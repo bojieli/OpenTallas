@@ -1,0 +1,31 @@
+Frozen read-only audit of bb65ae0dcfa7a33a98781e46b547e29f18597f24.
+Run from the isolated checkout root; parent owns intake. No main/docs/model edits.
+
+Cheap receipt replay (89 unique file pins, historical raw trace git object,
+three prefix-helper evaluations, original record assertions):
+python3 results/uarch/qwen_calibrated_calendar_independent_review_20261003/review.py
+
+Requested cold nine tests:
+python3 -m unittest discover -s tests -p test_qwen_rom_calibrated_calendar.py -v
+
+Requested independent cold four-record verifier (seven finite model calendars):
+python3 tools/uarch_model_qwen_rom_calibrated_calendar.py --verify --processes 1
+
+Resource choice: one calendar worker on local host with 32 cores and measured
+load 30.19, 98 GiB available RAM, 571 GB free workspace disk at launch. No
+arbitrary time limit or restart. Parent's independent parallel verifier is a
+separate parent review and was observed completing all four records IDENTICAL.
+Do not use its output as this receipt's independent verifier result.
+
+findings-r2.json is the complete receipt. findings-r1.json is the provisional
+receipt before historical raw-trace/source-inventory checks were added.
+provisional-receipt-mismatch-r1.log preserves the expected mismatch when the
+expanded review was compared with that earlier immutable receipt. It is not a
+failure of the candidate calendar. receipt-replay-r2.log verifies the successor.
+
+Required owner actions (Claude/calendar, root/intake; Ampere physical and Euclid
+producer evidence retained): bind actual accepted K/V producer deadlines and
+source-current arithmetic calibration; keep 2599 body and +1220 delta as model
+assumptions; correct IDLE-only/due-edge wording; prove finite sustained refresh,
+PHY/controller/write/protection service; treat selected_for_build as peer
+proposal only. No root adoption or RTL/P&R admission is granted by this audit.

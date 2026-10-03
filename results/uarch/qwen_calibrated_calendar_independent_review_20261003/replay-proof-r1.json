@@ -1,0 +1,15 @@
+{
+  "admission": false,
+  "candidate_commit": "bb65ae0dcfa7a33a98781e46b547e29f18597f24",
+  "four_cold_records": "BYTE_IDENTICAL",
+  "log_sha256": {
+    "cold-nine-tests-r1.log": "e6ec9f9f241b17df118859c483c72dc6b257a5cf227ac85e5e2766258531b58b",
+    "cold-verify-r1.log": "cf41d9280323d03c389ac0e005865e502f81e9ea83e7fa08fcdd10c8d16735c5",
+    "provisional-receipt-mismatch-r1.log": "abaa054cf589155675297113aa3ce928c7e200d36b41f525efbc70c7c822fde1",
+    "receipt-replay-r2.log": "e99d806c1d7b81c2b1b05871a812fdc5b81a5dc611ce8052b7da751ea7fa1adb"
+  },
+  "new_hardware_jobs": 0,
+  "nine_tests": "PASS",
+  "review_receipt": "findings-r2.json",
+  "schema": "QCALENDAR_INDEPENDENT_REPLAY_PROOF_V1"
+}

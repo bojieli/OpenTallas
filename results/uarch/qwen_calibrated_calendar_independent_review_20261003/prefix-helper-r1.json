@@ -1,0 +1,110 @@
+{
+  "112": {
+    "cycles": 3680,
+    "layer": 18,
+    "stages": [
+      {
+        "cycles": 508,
+        "engine_busy": 64,
+        "exposed": 444,
+        "stage": "QKV projection, then q/k norm, RoPE"
+      },
+      {
+        "cycles": 1738,
+        "engine_busy": 216,
+        "exposed": 1522,
+        "stage": "attention: scores, softmax, P\u00b7V, 1/Z"
+      },
+      {
+        "cycles": 315,
+        "engine_busy": 48,
+        "exposed": 267,
+        "stage": "O projection, residual, FFN norm"
+      },
+      {
+        "cycles": 708,
+        "engine_busy": 256,
+        "exposed": 452,
+        "stage": "gate/up projection, fused SiLU\u00b7up"
+      },
+      {
+        "cycles": 411,
+        "engine_busy": 144,
+        "exposed": 267,
+        "stage": "down projection, residual, next norm"
+      }
+    ]
+  },
+  "167": {
+    "cycles": 4010,
+    "layer": 18,
+    "stages": [
+      {
+        "cycles": 563,
+        "engine_busy": 64,
+        "exposed": 499,
+        "stage": "QKV projection, then q/k norm, RoPE"
+      },
+      {
+        "cycles": 1848,
+        "engine_busy": 216,
+        "exposed": 1632,
+        "stage": "attention: scores, softmax, P\u00b7V, 1/Z"
+      },
+      {
+        "cycles": 370,
+        "engine_busy": 48,
+        "exposed": 322,
+        "stage": "O projection, residual, FFN norm"
+      },
+      {
+        "cycles": 763,
+        "engine_busy": 256,
+        "exposed": 507,
+        "stage": "gate/up projection, fused SiLU\u00b7up"
+      },
+      {
+        "cycles": 466,
+        "engine_busy": 144,
+        "exposed": 322,
+        "stage": "down projection, residual, next norm"
+      }
+    ]
+  },
+  "55": {
+    "cycles": 3338,
+    "layer": 18,
+    "stages": [
+      {
+        "cycles": 451,
+        "engine_busy": 64,
+        "exposed": 387,
+        "stage": "QKV projection, then q/k norm, RoPE"
+      },
+      {
+        "cycles": 1624,
+        "engine_busy": 216,
+        "exposed": 1408,
+        "stage": "attention: scores, softmax, P\u00b7V, 1/Z"
+      },
+      {
+        "cycles": 258,
+        "engine_busy": 48,
+        "exposed": 210,
+        "stage": "O projection, residual, FFN norm"
+      },
+      {
+        "cycles": 651,
+        "engine_busy": 256,
+        "exposed": 395,
+        "stage": "gate/up projection, fused SiLU\u00b7up"
+      },
+      {
+        "cycles": 354,
+        "engine_busy": 144,
+        "exposed": 210,
+        "stage": "down projection, residual, next norm"
+      }
+    ]
+  }
+}

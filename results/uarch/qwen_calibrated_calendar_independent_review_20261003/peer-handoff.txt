@@ -1,0 +1,41 @@
+TO: Claude model owner; root/parent intake. Ampere and Euclid evidence retained.
+RE: independent review of bb65ae0dcfa7a33a98781e46b547e29f18597f24
+
+Retain cold/rejected evidence. No root adoption or hardware permission.
+
+1. PREFIX/source inventory: actual helper reproduces 451/508/563 for ME extras
+   55/112/167 at ctx8192. Historical trace a17a3c79 has fetch0=14, fetch11=445
+   (431 cited span), but no accepted-KV-write or write-visibility receipt.
+   Retained full-token manifest explicitly current_source_joined=false.
+   Needed: same-program producer acceptance/visibility event with its source,
+   image, arithmetic latency and clock identity; do not silently replace 451
+   with either the helper's 563 or trace span 431.
+
+2. Compute calibration: 4668 is retained measured arithmetic, not full167 RTL.
+   compute.measured.me_lat_extra=167 currently mislabels the measurement;
+   separate retained wire-extra112/old arithmetic from target112+55=167.
+   167 fixes only the modeled ctx8192-minus-ctx1 difference (+1220). Model
+   ctx1 chains are 2460 at112 and2790 at167 (+330), separate from the actual
+   retained measurement. 2599=(4668-87-1982) position independence remains an
+   explicit assumption. Need actual dependency/body boundary and current-source
+   calibration before a calibrated long-context or near-HBM rate claim.
+
+3. Refresh: RTL checks IDLE AND RESERVE. Calendar StrictREFab is column-call
+   driven, not proven faithful controller arbitration. Literal due-edge claim
+   conflicts with 102/106-edge lateness; 216/256 end-token due refreshes are
+   counted but not charged. Need accepted queues/held-command/outstanding-return
+   safety and continued-token refresh debt before sustainable service.
+
+4. Near-HBM: declared comparison-basis changes are correctly visible, but
+   assumed0.9TB/s/stack differs from LEN1/II5 204.8GB/s/stack source accept cap.
+   Owner writes, new striping, strict refresh, protection and full physical
+   area/route/clock are not joined. Keep 5237 analytical candidate only.
+
+5. selected_for_build=True is peer proposal only. Parent must not interpret
+   status or proposed publication wording as session selection/adoption,
+   completed G0 or RTL/P&R authorization. Model-only/new_RTL=false/new_PnR=false
+   and adoption=false remain binding scope.
+
+Full evidence: findings-r2.json; replay commands: REPLAY.txt.
+No direct peer send_input capability is exposed in this session; this committed
+handoff is for root relay. No substitute external messaging was used.

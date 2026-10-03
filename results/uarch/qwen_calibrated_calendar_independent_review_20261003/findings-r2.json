@@ -1,0 +1,246 @@
+{
+  "admission": {
+    "candidate_selection": "peer_proposal_only",
+    "hardware_permission": false,
+    "root_adoption": false
+  },
+  "baseline_refresh": {
+    "attention8k": {
+      "max_refresh_lateness_edges": 106,
+      "unissued_REFab_due_before_token_end": 256
+    },
+    "position0": {
+      "max_refresh_lateness_edges": 102,
+      "unissued_REFab_due_before_token_end": 216
+    }
+  },
+  "candidate_commit": "bb65ae0dcfa7a33a98781e46b547e29f18597f24",
+  "findings": [
+    {
+      "evidence": [
+        "tools/uarch_model_qwen_rom_calibrated_calendar.py:PREFIX_CYCLES/measured_compute",
+        "tools/uarch_model_qwen_kv_credit17.py:composed calendar",
+        "tools/arch_budget_qwen3.py:as_built/layer_chain",
+        "inputs/l0cal/l0_reconciliation.json"
+      ],
+      "finding": "451 is reproduced by the old helper at ME extra 55. Full 167 gives 563; 112 gives 508. The cited trace QKV span is 431. None alone proves current K/V accepted-write visibility. The retained terminal explicitly has current_source_joined=false and lists the +55/source-current bridge as a remaining gate. bb65 retains 4668 measured cycles and subtracts 451 to partition that total; 167 is applied to the unmeasured 8K-minus-pos0 delta only.",
+      "id": "F1_PREFIX_CALIBRATION_JOIN",
+      "required": "Join the actual instruction/producer acceptance and visibility journal to the measured arithmetic configuration and prefix. Keep 4668 as its original measured basis; do not silently represent it as full-167 measured compute or substitute 563 without the dependency join.",
+      "severity": "claim_blocker"
+    },
+    {
+      "evidence": [
+        "inputs/l0cal/l0_reconciliation.json",
+        "near-hbm-selected-r1.json:composition/sensitivities",
+        "baseline-r1.json:identity/headline"
+      ],
+      "finding": "2599 = 4668 - 87 - 1982 is assumed position independent. 87 is a trace span, not proof of all replaceable attention dependencies. The alternative modeled ctx1 share is 522; the +1220 long-context delta and single-segment AR 620/490 are unmeasured. Baseline uses ctx8191 cold service with pos0 compute, not an observed ctx8191 production token.",
+      "id": "F2_POSITION_TRANSFER",
+      "required": "Retain calibration/body-transfer labels and source inventory; establish the same-program long-context compute, address availability and dependency boundary before a calibrated rate claim.",
+      "severity": "claim_blocker"
+    },
+    {
+      "evidence": [
+        "rtl/model_ready_hbm_r14/ot_hbm_r14_pc.sv:IDLE/RESERVE/SCHEDULE",
+        "tools/uarch_model_qwen_rom_calibrated_calendar.py:StrictREFab/refresh_debt",
+        "baseline-r1.json:calendar"
+      ],
+      "finding": "RTL checks due refresh in IDLE and RESERVE, not IDLE alone. Accepted queue scans, held scheduling, command readiness and timing can delay it. StrictREFab is invoked on column calls and schedules from due; it is a conditional replacement calendar, not demonstrated source-state equivalence. Baseline records lateness 102/106 service edges; end-of-token due refresh is counted but not charged. Outstanding-return timing is not proven by this replacement.",
+      "id": "F3_REFRESH_SOURCE_EQUIVALENCE",
+      "required": "Correct literal due-edge/IDLE-only claims in the owning successor; bind controller arbitration and outstanding-return safety, plus carried refresh debt in a continued-token finite calendar before sustainable service qualification.",
+      "severity": "claim_blocker"
+    },
+    {
+      "evidence": [
+        "near-hbm-selected-r1.json:identity_notes/unqualified_inputs/area",
+        "summary-r1.json:comparisons"
+      ],
+      "finding": "The 20-field comparison explicitly declares calibration and service changes; this is not a common-service qualification. Near-HBM removes global fill but assumes 0.9 TB/s/stack against the documented LEN1/II5 204.8 GB/s/stack ceiling. New striping, owner writes, strict refresh and mutable protection are not fully priced or source joined; 13.85-15.81 mm2 versus 19.67 mm2 is not complete slot/route/clock admission.",
+      "id": "F4_NEAR_HBM_COMPARABILITY",
+      "required": "Keep 5237 as an analytical candidate assumption only. Require finite controller accepts/bursts, PHY, write/read contention, refresh, protection, source-owned layout and composed physical slot/clock before comparison or hardware admission.",
+      "severity": "claim_blocker"
+    },
+    {
+      "evidence": [
+        "near-hbm-selected-r1.json:status/admission",
+        "REPLAY.md",
+        "PROPOSED_DOC_CHANGES.md"
+      ],
+      "finding": "selected_for_build=True and SELECTED FOR BUILD are peer proposal labels. Existing model_only=True/new_RTL=False/new_PnR=False/adoption=False do not supply root selection or full G0. Proposed current-rate wording must not be promoted to adopted or measured product headlines.",
+      "id": "F5_SELECTION_AUTHORITY",
+      "required": "Parent intake must interpret this as proposal-only, not session adoption or permission to launch. Preserve the rejected streaming record and all calibration evidence; no hardware until composed gates.",
+      "severity": "scope_blocker"
+    }
+  ],
+  "pin_counts": {
+    "production_pins": 57,
+    "repository_pins": 11,
+    "review_inputs": 15,
+    "unique_review_sources": 89
+  },
+  "prefix_helper": {
+    "112": {
+      "cycles": 508,
+      "engine_busy": 64,
+      "exposed": 444,
+      "stage": "QKV projection, then q/k norm, RoPE"
+    },
+    "167": {
+      "cycles": 563,
+      "engine_busy": 64,
+      "exposed": 499,
+      "stage": "QKV projection, then q/k norm, RoPE"
+    },
+    "55": {
+      "cycles": 451,
+      "engine_busy": 64,
+      "exposed": 387,
+      "stage": "QKV projection, then q/k norm, RoPE"
+    }
+  },
+  "preserved_compute": {
+    "attention_8k_delta_cycles": 1220,
+    "attention_8k_delta_source": "tools/uarch_model.py:qwen_tp_point(4,6144,'board',1.2e9,me_lat_extra=167,su_width=64) layer_chain ctx 8192 (4010) minus ctx 1 (2790); UNMEASURED",
+    "me_lat_extra_basis": "112 measured wire stages + 55 arithmetic delta; credit17/kv_bank_groups/kv_rate_risk passed 55 alone",
+    "measured": {
+      "L0": 4669,
+      "allreduces_per_layer": 1982,
+      "body_excl_collectives": 2687,
+      "head": 2998,
+      "layer_L1_L35": 4668,
+      "me_lat_extra": 167,
+      "per_allreduce": 991,
+      "pos0_attention_model_ctx1": 522,
+      "pos0_attention_trace": 87,
+      "token_total": 171090,
+      "unattributed_start_terminal": 43
+    },
+    "nonlayer_cycles": 3042,
+    "prefix_cycles": 451,
+    "rest_cycles_8k": 5437,
+    "rest_cycles_pos0": 4217
+  },
+  "raw_trace_inventory": {
+    "accepted_KV_write_visibility_export": false,
+    "byte_count": 1632,
+    "cited_span_cycles": 431,
+    "git_object": "a17a3c79:results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64_itrace.txt",
+    "observed_fetch0": 14,
+    "observed_fetch11": 445,
+    "remaining_terminal_gates": [
+      "Q2 current seven-source join and source-current +55 bridge",
+      "Persistent HBM per-layer ownership/lifetimes/finite fill and visibility calendar, reconciled to existing read bytes",
+      "Macro-local KV connected numerical checks and Q3 current-source full token",
+      "G3 contextual SS/FF macro/tile/spine/collective/die routing/clock/power",
+      "G4 same-program service/stall/collective/physical latency calibration"
+    ],
+    "retained_terminal_current_source_joined": false,
+    "sha256": "19117af0eec1cb356109966e609208208161b4c0d722a95f674194bf2c4c5092"
+  },
+  "rejected_streaming_preserved": {
+    "rejection": {
+      "failed_verdict_is_final": true,
+      "reasons": [
+        "like-for-like gain at the 8K-attention calibrated compute is 0.857% (below the 1% adoption screen)",
+        "position-0 gain 3.149% is the upper case and still leaves the token at 347.1 us, above the 333.3 us 3k budget",
+        "command-bus floor 308.16 us binds before the 280.6 us fill floor; with unlimited in-flight storage the ceiling is about +15%, far below the near-HBM candidate (near-hbm-selected-r1.json)",
+        "needs unqualified cross-layer epoch RTL (two live layer epochs in credits, pending, owner slots)"
+      ]
+    },
+    "status": "REJECTED_MODEL_GAIN_BELOW_1PERCENT_AT_8K_CALIBRATED"
+  },
+  "schema": "qwen-calibrated-calendar-independent-review.v1",
+  "scope": "Read-only candidate audit; no main/docs/tools/model/RTL changes; no policy sweep.",
+  "source_sha256": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "configs/models/qwen3-8b.json": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b",
+    "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+    "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444",
+    "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy_bb.v": "6c50696a532d19c9264bcc6451ceae271969bdcc57fb0d4d68d672126f30b688",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.json": "6d516bd39f8d4b0b43970c35014bf855febd57e7d80157b6fd39fed3e61a362a",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/original_terminal.json": "0da7a39272da4a4c404321c3fd6d0102384fe1b931f5ffe4ee19c710ecce99de",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/terminal_manifest.json": "3aa197d53a24e4d2e5590f0666700395ba60cdca45ed9c05e224d1b13fa2ed54",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/PROPOSED_DOC_CHANGES.md": "ebd713b283798f795e1b4bbfaaf81271b8dc542048eb1759eb287f164348fc7e",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/REPLAY.md": "0329273b57c8bcf8b64f0b11424bac24f0377af24b4054afcb27afc5d24ffb6a",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/baseline-r1.json": "1a20b73d7ed4600c0999b829f31226724aaefa30225777df69cb26fb3c3582b3",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/cooling/qwen_rom_cooling_recheck.json": "ed1208f8b136074ef2adab4ff3583fed5573fe23373b69b37a489e1a7092a319",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/cooling/qwen_rom_cooling_recheck.md": "efda4557bfa3c1a8d1659e6ca986ea396190af303dd000eeae8ce3f22e582ca8",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/l0cal/l0_reconciliation.json": "7d978fa53cdfb6ba93c0774600d2f8ddd7ce8e96d7b6729e8fcf55abac33b3c7",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/l0cal/l0_reconciliation.md": "becda125e6e47a75c3e2ccb53ce49b0075dc66eabe9f2b5e6a50c563f1534351",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/nearhbm/near_hbm_attention_pricing.json": "d6aa247886f1da97e2e5671bb8c165cfb06a81c44735814f4037c1bb86e3c504",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/nearhbm/near_hbm_attention_pricing.md": "0a67b489ee0403e2ea800b2a54caf6268a2579d7f8f635d101e475a785d73114",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/nearhbm/price_near_hbm_attention.py": "4df3d6b54eba49cf41654b64d6d0c4ca2ab5018d8c449d1da26ae7573ec3ba2d",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/policy/workload_identity.json": "c6e4210574c306df37713224f5c124976bedaaf8f8ea8e89173a94a661f6b887",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/policy/workload_identity.md": "176f77c63dd71da29a3e33fabd068e5021e1408fde916329742c743daf52d244",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/prefetch/decoupled_kv_service_pricing.json": "5e5e0d58d1e28599b533cbf9224e1a87435d1708dcb2d3dd623afdb6664beae5",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/prefetch/decoupled_kv_service_pricing.md": "155c59c3a3b195f27c30f9274c3f00af843fd2021ae2fcebaa3c42481d77cb21",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/prefetch/work/decoupled.py": "3c776a522b4f2bdae02a22c9ae55f9e238fd21c49d16daf19f55fe9f3970706a",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/protref/protection_refresh_pricing.json": "85228235c0957b0c937f62e669f2654ebbc98f8b4dcd857bfd2d2e3fe1091adc",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/protref/protection_refresh_pricing.md": "ea44e5d236045ddad8a0226a06d02dc177aaf8a0edc619b25c31d1419fed2db7",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/protref/run_variants.py": "8e6b0d69513d26381b7c9c043b823db03cad7dcf2fd8bd3dc7658a4d78a7a421",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/near-hbm-selected-r1.json": "b7862b22c589a95b452f8ff12036c8b6c99163945c8754187955b5124c16b0ef",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/streaming-rejected-r1.json": "c922ac0fe28649446741a6548b59b2ba67f4e43bfa13c22143754c43a9d41012",
+    "results/uarch/qwen_rom_calibrated_calendar_20261003/summary-r1.json": "1120d1e11699461a7f1e7eb620488c0262df75f1588e01a0e91c826fa8dab522",
+    "results/uarch/qwen_rom_current_reset_construction_20261002/inputs/launch_join_cells_r1.json": "b7cbf219c7950790ae28b27041063ac336be497ea4f1f6d2982ad03d7376788f",
+    "results/uarch/qwen_rom_current_reset_construction_20261002/inputs/model.json": "a75ad8e44e95575b04239c734de400df5e98ade3d4778b39559a52a6f3bcef3c",
+    "results/uarch/qwen_rom_current_reset_construction_20261002/inputs/setRC.tcl": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14",
+    "results/uarch/qwen_rom_kv_credit17_20261003/model-r2.json": "d8d08f004057530b4c1f11c6f3a072bbe5e756a26175195eb45433056a13d46b",
+    "results/uarch/qwen_rom_kv_credit17_20261003/model-r3.json": "7df91f3da986e6cf909ef3098580657ac8b67d863729c11ebc5ff9fc062d277d",
+    "results/uarch/qwen_rom_kv_credit_allocator_20261002/model-r4.json": "0b2c886fec5f35b8a12aeabf184b5bcd55685bfbe234b787e119451d1d114c8b",
+    "results/uarch/qwen_rom_kv_rate_risk_20261002/model_r3.json": "b51e30143307ada7d72c7794c1c3d5a25807b12cfd51d5081ba6a62043056f91",
+    "results/uarch/qwen_rom_local_parent_composition_20261002/model-r1.json": "e59477a8b4ba4966f0e9e770af8817cade33185ee77f525cd72d929b90ba7cea",
+    "results/uarch/qwen_rom_owned_ready_context_20261002/model-r1.json": "e51ed457721bfc3a441b91f88bc281ac309e947b3dd5c7dbbc0d25f9611ba03b",
+    "results/uarch/qwen_rom_parallel_owner_screen_20261002/model-r1.json": "2e3559b465d85c100e5c3f9c8fc367832efaf19052dc12dafe9aad60a2d41aed",
+    "results/uarch/qwen_rom_physical_context_current_20261002/model-r1.json": "43998197cf6e1025c0ea91e41f7bfa1a771dcff0423a312e892d5eae87f7b6a7",
+    "results/uarch/qwen_rom_physical_context_current_20261002/parent-IO-next-receipt-r1.json": "fec36669311e63aa5fcef52460f1e615587684310468a84bd87ca9f4ee211896",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/invbuf_ss.lib.gz": "874764b0c9695f283f39abef87d761d70fef34be9b492ed339271661f647c49c",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/seq_ss.lib.gz": "55207b0273d8a452871483f607cfc82fba493c08c1299430eee814fd1d743386",
+    "results/uarch/qwen_rom_retention_parent_launch_20261002/model-r1.json": "6e1f0045737787b3349ef3e4e636fc7922e8d6c98fe1046f107c2ec72f222bd6",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/hdc/kv/ot_hdc_kv_stream.sv": "293895050e77e758692f6eeef29c02934935d092f4000ef8da92d23365bcbd1a",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+    "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_qwen_rom_tile_context_candidate_r3_retained.sv": "77dfbb108424d639dc16bcbc824f5e00533bd405c6922265070b2359d7a91f41",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pc.sv": "5de049782df95ea81bf79458839e12e987fe2316c19237483788e3d578011025",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_route.sv": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+    "rtl/physical/ot_qwen_rom_reset_parent_provider.sv": "b761cf522e05f2421d752dba6a234e117b796f40f4737593abae63763cda66ec",
+    "rtl/test/model_ready_hbm_r14/tb_hbm_finite_stage.sv": "ad6648ee9d866953e8a996b702a18d249505b95bfe307d0dc3d2a4ec8083f404",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+    "tests/test_qwen_rom_calibrated_calendar.py": "d746e44f23d22af80274e44f4c12d3d14f5f7dd30cb5939c298af154bdad48d2",
+    "tests/test_qwen_rom_kv_rate_risk.py": "4036a003c1f8e78d2ac771fdb440a7f38088629e7dbaa3115e94a16e42c4a091",
+    "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+    "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+    "tools/hdc_qwen_fullshape_isa_w12.py": "add181198a349f401629e39393e47aa20b969df38ec42afbdb8347921ea18707",
+    "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+    "tools/hdc_timing.py": "f7135f8007a3fc5ad24274c7a5b0ed8c16d24205210620afba8f6061a0edae36",
+    "tools/qwen_kv_bank_prototype.py": "1d327fdf38c7ddb3907f53cb69c67d0e8a64fe639d8630b6ae6c612038e79a9a",
+    "tools/qwen_rom_kv_causal_join.py": "05c8b9050c9e29be956d9e2465940ad186dcf4d9aa0147f0ebee9ed5640e650d",
+    "tools/qwen_rom_kv_production_join.py": "2cf13c419d3056af10be64f9c687318ea6d5506cf1d0755f1be890130a999eaa",
+    "tools/qwen_rom_persistent_kv_g0.py": "4ec0ca483a2a93e426d973467f45ca8fab69f4d642daa0f1920b45d810e0dc7c",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/uarch_model_qwen_kv_bank_groups.py": "0050f1be26a913427c5334e59cf7561b5a18a3ad0aa5f4aa05f23ea6a89ee30b",
+    "tools/uarch_model_qwen_kv_credit17.py": "69b5d8a94d208ddf6fb35e719578c5cc6189efbf9c87abecd3e3af099001fdae",
+    "tools/uarch_model_qwen_kv_credit_allocator.py": "28ace77b8f9eda67139b2cb24a7c0aa07ea76b83368194ef255a98909f3594a4",
+    "tools/uarch_model_qwen_kv_decoupled_lease.py": "966c2cd4ca8b5924ddc68158a226b9f37dcdbf203885a4a7a5568be2d28cc078",
+    "tools/uarch_model_qwen_kv_rate_risk.py": "3b190905af9ad00430bba363c6e48a7be106662c3d878a3ad3c97aa70ca07d36",
+    "tools/uarch_model_qwen_kv_successor.py": "a88a32eae4e8fd0cb43535bd6ef24be1bbf33ca569ddf6db94a1b08a8a2e3b3b",
+    "tools/uarch_model_qwen_rom_calibrated_calendar.py": "711087c86150219ed80a784cbf0c4f2be6aab7e6c6112e8dde79ee5ea2108e27"
+  },
+  "verdict": "REPRODUCIBILITY_SEPARATE_FROM_ADMISSION_CALIBRATION_AND_SERVICE_JOINS_OPEN"
+}
