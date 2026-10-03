@@ -53,6 +53,9 @@ module tb_dsrom_c8_native;
  end endgenerate
  always @(posedge clk) if(rst_n) begin
   cycle<=cycle+1;
+  if(sf)$fatal(1,"actual service fault code=%h",sfc);
+  if(cv[3]&&ce[3]&&mv[3]&&mr[3]&&!cr[3])
+   $fatal(1,"backend accepted C write without caller grant");
   if(ce[3]&&cv[3]&&cr[3]) accepted<=accepted+1;
   for(integer p=0;p<128;p=p+1) if(vv[p]) begin
    if(vi[p*47+:47]!=={16'd7,10'd2,21'd100}||vw[p*2+:2]!==2'b11||va[p*30+:30]!==30'(16+9*31+visible))$fatal(1,"wrong visible identity/address/writer");
@@ -68,13 +71,18 @@ module tb_dsrom_c8_native;
   repeat(8)edge_step();rst_n=1;repeat(8)edge_step();
   sel_v=1;edge_step();sel_v=0;
   for(integer b=0;b<16;b=b+1) begin
+   // Actual golden qdq_fp4_e4m3(ones): scale 0.171875, code 6,
+   // BF16 output 1.03125. Arbitrary unquantized 1.0 is not encoder input.
    nw_we=1;nw_addr=30'(511*512+b*32);
-   for(integer i=0;i<32;i=i+1) nw_data[i*32+:32]=32'h3f800000;
+   for(integer i=0;i<32;i=i+1) nw_data[i*32+:32]=32'h3f840000;
    edge_step();
   end
   nw_we=0;
   while(!own_visible && cycle<100000)edge_step();
-  if(!own_visible)$fatal(1,"actual C writer failed to publish nine visible sectors");
+  if(!own_visible)begin
+   $display("BLOCKED id_done=%b count=%0d enc_done=%b enc_busy=%b got=%h go=%b wr_act=%b wr_pending=%b wr_k=%0d cv=%h cr=%h cwd=%h accepted=%0d visible=%0d",service.id_done,service.id_count,service.enc_done,service.enc_busy,service.nw_got,service.go,service.wr_act,service.wr_pending,service.wr_k,cv,cr,cwd,accepted,visible);
+   $fatal(1,"actual C writer failed to publish nine visible sectors");
+  end
   expected=service.new_row;reading_mode=1;
   // Read through the actual mux/arb/backend AFTER visible completion. No mem
   // peeking is admitted as completion or as the readback value.

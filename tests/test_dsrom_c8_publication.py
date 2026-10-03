@@ -45,3 +45,21 @@ def test_stage_admission_is_not_engine_entry_or_retirement():
  assert 'done_armed&&engine_done' in s
  assert 'write_journal_quiet&&!write_quarantine&&!write_fault' in s
  assert 'if(active||count!=0) quarantine<=1' in s
+
+
+def test_c_grant_matches_selected_nonreset_backend_acceptance():
+ s=(D/'ot_chip_v41x_kv_reqmux_c8.sv').read_text()
+ assert 'assign c_rdy[s] = rst_n && !hold_write && !choose_w && m_rdy[s];' in s
+ assert 'assign w_rdy[s] = rst_n && !hold_write && choose_w && m_rdy[s];' in s
+ assert '!rst_n && !hold_write && choose_w' not in s
+
+def test_native_transport_fixture_uses_actual_golden_qdq_value():
+ import sys
+ sys.path.insert(0,str(ROOT/'tools'))
+ import numpy as np
+ from hdc_golden_v41 import qdq_fp4_e4m3
+ y=qdq_fp4_e4m3(np.ones(512,dtype=np.float32))
+ assert np.all(y.view(np.uint32)==0x3f840000)
+ s=(ROOT/'rtl/test/dsrom_sys/c8/tb_dsrom_c8_native.sv').read_text()
+ assert "32'h3f840000" in s
+ assert 'if(sf)$fatal' in s

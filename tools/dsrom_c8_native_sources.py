@@ -23,8 +23,13 @@ def generate():
  s=extra_ports(s,'    input wire clk,rst_n')
  s=s.replace('wire choose_w = w_v[s];','reg pending=0,owner_c=0;\n        wire hold_write=C8_PUBLICATION && pending;\n        wire choose_w = w_v[s];\n        always @(posedge clk) begin\n          if (!rst_n) begin pending<=0; owner_c<=0; end\n          else if (C8_PUBLICATION) begin\n            if (m_wr_done[s] && pending) pending<=0;\n            if (m_v[s] && m_rdy[s] && m_we[s]) begin pending<=1;owner_c<=!choose_w;end\n          end\n        end')
  s=s.replace('w_v[s] || c_v[s]','rst_n && !hold_write && (w_v[s] || c_v[s])')
- s=s.replace('choose_w && m_rdy[s]','rst_n && !hold_write && choose_w && m_rdy[s]')
- s=s.replace('!choose_w && m_rdy[s]','rst_n && !hold_write && !choose_w && m_rdy[s]')
+ # Replace complete assignments; substring replacement also matches the
+ # negated C predicate and formerly turned !choose_w into !rst_n.
+ for client,predicate in [('w','choose_w'),('c','!choose_w')]:
+  old=f'assign {client}_rdy[s] = {predicate} && m_rdy[s];'
+  new=f'assign {client}_rdy[s] = rst_n && !hold_write && {predicate} && m_rdy[s];'
+  assert s.count(old)==1
+  s=s.replace(old,new)
  s=s.replace("choose_w ? w_we[s] : 1'b0","choose_w ? w_we[s] : (C8_PUBLICATION ? c_we[s] : 1'b0)")
  s=s.replace("choose_w ? w_wdata[s*256 +: 256] : '0","choose_w ? w_wdata[s*256 +: 256] : (C8_PUBLICATION ? c_wdata[s*256 +: 256] : '0)")
  s=s.replace("choose_w ? w_wstrb[s*32 +: 32] : '0","choose_w ? w_wstrb[s*32 +: 32] : (C8_PUBLICATION ? c_wstrb[s*32 +: 32] : '0)")

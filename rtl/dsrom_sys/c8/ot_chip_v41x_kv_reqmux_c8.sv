@@ -70,7 +70,7 @@ module ot_chip_v41x_kv_reqmux_c8 #(
         wire rsp_c = s_tag[s*TAGW + TAGW-1];
         assign m_v[s] = rst_n && !hold_write && (w_v[s] || c_v[s]);
         assign w_rdy[s] = rst_n && !hold_write && choose_w && m_rdy[s];
-        assign c_rdy[s] = !rst_n && !hold_write && choose_w && m_rdy[s];
+        assign c_rdy[s] = rst_n && !hold_write && !choose_w && m_rdy[s];
         assign m_addr[s*HAW +: HAW] = choose_w ? w_addr[s*HAW +: HAW] : c_addr[s*HAW +: HAW];
         assign m_len[s*4 +: 4] = choose_w ? w_len[s*4 +: 4] : c_len[s*4 +: 4];
         assign m_tag[s*TAGW +: TAGW] = choose_w ?
