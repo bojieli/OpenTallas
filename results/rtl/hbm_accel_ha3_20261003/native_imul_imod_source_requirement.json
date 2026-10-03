@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.ha3.native_integer_source_requirement.v1",
+  "parent_sha": "4ed12eccd7426821d94f2ac72320e79eb3ba7508",
+  "status": "ABSENT_FROM_RELEASED_1737_RECIPES",
+  "source_pins": {
+    "/home/ubuntu/OpenTallas/results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz": {
+      "compressed_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+      "decompressed_sha256": "4785f0973c7db658c592d87c042be1a0556ab108abfe8ed1fbf20d8ed1820228"
+    },
+    "/home/ubuntu/OpenTallas/results/uarch/c0_pc40_payload_lease_20261003/inputs/h3_qwen_bounded_native.py": {
+      "sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b"
+    }
+  },
+  "templates": 13,
+  "recipe_nodes": 98,
+  "pc_records": 1737,
+  "required_ops": {
+    "IMUL": {
+      "recipe_nodes": 0,
+      "pc_primitive_command_records": 0,
+      "global_opcode": 38,
+      "action": "KEEP_UNBOUND_REFUSE"
+    },
+    "IMOD": {
+      "recipe_nodes": 0,
+      "pc_primitive_command_records": 0,
+      "global_opcode": 39,
+      "action": "KEEP_UNBOUND_REFUSE"
+    }
+  },
+  "operations_and_microcode_exact_symbol_hits": 0,
+  "distinction": "NativePrimitiveVM COMMON_NATIVE declares IMUL/IMOD and supports NumPy multiply/remainder; no released recipe or PC requests them. ABI availability is not source demand.",
+  "action": "No speculative RTL, controller/storage, sizing model or build. New source demand would require prebuild exact semantics and area/latency pricing.",
+  "model_gain": null,
+  "adopt": false
+}
