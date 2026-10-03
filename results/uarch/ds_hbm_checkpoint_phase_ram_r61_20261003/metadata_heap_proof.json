@@ -1,0 +1,13 @@
+{
+  "schema": "CPYTHON_TAGGED_WRITER_TREE_HEAP_PER_JSON_BYTE_BOUND",
+  "factor": 64,
+  "source": "unchanged V3Writer.tree returns tagged dict/list metadata for source dict/list/tuple/set and array/bytes/SectorBacking payload offsets. Payload streamed, no payload Python tree.",
+  "scalar_induction": [
+    "None/bool/float/U64 Python object size <=64*JSON token bytes",
+    "str allocatedUnicode header+<=4B/codepoint bounded by64*quoted ensure_ascii JSON bytes",
+    "list/tuple/set tag and element JSON punctuation pays container+pointer allocation; source arrays/sector tables metadata only",
+    "dict tagged representation pays each dict/list pair node using type tags and key/value punctuation; apply bound recursively, aliases overcount safely"
+  ],
+  "enrollment": "exact CPython3.10.12/source schemas; unknown objects refused by original Writer. Not general arbitrary application-object heap theorem.",
+  "runtime_followup": "Peirce successor should measure actual V3 deep_metadata_bytes/serialized bytes on quiescent producer and refuse any ratio/schema outside this envelope before applying lower future bound. Existing R58guard remains90.877GB unchanged."
+}

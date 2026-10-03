@@ -1,0 +1,29 @@
+{
+  "schema": "HELD_R58_SAME_PID_SOURCE_RAM_ADMISSION",
+  "PID": 2591875,
+  "start_ticks": 319502277,
+  "producer_argv": [
+    "/home/ubuntu/bin/python",
+    "tools/ds_hbm_checkpoint_execution_r58.py",
+    "--plan",
+    "results/uarch/ds_hbm_checkpoint_execution_r58_20261003/runtime_plan.json",
+    "--out",
+    "/tmp/kepler-ds-r58-PC0-10-checkpoint-runtime-20261003",
+    "--actual-pc10"
+  ],
+  "producer_cwd": "/tmp/kepler-ds-r50-current-main-20261002",
+  "producer_source_commit": "10c7d4ab0189460f823dbfddb46e34a9899d20d4",
+  "resume_MemAvailable_required_bytes": 98995480738,
+  "model_path": "results/uarch/ds_hbm_checkpoint_phase_ram_r61_20261003/model.json",
+  "source_sha256": {
+    "tools/ds_hbm_checkpointed_prefix_r55.py": "d8afd90b1d9e9ff374c85caf1e55e71a5e5bca6afd1639d077fdeb9f1c51ab39",
+    "tools/ds_producer_checkpoint_resume_v3.py": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e",
+    "tools/ds_hbm_dual_resources_r56.py": "edbf6366f660e205fcbc40a703e83e7b11237748412524dbde6e36906a71831d",
+    "tools/hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "tools/h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21",
+    "results/uarch/ds_hbm_checkpoint_execution_r58_20261003/model.json": "3c56107c8ae9f128cb1d189aa1e210330c1a2048e5d6a2d5b3f25d4ca45e462a",
+    "tools/ds_hbm_checkpoint_phase_ram_r61.py": "26aef3e08de62153c2bee03cd46898c44d6b2ff881dbbf600ab72908bd193496",
+    "tools/ds_hbm_held_resume_r61.py": "a23cd546ebcd24a0df1d6899a9086e02162f0a4e890c35df8044d94c58a83c80",
+    "tests/test_ds_hbm_checkpoint_phase_ram_r61.py": "dc7644d87cdaf388925a2177e63bdd525e1f9b753e440e470503971876691a97"
+  }
+}

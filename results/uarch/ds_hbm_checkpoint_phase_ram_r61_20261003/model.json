@@ -1,0 +1,441 @@
+{
+  "schema": "DS_CHECKPOINT_SOURCE_PHASE_RAM_R61",
+  "existing_R58_guard_bytes": 90877389572,
+  "checkpoint_metadata_serialized_upper_bytes": 88285386,
+  "metadata_heap_multiplier": 64,
+  "metadata_python_tree_heap_upper_bytes": 5650264704,
+  "serialization_only_increment_bytes": 6963826802,
+  "cold_restore_candidate_with_all_other_components_retained_bytes": 70476249358,
+  "old_serialization_coexistence_overcharge_removed_bytes": 20401140214,
+  "preserved_original_components": {
+    "PC10_all_shared_sector_objects": 5391777792,
+    "all_retained_producer_partial_sector_objects": 28485857280,
+    "canonical_identity_and_lineage_workspace_bytes": 1035636830,
+    "checkpoint_mmap_resident_bytes": 1717587146,
+    "cold_restored_cached_array_bytes": 100305920,
+    "cold_restored_partial_sector_objects": 28485857280,
+    "exact_source_metadata_allocation_slots_bytes": 24611743040,
+    "immutable_inputs_mapped_twice_bytes": 2005858584,
+    "native_primitive_CPU_live_and_transient_bytes": 21149856,
+    "producer_cached_source_array_bytes": 100305920,
+    "restore_port_dictionary_copy": 117325824,
+    "serialization_workspace_bytes": 27364967016,
+    "source_byte_atom_tables": 24758784
+  },
+  "future_PC8_9_home_rows": [
+    {
+      "home_index": 16,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 17,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 18,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 3063,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 3064,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 3065,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 4639,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 5896,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 26154,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 26155,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 26156,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 29201,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 29202,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 29203,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 30777,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 32034,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 52292,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 52293,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 52294,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 55347,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 55348,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 55349,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 56923,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 58180,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 78438,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 78439,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 78440,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 81487,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 81488,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 81489,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 83064,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 84321,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 104579,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 104580,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 104581,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 107634,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 107635,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 107636,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 109210,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 110467,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 704
+    },
+    {
+      "home_index": 130725,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 130726,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 130727,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 133772,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 133773,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 133774,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 135348,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 136605,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 156863,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 156864,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 156865,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 159910,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 159911,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 159912,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 161486,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 162743,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 640
+    },
+    {
+      "home_index": 183001,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 183002,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 183003,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 186054,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 186055,
+      "birth_PC": 8,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 186056,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 187633,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 64
+    },
+    {
+      "home_index": 188890,
+      "birth_PC": 9,
+      "kind": "RF",
+      "sector_upper": 64
+    }
+  ],
+  "future_PC8_9_sector_upper": 32768,
+  "remaining_before_guard_components": {
+    "all_PC8_9_new_sector_objects": 28082176,
+    "all_cached_array_payload_bytes": 100305920,
+    "all_immutable_input_mapped_pages_bytes": 1002929292,
+    "primitive_CPU_live_and_transient_bytes": 21149856,
+    "full_observation_metadata_bytes": 732160,
+    "helper_fixed_metadata_IO_bytes": 1064960
+  },
+  "held_R58_resume_MemAvailable_required_bytes": 98995480738,
+  "whole_producer_release_credit_bytes": 0,
+  "allocator_return_credit_bytes": 0,
+  "source_RSS_lowering_credit_bytes": 0,
+  "existing_guard_changed": false,
+  "future_cold_candidate_adopted": false,
+  "source_ram_caps": false,
+  "source_sha256": {
+    "tools/ds_hbm_checkpointed_prefix_r55.py": "d8afd90b1d9e9ff374c85caf1e55e71a5e5bca6afd1639d077fdeb9f1c51ab39",
+    "tools/ds_producer_checkpoint_resume_v3.py": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e",
+    "tools/ds_hbm_dual_resources_r56.py": "edbf6366f660e205fcbc40a703e83e7b11237748412524dbde6e36906a71831d",
+    "tools/hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "tools/h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21",
+    "results/uarch/ds_hbm_checkpoint_execution_r58_20261003/model.json": "3c56107c8ae9f128cb1d189aa1e210330c1a2048e5d6a2d5b3f25d4ca45e462a",
+    "tools/ds_hbm_checkpoint_phase_ram_r61.py": "26aef3e08de62153c2bee03cd46898c44d6b2ff881dbbf600ab72908bd193496",
+    "tools/ds_hbm_held_resume_r61.py": "a23cd546ebcd24a0df1d6899a9086e02162f0a4e890c35df8044d94c58a83c80",
+    "tests/test_ds_hbm_checkpoint_phase_ram_r61.py": "dc7644d87cdaf388925a2177e63bdd525e1f9b753e440e470503971876691a97"
+  },
+  "actual_bound_home_input_sha256": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a",
+  "actual_bound_home_input_path": "/tmp/kepler-ds-r58-PC0-10-checkpoint-runtime-20261003/bound_homes.json.gz",
+  "source_only_capture_no_production_execution": true
+}

@@ -1,0 +1,18 @@
+{
+  "status": "SOURCE_PHASE_BREAKDOWN_AND_SAME_PID_RESUME_CONTROLLER_READY",
+  "model": "model.json",
+  "live_guard_unchanged_bytes": 90877389572,
+  "source_serialization_increment_candidate_bytes": 6963826802,
+  "source_cold_restore_candidate_bytes": 70476249358,
+  "frozen_R58_resume_MemAvailable_required_bytes": 98995480738,
+  "future_home_sectors_bound": 32768,
+  "future_raw_sector_heap_growth_bytes": 28082176,
+  "tests_PASS": 10,
+  "release_helper_owner": "Peirce",
+  "typed_kernel/witness/schema_owner": "Sagan",
+  "VM_scope": "no remote execution/transfer admitted; explicit dev/inode/source migration required; only actualcheckpointbytes notgolden/witness",
+  "no_bound_lowered_by_RSS": true,
+  "producer_allocator_release_credit": 0,
+  "parent_action": "Coordinate normal release/no new heavyadmission; samePID/startticks pidfd controller SIGCONT once source thresholdfits. R58sourceplan/guards stayunchanged.",
+  "future_cold_candidate_adopted": false
+}

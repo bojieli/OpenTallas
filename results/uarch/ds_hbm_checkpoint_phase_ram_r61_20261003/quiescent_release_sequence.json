@@ -1,0 +1,19 @@
+{
+  "status": "PEIRCE_CONTROLLER_ENROLLMENT_REQUIRED_NOT_IMPLEMENTED_IN_LIVE_R58",
+  "sequence": [
+    "Retire actual producer; source quiescent verifies all read/write/reservation/lease/reverse debt empty",
+    "Admit serialization workspace separately using unchanged actualproject_checkpoint plus source_contractbytes; keep producer RAM and FDlocks live",
+    "Capture actual arrays/sectors/generations/locations/visiblehistory and allsource/class/shape/home identities; fsync and seal checkpoint and historical journals",
+    "Verify trusted checkpointreceipt, originalsourcecontract and complete oldjournal hash/set inventory before destructive release",
+    "Retain narrow evidence/lock custody: oldjournal streams/index/dictionary handles, exactimmutableinput/checkpointshard locks and history identities; no flush/commit/close afterseal",
+    "Release producer mutable backing arrays and cached results/oldgroups only afterseal; external controller irrevocably excludes oldengine from further execution",
+    "Preserve full allocator-arena escrow: logical object release does not imply RSS or MemAvailable returned. Fresh postrelease admission before any coldconstruction",
+    "Construct/restore exactcold state in unique newjournal; actualsource/data/gen/home/retention equality and held-stateschema checks unchanged",
+    "Reverify sealed oldjournal inventory afterrestore and afterconsumercompletion; transfer storage only with exactsource/state migration certificate"
+  ],
+  "current_runtime_compatibility": "R58currentlycapturesPC9 only; no PC10payload checkpoint. No live injection or sourcepatch. Ifoldprecapture guardrefuses, checkpointis absent; currentPID hold prevents knownpremature exit.",
+  "RAM_credit_before_measured_OS_release": 0,
+  "journal_closure_or_flush_after_seal_allowed": false,
+  "expected_payload_as_state_allowed": false,
+  "VM_transition": "OldV3pins checkpointshard dev/inode/size/mtime/ctime and manifests/paths/sources. Remotecopyalone is not legalrestore; Peirce explicit source/file migration proof plus exactlocked payloads required. No VMjob/transfer admitted here."
+}
