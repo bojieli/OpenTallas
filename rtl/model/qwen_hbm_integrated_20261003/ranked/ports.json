@@ -34,6 +34,326 @@
       "leaf": "rank_refusal",
       "block": "sector"
     },
+    "issuer_por_n": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "por_n",
+      "block": "issuer"
+    },
+    "issuer_run_enable": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "run_enable",
+      "block": "issuer"
+    },
+    "issuer_session_begin_valid": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "session_begin_valid",
+      "block": "issuer"
+    },
+    "issuer_session_begin_id": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "session_begin_id",
+      "block": "issuer"
+    },
+    "issuer_source_quiescent": {
+      "direction": "input",
+      "bits": 8,
+      "count": 1,
+      "leaf_bits": 8,
+      "leaf": "source_quiescent",
+      "block": "issuer"
+    },
+    "issuer_session_begin_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "session_begin_ready",
+      "block": "issuer"
+    },
+    "issuer_session_valid": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "session_valid",
+      "block": "issuer"
+    },
+    "issuer_session_fault": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "session_fault",
+      "block": "issuer"
+    },
+    "issuer_session_id": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "session_id",
+      "block": "issuer"
+    },
+    "issuer_issue_valid": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "issue_valid",
+      "block": "issuer"
+    },
+    "issuer_row_barrier_ready": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "row_barrier_ready",
+      "block": "issuer"
+    },
+    "issuer_backend_go_ready": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "backend_go_ready",
+      "block": "issuer"
+    },
+    "issuer_issue_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "count": 1,
+      "leaf_bits": 15296,
+      "leaf": "issue_tuple",
+      "block": "issuer"
+    },
+    "issuer_issue_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "count": 1,
+      "leaf_bits": 3520,
+      "leaf": "issue_owner",
+      "block": "issuer"
+    },
+    "issuer_issue_ready": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "issue_ready",
+      "block": "issuer"
+    },
+    "issuer_backend_go_valid": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "backend_go_valid",
+      "block": "issuer"
+    },
+    "issuer_backend_go_tuple": {
+      "direction": "output",
+      "bits": 15296,
+      "count": 1,
+      "leaf_bits": 15296,
+      "leaf": "backend_go_tuple",
+      "block": "issuer"
+    },
+    "issuer_backend_go_owner": {
+      "direction": "output",
+      "bits": 3520,
+      "count": 1,
+      "leaf_bits": 3520,
+      "leaf": "backend_go_owner",
+      "block": "issuer"
+    },
+    "issuer_producer_result_valid": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "producer_result_valid",
+      "block": "issuer"
+    },
+    "issuer_rf_ack_valid": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "rf_ack_valid",
+      "block": "issuer"
+    },
+    "issuer_whole_terminal_valid": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "whole_terminal_valid",
+      "block": "issuer"
+    },
+    "issuer_whole_reverse_valid": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "whole_reverse_valid",
+      "block": "issuer"
+    },
+    "issuer_producer_result_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "count": 1,
+      "leaf_bits": 15296,
+      "leaf": "producer_result_tuple",
+      "block": "issuer"
+    },
+    "issuer_whole_terminal_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "count": 1,
+      "leaf_bits": 15296,
+      "leaf": "whole_terminal_tuple",
+      "block": "issuer"
+    },
+    "issuer_whole_reverse_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "count": 1,
+      "leaf_bits": 15296,
+      "leaf": "whole_reverse_tuple",
+      "block": "issuer"
+    },
+    "issuer_rf_ack_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "count": 1,
+      "leaf_bits": 3520,
+      "leaf": "rf_ack_owner",
+      "block": "issuer"
+    },
+    "issuer_producer_result_ready": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "producer_result_ready",
+      "block": "issuer"
+    },
+    "issuer_rf_ack_ready": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "rf_ack_ready",
+      "block": "issuer"
+    },
+    "issuer_whole_terminal_ready": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "whole_terminal_ready",
+      "block": "issuer"
+    },
+    "issuer_whole_reverse_ready": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "whole_reverse_ready",
+      "block": "issuer"
+    },
+    "issuer_publish_valid": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "publish_valid",
+      "block": "issuer"
+    },
+    "issuer_retire_valid": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "retire_valid",
+      "block": "issuer"
+    },
+    "issuer_publish_ready": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "publish_ready",
+      "block": "issuer"
+    },
+    "issuer_retire_ready": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "retire_ready",
+      "block": "issuer"
+    },
+    "issuer_publish_tuple": {
+      "direction": "output",
+      "bits": 15296,
+      "count": 1,
+      "leaf_bits": 15296,
+      "leaf": "publish_tuple",
+      "block": "issuer"
+    },
+    "issuer_retire_tuple": {
+      "direction": "output",
+      "bits": 15296,
+      "count": 1,
+      "leaf_bits": 15296,
+      "leaf": "retire_tuple",
+      "block": "issuer"
+    },
+    "issuer_publish_owner": {
+      "direction": "output",
+      "bits": 3520,
+      "count": 1,
+      "leaf_bits": 3520,
+      "leaf": "publish_owner",
+      "block": "issuer"
+    },
+    "issuer_retire_owner": {
+      "direction": "output",
+      "bits": 3520,
+      "count": 1,
+      "leaf_bits": 3520,
+      "leaf": "retire_owner",
+      "block": "issuer"
+    },
+    "issuer_busy": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "busy",
+      "block": "issuer"
+    },
+    "issuer_fault": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "fault",
+      "block": "issuer"
+    },
     "sector_por_n": {
       "direction": "input",
       "bits": 1,
@@ -2450,7 +2770,8 @@
     "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv": "04930aa71137a791935c8ccba0dc1f20689e5bff35a214477cd990a87a36c7ef",
     "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
     "rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
-    "rtl/model/qwen_hbm_integrated_20261003/ranked/ot_gpu_qwen_hbm_integrated_ranked.sv": "04d00b82afd39c9e890b4d7c7d273093481cd9a1d243b79fb7bb151eaa34ac76",
+    "rtl/model/qwen_hbm_integrated_20261003/ranked/ot_gpu_qwen_hbm_integrated_ranked.sv": "801e1763a61c3b8b8e2131c9bcbe4a667843c340af1af776ddbfeecbf81bb369",
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv": "82f85401dd62982f600329d86d54c0788578f9cc57bae9e53823638196abe0b8",
     "rtl/model/qwen_hbm_integrated_20261003/ranked/ot_gpu_qwen_rank_boundary.sv": "01adc3ccf58f12d2b276674fd64b34a9954239c169f6b2e20f81195484cdbf79"
   },
   "inventory": {
@@ -2459,7 +2780,8 @@
     "W2_PC_per_rank": 128,
     "W2_total": 256,
     "native_connector_count": 1,
-    "KV_controller_count": 1
+    "KV_controller_count": 1,
+    "full_source_issuer_count": 1
   },
   "derivation_inputs_sha256": {
     "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_connected_ports.sv": "277e235be66e434e0bafc041c7067927c6f8f92d9de0412e24cbb50ce6de854f",
@@ -2476,6 +2798,12 @@
     "real backend and request/reverse CDC",
     "source issuer allocation, reset/quiescence enrollment",
     "complete1737 operator dispatcher",
+    "Nash actual seven-row barrier/source-lease hardware output",
+    "Claude real whole-engine producer/terminal/reverse outputs",
+    "actual all-copy cold session quiescence/COMMON reset source binding",
+    "actual RFowner55 allocator binding",
+    "composed nativecalendar physical timing",
+    "Nash actual publication_ready and retire_ready from retained seven-row allocator",
     "physical outer rank mux/load/RC and real sender rank retained across reverse CDC"
   ],
   "streaming_clock_period_ps": "2500/3",
@@ -2483,6 +2811,7 @@
   "hold_uncertainty_ps": 25,
   "physical_qualified": false,
   "token_qualified": false,
+  "issuer_model_sha256": "b7aca3752caeabf1b242f2e1d259287b68af13365f8ea4f00714b3b77f728a33",
   "rank_contract": {
     "grant_rank_bit": 136,
     "alloc_source_rank_bit": 56,
