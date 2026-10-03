@@ -1,0 +1,121 @@
+{
+  "actual_restore_executed": false,
+  "checkpoint_boundary": 9,
+  "cold_data_identity_exact": true,
+  "cold_role_proof": {
+    "capacity_role": "SQLite metadata admission guard; not tags/queues/backing extent",
+    "compact_runtime_source_sha256": {
+      "ds_hbm_additive_endpoint_join_r54.py": "00bd0b2fa93de9afd11ca65722563fec2df939729a937413f4e66451418d36c2",
+      "h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21"
+    },
+    "native_ports_unchanged": true,
+    "schema": "SOURCE_JOURNAL_EVIDENCE_ROLE_V1",
+    "source_sha256": {
+      "h3_ds_checkpoint_provider_r30.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+      "hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0"
+    },
+    "stop_role": "external execution bound; no use in provider/engine data classes"
+  },
+  "compact_install": {
+    "all_events_indexes_and_dictionary_required": true,
+    "changed_aliases": [
+      "Sagan_committed_r39:DiskEvents",
+      "ds_hbm_prefix_observed_outputs_r42:DiskEvents",
+      "h3_ds_checkpoint_provider_r30:BoundSectorProvider",
+      "h3_ds_checkpoint_provider_r30:JournalBudget",
+      "h3_ds_query_provider_r36:BoundSectorProvider",
+      "h4_c0_ds_expected_outputs:DiskEvents",
+      "h4_c0_ds_source_views:DiskEvents",
+      "hbm_bound_event_journal_r30:BoundSectorProvider",
+      "hbm_bound_event_journal_r30:DiskEvents",
+      "hbm_bound_event_journal_r30:JournalBudget"
+    ],
+    "existing_instances_modified": false,
+    "hardware_qualified": false,
+    "immutable_files_modified": false,
+    "original_constructor_object_retained": true,
+    "original_constructor_source_sha256": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "payload_checksums": "actual write admission/visibility and actual read capture bytes",
+    "production_factory_constructor_guard_preserved": true,
+    "schema": "H4_R46_COMPACT_EXACT_CONSTRUCTOR_INSTALL_V1",
+    "source_pins": {
+      "Sagan_committed_r39": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/results/uarch/ds_hbm_source_prefix_r39_20261002/inputs/h4_c0_ds_native_execution.py.source",
+        "sha256": "2ef4c0ea75bfe1781b58de80346bb6518e9e8bf807e095135e817d189e63bd8e"
+      },
+      "ds_hbm_prefix_observed_outputs_r42": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_hbm_prefix_observed_outputs_r42.py",
+        "sha256": "c1068f2e82ff8fb0b6ad4677eaadbbb28351e03631142bf05f850d577a38de74"
+      },
+      "h3_ds_checkpoint_provider_r30": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/tools/h3_ds_checkpoint_provider_r30.py",
+        "sha256": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9"
+      },
+      "h3_ds_query_provider_r36": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/tools/h3_ds_query_provider_r36.py",
+        "sha256": "717f127d48779d3552a1fc00aab25e2468d768d9a4cbcf6c690326959fdb78f9"
+      },
+      "h4_c0_ds_expected_outputs": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h4_c0_ds_expected_outputs.py",
+        "sha256": "7422dee1addad00a3292ed136b59eb98950978ceeaaf3fcbf8ce7d2d1fe218b9"
+      },
+      "h4_c0_ds_source_views": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h4_c0_ds_source_views.py",
+        "sha256": "35e642ba43dc9e4fcf90ed6dbbe759be2b7c84aff86f649b020b634ecdca4f66"
+      },
+      "hbm_bound_event_journal_r30": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/tools/hbm_bound_event_journal_r30.py",
+        "sha256": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0"
+      }
+    }
+  },
+  "end_ns": 1790989993230978447,
+  "expected_outputs": 1664,
+  "full_token_GO": false,
+  "hardware_qualified": false,
+  "max_rss_KiB": 20906672,
+  "native_PCs_executed": 0,
+  "pid": 2573949,
+  "prefix_stop": 10,
+  "prelaunch_RAM_admission": {
+    "available_bytes": 133528879104,
+    "headroom_bytes": 14065747832,
+    "incremental_peak_bytes": 119463131272,
+    "process_memory_cap": false,
+    "producer_resident_already_excluded_from_available": false,
+    "producer_retained": false
+  },
+  "retired_PCs": [],
+  "role_proof": {
+    "capacity_role": "SQLite metadata admission guard; not tags/queues/backing extent",
+    "compact_runtime_source_sha256": {
+      "ds_hbm_additive_endpoint_join_r54.py": "00bd0b2fa93de9afd11ca65722563fec2df939729a937413f4e66451418d36c2",
+      "h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21"
+    },
+    "native_ports_unchanged": true,
+    "schema": "SOURCE_JOURNAL_EVIDENCE_ROLE_V1",
+    "source_sha256": {
+      "h3_ds_checkpoint_provider_r30.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+      "hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0"
+    },
+    "stop_role": "external execution bound; no use in provider/engine data classes"
+  },
+  "source_commit": "2fdc39f07e35e5b3ccd35b2d0b5697161d9d5b3a",
+  "source_plan_sha256": "96836147734837631df9985bf11c487ab50a26090be1ed98de60ca11d869923f",
+  "start_ns": 1790989748482019742,
+  "status": "PASS_ACTUAL_PRODUCER_AND_COLD_ADDITIVE_CONSTRUCTORS",
+  "storage": {
+    "available_bytes": 754568261632,
+    "capacity_reservation_acquired": false,
+    "checkpoint_new_bytes": 1717587146,
+    "cold_and_restore_new_RAM_bytes": 90876968072,
+    "continuation_journal_new_bytes": 53710196720,
+    "headroom_bytes": 228998853988,
+    "journal_new_bytes": 523245138272,
+    "other_new_bytes": 606682226,
+    "producer_journal_new_bytes": 469534941552,
+    "producer_new_RAM_bytes": 28586163200,
+    "required_new_bytes": 525569407644,
+    "serialization_workspace_RAM_bytes": 90876968072
+  }
+}
