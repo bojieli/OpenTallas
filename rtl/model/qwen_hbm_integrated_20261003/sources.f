@@ -1,3 +1,4 @@
+rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
 results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv
 results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv
 results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_scratch_service.sv
@@ -13,11 +14,11 @@ rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_fmin_consumer_r5.sv
 rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_connector_r5.sv
 rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_ingress_r5.sv
 rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_physical_ack_source_r5.sv
-rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_connected_ports.sv
 rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_metadata_join.sv
-rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_reader_services.sv
 rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_shared_router.sv
 rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_observer.sv
+rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_joined_kv.sv
+rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_native_consumer_drain.sv
 rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv
 rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv
 rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv

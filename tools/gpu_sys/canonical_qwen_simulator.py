@@ -102,10 +102,17 @@ class EnclosingPins:
             raise TransportError('actual settle refused')
 
     def add_edge_hook(self, hook):
-        if self.edge_open or self.edges or hook in self.hooks:
-            raise TransportError('hook registration must precede first clock; no duplicates')
+        if self.edge_open or self.hooks or self.stopped:
+            raise TransportError('hook registration before traffic; one registration only')
         if not all(callable(getattr(hook, n, None)) for n in ('before_edge', 'after_edge')):
             raise TransportError('both actual edge hook methods required')
+        if self.edges:
+            # Source owner's cold boot may need real clock edges before payload
+            # pumping. Register only on actual locally empty controllers. This
+            # is not an all-copy fence or a warm-reset permission.
+            if (not self.get('kv_idle') or self.get('sector_grant_live') or
+                self.get('sector_fault') or self.get('w2_idle') != (1 << 128)-1):
+                raise TransportError('cannot enroll payload hook with accepted local debt')
         self.hooks.append(hook)
 
     def tick(self):

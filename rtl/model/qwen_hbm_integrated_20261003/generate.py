@@ -13,7 +13,7 @@ OUT = Path(__file__).resolve().parent
 W4 = 'results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/'
 BLOCKS = (
  ('sector', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_w2_authority.sv', 'ot_gpu_qwen_payload_w2_authority', 1, '.ENABLE(ENABLE),.IDENTW(207)'),
- ('kv', 'rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_connected_ports.sv', 'ot_gpu_qwen_kv_connected_ports', 1, '.ENABLE(ENABLE)'),
+ ('kv', 'rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_joined_kv.sv', 'ot_gpu_qwen_joined_kv', 1, '.ENABLE(ENABLE)'),
  ('native', 'rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_connector_r5.sv', 'ot_gpu_pc40_native_connector_r5', 1, '.ENABLE(ENABLE)'),
  ('sm', W4+'ot_gpu_full_sm_service.sv', 'ot_gpu_full_sm_service', 64, '.ENABLE(ENABLE),.ACK_ID(1)'),
  ('w2', 'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv', 'ot_w2_nc6_protected_completion_reset_quarantine', 128, '.OPT_EXACT(ENABLE),.OPT_RESET_QUARANTINE(ENABLE),.PC_ID(7\'(i))'),
@@ -48,7 +48,41 @@ def leaf_ports(path, module):
     return ports
 
 
+def joined_kv():
+    # Preserve the reviewed shared/state/metadata wiring and replace ONLY the
+    # old owner55 reader leaf with Popper's actual fulloperator tuple bridge.
+    # Neither peer wrapper is instantiated: exactly one original controller.
+    src=ROOT/'rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_connected_ports.sv'
+    original=src.read_text()
+    module='ot_gpu_qwen_native_consumer_drain'
+    bridge=ROOT/'rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_native_consumer_drain.sv'
+    bridge_ports=leaf_ports(bridge,module)
+    extra=[p for p in bridge_ports if p['name'].startswith(('native_','cohort_')) or p['name'] in ('rst_n','endpoint_fault','drain_retained')]
+    header=[]
+    for p in extra:
+        rng='' if p['bits']==1 else f"[{p['bits']-1}:0] "
+        header.append(f" {p['direction']} wire {rng}{p['name']},")
+    original,n=re.subn(r' input wire  operation_valid,.*? output wire  reader_services_drained,', '\n'.join(header), original, flags=re.S)
+    if n!=1:raise ValueError('reviewed reader header changed')
+    connections=[]
+    for p in bridge_ports:
+        name=p['name']
+        if name.startswith(('consumer_','drain_')) and name!='drain_retained':expression='c_'+name
+        elif name=='fault':expression='reader_fault'
+        elif name=='run_enable':expression='effective_enable'
+        elif name=='endpoint_fault':expression='endpoint_fault || core_fault || router_fault || observer_fault || join_fault'
+        else:expression=name
+        connections.append(f'.{name}({expression})')
+    replacement=f'{module} #(.ENABLE(ENABLE)) native_consumer_drain(\n  '+',\n  '.join(connections)+'\n );'
+    original,n=re.subn(r'ot_gpu_qwen_kv_reader_services #\(\.ENABLE\(ENABLE\)\) reader_services \(.*?\n \);', replacement, original, flags=re.S)
+    if n!=1:raise ValueError('reviewed reader instance changed')
+    original=original.replace('module ot_gpu_qwen_kv_connected_ports ', 'module ot_gpu_qwen_joined_kv ')
+    original='// Source-derived join: Dewey73d8 individual modules + Popperdf414 bridge; ONE controller.\n'+original
+    (OUT/'ot_gpu_qwen_joined_kv.sv').write_text(original)
+
+
 def main():
+    joined_kv()
     pins = {'stream_clk': dict(direction='input', bits=1, count=1, leaf='clk'), 'assembly_enabled': dict(direction='output', bits=1, count=1, leaf='ENABLE')}
     instances = []
     internal = []
@@ -106,9 +140,10 @@ for(genvar p=0;p<128;p=p+1)begin:g_guard
  assign guarded_c_wr_done_rdy[p*6+:6]=w2_c_wr_done_rdy[p*6+:6]&cap_mask;
 end''', '\n'.join(instances), 'endmodule', ''])
     (OUT/'ot_gpu_qwen_hbm_integrated.sv').write_text('\n'.join(lines))
-    deps = [W4+n for n in ('ot_gpu_rf_service.sv','ot_gpu_full_sm_service.sv','ot_gpu_scratch_service.sv','ot_gpu_fadd.sv','ot_hdc_fp32_add_lat.sv','ot_hdc_fp32_mul_lat.sv','ot_hdc_fastfp.sv','ot_hdc_prefix.sv','ot_sram_1r1w_128x256_m1_r2c2.v','ot_sram_1r1w_1024x256_m2_r2c2.v')]
+    deps = ['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv'] + [W4+n for n in ('ot_gpu_rf_service.sv','ot_gpu_full_sm_service.sv','ot_gpu_scratch_service.sv','ot_gpu_fadd.sv','ot_hdc_fp32_add_lat.sv','ot_hdc_fp32_mul_lat.sv','ot_hdc_fastfp.sv','ot_hdc_prefix.sv','ot_sram_1r1w_128x256_m1_r2c2.v','ot_sram_1r1w_1024x256_m2_r2c2.v')]
     deps += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'rtl/experimental/hbm_c0_connected_20261003/r5').glob('*.sv'))]
-    deps += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'rtl/model/qwen_kv_connections_20261003').glob('*.sv'))]
+    deps += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'rtl/model/qwen_kv_connections_20261003').glob('*.sv')) if p.stem not in ('ot_gpu_qwen_kv_connected_ports','ot_gpu_qwen_kv_reader_services')]
+    deps += ['rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_joined_kv.sv', 'rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_native_consumer_drain.sv']
     deps += ['rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv', 'rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv', 'rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv', 'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_w2_authority.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_sector_authority.sv',
              'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv',
              'rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv']
@@ -117,6 +152,7 @@ end''', '\n'.join(instances), 'endmodule', ''])
     manifest = dict(top='ot_gpu_qwen_hbm_integrated', pins=pins,
                     source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in deps},
                     inventory=dict(rank_count=2, SM_per_rank=32, W2_PC_count=128, native_connector_count=1, KV_controller_count=1),
+                    derivation_inputs_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in ('rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_connected_ports.sv','rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_native_consumer_drain.sv')},
                     scope='literal reuse; native r5 is PC40 FMIN, NOT complete canonical operator dispatch',
                     unresolved=['native RF-to-selected SM arbitration/source ownership', 'native shared contender source binding',
                                 'physical source allocator/prior-sector+selected-client drain proof', 'actual W2 state-write/capture/visibility/reverse observer enrollment',
