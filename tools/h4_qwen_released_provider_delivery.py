@@ -347,6 +347,8 @@ class ReleasedProviderDelivery:
 
     def attach(self):
         require(not self.attached, 'attach live provider once')
+        from h4_qwen_released_kv_delivery import KVStorageDelivery
+        kv_client = KVStorageDelivery(self)
         for name in ('write', 'read_indices', 'publish', 'retire'):
             require(name not in self.store.__dict__, 'no predecessor instance hook')
             self.original[name] = getattr(self.store, name)
@@ -364,6 +366,7 @@ class ReleasedProviderDelivery:
         def primitive_forward(instance, op, args, attrs=None, shape=None):
             return self.primitive(op, args, attrs, shape)
         self.machine.vm.primitive = MethodType(primitive_forward, self.machine.vm)
+        self.kv_client = kv_client.attach()
         self.attached = True
         return self
 
@@ -373,11 +376,14 @@ class ReleasedProviderDelivery:
         # owner's job. Never advertise a software VM as the integrated run.
         require(self.transport.native_dispatch_program_sha256 == PROGRAM_SHA,
                 'full canonical native RTL dispatcher must be connected')
-        require(getattr(self.machine.memory, 'rtl_transport', None) is self.transport,
-                'whole-system persistent KV/state transport must also be installed')
+        from h4_qwen_released_kv_delivery import KVStorageDelivery
+        require(type(getattr(self,'kv_client',None)) is KVStorageDelivery
+                and self.kv_client.installed_on(self.machine.memory,self.transport),
+                'actual KV byte/control client installed, not a transport marker')
         self.machine.current_pc = -1
         result = self.machine.run(token, position, observer=observer)
-        require(len(self.machine.done) == 1737 and not self.pending and not self.stopped,
+        require(len(self.machine.done) == 1737 and not self.pending and not self.stopped
+                and not self.kv_client.held_writers and not self.kv_client.held_readers,
                 'all1737 source commands and live deliveries complete')
         return result
 
