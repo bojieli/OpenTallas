@@ -1,0 +1,48 @@
+{
+  "async_adopted": false,
+  "asyncsub1_rejection_preserved": true,
+  "clock_fix_adopted": false,
+  "future_same_scope_clock_price": "(baseline_cycles+126)/qualified_sclk_Hz; a future SS/FF clock change requires source-matched measurement, never a free bonus",
+  "input_sha256": {
+    "results/rtl/qwen_rom_system_rtl_20261003/registered_head/model.json": "a2ad0d7d2c3feffd44645a728897942e72fa4f1ac2c2b6c6eca3813ce1d46c59",
+    "results/rtl/qwen_rom_system_rtl_20261003/registered_head/result.json": "abe86f37db7812a9467aa57f964a68347ec9b6b8aac1f1e6a952f75627e524db",
+    "results/rtl/qwen_rom_system_rtl_20261003/registered_head/source_relocation.json": "773a37111c95144e76acdcbc5e7880f03cc0b1e5e356be104cf8681d0f2ef8d0",
+    "rtl/test/qwen_sys/async/headreg/tb_qwen_rom_sys.sv": "0c6c23442ff94176bf5d1b90b55052c30c5637290d56cd7d1e1442c6e0a1769c",
+    "rtl/test/qwen_sys/qsys_harness2.cpp": "0b41dcda318f4100329aca5f2c9328bc80c639e0f0dda9e43c04a00f850d4626",
+    "tools/qwen_headreg_measured_cost.py": "c2864ed0f3578c0f1ac7bf1169662058c38a0bcfa0094656ba236ae7864d9dab",
+    "tools/uarch_model.py": "06734d09b0ffed7f4af8525870c9617a4c5e94d59196a70573d7289a2e64d653"
+  },
+  "physical_setup_hold_qualification": false,
+  "projected72_not_used": true,
+  "rate_bonus": 0,
+  "rows": [
+    {
+      "added_sclk_cycles": 126,
+      "case": "c1p1ah_u1",
+      "full_token_rate": null,
+      "functional_added_ns": 140.0,
+      "measured_cycles": 224316,
+      "physical_clock_gain": null,
+      "reference_cycles": 224190,
+      "same_clock_context_rate_debit_percent": 0.05617075910768765,
+      "same_clock_context_rate_ratio": 0.9994382924089231,
+      "sclk_hz": 900000000
+    },
+    {
+      "added_sclk_cycles": 126,
+      "case": "c1p1ah_u1_fphase1",
+      "full_token_rate": null,
+      "functional_added_ns": 140.0,
+      "measured_cycles": 224317,
+      "physical_clock_gain": null,
+      "reference_cycles": 224191,
+      "same_clock_context_rate_debit_percent": 0.05617050869973772,
+      "same_clock_context_rate_ratio": 0.9994382949130026,
+      "sclk_hz": 900000000
+    }
+  ],
+  "schema": "opentallas.qwen.headreg.measured-cost.v1",
+  "scope": "reduced G4/NW16 system,18 checked steps including prompt/generation; no per-token division/extrapolation",
+  "status": "MEASURED_REDUCED_SYSTEM_CONTEXT_DEBIT_NOT_ADOPTED",
+  "transfer_rule": "apply 126 slow-domain cycles only to this matched reduced context; other token geometries require an actual dependency calendar"
+}

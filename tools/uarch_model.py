@@ -6300,9 +6300,23 @@ def w10_pinaccess_contract_review(inputs):
         source_sha256=inputs["sources_sha256"])
 
 
+def hbm_retained_collective_rows():
+    """Retained W19 baseline after measured HA2 rejection; no candidate gain."""
+    from hbm_retained_collective_composition import build
+    return build(ROOT)
+
+
+def qwen_headreg_measured_rows():
+    """Source-matched reduced-system debit; no clock/async adoption."""
+    from qwen_headreg_measured_cost import build
+    return build(ROOT)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--hbm-retained-collectives", action="store_true", help="retain W19 collectives after measured HA2 rejection; no accelerator adoption")
+    ap.add_argument("--qwen-headreg-cost", action="store_true", help="actual126 slow-cycle context debit; no async or physical gain")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
     ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
     ap.add_argument("--w10-baseline", action="store_true", help="audit existing FAST/PP/BP baseline only")
@@ -6321,6 +6335,20 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.qwen_headreg_cost:
+        payload = json.dumps(qwen_headreg_measured_rows(), indent=2, sort_keys=True) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.hbm_retained_collectives:
+        payload = json.dumps(hbm_retained_collective_rows(), indent=2, sort_keys=True) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.w10_pinaccess_contract:
         payload = json.dumps(w10_pinaccess_contract_review(json.loads(Path(a.w10_pinaccess_contract).read_text())), indent=2) + "\n"
         if a.out:
