@@ -112,6 +112,6 @@ module ot_hbm_accel_gather_die #(
  end else begin: off
  assign in_ready=0; assign rx_ready=0; assign out_valid=0;
  assign out_data=0; assign out_rank=0; assign out_tag=0; assign out_last=0;
- always @* begin tx_valid=0; tx_record=0; fault=0; end
+ assign tx_valid=0; assign tx_record=0; assign fault=0;
  end endgenerate
 endmodule
