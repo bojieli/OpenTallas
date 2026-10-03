@@ -1,0 +1,80 @@
+{
+  "C_stations": null,
+  "accepted_consumer_deadline": null,
+  "actual_PHW10_program_user_generation_callbacks": null,
+  "cold_model_byteidentical": true,
+  "exact_VMlease_tail_peak": null,
+  "final_GU5": "I92->I93 ready fence; I93->I94 ready fence ->I98 consumer; I96 collective waited31/&idles/!collbusy and I97 LINQ further intervene.",
+  "focused_tests_passed": 28,
+  "necessary_implementation": "Source commonadapter ready/rearm must stay closed until every previous owned row sameidentityVMvisible plus actual positive capturedcredits/packet debts. Per-target ready alone invalidates proof. Separate VMversion leases through sourceaccepted SUread/R+2; do not hold bank until consumer.",
+  "new_jobs": [],
+  "new_tests_passed": 14,
+  "no_wrongdata_or_observed_deadlock_claim": true,
+  "physical_PR_admitted": false,
+  "prerequisite_commit": "341e871cb305ae5e3fe520fb1e1f72894aaa3bd4",
+  "replay_command": "python3 tools/dsrom_capture_existing_fences.py --out /tmp/FRESH-existing-fences/model.json",
+  "result": "All12 W1/W3 operands have intervening non-skipped LINQ admission sharing rom_ready_w before first SUconsumer, conditional on selected global readiness/publication+positivecredit contract. No new SUguard selected for this slice.",
+  "source_fence_pairs": [
+    [
+      66,
+      67,
+      70
+    ],
+    [
+      67,
+      68,
+      70
+    ],
+    [
+      68,
+      69,
+      80
+    ],
+    [
+      69,
+      72,
+      80
+    ],
+    [
+      72,
+      73,
+      85
+    ],
+    [
+      73,
+      79,
+      85
+    ],
+    [
+      82,
+      83,
+      90
+    ],
+    [
+      83,
+      84,
+      90
+    ],
+    [
+      87,
+      88,
+      95
+    ],
+    [
+      88,
+      89,
+      95
+    ],
+    [
+      92,
+      93,
+      98
+    ],
+    [
+      93,
+      94,
+      98
+    ]
+  ],
+  "test_command": "python3 -m pytest -q tests/test_dsrom_capture_existing_fences.py tests/test_dsrom_capture_consumer_admission.py"
+}
