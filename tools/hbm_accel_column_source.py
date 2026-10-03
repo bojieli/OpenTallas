@@ -47,7 +47,7 @@ class ColumnSource:
         uint(column, 13, 'column')
         if self.engine.sm_engine.state != 'IDLE' or not self.engine.receipts or receipt != self.engine.receipts[-1]:
             raise ValueError('authoritative completed owned kernel required')
-        if receipt['kind'] != 'swapout' or receipt['token'] != column or receipt['source_sha256'] != self.source_sha256:
+        if receipt['kind'] != 'swapout' or receipt.get('input_token') != column or receipt['source_sha256'] != self.source_sha256:
             raise ValueError('actual SWAPOUT column identity required')
         before = self.pins.snapshot()
         values = []
@@ -91,6 +91,29 @@ class ColumnSource:
                                           payload=self._read(die, at, 288)))
         return spans
 
+    def _entering_swapin(self, owner):
+        """Retain the latest entering source column through layer-zero EMBED.
+
+        Receipt input_token is the issued SWAPIN column. Completion token is
+        a separate hardware result and must not be used as source identity.
+        Only the same command's optional EMBED may intervene.
+        """
+        embedded = False
+        for receipt in reversed(self.engine.receipts):
+            if (receipt.get('job'), receipt.get('generation'), receipt.get('source_sha256')) != (owner.job, owner.generation, self.source_sha256):
+                raise RuntimeError('entering SWAPIN command/source identity mismatch')
+            kind = receipt.get('kind')
+            if kind == 'swapin':
+                if 'input_token' not in receipt:
+                    raise RuntimeError('entering SWAPIN needs issued input_token receipt')
+                if embedded and receipt['pos'] != 0:
+                    raise RuntimeError('EMBED may only follow layer-zero SWAPIN')
+                return receipt
+            if kind != 'embed' or embedded or receipt.get('pos') != owner.position or receipt.get('input_token') != owner.token:
+                raise RuntimeError('native layer entering SWAPIN interrupted')
+            embedded = True
+        raise RuntimeError('native layer has no actual entering column')
+
     def attach(self, compiled):
         """Enroll on ONE existing tick observer; never start a second engine.
 
@@ -117,10 +140,8 @@ class ColumnSource:
             owner = self.engine.sm_engine
             if owner.state != 'WAIT' or owner.entry != self.engine.entries['layer']:
                 return
-            if not self.engine.receipts or self.engine.receipts[-1]['kind'] != 'swapin':
-                raise RuntimeError('native layer has no actual entering column')
-            entering = self.engine.receipts[-1]
-            layer, column = entering['pos'], entering['token']
+            entering = self._entering_swapin(owner)
+            layer, column = entering['pos'], entering['input_token']
             uint(layer, self.p.m.L, 'layer'); uint(column, 13, 'column')
             for index, state in enumerate(after['sms']):
                 marker = markers.get((index,state['pc']))

@@ -27,8 +27,8 @@ class Pins:
 
 def setup():
     pins=Pins()
-    owner=SimpleNamespace(state='WAIT',entry=10,job=9,generation=3,position=7)
-    entering=dict(kind='swapin',token=4,pos=2)
+    owner=SimpleNamespace(state='WAIT',entry=10,job=9,generation=3,position=7,token=42)
+    entering=dict(kind='swapin',token=99,input_token=4,pos=2,job=9,generation=3,source_sha256=SHA)
     engine=SimpleNamespace(pins=pins,ndie=2,nsm=2,source_sha256=SHA,
                            entries=dict(layer=10),sm_engine=owner,receipts=[entering])
     p=SimpleNamespace(CSTR=4736,a=dict(COL=4096,DESC=0,CTR=100),
@@ -86,7 +86,7 @@ def test_owner_source_and_router_refusals():
 
 def test_complete_column_readback_no_fake_ctr():
     join,pins,engine,_=setup(); engine.sm_engine.state='IDLE'
-    receipt=dict(kind='swapout',token=4,source_sha256=SHA,job=9,generation=3)
+    receipt=dict(kind='swapout',token=99,input_token=4,source_sha256=SHA,job=9,generation=3)
     engine.receipts.append(receipt)
     result=join.capture_column(4,receipt)
     assert all(set(fields)==set(REGIONS) for fields in result['values'])
@@ -116,7 +116,7 @@ def test_probe_range_and_direct_rtl_generation(tmp_path):
 def test_same_command_multiple_columns_and_sector_interleave():
     join,pins,engine,compiled=setup(); observe=join.attach(compiled)
     observe(None,pins.snapshot())
-    engine.receipts[-1]['token']=5
+    engine.receipts[-1]['input_token']=5
     observe(None,pins.snapshot())
     assert [r['column'] for r in join.movements]==[4,5]
     probe=SectorReadbackPins.__new__(SectorReadbackPins); calls=[]
@@ -129,3 +129,35 @@ def test_same_command_multiple_columns_and_sector_interleave():
     assert result==bytes([1])*8+bytes([2])*12
     assert calls==['M 2 3','M 3 0']
     assert probe.read_bytes(0,1,0,mem_words=100)==b''
+
+
+def test_layer_zero_embed_retains_actual_entering_swapin():
+    join,pins,engine,compiled=setup()
+    engine.receipts[-1]['pos']=0; pins.ctr=0
+    engine.receipts.append(dict(kind='embed',input_token=42,token=99,pos=7,
+                               job=9,generation=3,source_sha256=SHA))
+    join.attach(compiled)(None,pins.snapshot())
+    assert (join.movements[0]['layer'],join.movements[0]['column'])==(0,4)
+    assert engine.receipts[-1]['kind']=='embed'
+    assert pins.snapshot()['cycle']==10
+
+
+@pytest.mark.parametrize('change', ['job','generation','source','position','embed_input','interrupted','wrong_layer','missing_input','missing_swapin'])
+def test_entering_swapin_refuses_stale_or_interrupted_receipts(change):
+    join,pins,engine,compiled=setup()
+    engine.receipts[-1]['pos']=0; pins.ctr=0
+    embed=dict(kind='embed',input_token=42,token=99,pos=7,job=9,
+               generation=3,source_sha256=SHA)
+    engine.receipts.append(embed)
+    if change=='job': engine.receipts[0]['job']=8
+    if change=='generation': engine.receipts[0]['generation']=2
+    if change=='source': embed['source_sha256']='2'*64
+    if change=='position': embed['pos']=6
+    if change=='embed_input': embed['input_token']=43
+    if change=='interrupted': embed['kind']='swapout'
+    if change=='wrong_layer': engine.receipts[0]['pos']=2
+    if change=='missing_input': del engine.receipts[0]['input_token']
+    if change=='missing_swapin': del engine.receipts[0]
+    observe=join.attach(compiled)
+    with pytest.raises(RuntimeError): observe(None,pins.snapshot())
+    assert not join.movements and not pins.reads
