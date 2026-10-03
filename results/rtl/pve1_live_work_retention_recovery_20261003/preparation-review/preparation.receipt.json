@@ -1,0 +1,185 @@
+{
+  "time_utc": "2026-10-03T00:36:35.437123+00:00",
+  "status": "CONFIG_SOURCE_DERIVED_PREPARATION_EFFECTIVE_EXPORTS_EXACT",
+  "driver_commit": "fb5df1ac4ee6df1011165e32e91aadc29bc702ae",
+  "driver_sha256": "1238d12389efa5e176c5411959510bbf7bf5ac88448583858e5c03f3ad803fb6",
+  "generation": "Original main preparation AST prefix and pure orfs_config_lines/sdc_text only;driver.run hard-refused;effective SYNTH_MEMORY_MAX_BITS/TNS_END_PERCENT bound from live make exports",
+  "config_bytes": 1673,
+  "config_sha256": "98f6304918ff77da8a5257d0d2b9322e0f21345aa6d2de8f77d7603b04ac82a8",
+  "constraint_sdc_sha256": "360040de16ad28c433a94d550c87806ce4cbe3237e9baea0604c0640ef1df044",
+  "unique_effective_exports_verified": 33,
+  "checks": [
+    {
+      "key": "DESIGN_NICKNAME",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "DESIGN_NAME",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "PLATFORM",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "VERILOG_FILES",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "VERILOG_DEFINES",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "SDC_FILE",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "CORE_UTILIZATION",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "CORE_ASPECT_RATIO",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "CORE_MARGIN",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "PLACE_DENSITY",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "PLACE_DENSITY_LB_ADDON",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "SYNTH_REPEATABLE_BUILD",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "SYNTH_HIERARCHICAL",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "SYNTH_MEMORY_MAX_BITS",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "LEC_CHECK",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "TNS_END_PERCENT",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "HOLD_SLACK_MARGIN",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "SETUP_SLACK_MARGIN",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "SKIP_REPORT_METRICS",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "REPORT_CLOCK_SKEW",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "VERILOG_TOP_PARAMS",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "CORNER",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "ADDER_MAP_FILE",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "ASAP7_USE_VT",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "SYNTH_KEEP_MODULES",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "SLEW_MARGIN",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "CORNERS",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "WC_LIB_FILES",
+      "matches_live_effective": true,
+      "make_expansion_used": true
+    },
+    {
+      "key": "BC_LIB_FILES",
+      "matches_live_effective": true,
+      "make_expansion_used": true
+    },
+    {
+      "key": "MIN_ROUTING_LAYER",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "MAX_ROUTING_LAYER",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "PRE_CTS_TCL",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    },
+    {
+      "key": "PRE_GLOBAL_ROUTE_TCL",
+      "matches_live_effective": true,
+      "make_expansion_used": false
+    }
+  ],
+  "original_deleted_config_byte_hash_available": false,
+  "2_floorplan_sdc_recovered": false,
+  "same_top_earlier_artifacts_found": 0,
+  "candidate_files_examined": 549,
+  "no_live_input_installation": true,
+  "no_build_or_PnR_or_simulation": true,
+  "continuation_gate": "CLOSED:2_floorplan.sdc exact predecessor missing;source-prepared constraint.sdc is NOT a substitute."
+}
