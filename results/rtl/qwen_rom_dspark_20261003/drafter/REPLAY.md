@@ -78,7 +78,20 @@ The golden is one draft step in `hdc_golden` arithmetic under the W8 contract, s
 - K/V in FP32, checked against DeepSpec's PyTorch model on the same dequantised weights;
 - K/V in FP8, the target's KV contract.
 
-It reports the draft tokens and the max logit difference. GOLDEN_RESULT
+It reports the draft tokens and the max logit difference.
+
+**Result: PASS on every case.** The golden's draft tokens equal DeepSpec's on one prompt (anchor at position `start` in `golden.json`):
+
+| Slots | K/V | Draft tokens equal | Max logit diff | Max logit |
+|---|---|---|---|---|
+| 3 | FP32 | yes | 0.062 | 33.2 |
+| 3 | FP8 | yes | 0.554 | 33.2 |
+| 7 | FP32 | yes | 0.056 | 35.1 |
+| 7 | FP8 | yes | 1.121 | 35.1 |
+
+- The FP32 rows isolate the golden's BF16 activation and the R-ARITH rounding against the FP32 reference.
+- The FP8 rows add the target's KV contract, which the reference does not model.
+- The argmax logit bits per slot are recorded, so they serve as the ISA/RTL oracle for this step.
 
 ## Replay
 
