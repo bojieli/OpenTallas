@@ -157,6 +157,8 @@ def my_linear(x, weight, bias=None):
 
 M.linear = my_linear
 VERBOSE = os.environ.get('V41_VERBOSE') == '1'
+MH_TAIL = 0
+FIT_CACHES = 0   # opt-in: args.max_seq_len when per-trace caches are sized to need
 
 # ---------------------------------------------------------------- checkpoint access
 LOCK = threading.Lock()
@@ -385,7 +387,13 @@ class Trace:
             for n, b in blk.named_buffers():
                 if n.endswith('freqs_cis'):
                     continue
-                t = torch.zeros(b.shape, dtype=b.dtype, device='cuda')
+                shape = list(b.shape)
+                if FIT_CACHES and len(shape) == 3 and shape[1] > 128:
+                    # opt-in: size the seq axis of compressed / indexer caches to this trace's need (the vendor
+                    # code only slices them up to end_pos // ratio); the 128-row window rings are untouched
+                    need = self.L + max_new + 16
+                    shape[1] = min(shape[1], -(-shape[1] * need // FIT_CACHES))
+                t = torch.zeros(shape, dtype=b.dtype, device='cuda')
                 if n.endswith('score_state'):
                     t.fill_(-float('inf'))
                 d[n] = t
@@ -402,7 +410,7 @@ def swap_caches(blk, d):
         m._buffers[parts[-1]] = t
 
 # ---------------------------------------------------------------- one forward over a group of traces
-def forward_group(traces, chunks, blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats):
+def forward_group(traces, chunks, blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats, want_logits=False):
     """chunks[b] = list of token ids to process for trace b at its current pos. Returns next greedy token per trace."""
     H, premix, start = [], [], []
     for tr, ch in zip(traces, chunks):
@@ -451,13 +459,54 @@ def forward_group(traces, chunks, blocks, hps, stores, embed_w, head_w, norm_w, 
         h = blocks[-1].hc_pre(H[b][:, -1:], premix[b][:, -1:])
         hf = h.float(); h = (norm_w * (hf * torch.rsqrt(hf.square().mean(-1, keepdim=True) + args.norm_eps))).to(h.dtype)
         logits = torch.cat([F.linear(h.float().view(1, -1), head_w[v:v + 32768].float()) for v in range(0, head_w.size(0), 32768)], -1)
-        nxt.append(logits.argmax(-1))
+        nxt.append(logits if want_logits else logits.argmax(-1))
         tr.pos = start[b] + len(chunks[b])
     mhs = torch.cat([torch.cat(m, dim=-1)[0] for m in mh]).cpu()
     o = 0
     for b, tr in enumerate(traces):
         n = len(chunks[b]); tr.main_hidden.append(mhs[o:o + n]); o += n
+    if want_logits:
+        return nxt
     return torch.cat(nxt).tolist()
+
+
+# ---------------------------------------------------------------- opt-in: T=1 twin traces (qualified run, 2026-10-03)
+def pick(tr, logits):
+    """greedy (mode 'greedy') or vendor sample() at T=1, top_p 1 (mode 't1') with a per-trace seeded generator;
+    t1 records the target probability of the sampled token (the speculative-sampling replay needs p(x))."""
+    if tr.mode == 'greedy':
+        return int(logits.argmax(-1))
+    probs = torch.softmax(logits.float().view(-1), -1, dtype=torch.float32)
+    e = torch.empty_like(probs).exponential_(1, generator=tr.gen)
+    t = int((probs / e).argmax())
+    tr.p_tok.append(float(probs[t]))
+    return t
+
+
+def twin(tr, blocks, seed):
+    """a T=1 copy of a prefilled greedy trace: same prompt, caches cloned (prefill is shared)."""
+    import copy as _c
+    t = Trace.__new__(Trace)
+    t.item, t.L, t.max_new, t.done, t.pos = tr.item, tr.L, tr.max_new, False, tr.pos
+    t.tokens = list(tr.tokens)
+    t.caches = {i: {n: x.clone() for n, x in d.items()} for i, d in tr.caches.items()}
+    # the runtime keeps references to the owning layer's cache tensors across forwards (index_k is only
+    # re-published when a compressor group completes): re-point them at the twin's clones
+    t.shared = M.SharedAttentionRuntime()
+    ident = {id(x): (i, n) for i, d in tr.caches.items() for n, x in d.items()}
+    for f in ('compress_kv', 'index_k', 'topk_idxs', 'candidates'):
+        v = getattr(tr.shared, f)
+        if v is None:
+            continue
+        if id(v) in ident:
+            i, n = ident[id(v)]
+            setattr(t.shared, f, t.caches[i][n])
+        else:
+            setattr(t.shared, f, v.clone())
+    t.main_hidden = list(tr.main_hidden)
+    t.mode = 't1'; t.p_tok = []
+    t.gen = torch.Generator(device='cuda'); t.gen.manual_seed(seed)
+    return t
 
 def main():
     ap = argparse.ArgumentParser()
@@ -468,11 +517,20 @@ def main():
     ap.add_argument('--out', default='gen_out.pt')
     ap.add_argument('--max-seq-len', type=int, default=6144)
     ap.add_argument('--gpu-frac', type=float, default=0.15)
+    ap.add_argument('--t1-twins', action='store_true', help='opt-in: add a T=1 sampled twin per prompt (shared prefill)')
+    ap.add_argument('--seed', type=int, default=20261003)
+    ap.add_argument('--mh-prompt-tail', type=int, default=0, help='opt-in: keep only the last N prompt rows of main_hidden '
+                    '(DSpark prefill only seeds its window_size=128 ring)')
+    ap.add_argument('--save-every', type=int, default=10)
+    ap.add_argument('--fit-caches', action='store_true', help='opt-in: size each trace\'s compressed/indexer caches to L+max_new')
     a = ap.parse_args()
     torch.cuda.set_per_process_memory_fraction(a.gpu_frac)
     torch.set_default_dtype(torch.bfloat16)
     torch.set_grad_enabled(False)
     args = load_args(a.max_seq_len)
+    global MH_TAIL, FIT_CACHES
+    MH_TAIL = a.mh_prompt_tail
+    FIT_CACHES = a.max_seq_len if a.fit_caches else 0
     init_pinned(3 * 48 + 8)
     torch.set_default_device('cuda')
     M.world_size, M.rank, M.default_dtype = 1, 0, torch.float8_e4m3fn
@@ -512,12 +570,27 @@ def main():
             groups.append(cur); cur, ctok = [], 0
         cur.append(tr); ctok += tr.L
     groups.append(cur)
+    for tr in traces:
+        tr.mode = 'greedy'
+    twins = []
     for g in groups:
         ts = time.time()
-        nxt = forward_group(g, [tr.tokens for tr in g], blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats)
-        for tr, n in zip(g, nxt):
-            tr.tokens.append(n)
+        if not a.t1_twins:
+            nxt = forward_group(g, [tr.tokens for tr in g], blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats)
+            for tr, n in zip(g, nxt):
+                tr.tokens.append(n)
+        else:
+            lg = forward_group(g, [tr.tokens for tr in g], blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats,
+                               want_logits=True)
+            for tr, l in zip(g, lg):
+                if MH_TAIL:
+                    tr.main_hidden = [torch.cat(tr.main_hidden)[-MH_TAIL:].clone()]
+                import zlib
+                tw = twin(tr, blocks, a.seed ^ zlib.crc32(tr.item['prompt_id'].encode()))
+                tr.tokens.append(pick(tr, l)); tw.tokens.append(pick(tw, l))
+                twins.append(tw)
         print(f'prefill group {len(g)} traces {sum(tr.L for tr in g)} tok {time.time()-ts:.1f}s stats {stats}', flush=True)
+    traces = traces + twins
     eos = tok.eos_token_id
     step = 0
     while True:
@@ -525,14 +598,17 @@ def main():
         if not act:
             break
         ts = time.time()
-        nxt = forward_group(act, [[tr.tokens[-1]] for tr in act], blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats)
+        nxt = forward_group(act, [[tr.tokens[-1]] for tr in act], blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats,
+                            want_logits=a.t1_twins)
+        if a.t1_twins:
+            nxt = [pick(tr, l) for tr, l in zip(act, nxt)]
         for tr, n in zip(act, nxt):
             tr.tokens.append(n)
             if n == eos or len(tr.tokens) - tr.L >= tr.max_new:
                 tr.done = True
         step += 1
         print(f'step {step} active {len(act)} {time.time()-ts:.1f}s experts {stats["experts"]} moe {stats["moe_s"]:.0f} attn {stats["attn_s"]:.0f} h2d {stats["h2d_s"]:.0f} gpu_peak {torch.cuda.max_memory_allocated()/1e9:.2f}', flush=True)
-        if step % 10 == 0 or not [tr for tr in traces if not tr.done]:
+        if step % a.save_every == 0 or not [tr for tr in traces if not tr.done]:
             save(traces, a.out, tok)
     save(traces, a.out, tok)
     print('done', time.time() - t0, flush=True)
@@ -540,9 +616,13 @@ def main():
 def save(traces, path, tok):
     out = []
     for tr in traces:
-        out.append(dict(item={k: v for k, v in tr.item.items() if k != 'ids'}, prompt_ids=tr.item['ids'], tokens=tr.tokens,
-                        L=tr.L, main_hidden=torch.cat(tr.main_hidden) if tr.main_hidden else None,
-                        text=tok.decode(tr.tokens[tr.L:])))
+        mh = torch.cat(tr.main_hidden) if tr.main_hidden else None
+        d = dict(item={k: v for k, v in tr.item.items() if k != 'ids'}, prompt_ids=tr.item['ids'], tokens=tr.tokens,
+                 L=tr.L, main_hidden=mh, text=tok.decode(tr.tokens[tr.L:]))
+        if hasattr(tr, 'mode'):    # opt-in qualified fields
+            d.update(mode=tr.mode, p_tok=getattr(tr, 'p_tok', None),
+                     mh_offset=(len(tr.tokens) - 1 - mh.size(0)) if mh is not None else None)
+        out.append(d)
     torch.save(out, path + '.tmp')
     os.replace(path + '.tmp', path)
 
