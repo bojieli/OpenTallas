@@ -146,7 +146,7 @@ end''', '\n'.join(instances), 'endmodule', ''])
     deps += ['rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_joined_kv.sv', 'rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_native_consumer_drain.sv']
     deps += ['rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv', 'rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv', 'rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv', 'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_w2_authority.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_sector_authority.sv',
              'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv',
-             'rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv']
+             'rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv', 'rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv']
     deps += ['rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_hbm_integrated.sv']
     (OUT/'sources.f').write_text('\n'.join(dict.fromkeys(deps))+'\n')
     manifest = dict(top='ot_gpu_qwen_hbm_integrated', pins=pins,

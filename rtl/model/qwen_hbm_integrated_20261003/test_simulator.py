@@ -76,6 +76,24 @@ class PinTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256((root/source).read_bytes()).hexdigest(),want,source)
 
 
+
+    def test_existing_engine_dependency_closure(self):
+        import re
+        root=PORTBOOK.parents[3]
+        sources=(PORTBOOK.parent/'sources.f').read_text().splitlines()
+        text='\n'.join((root/p).read_text() for p in sources)
+        declarations=set(re.findall(r'\bmodule\s+(ot_\w+)',text))
+        uses=set(re.findall(r'^\s*(ot_\w+)\s+(?:#\s*\(|\w+\s*\()',text,re.M))
+        # These undefined names intentionally reject invalid LAT/CUTS at
+        # elaboration. They are guarded parameter traps, not missing engines.
+        traps={f'ot_hdc_fp32_{op}_lat_CUTS_must_match_LAT' for op in ('add','mul')}
+        for trap in traps:
+            self.assertRegex(text, r'generate if \(CUTS >= 0 &&[^\n]+ != LAT\) begin : g_bad_cuts\s+'
+                             +re.escape(trap)+r' u_trap \(\);\s+end endgenerate')
+        self.assertEqual(uses-declarations-traps,set())
+        self.assertIn('ot_w2_nc6_correction_control',uses)
+        self.assertIn('ot_gpu_qwen_native_consumer_drain',uses)
+
     def test_single_controller_actual_source_join(self):
         packet=PORTBOOK.parent
         joined=(packet/'ot_gpu_qwen_joined_kv.sv').read_text()
