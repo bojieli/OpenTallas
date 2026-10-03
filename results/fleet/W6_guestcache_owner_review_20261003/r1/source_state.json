@@ -1,0 +1,15 @@
+{
+  "root": "/home/ubuntu/w6",
+  "subrepos": [
+    {
+      "path": "/home/ubuntu/w6/wt",
+      "error": "Command '['git', '-C', '/home/ubuntu/w6/wt', 'rev-parse', 'HEAD']' returned non-zero exit status 128."
+    },
+    {
+      "path": "/home/ubuntu/w6/wthbm",
+      "error": "Command '['git', '-C', '/home/ubuntu/w6/wthbm', 'rev-parse', 'HEAD']' returned non-zero exit status 128."
+    }
+  ],
+  "no_source_edits": true,
+  "preservation_actions": []
+}

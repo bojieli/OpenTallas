@@ -1,0 +1,90 @@
+{
+  "fullwidth": {
+    "KV_client": 5,
+    "RF_copies": 2,
+    "RF_payload_bytes_per_frame": 512,
+    "RFslot_bits": 9,
+    "child_meta_bits": 92,
+    "children_per_parent": 128,
+    "clients": 6,
+    "frames_per_parent": 8,
+    "owner_bits": 46,
+    "parent_bits": 55
+  },
+  "local_component_retained": "Existing defaultoff71raw/144protected state perSM and actual local611assertions157accept archived replay remain local scope; no8-frame directory inference.",
+  "next_source_gate": "Actual C0 accepted command SSA/tile/bittypes/home/client/rank/SM adapter plus source-held RF55/full backend16 and all-copy drain wiring; first C0 then KV5 read. Partial/packed FP8 frame deposition requires separately priced exact codec and masks.",
+  "no_PNR_launched": true,
+  "no_RTL_change": true,
+  "no_joined_hardware_credit": true,
+  "no_new_fulltoken_run": true,
+  "pins": [
+    {
+      "bytes": 27717,
+      "commit": "298ba9d796d1441760359c85f3b909c199ca2495",
+      "origin": "/home/ubuntu/OpenTallas",
+      "path": "tools/h4_hbm_native_frame_emitter.py",
+      "sha256": "c2c17a5e6db2994e9e0a6c129970ea5c34fe8da7cdece5af2894734c1c04eb09"
+    },
+    {
+      "bytes": 12548,
+      "commit": "298ba9d796d1441760359c85f3b909c199ca2495",
+      "origin": "/home/ubuntu/OpenTallas",
+      "path": "tests/test_h4_hbm_native_frame_emitter.py",
+      "sha256": "a191117e1294852c7a78b26b0c21bd89fdce60c5d638dd93c24377165539ee31"
+    },
+    {
+      "bytes": 4402,
+      "commit": "298ba9d796d1441760359c85f3b909c199ca2495",
+      "origin": "/home/ubuntu/OpenTallas",
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/native_frame_r5/model.json",
+      "sha256": "2f3d80c1243a73a7695bb671e8bcc2fb2a04bfc132f4ccc60a1fc2d2f58b2223"
+    },
+    {
+      "bytes": 4017,
+      "commit": "298ba9d796d1441760359c85f3b909c199ca2495",
+      "origin": "/home/ubuntu/OpenTallas",
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/native_frame_r5/HANDOFF.txt",
+      "sha256": "79e9fe65403c1e1dae744668a4808082d50ae36e4b7165fc7288d15c5c2d33b5"
+    },
+    {
+      "bytes": 3072,
+      "commit": "87e2efae79f00dc5149bc1015168c8ed56c3313a",
+      "origin": "/home/ubuntu/OpenTallas-hbm-w6-fence-contract",
+      "path": "tools/hbm_w6_local_rtl_model.py",
+      "sha256": "a24b7da94174eb631cb11fe068af88ed2542b42f8ced7f7e98c89bd08a214e06"
+    },
+    {
+      "bytes": 8204,
+      "commit": "87e2efae79f00dc5149bc1015168c8ed56c3313a",
+      "origin": "/home/ubuntu/OpenTallas-hbm-w6-fence-contract",
+      "path": "rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv",
+      "sha256": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396"
+    }
+  ],
+  "retention_join": [
+    "Caller must reserve all source-frame/destination-frame identities and child records before continued dispatch; 64B continued-capture is not physical reverse or parent release.",
+    "Actual W4 mirrored RF write acceptance must capture prebound owner46+slot9; host commonACK and internal SIMD retirement remain separate W6 inputs.",
+    "A single local W6 owner cannot be used as eight-frame directory. Native caller must retain 8 distinct frame identities through actual operation consumer, and sequence or replicate fences only after their latency/storage model is admitted.",
+    "Caller must define whether consumer acceptance means source lane capture or whole native operation acceptance; current ContinuedCapture.consumer_accept requires all frame ACKs. Releasing first-frame identity before the later frames/consumer would violate this source lifetime.",
+    "Only actual accepted consumer permits matched child reverse, then parent reverse, then reverseCDC; assembler data reuse never frees metadata.",
+    "Real source-owner stop/drain must certify all9 scoped debt classes including bothCDC copies before generation wrap/reuse; W6 does not invent or reconstruct source emptiness."
+  ],
+  "schema": "W6_SOURCE_BOUND_NATIVE_FRAME_JOIN_CONSUMPTION_R1",
+  "source_blockers": {
+    "actual_W4_ACK": "Archived R4 contract still contains null identity inventory; do not turn bare ACK into identity proof",
+    "allcopies": "External current source levels not installed",
+    "continued_capture": "Proposed UNINSTALLED ABI; requires actual source requester hardware port",
+    "multi_frame_consumer_retention": "Caller perframe acceptance/retention/wiring not installed",
+    "physical": "Source-sized slots/port track capacities/clock/reset/protection selectors and SS60ps/FF25ps remain separate gates",
+    "production_operand_view": "REFUSED by committed NativeCompiler: scope software_reference and operand_view_scope protocol_control only"
+  },
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -p test_h4_hbm_native_frame_emitter.py -v",
+    "count": 24,
+    "result": "PASS",
+    "scope": "Actual committed Popper compiler/capture/calendar model with protocol controls; no trained execution, installed caller or hardware cycle evidence",
+    "verify_command": "python3 tools/h4_hbm_native_frame_emitter.py --verify",
+    "verify_exit": 0
+  },
+  "time": "2026-10-03T06:27:14.116712+00:00"
+}

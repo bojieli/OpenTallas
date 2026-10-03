@@ -1,0 +1,38 @@
+{
+  "inputs/results/uarch/h4_hbm_baseline_bridge_20261003/native_frame_r5/HANDOFF.txt": {
+    "bytes": 4017,
+    "sha256": "79e9fe65403c1e1dae744668a4808082d50ae36e4b7165fc7288d15c5c2d33b5"
+  },
+  "inputs/results/uarch/h4_hbm_baseline_bridge_20261003/native_frame_r5/model.json": {
+    "bytes": 4402,
+    "sha256": "2f3d80c1243a73a7695bb671e8bcc2fb2a04bfc132f4ccc60a1fc2d2f58b2223"
+  },
+  "inputs/rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv": {
+    "bytes": 8204,
+    "sha256": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396"
+  },
+  "inputs/tests/test_h4_hbm_native_frame_emitter.py": {
+    "bytes": 12548,
+    "sha256": "a191117e1294852c7a78b26b0c21bd89fdce60c5d638dd93c24377165539ee31"
+  },
+  "inputs/tools/h4_hbm_native_frame_emitter.py": {
+    "bytes": 27717,
+    "sha256": "c2c17a5e6db2994e9e0a6c129970ea5c34fe8da7cdece5af2894734c1c04eb09"
+  },
+  "inputs/tools/hbm_w6_local_rtl_model.py": {
+    "bytes": 3072,
+    "sha256": "a24b7da94174eb631cb11fe068af88ed2542b42f8ced7f7e98c89bd08a214e06"
+  },
+  "join_receipt.json": {
+    "bytes": 5085,
+    "sha256": "3cf85b877c28f831ac5b02f455a653d91c11197cf78c86923af8af8172d5bf89"
+  },
+  "native-frame-tests.log": {
+    "bytes": 2762,
+    "sha256": "65945c9080157df46647b454ae7bd2f51cf5a6af1241397beff325b0e0db6485"
+  },
+  "native-frame-verify.log": {
+    "bytes": 115,
+    "sha256": "06ef9fd556b4dff9ff2b0f171a248ae3a00420dc15cfb2f9d291875b6b56a9d7"
+  }
+}

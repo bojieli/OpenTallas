@@ -1,0 +1,36 @@
+{
+  "active_reference_snapshot": "No argv/cwd/exe/root/fd/mmap references under w6; exact76 dev/inode checked as root, no access errors. New jobs can invalidate snapshot.",
+  "cache_advice": false,
+  "cache_engineering_release_ready": false,
+  "candidate_count": 76,
+  "current_main_literal_dependency_scan": "No literal /home/ubuntu/w6 matches in current main tools/configs/physical Python/JSON/shell/Tcl; this is supplementary to owner scope, not dynamic dependency proof.",
+  "deletion": false,
+  "disk_recovery_credit_bytes": 0,
+  "file_specific_cleanliness": "UNKNOWN: kernel5.15 lacks cachestat; no global Dirty/Writeback substitution, no file faults/writes used to manufacture evidence.",
+  "global_drop_caches": false,
+  "historical_guest_resident_bytes": 16674668544,
+  "host_physical_RAM_release_credit_bytes": 0,
+  "logical_bytes": 22894724832,
+  "owner": "Goodall",
+  "owner_current_W6_target_dependency": false,
+  "owner_version_release": "76 historical W6 hex images released from current W6 target dependency; originals remain on disk as historical evidence. No whole-tree deletion authorization or current-target retirement claimed.",
+  "preservation": "Complete 7658-file/symlink wt+wthbm archive independently compared to originals; no ref/patch possible absent Git metadata. All sources and weight images retained.",
+  "protected": "Current W12 inputs/HF cache, current Qwen trained binary images and active ampere C0 PC40 user service unchanged.",
+  "remaining": [
+    "Chandra file-specific cleanliness/writeback evidence",
+    "Peirce actual guest-to-host reporting/discard/KSM/unsharing proof and same-time physical measurement"
+  ],
+  "resident_measurement_scope": "Chandra prior mincore snapshot; not freshly measured or host-physical recovery",
+  "schema": "W6_GUESTCACHE_OWNER_REVIEW_R1",
+  "scope_paths": [
+    "/home/ubuntu/w6/img2/L{0..35}-d{0,1}/matrix_int8.hex",
+    "/home/ubuntu/w6/img2/head-d{0,1}/matrix_int8.hex",
+    "/home/ubuntu/w6/img/qwen-real-layer0-d{0,1}/matrix_int8.hex"
+  ],
+  "source_cleanliness": "UNKNOWN: wt/wthbm are copied source trees without .git. No clean Git checkout claim.",
+  "source_preservation": "/home/ubuntu/otarchives/w6-source-preservation-20261003-r1/copied-sources.tar.gz",
+  "source_preservation_bytes": 54844572,
+  "source_preservation_files": 7658,
+  "source_preservation_sha256": "3cbe39fe85579cbbb8d5c9fe87e734fc1e0b1fdabfa0e924415276e1aa909c4b",
+  "time": "2026-10-03T06:26:23.236640+00:00"
+}
