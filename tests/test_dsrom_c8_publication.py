@@ -90,6 +90,6 @@ def test_selected_reuse_clear_wins_and_legacy_default_is_preserved():
  assert "else npresent <= npresent + (KW+1)'(nwr);" in s
  b=(ROOT/'rtl/test/dsrom_sys/c8/tb_dsrom_c8_two_positions.sv').read_text()
  assert 'identity={16\'d7,10\'d2,21\'(100+p)}' in b
- assert 'read_row(510,first_row)' in b
+ assert 'read_row(766,first_row)' in b
  assert '(!service.f_ready || !(&quiet))' in b
  assert 'second selection retained stale present count' in b

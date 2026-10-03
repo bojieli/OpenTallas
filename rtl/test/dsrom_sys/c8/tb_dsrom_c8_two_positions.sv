@@ -11,11 +11,11 @@ module tb_dsrom_c8_two_positions;
  wire [3:0] wready,wwdone;
  reg readback=0,reading_mode=0;reg [3:0] read_done=0;integer read_index=0;
  wire [3:0] port_v=reading_mode?(readback?4'b1000:4'd0):cv;
- wire [119:0] port_addr=readback?{30'(16+9*(read_gid&15)+read_index),90'd0}:ca;
+ wire [119:0] port_addr=readback?{30'(16+9*(((read_gid>>8)<<4)|(read_gid&15))+read_index),90'd0}:ca;
  wire [3:0] quiet,qfault,quarantine;
  wire [127:0] vv;wire [128*47-1:0] vi;wire [128*30-1:0] va;wire [255:0] vw;
  integer accepted=0,visible=0,read_count=0;reg [2303:0] expected,first_row;
- integer position_index=0,row_gid=510,read_gid=510;integer first_visibility=0,second_start=0;
+ integer position_index=0,row_gid=766,read_gid=766;integer first_visibility=0,second_start=0;
  reg second=0;
  // Actual retained full K512 service, including its original row encoder and
  // full ID table. Only publication completion/visibility logic is selected.
@@ -30,8 +30,8 @@ module tb_dsrom_c8_two_positions;
   .fault(sf),.fault_code(sfc),.rows_ready(),.st_rows_local(),.st_rows_remote(),.st_cycles_to_ready(),
   .position_identity(identity),.own_visible_v(own_visible),.own_visible_identity(own_id),.own_visible_gid(own_gid),.own_pending(own_pending));
  always @(posedge clk) if(vm_re) for(integer i=0;i<16;i=i+1) begin
-  if(position_index==0 && vm_addr*16+i==510) vm_q[i*32+:32]<=511;
-  else if(position_index==0 && vm_addr*16+i==511) vm_q[i*32+:32]<=510;
+  if(vm_addr*16+i==511) vm_q[i*32+:32]<=32'(766+position_index);
+  else if(position_index==1 && vm_addr*16+i==510) vm_q[i*32+:32]<=766;
   else vm_q[i*32+:32]<=32'(vm_addr*16+i);
  end
  ot_chip_v41x_kv_rope_reqmux_c8 #(.C8_PUBLICATION(1),.HAW(30),.TAGW(16)) mux(
@@ -63,7 +63,7 @@ module tb_dsrom_c8_two_positions;
    $fatal(1,"backend accepted C write without caller grant");
   if(ce[3]&&cv[3]&&cr[3]) accepted<=accepted+1;
   for(integer p=0;p<128;p=p+1) if(vv[p]) begin
-   if(vi[p*47+:47]!==identity||vw[p*2+:2]!==2'b11||va[p*30+:30]!==30'(16+9*(row_gid&15)+visible))$fatal(1,"wrong visible identity/address/writer");
+   if(vi[p*47+:47]!==identity||vw[p*2+:2]!==2'b11||va[p*30+:30]!==30'(16+9*(((row_gid>>8)<<4)|(row_gid&15))+visible))$fatal(1,"wrong visible identity/address/writer");
    visible<=visible+1;
   end
   if(own_visible) begin
@@ -87,13 +87,13 @@ module tb_dsrom_c8_two_positions;
  initial begin
   repeat(8)edge_step();rst_n=1;repeat(8)edge_step();
   for(integer p=0;p<2;p=p+1) begin
-   position_index=p;row_gid=510+p;identity={16'd7,10'd2,21'(100+p)};
+   position_index=p;row_gid=766+p;identity={16'd7,10'd2,21'(100+p)};
    accepted=0;visible=0;
    if(p==1)begin
     second_start=cycle;
     // Previous owner publication is not inferred from a modeled fence or
     // reset. Read the previous row through the actual backend again.
-    read_row(510,first_row);
+    read_row(766,first_row);
    end
    sel_v=1;edge_step();sel_v=0;
    if(service.npresent!=0)$fatal(1,"second selection retained stale present count");
@@ -114,6 +114,8 @@ module tb_dsrom_c8_two_positions;
    edge_step();
    while((!service.f_ready || !(&quiet)) && cycle<100000)edge_step();
    if(!service.f_ready || !(&quiet))$fatal(1,"prior native fetch/publication failed to drain");
+   if(p==1 && (!service.present[510] || service.buf_row[510]!==first_row))
+    $fatal(1,"second selected CKV gather did not receive first position's published native row");
    read_row(row_gid,expected);
   end
   $display("PASS C8_TWO_POSITIONS same_user=2 positions=100,101 own_sectors=18 visible_ACKs=18 native_readback=%0d retained_first_row=1 no_reset_between=1 first_visible_cycle=%0d second_begin_cycle=%0d end_cycle=%0d",read_count,first_visibility,second_start,cycle);
