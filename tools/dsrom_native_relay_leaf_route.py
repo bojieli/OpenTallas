@@ -85,7 +85,10 @@ def emit(m):
     for i in range(8):
         lines += [f'(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_{i} (.A(source_y), .Y(leaf_y[{i}]));',
                   f'(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_{i} (.CLK(leaf_y[{i}]), .D(d[{i}]), .QN(qn[{i}]));']
-    lines += ['endmodule'];out.write_text('\n'.join(lines)+'\n')
+    lines += ['endmodule',
+              '(* blackbox *) module BUFx4_ASAP7_75t_R(input A, output Y); endmodule',
+              '(* blackbox *) module DFFHQNx1_ASAP7_75t_R(input CLK, input D, output QN); endmodule']
+    out.write_text('\n'.join(lines)+'\n')
     ox,oy=m['translated_origin_DBU'];tcl=['set block [ord::get_db_block]',
         'set scale [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])/1000.0}]']
     names={m['branches'][0]['source']:'source_buf'}

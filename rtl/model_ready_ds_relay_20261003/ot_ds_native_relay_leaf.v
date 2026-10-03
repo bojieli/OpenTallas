@@ -18,3 +18,5 @@ wire source_y; wire [7:0] leaf_y;
 (* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_7 (.A(source_y), .Y(leaf_y[7]));
 (* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_7 (.CLK(leaf_y[7]), .D(d[7]), .QN(qn[7]));
 endmodule
+(* blackbox *) module BUFx4_ASAP7_75t_R(input A, output Y); endmodule
+(* blackbox *) module DFFHQNx1_ASAP7_75t_R(input CLK, input D, output QN); endmodule
