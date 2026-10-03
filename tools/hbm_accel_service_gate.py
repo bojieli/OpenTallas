@@ -22,9 +22,11 @@ SUCCESSOR='rtl/hbm_accel/service/ot_hbm_accel_kv_lifecycle.sv'
 FIXTURE='tests/test_canonical_qwen_kv_controller.py'
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--out',required=True); a=ap.parse_args()
+    ap=argparse.ArgumentParser(); ap.add_argument('--out',required=True); ap.add_argument('--fixture',type=Path); a=ap.parse_args()
     out=Path(a.out); out.mkdir(parents=True,exist_ok=False)
-    src=subprocess.check_output(['git','show',BASE+':'+FIXTURE],cwd=ROOT,text=True)
+    src=a.fixture.read_text() if a.fixture else subprocess.check_output(['git','show',BASE+':'+FIXTURE],cwd=ROOT,text=True)
+    expected='950002206b71d46e67ecd22f43d12a93bb8bcfb7d8e12b828aca3a224c209365'
+    if hashlib.sha256(src.encode()).hexdigest()!=expected: raise ValueError('fixture differs from pinned parent')
     (out/'pinned_fixture.py').write_text(src)
     m=types.ModuleType('ha4_fixture'); m.__file__=str(ROOT/FIXTURE)
     exec(compile(src,str(ROOT/FIXTURE),'exec'),m.__dict__)
@@ -80,8 +82,8 @@ if(rsp_capture!=512'd42 || !writer_retained) $fatal(1,"resume lost saved bytes")
 integer r, st; reg [19:0] rowkey;
 for(r=0;r<72;r=r+1) begin
  rowkey=(r<<13)|13'd17;
- hydrate_key=rowkey; hydrate_producer=99; hydrate_valid=1;
- while(!hydrate_ready) @(negedge clk);
+ @(negedge clk); hydrate_key=rowkey; hydrate_producer=99; hydrate_valid=1;
+ #1; while(!hydrate_ready) begin @(negedge clk); #1; end
  @(negedge clk); hydrate_valid=0;
  cmd_producer=99; offer(4,777+r,rowkey); response();
 end
@@ -128,7 +130,7 @@ end"""
                 sector_issue_intervals_equal=[b[2]-a[2] for a,b in zip(x['sectors'],x['sectors'][1:])]==[b[2]-a[2] for a,b in zip(y['sectors'],y['sectors'][1:])],
                 response_latency_delta_cycles=[b[2]-a[2] for a,b in zip(x['responses'],y['responses'])]))
     ok=result.wasSuccessful() and all(p['response_identity_order_equal'] and p['sector_order_equal'] and p['sector_issue_intervals_equal'] for p in pairs)
-    record=dict(schema='opentallas.hbm_accel.ha4.directed.v1',source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+    record=dict(schema='opentallas.hbm_accel.ha4.directed.v1',source_commit=(ROOT/'SOURCE_COMMIT').read_text().strip() if (ROOT/'SOURCE_COMMIT').exists() else subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         fixture_commit=BASE,fixture_sha256=hashlib.sha256(src.encode()).hexdigest(),source_sha256=pins,
         verdict='PASS_DIRECTED' if ok else 'FAIL_DIRECTED',cases=cases,comparisons=pairs,
         scope='actual RTL with test SRAM and held ready/valid endpoint fixtures; no production token/CDC/wire/refresh evidence',
