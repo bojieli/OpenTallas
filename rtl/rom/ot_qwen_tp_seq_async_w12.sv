@@ -10,10 +10,12 @@
 // ASYNC_COLL = 1: an all-reduce descriptor with bit [20] (CUT) set is sent
 // WHILE the core still runs the segment, instead of after its END.  The
 // sequencer observes the matrix engine's result writes (the die's vw_me_*
-// ports) and keeps a lane mask per vector-memory word of the all-reduce
-// region [vw, vw + nw); word k is sent, in word order, as soon as all 16 of
-// its lanes have been written by the engine in this segment (or once the core
-// reports END, whose barrier means every write has landed).  Receives are
+// ports) and keeps one bit per vector-memory word of the all-reduce region
+// [vw, vw + nw); word k is sent, in word order, as soon as the engine has
+// written all 16 of its lanes in one result write in this segment (the
+// engine's masks are full except past the op's output count), or once the
+// core reports END, whose barrier means every write has landed (so a word
+// written in partial masks waits for END: slower, never early).  Receives are
 // accepted from the first one and written back in word order exactly as
 // before; the segment advances when the core is done AND the last word is
 // received.  The per-word rank-order fold ((p0+p1)+p2)+p3 in
@@ -120,10 +122,11 @@ module ot_qwen_tp_seq_async_w12 #(
         okey = v[31] ? ~v : {1'b1, v[30:0]};
     endfunction
 
-    // -- cut-through scoreboard: lanes of each region word the engine has written this segment --------
-    reg  [LN-1:0] lm [0:255];
+    // -- cut-through scoreboard: region words the engine has written whole this segment -------------
+    // one bit per word, set by a full-mask result write: a decoder per port and a port-OR per word
+    reg  [255:0]  lw;
     wire [7:0]    rd_w = rd_k[7:0];
-    wire          word_ok = !cut || core_fin || (&lm[rd_w]);
+    wire          word_ok = !cut || core_fin || lw[rd_w];
 
     // -- transmit: vector-memory words (all-reduce) or the argmax record ------------------
     localparam integer QD = 4;
@@ -151,19 +154,30 @@ module ot_qwen_tp_seq_async_w12 #(
         vm_raddr = vw + rd_k;
     end
 
-    integer pi, wi;
-    reg [MAW-1:0] off;
+    // per port: the region word offset it writes whole this cycle (one-hot over 256 words)
+    wire [255:0] hit_p [0:NP-1];
+    wire [255:0] hit;
+    genvar gp;
+    generate
+        for (gp = 0; gp < NP; gp = gp + 1) begin : g_port
+            wire [MAW-1:0] a   = me_addr[gp*MAW +: MAW];
+            wire [MAW-1:0] off = a - {{(MAW - VWA){1'b0}}, vw};
+            wire           in  = me_we[gp] && (&me_mask[gp*16 +: LN]) && a >= {{(MAW - VWA){1'b0}}, vw}
+                                 && off < {{(MAW - 9){1'b0}}, nw};
+            assign hit_p[gp] = in ? (256'd1 << off[7:0]) : 256'd0;
+        end
+    endgenerate
+    integer pi;
+    reg [255:0] hit_or;
+    always @(*) begin
+        hit_or = 256'd0;
+        for (pi = 0; pi < NP; pi = pi + 1) hit_or = hit_or | hit_p[pi];
+    end
+    assign hit = hit_or;
     always @(posedge clk) begin
         if (ASYNC_COLL != 0) begin
-            if (st == S_DLAT) begin
-                for (wi = 0; wi < 256; wi = wi + 1) lm[wi] <= {LN{1'b0}};
-            end else if (cut && (st == S_RUN || st == S_CWAIT)) begin
-                for (pi = 0; pi < NP; pi = pi + 1) begin
-                    off = me_addr[pi*MAW +: MAW] - {{(MAW - VWA){1'b0}}, vw};
-                    if (me_we[pi] && me_addr[pi*MAW +: MAW] >= {{(MAW - VWA){1'b0}}, vw} && off < {{(MAW - 9){1'b0}}, nw})
-                        lm[off[7:0]] <= lm[off[7:0]] | me_mask[pi*16 +: LN];
-                end
-            end
+            if (st == S_DLAT) lw <= 256'd0;
+            else if (cut && (st == S_RUN || st == S_CWAIT)) lw <= lw | hit;
         end
     end
 
