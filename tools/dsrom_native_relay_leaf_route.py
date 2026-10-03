@@ -110,13 +110,14 @@ def emit(m):
               '(* blackbox *) module BUFx4_ASAP7_75t_R(input A, output Y); endmodule',
               '(* blackbox *) module DFFHQNx1_ASAP7_75t_R(input CLK, input D, output QN); endmodule']
     out.write_text('\n'.join(lines)+'\n')
-    ox,oy=m['translated_origin_DBU'];tcl=['set block [ord::get_db_block]',
+    ox,oy=m['translated_origin_DBU'];tcl=['source /src/physical/dsrom_native_relay_20261003/binding.tcl',
+        'set aliases [ds_native_binding]', 'set block [ord::get_db_block]',
         'set scale [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])/1000.0}]']
     names={m['branches'][0]['source']:'source_buf'}
     names.update({b['sink']:f'sink_{i}' for i,b in enumerate(m['branches'])})
     for c in m['cells']:
         name=names.get(c['instance'],c['instance']); x,y=c['bbox_DBU'][:2]
-        tcl += [f'set inst [$block findInst {name}]',
+        tcl += [f'set inst [dict get $aliases {name}]',
                 f'if {{$inst == "NULL"}} {{error "Missing actual fixed instance {name}"}}',
                 f'if {{[[$inst getMaster] getName] ne "{c["master"]}"}} {{error "Master changed {name}"}}',
                 f'$inst setOrient {c["orientation"]}',
@@ -125,6 +126,47 @@ def emit(m):
     tcl += ['set_dont_touch [get_cells *]', 'set_dont_touch [get_nets *]',
             'puts "DS_NATIVE_RELAY_FIXED_CENSUS_17"']
     (ROOT/'physical/dsrom_native_relay_20261003/place.tcl').write_text('\n'.join(tcl)+'\n')
+    (ROOT/'physical/dsrom_native_relay_20261003/binding.tcl').write_text('''
+proc ds_native_one {values label} {
+  if {[llength $values] != 1} {error "Ambiguous/missing native $label"}
+  return [lindex $values 0]
+}
+proc ds_native_pin {inst pin} {
+  set it [$inst findITerm $pin]
+  if {$it == "NULL"} {error "Missing native pin $pin"}
+  return [$it getNet]
+}
+proc ds_native_binding {} {
+  set block [ord::get_db_block]
+  set clock [$block findBTerm clk]
+  if {$clock == "NULL"} {error "Missing original clock port"}
+  set cn [$clock getNet]; set sources {}
+  foreach inst [$block getInsts] {
+    if {[[$inst getMaster] getName] eq "BUFx4_ASAP7_75t_R" && [ds_native_pin $inst A] eq $cn} {lappend sources $inst}
+  }
+  set source [ds_native_one $sources clock_driver]
+  set sy [ds_native_pin $source Y]
+  set result [dict create source_buf $source]; set used [list $source]
+  for {set i 0} {$i<8} {incr i} {
+    set port [$block findBTerm [format {d[%d]} $i]]
+    if {$port == "NULL"} {error "Missing original data port $i"}
+    set dn [$port getNet];set sinks {}
+    foreach inst [$block getInsts] {
+      if {[[$inst getMaster] getName] eq "DFFHQNx1_ASAP7_75t_R" && [ds_native_pin $inst D] eq $dn} {lappend sinks $inst}
+    }
+    set sink [ds_native_one $sinks sink_$i]
+    set sn [ds_native_pin $sink CLK]; set relays {}
+    foreach inst [$block getInsts] {
+      if {[[$inst getMaster] getName] eq "BUFx4_ASAP7_75t_R" && [ds_native_pin $inst A] eq $sy && [ds_native_pin $inst Y] eq $sn} {lappend relays $inst}
+    }
+    set relay [ds_native_one $relays relay_$i]
+    dict set result sink_$i $sink;dict set result relay_$i $relay
+    lappend used $sink $relay
+  }
+  if {[llength [lsort -unique $used]] != 17} {error "Native 17-cell ownership aliases"}
+  return $result
+}
+'''.lstrip())
     # This component already contains its selected clock tree. Bypass automatic
     # CTS insertion, not timing checks: retain exact priced cells, propagate the
     # clock, validate placement, and produce the normal ORFS stage artifacts.
@@ -139,10 +181,12 @@ orfs_write_sdc $::env(RESULTS_DIR)/4_cts.sdc
 exit
 '''.lstrip())
     (ROOT/'physical/dsrom_native_relay_20261003/report.tcl').write_text('''
+source /src/physical/dsrom_native_relay_20261003/binding.tcl
+set aliases [ds_native_binding]
 set block [ord::get_db_block]
 set expected [concat source_buf {relay_0 relay_1 relay_2 relay_3 relay_4 relay_5 relay_6 relay_7 sink_0 sink_1 sink_2 sink_3 sink_4 sink_5 sink_6 sink_7}]
 foreach n $expected {
-  set inst [$block findInst $n]
+  set inst [dict get $aliases $n]
   if {$inst == "NULL"} {error "Native clock instance lost: $n"}
   if {[$inst getPlacementStatus] ne "LOCKED"} {error "Native fixed instance moved: $n"}
 }
