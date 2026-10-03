@@ -167,7 +167,8 @@ class RTLColumnEngine:
     numerical callback. No completion or caller lease is synthesized/released.
     """
     def __init__(self,pins,entries,expand,*,ndie,nsm,position_extent,
-                 source_sha256,enable=False,read_logits=None,swapin_positions=()):
+                 source_sha256,enable=False,read_logits=None,swapin_positions=(),
+                 sm_engine_factory=None,imw=14):
         if not enable:
             raise ValueError('HA5 actual engine requires explicit enable')
         for method in ('snapshot','drive_die','tick'):
@@ -182,6 +183,10 @@ class RTLColumnEngine:
         self.source_sha256,self.read_logits=source_sha256,read_logits
         self.swapin_positions=tuple(swapin_positions)
         self.launches=0;self.failed=None;self.receipts=[]
+        if sm_engine_factory is None:
+            from tools.gpu_sys.ds_hbm_sm_engine20_guarded import SMEngine20Guarded
+            sm_engine_factory=SMEngine20Guarded
+        self.sm_engine=sm_engine_factory(pins,enable=True,ndie=ndie,nsm=nsm,imw=imw)
 
     def _valid_position(self,kind,pos):
         if type(pos) is not int or not 0<=pos<1<<20:
@@ -205,54 +210,23 @@ class RTLColumnEngine:
             raise ValueError('actual token17 refuses narrowing')
         if not self._valid_position(kind,pos):
             raise ValueError('source image position extent, not just POS20 width')
-        words=((1<<60)|(((1<<self.nsm)-1)<<44)|self.entries[kind],2<<60)
-        idle=self._snapshot()
-        if not all(d['db_rdy'] and not d['cpl_v'] for d in idle['dies']):
-            raise RuntimeError('source command memory not exclusively idle')
-        start=idle['cycle']
-        for address,word in enumerate(words):
-            s=self._snapshot()
-            if not all(d['db_rdy'] and not d['cpl_v'] for d in s['dies']):
-                raise RuntimeError('lost idle ownership while loading command')
-            for i in range(self.ndie):
-                self.pins.drive_die(i,cmd_we=1,cmd_addr=address,cmd_wdata=word,
-                                    db_v=0,db_token=token,db_pos=pos,db_job=job,
-                                    db_generation=generation,cpl_rdy=0)
-            self.pins.tick()
-        sent=set();complete={};doorbell={}
+        start=self._snapshot()['cycle']
         expected_status=0 if kind in ('head','markov') else 2
-        while len(complete)<self.ndie:
-            s=self._snapshot();accept=[]
-            for i,d in enumerate(s['dies']):
-                offer=i not in sent
-                ready=i in sent and i not in complete
-                if ready and d['cpl_v']:
-                    c=decode_completion(d['cpl_data'])
-                    if (c['pos'],c['job'],c['generation'],c['status'])!=(pos,job,generation,expected_status):
-                        # Hold the untrusted response. No ACK, no caller lease release.
-                        raise RuntimeError('actual completion identity/status mismatch')
-                    accept.append((i,c))
-                self.pins.drive_die(i,cmd_we=0,cmd_addr=0,cmd_wdata=0,
-                                    db_v=int(offer),db_token=token,db_pos=pos,
-                                    db_job=job,db_generation=generation,cpl_rdy=int(ready))
-                if offer and d['db_rdy']:
-                    sent.add(i);doorbell[i]=s['cycle']
-            self.pins.tick()
-            complete.update(accept)
-        tokens=[c['token'] for c in complete.values()]
-        if expected_status==0 and len(set(tokens))!=1:
-            raise RuntimeError('actual RESULT consensus mismatch')
-        # Quiesce host offers after the actual last completion handshake.
-        for i in range(self.ndie):
-            self.pins.drive_die(i,cmd_we=0,cmd_addr=0,cmd_wdata=0,db_v=0,
-                                db_token=token,db_pos=pos,db_job=job,
-                                db_generation=generation,cpl_rdy=0)
+        self.sm_engine.launch(entry_pc=self.entries[kind],token=token,position=pos,
+                              job=job,generation=generation,expected_status=expected_status)
+        receipt=None
+        while receipt is None:
+            snapshot=self._snapshot()
+            # poll is the ONE CP/SM edge owner. No tick in this adapter.
+            receipt=self.sm_engine.poll()
         self.launches+=1
-        self.receipts.append(dict(kind=kind,token=token,pos=pos,job=job,generation=generation,
-                                 start_cycle=start,doorbell_cycles=doorbell,
-                                 final_completion_cycle=s['cycle'],completions=complete,
+        self.receipts.append(dict(kind=kind,token=receipt.token,pos=pos,job=job,
+                                 generation=generation,start_cycle=start,
+                                 final_completion_cycle=self.pins.snapshot()['cycle'],
+                                 cycles_by_die=receipt.cycles_by_die,
+                                 elapsed_edges=receipt.elapsed_edges,
                                  source_sha256=self.source_sha256))
-        return tokens[0] if expected_status==0 else None
+        return receipt.token if expected_status==0 else None
 
     def run(self,cmd,want_logits=False):
         if self.failed:
