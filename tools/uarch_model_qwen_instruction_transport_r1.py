@@ -14,6 +14,7 @@ def price(stations=1536):
     ff=facts['facts']['DFFASRHQNx1_ASAP7_75t_R']['SS']
     bits=2*216+432+72  # two protected 190-bit beats, protected 379-bit assembly, control64
     body=bits*stations*ff['area_um2']
+    head_bits=64*(432+3*432+4*72)
     return dict(schema='QWEN_W12_TWO_BEAT_MODEL_R1',default_off=True,
         unified_model_sha256=hashlib.sha256((ROOT/'tools/uarch_model.py').read_bytes()).hexdigest(),
         source_width=dict(NW=18,AW=24,packed_instruction_bits=3*18+13*24+13),
@@ -27,9 +28,15 @@ def price(stations=1536):
           link_spine_bits_before=2112,link_spine_bits_after=2112,
           link_spine_hotspot_relief_credited=0),
         state=dict(raw_payload_bits=759,protected_bits_per_station=bits,protected_bits_total=bits*stations,
-          control_bits_physically_stored=72,one_instruction_outstanding_per_station=True),
+          control_bits_physically_stored=72,one_instruction_outstanding_per_station=True,
+          column_heads=64,head_branch_acceptance_source='UNKNOWN: three-way north/south/head-chain fanout acceptance ledger required',
+          conservative_added_head_state_bits=head_bits),
         cost=dict(FF_body_mm2=body/1e6,logic_proxy_mm2=.5*body/1e6,
           slot_mm2_at_50pct=3*body/1e6,slot_capacity_mm2=stations*52.704*69.12/1e6,
+          conservative_head_FF_body_mm2=head_bits*ff['area_um2']/1e6,
+          conservative_head_slot_mm2_at_50pct=3*head_bits*ff['area_um2']/1e6,
+          conservative_total_slot_mm2_at_50pct=3*(body+head_bits*ff['area_um2'])/1e6,
+          head_clock_pin_load_SS_fF=head_bits*ff['pins']['CLK']['cap_fF'],
           clock_pin_load_SS_fF=bits*stations*ff['pins']['CLK']['cap_fF'],
           muxes='sender 2:1 x216; receiver SECDED decode 6x72 and encode 6x64; control decode/encode 1x72',
           fanout='each ready/valid point-to-point; real tree branch/clock/reset buffer census required',
@@ -39,6 +46,7 @@ def price(stations=1536):
           data_return_and_x_network_cycles_changed=0,
           token_delta='sum selected instruction path hop counts + finite stall/consumer retirement; exact source program/map required',
           warm_fence='wait accepted beats, actual consumer retirement and all_copy_drained; no timer or debt discard',
+          retirement_source='must be identity-qualified by the actual caller; bare retirement level cannot distinguish a stale ACK during a new issued instruction',
           cold_reset='destructive power-on only; warm request never asserts cold reset'),
         clocks=dict(stream_GHz=1.2,setup_uncertainty_ps=60,hold_uncertainty_ps=25),
         physical=dict(hard_reticle_mm2=858,full_die_IR_required=True,
