@@ -38,10 +38,22 @@ module ot_hbm_txcount_sm #(parameter bit ENABLE=0)(
    {1'b0,w4_index}<ctx[48:43]&&!ack_id[65]&&ack_id[63:55]==0&&ack_id[54:0]==w4_owner55&&!seen[w4_index];
   wire fence_match=sealed&&{w6_gen,w6_job,w6_rank}==ctx[42:0]&&
    {1'b0,w6_index}<ctx[48:43]&&!fence_id[65]&&fence_id[63:55]==0&&fence_id[54:0]==w6_owner55&&!seen[32+w6_index];
-  wire invalid_event=(w4_accept&&!ack_match)||(w6_accept&&!fence_match)||source_fault;
+  reg manifest_bad;
+  reg [65:0] loaded_id;
+  integer m;
+  always @* begin
+   manifest_bad=({manifest_owner55[12:9],manifest_owner55[44:13],manifest_owner55[54:48]}!=ctx[42:0]) || manifest_owner55[47:45]>=6;
+   loaded_id=0;
+   for(m=0;m<32;m=m+1)if(m<st[5:0])begin
+    loaded_id=decode64(identities[m]);
+    if(loaded_id[65] || loaded_id[54:0]==manifest_owner55)manifest_bad=1;
+   end
+  end
+  wire invalid_manifest=manifest_valid&&st[18]&&st[5:0]<ctx[48:43]&&manifest_bad;
+  wire invalid_event=invalid_manifest||(w4_accept&&!ack_match)||(w6_accept&&!fence_match)||source_fault;
   // Invalid simultaneous evidence masks completion on the same edge.
   assign begin_ready=live&&!st[18]&&begin_count>=1&&begin_count<=32;
-  assign manifest_ready=live&&st[18]&&st[5:0]<ctx[48:43];
+  assign manifest_ready=live&&st[18]&&st[5:0]<ctx[48:43]&&!manifest_bad;
   assign complete_valid=live&&!invalid_event&&sealed&&st[11:6]==ctx[48:43]&&st[17:12]==ctx[48:43];
   assign complete_rank=ctx[6:0];assign complete_job=ctx[38:7];assign complete_gen=ctx[42:39];
   assign fault=bad||st[19];
