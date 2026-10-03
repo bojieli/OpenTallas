@@ -105,3 +105,95 @@ Run from the repository root:
 ```
 
 `--verify` regenerates both outputs in a temporary directory and requires them to be byte-identical. It runs in seconds.
+
+---
+
+# r2: margins netted for place and route (model only)
+
+r2 answers whether the r1 margins let place and route complete. It does not change anything in r1: `model-r1.json` and `floorplan-r1.svg` are byte-identical, and the r1 tool is unchanged.
+
+- **Tool:** `tools/qwen_rom_floorplan_nearhbm_r2.py`. It imports r1.
+- **Test:** `tests/test_qwen_rom_floorplan_nearhbm_r2.py`.
+- **Outputs:** `model-r2.json` and `floorplan-r2.svg`.
+- **KV service decomposition:** `inputs/kvservice/kv_service_families.py`.
+
+## Die and margins
+
+**Die:** 24,147 x 32,800 um = **792.0 mm2**. That is 23.0 mm2 under 815; r1 was 802.0.
+- Unallocated area is 29.4 mm2: 20.3 mm2 of free shoreline plus 9.1 mm2 of IO spare.
+- The change against r1 is funded by trimming the KV service reservation. The controller band narrows from 400.5 to 247.5 um.
+- Keeping the whole 19.22 mm2 reservation still fits, at 802.0 mm2.
+
+## Corridors per layer
+
+Netted capacity is raw tracks, less the power grid at the region's IR coverage, less a 5% via/obstruction allowance (assumed), less the clock spine. The target is <= 70% of netted tracks: min(1 - ORFS layer adjustment 0.25, 1 - the die model's M8/M9 reserve 0.30).
+
+| Corridor | Width (um) | Demand | 70% of netted | Demand / raw |
+|---|---|---|---|---|
+| Tile column (M7/M9) | 52.704 | 637 | 938 | 0.43 |
+| Horizontal link (M6/M8) | 96.768 | 1,056 | 1,655 | 0.39 |
+| Vertical spine (M7/M9) | 174.096 | 2,112 | 3,164 | 0.43 |
+| In-strip fan (M7/M9, over the engine frames) | 328.32 | 1,056 | 5,172 | 0.11 |
+
+- Every corridor fits the target at its r1 width.
+- No width is narrowed below r1; r2 never relaxes a width.
+
+## PG coverage (M8/M9 per net, 35 mV)
+
+| Region | Peak density | Coverage per net |
+|---|---|---|
+| Tile field | 1.05 W/mm2 | 4.4% |
+| Hub | 0.39 W/mm2 | 2.5% (the base grid) |
+| Strip (scenario A) | 3.92 W/mm2 | 16.4% |
+
+## Routed evidence: the gate
+
+The only routed reference is a buffered straight-bus corridor:
+- `v41_corridor_136um_1500w_M4up` routes at **0.225** of raw same-direction tracks, with GRT at 30.06% and 0 overflow.
+- The 3,000-wire run is **unresolved at 0.451**: it stopped while still in congestion reduction.
+- The r1/r2 corridors sit at 0.39-0.43, inside that unmeasured band.
+
+What this means for the die:
+- 815 mm2 holds the corridors down to a density of **0.362**.
+- At 0.225 the die would be 902.5 mm2.
+- Narrower 128-bit links (+10.1 us) do not help, because the tile column corridor carries the area.
+
+**Gate:** route a 504 um link span and a tile-column corridor strip at the r2 widths before die assembly.
+
+## Long wires and CTS
+
+**Stations and repeaters at 504 um/stage:**
+- Stations: 1.16 mm2 of FFs.
+- Repeaters: 1.09 mm2. That is 7.71 buffers per wire-mm, as in the routed corridor.
+- Both sit in corridor whitespace.
+
+**CTS:**
+- CTS is 5.3% of cell area (p90 over 139 routed blocks), 13.5 mm2 in all. Repair buffers add 6.7%.
+- After both, tile utilisation is 0.56 (cap 0.70).
+- Hub element utilisation would be 0.78, so its frame grows by 5.8% per side.
+- Clock power is 52 W with ICG gating (assumed constant) and 280 W ungated (measured).
+
+## Hot spot
+
+**Limit:** 2.0 W/mm2 nominal, 1.0 conservative, 4.0 aggressive. Source: IEEE EPS HIR Thermal chapter v0.9, s2 and Table 4 (https://eps.ieee.org/wp-content/uploads/2026/05/HIR_20-Thermal_0.9.docx.pdf).
+
+Thermal time constant: the strip's is 1.2 ms, much longer than the 0.58 us phase. The time-averaged flux is therefore the thermal load.
+
+**Strip:**
+- Passes in single-user decode: 0.92 W/mm2.
+- Sustained 100% duty in scenario A would reach 3.92 W/mm2. That case needs a duty governor <= 0.48, or a measured MAC <= 1.92 pJ.
+- A 0.9 GHz strip costs +14.0 us and still leaves 2.99 W/mm2. A deeper strip costs +20.7 mm2.
+
+**PHY:**
+- r1's 7.34 W/mm2 is **implausible**. Published host PHY energy is 0.29-0.8 pJ/b, which gives 0.21-0.58 W/mm2.
+- The rest of the 10.19 pJ/b would be 22.8 W/mm2 in the controller band. That is 5.8x the densest logic, so it has no physical home there.
+- Bounded by logic density, the band is <= 1.62 pJ/b and 0.86 W/mm2.
+
+**Row-engine element P&R:** no change.
+
+## Replay
+
+```bash
+(cd tests && python3 -m unittest test_qwen_rom_floorplan_nearhbm_r2 test_qwen_rom_floorplan_nearhbm -v)
+(cd tools && python3 qwen_rom_floorplan_nearhbm_r2.py --verify && python3 qwen_rom_floorplan_nearhbm.py --verify)
+```
