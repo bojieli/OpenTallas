@@ -1028,12 +1028,32 @@ mem def
 if {{[catch {{ot_mts::assert_on_track -label fulldie}} err]}} {{ puts "OT_ASSERT FAIL $err" }} else {{ puts "OT_ASSERT PASS" }}
 mem assert
 set t0 [clock seconds]
-if {{[catch {{pin_access -bottom_routing_layer M2 -top_routing_layer M9 -verbose 1}} err]}} {{ puts "OT_PA FAIL $err" }} else {{ puts "OT_PA DONE" }}
+set_routing_layers -signal M2-M9
+if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err" }} else {{ puts "OT_PA DONE" }}
 puts "OT_TIME pa_s=[expr {{[clock seconds]-$t0}}]"
 mem pa
 write_db /work/floorplan.odb
 """
     (work / 'run.tcl').write_text(tcl)
+    (work / 'run_pa.tcl').write_text(f"""# case (a) follow-on: pin access and die PDN on the placed floorplan
+proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
+  regexp {{VmRSS:\\s+(\\d+)}} $s -> r; puts "OTMEM $tag [expr {{$r/1024}}] MB [clock seconds]" }}
+read_db /work/floorplan.odb
+mem read
+set_routing_layers -signal M2-M9
+set t0 [clock seconds]
+if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err" }} else {{ puts "OT_PA DONE" }}
+puts "OT_TIME pa_s=[expr {{[clock seconds]-$t0}}]"
+mem pa
+set t0 [clock seconds]
+if {{[catch {{source /work/pdn.tcl; pdngen}} err]}} {{ puts "OT_PDN FAIL $err" }} else {{
+  set nsw 0; foreach net [[ord::get_db_block] getNets] {{ foreach sw [$net getSWires] {{ incr nsw [llength [$sw getWires]] }} }}
+  puts "OT_PDN PASS special_shapes=$nsw" }}
+puts "OT_TIME pdn_s=[expr {{[clock seconds]-$t0}}]"
+mem pdn
+foreach net {{VDD VSS}} {{ if {{[catch {{check_power_grid -net $net}} err]}} {{ puts "OT_PGCHECK $net FAIL $err" }} else {{ puts "OT_PGCHECK $net PASS" }} }}
+write_db /work/floorplan_pdn.odb
+""")
     man = dict(case='a', instances=len(m['insts']), pins=npins, nets=sum(b[2] for b in m['buses']),
                masters=len(M) + 1)
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
@@ -1041,7 +1061,7 @@ write_db /work/floorplan.odb
 
 
 # ------------------------------------------------------------------------------------------------ case (b): bundled GRT
-def case_grt(m, work, k, tag):
+def case_grt(m, work, k, tag, iters=50):
     from chip_assembly import v41_die as VD
     work.mkdir(parents=True, exist_ok=True)
     M = masters(m, k)
@@ -1088,7 +1108,7 @@ mem placed
 {chr(10).join(adj)}
 set_routing_layers -signal M2-M9
 set t0 [clock seconds]
-global_route -verbose -allow_congestion -congestion_iterations 50 -congestion_report_file /work/grt_congestion.rpt
+global_route -verbose -allow_congestion -congestion_iterations {iters} -congestion_report_file /work/grt_congestion.rpt
 puts "OT_TIME grt_s=[expr {{[clock seconds]-$t0}}]"
 mem grt
 report_wire_length -net * -global_route -file /work/wirelength.csv
@@ -1124,7 +1144,7 @@ close $out
 mem done
 """
     (work / 'run.tcl').write_text(tcl)
-    man = dict(case='b', tag=tag, bundle_k=k, instances=len(m['insts']), bundle_pins=npins,
+    man = dict(case='b', tag=tag, bundle_k=k, congestion_iterations=iters, instances=len(m['insts']), bundle_pins=npins,
                bundle_nets=sum(max(1, math.ceil(b[2] / k)) for b in mm['buses']),
                wires=sum(b[2] for b in mm['buses']), tree_mode=m['tree_mode'],
                adjustment=dict(base_M4_M9=VIA_OBS + 2 * REGION_PG['tile_field'], M2_M3=ORFS_LOW_ADJ,
@@ -1156,15 +1176,37 @@ def region_at(m, x, y):
     return best or 'tile_field'
 
 
-def case_ir(m, work, window, peak=True):
+def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch=None, align=False, signal_bumps_phy=False):
+    """cov_scale multiplies every region's M8/M9 coverage; bump_pad adds a 20 x 20 um M9 landing pad at every bump
+    site (the UBM/AP landing any bump has: ASAP7 has no AP/RDL layer, so without it the bump contacts only the
+    0.48 um stripes under it); sources are explicit per-net bump sites (VSS interleaved half a pitch off VDD)."""
     work.mkdir(parents=True, exist_ok=True)
     g = m['geo']
     x0, y0, x1, y1 = [round(v, 3) for v in WINDOWS[window](g)]
     x0, y0 = dn(x0, GX), dn(y0, GY)
     W, H = round(x1 - x0, 3), round(y1 - y0, 3)
     # straps: per region column/row segments; M9 vertical stripes at the pitch of the region under them, M8 horizontal
+    vp = vdd_pitch or BUMP_PITCH / math.sqrt(POWER_BUMP_FRACTION)
+
     def pitch(cov):
-        return dn(0.48 / cov, 0.160)
+        raw = dn(0.48 / (cov * cov_scale), 0.160)
+        if not align:
+            return raw
+        # bump-aligned: the largest pitch <= raw that puts an odd number of stripe pitches in a bump pitch, so a
+        # VDD stripe runs through every VDD bump column/row and a VSS stripe (half a pitch off) through every VSS one
+        n = math.ceil(vp / raw - 1e-9)
+        n += (n % 2 == 0)
+        return round(vp / n, 4)
+    sites = {'VDD': [], 'VSS': []}
+    for net, off in (('VDD', vp / 2), ('VSS', 0.0)):
+        yy = off if off > 0 else vp
+        while yy < H - 1.0:
+            xx = off if off > 0 else vp
+            while xx < W - 1.0:
+                if not (signal_bumps_phy and region_at(m, x0 + xx, y0 + yy) in ('phy', 'io')):
+                    sites[net].append((round(xx, 3), round(yy, 3)))
+                xx += vp
+            yy += vp
     cell = 20.0
     nx, ny = int(W // cell), int(H // cell)
     # load tiles: 20 um cells, power = region density x area (peak in-phase)
@@ -1186,7 +1228,7 @@ def case_ir(m, work, window, peak=True):
 
     def lines(p, span):
         out = []
-        v = 1.0
+        v = ((vp / 2) % p) if align else 1.0
         while v < span - 0.5:
             out.append(('VDD', round(v, 3)))
             if v + p / 2 < span - 0.5:
@@ -1295,6 +1337,9 @@ def case_ir(m, work, window, peak=True):
         for (nn, xx, yy) in vias:
             if nn == net:
                 L.append(f'    NEW M8 0 ( {round(xx * 1000)} {round(yy * 1000)} ) via89')
+        if bump_pad:
+            for (xx, yy) in sites[net]:
+                L.append(f'    NEW M9 20000 ( {round(xx * 1000)} {round((yy - 10) * 1000)} ) ( * {round((yy + 10) * 1000)} )')
         L[-1] += ' ;'
         d += L
     d.append('END SPECIALNETS')
@@ -1303,7 +1348,10 @@ def case_ir(m, work, window, peak=True):
     (work / 'top.def').write_text(txt)
     for n, t in lefs.items():
         (work / f'{n}.lef').write_text(t)
-    vdd_pitch = BUMP_PITCH / math.sqrt(POWER_BUMP_FRACTION)
+    vdd_pitch = vp
+    for net in ('VDD', 'VSS'):
+        (work / f'vsrc_{net}.loc').write_text(''.join(f'{x:.3f}, {y:.3f}, {BUMP_SIZE:.1f}, {VDD_V if net == "VDD" else 0.0}\n'
+                                                     for x, y in sites[net]))
     tcl = f"""
 set t0 [clock seconds]
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
@@ -1325,7 +1373,7 @@ foreach net {{VDD VSS}} {{
 }}
 foreach net {{VDD VSS}} {{
   set_pdnsim_net_voltage -net $net -voltage [expr {{$net eq "VDD" ? {VDD_V} : 0.0}}]
-  if {{[catch {{analyze_power_grid -net $net -source_type BUMPS -voltage_file /work/ir_$net.rpt -error_file /work/ir_err_$net.rpt}} err]}} {{
+  if {{[catch {{analyze_power_grid -net $net -vsrc /work/vsrc_$net.loc -voltage_file /work/ir_$net.rpt -error_file /work/ir_err_$net.rpt}} err]}} {{
     puts "OT_IR net=$net status=FAIL err=$err" }} else {{ puts "OT_IR net=$net status=PASS" }}
 }}
 puts "OT_TIME psm_s=[expr {{[clock seconds]-$t0}}]"
@@ -1337,12 +1385,13 @@ exit
         tot[kinds[n]] = tot.get(kinds[n], 0.0) + p
     meta = dict(case='c', window=window, window_um=[x0, y0, x1, y1], size_um=[W, H], cell_um=cell, loads=len(comps),
                 power_w_by_region={k_: round(v, 4) for k_, v in tot.items()}, power_w=round(sum(power.values()), 4), cells_without_both_rails=missing,
-                peak=peak, stripes=dict(M9=len(s9), M8=len(s8), vias=nvia, width_um=0.48,
+                peak=peak, cov_scale=cov_scale, bump_pad=bump_pad, align=align, signal_bumps_phy=signal_bumps_phy, bump_sites=len(sites['VDD']), stripes=dict(M9=len(s9), M8=len(s8), vias=nvia, width_um=0.48,
                                         pitch_by_region={k_: pitch(v) for k_, v in REGION_PG.items() if v}),
                 bumps=dict(array_pitch_um=BUMP_PITCH, power_fraction=POWER_BUMP_FRACTION, vdd_pitch_um=round(vdd_pitch, 2),
                            size_um=BUMP_SIZE, basis='tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; '
                            'power fraction and contact assumed)'), vdd_v=VDD_V, budget_mv=35.0)
     (work / 'manifest.json').write_text(json.dumps(meta, indent=1))
+    (work / 'kinds.json').write_text(json.dumps(kinds))
     return meta
 
 
@@ -1409,12 +1458,154 @@ def case_clock(m):
 
 
 # ------------------------------------------------------------------------------------------------ records
-def parse_grt(work):
+def _log(work):
+    f = work / 'run.log'
+    return f.read_text(errors='replace') if f.is_file() else ''
+
+
+def _exit(work):
+    f = work / 'run.log.exit'
+    return int(f.read_text().strip()) if f.is_file() and f.read_text().strip() else None
+
+
+def _rss_mb(log):
+    m = re.search(r'Maximum resident set size \(kbytes\): (\d+)', log)
+    return round(int(m.group(1)) / 1024) if m else None
+
+
+def _wall(log):
+    m = re.search(r'Elapsed \(wall clock\) time \(h:mm:ss or m:ss\): (\S+)', log)
+    return m.group(1) if m else None
+
+
+def record_a(work):
+    log = _log(work)
+    out = dict(case='a', exit=_exit(work), wall=_wall(log), peak_rss_mb=_rss_mb(log),
+               manifest=json.loads((work / 'manifest.json').read_text()))
+    m = re.search(r'OT_LEGAL instances=(\d+) overlaps=(\d+) outside=(\d+)', log)
+    out['legality'] = dict(instances=int(m.group(1)), overlaps=int(m.group(2)), outside=int(m.group(3))) if m else None
+    moved = []
+    for mm in re.finditer(r'OT_MTS_PLACE (\S+) (\S+) (\S+) requested \(([-\d.]+), ([-\d.]+)\) placed \(([-\d.]+), ([-\d.]+)\)', log):
+        dx, dy = float(mm.group(6)) - float(mm.group(4)), float(mm.group(7)) - float(mm.group(5))
+        if abs(dx) > 1e-6 or abs(dy) > 1e-6:
+            moved.append((mm.group(1), mm.group(2), round(dx, 3), round(dy, 3)))
+    out['snap_moves'] = dict(count=len(moved), by_master={}, max_um=max((abs(a_) + abs(b_) for _, _, a_, b_ in moved), default=0.0))
+    for _, mst, a_, b_ in moved:
+        out['snap_moves']['by_master'][mst] = out['snap_moves']['by_master'].get(mst, 0) + 1
+    m = re.search(r'OT_MACRO_TRACK_ASSERT (\S+)(?: label=\S+)? macros=(\d+) pins_checked=(\d+) offtrack=(\d+) max_offset_nm=([\d.]+) no_track_grid=(\d+)', log)
+    out['track_assert'] = dict(verdict=m.group(1), macros=int(m.group(2)), pins_checked=int(m.group(3)), offtrack=int(m.group(4)),
+                               max_offset_nm=float(m.group(5)), no_track_grid=int(m.group(6))) if m else None
+    out['track_assert_offenders'] = re.findall(r'OT_MACRO_TRACK_ASSERT offtrack (\S+)', log)[:40]
+    pa = {}
+    for key, pat in (('unique_instances', r'#unique instances\s*=\s*(\d+)'), ('scanned_instances', r'#scanned instances\s*=\s*(\d+)'),
+                     ('inst_terms_valid_planar', r'#instTermValidViaApCnt\s*=\s*(\d+)'),
+                     ('macro_valid_planar_ap', r'#macroValidPlanarAp\s*=\s*(\d+)'), ('macro_valid_via_ap', r'#macroValidViaAp\s*=\s*(\d+)'),
+                     ('macro_no_ap', r'#macroNoAp\s*=\s*(\d+)')):
+        mm = re.search(pat, log)
+        if mm:
+            pa[key] = int(mm.group(1))
+    pa['status'] = 'DONE' if 'OT_PA DONE' in log else ('FAIL' if 'OT_PA FAIL' in log else 'not reached')
+    pa['no_access_errors'] = len(re.findall(r'DRT-0073|No access point', log))
+    pa['examples'] = re.findall(r'\[(?:WARNING|ERROR) DRT-00(?:73|74|83)\].*', log)[:20]
+    out['pin_access'] = pa
+    out['errors'] = re.findall(r'\[ERROR [^\]]+\].*|^Error: .*', log, re.M)[:10]
+    return out
+
+
+def record_b(work, m):
     from chip_assembly import v41_die as VD
-    log = (work / 'grt.log').read_text() if (work / 'grt.log').is_file() else ''
-    out = VD.parse_log(log)
-    m = re.search(r'OT_TIME grt_s=(\d+)', log)
-    out['grt_s'] = int(m.group(1)) if m else None
+    log = _log(work)
+    rec = dict(case='b', exit=_exit(work), wall=_wall(log), peak_rss_mb=_rss_mb(log),
+               manifest=json.loads((work / 'manifest.json').read_text()))
+    p = VD.parse_log(log)
+    rec['grt'] = {k_: v for k_, v in p.items() if k_ not in ('mem',)}
+    mm = re.search(r'OT_TIME grt_s=(\d+)', log)
+    rec['grt_s'] = int(mm.group(1)) if mm else None
+    k = rec['manifest']['bundle_k']
+    cls_of = {f'n_{bid}': (c, bits) for bid, c, bits, _ in m['buses']}
+    lens = VD.parse_wirelength(work / 'wirelength.csv')
+    per = {}
+    for net, um in lens.items():
+        base = net.split('[')[0]
+        c, bits = cls_of.get(base, ('?', 0))
+        e = per.setdefault(c, dict(bundle_nets=0, bundle_um=0.0, max_um=0.0))
+        e['bundle_nets'] += 1
+        e['bundle_um'] += um
+        e['max_um'] = max(e['max_um'], um)
+    for c, e in per.items():
+        e['wire_m'] = round(e['bundle_um'] * k / 1e6, 1)
+        e['bundle_um'] = round(e['bundle_um'], 1)
+        e['max_um'] = round(e['max_um'], 1)
+    rec['wire_by_class'] = per
+    cm = VD.congestion_map(work / 'gcell_usage.txt', work / 'gcell_base.txt') if (work / 'gcell_base.txt').is_file() else {}
+    rec['congestion_windows'] = cm.get('summary')
+    # raw usage/capacity windows (no baseline run): windows above 0.7 and 1.0 of capacity, per layer
+    u = {}
+    f = work / 'gcell_usage.txt'
+    if f.is_file():
+        for line in f.read_text().splitlines():
+            if not line.startswith('L '):
+                continue
+            fs = line.split()
+            ln = fs[1]
+            e = u.setdefault(ln, dict(windows=0, over_0p7=0, over_1=0, max=0.0))
+            for cell in fs[3:]:
+                cap, use = (float(x) for x in cell.split('/'))
+                if cap <= 0:
+                    continue
+                r = use / cap
+                e['windows'] += 1
+                e['over_0p7'] += r > 0.7
+                e['over_1'] += r > 1.0
+                e['max'] = max(e['max'], round(r, 3))
+    rec['gcell_window_usage'] = u
+    rec['errors'] = re.findall(r'\[ERROR [^\]]+\].*|^Error: .*', log, re.M)[:10]
+    return rec
+
+
+def record_c(work):
+    log = _log(work)
+    meta = json.loads((work / 'manifest.json').read_text())
+    out = dict(case='c', exit=_exit(work), wall=_wall(log), peak_rss_mb=_rss_mb(log), meta=meta)
+    drops = re.findall(r'Worstcase IR drop: ([\d.e+-]+) V', log)
+    avgs = re.findall(r'Average IR drop  : ([\d.e+-]+) V', log)
+    if len(drops) >= 2:
+        out['worst_mv'] = dict(VDD=round(float(drops[0]) * 1e3, 2), VSS=round(float(drops[1]) * 1e3, 2))
+        out['avg_mv'] = dict(VDD=round(float(avgs[0]) * 1e3, 2), VSS=round(float(avgs[1]) * 1e3, 2))
+        out['rail_to_rail_worst_mv'] = round(out['worst_mv']['VDD'] + out['worst_mv']['VSS'], 2)
+        out['budget_mv'] = meta['budget_mv']
+        out['pass'] = out['rail_to_rail_worst_mv'] <= meta['budget_mv']
+    # worst per region kind (instance voltages; VDD drop = VDD - v, VSS bounce = v)
+    kf = work / 'kinds.json'
+    if kf.is_file():
+        kinds = json.loads(kf.read_text())
+        per = {}
+        for net in ('VDD', 'VSS'):
+            f = work / f'ir_{net}.rpt'
+            if not f.is_file():
+                continue
+            for line in f.read_text().splitlines()[1:]:
+                fs = line.split(',')
+                if len(fs) < 6 or fs[0] not in kinds:
+                    continue
+                v = float(fs[5])
+                d = (VDD_V - v) if net == 'VDD' else v
+                x, y = float(fs[3]), float(fs[4])
+                W_, H_ = meta['size_um']
+                vp = meta['bumps']['vdd_pitch_um']
+                interior = vp <= x <= W_ - vp and vp <= y <= H_ - vp
+                e = per.setdefault(kinds[fs[0]], {})
+                e[net] = round(max(e.get(net, 0.0), d * 1e3), 2)
+                if interior:
+                    e[net + '_interior'] = round(max(e.get(net + '_interior', 0.0), d * 1e3), 2)
+                    wi = out.setdefault('worst_interior_mv', {})
+                    wi[net] = round(max(wi.get(net, 0.0), d * 1e3), 2)
+        out['worst_mv_by_region'] = per
+        wi = out.get('worst_interior_mv')
+        if wi and len(wi) == 2:
+            out['rail_to_rail_interior_mv'] = round(wi['VDD'] + wi['VSS'], 2)
+            out['pass_interior'] = out['rail_to_rail_interior_mv'] <= meta['budget_mv']
+            out['interior_rule'] = 'cells at least one VDD bump pitch from every window edge (the die continues)'
     return out
 
 
@@ -1424,9 +1615,15 @@ def main(argv=None):
     ap.add_argument('--work', type=Path)
     ap.add_argument('--k', type=int, default=16)
     ap.add_argument('--tag', default='base')
+    ap.add_argument('--iters', type=int, default=50, help='GRT congestion iterations')
     ap.add_argument('--tree', default='central', choices=['central', 'banded'])
     ap.add_argument('--window', default='tile_field', choices=list(WINDOWS))
     ap.add_argument('--avg', action='store_true', help='IR at 25%% of peak density')
+    ap.add_argument('--cov-scale', type=float, default=1.0)
+    ap.add_argument('--bump-pad', action='store_true')
+    ap.add_argument('--vdd-pitch', type=float)
+    ap.add_argument('--align', action='store_true', help='bump-aligned strap lattices')
+    ap.add_argument('--phy-signal-bumps', action='store_true', help='no power bumps over the PHY / IO regions')
     ap.add_argument('--out', type=Path)
     ap.add_argument('--case', choices=['a', 'b', 'c'])
     a = ap.parse_args(argv)
@@ -1451,15 +1648,40 @@ def main(argv=None):
         for mo in rec['models']:
             print(mo['model'], mo['insertion_ns'], [(r['ocv_derate'], r['root_divergence_skew_ps'], r['subtree_extent_mm_within_60ps'], r['subtree_extent_mm_within_25ps']) for r in mo['ocv']])
         return 0
+    if a.mode == 'record':
+        cases = {}
+        root = a.work
+        for d in sorted(root.iterdir()):
+            if not (d / 'manifest.json').is_file():
+                continue
+            man = json.loads((d / 'manifest.json').read_text())
+            try:
+                if man.get('case') == 'a':
+                    cases[d.name] = record_a(d)
+                elif man.get('case') == 'b':
+                    mb = build(tree_mode=man.get('tree_mode', 'central'))
+                    cases[d.name] = record_b(d, mb)
+                elif man.get('case') == 'c':
+                    cases[d.name] = record_c(d)
+            except Exception as e:  # noqa: BLE001  (a partial case is recorded, never dropped)
+                cases[d.name] = dict(error=repr(e))
+        rec = dict(schema='opentallas.qwen-rom-fulldie.feasibility.v1', tool_sha256=sha('tools/qwen_rom_fulldie.py'),
+                   cases=cases)
+        out = a.out or ROOT / OUT / 'feasibility.json'
+        out.write_text(json.dumps(rec, indent=1, sort_keys=True) + '\n')
+        print(json.dumps({k_: {kk: v.get(kk) for kk in ('exit', 'rail_to_rail_worst_mv', 'legality', 'track_assert', 'grt_s')}
+                          for k_, v in cases.items()}, indent=1))
+        return 0
     if a.work is None:
         ap.error('--work required')
     work = a.work.resolve()
     if a.mode == 'real':
         print(json.dumps(case_real(m, work)))
     elif a.mode == 'grt':
-        print(json.dumps(case_grt(m, work, a.k, a.tag)))
+        print(json.dumps(case_grt(m, work, a.k, a.tag, a.iters)))
     elif a.mode == 'ir':
-        print(json.dumps(case_ir(m, work, a.window, peak=not a.avg)))
+        print(json.dumps(case_ir(m, work, a.window, peak=not a.avg, cov_scale=a.cov_scale, bump_pad=a.bump_pad,
+                                 vdd_pitch=a.vdd_pitch, align=a.align, signal_bumps_phy=a.phy_signal_bumps)))
     return 0
 
 
