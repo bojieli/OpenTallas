@@ -1,0 +1,115 @@
+{
+  "owner": "Archimedes",
+  "worktree": "/home/ubuntu/w17-dsrom-ratio-fifo-gap-20261003",
+  "branch": "model/dsrom-ratio-fifo-gap-20261003",
+  "model_sha256": "7d0be5a7020c4f3e06bc8db6333c2506ed7aec83cb55ab61b89bdb9980224df6",
+  "request": {
+    "actual_reserved_rectangle": null,
+    "excludes_added_scalar_provider": true,
+    "gross_50pct_mm2": 0.0235640502,
+    "gross_cell_body_um2": 11782.025099999999,
+    "height_um": 184.14,
+    "name": "MTP_ACCEPT_SERIAL_SPINE_PER_ACTUAL_CORE",
+    "physical_fit": false,
+    "rectangle_mm2": 0.023569919999999998,
+    "requirement": "Parent must add disjoint rectangle to selected fixed candidate union, with literal PG/via/clock exclusions; no corridor/site borrowing",
+    "unused_geometric_um2": 5.869800000000396,
+    "width_um": 128
+  },
+  "replicas": {
+    "fleet_rule": "Multiply only actual enrolled core instance census; no96rank/32SM/product stage assumption",
+    "new_enrolled_hardware_instances": 0,
+    "per_actual_core": 1,
+    "per_selected_source_die": 1,
+    "per_tile": 1,
+    "physical_P_AR2_owner": "No inferred second core for row-split shard; Maxwell must bind this one namespace to selected physical home",
+    "source_hierarchy": "u_tile.u_core.g_accept plus XU scalar provider; N_TP link loops are not core replicas"
+  },
+  "source_correction": {
+    "NW": 21,
+    "TOPK": 512,
+    "X_SEL1_static_draft_path": "S_SEL FP32: XU_D_N absent =>i_bf16false",
+    "additional_scalar_FF_bits": 7690,
+    "arithmetic": "FP32 value ordering, lower-index ties and original insertion/emission order retained",
+    "current_scalar_IW": 16,
+    "finite_witnesses": [
+      {
+        "index": 65535,
+        "required21": 65535,
+        "retained16": 65535
+      },
+      {
+        "index": 65536,
+        "required21": 65536,
+        "retained16": 0
+      },
+      {
+        "index": 129279,
+        "required21": 129279,
+        "retained16": 63743
+      }
+    ],
+    "full_selector_busy_edges_after_last": 1537,
+    "full_selector_tail_edges_after_last": 1026,
+    "missing_widened_points": [
+      "u_sel.IW and in_idx",
+      "so_idx wire",
+      "sel_first adapter/core net",
+      "vw_data full21bit index zeroextension to32"
+    ],
+    "new_scalar_state": {
+      "sections": {
+        "bank": 11776,
+        "busy": 1,
+        "emission_control": 16,
+        "input": 65,
+        "key": 55,
+        "output": 24,
+        "pass_entries": 28105,
+        "stored": 28160,
+        "wave_threshold": 1024
+      },
+      "total": 69226
+    },
+    "old_scalar_state": {
+      "sections": {
+        "bank": 9216,
+        "busy": 1,
+        "emission_control": 16,
+        "input": 60,
+        "key": 50,
+        "output": 19,
+        "pass_entries": 25550,
+        "stored": 25600,
+        "wave_threshold": 1024
+      },
+      "total": 61536
+    },
+    "required_scalar_IW": 21,
+    "tail_scope": "RetainedK512 source even runtimek1; not leafTOKX/AMAXII2 or measured timing",
+    "zeroextension_rule": "Extend full21bit result to32; never extend alreadytruncated16. Do not change BF16 discriminator to force unrelated branch."
+  },
+  "scalar_debit": {
+    "FF_body_floor_mm2": 0.002242404,
+    "FF_clock_pin_FF_fF": 4014.2569,
+    "FF_clock_pin_SS_fF": 3434.6462199999996,
+    "added_FF_bits": 7690,
+    "added_compare_bits": 5115,
+    "area_scope": "Index-state floor only: wider compare and insertion/pass/sort multiplexers + hold/reset/clock/wires require separate realization. sel_first full21 gross already in caller ledger; no duplicate5-bit charge.",
+    "at50pct_FF_floor_mm2": 0.004484808,
+    "existing_slot_containment_proven": false,
+    "matched_existing_scalar_debit": null
+  },
+  "admission": {
+    "component_RTL_authorized_here": false,
+    "physical_G0": false,
+    "request_priced_for_review": true,
+    "slot_reserved": false,
+    "whole_token": false
+  },
+  "next_action": "Russell freeze exactIW21 scalar branch and caller/source-origin adapter; Maxwell add one enrolled-core request and separate scalar/CDC debit into selected disjoint core home and root/reset/PG/native escapes. Component width/model review before any physical launch.",
+  "tests": "python3 -m unittest discover -s tests -p test_ds_mtp_serial_spine_context.py -v",
+  "replay": "python3 tools/ds_mtp_serial_spine_context.py",
+  "standalone": true,
+  "no_live_jobs_changed": true
+}

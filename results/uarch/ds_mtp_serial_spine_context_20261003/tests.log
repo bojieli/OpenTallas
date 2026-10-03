@@ -1,0 +1,17 @@
+test_CDC_whole_shadow_state_not_singleclock_claim (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_actual_corner_clock_loads (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_actual_scalar_not_BF16 (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_full_K_state_not_candidate_K1 (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_increment_each_index_site (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_index_counterexample (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_model_exact (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_named_trees_exact_1944_sinks (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_no_link_NTP_core_replication (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_no_unreserved_tracks_or_protection_timing_credit (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_request_not_reservation_and_scalar_separate (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+test_tail_not_runtimek1_or_leaf_II (test_ds_mtp_serial_spine_context.SerialSpine) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.004s
+
+OK

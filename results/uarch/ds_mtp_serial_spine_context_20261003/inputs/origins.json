@@ -1,0 +1,56 @@
+[
+  {
+    "copy": "accept_model.json",
+    "git": "468c2b913bc96f82dcf334a17b148dc993ec1bc9",
+    "path": "results/uarch/ds_mtp_accept_leaf_20261003/model.json",
+    "sha256": "ac6cf3d932890cfe357afbf84644b5422ca050acf26487b73342f45cd68c22b7"
+  },
+  {
+    "copy": "cell_prices.json",
+    "git": "468c2b913bc96f82dcf334a17b148dc993ec1bc9",
+    "path": "results/uarch/ds_mtp_accept_leaf_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json",
+    "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+  },
+  {
+    "copy": "select.sv",
+    "git": "69e37adda9951639f3b8975063d74112d3dfe330",
+    "path": "rtl/hdc/v41/ot_hdc_select.sv",
+    "sha256": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e"
+  },
+  {
+    "copy": "xu_adapt.sv",
+    "git": "69e37adda9951639f3b8975063d74112d3dfe330",
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+    "sha256": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0"
+  },
+  {
+    "copy": "core.sv",
+    "git": "69e37adda9951639f3b8975063d74112d3dfe330",
+    "path": "rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv",
+    "sha256": "c5e1b8c9ff458bc0995f58b299e8930bb192c4761434fb1c7eb8fe0f803b6a30"
+  },
+  {
+    "copy": "tile.sv",
+    "git": "69e37adda9951639f3b8975063d74112d3dfe330",
+    "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+    "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+  },
+  {
+    "copy": "die.sv",
+    "git": "69e37adda9951639f3b8975063d74112d3dfe330",
+    "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+    "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054"
+  },
+  {
+    "copy": "shared_fifo.sv",
+    "git": "87fae5ac381dac1b029cffa7af98cad839f39544",
+    "path": "rtl/common/ot_ratio_cdc_fifo.sv",
+    "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+  },
+  {
+    "copy": "split_parent_model.json",
+    "git": "9ffc7a30c13af94c9dc2f4c69b9fc1c276dd9cdc",
+    "path": "results/uarch/dsrom_split_domain_parent_20261003/model.json",
+    "sha256": "3cdef28378588029dbf83d2cc44bc383df1f1fc5949b95755504a1e50ed3ec10"
+  }
+]
