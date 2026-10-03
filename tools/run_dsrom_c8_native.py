@@ -13,13 +13,16 @@ def main():
  assert model['admission']['isolated_actual_backend_functional']
  paths=git('show',PIN+':tools/w17_current_fastpp_l20_window_owner_safe_sources.txt').decode().split()
  files=[];pins={}
+ headers=[p for p in git('ls-tree','-r','--name-only',PIN,'rtl/hdc/v41').decode().splitlines() if p.endswith('.svh')]
+ for path in headers:
+  blob=git('show',PIN+':'+path);q=out/'original'/path;q.parent.mkdir(parents=True,exist_ok=True);q.write_bytes(blob);pins[path]=hashlib.sha256(blob).hexdigest()
  for path in paths:
   blob=git('show',PIN+':'+path);q=out/'original'/path;q.parent.mkdir(parents=True,exist_ok=True);q.write_bytes(blob)
   files.append(str(q));pins[path]=hashlib.sha256(blob).hexdigest()
  current=['rtl/dsrom_sys/c8/ot_hdc_v41x_idx_hbm_c8.sv','rtl/dsrom_sys/c8/ot_chip_v41x_kv_reqmux_c8.sv','rtl/dsrom_sys/c8/ot_chip_v41x_kv_rope_reqmux_c8.sv','rtl/dsrom_sys/c8/ot_chip_v41x_ckv_die_service_c8.sv','rtl/dsrom_sys/c8/ot_dsrom_c8_write_journal.sv','rtl/test/dsrom_sys/c8/tb_dsrom_c8_native.sv']
  for path in current:
   q=ROOT/path;files.append(str(q));pins[path]=hashlib.sha256(q.read_bytes()).hexdigest()
- cmd=[a.verilator,'--binary','--timing','--top-module','tb_dsrom_c8_native','--Mdir',str(out/'obj'),'-j',str(a.jobs),'-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD','-Wno-MODDUP','-Wno-UNOPTFLAT',*files]
+ cmd=[a.verilator,'--binary','--timing','--top-module','tb_dsrom_c8_native','--Mdir',str(out/'obj'),'-j',str(a.jobs),'-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD','-Wno-MODDUP','-Wno-UNOPTFLAT',f"-I{out/'original/rtl/hdc/v41'}",*files]
  rec=dict(source_commit=git('rev-parse','HEAD').decode().strip(),original_pin=PIN,source_sha256=pins,command=cmd,scope='native publisher/transport/readback only; actual two-position engine and physical/protected-state unqualified',pass_=False)
  (out/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
  t=time.monotonic()
