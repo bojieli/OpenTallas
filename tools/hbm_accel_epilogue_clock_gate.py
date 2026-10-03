@@ -21,11 +21,12 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--work',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--origin-commit',help='Full commit of byte-identical git archive deployed to clean run worktree')
     a=ap.parse_args()
     if a.out.exists(): raise SystemExit('Existing verdict retained; choose new run path')
     a.work.mkdir(parents=True,exist_ok=False)
     pins={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in FILES+[__file__.replace(str(ROOT)+'/', ''),'tools/hbm_accel_epilogue_model.py','tools/hbm_accel_epilogue_compile.py']}
-    r=dict(schema='opentallas.hbm_accel.ha3.clock_gate.v1', source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+    r=dict(schema='opentallas.hbm_accel.ha3.clock_gate.v1', origin_commit=a.origin_commit, source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
            input_sha256=pins,host=socket.gethostname(),run_pid=os.getpid(),status='FAIL',cases=[],
            exact=dict(scope='Accepted issue identity/order, weights, credit/data hold; synthetic connected SM issue+bulk service',mismatches=0),
            physical=dict(ss_wns_ns=None,ff_wns_ns=None,area_mm2=None,route='NOT_RUN',setup_uncertainty_ps=60,hold_uncertainty_ps=25),
