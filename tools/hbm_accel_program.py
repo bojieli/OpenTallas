@@ -40,7 +40,10 @@ def schedule_ops(ops, shared_first=False):
         raise ValueError('route identity must be resolved before shared issue')
     result = [o for o in result if not shared_prefix(o)]
     fetch = next(i for i, o in enumerate(result) if o['kind'] == 'expert_fetch')
-    result[fetch:fetch] = prefix
+    # Request routed weights at the original point. Shared compute may issue
+    # while those weights are outstanding; delaying this request would add an
+    # extra SM drain/barrier and does not create an overlap window.
+    result[fetch+1:fetch+1] = prefix
     # w2 consumes the same gathered intermediates, independent by slot. Keep
     # shared issue first here too, while the later moe_sum still adds 0..6.
     shared_down = [o for o in result if o.get('kind') == 'mv'

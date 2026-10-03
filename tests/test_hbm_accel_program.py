@@ -39,10 +39,10 @@ def test_all_40_layers_preserve_operations_head_collectives_and_sum(program):
             assert old==new
             continue
         ops=new['ops'];fetch=next(i for i,o in enumerate(ops) if o['kind']=='expert_fetch')
-        assert ops[fetch-3]['w']==[6,'w1']
-        assert ops[fetch-2]['w']==[6,'w3']
-        assert ops[fetch-1]['fn']=='swiglu'
-        assert ops[fetch-4]['fn']=='route'
+        assert ops[fetch+1]['w']==[6,'w1']
+        assert ops[fetch+2]['w']==[6,'w3']
+        assert ops[fetch+3]['fn']=='swiglu'
+        assert ops[fetch-1]['fn']=='route'
         assert [o['w'][0] for o in ops if o['kind']=='mv' and isinstance(o.get('w'),list) and o['w'][1]=='w2']==[6,0,1,2,3,4,5]
         assert [o['id'] for o in ops]==list(range(len(ops)))
 
