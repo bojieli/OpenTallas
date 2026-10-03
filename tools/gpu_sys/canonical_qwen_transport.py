@@ -19,6 +19,7 @@ from tools.h4_qwen_released_provider_delivery import PROGRAM_SHA, wire_decode, w
 
 KINDS = ("source_page_write", "source_page_read", "source_publish", "source_retire",
          "immutable_source_transfer", "native_primitive")
+KV_KINDS = ("kv_state_write", "kv_state_read", "kv_payload_write", "kv_payload_read")
 IDENTITY = ("program_sha256", "source_PC", "sequence")
 
 
@@ -153,7 +154,7 @@ class SimulatorPipes:
         self.reader = os.fdopen(os.dup(read_fd), "rb")
         self.writer = os.fdopen(os.dup(write_fd), "wb", buffering=0)
         self.stopped = False
-        self.handlers = {kind: self._handler(kind) for kind in KINDS}
+        self.handlers = {kind: self._handler(kind) for kind in KINDS + KV_KINDS}
 
     def _handler(self, kind):
         def transact(request):
@@ -185,7 +186,13 @@ class DeliverySession:
         missing = [kind for kind in KINDS if not callable(handlers.get(kind))]
         if missing:
             raise TransportError("missing simulator handlers: " + ", ".join(missing))
-        self.handlers = handlers
+        extra = set(handlers) - set(KINDS + KV_KINDS)
+        if extra:
+            raise TransportError("unknown simulator handlers: " + ", ".join(sorted(extra)))
+        enrolled_kv = set(handlers) & set(KV_KINDS)
+        if enrolled_kv and (enrolled_kv != set(KV_KINDS) or any(not callable(handlers[k]) for k in KV_KINDS)):
+            raise TransportError("KV state and payload handlers must enroll together")
+        self.handlers = dict(handlers)
         self.sequence = 0
         self.stopped = False
         self.pending = None
