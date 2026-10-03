@@ -105,6 +105,7 @@ def emit(m):
     # CTS insertion, not timing checks: retain exact priced cells, propagate the
     # clock, validate placement, and produce the normal ORFS stage artifacts.
     (ROOT/'physical/dsrom_native_relay_20261003/fixed_cts.tcl').write_text('''
+set_clock_transition 20 [get_clocks core_clk]
 set_propagated_clock [all_clocks]
 check_placement -verbose
 estimate_parasitics -placement

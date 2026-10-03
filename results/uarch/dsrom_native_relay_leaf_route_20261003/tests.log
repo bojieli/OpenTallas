@@ -1,11 +1,12 @@
 test_both_native_contacts (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_full_fanout (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_missing_sites_not_admitted (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
+test_pinned_driver_recipe (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_scope_not_parent (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_truncated_not_admitted (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_unique_sites (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 
 ----------------------------------------------------------------------
-Ran 6 tests in 2.895s
+Ran 7 tests in 2.352s
 
 OK

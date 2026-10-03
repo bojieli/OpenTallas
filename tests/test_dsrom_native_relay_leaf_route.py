@@ -1,4 +1,4 @@
-import gzip,json,sys,unittest
+import gzip,json,sys,unittest,shlex
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 import dsrom_native_relay_leaf_route as R
@@ -27,5 +27,17 @@ class NativeLeaf(unittest.TestCase):
         self.assertFalse(self.m['full_parent_build_admitted'])
         self.assertFalse(self.m['reset_construction_covered'])
         self.assertEqual(self.m['extra_architectural_cycles'],0)
+    def test_pinned_driver_recipe(self):
+        import run_abi3_physical as driver
+        script=(R.ROOT/'physical/dsrom_native_relay_20261003/launch_epyc.sh').read_text()
+        args=shlex.split(next(l for l in script.splitlines() if l.startswith('python3 tools/')))[2:]
+        cleaned=[];i=0
+        while i<len(args):
+            if args[i]=='--macro-track-gate':i+=1
+            elif args[i] in ('--persistent-workdir','--launch-receipt'):i+=2
+            else:cleaned.append(args[i]);i+=1
+        parsed=driver.build_parser().parse_args(cleaned)
+        self.assertEqual(parsed.orfs_corner,'WC')
+        self.assertEqual(parsed.clock_uncertainty_hold_ns,.025)
 
 if __name__=='__main__':unittest.main()
