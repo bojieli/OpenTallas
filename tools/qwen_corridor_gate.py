@@ -129,7 +129,7 @@ def plan():
     rec = r2()
     assert abs(rec['pg_coverage']['regions']['tile_field']['m8m9_coverage_per_net'] - PG['tile']) < 1e-4
     assert abs(rec['pg_coverage']['regions']['strip']['m8m9_coverage_per_net'] - PG['strip']) < 1e-4
-    ratios = [('r060', 0.60), ('r050', 0.50), ('r2', None), ('r0362', 0.362), ('r030', 0.30), ('r0225', 0.225)]
+    ratios = [('r060', 0.60), ('r055', 0.55), ('r050', 0.50), ('r045', 0.45), ('r2', None), ('r0362', 0.362), ('r030', 0.30), ('r0225', 0.225)]
     V = {}
     for tname, pgs in (('A', ('strip', 'tile')), ('B', ('tile',)), ('C', ('tile',)), ('D', ('tile',))):
         t = T[tname]
