@@ -1,0 +1,92 @@
+{
+  "status": "MODEL_ONLY_IMPLEMENTATION_HANDOFF_NO_ADOPTION",
+  "gals_cost": {
+    "qwen": {
+      "fifos": 168,
+      "incremental_fifo_area_mm2": 5.183633759999999,
+      "active_fifo_power_proxy_w": 10.8040592,
+      "regional_roots": 5,
+      "incremental_root_reset_reserve_mm2": 0.1,
+      "incremental_root_reset_power_w": 1.0,
+      "total_incremental_area_mm2": 5.283633759999999,
+      "total_incremental_power_proxy_w": 11.8040592,
+      "root_reserve_basis": "ASSUMED 0.02mm2/0.2W per buffered root and reset/epoch control; existing local CTS retained, no new PLL credited",
+      "reticle_area_remaining_mm2": 29.71636624,
+      "fit_proven": false,
+      "local_clock_refinement_sensitivity": [
+        {
+          "roots": 5,
+          "area_mm2": 5.283633759999999,
+          "power_proxy_w": 11.8040592
+        },
+        {
+          "roots": 97,
+          "area_mm2": 7.123633759999999,
+          "power_proxy_w": 30.204059200000003
+        },
+        {
+          "roots": 1537,
+          "area_mm2": 35.92363376,
+          "power_proxy_w": 318.2040592
+        }
+      ],
+      "memory_storage_bits": 1540096,
+      "macs_per_cycle": 0,
+      "compute_intensity_macs_per_byte": 0,
+      "communication_intensity": "transport only, one ordered word/port/cycle",
+      "critical_caveat": "Existing topology may need extra local subdivisions; root/reset reserve is an assumption; finer partitions require additional crossings and a new composed price."
+    },
+    "ds": {
+      "fifos": 128,
+      "incremental_fifo_area_mm2": 6.252068909999999,
+      "active_fifo_power_proxy_w": 13.030959700000002,
+      "regional_roots": 65,
+      "incremental_root_reset_reserve_mm2": 1.3,
+      "incremental_root_reset_power_w": 13.0,
+      "total_incremental_area_mm2": 7.552068909999999,
+      "total_incremental_power_proxy_w": 26.030959700000004,
+      "root_reserve_basis": "ASSUMED 0.02mm2/0.2W per buffered root and reset/epoch control; existing local CTS retained, no new PLL credited",
+      "reticle_area_remaining_mm2": 64.21793108999998,
+      "fit_proven": false,
+      "local_clock_refinement_sensitivity": [
+        {
+          "roots": 65,
+          "area_mm2": 7.552068909999999,
+          "power_proxy_w": 26.030959700000004
+        },
+        {
+          "roots": 2049,
+          "area_mm2": 47.23206891,
+          "power_proxy_w": 422.8309597
+        }
+      ],
+      "memory_storage_bits": 1857536,
+      "macs_per_cycle": 0,
+      "compute_intensity_macs_per_byte": 0,
+      "communication_intensity": "transport only, one ordered word/port/cycle",
+      "critical_caveat": "Existing topology may need extra local subdivisions; root/reset reserve is an assumption; finer partitions require additional crossings and a new composed price."
+    }
+  },
+  "prices": [
+    {
+      "name": "registered_mesh",
+      "qwen_added_us": 0.3616666666666667,
+      "ds_dag_added_us": 0.46833333333304566
+    },
+    {
+      "name": "gals_seams_d16",
+      "qwen_added_us": 2.17,
+      "ds_dag_added_us": 2.8100000000000085
+    },
+    {
+      "name": "gals_seams_d16_slow_sync",
+      "qwen_added_us": 2.8933333333333335,
+      "ds_dag_added_us": 3.7466666666664254
+    },
+    {
+      "name": "gals_local_ratio_2_2",
+      "qwen_added_us": 3.0138888888888893,
+      "ds_dag_added_us": 2.8100000000000085
+    }
+  ]
+}

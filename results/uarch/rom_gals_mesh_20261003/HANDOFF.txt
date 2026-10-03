@@ -1,0 +1,162 @@
+ROM GALS versus mesh: model milestone, 2026-10-03
+Branch codex/rom-gals-mesh-model-20261003, base main 79b3c5f84.
+Physical owner: Goodall 01a0fac5. Ownership unchanged. No P&R, engine RTL,
+CPU inference, HBM study, DS storage resizing or Qwen27B work performed.
+
+Decision for the implementation handoff
+Select an opt-in elastic seam FIFO prototype, D16, with independent regional
+clock phase, rather than implementing a die-wide mesh first. This is a choice
+of the next physically testable experiment, NOT hardware adoption or clock
+qualification. Mesh is the latency winner IF its assumed skew is achieved.
+No option currently has contextual SS setup/FF hold or die routing acceptance.
+A slower or unclosed implementation must be rejected under the owner's rule.
+
+Pinned geometry and baseline
+Qwen c3a567541 floorplan: 24156.144 x 32801.76 um, 64 x 24 tiles,
+midline y15618.96, spine x11466.144, width1223.856; two 524.88 um columns.
+Source bbox area792.364 mm2; owner current candidate ~823 mm2 is used as the
+conservative area envelope, against858. It is not a new inferred die shape.
+The owner must reconcile the current physical union with this envelope.
+The clock trunk result is a wire/OCV estimate with routed span coefficients,
+not measured full-die CTS; insertion3.8--29ns does not qualify synchronous
+cross-die paths. Insertion alone is not failure: differential skew and timed
+paths are the relevant gates. The pinned study prices these explicitly.
+The corrected <=430.56um link pitch adds432 cycles/token (0.36us); this is
+charged to ALL Qwen alternatives in addition to their CDC price.
+
+DS remains DS4096-TP4-S58-PAR2-NP2048, 33x26mm, 2048 pairs and64 roots,
+508 dies including464 layer dies. No PAR2 crossing is removed or credited.
+Root rectangles are derived from actual field.json.gz coordinates (DBU/1000).
+The field ends near y6315.84um: splitting it blindly at die y13000 is wrong.
+Use complete-root-to-return-band boundaries instead. These long root regions
+are NOT proven local clock islands. Clock subdivision needs a new composition.
+DS area uses max(parent screen744.616,current PAR2 screen786.23), not an
+assumed reduction in storage. Baseline AR426.008us at1M,408.999us at200K.
+
+Concrete boundary inventory (payload / proposed identity / replicas)
+Qwen midline command:508/64/64; independent column banks, fanout12 rows each.
+Qwen block result to spine:512/64/96; preserve every existing tree child.
+Qwen stack links at spine:512/32/8; retain all existing link stages.
+DS root activation:1632/49/64, fanout32 pairs/root.
+DS completed root result:69/64/64, one destination per bank.
+The command508 is instruction379+x128+go1; ready is handshake, not payload.
+The64-bit envelopes are positive sizing reserves; exact epoch/op/row/sequence
+packing must be bound to source widths before RTL. DS activation49 is the
+existing proposed boundary identity budget. Neither is an accepted new ABI.
+Each port's payload bytes, total bits, mux/demux cost, storage, fanout,
+track floor, area-equivalent rectangle and channel capacity are in model.json.
+No cross-root return mux, partial sum reassociation or changed rounding.
+The FSM/configuration/address and transaction validity checks remain.
+Mutable FIFO storage/control protection is NOT waived by the ROM no-ECC rule;
+reuse the existing protected control/data contract and price extra cells if
+needed before implementation. No new ROM parity/ECC hardware is introduced.
+
+Cycle composition
+Model async:2 Gray-pointer synchronizer stages plus registered output,
+worst phase included:3 destination cycles/hop. Sensitivity:4 cycles/hop.
+Two seam hops per direction:10ns round trip,13.333ns conservative sensitivity.
+Qwen217 serialized engine calls:2.17us crossing +0.36us geometry debt;
+AR analytical baseline112.9975us becomes115.5275us. Fourth-cycle sensitivity
+adds2.8933us+0.36us. Model baseline is not the measured current split-clock token.
+DS unified DAG:407 matvec nodes; critical-path solve exposes2.81us of10ns/node.
+For retained PAR2 budget conservatively charge ALL407 serially:4.07us;
+AR1M becomes430.078us,~2325tok/s model-only, about0.95% slower.
+At200K:413.069us. This is a sensitivity bound against the existing model;
+an actual exposed-crossing trace can add invocations or stalls and supersedes it.
+No MTP gain/rate claim: drafter/verification/commit/rollback calendar not replayed.
+Registered mesh:1 hop/direction,1 registered cycle/hop; Qwen+0.3617us
+crossing+0.36us geometry; DS serial budget+0.6783us. No zero-cycle mesh.
+
+27d86 measured related-clock FIFO reuse
+One LOCAL PLL3.6GHz /3 and /4:2 slow cycles fast->slow (2.2222ns),2 fast
+cycles slow->fast (1.6667ns), sparse ready/no-stall worst phase. D4 sustains
+0.9 words/ns; widen/parallelize a slow port4/3 if it must preserve fast bandwidth.
+W64 both directions andW512 fast->slow close under60ps setup/25ps hold SS/FF.
+Do not extrapolate W512 slow->fast or wider packets to contextual closure.
+The related FIFO has NO synchronizer and requires278ps related edge spacing;
+independent clock phases and different regional insertion break its contract.
+It is used only in the optional LOCAL ratio row. That row prices Qwen transport,
+not Qwen SU retiming. DS retains its inherited local-domain budget, so no
+second local ratio charge is added to its retained PAR2 overlay. DS standalone2/2 gain in the source is0.653%, below the
+1% adoption threshold: no standalone performance-lever adoption proposed.
+
+Area/power trade (assumptions; existing local CTS retained in both options)
+Qwen GALS168 FIFO banks:5.184mm2,10.80W scaled active FIFO proxy;
+5 root/reset reserves add0.10mm2,1W ->5.284mm2,11.80W and29.72mm2 area slack.
+DS128 FIFO banks:6.252mm2,13.03W;65 root/reset reserves add1.30mm2,13W
+->7.552mm2,26.03W and64.22mm2 screen slack.
+Related W512 D4 measured routed core6893.13um2 / power0.0143671W scaled by
+W/512 * D/4 for a conservative proxy; these are not async measurements.
+Root/reset reserves0.02mm2/0.2W each are assumptions, not fabricated PLL results.
+Qwen refinement97 roots ->7.124mm2 /30.20W before additional crossings;
+1537 roots ->35.924mm2 exceeds its35mm2 envelope slack even BEFORE those
+crossings. Thus 'just one island per tile' is not a free fallback.
+DS2049-root sensitivity similarly requires new crossings and cannot be adopted.
+
+Mesh sweep pitches2/1/0.5mm on the SAME actual die extents: positive driver
+reserves0.5/1/2% candidate area; incremental clock loading1.25/1.5/2 times
+assumed51.9W plus CV^2f at0.2pF/mm,0.7V. Qwen+4.115/8.23/16.46mm2 and
++13.08/26.15/52.28W; DS+3.931/7.862/15.725mm2,similar power. DS51.9W
+is a sensitivity proxy, NOT measured DS clock power. Residual80/40/20ps
+skew values are explicit assumptions. Existing clock load is not subtracted;
+3-track shielding/metal demand is also reported. No assumed skew is a PASS.
+
+Interface-specific implementation work (not performed here)
+1. Qwen rtl/hdc/ot_qwen_me_array.sv: bridge ib_go/tgo,tb,xl_d at regional
+   column handoff and lw/lvv tree-block words before top-level reduction.
+   Keep t_out/t_vout and n_a/n_b/n_va/n_y ordering and arithmetic identical.
+   Complete result o_we/o_addr/o_mask/o_data and fault propagate with identity.
+   Ports contain fixed-latency producers, not arbitrary ready/valid engines.
+   Add a launch-credit adapter using real in-flight response counts BEFORE
+   issuing go/operands. Never stall/freeze a ROM capture or adder pipeline.
+2. DS source root relays carry xs_bot/xs_top,xb,go/config phase. Config is local;
+   wait for real25-word per-pair config visibility before launch. Root return
+   rtl/v41rom/ot_v41_ret.sv r_v/r_row/r_pos/r_fp32/r_bf16/r_e retains ordering.
+   ret_node lacks ready: preserve sibling arrivals; do not place a stalled FIFO
+   between its two unthrottled leaves unless finite launch credits guarantee
+   enough response capacity for every in-flight leaf/partial. Keep PAR2 owner,
+   stage/rank/shard/phase/key/reset-era identity and held service contracts.
+3. New experimental wrapper parameter REGION_CDC=0 by default. Same-frequency
+   async/mesochronous seam FIFO uses Gray pointers, synchronized pointer/control,
+   coherent stable data and registered consumer output. Flush both directions
+   on either reset; block valid/accept until the new epoch is live. Retain
+   mutable state protection; no timing exceptions beyond genuine async CDC
+   constraints with documented synchronizer/max-delay/bus-skew checking.
+4. First physical test AFTER functional/cycle gates: single576-bit D16 FIFO
+   at the Qwen midline/spine interface with true producer/consumer pin loads,
+   PG/clock roots and 430.56um stages. Then DS1681-bit activation and133-bit
+   completed-root return. These widths are unqualified. No die-wide run.
+   Area-equivalent Qwen command rectangle is~584.5um high in52.704um corridor:
+   it does NOT fit existing69.12um station slab. Owner must allocate/disjointly
+   reserve real slabs or reject. No blanket use of total reticle slack.
+   Parallel bank track floors exceed a single shared spine: distribute banks
+   at existing block/root locations. No silent serialization or widened die.
+5. Tests required: all relative clock phases, small frequency drift, ready
+   bursts and stalls, full/empty, simultaneous reset and either unilateral
+   reset, wrap/epoch aliasing; exact word/identity conservation; finite
+   launch-credit occupancy including full pipeline drain; no stale fault/ACK.
+   Reuse rtl/test/two_clock campaigns/mutation style for local ratio, but add
+   independent-phase tests (ratio bench does not qualify asynchronous seams).
+   Replay Qwen golden/ISA full layer and DS owner roots/PAR2 held-service
+   trace with all consumer stalls; reprice actual exposed accept->accept cycles
+   in token/MTP schedule. Route-layer audit, actual macro SS clk-q, zero
+   pin/track/via/PG overflow, contextual SS setup+FF hold60/25ps mandatory.
+
+Coordination
+User assigns Goodall01a0fac5 physical ownership. This result changes none of
+that owner's files and leaves live jobs alone. Shared handoff copy is placed
+in /tmp/claude-review-20261003/ROM_GALS_MESH_HANDOFF_TO_GOODALL.txt.
+No owner acknowledgement is claimed: session exposes no agent messaging tool;
+the historical /home/ubuntu/.local/bin/opentallas-agent-bus is absent.
+Need owner's current station/slab/clock-pin union and model-interface review
+before experimental RTL or physical launch. Claude's three other studies stay
+with Claude; fallback#4 alone was explicitly authorized by the user.
+
+Validation/replay
+python3 tools/uarch_rom_gals_mesh.py --out results/uarch/rom_gals_mesh_20261003/model.json
+python3 -m unittest discover -s tools -p test_uarch_rom_gals_mesh.py -v
+All source snapshots are git-show byte copies with full commit/path/SHA256 pins.
+Sparse checkout needs src,configs,tools,results/arch,results/floorplan and
+imported physical.json/speculative model records from base79b3c5f84. No large
+jobs. Five checks cover source geometry, accounting, monotonic cycle costs,
+local-only ratio scope, no qualification/adoption promotion and PAR2 retention.

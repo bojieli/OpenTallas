@@ -1,0 +1,74 @@
+[
+  {
+    "file": "qwen_floorplan.json",
+    "commit": "c3a5675416cf435591a6213a88fe0c5f09956fed",
+    "path": "results/rtl/qwen_rom_fulldie_20261003/floorplan.json",
+    "sha256": "3cdf1fa44c892b9e15364be093d2991dbeffce5996427428315e78b1c35cb0a9"
+  },
+  {
+    "file": "qwen_clock.json",
+    "commit": "c3a5675416cf435591a6213a88fe0c5f09956fed",
+    "path": "results/rtl/qwen_rom_fulldie_20261003/clock_trunk.json",
+    "sha256": "81b4e38b962d07ac676b46ec346a4da0e85ef88ccf1165b0537f103aa471b9e7"
+  },
+  {
+    "file": "ds_parent.json",
+    "commit": "79b3c5f84e9d9555f24e7bc943869f64edb74b72",
+    "path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/model.json",
+    "sha256": "86d2594ea5c6154ebd087e4b84e017a7cda0433c2acbf24ee71addb970600028"
+  },
+  {
+    "file": "ds_field.json.gz",
+    "commit": "79b3c5f84e9d9555f24e7bc943869f64edb74b72",
+    "path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/field.json.gz",
+    "sha256": "527ce659bb50db911baee236ec2d0298cbd8f44aaf68426f6bfc3aa71d914f2e"
+  },
+  {
+    "file": "cdc.json",
+    "commit": "27d86cfe4b8f87dab020886b70f4d75f89a819e6",
+    "path": "results/rtl/two_clock_crossing_20261003/crossing_model.json",
+    "sha256": "c212d98c9c803fb2aa71420d80f7b6ca98af60a2d7808d605c74a4c98f4d73db"
+  },
+  {
+    "file": "cdc_physical.json",
+    "commit": "27d86cfe4b8f87dab020886b70f4d75f89a819e6",
+    "path": "results/rtl/two_clock_crossing_20261003/physical/f2s_w512_d4/physical.json",
+    "sha256": "54574e9e00810f40a6b8b655b10c9af8c217d4832a16163886c6a561dab1de60"
+  },
+  {
+    "file": "ds_par2.json",
+    "commit": "abd77c4e1699ed388b0f801057b5c9ef16815640",
+    "path": "results/uarch/dsrom_parallelism_20261003/model.json",
+    "sha256": "a176aba91ab1f7184574fd294f5b99241b63c1eaaffe2f0fce35dd86f17cb2d7"
+  },
+  {
+    "file": "qwen_array.sv",
+    "commit": "79b3c5f84e9d9555f24e7bc943869f64edb74b72",
+    "path": "rtl/hdc/ot_qwen_me_array.sv",
+    "sha256": "17ef6b5f40353fc5d35e4402cf428391e3636a3b90e3e8e944bae52e64098388"
+  },
+  {
+    "file": "ds_return.sv",
+    "commit": "79b3c5f84e9d9555f24e7bc943869f64edb74b72",
+    "path": "rtl/v41rom/ot_v41_ret.sv",
+    "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3"
+  },
+  {
+    "file": "ratio_fifo.sv",
+    "commit": "27d86cfe4b8f87dab020886b70f4d75f89a819e6",
+    "path": "rtl/common/ot_ratio_cdc_fifo.sv",
+    "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+  },
+  {
+    "file": "qwen_geometry_tool.py",
+    "commit": "c3a5675416cf435591a6213a88fe0c5f09956fed",
+    "path": "tools/qwen_rom_fulldie.py",
+    "sha256": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118"
+  },
+  {
+    "file": "ds_geometry_tool.py",
+    "commit": "d20e7cf6e2dafaabbf7b8ac844d05be1e76e079c",
+    "path": "tools/dsrom_die_feasibility.py",
+    "sha256": "6ad9fbbf557d89219b20747cefdf31423170758a4269544c42610956613f5e64"
+  }
+]

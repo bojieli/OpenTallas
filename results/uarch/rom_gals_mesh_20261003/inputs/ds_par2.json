@@ -1,0 +1,2113 @@
+{
+ "baseline_reproduced": true,
+ "basis": "DS4096 S58, unified model cons_v41_rom S58 settings",
+ "candidates": [
+  {
+   "exactness": {
+    "class_": "model proxy",
+    "verdict": "NOT exact as priced",
+    "why": "the graph prices the MoE combine as an FP32 all-reduce of intermediate-K partials (decode_critical_path v41_moe); FF=2304 = 9 golden chunks cannot be cut 4 ways on chunk boundaries, and the golden sums whole experts in id order (hdc_golden_v41.py csum 189-206, moe 980-990; v41_tp_exact_reprice docstring)"
+   },
+   "id": "M0_model_S58_TP4",
+   "mapping": {},
+   "note": "unified model as pinned (TP-4 rank dies, no PAR2 term): reference only",
+   "par2": false,
+   "physical": {
+    "boundaries": {
+     "note": "model rank dies; collectives over 2 packages (mesh)"
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 960,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 866,
+     "200000": 4516
+    },
+    "layer_dies": 464,
+    "packages": 254,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 132.9,
+      "mean_die_w": 78.5
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 96.6,
+      "mean_die_w": 78.3
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": 9.21,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2563.7,
+     "ar_token_us": 390.06,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 5.2,
+     "layer_stage_max_us": 11.57,
+     "layer_stage_mean_us": 2.225,
+     "mtp_delta_pct_vs_C1": 7.63,
+     "mtp_saturated_tok_s": 35262.3,
+     "mtp_tok_s": 3809.4,
+     "path_T_us": 390.066,
+     "path_us": {
+      "cp_merge": 2.217,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 161.969,
+      "stage_hops": 23.2,
+      "tp_collectives": 65.2
+     },
+     "rank_layer_die_hottest_w": 204.4,
+     "rank_layer_die_mean_w": 95.7,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": 9.64,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2680.6,
+     "ar_token_us": 373.05,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 2.31,
+     "layer_stage_max_us": 4.46,
+     "layer_stage_mean_us": 1.927,
+     "mtp_delta_pct_vs_C1": 8.37,
+     "mtp_saturated_tok_s": 35702.4,
+     "mtp_tok_s": 4176.7,
+     "path_T_us": 373.057,
+     "path_us": {
+      "cp_merge": 2.217,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 154.978,
+      "stage_hops": 23.2,
+      "tp_collectives": 65.2
+     },
+     "rank_layer_die_hottest_w": 131.8,
+     "rank_layer_die_mean_w": 95.2,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A for the PAR2 boundary",
+    "verdict": "exact if the MoE is the row split",
+    "why": "PAR2 cuts no reduction (model-r4 source_reduction_region_cut_count 0); the rate is priced on the model's all-reduce MoE combine (see M0)"
+   },
+   "id": "C1_PP58_TP4_PAR2rows",
+   "mapping": {},
+   "note": "current: TP-4 ranks, each rank's matrices split by output rows over a 2-die package (PAR2 owner, fc4 quad)",
+   "par2": true,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0043,
+    "boundaries": {
+     "board": "TP-4 collectives over 4 packages (fc4): a_allgather, out_allreduce, router_allgather, combine_allreduce (+ merges / rows on scan layers); 57 stage hops",
+     "board_bytes_per_layer_per_die": 46144,
+     "in_package_ucie": "PAR2 owner crossing: 6 exposed steps a layer x 2 one-way (65.2 ns); 1,050 crossing calls/token; need 0.91 TB/s of 4.2 TB/s (4.6x headroom; dsrom_par2_boundary_20261003)"
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 960,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 866,
+     "200000": 4516
+    },
+    "layer_dies": 464,
+    "note": "PAR2 as selected; option (c) re-frame assumed for every candidate",
+    "packages": 254,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 132.9,
+      "mean_die_w": 78.5
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 96.6,
+      "mean_die_w": 78.3
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": 0.0,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2347.4,
+     "ar_token_us": 426.0,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 80.4,
+      "all_reduce": 345.1
+     },
+     "layer_stage_max_over_mean": 5.2,
+     "layer_stage_max_us": 11.57,
+     "layer_stage_mean_us": 2.225,
+     "mtp_delta_pct_vs_C1": 0.0,
+     "mtp_saturated_tok_s": 34367.1,
+     "mtp_tok_s": 3539.3,
+     "path_T_us": 426.008,
+     "path_us": {
+      "cp_merge": 2.205,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 31.28,
+      "serial_chain": 161.969,
+      "stage_hops": 24.624,
+      "tp_collectives": 68.451
+     },
+     "rank_layer_die_hottest_w": 204.4,
+     "rank_layer_die_mean_w": 95.7,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": 0.0,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2445.0,
+     "ar_token_us": 409.0,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 80.4,
+      "all_reduce": 345.1
+     },
+     "layer_stage_max_over_mean": 2.31,
+     "layer_stage_max_us": 4.46,
+     "layer_stage_mean_us": 1.927,
+     "mtp_delta_pct_vs_C1": 0.0,
+     "mtp_saturated_tok_s": 34785.0,
+     "mtp_tok_s": 3854.2,
+     "path_T_us": 408.999,
+     "path_us": {
+      "cp_merge": 2.205,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 31.28,
+      "serial_chain": 154.978,
+      "stage_hops": 24.624,
+      "tp_collectives": 68.451
+     },
+     "rank_layer_die_hottest_w": 131.8,
+     "rank_layer_die_mean_w": 95.2,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A",
+    "verdict": "exact",
+    "why": "output-row split of every matrix (full K per row) + id-order expert sum per row"
+   },
+   "id": "C1x_PAR2rows_exactMoE",
+   "mapping": {
+    "board": "par2",
+    "coll": {
+     ".ffn.combine_allreduce": [
+      "replace",
+      [
+       [
+        "all_gather",
+        68096,
+        4
+       ],
+       [
+        "all_gather",
+        20480,
+        4
+       ]
+      ]
+     ]
+    },
+    "group": 4
+   },
+   "note": "C1 with the MoE combine as the bit-exact two-gather row split (v41_tp_exact_reprice) instead of the modelled (inexact) FP32 K-split all-reduce",
+   "par2": true,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0107,
+    "boundaries": {
+     "board": "as C1 with the combine as act all-gather 68 KB + y all-gather 20 KB",
+     "board_bytes_per_layer_per_die": 114240
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 960,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 866,
+     "200000": 4516
+    },
+    "layer_dies": 464,
+    "note": "PAR2 as selected; option (c) re-frame assumed for every candidate",
+    "packages": 254,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 132.9,
+      "mean_die_w": 78.5
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 96.6,
+      "mean_die_w": 78.3
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": 0.07,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2349.1,
+     "ar_token_us": 425.69,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 80.4,
+      "all_reduce": 345.1
+     },
+     "layer_stage_max_over_mean": 5.2,
+     "layer_stage_max_us": 11.57,
+     "layer_stage_mean_us": 2.225,
+     "mtp_delta_pct_vs_C1": -0.62,
+     "mtp_saturated_tok_s": 34374.8,
+     "mtp_tok_s": 3517.4,
+     "path_T_us": 425.689,
+     "path_us": {
+      "cp_merge": 2.205,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 31.28,
+      "serial_chain": 161.969,
+      "stage_hops": 24.624,
+      "tp_collectives": 68.131
+     },
+     "rank_layer_die_hottest_w": 204.4,
+     "rank_layer_die_mean_w": 95.7,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": 0.08,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2446.9,
+     "ar_token_us": 408.68,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 80.4,
+      "all_reduce": 345.1
+     },
+     "layer_stage_max_over_mean": 2.31,
+     "layer_stage_max_us": 4.46,
+     "layer_stage_mean_us": 1.927,
+     "mtp_delta_pct_vs_C1": -0.67,
+     "mtp_saturated_tok_s": 34792.9,
+     "mtp_tok_s": 3828.2,
+     "path_T_us": 408.68,
+     "path_us": {
+      "cp_merge": 2.205,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 31.28,
+      "serial_chain": 154.978,
+      "stage_hops": 24.624,
+      "tp_collectives": 68.131
+     },
+     "rank_layer_die_hottest_w": 131.8,
+     "rank_layer_die_mean_w": 95.2,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A",
+    "verdict": "exact",
+    "why": "whole matrices and whole experts; the hub sums expert FP32 outputs in id order (golden seqsum), then the shared expert"
+   },
+   "id": "C2_PP58_EP8_hubTP1",
+   "mapping": {
+    "board": "fc4",
+    "coll": {
+     ".attn.a_allgather": [
+      "remove"
+     ],
+     ".attn.cand.merge": [
+      "remove"
+     ],
+     ".attn.idx.topk_merge": [
+      "remove"
+     ],
+     ".attn.out_allreduce": [
+      "remove"
+     ],
+     ".attn.rows_allgather": [
+      "remove"
+     ],
+     ".ffn.combine_allreduce": [
+      "board_gather",
+      20480,
+      9e-08
+     ],
+     ".ffn.router_allgather": [
+      "remove"
+     ]
+    },
+    "cp": {
+     "W": 1,
+     "stacks": 4
+    },
+    "ep_combine": true,
+    "ep_dies": 8,
+    "field": {
+     "a_proj": "tp1",
+     "cmp.wk": "tp1",
+     "down": "ep",
+     "experts_gu": "ep",
+     "router": "tp1",
+     "shared_gu": "tp1",
+     "wo_a": "tp1",
+     "wo_b": "tp1",
+     "wq_b": "tp1"
+    },
+    "group": 8,
+    "issue_scale": {
+     ".attn.den": 4.0,
+     ".attn.exp": 4.0,
+     ".attn.max": 4.0,
+     ".attn.normalize": 4.0,
+     ".attn.pv": 4.0,
+     ".attn.q_rope": 4.0,
+     ".attn.scores": 4.0,
+     ".attn.sink": 4.0,
+     ".attn.z_quant": 4.0,
+     ".ffn.shared_quant": 4.0,
+     ".ffn.shared_swiglu": 4.0,
+     ".ffn.softplus_sqrt": 4.0
+    }
+   },
+   "note": "1 hub die (all dense weights TP-1, SU/Sinkhorn, attention, KV + index keys on its 4 stacks) + 8 expert dies holding whole experts; dispatch/combine over the board; no CP",
+   "par2": false,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0032,
+    "boundaries": {
+     "board": "dispatch hub -> <=6 expert dies one way (205 ns + 5.4 KB); combine 6 x 20 KB FP32 into the hub (205 ns + 104 ns at the hub package's 1.19 TB/s ingress) + id-order sum; 57 stage hops",
+     "board_bytes_per_layer_per_die": 128320
+    },
+    "dies_per_stage": 9,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 264,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 216,
+     "200000": 1129
+    },
+    "layer_dies": 522,
+    "packages": 283,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "expert_die_w": 65.8,
+      "fits": true,
+      "hub_die_w": 189.9
+     },
+     "200000": {
+      "expert_die_w": 67.0,
+      "fits": true,
+      "hub_die_w": 224.7
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 566
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": -42.36,
+     "ar_saturated_tok_s": 21425.0,
+     "ar_tok_s": 1353.0,
+     "ar_token_us": 739.1,
+     "busiest_stage": 29,
+     "busiest_stage_us": 46.67,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 4.98,
+     "layer_stage_max_us": 46.67,
+     "layer_stage_mean_us": 9.371,
+     "mtp_delta_pct_vs_C1": -68.26,
+     "mtp_saturated_tok_s": 15100.5,
+     "mtp_tok_s": 1123.3,
+     "path_T_us": 739.11,
+     "path_us": {
+      "cp_merge": 0.0,
+      "ep_combine_dispatch": 28.455,
+      "field": 424.443,
+      "kv_scan": 94.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 168.278,
+      "stage_hops": 23.2,
+      "tp_collectives": 0.222
+     },
+     "rank_layer_die_hottest_w": 97.9,
+     "rank_layer_die_mean_w": 70.5,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": -39.08,
+     "ar_saturated_tok_s": 54887.1,
+     "ar_tok_s": 1489.6,
+     "ar_token_us": 671.32,
+     "busiest_stage": 29,
+     "busiest_stage_us": 18.22,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 2.23,
+     "layer_stage_max_us": 18.22,
+     "layer_stage_mean_us": 8.18,
+     "mtp_delta_pct_vs_C1": -67.49,
+     "mtp_saturated_tok_s": 29291.2,
+     "mtp_tok_s": 1253.1,
+     "path_T_us": 671.335,
+     "path_us": {
+      "cp_merge": 0.0,
+      "ep_combine_dispatch": 28.455,
+      "field": 424.443,
+      "kv_scan": 54.44,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 140.575,
+      "stage_hops": 23.2,
+      "tp_collectives": 0.222
+     },
+     "rank_layer_die_hottest_w": 107.8,
+     "rank_layer_die_mean_w": 84.3,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A only with aligned shares",
+    "verdict": "exact but imbalanced",
+    "why": "row-parallel down is a K split: exact only on golden chunk boundaries of the padded pairwise tree (FF 9 chunks -> shares [2,2,2,2,1,0,0,0]) and only if each expert's partials are tree-reduced separately in fixed order before the id-order sum (7 x 20 KB payload); a ring all-reduce or summing experts first is NOT exact"
+   },
+   "id": "C3_PP58_TP8_megatron",
+   "mapping": {
+    "board": "fc4",
+    "coll": {
+     ".attn.a_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.cand.merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.idx.topk_merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.out_allreduce": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.rows_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".ffn.combine_allreduce": [
+      "replace",
+      [
+       [
+        "all_reduce",
+        143360,
+        8
+       ]
+      ]
+     ],
+     ".ffn.router_allgather": [
+      "respan",
+      1.0,
+      8
+     ]
+    },
+    "cp": {
+     "W": 8,
+     "stacks": 2
+    },
+    "field": {
+     "a_proj": "tp",
+     "cmp.wk": "tp",
+     "down": "kalign",
+     "experts_gu": "kalign",
+     "router": "tp",
+     "shared_gu": "tp",
+     "wo_a": "tp",
+     "wo_b": "tp",
+     "wq_b": "tp"
+    },
+    "group": 8,
+    "kalign_factor": 1.7777777777777777,
+    "tp_group": 8
+   },
+   "note": "TP-8 over 4 packages: column-parallel a_proj/router/gu, head-parallel attention, row-parallel (K-split) down with golden-chunk-aligned shares and an exact fixed-tree all-reduce of 7 per-expert partials",
+   "par2": false,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0159,
+    "boundaries": {
+     "board": "TP-8 over 4 packages: a_allgather, router_allgather, out_allreduce, MoE all-reduce of 7 per-expert partials 143 KB (823 ns on the fabric), rows/merges on scan layers",
+     "board_bytes_per_layer_per_die": 169024
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 960,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 866,
+     "200000": 4516
+    },
+    "layer_dies": 464,
+    "packages": 254,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 122.0,
+      "mean_die_w": 78.5
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 94.0,
+      "mean_die_w": 78.3
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": 0.41,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2357.1,
+     "ar_token_us": 424.25,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 4.32,
+     "layer_stage_max_us": 9.85,
+     "layer_stage_mean_us": 2.281,
+     "mtp_delta_pct_vs_C1": -11.22,
+     "mtp_saturated_tok_s": 34409.9,
+     "mtp_tok_s": 3142.2,
+     "path_T_us": 424.245,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 123.654,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 158.396,
+      "stage_hops": 23.2,
+      "tp_collectives": 95.011
+     },
+     "rank_layer_die_hottest_w": 182.6,
+     "rank_layer_die_mean_w": 95.7,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": -0.41,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2434.9,
+     "ar_token_us": 410.69,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 2.1,
+     "layer_stage_max_us": 4.29,
+     "layer_stage_mean_us": 2.045,
+     "mtp_delta_pct_vs_C1": -13.78,
+     "mtp_saturated_tok_s": 34743.0,
+     "mtp_tok_s": 3323.2,
+     "path_T_us": 410.688,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 123.654,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 154.857,
+      "stage_hops": 23.2,
+      "tp_collectives": 95.011
+     },
+     "rank_layer_die_hottest_w": 126.6,
+     "rank_layer_die_mean_w": 95.2,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A",
+    "verdict": "exact",
+    "why": "C2 + per-key index scores; local top-512 lists concatenated in position order into one tselect_final (golden topk_lowest_index tie order)"
+   },
+   "id": "C4_PP58_EP8_hub_CP8",
+   "mapping": {
+    "board": "fc4",
+    "coll": {
+     ".attn.a_allgather": [
+      "remove"
+     ],
+     ".attn.cand.merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.idx.topk_merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.out_allreduce": [
+      "remove"
+     ],
+     ".attn.rows_allgather": [
+      "remove"
+     ],
+     ".ffn.combine_allreduce": [
+      "board_gather",
+      20480,
+      9e-08
+     ],
+     ".ffn.router_allgather": [
+      "remove"
+     ]
+    },
+    "cp": {
+     "W": 8,
+     "stacks": 2
+    },
+    "ep_combine": true,
+    "ep_dies": 8,
+    "field": {
+     "a_proj": "tp1",
+     "cmp.wk": "tp1",
+     "down": "ep",
+     "experts_gu": "ep",
+     "router": "tp1",
+     "shared_gu": "tp1",
+     "wo_a": "tp1",
+     "wo_b": "tp1",
+     "wq_b": "tp1"
+    },
+    "group": 8,
+    "issue_scale": {
+     ".attn.den": 4.0,
+     ".attn.exp": 4.0,
+     ".attn.max": 4.0,
+     ".attn.normalize": 4.0,
+     ".attn.pv": 4.0,
+     ".attn.q_rope": 4.0,
+     ".attn.scores": 4.0,
+     ".attn.sink": 4.0,
+     ".attn.z_quant": 4.0,
+     ".ffn.shared_quant": 4.0,
+     ".ffn.shared_swiglu": 4.0,
+     ".ffn.softplus_sqrt": 4.0
+    }
+   },
+   "note": "C2 + index keys context-parallel over 8 expert dies' HBM, exact merge",
+   "par2": false,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0081,
+    "boundaries": {
+     "board": "as C2 + CP merge 8 x 512 candidates to the hub on scan layers",
+     "board_bytes_per_layer_per_die": 128320
+    },
+    "dies_per_stage": 9,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 1076,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 974,
+     "200000": 5080
+    },
+    "layer_dies": 522,
+    "packages": 283,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "expert_die_w": 67.1,
+      "fits": true,
+      "hub_die_w": 227.5
+     },
+     "200000": {
+      "expert_die_w": 68.0,
+      "fits": true,
+      "hub_die_w": 255.7
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 566
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": -36.85,
+     "ar_saturated_tok_s": 54407.8,
+     "ar_tok_s": 1482.4,
+     "ar_token_us": 674.58,
+     "busiest_stage": 29,
+     "busiest_stage_us": 18.38,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 2.25,
+     "layer_stage_max_us": 18.38,
+     "layer_stage_mean_us": 8.161,
+     "mtp_delta_pct_vs_C1": -64.54,
+     "mtp_saturated_tok_s": 29233.7,
+     "mtp_tok_s": 1254.9,
+     "path_T_us": 674.598,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 28.455,
+      "field": 424.443,
+      "kv_scan": 56.446,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 139.378,
+      "stage_hops": 23.2,
+      "tp_collectives": 0.222
+     },
+     "rank_layer_die_hottest_w": 108.6,
+     "rank_layer_die_mean_w": 84.5,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": -38.13,
+     "ar_saturated_tok_s": 77118.4,
+     "ar_tok_s": 1512.8,
+     "ar_token_us": 661.03,
+     "busiest_stage": 20,
+     "busiest_stage_us": 12.97,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 1.64,
+     "layer_stage_max_us": 12.97,
+     "layer_stage_mean_us": 7.926,
+     "mtp_delta_pct_vs_C1": -66.72,
+     "mtp_saturated_tok_s": 29473.8,
+     "mtp_tok_s": 1282.8,
+     "path_T_us": 661.042,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 28.455,
+      "field": 424.443,
+      "kv_scan": 46.428,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 135.84,
+      "stage_hops": 23.2,
+      "tp_collectives": 0.222
+     },
+     "rank_layer_die_hottest_w": 116.6,
+     "rank_layer_die_mean_w": 93.6,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A",
+    "verdict": "exact",
+    "why": "replicated chains are bit-identical; head/o-group split cuts no reduction; wo_b K split = 4-chunk aligned subtrees of the 32-chunk padded tree, combined in fixed pairwise order; experts whole; id-order sum"
+   },
+   "id": "C4b_PP58_TP8sym_EP8_CP8",
+   "mapping": {
+    "board": "fc4",
+    "coll": {
+     ".attn.a_allgather": [
+      "remove"
+     ],
+     ".attn.cand.merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.idx.topk_merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.out_allreduce": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.rows_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".ffn.combine_allreduce": [
+      "a2a",
+      20480,
+      9e-08
+     ],
+     ".ffn.router_allgather": [
+      "remove"
+     ]
+    },
+    "cp": {
+     "W": 8,
+     "stacks": 2
+    },
+    "ep_combine": true,
+    "ep_dies": 8,
+    "field": {
+     "a_proj": "replicate",
+     "cmp.wk": "replicate",
+     "down": "ep",
+     "experts_gu": "ep",
+     "router": "replicate",
+     "shared_gu": "tp",
+     "wo_a": "tp",
+     "wo_b": "tp",
+     "wq_b": "tp"
+    },
+    "group": 8,
+    "issue_scale": {
+     ".ffn.softplus_sqrt": 4.0
+    },
+    "tp_group": 8
+   },
+   "note": "symmetric: every die runs the replicated hub chain; a_proj/router replicated; head-parallel attention; routed experts whole (EP-8) with an all-gather combine summed in id order; CP-8 index keys",
+   "par2": false,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0135,
+    "boundaries": {
+     "board": "TP-8: out_allreduce 20 KB, EP all-gather combine (kmax 2.18 experts x 20 KB; 590 ns), rows all-gather 215 KB / merges on scan layers",
+     "board_bytes_per_layer_per_die": 143360
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 960,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 866,
+     "200000": 4516
+    },
+    "layer_dies": 464,
+    "packages": 254,
+    "per_die_screen_mm2": 788.74,
+    "per_die_screen_pct_of_reticle": 91.9,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 110.6,
+      "mean_die_w": 78.5
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 93.5,
+      "mean_die_w": 78.3
+     }
+    },
+    "replicated_bytes_per_die": 8165959,
+    "replicated_pairs_per_die": 27,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": -4.89,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2232.5,
+     "ar_token_us": 447.93,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 3.39,
+     "layer_stage_max_us": 11.25,
+     "layer_stage_mean_us": 3.313,
+     "mtp_delta_pct_vs_C1": -22.0,
+     "mtp_saturated_tok_s": 33843.0,
+     "mtp_tok_s": 2760.6,
+     "path_T_us": 447.928,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 30.727,
+      "field": 180.199,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 158.396,
+      "stage_hops": 23.2,
+      "tp_collectives": 31.422
+     },
+     "rank_layer_die_hottest_w": 159.8,
+     "rank_layer_die_mean_w": 95.7,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": -5.84,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2302.2,
+     "ar_token_us": 434.37,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 1.9,
+     "layer_stage_max_us": 5.83,
+     "layer_stage_mean_us": 3.078,
+     "mtp_delta_pct_vs_C1": -24.78,
+     "mtp_saturated_tok_s": 34165.2,
+     "mtp_tok_s": 2899.3,
+     "path_T_us": 434.371,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 30.727,
+      "field": 180.199,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 154.857,
+      "stage_hops": 23.2,
+      "tp_collectives": 31.422
+     },
+     "rank_layer_die_hottest_w": 125.6,
+     "rank_layer_die_mean_w": 95.2,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A",
+    "verdict": "exact",
+    "why": "as C4b for attention/replication/CP; experts output-row split with full K per row (no K cut), local id-order sum per row"
+   },
+   "id": "C5r_hybrid_replicated_small",
+   "mapping": {
+    "board": "fc4",
+    "coll": {
+     ".attn.a_allgather": [
+      "remove"
+     ],
+     ".attn.cand.merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.idx.topk_merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.out_allreduce": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.rows_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".ffn.combine_allreduce": [
+      "replace",
+      [
+       [
+        "all_gather",
+        68096,
+        8
+       ],
+       [
+        "all_gather",
+        20480,
+        8
+       ]
+      ]
+     ],
+     ".ffn.router_allgather": [
+      "remove"
+     ]
+    },
+    "cp": {
+     "W": 8,
+     "stacks": 2
+    },
+    "field": {
+     "a_proj": "replicate",
+     "cmp.wk": "replicate",
+     "router": "replicate",
+     "shared_gu": "tp",
+     "wo_a": "tp",
+     "wo_b": "tp",
+     "wq_b": "tp"
+    },
+    "group": 8,
+    "issue_scale": {
+     ".ffn.softplus_sqrt": 4.0
+    },
+    "tp_group": 8
+   },
+   "note": "C5 but a_proj/router/cmp.wk replicated on every die to drop their all-gathers (rejected sub-option)",
+   "par2": false,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0103,
+    "boundaries": {
+     "board": "as C5 without a_allgather / router_allgather",
+     "board_bytes_per_layer_per_die": 109056
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 960,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 866,
+     "200000": 4516
+    },
+    "layer_dies": 464,
+    "packages": 254,
+    "per_die_screen_mm2": 788.74,
+    "per_die_screen_pct_of_reticle": 91.9,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 114.7,
+      "mean_die_w": 78.5
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 95.1,
+      "mean_die_w": 78.3
+     }
+    },
+    "replicated_bytes_per_die": 8165959,
+    "replicated_pairs_per_die": 27,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": 1.86,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2391.1,
+     "ar_token_us": 418.22,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 3.72,
+     "layer_stage_max_us": 10.85,
+     "layer_stage_mean_us": 2.915,
+     "mtp_delta_pct_vs_C1": -16.7,
+     "mtp_saturated_tok_s": 34557.4,
+     "mtp_tok_s": 2948.3,
+     "path_T_us": 418.21,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 158.772,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 158.396,
+      "stage_hops": 23.2,
+      "tp_collectives": 53.858
+     },
+     "rank_layer_die_hottest_w": 167.9,
+     "rank_layer_die_mean_w": 95.7,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": 1.08,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2471.3,
+     "ar_token_us": 404.65,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 2.03,
+     "layer_stage_max_us": 5.44,
+     "layer_stage_mean_us": 2.68,
+     "mtp_delta_pct_vs_C1": -19.38,
+     "mtp_saturated_tok_s": 34893.4,
+     "mtp_tok_s": 3107.1,
+     "path_T_us": 404.653,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 158.772,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 154.857,
+      "stage_hops": 23.2,
+      "tp_collectives": 53.858
+     },
+     "rank_layer_die_hottest_w": 128.8,
+     "rank_layer_die_mean_w": 95.2,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A",
+    "verdict": "exact",
+    "why": "as C4b for attention/replication/CP; experts output-row split with full K per row (no K cut), local id-order sum per row"
+   },
+   "id": "C5_PP58_TP8_hybrid",
+   "mapping": {
+    "board": "fc4",
+    "coll": {
+     ".attn.a_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.cand.merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.idx.topk_merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.out_allreduce": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.rows_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".ffn.combine_allreduce": [
+      "replace",
+      [
+       [
+        "all_gather",
+        68096,
+        8
+       ],
+       [
+        "all_gather",
+        20480,
+        8
+       ]
+      ]
+     ],
+     ".ffn.router_allgather": [
+      "respan",
+      1.0,
+      8
+     ]
+    },
+    "cp": {
+     "W": 8,
+     "stacks": 2
+    },
+    "field": {
+     "a_proj": "tp",
+     "cmp.wk": "tp",
+     "router": "tp",
+     "shared_gu": "tp",
+     "wo_a": "tp",
+     "wo_b": "tp",
+     "wq_b": "tp"
+    },
+    "group": 8,
+    "issue_scale": {},
+    "tp_group": 8
+   },
+   "note": "per-operator hybrid, TP-8 symmetric peers (no owner die): column-parallel a_proj/router + all-gather; head/o-group-parallel attention + aligned wo_b fixed-tree all-reduce; routed+shared experts output-row split (column gu, act all-gather, row down, y all-gather); CP-8 index keys; mHC/Sinkhorn/SU chain replicated bit-identically on every die",
+   "par2": false,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0107,
+    "boundaries": {
+     "board": "TP-8 over 4 packages (2 dies/package UCIe + fc4 board): a_allgather 3.6 KB, router_allgather 1.5 KB, out_allreduce 20 KB (fixed pairwise tree), act all-gather 68 KB, y all-gather 20 KB; rows all-gather 215 KB and 8-way merges on scan layers; 57 stage hops (die-to-counterpart)",
+     "board_bytes_per_layer_per_die": 114240
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 960,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 866,
+     "200000": 4516
+    },
+    "layer_dies": 464,
+    "packages": 254,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 124.4,
+      "mean_die_w": 78.5
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 94.8,
+      "mean_die_w": 78.3
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": 8.07,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2536.8,
+     "ar_token_us": 394.2,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 4.51,
+     "layer_stage_max_us": 9.72,
+     "layer_stage_mean_us": 2.154,
+     "mtp_delta_pct_vs_C1": 4.85,
+     "mtp_saturated_tok_s": 35157.0,
+     "mtp_tok_s": 3710.8,
+     "path_T_us": 394.2,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 116.306,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 158.396,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     },
+     "rank_layer_die_hottest_w": 187.5,
+     "rank_layer_die_mean_w": 95.7,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": 7.45,
+     "ar_saturated_tok_s": 80833.5,
+     "ar_tok_s": 2627.1,
+     "ar_token_us": 380.65,
+     "busiest_stage": "head",
+     "busiest_stage_us": 12.37,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 2.17,
+     "layer_stage_max_us": 4.16,
+     "layer_stage_mean_us": 1.919,
+     "mtp_delta_pct_vs_C1": 2.9,
+     "mtp_saturated_tok_s": 35504.8,
+     "mtp_tok_s": 3965.9,
+     "path_T_us": 380.643,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 116.306,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 154.857,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     },
+     "rank_layer_die_hottest_w": 128.3,
+     "rank_layer_die_mean_w": 95.2,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A",
+    "verdict": "exact",
+    "why": "as C4b for attention/replication/CP; experts output-row split with full K per row (no K cut), local id-order sum per row; lm_head vocabulary split 8 ways with a lowest-index argmax merge; chase streams the same tselect (order unchanged)"
+   },
+   "id": "C5h_hybrid_head8",
+   "mapping": {
+    "board": "fc4",
+    "coll": {
+     ".attn.a_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.cand.merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.idx.topk_merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.out_allreduce": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.rows_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".ffn.combine_allreduce": [
+      "replace",
+      [
+       [
+        "all_gather",
+        68096,
+        8
+       ],
+       [
+        "all_gather",
+        20480,
+        8
+       ]
+      ]
+     ],
+     ".ffn.router_allgather": [
+      "respan",
+      1.0,
+      8
+     ]
+    },
+    "cp": {
+     "W": 8,
+     "stacks": 2
+    },
+    "field": {
+     "a_proj": "tp",
+     "cmp.wk": "tp",
+     "router": "tp",
+     "shared_gu": "tp",
+     "wo_a": "tp",
+     "wo_b": "tp",
+     "wq_b": "tp"
+    },
+    "group": 8,
+    "head_ways": 8,
+    "issue_scale": {},
+    "tp_group": 8
+   },
+   "note": "C5 + lm_head vocabulary split 8 ways over the 8 head dies",
+   "par2": false,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0137,
+    "boundaries": {
+     "board": "TP-8 over 4 packages (2 dies/package UCIe + fc4 board): a_allgather 3.6 KB, router_allgather 1.5 KB, out_allreduce 20 KB (fixed pairwise tree), act all-gather 68 KB, y all-gather 20 KB; rows all-gather 215 KB and 8-way merges on scan layers; 57 stage hops (die-to-counterpart)",
+     "board_bytes_per_layer_per_die": 114240
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 960,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 866,
+     "200000": 4516
+    },
+    "layer_dies": 464,
+    "packages": 254,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 141.6,
+      "mean_die_w": 83.2
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 128.0,
+      "mean_die_w": 95.0
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": 9.78,
+     "ar_saturated_tok_s": 102869.5,
+     "ar_tok_s": 2576.9,
+     "ar_token_us": 388.06,
+     "busiest_stage": 29,
+     "busiest_stage_us": 9.72,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 4.51,
+     "layer_stage_max_us": 9.72,
+     "layer_stage_mean_us": 2.154,
+     "mtp_delta_pct_vs_C1": 8.98,
+     "mtp_saturated_tok_s": 54934.2,
+     "mtp_tok_s": 3857.0,
+     "path_T_us": 388.066,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.172,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 158.396,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     },
+     "rank_layer_die_hottest_w": 221.8,
+     "rank_layer_die_mean_w": 105.1,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": 9.21,
+     "ar_saturated_tok_s": 160771.7,
+     "ar_tok_s": 2670.2,
+     "ar_token_us": 374.5,
+     "busiest_stage": "head",
+     "busiest_stage_us": 6.22,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 2.17,
+     "layer_stage_max_us": 4.16,
+     "layer_stage_mean_us": 1.919,
+     "mtp_delta_pct_vs_C1": 7.24,
+     "mtp_saturated_tok_s": 55788.1,
+     "mtp_tok_s": 4133.3,
+     "path_T_us": 374.51,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.172,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 154.857,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     },
+     "rank_layer_die_hottest_w": 194.6,
+     "rank_layer_die_mean_w": 128.6,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A",
+    "verdict": "exact",
+    "why": "as C4b for attention/replication/CP; experts output-row split with full K per row (no K cut), local id-order sum per row; lm_head vocabulary split 8 ways with a lowest-index argmax merge; chase streams the same tselect (order unchanged)"
+   },
+   "id": "C5hc_hybrid_head8_chase",
+   "mapping": {
+    "board": "fc4",
+    "chase": true,
+    "coll": {
+     ".attn.a_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.cand.merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.idx.topk_merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.out_allreduce": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.rows_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".ffn.combine_allreduce": [
+      "replace",
+      [
+       [
+        "all_gather",
+        68096,
+        8
+       ],
+       [
+        "all_gather",
+        20480,
+        8
+       ]
+      ]
+     ],
+     ".ffn.router_allgather": [
+      "respan",
+      1.0,
+      8
+     ]
+    },
+    "cp": {
+     "W": 8,
+     "stacks": 2
+    },
+    "field": {
+     "a_proj": "tp",
+     "cmp.wk": "tp",
+     "router": "tp",
+     "shared_gu": "tp",
+     "wo_a": "tp",
+     "wo_b": "tp",
+     "wq_b": "tp"
+    },
+    "group": 8,
+    "head_ways": 8,
+    "issue_scale": {},
+    "tp_group": 8
+   },
+   "note": "C5h + streamed local top-k (dsrom_stage_balance_20261003 'chase'): RECOMMENDED",
+   "par2": false,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0137,
+    "boundaries": {
+     "board": "TP-8 over 4 packages (2 dies/package UCIe + fc4 board): a_allgather 3.6 KB, router_allgather 1.5 KB, out_allreduce 20 KB (fixed pairwise tree), act all-gather 68 KB, y all-gather 20 KB; rows all-gather 215 KB and 8-way merges on scan layers; 57 stage hops (die-to-counterpart)",
+     "board_bytes_per_layer_per_die": 114240
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 960,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 866,
+     "200000": 4516
+    },
+    "layer_dies": 464,
+    "packages": 254,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 141.6,
+      "mean_die_w": 83.2
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 128.0,
+      "mean_die_w": 95.0
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": 11.04,
+     "ar_saturated_tok_s": 102869.5,
+     "ar_tok_s": 2606.6,
+     "ar_token_us": 383.64,
+     "busiest_stage": 29,
+     "busiest_stage_us": 9.72,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 4.51,
+     "layer_stage_max_us": 9.72,
+     "layer_stage_mean_us": 2.154,
+     "mtp_delta_pct_vs_C1": 12.13,
+     "mtp_saturated_tok_s": 55209.7,
+     "mtp_tok_s": 3968.6,
+     "path_T_us": 383.646,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.172,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 153.976,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     },
+     "rank_layer_die_hottest_w": 221.8,
+     "rank_layer_die_mean_w": 105.1,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": 9.49,
+     "ar_saturated_tok_s": 160771.7,
+     "ar_tok_s": 2677.1,
+     "ar_token_us": 373.54,
+     "busiest_stage": "head",
+     "busiest_stage_us": 6.22,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 2.17,
+     "layer_stage_max_us": 4.16,
+     "layer_stage_mean_us": 1.919,
+     "mtp_delta_pct_vs_C1": 7.93,
+     "mtp_saturated_tok_s": 55850.1,
+     "mtp_tok_s": 4159.9,
+     "path_T_us": 373.542,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.172,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 153.889,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     },
+     "rank_layer_die_hottest_w": 194.6,
+     "rank_layer_die_mean_w": 128.6,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  },
+  {
+   "exactness": {
+    "class_": "A",
+    "verdict": "exact",
+    "why": "as C4b for attention/replication/CP; experts output-row split with full K per row (no K cut), local id-order sum per row; lm_head vocabulary split 8 ways with a lowest-index argmax merge; chase streams the same tselect (order unchanged)"
+   },
+   "id": "C5hc4_hybrid_4stacks",
+   "mapping": {
+    "board": "fc4",
+    "chase": true,
+    "coll": {
+     ".attn.a_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.cand.merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.idx.topk_merge": [
+      "respan",
+      2.0,
+      8
+     ],
+     ".attn.out_allreduce": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".attn.rows_allgather": [
+      "respan",
+      1.0,
+      8
+     ],
+     ".ffn.combine_allreduce": [
+      "replace",
+      [
+       [
+        "all_gather",
+        68096,
+        8
+       ],
+       [
+        "all_gather",
+        20480,
+        8
+       ]
+      ]
+     ],
+     ".ffn.router_allgather": [
+      "respan",
+      1.0,
+      8
+     ]
+    },
+    "cp": {
+     "W": 8,
+     "stacks": 4
+    },
+    "field": {
+     "a_proj": "tp",
+     "cmp.wk": "tp",
+     "router": "tp",
+     "shared_gu": "tp",
+     "wo_a": "tp",
+     "wo_b": "tp",
+     "wq_b": "tp"
+    },
+    "group": 8,
+    "head_ways": 8,
+    "issue_scale": {},
+    "tp_group": 8
+   },
+   "note": "C5hc with 4 HBM stacks per physical die (sensitivity, 2x stacks)",
+   "par2": false,
+   "physical": {
+    "board_link_utilisation_at_1M_saturation": 0.0183,
+    "boundaries": {
+     "board": "TP-8 over 4 packages (2 dies/package UCIe + fc4 board): a_allgather 3.6 KB, router_allgather 1.5 KB, out_allreduce 20 KB (fixed pairwise tree), act all-gather 68 KB, y all-gather 20 KB; rows all-gather 215 KB and 8-way merges on scan layers; 57 stage hops (die-to-counterpart)",
+     "board_bytes_per_layer_per_die": 114240
+    },
+    "dies_per_stage": 8,
+    "element_instance_utilisation": 0.6,
+    "element_utilisation_vs_ceiling": "0.60 target (re-framed q/BF pairs); empirical closed 0.375, failures from 0.72",
+    "hbm_stacks": 1888,
+    "kv_capacity_basis": "unified model capacity_users_1m (at the run's context) x layer HBM stacks / 928",
+    "kv_capacity_users": {
+     "1048576": 1732,
+     "200000": 9032
+    },
+    "layer_dies": 464,
+    "packages": 254,
+    "per_die_screen_mm2": 786.23,
+    "per_die_screen_pct_of_reticle": 91.6,
+    "power_w_saturated": {
+     "1048576": {
+      "fits": true,
+      "hottest_die_w": 148.5,
+      "mean_die_w": 90.7
+     },
+     "200000": {
+      "fits": true,
+      "hottest_die_w": 127.8,
+      "mean_die_w": 95.0
+     }
+    },
+    "replicated_bytes_per_die": 0,
+    "replicated_pairs_per_die": 0,
+    "total_dies": 508
+   },
+   "results": {
+    "1048576": {
+     "ar_delta_pct_vs_C1": 12.91,
+     "ar_saturated_tok_s": 138021.5,
+     "ar_tok_s": 2650.4,
+     "ar_token_us": 377.3,
+     "busiest_stage": 29,
+     "busiest_stage_us": 7.25,
+     "capacity_users_1m_model": 866,
+     "ctx": 1048576,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 3.54,
+     "layer_stage_max_us": 7.25,
+     "layer_stage_mean_us": 2.045,
+     "mtp_delta_pct_vs_C1": 15.47,
+     "mtp_saturated_tok_s": 55610.0,
+     "mtp_tok_s": 4086.7,
+     "path_T_us": 377.302,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.172,
+      "kv_scan": 15.186,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 153.976,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     },
+     "rank_layer_die_hottest_w": 235.7,
+     "rank_layer_die_mean_w": 120.0,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    },
+    "200000": {
+     "ar_delta_pct_vs_C1": 9.73,
+     "ar_saturated_tok_s": 160771.7,
+     "ar_tok_s": 2682.9,
+     "ar_token_us": 372.73,
+     "busiest_stage": "head",
+     "busiest_stage_us": 6.22,
+     "capacity_users_1m_model": 4516,
+     "ctx": 200000,
+     "fixed_part_ns": {
+      "all_gather": 88.5,
+      "all_reduce": 305.8
+     },
+     "layer_stage_max_over_mean": 2.0,
+     "layer_stage_max_us": 3.8,
+     "layer_stage_mean_us": 1.896,
+     "mtp_delta_pct_vs_C1": 8.6,
+     "mtp_saturated_tok_s": 55902.2,
+     "mtp_tok_s": 4185.8,
+     "path_T_us": 372.73,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.054,
+      "kv_scan": 9.066,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 155.642,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     },
+     "rank_layer_die_hottest_w": 194.2,
+     "rank_layer_die_mean_w": 128.6,
+     "rank_layer_die_static_w": 61.4,
+     "stage_hops": 57
+    }
+   }
+  }
+ ],
+ "cp_attention": "Context-parallel attention softmax is rejected: R = 128 window + 512 selected rows per head is independent of context (decode_critical_path v41_attention), so splitting it buys nothing, and a partial-softmax combine (running max rescale + split denominators) does not reproduce the golden's single-pass max, exp(s - max) and P=8-interleaved reduce_sum order (hdc_golden_v41.py 47, 444-457).  The only context-linear work is the index scan + top-k (dsrom_stage_balance_20261003: 17.02 of the 17.01 us 1M-200K difference), which CP splits exactly.",
+ "die": {
+  "cooling_limit_w": 474.56,
+  "element_util_current_q": 0.723,
+  "element_util_reframed": 0.6,
+  "pairs_per_die": 2048,
+  "payload_B_per_die": 637881281.0,
+  "q_pair_mm2_reframed": 0.093039,
+  "reticle_mm2": 858.0,
+  "screen_par2_mm2": 759.44,
+  "screen_reframed_mm2": 786.23
+ },
+ "external_inputs": {
+  "par2_boundary": "origin/claude/dsrom-par2-boundary-20261003 aafbe3a75 results/uarch/dsrom_par2_boundary_20261003/model.json (reproduced here: C1)",
+  "stage_balance": "origin/claude/dsrom-stage-balance-20261003 91bb2323c results/uarch/dsrom_stage_balance_20261003 (chase, CP-8 scans, 8-way head)",
+  "utilisation_review": "/tmp/claude-review-20261003/dsrom_fit/dsrom_utilisation_redesign.{md,json} (option (c) re-frame 786.23 mm2; empirical ceiling 0.375 / 0.60 target)"
+ },
+ "links": {
+  "board_a2a_kmax_2p18_ns": 589.7,
+  "board_light_fec": {
+   "link_bytes_s_fc4": 237234375000.0,
+   "one_way_ns": 205.0,
+   "package_bytes_s": 1186171875000.0,
+   "src": "arch_budget_v41.BASELINE board_hop_s 130 ns + 2 x 45 VM->SerDes stages; technology.json rom_board_serdes (90 lanes per 2-die package, fc4 = 5 links)"
+  },
+  "fabric_8die_fc4_examples_ns": {
+   "all_gather_20480B": 164.0,
+   "all_gather_215040B": 392.2,
+   "all_gather_3648B": 144.3,
+   "all_gather_68096B": 219.9,
+   "all_reduce_143360B": 822.6,
+   "all_reduce_20480B": 246.1
+  },
+  "ucie_in_package": {
+   "bytes_s": 4200000000000.0,
+   "one_way_ns": 65.2,
+   "src": "technology.json links.rom_package_ucie (10 ns incl. 1.5 ns on-die) + 2 x 34 VM->PHY stages (W18b); uarch_model_par2_boundary one_way_s"
+  }
+ },
+ "recommendation": {
+  "mapping": "C5hc_hybrid_head8_chase",
+  "measure_first_in_rtl": [
+   "8-die (4-package) all-gather and fixed-order pairwise all-reduce latency at the die's 64-B flit, including blocking COLL and backpressure (C7 found overlap worse than modelled: 8,622 -> 7,579 tok/s)",
+   "the MoE two-gather schedule (act 68 KB after quant2, y 20 KB after the local id-order sum) against the golden at full shape (v41_tp_exact_reprice required_collective_bench)",
+   "wo_b 8-way aligned K split + fixed tree reduce bit-exact against hdc_golden_v41 csum (chunk8)",
+   "bit-identical replicated hub chains on 8 dies (same inputs, same order): a two-die lockstep check",
+   "CP-8 index scan: striped key writer/scanner, position-ordered tselect_final at 8 x 512, tie order",
+   "the streamed top-k (chase) in RTL",
+   "lm_head 8-way vocabulary split + lowest-index argmax merge"
+  ],
+  "regenerate": [
+   "tools/uarch_model.py cons_v41_rom: a TP-8 physical-die mode (group 8, 2 dies/package, fc4), the exact MoE two-gather in decode_critical_path.v41_moe, lm_head 8-way, CP-8 scans (today an extension only)",
+   "results/uarch/dsrom_parallel_owner_binding_20261002 native_shard_choices (no owner shard: per-die TP-8 shares; head/o-group ownership)",
+   "results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002 model-r4 PAR2 boundary / return-port ledger (the remote result port and activation packet disappear; collective ports instead)",
+   "results/uarch/dsrom_4096_comparable_capacity_20261002 partition_token_options (per physical die rows)",
+   "results/uarch/dsrom_par2_boundary_20261003 (superseded as the selected mapping; kept as evidence)",
+   "results/uarch/dsrom_stage_balance_20261003 options (CP-8 and chase now part of the mapping)",
+   "die HBM placement: 2 stacks per physical die (was 4 on the PAR2 shard-0 die), shoreline/PHY plan",
+   "coordinated no-ECC model, macro inventory and physical contracts (AGENTS.md ROM policy)",
+   "results/arch/v41_tp_exact_reprice.json at TP-8, and the C7 collective exposure campaign at 8 dies"
+  ],
+  "statement": "Drop PAR2's owner/row-split boundary: make the 8 physical dies of each S58 stage symmetric TP-8 peers, each running the bit-identical hub chain (SU, mHC/Sinkhorn, norms) on a replicated residual.  Per operator: a_proj / router column-parallel + small all-gathers (replication priced worse: BF16 router on one die's BF pairs costs +29 us); attention head/o-group parallel (8 heads, 1 o-group per die) with wo_b's K split on 4-chunk aligned subtrees and a fixed pairwise-tree all-reduce; routed and shared experts output-row split (column gu, act all-gather, full-K row down, local id-order sum, y all-gather), NOT EP (busiest-die read x2.9 at E[kmax]=2.18 and a 6x combine payload: -4.9% AR / -22% MTP) and NOT Megatron K-split (unaligned FF chunks: imbalance 1.78x and a 143 KB per-expert all-reduce: MTP -11%); index keys context-parallel over the 8 dies' HBM with the position-ordered exact merge and the streamed top-k (chase); attention softmax not split; lm_head 8 ways over the 8 head dies; PP over 58 stages; MTP m=1 time-multiplexed on the same mapping.  Same 508 dies / 254 packages / 960 stacks as the current system."
+ },
+ "schema": "opentallas.dsrom.parallelism.v1",
+ "scope": "Analytical only; dataflow levels 1-5; no RTL/P&R; nothing adopted.",
+ "source_sha256": {
+  "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+  "results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154",
+  "results/uarch/dsrom_parallel_owner_binding_20261002/r1/native_shard_choices.jsonl.gz": "a723482a46ab7843a83399f666c9c3571c499891d02a449c6d8d89eb356eb2b3",
+  "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+  "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+  "tools/dsrom_parallelism.py": "73a7a577c3054e679b9f4836619ba910a72cd9957c45be9745b370471d4c7434",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "tools/uarch_model_par2_boundary.py": "b898f4a34bfa061c92690a7566644eea33a7b411aae7e798c855443c27d2f274",
+  "tools/uarch_model_parallelism.py": "c20d7ea122173f53bde900cbf1328cae6b51b260852ae599988c05936d2f4c60"
+ }
+}

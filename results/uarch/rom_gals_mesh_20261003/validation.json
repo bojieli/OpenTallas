@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.rom.gals_mesh.validation.v1",
+  "base_commit": "79b3c5f84e9d9555f24e7bc943869f64edb74b72",
+  "checks": "5/5 analytical tests passed",
+  "physical_gate": "NOT_RUN",
+  "hardware_adoption": false,
+  "main_and_owner_files_modified": false,
+  "coordination": {
+    "owner": "Goodall 01a0fac5",
+    "delivery": "shared handoff file",
+    "acknowledged": false,
+    "reason": "No agent messaging tool; historical mailbox executable absent"
+  },
+  "sha256": {
+    "tools/uarch_rom_gals_mesh.py": "f8e448bc99543ab22e39fe63776e1795299aa764f04aa61d9784de7b34c12ed5",
+    "tools/test_uarch_rom_gals_mesh.py": "2ecf5fe3935946922c2337752e3c702a6ea2d2aad75cdd477778052211143422",
+    "results/uarch/rom_gals_mesh_20261003/model.json": "51f96614ea2cf87c00e4da63ccdb4d54ce53b53fe125122265dea84a13a28d60",
+    "results/uarch/rom_gals_mesh_20261003/HANDOFF.txt": "12980c5e00c870fc017eeab3bf04eaab530c6fe111c8fa82c5372db0805fb85b",
+    "results/uarch/rom_gals_mesh_20261003/tests.log": "db5ac2b9a334a6a36f48cd13bacadc8238bb6752de22d788bc144c4839bf3e4d",
+    "results/uarch/rom_gals_mesh_20261003/replay.log": "2f8665a5108b0b71d7f3b445bfb222a6a405fc523635864508f08012a815c198",
+    "results/uarch/rom_gals_mesh_20261003/inputs/pins.json": "dea7b204c1771fec6b02d100008d27615464eaa46d7213ee7a1b46cbc780eee5"
+  }
+}
