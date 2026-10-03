@@ -144,7 +144,7 @@ module ot_hdc_v41x_att_adapt_native_vm #(
     wire [MP*G*32-1:0] checked_x_q = VM_RESPONSE_WAIT ? reply_capture : x_q;
     wire output_slot = !(|o_we) && !write_debt && !write_pending;
     assign x_request_cookie = lc;
-    assign x_reply_ready = VM_RESPONSE_WAIT && rst_n && read_pending && !identity_fault;
+    assign x_reply_ready = VM_RESPONSE_WAIT && rst_n && read_pending && !identity_fault && x_reply_cookie==pending_cookie;
     assign ready = (st == A_IDLE) && (!VM_RESPONSE_WAIT || (rst_n && !identity_fault && !read_pending && !(|x_re))) &&
                    (!OUTPUT_CREDIT || output_slot);
     initial if (VM_RESPONSE_WAIT && (!PACKED_KV || MP!=1 || G!=4 || AW!=30 || NW!=21 || D!=512 || TROWS!=640))
@@ -434,9 +434,9 @@ module ot_hdc_v41x_att_adapt_native_vm #(
                 if ((|x_re) && x_req_ready) begin
                     x_re<=0; read_pending<=1; pending_cookie<=lc; lc<=lc+G;
                 end
-                if (x_reply_v && x_reply_ready) begin
+                if (x_reply_v && read_pending) begin
                     if (x_reply_cookie != pending_cookie) identity_fault<=1;
-                    else begin reply_capture<=x_q; l2_v<=1; l2_c<=pending_cookie; read_pending<=0; end
+                    else if (x_reply_ready) begin reply_capture<=x_q; l2_v<=1; l2_c<=pending_cookie; read_pending<=0; end
                 end
             end
             if (OUTPUT_CREDIT) begin

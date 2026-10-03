@@ -419,7 +419,7 @@ module ot_hdc_v41x_me_adapt_native_vm #(
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
-        else idle <= (st == A_IDLE) && !go && t_idle && !t_ov && !ov && !(|o_we) && (!OUTPUT_CREDIT||(!write_pending&&!write_debt));
+        else idle <= (st == A_IDLE) && !go && t_idle && !t_ov && !ov && !(|o_we) && (!OUTPUT_CREDIT||(!write_pending&&!write_debt)) && (!VM_RESPONSE_WAIT || (!read_pending&&!identity_fault));
     end
     // ---- activation counters (bench only, read hierarchically by rtl/test/tb_hdc_core_v41x.sv): ops this
     // engine ran and the elements it processed -- the campaign fails a selected unit whose counters stay 0

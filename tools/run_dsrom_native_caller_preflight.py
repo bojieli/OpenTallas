@@ -11,7 +11,7 @@ CASES={
  'XU':('ot_hdc_v41x_xu_adapt_native_vm',dict(VM_RESPONSE_WAIT=1,OUTPUT_CREDIT=1,AW=30,NW=21,K=512,IKW=12,SK=2048,X_SEL=1,SQ=4,SW=16))}
 def main():
  from dsrom_shared_native_vm_model import model
- p=argparse.ArgumentParser();p.add_argument('--out',type=pathlib.Path,required=True);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--out',type=pathlib.Path,required=True);p.add_argument('--cases',nargs='+',choices=CASES,default=list(CASES));a=p.parse_args()
  m=model();assert m['caller_integration']['raw_source_integration_admission']
  out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
  names=(ROOT/'tools/w17_current_fastpp_l20_window_owner_safe_sources.txt').read_text().split()
@@ -24,12 +24,13 @@ def main():
  rec=dict(pid=os.getpid(),host=os.uname().nodename,status='RUNNING',scope='full-width source elaboration only; no arithmetic simulation, protected parent, physical or token credit',source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),dirty=subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True),source_sha256=pins,cases={},versions=subprocess.check_output(['verilator','--version'],text=True))
  def save():(out/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
  save();(out/'model.json').write_text(json.dumps(m,indent=2)+'\n')
- for case,(top,params) in CASES.items():
+ for case in a.cases:
+  top,params=CASES[case]
   cmd=['verilator','--lint-only','--timing','-Wno-fatal','-DV41_ATT_CUT','-I'+str(ROOT/'rtl/hdc/v41'),'--top-module',top,*['-G'+k+'='+str(v) for k,v in params.items()],*files]
   start=time.time()
   with (out/(case+'.log')).open('w') as log:
    code=subprocess.run(['/usr/bin/time','-v','-o',str(out/(case+'.resources')),*cmd],stdout=log,stderr=subprocess.STDOUT,cwd=ROOT).returncode
   rec['cases'][case]=dict(command=cmd,parameters=params,exit_code=code,elapsed_s=time.time()-start);save()
   if code:break
- rec['status']='TERMINAL';rec['verdict']='PASS' if len(rec['cases'])==5 and all(c['exit_code']==0 for c in rec['cases'].values()) else 'FAIL';save();print(json.dumps(dict(receipt=str(out/'record.json'),verdict=rec['verdict'])));return rec['verdict']!='PASS'
+ rec['status']='TERMINAL';rec['verdict']='PASS' if len(rec['cases'])==len(a.cases) and all(c['exit_code']==0 for c in rec['cases'].values()) else 'FAIL';save();print(json.dumps(dict(receipt=str(out/'record.json'),verdict=rec['verdict'])));return rec['verdict']!='PASS'
 if __name__=='__main__':raise SystemExit(main())

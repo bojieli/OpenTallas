@@ -31,6 +31,7 @@ def test_complete_attention_stored_format_and_finite_index_batch():
  a=(R/'ot_hdc_v41x_att_adapt_native_vm.sv').read_text()
  assert 'D!=512 || TROWS!=640' in a and '!PACKED_KV' in a
  assert 'x_reply_cookie != pending_cookie' in a
+ assert '&& x_reply_cookie==pending_cookie' in a and 'if (x_reply_v && read_pending)' in a
  assert 'wc < wend' in a and 'write_debt<=0' in a
  p=(R/'ot_hdc_v41x_idx_pool_adapt_native_vm.sv').read_text()
  assert 'score_fifo[0:63]' in p and 'merge_v && next_batch_room' in p
@@ -45,3 +46,20 @@ def test_actual_core_calls_selected_copies_with_issuer_pc():
  assert '.x_q(NATIVE_VM ? native_vx_q_data[1*128+:128] : vx_q)' in p
  assert '.write_visible(native_w_visible[3])' in p
  assert not M.model()['admission']['complete_seven_class_parent']
+def test_new_terminal_pins_resources_and_exact_scope():
+ import tarfile
+ d=ROOT/'results/uarch/dsrom_shared_native_vm_20261003'
+ m=json.loads((d/'native_caller_implementation.json').read_text())
+ assert not m['admission']['full_token'] and not m['admission']['actual_operator_golden_simulation']
+ for n,r in m['receipts'].items():
+  p=d/'evidence'/r['archive'];assert hashlib.sha256(p.read_bytes()).hexdigest()==r['sha256']
+  with tarfile.open(p) as t:
+   actual=json.load(t.extractfile('record.json'));assert actual['status']=='TERMINAL'
+   assert actual['verdict']==r['verdict'] and not r['source_dirty']
+   for name,h in actual['source_sha256'].items():
+    saved=next(n for n in t.getnames() if n.startswith('sources/') and n.endswith(Path(name).name))
+    assert hashlib.sha256(t.extractfile(saved).read()).hexdigest()==h
+ assert 'PASS NATIVE_CALLER_RESET' in m['receipts']['ds-native-callers-r2-pass']['terminal']
+ assert 'unexpected source integration fault' in m['receipts']['ds-native-callers-r1-failed']['terminal']
+ assert set(m['receipts']['ds-native-caller-preflight-r2-pass']['cases'])=={'core','ME','attention','index','XU'}
+ assert all(c['exit_code']==0 for c in m['receipts']['ds-native-caller-preflight-r2-pass']['cases'].values())
