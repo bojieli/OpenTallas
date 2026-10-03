@@ -1,0 +1,44 @@
+test_actual_collector_negative_witnesses (test_pve1_odb_endpoint_tcl_mock.NativeCollectorMockTests) ... ok
+test_complete_collector_corner_checks_and_iterator_lifecycle (test_pve1_odb_endpoint_tcl_mock.NativeCollectorMockTests) ... ok
+test_macro_arc_delay_signature_retained_and_qualification_held (test_pve1_odb_endpoint_tcl_mock.NativeCollectorMockTests) ... ok
+test_native_api_error_cannot_generate_completion (test_pve1_odb_endpoint_tcl_mock.NativeCollectorMockTests) ... ok
+test_reset_only_missing_graph_endpoint_has_explicit_witness (test_pve1_odb_endpoint_tcl_mock.NativeCollectorMockTests) ... ok
+test_bus_port_literal_coverage (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_canonical_numeric_format_and_pin_load_supported (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_constraint_disabled_arc_cannot_hide_behind_constant (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_disabled_arc_requires_native_constant_proof (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_disabled_checks_and_missing_macro_views_refused (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_exact_source_contract_and_complete_native_rows (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_missing_or_duplicate_endpoint_rows_refused (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_mixed_reset_and_functional_endpoint_not_waived (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_negative_slack_allowed_only_as_intermediate_evidence (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_no_generic_nonzero_or_missing_slack_acceptance (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_odb_sta_identity_mismatch_refused (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_proven_reset_only_non_graph_endpoint_is_explicit_exception (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_relaxation_or_broadened_exception_refused (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_safe_replay_denies_file_and_process_access (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_terminal_ideal_clock_refused (test_pve1_odb_stage_driver.EndpointAuditTests) ... ok
+test_arbitrary_timeout_refused (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_default_off_and_terminal_missing_refuse_before_launch (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_exact_producer_terminal_refuses_old_timeout (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_fresh_namespace_identity_verifier_checks_actual_bytes (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_heavy_outputs_refuse_tmpfs_tmp_paths (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_hooks_restored_from_exact_source_not_missing_archive_text (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_later_stage_knobs_and_odb_sequence (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_native_tcl_is_complete_script (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_prepare_no_native_process_and_existing_bundle_preserved (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_run_streams_raw_log_without_timeout (test_pve1_odb_stage_driver.StageDriverTests) ... ok
+test_changed_original_source_refused (test_pve1_source_constraint_successor.SourceContractTests) ... ok
+test_changed_source_binding_refused (test_pve1_source_constraint_successor.SourceContractTests) ... ok
+test_constraint_declaration_or_latency_change_refused (test_pve1_source_constraint_successor.SourceContractTests) ... ok
+test_default_off_creates_nothing (test_pve1_source_constraint_successor.SourceContractTests) ... ok
+test_existing_artifacts_preserved (test_pve1_source_constraint_successor.SourceContractTests) ... ok
+test_missing_or_substituted_rtl_inventory_refused (test_pve1_source_constraint_successor.SourceContractTests) ... ok
+test_relaxed_clock_or_reset_literal_refused (test_pve1_source_constraint_successor.SourceContractTests) ... ok
+test_retrospective_equivalence_refused (test_pve1_source_constraint_successor.SourceContractTests) ... ok
+test_review_bundle_does_not_claim_terminal_or_qualification (test_pve1_source_constraint_successor.SourceContractTests) ... ok
+
+----------------------------------------------------------------------
+Ran 39 tests in 5.806s
+
+OK

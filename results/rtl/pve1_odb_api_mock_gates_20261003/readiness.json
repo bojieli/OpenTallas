@@ -1,0 +1,43 @@
+{
+  "created_utc": "2026-10-03T02:52:55.480170+00:00",
+  "dependency_commit": "7eaf43a4553dd61d2e368828085c2264800a9e32",
+  "source_commit": "fb5df1ac4ee6df1011165e32e91aadc29bc702ae",
+  "unchanged_pins": {
+    "tools/pve1_odb_endpoint_audit.tcl": "8fc3837aac0d563744bc1f70f3a32bf2d20384719fb6e964432192efecc257b4",
+    "tools/pve1_odb_endpoint_audit.py": "4ebb57ad34d3b3a2a17695bae11edd408a1493b576b25097cc4a79b35ad641ed",
+    "tools/pve1_odb_stage_driver.py": "a763d81796193693ca24e19ed8f6d4d0c776ecb58d4a2c360c29931cd584bee9",
+    "results/rtl/pve1_new_source_constraint_successor_20261003/new_source_constraint.sdc": "360040de16ad28c433a94d550c87806ce4cbe3237e9baea0604c0640ef1df044"
+  },
+  "readiness": "STATIC_SOURCE_REVIEW_AND_FINITE_MOCK_GATES_ONLY",
+  "native_execution_verified": false,
+  "launch_authorized": false,
+  "heavy_job_started": false,
+  "resource_limits_added": false,
+  "source_or_clock_changes": false,
+  "terminal_gate": "Exact PID2006920/start_ticks53282142 producer exit0, writer closed, raw log and nonempty 3_3_place_gp.odb hashes; then fresh disjoint lease/capacity review and pinned persistent uncapped launcher.",
+  "pve1_observation": {
+    "time_utc": "2026-10-03T02:37:00.799094Z",
+    "producer_alive": true,
+    "watcher_pid": 2093643,
+    "log_bytes": 9748,
+    "log_sha256": "58ccce03e83038daf1c9344514177c3f26b067de2adf3346c995693f6cb474b8",
+    "outputs": [],
+    "free_bytes": 79168860160,
+    "terminal_inferred": false
+  },
+  "pve2_observation": {
+    "one_poll_only": true,
+    "pid": 551255,
+    "ssh_exit": 255,
+    "stderr": "Connection timed out during banner exchange; Connection to UNKNOWN port 65535 timed out.",
+    "terminal_inferred": false,
+    "release_ready": false,
+    "job_preserved": true
+  },
+  "pve3_observation": {
+    "fresh_independent_poll": false,
+    "parent_status": "idle held; drain-only; no new workload"
+  },
+  "historical_timeout_verdict": "FAIL preserved",
+  "signoff": false
+}

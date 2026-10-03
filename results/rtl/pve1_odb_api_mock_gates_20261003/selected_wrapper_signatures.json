@@ -1,0 +1,80 @@
+{
+  "binary_sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+  "binary_bytes": 121423136,
+  "signatures": {
+    "endpoints": [
+      ":sta::endpoints "
+    ],
+    "vertex_iterator": [
+      ":sta::vertex_iterator "
+    ],
+    "timing_role_is_check": [
+      "o:sta::timing_role_is_check role "
+    ],
+    "Vertex_in_edge_iterator": [
+      "o:sta::Vertex_in_edge_iterator self "
+    ],
+    "VertexIterator_has_next": [
+      "o:sta::VertexIterator_has_next self "
+    ],
+    "VertexIterator_next": [
+      "o:sta::VertexIterator_next self "
+    ],
+    "VertexIterator_finish": [
+      "o:sta::VertexIterator_finish self "
+    ],
+    "Edge_role": [
+      "o:sta::Edge_role self "
+    ],
+    "Edge_from_pin": [
+      "o:sta::Edge_from_pin self "
+    ],
+    "Edge_to_pin": [
+      "o:sta::Edge_to_pin self "
+    ],
+    "Edge_is_disabled_constraint": [
+      "o:sta::Edge_is_disabled_constraint self "
+    ],
+    "Edge_is_disabled_loop": [
+      "o:sta::Edge_is_disabled_loop self "
+    ],
+    "Edge_is_disabled_constant": [
+      "o:sta::Edge_is_disabled_constant self "
+    ],
+    "Edge_disabled_constant_pins": [
+      "o:sta::Edge_disabled_constant_pins self "
+    ],
+    "Edge_timing_arcs": [
+      "o:sta::Edge_timing_arcs self "
+    ],
+    "Edge_arc_delay_strings": [
+      "oooo:sta::Edge_arc_delay_strings self arc report_variance digits "
+    ],
+    "Edge_to_string": [
+      "o:sta::Edge_to_string self "
+    ],
+    "PathEnd_is_unconstrained": [
+      "o:sta::PathEnd_is_unconstrained self "
+    ],
+    "liberty_cell_property": [
+      "oo:sta::liberty_cell_property cell property "
+    ],
+    "VertexInEdgeIterator_has_next": [
+      "o:sta::VertexInEdgeIterator_has_next self "
+    ],
+    "VertexInEdgeIterator_next": [
+      "o:sta::VertexInEdgeIterator_next self "
+    ],
+    "VertexInEdgeIterator_finish": [
+      "o:sta::VertexInEdgeIterator_finish self "
+    ],
+    "find_timing_cmd": [
+      "o:sta::find_timing_cmd full "
+    ]
+  },
+  "native_execution_verified": false,
+  "status": "COMPILED_WRAPPER_SIGNATURES_OBSERVED",
+  "find_timing": "Tcl procedure in installed_tcl_source_review.json; calls compiled find_timing_cmd",
+  "edge_iterator_class": "VertexInEdgeIterator (not EdgeIterator)",
+  "native_ODB_dispatch_return_types_verified": false
+}

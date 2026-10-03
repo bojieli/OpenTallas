@@ -1,0 +1,156 @@
+{
+  "binary_sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+  "array_symbol": "sta::dbSta_tcl_inits",
+  "array_address": "0x6066540",
+  "chunks": [
+    {
+      "pointer": "0x43a1308",
+      "offset": 70914824,
+      "bytes": 65536,
+      "sha256": "b6ec5b9da47059b73c1af7e2f9b74f8320e939c5792bc5dcc36b3bf1eb235fa0"
+    },
+    {
+      "pointer": "0x43b1310",
+      "offset": 70980368,
+      "bytes": 65536,
+      "sha256": "461e0d5bfe7be601a604822768d7c971f3074153dc577440cc52e96c5f5d9af1"
+    },
+    {
+      "pointer": "0x43c1318",
+      "offset": 71045912,
+      "bytes": 65536,
+      "sha256": "416723e055db610c7b8004b0fb92fb81fedd8434641dddcd57cb6b2bf4e49c22"
+    },
+    {
+      "pointer": "0x43d1320",
+      "offset": 71111456,
+      "bytes": 65536,
+      "sha256": "8bfd6d55d9d83a650083eba49918d78c860c3857159be0d96bad90029b1202e1"
+    },
+    {
+      "pointer": "0x43e1328",
+      "offset": 71177000,
+      "bytes": 65536,
+      "sha256": "774f40b9e9d0e8b8e3b277aef89ab1df24dab7cd2c16564221fb1d87ab7b45d0"
+    },
+    {
+      "pointer": "0x43f1330",
+      "offset": 71242544,
+      "bytes": 65536,
+      "sha256": "426bae3f545e2291a326f93c5a051c93024f28c5bca9ed1dc208b8a0e25a9c92"
+    },
+    {
+      "pointer": "0x4401338",
+      "offset": 71308088,
+      "bytes": 65536,
+      "sha256": "bc338186299a59dba0878f4b361708db18be5d7dafa065894623f7f759656e5a"
+    },
+    {
+      "pointer": "0x4411340",
+      "offset": 71373632,
+      "bytes": 4176,
+      "sha256": "2edaa0d3272b024c9ac69ce15426c2fd51d0c883ae304130572890686d5b8cf4"
+    }
+  ],
+  "encoded_sha256": "9747d494c88f6438574146672296555f40aadd9f9e0f2406c706db7b9bfbf2b1",
+  "decoded_sha256": "7298ab42784b73ee43da0f694aca5fd5fbe0936528424740818c46fbad79d8d6",
+  "decoded_bytes": 347194,
+  "status": "INSTALLED_TCL_SOURCE_OPTIONS_REVIEWED",
+  "native_execution_verified": false,
+  "launch_authorized": false,
+  "decoded_command_definitions": {
+    "find_timing": {
+      "decoded_offset": 294882,
+      "bytes": 147,
+      "sha256": "19bf268e5ab64ce97619ec81948e2be3a468ce3aafcc6356988087da9617f50a",
+      "required_literals": [
+        "find_timing_cmd"
+      ],
+      "source": "proc find_timing { args } {\n  parse_key_args \"find_timing\" args keys {} flags {-full_update}\n  find_timing_cmd [info exists flags(-full_update)]\n}\n"
+    },
+    "find_timing_paths_cmd": {
+      "decoded_offset": 295834,
+      "bytes": 4016,
+      "sha256": "4a423ac1eda3421361d10692dadea5de533f066a8fb980f36b8dc3d9ee586476",
+      "required_literals": [
+        "-to",
+        "-corner",
+        "-path_delay"
+      ],
+      "source": "proc find_timing_paths_cmd { cmd args_var } {\n  global sta_report_unconstrained_paths\n  upvar 1 $args_var args\n\n  parse_key_args $cmd args \\\n    keys {-from -rise_from -fall_from -to -rise_to -fall_to \\\n            -path_delay -corner -scenes -group_count -endpoint_count \\\n            -group_path_count -endpoint_path_count \\\n            -slack_max -slack_min -path_group} \\\n    flags {-unconstrained -sort_by_slack \\\n             -unique_paths_to_endpoint \\\n             -unique_edges_to_endpoint} 0\n\n  set min_max \"max\"\n  set end_rf \"rise_fall\"\n  if [info exists keys(-path_delay)] {\n    set mm_key $keys(-path_delay)\n    if { $mm_key == \"max_rise\" } {\n      set min_max \"max\"\n      set end_rf \"rise\"\n    } elseif { $mm_key == \"max_fall\" } {\n      set min_max \"max\"\n      set end_rf \"fall\"\n    } elseif { $mm_key == \"min_rise\" } {\n      set min_max \"min\"\n      set end_rf \"rise\"\n    } elseif { $mm_key == \"min_fall\" } {\n      set min_max \"min\"\n      set end_rf \"fall\"\n    } elseif { $mm_key == \"min\" || $mm_key == \"max\" || $mm_key == \"min_max\" } {\n      set min_max $mm_key\n    } else {\n      sta_error 510 \"$cmd -path_delay must be min, min_rise, min_fall, max, max_rise, max_fall or min_max.\"\n    }\n  }\n\n  set arg_error 0\n  set from [parse_from_arg keys arg_error]\n  set thrus [parse_thrus_arg args arg_error]\n  set to [parse_to_arg1 keys $end_rf arg_error]\n  if { $arg_error } {\n    delete_from_thrus_to $from $thrus $to\n    sta_error 511 \"$cmd command failed.\"\n  }\n\n  if { [info exists flags(-unconstrained)] } {\n    set unconstrained 1\n  } elseif { [info exists sta_report_unconstrained_paths] } {\n    set unconstrained $sta_report_unconstrained_paths\n  } else {\n    set unconstrained 0\n  }\n\n  set scenes [parse_scenes_or_all keys]\n\n  set endpoint_path_count 1\n  if { [info exists keys(-endpoint_count)] } {\n    # deprecated 2024-11-22\n    sta_warn 502 \"$cmd -endpoint_count is deprecated. Use -endpoint_path_count instead.\"\n    set endpoint_path_count $keys(-endpoint_count)\n  }\n  if [info exists keys(-endpoint_path_count)] {\n    set endpoint_path_count $keys(-endpoint_path_count)\n  }\n  if { $endpoint_path_count < 1 } {\n    sta_error 512 \"-endpoint_path_count must be a positive integer.\"\n  }\n\n  set group_path_count $endpoint_path_count\n  if { [info exists keys(-group_count)] } {\n    # deprecated 2024-11-22\n    sta_warn 503 \"$cmd -group_count is deprecated. Use -group_path_count instead.\"\n    set group_path_count $keys(-group_count)\n  }\n  if [info exists keys(-group_path_count)] {\n    set group_path_count $keys(-group_path_count)\n  }\n  check_positive_integer \"-group_path_count\" $group_path_count\n  if { $group_path_count < 1 } {\n    sta_error 513 \"-group_path_count must be >= 1.\"\n  }\n\n  set unique_pins [info exists flags(-unique_paths_to_endpoint)]\n  set unique_edges [info exists flags(-unique_edges_to_endpoint)]\n\n  set slack_min \"-1e+30\"\n  if [info exist keys(-slack_min)] {\n    set slack_min $keys(-slack_min)\n    check_float \"-slack_min\" $slack_min\n    set slack_min [time_ui_sta $slack_min]\n  }\n\n  set slack_max \"1e+30\"\n  if [info exist keys(-slack_max)] {\n    set slack_max $keys(-slack_max)\n    check_float \"-slack_max\" $slack_max\n    set slack_max [time_ui_sta $slack_max]\n  }\n\n  set sort_by_slack [info exists flags(-sort_by_slack)]\n\n  set groups {}\n  if [info exists keys(-path_group)] {\n    set groups [parse_path_group_arg $keys(-path_group)]\n  }\n\n  if { [llength $args] != 0 } {\n    delete_from_thrus_to $from $thrus $to\n    set arg [lindex $args 0]\n    if { [is_keyword_arg $arg] } {\n      sta_error 514 \"'$arg' is not a known keyword or flag.\"\n    } else {\n      sta_error 515 \"positional arguments not supported.\"\n    }\n  }\n  set path_ends [find_path_ends $from $thrus $to $unconstrained \\\n                   $scenes $min_max \\\n                   $group_path_count $endpoint_path_count \\\n                   $unique_pins $unique_edges \\\n                   $slack_min $slack_max \\\n                   $sort_by_slack $groups \\\n                   1 1 1 1 1 1]\n  return $path_ends\n}\n"
+    },
+    "all_registers": {
+      "decoded_offset": 177943,
+      "bytes": 2221,
+      "sha256": "4967462318ad284807147a32a970efa188b3f095d199a3775a6013e309eac541",
+      "required_literals": [
+        "-clock_pins",
+        "-data_pins",
+        "-async_pins"
+      ],
+      "source": "proc all_registers { args } {\n  parse_key_args \"all_registers\" args keys {-clock -rise_clock -fall_clock} \\\n    flags {-cells -data_pins -clock_pins -async_pins -output_pins -level_sensitive -edge_triggered}\n  check_argc_eq0 \"all_registers\" $args\n\n  set clks {}\n  set clk_rf \"rise_fall\"\n  if [info exists keys(-clock)] {\n    set clks [get_clocks_warn \"clocks\" $keys(-clock)]\n  }\n  if [info exists keys(-rise_clock)] {\n    set clks [get_clocks_warn \"clocks\" $keys(-rise_clock)]\n    set clk_rf \"rise\"\n  }\n  if [info exists keys(-fall_clock)] {\n    set clks [get_clocks_warn \"clocks\" $keys(-fall_clock)]\n    set clk_rf \"fall\"\n  }\n\n  if {[info exists flags(-edge_triggered)] \\\n        && ![info exists flags(-level_sensitive)]} {\n    set edge_triggered 1\n    set level_sensitive 0\n  } elseif {[info exists flags(-level_sensitive)] \\\n              && ![info exists flags(-edge_triggered)]} {\n    set level_sensitive 1\n    set edge_triggered 0\n  } else {\n    set edge_triggered 1\n    set level_sensitive 1\n  }\n  if { [expr [info exists flags(-cells)] \\\n          + [info exists flags(-data_pins)] \\\n          + [info exists flags(-clock_pins)] \\\n          +  [info exists flags(-async_pins)] \\\n          + [info exists flags(-output_pins)]] > 1 } {\n    sta_error 346 \"only one of -cells, -data_pins, -clock_pins, -async_pins, -output_pins are suppported.\"\n  }\n  if [info exists flags(-cells)] {\n    return [find_register_instances $clks $clk_rf \\\n              $edge_triggered $level_sensitive]\n  } elseif [info exists flags(-data_pins)] {\n    return [find_register_data_pins $clks $clk_rf \\\n              $edge_triggered $level_sensitive]\n  } elseif [info exists flags(-clock_pins)] {\n    return [find_register_clk_pins $clks $clk_rf \\\n              $edge_triggered $level_sensitive]\n  } elseif [info exists flags(-async_pins)] {\n    return [find_register_async_pins $clks $clk_rf \\\n              $edge_triggered $level_sensitive]\n  } elseif [info exists flags(-output_pins)] {\n    return [find_register_output_pins $clks $clk_rf \\\n              $edge_triggered $level_sensitive]\n  } else {\n    # -cells is the default.\n    return [find_register_instances $clks $clk_rf \\\n              $edge_triggered $level_sensitive]\n  }\n}\n"
+    },
+    "check_setup_cmd": {
+      "decoded_offset": 293253,
+      "bytes": 1436,
+      "sha256": "4550a796db9ed1d745cdd0e1ebdedae3b475cff7ab0047bafc1ef24e03595283",
+      "required_literals": [
+        "-verbose",
+        "expr [llength $errors] == 0"
+      ],
+      "source": "proc check_setup_cmd { cmd cmd_args } {\n  parse_key_args $cmd cmd_args keys {} flags {-verbose} 0\n  # When nothing is everything.\n  if { $cmd_args == {} } {\n    set unconstrained_endpoints 1\n    set multiple_clock 1\n    set no_clock 1\n    set no_input_delay 1\n    set no_output_delay 1\n    set loops 1\n    set generated_clocks 1\n  } else {\n    parse_key_args $cmd cmd_args keys {} \\\n      flags {-no_input_delay -no_output_delay -multiple_clock -no_clock \\\n                -unconstrained_endpoints -loops -generated_clocks}\n    set no_input_delay [info exists flags(-no_input_delay)]\n    set no_output_delay [info exists flags(-no_output_delay)]\n    set multiple_clock [info exists flags(-multiple_clock)]\n    set no_clock [info exists flags(-no_clock)]\n    set unconstrained_endpoints [info exists flags(-unconstrained_endpoints)]\n    set loops [info exists flags(-loops)]\n    set generated_clocks [info exists flags(-generated_clocks)]\n  }\n  set verbose [info exists flags(-verbose)]\n  set errors [check_timing_cmd $no_input_delay $no_output_delay \\\n                $multiple_clock $no_clock \\\n                $unconstrained_endpoints $loops \\\n                $generated_clocks]\n  foreach error $errors {\n    # First line is the error msg.\n    report_line [lindex $error 0]\n    if { $verbose } {\n      foreach obj [lrange $error 1 end] {\n        report_line \"  $obj\"\n      }\n    }\n  }\n  # return value\n  expr [llength $errors] == 0\n}\n"
+    },
+    "write_sdc": {
+      "decoded_offset": 172705,
+      "bytes": 728,
+      "sha256": "a3579c13c578efe60e9dec58809552ac7f6878e3049f7dd72e5f47fe2f66fbf1",
+      "required_literals": [
+        "-no_timestamp"
+      ],
+      "source": "proc write_sdc { args } {\n  parse_key_args \"write_sdc\" args keys {-mode -digits} \\\n    flags {-map_hpins -compatible -gzip -no_timestamp}\n  check_argc_eq1 \"write_sdc\" $args\n\n  set mode [cmd_mode_name]\n  if { [info exists keys(-mode)] } {\n    set mode $keys(-mode)\n  }\n  \n  set digits 4\n  if { [info exists keys(-digits)] } {\n    set digits $keys(-digits)\n  }\n  check_positive_integer \"-digits\" $digits\n\n  set filename [file nativename [lindex $args 0]]\n  set gzip [info exists flags(-gzip)]\n  set no_timestamp [info exists flags(-no_timestamp)]\n  set map_hpins [info exists flags(-map_hpins)]\n  set native [expr ![info exists flags(-compatible)]]\n  write_sdc_cmd $filename $mode $map_hpins $native $digits $gzip $no_timestamp\n}\n"
+    },
+    "get_fanin": {
+      "decoded_offset": 66163,
+      "bytes": 1672,
+      "sha256": "e76c5832fc1d193493587466c0b4b61b8e0fbcdc4aef7d77fcb6c4e3d185e167",
+      "required_literals": [
+        "-flat",
+        "-startpoints_only",
+        "-trace_arcs"
+      ],
+      "source": "proc get_fanin { args } {\n  parse_key_args \"get_fanin\" args \\\n    keys {-to -levels -pin_levels -trace_arcs} \\\n    flags {-flat -only_cells -startpoints_only}\n  if { [llength $args] != 0 } {\n    cmd_usage_error \"get_fanin\"\n  }\n  if { ![info exists keys(-to)] } {\n    cmd_usage_error \"get_fanin\"\n  }\n  parse_port_pin_net_arg $keys(-to) pins nets\n  foreach net $nets {\n    set net_pins [net_pins $net]\n    if { $net_pins != {} } {\n      lappend pins $net_pins\n    } else {\n      sta_warn 541 \"No load pins connected to net [get_full_name $net].\"\n    }\n  }\n  set flat [info exists flags(-flat)]\n  set only_insts [info exists flags(-only_cells)]\n  set startpoints_only [info exists flags(-startpoints_only)]\n  set inst_levels 0\n  if { [info exists keys(-levels)] } {\n    set inst_levels $keys(-levels)\n  }\n  set pin_levels 0\n  if { [info exists keys(-pin_levels)] } {\n    set pin_levels $keys(-pin_levels)\n  }\n\n  set thru_disabled 0\n  set thru_constants 0\n  if { [info exists keys(-trace_arcs)] } {\n    set trace_arcs $keys(-trace_arcs)\n    if { $trace_arcs == \"timing\" } {\n      set thru_disabled 0\n      set thru_constants 0\n    } elseif { $trace_arcs == \"enabled\" } {\n      set thru_disabled 0\n      set thru_constants 0\n    } elseif { $trace_arcs == \"all\" } {\n      set thru_disabled 1\n      set thru_constants 1\n    } else {\n      cmd_usage_error \"get_fanin\"\n    }\n  }\n  if { $only_insts } {\n    return [find_fanin_insts $pins $flat $startpoints_only \\\n              $inst_levels $pin_levels $thru_disabled $thru_constants]\n } else {\n    return [find_fanin_pins $pins $flat $startpoints_only \\\n              $inst_levels $pin_levels $thru_disabled $thru_constants]\n  }\n}\n"
+    },
+    "get_fanout": {
+      "decoded_offset": 68087,
+      "bytes": 1458,
+      "sha256": "a714f9fc5e370161d066c2773ec9d24aca5269237880ba4c04543eac216defee",
+      "required_literals": [
+        "-flat",
+        "-endpoints_only",
+        "-trace_arcs"
+      ],
+      "source": "proc get_fanout { args } {\n  parse_key_args \"get_fanout\" args \\\n    keys {-from -levels -pin_levels -trace_arcs} \\\n    flags {-flat -only_cells -endpoints_only}\n  if { [llength $args] != 0 } {\n    cmd_usage_error \"get_fanout\"\n  }\n  parse_port_pin_net_arg $keys(-from) pins nets\n  foreach net $nets {\n    lappend pins [net_load_pins $net]\n  }\n  set flat [info exists flags(-flat)]\n  set only_insts [info exists flags(-only_cells)]\n  set endpoints_only [info exists flags(-endpoints_only)]\n\n  set inst_levels 0\n  if { [info exists keys(-levels)] } {\n    set inst_levels $keys(-levels)\n  }\n\n  set pin_levels 0\n  if { [info exists keys(-pin_levels)] } {\n    set pin_levels $keys(-pin_levels)\n  }\n\n  set thru_disabled 0\n  set thru_constants 0\n  if { [info exists keys(-trace_arcs)] } {\n    set trace_arcs $keys(-trace_arcs)\n    if { $trace_arcs == \"timing\" } {\n      set thru_disabled 0\n      set thru_constants 0\n    } elseif { $trace_arcs == \"enabled\" } {\n      set thru_disabled 0\n      set thru_constants 0\n    } elseif { $trace_arcs == \"all\" } {\n      set thru_disabled 1\n      set thru_constants 1\n    } else {\n      cmd_usage_error \"get_fanout\"\n    }\n  }\n  if { $only_insts } {\n    return [find_fanout_insts $pins $flat $endpoints_only \\\n              $inst_levels $pin_levels $thru_disabled $thru_constants]\n  } else {\n    return [find_fanout_pins $pins $flat $endpoints_only \\\n              $inst_levels $pin_levels $thru_disabled $thru_constants]\n  }\n}\n"
+    },
+    "get_property": {
+      "decoded_offset": 40217,
+      "bytes": 668,
+      "sha256": "e2ff7e58e6518c77aa057800337ae857ec678ff1c25111bc08b7dbaacc931154",
+      "required_literals": [
+        "get_object_property"
+      ],
+      "source": "proc get_property { args } {\n  parse_key_args \"get_property\" args keys {-object_type} flags {-quiet}\n  check_argc_eq2 \"get_property\" $args\n  set quiet [info exists flags(-quiet)]\n  set object [lindex $args 0]\n  if { $object == \"\" } {\n    sta_error 2200 \"get_property object is null.\"\n  } elseif { ![is_object $object] } {\n    if [info exists keys(-object_type)] {\n      set object_type $keys(-object_type)\n    } else {\n      sta_error 2201 \"get_property -object_type must be specified with object name argument.\"\n    }\n    set object [get_property_object_type $object_type $object $quiet]\n  }\n  set prop [lindex $args 1]\n  return [get_object_property $object $prop]\n}\n"
+    },
+    "get_object_property": {
+      "decoded_offset": 40886,
+      "bytes": 1726,
+      "sha256": "606eef38dfd5117cbe645f59f575f9cf88817f2ca59a8d9579642b151c79479f",
+      "required_literals": [
+        "liberty_cell_property",
+        "path_end_property"
+      ],
+      "source": "proc get_object_property { object prop } {\n  if { [is_object $object] } {\n    set object_type [object_type $object]\n    if { $object_type == \"Instance\" } {\n      return [instance_property $object $prop]\n    } elseif { $object_type == \"Pin\" } {\n      return [pin_property $object $prop]\n    } elseif { $object_type == \"Net\" } {\n      return [net_property $object $prop]\n    } elseif { $object_type == \"Clock\" } {\n      return [clock_property $object $prop]\n    } elseif { $object_type == \"Scene\" } {\n      return [scene_property $object $prop]\n    } elseif { $object_type == \"Mode\" } {\n      return [mode_property $object $prop]\n    } elseif { $object_type == \"Port\" } {\n      return [port_property $object $prop]\n    } elseif { $object_type == \"LibertyPort\" } {\n      return [liberty_port_property $object $prop]\n    } elseif { $object_type == \"LibertyCell\" } {\n      return [liberty_cell_property $object $prop]\n    } elseif { $object_type == \"Cell\" } {\n      return [cell_property $object $prop]\n    } elseif { $object_type == \"Library\" } {\n      return [library_property $object $prop]\n    } elseif { $object_type == \"LibertyLibrary\" } {\n      return [liberty_library_property $object $prop]\n    } elseif { $object_type == \"Edge\" } {\n      return [edge_property $object $prop]\n    } elseif { $object_type == \"PathEnd\" } {\n      return [path_end_property $object $prop]\n    } elseif { $object_type == \"Path\" } {\n      return [path_property $object $prop]\n    } elseif { $object_type == \"TimingArcSet\" } {\n      return [timing_arc_property $object $prop]\n    } else {\n      sta_error 2203 \"get_property unsupported object type $object_type.\"\n    }\n  } else {\n    sta_error 2204 \"get_property $object is not an object.\"\n  }\n}\n"
+    }
+  },
+  "extraction": "ELF64 PT_LOAD virtual-address mapping of sta::dbSta_tcl_inits at 0x6066540; null-terminated pointer array; concatenate base64 chunks and strict-decode. No binary execution.",
+  "discarded_probe": "Unrelated legacy decimal unencode routine supplied no Tcl source evidence; no compatibility verdict is drawn from that probe."
+}
