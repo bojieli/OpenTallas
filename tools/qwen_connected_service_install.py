@@ -57,15 +57,16 @@ def slice_signal(signal, width):
     return signal + ('[i]' if width == 1 else f'[i*{width} +: {width}]')
 
 
-def generate(out=OUT):
-    model = json.loads(MODEL.read_text())
+def generate(out=OUT, *, base=BASE, model_path=MODEL, top_name='ot_gpu_qwen_hbm_integrated_ranked'):
+    base, model_path = Path(base), Path(model_path)
+    model = json.loads(model_path.read_text())
     for path, digest in model['source_sha256'].items():
         if hashlib.sha256((ROOT/path).read_bytes()).hexdigest() != digest:
             raise ValueError('priced install source changed: ' + path)
     abi = json.loads((ROOT/ABI).read_text())
-    book = json.loads((BASE/'ports.json').read_text())
-    sv = (BASE/'ot_gpu_qwen_hbm_integrated_ranked.sv').read_text()
-    cpp = (BASE/'pin_driver.cpp').read_text()
+    book = json.loads((base/'ports.json').read_text())
+    sv = (base/(top_name+'.sv')).read_text()
+    cpp = (base/'pin_driver.cpp').read_text()
     declarations, connections, assignments, get, set_ = [], [], [], [], []
     for name, spec in abi['ports'].items():
         if name == 'clk':
@@ -103,18 +104,18 @@ def generate(out=OUT):
     sv = replace_once(sv, '\nendmodule', instance+'\nendmodule')
     sv = replace_once(sv, '|| state_rpc_fault)', '|| state_rpc_fault || (|source_owner_fault))')
     out = Path(out); out.mkdir(parents=True, exist_ok=True)
-    top = out/'ot_gpu_qwen_hbm_integrated_ranked.sv'
+    top = out/(top_name+'.sv')
     top.write_text(sv); (out/'pin_driver.cpp').write_text(cpp)
-    deps = (BASE/'sources.f').read_text().splitlines()
-    if deps[-1] != str((BASE/'ot_gpu_qwen_hbm_integrated_ranked.sv').relative_to(ROOT)):
+    deps = (base/'sources.f').read_text().splitlines()
+    if deps[-1] != str((base/(top_name+'.sv')).relative_to(ROOT)):
         raise ValueError('unexpected sourcebook top ordering')
     deps[-1:] = [OWNER, str(top.relative_to(ROOT))]
     (out/'sources.f').write_text('\n'.join(deps)+'\n')
     book['inventory']['source_owner_count'] = 64
     book['source_sha256'][OWNER] = model['source_sha256'][OWNER]
     book['source_sha256'][str(top.relative_to(ROOT))] = hashlib.sha256(top.read_bytes()).hexdigest()
-    book['source_sha256'].pop(str((BASE/'ot_gpu_qwen_hbm_integrated_ranked.sv').relative_to(ROOT)))
-    book['service_install_model'] = str(MODEL.relative_to(ROOT))
+    book['source_sha256'].pop(str((base/(top_name+'.sv')).relative_to(ROOT)))
+    book['service_install_model'] = str(model_path.relative_to(ROOT))
     book['unresolved'] += model['pending']
     book['native_scratch_input_namespace'] = 'kv_native_* routed by existing shared_router; SM outputs remain readonly'
     (out/'ports.json').write_text(json.dumps(book,indent=2)+'\n')
