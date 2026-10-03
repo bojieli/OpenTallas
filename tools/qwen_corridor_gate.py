@@ -439,6 +439,23 @@ ACCESS_UM = 10.0                                        # audit: pin-access band
 CORE_MARGIN = 1.08                                      # um core inset: PG and rows stop short of the ports
 
 
+def hook_unfreeze():
+    return TCL_LIB + r'''
+# PRE_RESIZE: global placement (which calls remove_buffers when timing driven) is over; release the r2 stations and
+# repeaters to the resizer (sizing, buffering their nets) and to the legaliser.  Kept dont_touch, rsz fails with
+# RSZ-3006 when it buffers a station -> repeater net (measured: A_strip_r2 and B_tile_r0362 attempts).
+set n 0
+foreach inst [[qcg_block] getInsts] {
+  if {[regexp {^q[sr][0-9]+_[0-9]+$} [$inst getName]]} {
+    $inst setDoNotTouch 0
+    $inst setPlacementStatus PLACED
+    incr n
+  }
+}
+puts "QCG released $n station/repeater cells to resize and legalisation"
+'''
+
+
 def hook_def():
     return TCL_LIB + r'''
 # POST_DETAIL_ROUTE: routed DEF for the per-layer audit (tools/qwen_corridor_gate.py layer_audit).
@@ -495,6 +512,7 @@ def files(chains=None):
         out[f'{HOOK_DIR}/{low}_grt.tcl'] = hook_grt(t)
     out[f'{HOOK_DIR}/dont_touch.tcl'] = hook_dont_touch()
     out[f'{HOOK_DIR}/write_def.tcl'] = hook_def()
+    out[f'{HOOK_DIR}/unfreeze.tcl'] = hook_unfreeze()
     for k in list(out):
         if k.startswith(HOOK_DIR) and not k.split('/')[-1].startswith('pdn_'):
             # ORFS sources step hooks inside a proc: run them in a namespace so their variables are shared
@@ -540,6 +558,7 @@ def argv(v, jobroot: Path, src_root: Path):
          '--step-tcl', f'PRE_FLOORPLAN={HOOK_DIR}/dont_touch.tcl',
          '--step-tcl', f'PRE_GLOBAL_PLACE_SKIP_IO={HOOK_DIR}/{low}_place.tcl',
          '--step-tcl', f'PRE_IO_PLACEMENT={HOOK_DIR}/{low}_pins.tcl',
+         '--step-tcl', f'PRE_RESIZE={HOOK_DIR}/unfreeze.tcl',
          '--step-tcl', f'PRE_GLOBAL_ROUTE={HOOK_DIR}/{low}_grt.tcl',
          '--step-tcl', f'POST_DETAIL_ROUTE={HOOK_DIR}/write_def.tcl',
          '--orfs-var', f'PDN_TCL=/src/{HOOK_DIR}/pdn_{var["pg"]}.tcl',
@@ -779,7 +798,7 @@ def record(v, jobroot: Path, src_root: Path):
         run_sources=dict(root=str(run_root), commit=run_commit, sha256={
             rel: sha(run_root / rel) for rel in [R2_REC, 'tools/qwen_corridor_gate.py', f'{RTL_DIR}/{t["top"]}.v'] +
             [f'{HOOK_DIR}/{n}' for n in (f'{t["name"].lower()}_place.tcl', f'{t["name"].lower()}_pins.tcl',
-                                         f'{t["name"].lower()}_grt.tcl', 'dont_touch.tcl', 'write_def.tcl',
+                                         f'{t["name"].lower()}_grt.tcl', 'dont_touch.tcl', 'write_def.tcl', 'unfreeze.tcl',
                                          f'pdn_{var["pg"]}.tcl')] if (run_root / rel).is_file()}),
         recorder_sha256=sha(Path(__file__)),
         claim_boundary='ASAP7 block-level strip of one corridor at its r2 width: the router sees only the tracks inside '
