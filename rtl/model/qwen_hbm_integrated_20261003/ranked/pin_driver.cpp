@@ -28,6 +28,105 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="sector_map_rank"){word(dut.sector_map_rank);} else
  if(name=="sector_reverse_rank"){word(dut.sector_reverse_rank);} else
  if(name=="sector_rank_refusal"){word(dut.sector_rank_refusal);} else
+ if(name=="state_rpc_por_n"){word(dut.state_rpc_por_n);} else
+ if(name=="state_rpc_run_enable"){word(dut.state_rpc_run_enable);} else
+ if(name=="state_rpc_local_reset"){word(dut.state_rpc_local_reset);} else
+ if(name=="state_rpc_source_bound"){word(dut.state_rpc_source_bound);} else
+ if(name=="state_rpc_state_base_rank0"){word(uint32_t(dut.state_rpc_state_base_rank0>>32));word(uint32_t(dut.state_rpc_state_base_rank0));} else
+ if(name=="state_rpc_state_base_rank1"){word(uint32_t(dut.state_rpc_state_base_rank1>>32));word(uint32_t(dut.state_rpc_state_base_rank1));} else
+ if(name=="state_rpc_rpc_valid"){word(dut.state_rpc_rpc_valid);} else
+ if(name=="state_rpc_rpc_ready"){word(dut.state_rpc_rpc_ready);} else
+ if(name=="state_rpc_rpc_identity"){word(uint32_t(dut.state_rpc_rpc_identity>>32));word(uint32_t(dut.state_rpc_rpc_identity));} else
+ if(name=="state_rpc_rpc_rank"){word(dut.state_rpc_rpc_rank);} else
+ if(name=="state_rpc_rpc_write"){word(dut.state_rpc_rpc_write);} else
+ if(name=="state_rpc_rpc_address"){word(uint32_t(dut.state_rpc_rpc_address>>32));word(uint32_t(dut.state_rpc_rpc_address));} else
+ if(name=="state_rpc_rpc_bytes"){word(dut.state_rpc_rpc_bytes);} else
+ if(name=="state_rpc_rpc_payload"){for(int i=7;i>=0;i--)word(dut.state_rpc_rpc_payload[i]);} else
+ if(name=="state_rpc_rpc_reply_valid"){word(dut.state_rpc_rpc_reply_valid);} else
+ if(name=="state_rpc_rpc_reply_ready"){word(dut.state_rpc_rpc_reply_ready);} else
+ if(name=="state_rpc_rpc_reply_identity"){word(uint32_t(dut.state_rpc_rpc_reply_identity>>32));word(uint32_t(dut.state_rpc_rpc_reply_identity));} else
+ if(name=="state_rpc_rpc_reply_rank"){word(dut.state_rpc_rpc_reply_rank);} else
+ if(name=="state_rpc_rpc_reply_address"){word(uint32_t(dut.state_rpc_rpc_reply_address>>32));word(uint32_t(dut.state_rpc_rpc_reply_address));} else
+ if(name=="state_rpc_rpc_reply_bytes"){word(dut.state_rpc_rpc_reply_bytes);} else
+ if(name=="state_rpc_root_accept"){word(dut.state_rpc_root_accept);} else
+ if(name=="state_rpc_root_admit"){word(dut.state_rpc_root_admit);} else
+ if(name=="state_rpc_root_identity"){word(uint32_t(dut.state_rpc_root_identity>>32));word(uint32_t(dut.state_rpc_root_identity));} else
+ if(name=="state_rpc_root_retire"){word(dut.state_rpc_root_retire);} else
+ if(name=="state_rpc_root_retire_ready"){word(dut.state_rpc_root_retire_ready);} else
+ if(name=="state_rpc_root_retire_identity"){word(uint32_t(dut.state_rpc_root_retire_identity>>32));word(uint32_t(dut.state_rpc_root_retire_identity));} else
+ if(name=="state_rpc_sector_offer_valid"){word(dut.state_rpc_sector_offer_valid);} else
+ if(name=="state_rpc_sector_offer_rank"){word(dut.state_rpc_sector_offer_rank);} else
+ if(name=="state_rpc_sector_offer_write"){word(dut.state_rpc_sector_offer_write);} else
+ if(name=="state_rpc_sector_offer_identity"){word(uint32_t(dut.state_rpc_sector_offer_identity>>32));word(uint32_t(dut.state_rpc_sector_offer_identity));} else
+ if(name=="state_rpc_sector_offer_source_addr"){word(uint32_t(dut.state_rpc_sector_offer_source_addr>>32));word(uint32_t(dut.state_rpc_sector_offer_source_addr));} else
+ if(name=="state_rpc_map_valid"){word(dut.state_rpc_map_valid);} else
+ if(name=="state_rpc_map_ready"){word(dut.state_rpc_map_ready);} else
+ if(name=="state_rpc_map_rank"){word(dut.state_rpc_map_rank);} else
+ if(name=="state_rpc_map_sector_granted"){word(dut.state_rpc_map_sector_granted);} else
+ if(name=="state_rpc_map_source_addr"){word(uint32_t(dut.state_rpc_map_source_addr>>32));word(uint32_t(dut.state_rpc_map_source_addr));} else
+ if(name=="state_rpc_map_physical_addr"){word(uint32_t(dut.state_rpc_map_physical_addr>>32));word(uint32_t(dut.state_rpc_map_physical_addr));} else
+ if(name=="state_rpc_map_owner"){word(uint32_t(dut.state_rpc_map_owner>>32));word(uint32_t(dut.state_rpc_map_owner));} else
+ if(name=="state_rpc_tap_command_valid"){word(dut.state_rpc_tap_command_valid);} else
+ if(name=="state_rpc_tap_command_ready"){word(dut.state_rpc_tap_command_ready);} else
+ if(name=="state_rpc_tap_command_rank"){word(dut.state_rpc_tap_command_rank);} else
+ if(name=="state_rpc_tap_command_write"){word(dut.state_rpc_tap_command_write);} else
+ if(name=="state_rpc_tap_command_sector_granted"){word(dut.state_rpc_tap_command_sector_granted);} else
+ if(name=="state_rpc_tap_command_identity"){word(uint32_t(dut.state_rpc_tap_command_identity>>32));word(uint32_t(dut.state_rpc_tap_command_identity));} else
+ if(name=="state_rpc_tap_command_source_addr"){word(uint32_t(dut.state_rpc_tap_command_source_addr>>32));word(uint32_t(dut.state_rpc_tap_command_source_addr));} else
+ if(name=="state_rpc_tap_command_physical_addr"){word(uint32_t(dut.state_rpc_tap_command_physical_addr>>32));word(uint32_t(dut.state_rpc_tap_command_physical_addr));} else
+ if(name=="state_rpc_tap_command_owner"){word(uint32_t(dut.state_rpc_tap_command_owner>>32));word(uint32_t(dut.state_rpc_tap_command_owner));} else
+ if(name=="state_rpc_tap_command_new_data"){for(int i=7;i>=0;i--)word(dut.state_rpc_tap_command_new_data[i]);} else
+ if(name=="state_rpc_tap_command_byte_mask"){word(dut.state_rpc_tap_command_byte_mask);} else
+ if(name=="state_rpc_tap_reply_valid"){word(dut.state_rpc_tap_reply_valid);} else
+ if(name=="state_rpc_tap_reply_ready"){word(dut.state_rpc_tap_reply_ready);} else
+ if(name=="state_rpc_tap_reply_identity"){word(uint32_t(dut.state_rpc_tap_reply_identity>>32));word(uint32_t(dut.state_rpc_tap_reply_identity));} else
+ if(name=="state_rpc_tap_reply_rank"){word(dut.state_rpc_tap_reply_rank);} else
+ if(name=="state_rpc_tap_reply_owner"){word(uint32_t(dut.state_rpc_tap_reply_owner>>32));word(uint32_t(dut.state_rpc_tap_reply_owner));} else
+ if(name=="state_rpc_tap_reply_physical_addr"){word(uint32_t(dut.state_rpc_tap_reply_physical_addr>>32));word(uint32_t(dut.state_rpc_tap_reply_physical_addr));} else
+ if(name=="state_rpc_tap_reply_old_data"){for(int i=7;i>=0;i--)word(dut.state_rpc_tap_reply_old_data[i]);} else
+ if(name=="state_rpc_sector_capture_valid"){word(dut.state_rpc_sector_capture_valid);} else
+ if(name=="state_rpc_sector_capture_ready"){word(dut.state_rpc_sector_capture_ready);} else
+ if(name=="state_rpc_sector_capture_source_addr"){word(uint32_t(dut.state_rpc_sector_capture_source_addr>>32));word(uint32_t(dut.state_rpc_sector_capture_source_addr));} else
+ if(name=="state_rpc_sector_capture_old_data"){for(int i=7;i>=0;i--)word(dut.state_rpc_sector_capture_old_data[i]);} else
+ if(name=="state_rpc_quiescent"){word(dut.state_rpc_quiescent);} else
+ if(name=="state_rpc_fault"){word(dut.state_rpc_fault);} else
+ if(name=="local_por_n"){word(dut.local_por_n);} else
+ if(name=="local_run_enable"){word(dut.local_run_enable);} else
+ if(name=="local_local_reset"){word(dut.local_local_reset);} else
+ if(name=="local_source_bound"){word(dut.local_source_bound);} else
+ if(name=="local_stage_root_accept"){word(uint32_t(dut.local_stage_root_accept>>32));word(uint32_t(dut.local_stage_root_accept));} else
+ if(name=="local_stage_root_retire"){word(uint32_t(dut.local_stage_root_retire>>32));word(uint32_t(dut.local_stage_root_retire));} else
+ if(name=="local_stage_root_owner"){for(int i=109;i>=0;i--)word(dut.local_stage_root_owner[i]);} else
+ if(name=="local_stage_root_retire_owner"){for(int i=109;i>=0;i--)word(dut.local_stage_root_retire_owner[i]);} else
+ if(name=="local_stage_root_admit"){word(uint32_t(dut.local_stage_root_admit>>32));word(uint32_t(dut.local_stage_root_admit));} else
+ if(name=="local_stage_root_retire_ready"){word(uint32_t(dut.local_stage_root_retire_ready>>32));word(uint32_t(dut.local_stage_root_retire_ready));} else
+ if(name=="local_shared_router_drained"){word(dut.local_shared_router_drained);} else
+ if(name=="local_writer_retained"){word(dut.local_writer_retained);} else
+ if(name=="local_shared_service_ready"){word(uint32_t(dut.local_shared_service_ready>>32));word(uint32_t(dut.local_shared_service_ready));} else
+ if(name=="local_shared_service_done"){word(uint32_t(dut.local_shared_service_done>>32));word(uint32_t(dut.local_shared_service_done));} else
+ if(name=="local_state_root_accept"){word(dut.local_state_root_accept);} else
+ if(name=="local_state_root_retire"){word(dut.local_state_root_retire);} else
+ if(name=="local_state_root_identity"){word(uint32_t(dut.local_state_root_identity>>32));word(uint32_t(dut.local_state_root_identity));} else
+ if(name=="local_state_root_retire_identity"){word(uint32_t(dut.local_state_root_retire_identity>>32));word(uint32_t(dut.local_state_root_retire_identity));} else
+ if(name=="local_state_root_admit"){word(dut.local_state_root_admit);} else
+ if(name=="local_state_root_retire_ready"){word(dut.local_state_root_retire_ready);} else
+ if(name=="local_state_tap_quiescent"){word(dut.local_state_tap_quiescent);} else
+ if(name=="local_state_observer_drained"){word(dut.local_state_observer_drained);} else
+ if(name=="local_metadata_ACK_held"){word(dut.local_metadata_ACK_held);} else
+ if(name=="local_metadata_reverse_held"){word(dut.local_metadata_reverse_held);} else
+ if(name=="local_metadata_event_held"){word(dut.local_metadata_event_held);} else
+ if(name=="local_request_valid"){word(dut.local_request_valid);} else
+ if(name=="local_request_ready"){word(dut.local_request_ready);} else
+ if(name=="local_request_identity"){word(uint32_t(dut.local_request_identity>>32));word(uint32_t(dut.local_request_identity));} else
+ if(name=="local_request_key"){word(dut.local_request_key);} else
+ if(name=="local_response_valid"){word(dut.local_response_valid);} else
+ if(name=="local_response_ready"){word(dut.local_response_ready);} else
+ if(name=="local_response_identity"){for(int i=3;i>=0;i--)word(dut.local_response_identity[i]);} else
+ if(name=="local_response_key"){word(uint32_t(dut.local_response_key>>32));word(uint32_t(dut.local_response_key));} else
+ if(name=="local_response_quiet"){word(dut.local_response_quiet);} else
+ if(name=="local_quiesce"){word(dut.local_quiesce);} else
+ if(name=="local_roots_empty"){word(dut.local_roots_empty);} else
+ if(name=="local_fault"){word(dut.local_fault);} else
  if(name=="issuer_inputs_bound_valid"){word(uint32_t(dut.issuer_inputs_bound_valid>>32));word(uint32_t(dut.issuer_inputs_bound_valid));} else
  if(name=="issuer_inputs_bound_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_inputs_bound_tuple[i]);} else
  if(name=="issuer_inputs_bound_mask"){for(int i=13;i>=0;i--)word(dut.issuer_inputs_bound_mask[i]);} else
@@ -607,6 +706,35 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  else if(op=="SET"){in>>name>>value;if(in>>extra)throw std::runtime_error("extra");
  if(name=="sector_map_rank"){auto v=unpack(value,1);dut.sector_map_rank=v[0];std::cout<<"OK";} else
  if(name=="sector_reverse_rank"){auto v=unpack(value,1);dut.sector_reverse_rank=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_por_n"){auto v=unpack(value,1);dut.state_rpc_por_n=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_run_enable"){auto v=unpack(value,1);dut.state_rpc_run_enable=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_local_reset"){auto v=unpack(value,1);dut.state_rpc_local_reset=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_source_bound"){auto v=unpack(value,1);dut.state_rpc_source_bound=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_state_base_rank0"){auto v=unpack(value,34);dut.state_rpc_state_base_rank0=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_rpc_state_base_rank1"){auto v=unpack(value,34);dut.state_rpc_state_base_rank1=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_rpc_rpc_valid"){auto v=unpack(value,1);dut.state_rpc_rpc_valid=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_rpc_identity"){auto v=unpack(value,64);dut.state_rpc_rpc_identity=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_rpc_rpc_rank"){auto v=unpack(value,1);dut.state_rpc_rpc_rank=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_rpc_write"){auto v=unpack(value,1);dut.state_rpc_rpc_write=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_rpc_address"){auto v=unpack(value,34);dut.state_rpc_rpc_address=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_rpc_rpc_bytes"){auto v=unpack(value,16);dut.state_rpc_rpc_bytes=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_rpc_payload"){auto v=unpack(value,256);for(unsigned i=0;i<v.size();i++)dut.state_rpc_rpc_payload[i]=v[i];std::cout<<"OK";} else
+ if(name=="state_rpc_rpc_reply_ready"){auto v=unpack(value,1);dut.state_rpc_rpc_reply_ready=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_map_valid"){auto v=unpack(value,1);dut.state_rpc_map_valid=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_map_rank"){auto v=unpack(value,1);dut.state_rpc_map_rank=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_map_sector_granted"){auto v=unpack(value,1);dut.state_rpc_map_sector_granted=v[0];std::cout<<"OK";} else
+ if(name=="state_rpc_map_source_addr"){auto v=unpack(value,34);dut.state_rpc_map_source_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_rpc_map_physical_addr"){auto v=unpack(value,34);dut.state_rpc_map_physical_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_rpc_map_owner"){auto v=unpack(value,46);dut.state_rpc_map_owner=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_rpc_sector_capture_ready"){auto v=unpack(value,1);dut.state_rpc_sector_capture_ready=v[0];std::cout<<"OK";} else
+ if(name=="local_por_n"){auto v=unpack(value,1);dut.local_por_n=v[0];std::cout<<"OK";} else
+ if(name=="local_run_enable"){auto v=unpack(value,1);dut.local_run_enable=v[0];std::cout<<"OK";} else
+ if(name=="local_local_reset"){auto v=unpack(value,1);dut.local_local_reset=v[0];std::cout<<"OK";} else
+ if(name=="local_source_bound"){auto v=unpack(value,1);dut.local_source_bound=v[0];std::cout<<"OK";} else
+ if(name=="local_stage_root_accept"){auto v=unpack(value,64);dut.local_stage_root_accept=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="local_stage_root_retire"){auto v=unpack(value,64);dut.local_stage_root_retire=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="local_stage_root_owner"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.local_stage_root_owner[i]=v[i];std::cout<<"OK";} else
+ if(name=="local_stage_root_retire_owner"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.local_stage_root_retire_owner[i]=v[i];std::cout<<"OK";} else
  if(name=="issuer_inputs_bound_valid"){auto v=unpack(value,64);dut.issuer_inputs_bound_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="issuer_inputs_bound_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_inputs_bound_tuple[i]=v[i];std::cout<<"OK";} else
  if(name=="issuer_inputs_bound_mask"){auto v=unpack(value,448);for(unsigned i=0;i<v.size();i++)dut.issuer_inputs_bound_mask[i]=v[i];std::cout<<"OK";} else
@@ -639,18 +767,7 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="state_run_enable"){auto v=unpack(value,1);dut.state_run_enable=v[0];std::cout<<"OK";} else
  if(name=="state_local_reset"){auto v=unpack(value,1);dut.state_local_reset=v[0];std::cout<<"OK";} else
  if(name=="state_source_bound"){auto v=unpack(value,1);dut.state_source_bound=v[0];std::cout<<"OK";} else
- if(name=="state_command_valid"){auto v=unpack(value,1);dut.state_command_valid=v[0];std::cout<<"OK";} else
- if(name=="state_command_rank"){auto v=unpack(value,1);dut.state_command_rank=v[0];std::cout<<"OK";} else
- if(name=="state_command_write"){auto v=unpack(value,1);dut.state_command_write=v[0];std::cout<<"OK";} else
- if(name=="state_command_sector_granted"){auto v=unpack(value,1);dut.state_command_sector_granted=v[0];std::cout<<"OK";} else
  if(name=="state_state_client_mask"){auto v=unpack(value,6);dut.state_state_client_mask=v[0];std::cout<<"OK";} else
- if(name=="state_command_identity"){auto v=unpack(value,64);dut.state_command_identity=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="state_command_source_addr"){auto v=unpack(value,34);dut.state_command_source_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="state_command_physical_addr"){auto v=unpack(value,34);dut.state_command_physical_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="state_command_owner"){auto v=unpack(value,46);dut.state_command_owner=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="state_command_new_data"){auto v=unpack(value,256);for(unsigned i=0;i<v.size();i++)dut.state_command_new_data[i]=v[i];std::cout<<"OK";} else
- if(name=="state_command_byte_mask"){auto v=unpack(value,32);dut.state_command_byte_mask=v[0];std::cout<<"OK";} else
- if(name=="state_reply_ready"){auto v=unpack(value,1);dut.state_reply_ready=v[0];std::cout<<"OK";} else
  if(name=="rfdrain_por_n"){auto v=unpack(value,64);dut.rfdrain_por_n=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="rfdrain_rst_n"){auto v=unpack(value,64);dut.rfdrain_rst_n=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="rfdrain_run_enable"){auto v=unpack(value,64);dut.rfdrain_run_enable=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else

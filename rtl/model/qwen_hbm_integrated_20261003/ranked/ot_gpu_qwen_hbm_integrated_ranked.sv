@@ -7,6 +7,105 @@ module ot_gpu_qwen_hbm_integrated_ranked #(parameter bit ENABLE=0)(
  input wire sector_map_rank,
  input wire sector_reverse_rank,
  output wire sector_rank_refusal,
+ input wire state_rpc_por_n,
+ input wire state_rpc_run_enable,
+ input wire state_rpc_local_reset,
+ input wire state_rpc_source_bound,
+ input wire [33:0] state_rpc_state_base_rank0,
+ input wire [33:0] state_rpc_state_base_rank1,
+ input wire state_rpc_rpc_valid,
+ output wire state_rpc_rpc_ready,
+ input wire [63:0] state_rpc_rpc_identity,
+ input wire state_rpc_rpc_rank,
+ input wire state_rpc_rpc_write,
+ input wire [33:0] state_rpc_rpc_address,
+ input wire [15:0] state_rpc_rpc_bytes,
+ input wire [255:0] state_rpc_rpc_payload,
+ output wire state_rpc_rpc_reply_valid,
+ input wire state_rpc_rpc_reply_ready,
+ output wire [63:0] state_rpc_rpc_reply_identity,
+ output wire state_rpc_rpc_reply_rank,
+ output wire [33:0] state_rpc_rpc_reply_address,
+ output wire [15:0] state_rpc_rpc_reply_bytes,
+ output wire state_rpc_root_accept,
+ output wire state_rpc_root_admit,
+ output wire [63:0] state_rpc_root_identity,
+ output wire state_rpc_root_retire,
+ output wire state_rpc_root_retire_ready,
+ output wire [63:0] state_rpc_root_retire_identity,
+ output wire state_rpc_sector_offer_valid,
+ output wire state_rpc_sector_offer_rank,
+ output wire state_rpc_sector_offer_write,
+ output wire [63:0] state_rpc_sector_offer_identity,
+ output wire [33:0] state_rpc_sector_offer_source_addr,
+ input wire state_rpc_map_valid,
+ output wire state_rpc_map_ready,
+ input wire state_rpc_map_rank,
+ input wire state_rpc_map_sector_granted,
+ input wire [33:0] state_rpc_map_source_addr,
+ input wire [33:0] state_rpc_map_physical_addr,
+ input wire [45:0] state_rpc_map_owner,
+ output wire state_rpc_tap_command_valid,
+ output wire state_rpc_tap_command_ready,
+ output wire state_rpc_tap_command_rank,
+ output wire state_rpc_tap_command_write,
+ output wire state_rpc_tap_command_sector_granted,
+ output wire [63:0] state_rpc_tap_command_identity,
+ output wire [33:0] state_rpc_tap_command_source_addr,
+ output wire [33:0] state_rpc_tap_command_physical_addr,
+ output wire [45:0] state_rpc_tap_command_owner,
+ output wire [255:0] state_rpc_tap_command_new_data,
+ output wire [31:0] state_rpc_tap_command_byte_mask,
+ output wire state_rpc_tap_reply_valid,
+ output wire state_rpc_tap_reply_ready,
+ output wire [63:0] state_rpc_tap_reply_identity,
+ output wire state_rpc_tap_reply_rank,
+ output wire [45:0] state_rpc_tap_reply_owner,
+ output wire [33:0] state_rpc_tap_reply_physical_addr,
+ output wire [255:0] state_rpc_tap_reply_old_data,
+ output wire state_rpc_sector_capture_valid,
+ input wire state_rpc_sector_capture_ready,
+ output wire [33:0] state_rpc_sector_capture_source_addr,
+ output wire [255:0] state_rpc_sector_capture_old_data,
+ output wire state_rpc_quiescent,
+ output wire state_rpc_fault,
+ input wire local_por_n,
+ input wire local_run_enable,
+ input wire local_local_reset,
+ input wire local_source_bound,
+ input wire [63:0] local_stage_root_accept,
+ input wire [63:0] local_stage_root_retire,
+ input wire [3519:0] local_stage_root_owner,
+ input wire [3519:0] local_stage_root_retire_owner,
+ output wire [63:0] local_stage_root_admit,
+ output wire [63:0] local_stage_root_retire_ready,
+ output wire local_shared_router_drained,
+ output wire local_writer_retained,
+ output wire [63:0] local_shared_service_ready,
+ output wire [63:0] local_shared_service_done,
+ output wire local_state_root_accept,
+ output wire local_state_root_retire,
+ output wire [63:0] local_state_root_identity,
+ output wire [63:0] local_state_root_retire_identity,
+ output wire local_state_root_admit,
+ output wire local_state_root_retire_ready,
+ output wire local_state_tap_quiescent,
+ output wire local_state_observer_drained,
+ output wire local_metadata_ACK_held,
+ output wire local_metadata_reverse_held,
+ output wire local_metadata_event_held,
+ output wire [1:0] local_request_valid,
+ output wire [1:0] local_request_ready,
+ output wire [63:0] local_request_identity,
+ output wire [19:0] local_request_key,
+ output wire [1:0] local_response_valid,
+ output wire [1:0] local_response_ready,
+ output wire [127:0] local_response_identity,
+ output wire [39:0] local_response_key,
+ output wire [1:0] local_response_quiet,
+ output wire [1:0] local_quiesce,
+ output wire [1:0] local_roots_empty,
+ output wire local_fault,
  input wire [63:0] issuer_inputs_bound_valid,
  input wire [15295:0] issuer_inputs_bound_tuple,
  input wire [447:0] issuer_inputs_bound_mask,
@@ -67,20 +166,20 @@ module ot_gpu_qwen_hbm_integrated_ranked #(parameter bit ENABLE=0)(
  input wire state_run_enable,
  input wire state_local_reset,
  input wire state_source_bound,
- input wire state_command_valid,
+ output wire state_command_valid,
  output wire state_command_ready,
- input wire state_command_rank,
- input wire state_command_write,
- input wire state_command_sector_granted,
+ output wire state_command_rank,
+ output wire state_command_write,
+ output wire state_command_sector_granted,
  input wire [5:0] state_state_client_mask,
- input wire [63:0] state_command_identity,
- input wire [33:0] state_command_source_addr,
- input wire [33:0] state_command_physical_addr,
- input wire [45:0] state_command_owner,
- input wire [255:0] state_command_new_data,
- input wire [31:0] state_command_byte_mask,
+ output wire [63:0] state_command_identity,
+ output wire [33:0] state_command_source_addr,
+ output wire [33:0] state_command_physical_addr,
+ output wire [45:0] state_command_owner,
+ output wire [255:0] state_command_new_data,
+ output wire [31:0] state_command_byte_mask,
  output wire state_reply_valid,
- input wire state_reply_ready,
+ output wire state_reply_ready,
  output wire [63:0] state_reply_identity,
  output wire [255:0] state_reply_old_data,
  output wire state_reply_rank,
@@ -585,35 +684,144 @@ module ot_gpu_qwen_hbm_integrated_ranked #(parameter bit ENABLE=0)(
 );
 assign assembly_enabled=ENABLE;
 wire [6:0] selected_PC;
-wire state_bus_owned=!state_quiescent || (state_command_valid && state_command_sector_granted && !sector_grant_live);
+wire state_route_shared=sector_grant_live &&
+ sector_grant_identity[136]==(state_quiescent ? state_command_rank : state_reply_rank) &&
+ sector_grant_identity[79:46]==(state_quiescent ? state_command_physical_addr : state_reply_physical_addr) &&
+ sector_grant_identity[45:0]==(state_quiescent ? state_command_owner : state_reply_owner);
+wire state_bus_owned=!state_quiescent || (state_command_valid && state_command_sector_granted && (!sector_grant_live || state_route_shared));
 wire [6:0] payload_selected_PC;
 wire [7:0] payload_selected_index;
 wire [7:0] selected_index=state_bus_owned ?
  (state_quiescent ? {state_command_rank,state_command_owner[45:39]} : {state_reply_rank,state_reply_owner[45:39]}) : payload_selected_index;
 assign selected_PC=selected_index[6:0];
 wire payload_alloc_ready,payload_reverse_ready,raw_state_command_ready;
-assign state_command_ready=raw_state_command_ready && !sector_grant_live;
+assign state_command_ready=raw_state_command_ready && (!sector_grant_live || state_route_shared);
 assign sector_alloc_ready=payload_alloc_ready && !state_bus_owned;
-assign sector_reverse_ready=state_bus_owned ? state_reverse_ready : payload_reverse_ready;
+assign sector_reverse_ready=state_bus_owned ? (state_reverse_ready && (!state_route_shared || payload_reverse_ready)) : payload_reverse_ready;
 wire rank_raw_alloc_ready,rank_raw_reverse_ready;
 wire rank_checked_alloc_valid,rank_checked_map_valid,rank_checked_reverse_valid;
 ot_gpu_qwen_rank_boundary #(.ENABLE(ENABLE)) rank_boundary(
  .grant_live(sector_grant_live),.grant_identity(sector_grant_identity),
  .alloc_valid(sector_alloc_valid),.map_valid(sector_map_valid),.map_rank(sector_map_rank),
  .alloc_source(sector_alloc_source),.map_PC(sector_map_PC),.raw_alloc_ready(rank_raw_alloc_ready),
- .reverse_valid(sector_reverse_valid && !state_bus_owned),.reverse_rank(sector_reverse_rank),.raw_reverse_ready(rank_raw_reverse_ready),
+ .reverse_valid(sector_reverse_valid && (!state_bus_owned || (state_route_shared && state_reverse_ready))),.reverse_rank(sector_reverse_rank),.raw_reverse_ready(rank_raw_reverse_ready),
  .alloc_valid_checked(rank_checked_alloc_valid),.map_valid_checked(rank_checked_map_valid),.alloc_ready(payload_alloc_ready),
  .reverse_valid_checked(rank_checked_reverse_valid),.reverse_ready(payload_reverse_ready),
  .selected_PC(payload_selected_PC),.selected_index(payload_selected_index),.rank_refusal(sector_rank_refusal));
 wire [1535:0] raw_w2_req_rdy,guarded_c_req_v,guarded_c_rsp_rdy,guarded_c_wr_done_rdy;
 for(genvar p=0;p<256;p=p+1)begin:g_guard
- wire [5:0] req_mask = selected_index==p ? (state_bus_owned ? state_req_permit : sector_req_permit) : 6'b111111;
- wire [5:0] cap_mask = selected_index==p ? (state_bus_owned ? state_capture_permit : sector_capture_permit) : 6'b111111;
+ wire [5:0] req_mask = selected_index==p ? (state_bus_owned ? (state_req_permit & (state_route_shared ? sector_req_permit : 6'b111111)) : sector_req_permit) : 6'b111111;
+ wire [5:0] cap_mask = selected_index==p ? (state_bus_owned ? (state_capture_permit & (state_route_shared ? sector_capture_permit : 6'b111111)) : sector_capture_permit) : 6'b111111;
  assign guarded_c_req_v[p*6+:6]=w2_c_req_v[p*6+:6]&req_mask;
  assign w2_c_req_rdy[p*6+:6]=raw_w2_req_rdy[p*6+:6]&req_mask;
  assign guarded_c_rsp_rdy[p*6+:6]=w2_c_rsp_rdy[p*6+:6]&cap_mask;
  assign guarded_c_wr_done_rdy[p*6+:6]=w2_c_wr_done_rdy[p*6+:6]&cap_mask;
 end
+ot_gpu_qwen_kv_state_rpc_join #(.ENABLE(ENABLE)) u_state_rpc(
+  .clk(stream_clk),
+  .por_n(state_rpc_por_n),
+  .run_enable(state_rpc_run_enable),
+  .local_reset(state_rpc_local_reset),
+  .source_bound(state_rpc_source_bound),
+  .state_base_rank0(state_rpc_state_base_rank0),
+  .state_base_rank1(state_rpc_state_base_rank1),
+  .rpc_valid(state_rpc_rpc_valid),
+  .rpc_ready(state_rpc_rpc_ready),
+  .rpc_identity(state_rpc_rpc_identity),
+  .rpc_rank(state_rpc_rpc_rank),
+  .rpc_write(state_rpc_rpc_write),
+  .rpc_address(state_rpc_rpc_address),
+  .rpc_bytes(state_rpc_rpc_bytes),
+  .rpc_payload(state_rpc_rpc_payload),
+  .rpc_reply_valid(state_rpc_rpc_reply_valid),
+  .rpc_reply_ready(state_rpc_rpc_reply_ready),
+  .rpc_reply_identity(state_rpc_rpc_reply_identity),
+  .rpc_reply_rank(state_rpc_rpc_reply_rank),
+  .rpc_reply_address(state_rpc_rpc_reply_address),
+  .rpc_reply_bytes(state_rpc_rpc_reply_bytes),
+  .root_accept(state_rpc_root_accept),
+  .root_admit(local_state_root_admit),
+  .root_identity(state_rpc_root_identity),
+  .root_retire(state_rpc_root_retire),
+  .root_retire_ready(local_state_root_retire_ready),
+  .root_retire_identity(state_rpc_root_retire_identity),
+  .sector_offer_valid(state_rpc_sector_offer_valid),
+  .sector_offer_rank(state_rpc_sector_offer_rank),
+  .sector_offer_write(state_rpc_sector_offer_write),
+  .sector_offer_identity(state_rpc_sector_offer_identity),
+  .sector_offer_source_addr(state_rpc_sector_offer_source_addr),
+  .map_valid(state_rpc_map_valid),
+  .map_ready(state_rpc_map_ready),
+  .map_rank(state_rpc_map_rank),
+  .map_sector_granted(state_rpc_map_sector_granted),
+  .map_source_addr(state_rpc_map_source_addr),
+  .map_physical_addr(state_rpc_map_physical_addr),
+  .map_owner(state_rpc_map_owner),
+  .tap_command_valid(state_rpc_tap_command_valid),
+  .tap_command_ready(state_command_ready),
+  .tap_command_rank(state_rpc_tap_command_rank),
+  .tap_command_write(state_rpc_tap_command_write),
+  .tap_command_sector_granted(state_rpc_tap_command_sector_granted),
+  .tap_command_identity(state_rpc_tap_command_identity),
+  .tap_command_source_addr(state_rpc_tap_command_source_addr),
+  .tap_command_physical_addr(state_rpc_tap_command_physical_addr),
+  .tap_command_owner(state_rpc_tap_command_owner),
+  .tap_command_new_data(state_rpc_tap_command_new_data),
+  .tap_command_byte_mask(state_rpc_tap_command_byte_mask),
+  .tap_reply_valid(state_reply_valid),
+  .tap_reply_ready(state_rpc_tap_reply_ready),
+  .tap_reply_identity(state_reply_identity),
+  .tap_reply_rank(state_reply_rank),
+  .tap_reply_owner(state_reply_owner),
+  .tap_reply_physical_addr(state_reply_physical_addr),
+  .tap_reply_old_data(state_reply_old_data),
+  .sector_capture_valid(state_rpc_sector_capture_valid),
+  .sector_capture_ready(state_rpc_sector_capture_ready),
+  .sector_capture_source_addr(state_rpc_sector_capture_source_addr),
+  .sector_capture_old_data(state_rpc_sector_capture_old_data),
+  .quiescent(state_rpc_quiescent),
+  .fault(state_rpc_fault)
+ );
+ot_gpu_qwen_kv_local_cohorts_terminal_ready #(.ENABLE(ENABLE)) u_local(
+  .clk(stream_clk),
+  .por_n(local_por_n),
+  .run_enable(local_run_enable),
+  .local_reset(local_local_reset),
+  .source_bound(local_source_bound),
+  .stage_root_accept(local_stage_root_accept),
+  .stage_root_retire(local_stage_root_retire),
+  .stage_root_owner(local_stage_root_owner),
+  .stage_root_retire_owner(local_stage_root_retire_owner),
+  .stage_root_admit(local_stage_root_admit),
+  .stage_root_retire_ready(local_stage_root_retire_ready),
+  .shared_router_drained(kv_shared_drained),
+  .writer_retained(kv_writer_retained),
+  .shared_service_ready(sm_scratch_ready),
+  .shared_service_done(sm_scratch_done),
+  .state_root_accept(state_rpc_root_accept),
+  .state_root_retire(state_rpc_root_retire),
+  .state_root_identity(state_rpc_root_identity),
+  .state_root_retire_identity(state_rpc_root_retire_identity),
+  .state_root_admit(local_state_root_admit),
+  .state_root_retire_ready(local_state_root_retire_ready),
+  .state_tap_quiescent(state_quiescent),
+  .state_observer_drained(kv_state_observer_drained),
+  .metadata_ACK_held(kv_ACK_valid),
+  .metadata_reverse_held(state_ACK_reverse),
+  .metadata_event_held(kv.c_metadata_valid || kv.c_reader_metadata_valid || kv.event_valid),
+  .request_valid({kv_cohort_req_valid[3],kv_cohort_req_valid[0]}),
+  .request_ready(local_request_ready),
+  .request_identity(kv_cohort_identity),
+  .request_key(kv_cohort_key),
+  .response_valid(local_response_valid),
+  .response_ready({kv_cohort_rsp_ready[3],kv_cohort_rsp_ready[0]}),
+  .response_identity(local_response_identity),
+  .response_key(local_response_key),
+  .response_quiet(local_response_quiet),
+  .quiesce(local_quiesce),
+  .roots_empty(local_roots_empty),
+  .fault(local_fault)
+ );
 ot_gpu_qwen_full_issuer_r2 #(.ENABLE(ENABLE)) u_issuer(
   .inputs_bound_valid(issuer_inputs_bound_valid),
   .inputs_bound_tuple(issuer_inputs_bound_tuple),
@@ -679,20 +887,20 @@ ot_gpu_qwen_kv_state_w2_tap #(.ENABLE(ENABLE)) u_state(
   .run_enable(state_run_enable),
   .local_reset(state_local_reset),
   .source_bound(state_source_bound),
-  .command_valid(state_command_valid && !sector_grant_live),
+  .command_valid(state_rpc_tap_command_valid && (!sector_grant_live || state_route_shared)),
   .command_ready(raw_state_command_ready),
-  .command_rank(state_command_rank),
-  .command_write(state_command_write),
-  .command_sector_granted(state_command_sector_granted),
+  .command_rank(state_rpc_tap_command_rank),
+  .command_write(state_rpc_tap_command_write),
+  .command_sector_granted(state_rpc_tap_command_sector_granted),
   .state_client_mask(state_state_client_mask),
-  .command_identity(state_command_identity),
-  .command_source_addr(state_command_source_addr),
-  .command_physical_addr(state_command_physical_addr),
-  .command_owner(state_command_owner),
-  .command_new_data(state_command_new_data),
-  .command_byte_mask(state_command_byte_mask),
+  .command_identity(state_rpc_tap_command_identity),
+  .command_source_addr(state_rpc_tap_command_source_addr),
+  .command_physical_addr(state_rpc_tap_command_physical_addr),
+  .command_owner(state_rpc_tap_command_owner),
+  .command_new_data(state_rpc_tap_command_new_data),
+  .command_byte_mask(state_rpc_tap_command_byte_mask),
   .reply_valid(state_reply_valid),
-  .reply_ready(state_reply_ready),
+  .reply_ready(state_rpc_tap_reply_ready),
   .reply_identity(state_reply_identity),
   .reply_old_data(state_reply_old_data),
   .reply_rank(state_reply_rank),
@@ -701,7 +909,7 @@ ot_gpu_qwen_kv_state_w2_tap #(.ENABLE(ENABLE)) u_state(
   .quiescent(state_quiescent),
   .bus_rank(selected_index[7]),
   .bus_PC(selected_PC),
-  .caller_req_v(w2_c_req_v[selected_index*6 +: 6]),
+  .caller_req_v((w2_c_req_v[selected_index*6 +: 6] & (state_route_shared ? sector_req_permit : 6'b111111))),
   .caller_req_we(w2_c_req_we[selected_index*6 +: 6]),
   .raw_req_rdy(raw_w2_req_rdy[selected_index*6 +: 6]),
   .caller_req_addr(w2_c_req_addr[selected_index*204 +: 204]),
@@ -711,8 +919,8 @@ ot_gpu_qwen_kv_state_w2_tap #(.ENABLE(ENABLE)) u_state(
   .req_permit(state_req_permit),
   .raw_rsp_v(w2_c_rsp_v[selected_index*6 +: 6]),
   .raw_wr_done_v(w2_c_wr_done_v[selected_index*6 +: 6]),
-  .caller_rsp_rdy(w2_c_rsp_rdy[selected_index*6 +: 6]),
-  .caller_wr_done_rdy(w2_c_wr_done_rdy[selected_index*6 +: 6]),
+  .caller_rsp_rdy((w2_c_rsp_rdy[selected_index*6 +: 6] & (state_route_shared ? sector_capture_permit : 6'b111111))),
+  .caller_wr_done_rdy((w2_c_wr_done_rdy[selected_index*6 +: 6] & (state_route_shared ? sector_capture_permit : 6'b111111))),
   .raw_rsp_tag(w2_c_rsp_tag[selected_index*192 +: 192]),
   .raw_wr_done_tag(w2_c_wr_done_tag[selected_index*192 +: 192]),
   .raw_rsp_gen(w2_c_rsp_gen[selected_index*24 +: 24]),
@@ -721,7 +929,7 @@ ot_gpu_qwen_kv_state_w2_tap #(.ENABLE(ENABLE)) u_state(
   .W2_fault(w2_fault[selected_index]),
   .repair_busy(w2_repair_busy[selected_index]),
   .capture_permit(state_capture_permit),
-  .reverse_valid(sector_reverse_valid && state_bus_owned),
+  .reverse_valid(sector_reverse_valid && state_bus_owned && (!state_route_shared || payload_reverse_ready)),
   .reverse_ready(state_reverse_ready),
   .reverse_rank(sector_reverse_rank),
   .reverse_write(sector_reverse_write),
@@ -881,7 +1089,7 @@ ot_gpu_qwen_payload_w2_authority #(.ENABLE(ENABLE),.IDENTW(207)) u_sector(
   .grant_rmw(sector_grant_rmw),
   .grant_phase(sector_grant_phase),
   .bus_PC(selected_PC),
-  .caller_req_v(w2_c_req_v[selected_index*6 +: 6]),
+  .caller_req_v((w2_c_req_v[selected_index*6 +: 6] & (state_route_shared ? state_req_permit : 6'b111111))),
   .caller_req_we(w2_c_req_we[selected_index*6 +: 6]),
   .raw_req_rdy(raw_w2_req_rdy[selected_index*6 +: 6]),
   .caller_req_addr(w2_c_req_addr[selected_index*204 +: 204]),
@@ -894,8 +1102,8 @@ ot_gpu_qwen_payload_w2_authority #(.ENABLE(ENABLE),.IDENTW(207)) u_sector(
   .raw_wr_done_tag(w2_c_wr_done_tag[selected_index*192 +: 192]),
   .raw_rsp_gen(w2_c_rsp_gen[selected_index*24 +: 24]),
   .raw_wr_done_gen(w2_c_wr_done_gen[selected_index*24 +: 24]),
-  .caller_rsp_rdy(w2_c_rsp_rdy[selected_index*6 +: 6]),
-  .caller_wr_done_rdy(w2_c_wr_done_rdy[selected_index*6 +: 6]),
+  .caller_rsp_rdy((w2_c_rsp_rdy[selected_index*6 +: 6] & (state_route_shared ? state_capture_permit : 6'b111111))),
+  .caller_wr_done_rdy((w2_c_wr_done_rdy[selected_index*6 +: 6] & (state_route_shared ? state_capture_permit : 6'b111111))),
   .capture_permit(sector_capture_permit),
   .reverse_valid(rank_checked_reverse_valid),
   .reverse_ready(rank_raw_reverse_ready),
@@ -1008,7 +1216,7 @@ ot_gpu_qwen_joined_kv #(.ENABLE(ENABLE)) u_kv(
   .ACK_reverse(state_ACK_reverse),
   .state_observer_drained(kv_state_observer_drained),
   .rst_n(kv_rst_n),
-  .endpoint_fault(kv_endpoint_fault || (|rfdrain_fault) || (|rfjoin_fault) || rfcohort_tuple_mismatch || state_fault || (|issuer_fault) || issuer_session_fault),
+  .endpoint_fault(kv_endpoint_fault || (|rfdrain_fault) || (|rfjoin_fault) || rfcohort_tuple_mismatch || state_fault || (|issuer_fault) || issuer_session_fault || local_fault || state_rpc_fault),
   .native_issue_valid(kv_native_issue_valid),
   .native_issue_ready(kv_native_issue_ready),
   .native_issue_tuple(kv_native_issue_tuple),
@@ -1020,13 +1228,13 @@ ot_gpu_qwen_joined_kv #(.ENABLE(ENABLE)) u_kv(
   .native_reverse_tuple(kv_native_reverse_tuple),
   .cohort_quiesce(kv_cohort_quiesce),
   .cohort_req_valid(kv_cohort_req_valid),
-  .cohort_req_ready((kv_cohort_req_ready & 8'hef) | ({8{rfcohort_req_ready}} & 8'h10)),
+  .cohort_req_ready((kv_cohort_req_ready & 8'hE6) | ({8{rfcohort_req_ready}} & 8'h10) | {4'b0,local_request_ready[1],2'b0,local_request_ready[0]}),
   .cohort_identity(kv_cohort_identity),
   .cohort_key(kv_cohort_key),
-  .cohort_rsp_valid((kv_cohort_rsp_valid & 8'hef) | ({8{rfcohort_rsp_valid}} & 8'h10)),
+  .cohort_rsp_valid((kv_cohort_rsp_valid & 8'hE6) | ({8{rfcohort_rsp_valid}} & 8'h10) | {4'b0,local_response_valid[1],2'b0,local_response_valid[0]}),
   .cohort_rsp_ready(kv_cohort_rsp_ready),
-  .cohort_rsp_tuple({kv_cohort_rsp_tuple[671:420],rfcohort_rsp_tuple,kv_cohort_rsp_tuple[335:0]}),
-  .cohort_rsp_empty((kv_cohort_rsp_empty & 8'hef) | ({8{rfcohort_rsp_empty}} & 8'h10)),
+  .cohort_rsp_tuple({kv_cohort_rsp_tuple[671:420],rfcohort_rsp_tuple,local_response_key[39:20],local_response_identity[127:64],kv_cohort_rsp_tuple[251:84],local_response_key[19:0],local_response_identity[63:0]}),
+  .cohort_rsp_empty((kv_cohort_rsp_empty & 8'hE6) | ({8{rfcohort_rsp_empty}} & 8'h10) | {4'b0,local_response_quiet[1],2'b0,local_response_quiet[0]}),
   .native_retained(kv_native_retained),
   .drain_retained(kv_drain_retained),
   .fault(kv_fault)
@@ -1249,9 +1457,46 @@ for(genvar rank=0;rank<2;rank=rank+1) begin:g_rank
  );
  end
 end
+assign state_rpc_root_admit=local_state_root_admit;
+assign state_rpc_root_retire_ready=local_state_root_retire_ready;
+assign state_rpc_tap_command_ready=state_command_ready;
+assign state_rpc_tap_reply_valid=state_reply_valid;
+assign state_rpc_tap_reply_identity=state_reply_identity;
+assign state_rpc_tap_reply_rank=state_reply_rank;
+assign state_rpc_tap_reply_owner=state_reply_owner;
+assign state_rpc_tap_reply_physical_addr=state_reply_physical_addr;
+assign state_rpc_tap_reply_old_data=state_reply_old_data;
+assign local_shared_router_drained=kv_shared_drained;
+assign local_writer_retained=kv_writer_retained;
+assign local_shared_service_ready=sm_scratch_ready;
+assign local_shared_service_done=sm_scratch_done;
+assign local_state_root_accept=state_rpc_root_accept;
+assign local_state_root_retire=state_rpc_root_retire;
+assign local_state_root_identity=state_rpc_root_identity;
+assign local_state_root_retire_identity=state_rpc_root_retire_identity;
+assign local_state_tap_quiescent=state_quiescent;
+assign local_state_observer_drained=kv_state_observer_drained;
+assign local_metadata_ACK_held=kv_ACK_valid;
+assign local_metadata_reverse_held=state_ACK_reverse;
+assign local_metadata_event_held=kv.c_metadata_valid || kv.c_reader_metadata_valid || kv.event_valid;
+assign local_request_valid={kv_cohort_req_valid[3],kv_cohort_req_valid[0]};
+assign local_request_identity=kv_cohort_identity;
+assign local_request_key=kv_cohort_key;
+assign local_response_ready={kv_cohort_rsp_ready[3],kv_cohort_rsp_ready[0]};
+assign state_command_valid=state_rpc_tap_command_valid && (!sector_grant_live || state_route_shared);
+assign state_command_rank=state_rpc_tap_command_rank;
+assign state_command_write=state_rpc_tap_command_write;
+assign state_command_sector_granted=state_rpc_tap_command_sector_granted;
+assign state_command_identity=state_rpc_tap_command_identity;
+assign state_command_source_addr=state_rpc_tap_command_source_addr;
+assign state_command_physical_addr=state_rpc_tap_command_physical_addr;
+assign state_command_owner=state_rpc_tap_command_owner;
+assign state_command_new_data=state_rpc_tap_command_new_data;
+assign state_command_byte_mask=state_rpc_tap_command_byte_mask;
+assign state_reply_ready=state_rpc_tap_reply_ready;
 assign state_bus_rank=selected_index[7];
 assign state_bus_PC=selected_PC;
-assign state_caller_req_v=w2_c_req_v[selected_index*6 +: 6];
+assign state_caller_req_v=(w2_c_req_v[selected_index*6 +: 6] & (state_route_shared ? sector_req_permit : 6'b111111));
 assign state_caller_req_we=w2_c_req_we[selected_index*6 +: 6];
 assign state_raw_req_rdy=raw_w2_req_rdy[selected_index*6 +: 6];
 assign state_caller_req_addr=w2_c_req_addr[selected_index*204 +: 204];
@@ -1260,8 +1505,8 @@ assign state_caller_req_gen=w2_c_req_gen[selected_index*24 +: 24];
 assign state_caller_req_data=w2_c_req_data[selected_index*1536 +: 1536];
 assign state_raw_rsp_v=w2_c_rsp_v[selected_index*6 +: 6];
 assign state_raw_wr_done_v=w2_c_wr_done_v[selected_index*6 +: 6];
-assign state_caller_rsp_rdy=w2_c_rsp_rdy[selected_index*6 +: 6];
-assign state_caller_wr_done_rdy=w2_c_wr_done_rdy[selected_index*6 +: 6];
+assign state_caller_rsp_rdy=(w2_c_rsp_rdy[selected_index*6 +: 6] & (state_route_shared ? sector_capture_permit : 6'b111111));
+assign state_caller_wr_done_rdy=(w2_c_wr_done_rdy[selected_index*6 +: 6] & (state_route_shared ? sector_capture_permit : 6'b111111));
 assign state_raw_rsp_tag=w2_c_rsp_tag[selected_index*192 +: 192];
 assign state_raw_wr_done_tag=w2_c_wr_done_tag[selected_index*192 +: 192];
 assign state_raw_rsp_gen=w2_c_rsp_gen[selected_index*24 +: 24];
@@ -1269,7 +1514,7 @@ assign state_raw_wr_done_gen=w2_c_wr_done_gen[selected_index*24 +: 24];
 assign state_raw_rsp_data=w2_c_rsp_data[selected_index*1536 +: 1536];
 assign state_W2_fault=w2_fault[selected_index];
 assign state_repair_busy=w2_repair_busy[selected_index];
-assign state_reverse_valid=sector_reverse_valid && state_bus_owned;
+assign state_reverse_valid=sector_reverse_valid && state_bus_owned && (!state_route_shared || payload_reverse_ready);
 assign state_reverse_rank=sector_reverse_rank;
 assign state_reverse_write=sector_reverse_write;
 assign state_reverse_owner=sector_reverse_route[45:0];
