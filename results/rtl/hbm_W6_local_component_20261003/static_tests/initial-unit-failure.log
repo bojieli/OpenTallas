@@ -1,0 +1,24 @@
+test_assertion_failure (test_hbm_w6_component_gate.TestTrace) ... ok
+test_duplicate (test_hbm_w6_component_gate.TestTrace) ... ok
+test_exact_trace (test_hbm_w6_component_gate.TestTrace) ... ok
+test_field_truncated (test_hbm_w6_component_gate.TestTrace) ... FAIL
+test_internal_cannot_use_host_ACK (test_hbm_w6_component_gate.TestTrace) ... ok
+test_missing (test_hbm_w6_component_gate.TestTrace) ... ok
+test_reversed (test_hbm_w6_component_gate.TestTrace) ... ok
+test_stale_generation (test_hbm_w6_component_gate.TestTrace) ... ok
+test_terminal_duplicate (test_hbm_w6_component_gate.TestTrace) ... ok
+test_terminal_missing (test_hbm_w6_component_gate.TestTrace) ... ok
+test_zero_edge (test_hbm_w6_component_gate.TestTrace) ... ok
+
+======================================================================
+FAIL: test_field_truncated (test_hbm_w6_component_gate.TestTrace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-hbm-w6-fence-contract/tools/test_hbm_w6_component_gate.py", line 42, in test_field_truncated
+    with self.assertRaises(ValueError):self.replay([r.replace('fe123456','00123456') for r in self.rows])
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.005s
+
+FAILED (failures=1)

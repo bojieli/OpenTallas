@@ -1,0 +1,101 @@
+{
+  "AR_native_program": {
+    "PCs": 2213,
+    "family_count": 30,
+    "scope": "single-reference-position native program; no MTP accepted-token credit"
+  },
+  "acceptance": {
+    "arithmetic_transfer_to_exact_chunk8_1M": "UNPROVEN; different GEMM summation order and own short-context continuations",
+    "bonus_included": true,
+    "budget_record_owner": "parent additive cohort/iteration budget record",
+    "caveats": [
+      "Numerics: torch replacements of the vendor kernels (exact quantizers, fp32-accumulated GEMMs in a different summation order) -- greedy continuations can differ from the vendor fp8 kernels at near-ties; acceptance is measured self-consistently on this implementation's own greedy text.",
+      "Short continuations: up to 160 generated tokens per prompt (reasoning prompts sit inside their thinking span); acceptance deep into long generations or at 200K-1M context is not measured.",
+      "Greedy only; T = 1.0 serving (probabilistic draft sampling, block rejection) is lower per InferenceX (3.51 thinking-on / 4.07 thinking-off, coding) -- not measured here.",
+      "Prompt count is small (4 per workload, 9 workloads); CIs are prompt-level bootstrap and dominate any per-token precision."
+    ],
+    "chat_walk_tau": 2.45771144278607,
+    "headline_agentic_median_rate": null,
+    "headline_requirement": "primary third-party V4.1 gamma5 agentic per-request committed-token/verify receipts with matching costs",
+    "headline_rounded_assumption": 3.649,
+    "local_chat_role": "sensitivity only; not the DS headline",
+    "local_pooled_role": "sensitivity/acceptance experiment only; not third-party agentic median",
+    "overall_walk_tau": 3.6486761710794298,
+    "pooled_prompts": 36,
+    "reasoning_walk_tau": 3.6065259117082533,
+    "scope": "36-prompt pooled short-context own greedy continuations; not reasoning-only"
+  },
+  "accepted_token_rate_qualified": false,
+  "causal_KV_successor_contract": {
+    "accepted_commit": "publish processed anchor and accepted draft-input KV/index/window versions after visible ACKs; emit accepted drafts plus target bonus",
+    "bonus_token": "next pending input; no fabricated KV for the unprocessed bonus",
+    "identity": [
+      "iteration",
+      "position_j",
+      "logical_position",
+      "version",
+      "rank",
+      "SM",
+      "generation"
+    ],
+    "implemented_native_commit_or_rollback_program": null,
+    "rejected_suffix": "restore all speculative state counters/views and reclaim suffix leases only after consumer/return/reverse debt drains",
+    "states": [
+      "window rows",
+      "compressed KV rows",
+      "index-key/code/scale rows",
+      "compressor open slots",
+      "State.n row counts",
+      "token history",
+      "draft hidden/cache state"
+    ],
+    "visibility": "position j may read retained committed history plus earlier verified-position state; later positions never visible"
+  },
+  "composition": "must close the same provider/home/ACK/reverse and V1/C0 gates; AR full run is a separate gate",
+  "full_iteration_calibrated_us": null,
+  "missing_complete_iteration_costs": {
+    "acceptance_control_and_target_compare": null,
+    "accepted_prefix_and_bonus_commit": null,
+    "causal_index_KV_append_refill_and_code_scale_visibility": null,
+    "clock_domain_CDC_and_calibrated_endpoint_stalls": null,
+    "rejected_suffix_rollback_and_lease_drain": null,
+    "six_position_native_verify_and_cross_position_provider_movement": null,
+    "source_native_draft": null
+  },
+  "modeled_reference_us": {
+    "AR_baseline": 442.14,
+    "draft": 49.9,
+    "qualification": "modeled historical contributions; not calibrated complete native iteration",
+    "six_position_verify": 715.82
+  },
+  "primary_agentic_request_rate": {
+    "median_request_tokens_s": null,
+    "pooled_tokens_per_verify": null,
+    "pooled_tokens_s": null,
+    "qualified_headline": false,
+    "status": "PENDING_PRIMARY_AGENTIC_RECEIPTS"
+  },
+  "reference_drafts": {
+    "actual_drafter_executed_by_reference": false,
+    "fixed_token_ids": [
+      21946,
+      103774,
+      113689,
+      93642,
+      33100
+    ],
+    "native_draft_program_and_provider_versions": null
+  },
+  "schema": "H4_DS_MTP_CAUSAL_PROVIDER_NATIVE_SOURCE_AUDIT_V1",
+  "software_ticks_to_us_conversion": null,
+  "source_verify_program": {
+    "actual_primitive_microprograms_and_version_home_calendar": null,
+    "head": "compile_head per position, source greedy target prefix acceptance",
+    "order": "layer-major; j=0..5, pos=pos0+j, history=hist0+tokens[1:1+j]",
+    "ownership": "distinct PR[j] rank buffers; causal shared State compressed/index stores and per-rank window appends",
+    "path": "tools/w19_hbm_tp96_isa.py:run_mtp",
+    "positions": 6,
+    "scope": "ISA/source execution uses high-level numerical families; does not replace H3 primitive recipes"
+  },
+  "status": "MTP_NATIVE_ITERATION_CONTRACT_INCOMPLETE"
+}

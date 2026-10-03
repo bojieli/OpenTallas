@@ -1,0 +1,97 @@
+{
+  "R14_BEAT": 0,
+  "R14_LEN": 1,
+  "additional_controls": {
+    "admission_stop": 1,
+    "idle": 1,
+    "provider_fenced": 1,
+    "rearm_rdy": 1,
+    "rearm_v": 1,
+    "reset_fenced": 1
+  },
+  "clock": {
+    "SS_setup_hold_qualified": false,
+    "domain": "single component service clock",
+    "functional_fixture_period_ps": 1000,
+    "lookup_stages": 1,
+    "physical_admission": false,
+    "physical_loaded_clock_budget": null,
+    "source_R14_clock_not_inherited": true
+  },
+  "default_enable": 0,
+  "gate": {
+    "build_requires_measured_CPU_headroom": true,
+    "cannot_prove": "old-copy absence comes from explicit external receipts, not a local empty/timer",
+    "scope": "NC6 functional completion component only; no native caller or R14 backend provider",
+    "tests": [
+      "heldrequest",
+      "heldread",
+      "heldwrite",
+      "full16credit",
+      "outoforder",
+      "duplicate",
+      "wrongtag",
+      "wronggen",
+      "wrongdirection",
+      "validcode_mutation",
+      "rearm_live_debt",
+      "unfenced_wrap",
+      "fenced_wrap",
+      "reset_stale",
+      "simultaneous_release_badquery"
+    ]
+  },
+  "geometry": {
+    "AW": 34,
+    "CTAGW": 32,
+    "GENW": 4,
+    "MAX_OUT": 16,
+    "NC": 6,
+    "PTAGW": 35,
+    "SIDW": 3,
+    "scoped_tag_plus_generation": 39
+  },
+  "latency": {
+    "backend_read_to_client_accept_min": 2,
+    "backend_write_to_client_accept_min": 3,
+    "clocks": "service edges; no crossclock sum, physical latency unqualified",
+    "request_read_II": 2,
+    "request_selection_to_backend_accept_min": 1,
+    "write_query_II": 1
+  },
+  "new_directory_client": false,
+  "ports": {
+    "backend_read_return": 297,
+    "backend_request": 332,
+    "backend_write_completion": 41,
+    "client_read_total": 1764,
+    "client_request_total": 1974,
+    "client_write_completion_total": 228
+  },
+  "reset": {
+    "cold_rst_n": "External all-copy-fenced cold initialization only; unsafe asynchronous reset outside component contract",
+    "fault_freezes_normal_acceptance_and_release": true,
+    "fault_with_live_debt_requires_external_provider_recovery": true,
+    "rearm_erases_live_debt": false,
+    "runtime": "rearm_v && admission_stop && provider_fenced && reset_fenced && idle",
+    "unfenced_rearm_latches_fault": true
+  },
+  "sector_bytes": 32,
+  "state": {
+    "all128PC_50pct_screen_mm2_ASSUMED": 6.63848068608,
+    "base_raw_bits": 4779,
+    "capture_guard_extra_comparators": 2,
+    "capture_guard_key_bits": 39,
+    "extra_guard_and_fence_logic_INV_budget": 194,
+    "extra_guard_and_fence_logic_NAND2_budget": 468,
+    "extra_guard_fence_body_mm2_ASSUMED": 4.9426200000000005e-05,
+    "implemented_raw_bits": 4781,
+    "invalid_bits_fit_existing_query_protection_padding": true,
+    "old_gross_body_mm2_assumed": 0.02588213898,
+    "protected_bits": 9144,
+    "protected_gross_body_mm2_perPC_ASSUMED": 0.02593156518,
+    "same_edge_issue_capture_invalid_bits": 2,
+    "storage_protection_implemented": false,
+    "updated_physical_area_qualified": false
+  }
+}
