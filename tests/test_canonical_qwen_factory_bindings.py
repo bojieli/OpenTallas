@@ -176,3 +176,44 @@ def test_actual_consumption_observation_settles_current_offers_before_sampling()
     observed=SharedConsumption(object(),tc)
     observed.before_edge()
     assert events==['settle current offers','sample actual consume_valid']
+
+
+def manifest_header(root, *, enabled=1):
+    TC_header(root)
+    root.book['manifest_contract'] = dict(
+        owner_module='ot_gpu_qwen_manifest_range_owner',
+        issuer_module='ot_gpu_qwen_full_issuer_r3')
+    from tools.gpu_sys.canonical_qwen_matrix_scratch_adapter import fields_for_book
+    for name, (direction, _) in fields_for_book(root.book).items():
+        root.book['pins']['scratch_'+name]['direction'] = direction
+    root.get=lambda name: enabled if name=='manifest_enabled' else (
+        1 if name=='tc_enabled' else pytest.fail('unexpected sampling '+name))
+
+
+def test_manifest_selects_actual_authority_and_readonly_workspace_no_constructor_edges():
+    root,writer=pins();manifest_header(root);RF=object()
+    with patch.object(F,'build_RF_authority') as legacy, patch(
+        'tools.gpu_sys.canonical_qwen_manifest_owner_bindings.build_RF_authority',
+        return_value=RF) as manifest:
+        bound=F.compose(root,physical_provider=provider(),placement=None,w2_ports=ports(),
+            native_factory=lambda *args:{k:lambda request:None for k in F.NATIVE_KINDS},enabled=True)
+    legacy.assert_not_called();manifest.assert_called_once_with(root,None)
+    assert bound['authority'].RF is RF
+    assert root.edges==0 and not root.hooks and writer.getvalue()=='HELLO\n'
+
+
+def test_manifest_disabled_refuses_before_native_or_authority():
+    root,writer=pins();manifest_header(root,enabled=0)
+    with patch('tools.gpu_sys.canonical_qwen_manifest_owner_bindings.build_RF_authority') as RF:
+        with pytest.raises(TransportError,match='manifest opt-in is disabled'):
+            F.compose(root,physical_provider=provider(),placement=None,w2_ports=ports(),
+                native_factory=lambda *args:pytest.fail('disabled manifest'),enabled=True)
+    RF.assert_not_called()
+    assert root.edges==0 and writer.getvalue()=='HELLO\n'
+
+
+def test_manifest_cannot_retain_old_host_driven_workspace_namespace():
+    root,_=pins();manifest_header(root)
+    root.book['pins']['scratch_workspace_owner']['direction']='input'
+    with pytest.raises(TransportError,match='scratch mux field workspace_owner'):
+        F.validate_installed_book(root)

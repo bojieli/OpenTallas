@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from tools.gpu_sys.canonical_qwen_transport import TransportError
 from tools.gpu_sys.canonical_qwen_simulator import NATIVE_KINDS
 from tools.gpu_sys.canonical_qwen_range_owner_bindings import build_RF_authority
-from tools.gpu_sys.canonical_qwen_matrix_scratch_adapter import MatrixPhysicalServices, FIELDS as SCRATCH_FIELDS
+from tools.gpu_sys.canonical_qwen_matrix_scratch_adapter import MatrixPhysicalServices, fields_for_book
 from tools.gpu_sys.canonical_qwen_matrix_tc_pins import ConsumptionAuthority, bind_operator
 from tools.gpu_sys.canonical_qwen_matrix_tc_factory import InstalledTCPins, SharedConsumption
 from tools.gpu_sys.canonical_qwen_scratch_simulator import ScratchEnclosingPins, scratch_component
@@ -55,7 +55,7 @@ def validate_installed_book(pins):
     # Constructors inspect the genuine emitted TC contract and all source fields.
     # Missing TC rejects before RF callbacks, native construction or pin writes.
     TC = tuple(InstalledTCPins(pins, i//32, i%32, enabled=True) for i in range(64))
-    for name, (direction, width) in SCRATCH_FIELDS.items():
+    for name, (direction, width) in fields_for_book(pins.book).items():
         port = pins.book['pins'].get('scratch_'+name, {})
         require(port.get('direction') == direction and port.get('leaf_bits') == width
                 and port.get('count') == 64 and port.get('bits') == width*64,
@@ -88,7 +88,13 @@ def compose(pins, *, physical_provider, placement, w2_ports, native_factory,
     require(not pins.edge_open and not pins.stopped and not pins.hooks,
             'factory adaptation before sole shared-hook enrollment')
     TC = validate_installed_book(pins)
-    RF = build_RF_authority(pins, placement)
+    if 'manifest_contract' in pins.book:
+        require(pins.get('manifest_enabled') == 1,
+                'actual compiled manifest opt-in is disabled')
+        from tools.gpu_sys.canonical_qwen_manifest_owner_bindings import build_RF_authority as manifest_RF
+        RF = manifest_RF(pins, placement)
+    else:
+        RF = build_RF_authority(pins, placement)
     authority = FactoryAuthority(physical_provider, RF)
     contexts = []
     for i, tc in enumerate(TC):

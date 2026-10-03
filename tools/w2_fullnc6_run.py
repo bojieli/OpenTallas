@@ -85,6 +85,9 @@ def connected_runtime(binary, bindings, socket_path, out, *, portbook=None):
             from tools.gpu_sys.canonical_qwen_installed_services import installed_scratch_pins_class
             from tools.gpu_sys.canonical_qwen_scratch_simulator import build
             EnclosingPins=installed_scratch_pins_class()
+            if 'manifest_contract' in book:
+                from tools.gpu_sys.canonical_qwen_manifest_simulator import ManifestEnclosingPins
+                EnclosingPins=ManifestEnclosingPins
         if book['inventory'].get('source_owner_count') != 64:
             raise ValueError('connected installed sourcebook requires actual64 range owners')
         for path, digest in book['source_sha256'].items():
