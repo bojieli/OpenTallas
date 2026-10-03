@@ -1,0 +1,192 @@
+{
+  "FP32_adds_per_cycle": 8192,
+  "MACs_per_cycle": 0,
+  "NP": 4096,
+  "R": 128,
+  "RD": 4,
+  "RD16_MODEL_NOT_BUILT": {
+    "storage_plus_adders_proxy_mm2": 19.52049420288,
+    "storage_reservation_mm2": 16.36228159488
+  },
+  "ROOTD": 128,
+  "RST": 1,
+  "actual_leaf_buffer_implemented": false,
+  "adder_proxy_mm2": 3.158212608,
+  "adopted": false,
+  "area_proxy_exceeds7": true,
+  "area_target_mm2": 7,
+  "area_target_pass": null,
+  "boundary_bits_per_cycle": {
+    "node_inputs": 130,
+    "node_output": 65,
+    "reverse_credits": 3,
+    "root_output": 69
+  },
+  "channel": {
+    "actual_corridor_binding": null,
+    "over_ROM_tracks_per_100um": 1128,
+    "required_node_signal_tracks": 198,
+    "spine_capacity": 1153
+  },
+  "compiled_pairs": 4096,
+  "credit_loop_target": 4,
+  "delta_against_scenario_C": {
+    "credit_or_repartition_adopted": false,
+    "dies": null,
+    "kW": null,
+    "mm2_synthesized": null,
+    "tok_s": null
+  },
+  "excluded_area": "adder/tag/alignment pipeline FF, counters, input muxes, root queue selection, comparator broadcast, CTS/PDN and routing",
+  "gates": {
+    "ASAP7_SS_area_le7mm2": "UNMEASURED",
+    "L0_L20_exact": "NOT_RUN_EARLIER_LOOP_GATE_FAILED",
+    "L0_L20_peak_occupancy": "UNMEASURED",
+    "SS60ps_FF25ps": "UNMEASURED",
+    "adoption": "REJECTED",
+    "busiest_stage_loss_le1pct": "UNMEASURED",
+    "credit_slot_reuse_le4": "FAIL_MEASURED_9",
+    "directed_exact": "PASS",
+    "directed_overflow": "PASS_ZERO",
+    "held_sibling_full128_directed": "PASS",
+    "hub_routing_layer": "UNQUALIFIED_NO_PHYSICAL_ADMISSION"
+  },
+  "historical_scenario_pins_match": {
+    "246b5da68fe1bd86e95be19db99cb80e42207a0d:results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154",
+    "246b5da68fe1bd86e95be19db99cb80e42207a0d:results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/inputs/compiled_budget.json": "821b5c4a8bb2f64c8ecdc4b0f508e8f0b8e704393aba7e6e2e2f5e0d91c14e0d",
+    "246b5da68fe1bd86e95be19db99cb80e42207a0d:results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/model-r4.json": "0777a3dc8dd5fc3d128d7593907ecf0003ab4c9c1294bf8b8f9059585d91fd08",
+    "246b5da68fe1bd86e95be19db99cb80e42207a0d:results/uarch/dsrom_return_scaling_source_audit_20261002/model.json": "7ff6988499658d022f2bdbe85ef62657937f52a0331f0c8321dadad50c860f56",
+    "93efabc2d9fd6f3402a6f586798b45fd97adbabc:results/rtl/dsrom_return_lifetime_audit_20261002/model.json": "9b01034e5282a97d14689b0a3ea0171c6b7f70191312fdcd67daa1040bec6d92",
+    "e697d6eaef01ef7b60bd9ff330a3adc99c2adabc:results/uarch/dsrom_4096_comparable_capacity_20261002/model.json": "f48a5866432fa45a6f70aa822cae7607b100919ef1a397ff6e7a72e2eda02087"
+  },
+  "label": "MODEL_NOT_VALIDATED",
+  "latency": {
+    "add_reservation_to_refund_lower_bound_cycles": 8,
+    "adder": 5,
+    "credit_reservation": "reserve downstream slot BEFORE launching nonstallable adder; refund ONLY downstream FIFO pop",
+    "max_levels": 6,
+    "noqueue_tree_cycles": 36,
+    "reverse_credit_register": 1,
+    "token_contribution": "replace existing return calendar once; added stalls must be measured on L0/L20, rate unknown",
+    "wire": 1
+  },
+  "measured": {
+    "nodes": {
+      "compile_exit": 0,
+      "fixture_latency_increase_fraction": 1.1797752808988764,
+      "fixture_rate_loss": 0.5412371134020619,
+      "measured": {
+        "count": 256,
+        "credit_last": 582,
+        "parent_peak": 1,
+        "peak_a": 4,
+        "peak_b": 4,
+        "reference_last": 267,
+        "stalls": 315
+      },
+      "measured_launch_to_downstream_pop_cycles": {
+        "max": 7,
+        "min": 7
+      },
+      "measured_saturated_slot_reuse_cycles": 9,
+      "run_exit": 0,
+      "status": "PASS_DIRECTED_RTL",
+      "summary": [
+        "RESULT nodes count=256 credit_last=582 reference_last=267 peak_a=4 peak_b=4 parent_peak=1 stalls=315"
+      ]
+    },
+    "ragged_elaboration": {
+      "NP": 5,
+      "R": 2,
+      "compile_exit": 0,
+      "scope": "actual RTL compile only; full2682 HDL not built"
+    },
+    "root": {
+      "compile_exit": 0,
+      "run_exit": 0,
+      "status": "PASS_DIRECTED_RTL",
+      "summary": [
+        "RESULT root count=129 cycles=394 peak_q=63 peak_held=128 blocked=1"
+      ]
+    },
+    "topology_2682": {
+      "nodes": 5236,
+      "padding_pairs": 0,
+      "roots": 128
+    },
+    "topology_4096": {
+      "nodes": 8064,
+      "padding_pairs": 0,
+      "roots": 128
+    },
+    "topology_5": {
+      "nodes": 8,
+      "padding_pairs": 0,
+      "roots": 2
+    }
+  },
+  "measured_rate_loss": null,
+  "minimum_RD_to_cover_measured_reuse": 9,
+  "next_supported_power2_RD": 16,
+  "node_mux_entries": 4,
+  "node_port_bytes_per_cycle": {
+    "read": 16.25,
+    "write": 16.25
+  },
+  "nodes": 8064,
+  "originals_byte_identical": [
+    "rtl/v41rom/ot_v41_ret.sv",
+    "rtl/v41die/ot_v41_retn_w17w10.sv",
+    "tools/uarch_model.py",
+    "tools/model_dsrom_return_calendar.py",
+    "tools/dsrom_return_scaling_source_audit.py",
+    "tools/dsrom_return_storage_hbm.py",
+    "results/uarch/dsrom_return_storage_hbm_20261003/model.json"
+  ],
+  "padding_pairs": 0,
+  "ragged_golden": {
+    "NP": 5,
+    "R": 2,
+    "cycles": 305,
+    "label": "MEASURED_RTL",
+    "rows": 64,
+    "scope": "non-sibling physical neighbors, nseg3/5, cancellation, positions0..5, staggered arrivals",
+    "status": "PASS_SCALAR_GOLDEN"
+  },
+  "rate_loss_target": 0.01,
+  "reason": "MEASURED saturated slot reuse9cycles >4 target; 582 vs267cycles in saturated directed fixture. Not a L0/L20 performance verdict.",
+  "replicas": {
+    "node": 8064,
+    "pair_buffer": 4096,
+    "root": 128
+  },
+  "root_fanout": 128,
+  "root_mux_entries": 128,
+  "root_queue_held_comparators": 2113536,
+  "scenario_C_reservation_cell_um2": 0.37908,
+  "scenario_C_reservation_mm2": 6.824750100479999,
+  "schema": "dsrom.credit_return.successor.v1",
+  "slot_fit": null,
+  "source_hashes": {
+    "rtl/test/tb_dsrom_credit_ragged.sv": "f20229691db5f8e808b40ec79ec912a390385751c850d9c0db45710c041a17fd",
+    "rtl/v41die/ot_v41_retn_credit.sv": "31d54cf03317a49f1245e484fb7a4acb87916d4fe7090a10e08922e92e5098c6",
+    "rtl/v41rom/ot_v41_ret_credit.sv": "a1f33c54ea4f73c23401eb7d6abecabdf0962ef1c8fc3ee4c7eb65e6e3be3d11",
+    "tools/dsrom_credit_return_model.py": "71e213552cf051db7521d1177c5eccbf024cc83f44b236324fd46df740a68410",
+    "tools/gen_dsrom_credit_return.py": "2a25d658583f0490b8865175c8182058b1886860582a18a062c25864c952adfe"
+  },
+  "source_parent": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+  "source_sha256": {
+    "results/uarch/dsrom_return_storage_hbm_20261003/model.json": "620e7b8be078e4b90e5986340cb7c719351beba39029d4e66b7b193a9ea2b5d2",
+    "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "tools/dsrom_return_scaling_source_audit.py": "d94617596b04a8a2fe2c0ead7e20ae06085af14bac66838009103d02cb75db66",
+    "tools/dsrom_return_storage_hbm.py": "c6ac731b0d7f8d2c0468fba31b1eb395a893e077d08e8e8a4a7073efe050f4e2",
+    "tools/model_dsrom_return_calendar.py": "7e6e77f0b57479d4ba4f263803a09576ff27303ebd14b13f83c40360f8fda9a3",
+    "tools/uarch_model.py": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9"
+  },
+  "status": "REJECTED_RD4_RESERVATION_IMPLEMENTATION",
+  "storage_FF50_proxy_mm2": 5.2498077696,
+  "storage_bits_lower_bound": 9001728,
+  "storage_plus_unified_adders_proxy_mm2": 9.982962708479999,
+  "unified_vs_scenario_storage": "Initial prebuild ledger used unified generic DFF0.2916um2. Scenario C reservation uses0.37908um2; both proxies retained, neither synthesized area."
+}

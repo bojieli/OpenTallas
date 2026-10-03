@@ -1,0 +1,78 @@
+{
+  "NP": 5,
+  "R": 2,
+  "RD": 4,
+  "ROOTD": 128,
+  "RST": 1,
+  "leaf_index": "2*compiled_pair_id+macro_side; pair regions contiguous; golden row must remain within one region",
+  "metadata_version": "dsrom.active_pair_return.v1",
+  "nodes": [
+    {
+      "a": 0,
+      "b": 1,
+      "id": 10,
+      "region": 0
+    },
+    {
+      "a": 2,
+      "b": 3,
+      "id": 11,
+      "region": 0
+    },
+    {
+      "a": 10,
+      "b": 11,
+      "id": 12,
+      "region": 0
+    },
+    {
+      "a": 5,
+      "b": 6,
+      "id": 13,
+      "region": 1
+    },
+    {
+      "a": 4,
+      "b": 13,
+      "id": 14,
+      "region": 1
+    },
+    {
+      "a": 8,
+      "b": 9,
+      "id": 15,
+      "region": 1
+    },
+    {
+      "a": 7,
+      "b": 15,
+      "id": 16,
+      "region": 1
+    },
+    {
+      "a": 14,
+      "b": 16,
+      "id": 17,
+      "region": 1
+    }
+  ],
+  "padding_pairs": 0,
+  "pair_spans": [
+    [
+      0,
+      2
+    ],
+    [
+      2,
+      5
+    ]
+  ],
+  "qualification": "UNVALIDATED_RETURN_ONLY; actual element buffers/flow control, workload mapping and SS/FF are separate gates",
+  "rank_id": null,
+  "roots": [
+    12,
+    17
+  ],
+  "rtl_sha256": "2e0119b66dd5de8b4c0e4fa8379950c179c7b0ca6e2fd45424209c01fdfda23e",
+  "stage_id": null
+}

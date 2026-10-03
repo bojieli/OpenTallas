@@ -1,0 +1,66 @@
+{
+  "FP32_adds_per_cycle": 8192,
+  "MACs_per_cycle": 0,
+  "NP": 4096,
+  "R": 128,
+  "RD": 4,
+  "ROOTD": 128,
+  "RST": 1,
+  "adder_proxy_mm2": 3.158212608,
+  "adopted": false,
+  "area_target_mm2": 7,
+  "area_target_pass": null,
+  "boundary_bits_per_cycle": {
+    "node_inputs": 130,
+    "node_output": 65,
+    "reverse_credits": 3,
+    "root_output": 69
+  },
+  "channel": {
+    "actual_corridor_binding": null,
+    "over_ROM_tracks_per_100um": 1128,
+    "required_node_signal_tracks": 198,
+    "spine_capacity": 1153
+  },
+  "compiled_pairs": 4096,
+  "credit_loop_target": 4,
+  "excluded_area": "adder/tag/alignment pipeline FF, counters, input muxes, root queue selection, comparator broadcast, CTS/PDN and routing",
+  "label": "MODEL_NOT_VALIDATED",
+  "latency": {
+    "add_reservation_to_refund_lower_bound_cycles": 8,
+    "adder": 5,
+    "credit_reservation": "reserve downstream slot BEFORE launching nonstallable adder; refund ONLY downstream FIFO pop",
+    "max_levels": 6,
+    "noqueue_tree_cycles": 36,
+    "reverse_credit_register": 1,
+    "token_contribution": "replace existing return calendar once; added stalls must be measured on L0/L20, rate unknown",
+    "wire": 1
+  },
+  "measured_rate_loss": null,
+  "node_mux_entries": 4,
+  "node_port_bytes_per_cycle": {
+    "read": 16.25,
+    "write": 16.25
+  },
+  "nodes": 8064,
+  "padding_pairs": 0,
+  "rate_loss_target": 0.01,
+  "replicas": {
+    "node": 8064,
+    "pair_buffer": 4096,
+    "root": 128
+  },
+  "root_fanout": 128,
+  "root_mux_entries": 128,
+  "schema": "dsrom.credit_return.successor.v1",
+  "slot_fit": null,
+  "source_sha256": {
+    "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "tools/dsrom_return_scaling_source_audit.py": "d94617596b04a8a2fe2c0ead7e20ae06085af14bac66838009103d02cb75db66",
+    "tools/model_dsrom_return_calendar.py": "7e6e77f0b57479d4ba4f263803a09576ff27303ebd14b13f83c40360f8fda9a3",
+    "tools/uarch_model.py": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9"
+  },
+  "storage_FF50_proxy_mm2": 5.2498077696,
+  "storage_bits_lower_bound": 9001728
+}
