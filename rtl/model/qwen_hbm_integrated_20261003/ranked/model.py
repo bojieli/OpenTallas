@@ -59,7 +59,7 @@ def model():
       source_sha256={p:hashlib.sha256(blob(p)).hexdigest() for p in inputs},
       current_W2_price=pricing,
       storage=dict(coded_bits_per_PC=15768,total_coded_bits=256*15768,delta_vs_old_top_bits=128*15768,
-        rank_retain='Existing207bit protected grant key20 rankbit13; no extra unprotected rank register',added_rank_FF=0,added_SRAM_bytes=0),
+        rank_retain='Existing207bit retained grant key20 rankbit13; no extra rank register',added_rank_FF=0,added_SRAM_bytes=0,existing_root_mutable_protection='source root owner/phase/rmw/fault are ordinary registers; no SECDED protection credit, contextual protection unresolved'),
       ports=dict(inner_PC_bits=7,rank_bits=1,outer_reverse_bits=81,inner_reverse_bits=80,
         selected_bus_widths=widths,selected_bits=mux_bits,maximum_bytes_per_PC_edge=32,
         request_bytes_per_edge_256PC_upper_bound=256*32,actual_composed_bandwidth_unknown=True,
