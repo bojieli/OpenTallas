@@ -18,13 +18,26 @@ FIELDS={'client_valid':('input',1),'client_write':('input',1),'client_addr':('in
         'workspace_base':('input',10),'workspace_length':('input',11),
         'busy':('output',1),'drained':('output',1),'fault':('output',1)}
 
+def fields_for_book(book):
+    fields = dict(FIELDS)
+    if 'manifest_contract' in book:
+        contract = book['manifest_contract']
+        C.need(contract.get('owner_module') == 'ot_gpu_qwen_manifest_range_owner'
+               and contract.get('issuer_module') == 'ot_gpu_qwen_full_issuer_r3',
+               'actual manifest owner/typed issuer namespace')
+        for name, (_, width) in fields.items():
+            if name.startswith('workspace_'):
+                fields[name] = ('output', width)
+    return fields
+
+
 class ScratchPump(S.ScratchPump):
     def __init__(self,pins):
         C.need(getattr(pins,'block',None)=='scratch' and pins.aliases==ALIASES,
                'Euclid actual scratch INPUT client, never SM output aliases')
         C.need(pins.parameter('ENABLE_CLIENT')==1 and pins.parameter('INDEX')==pins.index,
                'actual enabled scratch client index')
-        for n,(direction,width) in FIELDS.items():
+        for n,(direction,width) in fields_for_book(pins.root.book).items():
             p=pins.root.book['pins'].get('scratch_'+n,{})
             C.need(p.get('direction')==direction and p.get('leaf_bits')==width
                    and p.get('count')==64 and p.get('bits')==64*width,
