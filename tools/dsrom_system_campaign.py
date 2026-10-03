@@ -111,12 +111,24 @@ def main():
     ap.add_argument("--scratch", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--prepare-only", action="store_true")
+    ap.add_argument("--prepared", action="store_true",
+                    help="reuse images, ROMs, golden and svh a --prepare-only run left in --scratch "
+                         "(hosts without the golden's tokenizer dependency)")
     ap.add_argument("--all-unit", action="store_true"); ap.add_argument("--kv-hbm", action="store_true")
     a = ap.parse_args()
     a.scratch.mkdir(parents=True, exist_ok=True)
     c = CONFIGS[a.only]
     t0 = time.time()
-    ctx = prepare(a.only, a.scratch)
+    if a.prepared:
+        prep = json.loads((a.scratch / f"prep_{a.only}.json").read_text())
+        gold = json.loads(next(a.scratch.glob("gold_*.json")).read_text())
+        ctx = dict(recs=prep["isa_pipeline"], link_class=prep["link_class_per_link"],
+                   gold=[dict(prompt=p, generated=g) for p, g in zip(prep["golden_prompts"], prep["golden_generated"])],
+                   img=a.scratch / f"cfg_{a.only}", roms=a.scratch / "roms",
+                   steps=c["plen"] + c["ngen"] - 1, svh=(a.scratch / f"svh_{a.only}.svh").read_text())
+        assert all(r["logits_bit_exact_every_step"] for r in ctx["recs"]), "prepared ISA pipeline not exact"
+    else:
+        ctx = prepare(a.only, a.scratch)
     rec = {"schema": "opentallas.rtl.dsrom_system_gate.v1", "config_name": a.only, "config": c,
            "link_class_per_link": ctx["link_class"], "isa_pipeline": ctx["recs"],
            "golden_prompts": [g["prompt"] for g in ctx["gold"]],
@@ -127,9 +139,12 @@ def main():
     if a.prepare_only:
         (a.scratch / f"svh_{a.only}.svh").write_text(ctx["svh"])
         a.output.write_text(json.dumps(rec, indent=1) + "\n")
+        (a.scratch / f"prep_{a.only}.json").write_text(json.dumps(rec, indent=1) + "\n")
         return 0
     exe, bs = build(a.scratch / f"obj_{a.only}", ctx["svh"], c)
     rec["build_seconds"] = round(bs, 1)
+    rec["prepared_from_scratch"] = bool(a.prepared)
+    rec["verilator"] = subprocess.run(["verilator", "--version"], capture_output=True, text=True).stdout.strip()
     log = a.scratch / f"out_{a.only}.txt"
     cmd = [str(exe), f"+DIR={ctx['img']}", f"+ROMS={ctx['roms']}", f"+NUSERS={c['users']}",
            f"+NPROMPT={c['plen']}", f"+NGEN={c['ngen']}", "+HB=100000"]
