@@ -1,0 +1,62 @@
+{
+  "verdict": "PASS_TYPED_ISSUER_RECEIVER",
+  "source_sha256": {
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/r3/issuer_tb.sv": "b23360101ed4fca99f3a0c801e0b5be0fb3ddfcd177e82ad2a96f658e7d46ca2",
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/r3/ot_gpu_qwen_full_issuer_r3.sv": "811da1864e61816fa864864df6f42a40bcfd5a9537e42475b837947df60eda1b",
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv": "82f85401dd62982f600329d86d54c0788578f9cc57bae9e53823638196abe0b8",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  },
+  "post_source_sha256": {
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/r3/issuer_tb.sv": "b23360101ed4fca99f3a0c801e0b5be0fb3ddfcd177e82ad2a96f658e7d46ca2",
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/r3/ot_gpu_qwen_full_issuer_r3.sv": "811da1864e61816fa864864df6f42a40bcfd5a9537e42475b837947df60eda1b",
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv": "82f85401dd62982f600329d86d54c0788578f9cc57bae9e53823638196abe0b8",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  },
+  "cases": [
+    {
+      "name": "enabled",
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "issuer_r3_tb",
+        "-P",
+        "issuer_r3_tb.TB_ENABLE=1",
+        "-o",
+        "/tmp/euclid-issuer-r3-directed-r3/enabled.vvp",
+        "/tmp/opentallas-euclid-manifest-issuer-20261003/rtl/model/qwen_hbm_integrated_20261003/issuer/r3/issuer_tb.sv",
+        "/tmp/opentallas-euclid-manifest-issuer-20261003/rtl/model/qwen_hbm_integrated_20261003/issuer/r3/ot_gpu_qwen_full_issuer_r3.sv",
+        "/tmp/opentallas-euclid-manifest-issuer-20261003/rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv",
+        "/tmp/opentallas-euclid-manifest-issuer-20261003/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv"
+      ],
+      "compile_exit": 0,
+      "run_exit": 0,
+      "pass_": true
+    },
+    {
+      "name": "defaultoff",
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "issuer_r3_tb",
+        "-P",
+        "issuer_r3_tb.TB_ENABLE=0",
+        "-o",
+        "/tmp/euclid-issuer-r3-directed-r3/defaultoff.vvp",
+        "/tmp/opentallas-euclid-manifest-issuer-20261003/rtl/model/qwen_hbm_integrated_20261003/issuer/r3/issuer_tb.sv",
+        "/tmp/opentallas-euclid-manifest-issuer-20261003/rtl/model/qwen_hbm_integrated_20261003/issuer/r3/ot_gpu_qwen_full_issuer_r3.sv",
+        "/tmp/opentallas-euclid-manifest-issuer-20261003/rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv",
+        "/tmp/opentallas-euclid-manifest-issuer-20261003/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv"
+      ],
+      "compile_exit": 0,
+      "run_exit": 0,
+      "pass_": true
+    }
+  ],
+  "elapsed_s": 1.6038477420806885,
+  "whole1737": false,
+  "allocator_component": false,
+  "physical": false,
+  "peakRSS_measured": false
+}

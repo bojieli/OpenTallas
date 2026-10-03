@@ -7,6 +7,12 @@
       "L1": 932,
       "L2": 544
     },
+    "real2_p1023": {
+      "E": 0,
+      "L0": 849,
+      "L1": 2231,
+      "L2": 2087
+    },
     "real2_p255": {
       "E": 0,
       "L0": 247,
@@ -427,6 +433,119 @@
         "L2_die3": true
       },
       "total_cycles": 16152
+    },
+    "real2_p1023": {
+      "binary_sha256": "434adbbedaca509354e4c47f9fc121526e2fc6c865b7cb97253e6b0bba88ed2a",
+      "configuration": "REAL_MEM",
+      "first_mismatches": {},
+      "layer_x_exact": {
+        "E_die0_x": true,
+        "E_die1_x": true,
+        "E_die2_x": true,
+        "E_die3_x": true,
+        "L0_die0_x": true,
+        "L0_die1_x": true,
+        "L0_die2_x": true,
+        "L0_die3_x": true,
+        "L1_die0_x": true,
+        "L1_die1_x": true,
+        "L1_die2_x": true,
+        "L1_die3_x": true,
+        "L2_die0_x": true,
+        "L2_die1_x": true,
+        "L2_die2_x": true,
+        "L2_die3_x": true
+      },
+      "position": 1023,
+      "returncode": 0,
+      "source_stable": true,
+      "stages": {
+        "E": {
+          "cycles": 98,
+          "memory_max_over_dies": {
+            "drain_low": 0,
+            "fill_cycles": 0,
+            "fill_sectors": 0,
+            "kvok_low_with_desc": 0,
+            "rsp_tile_stall": 0,
+            "stall_bridge": 0,
+            "stall_drain": 0,
+            "stall_kv": 0,
+            "stall_mem": 0,
+            "stall_retire": 0,
+            "wr_lat_max": 0,
+            "wr_sectors": 0
+          }
+        },
+        "L0": {
+          "cycles": 5789,
+          "memory_max_over_dies": {
+            "drain_low": 772,
+            "fill_cycles": 1451,
+            "fill_sectors": 16376,
+            "kvok_low_with_desc": 410,
+            "rsp_tile_stall": 5,
+            "stall_bridge": 425,
+            "stall_drain": 471,
+            "stall_kv": 412,
+            "stall_mem": 0,
+            "stall_retire": 0,
+            "wr_lat_max": 276,
+            "wr_sectors": 136
+          }
+        },
+        "L1": {
+          "cycles": 7171,
+          "memory_max_over_dies": {
+            "drain_low": 1283,
+            "fill_cycles": 2833,
+            "fill_sectors": 16376,
+            "kvok_low_with_desc": 1564,
+            "rsp_tile_stall": 3,
+            "stall_bridge": 425,
+            "stall_drain": 699,
+            "stall_kv": 1566,
+            "stall_mem": 0,
+            "stall_retire": 0,
+            "wr_lat_max": 389,
+            "wr_sectors": 136
+          }
+        },
+        "L2": {
+          "cycles": 7027,
+          "memory_max_over_dies": {
+            "drain_low": 1568,
+            "fill_cycles": 2689,
+            "fill_sectors": 16376,
+            "kvok_low_with_desc": 1201,
+            "rsp_tile_stall": 2,
+            "stall_bridge": 425,
+            "stall_drain": 918,
+            "stall_kv": 1203,
+            "stall_mem": 0,
+            "stall_retire": 0,
+            "wr_lat_max": 622,
+            "wr_sectors": 136
+          }
+        }
+      },
+      "status": "pass",
+      "token": 1796,
+      "token_kv_writeback_exact": {
+        "L0_die0": true,
+        "L0_die1": true,
+        "L0_die2": true,
+        "L0_die3": true,
+        "L1_die0": true,
+        "L1_die1": true,
+        "L1_die2": true,
+        "L1_die3": true,
+        "L2_die0": true,
+        "L2_die1": true,
+        "L2_die2": true,
+        "L2_die3": true
+      },
+      "total_cycles": 20095
     },
     "real2_p255": {
       "binary_sha256": "434adbbedaca509354e4c47f9fc121526e2fc6c865b7cb97253e6b0bba88ed2a",
