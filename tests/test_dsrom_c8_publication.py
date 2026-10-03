@@ -63,3 +63,10 @@ def test_native_transport_fixture_uses_actual_golden_qdq_value():
  s=(ROOT/'rtl/test/dsrom_sys/c8/tb_dsrom_c8_native.sv').read_text()
  assert "32'h3f840000" in s
  assert 'if(sf)$fatal' in s
+
+
+def test_native_backend_lengths_match_actual_parent_not_default():
+ b=(ROOT/'rtl/test/dsrom_sys/c8/tb_dsrom_c8_native.sv').read_text()
+ assert '.TAGW(17),.LENW(4),.BEATW(4),' in b
+ parent=(D/'ot_chip_v41x_hbm3e_phy_c8.sv').read_text()
+ assert '.LENW(4), .BEATW(4)' in parent

@@ -44,7 +44,7 @@ module tb_dsrom_c8_native;
    .clk(clk),.rst_n(rst_n),.b_v(32'd0),.b_rdy(),.b_addr(960'd0),.b_len(128'd0),.b_tag(512'd0),.b_we(32'd0),.b_wdata(8192'd0),.b_wstrb(1024'd0),.b_wr_done(),.b_rsp_v(),.b_rsp_rdy(32'hffffffff),.b_rsp_tag(),.b_rsp_beat(),.b_rsp_data(),
    .k_v(mv[g]),.k_rdy(mr[g]),.k_addr(ma[g*30+:30]),.k_len(ml[g*4+:4]),.k_tag(mt[g*16+:16]),.k_we(me[g]),.k_wdata(md[g*256+:256]),.k_wstrb(mw[g*32+:32]),.k_wr_done(mwd[g]),.k_rsp_v(sv[g]),.k_rsp_rdy(sr[g]),.k_rsp_tag(st[g*16+:16]),.k_rsp_beat(sb[g*4+:4]),.k_rsp_data(sd[g*256+:256]),
    .h_v(hv),.h_rdy(hr),.h_addr(ha),.h_len(hl),.h_tag(ht),.h_we(he),.h_wdata(hd),.h_wstrb(hw),.h_wr_done(hwd),.r_v(rv),.r_rdy(rr),.r_tag(rt),.r_beat(rb),.r_data(rd),.k_grants(),.b_grants(),.contended());
-  ot_hdc_v41x_idx_hbm_c8 #(.NPC(32),.AW(30),.DW(256),.TAGW(17),.MEM_WORDS(1024),.QD(64),.REFPB(3),.MEM_MODE(0)) backend(
+  ot_hdc_v41x_idx_hbm_c8 #(.NPC(32),.AW(30),.DW(256),.TAGW(17),.LENW(4),.BEATW(4),.MEM_WORDS(1024),.QD(64),.REFPB(3),.MEM_MODE(0)) backend(
    .clk(clk),.rst_n(rst_n),.req_v(hv),.req_rdy(hr),.req_addr(ha),.req_len(hl),.req_tag(ht),.req_we(he),.req_wdata(hd),.req_wstrb(hw),.wr_done(hwd),.wr_done_addr(da),.wr_done_tag(dt),.rsp_v(rv),.rsp_rdy(rr),.rsp_tag(rt),.rsp_beat(rb),.rsp_data(rd));
   initial for(integer a=0;a<1024;a=a+1) backend.mem[a]=0;
   ot_dsrom_c8_write_journal #(.NPC(32),.DEPTH(64),.AW(30)) journal(
