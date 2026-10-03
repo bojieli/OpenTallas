@@ -42,6 +42,7 @@ To build and run on ot-epyc1tb (Verilator 5.050):
 | `sys_b5` | 5 / 3 | 2 UCIe + 3 board; 3 body stages + 2 chained lm_head parts | 1 | positions 0, 1 |
 | `sys_b5_u2` | as `sys_b5` | as `sys_b5` | 2 | positions 0, 1 |
 | `sys_b5_p3g2` | as `sys_b5` | as `sys_b5` | 1 | positions 0..3 |
+| `sys_d5`, `sys_d5_u2`, `sys_d5_p3g2` | 5 / 3 | 2 UCIe + 3 board; 5 body dies, whole lm_head on the last | 1 or 2 | positions 0, 1 (or 0..3) |
 | `sys_b2` with `OT_SYS_GPARAMS=LINK_RT=0 OT_SYS_TAG=_lrt0` | as `sys_b2` | pinned delay-line link | 1 | control for the cost of the link layer |
 
 A gate passes only if every check below holds:
@@ -54,3 +55,9 @@ A gate passes only if every check below holds:
 ## L0 diagnosis
 
 See `l0diag/REPLAY.md`. This is the original w17 r4 configuration with a read-only observer, run fresh.
+
+## Results so far
+
+- `system_gate_sys_b2.json`: **PASS**. Tokens 2815, 3537 and 2047 at positions 0, 1 and 2 were exact. 1,304,979 cycles.
+- `system_gate_sys_b5_FAIL_r1.log`: **FAIL**. The split lm_head ME bank image was incomplete. The fix is in the gate tool (8f6459462), and the r2 runs are queued.
+- The remaining runs and next steps are in `STATUS.md`.
