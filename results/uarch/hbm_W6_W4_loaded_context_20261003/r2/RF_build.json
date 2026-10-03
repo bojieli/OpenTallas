@@ -3019,9 +3019,12 @@
   },
   "host": "ot-epyc1tb",
   "physical_selection": {
+    "RF_hierarchy_retained_for_complete512_vector_capacity": true,
     "absent_fullSM_SIMD_duplicate": true,
     "external_io_budget_fraction": 0.2,
     "external_io_budget_status": "prospective adjacent registered producer/consumer contract; fullbridge extraction still required",
+    "frontend_unroll_limit": null,
+    "frontend_unroll_limit_reason": "Existing finite64word SECDED loops exceed slang default4000; unlimited elaboration preserves all source loop bounds and arithmetic",
     "full32_replicas_model_only": true,
     "fullsize_actual_context_top": "ot_gpu_rf_w6_physical_context",
     "hold_corner": "BC/FF",

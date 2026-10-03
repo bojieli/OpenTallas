@@ -70,5 +70,9 @@
   "--source",
   "physical/abi3/ot_gpu_rf_w6_physical_context.sv",
   "--orfs-var",
-  "SYNTH_HDL_FRONTEND=slang"
+  "SYNTH_HDL_FRONTEND=slang",
+  "--orfs-var",
+  "SYNTH_SLANG_ARGS=--unroll-limit=0",
+  "--source",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
 ]

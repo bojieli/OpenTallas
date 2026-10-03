@@ -136,7 +136,7 @@ ot_gpu_pc40_physical_ack_source #(.ENABLE(ENABLE)) joined(
 .exclusive_lease(exclusive_lease),
 .fault(fault)
 );
-ot_gpu_rf_service #(.ACK_ID(1)) provider(
+(* keep_hierarchy = "yes" *) ot_gpu_rf_service #(.ACK_ID(1)) provider(
 .clk(clk),
 .rst_n(rst_n),
 .rd_valid(rd_valid),
