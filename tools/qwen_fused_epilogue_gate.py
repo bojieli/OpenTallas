@@ -53,7 +53,7 @@ def case_vectors(kind, rng):
         x = rng.normal(0, 2, NEL).astype(F)
         return t1, s, x
     if kind == "wide":
-        e = rng.integers(-60, 60, (3, NEL)).astype(np.float64)
+        e = rng.integers(-40, 40, (3, NEL)).astype(np.float64)   # squares and their sum stay finite
         v = np.sign(rng.uniform(-1, 1, (3, NEL))) * rng.uniform(1, 2, (3, NEL)) * np.exp2(e)
         return v[0].astype(F), np.abs(v[1]).astype(F), v[2].astype(F)
     if kind == "adversarial":
@@ -158,7 +158,7 @@ def main():
                 gr = G.lane_sum(G.mul(gx, gx))
             gxb, grb = G.bits(gx), int(G.bits(np.asarray(gr, dtype=F)))
             two, fused = run(vec, 0), run(vec, 1)
-            finite = bool(np.isfinite(gx).all())
+            finite = bool(np.isfinite(gx).all()) and bool(np.isfinite(gr))   # X and its sum of squares
             nan_g = np.isnan(gx)
             same = bool((two["x"] == fused["x"]).all()) and two["r"] == fused["r"]
             vs_gold_two = int((two["x"] != gxb)[~nan_g].sum())
