@@ -1,0 +1,36 @@
+{
+  "PDN_scope": "204W area-proportional allocated load conserved; global native M8/M9 mesh90umBUMPS; internal macro M7/rail upfeed not qualified",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "clock_wire_model": "actual current graph routes requested; geometry wire lower screens positive; not idealzero transport",
+  "full_die_admitted": false,
+  "full_token_rate_admitted": false,
+  "jobs": {
+    "grt": {
+      "admission_peak_GB": 40,
+      "basis": "existing same-k16/full-size die routes observed about12GiB RSS; added clocks/capture edges with >3x admission allowance, not a running cap",
+      "threads": 16
+    },
+    "pdn": {
+      "admission_peak_GB": 64,
+      "basis": "full90um mesh plus source-shape current tiles; sparse electrical solve, not flat logic",
+      "threads": 8
+    },
+    "pin": {
+      "admission_peak_GB": 8,
+      "basis": "local native interface PA only, no whole-die native GCell allocation",
+      "threads": 1
+    }
+  },
+  "memory_policy": "admit.sh +150GB shared reserve, admission wait only, no running memory/time cap",
+  "model_replay_byteidentical": true,
+  "native_pin_scope": "q/BF source-port interface abstracts plus actual v1 cfg macro; full co-resident OBS and element hard abstract still separate",
+  "old_runs_untouched": true,
+  "pipeline_owner": "Epicurus",
+  "source_interface_scope": "full2048-site shard0 hierarchical black-box feasibility; no engine RTL or synthesis",
+  "source_sha256": {
+    "jobs/dsrom_current_die_20261003/run_job.sh": "dc4e2962fee361fe681552075ff1f684389f8c49ece8cab70c0ead8a2a3a6f48",
+    "tests/test_dsrom_current_die_feasibility.py": "5a9c5791e6ff65735fb010d7d50af3d67c085e464fb2b7ee27576c86b4f57605",
+    "tools/dsrom_current_die_feasibility.py": "23f4bff53a578f1c987a8da23235cf807af62a386dafbc8faff0c12b3467fb63"
+  },
+  "tests_pass": 6
+}
