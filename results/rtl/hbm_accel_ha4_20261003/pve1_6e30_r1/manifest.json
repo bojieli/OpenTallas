@@ -1,0 +1,22 @@
+{
+ "host": "ot-pve1",
+ "PID": 2379659,
+ "source_commit": "6e30dc4f7956e5122216bafb78e68f72c498faa1",
+ "reservation_GB": 1,
+ "wall_timeout": null,
+ "source_sha256": {
+  "pinned_fixture.py": "950002206b71d46e67ecd22f43d12a93bb8bcfb7d8e12b828aca3a224c209365",
+  "SOURCE_COMMIT": "669c57abbb3d3f214f1efc656ae9d5e36373ce1ee9f2fed210ec010c882cf1a0",
+  "rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv": "dc5857a61d3fdfb188888b9d8f6d30a8b4b0dbcc4afca6438c699884fe35396c",
+  "rtl/hbm_accel/service/ot_hbm_accel_kv_native_lifecycle.sv": "d8b86dd7d244928a034f41adeaec085fcd1030fb3d5694d6a3861c7fc4b25ba7",
+  "rtl/hbm_accel/service/ot_hbm_accel_causal_command_provider.sv": "675ede5f9d8f9027a6b34e945612f314ed6565beff1d8871cdc447cd5df0ae79",
+  "rtl/hbm_accel/service/ot_hbm_accel_kv_lifecycle.sv": "735574007ef0e446279185671fc2a560a5ece292d2bde69c94b8d8980ea9aed2",
+  "tools/h4_qwen_released_provider_delivery.py": "0ea16486aef5f60bf99edd3cb3dc922b7d2c27116f39269c5c7157e7444ba5c9",
+  "tools/hbm_accel_service_model.py": "2dea925f6bb9a3eeb780eb4abd318d8672110b273d8867dc626eac7dee3e5eb4",
+  "tools/hbm_accel_service_gate.py": "8cbd8fd7e0db20ad66a0626d51f75c99987f2b927d1fd186473b25696e3a27ff",
+  "tools/gpu_sys/canonical_qwen_kv_ports.py": "d1aa4e7adb3ef34f1c19a0519ac10e507b6cc439ce61cb582e5646b15d25d122",
+  "tools/gpu_sys/canonical_qwen_kv_controller_model.py": "e3de04b0681b65b9f9318bf3b34edffe636136f849a1bee3175b3d9180572ee5",
+  "tools/gpu_sys/canonical_qwen_kv_controller.py": "f9f4e5c07835d67f1b4fe189a3c224ada9e12dbbdaef5647d74137a839e84455",
+  "tools/gpu_sys/canonical_qwen_transport.py": "260b06f3fce070db8387b49b7a4640fa190326696dfc5b4d27fc1fbfd9ff8784"
+ }
+}
