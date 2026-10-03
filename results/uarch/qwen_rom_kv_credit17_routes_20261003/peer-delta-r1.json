@@ -1,0 +1,79 @@
+{
+  "RTL_or_PnR_authorized": false,
+  "Russell_credit_contract_commit": "af7c7112",
+  "actual_sustained_PHY_Bps": null,
+  "admission": "FAIL",
+  "boundary_bits": 43256,
+  "candidate17_replayed": false,
+  "clock_reset_PHY_pins": [
+    {
+      "layer": "M5",
+      "pin": "clk",
+      "rectangle_um": [
+        5115.984,
+        833.298,
+        5116.008,
+        833.49
+      ]
+    },
+    {
+      "layer": "M5",
+      "pin": "rst_n",
+      "rectangle_um": [
+        5116.176,
+        833.298,
+        5116.2,
+        833.49
+      ]
+    }
+  ],
+  "default_enabled": false,
+  "delta_area_mm2": 0.6882164595,
+  "field_delivery_buffers": 1558410,
+  "field_delivery_capacity_each": [
+    5069,
+    5069
+  ],
+  "field_delivery_demand_each": [
+    5068,
+    5068
+  ],
+  "fill_control_tracks": 7973,
+  "known_composed_area_mm2": 814.74970432322,
+  "model": "results/uarch/qwen_rom_kv_credit17_routes_20261003/model-r1.json",
+  "model_sha256": "b0918cc602c2dc4a550efe8724df29d992e9069a56cca5f349c36bb7f15c83a5",
+  "name": "QROM-SMIN6-KV7-NATIVEPHY-68C",
+  "next_required_source_contract": "Type and bind the reserved804boundarybits, actual four-column/8-group controller to native PHY pins, and real accepted descriptor/held ACK/drain event calendar. Include17/136 spill/protection and finite field transport before capacity replay/admission.",
+  "parent_relay_required": true,
+  "predecessor_commit": "a16df4e5624ba88866cc589b9e8eb0094a484e70",
+  "remaining_before_unknowns_mm2": 0.25029567678001774,
+  "replay_commands": [
+    "python tools/verify_qwen_rom_kv_credit17_routes.py",
+    "python -m pytest tests/test_qwen_rom_kv_credit17_routes.py -q"
+  ],
+  "required_sustained_Bps_per_stack": 113135616000,
+  "schema": "QROM_CREDIT17_ROUTE_CAPACITY_PEER_DELTA_R1",
+  "shoreline_capacity_each": [
+    18547,
+    18547
+  ],
+  "shoreline_demand_each": [
+    18546,
+    18546
+  ],
+  "unresolved_costs": [
+    "finite service calendar exceeds target",
+    "SS/FF clock skew exceeds unchanged 20ps construction demand",
+    "startup ACK outputs outside characterized load domain",
+    "controller/PHY strict refresh, held ACK and sustainable bandwidth unmeasured",
+    "complete source epoch/init/abort/producer accepted-demand binding absent",
+    "exclusive PG/via/OBS/pin landing and every service-family cut unproved",
+    "whole field root distribution and transport pipeline/hold costs incomplete",
+    "17/136 finite spill/protection calendar not replayed",
+    "new local sites/atomic credit protection and selectors not mapped or SSFF-qualified",
+    "804 parent boundary bits lack typed source endpoints",
+    "M9 delivery/shoreline and M6/M8 bands lack exclusive PG/via/hold/source pin ownership",
+    "field/shoreline root clock-reset balancing and actual transport stage replay incomplete"
+  ],
+  "untyped_boundary_bits": 804
+}
