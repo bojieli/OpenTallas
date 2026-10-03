@@ -83,11 +83,14 @@ def tests():
              layers=cor['tile_column']['layers'], blocked=['M3', 'M5'], width_r2=cor['tile_column']['width_r2_um'],
              seg_um=round(tile_h / math.ceil(tile_h / reach), 4), segs=math.ceil(tile_h / reach),
              reps=round(bpm * tile_h / math.ceil(tile_h / reach) / 1000), chains=cor['tile_column']['demand_tracks'])
-    for t in (a, b):
+    # C: B with the tile-edge pin row centred on its entry station (a 24.3 um lead-in of corridor below the station),
+    # instead of B's one-sided row above it; everything else identical
+    c = dict(b, name='C', lead=TAP_LEAD)
+    for t in (a, b, c):
         t['raw_per_um'] = sum(1 / PITCH[l] for l in t['layers'])
         t['zones'] = zones(t)
         t['length_um'] = round(t['zones'][-1][2] + EDGE, 4)
-    return dict(A=a, B=b)
+    return dict(A=a, B=b, C=c)
 
 
 def zones(t):
@@ -95,7 +98,7 @@ def zones(t):
     grid = SITE if t['axis'] == 'x' else ROW
     out = []
     for k in range(t['segs'] + 1):
-        c = EDGE + STATION / 2 + k * t['seg_um']
+        c = t.get('lead', 0.0) + EDGE + STATION / 2 + k * t['seg_um']
         out.append((f'qs{k}', snap(c - STATION / 2, grid, False), snap(c + STATION / 2, grid)))
         if k < t['segs']:
             for j in range(1, t['reps'] + 1):
@@ -125,7 +128,7 @@ def plan():
     assert abs(rec['pg_coverage']['regions']['strip']['m8m9_coverage_per_net'] - PG['strip']) < 1e-4
     ratios = [('r060', 0.60), ('r050', 0.50), ('r2', None), ('r0362', 0.362), ('r030', 0.30), ('r0225', 0.225)]
     V = {}
-    for tname, pgs in (('A', ('strip', 'tile')), ('B', ('tile',))):
+    for tname, pgs in (('A', ('strip', 'tile')), ('B', ('tile',)), ('C', ('tile',))):
         t = T[tname]
         for pg in pgs:
             for tag, ratio in ratios:
@@ -360,10 +363,14 @@ def hook_pins(t):
                 'set_io_pin_constraint -pin_names {clk} -region top:*']
     else:
         z0 = t['zones'][0]
-        tap_hi = round(z0[2] + 40.0, 2)
+        if t.get('lead'):                                  # C: row centred on the entry station
+            zc = (z0[1] + z0[2]) / 2
+            tap_lo, tap_hi = round(zc - TAP_ROW_UM / 2, 2), round(zc + TAP_ROW_UM / 2, 2)
+        else:                                              # B: one-sided row from the die edge past the station
+            tap_lo, tap_hi = 0, round(z0[2] + TAP_ROW_UM, 2)
         cons = ['set_io_pin_constraint -pin_names [qcg_ports {^bd\\[}] -region bottom:*',
                 'set_io_pin_constraint -pin_names [qcg_ports {^bq\\[}] -region top:*',
-                f'set_io_pin_constraint -pin_names [concat [qcg_ports {{^tq\\[}}] {{rdy_t}}] -region right:0-{tap_hi}',
+                f'set_io_pin_constraint -pin_names [concat [qcg_ports {{^tq\\[}}] {{rdy_t}}] -region right:{tap_lo}-{tap_hi}',
                 'set_io_pin_constraint -pin_names {clk} -region bottom:*']
     return TCL_LIB + r'''
 # PRE_IO_PLACEMENT: bus ports on the corridor ends, tile-edge pin row on the east edge (B); no ordering is forced,
@@ -434,6 +441,8 @@ puts "QCG margin obstructions: $no"
 
 
 GRT_KEEP = 2.0
+TAP_ROW_UM = 40.0                                       # tile-edge pin row length (636 pins + ready on M4/M6)
+TAP_LEAD = 24.3                                         # C: corridor lead-in below the entry station (90 rows)
 LONG_HAUL_UM = 10.0                                     # audit: blocked-layer segments longer than this are counted
 ACCESS_UM = 10.0                                        # audit: pin-access band around each slab
 CORE_MARGIN = 1.08                                      # um core inset: PG and rows stop short of the ports
@@ -901,13 +910,18 @@ def summary(out_dir: Path):
                                                     for l in T['A']['layers'])), 4),
                 'B': round(T['B']['demand'] / (sum(math.floor(T['B']['width_r2'] / PITCH[l] + 1e-8)
                                                     for l in T['B']['layers'])), 4)}
+    r2_ratio['C'] = r2_ratio['B']
     applied = dict(tile_column=dens('B_tile'), horizontal_link=dens('A_tile'), vertical_spine=dens('B_tile'))
     die = die_statement({k: v for k, v in applied.items() if v is not None})
     strip = dens('A_strip')
     link_s = [x for x in (strip, applied['horizontal_link']) if x is not None]
     die_strip = die_statement({k: v for k, v in dict(applied, horizontal_link=min(link_s) if link_s else None).items()
                                if v is not None})
+    cden = dens('C_tile')
+    die_centred = die_statement({k: v for k, v in dict(applied, tile_column=cden, vertical_spine=cden).items()
+                                 if v is not None}) if cden is not None else None
     return dict(schema='opentallas.qwen-corridor-gate-verdict.v1', r2_record=R2_REC, r2_ratio=r2_ratio,
+                die_if_tile_pins_centred=die_centred,
                 series=gate, attempts=[n for n in recs if 'attempt' in n],
                 diagnostics={n: dict(grt_overflow=(d['grt']['final'] or {}).get('overflow'),
                                      drt_final=d['drt']['final_violations'], drt_completed=d.get('drt_completed'),
