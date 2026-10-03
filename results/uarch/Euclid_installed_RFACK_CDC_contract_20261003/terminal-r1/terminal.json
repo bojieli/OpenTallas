@@ -1,0 +1,147 @@
+{
+  "caps": null,
+  "headroom": {
+    "available_memory": "MemAvailable:   73700456 kB",
+    "disk_free_B": 607197437952
+  },
+  "jobs": [
+    {
+      "argv": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--lint-only",
+        "--timing",
+        "--Wall",
+        "-Wno-fatal",
+        "--top-module",
+        "ot_gpu_rf_service",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/gpu/ot_gpu_rf_service.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/gpu/ot_gpu_rf_visibility_fence.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+      ],
+      "log_sha256": "06ceb24633623a945a88aaeb9f4351515db23aad0430da7b29ee00dc3379b805",
+      "name": "ot_gpu_rf_service-lint",
+      "returncode": 0,
+      "wall_s": 2.4913456439971924
+    },
+    {
+      "argv": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--lint-only",
+        "--timing",
+        "--Wall",
+        "-Wno-fatal",
+        "--top-module",
+        "ot_gpu_rf_visibility_fence",
+        "-GENABLE=1",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/gpu/ot_gpu_rf_service.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/gpu/ot_gpu_rf_visibility_fence.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+      ],
+      "log_sha256": "e9f5510fe73e4ec40f4145016aa70bfd19af70ab50a83dca3ded16dc5a8a6a0e",
+      "name": "ot_gpu_rf_visibility_fence-lint",
+      "returncode": 0,
+      "wall_s": 0.0944366455078125
+    },
+    {
+      "argv": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--lint-only",
+        "--timing",
+        "--Wall",
+        "-Wno-fatal",
+        "--top-module",
+        "ot_hbm_r14_clock_bridge",
+        "-GWIDTH=471",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/model_ready_hbm_r14/ot_hbm_r14_route.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv"
+      ],
+      "log_sha256": "16f14456cfe709db44fc2c8eab4da2c983d892ce479a3b2d858636f18b2cc19d",
+      "name": "ot_hbm_r14_clock_bridge-lint",
+      "returncode": 0,
+      "wall_s": 0.06969976425170898
+    },
+    {
+      "argv": [
+        "/usr/bin/iverilog",
+        "-g2012",
+        "-s",
+        "tb_RFACK_conditional",
+        "-o",
+        "/tmp/Euclid-installed-RFACK-CDC-contract-20261003-r1/tb_RFACK_conditional",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/gpu/ot_gpu_rf_service.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/gpu/ot_gpu_rf_visibility_fence.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/test/Euclid_installed_RFACK_CDC_20261003/tb_RFACK_conditional.sv"
+      ],
+      "log_sha256": "77f67a35ae7baee1a8938653eb7bafcfb777f5def5e8926baa5f3861f795d331",
+      "name": "tb_RFACK_conditional-compile",
+      "returncode": 0,
+      "wall_s": 0.08860254287719727
+    },
+    {
+      "argv": [
+        "/usr/bin/vvp",
+        "/tmp/Euclid-installed-RFACK-CDC-contract-20261003-r1/tb_RFACK_conditional"
+      ],
+      "log_sha256": "7076db348c04b0f6787ed8cd8ab4917a47e58cf00014d9b903c7b45342e3dbfa",
+      "name": "tb_RFACK_conditional-run",
+      "returncode": 0,
+      "wall_s": 0.18625855445861816
+    },
+    {
+      "argv": [
+        "/usr/bin/iverilog",
+        "-g2012",
+        "-s",
+        "tb_CDC_common_reset",
+        "-o",
+        "/tmp/Euclid-installed-RFACK-CDC-contract-20261003-r1/tb_CDC_common_reset",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/model_ready_hbm_r14/ot_hbm_r14_route.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv",
+        "/tmp/opentallas-RFACK-CDC-source-contract-20261003/rtl/test/Euclid_installed_RFACK_CDC_20261003/tb_CDC_common_reset.sv"
+      ],
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "tb_CDC_common_reset-compile",
+      "returncode": 0,
+      "wall_s": 0.008526802062988281
+    },
+    {
+      "argv": [
+        "/usr/bin/vvp",
+        "/tmp/Euclid-installed-RFACK-CDC-contract-20261003-r1/tb_CDC_common_reset"
+      ],
+      "log_sha256": "e09daa7f3fdc5830be226647bf1dd67e21b7fb992e6ef3986ab956f691783ecb",
+      "name": "tb_CDC_common_reset-run",
+      "returncode": 0,
+      "wall_s": 0.004634857177734375
+    }
+  ],
+  "source_contract": {
+    "hardware_or_rate_admitted": false,
+    "production_RF_ACK_CDC_connection": false,
+    "production_clock_pair": null,
+    "source_contract": "PASS_LITERAL_INSTALLED_LEAF_PINS",
+    "stale_external_ACK_rejection_proved": false,
+    "unknown_cycles": {
+      "CDC_phase_synchronizer_latency_in_common_units": null,
+      "RF_ACK_transport_cycles": null,
+      "RF_macro_SS_write_visibility_cycles": null,
+      "SSFF_installed_macro_clock": null,
+      "finite_backpressure_wait_upper": null,
+      "owner_switch_stale_drain_cycles": null,
+      "production_clock_pair": null,
+      "whole_operator_or_token_latency": null
+    },
+    "wire_ACK_identity": null
+  },
+  "source_freeze": "df270a0c111164e3de73480f84592d93a0b9e0e5",
+  "status": "PASS_ACTUAL_COMPILE_AND_CONDITIONAL_LEAVES_ONLY_PRODUCTION_JOIN_BLOCKED",
+  "tool_pins": {
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+    "/usr/bin/iverilog": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+    "/usr/bin/vvp": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+  }
+}

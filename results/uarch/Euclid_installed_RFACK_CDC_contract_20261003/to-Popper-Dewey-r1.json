@@ -1,0 +1,46 @@
+{
+  "CDC_actual_result": "two opaque packets accepted; first reset-aborted while held; second delivered once; same common reset shared by two FIFOs/route; no RF ACK mapping",
+  "Goodall_invalid_sender_domain_mutant": "Dewey owns fix; no software ledger changes in this packet",
+  "RF_ACK_wire_bits": 1,
+  "RF_ACK_wire_identity": null,
+  "RF_actual_result": "two write acceptances; one bare common ACK consumed; one held ACK aborted by common reset; one read proves both actual SRAM copies retain data across reset; local fence epoch does not authenticate ACK",
+  "actual_owner_switch_or_generation_reuse_admitted": false,
+  "calendar_or_rate_admitted": false,
+  "compiled_leaf_tops": [
+    "ot_gpu_rf_service",
+    "ot_gpu_rf_visibility_fence ENABLE1",
+    "ot_hbm_r14_clock_bridge WIDTH471"
+  ],
+  "known_connectivity": {
+    "RF_ACK_path": "u_rf.ack_valid -> full_sm_service.wack -> idle && wack -> host_ack_valid; fence host_ack_valid scalar only",
+    "old_held_ACK": "blocks RF host_wr_ready; wrapper passes already accepted ACK/response sinks independently of new owner grants",
+    "reset": "same clk/rst_n drive leaf RF and fence in directed RF bench; R14 shared rst_n drives both wrn/rrn on each FIFO and route",
+    "sole_outstanding": "per SM; actual RF idle = rst_n && !read_pending && !rsp_valid && !ack_valid",
+    "source_instantiations": "RF fence appears in directed test bench only; RF_shared_context is a preparation wrapper; R14 CDC instantiated for 455/467/404-bit request/response/reverse in directed r14 stage, not common RF ACK"
+  },
+  "known_gaps": [
+    "no installed RF common ACK CDC instantiation/domain pairing",
+    "no wire ACK tag/epoch/destination; local epoch only",
+    "external stale bare ACK while pending can be visible under current local epoch",
+    "common hardware reset alone does not prove external producer/owner invalidation/quiescence",
+    "new owner grant needs drain of accepted ACK/response/SIMD/scratch sinks; wrapper grants are external inputs",
+    "no SS/FF macro-write/loaded clock or CDC MTBF/hold proof"
+  ],
+  "next_owner_join": "Popper bind actual bare ACK local sole-outstanding/common-reset requirements and uninstantiated transport; Dewey bind source domain/owner/drain admission conditions, leave waits unknown until actual installed trace. Do not transfer proposed tagged ACK timing.",
+  "original_sources_unchanged": true,
+  "production_common_reset_trace": null,
+  "schema": "EUCLID_RFACK_CDC_SOURCE_HANDOFF_R1",
+  "scope": "Actual installed RTL leaves, compiled and exercised separately; conditional direct common reset only, production join remains BLOCKED",
+  "source_freeze": "df270a0c111164e3de73480f84592d93a0b9e0e5",
+  "tagged_ACK_installed": false,
+  "unknown_cycles": {
+    "CDC_phase_synchronizer_latency_in_common_units": null,
+    "RF_ACK_transport_cycles": null,
+    "RF_macro_SS_write_visibility_cycles": null,
+    "SSFF_installed_macro_clock": null,
+    "finite_backpressure_wait_upper": null,
+    "owner_switch_stale_drain_cycles": null,
+    "production_clock_pair": null,
+    "whole_operator_or_token_latency": null
+  }
+}
