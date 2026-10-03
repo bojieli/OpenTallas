@@ -161,3 +161,59 @@ class OracleTests(unittest.TestCase):
         self.assertEqual(m.case_mapping(s),{0:0,1:189})
 
 if __name__=='__main__':unittest.main()
+
+
+class ConnectedReceiptTests(unittest.TestCase):
+    def original(self):
+        return m.Request(m.Identity(5,0xfedcba98,15,True),0x300000020,(1<<255)|99)
+
+    def test_connected_source_to_backend_to_old_terminal(self):
+        o=m.ConnectedReceiptObserver(None);r=self.original()
+        o.held[127,5]=r;o.events=[('caller',127,r),('backend',127,r.wire_tuple)]
+        o.after_edge();self.assertEqual(o.backend_accepts,1)
+        o.events=[('terminal',127,r.identity)];o.after_edge()
+        self.assertEqual(o.client_terminals,1);self.assertFalse(o.receipts)
+
+    def test_connected_full_tuple_mutation_never_normalized(self):
+        r=self.original()
+        for field,width in enumerate((1,34,35,4,256)):
+            for bit in range(width):
+                o=m.ConnectedReceiptObserver(None);o.receipts[127,r.identity]=r
+                wrong=list(r.wire_tuple);wrong[field]^=1<<bit
+                o.events=[('backend',127,tuple(wrong))]
+                with self.assertRaises(m.ProtocolError):o.after_edge()
+
+    def test_connected_reset_retains_external_orphan_and_refuses_aba(self):
+        class ResetPins:
+            def get(self,name):return 0
+        r=self.original();o=m.ConnectedReceiptObserver(ResetPins())
+        o.receipts[127,r.identity]=r;o.issued.add((127,r.identity))
+        o.before_edge();o.after_edge()
+        self.assertEqual(o.receipts,{(127,r.identity):r})
+        self.assertIn((127,r.identity),o.orphans)
+        o.events=[('terminal',127,r.identity)]
+        with self.assertRaises(m.ProtocolError):o.after_edge()
+        o.held[127,5]=r;o.events=[('caller',127,r)]
+        with self.assertRaises(m.ProtocolError):o.after_edge()
+
+    def test_connected_sameedge_terminal_cannot_spend_new_receipt(self):
+        r=self.original();o=m.ConnectedReceiptObserver(None);o.held[127,5]=r
+        o.events=[('caller',127,r),('backend',127,r.wire_tuple),('terminal',127,r.identity)]
+        with self.assertRaises(m.ProtocolError):o.after_edge()
+        self.assertIn((127,r.identity),o.receipts)
+
+    def test_connected_request_pin_snapshot_uses_full_actual_fields(self):
+        r=self.original()
+        class Wires:
+            def __init__(self):self.leaf=dict(admission_stop=0,c_req_rdy=32,
+                c_req_tag=r.identity.tag<<(5*32),c_req_gen=15<<(5*4),c_req_we=32,
+                c_req_addr=r.address<<(5*34),c_req_data=r.data<<(5*256),
+                c_rsp_v=0,c_rsp_rdy=0,c_wr_done_v=0,c_wr_done_rdy=0)
+            def get(self,name):
+                return dict(w2_rst_n=(1<<128)-1,w2_c_req_v=32<<(127*6),
+                    w2_p_req_v=0,w2_c_rsp_v=0,w2_c_wr_done_v=0).get(name,self.leaf.get(name,0))
+            def component(self,block,index):
+                assert (block,index)==('w2',127)
+                return self
+        o=m.ConnectedReceiptObserver(Wires());o.before_edge();o.after_edge()
+        self.assertEqual(o.receipts[127,r.identity],r)
