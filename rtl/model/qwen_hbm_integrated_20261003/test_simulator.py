@@ -76,6 +76,18 @@ class PinTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256((root/source).read_bytes()).hexdigest(),want,source)
 
 
+
+    def test_existing_engine_dependency_closure(self):
+        import re
+        root=PORTBOOK.parents[3]
+        sources=(PORTBOOK.parent/'sources.f').read_text().splitlines()
+        text='\n'.join((root/p).read_text() for p in sources)
+        declarations=set(re.findall(r'\bmodule\s+(ot_\w+)',text))
+        uses=set(re.findall(r'^\s*(ot_\w+)\s+(?:#\s*\(|\w+\s*\()',text,re.M))
+        self.assertEqual(uses-declarations,set())
+        self.assertIn('ot_w2_nc6_correction_control',uses)
+        self.assertIn('ot_gpu_qwen_native_consumer_drain',uses)
+
     def test_single_controller_actual_source_join(self):
         packet=PORTBOOK.parent
         joined=(packet/'ot_gpu_qwen_joined_kv.sv').read_text()
