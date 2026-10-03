@@ -89,3 +89,22 @@ def test_predicted_calendar_is_positive_and_no_physical_claim():
  assert m['codec_replication']['parallel_scrub_ports']==113
  assert m['SS_FF_loaded_timing'] is None and m['track_and_slot_fit'] is None
  assert m['functional_component_enrollment_only'] and not m['RTL_build_admitted']
+
+
+def test_fixture_port_parser_carries_width_without_parsing_keywords_as_names():
+ from tools.gpu_sys.canonical_qwen_range_owner_gate import parse_ports
+ x=parse_ports('input wire clk,por_n, input wire [238:0] tuple, output wire v,ready')
+ assert x=={'clk':('input',''),'por_n':('input',''),'tuple':('input','238:0'),'v':('output',''),'ready':('output','')}
+ for text in ('input wire clk,input','input wire clk,clk','input wire [0:0] v, output'):
+  with pytest.raises(ValueError):parse_ports(text)
+
+
+def test_source_ABI_has_no_declared_keyword_or_duplicate_port():
+ from tools.gpu_sys.canonical_qwen_range_owner_gate import parse_ports
+ header=T.read_text().split(')(\n',1)[1].split(');',1)[0]
+ x=parse_ports(header)
+ assert x['input_terminal_tuple']==('input','238:0')
+ assert x['inputs_bound_tuple']==('output','238:0')
+ assert x['inputs_bound_mask']==('output','6:0')
+ assert x['query_result_owner']==('output','45:0')
+ assert len(x)>75
