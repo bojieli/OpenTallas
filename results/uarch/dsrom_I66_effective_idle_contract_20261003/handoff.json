@@ -1,0 +1,36 @@
+{
+  "actual_native_wrongdata_deadlock_claim": false,
+  "additional_SU_guard": false,
+  "build_admitted": false,
+  "candidate": "ONE DEFAULT_OFF u_radapt.s_idle effective-idle completion hook; copied-source/hardware implementation absent.",
+  "current_journal": null,
+  "entry": "python3 tools/dsrom_I66_effective_idle_contract.py --verify",
+  "event_aliases": {
+    "F": "healthy WAIT exit sample with effective_idle1 and s_go0",
+    "F+1": "earliest later QE core issue",
+    "F+2": "earliest registered ROM adapter accept",
+    "F+7": "earliest adjacent SU core admission",
+    "F+8": "earliest SU adapter front latch",
+    "F+9": "earliest vector acceptance if vector-ready"
+  },
+  "invariants": [
+    "Old phase active/169user32 context established before old WAIT may retire",
+    "No IDLE old active unretired phase; idle-only hook cannot fix that bypass",
+    "Capture bank rearms only after owned visibility+positive credits+packet/source retirement",
+    "Old VM address/version lease persists separately through actual SU reads and observed R+2 tags",
+    "Uncaptured W2 stays native; preserve transitive accepted phase lineage for old captured outputs"
+  ],
+  "live_job": null,
+  "next_joint_inputs": [
+    "Maxwell/Arch named control source/sink routes+clock/reset release allocation for c9",
+    "Nash sameidentity qualified retirement provider/positive credit-CDC and bank rearm callbacks",
+    "Current PHW10 program/source/binary enrollment+all17 accepted phase/consumer/readtag journals",
+    "Measured accepted service/firstlast event calendar and exact VM lease peak"
+  ],
+  "peer_composition_commit": "e380a8e13de1d7f7543e68f0feb1747ae8cebcb3",
+  "prerequisite": "23c5dc5dee51b8949e3fab67062a7a846bd8f11d",
+  "price_scope": "Peer gross two-control-bit allowed-cell floor archived exactly once; no extra c9 charge/inclusion credit. Forward/feedback routes, full169 comparisons/ledgers, clock/reset/PG/context price unqualified.",
+  "relation": "V<F; source-relative lower bounds only, not a finite service completion upper bound/absolute read deadline.",
+  "validation": "208 focused PASS including23new; canonical model and source-pin replay PASS; old tracked paths unchanged.",
+  "worktree": "/tmp/opentallas-I66-reserved-service-observer-20261002"
+}

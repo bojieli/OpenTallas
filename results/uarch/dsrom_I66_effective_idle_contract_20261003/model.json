@@ -1,0 +1,284 @@
+{
+  "absolute_deadline": null,
+  "additional_SU_guard": false,
+  "authority": {
+    "scope": "COMMITTED_SOURCE_MODEL_NOT_ACTUAL_RUNTIME",
+    "selected_clock_commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+    "sha256": "51e2e7d4dfb3d0507df38929f067dc18f7711d821ac8178ec203f1337e1ddecf",
+    "source_commit": "e380a8e13de1d7f7543e68f0feb1747ae8cebcb3",
+    "source_path": "results/uarch/dsrom_selector_capture_composition_20261003/model.json"
+  },
+  "build_admitted": false,
+  "callbacks_required": [
+    "old full169 context + separate shard1; reset epoch; phase_active and qualified retirement pre/post",
+    "raw native spine idle, adapter effective s_idle, adapter.st/s_go/s_ready, fault",
+    "core.pc/st/d_unit/qe_mode/waited/unit_ready/q_gate/kv_gate/m0_gate/d_skip at source issue and next registered ROM_go",
+    "all576 owned VM address/data postNBA; all12 writer families/root suppression; actual credits/packet/source rearm ledger",
+    "SU core admission, go&&!pend front latch, v_acc/seq/cp, resolved VM read and observed R+2 context tag",
+    "all17 QE admissions including uncaptured W2 and all old VM address/version lease releases"
+  ],
+  "chains": [
+    {
+      "F_is_WAIT_exit_of_pc": 68,
+      "adjacent_QE_pc": 69,
+      "consumer_pc": 70,
+      "operand": "a",
+      "owned_visibility": "V < F",
+      "producer_pc": 66,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 68,
+      "adjacent_QE_pc": 69,
+      "consumer_pc": 70,
+      "operand": "c",
+      "owned_visibility": "V < F",
+      "producer_pc": 67,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 73,
+      "adjacent_QE_pc": 79,
+      "consumer_pc": 80,
+      "operand": "a",
+      "owned_visibility": "V < F",
+      "producer_pc": 68,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 73,
+      "adjacent_QE_pc": 79,
+      "consumer_pc": 80,
+      "operand": "c",
+      "owned_visibility": "V < F",
+      "producer_pc": 69,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 83,
+      "adjacent_QE_pc": 84,
+      "consumer_pc": 85,
+      "operand": "a",
+      "owned_visibility": "V < F",
+      "producer_pc": 72,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 83,
+      "adjacent_QE_pc": 84,
+      "consumer_pc": 85,
+      "operand": "c",
+      "owned_visibility": "V < F",
+      "producer_pc": 73,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 88,
+      "adjacent_QE_pc": 89,
+      "consumer_pc": 90,
+      "operand": "a",
+      "owned_visibility": "V < F",
+      "producer_pc": 82,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 88,
+      "adjacent_QE_pc": 89,
+      "consumer_pc": 90,
+      "operand": "c",
+      "owned_visibility": "V < F",
+      "producer_pc": 83,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 93,
+      "adjacent_QE_pc": 94,
+      "consumer_pc": 95,
+      "operand": "a",
+      "owned_visibility": "V < F",
+      "producer_pc": 87,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 93,
+      "adjacent_QE_pc": 94,
+      "consumer_pc": 95,
+      "operand": "c",
+      "owned_visibility": "V < F",
+      "producer_pc": 88,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 94,
+      "adjacent_QE_pc": 97,
+      "consumer_pc": 98,
+      "operand": "a",
+      "owned_visibility": "V < F",
+      "producer_pc": 92,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    },
+    {
+      "F_is_WAIT_exit_of_pc": 94,
+      "adjacent_QE_pc": 97,
+      "consumer_pc": 98,
+      "operand": "c",
+      "owned_visibility": "V < F",
+      "producer_pc": 93,
+      "registered_SU_front_min": "F+8",
+      "relative_core_consumer_min": "F+7",
+      "source_word_evidence": "intended source words; actual current enrollment unavailable",
+      "vector_accept_min_if_ready": "F+9"
+    }
+  ],
+  "current_journal": null,
+  "edge_names": {
+    "F": "preedge effective idle1, adapter WAIT, s_go0: old phase can retire",
+    "Fplus1": "earliest later QE core issue",
+    "Fplus2": "earliest registered ROM adapter acceptance",
+    "Fplus7": "earliest adjacent SU core admission; user front bound is conservative for registered latch",
+    "Fplus8": "earliest SU adapter go&&!pend front latch",
+    "Fplus9": "earliest v_acc when vector-ready; SU ready alone does not imply vector pipeline idle"
+  },
+  "floor_charge_policy": "Reuse peer gross two control bits/cell floor as ONE proposal; no extra addition to c9 or claim existing active bit credit. Full169 comparison/credits/packet/context/control state not included in this floor.",
+  "hardware_admitted": false,
+  "hardware_reference_floor": {
+    "SSFF_new_CLK_pin_fF": {
+      "FF": 1.006304,
+      "SS": 0.867964
+    },
+    "SSFF_new_RESETN_pin_fF": {
+      "FF": 1.605818,
+      "SS": 1.40805
+    },
+    "body_um2": 2.2161600000000004,
+    "cell_counts": {
+      "BUFx4_ASAP7_75t_R": 4,
+      "DFFASRHQNx1_ASAP7_75t_R": 2,
+      "INVx1_ASAP7_75t_R": 6,
+      "NAND2x1_ASAP7_75t_R": 8,
+      "TIEHIx1_ASAP7_75t_R": 2
+    },
+    "control_logic": "INV(retire), NAND(active,notretire), NAND(nativeidle,enable), INV(effectiveidle)",
+    "feedback_per_ASR_twoBUF_lowerbound": true,
+    "gross_control_bits": 2,
+    "hold_closed": false,
+    "identity_compare_counters_credit_ledger_CDC_drivers_routes_clock_reset_PG_extra": true,
+    "not_a_complete_state_area_or_contextual_timing_price": true,
+    "phase_active_existing_containment_credit": 0,
+    "reserve50pct_mm2": 4.4323200000000005e-06
+  },
+  "hook": {
+    "adapter_sink": "dut.u_tile.u_core.g_rom.u_radapt.s_idle",
+    "affects": [
+      "adapter S_WAIT exit",
+      "adapter idle combinational output; consequently core qe_idle"
+    ],
+    "default": 0,
+    "destination_version_lease": "Separate full owner/address lease until actual SU reads and observed R+2 Xtags; does not hold phase_active/bank ready until consumer.",
+    "expression": "native_spine_idle && (!phase_active || qualified_VM_visible_credit_packet_retired)",
+    "native_source": "dut.u_tile.u_core.g_rom.u_spine.idle -> g_rom.s_idle",
+    "phase_active_scope": "Capture W1/W3 only; uncaptured W2 follows native idle. Old published VM ownership records survive rearm and intervening W2 phases.",
+    "phase_lifecycle": "Latch full old169/user32 owner and active before old WAIT retirement; reset starts inactive only with no old debt. Never clear active/retirement state before previous phase debt is qualified. IDLE with active unretired previous phase is forbidden.",
+    "ready_consequence": "ready is not directly hooked: adapter remains WAIT until effective idle; next preedge IDLE allows original ready=IDLE&&s_ready.",
+    "source_connection_pinned": "current core connects .s_idle(s_idle); no change implemented",
+    "unchanged_native_s_ready": true
+  },
+  "live_job": null,
+  "minimum_C": null,
+  "native_wrong_data_or_deadlock_claim": false,
+  "observer_only": {
+    "compiled_callback": false,
+    "implementation": "none; passive packet/schema plan only",
+    "new_engine_edits": 0,
+    "new_hardware_ports": 0,
+    "simulation_cost_measured": false
+  },
+  "physical_routes_required": [
+    {
+      "physical_pins_route": null,
+      "sink": "effective-idle combine -> u_radapt.s_idle",
+      "source": "native spine idle"
+    },
+    {
+      "physical_pins_route": null,
+      "sink": "qualified retirement register",
+      "source": "gather/VM postNBA visibility witness -> owner ledger"
+    },
+    {
+      "physical_pins_route": null,
+      "sink": "same old169/user32 retirement predicate",
+      "source": "shard0/shard1 positive captured credit return and packet ACKs"
+    },
+    {
+      "physical_pins_route": null,
+      "sink": "proposed active/retirement control flops",
+      "source": "c9 parent streaming clock and qualified reset release"
+    }
+  ],
+  "price_and_build_blockers": [
+    "named hook/retirement forward and typed hold routes",
+    "c9 root phase/reset-release control sink allocation + clock/reset/PG load",
+    "full identity/control state reconciliation and retained VM leases (four-frame floor, exact peak unobserved)",
+    "positive actual CDC/credit+packet service and qualified retirement provider",
+    "source/binary/program/field/17phase callback enrollment with actual service origin/first-last reads"
+  ],
+  "relative_relation_only": "V < F < later QE admission < actual adjacent SU admission/read; no source service upper bound, no absolute clock/c9 CDC conversion.",
+  "scope": "MODEL_ONLY_DEFAULT_OFF_EFFECTIVE_IDLE_CONTROL_AND_CALLBACK_PLAN",
+  "source_pins": {
+    "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/demand-r5.json.gz": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+    "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/selected_six_calls.json": "4a096afec0e2763176da456510285ab1ad10389592d410a3a88f6fd3704751b0",
+    "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/su_adapt.sv.txt": "420723862866ec2e7687dfdaf30ee35fd2631409a466163ee46b03831b412a62",
+    "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/vec.sv.txt": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13",
+    "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/vec_lane.sv.txt": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72",
+    "results/uarch/dsrom_I66_effective_idle_contract_20261003/inputs/authority.json": "6c83290b591264b109cf3aab1364b31f78f71b66d5e6c53b68fe6f5dd302364e",
+    "results/uarch/dsrom_I66_effective_idle_contract_20261003/inputs/composition_model.json": "51e2e7d4dfb3d0507df38929f067dc18f7711d821ac8178ec203f1337e1ddecf",
+    "results/uarch/dsrom_I66_existing_ready_fences_20261003/inputs/extraction_receipt.json": "4fbcf092edecfebdc25331ce942c16258f3a3aff7a03cec9fee5c0e41d1fc428",
+    "results/uarch/dsrom_I66_existing_ready_fences_20261003/inputs/selected_range_QE_words.json": "cbb5146523121ce1f647e5a49642b54576e8d2605c172897147158a17c037e0f",
+    "results/uarch/dsrom_I66_phase_protocol_join_20261003/inputs/selected_clock_model.json": "5fc207fa190513f8394e26b9177c1a032fd148dd0ddd6cf3abbe231753715ae0",
+    "results/uarch/dsrom_I66_phase_protocol_join_20261003/model.json": "b9b7609286b1c0d3949e183a31bc90073133444997b7297b2030c38eb68973d4",
+    "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/I66_current_patched_word.json": "00d82444607d0244bb1df75383f958459c129dbbb9724ccd9064dd24b5121d38",
+    "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/core.sv.txt": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+    "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/tile.sv.txt": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+    "results/uarch/dsrom_I66_source_interlock_20261003/inputs/rom_adapt.sv.txt": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f",
+    "results/uarch/dsrom_I66_stage_provider_20261002/inputs/isa_full.svh.txt": "372353deee55acc2f3e31b7a56179f9898e12ed69932bb22790f2b456e744ca9",
+    "tests/test_dsrom_I66_effective_idle_contract.py": "1fa3c34f81acd38e2f308a725557bb48a4ea9b2c92f9bbc28c158e4a05e09300",
+    "tests/test_dsrom_I66_existing_ready_fences.py": "ad31f9c4043b9db8ad4ba558602ba6b10d322dbdfb9b4c23d8bd2e13cd8b4ec1",
+    "tools/dsrom_I66_consumer_deadline.py": "12dc8c2a1436b7799e75e9c40fdb301f6c1475a0a3aac38be8eb9c22bf925936",
+    "tools/dsrom_I66_effective_idle_contract.py": "10017b9539a12678f6fe0f7ba4fa9e5f425ded70741e28fcb58bef66823b0529",
+    "tools/dsrom_I66_existing_ready_fences.py": "c7e209818241a4bef90e3318a1f9675efd56a0df4c87104f850978c400355834"
+  },
+  "stations": null
+}
