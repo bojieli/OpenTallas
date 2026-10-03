@@ -51,6 +51,10 @@ class MatrixTests(unittest.TestCase):
                     actual=[vectors[g*t.chunk+i][lane] for i in range(t.chunk)]
                     leaf=g*128+lane
                     self.assertEqual(actual,list(range(leaf*t.chunk,(leaf+1)*t.chunk)))
+    def test_line_identity_survives_layout_cursor_decoding(self):
+        for i in range(self.t.line_count):
+            self.assertEqual(self.t.line(i)['line_address'],i)
+
     def test_defaultoff_nonmatrix_changed_program_refused(self):
         with self.assertRaises(ValueError):M.lower_matrix(self.native,2)
         with self.assertRaises(ValueError):M.lower_matrix(self.native,0,enabled=True)

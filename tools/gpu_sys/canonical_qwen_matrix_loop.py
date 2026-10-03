@@ -41,12 +41,13 @@ class MatrixTile:
         C.need(type(index) is int and 0<=index<self.line_count,'line aperture')
         # Existing issue order: rowblock, group, chunk-k, slot. Tile128
         # is a multiple of IL8, so no padded weight lines are transmitted.
+        line_address=index
         block,index=divmod(index,self.groups*self.chunk*8)
         group,index=divmod(index,self.chunk*8)
         step,slot=divmod(index,8)
         row=self.row_start+block*8+slot
         ks=tuple((group*128+lane)*self.chunk+step for lane in range(128))
-        return dict(line_address=index,source_row=row,source_K_indices=ks,
+        return dict(line_address=line_address,source_row=row,source_K_indices=ks,
                     source_code_byte_offsets=tuple(row*self.K+k for k in ks),
                     dtype='I8',bytes=128,weight_key=self.weight_key,
                     source_PC=self.source_PC,rank=self.weight_rank)
