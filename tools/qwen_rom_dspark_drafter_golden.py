@@ -130,6 +130,7 @@ def main():
     ap.add_argument("--gen", type=int, default=24, help="target greedy tokens before the draft step")
     ap.add_argument("--S", default="3,7")
     ap.add_argument("--threads", type=int, default=32)
+    ap.add_argument("--device", default="cuda")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     import torch
@@ -140,16 +141,20 @@ def main():
     from deepspec.modeling.dspark.common import extract_context_feature
     t0 = time.time()
     tok = AutoTokenizer.from_pretrained(a.target)
-    target = AutoModelForCausalLM.from_pretrained(a.target, dtype=torch.bfloat16).eval()
+    dev = torch.device(a.device)
+    torch.backends.cuda.matmul.allow_tf32 = False
+    target = AutoModelForCausalLM.from_pretrained(a.target, dtype=torch.bfloat16).to(dev).eval()
     text = tok.apply_chat_template([{"role": "user", "content": a.prompt}], tokenize=False,
                                    add_generation_prompt=True, enable_thinking=False)
-    inp = tok(text, return_tensors="pt").input_ids
+    inp = tok(text, return_tensors="pt").input_ids.to(dev)
     with torch.no_grad():
         seq = target.generate(inp, max_new_tokens=a.gen, do_sample=False, temperature=None, top_p=None, top_k=None)
         out = target(seq, output_hidden_states=True)
     ref = Qwen3DSparkModel.from_pretrained(a.draft, dtype=torch.float32, attn_implementation="eager").eval()
-    feats_t = extract_context_feature(out.hidden_states, ref.target_layer_ids).float()
-    del target
+    feats_t = extract_context_feature(out.hidden_states, ref.target_layer_ids).float().cpu()
+    del target, out
+    torch.cuda.empty_cache()
+    seq = seq.cpu()
     start = seq.shape[1] - 1                    # anchor: the last committed token
     anchor = int(seq[0, start])
     sd = {k: v for k, v in ref.state_dict().items()}
@@ -183,6 +188,8 @@ def main():
         ref.markov_head.markov_w1.weight.copy_(torch.from_numpy(Wt["w1"]))
         ref.embed_tokens.weight.copy_(torch.from_numpy(Wt["embed"]))
     feats = feats_t[0, :start].numpy().astype(F)
+    ref = ref.to(dev)
+    feats_t = feats_t.to(dev)
     rec = {"schema": "opentallas.qwen-rom-dspark-drafter-golden.v1", "prompt": a.prompt, "start": start,
            "anchor": anchor, "mask_token_id": int(ref.mask_token_id), "context_tokens": seq[0, :start].tolist(),
            "tool_sha256": sha(__file__), "golden_sha256": sha(Path(G.__file__)),
@@ -190,14 +197,14 @@ def main():
            "deepspec": "deepseek-ai/DeepSpec@005e03b81cec38b7da6399833d609ee89a2587f2", "steps": []}
     for S in map(int, a.S.split(",")):
         with torch.no_grad():
-            ids = torch.full((1, S), int(ref.mask_token_id), dtype=torch.long)
+            ids = torch.full((1, S), int(ref.mask_token_id), dtype=torch.long, device=dev)
             ids[0, 0] = anchor
             hid = ref._forward_backbone(target_hidden_states=feats_t[:, :start], noise_embedding=ref.embed_tokens(ids),
-                                        position_ids=torch.arange(start + S).unsqueeze(0), attention_mask=None,
+                                        position_ids=torch.arange(start + S, device=dev).unsqueeze(0), attention_mask=None,
                                         past_key_values=None, use_cache=False, is_causal=False)
             rt, rl = ref.sample_draft_tokens(ref.compute_logits(hid[:, :S]), first_prev_token_ids=ids[:, 0],
                                              temperature=0.0, hidden_states=hid[:, :S])
-        rt, rl = rt[0].tolist(), rl[0].numpy()
+        rt, rl = rt[0].tolist(), rl[0].float().cpu().numpy()
         for kv in ("fp32", "fp8"):
             t1 = time.time()
             gt, gl = golden_step(Wt, feats, anchor, start, S, int(ref.mask_token_id), kv)
