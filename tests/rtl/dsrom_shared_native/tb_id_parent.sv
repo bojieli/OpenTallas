@@ -49,8 +49,9 @@ module tb;
   @(negedge fast_clk);me_en=1;me_a=32;me_mask=1;me_d=3;
   do @(posedge fast_clk);while(!wr[0]);@(negedge fast_clk);me_en=0;wait(vis[0]);wait(debt==0);
   start();wait(vi_re);
-  repeat(9)begin @(negedge fast_clk);if(!vi_re||vi_addr!=512||hq_v)$fatal(1,"ID request not held or prematurely consumed");end
+  repeat(10)begin @(negedge fast_clk);if(!vi_re||vi_addr!=512||hq_v)$fatal(1,"ID request not held or prematurely consumed");end
   permit=1;wait(hq_v);@(negedge fast_clk);
+  $display("ID_BOUNDARY fault%0d requests%0d replies%0d hbm%0d len%0d rom%0d held%0d",caller_fault,accepted,delivered,hq_addr,hq_len,caller.e_rom,held);
   if(caller_fault||accepted!=1||delivered!=1||hq_addr!=457||hq_len!=17||caller.e_rom!=221||held<9)$fatal(1,"indirect ID exact native result addr%0d accepted%0d delivered%0d",hq_addr,accepted,delivered);
   wait(debt==0);$display("PASS ID_NATIVE held_request=1 matching_reply=1 macros=256 expertID=3 rom=221 hbm=457 requests=1");
   // A wrong owner cookie must never retire the accepted reply or publish HBM.

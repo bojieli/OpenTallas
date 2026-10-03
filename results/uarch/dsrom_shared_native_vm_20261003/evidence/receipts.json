@@ -77,5 +77,11 @@
     "sha256": "531ac71e313b26ac35279aba21b1d91246c7d2f0081ce7700b74315f7e5f2559",
     "terminal": "[48675000] %Fatal: 0_tb_coll_parent.sv:90: Assertion failed in tb: gather counts read266 sent266 writes1064\n%Error: /srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r3/sources/0_tb_coll_parent.sv:90: Verilog $stop\nAborting...\n",
     "scope": "causal native gather counts exact; fixture did not force output stall, rejected before full topk. No full collective PASS."
+  },
+  "ds-ID-agidock128-r1": {
+    "archive": "ds-ID-agidock128-r1.tgz",
+    "sha256": "e3be6d06a6267d35a9c2ee996bfd92582dd350a83756f43b1f48802171d25e69",
+    "terminal": "FATAL: /home/ubuntu/otjobs/dsrom-shared-native/ID-r1/sources/0_tb_id_parent.sv:54: indirect ID exact native result addr457 accepted1 delivered1\n       Time: 357000  Scope: tb\n",
+    "scope": "one real native ID request/reply and expected HBM457; fixture hold counter assertion failure, no caller PASS"
   }
 }
