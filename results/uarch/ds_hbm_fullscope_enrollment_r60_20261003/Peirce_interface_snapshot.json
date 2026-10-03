@@ -1,0 +1,28 @@
+{
+  "source_commit": "0c31e5e0099ab080dafb84afa23b420298afcbfd",
+  "handoff_git_path": "results/uarch/ds_full_checkpoint_continuation_plan_20261003/handoff.json",
+  "handoff_sha256": "d5e79676ac36f86060d671837dfb4f9edf16eea6679d5e4ce264a37f7e655225",
+  "coverage": {
+    "PCs": 2213,
+    "contiguous_scopes": 43,
+    "families": 30,
+    "last_PC": 2212,
+    "remaining_PCs": 2202,
+    "templates": 1129
+  },
+  "next_contiguous_scope": [
+    11,
+    19
+  ],
+  "components": {
+    "CPU_native_live_and_transient_bytes": 14333360,
+    "fresh_journal_bootstrap_component_bytes": 26902528,
+    "immutable_LOAD_bytes": 371746944,
+    "native_calls": 864,
+    "old_and_restored_declared_home_query_heap_component_bytes": 68302872576,
+    "source_owned_conservative_sector_journal_component_bytes": 141124042752,
+    "source_owned_sector_request_component_upper": 3132192,
+    "two_cold_source_graph_heap_component_bytes": 2460092738
+  },
+  "resource_scope": "Conservative components, not actual complete disk/RAM upper or admission. Codec/provider/publication/witness event schemas and object alias instances still require source prices; never zero. Released logical versions retain raw backing in current dict ports, no automatic reclamation credit. Old plus new inventories stay retained. No elapsed/FSIZE/CPU-time caps."
+}
