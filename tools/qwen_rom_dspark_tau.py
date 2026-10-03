@@ -110,7 +110,10 @@ def main():
     ap.add_argument("--classes", default=",".join(PROMPTS))
     ap.add_argument("--max-new", type=int, default=160)
     ap.add_argument("--threads", type=int, default=32)
+    ap.add_argument("--dtype", default="float32", help="compute dtype (BF16 checkpoints; float32 is exact upcast, "
+                    "and far faster than CPU bfloat16 kernels)")
     ap.add_argument("--limit", type=int, default=0, help="prompts per class (0: all)")
+    ap.add_argument("--first", type=int, default=0, help="first prompt index per class")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     torch.set_num_threads(a.threads)
@@ -121,9 +124,10 @@ def main():
     from deepspec.modeling.dspark.common import extract_context_feature
 
     tok = AutoTokenizer.from_pretrained(a.target)
-    target = AutoModelForCausalLM.from_pretrained(a.target, dtype=torch.bfloat16, attn_implementation="sdpa").eval()
-    drafts = {"bf16": Qwen3DSparkModel.from_pretrained(a.draft, dtype=torch.bfloat16, attn_implementation="sdpa").eval()}
-    q = Qwen3DSparkModel.from_pretrained(a.draft, dtype=torch.bfloat16, attn_implementation="sdpa").eval()
+    dt = getattr(torch, a.dtype)
+    target = AutoModelForCausalLM.from_pretrained(a.target, dtype=dt, attn_implementation="sdpa").eval()
+    drafts = {"bf16": Qwen3DSparkModel.from_pretrained(a.draft, dtype=dt, attn_implementation="sdpa").eval()}
+    q = Qwen3DSparkModel.from_pretrained(a.draft, dtype=dt, attn_implementation="sdpa").eval()
     with torch.no_grad():
         for name, mod in q.named_modules():
             if isinstance(mod, torch.nn.Linear) and not name.startswith("lm_head"):
@@ -135,23 +139,68 @@ def main():
     rec = {"schema": "opentallas.qwen-rom-dspark-tau.v1", "target": "Qwen/Qwen3-8B@b968826d9c46dd6066d109eabc6255188de91218",
            "draft": "deepseek-ai/dspark_qwen3_8b_block7@03326e5043815da1f81b109078b2889737c26017",
            "deepspec": "deepseek-ai/DeepSpec@005e03b81cec38b7da6399833d609ee89a2587f2",
-           "tool_sha256": sha(__file__), "max_new_tokens": a.max_new, "mode": "non-thinking chat template, greedy",
+           "tool_sha256": sha(__file__), "max_new_tokens": a.max_new, "mode": "non-thinking chat template, greedy", "compute_dtype": a.dtype, "drafter_keys": "bf16 = the released BF16 weights; w8 = quantize_w8 dequantised",
            "samples": []}
 
+    from transformers.models.qwen3.modeling_qwen3 import rotate_half
+    import torch.nn.functional as Fn
+
     @torch.no_grad()
-    def draft_tokens(model, feats, seq, start, S):
+    def precompute_ctx(model, feats):
+        """Context K/V of every drafter layer: projections of the fixed context feature (DeepSpec
+        Qwen3DSparkAttention: k_ctx = k_proj(hidden_norm(fc(features)))), k_norm and RoPE at the context
+        positions -- independent of the block, so computed once for the whole sequence."""
+        c = model.hidden_norm(model.fc(feats))
+        n = c.shape[1]
+        cos, sin = model.rotary_emb(c, torch.arange(n).unsqueeze(0))
+        cos, sin = cos.unsqueeze(1), sin.unsqueeze(1)
+        out = []
+        for layer in model.layers:
+            at = layer.self_attn
+            k = at.k_norm(at.k_proj(c).view(1, n, at.num_key_value_heads, at.head_dim)).transpose(1, 2)
+            v = at.v_proj(c).view(1, n, at.num_key_value_heads, at.head_dim).transpose(1, 2)
+            out.append(((k * cos) + (rotate_half(k) * sin), v))
+        return out
+
+    @torch.no_grad()
+    def draft_fast(model, ctxkv, seq, start, S):
         ids = torch.full((1, S), mask_id, dtype=torch.long)
         ids[0, 0] = seq[start]
-        pos = torch.arange(start + S).unsqueeze(0)
+        x = model.embed_tokens(ids)
+        cos, sin = model.rotary_emb(x, torch.arange(start, start + S).unsqueeze(0))
+        cos, sin = cos.unsqueeze(1), sin.unsqueeze(1)
+        for layer, (kc, vc) in zip(model.layers, ctxkv):
+            at = layer.self_attn
+            h = layer.input_layernorm(x)
+            q = at.q_norm(at.q_proj(h).view(1, S, at.num_attention_heads, at.head_dim)).transpose(1, 2)
+            kb = at.k_norm(at.k_proj(h).view(1, S, at.num_key_value_heads, at.head_dim)).transpose(1, 2)
+            vb = at.v_proj(h).view(1, S, at.num_key_value_heads, at.head_dim).transpose(1, 2)
+            q, kb = (q * cos) + (rotate_half(q) * sin), (kb * cos) + (rotate_half(kb) * sin)
+            g = at.num_key_value_groups
+            k = torch.cat([kc[:, :, :start], kb], 2).repeat_interleave(g, 1)
+            v = torch.cat([vc[:, :, :start], vb], 2).repeat_interleave(g, 1)
+            o = Fn.scaled_dot_product_attention(q, k, v, is_causal=False, scale=at.scaling)
+            x = x + at.o_proj(o.transpose(1, 2).reshape(1, S, -1))
+            x = x + layer.mlp(layer.post_attention_layernorm(x))
+        hid = model.norm(x)
+        toks, _ = model.sample_draft_tokens(model.compute_logits(hid), first_prev_token_ids=ids[:, 0],
+                                            temperature=0.0, hidden_states=hid)
+        return toks[0].tolist()
+
+    @torch.no_grad()
+    def draft_ref(model, feats, seq, start, S):
+        """The publisher's path (DeepSpec _forward_backbone without a cache): the fast path is checked against it."""
+        ids = torch.full((1, S), mask_id, dtype=torch.long)
+        ids[0, 0] = seq[start]
         hid = model._forward_backbone(target_hidden_states=feats[:, :start], noise_embedding=model.embed_tokens(ids),
-                                      position_ids=pos, attention_mask=None, past_key_values=None,
-                                      use_cache=False, is_causal=False)
-        base = model.compute_logits(hid[:, :S])
-        toks, _ = model.sample_draft_tokens(base, first_prev_token_ids=ids[:, 0], temperature=0.0, hidden_states=hid[:, :S])
+                                      position_ids=torch.arange(start + S).unsqueeze(0), attention_mask=None,
+                                      past_key_values=None, use_cache=False, is_causal=False)
+        toks, _ = model.sample_draft_tokens(model.compute_logits(hid[:, :S]), first_prev_token_ids=ids[:, 0],
+                                            temperature=0.0, hidden_states=hid[:, :S])
         return toks[0].tolist()
 
     for cls in a.classes.split(","):
-        for i, prompt in enumerate(PROMPTS[cls][:a.limit or None]):
+        for i, prompt in list(enumerate(PROMPTS[cls]))[a.first:(a.first + a.limit) if a.limit else None]:
             t0 = time.time()
             text = tok.apply_chat_template([{"role": "user", "content": prompt}], tokenize=False,
                                            add_generation_prompt=True, enable_thinking=False)
@@ -164,6 +213,9 @@ def main():
             n0, n = inp.shape[1], len(seq)
             res = {"class": cls, "prompt_index": i, "prompt_tokens": n0, "generated": n - n0}
             cache = {}
+            ctxkvs = {dname: precompute_ctx(model, feats.to(model.dtype)) for dname, model in drafts.items()}
+            chk = draft_ref(drafts["bf16"], feats.to(dt), seq, n0, 7)
+            res["fast_path_equals_reference_at_first_step"] = chk == draft_fast(drafts["bf16"], ctxkvs["bf16"], seq, n0, 7)
             for dname, model in drafts.items():
                 for S, blocks in ((7, range(2, 9)), (3, (4,)), (1, (2,))):
                     for B in blocks:
@@ -171,7 +223,7 @@ def main():
                         while start < n - 1:
                             key = (dname, S, start)
                             if key not in cache:
-                                cache[key] = draft_tokens(model, feats, seq, start, S)
+                                cache[key] = draft_fast(model, ctxkvs[dname], seq, start, S)
                             d = cache[key][:B - 1]
                             acc = 0
                             while acc < len(d) and start + 1 + acc < n and d[acc] == seq[start + 1 + acc]:
