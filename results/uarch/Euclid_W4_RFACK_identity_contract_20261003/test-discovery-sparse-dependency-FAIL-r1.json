@@ -1,0 +1,6 @@
+{
+  "rc": 1,
+  "stdout": "",
+  "stderr": "E....\n======================================================================\nERROR: abi3 (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: abi3\nTraceback (most recent call last):\n  File \"/usr/lib/python3.10/unittest/loader.py\", line 470, in _find_test_path\n    package = self._get_module_from_name(name)\n  File \"/usr/lib/python3.10/unittest/loader.py\", line 377, in _get_module_from_name\n    __import__(name)\n  File \"/tmp/opentallas-W4-RFACK-identity-contract-20261003/tests/abi3/__init__.py\", line 31, in <module>\n    from runtime.abi3.capability import Capability\nModuleNotFoundError: No module named 'runtime.abi3'\n\n\n----------------------------------------------------------------------\nRan 5 tests in 0.011s\n\nFAILED (errors=1)\n",
+  "cause": "Unrelated tests/abi3 package import needs runtime.abi3 absent sparse selection; W4 four tests passed but overall invocation FAIL. Direct focused file command is successor; no test or dependency bypass credit."
+}
