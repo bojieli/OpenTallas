@@ -27,8 +27,8 @@
 // Every padding term is +0 and no sum is ever -0, so the zero-padded trees are the golden's trees.
 //
 // Arithmetic: ot_qwen_nearhbm_prod (the exact BF16 x E4M3 product, proven on all 2^24 operand pairs), ot_hdc_fp32_add_lat
-// (ADD_LAT, bit-identical to the qualified add), ot_hdc_fp32_mul_lat (MUL_LAT), ot_hdc_exp_q and ot_hdc_recip_q
-// (bit-identical to the golden exp / reciprocal on all 2^32 inputs).  The lane's sequential sum is add(acc, mul(v, e)),
+// (ADD_LAT, bit-identical to the qualified add), ot_hdc_fp32_mul_lat (MUL_LAT), ot_qwen_nearhbm_exp_p / _recip_p
+// (ot_hdc_exp_q / ot_hdc_recip_q on the SS-1.2 GHz units; equal to them on all 2^32 inputs).  The lane's sequential sum is add(acc, mul(v, e)),
 // the golden's own two operations (the product is exact, so no fused rounding question arises).
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -467,7 +467,8 @@ module ot_qwen_nearhbm_exp_quad #(
     output reg          fault,
     output reg          ev_first
 );
-    localparam integer XD = 49;           // ot_hdc_exp_q depth
+    localparam integer SFU_LA = 7, SFU_LM = 6;          // ot_qwen_nearhbm_exp_p: binary32 steps that close at SS 1.2 GHz
+    localparam integer XD = 7 * SFU_LM + 8 * SFU_LA + 4;  // its depth: 102 (ot_hdc_exp_q, LAT 3 / 3: 49)
     localparam integer D = 1 + ADD_LAT + XD;
     localparam integer PAD = 8 - ADD_LAT;
     localparam [1:0] SB = S;
@@ -554,7 +555,8 @@ module ot_qwen_nearhbm_exp_quad #(
                 .clk(clk), .rst_n(rst_n), .valid_in(pv1), .a(pv1 ? rd_data[32*h +: 32] : 32'd0),
                 .b(pv1 ? {~mm[31], mm[30:0]} : 32'd0), .y(x), .err(err), .valid_out(vo));
             assign sf[h] = vo && (err != 2'd0);
-            ot_hdc_exp_q u_exp (.clk(clk), .rst_n(rst_n), .v(vo), .x(x), .y(e[32*h +: 32]), .vo(xvo), .fault(xf[h]));
+            ot_qwen_nearhbm_exp_p #(.LA(SFU_LA), .LM(SFU_LM)) u_exp (.clk(clk), .rst_n(rst_n), .v(vo), .x(x),
+                .y(e[32*h +: 32]), .vo(xvo), .fault(xf[h]));
         end
     endgenerate
     wire        vD = tagD[TW];

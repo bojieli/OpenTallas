@@ -9,6 +9,7 @@ VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 W=$(cd "$(dirname "$0")/../.." && pwd)
 SRC="$W/test/nearhbm/ot_qwen_nearhbm_attn_die_tb.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack.sv \
  $W/hdc/nearhbm/ot_qwen_nearhbm_attn_hub.sv $W/hdc/nearhbm/ot_qwen_nearhbm_prod.sv $W/hdc/ot_hdc_sfu_q.sv \
+ $W/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv \
  $W/hdc/ot_hdc_sfu.sv $W/hdc/ot_hdc_delay.sv $W/hdc/ot_hdc_fpu.sv $W/hdc/ot_hdc_fp32_mul_pipe.sv \
  $W/proto/ot_fp32_add_rne_pipe.sv"
 CPP="$W/test/nearhbm/tb_qwen_nearhbm_attn.cpp"

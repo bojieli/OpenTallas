@@ -3,7 +3,7 @@
 // Near-HBM attention for the Qwen3-8B ROM die (TP4): THE HUB.  NEW, DEFAULT-OFF (see ot_qwen_nearhbm_attn_stack.sv).
 //   max  : M[g][h] = max over the 4 stacks' local maxima (order-free), broadcast back to every stack.
 //   Z    : the 64 block sums b = 4 k + s per head (+0 for an empty block), pairwise = Z levels 5-10, then the
-//          golden reciprocal (bit seed + 3 Newton steps, ot_hdc_recip_q).
+//          golden reciprocal (bit seed + 3 Newton steps, ot_qwen_nearhbm_recip_p: ot_hdc_recip_q on SS-1.2 GHz units).
 //   P.V  : (S0 + S1) + (S2 + S3) = P.V levels 8-9, then x reciprocal(Z): the golden's normalise-after-sum.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qwen_nearhbm_attn_hub #(
@@ -170,7 +170,8 @@ module ot_qwen_nearhbm_attn_hub #(
     reg [2:0]  rh;
     wire [31:0] ry;
     wire        rvo, rfault;
-    ot_hdc_recip_q u_recip (.clk(clk), .rst_n(rst_n), .v(rv), .x(rx), .y(ry), .vo(rvo), .fault(rfault));
+    ot_qwen_nearhbm_recip_p #(.LA(7), .LM(6)) u_recip (.clk(clk), .rst_n(rst_n), .v(rv), .x(rx), .y(ry), .vo(rvo),
+                                                     .fault(rfault));
     reg [2:0]  rcnt;
     reg [31:0] rz [0:7];                           // {g, h}
     reg [1:0]  rz_ok;
