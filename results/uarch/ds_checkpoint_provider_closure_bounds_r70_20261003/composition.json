@@ -1,0 +1,65 @@
+{
+  "decoded_state_metadata": {
+    "alias_discount_bytes": 0,
+    "decoded_nonpayload_heap_upper_bytes": 5645676,
+    "decoded_plus_restored_port_headers_upper_bytes": 6204076,
+    "journal_file_buffers_SQLite_and_allocator_not_in_this_component": true,
+    "ndarray_sector_payload_added": false,
+    "physical_admission": false,
+    "restored_RF_port_instance_and_vars_upper_bytes": 558400,
+    "restored_RF_port_variable_slots_upper": 21,
+    "source_object_kind_occurrences": {
+      "array": 768,
+      "bool": 1,
+      "dict": 1265,
+      "dtype": 576,
+      "int": 20266,
+      "list": 770,
+      "sector_backing": 96,
+      "set": 3,
+      "str": 15008,
+      "tuple": 9702
+    }
+  },
+  "not_summed_as_one_phase": true,
+  "object_components": {
+    "actual_observations": 4926068,
+    "closure": 14948000,
+    "identity": 1988268,
+    "journal_inventory": 1782344,
+    "provenance": 844004,
+    "provenance_declared_input_fields": 87732332,
+    "provenance_working_view_bindings": 4030416,
+    "snapshot": 11009168,
+    "source_manifest": 87743404
+  },
+  "phase_uses": {
+    "atomic": [
+      "closure decoded JSON object bound",
+      "actual observations decoded JSON object bound",
+      "input bytes/text/parser/scanner Kepler"
+    ],
+    "cold": [
+      "closure decoded JSON object bound",
+      "decoded state metadata object bound",
+      "restored port headers/control dictionaries",
+      "all259806720 table copies separate R70 ledger",
+      "actual observations decoded JSON object bound",
+      "existing full constructor/raw sectors/array copies retained",
+      "parser/scanner/comparison/IO/allocator Kepler"
+    ],
+    "project": [
+      "snapshot encoded graph",
+      "source snapshot wrappers from decoded-state metadata profile; payload/header aliases may be charged conservatively",
+      "deep_metadata seen set/canonical overlap Kepler"
+    ],
+    "save": [
+      "source snapshot wrappers",
+      "identity/provenance/journal source schemas",
+      "stream frame/leaf overlap Kepler"
+    ]
+  },
+  "physical_admission": false,
+  "schema": "R70_NODE_BOUND_PHASE_JOIN",
+  "source_manifest_and_provenance_declared_input_fields_are_constructor_components_not_an_automatic_runtime_recharge": true
+}

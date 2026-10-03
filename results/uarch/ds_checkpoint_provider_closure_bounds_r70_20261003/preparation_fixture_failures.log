@@ -1,0 +1,49 @@
+F.........F.                                                             [100%]
+=================================== FAILURES ===================================
+________ test_every_original_typed_provider_and_port_field_has_a_bound _________
+
+graphs = ({'actual_observations': {'boundary_pc': 1, 'initialization_provenance': {'all_other_source_fields_exact': True, 'decl..., ...}, {'RF_generations_per_port': 4, 'RF_ports': 96, 'all_stream_upper': 293, 'auxiliary_binding_records': 383, ...})
+
+    def test_every_original_typed_provider_and_port_field_has_a_bound(graphs):
+        g,e=graphs;s=g['snapshot']
+        assert set(s['provider'])==set(source_literal('STATE'))
+>       assert set(s['ports']['rf'][0])==set(source_literal('PORT_STATE'))
+E       AssertionError: assert {'accept_sequ... 'costs', ...} == {'accept_sequ...extents', ...}
+E         
+E         Extra items in the left set:
+E         'compact_lifecycle'
+E         Use -v to get more diff
+
+tests/test_ds_checkpoint_provider_closure_bounds_r70.py:23: AssertionError
+_____________ test_original_writer_primitive_schema_matches_shadow _____________
+
+    def test_original_writer_primitive_schema_matches_shadow():
+        # Execute only exact original leaf/container writer, no provider constructor
+        # or arithmetic callback. Small actual bytes here are regression fixtures.
+        import io,numpy as np,types
+        source=m.D/'inputs/ds_producer_checkpoint_resume_v3.py.source'
+        tree=ast.parse(source.read_bytes());wanted={'Writer','SectorBacking','canonical'}
+        env={'np':np,'json':json,'sys':sys,'os':__import__('os'),'SECTOR_RECORD':__import__('struct').Struct('<HQI32s')}
+        exec(compile(ast.Module(body=[n for n in tree.body if isinstance(n,(ast.FunctionDef,ast.ClassDef)) and n.name in wanted],type_ignores=[]),str(source),'exec'),env)
+        payload=np.arange(4,dtype='<f4');value={'published':{('source',0):payload},'locations':{('source',0):{'shape':(4,),'dtype':payload.dtype,'pc':0}}}
+        w=env['Writer'].__new__(env['Writer']);w.f=io.BytesIO();w.bytes=w.arrays=w.array_temporary_bytes=0
+        actual=w.tree(value)
+        shadow=m.typed({'published':{('source',0):m.array([4])},'locations':{('source',0):{'shape':(4,),'dtype':m.Leaf({'dtype':'<f4'}),'pc':0}}})
+        def replace_offsets(x):
+            if isinstance(x,dict) and set(x)=={'array'}:
+                return {'array':[m.U,m.U]+x['array'][2:]}
+            if isinstance(x,dict):return {k:replace_offsets(v) for k,v in x.items()}
+            if isinstance(x,list):return [replace_offsets(v) for v in x]
+            return x
+>       assert replace_offsets(actual)==shadow
+E       AssertionError: assert {'dict': [['p...}, {...}]]}]]} == {'dict': [['p...}, {...}]]}]]}
+E         
+E         Differing items:
+E         {'dict': [['published', {'dict': [[{...}, {...}]]}], ['locations', {'dict': [[{...}, {...}]]}]]} != {'dict': [['published', {'dict': [[{...}, {...}]]}], ['locations', {'dict': [[{...}, {...}]]}]]}
+E         Use -v to get more diff
+
+tests/test_ds_checkpoint_provider_closure_bounds_r70.py:102: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_ds_checkpoint_provider_closure_bounds_r70.py::test_every_original_typed_provider_and_port_field_has_a_bound
+FAILED tests/test_ds_checkpoint_provider_closure_bounds_r70.py::test_original_writer_primitive_schema_matches_shadow
+2 failed, 10 passed in 15.44s

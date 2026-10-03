@@ -1,0 +1,49 @@
+....F.........F.                                                         [100%]
+=================================== FAILURES ===================================
+____________ test_ordinary_and_typed_snapshot_node_profiles_replay _____________
+
+graphs = ({'actual_observations': {'boundary_pc': 1, 'initialization_provenance': {'all_other_source_fields_exact': True, 'decl..., ...}, {'RF_generations_per_port': 4, 'RF_ports': 96, 'all_stream_upper': 293, 'auxiliary_binding_records': 383, ...})
+record = {'CPython_layout': {'bool': 28, 'bytearray_header': 56, 'bytes_header': 33, 'dict_header': 64, ...}, 'R70_commit': '1dc062fd01d549c5ce611df13bf5cc007e2af0ac', 'actual_constructor_runs': 0, 'actual_payload_reads': 0, ...}
+
+    def test_ordinary_and_typed_snapshot_node_profiles_replay(graphs,record):
+        g,e=graphs
+        for name,value in g.items():
+            got=m.count(m.typed(value) if name=='snapshot' else value)
+>           assert got==record['node_profiles'][name]
+E           AssertionError: assert {'JSON_dictio...s': 2616, ...} == {'JSON_dictio...s': 2616, ...}
+E             
+E             Omitting 13 identical items, use -vv to show
+E             Right contains 1 more item:
+E             {'nullable_integer_slots_upper': 192}
+E             Use -v to get more diff
+
+tests/test_ds_checkpoint_provider_closure_bounds_r70.py:65: AssertionError
+__________ test_source_allowed_nullable_lifecycle_capacity_is_priced ___________
+
+graphs = ({'actual_observations': {'boundary_pc': 1, 'initialization_provenance': {'all_other_source_fields_exact': True, 'decl..., ...}, {'RF_generations_per_port': 4, 'RF_ports': 96, 'all_stream_upper': 293, 'auxiliary_binding_records': 383, ...})
+record = {'CPython_layout': {'bool': 28, 'bytearray_header': 56, 'bytes_header': 33, 'dict_header': 64, ...}, 'R70_commit': '1dc062fd01d549c5ce611df13bf5cc007e2af0ac', 'actual_constructor_runs': 0, 'actual_payload_reads': 0, ...}
+
+    def test_source_allowed_nullable_lifecycle_capacity_is_priced(graphs,record):
+        import copy
+        snapshot=copy.deepcopy(graphs[0]['snapshot'])
+        for p in snapshot['ports']['rf'].values():
+            p['compact_lifecycle']['tag_capacity']=None;p['compact_lifecycle']['write_capacity']=None
+>       result=m.verify_enrolled_metadata('snapshot',m.typed(snapshot),record)
+
+tests/test_ds_checkpoint_provider_closure_bounds_r70.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_checkpoint_provider_closure_bounds_r70.py:163: in verify_enrolled_metadata
+    require(got[field]<=limit[field],'allocation exceeds '+field)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+v = False, msg = 'allocation exceeds canonical_byte_upper'
+
+    def require(v,msg):
+>       if not v:raise ValueError(msg)
+E       ValueError: allocation exceeds canonical_byte_upper
+
+tools/ds_checkpoint_provider_closure_bounds_r70.py:20: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_ds_checkpoint_provider_closure_bounds_r70.py::test_ordinary_and_typed_snapshot_node_profiles_replay
+FAILED tests/test_ds_checkpoint_provider_closure_bounds_r70.py::test_source_allowed_nullable_lifecycle_capacity_is_priced
+2 failed, 14 passed in 4.78s

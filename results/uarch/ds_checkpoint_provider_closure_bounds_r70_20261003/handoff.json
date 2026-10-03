@@ -1,0 +1,72 @@
+{
+  "R70_source_commit": "1dc062fd01d549c5ce611df13bf5cc007e2af0ac",
+  "commands": [
+    "python3 -m pytest -q tests/test_ds_checkpoint_provider_closure_bounds_r70.py",
+    "python3 tools/ds_checkpoint_provider_closure_bounds_r70.py --verify"
+  ],
+  "complete_physical_phase_certificate": false,
+  "complete_provider_metadata_component": true,
+  "component": "provider closure/provenance allocation schemas; parser/scanner/serialization-overlap remains Kepler",
+  "decoded_state_metadata": {
+    "alias_discount_bytes": 0,
+    "decoded_nonpayload_heap_upper_bytes": 5645676,
+    "decoded_plus_restored_port_headers_upper_bytes": 6204076,
+    "journal_file_buffers_SQLite_and_allocator_not_in_this_component": true,
+    "ndarray_sector_payload_added": false,
+    "physical_admission": false,
+    "restored_RF_port_instance_and_vars_upper_bytes": 558400,
+    "restored_RF_port_variable_slots_upper": 21,
+    "source_object_kind_occurrences": {
+      "array": 768,
+      "bool": 1,
+      "dict": 1265,
+      "dtype": 576,
+      "int": 20266,
+      "list": 770,
+      "sector_backing": 96,
+      "set": 3,
+      "str": 15008,
+      "tuple": 9702
+    }
+  },
+  "dependency": "972c35b3970c58b3a5ef1958c4c403a280b645c2",
+  "entrypoint": "tools/ds_checkpoint_provider_closure_bounds_r70.py",
+  "object_bounds_bytes": {
+    "actual_observations": 4926068,
+    "closure": 14948000,
+    "identity": 1988268,
+    "journal_inventory": 1782344,
+    "provenance": 844004,
+    "provenance_declared_input_fields": 87732332,
+    "provenance_working_view_bindings": 4030416,
+    "snapshot": 11009168,
+    "source_manifest": 87743404
+  },
+  "original_R69_V3_R2_guards_and_sources_unchanged": true,
+  "raw_array_and_sector_payload_costs_not_recharged": true,
+  "remote_GO": false,
+  "runtime_phase_IO_buffers_SQLite_allocator_and_physical_union_required_separately": true,
+  "schema": "R70_PROVIDER_CLOSURE_SOURCE_NODE_HANDOFF",
+  "scope": "Full2213PC/290730future homes, PC01 checkpoint boundaries only. No actual provider constructed, payload read or operator executed. Allocation shadows are never checkpoint/runtime inputs.",
+  "source_allocation_shapes": {
+    "RF_generations_per_port": 4,
+    "RF_ports": 96,
+    "all_stream_upper": 293,
+    "auxiliary_binding_records": 383,
+    "control_integer_upper": 18446744073709551615,
+    "history_input_records": 8,
+    "immutable_input_records": 3840,
+    "immutable_input_unique_paths": 119,
+    "journal_files_upper": 589,
+    "max_home_indices_per_publication": 20,
+    "path_char_upper": 223,
+    "publication_upper": 576,
+    "published_array_copy_bytes_upper": 19671552,
+    "published_array_occurrences_upper": 768,
+    "scratch_stream_upper": 192,
+    "shard_record_upper": 48,
+    "source_image_key_upper": 3840,
+    "source_pin_entries_upper": 2403
+  },
+  "tests": "18 PASS"
+}
