@@ -1,0 +1,65 @@
+[
+  {
+    "archive": "inputs/results/uarch/h4_hbm_pc40_physical_ack_r3_20261003/model.json",
+    "bytes": 7007,
+    "origin_commit": "b6d1d19f77c89e4131cbb0aca29d88fae5772b1a",
+    "path": "results/uarch/h4_hbm_pc40_physical_ack_r3_20261003/model.json",
+    "sha256": "84eb2e85faa7f54200d289f711a11e081be63210d468fd8f992cfc7d09dcf5f6"
+  },
+  {
+    "archive": "inputs/results/uarch/h4_hbm_pc40_physical_ack_r3_20261003/inputs/ot_gpu_rf_service.sv",
+    "bytes": 6585,
+    "origin_commit": "b6d1d19f77c89e4131cbb0aca29d88fae5772b1a",
+    "path": "results/uarch/h4_hbm_pc40_physical_ack_r3_20261003/inputs/ot_gpu_rf_service.sv",
+    "sha256": "0c78df13fc5f356a24b99e42fbf0b7477e0fe57ba6475d3c8f5b80eab966b7d9"
+  },
+  {
+    "archive": "inputs/rtl/experimental/hbm_c0_connected_20261003/r3/ot_gpu_c0_connected_bridge_r3.sv",
+    "bytes": 13105,
+    "origin_commit": "b6d1d19f77c89e4131cbb0aca29d88fae5772b1a",
+    "path": "rtl/experimental/hbm_c0_connected_20261003/r3/ot_gpu_c0_connected_bridge_r3.sv",
+    "sha256": "2cf99ca94dae2738e44fda1c06717880671760189b94e52c7e174a0441c132d7"
+  },
+  {
+    "archive": "inputs/rtl/experimental/hbm_c0_connected_20261003/r3/ot_gpu_pc40_physical_ack_source.sv",
+    "bytes": 6347,
+    "origin_commit": "b6d1d19f77c89e4131cbb0aca29d88fae5772b1a",
+    "path": "rtl/experimental/hbm_c0_connected_20261003/r3/ot_gpu_pc40_physical_ack_source.sv",
+    "sha256": "9938ec07f5806e9255e4222e3144a0e2a3b88d13fa97c66d900631f8c85976ba"
+  },
+  {
+    "archive": "inputs/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_fmin_consumer.sv",
+    "bytes": 3353,
+    "origin_commit": "b6d1d19f77c89e4131cbb0aca29d88fae5772b1a",
+    "path": "rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_fmin_consumer.sv",
+    "sha256": "132026114e0ca96ebe272769b1480915cff46c2768d8b88d8e9142b78bd55553"
+  },
+  {
+    "archive": "inputs/rtl/experimental/hbm_c0_connected_20261003/ot_gpu_c0_fmax_leaf.sv",
+    "bytes": 1143,
+    "origin_commit": "b6d1d19f77c89e4131cbb0aca29d88fae5772b1a",
+    "path": "rtl/experimental/hbm_c0_connected_20261003/ot_gpu_c0_fmax_leaf.sv",
+    "sha256": "5728d99770877fe86f9dcf5f506f5ec75ddbd65ea39bb11c219ec114b4e4bef4"
+  },
+  {
+    "archive": "inputs/results/uarch/h4_hbm_c0_connected_bridge_20261003/r2/model.json",
+    "bytes": 19372,
+    "origin_commit": "b6d1d19f77c89e4131cbb0aca29d88fae5772b1a",
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/r2/model.json",
+    "sha256": "03369a02155132b278c138bbf967ca849f58cc392ddc329f01f04d87be8ae915"
+  },
+  {
+    "archive": "inputs/results/uarch/hbm_fullsize_inventory_20261003/model-r1.json",
+    "bytes": 29520,
+    "origin_commit": "b6d1d19f77c89e4131cbb0aca29d88fae5772b1a",
+    "path": "results/uarch/hbm_fullsize_inventory_20261003/model-r1.json",
+    "sha256": "774c50e28e39d06c9c7a3e80b69c6442a262af69640d5167126b6ef708cf465b"
+  },
+  {
+    "archive": "inputs/make_tracks.tcl",
+    "bytes": 1235,
+    "origin": "actual selected local ASAP7 track file, external PDK snapshot not Git object",
+    "path": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/openRoad/make_tracks.tcl",
+    "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632"
+  }
+]
