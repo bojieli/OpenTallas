@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--lint-only",
+    "--Wall",
+    "-Wno-fatal",
+    "--top-module",
+    "ot_w2_nc6_coded_secondary",
+    "-GOPT_PROTECTION=1",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv",
+    "rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv"
+  ],
+  "compiler_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "elapsed_s": 29.280246281065047,
+  "returncode": 0,
+  "scope": "37-word secondary syntax only, no full219 controller runtime/SSFF",
+  "source_sha256": {
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv": "d5ea2b62cdc8399a9fe1b60cda98a40d93779f6cafbd88f8676979ada19c9a71"
+  }
+}

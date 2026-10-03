@@ -1,0 +1,75 @@
+W2 actual controller supply, 2026-10-03
+
+This milestone supplies a DEFAULT-OFF 37-word coded secondary controller,
+NOT the full219-word protected NC6 controller. Full-controller runtime
+terminal and live handle are ABSENT. Do not install this as a complete W2
+provider in Claude's W2/W4/W6/W5/W10 bridge. No bridge job is launched here.
+
+The full storage model remains10cb7849246f7ca06fe3309e577b10c099fdac29:
+219x72=15768bits/PC. The secondary owns global125..130,132,189..218;
+the primary must own the complementary182 words. The physical costs are
+prospective, not mapped or loadedSSFF-qualified.
+
+Implemented secondary responsibilities:
+- six count/version caches, six coded98-bit count workers and six pending
+  signed deltas; six independent secondary writes;
+- six coded offer epochs, reservation before offered-valid, actual accepted
+  request/read/write role folding, illegal roles and overflow failclosed;
+- two utility scrub ports matching CURRENT original/address/corrected word;
+- coded sticky fault; positive provider/reverse/reset rearm fences;
+- CURRENT inspection wires for the primary utility scheduler, no copied
+  inspection state and no duplicate96-row table decoder.
+
+Interfaces to the unfinished primary:
+- table_state192, CURRENT clean96/bad96 from primary table decoders;
+- table_pending6 means ONLY count-changing journals, not all table mutators;
+  the primary's lookup exclusion must independently cover every mutator;
+- reserve_roles18/pre-permit accept_intent18/actual commit_roles18;
+- consumed-offer-copies-drained6, not accepted owner retirement;
+- other_clean/other_bad from the other86 primary words, never tied constants;
+- two scrub lanes, each original72/candidate72/address10 and validated ready;
+- CURRENT inspection7067 bits, local combinational wires with unqualified
+  loaded mux/fanout costs; they do not create extra persistent bits.
+
+Required primary implementation before a full-controller functional build:
+96 table rows,9 journal roles, held request/read/write records, coded lookup
+sequencing, eight correction contexts (six banks/two utilities) and rescue.
+Every normal handshake must be quarantined while an exceptional context
+is live. CAP4+FIX4 is an eight-edge prospective correction minimum; the
+earlier four-edge repair estimate cannot enroll this full source. The
+original/candidate/address corrector boundary is1232bits for eight engines,
+576bits above the earlier656-bit target-only boundary. This and the loaded
+secondary feedback/read-selection paths require additive composed pricing.
+Do not infer source1.2GHz from syntax or codec truth evidence.
+
+Full functional gate to prepare/run next (NOT run in this milestone):
+NC6/MAX16 customer32/gen4/scoped39; required p_wr_done_ready;32B LEN1 BEAT0.
+Use actual accepted requests and backend echoes. Test held request/read/write,
+wrong-client/direction/tag/generation, duplicate/reset-stale and wrapped-gen
+rearm with positive all-copy fences; every physical single-bit repair and
+same-word double failclosed; context/seal/address/stale-snapshot mutants.
+Check all219 instantiated physical words and no unprotected phase state.
+No new directory client, no codec truth duplicate, no native-caller or full
+HBM/SSFF/rate credit. Popper/Claude own actual connected caller integration.
+
+Evidence:
+86 source/model tests PASS (18 new secondary enrollment tests,57 count/
+utility model tests,11 reconciliation tests). These are NOT RTL runtime
+negative cases. Exact Verilator5.050 secondary syntax EXIT0,29.280246s;
+no UNOPTFLAT/LATCH/Error. Unused complement ports/signals remain warnings.
+Earlier syntax logs retained; lint_attempt1 false SCC warning preserved
+(its intermediate source was not retained, so it carries no reproducible
+source verdict). lint_attempt2 has source snapshot lint_r1_source.sv;
+current lint_r2 has exact pins.
+Frozen codec unchanged and parent10623 actual codec cases reused.
+
+Replay source/model:
+python3 tools/w2_nc6_secondary_source.py --output /tmp/w2-secondary-plan.json
+cmp /tmp/w2-secondary-plan.json results/uarch/w2_nc6_secondary_source_20261003/plan.json
+python3 -m pytest -q tests/test_w2_nc6_secondary_source.py tests/test_w2_nc6_count_utility_closure.py tests/test_w2_nc6_protection_reconciliation.py
+
+Prerequisites:10cb7849246f7ca06fe3309e577b10c099fdac29 plus its22ec32816/
+b846a38ee chain, and67ab2420e original fullwidth source/model. Parent codec
+runtime evidence is main82ba8f9c5; no dependency on an external binary.
+Current local admission sample: load187.68 on32 CPUs,37.7GB available,
+swap8GB exhausted. No runtime build launched; coordinate a fresh fleet slot.

@@ -1,0 +1,74 @@
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.069 MB sources in 3 modules, into 2.975 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 6.165 s (elab=0.097, cvt=5.707, bld=0.000); cpu 2.880 s on 1 threads; allocated 80.148 MB
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:139:6: Instance pin connected by name with empty reference: 'syndrome'
+  139 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |      ^~~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:139:18: Instance pin connected by name with empty reference: 'overall_odd'
+  139 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |                  ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:139:33: Instance pin connected by name with empty reference: 'clean'
+  139 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |                                 ^~~~~
+%Warning-WIDTHEXPAND: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:179:50: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                                                    : ... note: In instance 'ot_w2_nc6_coded_secondary'
+  179 |      if(cache[client][4:0]<16&&cache[client][4:0]==census[client]&&!admission_stop)request_bank_open[client]=1;
+      |                                                  ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:229:70: Operator ADD expects 44 bits on the LHS, but LHS's CASTWRAP generates 32 bits.
+                                                                                                    : ... note: In instance 'ot_w2_nc6_coded_secondary'
+  229 |        target=encode_payload(44'(newn|(((integer'(cache[client][8:5])+1)&15)<<5)),global_index(client),4);
+      |                                                                      ^
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:36:14: Signal is not used: 'cache_commit'
+                                                                                                    : ... note: In instance 'ot_w2_nc6_coded_secondary'
+   36 |  logic [5:0] cache_commit;
+      |              ^~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:37:42: Signal is not used: 'b'
+                                                                                                    : ... note: In instance 'ot_w2_nc6_coded_secondary'
+   37 |  integer client,wordno,slot,lane,index,a,b,d,n,newn,version,delta,phase;
+      |                                          ^
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:37:46: Signal is not used: 'n'
+                                                                                                    : ... note: In instance 'ot_w2_nc6_coded_secondary'
+   37 |  integer client,wordno,slot,lane,index,a,b,d,n,newn,version,delta,phase;
+      |                                              ^
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:46:15: Bits of signal are not used: 'target_data'[63:44]
+                                                                                                    : ... note: In instance 'ot_w2_nc6_coded_secondary'
+   46 |  logic [63:0] target_data;
+      |               ^~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:47:8: Signal is not used: 'parity'
+                                                                                                   : ... note: In instance 'ot_w2_nc6_coded_secondary'
+   47 |  logic parity;
+      |        ^~~~~~
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:50:11: Function variable is not used: 'kind'
+                                                                                                    : ... note: In instance 'ot_w2_nc6_coded_secondary'
+   50 |   integer kind,bits;
+      |           ^~~~
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:50:16: Function variable is not used: 'bits'
+                                                                                                    : ... note: In instance 'ot_w2_nc6_coded_secondary'
+   50 |   integer kind,bits;
+      |                ^~~~
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:108:72: Bits of function variable are not used: 'wi'[31:10]
+                                                                                                     : ... note: In instance 'ot_w2_nc6_coded_secondary'
+  108 |  function automatic [71:0] encode_payload(input [43:0] p,input integer wi,input integer kind);
+      |                                                                        ^~
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:108:89: Bits of function variable are not used: 'kind'[31:3]
+                                                                                                     : ... note: In instance 'ot_w2_nc6_coded_secondary'
+  108 |  function automatic [71:0] encode_payload(input [43:0] p,input integer wi,input integer kind);
+      |                                                                                         ^~~~
+%Warning-UNOPTFLAT: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:33:15: Signal unoptimizable: Circular combinational logic: 'ot_w2_nc6_coded_secondary.next_payload'
+   33 |  logic [43:0] next_payload[0:NW-1];
+      |               ^~~~~~~~~~~~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:33:15:      Example path: ot_w2_nc6_coded_secondary.next_payload
+                    rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:25:2:      Example path: ALWAYS
+                    rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:33:      Example path: ot_w2_nc6_coded_secondary.__Vcellout__word_codec[36].codec__correctable
+                    rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:139:42:      Example path: ASSIGNW
+                    rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:32:22:      Example path: ot_w2_nc6_coded_secondary.ce
+                    rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:145:2:      Example path: ALWAYS
+                    rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:33:15:      Example path: ot_w2_nc6_coded_secondary.next_payload

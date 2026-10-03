@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_w2_nc6_secondary_source.py"
+  ],
+  "elapsed_s": 70.47517729178071,
+  "exit_code": 0,
+  "prior_combined_model_gate": {
+    "cases": 86,
+    "exit_code": 0,
+    "files": [
+      "tests/test_w2_nc6_secondary_source.py",
+      "tests/test_w2_nc6_count_utility_closure.py",
+      "tests/test_w2_nc6_protection_reconciliation.py"
+    ]
+  },
+  "scope": "18 source/model enrollment cases, NOT hardware negative runtime"
+}

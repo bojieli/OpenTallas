@@ -1,0 +1,53 @@
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.069 MB sources in 3 modules, into 9.036 MB in 13 C++ files needing 0.000 MB
+- Verilator: Walltime 8.145 s (elab=0.040, cvt=7.342, bld=0.000); cpu 4.127 s on 1 threads; allocated 98.145 MB
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:137:43: Instance pin connected by name with empty reference: 'encoded_word'
+  137 |     .payload(44'b0),.current_word(cw[w]),.encoded_word(),
+      |                                           ^~~~~~~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:138:6: Instance pin connected by name with empty reference: 'syndrome'
+  138 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |      ^~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:138:18: Instance pin connected by name with empty reference: 'overall_odd'
+  138 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |                  ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:138:33: Instance pin connected by name with empty reference: 'clean'
+  138 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |                                 ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:146:6: Instance pin connected by name with empty reference: 'syndrome'
+  146 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |      ^~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:146:18: Instance pin connected by name with empty reference: 'overall_odd'
+  146 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                  ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:146:33: Instance pin connected by name with empty reference: 'clean'
+  146 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                                 ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:146:42: Instance pin connected by name with empty reference: 'correctable'
+  146 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                                          ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:146:57: Instance pin connected by name with empty reference: 'uncorrectable'
+  146 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                                                         ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:147:6: Instance pin connected by name with empty reference: 'seal_ok'
+  147 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |      ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:147:17: Instance pin connected by name with empty reference: 'padding_ok'
+  147 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                 ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:147:31: Instance pin connected by name with empty reference: 'release_clean'
+  147 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                               ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:147:48: Instance pin connected by name with empty reference: 'repaired_payload'
+  147 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                ^~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:147:68: Instance pin connected by name with empty reference: 'repaired_word'
+  147 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                                    ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:45:15: Bits of signal are not used: 'target_data'[63:44]
+                                                                                                    : ... note: In instance 'ot_w2_nc6_coded_secondary'
+   45 |  logic [63:0] target_data;
+      |               ^~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
