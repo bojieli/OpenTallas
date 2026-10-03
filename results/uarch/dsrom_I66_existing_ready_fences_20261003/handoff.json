@@ -1,0 +1,33 @@
+{
+  "actual_guard_implemented": false,
+  "actual_journal": null,
+  "actual_wrong_data_or_deadlock_claim": false,
+  "additional_guard": false,
+  "bank_scope": "Rearm after visibility/credits, separately retain VM address/version through actual SU read/tag. Holding bank until future read is an incompatible modeled policy, not an observed actual deadlock.",
+  "clock_scope": "Strict native event order only; rearm may share credit-capture edge, next source admission must be later. No +24dispatch timing surrogate. c9 physical phase/reset/positiveCDC stillunqualified.",
+  "collective_scope": "Ten operands also have an intervening collective, conditional on strengthening ROM idle to the candidate publication/credit fence. Ready-only proof needs no collective alternative.",
+  "descriptor_evidence": "33 exact source words:17 address-patched intended QE words+16 source template words. I66 SHA7d6b matches current source. Actual four-rank compiled programs/runtime enrollment absent.",
+  "entry": "python3 tools/dsrom_I66_existing_ready_fences.py --verify",
+  "final94to97": "I94 QE LINQ W2; I95 SU consumes GU4; I96 collective wait31/allidle; I97 QE LINQ W2; I98 consumes GU5.",
+  "finite_numeric_deadline": null,
+  "hardware_admission": false,
+  "live_job": null,
+  "next_receipts": [
+    "Shared-ready implementation/source inverse with full previous169/user32 context including cross-stage owner changes",
+    "Actual current program/compiledcallbacks admitted-nextROM and vector/read/tag events",
+    "Finite provider/calendar with measured rootphase/reset and positive credit CDC",
+    "VM version/writer exclusion and exact peak lease census"
+  ],
+  "prerequisite": "bfce21b139e3b6b97d53ca7a4de3b6abb09b2d56",
+  "proof_scope": "If shared ROM ready remains gated by previous captured owner complete VM visibility+positive credits/packet/source retirement, all12 publications/credit retirements precede firstconsumer. Existing ready path is sufficient; no new SUguard selected/priced.",
+  "source_pairs": [
+    "I66/I67 -> readyI67/I68 -> I70",
+    "I68/I69 -> readyI69/I72 -> I80",
+    "I72/I73 -> readyI73/I79 -> I85",
+    "I82/I83 -> readyI83/I84 -> I90",
+    "I87/I88 -> readyI88/I89 -> I95",
+    "I92/I93 -> readyI93/I94 -> I98"
+  ],
+  "validation": "185 focused PASS including27new; canonical source-pin/model replay PASS. No source/runtime/build changes.",
+  "worktree": "/tmp/opentallas-I66-reserved-service-observer-20261002"
+}
