@@ -53,14 +53,14 @@ class RankedEnclosingPins(EnclosingPins):
 
 class RankedComponentPins(ComponentPins):
     def __init__(self,root,block,index,*,aliases=None):
-        counts={'sector':1,'kv':1,'native':1,'sm':64,'w2':256,'issuer':1,'state':1,'rfdrain':64,'rfjoin':2}
+        counts={'sector':1,'kv':1,'native':1,'sm':64,'w2':256,'issuer':1,'state':1,'rfdrain':64,'rfjoin':2,'local':1,'state_rpc':1}
         if block not in counts or type(index) is not int or not 0<=index<counts[block]:
             raise TransportError('actual rank-qualified instance')
         self.root,self.block,self.index=root,block,index
         self.aliases=dict(aliases or {})
 
     def parameter(self,name):
-        if self.block in ('issuer','state','rfdrain','rfjoin') and name=='ENABLE':return 1
+        if self.block in ('issuer','state','rfdrain','rfjoin','local','state_rpc') and name=='ENABLE':return 1
         if self.block=='sm' and name=='OPT_CONTEXT':return 1
         if self.block=='sm' and name=='INSTANCE_ID':return self.index
         if self.block=='w2' and name=='PC_ID':return self.index%128
@@ -115,7 +115,10 @@ def build(pins,authority,native_handlers,w2_ports,*,enabled=False):
     controller=KVControllerPort(pins.component('kv'),authority)
     payload=RankedSectorBoundPayload(pins.component('kv'),pins.component('sector'),w2_ports,enabled=True)
     kv=KVHandlers(authority,controller.handlers);rf=RFPageHandlers(authority)
+    from tools.gpu_sys.canonical_qwen_state_rpc_join import StateRPCByteHandlers
+    state=StateRPCByteHandlers(authority,pins.component('state_rpc'),enabled=True)
     handlers=dict(native_handlers,source_page_write=rf.source_page_write,source_page_read=rf.source_page_read,**kv.handlers)
+    for kind in ('kv_state_read','kv_state_write'):handlers[kind]=state.handlers[kind]
     if set(handlers)!=set(ALL_KINDS):raise TransportError('sixteen actual handlers required')
     pins.add_edge_hook(payload)
-    return dict(handlers=handlers,pins=pins,payload=payload,controller=controller,rf=rf,kv=kv)
+    return dict(handlers=handlers,pins=pins,payload=payload,controller=controller,rf=rf,kv=kv,state=state)

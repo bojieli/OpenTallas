@@ -34,6 +34,798 @@
       "leaf": "rank_refusal",
       "block": "sector"
     },
+    "state_rpc_por_n": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "por_n",
+      "block": "state_rpc"
+    },
+    "state_rpc_run_enable": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "run_enable",
+      "block": "state_rpc"
+    },
+    "state_rpc_local_reset": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "local_reset",
+      "block": "state_rpc"
+    },
+    "state_rpc_source_bound": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "source_bound",
+      "block": "state_rpc"
+    },
+    "state_rpc_state_base_rank0": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "state_base_rank0",
+      "block": "state_rpc"
+    },
+    "state_rpc_state_base_rank1": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "state_base_rank1",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_valid": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "rpc_valid",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "rpc_ready",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_identity": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "rpc_identity",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_rank": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "rpc_rank",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_write": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "rpc_write",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_address": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "rpc_address",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_bytes": {
+      "direction": "input",
+      "bits": 16,
+      "count": 1,
+      "leaf_bits": 16,
+      "leaf": "rpc_bytes",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_payload": {
+      "direction": "input",
+      "bits": 256,
+      "count": 1,
+      "leaf_bits": 256,
+      "leaf": "rpc_payload",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_reply_valid": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "rpc_reply_valid",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_reply_ready": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "rpc_reply_ready",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_reply_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "rpc_reply_identity",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_reply_rank": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "rpc_reply_rank",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_reply_address": {
+      "direction": "output",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "rpc_reply_address",
+      "block": "state_rpc"
+    },
+    "state_rpc_rpc_reply_bytes": {
+      "direction": "output",
+      "bits": 16,
+      "count": 1,
+      "leaf_bits": 16,
+      "leaf": "rpc_reply_bytes",
+      "block": "state_rpc"
+    },
+    "state_rpc_root_accept": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "root_accept",
+      "block": "state_rpc"
+    },
+    "state_rpc_root_admit": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "root_admit",
+      "block": "state_rpc"
+    },
+    "state_rpc_root_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "root_identity",
+      "block": "state_rpc"
+    },
+    "state_rpc_root_retire": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "root_retire",
+      "block": "state_rpc"
+    },
+    "state_rpc_root_retire_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "root_retire_ready",
+      "block": "state_rpc"
+    },
+    "state_rpc_root_retire_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "root_retire_identity",
+      "block": "state_rpc"
+    },
+    "state_rpc_sector_offer_valid": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "sector_offer_valid",
+      "block": "state_rpc"
+    },
+    "state_rpc_sector_offer_rank": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "sector_offer_rank",
+      "block": "state_rpc"
+    },
+    "state_rpc_sector_offer_write": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "sector_offer_write",
+      "block": "state_rpc"
+    },
+    "state_rpc_sector_offer_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "sector_offer_identity",
+      "block": "state_rpc"
+    },
+    "state_rpc_sector_offer_source_addr": {
+      "direction": "output",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "sector_offer_source_addr",
+      "block": "state_rpc"
+    },
+    "state_rpc_map_valid": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "map_valid",
+      "block": "state_rpc"
+    },
+    "state_rpc_map_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "map_ready",
+      "block": "state_rpc"
+    },
+    "state_rpc_map_rank": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "map_rank",
+      "block": "state_rpc"
+    },
+    "state_rpc_map_sector_granted": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "map_sector_granted",
+      "block": "state_rpc"
+    },
+    "state_rpc_map_source_addr": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "map_source_addr",
+      "block": "state_rpc"
+    },
+    "state_rpc_map_physical_addr": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "map_physical_addr",
+      "block": "state_rpc"
+    },
+    "state_rpc_map_owner": {
+      "direction": "input",
+      "bits": 46,
+      "count": 1,
+      "leaf_bits": 46,
+      "leaf": "map_owner",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_valid": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "tap_command_valid",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "tap_command_ready",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_rank": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "tap_command_rank",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_write": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "tap_command_write",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_sector_granted": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "tap_command_sector_granted",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "tap_command_identity",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_source_addr": {
+      "direction": "output",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "tap_command_source_addr",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_physical_addr": {
+      "direction": "output",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "tap_command_physical_addr",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_owner": {
+      "direction": "output",
+      "bits": 46,
+      "count": 1,
+      "leaf_bits": 46,
+      "leaf": "tap_command_owner",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_new_data": {
+      "direction": "output",
+      "bits": 256,
+      "count": 1,
+      "leaf_bits": 256,
+      "leaf": "tap_command_new_data",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_command_byte_mask": {
+      "direction": "output",
+      "bits": 32,
+      "count": 1,
+      "leaf_bits": 32,
+      "leaf": "tap_command_byte_mask",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_reply_valid": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "tap_reply_valid",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_reply_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "tap_reply_ready",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_reply_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "tap_reply_identity",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_reply_rank": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "tap_reply_rank",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_reply_owner": {
+      "direction": "output",
+      "bits": 46,
+      "count": 1,
+      "leaf_bits": 46,
+      "leaf": "tap_reply_owner",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_reply_physical_addr": {
+      "direction": "output",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "tap_reply_physical_addr",
+      "block": "state_rpc"
+    },
+    "state_rpc_tap_reply_old_data": {
+      "direction": "output",
+      "bits": 256,
+      "count": 1,
+      "leaf_bits": 256,
+      "leaf": "tap_reply_old_data",
+      "block": "state_rpc"
+    },
+    "state_rpc_sector_capture_valid": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "sector_capture_valid",
+      "block": "state_rpc"
+    },
+    "state_rpc_sector_capture_ready": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "sector_capture_ready",
+      "block": "state_rpc"
+    },
+    "state_rpc_sector_capture_source_addr": {
+      "direction": "output",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "sector_capture_source_addr",
+      "block": "state_rpc"
+    },
+    "state_rpc_sector_capture_old_data": {
+      "direction": "output",
+      "bits": 256,
+      "count": 1,
+      "leaf_bits": 256,
+      "leaf": "sector_capture_old_data",
+      "block": "state_rpc"
+    },
+    "state_rpc_quiescent": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "quiescent",
+      "block": "state_rpc"
+    },
+    "state_rpc_fault": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "fault",
+      "block": "state_rpc"
+    },
+    "local_por_n": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "por_n",
+      "block": "local"
+    },
+    "local_run_enable": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "run_enable",
+      "block": "local"
+    },
+    "local_local_reset": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "local_reset",
+      "block": "local"
+    },
+    "local_source_bound": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "source_bound",
+      "block": "local"
+    },
+    "local_stage_root_accept": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "stage_root_accept",
+      "block": "local"
+    },
+    "local_stage_root_retire": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "stage_root_retire",
+      "block": "local"
+    },
+    "local_stage_root_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "count": 1,
+      "leaf_bits": 3520,
+      "leaf": "stage_root_owner",
+      "block": "local"
+    },
+    "local_stage_root_retire_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "count": 1,
+      "leaf_bits": 3520,
+      "leaf": "stage_root_retire_owner",
+      "block": "local"
+    },
+    "local_stage_root_admit": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "stage_root_admit",
+      "block": "local"
+    },
+    "local_stage_root_retire_ready": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "stage_root_retire_ready",
+      "block": "local"
+    },
+    "local_shared_router_drained": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "shared_router_drained",
+      "block": "local"
+    },
+    "local_writer_retained": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "writer_retained",
+      "block": "local"
+    },
+    "local_shared_service_ready": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "shared_service_ready",
+      "block": "local"
+    },
+    "local_shared_service_done": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "shared_service_done",
+      "block": "local"
+    },
+    "local_state_root_accept": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "state_root_accept",
+      "block": "local"
+    },
+    "local_state_root_retire": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "state_root_retire",
+      "block": "local"
+    },
+    "local_state_root_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "state_root_identity",
+      "block": "local"
+    },
+    "local_state_root_retire_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "state_root_retire_identity",
+      "block": "local"
+    },
+    "local_state_root_admit": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "state_root_admit",
+      "block": "local"
+    },
+    "local_state_root_retire_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "state_root_retire_ready",
+      "block": "local"
+    },
+    "local_state_tap_quiescent": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "state_tap_quiescent",
+      "block": "local"
+    },
+    "local_state_observer_drained": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "state_observer_drained",
+      "block": "local"
+    },
+    "local_metadata_ACK_held": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "metadata_ACK_held",
+      "block": "local"
+    },
+    "local_metadata_reverse_held": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "metadata_reverse_held",
+      "block": "local"
+    },
+    "local_metadata_event_held": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "metadata_event_held",
+      "block": "local"
+    },
+    "local_request_valid": {
+      "direction": "output",
+      "bits": 2,
+      "count": 1,
+      "leaf_bits": 2,
+      "leaf": "request_valid",
+      "block": "local"
+    },
+    "local_request_ready": {
+      "direction": "output",
+      "bits": 2,
+      "count": 1,
+      "leaf_bits": 2,
+      "leaf": "request_ready",
+      "block": "local"
+    },
+    "local_request_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "request_identity",
+      "block": "local"
+    },
+    "local_request_key": {
+      "direction": "output",
+      "bits": 20,
+      "count": 1,
+      "leaf_bits": 20,
+      "leaf": "request_key",
+      "block": "local"
+    },
+    "local_response_valid": {
+      "direction": "output",
+      "bits": 2,
+      "count": 1,
+      "leaf_bits": 2,
+      "leaf": "response_valid",
+      "block": "local"
+    },
+    "local_response_ready": {
+      "direction": "output",
+      "bits": 2,
+      "count": 1,
+      "leaf_bits": 2,
+      "leaf": "response_ready",
+      "block": "local"
+    },
+    "local_response_identity": {
+      "direction": "output",
+      "bits": 128,
+      "count": 1,
+      "leaf_bits": 128,
+      "leaf": "response_identity",
+      "block": "local"
+    },
+    "local_response_key": {
+      "direction": "output",
+      "bits": 40,
+      "count": 1,
+      "leaf_bits": 40,
+      "leaf": "response_key",
+      "block": "local"
+    },
+    "local_response_quiet": {
+      "direction": "output",
+      "bits": 2,
+      "count": 1,
+      "leaf_bits": 2,
+      "leaf": "response_quiet",
+      "block": "local"
+    },
+    "local_quiesce": {
+      "direction": "output",
+      "bits": 2,
+      "count": 1,
+      "leaf_bits": 2,
+      "leaf": "quiesce",
+      "block": "local"
+    },
+    "local_roots_empty": {
+      "direction": "output",
+      "bits": 2,
+      "count": 1,
+      "leaf_bits": 2,
+      "leaf": "roots_empty",
+      "block": "local"
+    },
+    "local_fault": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "fault",
+      "block": "local"
+    },
     "issuer_inputs_bound_valid": {
       "direction": "input",
       "bits": 64,
@@ -515,7 +1307,7 @@
       "block": "state"
     },
     "state_command_valid": {
-      "direction": "input",
+      "direction": "output",
       "bits": 1,
       "count": 1,
       "leaf_bits": 1,
@@ -531,7 +1323,7 @@
       "block": "state"
     },
     "state_command_rank": {
-      "direction": "input",
+      "direction": "output",
       "bits": 1,
       "count": 1,
       "leaf_bits": 1,
@@ -539,7 +1331,7 @@
       "block": "state"
     },
     "state_command_write": {
-      "direction": "input",
+      "direction": "output",
       "bits": 1,
       "count": 1,
       "leaf_bits": 1,
@@ -547,7 +1339,7 @@
       "block": "state"
     },
     "state_command_sector_granted": {
-      "direction": "input",
+      "direction": "output",
       "bits": 1,
       "count": 1,
       "leaf_bits": 1,
@@ -563,7 +1355,7 @@
       "block": "state"
     },
     "state_command_identity": {
-      "direction": "input",
+      "direction": "output",
       "bits": 64,
       "count": 1,
       "leaf_bits": 64,
@@ -571,7 +1363,7 @@
       "block": "state"
     },
     "state_command_source_addr": {
-      "direction": "input",
+      "direction": "output",
       "bits": 34,
       "count": 1,
       "leaf_bits": 34,
@@ -579,7 +1371,7 @@
       "block": "state"
     },
     "state_command_physical_addr": {
-      "direction": "input",
+      "direction": "output",
       "bits": 34,
       "count": 1,
       "leaf_bits": 34,
@@ -587,7 +1379,7 @@
       "block": "state"
     },
     "state_command_owner": {
-      "direction": "input",
+      "direction": "output",
       "bits": 46,
       "count": 1,
       "leaf_bits": 46,
@@ -595,7 +1387,7 @@
       "block": "state"
     },
     "state_command_new_data": {
-      "direction": "input",
+      "direction": "output",
       "bits": 256,
       "count": 1,
       "leaf_bits": 256,
@@ -603,7 +1395,7 @@
       "block": "state"
     },
     "state_command_byte_mask": {
-      "direction": "input",
+      "direction": "output",
       "bits": 32,
       "count": 1,
       "leaf_bits": 32,
@@ -619,7 +1411,7 @@
       "block": "state"
     },
     "state_reply_ready": {
-      "direction": "input",
+      "direction": "output",
       "bits": 1,
       "count": 1,
       "leaf_bits": 1,
@@ -4652,9 +5444,11 @@
     "rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_connector_r5.sv": "a2163a70deb5fd091fdb57d5abdfda5e964a63383b4dfbecd2427ef7cc638439",
     "rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_ingress_r5.sv": "58c20c4a27304af4f31f2cbd3b7acf2f2d40817d733881900089bbad712f80f9",
     "rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_physical_ack_source_r5.sv": "83ba96237297c4cf34c5fbb1a4312b370a13617b6381642358bb18b289269d32",
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_local_cohorts_terminal_ready.sv": "df8651408e4005cf7fb5ad8939995e01f5aa82734a65d714a7ffb4210b37aa9c",
     "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_metadata_join.sv": "6d602e7d832d265cbdcb133337a8c31919f65614078d628a317eb503c46d433f",
     "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_shared_router.sv": "f40fdf52eb6a1a4ab74adbf805cb2d50dd68d090342c1b7049d68f477f77df70",
     "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_observer.sv": "2c1bcffe9d8f9536f23dcccd93e695e174cbdb1b9590f4d37cd2e9db451555f8",
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_rpc_join.sv": "356042fa7868163744168b63937e58ce351fd2f24094ad1987b6826b5caa70f0",
     "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_w2_tap.sv": "dd4b05990a1e581d14769444d3b22a46adc900fa86cfbc0dda84171ed764850b",
     "rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_joined_kv.sv": "48b5ab1c6948c6e748172a7ae5ddb694be32fa9826fb0cb555fc191cd6f2831e",
     "rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_native_consumer_drain.sv": "df9d4483a72d6098189af4350d6791f5778013c44054265651c7bf9de0e3f7de",
@@ -4667,7 +5461,7 @@
     "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv": "04930aa71137a791935c8ccba0dc1f20689e5bff35a214477cd990a87a36c7ef",
     "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
     "rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
-    "rtl/model/qwen_hbm_integrated_20261003/ranked/ot_gpu_qwen_hbm_integrated_ranked.sv": "fcef5b34f5f2c8f3168831405f409dd87fa7fe03e82b137f0a10c8e622b99e83",
+    "rtl/model/qwen_hbm_integrated_20261003/ranked/ot_gpu_qwen_hbm_integrated_ranked.sv": "7a1e553dc9b66837f5fb4edef8579461d6e1fd18b9d193d52642140a80b4fd49",
     "rtl/model/qwen_hbm_integrated_20261003/guarded_sm/ot_gpu_full_sm_service_guarded.sv": "85db24f9e45ab1bb39dd3776465dfcc550f2a4af4e1c23e37399c9f7e744d945",
     "rtl/model/qwen_rf_ack_drain_20261003/r2/ot_gpu_qwen_rf_ack_drain_r2.sv": "4d485a2870f467f872530c48113fae04e59b8a7a729d6378f423582caf48e6e6",
     "rtl/model/qwen_rf_ack_drain_20261003/ot_gpu_qwen_rf_ack_drain_join.sv": "acf213c18d97cf15d928909d67e606739708d9700ef7a98348c51190b7976bcc",
@@ -4686,7 +5480,9 @@
     "guarded_SM_count": 64,
     "RF_cohort_leaf_count": 64,
     "RF_rank_join_count": 2,
-    "STATE_W2_tap_count": 1
+    "STATE_W2_tap_count": 1,
+    "STATE_RPC_count": 1,
+    "local_cohort_count": 2
   },
   "derivation_inputs_sha256": {
     "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_connected_ports.sv": "277e235be66e434e0bafc041c7067927c6f8f92d9de0412e24cbb50ce6de854f",
@@ -4703,6 +5499,9 @@
     "real backend and request/reverse CDC",
     "source issuer allocation, reset/quiescence enrollment",
     "complete1737 operator dispatcher",
+    "Nash actual STATE sector map/grant/source association must drive state_rpc.map_*; no static map or capture-valid readiness",
+    "Native whole scratch-command acceptance/terminal heldowner55 must drive local.stage_root_* and honor NEW root_admit; individual scratch children are not roots",
+    "Nash saved inputrows/allpageACK aggregate and Claude wholeengine actual terminal/reverse/visibility remain mandatory, no PC40 fragment equivalence",
     "Nash actual seven-row barrier/source-lease hardware output",
     "Claude real whole-engine producer/terminal/reverse outputs",
     "actual all-copy cold session quiescence/COMMON reset source binding",
@@ -4721,16 +5520,26 @@
   "token_qualified": false,
   "issuer_model_sha256": "57d19608454aac4372bcaf126058954e6903c097d29515e1d3681d8de5fe76b6",
   "installed_cohorts": {
-    "RF_ACK": 4
+    "RF_ACK": 4,
+    "local_stage": 0,
+    "metadata_RPC": 3
   },
   "overridden_external_input_masks": {
-    "kv_cohort_req_ready": 16,
-    "kv_cohort_rsp_valid": 16,
-    "kv_cohort_rsp_empty": 16,
+    "kv_cohort_req_ready": 25,
+    "kv_cohort_rsp_valid": 25,
+    "kv_cohort_rsp_empty": 25,
     "kv_cohort_rsp_tuple": {
-      "start": 336,
-      "width": 84
+      "cohort_indices": [
+        0,
+        3,
+        4
+      ],
+      "width_per_cohort": 84
     }
+  },
+  "factory_source_sha256": {
+    "tools/gpu_sys/canonical_qwen_state_rpc_join.py": "9dfba5a3b111970b3438e7790332bc8733a10c4c0dc94dd71bd0274cb1ecb542",
+    "tools/gpu_sys/canonical_qwen_ranked_simulator.py": "f126675b79fad9d14fdfd53c3336bf600a6166b7f336699b1a9fd60d27af30fd"
   },
   "rank_contract": {
     "grant_rank_bit": 136,

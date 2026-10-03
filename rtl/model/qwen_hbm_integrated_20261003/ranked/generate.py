@@ -17,6 +17,8 @@ def replace_once(text, old, new):
 
 
 # Exact source pin joins. No owner, ready, ACK or debt is synthesized here.
+RPC_TAP={n:n[4:] for n in ('tap_command_valid','tap_command_ready','tap_command_rank','tap_command_write','tap_command_sector_granted','tap_command_identity','tap_command_source_addr','tap_command_physical_addr','tap_command_owner','tap_command_new_data','tap_command_byte_mask','tap_reply_valid','tap_reply_ready','tap_reply_identity','tap_reply_rank','tap_reply_owner','tap_reply_physical_addr','tap_reply_old_data')}
+
 RF_FROM_SM={n:n for n in ('rf_write_accept','rf_write_owner55','rf_ack_valid','rf_ack_accept','rf_ack_owner55','rf_ack_fault','rf_read_accept','rf_read_a','rf_read_b','rf_rsp_valid','rf_rsp_accept','simd_context_accept','simd_context_owner55','simd_context_retire','simd_retire_owner55','wr_continuation_valid','wr_continuation_source','rd_continuation_valid','rd_continuation_source','rd_context_owner55')}
 RF_FROM_SM.update({n:'wr_context_'+n[3:] for n in ('wr_binding_valid','wr_KV_related','wr_identity','wr_key')})
 RF_FROM_SM.update({n:'rd_context_'+n[3:] for n in ('rd_binding_valid','rd_KV_related','rd_identity','rd_key')})
@@ -37,11 +39,22 @@ def join_pin(pins,prefix,name,expression):
 
 JOINED_ALIASES={}
 def installed_connection(prefix,name,bits,count,pins,expression):
-    if prefix=='kv' and name=='cohort_req_ready':return '(kv_cohort_req_ready & 8\'hef) | ({8{rfcohort_req_ready}} & 8\'h10)'
-    if prefix=='kv' and name=='cohort_rsp_valid':return '(kv_cohort_rsp_valid & 8\'hef) | ({8{rfcohort_rsp_valid}} & 8\'h10)'
-    if prefix=='kv' and name=='cohort_rsp_empty':return '(kv_cohort_rsp_empty & 8\'hef) | ({8{rfcohort_rsp_empty}} & 8\'h10)'
-    if prefix=='kv' and name=='cohort_rsp_tuple':return '{kv_cohort_rsp_tuple[671:420],rfcohort_rsp_tuple,kv_cohort_rsp_tuple[335:0]}'
-    if prefix=='kv' and name=='endpoint_fault':return 'kv_endpoint_fault || (|rfdrain_fault) || (|rfjoin_fault) || rfcohort_tuple_mismatch || state_fault || (|issuer_fault) || issuer_session_fault'
+    if prefix=='kv' and name in ('cohort_req_ready','cohort_rsp_valid','cohort_rsp_empty'):
+        signal={'cohort_req_ready':'local_request_ready','cohort_rsp_valid':'local_response_valid','cohort_rsp_empty':'local_response_quiet'}[name]
+        rf={'cohort_req_ready':'rfcohort_req_ready','cohort_rsp_valid':'rfcohort_rsp_valid','cohort_rsp_empty':'rfcohort_rsp_empty'}[name]
+        return "(kv_%s & 8'hE6) | ({8{%s}} & 8'h10) | {4'b0,%s[1],2'b0,%s[0]}" % (name,rf,signal,signal)
+    if prefix=='kv' and name=='cohort_rsp_tuple':return '{kv_cohort_rsp_tuple[671:420],rfcohort_rsp_tuple,local_response_key[39:20],local_response_identity[127:64],kv_cohort_rsp_tuple[251:84],local_response_key[19:0],local_response_identity[63:0]}'
+    if prefix=='state_rpc' and name in RPC_TAP:
+        if name=='tap_command_ready':return join_pin(pins,prefix,name,'state_command_ready')
+        if name.startswith('tap_reply_') and name!='tap_reply_ready':return join_pin(pins,prefix,name,'state_'+RPC_TAP[name])
+    if prefix=='state' and ('tap_'+name) in RPC_TAP:
+        if name=='command_valid':return join_pin(pins,prefix,name,'state_rpc_tap_command_valid && (!sector_grant_live || state_route_shared)')
+        if name=='command_ready':return 'raw_state_command_ready'
+        if name.startswith('command_') or name=='reply_ready':return join_pin(pins,prefix,name,'state_rpc_tap_'+name)
+    if prefix=='state_rpc' and name in ('root_admit','root_retire_ready'):return join_pin(pins,prefix,name,'local_state_'+name)
+    local_sources={'state_root_accept':'state_rpc_root_accept','state_root_retire':'state_rpc_root_retire','state_root_identity':'state_rpc_root_identity','state_root_retire_identity':'state_rpc_root_retire_identity','shared_router_drained':'kv_shared_drained','writer_retained':'kv_writer_retained','shared_service_ready':'sm_scratch_ready','shared_service_done':'sm_scratch_done','state_tap_quiescent':'state_quiescent','state_observer_drained':'kv_state_observer_drained','metadata_ACK_held':'kv_ACK_valid','metadata_reverse_held':'state_ACK_reverse','metadata_event_held':'kv.c_metadata_valid || kv.c_reader_metadata_valid || kv.event_valid','request_valid':"{kv_cohort_req_valid[3],kv_cohort_req_valid[0]}",'request_identity':'kv_cohort_identity','request_key':'kv_cohort_key','response_ready':"{kv_cohort_rsp_ready[3],kv_cohort_rsp_ready[0]}"}
+    if prefix=='local' and name in local_sources:return join_pin(pins,prefix,name,local_sources[name])
+    if prefix=='kv' and name=='endpoint_fault':return 'kv_endpoint_fault || (|rfdrain_fault) || (|rfjoin_fault) || rfcohort_tuple_mismatch || state_fault || (|issuer_fault) || issuer_session_fault || local_fault || state_rpc_fault'
     if prefix=='rfjoin' and name=='drain_req_valid':return join_pin(pins,prefix,name,'kv_cohort_req_valid[4] && rfcohort_req_ready')
     if prefix=='rfjoin' and name=='drain_req_identity':return join_pin(pins,prefix,name,'kv_cohort_identity')
     if prefix=='rfjoin' and name=='drain_req_key':return join_pin(pins,prefix,name,'kv_cohort_key')
@@ -52,14 +65,20 @@ def installed_connection(prefix,name,bits,count,pins,expression):
         return join_pin(pins,prefix,name,value)
     if prefix=='sm' and name in SM_FROM_RF:
         return join_pin(pins,prefix,name,'rfdrain_'+name+'[i]')
-    if prefix=='state' and name=='command_valid':return 'state_command_valid && !sector_grant_live'
+    if prefix=='state' and name=='command_valid':raise ValueError('RPC command must use installed join')
     if prefix=='state' and name=='command_ready':return 'raw_state_command_ready'
+    if prefix=='sector' and name in ('caller_req_v','caller_rsp_rdy','caller_wr_done_rdy'):
+        permit='state_req_permit' if name=='caller_req_v' else 'state_capture_permit'
+        return f'(w2_{STATE_SELECTED[name]}[selected_index*6 +: 6] & (state_route_shared ? {permit} : 6\'b111111))'
+    if prefix=='state' and name in ('caller_req_v','caller_rsp_rdy','caller_wr_done_rdy'):
+        permit='sector_req_permit' if name=='caller_req_v' else 'sector_capture_permit'
+        return join_pin(pins,prefix,name,f'(w2_{STATE_SELECTED[name]}[selected_index*6 +: 6] & (state_route_shared ? {permit} : 6\'b111111))')
     if prefix=='state' and name in STATE_SELECTED:
         return join_pin(pins,prefix,name,f'w2_{STATE_SELECTED[name]}[selected_index*{bits} +: {bits}]')
     if prefix=='state' and name=='raw_req_rdy':return join_pin(pins,prefix,name,'raw_w2_req_rdy[selected_index*6 +: 6]')
     if prefix=='state' and name=='bus_rank':return join_pin(pins,prefix,name,'selected_index[7]')
     if prefix=='state' and name=='bus_PC':return join_pin(pins,prefix,name,'selected_PC')
-    if prefix=='state' and name=='reverse_valid':return join_pin(pins,prefix,name,'sector_reverse_valid && state_bus_owned')
+    if prefix=='state' and name=='reverse_valid':return join_pin(pins,prefix,name,'sector_reverse_valid && state_bus_owned && (!state_route_shared || payload_reverse_ready)')
     if prefix=='state' and name=='reverse_rank':return join_pin(pins,prefix,name,'sector_reverse_rank')
     if prefix=='state' and name=='reverse_write':return join_pin(pins,prefix,name,'sector_reverse_write')
     if prefix=='state' and name=='reverse_owner':return join_pin(pins,prefix,name,'sector_reverse_route[45:0]')
@@ -93,7 +112,7 @@ def main():
     if issuer_model['tuple_bits']!=239 or issuer_model['inventory']['coded_FF_bits']!=37008:
         raise ValueError('priced issuer dimensions differ')
     text=source.read_text()
-    text=replace_once(text, "BLOCKS = (", "BLOCKS = (\n ('issuer', 'rtl/model/qwen_hbm_integrated_20261003/issuer/r2/ot_gpu_qwen_full_issuer_r2.sv', 'ot_gpu_qwen_full_issuer_r2', 1, '.ENABLE(ENABLE)'),\n ('state', 'rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_w2_tap.sv', 'ot_gpu_qwen_kv_state_w2_tap', 1, '.ENABLE(ENABLE)'),\n ('rfdrain', 'rtl/model/qwen_rf_ack_drain_20261003/r2/ot_gpu_qwen_rf_ack_drain_r2.sv', 'ot_gpu_qwen_rf_ack_drain_r2', 64, '.ENABLE(ENABLE)'),\n ('rfjoin', 'rtl/model/qwen_rf_ack_drain_20261003/ot_gpu_qwen_rf_ack_drain_join.sv', 'ot_gpu_qwen_rf_ack_drain_join', 2, '.ENABLE(ENABLE)'),")
+    text=replace_once(text, "BLOCKS = (", "BLOCKS = (\n ('state_rpc', 'rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_rpc_join.sv', 'ot_gpu_qwen_kv_state_rpc_join', 1, '.ENABLE(ENABLE)'),\n ('local', 'rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_local_cohorts_terminal_ready.sv', 'ot_gpu_qwen_kv_local_cohorts_terminal_ready', 1, '.ENABLE(ENABLE)'),\n ('issuer', 'rtl/model/qwen_hbm_integrated_20261003/issuer/r2/ot_gpu_qwen_full_issuer_r2.sv', 'ot_gpu_qwen_full_issuer_r2', 1, '.ENABLE(ENABLE)'),\n ('state', 'rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_w2_tap.sv', 'ot_gpu_qwen_kv_state_w2_tap', 1, '.ENABLE(ENABLE)'),\n ('rfdrain', 'rtl/model/qwen_rf_ack_drain_20261003/r2/ot_gpu_qwen_rf_ack_drain_r2.sv', 'ot_gpu_qwen_rf_ack_drain_r2', 64, '.ENABLE(ENABLE)'),\n ('rfjoin', 'rtl/model/qwen_rf_ack_drain_20261003/ot_gpu_qwen_rf_ack_drain_join.sv', 'ot_gpu_qwen_rf_ack_drain_join', 2, '.ENABLE(ENABLE)'),")
     text=replace_once(text,'ROOT = Path(__file__).resolve().parents[3]','ROOT = Path(__file__).resolve().parents[4]')
     text=replace_once(text,"128, '.OPT_EXACT(ENABLE),.OPT_RESET_QUARANTINE(ENABLE),.PC_ID(7\\'(i))'", "256, '.OPT_EXACT(ENABLE),.OPT_RESET_QUARANTINE(ENABLE),.PC_ID(7\\'(i%128))'")
     text=text.replace("('sm', W4+'ot_gpu_full_sm_service.sv', 'ot_gpu_full_sm_service', 64, '.ENABLE(ENABLE),.ACK_ID(1)')","('sm', 'rtl/model/qwen_hbm_integrated_20261003/guarded_sm/ot_gpu_full_sm_service_guarded.sv', 'ot_gpu_full_sm_service_guarded', 64, '.ENABLE(ENABLE),.ACK_ID(1),.OPT_CONTEXT(ENABLE),.INSTANCE_ID(i)')")
@@ -118,31 +137,35 @@ def main():
     text=text.replace('selected_PC*{bits}','selected_index*{bits}')
     text=text.replace('raw_w2_req_rdy[selected_PC*6','raw_w2_req_rdy[selected_index*6')
     text=replace_once(text,'wire [6:0] selected_PC = sector_grant_live ? sector_grant_identity[45:39] : sector_map_PC;','wire [6:0] selected_PC;')
-    text=replace_once(text,'wire [767:0] raw_w2_req_rdy', """wire state_bus_owned=!state_quiescent || (state_command_valid && state_command_sector_granted && !sector_grant_live);
+    text=replace_once(text,'wire [767:0] raw_w2_req_rdy', """wire state_route_shared=sector_grant_live &&
+ sector_grant_identity[136]==(state_quiescent ? state_command_rank : state_reply_rank) &&
+ sector_grant_identity[79:46]==(state_quiescent ? state_command_physical_addr : state_reply_physical_addr) &&
+ sector_grant_identity[45:0]==(state_quiescent ? state_command_owner : state_reply_owner);
+wire state_bus_owned=!state_quiescent || (state_command_valid && state_command_sector_granted && (!sector_grant_live || state_route_shared));
 wire [6:0] payload_selected_PC;
 wire [7:0] payload_selected_index;
 wire [7:0] selected_index=state_bus_owned ?
  (state_quiescent ? {state_command_rank,state_command_owner[45:39]} : {state_reply_rank,state_reply_owner[45:39]}) : payload_selected_index;
 assign selected_PC=selected_index[6:0];
 wire payload_alloc_ready,payload_reverse_ready,raw_state_command_ready;
-assign state_command_ready=raw_state_command_ready && !sector_grant_live;
+assign state_command_ready=raw_state_command_ready && (!sector_grant_live || state_route_shared);
 assign sector_alloc_ready=payload_alloc_ready && !state_bus_owned;
-assign sector_reverse_ready=state_bus_owned ? state_reverse_ready : payload_reverse_ready;
+assign sector_reverse_ready=state_bus_owned ? (state_reverse_ready && (!state_route_shared || payload_reverse_ready)) : payload_reverse_ready;
 wire rank_raw_alloc_ready,rank_raw_reverse_ready;
 wire rank_checked_alloc_valid,rank_checked_map_valid,rank_checked_reverse_valid;
 ot_gpu_qwen_rank_boundary #(.ENABLE(ENABLE)) rank_boundary(
  .grant_live(sector_grant_live),.grant_identity(sector_grant_identity),
  .alloc_valid(sector_alloc_valid),.map_valid(sector_map_valid),.map_rank(sector_map_rank),
  .alloc_source(sector_alloc_source),.map_PC(sector_map_PC),.raw_alloc_ready(rank_raw_alloc_ready),
- .reverse_valid(sector_reverse_valid && !state_bus_owned),.reverse_rank(sector_reverse_rank),.raw_reverse_ready(rank_raw_reverse_ready),
+ .reverse_valid(sector_reverse_valid && (!state_bus_owned || (state_route_shared && state_reverse_ready))),.reverse_rank(sector_reverse_rank),.raw_reverse_ready(rank_raw_reverse_ready),
  .alloc_valid_checked(rank_checked_alloc_valid),.map_valid_checked(rank_checked_map_valid),.alloc_ready(payload_alloc_ready),
  .reverse_valid_checked(rank_checked_reverse_valid),.reverse_ready(payload_reverse_ready),
  .selected_PC(payload_selected_PC),.selected_index(payload_selected_index),.rank_refusal(sector_rank_refusal));
 wire [1535:0] raw_w2_req_rdy""")
     text=replace_once(text,'p<128','p<256')
     text=text.replace('selected_PC==p','selected_index==p')
-    text=replace_once(text,"sector_req_permit : 6'b111111","(state_bus_owned ? state_req_permit : sector_req_permit) : 6'b111111")
-    text=replace_once(text,"sector_capture_permit : 6'b111111","(state_bus_owned ? state_capture_permit : sector_capture_permit) : 6'b111111")
+    text=replace_once(text,"sector_req_permit : 6'b111111","(state_bus_owned ? (state_req_permit & (state_route_shared ? sector_req_permit : 6\'b111111)) : sector_req_permit) : 6'b111111")
+    text=replace_once(text,"sector_capture_permit : 6'b111111","(state_bus_owned ? (state_capture_permit & (state_route_shared ? sector_capture_permit : 6\'b111111)) : sector_capture_permit) : 6'b111111")
     text=text.replace('ot_gpu_qwen_hbm_integrated', 'ot_gpu_qwen_hbm_integrated_ranked')
     # The dependency list must select sibling top, not a nonexistent old-path renamed file.
     text=text.replace('rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_hbm_integrated_ranked.sv',
@@ -190,7 +213,7 @@ wire [1535:0] raw_w2_req_rdy""")
     old_issuer='rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv'
     deps.insert(len(deps)-1,old_issuer)
     deps.insert(len(deps)-1,issuer)
-    installed=['rtl/model/qwen_hbm_integrated_20261003/guarded_sm/ot_gpu_full_sm_service_guarded.sv','rtl/model/qwen_rf_ack_drain_20261003/r2/ot_gpu_qwen_rf_ack_drain_r2.sv','rtl/model/qwen_rf_ack_drain_20261003/ot_gpu_qwen_rf_ack_drain_join.sv','rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_w2_tap.sv']
+    installed=['rtl/model/qwen_hbm_integrated_20261003/guarded_sm/ot_gpu_full_sm_service_guarded.sv','rtl/model/qwen_rf_ack_drain_20261003/r2/ot_gpu_qwen_rf_ack_drain_r2.sv','rtl/model/qwen_rf_ack_drain_20261003/ot_gpu_qwen_rf_ack_drain_join.sv','rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_w2_tap.sv','rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_rpc_join.sv','rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_local_cohorts_terminal_ready.sv']
     for dep in installed:deps.insert(len(deps)-1,dep)
     (OUT/'sources.f').write_text('\n'.join(deps)+'\n')
     book=json.loads((OUT/'ports.json').read_text())
@@ -198,9 +221,11 @@ wire [1535:0] raw_w2_req_rdy""")
     book['source_sha256'][old_issuer]=hashlib.sha256((ROOT/old_issuer).read_bytes()).hexdigest()
     book['source_sha256'][issuer]=hashlib.sha256((ROOT/issuer).read_bytes()).hexdigest()
     book['issuer_model_sha256']=hashlib.sha256((BASE/'issuer/r2/model.json').read_bytes()).hexdigest()
-    book['inventory'].update(full_source_issuer_count=1,guarded_SM_count=64,RF_cohort_leaf_count=64,RF_rank_join_count=2,STATE_W2_tap_count=1)
-    book['installed_cohorts']={'RF_ACK':4}
-    book['overridden_external_input_masks']={'kv_cohort_req_ready':16,'kv_cohort_rsp_valid':16,'kv_cohort_rsp_empty':16,'kv_cohort_rsp_tuple':{'start':336,'width':84}}
+    book['inventory'].update(full_source_issuer_count=1,guarded_SM_count=64,RF_cohort_leaf_count=64,RF_rank_join_count=2,STATE_W2_tap_count=1,STATE_RPC_count=1,local_cohort_count=2)
+    book['installed_cohorts']={'RF_ACK':4,'local_stage':0,'metadata_RPC':3}
+    book['overridden_external_input_masks']={'kv_cohort_req_ready':25,'kv_cohort_rsp_valid':25,'kv_cohort_rsp_empty':25,'kv_cohort_rsp_tuple':{'cohort_indices':[0,3,4],'width_per_cohort':84}}
+    book['factory_source_sha256']={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in ('tools/gpu_sys/canonical_qwen_state_rpc_join.py','tools/gpu_sys/canonical_qwen_ranked_simulator.py')}
+    book['unresolved']+=['Nash actual STATE sector map/grant/source association must drive state_rpc.map_*; no static map or capture-valid readiness','Native whole scratch-command acceptance/terminal heldowner55 must drive local.stage_root_* and honor NEW root_admit; individual scratch children are not roots','Nash saved inputrows/allpageACK aggregate and Claude wholeengine actual terminal/reverse/visibility remain mandatory, no PC40 fragment equivalence']
     book['unresolved']+=issuer_model['pending']
     book['source_sha256'][guard]=hashlib.sha256((ROOT/guard).read_bytes()).hexdigest()
     p=str(top.relative_to(ROOT));book['source_sha256'][p]=hashlib.sha256(top.read_bytes()).hexdigest()
