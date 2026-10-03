@@ -76,16 +76,24 @@ def golden_select(vals):
     return sorted(int(i) for i in G.topk_lowest_index(v, min(K, len(v))))
 
 
-def stack_of(p):
-    return (np.asarray(p) >> 4) & 3
+def boundaries(n):
+    """Frozen block8-aligned writer/reader layout; changing N needs migration."""
+    groups = (n + 7) // 8
+    return np.minimum(n, 8 * (np.arange(5) * groups // 4))
+
+
+def stack_of(p, n=None):
+    if n is None:
+        return (np.asarray(p) >> 4) & 3
+    return np.searchsorted(boundaries(n)[1:], np.asarray(p), side="right")
 
 
 # -- vectors -------------------------------------------------------------------------------------------------
-def query_beats(vals_bits):
+def query_beats(vals_bits, contiguous=False):
     """Per stack: list of (last, lv, [(val, pos)] * LI), stack-local ascending, valid prefix per beat."""
     n = len(vals_bits)
     pos = np.arange(n)
-    st = stack_of(pos)
+    st = stack_of(pos, n if contiguous else None)
     out = []
     for s in range(4):
         ps = pos[st == s]
@@ -103,14 +111,14 @@ def query_beats(vals_bits):
     return out
 
 
-def write_queries(d: Path, queries):
+def write_queries(d: Path, queries, contiguous=False):
     """queries: list of float arrays (score values, BF16-exact).  Writes S0..S3 and EXP."""
     fs = [open(d / f"s{s}.txt", "w") for s in range(4)]
     fe = open(d / "exp.txt", "w")
     nexp = 0
     for vals in queries:
         b = bits16(vals)
-        for s, rows in enumerate(query_beats(b)):
+        for s, rows in enumerate(query_beats(b, contiguous)):
             f = fs[s]
             f.write(f"Q {len(rows)}\n")
             for last, lv, lanes in rows:
@@ -212,6 +220,7 @@ def run_select(binary: Path, d: Path, rate=RATE, bubble=0, seed=1):
     t = time.time()
     r = subprocess.run(args, capture_output=True, text=True)
     out = r.stdout + r.stderr
+    (d / f"run_rate{rate}_bubble{bubble}_seed{seed}.log").write_text(out)
     rows = {}
     for m in QRE.finditer(out):
         q = int(m.group(1))
@@ -285,7 +294,7 @@ def bench_select(args):
     work.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(args.seed)
     arrays = [] if args.no_real else real_arrays(Path(args.real_cache) if args.real_cache else None)
-    binary = build(work, SEL_TB, SEL_RTL, "tb_dsrom_edge_select", dict(LI=LI, IW=IW, K=K), jobs=args.jobs)
+    binary = build(work, SEL_TB, SEL_RTL, "tb_dsrom_edge_select", dict(LI=LI, IW=IW, K=K, CONTIGUOUS=int(args.contiguous)), jobs=args.jobs)
     rec = dict(schema="opentallas.dsrom-edge-select.v1", bench=SEL_TB, golden="tools/hdc_golden_v41.py "
                "sorted(topk_lowest_index(s, min(512, n))) on the BF16 index scores", groups={})
     ok = True
@@ -295,7 +304,7 @@ def bench_select(args):
     for gname, cases in groups:
         d = work / gname
         d.mkdir(exist_ok=True)
-        nexp = write_queries(d, [v for _, v in cases])
+        nexp = write_queries(d, [v for _, v in cases], args.contiguous)
         modes = [("hbm_rate", RATE, 0, 1)] + ([("bubbles", RATE, 30, 7), ("mac_rate", 0, 0, 3)]
                                                 if gname == "functional" else [])
         grec = dict(cases=len(cases), expected_positions=nexp, modes={})
@@ -322,7 +331,7 @@ def bench_select(args):
 
 
 # -- the full stack element: score slices + streamed top-K ------------------------------------------------------
-STK_RTL = ["rtl/dsrom_sys/ot_dsrom_idx_edge.sv", "rtl/dsrom_sys/ot_dsrom_edge_lsel.sv",
+STK_RTL = ["rtl/dsrom_sys/ot_dsrom_edge_layout.sv", "rtl/dsrom_sys/ot_dsrom_idx_edge.sv", "rtl/dsrom_sys/ot_dsrom_edge_lsel.sv",
            "rtl/hdc/v41/ot_hdc_tselect.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
            "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
            "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_delay.sv",
@@ -354,20 +363,22 @@ def make_token(rng, n, cls, nb=4, ih=32):
     return IC.finish(tok)
 
 
-def write_stack(d: Path, toks, s, nb=4, ih=32):
+def write_stack(d: Path, toks, s, nb=4, ih=32, contiguous=False):
     """The stack-s files of tb_dsrom_edge_stack for a list of tokens.  Returns (nbeat, ncand, per-token info)."""
     IC = idx_tools()
     d.mkdir(parents=True, exist_ok=True)
     ql, nl, kl, el, cl, info = [], [], [], [], [], []
+    layout_lines = []
     for t in toks:
         n = len(t["keep"])
         for h in range(ih):
             f = [(c, 4) for c in t["qc"][h]] + [(u, 8) for u in t["qu"][h]] + [(int(G.bits(t["w"][h])) >> 16, 16)]
             ql.append(IC.hexline(f))
         pos = np.arange(n)
-        mine = pos[stack_of(pos) == s]
+        mine = pos[stack_of(pos, n if contiguous else None) == s]
         nbq = max(1, -(-len(mine) // LI))
         nl.append(f"{nbq:08x}")
+        layout_lines.append(f"{n:x}")
         for b in range(nbq):
             chunk = mine[b * LI:(b + 1) * LI]
             fields = []
@@ -391,7 +402,7 @@ def write_stack(d: Path, toks, s, nb=4, ih=32):
             cl.append(IC.hexline([(int(sc[i]), 16), (int(mine[i]), IW)]))
         info.append(dict(n=n, stack_keys=int(len(mine)), beats=nbq, candidates=len(loc),
                          faults=int(np.sum(t["fault"][mine])) if len(mine) else 0))
-    for name, lines in (("st_q.mem", ql), ("st_n.mem", nl), ("st_k.mem", kl), ("st_e.mem", el), ("st_c.mem", cl)):
+    for name, lines in (("st_q.mem", ql), ("st_n.mem", nl), ("st_k.mem", kl), ("st_e.mem", el), ("st_c.mem", cl), ("st_layout.mem", layout_lines)):
         (d / name).write_text("\n".join(lines) + "\n")
     return len(kl), len(cl), info
 
@@ -401,6 +412,7 @@ def run_stack(binary: Path, d: Path, nq, nbeat, ncand, s, rate=RATE):
     r = subprocess.run([str(binary), f"+NQ={nq}", f"+NBEAT={nbeat}", f"+NCAND={ncand}", f"+STACK={s}",
                         f"+RATE={rate}"], cwd=d, capture_output=True, text=True)
     out = r.stdout + r.stderr
+    (d / f"run_stack{s}_rate{rate}.log").write_text(out)
     m = re.search(r"STDONE queries=(\d+) checked=(\d+) score_errors=(\d+) faults=(\d+) cand_errors=(\d+)", out)
     rows = []
     for mm in STRE.finditer(out):
@@ -418,7 +430,7 @@ def bench_score(args):
     work = Path(args.work) / "score"
     work.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(args.seed + 1)
-    params = dict(NSL=4, NK=4, NB=4, IH=32, IW=IW, K=K, FPL=7, FML=5, QL=5, MAXQ=64, MAXB=1 << 13, MAXC=1 << 14)
+    params = dict(NSL=4, NK=4, NB=4, IH=32, IW=IW, K=K, FPL=7, FML=5, QL=5, MAXQ=64, MAXB=1 << 13, MAXC=1 << 14, CONTIGUOUS=int(args.contiguous))
     if args.contexts:
         params["MAXB"] = 1 << 13
     binary = build(work, STK_TB, STK_RTL, "tb_dsrom_edge_stack", params, jobs=args.jobs)
@@ -441,10 +453,12 @@ def bench_score(args):
         grec = dict(tokens=[dict(n=len(t["keep"]), cls=t["cls"]) for t in toks], stacks={})
         for s in range(4):
             d = work / gname / f"s{s}"
-            nbeat, ncand, info = write_stack(d, toks, s)
+            nbeat, ncand, info = write_stack(d, toks, s, contiguous=args.contiguous)
             r = run_stack(binary, d, len(toks), nbeat, ncand, s)
             sp = bool(r["rc"] == 0 and r.get("queries") == len(toks) and r.get("score_errors") == 0 and
-                      r.get("cand_errors") == 0)
+                      r.get("cand_errors") == 0 and r.get("checked") == sum(i["stack_keys"] for i in info) and
+                      r.get("faults") == sum(i["faults"] for i in info) and len(r["rows"]) == len(info) and
+                      all(row["fault"] == bool(i["faults"]) for row, i in zip(r["rows"], info)))
             ok &= sp
             grec["stacks"][s] = dict(passed=sp, info=info, **r)
             print(gname, "stack", s, "pass" if sp else "FAIL", r.get("checked"), r.get("score_errors"),
@@ -461,6 +475,7 @@ def main() -> int:
     ap.add_argument("--out")
     ap.add_argument("--seed", type=int, default=20261003)
     ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--contiguous", action="store_true", help="opt-in frozen block8 contiguous layout + concat")
     ap.add_argument("--no-real", action="store_true")
     ap.add_argument("--real-cache")
     ap.add_argument("--jobs", type=int, default=8)
@@ -472,7 +487,7 @@ def main() -> int:
                           "tools/rtl_hdc_v41x_idx_campaign.py"]
     t = time.time()
     rec = bench_select(args) if args.bench == "select" else bench_score(args)
-    rec.update(git_head=git_head(), dirty=dirty(srcs), source_sha256={s: sha(s) for s in sorted(set(srcs))},
+    rec.update(contiguous=args.contiguous, git_head=git_head(), dirty=dirty(srcs), source_sha256={s: sha(s) for s in sorted(set(srcs))},
                verilator=subprocess.run([VERILATOR, "--version"], capture_output=True, text=True).stdout.strip(),
                wall_s=round(time.time() - t, 1), argv=sys.argv[1:])
     out = Path(args.out) if args.out else OUT / f"{args.bench}.json"

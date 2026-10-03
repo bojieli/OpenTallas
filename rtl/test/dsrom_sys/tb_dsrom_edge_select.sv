@@ -22,7 +22,7 @@ module tb_dsrom_edge_select
     reg clk = 1'b0;
     always #0.5 clk = !clk;
 `endif
-    parameter integer LI = 16, W = 64, VW = 16, IW = 20, K = 512, NC = 32, FA = 7, LO = 16, MACRO = 0;
+    parameter integer LI = 16, W = 64, VW = 16, IW = 20, K = 512, NC = 32, FA = 7, LO = 16, MACRO = 0, CONTIGUOUS = 0;
 
     reg               rst_n = 1'b0;
     reg               start = 1'b0;
@@ -54,7 +54,7 @@ module tb_dsrom_edge_select
                 .st_stall(ss[32*g +: 32]));
         end
     endgenerate
-    ot_dsrom_edge_hub #(.WM(LO), .W(W), .VW(VW), .IW(IW), .K(K), .MACRO(MACRO)) u_hub (
+    ot_dsrom_edge_hub #(.WM(LO), .W(W), .VW(VW), .IW(IW), .K(K), .MACRO(MACRO), .CONTIGUOUS(CONTIGUOUS)) u_hub (
         .clk(clk), .rst_n(rst_n), .start(start),
         .i_valid(cv), .i_ready(cr), .i_last(cl), .i_lv(clv), .i_val(cval), .i_idx(cidx),
         .o_valid(ov), .o_last(ol), .o_lv(olv), .o_val(oval), .o_idx(oidx), .busy(hb));
@@ -123,18 +123,6 @@ module tb_dsrom_edge_select
                      phase, iv, ir, sb, hb, cv, cr, left[0], left[1], left[2], left[3], have[0], have[1], have[2], have[3], got);
             $display("EDGE lsel0 fs=%0d fcnt=%0d in_done=%b scan=%b emitted=%b sn=%0d tbusy=%b", g_s[0].u.fs, g_s[0].u.fcnt,
                      g_s[0].u.in_done, g_s[0].u.scan, g_s[0].u.emitted, g_s[0].u.sn, g_s[0].u.t_busy);
-            $display("EDGE leaf0 wa=%0d pa=%0d ea=%b wb=%0d pb=%0d eb=%b done=%b fc=%0d infl=%0d | leaf1 wa=%0d pa=%0d ea=%b wb=%0d pb=%0d eb=%b done=%b | root wa=%0d pa=%0d ea=%b wb=%0d pb=%0d eb=%b done=%b fc=%0d | p_v=%b tsel_state=%0d",
-                u_hub.u_merge.g_leaf[0].u_m.wa, u_hub.u_merge.g_leaf[0].u_m.pa, u_hub.u_merge.g_leaf[0].u_m.ea,
-                u_hub.u_merge.g_leaf[0].u_m.wb, u_hub.u_merge.g_leaf[0].u_m.pb, u_hub.u_merge.g_leaf[0].u_m.eb,
-                u_hub.u_merge.g_leaf[0].u_m.done, u_hub.u_merge.g_leaf[0].u_m.fc, u_hub.u_merge.g_leaf[0].u_m.infl,
-                u_hub.u_merge.g_leaf[1].u_m.wa, u_hub.u_merge.g_leaf[1].u_m.pa, u_hub.u_merge.g_leaf[1].u_m.ea,
-                u_hub.u_merge.g_leaf[1].u_m.wb, u_hub.u_merge.g_leaf[1].u_m.pb, u_hub.u_merge.g_leaf[1].u_m.eb,
-                u_hub.u_merge.g_leaf[1].u_m.done,
-                u_hub.u_merge.u_root.wa, u_hub.u_merge.u_root.pa, u_hub.u_merge.u_root.ea,
-                u_hub.u_merge.u_root.wb, u_hub.u_merge.u_root.pb, u_hub.u_merge.u_root.eb, u_hub.u_merge.u_root.done,
-                u_hub.u_merge.u_root.fc, u_hub.p_v, u_hub.u_tsel.state);
-            $display("EDGE root x=%0d lt=%b na=%0d nb=%0d wia0=%h wib15=%h xb=%0d fin=%b", u_hub.u_merge.u_root.x, u_hub.u_merge.u_root.lt, u_hub.u_merge.u_root.na, u_hub.u_merge.u_root.nb, u_hub.u_merge.u_root.wia[36:0], u_hub.u_merge.u_root.wib[15*37 +: 37], u_hub.u_merge.u_root.xb, u_hub.u_merge.u_root.fin);
-            $display("EDGE t_in_ready=%b init=%0d root_go=%b room=%b sh_a=%b sh_b=%b m_v=%b m_r=%b pq=%0d p_l=%b", u_hub.t_in_ready, u_hub.u_tsel.init, u_hub.u_merge.u_root.go, u_hub.u_merge.u_root.room, u_hub.u_merge.u_root.sh_a, u_hub.u_merge.u_root.sh_b, u_hub.m_v, u_hub.m_r, u_hub.pq, u_hub.p_l);
             $finish;
         end
         if (rst_n && phase == 0 && cyc > 16) begin

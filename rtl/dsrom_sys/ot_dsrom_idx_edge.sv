@@ -37,12 +37,15 @@ module ot_dsrom_edge_stack #(
     parameter integer NC    = 32,
     parameter integer FA    = 7,
     parameter integer LO    = 16,
-    parameter integer MACRO = 0
+    parameter integer MACRO = 0,
+    parameter integer CONTIGUOUS = 0
 ) (
     input  wire                      clk,
     input  wire                      rst_n,
     input  wire [1:0]                stack_id,
     input  wire                      start,
+    input  wire [IW:0]               layout_n,
+    input  wire                      layout_installed,
     // q load (broadcast from the hub, one head per cycle, before the scan)
     input  wire                      ql_v,
     output wire                      ql_ready,
@@ -73,13 +76,24 @@ module ot_dsrom_edge_stack #(
     output wire [31:0]               st_stall
 );
     localparam integer LI = NSL * NK;
+    reg [IW:0] n_q;
+    reg installed_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin n_q <= 0; installed_q <= 0; end
+        else if (start) begin n_q <= layout_n; installed_q <= layout_installed; end
+    end
+    wire [4*(IW+1)-1:0] bases, counts;
+    ot_dsrom_edge_layout #(.IW(IW)) u_map (.n(n_q), .position({IW{1'b0}}),
+        .bases(bases), .counts(counts), .stack(), .local_row(), .valid());
+    wire [IW:0] stack_base = bases[(IW+1)*stack_id +: IW+1];
+    wire [IW:0] stack_count = counts[(IW+1)*stack_id +: IW+1];
     // global positions of the beat's slots
     wire [LI*IW-1:0] gidx;
     genvar g;
     generate
         for (g = 0; g < LI; g = g + 1) begin : g_ix
             localparam [IW-1:0] L = g;
-            assign gidx[IW*g +: IW] = {k_first[IW-1:4], 6'd0} + {{(IW-6){1'b0}}, stack_id, 4'd0} + L;
+            assign gidx[IW*g +: IW] = CONTIGUOUS ? stack_base + k_first + L : {k_first[IW-1:4], 6'd0} + {{(IW-6){1'b0}}, stack_id, 4'd0} + L;
         end
     endgenerate
 
@@ -105,11 +119,18 @@ module ot_dsrom_edge_stack #(
         .out_idx(c_idx), .busy(busy), .st_folds(st_folds), .st_pass(st_pass), .st_lines(st_lines),
         .st_stall(st_stall));
 
+    reg bad_range;
+    integer lane;
+    always @* begin
+        bad_range = !installed_q;
+        for (lane=0; lane<LI; lane=lane+1)
+            if (k_kv[lane] && ({1'b0,k_first}+lane >= stack_count)) bad_range=1'b1;
+    end
     // a refused or faulted key (golden intermediate not finite) fails the query closed
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
-        else if (start) fault <= 1'b0;
-        else if ((s_valid && s_ready && |(s_fault & s_kv)) || s_pf) fault <= 1'b1;
+        else if (start) fault <= CONTIGUOUS && !layout_installed;
+        else if ((CONTIGUOUS && k_valid && k_ready && bad_range) || (s_valid && s_ready && |(s_fault & s_kv)) || s_pf) fault <= 1'b1;
     end
 endmodule
 
@@ -128,11 +149,14 @@ module ot_dsrom_idx_edge #(
     parameter integer NC    = 32,
     parameter integer FA    = 7,
     parameter integer LO    = 16,
-    parameter integer MACRO = 0
+    parameter integer MACRO = 0,
+    parameter integer CONTIGUOUS = 0
 ) (
     input  wire                        clk,
     input  wire                        rst_n,
     input  wire                        start,
+    input  wire [IW:0]                 layout_n,
+    input  wire                        layout_installed,
     input  wire                        ql_v,
     output wire                        ql_ready,
     input  wire [7:0]                  ql_head,
@@ -171,8 +195,8 @@ module ot_dsrom_idx_edge #(
         for (s = 0; s < 4; s = s + 1) begin : g_stack
             localparam [1:0] SID = s;
             ot_dsrom_edge_stack #(.NSL(NSL), .NK(NK), .NB(NB), .IH(IH), .IW(IW), .K(K), .FPL(FPL), .FML(FML),
-                                  .QL(QL), .NC(NC), .FA(FA), .LO(LO), .MACRO(MACRO)) u_st (
-                .clk(clk), .rst_n(rst_n), .stack_id(SID), .start(start),
+                                  .QL(QL), .NC(NC), .FA(FA), .LO(LO), .MACRO(MACRO), .CONTIGUOUS(CONTIGUOUS)) u_st (
+                .clk(clk), .rst_n(rst_n), .stack_id(SID), .start(start), .layout_n(layout_n), .layout_installed(layout_installed),
                 .ql_v(ql_v && ql_ready), .ql_ready(qr[s]), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc),
                 .ql_w(ql_w),
                 .k_valid(k_valid[s]), .k_ready(k_ready[s]), .k_last(k_last[s]), .k_first(k_first[IW*s +: IW]),
@@ -184,7 +208,7 @@ module ot_dsrom_idx_edge #(
                 .st_stall(st_stall[32*s +: 32]));
         end
     endgenerate
-    ot_dsrom_edge_hub #(.WM(LO), .W(64), .VW(16), .IW(IW), .K(K), .MACRO(MACRO)) u_hub (
+    ot_dsrom_edge_hub #(.WM(LO), .W(64), .VW(16), .IW(IW), .K(K), .MACRO(MACRO), .CONTIGUOUS(CONTIGUOUS)) u_hub (
         .clk(clk), .rst_n(rst_n), .start(start),
         .i_valid(cv), .i_ready(cr), .i_last(cl), .i_lv(clv), .i_val(cval), .i_idx(cidx),
         .o_valid(o_valid), .o_last(o_last), .o_lv(o_lv), .o_val(o_val), .o_idx(o_idx), .busy(hb));

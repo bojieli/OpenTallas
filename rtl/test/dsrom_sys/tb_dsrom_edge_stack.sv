@@ -15,13 +15,14 @@
 // RATE (keys/cycle the HBM service offers, credit model; 0 = every cycle).
 module tb_dsrom_edge_stack #(
     parameter integer NSL = 4, NK = 4, NB = 4, IH = 32, IW = 20, K = 512,
-    parameter integer FPL = 7, FML = 5, QL = 5, MACRO = 0,
+    parameter integer FPL = 7, FML = 5, QL = 5, MACRO = 0, CONTIGUOUS = 0,
     parameter integer MAXQ = 64, MAXB = 1 << 15, MAXC = 1 << 15
 ) (input wire clk);
     localparam integer LI = NSL * NK;
     localparam integer KB = NB * 136;
     localparam integer QW = 16 + NB * 8 + NB * 128;
     reg [QW-1:0]        qm [0:MAXQ*IH-1];
+    reg [IW:0]          layouts [0:MAXQ-1];
     reg [31:0]          nm [0:MAXQ-1];
     reg [2*LI+LI*KB-1:0] km [0:MAXB-1];
     reg [16:0]          em [0:MAXB*LI-1];
@@ -35,6 +36,7 @@ module tb_dsrom_edge_stack #(
         if (!$value$plusargs("RATE=%d", rate)) rate = 11;
         $readmemh("st_q.mem", qm, 0, nq * IH - 1);
         $readmemh("st_n.mem", nm, 0, nq - 1);
+        if (CONTIGUOUS) $readmemh("st_layout.mem", layouts, 0, nq - 1);
         $readmemh("st_k.mem", km, 0, nbeat - 1);
         $readmemh("st_e.mem", em, 0, nbeat * LI - 1);
         $readmemh("st_c.mem", cm, 0, ncand - 1);
@@ -58,8 +60,8 @@ module tb_dsrom_edge_stack #(
     wire [16*IW-1:0]  c_idx;
     wire [31:0]       st_folds, st_pass, st_stall;
     ot_dsrom_edge_stack #(.NSL(NSL), .NK(NK), .NB(NB), .IH(IH), .IW(IW), .K(K), .FPL(FPL), .FML(FML), .QL(QL),
-                          .LO(16), .MACRO(MACRO)) dut (
-        .clk(clk), .rst_n(rst_n), .stack_id(stack[1:0]), .start(start),
+                          .LO(16), .MACRO(MACRO), .CONTIGUOUS(CONTIGUOUS)) dut (
+        .clk(clk), .rst_n(rst_n), .stack_id(stack[1:0]), .start(start), .layout_n(layouts[q]), .layout_installed(1'b1),
         .ql_v(ql_v), .ql_ready(ql_ready), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc), .ql_w(ql_w),
         .k_valid(k_valid), .k_ready(k_ready), .k_last(k_last), .k_first(k_first), .k_kv(k_kv),
         .k_keep(k_keep), .k_ref({LI{1'b0}}), .k_key(k_key),

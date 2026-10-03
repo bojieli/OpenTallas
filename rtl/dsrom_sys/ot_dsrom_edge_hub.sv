@@ -24,7 +24,8 @@ module ot_dsrom_edge_hub #(
     parameter integer VW    = 16,
     parameter integer IW    = 20,
     parameter integer K     = 512,
-    parameter integer MACRO = 0
+    parameter integer MACRO = 0,
+    parameter integer CONTIGUOUS = 0
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -53,10 +54,27 @@ module ot_dsrom_edge_hub #(
     wire [WM-1:0]     m_lv;
     wire [WM*IW-1:0]  m_idx;
     wire [WM*VW-1:0]  m_val;
-    ot_dsrom_edge_merge4 #(.W(WM), .IW(IW), .PW(VW)) u_merge (
-        .clk(clk), .rst_n(rst_n), .start(start),
-        .i_valid(i_valid), .i_ready(i_ready), .i_last(i_last), .i_lv(i_lv), .i_idx(i_idx), .i_pay(i_val),
-        .o_valid(m_v), .o_ready(m_r), .o_last(m_l), .o_lv(m_lv), .o_idx(m_idx), .o_pay(m_val));
+    generate if (CONTIGUOUS != 0) begin : g_concat
+        // Lists are disjoint contiguous ranges, already position ordered.
+        // Consume the empty terminal beat too; only stack 3 ends the union.
+        reg [2:0] side;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) side <= 0;
+            else if (start) side <= 0;
+            else if (m_v && m_r && i_last[side[1:0]]) side <= side + 1'b1;
+        end
+        assign m_v = side < 4 && i_valid[side[1:0]];
+        assign m_l = side == 3 && i_last[side[1:0]];
+        assign m_lv = i_lv[WM*side[1:0] +: WM];
+        assign m_idx = i_idx[WM*IW*side[1:0] +: WM*IW];
+        assign m_val = i_val[WM*VW*side[1:0] +: WM*VW];
+        assign i_ready = side < 4 ? (4'b0001 << side[1:0]) & {4{m_r}} : 4'b0;
+    end else begin : g_roundrobin
+        ot_dsrom_edge_merge4 #(.W(WM), .IW(IW), .PW(VW)) u_merge (
+            .clk(clk), .rst_n(rst_n), .start(start),
+            .i_valid(i_valid), .i_ready(i_ready), .i_last(i_last), .i_lv(i_lv), .i_idx(i_idx), .i_pay(i_val),
+            .o_valid(m_v), .o_ready(m_r), .o_last(m_l), .o_lv(m_lv), .o_idx(m_idx), .o_pay(m_val));
+    end endgenerate
 
     // -- pack WM-lane beats into W-lane lines ----------------------------------------------------
     reg              p_v, p_l;
