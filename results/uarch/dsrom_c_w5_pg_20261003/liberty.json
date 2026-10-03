@@ -1,0 +1,2312 @@
+{
+  "cells": {
+    "AND2x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.21222e-10
+    },
+    "AND2x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.37702e-09
+    },
+    "AND2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.73001e-10
+    },
+    "AND2x4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.42443e-10
+    },
+    "AND2x4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.75404e-09
+    },
+    "AND2x4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.4600099999999995e-10
+    },
+    "AND2x6_ASAP7_75t_R/FF": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.352e-10
+    },
+    "AND2x6_ASAP7_75t_R/SS": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.67646e-09
+    },
+    "AND2x6_ASAP7_75t_R/TT": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.52653e-10
+    },
+    "AND3x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.06467e-10
+    },
+    "AND3x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.33687e-09
+    },
+    "AND3x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.00304e-10
+    },
+    "AND3x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.52851e-10
+    },
+    "AND3x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.79063e-09
+    },
+    "AND3x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.53631e-10
+    },
+    "AND3x4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.51733e-10
+    },
+    "AND3x4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.75714e-09
+    },
+    "AND3x4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.6488299999999996e-10
+    },
+    "AND4x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.26498e-10
+    },
+    "AND4x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.2982e-09
+    },
+    "AND4x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.49297e-10
+    },
+    "AND4x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.72882e-10
+    },
+    "AND4x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.75235e-09
+    },
+    "AND4x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.02626e-10
+    },
+    "AND5x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.17535e-10
+    },
+    "AND5x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.66021e-09
+    },
+    "AND5x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.1919999999999998e-10
+    },
+    "AND5x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.03123e-10
+    },
+    "AND5x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.72101e-09
+    },
+    "AND5x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.59285e-10
+    },
+    "BUFx10_ASAP7_75t_R/FF": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.96771e-10
+    },
+    "BUFx10_ASAP7_75t_R/SS": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.05181e-08
+    },
+    "BUFx10_ASAP7_75t_R/TT": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.3124e-10
+    },
+    "BUFx12_ASAP7_75t_R/FF": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.88347e-10
+    },
+    "BUFx12_ASAP7_75t_R/SS": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.24404e-08
+    },
+    "BUFx12_ASAP7_75t_R/TT": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.378909999999999e-10
+    },
+    "BUFx12f_ASAP7_75t_R/FF": {
+      "area_library_units": 0.26244,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.27236e-10
+    },
+    "BUFx12f_ASAP7_75t_R/SS": {
+      "area_library_units": 0.26244,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.33469e-08
+    },
+    "BUFx12f_ASAP7_75t_R/TT": {
+      "area_library_units": 0.26244,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 8.35876e-10
+    },
+    "BUFx16f_ASAP7_75t_R/FF": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 8.10389e-10
+    },
+    "BUFx16f_ASAP7_75t_R/SS": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7191599999999998e-08
+    },
+    "BUFx16f_ASAP7_75t_R/TT": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.04918e-09
+    },
+    "BUFx24_ASAP7_75t_R/FF": {
+      "area_library_units": 0.4374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.17669e-09
+    },
+    "BUFx24_ASAP7_75t_R/SS": {
+      "area_library_units": 0.4374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.48808e-08
+    },
+    "BUFx24_ASAP7_75t_R/TT": {
+      "area_library_units": 0.4374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.4757799999999998e-09
+    },
+    "BUFx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.0454099999999999e-10
+    },
+    "BUFx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.2244899999999996e-09
+    },
+    "BUFx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.39314e-10
+    },
+    "BUFx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.56809e-10
+    },
+    "BUFx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.3367399999999998e-09
+    },
+    "BUFx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.08969e-10
+    },
+    "BUFx4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.96118e-10
+    },
+    "BUFx4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.1468199999999995e-09
+    },
+    "BUFx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.45965e-10
+    },
+    "BUFx4f_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.0908199999999998e-10
+    },
+    "BUFx4f_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.448979999999999e-09
+    },
+    "BUFx4f_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.78629e-10
+    },
+    "BUFx5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.4838499999999996e-10
+    },
+    "BUFx5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.25906e-09
+    },
+    "BUFx5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.1562e-10
+    },
+    "BUFx6f_ASAP7_75t_R/FF": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.13618e-10
+    },
+    "BUFx6f_ASAP7_75t_R/SS": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.6734700000000005e-09
+    },
+    "BUFx6f_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.17938e-10
+    },
+    "BUFx8_ASAP7_75t_R/FF": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.92235e-10
+    },
+    "BUFx8_ASAP7_75t_R/SS": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 8.293639999999999e-09
+    },
+    "BUFx8_ASAP7_75t_R/TT": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.91931e-10
+    },
+    "CKINVDCx10_ASAP7_75t_R/FF": {
+      "area_library_units": 0.34992,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.717859999999999e-10
+    },
+    "CKINVDCx10_ASAP7_75t_R/SS": {
+      "area_library_units": 0.34992,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.623850000000001e-09
+    },
+    "CKINVDCx10_ASAP7_75t_R/TT": {
+      "area_library_units": 0.34992,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.4465e-10
+    },
+    "CKINVDCx11_ASAP7_75t_R/FF": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.1758e-10
+    },
+    "CKINVDCx11_ASAP7_75t_R/SS": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.05849e-08
+    },
+    "CKINVDCx11_ASAP7_75t_R/TT": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.9798e-10
+    },
+    "CKINVDCx12_ASAP7_75t_R/FF": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.63363e-10
+    },
+    "CKINVDCx12_ASAP7_75t_R/SS": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.1546e-08
+    },
+    "CKINVDCx12_ASAP7_75t_R/TT": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.512999999999999e-10
+    },
+    "CKINVDCx14_ASAP7_75t_R/FF": {
+      "area_library_units": 0.40824,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.549389999999999e-10
+    },
+    "CKINVDCx14_ASAP7_75t_R/SS": {
+      "area_library_units": 0.40824,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.34681e-08
+    },
+    "CKINVDCx14_ASAP7_75t_R/TT": {
+      "area_library_units": 0.40824,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.57951e-10
+    },
+    "CKINVDCx16_ASAP7_75t_R/FF": {
+      "area_library_units": 0.4374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.46515e-10
+    },
+    "CKINVDCx16_ASAP7_75t_R/SS": {
+      "area_library_units": 0.4374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.53903e-08
+    },
+    "CKINVDCx16_ASAP7_75t_R/TT": {
+      "area_library_units": 0.4374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 8.64602e-10
+    },
+    "CKINVDCx20_ASAP7_75t_R/FF": {
+      "area_library_units": 0.55404,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.343029999999999e-10
+    },
+    "CKINVDCx20_ASAP7_75t_R/SS": {
+      "area_library_units": 0.55404,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.9238900000000002e-08
+    },
+    "CKINVDCx20_ASAP7_75t_R/TT": {
+      "area_library_units": 0.55404,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.0817e-09
+    },
+    "CKINVDCx5p33_ASAP7_75t_R/FF": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.58124e-10
+    },
+    "CKINVDCx5p33_ASAP7_75t_R/SS": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.13885e-09
+    },
+    "CKINVDCx5p33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.95811e-10
+    },
+    "CKINVDCx6p67_ASAP7_75t_R/FF": {
+      "area_library_units": 0.34992,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.1917899999999997e-10
+    },
+    "CKINVDCx6p67_ASAP7_75t_R/SS": {
+      "area_library_units": 0.34992,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.42028e-09
+    },
+    "CKINVDCx6p67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.34992,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.66915e-10
+    },
+    "CKINVDCx8_ASAP7_75t_R/FF": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.8020999999999997e-10
+    },
+    "CKINVDCx8_ASAP7_75t_R/SS": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.7017e-09
+    },
+    "CKINVDCx8_ASAP7_75t_R/TT": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.3799900000000003e-10
+    },
+    "CKINVDCx9p33_ASAP7_75t_R/FF": {
+      "area_library_units": 0.40824,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.41288e-10
+    },
+    "CKINVDCx9p33_ASAP7_75t_R/SS": {
+      "area_library_units": 0.40824,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 8.98315e-09
+    },
+    "CKINVDCx9p33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.40824,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.09122e-10
+    },
+    "DFFASRHQNx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.20297e-10
+    },
+    "DFFASRHQNx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.155779999999999e-09
+    },
+    "DFFASRHQNx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.40003e-10
+    },
+    "DFFHQNx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7514099999999998e-10
+    },
+    "DFFHQNx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.7075799999999997e-09
+    },
+    "DFFHQNx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.60532e-10
+    },
+    "DFFHQNx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.20929e-10
+    },
+    "DFFHQNx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.66882e-09
+    },
+    "DFFHQNx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.13859e-10
+    },
+    "DFFHQNx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.66718e-10
+    },
+    "DFFHQNx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.63007e-09
+    },
+    "DFFHQNx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.67185e-10
+    },
+    "DFFHQx4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.6559e-10
+    },
+    "DFFHQx4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.832659999999999e-09
+    },
+    "DFFHQx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.224429999999999e-10
+    },
+    "DFFLQNx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7514099999999998e-10
+    },
+    "DFFLQNx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.7076e-09
+    },
+    "DFFLQNx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.60532e-10
+    },
+    "DFFLQNx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.20929e-10
+    },
+    "DFFLQNx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.6688500000000005e-09
+    },
+    "DFFLQNx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.13859e-10
+    },
+    "DFFLQNx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.66718e-10
+    },
+    "DFFLQNx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.63009e-09
+    },
+    "DFFLQNx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.67185e-10
+    },
+    "DFFLQx4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.6559e-10
+    },
+    "DFFLQx4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.83264e-09
+    },
+    "DFFLQx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.224429999999999e-10
+    },
+    "DHLx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.30814e-10
+    },
+    "DHLx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.82727e-09
+    },
+    "DHLx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.04994e-10
+    },
+    "DHLx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7486099999999999e-10
+    },
+    "DHLx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.78907e-09
+    },
+    "DHLx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.56668e-10
+    },
+    "DHLx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.24786,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.2065e-10
+    },
+    "DHLx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.24786,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.75087e-09
+    },
+    "DHLx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.24786,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.09995e-10
+    },
+    "DLLx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.30814e-10
+    },
+    "DLLx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.82725e-09
+    },
+    "DLLx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.04994e-10
+    },
+    "DLLx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7486099999999999e-10
+    },
+    "DLLx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.78905e-09
+    },
+    "DLLx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.56668e-10
+    },
+    "DLLx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.24786,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.2065e-10
+    },
+    "DLLx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.24786,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.75085e-09
+    },
+    "DLLx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.24786,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.09995e-10
+    },
+    "FAx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.2043700000000002e-10
+    },
+    "FAx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.84061e-09
+    },
+    "FAx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.29752e-10
+    },
+    "HAxp5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.14736e-10
+    },
+    "HAxp5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.3648400000000003e-09
+    },
+    "HAxp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.50756e-10
+    },
+    "HB1xp67_ASAP7_75t_R/FF": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.70128e-11
+    },
+    "HB1xp67_ASAP7_75t_R/SS": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.9186e-10
+    },
+    "HB1xp67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.1886e-11
+    },
+    "HB2xp67_ASAP7_75t_R/FF": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.32328e-11
+    },
+    "HB2xp67_ASAP7_75t_R/SS": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.01153e-10
+    },
+    "HB2xp67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.17821e-11
+    },
+    "HB3xp67_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.33471e-11
+    },
+    "HB3xp67_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.7946e-10
+    },
+    "HB3xp67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.0097499999999994e-11
+    },
+    "HB4xp67_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.38037e-11
+    },
+    "HB4xp67_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.698060000000001e-10
+    },
+    "HB4xp67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.95853e-11
+    },
+    "ICGx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.26244,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.48747e-10
+    },
+    "ICGx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.26244,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.50726e-09
+    },
+    "ICGx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.26244,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.9390699999999996e-10
+    },
+    "ICGx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.27702,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.94535e-10
+    },
+    "ICGx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.27702,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.96065e-09
+    },
+    "ICGx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.27702,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.47233e-10
+    },
+    "ICGx2p67DC_ASAP7_75t_R/FF": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.065410000000001e-10
+    },
+    "ICGx2p67DC_ASAP7_75t_R/SS": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.49306e-08
+    },
+    "ICGx2p67DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.37506e-10
+    },
+    "ICGx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.40324e-10
+    },
+    "ICGx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.793399999999999e-09
+    },
+    "ICGx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.00559e-10
+    },
+    "ICGx4DC_ASAP7_75t_R/FF": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.324589999999999e-10
+    },
+    "ICGx4DC_ASAP7_75t_R/SS": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.55351e-08
+    },
+    "ICGx4DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.0086e-09
+    },
+    "ICGx4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.86112e-10
+    },
+    "ICGx4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.754609999999999e-09
+    },
+    "ICGx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.53885e-10
+    },
+    "ICGx5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.319e-10
+    },
+    "ICGx5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 8.715819999999999e-09
+    },
+    "ICGx5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.07211e-10
+    },
+    "ICGx5p33DC_ASAP7_75t_R/FF": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.583769999999999e-10
+    },
+    "ICGx5p33DC_ASAP7_75t_R/SS": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.61397e-08
+    },
+    "ICGx5p33DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.0797000000000001e-09
+    },
+    "ICGx6p67DC_ASAP7_75t_R/FF": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.006849999999999e-10
+    },
+    "ICGx6p67DC_ASAP7_75t_R/SS": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.6744200000000002e-08
+    },
+    "ICGx6p67DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.15079e-09
+    },
+    "ICGx8DC_ASAP7_75t_R/FF": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.617279999999999e-10
+    },
+    "ICGx8DC_ASAP7_75t_R/SS": {
+      "area_library_units": 0.70038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.73487e-08
+    },
+    "ICGx8DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.2218800000000001e-09
+    },
+    "INVx11_ASAP7_75t_R/FF": {
+      "area_library_units": 0.18954,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.0367e-10
+    },
+    "INVx11_ASAP7_75t_R/SS": {
+      "area_library_units": 0.18954,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.05718e-08
+    },
+    "INVx11_ASAP7_75t_R/TT": {
+      "area_library_units": 0.18954,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.865789999999999e-10
+    },
+    "INVx13_ASAP7_75t_R/FF": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.95246e-10
+    },
+    "INVx13_ASAP7_75t_R/SS": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.2493899999999999e-08
+    },
+    "INVx13_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.9323e-10
+    },
+    "INVx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.5788200000000006e-11
+    },
+    "INVx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.610719999999999e-10
+    },
+    "INVx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.33254e-11
+    },
+    "INVx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.157640000000001e-11
+    },
+    "INVx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.92214e-09
+    },
+    "INVx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.06651e-10
+    },
+    "INVx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.37365e-10
+    },
+    "INVx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.88322e-09
+    },
+    "INVx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.59976e-10
+    },
+    "INVx4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.8315299999999998e-10
+    },
+    "INVx4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.84429e-09
+    },
+    "INVx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.1330099999999999e-10
+    },
+    "INVx5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.28941e-10
+    },
+    "INVx5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.80536e-09
+    },
+    "INVx5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.66627e-10
+    },
+    "INVx6_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.74729e-10
+    },
+    "INVx6_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.76643e-09
+    },
+    "INVx6_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.19952e-10
+    },
+    "INVx8_ASAP7_75t_R/FF": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.6630599999999997e-10
+    },
+    "INVx8_ASAP7_75t_R/SS": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.688569999999999e-09
+    },
+    "INVx8_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.26603e-10
+    },
+    "INVxp33_ASAP7_75t_R/FF": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.52667e-11
+    },
+    "INVxp33_ASAP7_75t_R/SS": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.2036e-10
+    },
+    "INVxp33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.77784e-11
+    },
+    "INVxp67_ASAP7_75t_R/FF": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.05274e-11
+    },
+    "INVxp67_ASAP7_75t_R/SS": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.40716e-10
+    },
+    "INVxp67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.55519e-11
+    },
+    "MAJIxp5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.1493600000000001e-10
+    },
+    "MAJIxp5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.19769e-09
+    },
+    "MAJIxp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.25948e-10
+    },
+    "MAJx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.54999e-10
+    },
+    "MAJx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.10469e-09
+    },
+    "MAJx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.23936e-10
+    },
+    "MAJx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.86232e-10
+    },
+    "MAJx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.93972e-09
+    },
+    "MAJx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.7293e-10
+    },
+    "NAND2x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.656e-11
+    },
+    "NAND2x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.92531e-09
+    },
+    "NAND2x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.0935200000000001e-10
+    },
+    "NAND2x1p5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.44883e-10
+    },
+    "NAND2x1p5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.2077899999999997e-09
+    },
+    "NAND2x1p5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.6740100000000002e-10
+    },
+    "NAND2x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.9312e-10
+    },
+    "NAND2x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.85062e-09
+    },
+    "NAND2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.1870400000000001e-10
+    },
+    "NAND2xp33_ASAP7_75t_R/FF": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.23849e-11
+    },
+    "NAND2xp33_ASAP7_75t_R/SS": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.417759999999999e-10
+    },
+    "NAND2xp33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.64524e-11
+    },
+    "NAND2xp5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.83233e-11
+    },
+    "NAND2xp5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.28248e-09
+    },
+    "NAND2xp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.63488e-11
+    },
+    "NAND2xp67_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.47685e-11
+    },
+    "NAND2xp67_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.2835399999999999e-09
+    },
+    "NAND2xp67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.29048e-11
+    },
+    "NAND3x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.50831e-10
+    },
+    "NAND3x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.89272e-09
+    },
+    "NAND3x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.68446e-10
+    },
+    "NAND3x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.01662e-10
+    },
+    "NAND3x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.78543e-09
+    },
+    "NAND3x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.36892e-10
+    },
+    "NAND3xp33_ASAP7_75t_R/FF": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.03663e-11
+    },
+    "NAND3xp33_ASAP7_75t_R/SS": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.9237e-09
+    },
+    "NAND3xp33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.95231e-11
+    },
+    "NAND4xp25_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.6929900000000004e-11
+    },
+    "NAND4xp25_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.56488e-09
+    },
+    "NAND4xp25_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.32697e-10
+    },
+    "NAND4xp75_ASAP7_75t_R/FF": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7078899999999998e-10
+    },
+    "NAND4xp75_ASAP7_75t_R/SS": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.69462e-09
+    },
+    "NAND4xp75_ASAP7_75t_R/TT": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.98092e-10
+    },
+    "NAND5xp2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.11623e-11
+    },
+    "NAND5xp2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.20602e-09
+    },
+    "NAND5xp2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.65872e-10
+    },
+    "NOR2x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.330209999999999e-11
+    },
+    "NOR2x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.9213499999999998e-09
+    },
+    "NOR2x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.07382e-10
+    },
+    "NOR2x1p5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.55721e-10
+    },
+    "NOR2x1p5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.88227e-09
+    },
+    "NOR2x1p5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.78729e-10
+    },
+    "NOR2x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.86609e-10
+    },
+    "NOR2x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.8426999999999996e-09
+    },
+    "NOR2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.14764e-10
+    },
+    "NOR2xp33_ASAP7_75t_R/FF": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.18918e-11
+    },
+    "NOR2xp33_ASAP7_75t_R/SS": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.404529999999999e-10
+    },
+    "NOR2xp33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.58005e-11
+    },
+    "NOR2xp67_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.25979e-11
+    },
+    "NOR2xp67_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.2809e-09
+    },
+    "NOR2xp67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.15912e-11
+    },
+    "NOR3x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.40799e-10
+    },
+    "NOR3x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.8824e-09
+    },
+    "NOR3x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.62169e-10
+    },
+    "NOR3x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.81598e-10
+    },
+    "NOR3x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.7648e-09
+    },
+    "NOR3x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.24339e-10
+    },
+    "NOR3xp33_ASAP7_75t_R/FF": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.36169e-11
+    },
+    "NOR3xp33_ASAP7_75t_R/SS": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.61346e-10
+    },
+    "NOR3xp33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.07021e-10
+    },
+    "NOR4xp25_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.24824e-10
+    },
+    "NOR4xp25_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.2094200000000002e-09
+    },
+    "NOR4xp25_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.42695e-10
+    },
+    "NOR4xp75_ASAP7_75t_R/FF": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.74494e-10
+    },
+    "NOR4xp75_ASAP7_75t_R/SS": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.62827e-09
+    },
+    "NOR4xp75_ASAP7_75t_R/TT": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.28083e-10
+    },
+    "NOR5xp2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.5602799999999999e-10
+    },
+    "NOR5xp2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.51176e-09
+    },
+    "NOR5xp2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7836799999999998e-10
+    },
+    "OR2x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.1238200000000001e-10
+    },
+    "OR2x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.52735e-09
+    },
+    "OR2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.69334e-10
+    },
+    "OR2x4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.05138e-10
+    },
+    "OR2x4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.4499899999999994e-09
+    },
+    "OR2x4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.67321e-10
+    },
+    "OR2x6_ASAP7_75t_R/FF": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.1751999999999995e-10
+    },
+    "OR2x6_ASAP7_75t_R/SS": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.97735e-09
+    },
+    "OR2x6_ASAP7_75t_R/TT": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.36655e-10
+    },
+    "OR3x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.5915799999999998e-10
+    },
+    "OR3x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.32159e-09
+    },
+    "OR3x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.08971e-10
+    },
+    "OR3x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7919e-10
+    },
+    "OR3x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.28348e-09
+    },
+    "OR3x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.5796699999999996e-10
+    },
+    "OR3x4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.1925399999999998e-10
+    },
+    "OR3x4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.20727e-09
+    },
+    "OR3x4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.55958e-10
+    },
+    "OR4x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.05538e-10
+    },
+    "OR4x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.7754299999999998e-09
+    },
+    "OR4x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.62298e-10
+    },
+    "OR4x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.2556999999999998e-10
+    },
+    "OR4x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.73795e-09
+    },
+    "OR4x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.1129700000000003e-10
+    },
+    "OR5x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7606e-10
+    },
+    "OR5x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.47434e-09
+    },
+    "OR5x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.27366e-10
+    },
+    "OR5x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.96092e-10
+    },
+    "OR5x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.43692e-09
+    },
+    "OR5x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.76365e-10
+    },
+    "SDFHx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.2495599999999998e-10
+    },
+    "SDFHx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.8083000000000004e-09
+    },
+    "SDFHx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.26865e-10
+    },
+    "SDFHx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.70745e-10
+    },
+    "SDFHx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.76956e-09
+    },
+    "SDFHx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.7742399999999996e-10
+    },
+    "SDFHx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.39366,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.16533e-10
+    },
+    "SDFHx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.39366,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.73082e-09
+    },
+    "SDFHx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.39366,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.3075e-10
+    },
+    "SDFHx4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.45198,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.14809e-10
+    },
+    "SDFHx4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.45198,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.1054e-08
+    },
+    "SDFHx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.45198,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.33841e-10
+    },
+    "SDFLx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.55478e-10
+    },
+    "SDFLx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.44899e-09
+    },
+    "SDFLx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.6241199999999996e-10
+    },
+    "SDFLx2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.01266e-10
+    },
+    "SDFLx2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.41025e-09
+    },
+    "SDFLx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.1230200000000003e-10
+    },
+    "SDFLx3_ASAP7_75t_R/FF": {
+      "area_library_units": 0.39366,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.47054e-10
+    },
+    "SDFLx3_ASAP7_75t_R/SS": {
+      "area_library_units": 0.39366,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.37151e-09
+    },
+    "SDFLx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.39366,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.6562799999999996e-10
+    },
+    "SDFLx4_ASAP7_75t_R/FF": {
+      "area_library_units": 0.45198,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.14809e-10
+    },
+    "SDFLx4_ASAP7_75t_R/SS": {
+      "area_library_units": 0.45198,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.1054e-08
+    },
+    "SDFLx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.45198,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.33841e-10
+    },
+    "TIEHIx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 8.64846e-13
+    },
+    "TIEHIx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.12852e-12
+    },
+    "TIEHIx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 8.768329999999999e-13
+    },
+    "TIELOx1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.45341e-12
+    },
+    "TIELOx1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.78757e-12
+    },
+    "TIELOx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.6555899999999998e-12
+    },
+    "XNOR2x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.96596e-10
+    },
+    "XNOR2x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.2876e-09
+    },
+    "XNOR2x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.47172e-10
+    },
+    "XNOR2x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.75748e-10
+    },
+    "XNOR2x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.77951e-09
+    },
+    "XNOR2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.52687e-10
+    },
+    "XNOR2xp5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.14737e-10
+    },
+    "XNOR2xp5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.3648400000000003e-09
+    },
+    "XNOR2xp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.50756e-10
+    },
+    "XOR2x1_ASAP7_75t_R/FF": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.09731e-10
+    },
+    "XOR2x1_ASAP7_75t_R/SS": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.03502e-09
+    },
+    "XOR2x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.63395e-10
+    },
+    "XOR2x2_ASAP7_75t_R/FF": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.81253e-10
+    },
+    "XOR2x2_ASAP7_75t_R/SS": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.66136e-09
+    },
+    "XOR2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.5740800000000003e-10
+    },
+    "XOR2xp5_ASAP7_75t_R/FF": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.1424999999999999e-10
+    },
+    "XOR2xp5_ASAP7_75t_R/SS": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.19663e-09
+    },
+    "XOR2xp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.54699e-10
+    }
+  },
+  "schema": "dsrom_c_w5_liberty_v1",
+  "scope": "Liberty screen, not measured silicon power; off-rail and SerDes standby unknown",
+  "sources": [
+    {
+      "path": "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+      "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408"
+    },
+    {
+      "path": "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+      "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+    },
+    {
+      "path": "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+      "sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+    },
+    {
+      "path": "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ]
+}

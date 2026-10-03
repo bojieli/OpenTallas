@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "failure": "link-only stimulus shared sleep_req while stage had no live debt; stage was still waking when debt loop sampled it",
+  "sources": {
+    "rtl/v41rom/ot_dsrom_c_w5_pg.sv": "902b860c114a3012dd80b2242dcae827317de699cf2cd92090ea62524d9e7bf2",
+    "rtl/test/tb_dsrom_c_w5_pg.sv": "286814e368829b9faf58d672e203b0c9a8903998f1ddb4cbb014df4811fd6f54"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "passed": false,
+  "failure": "ORFS SIMPLE FF 211120 is a symlink to 250407; tar without dereference did not archive target",
+  "resolution": "extract with tar -h and pin actual bytes"
+}

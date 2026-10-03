@@ -1,0 +1,783 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `read_verilog -sv rtl/v41rom/ot_dsrom_c_w5_pg.sv; chparam -set ENABLE_PG 1 ot_dsrom_c_w5_pg; synth -top ot_dsrom_c_w5_pg; write_json results/uarch/dsrom_c_w5_pg_20261003/synth_generic_final/netlist.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/v41rom/ot_dsrom_c_w5_pg.sv
+Parsing SystemVerilog input from `rtl/v41rom/ot_dsrom_c_w5_pg.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_c_w5_pg'.
+Generating RTLIL representation for module `\ot_dsrom_c_w5_prewake'.
+Generating RTLIL representation for module `\ot_dsrom_c_w5_isolation'.
+Generating RTLIL representation for module `\ot_dsrom_c_w5_link_pg'.
+Successfully finished Verilog frontend.
+Parameter \ENABLE_PG = 1
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_c_w5_pg'.
+Parameter \ENABLE_PG = 1
+Generating RTLIL representation for module `$paramod\ot_dsrom_c_w5_pg\ENABLE_PG=s32'00000000000000000000000000000001'.
+
+3. Executing SYNTH pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \ot_dsrom_c_w5_pg
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \ot_dsrom_c_w5_pg
+Removing unused module `\ot_dsrom_c_w5_link_pg'.
+Removing unused module `\ot_dsrom_c_w5_isolation'.
+Removing unused module `\ot_dsrom_c_w5_prewake'.
+Removed 3 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:43$135'.
+Removing empty process `ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:43$135'.
+Cleaned up 2 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131 in module ot_dsrom_c_w5_pg.
+Marked 12 switch rules as full_case in process $proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:47$115 in module ot_dsrom_c_w5_pg.
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 4 redundant assignments.
+Promoted 3 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131'.
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~13 debug messages>
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131'.
+     1/5: $0\parity[0:0]
+     2/5: $0\wake_pending[0:0]
+     3/5: $0\guard_count[7:0]
+     4/5: $0\state[2:0]
+     5/5: $0\fault[0:0]
+Creating decoders for process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:47$115'.
+     1/21: $5\pending_d[0:0]
+     2/21: $11\state_d[2:0]
+     3/21: $5\guard_d[7:0]
+     4/21: $10\state_d[2:0]
+     5/21: $4\guard_d[7:0]
+     6/21: $9\state_d[2:0]
+     7/21: $8\state_d[2:0]
+     8/21: $7\state_d[2:0]
+     9/21: $6\state_d[2:0]
+    10/21: $5\state_d[2:0]
+    11/21: $4\state_d[2:0]
+    12/21: $3\state_d[2:0]
+    13/21: $4\pending_d[0:0]
+    14/21: $3\guard_d[7:0]
+    15/21: $3\pending_d[0:0]
+    16/21: $2\pending_d[0:0]
+    17/21: $2\guard_d[7:0]
+    18/21: $2\state_d[2:0]
+    19/21: $1\pending_d[0:0]
+    20/21: $1\guard_d[7:0]
+    21/21: $1\state_d[2:0]
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_dsrom_c_w5_pg.\state_d' from process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:47$115'.
+No latch inferred for signal `\ot_dsrom_c_w5_pg.\guard_d' from process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:47$115'.
+No latch inferred for signal `\ot_dsrom_c_w5_pg.\pending_d' from process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:47$115'.
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_dsrom_c_w5_pg.\fault' using process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131'.
+  created $adff cell `$procdff$375' with positive edge clock and positive level reset.
+Creating register for signal `\ot_dsrom_c_w5_pg.\state' using process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131'.
+  created $adff cell `$procdff$380' with positive edge clock and positive level reset.
+Creating register for signal `\ot_dsrom_c_w5_pg.\guard_count' using process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131'.
+  created $adff cell `$procdff$385' with positive edge clock and positive level reset.
+Creating register for signal `\ot_dsrom_c_w5_pg.\wake_pending' using process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131'.
+  created $adff cell `$procdff$390' with positive edge clock and positive level reset.
+Creating register for signal `\ot_dsrom_c_w5_pg.\parity' using process `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131'.
+  created $adff cell `$procdff$395' with positive edge clock and positive level reset.
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131'.
+Removing empty process `ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:96$131'.
+Found and cleaned up 12 empty switches in `\ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:47$115'.
+Removing empty process `ot_dsrom_c_w5_pg.$proc$rtl/v41rom/ot_dsrom_c_w5_pg.sv:47$115'.
+Cleaned up 13 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+<suppressed ~66 debug messages>
+
+3.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+Removed 7 unused cells and 138 unused wires.
+<suppressed ~8 debug messages>
+
+3.5. Executing CHECK pass (checking for obvious problems).
+Checking module ot_dsrom_c_w5_pg...
+Found and reported 0 problems.
+
+3.6. Executing OPT pass (performing simple optimizations).
+
+3.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 124 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Computing hashes of 97 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Computing hashes of 96 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+<suppressed ~84 debug messages>
+Removed a total of 28 cells.
+
+3.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_c_w5_pg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$215.
+    dead port 2/2 on $mux $procmux$213.
+    dead port 1/2 on $mux $procmux$297.
+    dead port 1/2 on $mux $procmux$320.
+    dead port 1/2 on $mux $procmux$202.
+    dead port 2/2 on $mux $procmux$200.
+    dead port 2/2 on $mux $procmux$295.
+    dead port 1/2 on $mux $procmux$339.
+    dead port 1/2 on $mux $procmux$189.
+    dead port 2/2 on $mux $procmux$187.
+    dead port 1/2 on $mux $procmux$185.
+    dead port 1/2 on $mux $procmux$173.
+    dead port 2/2 on $mux $procmux$171.
+    dead port 1/2 on $mux $procmux$169.
+    dead port 1/2 on $mux $procmux$157.
+    dead port 2/2 on $mux $procmux$155.
+    dead port 1/2 on $mux $procmux$281.
+    dead port 2/2 on $mux $procmux$279.
+    dead port 1/2 on $mux $procmux$145.
+    dead port 2/2 on $mux $procmux$143.
+    dead port 1/2 on $mux $procmux$277.
+    dead port 1/2 on $mux $procmux$262.
+    dead port 1/2 on $mux $procmux$310.
+    dead port 2/2 on $mux $procmux$260.
+    dead port 1/2 on $mux $procmux$330.
+    dead port 1/2 on $mux $procmux$247.
+    dead port 2/2 on $mux $procmux$245.
+    dead port 1/2 on $mux $procmux$243.
+    dead port 2/2 on $mux $procmux$227.
+    dead port 1/2 on $mux $procmux$229.
+Removed 30 multiplexer ports.
+<suppressed ~58 debug messages>
+
+3.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_c_w5_pg.
+Performed a total of 0 changes.
+
+3.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 66 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+Removed 0 unused cells and 58 unused wires.
+<suppressed ~1 debug messages>
+
+3.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_c_w5_pg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~26 debug messages>
+
+3.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_c_w5_pg.
+Performed a total of 0 changes.
+
+3.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 66 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+
+3.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+3.7. Executing FSM pass (extract and optimize FSM).
+
+3.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+Not marking ot_dsrom_c_w5_pg.state as FSM state register:
+    Register is connected to module port.
+    Users of register don't seem to benefit from recoding.
+
+3.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+3.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+3.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+
+3.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+3.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+3.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+3.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+3.8. Executing OPT pass (performing simple optimizations).
+
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 66 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_c_w5_pg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~26 debug messages>
+
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_c_w5_pg.
+Performed a total of 0 changes.
+
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 66 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$375 ($adff) from module ot_dsrom_c_w5_pg (D = 1'1, Q = \fault).
+
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+Removed 1 unused cells and 1 unused wires.
+<suppressed ~2 debug messages>
+
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_c_w5_pg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_c_w5_pg.
+Performed a total of 0 changes.
+
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 65 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+3.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 3) from port B of cell ot_dsrom_c_w5_pg.$ne$rtl/v41rom/ot_dsrom_c_w5_pg.sv:35$82 ($ne).
+Removed top 7 bits (of 8) from port B of cell ot_dsrom_c_w5_pg.$eq$rtl/v41rom/ot_dsrom_c_w5_pg.sv:77$128 ($eq).
+Removed top 1 bits (of 3) from mux cell ot_dsrom_c_w5_pg.$procmux$153 ($mux).
+Removed top 1 bits (of 3) from port B of cell ot_dsrom_c_w5_pg.$procmux$228_CMP0 ($eq).
+Removed top 2 bits (of 3) from port B of cell ot_dsrom_c_w5_pg.$procmux$261_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_dsrom_c_w5_pg.$procmux$306_CMP0 ($eq).
+Removed top 1 bits (of 3) from wire ot_dsrom_c_w5_pg.$11\state_d[2:0].
+
+3.10. Executing PEEPOPT pass (run peephole optimizers).
+
+3.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+3.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_dsrom_c_w5_pg:
+  creating $macc model for $add$rtl/v41rom/ot_dsrom_c_w5_pg.sv:80$129 ($add).
+  creating $alu model for $macc $add$rtl/v41rom/ot_dsrom_c_w5_pg.sv:80$129.
+  creating $alu model for $gt$rtl/v41rom/ot_dsrom_c_w5_pg.sv:33$79 ($gt): new $alu
+  creating $alu model for $procmux$305_CMP0 ($eq): merged with $gt$rtl/v41rom/ot_dsrom_c_w5_pg.sv:33$79.
+  creating $alu cell for $gt$rtl/v41rom/ot_dsrom_c_w5_pg.sv:33$79, $procmux$305_CMP0: $auto$alumacc.cc:512:replace_alu$399
+  creating $alu cell for $add$rtl/v41rom/ot_dsrom_c_w5_pg.sv:80$129: $auto$alumacc.cc:512:replace_alu$410
+  created 2 $alu and 0 $macc cells.
+
+3.13. Executing SHARE pass (SAT-based resource sharing).
+
+3.14. Executing OPT pass (performing simple optimizations).
+
+3.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 68 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_c_w5_pg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+3.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_c_w5_pg.
+Performed a total of 0 changes.
+
+3.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 68 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+3.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_c_w5_pg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+3.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_c_w5_pg.
+Performed a total of 0 changes.
+
+3.14.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 68 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+
+3.14.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.14.16. Finished fast OPT passes. (There is nothing left to do.)
+
+3.15. Executing MEMORY pass.
+
+3.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+3.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+3.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+3.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+3.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+3.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+
+3.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+3.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+3.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+
+3.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+
+3.17. Executing OPT pass (performing simple optimizations).
+
+3.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+<suppressed ~2 debug messages>
+
+3.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 70 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+3.17.5. Finished fast OPT passes.
+
+3.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+3.19. Executing OPT pass (performing simple optimizations).
+
+3.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 70 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_c_w5_pg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~20 debug messages>
+
+3.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_c_w5_pg.
+    Consolidated identical input bits for $mux cell $procmux$153:
+      Old ports: A=2'11, B=2'00, Y=$11\state_d[2:0]
+      New ports: A=1'1, B=1'0, Y=$11\state_d[2:0] [0]
+      New connections: $11\state_d[2:0] [1] = $11\state_d[2:0] [0]
+  Optimizing cells in module \ot_dsrom_c_w5_pg.
+Performed a total of 1 changes.
+
+3.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 70 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.19.6. Executing OPT_SHARE pass.
+
+3.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+
+3.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+<suppressed ~1 debug messages>
+
+3.19.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.19.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_c_w5_pg..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~19 debug messages>
+
+3.19.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_c_w5_pg.
+Performed a total of 0 changes.
+
+3.19.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 70 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.19.14. Executing OPT_SHARE pass.
+
+3.19.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.19.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+
+3.19.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.19.18. Finished fast OPT passes. (There is nothing left to do.)
+
+3.20. Executing TECHMAP pass (map to technology primitives).
+
+3.20.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+3.20.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$c3cd1564c35d873179656addd6052d7ea8b6d991\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$fc972a7a46956c1788f3cb5257b53c8f1df2d0cc\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $reduce_xor.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $pmux.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000001 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001000 for cells of type $lcu.
+Using extmapper simplemap for cells of type $and.
+No more expansions possible.
+<suppressed ~484 debug messages>
+
+3.21. Executing OPT pass (performing simple optimizations).
+
+3.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+<suppressed ~113 debug messages>
+
+3.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 260 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Computing hashes of 248 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Computing hashes of 246 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Computing hashes of 245 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+<suppressed ~45 debug messages>
+Removed a total of 15 cells.
+
+3.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+Removed 11 unused cells and 133 unused wires.
+<suppressed ~12 debug messages>
+
+3.21.5. Finished fast OPT passes.
+
+3.22. Executing ABC pass (technology mapping using ABC).
+
+3.22.1. Extracting gate netlist of module `\ot_dsrom_c_w5_pg' to `<abc-temp-dir>/input.blif'..
+
+3.22.1.1. Executed ABC.
+Extracted 220 gates and 253 wires to a netlist network with 31 inputs and 19 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+3.22.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:       25
+ABC RESULTS:            ANDNOT cells:       11
+ABC RESULTS:               MUX cells:        6
+ABC RESULTS:              NAND cells:       30
+ABC RESULTS:               NOR cells:       11
+ABC RESULTS:               NOT cells:        4
+ABC RESULTS:                OR cells:       11
+ABC RESULTS:             ORNOT cells:        4
+ABC RESULTS:              XNOR cells:       22
+ABC RESULTS:               XOR cells:        9
+ABC RESULTS:        internal signals:      203
+ABC RESULTS:           input signals:       31
+ABC RESULTS:          output signals:       19
+Removing temp directory.
+Removing global temp directory.
+
+3.23. Executing OPT pass (performing simple optimizations).
+
+3.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_c_w5_pg.
+
+3.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_c_w5_pg'.
+Computing hashes of 147 cells of `\ot_dsrom_c_w5_pg'.
+Finding duplicate cells in `\ot_dsrom_c_w5_pg'.
+Removed a total of 0 cells.
+
+3.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_c_w5_pg..
+Removed 0 unused cells and 173 unused wires.
+<suppressed ~3 debug messages>
+
+3.23.5. Finished fast OPT passes.
+
+3.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_dsrom_c_w5_pg'. Setting top module to ot_dsrom_c_w5_pg.
+
+3.24.1. Analyzing design hierarchy..
+Top module:  \ot_dsrom_c_w5_pg
+
+3.24.2. Analyzing design hierarchy..
+Top module:  \ot_dsrom_c_w5_pg
+Removed 0 unused modules.
+
+3.25. Printing statistics.
+
+=== ot_dsrom_c_w5_pg ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      142 wires
+      169 wire bits
+       27 public wires
+       54 public wire bits
+       18 ports
+       27 port bits
+      147 cells
+       11   $_ANDNOT_
+       25   $_AND_
+        1   $_DFFE_PN0P_
+       11   $_DFF_PN0_
+        2   $_DFF_PN1_
+        6   $_MUX_
+       30   $_NAND_
+       11   $_NOR_
+        4   $_NOT_
+        4   $_ORNOT_
+       11   $_OR_
+       22   $_XNOR_
+        9   $_XOR_
+
+3.26. Executing CHECK pass (checking for obvious problems).
+Checking module ot_dsrom_c_w5_pg...
+Found and reported 0 problems.
+
+4. Executing JSON backend.
+
+5. Printing statistics.
+
+=== ot_dsrom_c_w5_pg ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      142 wires
+      169 wire bits
+       27 public wires
+       54 public wire bits
+       18 ports
+       27 port bits
+      147 cells
+       11   $_ANDNOT_
+       25   $_AND_
+        1   $_DFFE_PN0P_
+       11   $_DFF_PN0_
+        2   $_DFF_PN1_
+        6   $_MUX_
+       30   $_NAND_
+       11   $_NOR_
+        4   $_NOT_
+        4   $_ORNOT_
+       11   $_OR_
+       22   $_XNOR_
+        9   $_XOR_
+
+End of script. Logfile hash: f9535f951a, time: 0.28s, user: 0.09s, system: 0.05s, MEM: 27.00 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 68% 1x abc (0 sec), 6% 3x read_verilog (0 sec), ...

@@ -1,0 +1,64 @@
+{
+  "analog_guarantee": false,
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "tests/test_dsrom_c_w5_pg.py",
+        "-v"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_dsrom_c_w5_pg",
+        "-o",
+        "/tmp/dsrom-c-w5-local-final-r1/pg.vvp",
+        "rtl/v41rom/ot_dsrom_c_w5_pg.sv",
+        "rtl/test/tb_dsrom_c_w5_pg.sv"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "vvp",
+        "/tmp/dsrom-c-w5-local-final-r1/pg.vvp"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "tools/dsrom_c_w5_pg.py",
+        "--contract",
+        "configs/hardware/dsrom_c_w5_pg.json",
+        "--liberty",
+        "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+        "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+        "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+        "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+        "results/uarch/dsrom_c_w5_pg_20261003/inputs/liberty/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "--netlist",
+        "results/uarch/dsrom_c_w5_pg_20261003/synth_generic_final/netlist.json",
+        "--out",
+        "/tmp/dsrom-c-w5-local-final-r1/model"
+      ],
+      "returncode": 0
+    }
+  ],
+  "host": "ubuntu",
+  "inputs_unchanged": true,
+  "late_wake_added_cycles_measured": 7,
+  "max_child_RSS_MiB_measured": 27.671875,
+  "passed": true,
+  "production_calendar_qualified": false,
+  "scheduled_added_cycles_measured": 0,
+  "scope": "DIRECTED_DIGITAL_FIXTURE_AND_LIBERTY_SCREEN"
+}

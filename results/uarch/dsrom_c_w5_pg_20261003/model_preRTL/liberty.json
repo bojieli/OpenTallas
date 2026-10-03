@@ -1,0 +1,550 @@
+{
+  "cells": {
+    "AND2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.73001e-10
+    },
+    "AND2x4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.4600099999999995e-10
+    },
+    "AND2x6_ASAP7_75t_R/TT": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.52653e-10
+    },
+    "AND3x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.00304e-10
+    },
+    "AND3x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.53631e-10
+    },
+    "AND3x4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.6488299999999996e-10
+    },
+    "AND4x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.49297e-10
+    },
+    "AND4x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.02626e-10
+    },
+    "AND5x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.1919999999999998e-10
+    },
+    "AND5x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.59285e-10
+    },
+    "DFFASRHQNx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.40003e-10
+    },
+    "DFFHQNx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.60532e-10
+    },
+    "DFFHQNx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.13859e-10
+    },
+    "DFFHQNx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.67185e-10
+    },
+    "DFFHQx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.224429999999999e-10
+    },
+    "DFFLQNx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.60532e-10
+    },
+    "DFFLQNx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.13859e-10
+    },
+    "DFFLQNx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.67185e-10
+    },
+    "DFFLQx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.224429999999999e-10
+    },
+    "DHLx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.04994e-10
+    },
+    "DHLx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.56668e-10
+    },
+    "DHLx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.24786,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.09995e-10
+    },
+    "DLLx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2187,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.04994e-10
+    },
+    "DLLx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.23328,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.56668e-10
+    },
+    "DLLx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.24786,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.09995e-10
+    },
+    "FAx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.29752e-10
+    },
+    "HAxp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.50756e-10
+    },
+    "ICGx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.26244,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.9390699999999996e-10
+    },
+    "ICGx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.27702,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.47233e-10
+    },
+    "ICGx2p67DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.37506e-10
+    },
+    "ICGx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.00559e-10
+    },
+    "ICGx4DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.0086e-09
+    },
+    "ICGx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.30618,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 5.53885e-10
+    },
+    "ICGx5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.32076,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.07211e-10
+    },
+    "ICGx5p33DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.0797000000000001e-09
+    },
+    "ICGx6p67DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.15079e-09
+    },
+    "ICGx8DC_ASAP7_75t_R/TT": {
+      "area_library_units": 0.69984,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.2218800000000001e-09
+    },
+    "MAJIxp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.25948e-10
+    },
+    "MAJx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.23936e-10
+    },
+    "MAJx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.7293e-10
+    },
+    "NAND2x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.0935200000000001e-10
+    },
+    "NAND2x1p5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.6740100000000002e-10
+    },
+    "NAND2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.1870400000000001e-10
+    },
+    "NAND2xp33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.64524e-11
+    },
+    "NAND2xp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 6.63488e-11
+    },
+    "NAND2xp67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.29048e-11
+    },
+    "NAND3x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.68446e-10
+    },
+    "NAND3x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.36892e-10
+    },
+    "NAND3xp33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 9.95231e-11
+    },
+    "NAND4xp25_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.32697e-10
+    },
+    "NAND4xp75_ASAP7_75t_R/TT": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.98092e-10
+    },
+    "NAND5xp2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.65872e-10
+    },
+    "NOR2x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.07382e-10
+    },
+    "NOR2x1p5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.78729e-10
+    },
+    "NOR2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.1458,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.14764e-10
+    },
+    "NOR2xp33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.05832,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.58005e-11
+    },
+    "NOR2xp67_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.15912e-11
+    },
+    "NOR3x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.62169e-10
+    },
+    "NOR3x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.2916,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.24339e-10
+    },
+    "NOR3xp33_ASAP7_75t_R/TT": {
+      "area_library_units": 0.0729,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.07021e-10
+    },
+    "NOR4xp25_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.42695e-10
+    },
+    "NOR4xp75_ASAP7_75t_R/TT": {
+      "area_library_units": 0.20412,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.28083e-10
+    },
+    "NOR5xp2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.7836799999999998e-10
+    },
+    "OR2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.69334e-10
+    },
+    "OR2x4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.67321e-10
+    },
+    "OR2x6_ASAP7_75t_R/TT": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.36655e-10
+    },
+    "OR3x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.08748,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.08971e-10
+    },
+    "OR3x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.5796699999999996e-10
+    },
+    "OR3x4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.55958e-10
+    },
+    "OR4x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.10206,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.62298e-10
+    },
+    "OR4x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.1129700000000003e-10
+    },
+    "OR5x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.11664,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.27366e-10
+    },
+    "OR5x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.76365e-10
+    },
+    "SDFHx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.26865e-10
+    },
+    "SDFHx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.7742399999999996e-10
+    },
+    "SDFHx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.39366,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.3075e-10
+    },
+    "SDFHx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.45198,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.33841e-10
+    },
+    "SDFLx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.3645,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 3.6241199999999996e-10
+    },
+    "SDFLx2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.37908,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.1230200000000003e-10
+    },
+    "SDFLx3_ASAP7_75t_R/TT": {
+      "area_library_units": 0.39366,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 4.6562799999999996e-10
+    },
+    "SDFLx4_ASAP7_75t_R/TT": {
+      "area_library_units": 0.45198,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 7.33841e-10
+    },
+    "TIEHIx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 8.768329999999999e-13
+    },
+    "TIELOx1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.04374,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.6555899999999998e-12
+    },
+    "XNOR2x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.47172e-10
+    },
+    "XNOR2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.52687e-10
+    },
+    "XNOR2xp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.50756e-10
+    },
+    "XOR2x1_ASAP7_75t_R/TT": {
+      "area_library_units": 0.17496,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.63395e-10
+    },
+    "XOR2x2_ASAP7_75t_R/TT": {
+      "area_library_units": 0.16038,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 2.5740800000000003e-10
+    },
+    "XOR2xp5_ASAP7_75t_R/TT": {
+      "area_library_units": 0.13122,
+      "off_rail_W": null,
+      "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+      "on_rail_max_state_W": 1.54699e-10
+    }
+  },
+  "schema": "dsrom_c_w5_liberty_v1",
+  "scope": "Liberty screen, not measured silicon power; off-rail and SerDes standby unknown",
+  "sources": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+      "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    }
+  ]
+}

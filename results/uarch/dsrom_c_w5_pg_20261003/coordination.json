@@ -1,0 +1,49 @@
+{
+  "peers": [
+    {
+      "worktree": "/home/ubuntu/dsrom-c-w2-20261003",
+      "source_path": "results/uarch/dsrom_s73_pair1_20261003/model.json",
+      "sha256": "54ea65b3a1114234666f37bce6d7822823baaf0c5281143edb460780a82dd107",
+      "snapshot": "results/uarch/dsrom_c_w5_pg_20261003/inputs/W2_model.json",
+      "git_head_at_read": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+      "scope": "READ_ONLY_SNAPSHOT_NOT_QUALIFIED_JOIN"
+    },
+    {
+      "worktree": "/home/ubuntu/dsrom-c-w2-20261003",
+      "source_path": "results/uarch/dsrom_s73_pair1_20261003/physical_contract.json",
+      "sha256": "c5c87c7be192954a63538b57133795e324ed17a83bad6fd01b6cbca8c42377c4",
+      "snapshot": "results/uarch/dsrom_c_w5_pg_20261003/inputs/W2_physical_contract.json",
+      "git_head_at_read": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+      "scope": "READ_ONLY_SNAPSHOT_NOT_QUALIFIED_JOIN"
+    },
+    {
+      "worktree": "/home/ubuntu/dsrom-c-w2-20261003",
+      "source_path": "results/uarch/dsrom_s73_pair1_20261003/coordination.json",
+      "sha256": "3fefa6acf705f38d24d8948edc88189614924c8e774d7ca0910969d793bc775d",
+      "snapshot": "results/uarch/dsrom_c_w5_pg_20261003/inputs/W2_coordination.json",
+      "git_head_at_read": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+      "scope": "READ_ONLY_SNAPSHOT_NOT_QUALIFIED_JOIN"
+    },
+    {
+      "worktree": "/home/ubuntu/dsrom-c-w4-20261003",
+      "source_path": "results/uarch/dsrom_c_w4_20261003/model.json",
+      "sha256": "5306c2adc96cb9b1104a83980acbc8081eb1bf96817e34cafea4f36eee6e080c",
+      "snapshot": "results/uarch/dsrom_c_w5_pg_20261003/inputs/W4_model.json",
+      "git_head_at_read": "d1b6dd52a4595336ea789ebea8a6bdaf0016c51e",
+      "scope": "READ_ONLY_SNAPSHOT_NOT_QUALIFIED_JOIN"
+    },
+    {
+      "worktree": "/home/ubuntu/dsrom-c-w4-20261003",
+      "source_path": "results/uarch/dsrom_c_w4_20261003/origins.json",
+      "sha256": "0c7e7e71e9cc07d6ee47aa95a9679df0233c463d8acbf210a1caefc5456e068e",
+      "snapshot": "results/uarch/dsrom_c_w5_pg_20261003/inputs/W4_origins.json",
+      "git_head_at_read": "d1b6dd52a4595336ea789ebea8a6bdaf0016c51e",
+      "scope": "READ_ONLY_SNAPSHOT_NOT_QUALIFIED_JOIN"
+    }
+  ],
+  "W2_Arendt": "01a10204-7409",
+  "W2_request": "Explicit directed successor edges, stage/link IDs, all-token (AR and MTP) arrival/departure/debt retirement calendar and CDC/prewake route delay; no numeric-neighbor inference. New auxiliary-map latency cannot inherit old C rates.",
+  "W4_MaxwellPDN_request": "Always-on island, switch/clamp/retention cell Liberty including off-rail states, area/PG routes, stage/PHY link standby, wake grant scheduling, switched capacitance/ramp/droop, SS/FF in context. Retained debt never gated.",
+  "stage_map_ack": "NOT_RECORDED",
+  "PDN_ack": "NOT_RECORDED"
+}

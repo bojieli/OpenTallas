@@ -1,0 +1,27 @@
+abi3 (unittest.loader._FailedTest) ... ERROR
+test_actual_successor_and_debt_union (test_dsrom_c_w5_pg.W5ModelTest) ... ok
+test_baseline_preserved_and_savings_not_qualified (test_dsrom_c_w5_pg.W5ModelTest) ... ok
+test_invalid_cycles (test_dsrom_c_w5_pg.W5ModelTest) ... ok
+test_invalid_map (test_dsrom_c_w5_pg.W5ModelTest) ... ok
+test_liberty_units_states_and_no_off_credit (test_dsrom_c_w5_pg.W5ModelTest) ... ok
+test_missing_wake_is_unknown (test_dsrom_c_w5_pg.W5ModelTest) ... ok
+test_serial_cost_and_late_wake (test_dsrom_c_w5_pg.W5ModelTest) ... ok
+
+======================================================================
+ERROR: abi3 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: abi3
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/unittest/loader.py", line 470, in _find_test_path
+    package = self._get_module_from_name(name)
+  File "/usr/lib/python3.10/unittest/loader.py", line 377, in _get_module_from_name
+    __import__(name)
+  File "/home/ubuntu/dsrom-c-w5-20261003/tests/abi3/__init__.py", line 31, in <module>
+    from runtime.abi3.capability import Capability
+ModuleNotFoundError: No module named 'runtime.abi3'
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.742s
+
+FAILED (errors=1)

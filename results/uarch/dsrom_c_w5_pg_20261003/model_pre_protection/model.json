@@ -1,0 +1,117 @@
+{
+  "delta_against_C": {
+    "dies": 0,
+    "qualified_kW": null,
+    "qualified_mm2": null,
+    "qualified_tok_s": null
+  },
+  "gates": {
+    "Liberty_PG_residual": "BLOCKED_OFF_RAIL_SWITCH_AND_SERDES_CHARACTERIZATION",
+    "RTL_fixture": "NOT_RUN",
+    "SS_setup_FF_hold": "NOT_RUN",
+    "adopted": false,
+    "hub_routing_layers": "PENDING_CONTEXT",
+    "production_zero_added_cycles": "PENDING_W2_ACTUAL_CALENDAR",
+    "wake_droop_inrush": "PENDING_MAXWELLPDN"
+  },
+  "inputs": [
+    {
+      "path": "results/uarch/dsrom_return_storage_hbm_20261003/model.json",
+      "sha256": "620e7b8be078e4b90e5986340cb7c719351beba39029d4e66b7b193a9ea2b5d2"
+    },
+    {
+      "path": "configs/hardware/dsrom_c_w5_pg.json",
+      "sha256": "d6928997e89314639b2f35c1475491b6ce98afd32b65562c59f17b983c4b3725"
+    },
+    {
+      "path": "tools/dsrom_c_w5_pg.py",
+      "sha256": "089e8c47ae08f5bd1f64c24bc72b76e9e8049665983ae02ea1127e70a79a9407"
+    },
+    {
+      "path": "tools/uarch_model.py",
+      "sha256": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9"
+    }
+  ],
+  "leakage": {
+    "Engram_always_on_W_model": 3324.4,
+    "SerDes_standby_W": null,
+    "conservative_no_savings_static_kw_model": 19.896,
+    "historical_assumed_static_kw_b1": 7.07,
+    "legacy_10pct_adopted": false,
+    "logic_off_rail_W": null,
+    "qualified_static_kw": null,
+    "retained_inventory": {},
+    "retained_on_rail_W_by_corner": {
+      "FF": null,
+      "SS": null,
+      "TT": null
+    }
+  },
+  "occupancy": null,
+  "per_context": {
+    "1048576": {
+      "AR_tok_s_conditional": null,
+      "added_token_us_model": null,
+      "baseline_AR_tok_s_model": 2489.9,
+      "delta_AR_tok_s_conditional": null
+    },
+    "200000": {
+      "AR_tok_s_conditional": null,
+      "added_token_us_model": null,
+      "baseline_AR_tok_s_model": 2599.9,
+      "delta_AR_tok_s_conditional": null
+    }
+  },
+  "qualification": "Independent model/RTL fixture only. Analog costs and physical slots are not zero.",
+  "schema": "dsrom_c_w5_pg_model_v1",
+  "sizing_before_RTL": {
+    "MACs_per_cycle": 0,
+    "area_mm2": null,
+    "control_bits_per_domain_per_cycle": 16,
+    "fanout": "actual W2 adjacency and MaxwellPDN distribution required",
+    "floorplan_fit": null,
+    "latency_contribution": {
+      "added_cycles": null,
+      "lead_cycles": null,
+      "overlap": "no overlap credit without a measured event calendar",
+      "terms": {
+        "guard_cycles": 2,
+        "inrush_wait_cycles": null,
+        "powergood_cycles": null,
+        "prewake_route_cycles": null,
+        "release_cycles": 1,
+        "relock_cycles": null
+      },
+      "wake_cycles_serial_upper": null
+    },
+    "memory_ports_B_per_cycle": {},
+    "mux_demux": "local FSM; prewake static adjacency OR, one edge per successor",
+    "replicas_model": {
+      "links": null,
+      "stage_die": 292
+    },
+    "retained_state": "FSM 3 bits, guard counter 8 bits, wake pending 1 bit, parity 1 bit, sticky fault 1 bit; external live debt retained",
+    "routing_channel_capacity": null,
+    "routing_tracks_required_per_domain": 16,
+    "wake_switch_isolation_retention_area": null
+  },
+  "status": "DEFAULT_OFF_COMPONENT_PREPARATION",
+  "unified_model_binding": {
+    "composition": "Scenario C output, with additive priced wake cycles",
+    "raw_uarch_model_sha256": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9"
+  },
+  "wake": {
+    "added_cycles": null,
+    "lead_cycles": null,
+    "overlap": "no overlap credit without a measured event calendar",
+    "terms": {
+      "guard_cycles": 2,
+      "inrush_wait_cycles": null,
+      "powergood_cycles": null,
+      "prewake_route_cycles": null,
+      "release_cycles": 1,
+      "relock_cycles": null
+    },
+    "wake_cycles_serial_upper": null
+  }
+}
