@@ -1,0 +1,74 @@
+[
+  {
+    "source": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s73_pair1_20261003/successor_r4_baseline_return/return_baseline.json",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/W2_return_baseline.json",
+    "sha256": "6560db2039d1d304945979d1fbd910cdac9220b1526bdda549028ac769a1aafc",
+    "status": "W2_UNCOMMITTED_SOURCE_PINNED_SNAPSHOT"
+  },
+  {
+    "source": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s73_pair1_20261003/successor_r4_baseline_return/physical_contract.json",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/W2_physical_contract.json",
+    "sha256": "1a3ea653f3ce654c84f3a3c5ab4824f9183ec88a95a42849c2b6f859ec3533ff",
+    "status": "W2_UNCOMMITTED_SOURCE_PINNED_SNAPSHOT"
+  },
+  {
+    "source": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s73_pair1_20261003/successor_r4_baseline_return/coordination.json",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/W2_coordination.json",
+    "sha256": "ded41bc86c37be721bac36e5b2af4c585e615c769705479ae16e75fc9b2fa55b",
+    "status": "W2_UNCOMMITTED_SOURCE_PINNED_SNAPSHOT"
+  },
+  {
+    "source": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s73_pair1_20261003/successor_r4_baseline_return/model.json",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/W2_model.json",
+    "sha256": "53a5515b87e2bbf52aa72ee1205a455408dc4fa3224adf4ca486e819ff727bb4",
+    "status": "W2_UNCOMMITTED_SOURCE_PINNED_SNAPSHOT"
+  },
+  {
+    "source": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s73_pair1_20261003/successor_r4_baseline_return/area_ledger.json",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/W2_area_ledger.json",
+    "sha256": "a27b3e975e15834cd08314bcd0cdac3f412ecb86372a64ff63fa7fd68338a5ea",
+    "status": "W2_UNCOMMITTED_SOURCE_PINNED_SNAPSHOT"
+  },
+  {
+    "commit": "046bf5026d36cc4f31813db26045360da618e51f",
+    "source": "results/uarch/dsrom_c_w1_20261003/actual_r1/result.json",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/RD4_rejection.json",
+    "sha256": "ac82d5d01aa4ed889d91f46e2934ad6fac989841869b355a43a25e383a56aa8f",
+    "status": "COMMITTED_SOURCE_PIN"
+  },
+  {
+    "commit": "d1b6dd52a4595336ea789ebea8a6bdaf0016c51e",
+    "source": "results/uarch/dsrom_c_w4_20261003/model.json",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/W4_model.json",
+    "sha256": "5306c2adc96cb9b1104a83980acbc8081eb1bf96817e34cafea4f36eee6e080c",
+    "status": "COMMITTED_SOURCE_PIN"
+  },
+  {
+    "commit": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+    "source": "rtl/v41rom/ot_v41_ret.sv",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/retained_return.sv",
+    "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "status": "COMMITTED_SOURCE_PIN"
+  },
+  {
+    "commit": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+    "source": "rtl/v41die/ot_v41_retn_w17w10.sv",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/retained_return_wrapper.sv",
+    "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+    "status": "COMMITTED_SOURCE_PIN"
+  },
+  {
+    "commit": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+    "source": "rtl/v41die/ot_v41_field_w17w10.sv",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/retained_field.sv",
+    "sha256": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811",
+    "status": "COMMITTED_SOURCE_PIN"
+  },
+  {
+    "commit": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+    "source": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "snapshot": "results/uarch/dsrom_c_w5_integration_20261003/inputs/retained_adder.sv",
+    "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "status": "COMMITTED_SOURCE_PIN"
+  }
+]

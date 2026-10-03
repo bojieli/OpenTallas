@@ -1,0 +1,93 @@
+{
+  "Engram_always_on": true,
+  "MaxwellPDN_request": [
+    "always-on debt/control island and powered off-domain interface slots",
+    "source-pinned switch/clamp/retention and link standby Liberty",
+    "per-domain switched capacitance, ramp/current and simultaneous wake grants",
+    "droop budget and PDN/clock/routing checks with SS/FF 60/25 ps uncertainties"
+  ],
+  "W2_Arendt": "01a10204-7409",
+  "W2_request": [
+    "source-owned directed operation edges with stage/rank/link IDs",
+    "prewake route/CDC delay and arrival deadlines per edge",
+    "retained return FIFO/root/adder/output/consumer/reverse retirement timestamps",
+    "qualified return and indexer/split-delivery costs in the same calendar"
+  ],
+  "W5_source_milestone": "769a0f764",
+  "fixture_repeated": false,
+  "intake_ready": false,
+  "parent_priority": "realmem records and actual combined HBM factory; source intake waits for ready context",
+  "peer_acknowledgments": "PENDING",
+  "production_adjacent_edges": null,
+  "production_contract_path": "/home/ubuntu/dsrom-c-w5-20261003/results/uarch/dsrom_c_w5_integration_20261003/r1/model.json",
+  "production_contract_sha256": "7e8513dbec38ecdd0c40d949bcbb6efaf858a78cf20fa8153437ff1cff811078",
+  "retained_return": {
+    "NP": 4096,
+    "RD": 64,
+    "RD4_rejected_commit": "046bf5026",
+    "ROOTD": 128,
+    "latency_credit_cycles": 0,
+    "return_area_credit_mm2": 0,
+    "reuse_cycles": 9,
+    "target_cycles": 4
+  },
+  "return_debt_classes": [
+    {
+      "bit": 0,
+      "class": "producer_and_ingress",
+      "production_signal_bound": false,
+      "required": "all p_busy and accepted/live partial inputs; no producer pulse lost at isolation",
+      "unknown_is_debt": true
+    },
+    {
+      "bit": 1,
+      "class": "return_node_queues",
+      "production_signal_bound": false,
+      "required": "OR over retained nodes of (ac != 0 || bc != 0)",
+      "unknown_is_debt": true
+    },
+    {
+      "bit": 2,
+      "class": "return_node_pipelines",
+      "production_signal_bound": false,
+      "required": "OR of vp, ap, by_v, wrapper rv[RST:1], ingress/output valids; forwarding and tag alignment included",
+      "unknown_is_debt": true
+    },
+    {
+      "bit": 3,
+      "class": "root_input_queues",
+      "production_signal_bound": false,
+      "required": "OR over all 128 roots of (qc != 0 || i_v)",
+      "unknown_is_debt": true
+    },
+    {
+      "bit": 4,
+      "class": "root_held_siblings",
+      "production_signal_bound": false,
+      "required": "OR over all roots and all ROOTD=128 bv entries",
+      "unknown_is_debt": true
+    },
+    {
+      "bit": 5,
+      "class": "root_add_pipeline",
+      "production_signal_bound": false,
+      "required": "OR over all roots of add, u_add.s1_v, s2_v, s3_v, s4_v, valid_out; include tag validity through the same lifetime",
+      "unknown_is_debt": true
+    },
+    {
+      "bit": 6,
+      "class": "root_delivery_and_consumption",
+      "production_signal_bound": false,
+      "required": "r_v plus delivery/capture, masked-write visibility and reader debt until actual ownership retirement",
+      "unknown_is_debt": true
+    },
+    {
+      "bit": 7,
+      "class": "fault_identity_and_reverse_retirement",
+      "production_signal_bound": false,
+      "required": "sticky return/link faults, outstanding identities, CDC cohorts, reverse ACK and TX/RX/replay obligations; unknown bindings assert debt",
+      "unknown_is_debt": true
+    }
+  ],
+  "unknown_debt_policy": "ASSERT_DEBT_KEEP_AWAKE"
+}
