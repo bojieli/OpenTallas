@@ -5,7 +5,8 @@ oracle, host parent ledger, native arithmetic or synthetic retirement callback.
 Connect query/response lanes to reader_services cohorts0/3. Stage root_accept
 is the actual scratch-using command admission per rank*32+SM, not every child
 service handshake. Retire is that SAME retained owner55's execution retirement
-once all scratch children/returns finish. It is not persistent RF-version free.
+once all scratch children/returns finish. Terminal offers are held until the
+matching root_retire_ready; pause/reset cannot lose a one-cycle completion. It is not persistent RF-version free.
 State root_accept/retire span the WHOLE source byte RPC, including multisector
 OLD/NEW state operations; individual sector replies cannot retire a root early.
 Root admit permits gate the real NEW command accept symmetrically. Never mask
@@ -19,7 +20,7 @@ Cold POR only; warm reset pauses retained roots/queries, never resets por_n.
 """
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-TOP='ot_gpu_qwen_kv_local_cohorts'
+TOP='ot_gpu_qwen_kv_local_cohorts_terminal_ready'
 def source_files(root=ROOT):
     return (Path(root)/'rtl/model/qwen_kv_connections_20261003'/ (TOP+'.sv'),)
 def endpoint_lanes():

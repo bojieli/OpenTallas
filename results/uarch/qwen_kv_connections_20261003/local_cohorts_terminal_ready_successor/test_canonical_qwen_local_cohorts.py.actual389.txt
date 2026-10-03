@@ -102,9 +102,14 @@ roots();query();retire();@(negedge clk);stage_root_accept[0]=1;
 
     def test_reset_keeps_all_old_roots_and_held_queries(self):
         self.rtl('''
-roots();query();local_reset=1;repeat(4) @(negedge clk);
+roots();query();local_reset=1;
+stage_root_retire_owner=stage_root_owner;state_root_retire_identity=state_root_identity;
+stage_root_retire[63]=1;state_root_retire=1;repeat(4) @(negedge clk);
+if(stage_root_retire_ready || state_root_retire_ready)$fatal(1,"paused terminal accepted");
 if(roots_empty || response_valid || quiesce!=3 || stage_root_admit || state_root_admit)$fatal(1,"reset erased debt");
-local_reset=0;retire();@(negedge clk);#1;
+local_reset=0;#1;
+if(!stage_root_retire_ready[63] || !state_root_retire_ready)$fatal(1,"held terminal not resumed");
+@(negedge clk);stage_root_retire=0;state_root_retire=0;@(negedge clk);#1;
 if(response_valid!=3 || fault)$fatal(1,"old continuation lost after pause");
 ''')
 

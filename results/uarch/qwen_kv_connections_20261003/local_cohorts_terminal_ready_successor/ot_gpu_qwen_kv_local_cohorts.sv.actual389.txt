@@ -1,14 +1,14 @@
 `timescale 1ns/1ps
 // Exact accepted execution-root ledger + retained id/key drain receipt.
-// root_accept/retire MUST be actual source command acceptance / matched terminal
-// retirement. They are not software lease flags or persistent RF-version frees.
+// root_accept MUST be actual source command acceptance. root_retire is a
+// real held terminal offer; root_retire_ready is its matched retirement accept. They are not software lease flags or persistent RF-version frees.
 // root_admit gates only NEW roots, never admitted children or their replies.
 // The enclosing authority must apply root_admit symmetrically at the caller.
 module ot_gpu_qwen_kv_root_cohort #(parameter ENABLE=0, ROOTS=1, OWNERW=64)(
  input wire clk, por_n, run_enable, local_reset, source_bound,
  input wire [ROOTS-1:0] root_accept, root_retire,
  input wire [ROOTS*OWNERW-1:0] root_owner, root_retire_owner,
- output wire [ROOTS-1:0] root_admit,
+ output wire [ROOTS-1:0] root_admit, root_retire_ready,
  input wire request_valid, output wire request_ready,
  input wire [63:0] request_identity, input wire [19:0] request_key,
  input wire receipts_empty,
@@ -29,6 +29,11 @@ module ot_gpu_qwen_kv_root_cohort #(parameter ENABLE=0, ROOTS=1, OWNERW=64)(
       !(|root_accept) && !(|root_retire);
  assign response_quiet=receipt && roots_empty && receipts_empty && !fault;
  assign response_identity=identity; assign response_key=key;
+ genvar g;
+ generate for(g=0;g<ROOTS;g=g+1) begin: retirement
+  assign root_retire_ready[g]=active && live[g] &&
+       owners[g*OWNERW+:OWNERW]==root_retire_owner[g*OWNERW+:OWNERW];
+ end endgenerate
  integer i;
  always @(posedge clk or negedge por_n) begin
   if(!por_n) begin live<=0;owners<=0;held<=0;receipt<=0;identity<=0;key<=0;fault<=0;end
@@ -67,12 +72,12 @@ module ot_gpu_qwen_kv_local_cohorts #(parameter ENABLE=0)(
  input wire clk, por_n, run_enable, local_reset, source_bound,
  input wire [63:0] stage_root_accept, stage_root_retire,
  input wire [3519:0] stage_root_owner, stage_root_retire_owner,
- output wire [63:0] stage_root_admit,
+ output wire [63:0] stage_root_admit, stage_root_retire_ready,
  input wire shared_router_drained, writer_retained,
  input wire [63:0] shared_service_ready, shared_service_done,
  input wire state_root_accept, state_root_retire,
  input wire [63:0] state_root_identity, state_root_retire_identity,
- output wire state_root_admit,
+ output wire state_root_admit, state_root_retire_ready,
  input wire state_tap_quiescent, state_observer_drained,
  input wire metadata_ACK_held, metadata_reverse_held, metadata_event_held,
  input wire [1:0] request_valid, output wire [1:0] request_ready,
@@ -90,7 +95,7 @@ module ot_gpu_qwen_kv_local_cohorts #(parameter ENABLE=0)(
  ot_gpu_qwen_kv_root_cohort #(.ENABLE(ENABLE),.ROOTS(64),.OWNERW(55)) stage(
   .clk(clk),.por_n(por_n),.run_enable(run_enable && !fault),.local_reset(local_reset),.source_bound(source_bound),
   .root_accept(stage_root_accept),.root_retire(stage_root_retire),
-  .root_owner(stage_root_owner),.root_retire_owner(stage_root_retire_owner),.root_admit(stage_root_admit),
+  .root_owner(stage_root_owner),.root_retire_owner(stage_root_retire_owner),.root_admit(stage_root_admit),.root_retire_ready(stage_root_retire_ready),
   .request_valid(request_valid[0]),.request_ready(request_ready[0]),
   .request_identity(request_identity),.request_key(request_key),.receipts_empty(stage_empty),
   .response_valid(response_valid[0]),.response_ready(response_ready[0]),
@@ -99,7 +104,7 @@ module ot_gpu_qwen_kv_local_cohorts #(parameter ENABLE=0)(
  ot_gpu_qwen_kv_root_cohort #(.ENABLE(ENABLE),.ROOTS(1),.OWNERW(64)) metadata(
   .clk(clk),.por_n(por_n),.run_enable(run_enable && !fault),.local_reset(local_reset),.source_bound(source_bound),
   .root_accept(state_root_accept),.root_retire(state_root_retire),
-  .root_owner(state_root_identity),.root_retire_owner(state_root_retire_identity),.root_admit(state_root_admit),
+  .root_owner(state_root_identity),.root_retire_owner(state_root_retire_identity),.root_admit(state_root_admit),.root_retire_ready(state_root_retire_ready),
   .request_valid(request_valid[1]),.request_ready(request_ready[1]),
   .request_identity(request_identity),.request_key(request_key),.receipts_empty(metadata_empty),
   .response_valid(response_valid[1]),.response_ready(response_ready[1]),
