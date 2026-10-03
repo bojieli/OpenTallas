@@ -1,0 +1,57 @@
+Actual full219 W2 canonical transport endpoint
+
+Source: rtl/experimental/hbm_canonical_transport_20261003/ot_gpu_w2_canonical_endpoint.sv
+Default OPT_EXACT=0. To exercise selected source in the integrated functional
+simulator, explicitly select1 and compile the four actual Nash/Hubble inputs
+listed with exact content hashes in source-binding.json. Russell owns the
+one fullNC6 fixture; no fixture, compile, codec run or system run launched here.
+The snapshot identifies current source; it does not qualify evolving primary
+syntax or runtime. Re-run tools/h4_hbm_w2_canonical_binding.py at the owner's
+next exact source selection rather than silently using different source bytes.
+
+All43 primary ports are direct fullwidth connections. NC6/MAX16/AW34/tag32/
+sourcegen4/PTAG35/DW256/PC_ID7 retained. No raw526 compatibility path, no idle
+replacement for client5(KV), no fabricated seventh directory client. The
+controller instantiates the actual37CW secondary and8 combinational correctors;
+219CW/15768bitsPC remains the selected full-controller storage model.
+
+Connect provider p_wr_done_v/tag35/gen4 to a held, causally visible sector
+write-completion source; p_wr_done_ready returns to that source. A pulse or
+model request-acceptance queue is not a visibility receipt. Full readtag35/gen4
+echo required. A16-bit physical ticket needs its actual reversible live owner
+mapping; this endpoint never slices off source generation/tag bits.
+
+provider_fenced: actual accepted/queued/inflight/held-return provider debt.
+reverse_fenced: real consumer/reverse/allcopies state, NOT consumed offer snapshots.
+reset_fenced: actual system cross-domain reset/drain authority.
+repair_busy/fault: actual callee outputs. service_admission_hold ORs both to
+the global/native caller admission owner; no separate clean/status fiction.
+These are source ports, not Boolean constants. The actual system's producer
+connections remain Claude's whole-system integration responsibility.
+
+PC_ID must be the actual selected physical PC from the real address mapper;
+owner46 scope remains DIE/STACK. owner46 outputs reconstruct PC7+client3+
+originaltag32+sourcegen4 and are sampled only at their corresponding handshake.
+Native64 IDs remain in the caller's separate allocated private context.
+W2 completion credits and sourcegen reuse are different lifetimes; only actual
+global reverse/allcopy fencing authorizes namespace reuse/reset rearm.
+
+No added FF in this wiring endpoint. The admission OR is priced3NAND-eq/
+.1944um2cell ASSUMED (loaded actual cell/fanout unknown). Owner outputs598
+additional boundary bits expose actual transport routing work, not free cuts.
+Provider request/read/writeACK widths332/297/41 before global scope prefix.
+Loaded correction boundary1232bits, CAP4+FIX4>=8edges, loadedreadmux/fanout
+unclosed. Preserve actual source sameclientII19 and differentclient10prospective;
+no measured supply or finite backend wait upper bound. Replace W2.NC6.full219
+cost once, do not add old raw/9144/13608/leaf8/8/9 prices on top.
+
+Claude existing ot_gpu_hbm_partition.g_w2 is an old reduced raw path with
+gen0/provider_fenced1/reset_fenced1, no reverse fence/repair busy and model
+acceptance-time writeACK. It must not be described as this protected canonical
+endpoint. No live Claude file edited. Install new endpoint in the canonical
+transport with real six-client requests and causal provider completions while
+Nash/Hubble enrollment and Russell qualification proceed.
+
+Eight source-wiring tests PASS. They prove port enrollment/refusals, not RTL
+syntax, functionality, fulltoken execution, SS/FF, physical fit or rate.
+No new compile under local load187.7/32 and exhausted swap.
