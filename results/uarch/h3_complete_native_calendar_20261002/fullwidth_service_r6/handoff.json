@@ -1,0 +1,150 @@
+{
+  "R4_reopened": false,
+  "RTL_allowed": false,
+  "UNKNOWN": [
+    "actual accepted C0/KV requester/return/RFwriter map and production movement DAG",
+    "source all-copy/backend/ACK/consumer/reverseCDC quiescence predicate and reset epoch implementation",
+    "installed clocks and service hold/contender bounds",
+    "Popper complete slots/ports/control/cuts/clock/reset/area context composition"
+  ],
+  "artifacts": {
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/final/contending_32SM_calendars.json.gz": {
+      "bytes": 97595,
+      "sha256": "04c8a7605d1934dab3b182098bf13601e62f50bdf72e76a1403b83b118be4c60"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/final/model.json": {
+      "bytes": 3479,
+      "sha256": "d4f7047e234c2684aada131801a19de2090a86ba494e82cdb18b428fa44c8854"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/final/proof.json": {
+      "bytes": 2113,
+      "sha256": "fd42adf4ce816f1b15f589b4ae429e50ae0a685fcdccdfee5a3a0521b5d5e29e"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/final/prospective_calendars.json.gz": {
+      "bytes": 457310,
+      "sha256": "239d0c3f11148c5f7bb1e083bab0f95de4c37ff6762a0de93dcceeb38d8ad4cb"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/initial_sensitivity_expectation_FAIL.json": {
+      "bytes": 456,
+      "sha256": "a5f9dd7c53a6bb92a1e55077254f865cbdee1723acef317fd8bcbdb2fcccbd91"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/input_manifest.json": {
+      "bytes": 2113,
+      "sha256": "5ea012a603367933380f75e85259221d99abc12bd8a768ed41ac11918622945d"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/inputs/FULLWIDTH_HANDOFF.txt": {
+      "bytes": 2706,
+      "sha256": "2a7c931dd3256e6642324778eaf397a90548daeebe88ae889c39e83ddac9a4c2"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/inputs/RF.sv": {
+      "bytes": 2365,
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/inputs/W2.json": {
+      "bytes": 6622,
+      "sha256": "e3b21affdbe1e430311948a670f03e2a9f2f4b5d956c56e775744a12ca61707b"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/inputs/canonical.json": {
+      "bytes": 10417,
+      "sha256": "22e2e3c718807d91e3ef4bfd8b8a3db704583f452592975fc651b538f2827212"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/inputs/commands.json.gz": {
+      "bytes": 330784,
+      "sha256": "9f8c0fbf277c3405f09444efa7a592496b6c92761cc9c8c9fa22da9af41f5464"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/inputs/fence.sv": {
+      "bytes": 3538,
+      "sha256": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/inputs/fullSM.sv": {
+      "bytes": 4588,
+      "sha256": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/inputs/pipeline.py": {
+      "bytes": 21837,
+      "sha256": "7a10234ee4258d74222eb41d8a3e9c4b4ef36ccf90662d430b4388aea18a6e92"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/inputs/pipeline_model.json": {
+      "bytes": 11651,
+      "sha256": "08d13194e80ac27a5b149b455c5104104badacb9112b8c99d19ad23e3d012528"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/old_sector_phase_omission_FAIL.json": {
+      "bytes": 424,
+      "sha256": "6b3a64dc539bd8b594ccd091e12a2aa6bd95ecc803f9a25bb495ead05dcba51e"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/replay_proof.py": {
+      "bytes": 3812,
+      "sha256": "34c297416eca912c5cd0143ae39a81d27bb947fb897f62e8423a87172c701f9d"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/validation.json": {
+      "bytes": 417,
+      "sha256": "25689f730950723eca226a8007e3a4f489051c6037397e89287518ef9e4cb65c"
+    },
+    "tests/test_h3_complete_native_calendar_fullwidth_service_r6.py": {
+      "bytes": 6220,
+      "sha256": "acc246817857b11cca55f1ae589bed59db2421bf0cb2af8d4ef2e8e8dc9e11f5"
+    },
+    "tools/h3_complete_native_calendar_fullwidth_service_r6.py": {
+      "bytes": 17808,
+      "sha256": "6e7f3f6b66dba263783ef4595a459221fce0760fde77eea3b588e5e926fae4e3"
+    }
+  },
+  "branch": "codex/h3-physical-grants-20261002",
+  "checks": {
+    "byte_exact_cold_replay": true,
+    "combined_negative_subtests": 26,
+    "combined_seconds": 57.61,
+    "combined_tests": 38,
+    "final_component_negative_subtests": 16,
+    "final_component_seconds": 2.02,
+    "final_component_tests": 8,
+    "independent_interval_proof": true,
+    "numeric_or_build_runs": 0,
+    "old_source_unchanged": true,
+    "production_calls": 0,
+    "schema": "FULLWIDTH_COMPONENT_CALENDAR_R6_VALIDATION"
+  },
+  "commands": [
+    "python -m pytest -q -o addopts=\"\" tests/test_h3_complete_native_calendar_fullwidth_service_r6.py tests/test_h3_complete_native_calendar_causal_domains_r5.py tests/test_h3_complete_native_calendar_owner_join_r3.py",
+    "python tools/h3_complete_native_calendar_fullwidth_service_r6.py --verify",
+    "python results/uarch/h3_complete_native_calendar_20261002/fullwidth_service_r6/replay_proof.py"
+  ],
+  "component_source": "1aed3d931",
+  "git_history_dependency_for_replay": null,
+  "implemented": [
+    "finite NC6*16 rows per physicalPC and32SM owner holds until matched-model reverseCDC+positive drain",
+    "all16sector32 read/return/capture children per512B vector; actual2RFcopies1024B write command priced once with one commonACK",
+    "FIFO source-order prospective reservations; source held routeII40 vs uninstalled4lane pipelineII1; same occurrence existing debit retained not recharged",
+    "originaltag32/PTAG35 restored and explicit generation4 echoed in every child event; no compact prerequisite",
+    "49transaction repeated-token model crosses3modulo16 wraps per scenario; API has no generation run cap",
+    "positive8/64/256 endpoint+drain sensitivity and 32SM competing controls; explicit propagation/occupancy",
+    "owner16->46 width replacement +700416 protected pipeline bits; requestcut1736bits/SM vsreturn1448; FF-only screen excludes unpriced gates/clock/reset/ports",
+    "independent61events/vector proof of DAG dependencies, finite resource seats, W2slots and SMlease intervals, childcounts, commonACK once and tags",
+    "preserved initial expectation failure and actual omitted-old-sector phase failure; corrected read before merge"
+  ],
+  "inputs_portable_exact_archives": true,
+  "interface": {
+    "admit": "admit(occurrence,owner,SM,RF_slot,release=0)",
+    "calendar": "FullWidthCalendar(parameters,route=held|elastic_proposal,already_paid={occurrence:{kind,duration}})",
+    "caller_binding": "explicit prospective caller fields; actual accepted C0/KV adapter must supply them before production",
+    "owner46": "owner46(physical_PC7,client3,originaltag32,generation4)",
+    "owner55": "owner46<<9|RF_slot9",
+    "source_generation_not_software_lease64": true
+  },
+  "live_owned_jobs": [],
+  "next_action": "Popper bind NC6 accepted caller map/newslots and owner46 endpoints; Dewey load emitted owner DAG and authoritative existing occurrence intervals into this prospective scheduler, replace assumptions once and retain unknowns until source export/measurement",
+  "parent_canonical": "887c76704",
+  "physical_admitted": false,
+  "prospective_scope": "constructive component sizing/service model with positive assumed downstream bounds; not an installed guarantee",
+  "runtime_python_import_dependencies": [],
+  "schema": "FULLWIDTH_PAID_FINITE_MODEL_CALENDAR_R6_HANDOFF",
+  "source_PC_counts": {
+    "DS": 2213,
+    "Qwen": 1737
+  },
+  "source_scope": "selected_r4 source archive288RMW/9216shared children retained as inventory; controls are not their actual caller execution",
+  "tool": "tools/h3_complete_native_calendar_fullwidth_service_r6.py",
+  "whole_program_calendar_claim": false,
+  "whole_token_ns": null,
+  "worktree": "/home/ubuntu/OpenTallas-h3-physical-grants"
+}

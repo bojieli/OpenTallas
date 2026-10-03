@@ -1,0 +1,170 @@
+{
+  "W2_model_extension": {
+    "backend_echo": {
+      "p_req_generation": 4,
+      "p_req_tag": 35,
+      "p_rsp_generation": 4,
+      "p_rsp_tag": 35,
+      "p_wr_done_generation": 4,
+      "p_wr_done_tag": 35
+    },
+    "backend_identity_total_bits": 39,
+    "client_inputs": {
+      "c_req_generation": "NC*4",
+      "c_req_tag": "NC*32",
+      "c_req_we": "NC"
+    },
+    "client_returns": {
+      "c_rsp_generation": "NC*4",
+      "c_rsp_tag": "NC*32",
+      "c_wr_done_generation": "NC*4",
+      "c_wr_done_ready": "NC",
+      "c_wr_done_tag": "NC*32",
+      "c_wr_done_v": "NC"
+    },
+    "echo_required_before_exact_generation_match_claim": true,
+    "echo_source_installed": false,
+    "generation_bits": 4,
+    "generation_not_taken_from_original_tag": true,
+    "original_client_tag_bits": 32,
+    "physical_read_handshake": "existing p_rsp_v/p_rsp_rdy plus generation4 echo; source payload256",
+    "physical_write_done_handshake": {
+      "ownership": "Nash holds identity until matching completion is accepted; original source has no ready",
+      "p_wr_done_ready": 1,
+      "p_wr_done_v": 1
+    },
+    "representation": "35-bit source tag plus explicit4-bit generation sideband; do not silently overwrite original tag. Packed39 is equivalent only with priced source/endpoint adapter."
+  },
+  "admission": {
+    "default_off": true,
+    "model_interface_proposal": true,
+    "new_RTL": false,
+    "new_build": false,
+    "source_echo_qualified": false,
+    "whole_bridge_admitted": false
+  },
+  "allocation": {
+    "generation_owner": "source-bound allocator of the exact PC transaction slot; compact bridge allocator when adapter exists. Caller software lease64 is not substituted as wire generation.",
+    "generation_reset": "coordinated all-endpoint/backend/CDC drain or flush; never local valid/counter clear alone",
+    "original_tag_owner": "actual accepted requester; W2 retains all32 bits",
+    "wrap": "modulo16 only after source all-copies including matched reverse CDC quiescence receipt; price wait. No monotonically increasing4-bit run cap; no generation1 assumption"
+  },
+  "client_mapping": {
+    "NC5": "standalone PC source default, not proof of generic production client enrollment",
+    "NC6": "full wrapper exists; source fixture client5 is KV",
+    "directory_sixth_client_priced": false,
+    "directory_sixth_client_source_bound": false,
+    "required": "Popper/root bind actual accepted C0/KV/directory caller classes, arbitration and SM/PC mapping. Do not take occupied KV index5 as free issuer. Nash price NC5 first; NC6 joins full bridge price before whole-design claim."
+  },
+  "compact_bridge": {
+    "coalescer_layout": [
+      [
+        "client",
+        6
+      ],
+      [
+        "batch_slot",
+        6
+      ],
+      [
+        "generation",
+        4
+      ]
+    ],
+    "layout": [
+      [
+        "client",
+        3
+      ],
+      [
+        "requester_SM",
+        5
+      ],
+      [
+        "slot",
+        4
+      ],
+      [
+        "generation",
+        4
+      ]
+    ],
+    "namespace": "physical PC lane or proven pre-CDC reversible mapping; original tag32 restored from private context",
+    "numeric_equality_is_not_identity": true,
+    "parent_tag_bits": 16
+  },
+  "exact_table": {
+    "SM_and_home_owner": "retain in mapped bridge context; a per-PC completion count/table alone cannot invent SM, home or lease",
+    "held": "stable completion valid/tag/gen/direction until ready; capture/backpressure ports and cells owned/priced by Nash",
+    "index": [
+      "physicalPC",
+      "client3",
+      "slot4"
+    ],
+    "match": "exact live reserved {PC,client,slot,originaltag32,gen4,direction}; read only matches read, write completion only write; no unmatched/duplicate/stale release",
+    "minimum_only": true,
+    "raw_bits_NC5_per_PC": 3040,
+    "raw_bits_NC6_per_PC": 3648,
+    "row_minimum_fields": {
+      "direction": 1,
+      "generation": 4,
+      "original_tag": 32,
+      "valid": 1
+    },
+    "row_minimum_raw_bits": 38,
+    "simultaneous_update": "joint allocation/read-return/write-completion decision from old registered live state; no hidden double release or same-edge alias reuse",
+    "sticky_fault": "wrong client, stale generation, absent live row, duplicate, wrong direction or reset-epoch mismatch; fault suppresses matching grant/release"
+  },
+  "frozen_contract_sha256": "03a6f1973777cdf031986f605ceda9c74fa8f37d741757076ec59bd32efb7228",
+  "full_stream_gate": {
+    "DS_PC_count": 2213,
+    "Qwen_PC_count": 1737,
+    "actual_transaction_receipt_count": null,
+    "repeated_tokens": true,
+    "small_C0": "parameterized fixture only, not full design admission",
+    "source_allcopies_predicate": null,
+    "source_wrap_wait_edges": null
+  },
+  "owner": "Nash: model/source-interface only, default-off, no RTL/build admission",
+  "responsibilities": {
+    "Euclid_Goodall_Dewey": "actual requester/visibility/consumer/drain receipts; no synthetic whole-stream qualification",
+    "Nash": "per-PC exact table, generation echo and held-ready port extension, cells/selectors/protection/latency/model tests",
+    "Popper": "whole bridge mapping/directory/arbitration and composed calendar/physical cost",
+    "parent": "model intake/admission/build permission"
+  },
+  "schema": "F0_W2_SOURCE_COMPATIBLE_INTERFACE_HANDOFF_V1",
+  "source_variants": {
+    "Nash_selected_model": {
+      "CTAGW": 32,
+      "MAX_OUT": 16,
+      "NC": 5,
+      "PTAGW": 35,
+      "SIDW": 3,
+      "live_entries_per_PC": 80,
+      "slot_bits": 4
+    },
+    "full_HBM_wrapper": {
+      "CTAGW": 32,
+      "MAX_OUT": 16,
+      "NC": 6,
+      "PTAGW": 35,
+      "SIDW": 3,
+      "live_entries_per_PC": 96
+    },
+    "source_default": {
+      "CTAGW": 17,
+      "NC": 5,
+      "PTAGW": 20,
+      "SIDW": 3,
+      "not_current_full_KV_identity": true
+    }
+  },
+  "write_visibility": {
+    "KV_adapter": "logical WRITE_REQ ready only after matching physical write completion; retain page/address/originaltag/epoch match through RMW. Existing adapter lacks generation echo.",
+    "PC_request_ready": "request accepted into service only; not HBM visible",
+    "RF": "both copy write accepts -> one identity-bearing common ACK -> metadata fence visible -> consumer -> child reverse -> parent reverse -> reverse CDC -> credit/context release",
+    "backend_wr_done": "must originate from actual accepted backend write and source-qualified visibility/order condition; tag+gen echoed exactly",
+    "c_wr_done": "held exact write-completion acceptance; not proof of RF visibility/consumer retirement",
+    "read_or_completion_does_not_release_fullbridge_lease": true
+  }
+}

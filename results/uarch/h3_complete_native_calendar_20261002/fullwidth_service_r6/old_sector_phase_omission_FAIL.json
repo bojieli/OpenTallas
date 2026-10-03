@@ -1,0 +1,19 @@
+{
+  "correction": "execute old_sector_read before merge; source2edge cost retained",
+  "events_actual": 60,
+  "events_required": 61,
+  "retire_actual": [
+    779,
+    1419,
+    5259
+  ],
+  "retire_required": [
+    781,
+    1421,
+    5261
+  ],
+  "source_sha256": "2ba27475b7c5d206540a9c91f0ea58032138708d1fa249af94a94b43c7a43023",
+  "tests_failed": 2,
+  "tests_passed": 6,
+  "verdict": "FAIL_MISSING_OLD_SECTOR_READ_PHASE"
+}

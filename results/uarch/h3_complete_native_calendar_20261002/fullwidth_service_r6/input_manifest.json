@@ -1,0 +1,53 @@
+{
+  "FULLWIDTH_HANDOFF.txt": {
+    "bytes": 2706,
+    "commit": "887c76704954ebee8fa61f47d18da6140947ab5a",
+    "path": "results/uarch/h4_hbm_f0_field_freeze_review_20261003/FULLWIDTH_HANDOFF.txt",
+    "sha256": "2a7c931dd3256e6642324778eaf397a90548daeebe88ae889c39e83ddac9a4c2"
+  },
+  "RF.sv": {
+    "bytes": 2365,
+    "path": "rtl/gpu/ot_gpu_rf_service.sv",
+    "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+  },
+  "W2.json": {
+    "bytes": 6622,
+    "commit": "8535c3010c7354734ececca8a8d9109ced2f50a7",
+    "path": "results/uarch/h4_hbm_f0_field_freeze_review_20261003/W2-interface-contract-r1.json",
+    "sha256": "e3b21affdbe1e430311948a670f03e2a9f2f4b5d956c56e775744a12ca61707b"
+  },
+  "canonical.json": {
+    "bytes": 10417,
+    "commit": "887c76704954ebee8fa61f47d18da6140947ab5a",
+    "path": "results/uarch/h4_hbm_f0_field_freeze_review_20261003/canonical-fullwidth-C0-KV-read-r1.json",
+    "sha256": "22e2e3c718807d91e3ef4bfd8b8a3db704583f452592975fc651b538f2827212"
+  },
+  "commands.json.gz": {
+    "bytes": 330784,
+    "path": "selected_r4/commands.json.gz",
+    "scope": "archived source command inventory; caller map absent",
+    "sha256": "9f8c0fbf277c3405f09444efa7a592496b6c92761cc9c8c9fa22da9af41f5464"
+  },
+  "fence.sv": {
+    "bytes": 3538,
+    "path": "rtl/gpu/ot_gpu_rf_visibility_fence.sv",
+    "sha256": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3"
+  },
+  "fullSM.sv": {
+    "bytes": 4588,
+    "path": "rtl/gpu/ot_gpu_full_sm_service.sv",
+    "sha256": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896"
+  },
+  "pipeline.py": {
+    "bytes": 21837,
+    "commit": "1aed3d931a4ef08df7de50ca4df36103267fe183",
+    "path": "tools/h4_hbm_bridge_pipeline_r2.py",
+    "sha256": "7a10234ee4258d74222eb41d8a3e9c4b4ef36ccf90662d430b4388aea18a6e92"
+  },
+  "pipeline_model.json": {
+    "bytes": 11651,
+    "commit": "1aed3d931a4ef08df7de50ca4df36103267fe183",
+    "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/model.json",
+    "sha256": "08d13194e80ac27a5b149b455c5104104badacb9112b8c99d19ad23e3d012528"
+  }
+}

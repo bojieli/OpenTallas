@@ -1,0 +1,18 @@
+{
+  "actual": [
+    128,
+    352,
+    1120
+  ],
+  "correction": "sum explicit service terms; no implementation timing change to satisfy test",
+  "expected": [
+    130,
+    354,
+    1122
+  ],
+  "failing_test": "test_prospective_sensitive_to_endpoint_and_drain_bounds",
+  "source_test_sha256": "0534d5c89e58677058c67ab9b1579ac41dab841e69ec77f7dee1b8c3563728e5",
+  "subtests_passed": 13,
+  "tests_passed": 7,
+  "verdict": "FAIL_TEST_EXPECTATION_ARITHMETIC"
+}

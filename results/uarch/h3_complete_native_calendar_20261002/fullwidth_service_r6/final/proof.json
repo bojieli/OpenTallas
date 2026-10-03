@@ -1,0 +1,77 @@
+{
+  "actual_caller_map_supplied": false,
+  "actual_production_calls": 0,
+  "artifact_sha256": {
+    "contending_32SM_calendars.json.gz": "04c8a7605d1934dab3b182098bf13601e62f50bdf72e76a1403b83b118be4c60",
+    "prospective_calendars.json.gz": "239d0c3f11148c5f7bb1e083bab0f95de4c37ff6762a0de93dcceeb38d8ad4cb"
+  },
+  "calendars": {
+    "contending_32SM_calendars.json.gz": {
+      "elastic_proposal": {
+        "events": 1952,
+        "incremental_edges": 31232,
+        "jobs": 32,
+        "last_retire": 4269,
+        "wraps": 0
+      },
+      "held": {
+        "events": 1952,
+        "incremental_edges": 31232,
+        "jobs": 32,
+        "last_retire": 22977,
+        "wraps": 0
+      }
+    },
+    "prospective_calendars.json.gz": {
+      "elastic_proposal.endpoint256.drain256": {
+        "events": 2989,
+        "incremental_edges": 290864,
+        "jobs": 49,
+        "last_retire": 257789,
+        "wraps": 3
+      },
+      "elastic_proposal.endpoint64.drain64": {
+        "events": 2989,
+        "incremental_edges": 102704,
+        "jobs": 49,
+        "last_retire": 69629,
+        "wraps": 3
+      },
+      "elastic_proposal.endpoint8.drain8": {
+        "events": 2989,
+        "incremental_edges": 47824,
+        "jobs": 49,
+        "last_retire": 14749,
+        "wraps": 3
+      },
+      "held.endpoint256.drain256": {
+        "events": 2989,
+        "incremental_edges": 290864,
+        "jobs": 49,
+        "last_retire": 257789,
+        "wraps": 3
+      },
+      "held.endpoint64.drain64": {
+        "events": 2989,
+        "incremental_edges": 102704,
+        "jobs": 49,
+        "last_retire": 69629,
+        "wraps": 3
+      },
+      "held.endpoint8.drain8": {
+        "events": 2989,
+        "incremental_edges": 47824,
+        "jobs": 49,
+        "last_retire": 38269,
+        "wraps": 3
+      }
+    }
+  },
+  "installed_quiescence_proved": false,
+  "missing_sector_children": false,
+  "premature_owner_reuse": false,
+  "resource_overlap": false,
+  "schema": "INDEPENDENT_FULLWIDTH_PROSPECTIVE_INTERVAL_PROOF_R6",
+  "verdict": "PASS_MODEL_INTERVALS_ONLY",
+  "whole_program_qualified": false
+}
