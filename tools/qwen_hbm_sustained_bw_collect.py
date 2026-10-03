@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Collect the near-HBM stream bench logs into rtl-bench-r1.json (canonical JSON).
 
-Inputs: results/uarch/qwen_hbm_sustained_bw_20261003/logs/*.log written by
+Usage: qwen_hbm_sustained_bw_collect.py [r1|r2]  (r1 reads logs/, r2 logs-r2/)
+Inputs: results/uarch/qwen_hbm_sustained_bw_20261003/logs*/*.log written by
 tests/rtl/run_hbm_stream_bw.sh (runs named in logs/list.txt and logs/extra.txt) and
 tests/rtl/run_hbm_stream_existing_models.sh (existing_*.log).
 """
@@ -22,8 +23,10 @@ def kv(line):
 
 
 def main():
+    rev = sys.argv[1] if len(sys.argv) > 1 else "r1"
+    logs = D / ("logs" if rev == "r1" else f"logs-{rev}")
     runs = {}
-    for f in sorted((D / "logs").glob("*.log")):
+    for f in sorted(logs.glob("*.log")):
         txt = f.read_text()
         summ = {}
         for line in txt.splitlines():
@@ -65,7 +68,7 @@ def main():
         "existing_models": {k: runs[k] for k in runs if k.startswith("existing_")},
         "runs": runs,
     }
-    (D / "rtl-bench-r1.json").write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
+    (D / f"rtl-bench-{rev}.json").write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
     print(json.dumps(out["groups"], indent=1))
 
 

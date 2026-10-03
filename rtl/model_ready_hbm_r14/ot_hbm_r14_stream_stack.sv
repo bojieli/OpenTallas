@@ -3,11 +3,11 @@
 // sequencers (ot_hbm_r14_stream_pc) and 16 per-channel row-command slots (JESD238: 16
 // independent channels, each two 32-bit pseudo-channels sharing the channel's C/A).
 // Column commands: each PC owns one per controller cycle (CK/2), i.e. half of its channel's
-// 1-tCK column slots.  Row commands: one per channel per cycle, refresh-class first, else
-// round robin.  ENABLE=0 (default) ties every output to zero.
+// 1-tCK column slots.  Row commands: one per channel per cycle; the channel's two PCs take
+// alternate cycles (TDM).  ENABLE=0 (default) ties every output to zero.
 module ot_hbm_r14_stream_stack #(
   parameter integer ENABLE = 0, REF_MODE = 1, CRED = 32, PHASE = 0,
-  parameter integer T_REFI = 3808, T_REFIPB = 119,
+  parameter integer T_REFI = 3808, T_REFIPB = 118,
   parameter integer NCH = 16                   // channels (2 PCs each); 16 = one stack, 1 = a screen slice
 )(
   input  wire          clk, rst_n,
@@ -40,24 +40,13 @@ module ot_hbm_r14_stream_stack #(
         .col_v(col_v[p]), .col_bank(col_bank[p*5 +: 5]), .col_col(col_col[p*5 +: 5]),
         .cred_ret(cred_ret[p*3 +: 3]), .busy(busy[p]), .ref_fault(pc_fault[p]));
     end
-    // priority level: REFab/REFpb (2) > PREab / forced PRE (1) > ACT / PRE (0); ties round robin
-    wire [2*NP-1:0] lvl;
-    for (genvar p = 0; p < NP; p = p + 1) begin : lv
-      assign lvl[p*2 +: 2] = !prio[p] ? 2'd0 : (row_op[p*3 + 2] && row_op[p*3 +: 2] != 2'd1) ? 2'd2 : 2'd1;
-    end
-    for (genvar c = 0; c < NCH; c = c + 1) begin : ch
-      wire a = req[2*c], b = req[2*c+1];
-      wire [1:0] la = lvl[4*c +: 2], lb = lvl[4*c+2 +: 2];
-      wire pick_b = b && (!a || lb > la || (lb == la && rr[c]));
-      assign gnt[2*c]   = a && !pick_b;
-      assign gnt[2*c+1] = pick_b;
-    end
+    // Row slot per channel: its two PCs alternate cycles (TDM, PC[0] = cycle parity), so no
+    // arbitration; two requests in one cycle would be a design fault.
+    assign gnt = {NP{1'b1}};
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin rr <= 0; arb_fault <= 0; end
-      else for (integer c = 0; c < NCH; c = c + 1) begin
-        if (req[2*c] && req[2*c+1]) rr[c] <= ~rr[c];
-        if (lvl[4*c +: 2] == 2'd2 && lvl[4*c+2 +: 2] == 2'd2) arb_fault <= 1;  // two REF, one slot
-      end
+      else for (integer c = 0; c < NCH; c = c + 1)
+        if (req[2*c] && req[2*c+1]) arb_fault <= 1;
     assign row_v = req & gnt;
     assign desc_r = &pc_r;
     assign fault = arb_fault || (|pc_fault);

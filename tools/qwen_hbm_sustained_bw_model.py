@@ -82,7 +82,7 @@ def cyc(name: str) -> int:
 
 T = {k: cyc(k) for k in PS}
 T["REFI"] = PS["REFI"] // CYC_PS                    # strict: never later than tREFI
-T["REFIPB"] = PS["REFI"] // NB // CYC_PS            # tREFIpb = tREFI / banks
+T["REFIPB"] = 2 * (PS["REFI"] // NB // CYC_PS // 2)  # tREFIpb = tREFI / banks, even (2-PC TDM row slot): 118
 T["CL_RET"] = T["CL"] + 1 + T["RSP"]                # RD -> data at the consumer
 
 LAYERS = 36

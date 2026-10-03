@@ -22,7 +22,7 @@ module tb_hbm_stream_bw;
   parameter integer B2B = 0;
   parameter integer CRED = 32;
   parameter longint PERIOD_PS = 5234167;      // 6,281 cycles at 1.2 GHz
-  parameter integer MUT = 0;                  // negative controls: 1 tRCD check +1 ns, 2 one corrupted sector, 3 REFpb interval check -1 ns
+  parameter integer MUT = 0;                  // negative controls: 1 tRCD check +1 ns, 2 one corrupted sector, 3 REFpb interval check -2 ns
   localparam integer NS = 1024;               // sectors per PC per layer
   localparam integer CYC = 1024;              // ps per controller cycle (CK/2)
   // timing (ps): ot_hdc_hbm_model.sv defaults; RFCPB from ot_hdc_v41x_idx_hbm.sv; RREFD assumed
@@ -134,7 +134,7 @@ module tb_hbm_stream_bw;
             if (now < p_last_act[p] + RREFD) v("tRREFD (REFpb after ACT)", p, bk);
             if (p_round[p][bk]) v("REFpb bank twice in one round", p, bk);
             p_round[p][bk] = 1; if (&p_round[p]) p_round[p] = 0;
-            if (now - p_last_ref[p] > REFI / 32 - (MUT == 3 ? 1000 : 0)) v("REFpb late", p, bk);
+            if (now - p_last_ref[p] > REFI / 32 - (MUT == 3 ? 2000 : 0)) v("REFpb late", p, bk);
             if (now - p_last_ref[p] > max_ref_gap) max_ref_gap = now - p_last_ref[p];
             p_last_ref[p] = now; p_last_refpb_any[p] = now;
             b_ref_end[p][bk] = now + RFCPB;
@@ -228,7 +228,11 @@ module tb_hbm_stream_bw;
     if (MUT == 2) mem[midx(5, 9, LAYERS - 1, 17)][77] ^= 1'b1;
     for (int p = 0; p < 32; p++) begin
       p_last_act[p] = -1000000; p_last_rd[p] = -1000000;
-      p_last_ref[p] = longint'((PHASE + (p * (REF_MODE ? 119 : 3808)) / 32) % (REF_MODE ? 119 : 3808)) * CYC; p_last_refpb_any[p] = -1000000;
+      begin : ph
+        automatic int P = REF_MODE ? 118 : 3808;                     // RTL refresh period (cycles)
+        automatic int base = (PHASE + (p * P) / 32) % P;
+        p_last_ref[p] = longint'(base + ((base + P + p) % 2)) * CYC;  // first due one period later
+      end p_last_refpb_any[p] = -1000000;
       p_round[p] = 0;
       for (int g = 0; g < 4; g++) begin p_act_bg[p][g] = -1000000; p_rd_bg[p][g] = -1000000; p_faw[p][g] = -1000000; end
       for (int b = 0; b < 32; b++) begin
