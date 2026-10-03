@@ -352,6 +352,15 @@
     "finite_service": "each collective packet at most4 distinct word batches;26slow edges inclusive before output stall. Full operation sums actual packet count and reverse receipts; consumer stalls never assumed bounded absent actual caller contract"
   },
   "caller_integration": {
+    "core_hook": {
+      "source": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+      "default_NATIVE_VM": 0,
+      "source_selected_caller_copy": true,
+      "issuer_PC_bits": 56,
+      "MACs_added": 0,
+      "cycle_added": 0,
+      "ownership": "latch actual pc on ME/index/attention/XU issue, pass actual request cookie in context low32; full tile legacy producers remain unconverted and complete parent admission false"
+    },
     "default_off": true,
     "MACs_per_cycle_added": 0,
     "native_peak_bytes_per_cycle_read_write": [
@@ -449,8 +458,8 @@
     },
     "source_II": "per-class real native service + forward2/reverse2 + source capture/reissue + positive retirement; serialize four write producers, no four free native ports",
     "conditional_write_wait": "at most3 other shared-writer packets only if each actual native visible completion is finite; native8way reader/writer arbitration and consumer stalls remain additive",
-    "added_FF_floor_um2": 935.1612000000001,
-    "added_50pct_reservation_mm2": 0.0018703224000000001,
+    "added_FF_floor_um2": 951.4908,
+    "added_50pct_reservation_mm2": 0.0019029816,
     "shared_VX_mux": {
       "producers": [
         "ME",
@@ -462,7 +471,7 @@
     },
     "shared_arbiter_fault_bits": 1,
     "format_fault_bits": 1,
-    "clock_reset": "3207 additional FF sinks, distinct from existing WAKE and transport; no clock/PG/hold credit",
+    "clock_reset": "3263 additional FF sinks, distinct from existing WAKE and transport; no clock/PG/hold credit",
     "routing": "source4to1 write mux up to4*2236 inputbits +2236 outputbits; all existing13native transport widths unchanged; physical site/channel capacity unbound",
     "physical_admission": false,
     "raw_source_integration_admission": true
@@ -533,6 +542,8 @@
     "rtl/model_ready_ds_shared_native_20261003/ot_ds_native_engine_arbiter.sv": "fc280edb001ebcda7d3876401d6b33616b88fc649fc8fd770f1d9a6c0e3e84db",
     "rtl/model_ready_ds_shared_native_20261003/ot_ds_native_seven_caller_service.sv": "064cccb3feae2eef947e4057c258935223b82c9ca32470e4625725d8132e0ac8",
     "rtl/model_ready_ds_shared_native_20261003/ot_ds_native_vm_related_callers.sv": "fe899b5034ba534dd333e7f2872706884f5b211a1475bce0537c557f835b8229",
-    "rtl/model_ready_ds_shared_native_20261003/ot_ds_su_kv_related_namespace.sv": "0c066edce6ab58f8c881eb68c08e1f6a00810b68aecf24555876f9194bb2f1da"
+    "rtl/model_ready_ds_shared_native_20261003/ot_ds_su_kv_related_namespace.sv": "0c066edce6ab58f8c881eb68c08e1f6a00810b68aecf24555876f9194bb2f1da",
+    "rtl/model_ready_ds_shared_native_20261003/ot_hdc_core_v41x_native_callers.sv": "dcdf4cd23fd85ba5e09aa7f3e1a29fcbc3b7ba2903b69f14f1cef8486414f405",
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251"
   }
 }

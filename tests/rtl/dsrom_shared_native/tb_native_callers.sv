@@ -16,7 +16,7 @@ module tb;
  reg [3:0] coll_en=0;reg [59:0] coll_wordaddr=0;reg [2047:0] coll_data=0;reg [329:0] direct_w_context=0;
  wire [1:0] direct_w_ready,direct_w_visible,direct_w_pending;wire [127:0] row_visible_mask;
  wire fault,quarantined;wire [7:0] debt;
- integer visible=0,rows=0,replies=0,native_row_accepts=0;reg [3:0] finished=0;
+ reg expect_reset_fault=0;integer visible=0,rows=0,replies=0,native_row_accepts=0;reg [3:0] finished=0;
  ot_ds_native_seven_caller_service #(.ENABLE(1)) dut(.*);
  always @(posedge fast_clk)if(cold_n)begin
   for(integer c=0;c<3;c=c+1)begin
@@ -32,7 +32,7 @@ module tb;
   if(|producer_w_visible)begin visible<=visible+$countones(producer_w_visible);finished<=finished|producer_w_visible;end
   if(|row_visible_mask)begin rows<=rows+$countones(row_visible_mask);row_en<=row_en & ~row_visible_mask;end
   if(dut.native.accept[6])native_row_accepts<=native_row_accepts+1;
-  if(fault)$fatal(1,"unexpected source integration fault");
+  if(fault && !expect_reset_fault)$fatal(1,"unexpected source integration fault");
  end
  initial begin
   repeat(4)@(negedge slow_clk);cold_n=1;fast_rst_n=1;slow_rst_n=1;
@@ -65,7 +65,7 @@ module tb;
   $display("PASS NATIVE_CALLER_SERVICE actual_macros=256 shared_writers=4 shared_VX=3 visible=4 rows=2 receipt_edge_duplicate=0 selector32_unaligned_exact=1 stalled_reply_lock=1");
   // Accepted request warm reset cannot release or reassign the locked caller.
   @(negedge fast_clk);vx_v=1;do @(posedge fast_clk);while(!vx_ready[0]);
-  @(negedge fast_clk);vx_v=0;fast_rst_n=0;abort_fast=1;abort_slow=1;
+  @(negedge fast_clk);vx_v=0;expect_reset_fault=1;fast_rst_n=0;abort_fast=1;abort_slow=1;
   repeat(4)@(negedge fast_clk);fast_rst_n=1;abort_fast=0;abort_slow=0;
   repeat(8)@(negedge fast_clk);
   if(!quarantined || !dut.arb.outstanding || vx_ready!=0)$fatal(1,"reset erased ownership");
