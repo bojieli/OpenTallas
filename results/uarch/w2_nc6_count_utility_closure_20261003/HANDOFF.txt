@@ -1,0 +1,100 @@
+W2 NC6 count-delta and utility semantic closure milestone
+
+Prerequisites b846a38ee +22ec32816, now parent main82ba8f9c5. Parent owns actual
+codec runtime results/rtl/w2_sealed_codec_parent_20261003; NO duplication here.
+Original NC6/source codec/model records byte-identical. No RTL edit/build or
+physical launch in this milestone. Existing live jobs/rates unchanged.
+
+Executable semantic model: tools/w2_nc6_count_utility_closure.py. Coded records
+carry all prospective persistent state. Python objects/calls/edge labels are
+reference bookkeeping; they are not installed controller state or native hooks.
+77 tests:57 new control/count/utility plus20 antecedent codec/ownership tests.
+Initial r1/r2 failure was refusal-reason priority (busy before self-repair);
+logs retained. Reordered guard explicitly, without relaxing refusal. All later
+development/closure logs retained; current cold generator byte-identical.
+
+Inventory:219 words x72=15768 protected bits/PC, +2160 vs13608 antecedent.
+- Original189 words retained. Count caches use count5/version4 in same word.
+- Six98-bit count workers (3 words each): targetCW72/address10/sourceversion4/
+  signed delta3/phase3/valid1/current committed tablecount5.
+- Six pending-delta words: signed delta3/valid1/overflowfault1.
+- Six offer-epoch words: reserved3/taken3/closed1/valid1.
+Static seal/padding FFs remain physical/fault observable. No arbitrary FIFO.
+Fullwidth customer32/gen4/scoped39; NC6/MAX16/KV5/LEN1/BEAT0 unchanged.
+
+Source-owned primary table writer maximum9:request1,read1,WRmatch1,WRretire6.
+Read transition and read retirement cannot coincide because original rqv&&!rdv
+versus rd_take=rdv&&... use old rdv. Secondary count commits need six independent
+72-bit cache-write paths, NOT stolen/free table ports. Count workers load18
+coded words; pendingdelta6 and offerepoch6 have explicit FF updates; utility
+contexts8 have coded phase updates and3-word loads, plus peer phase restart.
+These are FF record/Wmux paths, not a claimed multiport SRAM provider.
+
+Count behavior:
+Actual accepted allocation/read-retirement/write-retirement fold perclient.
+A coded offer epoch reserves each role once before output valid. First handshake
+closes NEW offers for that bank; already offered outputs remain held and may
+accept at different edges. Only unaccepted request role cancels on stop.
+Pending signed range[-2,+1] follows the three reserved roles, not an assumed
+unbounded stream. Overflow faults. Netzero still retains its valid count debt.
+Prepare only after table commits visible; old count+delta must equal CURRENT
+sealed16-row nonFREE census. Capture expectedtablecount in protected worker.
+Current version/target checks precede all six commits atomically. Cache cannot
+solely authorize admission; table/reservation/journal/old offers/copies matter.
+Local cache version wrap waits prior worker drain; sourcegen4 still requires
+external all-copy/provider/reverseCDC quiescence. No generation/run cap.
+
+Journal storage reconciliation: target72/expectedversion4/static role derives
+before-state expectation; no hidden before72 register. FREE old tag/gen are
+semantically dead for reservation-to-issue, but current integrity/seal remain
+required. Held/retire compare exact tag/gen/direction, expected state/version,
+lock and permitted version increment. Illegal valid-code targets are refused.
+
+Utility behavior:
+96-bit context remains original72/address10/syndrome7/overall1/phase3/status2/
+valid1, in3 sealed words. No unpriced corrected-result register. Phase uses
+coded context; stateless CURRENT-check fixed-priority rescue can bypass an
+impaired scheduler. An impaired utility is repaired through the other clean
+utility; busy clean peer finishes first. Duplicate target loads excluded.
+Context repair also resets its coded phase, then requires four fresh quiet
+edges. Cache/worker repair resets affected count-worker phase. Original raw
+codeword/address snapshot must still match at scrub. Both utility contexts
+impaired, DUE, bad seal/padding or changed snapshot fail closed. No universal
+multifault forward-progress promise. All24 engine/context-word classes tested.
+Any CE quarantines normal handshakes even with ready asserted; repair progress
+is the only permitted path. Actual exceptional held-valid enrollment remains
+required before connecting successor; no silent legacy valid withdrawal.
+
+Prospective calendar, not measured:
+Minimum lookup request/read/write8/8/9 and global lookup II8 from22ec retained;
+its earliest legal return is NOT clean (three bank-commit stall edges).
+Secondary count commit4edges. Quiet closed-offer batch: accepted0, table4,
+count load5, cache commit9, new capture10, next backend acceptance18.
+Thus sameclient backend acceptance II18 minimum under this serialized policy,
+not12 and not a production service rate. Already offered ready refusal is
+unbounded; further late acceptance can require a successor count wave.
+No slots/credits disappear while held. Any loaded retiming changes calendar.
+
+Area budget0.10102582602 mm2/PC;128PC with50% screen25.86261146112 mm2.
+This is a prospective allowed-cell construction, not net replacement/mapped
+area. FF D-input routers price7 table mutators+hold (8 sources) and5 other
+mutators+hold (6 sources), explicit AND/OR NAND construction, destination
+enables, buffers, codec and correction/arbitration logic. Reset SETN counts
+for all128 identities and CLK load retained. Actual tracks/slot/SSFF unknown.
+Do NOT carry the old9144/13608-bit area allowance into the new source.
+
+Next: prepare full defaultoff NC6 source with these219 sealed records and
+actual ready/valid connections. Include required p_wr_done_ready and explicit
+repair_busy exceptional protocol. Actual native caller/physical reverse-owner
+binding stays Popper's stream. Model captures current-clean219 tree,6local
+popcounts/countfold, encoder/context/current-check/target commit andFF Wmux
+feedback/reset loaded paths. No combinCAM/ECC1.2GHz claim; preserve833.333ps,
+SSsetup60/FFhold25 and price added loaded stages. Parent codec PASS does not
+qualify full NC6 or loaded SSFF. No P&R admission; any NEW physical launch uses
+main194417d02 run_abi3_physical_aligned_guarded.py --macro-track-gate and actual
+instance census/aligned ot_mts hooks. No automatic v2 geometry adoption.
+
+Replay:
+ python3 tools/w2_nc6_count_utility_closure.py --output /tmp/w2-count-utility.json
+ cmp /tmp/w2-count-utility.json results/uarch/w2_nc6_count_utility_closure_20261003/model.json
+ python3 -m pytest -q tests/test_w2_nc6_count_utility_closure.py tests/test_w2_nc6_protection_reconciliation.py tests/test_w2_nc6_mutable_protection_model.py

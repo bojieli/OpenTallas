@@ -1,0 +1,36 @@
+...........F....                                                         [100%]
+=================================== FAILURES ===================================
+_________________ test_duplicate_target_and_selfrepair_refused _________________
+
+    def test_duplicate_target_and_selfrepair_refused():
+        x=m.Repair();x.memory[0]^=1;x.load(0,0)
+        with pytest.raises(m.Refusal,match='already-owned'):x.load(6,0)
+        own=m.ids('correction_context',6)[0];x.memory[own]^=1
+>       with pytest.raises(m.Refusal,match='self-repair'):x.load(6,own)
+
+tests/test_w2_nc6_count_utility_closure.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <w2_nc6_count_utility_closure.Repair object at 0x7eb4e04edf90>
+engine = 6, index = 163
+
+    def load(self,engine,index):
+>       if self.fault or not self.idle(engine):raise Refusal('engine-busy/fault')
+E       w2_nc6_count_utility_closure.Refusal: engine-busy/fault
+
+tools/w2_nc6_count_utility_closure.py:160: Refusal
+
+During handling of the above exception, another exception occurred:
+
+    def test_duplicate_target_and_selfrepair_refused():
+        x=m.Repair();x.memory[0]^=1;x.load(0,0)
+        with pytest.raises(m.Refusal,match='already-owned'):x.load(6,0)
+        own=m.ids('correction_context',6)[0];x.memory[own]^=1
+>       with pytest.raises(m.Refusal,match='self-repair'):x.load(6,own)
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'self-repair'
+E         Actual message: 'engine-busy/fault'
+
+tests/test_w2_nc6_count_utility_closure.py:94: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_w2_nc6_count_utility_closure.py::test_duplicate_target_and_selfrepair_refused

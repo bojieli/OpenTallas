@@ -1,0 +1,64 @@
+{
+  "cold_byteidentical": true,
+  "originals_byteidentical": true,
+  "original_sha256": {
+    "tools/w2_nc6_mutable_protection_model.py": "c0a3177276d92d9e8d168b310a003597ff5f979d6d5d3a2fee83ebd37e6f7243",
+    "tools/w2_nc6_protection_reconciliation.py": "daf8af16a80c6efd01c04658826a04cafe83c1d6eb325801b55a0b1af93d4d4b",
+    "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  },
+  "files": [
+    {
+      "path": "tools/w2_nc6_count_utility_closure.py",
+      "sha256": "a4e4b9805860d01ca559f19b40f32e82ddf881c71b663235c38bb961bb0f3e8a"
+    },
+    {
+      "path": "tests/test_w2_nc6_count_utility_closure.py",
+      "sha256": "e887781454a1832557fa80a068ca3ece9936e0f985e2ca1d8acf5bea807dcf52"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/HANDOFF.txt",
+      "sha256": "482596c3e235fd3ccd58e83f56b8be6fb0958b845a50694636876217a7b5853d"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/closure_tests.log",
+      "sha256": "4cf2124032e464147e816ec20702b3b32e3647b01af12dd56f695de26cf6f779"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/development_tests_r1.log",
+      "sha256": "390604de3e3a3f33d730e5ab99b8a270ff58cbc7684f637b746932e06f8b06bc"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/development_tests_r2.log",
+      "sha256": "938cbe13937d40b241b3558494fd3eb6a774548a7a73c19135cba7ae977e0980"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/development_tests_r3.log",
+      "sha256": "e2289c230135b682d66e48107f8caab30f5b37878e8daf2e9fb92df9aebb1375"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/development_tests_r4.log",
+      "sha256": "12784721e0280443291002b595b03384e8588476665647b621a862f07297e08f"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/development_tests_r5.log",
+      "sha256": "a82a0b51cd86fa0131904e08c34ef556963104f0e3677f688117e093ebf2d3fe"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/milestone_tests.log",
+      "sha256": "09efabbe841d5a8f293aba74741670e19f3bd0993cd9cbbc9f6011f34f0a683e"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/milestone_tests_final.log",
+      "sha256": "0fad0a991838d695f5b48bbf12bcd6b46118e3a0347be88208246da3c20abc37"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/model.json",
+      "sha256": "30909c80f7ddafb91947c57262219fb3993c72b1751e975b52a4f13647cb660c"
+    },
+    {
+      "path": "results/uarch/w2_nc6_count_utility_closure_20261003/tests.log",
+      "sha256": "64576d99c4cef913eb9b9bd4e5a096807fe2289f77eb08a67c7de2e43fc6349d"
+    }
+  ]
+}

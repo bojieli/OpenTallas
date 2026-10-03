@@ -1,0 +1,2414 @@
+{
+  "antecedent": "22ec32816e4920307b222e93f4d91c3d049d5780",
+  "calendar": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "antecedent_min_request_read_write": [
+      8,
+      8,
+      9
+    ],
+    "consumer_retire_new_reservation_min_edges": 10,
+    "count_commit_edges": 4,
+    "drain_bound_scope": "all already offered consumers accepted by edge0; active count worker and last table journal finish<=4, successor starts5/commits9; quiet nofault edges, held ready refusal unbounded",
+    "global_lookup_II": 8,
+    "measured_latency": false,
+    "minimum_clean_gate": "all219 CURRENT codewords/seals/padding and sticky state; CE quarantines normal handshakes even if consumer ready",
+    "quiet_single_closed_offer_count_drain_upper_edges": 9,
+    "reason": "accept0/tablecommit4/countstart5/countcommit9/newcapture10/requestaccept18; no earlier sameclient source offer",
+    "sameclient_backend_accept_II_min_quiet": 18,
+    "sourceclock_period_ps": 833.333333
+  },
+  "count": {
+    "completion": "four quiet/current-clean edges; cache target version and delta reconstructed old count match",
+    "credit": "derived cache + actual table/reservation/journal/held-copy checks; no count-only admission",
+    "fold": "allocation1-readretire1-writeretire1 perclient; simultaneous fold, not last NBA assignment",
+    "local_count_version_wrap": "old worker and pending dependencies drained before next worker; old sourcegen4 quiescence unchanged",
+    "offer_controller": "six coded8bit epochs: reserved3/taken3/closed1/valid1; first handshake closes new offers, old reserved outputs stay held; reopen requires all roles taken/canceled and count/table/copies drained",
+    "offer_epoch": "no new offers to bank until table/count debts and old offers drain; previously held outputs may accept",
+    "out_of_budget": "stickyfault; no wrapping accumulator",
+    "popcount_path": "six local16-row two-bit-state nonFREE reductions, integer5 count; current word check plus popcount plus encode/load is explicit prospective loaded path",
+    "return_early_clean": false,
+    "signed_pending_range": [
+      -2,
+      1
+    ],
+    "start": "table commits visible; count5+fold must equal CURRENT sealed16-row nonFREE census; capture tablecount5 in protected worker, no existing count worker",
+    "table_journal_snapshot": "target72+expectedversion4+static role reconstructs semantic before state; no hidden before72 register; FREE old tag is dead but current codeword integrity still checked"
+  },
+  "geometry": {
+    "CTAG": 32,
+    "GEN": 4,
+    "MAX_OUT": 16,
+    "NC": 6,
+    "PC_ID": 7,
+    "new_directory_client": false,
+    "scoped_tag": 39
+  },
+  "loaded_paths": {
+    "count_capture": "six16row current-check/nonFREE/popcount paths plus signed fold, expectedtablecount and encoded worker capture; no claimed one-edge SS closure",
+    "current_clean_gate": "219 codeword syndrome/seal/padding reductions, global quarantine tree and actual ready/valid/output enable loads; source check may not use cached syndrome",
+    "hold_uncertainty_ps": 25,
+    "pending_delta": "CURRENT protected3bit accumulator, three accepted-role fold, encoded5bit update and held-output guard",
+    "qualified": false,
+    "reset": "all219 words retain static seal/padding FFs; encoded SETN/RESETN and CLK tree, no allzero-reset shortcut",
+    "router": "table7-source/other5-source onehot mutators plus hold; actual address and control fanout/load, fastest feedback FF hold",
+    "secondary_commit": "CURRENT target/version/cache/seal checks through six independent72bit FF update paths",
+    "sensitivity": "each extra loaded count stage adds one edge to countdrain and sameclient eligibility; request-side retiming separately adds to next backend acceptance; not measured clock proof",
+    "setup_uncertainty_ps": 60,
+    "target_period_ps": 833.333333,
+    "utility": "coded context phases, stateless priority, fixed peer rescue, original72bit stable hold and target/phase feedback; no unprotected selector"
+  },
+  "ports": {
+    "context_load_words_each": 3,
+    "context_repair_extra_phase_write_max": 1,
+    "correction_engines": 8,
+    "correction_phase_writers": 8,
+    "count_worker_load_words": 18,
+    "loaded_reset_clock_fanout_and_Wmux_SSFF_unknown": true,
+    "maximum_primary_plus_count_writes": 15,
+    "offer_epoch_writers": 6,
+    "pending_delta_writers": 6,
+    "physical_implementation": "independent FF record updates, not imaginary multiport SRAM",
+    "primary_table_writers": 9,
+    "rescue_selection": "stateless current-check fixed priority; no unpriced FF selector",
+    "secondary_count_writers": 6,
+    "table_writer_roles": "1request,1read(held transition OR retirement),1WRmatch,6WRretire; old rdv makes read branches mutually exclusive"
+  },
+  "price": {
+    "FF_write_router": {
+      "buffers_x4_budget": 4806,
+      "corrector_to_target_boundary_bits": 656,
+      "enable_decode_NAND2_budget": 36720,
+      "extra_NAND2": 447552,
+      "maximum_table_data_fanin": 7,
+      "no_arbitrary_extra_FIFO": true,
+      "other_input_sources_including_hold": 6,
+      "table_dynamic_destinations": 672,
+      "table_input_sources_including_hold": 8,
+      "utility_word_destinations": 438
+    },
+    "body_mm2_perPC_ASSUMED": 0.10102582602000001,
+    "clean_XOR2": 60444,
+    "clock_SS_fF": 6843.028176,
+    "delta_bits": 2160,
+    "encoder_XOR2": 31051,
+    "extra_CLK_RESET_tree_area_um2_ASSUMED": 62.86896,
+    "extra_secondary_guard_rescue_NAND2_budget": 491454,
+    "gross128PC_50pct_mm2_ASSUMED": 25.862611461120004,
+    "loaded_and_mapped": false,
+    "net_F0_replacement_unknown": true,
+    "protected_bits": 15768,
+    "reset_byPC": {
+      "0": {
+        "SETN_bits": 1930,
+        "physical_bits": 15768
+      },
+      "1": {
+        "SETN_bits": 2150,
+        "physical_bits": 15768
+      },
+      "10": {
+        "SETN_bits": 2370,
+        "physical_bits": 15768
+      },
+      "100": {
+        "SETN_bits": 2570,
+        "physical_bits": 15768
+      },
+      "101": {
+        "SETN_bits": 2794,
+        "physical_bits": 15768
+      },
+      "102": {
+        "SETN_bits": 2806,
+        "physical_bits": 15768
+      },
+      "103": {
+        "SETN_bits": 3026,
+        "physical_bits": 15768
+      },
+      "104": {
+        "SETN_bits": 2576,
+        "physical_bits": 15768
+      },
+      "105": {
+        "SETN_bits": 2788,
+        "physical_bits": 15768
+      },
+      "106": {
+        "SETN_bits": 2812,
+        "physical_bits": 15768
+      },
+      "107": {
+        "SETN_bits": 3020,
+        "physical_bits": 15768
+      },
+      "108": {
+        "SETN_bits": 2808,
+        "physical_bits": 15768
+      },
+      "109": {
+        "SETN_bits": 3024,
+        "physical_bits": 15768
+      },
+      "11": {
+        "SETN_bits": 2586,
+        "physical_bits": 15768
+      },
+      "110": {
+        "SETN_bits": 3010,
+        "physical_bits": 15768
+      },
+      "111": {
+        "SETN_bits": 3230,
+        "physical_bits": 15768
+      },
+      "112": {
+        "SETN_bits": 2572,
+        "physical_bits": 15768
+      },
+      "113": {
+        "SETN_bits": 2792,
+        "physical_bits": 15768
+      },
+      "114": {
+        "SETN_bits": 2808,
+        "physical_bits": 15768
+      },
+      "115": {
+        "SETN_bits": 3024,
+        "physical_bits": 15768
+      },
+      "116": {
+        "SETN_bits": 2812,
+        "physical_bits": 15768
+      },
+      "117": {
+        "SETN_bits": 3020,
+        "physical_bits": 15768
+      },
+      "118": {
+        "SETN_bits": 3014,
+        "physical_bits": 15768
+      },
+      "119": {
+        "SETN_bits": 3226,
+        "physical_bits": 15768
+      },
+      "12": {
+        "SETN_bits": 2374,
+        "physical_bits": 15768
+      },
+      "120": {
+        "SETN_bits": 2806,
+        "physical_bits": 15768
+      },
+      "121": {
+        "SETN_bits": 3026,
+        "physical_bits": 15768
+      },
+      "122": {
+        "SETN_bits": 3008,
+        "physical_bits": 15768
+      },
+      "123": {
+        "SETN_bits": 3232,
+        "physical_bits": 15768
+      },
+      "124": {
+        "SETN_bits": 3006,
+        "physical_bits": 15768
+      },
+      "125": {
+        "SETN_bits": 3234,
+        "physical_bits": 15768
+      },
+      "126": {
+        "SETN_bits": 3242,
+        "physical_bits": 15768
+      },
+      "127": {
+        "SETN_bits": 3466,
+        "physical_bits": 15768
+      },
+      "13": {
+        "SETN_bits": 2582,
+        "physical_bits": 15768
+      },
+      "14": {
+        "SETN_bits": 2576,
+        "physical_bits": 15768
+      },
+      "15": {
+        "SETN_bits": 2788,
+        "physical_bits": 15768
+      },
+      "16": {
+        "SETN_bits": 2138,
+        "physical_bits": 15768
+      },
+      "17": {
+        "SETN_bits": 2350,
+        "physical_bits": 15768
+      },
+      "18": {
+        "SETN_bits": 2374,
+        "physical_bits": 15768
+      },
+      "19": {
+        "SETN_bits": 2582,
+        "physical_bits": 15768
+      },
+      "2": {
+        "SETN_bits": 2132,
+        "physical_bits": 15768
+      },
+      "20": {
+        "SETN_bits": 2370,
+        "physical_bits": 15768
+      },
+      "21": {
+        "SETN_bits": 2586,
+        "physical_bits": 15768
+      },
+      "22": {
+        "SETN_bits": 2572,
+        "physical_bits": 15768
+      },
+      "23": {
+        "SETN_bits": 2792,
+        "physical_bits": 15768
+      },
+      "24": {
+        "SETN_bits": 2366,
+        "physical_bits": 15768
+      },
+      "25": {
+        "SETN_bits": 2590,
+        "physical_bits": 15768
+      },
+      "26": {
+        "SETN_bits": 2568,
+        "physical_bits": 15768
+      },
+      "27": {
+        "SETN_bits": 2796,
+        "physical_bits": 15768
+      },
+      "28": {
+        "SETN_bits": 2570,
+        "physical_bits": 15768
+      },
+      "29": {
+        "SETN_bits": 2794,
+        "physical_bits": 15768
+      },
+      "3": {
+        "SETN_bits": 2356,
+        "physical_bits": 15768
+      },
+      "30": {
+        "SETN_bits": 2806,
+        "physical_bits": 15768
+      },
+      "31": {
+        "SETN_bits": 3026,
+        "physical_bits": 15768
+      },
+      "32": {
+        "SETN_bits": 2146,
+        "physical_bits": 15768
+      },
+      "33": {
+        "SETN_bits": 2370,
+        "physical_bits": 15768
+      },
+      "34": {
+        "SETN_bits": 2352,
+        "physical_bits": 15768
+      },
+      "35": {
+        "SETN_bits": 2572,
+        "physical_bits": 15768
+      },
+      "36": {
+        "SETN_bits": 2350,
+        "physical_bits": 15768
+      },
+      "37": {
+        "SETN_bits": 2574,
+        "physical_bits": 15768
+      },
+      "38": {
+        "SETN_bits": 2582,
+        "physical_bits": 15768
+      },
+      "39": {
+        "SETN_bits": 2810,
+        "physical_bits": 15768
+      },
+      "4": {
+        "SETN_bits": 2130,
+        "physical_bits": 15768
+      },
+      "40": {
+        "SETN_bits": 2354,
+        "physical_bits": 15768
+      },
+      "41": {
+        "SETN_bits": 2570,
+        "physical_bits": 15768
+      },
+      "42": {
+        "SETN_bits": 2586,
+        "physical_bits": 15768
+      },
+      "43": {
+        "SETN_bits": 2806,
+        "physical_bits": 15768
+      },
+      "44": {
+        "SETN_bits": 2590,
+        "physical_bits": 15768
+      },
+      "45": {
+        "SETN_bits": 2802,
+        "physical_bits": 15768
+      },
+      "46": {
+        "SETN_bits": 2796,
+        "physical_bits": 15768
+      },
+      "47": {
+        "SETN_bits": 3004,
+        "physical_bits": 15768
+      },
+      "48": {
+        "SETN_bits": 2358,
+        "physical_bits": 15768
+      },
+      "49": {
+        "SETN_bits": 2566,
+        "physical_bits": 15768
+      },
+      "5": {
+        "SETN_bits": 2358,
+        "physical_bits": 15768
+      },
+      "50": {
+        "SETN_bits": 2590,
+        "physical_bits": 15768
+      },
+      "51": {
+        "SETN_bits": 2802,
+        "physical_bits": 15768
+      },
+      "52": {
+        "SETN_bits": 2586,
+        "physical_bits": 15768
+      },
+      "53": {
+        "SETN_bits": 2806,
+        "physical_bits": 15768
+      },
+      "54": {
+        "SETN_bits": 2792,
+        "physical_bits": 15768
+      },
+      "55": {
+        "SETN_bits": 3008,
+        "physical_bits": 15768
+      },
+      "56": {
+        "SETN_bits": 2582,
+        "physical_bits": 15768
+      },
+      "57": {
+        "SETN_bits": 2810,
+        "physical_bits": 15768
+      },
+      "58": {
+        "SETN_bits": 2788,
+        "physical_bits": 15768
+      },
+      "59": {
+        "SETN_bits": 3012,
+        "physical_bits": 15768
+      },
+      "6": {
+        "SETN_bits": 2366,
+        "physical_bits": 15768
+      },
+      "60": {
+        "SETN_bits": 2790,
+        "physical_bits": 15768
+      },
+      "61": {
+        "SETN_bits": 3010,
+        "physical_bits": 15768
+      },
+      "62": {
+        "SETN_bits": 3022,
+        "physical_bits": 15768
+      },
+      "63": {
+        "SETN_bits": 3246,
+        "physical_bits": 15768
+      },
+      "64": {
+        "SETN_bits": 2144,
+        "physical_bits": 15768
+      },
+      "65": {
+        "SETN_bits": 2372,
+        "physical_bits": 15768
+      },
+      "66": {
+        "SETN_bits": 2350,
+        "physical_bits": 15768
+      },
+      "67": {
+        "SETN_bits": 2574,
+        "physical_bits": 15768
+      },
+      "68": {
+        "SETN_bits": 2352,
+        "physical_bits": 15768
+      },
+      "69": {
+        "SETN_bits": 2572,
+        "physical_bits": 15768
+      },
+      "7": {
+        "SETN_bits": 2590,
+        "physical_bits": 15768
+      },
+      "70": {
+        "SETN_bits": 2584,
+        "physical_bits": 15768
+      },
+      "71": {
+        "SETN_bits": 2808,
+        "physical_bits": 15768
+      },
+      "72": {
+        "SETN_bits": 2358,
+        "physical_bits": 15768
+      },
+      "73": {
+        "SETN_bits": 2566,
+        "physical_bits": 15768
+      },
+      "74": {
+        "SETN_bits": 2590,
+        "physical_bits": 15768
+      },
+      "75": {
+        "SETN_bits": 2802,
+        "physical_bits": 15768
+      },
+      "76": {
+        "SETN_bits": 2586,
+        "physical_bits": 15768
+      },
+      "77": {
+        "SETN_bits": 2806,
+        "physical_bits": 15768
+      },
+      "78": {
+        "SETN_bits": 2792,
+        "physical_bits": 15768
+      },
+      "79": {
+        "SETN_bits": 3008,
+        "physical_bits": 15768
+      },
+      "8": {
+        "SETN_bits": 2134,
+        "physical_bits": 15768
+      },
+      "80": {
+        "SETN_bits": 2354,
+        "physical_bits": 15768
+      },
+      "81": {
+        "SETN_bits": 2570,
+        "physical_bits": 15768
+      },
+      "82": {
+        "SETN_bits": 2586,
+        "physical_bits": 15768
+      },
+      "83": {
+        "SETN_bits": 2806,
+        "physical_bits": 15768
+      },
+      "84": {
+        "SETN_bits": 2590,
+        "physical_bits": 15768
+      },
+      "85": {
+        "SETN_bits": 2802,
+        "physical_bits": 15768
+      },
+      "86": {
+        "SETN_bits": 2796,
+        "physical_bits": 15768
+      },
+      "87": {
+        "SETN_bits": 3004,
+        "physical_bits": 15768
+      },
+      "88": {
+        "SETN_bits": 2584,
+        "physical_bits": 15768
+      },
+      "89": {
+        "SETN_bits": 2808,
+        "physical_bits": 15768
+      },
+      "9": {
+        "SETN_bits": 2354,
+        "physical_bits": 15768
+      },
+      "90": {
+        "SETN_bits": 2790,
+        "physical_bits": 15768
+      },
+      "91": {
+        "SETN_bits": 3010,
+        "physical_bits": 15768
+      },
+      "92": {
+        "SETN_bits": 2788,
+        "physical_bits": 15768
+      },
+      "93": {
+        "SETN_bits": 3012,
+        "physical_bits": 15768
+      },
+      "94": {
+        "SETN_bits": 3020,
+        "physical_bits": 15768
+      },
+      "95": {
+        "SETN_bits": 3248,
+        "physical_bits": 15768
+      },
+      "96": {
+        "SETN_bits": 2366,
+        "physical_bits": 15768
+      },
+      "97": {
+        "SETN_bits": 2590,
+        "physical_bits": 15768
+      },
+      "98": {
+        "SETN_bits": 2568,
+        "physical_bits": 15768
+      },
+      "99": {
+        "SETN_bits": 2796,
+        "physical_bits": 15768
+      }
+    }
+  },
+  "readiness": {
+    "codec_runtime_owned_by_parent": true,
+    "component_control_semantics_closed": true,
+    "forbidden": "no reuse of9144/13608bit old cost, no free secondary ports, no use of parent codec runtime as fullNC6 or SSFF proof",
+    "full_NC6_RTL": false,
+    "functional_RTL_preparation_ready": true,
+    "next_action": "prepare full defaultoff NC6 source binding using219 sealed records, count/table journal ports, fixed utility rescue and coded offer epochs; retain required p_wr_done_ready plus explicit repair_busy contract",
+    "no_physical_launch": true,
+    "reason": "count/utility/offer semantic model closed; actual ready-valid port enrollment and loaded cuts still required",
+    "remaining": [
+      "actual protected NC6 enrollment binding of offer/table journal records to ready/valid ports",
+      "exceptional held-valid quarantine enrollment and current clean loaded SS/FF cuts"
+    ]
+  },
+  "schema": "w2.nc6.count-utility-prospective.v1",
+  "source_sha256": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94",
+  "storage": {
+    "bits_perPC": 15768,
+    "count_cache_count5_version4": true,
+    "count_delta_words": 6,
+    "count_worker_payload_bits": 98,
+    "count_workers": 6,
+    "delta_vs13608": 2160,
+    "layout": [
+      {
+        "chunk": 0,
+        "index": 0,
+        "instance": 0,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 1,
+        "instance": 1,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 2,
+        "instance": 2,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 3,
+        "instance": 3,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 4,
+        "instance": 4,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 5,
+        "instance": 5,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 6,
+        "instance": 6,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 7,
+        "instance": 7,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 8,
+        "instance": 8,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 9,
+        "instance": 9,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 10,
+        "instance": 10,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 11,
+        "instance": 11,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 12,
+        "instance": 12,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 13,
+        "instance": 13,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 14,
+        "instance": 14,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 15,
+        "instance": 15,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 16,
+        "instance": 16,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 17,
+        "instance": 17,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 18,
+        "instance": 18,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 19,
+        "instance": 19,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 20,
+        "instance": 20,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 21,
+        "instance": 21,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 22,
+        "instance": 22,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 23,
+        "instance": 23,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 24,
+        "instance": 24,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 25,
+        "instance": 25,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 26,
+        "instance": 26,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 27,
+        "instance": 27,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 28,
+        "instance": 28,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 29,
+        "instance": 29,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 30,
+        "instance": 30,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 31,
+        "instance": 31,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 32,
+        "instance": 32,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 33,
+        "instance": 33,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 34,
+        "instance": 34,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 35,
+        "instance": 35,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 36,
+        "instance": 36,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 37,
+        "instance": 37,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 38,
+        "instance": 38,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 39,
+        "instance": 39,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 40,
+        "instance": 40,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 41,
+        "instance": 41,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 42,
+        "instance": 42,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 43,
+        "instance": 43,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 44,
+        "instance": 44,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 45,
+        "instance": 45,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 46,
+        "instance": 46,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 47,
+        "instance": 47,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 48,
+        "instance": 48,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 49,
+        "instance": 49,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 50,
+        "instance": 50,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 51,
+        "instance": 51,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 52,
+        "instance": 52,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 53,
+        "instance": 53,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 54,
+        "instance": 54,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 55,
+        "instance": 55,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 56,
+        "instance": 56,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 57,
+        "instance": 57,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 58,
+        "instance": 58,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 59,
+        "instance": 59,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 60,
+        "instance": 60,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 61,
+        "instance": 61,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 62,
+        "instance": 62,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 63,
+        "instance": 63,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 64,
+        "instance": 64,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 65,
+        "instance": 65,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 66,
+        "instance": 66,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 67,
+        "instance": 67,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 68,
+        "instance": 68,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 69,
+        "instance": 69,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 70,
+        "instance": 70,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 71,
+        "instance": 71,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 72,
+        "instance": 72,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 73,
+        "instance": 73,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 74,
+        "instance": 74,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 75,
+        "instance": 75,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 76,
+        "instance": 76,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 77,
+        "instance": 77,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 78,
+        "instance": 78,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 79,
+        "instance": 79,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 80,
+        "instance": 80,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 81,
+        "instance": 81,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 82,
+        "instance": 82,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 83,
+        "instance": 83,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 84,
+        "instance": 84,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 85,
+        "instance": 85,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 86,
+        "instance": 86,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 87,
+        "instance": 87,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 88,
+        "instance": 88,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 89,
+        "instance": 89,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 90,
+        "instance": 90,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 91,
+        "instance": 91,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 92,
+        "instance": 92,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 93,
+        "instance": 93,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 94,
+        "instance": 94,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 95,
+        "instance": 95,
+        "kind": 0,
+        "payload_bits": 44,
+        "record": "table"
+      },
+      {
+        "chunk": 0,
+        "index": 96,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "request_holder"
+      },
+      {
+        "chunk": 1,
+        "index": 97,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "request_holder"
+      },
+      {
+        "chunk": 2,
+        "index": 98,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "request_holder"
+      },
+      {
+        "chunk": 3,
+        "index": 99,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "request_holder"
+      },
+      {
+        "chunk": 4,
+        "index": 100,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "request_holder"
+      },
+      {
+        "chunk": 5,
+        "index": 101,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "request_holder"
+      },
+      {
+        "chunk": 6,
+        "index": 102,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "request_holder"
+      },
+      {
+        "chunk": 7,
+        "index": 103,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 27,
+        "record": "request_holder"
+      },
+      {
+        "chunk": 0,
+        "index": 104,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "read_query"
+      },
+      {
+        "chunk": 1,
+        "index": 105,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "read_query"
+      },
+      {
+        "chunk": 2,
+        "index": 106,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "read_query"
+      },
+      {
+        "chunk": 3,
+        "index": 107,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "read_query"
+      },
+      {
+        "chunk": 4,
+        "index": 108,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "read_query"
+      },
+      {
+        "chunk": 5,
+        "index": 109,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 44,
+        "record": "read_query"
+      },
+      {
+        "chunk": 6,
+        "index": 110,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 33,
+        "record": "read_query"
+      },
+      {
+        "chunk": 0,
+        "index": 111,
+        "instance": 0,
+        "kind": 1,
+        "payload_bits": 41,
+        "record": "write_query"
+      },
+      {
+        "chunk": 0,
+        "index": 112,
+        "instance": 0,
+        "kind": 2,
+        "payload_bits": 44,
+        "record": "read_delivery"
+      },
+      {
+        "chunk": 1,
+        "index": 113,
+        "instance": 0,
+        "kind": 2,
+        "payload_bits": 44,
+        "record": "read_delivery"
+      },
+      {
+        "chunk": 2,
+        "index": 114,
+        "instance": 0,
+        "kind": 2,
+        "payload_bits": 44,
+        "record": "read_delivery"
+      },
+      {
+        "chunk": 3,
+        "index": 115,
+        "instance": 0,
+        "kind": 2,
+        "payload_bits": 44,
+        "record": "read_delivery"
+      },
+      {
+        "chunk": 4,
+        "index": 116,
+        "instance": 0,
+        "kind": 2,
+        "payload_bits": 44,
+        "record": "read_delivery"
+      },
+      {
+        "chunk": 5,
+        "index": 117,
+        "instance": 0,
+        "kind": 2,
+        "payload_bits": 44,
+        "record": "read_delivery"
+      },
+      {
+        "chunk": 6,
+        "index": 118,
+        "instance": 0,
+        "kind": 2,
+        "payload_bits": 36,
+        "record": "read_delivery"
+      },
+      {
+        "chunk": 0,
+        "index": 119,
+        "instance": 0,
+        "kind": 3,
+        "payload_bits": 5,
+        "record": "write_selection"
+      },
+      {
+        "chunk": 0,
+        "index": 120,
+        "instance": 1,
+        "kind": 3,
+        "payload_bits": 5,
+        "record": "write_selection"
+      },
+      {
+        "chunk": 0,
+        "index": 121,
+        "instance": 2,
+        "kind": 3,
+        "payload_bits": 5,
+        "record": "write_selection"
+      },
+      {
+        "chunk": 0,
+        "index": 122,
+        "instance": 3,
+        "kind": 3,
+        "payload_bits": 5,
+        "record": "write_selection"
+      },
+      {
+        "chunk": 0,
+        "index": 123,
+        "instance": 4,
+        "kind": 3,
+        "payload_bits": 5,
+        "record": "write_selection"
+      },
+      {
+        "chunk": 0,
+        "index": 124,
+        "instance": 5,
+        "kind": 3,
+        "payload_bits": 5,
+        "record": "write_selection"
+      },
+      {
+        "chunk": 0,
+        "index": 125,
+        "instance": 0,
+        "kind": 4,
+        "payload_bits": 9,
+        "record": "outstanding_cache"
+      },
+      {
+        "chunk": 0,
+        "index": 126,
+        "instance": 1,
+        "kind": 4,
+        "payload_bits": 9,
+        "record": "outstanding_cache"
+      },
+      {
+        "chunk": 0,
+        "index": 127,
+        "instance": 2,
+        "kind": 4,
+        "payload_bits": 9,
+        "record": "outstanding_cache"
+      },
+      {
+        "chunk": 0,
+        "index": 128,
+        "instance": 3,
+        "kind": 4,
+        "payload_bits": 9,
+        "record": "outstanding_cache"
+      },
+      {
+        "chunk": 0,
+        "index": 129,
+        "instance": 4,
+        "kind": 4,
+        "payload_bits": 9,
+        "record": "outstanding_cache"
+      },
+      {
+        "chunk": 0,
+        "index": 130,
+        "instance": 5,
+        "kind": 4,
+        "payload_bits": 9,
+        "record": "outstanding_cache"
+      },
+      {
+        "chunk": 0,
+        "index": 131,
+        "instance": 0,
+        "kind": 4,
+        "payload_bits": 3,
+        "record": "round_robin"
+      },
+      {
+        "chunk": 0,
+        "index": 132,
+        "instance": 0,
+        "kind": 4,
+        "payload_bits": 1,
+        "record": "sticky_fault"
+      },
+      {
+        "chunk": 0,
+        "index": 133,
+        "instance": 0,
+        "kind": 5,
+        "payload_bits": 44,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 1,
+        "index": 134,
+        "instance": 0,
+        "kind": 5,
+        "payload_bits": 21,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 0,
+        "index": 135,
+        "instance": 1,
+        "kind": 5,
+        "payload_bits": 44,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 1,
+        "index": 136,
+        "instance": 1,
+        "kind": 5,
+        "payload_bits": 21,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 0,
+        "index": 137,
+        "instance": 2,
+        "kind": 5,
+        "payload_bits": 44,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 1,
+        "index": 138,
+        "instance": 2,
+        "kind": 5,
+        "payload_bits": 21,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 0,
+        "index": 139,
+        "instance": 3,
+        "kind": 5,
+        "payload_bits": 44,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 1,
+        "index": 140,
+        "instance": 3,
+        "kind": 5,
+        "payload_bits": 21,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 0,
+        "index": 141,
+        "instance": 4,
+        "kind": 5,
+        "payload_bits": 44,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 1,
+        "index": 142,
+        "instance": 4,
+        "kind": 5,
+        "payload_bits": 21,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 0,
+        "index": 143,
+        "instance": 5,
+        "kind": 5,
+        "payload_bits": 44,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 1,
+        "index": 144,
+        "instance": 5,
+        "kind": 5,
+        "payload_bits": 21,
+        "record": "query_pipeline"
+      },
+      {
+        "chunk": 0,
+        "index": 145,
+        "instance": 0,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 1,
+        "index": 146,
+        "instance": 0,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 2,
+        "index": 147,
+        "instance": 0,
+        "kind": 6,
+        "payload_bits": 8,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 0,
+        "index": 148,
+        "instance": 1,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 1,
+        "index": 149,
+        "instance": 1,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 2,
+        "index": 150,
+        "instance": 1,
+        "kind": 6,
+        "payload_bits": 8,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 0,
+        "index": 151,
+        "instance": 2,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 1,
+        "index": 152,
+        "instance": 2,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 2,
+        "index": 153,
+        "instance": 2,
+        "kind": 6,
+        "payload_bits": 8,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 0,
+        "index": 154,
+        "instance": 3,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 1,
+        "index": 155,
+        "instance": 3,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 2,
+        "index": 156,
+        "instance": 3,
+        "kind": 6,
+        "payload_bits": 8,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 0,
+        "index": 157,
+        "instance": 4,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 1,
+        "index": 158,
+        "instance": 4,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 2,
+        "index": 159,
+        "instance": 4,
+        "kind": 6,
+        "payload_bits": 8,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 0,
+        "index": 160,
+        "instance": 5,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 1,
+        "index": 161,
+        "instance": 5,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 2,
+        "index": 162,
+        "instance": 5,
+        "kind": 6,
+        "payload_bits": 8,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 0,
+        "index": 163,
+        "instance": 6,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 1,
+        "index": 164,
+        "instance": 6,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 2,
+        "index": 165,
+        "instance": 6,
+        "kind": 6,
+        "payload_bits": 8,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 0,
+        "index": 166,
+        "instance": 7,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 1,
+        "index": 167,
+        "instance": 7,
+        "kind": 6,
+        "payload_bits": 44,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 2,
+        "index": 168,
+        "instance": 7,
+        "kind": 6,
+        "payload_bits": 8,
+        "record": "correction_context"
+      },
+      {
+        "chunk": 0,
+        "index": 169,
+        "instance": 0,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 1,
+        "index": 170,
+        "instance": 0,
+        "kind": 7,
+        "payload_bits": 43,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 0,
+        "index": 171,
+        "instance": 1,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 1,
+        "index": 172,
+        "instance": 1,
+        "kind": 7,
+        "payload_bits": 43,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 0,
+        "index": 173,
+        "instance": 2,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 1,
+        "index": 174,
+        "instance": 2,
+        "kind": 7,
+        "payload_bits": 43,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 0,
+        "index": 175,
+        "instance": 3,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 1,
+        "index": 176,
+        "instance": 3,
+        "kind": 7,
+        "payload_bits": 43,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 0,
+        "index": 177,
+        "instance": 4,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 1,
+        "index": 178,
+        "instance": 4,
+        "kind": 7,
+        "payload_bits": 43,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 0,
+        "index": 179,
+        "instance": 5,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 1,
+        "index": 180,
+        "instance": 5,
+        "kind": 7,
+        "payload_bits": 43,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 0,
+        "index": 181,
+        "instance": 6,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 1,
+        "index": 182,
+        "instance": 6,
+        "kind": 7,
+        "payload_bits": 43,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 0,
+        "index": 183,
+        "instance": 7,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 1,
+        "index": 184,
+        "instance": 7,
+        "kind": 7,
+        "payload_bits": 43,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 0,
+        "index": 185,
+        "instance": 8,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 1,
+        "index": 186,
+        "instance": 8,
+        "kind": 7,
+        "payload_bits": 43,
+        "record": "prepared_write"
+      },
+      {
+        "chunk": 0,
+        "index": 187,
+        "instance": 0,
+        "kind": 4,
+        "payload_bits": 44,
+        "record": "protected_scheduler"
+      },
+      {
+        "chunk": 1,
+        "index": 188,
+        "instance": 0,
+        "kind": 4,
+        "payload_bits": 35,
+        "record": "protected_scheduler"
+      },
+      {
+        "chunk": 0,
+        "index": 189,
+        "instance": 0,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 1,
+        "index": 190,
+        "instance": 0,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 2,
+        "index": 191,
+        "instance": 0,
+        "kind": 7,
+        "payload_bits": 10,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 0,
+        "index": 192,
+        "instance": 1,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 1,
+        "index": 193,
+        "instance": 1,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 2,
+        "index": 194,
+        "instance": 1,
+        "kind": 7,
+        "payload_bits": 10,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 0,
+        "index": 195,
+        "instance": 2,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 1,
+        "index": 196,
+        "instance": 2,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 2,
+        "index": 197,
+        "instance": 2,
+        "kind": 7,
+        "payload_bits": 10,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 0,
+        "index": 198,
+        "instance": 3,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 1,
+        "index": 199,
+        "instance": 3,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 2,
+        "index": 200,
+        "instance": 3,
+        "kind": 7,
+        "payload_bits": 10,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 0,
+        "index": 201,
+        "instance": 4,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 1,
+        "index": 202,
+        "instance": 4,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 2,
+        "index": 203,
+        "instance": 4,
+        "kind": 7,
+        "payload_bits": 10,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 0,
+        "index": 204,
+        "instance": 5,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 1,
+        "index": 205,
+        "instance": 5,
+        "kind": 7,
+        "payload_bits": 44,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 2,
+        "index": 206,
+        "instance": 5,
+        "kind": 7,
+        "payload_bits": 10,
+        "record": "count_worker"
+      },
+      {
+        "chunk": 0,
+        "index": 207,
+        "instance": 0,
+        "kind": 4,
+        "payload_bits": 5,
+        "record": "count_pending_delta"
+      },
+      {
+        "chunk": 0,
+        "index": 208,
+        "instance": 1,
+        "kind": 4,
+        "payload_bits": 5,
+        "record": "count_pending_delta"
+      },
+      {
+        "chunk": 0,
+        "index": 209,
+        "instance": 2,
+        "kind": 4,
+        "payload_bits": 5,
+        "record": "count_pending_delta"
+      },
+      {
+        "chunk": 0,
+        "index": 210,
+        "instance": 3,
+        "kind": 4,
+        "payload_bits": 5,
+        "record": "count_pending_delta"
+      },
+      {
+        "chunk": 0,
+        "index": 211,
+        "instance": 4,
+        "kind": 4,
+        "payload_bits": 5,
+        "record": "count_pending_delta"
+      },
+      {
+        "chunk": 0,
+        "index": 212,
+        "instance": 5,
+        "kind": 4,
+        "payload_bits": 5,
+        "record": "count_pending_delta"
+      },
+      {
+        "chunk": 0,
+        "index": 213,
+        "instance": 0,
+        "kind": 4,
+        "payload_bits": 8,
+        "record": "offer_epoch"
+      },
+      {
+        "chunk": 0,
+        "index": 214,
+        "instance": 1,
+        "kind": 4,
+        "payload_bits": 8,
+        "record": "offer_epoch"
+      },
+      {
+        "chunk": 0,
+        "index": 215,
+        "instance": 2,
+        "kind": 4,
+        "payload_bits": 8,
+        "record": "offer_epoch"
+      },
+      {
+        "chunk": 0,
+        "index": 216,
+        "instance": 3,
+        "kind": 4,
+        "payload_bits": 8,
+        "record": "offer_epoch"
+      },
+      {
+        "chunk": 0,
+        "index": 217,
+        "instance": 4,
+        "kind": 4,
+        "payload_bits": 8,
+        "record": "offer_epoch"
+      },
+      {
+        "chunk": 0,
+        "index": 218,
+        "instance": 5,
+        "kind": 4,
+        "payload_bits": 8,
+        "record": "offer_epoch"
+      }
+    ],
+    "offer_epoch_payload_bits": 8,
+    "offer_epoch_words": 6,
+    "unprotected_mutable_registers_allowed": 0,
+    "words": 219
+  },
+  "utility": {
+    "both_utilities_impaired": "failclosed; no universal multifault forward-progress guarantee",
+    "context": "coded original72/address10/syndrome7/overall1/phase3/status2/valid1",
+    "duplicate_target": "all clean active contexts exclude duplicate loads; dirty context rescue precedes new ordinary tasks",
+    "hardware_current_clean_fanout_not_closed": true,
+    "impaired_utility": "other clean utility repairs context; busy peer drains its clean task first",
+    "interrupted_context": "repair targetword and coded phase reset before original task resumes; four fresh clean edges mandatory",
+    "no_corrected_candidate_register": true,
+    "normal_admission_and_irreversible_release_during_CE": false,
+    "peer_busy_extra_edges_max": 4,
+    "phase_path": "only own coded phase word updates; original remains stable",
+    "quiet_single_CE_scrub_edges": 4,
+    "scheduler_CE": "stateless rescue bypass; normal ownership interfaces quarantined",
+    "target_immutability": "match original raw codeword and address at final edge or fault"
+  }
+}
