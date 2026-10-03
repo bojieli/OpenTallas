@@ -1,0 +1,29 @@
+{
+  "implementation_commit": "e6dffa754a1bfa6b8b4fc1868f67ee632348574b",
+  "parent_intake": "Exact 3519c19f1 plus the original 717 selected 19 paths can proceed independently.",
+  "corrective_source_paths": [
+    "tools/dsrom_s73_pair1_records.py",
+    "tools/dsrom_s82_source_inventory.py",
+    "tools/dsrom_s82_payload_interface.py",
+    "tests/test_dsrom_s82_payload_interface.py"
+  ],
+  "additional_dependency": {
+    "commit": "717a32dcf35c09ccff432068691a3da40b610863",
+    "path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_mapping_r1/mapping_verdict.json",
+    "bytes": 895
+  },
+  "changes": [
+    "Canonical S82 default record inputs; explicit output directory",
+    "Minimal list substitutes tiny mapping verdict for coordinate coverage report",
+    "DieROM physical macro/row payload-owner and inventory API"
+  ],
+  "baseline_API_preserved": true,
+  "software_tests": "PASS_7_ON_6f6_INTAKE",
+  "canonical_replay": "PASS_12_CONTRACTS_WITHOUT_DUPLICATE_PAYLOAD_OUTPUT",
+  "qualified_return_cost_mm2": 52.89758742528,
+  "adopted": false,
+  "full_physical_payload_bijection": false,
+  "full_execution_calendar": false,
+  "physical_owner_input": "/tmp/dsrom-c-w2-S82-source-6f6",
+  "main_intake_required_for_peer_access": false
+}
