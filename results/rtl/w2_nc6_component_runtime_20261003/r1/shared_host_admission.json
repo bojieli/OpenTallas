@@ -1,0 +1,47 @@
+{
+  "time_utc": "2026-10-03T04:24:25.101956+00:00",
+  "source_head": "526c760682f111e2f0261bdf811a7eab10e49d1b",
+  "lease_pid": 3077032,
+  "lease_alive": true,
+  "slot": "ot-pve1.1",
+  "threads": 2,
+  "route": {
+    "alias": "ot-pve1",
+    "guest": "ubuntu@10.77.1.10:22",
+    "proxyjump": "root@bsql-host1.01.me:22",
+    "identity_file": "/home/ubuntu/.ssh/agidock_ot"
+  },
+  "bare_repo": "/home/ubuntu/repo.git",
+  "bundle_prerequisite": "103d3ec89373119898c5662d490676f6ff8ab570",
+  "prerequisite_independently_present": true,
+  "candidate_worktree": "/home/ubuntu/w2-nc6-526c76068-pinned-r1",
+  "runtime_owner": "Parent/Nash; this agent has launched none",
+  "capacity": {
+    "guest_cpus": 28,
+    "guest_load1": 10.32666015625,
+    "guest_available_ram_bytes": 243273056256,
+    "guest_persistent_free_bytes": 61493215232,
+    "physical_parent_cpus": 28,
+    "physical_parent_load1": 11.84,
+    "physical_parent_available_ram_bytes": 51301089280,
+    "capacity_not_summed_with_128GBVM": true
+  },
+  "shared_host_policy": "Use this one reservation; no independent additive PVE1/128GB CPU/RAM budget. Parent authorization is scoped to the single tiny standalone gate, not R64 or additional jobs.",
+  "PVE2_PVE3": "Pool disabled/draining. Peer-reported reclaimed; current retirement/job disposition not independently verified. No assignments/watchers launched.",
+  "toolchain_matches": true,
+  "guard_R64_unchanged": true,
+  "cpu_note": "Two aggregate worker slots held. The frozen runner freshly selects its two affinity CPUs; relay its final IDs into the handoff. Do not taskset the Python runner to only two CPUs: its unchanged load check uses affinity count.",
+  "current_cpu_candidates": [
+    10,
+    20
+  ],
+  "existing_clean_pinned_checkout": "/home/ubuntu/w2-nc6-526c76068-source-r1",
+  "existing_checkout_head_exact": true,
+  "existing_checkout_git_status_empty": true,
+  "existing_checkout_is_shallow": true,
+  "existing_checkout_rtl_fixture_hashes_match": true,
+  "no_live_nc6_runner_or_build_observed": true,
+  "existing_checkout_manifest_entries_verified": 12,
+  "existing_checkout_manifest_mismatches": [],
+  "next_exact_owner_action": "From /home/ubuntu/w2-nc6-526c76068-source-r1 run python3 tools/w2_nc6_component_run.py --out /home/ubuntu/w2-nc6-526c76068-runtime-r1 once after owner fresh preflight; output directory must be fresh."
+}

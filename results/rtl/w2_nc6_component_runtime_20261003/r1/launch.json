@@ -1,0 +1,164 @@
+{
+  "PID": 57679,
+  "aggregate_worker_budget": 2,
+  "detached": true,
+  "host": "ot-pve1",
+  "inherited_rlimits": {
+    "RLIMIT_AS": [
+      -1,
+      -1
+    ],
+    "RLIMIT_CPU": [
+      -1,
+      -1
+    ],
+    "RLIMIT_DATA": [
+      -1,
+      -1
+    ],
+    "RLIMIT_FSIZE": [
+      -1,
+      -1
+    ]
+  },
+  "launch_time": 1791001579.990163,
+  "leaseholder": 3077032,
+  "output": "/home/ubuntu/w2-nc6-526c76068-runtime-r1",
+  "preflight": "/home/ubuntu/w2-nc6-526c76068-runtime-r1-preflight/record.json",
+  "preflight_headroom": {
+    "admitted": true,
+    "allocated_cpus": [
+      6,
+      1
+    ],
+    "available_memory_KiB": 237120392,
+    "cpu_sample": [
+      {
+        "cpu": 0,
+        "idle_pct": 58.333333333333336
+      },
+      {
+        "cpu": 1,
+        "idle_pct": 66.66666666666667
+      },
+      {
+        "cpu": 2,
+        "idle_pct": 61.224489795918366
+      },
+      {
+        "cpu": 3,
+        "idle_pct": 57.89473684210526
+      },
+      {
+        "cpu": 4,
+        "idle_pct": 62.244897959183675
+      },
+      {
+        "cpu": 5,
+        "idle_pct": 0.0
+      },
+      {
+        "cpu": 6,
+        "idle_pct": 70.65217391304348
+      },
+      {
+        "cpu": 7,
+        "idle_pct": 55.670103092783506
+      },
+      {
+        "cpu": 8,
+        "idle_pct": 47.474747474747474
+      },
+      {
+        "cpu": 9,
+        "idle_pct": 53.535353535353536
+      },
+      {
+        "cpu": 10,
+        "idle_pct": 57.7319587628866
+      },
+      {
+        "cpu": 11,
+        "idle_pct": 63.1578947368421
+      },
+      {
+        "cpu": 12,
+        "idle_pct": 16.831683168316832
+      },
+      {
+        "cpu": 13,
+        "idle_pct": 50.0
+      },
+      {
+        "cpu": 14,
+        "idle_pct": 62.765957446808514
+      },
+      {
+        "cpu": 15,
+        "idle_pct": 61.702127659574465
+      },
+      {
+        "cpu": 16,
+        "idle_pct": 57.0
+      },
+      {
+        "cpu": 17,
+        "idle_pct": 54.73684210526316
+      },
+      {
+        "cpu": 18,
+        "idle_pct": 9.900990099009901
+      },
+      {
+        "cpu": 19,
+        "idle_pct": 0.0
+      },
+      {
+        "cpu": 20,
+        "idle_pct": 56.38297872340426
+      },
+      {
+        "cpu": 21,
+        "idle_pct": 62.244897959183675
+      },
+      {
+        "cpu": 22,
+        "idle_pct": 59.79381443298969
+      },
+      {
+        "cpu": 23,
+        "idle_pct": 54.54545454545455
+      },
+      {
+        "cpu": 24,
+        "idle_pct": 65.95744680851064
+      },
+      {
+        "cpu": 25,
+        "idle_pct": 52.42718446601942
+      },
+      {
+        "cpu": 26,
+        "idle_pct": 59.183673469387756
+      },
+      {
+        "cpu": 27,
+        "idle_pct": 63.44086021505376
+      }
+    ],
+    "disk_free_bytes": 61256175616,
+    "eligible_cpu_count": 28,
+    "load": [
+      11.134765625,
+      13.05908203125,
+      14.9130859375
+    ],
+    "policy": "2 >=50% idle CPUs, load1 below eligible CPU count; measured admission, not process limits"
+  },
+  "preflight_record_sha256": "eb4d09a4d9f2d9358dfbecf001b99a7d605d0d1a726c0b99e454e588bdc2d247",
+  "process_caps_added": false,
+  "runner_log": "/home/ubuntu/w2-nc6-526c76068-runtime-r1.runner.log",
+  "slot": "ot-pve1.1",
+  "source_commit": "526c760682f111e2f0261bdf811a7eab10e49d1b",
+  "source_directory": "/home/ubuntu/w2-nc6-526c76068-source-r1"
+}

@@ -1,0 +1,171 @@
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'rearm_rdy'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:9:14: ... Location of port declaration
+    9 |  output wire rearm_rdy,idle,
+      |              ^~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'idle'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:9:24: ... Location of port declaration
+    9 |  output wire rearm_rdy,idle,
+      |                        ^~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'c_req_rdy'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:11:22: ... Location of port declaration
+   11 |  output reg [NC-1:0] c_req_rdy,
+      |                      ^~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'c_rsp_v'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:16:22: ... Location of port declaration
+   16 |  output reg [NC-1:0] c_rsp_v,c_wr_done_v,
+      |                      ^~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'c_wr_done_v'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:16:30: ... Location of port declaration
+   16 |  output reg [NC-1:0] c_rsp_v,c_wr_done_v,
+      |                              ^~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'c_rsp_tag'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:18:28: ... Location of port declaration
+   18 |  output reg [NC*CTAGW-1:0] c_rsp_tag,c_wr_done_tag,
+      |                            ^~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'c_wr_done_tag'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:18:38: ... Location of port declaration
+   18 |  output reg [NC*CTAGW-1:0] c_rsp_tag,c_wr_done_tag,
+      |                                      ^~~~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'c_rsp_gen'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:19:27: ... Location of port declaration
+   19 |  output reg [NC*GENW-1:0] c_rsp_gen,c_wr_done_gen,
+      |                           ^~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'c_wr_done_gen'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:19:37: ... Location of port declaration
+   19 |  output reg [NC*GENW-1:0] c_rsp_gen,c_wr_done_gen,
+      |                                     ^~~~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'c_rsp_data'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:20:26: ... Location of port declaration
+   20 |  output reg [NC*256-1:0] c_rsp_data,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'p_req_we'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:21:21: ... Location of port declaration
+   21 |  output reg p_req_v,p_req_we,
+      |                     ^~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'p_req_addr'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:23:22: ... Location of port declaration
+   23 |  output reg [AW-1:0] p_req_addr,
+      |                      ^~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'p_req_tag'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:24:25: ... Location of port declaration
+   24 |  output reg [PTAGW-1:0] p_req_tag,
+      |                         ^~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'p_req_gen'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:25:24: ... Location of port declaration
+   25 |  output reg [GENW-1:0] p_req_gen,
+      |                        ^~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'p_req_data'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:26:21: ... Location of port declaration
+   26 |  output reg [255:0] p_req_data,
+      |                     ^~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'p_rsp_rdy'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:28:13: ... Location of port declaration
+   28 |  output reg p_rsp_rdy,p_wr_done_ready,
+      |             ^~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:20:34: Instance has missing pin: 'p_wr_done_ready'
+   20 |  ot_hdc_qwen_pc_exact_completion disabled(
+      |                                  ^~~~~~~~
+                     /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:28:23: ... Location of port declaration
+   28 |  output reg p_rsp_rdy,p_wr_done_ready,
+      |                       ^~~~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:55:28: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                 : ... note: In instance 'tb.dut'
+   55 |  assign rearm_rdy=OPT_EXACT&&admission_stop&&provider_fenced&&reset_fenced&&idle;
+      |                            ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:64:14: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'rqc' generates 3 bits.
+                                                                                                                                                  : ... note: In instance 'tb.dut'
+   64 |   if(rqv&&rqc<NC)for(integer s=0;s<MAX_OUT;s=s+1)
+      |              ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:66:14: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'wqc' generates 3 bits.
+                                                                                                                                                  : ... note: In instance 'tb.dut'
+   66 |   if(wqv&&wqc<NC)for(integer s=0;s<MAX_OUT;s=s+1)
+      |              ^
+%Warning-WIDTHEXPAND: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:78:30: Operator LT expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                                                                                                                  : ... note: In instance 'tb.dut'
+   78 |     if(outstanding[candidate]<MAX_OUT)begin
+      |                              ^
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:91:15: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                 : ... note: In instance 'tb.dut'
+   91 |   if(OPT_EXACT&&!fault&&!bad&&rst_n)begin
+      |               ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:123:13: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'hc' generates 3 bits.
+                                                                                                                                                   : ... note: In instance 'tb.dut'
+  123 |      rr<=(hc==NC-1)?0:hc+1'b1;
+      |             ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:143:29: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'hc' generates 3 bits.
+                                                                                                                                                   : ... note: In instance 'tb.dut'
+  143 |      delta=0;if(req_take&&hc==i)delta=delta+1;
+      |                             ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:144:21: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rdc' generates 3 bits.
+                                                                                                                                                   : ... note: In instance 'tb.dut'
+  144 |      if(rd_take&&rdc==i)delta=delta-1;
+      |                     ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv:111:12: Logical operator IF expects 1 bit on the If, but If's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                  : ... note: In instance 'tb.dut'
+  111 |   end else if(OPT_EXACT)begin
+      |            ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:68:36: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'rv' generates 6 bits.
+                                                                                                            : ... note: In instance 'tb'
+   68 |   begin step();step();if(!fault||pv||rv||wv||prr||pwr)$fatal(1,"bad completion not quarantined");end
+      |                                    ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:68:40: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'wv' generates 6 bits.
+                                                                                                            : ... note: In instance 'tb'
+   68 |   begin step();step();if(!fault||pv||rv||wv||prr||pwr)$fatal(1,"bad completion not quarantined");end
+      |                                        ^~
+make: Entering directory '/home/ubuntu/w2-nc6-526c76068-runtime-r1/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb_vm_classes_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/home/ubuntu/w2-nc6-526c76068-runtime-r1/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.072 MB sources in 3 modules, into 6.358 MB in 20 C++ files needing 0.005 MB
+- Verilator: Walltime 46.902 s (elab=0.034, cvt=2.576, bld=43.686); cpu 3.198 s on 2 threads; allocated 108.188 MB

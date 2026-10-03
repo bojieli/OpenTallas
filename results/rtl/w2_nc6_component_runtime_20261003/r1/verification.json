@@ -1,0 +1,21 @@
+{
+  "R14_connected_qualified": false,
+  "SS_FF_qualified": false,
+  "allocated_cpus": [
+    11,
+    27
+  ],
+  "binary_sha256": "ff950d744e8d0124524849810b9b4b057000920958a9e421b79de8c6a91b7923",
+  "case_count": 18,
+  "compile_seconds": 47.06158158404287,
+  "fixture_cycles": 320,
+  "full_token_qualified": false,
+  "functional_clock_period_ps": 1000,
+  "global_reset_ABA_qualified": false,
+  "mutable_protection_qualified": false,
+  "native_caller_qualified": false,
+  "physical_WR_visibility_qualified": false,
+  "production_rate_qualified": false,
+  "source_commit": "526c760682f111e2f0261bdf811a7eab10e49d1b",
+  "verdict": "PASS_COMPONENT_FUNCTIONAL_ONLY"
+}
