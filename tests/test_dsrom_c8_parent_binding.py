@@ -31,6 +31,7 @@ def test_actual_s82_join_dynamic_phw_and_source_api(owner):
     assert x['BF_pairs']==512 and x['physical_macros']==9552
     assert x['ROM_PHW']==10 and x['ROM_R']==128
     assert x['return_RD']==64 and x['return_ROOTD']==128
+    assert x['C8_CONTEXT']==1
     assert x['WINDOW_REFILL_OWNER_SAFE']==1 and x['WINDOW_REFILL_CREDITS']==8
     assert p.scan_home(20)==41
     assert p.field_parameters(81,0)['ROM_PHW']==1
@@ -60,3 +61,20 @@ def test_parent_export_refuses_source_substitution(owner):
         q=export/name;q.parent.mkdir(parents=True,exist_ok=True);q.write_text('unowned replacement')
     with pytest.raises(ValueError,match='native source changed'):
         p.native_sources(export)
+
+
+def test_native_dispatch_join_preserves_owner_multicast_and_source_order(owner):
+    p=m.ParentBinding(owner,BASE,PIN,API)
+    fragment={'matrix':{'stage':41,'compiled_NP':2388},'die_id':164,
+              'requested_rank':3,'ordered_K':[[0,512],[512,128]],
+              'gather_local_rows':[0,128],'result_multicast_required':True}
+    resolved={'source_identity_verified':True,'fragments':[fragment],
+              'input_VM_elements':[0,640],'output_VM_base':8192,'output_format':'FP32'}
+    joined=p.bind_execution(resolved)
+    assert joined['parent_fragments'][0]['fragment'] is fragment
+    assert joined['parent_fragments'][0]['field_parameters']['RANK']==0
+    assert joined['fragments'] is resolved['fragments']
+    assert joined['output_VM_base']==8192
+    with pytest.raises(ValueError):p.bind_execution(dict(resolved,source_identity_verified=False))
+    fragment['matrix']['compiled_NP']=2682
+    with pytest.raises(ValueError,match='different partition'):p.bind_execution(resolved)

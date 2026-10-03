@@ -106,5 +106,20 @@
   "completion_matching": "Native backend supplies the actual completed queue entry address/tag; match exactly one enrolled seat. No FIFO-order assumption across bank scheduler reordering.",
   "journal_comparison_bits_per_rank_die": 385024,
   "native_completion_metadata_bits_per_rank_die": 6016,
-  "fixed_metadata_cycle_added": 0
+  "fixed_metadata_cycle_added": 0,
+  "context_binding": {
+    "parameter": "C8_CONTEXT=0 by default, selected only with C8_PUBLICATION=1",
+    "offer_bits": 82,
+    "descriptor_seats": 2,
+    "actual_compute_engines": 1,
+    "reset_debt": "actual journals and queued/active descriptor state quarantine; reset/empty is not retirement",
+    "core_entry": "c8_entry14 routed through the actual retained host_entry to tile.entry; no program-counter stand-in",
+    "restore": "c8_context_restored must real caller VM/context restore; not tied ready",
+    "native_identity": "selected engine_identity derived from accepted token/pos/user/epoch; native journals/own-writer consume that stable identity",
+    "retirement": "actual retained core done plus native journal quiet and no write fault/quarantine",
+    "added_state_bits_vs_existing_reservation": 0,
+    "added_capture_cycles": 0,
+    "constant_parameter_selection_no_runtime_mux_credit": true,
+    "functional_parent_measured": false
+  }
 }

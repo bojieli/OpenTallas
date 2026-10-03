@@ -70,3 +70,16 @@ def test_native_backend_lengths_match_actual_parent_not_default():
  assert '.TAGW(17),.LENW(4),.BEATW(4),' in b
  parent=(D/'ot_chip_v41x_hbm3e_phy_c8.sv').read_text()
  assert '.LENW(4), .BEATW(4)' in parent
+
+
+def test_actual_l20_top_launch_entry_identity_and_retire_are_connected():
+ s=(D/'ot_v41_rt_die_l20_c8.sv').read_text()
+ assert 'parameter integer C8_CONTEXT=0' in s
+ assert '.host_start(C8_CONTEXT ? c8_engine_start : start)' in s
+ assert ".host_entry(C8_PUBLICATION ? (C8_CONTEXT ? c8_engine_entry : c8_entry) : 14'd0)" in s
+ assert '.c8_position_identity(C8_CONTEXT ? c8_engine_identity : c8_position_identity)' in s
+ assert '.offer_token(token),.offer_pos(pos),.offer_user(user)' in s
+ assert '.context_restored(c8_context_restored)' in s
+ assert '.engine_done(done),.write_journal_quiet(c8_write_quiet)' in s
+ assert '.write_quarantine(c8_write_quarantine),.write_fault(c8_write_fault)' in s
+ assert 'C8 context requires actual native publication callbacks' in s

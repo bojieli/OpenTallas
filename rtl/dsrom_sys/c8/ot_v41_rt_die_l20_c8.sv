@@ -21,6 +21,7 @@
 // ---------------------------------------------------------------------------
 module ot_v41_rt_die_l20_c8 #(
     parameter integer C8_PUBLICATION=0,
+    parameter integer C8_CONTEXT=0,
     parameter integer WINDOW_REFILL_CREDITS = 1,
     parameter bit WINDOW_REFILL_OWNER_SAFE = 0,
     parameter integer CKV_SELECTED = 1,
@@ -114,6 +115,12 @@ module ot_v41_rt_die_l20_c8 #(
     input  wire [3*2304-1:0] ckv_ag_rx_row,
     output wire [31:0]       ckv_cycles_to_ready,
     output wire [5:0]        ckv_fault_code,
+    input wire [13:0] c8_entry,
+    input wire c8_context_restored,
+    output wire c8_offer_ready,c8_context_v,c8_retire_v,c8_stage_active,c8_stage_quarantine,
+    output wire [46:0] c8_context_identity,c8_retire_identity,
+    output wire [20:0] c8_context_token,
+    output wire [13:0] c8_context_entry,
     input wire [46:0] c8_position_identity,
     output wire c8_write_quiet,c8_write_quarantine,c8_write_fault,
     output wire [127:0] c8_visible_v,
@@ -132,11 +139,11 @@ module ot_v41_rt_die_l20_c8 #(
                        .CL_LANES(CL_LANES), .CL_DEPTH(CL_DEPTH), .CL_RELAY(CL_RELAY)) dut (
         .clk(clk), .rst_n(rst_n), .rom_fb(rom_fb), .rom_fr(rom_fr), .rom_ffault(rom_ffault),
         .att_to(att_to), .att_from(att_from),
-        .c8_position_identity(c8_position_identity),.c8_write_quiet(c8_write_quiet),.c8_write_quarantine(c8_write_quarantine),.c8_write_fault(c8_write_fault),
+        .c8_position_identity(C8_CONTEXT ? c8_engine_identity : c8_position_identity),.c8_write_quiet(c8_write_quiet),.c8_write_quarantine(c8_write_quarantine),.c8_write_fault(c8_write_fault),
         .c8_visible_v(c8_visible_v),.c8_visible_identity(c8_visible_identity),.c8_visible_addr(c8_visible_addr),.c8_visible_writer(c8_visible_writer),
         .c8_own_pending(c8_own_pending),.c8_own_visible_v(c8_own_visible_v),.c8_own_visible_identity(c8_own_visible_identity),.c8_own_visible_gid(c8_own_visible_gid),
-        .host_mode(1'b1), .host_start(start), .host_token(token), .host_pos(pos), .host_user(user),
-        .host_entry(14'd0), .host_prime_v(1'b0), .host_prime_first(1'b0), .host_prime_cid(12'd0),
+        .host_mode(1'b1), .host_start(C8_CONTEXT ? c8_engine_start : start), .host_token(C8_CONTEXT ? c8_engine_token : token), .host_pos(C8_CONTEXT ? c8_engine_pos : pos), .host_user(C8_CONTEXT ? c8_engine_user : user),
+        .host_entry(C8_PUBLICATION ? (C8_CONTEXT ? c8_engine_entry : c8_entry) : 14'd0), .host_prime_v(1'b0), .host_prime_first(1'b0), .host_prime_cid(12'd0),
         .window_region_valid(window_region_valid), .window_region_base(window_region_base),
         .window_region_count(window_region_count), .window_prime_v(window_prime_v),
         .window_prime_ready(window_prime_ready), .window_prime_user(window_prime_user),
@@ -281,4 +288,33 @@ module ot_v41_rt_die_l20_c8 #(
     function int v41rt_vm_word(input int a);
         v41rt_vm_word = dut.u_tile.vm[a];
     endfunction
+
+    wire c8_engine_start;
+    wire [20:0] c8_engine_token,c8_engine_pos;
+    wire [9:0] c8_engine_user;
+    wire [13:0] c8_engine_entry;
+    wire [46:0] c8_engine_identity;
+    generate if(C8_CONTEXT) begin:g_c8_context
+        initial if(!C8_PUBLICATION) $fatal(1,"C8 context requires actual native publication callbacks");
+        ot_dsrom_c8_stage_context u_context(
+            .clk(clk),.rst_n(rst_n),.offer_v(start),.offer_ready(c8_offer_ready),
+            .offer_token(token),.offer_pos(pos),.offer_user(user),
+            .offer_epoch(c8_position_identity[46:31]),.offer_entry(c8_entry),
+            .context_v(c8_context_v),.context_restored(c8_context_restored),
+            .context_identity(c8_context_identity),.context_token(c8_context_token),.context_entry(c8_context_entry),
+            .engine_start(c8_engine_start),.engine_token(c8_engine_token),.engine_pos(c8_engine_pos),
+            .engine_user(c8_engine_user),.engine_entry(c8_engine_entry),.engine_identity(c8_engine_identity),
+            .engine_done(done),.write_journal_quiet(c8_write_quiet),
+            .write_quarantine(c8_write_quarantine),.write_fault(c8_write_fault),
+            .retire_v(c8_retire_v),.retire_identity(c8_retire_identity),
+            .active(c8_stage_active),.quarantine(c8_stage_quarantine));
+    end else begin:g_no_c8_context
+        assign c8_offer_ready=rst_n;assign c8_context_v=0;assign c8_retire_v=0;
+        assign c8_stage_active=0;assign c8_stage_quarantine=0;
+        assign c8_context_identity=0;assign c8_retire_identity=0;
+        assign c8_context_token=0;assign c8_context_entry=0;
+        assign c8_engine_start=0;assign c8_engine_token=0;assign c8_engine_pos=0;
+        assign c8_engine_user=0;assign c8_engine_entry=0;assign c8_engine_identity=0;
+    end endgenerate
+
 endmodule

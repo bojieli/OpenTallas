@@ -111,10 +111,51 @@ def generate():
  s=s.replace('ot_chip_v41x_hbm3e_phy #(', 'ot_chip_v41x_hbm3e_phy_c8 #(')
  s=s.replace('.k_wr_done(h_wr_done),','.k_wr_done(h_wr_done),.k_wr_done_addr(c8_done_addr),.k_wr_done_tag(c8_done_tag),')
  emit('ot_chip_v41x_die_owner_safe_c8.sv',s)
- s=original('rtl/chip/window_owner_safe/ot_v41_rt_die_l20_owner_safe.sv').replace('module ot_v41_rt_die_l20_owner_safe #(', 'module ot_v41_rt_die_l20_c8 #(\n    parameter integer C8_PUBLICATION=0,')
- s=extra_ports(s,'    input wire [46:0] c8_position_identity,\n    output wire c8_write_quiet,c8_write_quarantine,c8_write_fault,\n    output wire [127:0] c8_visible_v,\n    output wire [128*47-1:0] c8_visible_identity,\n    output wire [128*30-1:0] c8_visible_addr,\n    output wire [255:0] c8_visible_writer,\n    output wire c8_own_pending,c8_own_visible_v,\n    output wire [46:0] c8_own_visible_identity,\n    output wire [20:0] c8_own_visible_gid')
+ s=original('rtl/chip/window_owner_safe/ot_v41_rt_die_l20_owner_safe.sv').replace('module ot_v41_rt_die_l20_owner_safe #(', 'module ot_v41_rt_die_l20_c8 #(\n    parameter integer C8_PUBLICATION=0,\n    parameter integer C8_CONTEXT=0,')
+ s=extra_ports(s,'    input wire [13:0] c8_entry,\n    input wire c8_context_restored,\n    output wire c8_offer_ready,c8_context_v,c8_retire_v,c8_stage_active,c8_stage_quarantine,\n    output wire [46:0] c8_context_identity,c8_retire_identity,\n    output wire [20:0] c8_context_token,\n    output wire [13:0] c8_context_entry,\n    input wire [46:0] c8_position_identity,\n    output wire c8_write_quiet,c8_write_quarantine,c8_write_fault,\n    output wire [127:0] c8_visible_v,\n    output wire [128*47-1:0] c8_visible_identity,\n    output wire [128*30-1:0] c8_visible_addr,\n    output wire [255:0] c8_visible_writer,\n    output wire c8_own_pending,c8_own_visible_v,\n    output wire [46:0] c8_own_visible_identity,\n    output wire [20:0] c8_own_visible_gid')
  s=s.replace('ot_chip_v41x_die_owner_safe #(', 'ot_chip_v41x_die_owner_safe_c8 #(.C8_PUBLICATION(C8_PUBLICATION),')
  s=s.replace('.host_mode(1\'b1),', '.c8_position_identity(c8_position_identity),.c8_write_quiet(c8_write_quiet),.c8_write_quarantine(c8_write_quarantine),.c8_write_fault(c8_write_fault),\n        .c8_visible_v(c8_visible_v),.c8_visible_identity(c8_visible_identity),.c8_visible_addr(c8_visible_addr),.c8_visible_writer(c8_visible_writer),\n        .c8_own_pending(c8_own_pending),.c8_own_visible_v(c8_own_visible_v),.c8_own_visible_identity(c8_own_visible_identity),.c8_own_visible_gid(c8_own_visible_gid),\n        .host_mode(1\'b1),')
+ # Actual retained core entry / native write callbacks, not an external
+ # assumed retirement tuple. The old start/token/pos/user path is unchanged
+ # unless C8_CONTEXT is selected. The caller must hold offers until ready and
+ # restore the real VM context before pulsing c8_context_restored.
+ s=s.replace('.c8_position_identity(c8_position_identity)', '.c8_position_identity(C8_CONTEXT ? c8_engine_identity : c8_position_identity)')
+ for port,legacy,new in [('host_start','start','c8_engine_start'),('host_token','token','c8_engine_token'),('host_pos','pos','c8_engine_pos'),('host_user','user','c8_engine_user')]:
+  old=f'.{port}({legacy})';assert s.count(old)==1
+  s=s.replace(old,f'.{port}(C8_CONTEXT ? {new} : {legacy})')
+ assert s.count(".host_entry(14'd0)")==1
+ s=s.replace(".host_entry(14'd0)",".host_entry(C8_PUBLICATION ? (C8_CONTEXT ? c8_engine_entry : c8_entry) : 14'd0)")
+ context="""
+    wire c8_engine_start;
+    wire [20:0] c8_engine_token,c8_engine_pos;
+    wire [9:0] c8_engine_user;
+    wire [13:0] c8_engine_entry;
+    wire [46:0] c8_engine_identity;
+    generate if(C8_CONTEXT) begin:g_c8_context
+        initial if(!C8_PUBLICATION) $fatal(1,"C8 context requires actual native publication callbacks");
+        ot_dsrom_c8_stage_context u_context(
+            .clk(clk),.rst_n(rst_n),.offer_v(start),.offer_ready(c8_offer_ready),
+            .offer_token(token),.offer_pos(pos),.offer_user(user),
+            .offer_epoch(c8_position_identity[46:31]),.offer_entry(c8_entry),
+            .context_v(c8_context_v),.context_restored(c8_context_restored),
+            .context_identity(c8_context_identity),.context_token(c8_context_token),.context_entry(c8_context_entry),
+            .engine_start(c8_engine_start),.engine_token(c8_engine_token),.engine_pos(c8_engine_pos),
+            .engine_user(c8_engine_user),.engine_entry(c8_engine_entry),.engine_identity(c8_engine_identity),
+            .engine_done(done),.write_journal_quiet(c8_write_quiet),
+            .write_quarantine(c8_write_quarantine),.write_fault(c8_write_fault),
+            .retire_v(c8_retire_v),.retire_identity(c8_retire_identity),
+            .active(c8_stage_active),.quarantine(c8_stage_quarantine));
+    end else begin:g_no_c8_context
+        assign c8_offer_ready=rst_n;assign c8_context_v=0;assign c8_retire_v=0;
+        assign c8_stage_active=0;assign c8_stage_quarantine=0;
+        assign c8_context_identity=0;assign c8_retire_identity=0;
+        assign c8_context_token=0;assign c8_context_entry=0;
+        assign c8_engine_start=0;assign c8_engine_token=0;assign c8_engine_pos=0;
+        assign c8_engine_user=0;assign c8_engine_entry=0;assign c8_engine_identity=0;
+    end endgenerate
+"""
+ assert s.count('endmodule')==1
+ s=s.replace('endmodule',context+'\nendmodule')
  emit('ot_v41_rt_die_l20_c8.sv',s)
  return receipts
 if __name__=='__main__':

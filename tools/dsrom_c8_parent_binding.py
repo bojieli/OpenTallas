@@ -79,10 +79,31 @@ class ParentBinding:
                     field_pairs=self.pairs, BF_pairs=len(self.stage_map['BF_site_IDs']),
                     physical_macros=4 * self.pairs, physical_rows=4096,
                     return_RD=64, return_ROOTD=self.contract['return_contract']['ROOTD'],
-                    C8_PUBLICATION=1, WINDOW_REFILL_OWNER_SAFE=1, WINDOW_REFILL_CREDITS=8)
+                    C8_PUBLICATION=1, C8_CONTEXT=1, WINDOW_REFILL_OWNER_SAFE=1, WINDOW_REFILL_CREDITS=8)
 
     def scan_home(self, layer):
         return self.stage_map['scan_service_homes'][str(layer)]
+
+    def bind_execution(self, resolved):
+        """Join the owner's resolved source operation to actual field parameters.
+
+        Preserve fragment / ordered-K / multicast / VM output metadata verbatim.
+        This prepares the real dispatcher; it does not assume a free gather,
+        broadcast or context restore and never re-encodes an instruction.
+        """
+        if resolved.get('source_identity_verified') is not True:
+            raise ValueError('source operation identity not verified')
+        joined = []
+        for fragment in resolved['fragments']:
+            matrix = fragment['matrix']
+            stage, die = matrix['stage'], fragment['die_id']
+            owners = [r for (s, r), d in self.rank_dies.items() if s == stage and d == die]
+            if len(owners) != 1:
+                raise ValueError('fragment has no unique physical field owner')
+            if matrix['compiled_NP'] != self.pairs:
+                raise ValueError('fragment belongs to a different partition')
+            joined.append(dict(fragment=fragment, field_parameters=self.field_parameters(stage, owners[0])))
+        return dict(resolved, parent_fragments=joined)
 
     @property
     def payload_api_path(self):
