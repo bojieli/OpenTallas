@@ -124,6 +124,49 @@
    "wall": null,
    "wire_by_class": {}
   },
+  "b_k16_banded_i5": {
+   "case": "b",
+   "congestion_windows": null,
+   "errors": [],
+   "exit": null,
+   "gcell_window_usage": {},
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": null,
+    "layers": {},
+    "total_wirelength_bundle_um": null
+   },
+   "grt_s": null,
+   "manifest": {
+    "adjustment": {
+     "M2_M3": 0.25,
+     "base_M4_M9": 0.1378,
+     "regions": {
+      "channel": 0.1378,
+      "corridor": 0.1378,
+      "ctrl": 0.37779999999999997,
+      "hub": 0.1,
+      "io": 0.1,
+      "phy": 0.05,
+      "strip": 0.37779999999999997,
+      "tile_field": 0.1378
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 167382,
+    "bundle_pins": 5915,
+    "case": "b",
+    "congestion_iterations": 5,
+    "instances": 3218,
+    "tag": "k16_banded_i5",
+    "tree_mode": "banded",
+    "wires": 2673206
+   },
+   "peak_rss_mb": null,
+   "wall": null,
+   "wire_by_class": {}
+  },
   "b_k16_i5": {
    "case": "b",
    "congestion_windows": null,
@@ -209,20 +252,396 @@
    "wall": null,
    "wire_by_class": {}
   },
+  "b_k32_banded_i5": {
+   "case": "b",
+   "congestion_windows": null,
+   "errors": [],
+   "exit": 0,
+   "gcell_window_usage": {
+    "M2": {
+     "max": 1.0,
+     "over_0p7": 113340,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M3": {
+     "max": 1.0,
+     "over_0p7": 115178,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M4": {
+     "max": 1.0,
+     "over_0p7": 112044,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M5": {
+     "max": 1.0,
+     "over_0p7": 127578,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M6": {
+     "max": 1.0,
+     "over_0p7": 103842,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M7": {
+     "max": 1.0,
+     "over_0p7": 116183,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M8": {
+     "max": 1.0,
+     "over_0p7": 1490,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M9": {
+     "max": 1.0,
+     "over_0p7": 2033,
+     "over_1": 0,
+     "windows": 144861
+    }
+   },
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:03:58",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 7952,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 4473247,
+      "usage_pct": 0.18
+     },
+     "M3": {
+      "demand": 37391,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 4643879,
+      "usage_pct": 0.81
+     },
+     "M4": {
+      "demand": 89398,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 4258236,
+      "usage_pct": 2.1
+     },
+     "M5": {
+      "demand": 1922311,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 5222287,
+      "usage_pct": 36.81
+     },
+     "M6": {
+      "demand": 40237,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 3808454,
+      "usage_pct": 1.06
+     },
+     "M7": {
+      "demand": 614042,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 3623813,
+      "usage_pct": 16.94
+     },
+     "M8": {
+      "demand": 819257,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 13336668,
+      "usage_pct": 6.14
+     },
+     "M9": {
+      "demand": 1086967,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 13298731,
+      "usage_pct": 8.17
+     }
+    },
+    "total": {
+     "demand": 4617555,
+     "overflow_h": 0,
+     "overflow_total": 0,
+     "overflow_v": 0,
+     "resource": 52665315,
+     "usage_pct": 8.77
+    },
+    "total_wirelength_bundle_um": 88295013.0
+   },
+   "grt_s": 239,
+   "manifest": {
+    "adjustment": {
+     "M2_M3": 0.25,
+     "base_M4_M9": 0.1378,
+     "regions": {
+      "channel": 0.1378,
+      "corridor": 0.1378,
+      "ctrl": 0.37779999999999997,
+      "hub": 0.1,
+      "io": 0.1,
+      "phy": 0.05,
+      "strip": 0.37779999999999997,
+      "tile_field": 0.1378
+     }
+    },
+    "bundle_k": 32,
+    "bundle_nets": 83694,
+    "bundle_pins": 2962,
+    "case": "b",
+    "congestion_iterations": 5,
+    "instances": 3218,
+    "tag": "k32_banded_i5",
+    "tree_mode": "banded",
+    "wires": 2673206
+   },
+   "peak_rss_mb": 3429,
+   "wall": "4:57.31",
+   "wire_by_class": {
+    "clock_trunk": {
+     "bundle_nets": 6,
+     "bundle_um": 88866.5,
+     "max_um": 17695.6,
+     "wire_m": 2.8
+    },
+    "corridor": {
+     "bundle_nets": 30720,
+     "bundle_um": 36973243.7,
+     "max_um": 1480.8,
+     "wire_m": 1183.1
+    },
+    "hbm_read": {
+     "bundle_nets": 832,
+     "bundle_um": 5404.9,
+     "max_um": 259.1,
+     "wire_m": 0.2
+    },
+    "head_chain": {
+     "bundle_nets": 1280,
+     "bundle_um": 480667.7,
+     "max_um": 2054.6,
+     "wire_m": 15.4
+    },
+    "io": {
+     "bundle_nets": 112,
+     "bundle_um": 1172460.5,
+     "max_um": 19472.5,
+     "wire_m": 37.5
+    },
+    "link_channel": {
+     "bundle_nets": 660,
+     "bundle_um": 1394950.6,
+     "max_um": 2776.5,
+     "wire_m": 44.6
+    },
+    "link_spine": {
+     "bundle_nets": 396,
+     "bundle_um": 887869.2,
+     "max_um": 3146.7,
+     "wire_m": 28.4
+    },
+    "phy_dfi": {
+     "bundle_nets": 1152,
+     "bundle_um": 22656.2,
+     "max_um": 111.1,
+     "wire_m": 0.7
+    },
+    "spine_local": {
+     "bundle_nets": 32,
+     "bundle_um": 84757.3,
+     "max_um": 3794.6,
+     "wire_m": 2.7
+    },
+    "strip_fan": {
+     "bundle_nets": 792,
+     "bundle_um": 51605.9,
+     "max_um": 314.7,
+     "wire_m": 1.7
+    },
+    "tree_block": {
+     "bundle_nets": 46080,
+     "bundle_um": 33094399.2,
+     "max_um": 3646.5,
+     "wire_m": 1059.0
+    },
+    "tree_spine": {
+     "bundle_nets": 864,
+     "bundle_um": 14038132.2,
+     "max_um": 30171.3,
+     "wire_m": 449.2
+    }
+   }
+  },
   "b_k32_i5": {
    "case": "b",
    "congestion_windows": null,
    "errors": [],
-   "exit": null,
-   "gcell_window_usage": {},
+   "exit": 0,
+   "gcell_window_usage": {
+    "M2": {
+     "max": 1.0,
+     "over_0p7": 113283,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M3": {
+     "max": 1.0,
+     "over_0p7": 115060,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M4": {
+     "max": 1.0,
+     "over_0p7": 111904,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M5": {
+     "max": 1.0,
+     "over_0p7": 127304,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M6": {
+     "max": 1.167,
+     "over_0p7": 103397,
+     "over_1": 119,
+     "windows": 144861
+    },
+    "M7": {
+     "max": 1.0,
+     "over_0p7": 107592,
+     "over_1": 0,
+     "windows": 144861
+    },
+    "M8": {
+     "max": 2.828,
+     "over_0p7": 2130,
+     "over_1": 963,
+     "windows": 144861
+    },
+    "M9": {
+     "max": 3.638,
+     "over_0p7": 9146,
+     "over_1": 3954,
+     "windows": 144861
+    }
+   },
    "grt": {
     "elapsed_s": null,
     "errors": [],
-    "grt_runtime": null,
-    "layers": {},
-    "total_wirelength_bundle_um": null
+    "grt_runtime": "00:09:14",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 4473247,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 4643879,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 66989,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 4258163,
+      "usage_pct": 1.57
+     },
+     "M5": {
+      "demand": 1838562,
+      "overflow_h": 0,
+      "overflow_total": 1,
+      "overflow_v": 1,
+      "resource": 5222287,
+      "usage_pct": 35.21
+     },
+     "M6": {
+      "demand": 17989,
+      "overflow_h": 7,
+      "overflow_total": 2628,
+      "overflow_v": 0,
+      "resource": 3808454,
+      "usage_pct": 0.47
+     },
+     "M7": {
+      "demand": 215034,
+      "overflow_h": 0,
+      "overflow_total": 1,
+      "overflow_v": 1,
+      "resource": 3623813,
+      "usage_pct": 5.93
+     },
+     "M8": {
+      "demand": 1100208,
+      "overflow_h": 26,
+      "overflow_total": 123078,
+      "overflow_v": 0,
+      "resource": 13336980,
+      "usage_pct": 8.25
+     },
+     "M9": {
+      "demand": 1827325,
+      "overflow_h": 0,
+      "overflow_total": 527913,
+      "overflow_v": 24,
+      "resource": 13298731,
+      "usage_pct": 13.74
+     }
+    },
+    "total": {
+     "demand": 5066107,
+     "overflow_h": 33,
+     "overflow_total": 653621,
+     "overflow_v": 26,
+     "resource": 52665554,
+     "usage_pct": 9.62
+    },
+    "total_wirelength_bundle_um": 96864829.0
    },
-   "grt_s": null,
+   "grt_s": 554,
    "manifest": {
     "adjustment": {
      "M2_M3": 0.25,
@@ -248,9 +667,82 @@
     "tree_mode": "central",
     "wires": 2670134
    },
-   "peak_rss_mb": null,
-   "wall": null,
-   "wire_by_class": {}
+   "peak_rss_mb": 3456,
+   "wall": "10:20.74",
+   "wire_by_class": {
+    "clock_trunk": {
+     "bundle_nets": 6,
+     "bundle_um": 89162.7,
+     "max_um": 17603.0,
+     "wire_m": 2.9
+    },
+    "corridor": {
+     "bundle_nets": 30720,
+     "bundle_um": 36968246.0,
+     "max_um": 1591.9,
+     "wire_m": 1183.0
+    },
+    "hbm_read": {
+     "bundle_nets": 832,
+     "bundle_um": 7922.3,
+     "max_um": 259.1,
+     "wire_m": 0.3
+    },
+    "head_chain": {
+     "bundle_nets": 1280,
+     "bundle_um": 513911.6,
+     "max_um": 2184.2,
+     "wire_m": 16.4
+    },
+    "io": {
+     "bundle_nets": 112,
+     "bundle_um": 1195043.0,
+     "max_um": 20527.6,
+     "wire_m": 38.2
+    },
+    "link_channel": {
+     "bundle_nets": 660,
+     "bundle_um": 1394802.5,
+     "max_um": 2721.0,
+     "wire_m": 44.6
+    },
+    "link_spine": {
+     "bundle_nets": 396,
+     "bundle_um": 891052.9,
+     "max_um": 2869.1,
+     "wire_m": 28.5
+    },
+    "phy_dfi": {
+     "bundle_nets": 1152,
+     "bundle_um": 22989.4,
+     "max_um": 148.1,
+     "wire_m": 0.7
+    },
+    "spine_local": {
+     "bundle_nets": 32,
+     "bundle_um": 84405.6,
+     "max_um": 3905.6,
+     "wire_m": 2.7
+    },
+    "strip_fan": {
+     "bundle_nets": 792,
+     "bundle_um": 52050.1,
+     "max_um": 277.6,
+     "wire_m": 1.7
+    },
+    "tree_block": {
+     "bundle_nets": 46080,
+     "bundle_um": 33943804.6,
+     "max_um": 3720.5,
+     "wire_m": 1086.2
+    },
+    "tree_spine": {
+     "bundle_nets": 1536,
+     "bundle_um": 21701439.4,
+     "max_um": 30819.2,
+     "wire_m": 694.4
+    }
+   }
   },
   "c_shoreline_w": {
    "avg_mv": {
@@ -784,8 +1276,14 @@
    }
   },
   "ir_sh_align_b45_sig": {
+   "avg_mv": {
+    "VDD": 4.16,
+    "VSS": 10.9
+   },
+   "budget_mv": 35.0,
    "case": "c",
-   "exit": null,
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
    "meta": {
     "align": true,
     "budget_mv": 35.0,
@@ -804,12 +1302,12 @@
     "cov_scale": 1.0,
     "loads": 17160,
     "peak": true,
-    "power_w": 9.8848,
+    "power_w": 9.0985,
     "power_w_by_region": {
      "channel": 0.1042,
      "corridor": 0.5292,
      "ctrl": 2.4486,
-     "phy": 0.7862,
+     "phy": 0.0,
      "strip": 3.2648,
      "tile_field": 2.7518
     },
@@ -842,13 +1340,68 @@
      10411.96
     ]
    },
-   "peak_rss_mb": null,
-   "wall": null,
-   "worst_mv_by_region": {}
+   "pass": false,
+   "pass_interior": false,
+   "peak_rss_mb": 5100,
+   "rail_to_rail_interior_mv": 35.33,
+   "rail_to_rail_worst_mv": 43.1,
+   "wall": "2:00.95",
+   "worst_interior_mv": {
+    "VDD": 12.38,
+    "VSS": 22.95
+   },
+   "worst_mv": {
+    "VDD": 12.4,
+    "VSS": 30.7
+   },
+   "worst_mv_by_region": {
+    "channel": {
+     "VDD": 9.61,
+     "VDD_interior": 9.61,
+     "VSS": 16.43,
+     "VSS_interior": 9.75
+    },
+    "corridor": {
+     "VDD": 9.5,
+     "VDD_interior": 9.5,
+     "VSS": 30.7,
+     "VSS_interior": 10.21
+    },
+    "ctrl": {
+     "VDD": 12.23,
+     "VDD_interior": 12.23,
+     "VSS": 30.29,
+     "VSS_interior": 22.95
+    },
+    "phy": {
+     "VDD": 3.82,
+     "VDD_interior": 3.82,
+     "VSS": 23.56,
+     "VSS_interior": 19.66
+    },
+    "strip": {
+     "VDD": 12.38,
+     "VDD_interior": 12.38,
+     "VSS": 27.51,
+     "VSS_interior": 12.9
+    },
+    "tile_field": {
+     "VDD": 9.63,
+     "VDD_interior": 9.63,
+     "VSS": 26.91,
+     "VSS_interior": 10.95
+    }
+   }
   },
   "ir_sh_align_sig": {
+   "avg_mv": {
+    "VDD": 10.3,
+    "VSS": 22.7
+   },
+   "budget_mv": 35.0,
    "case": "c",
-   "exit": null,
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
    "meta": {
     "align": true,
     "budget_mv": 35.0,
@@ -867,12 +1420,12 @@
     "cov_scale": 1.0,
     "loads": 17160,
     "peak": true,
-    "power_w": 9.8848,
+    "power_w": 9.0985,
     "power_w_by_region": {
      "channel": 0.1042,
      "corridor": 0.5292,
      "ctrl": 2.4486,
-     "phy": 0.7862,
+     "phy": 0.0,
      "strip": 3.2648,
      "tile_field": 2.7518
     },
@@ -905,9 +1458,58 @@
      10411.96
     ]
    },
-   "peak_rss_mb": null,
-   "wall": null,
-   "worst_mv_by_region": {}
+   "pass": false,
+   "pass_interior": false,
+   "peak_rss_mb": 5089,
+   "rail_to_rail_interior_mv": 63.96,
+   "rail_to_rail_worst_mv": 83.3,
+   "wall": "2:09.89",
+   "worst_interior_mv": {
+    "VDD": 24.32,
+    "VSS": 39.64
+   },
+   "worst_mv": {
+    "VDD": 24.3,
+    "VSS": 59.0
+   },
+   "worst_mv_by_region": {
+    "channel": {
+     "VDD": 21.27,
+     "VDD_interior": 21.27,
+     "VSS": 22.27,
+     "VSS_interior": 20.59
+    },
+    "corridor": {
+     "VDD": 23.75,
+     "VDD_interior": 20.95,
+     "VSS": 53.87,
+     "VSS_interior": 23.4
+    },
+    "ctrl": {
+     "VDD": 24.2,
+     "VDD_interior": 24.2,
+     "VSS": 58.99,
+     "VSS_interior": 39.64
+    },
+    "phy": {
+     "VDD": 8.27,
+     "VDD_interior": 8.27,
+     "VSS": 46.27,
+     "VSS_interior": 36.71
+    },
+    "strip": {
+     "VDD": 24.32,
+     "VDD_interior": 24.32,
+     "VSS": 58.9,
+     "VSS_interior": 30.02
+    },
+    "tile_field": {
+     "VDD": 23.81,
+     "VDD_interior": 21.29,
+     "VSS": 54.03,
+     "VSS_interior": 23.62
+    }
+   }
   },
   "ir_sh_base": {
    "avg_mv": {
@@ -1143,8 +1745,14 @@
    }
   },
   "ir_sh_cov2_sig": {
+   "avg_mv": {
+    "VDD": 5.07,
+    "VSS": 11.4
+   },
+   "budget_mv": 35.0,
    "case": "c",
-   "exit": null,
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
    "meta": {
     "align": false,
     "budget_mv": 35.0,
@@ -1163,12 +1771,12 @@
     "cov_scale": 2.0,
     "loads": 17160,
     "peak": true,
-    "power_w": 9.8848,
+    "power_w": 9.0985,
     "power_w_by_region": {
      "channel": 0.1042,
      "corridor": 0.5292,
      "ctrl": 2.4486,
-     "phy": 0.7862,
+     "phy": 0.0,
      "strip": 3.2648,
      "tile_field": 2.7518
     },
@@ -1201,9 +1809,58 @@
      10411.96
     ]
    },
-   "peak_rss_mb": null,
-   "wall": null,
-   "worst_mv_by_region": {}
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 14025,
+   "rail_to_rail_interior_mv": 32.96,
+   "rail_to_rail_worst_mv": 47.8,
+   "wall": "9:01.64",
+   "worst_interior_mv": {
+    "VDD": 13.7,
+    "VSS": 19.26
+   },
+   "worst_mv": {
+    "VDD": 13.7,
+    "VSS": 34.1
+   },
+   "worst_mv_by_region": {
+    "channel": {
+     "VDD": 13.5,
+     "VDD_interior": 13.5,
+     "VSS": 15.64,
+     "VSS_interior": 13.72
+    },
+    "corridor": {
+     "VDD": 13.7,
+     "VDD_interior": 13.7,
+     "VSS": 34.08,
+     "VSS_interior": 14.51
+    },
+    "ctrl": {
+     "VDD": 12.64,
+     "VDD_interior": 12.64,
+     "VSS": 30.71,
+     "VSS_interior": 19.26
+    },
+    "phy": {
+     "VDD": 3.82,
+     "VDD_interior": 3.82,
+     "VSS": 22.92,
+     "VSS_interior": 17.06
+    },
+    "strip": {
+     "VDD": 12.69,
+     "VDD_interior": 12.69,
+     "VSS": 30.73,
+     "VSS_interior": 14.6
+    },
+    "tile_field": {
+     "VDD": 13.7,
+     "VDD_interior": 13.7,
+     "VSS": 33.44,
+     "VSS_interior": 16.56
+    }
+   }
   },
   "ir_sh_pad": {
    "avg_mv": {
@@ -2618,5 +3275,6 @@
   }
  },
  "schema": "opentallas.qwen-rom-fulldie.feasibility.v1",
- "tool_sha256": "23f7ba6a765fdca3308739a2d5d36b4623d963af69be3b94a030d4a7c4879feb"
+ "superseded": "r1 bundled GRT allowed long haul on M2-M5 and used 504 um link waypoints; the corridor gate verdict (claude/qwen-corridor-gate @ 89e70dd78) forbids M3/M5 long haul and requires <= 430.56 um stages. Kept as evidence: k32 central tree top overflow 653,621 (M9 527,913, M8 123,078); k32 banded 0. IR and case (a) entries remain valid.",
+ "tool_sha256": "520eabf183bab876e7a7914faf5bb498dc4c03c417bc7857b2972c98e4e3caad"
 }

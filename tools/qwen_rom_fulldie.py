@@ -81,7 +81,9 @@ KVNEW_BITS = 128               # new-token K/V write, FIFO -> controller (ASSUME
 IO_BITS = 512
 CLK_TRUNK_TRACKS = 3           # shielded trunk (r2 cts.global_htree.tracks)
 BLOCK = (4, 4)                 # tiles per tree block (cols, rows): 16 = 2^(TCUT-2)
-LINK_WAYPOINT_UM = 2016.0      # 4 x 504 um SS reach: one modelled waypoint per 4 registered stages
+LINK_STAGE_UM = 430.56         # corridor gate verdict (claude/qwen-corridor-gate @ 89e70dd78): 504 um link spans miss SS
+                               # setup by 29-79 ps; 430.56 um tile-column segments close (+11.9 ps): stage pitch <= 430.56
+LINK_WAYPOINT_UM = 4 * LINK_STAGE_UM   # one modelled waypoint per 4 registered stages
 REGION_PG = dict(tile_field=0.0439, corridor=0.0439, channel=0.0439, hub=0.025, strip=0.1639, ctrl=0.1639,
                  io=0.025, phy=0.0)
 REGION_W_PER_MM2 = dict(tile_field=1.05, corridor=1.05, channel=1.05, hub=0.385, strip=3.924, ctrl=3.924,
@@ -905,6 +907,35 @@ def svg(m, path, scale=0.03):
     Path(path).write_text('\n'.join(o))
 
 
+def link_stages(m):
+    """Registered stages on the hub <-> stack link and hub <-> IO paths at the 504 um r2 reach and at the corridor
+    gate's closing pitch (430.56 um); per-token delta = 2 directions x 36 layers x delta stages (r1 pricing rule)."""
+    g = m['geo']
+    hub = m['hub']
+    rows = []
+    for st, lf in m['lfifos'].items():
+        si = 0 if st[1] == 'S' else 1
+        corner_y = g['ch_y'][si] + HCH / 2
+        vert = abs((hub.y + hub.h / 2) - corner_y)
+        horiz = abs((g['x_vch'] + VCH / 2) - (lf.x + lf.w / 2))
+        fan = 2.5 * RE_H + FIFO[1] / 2                     # FIFO to the farthest row-engine centre
+        trunk = vert + horiz
+        r = dict(stack=st, trunk_um=round(trunk, 1), fan_um=round(fan, 1))
+        for reach in (504.0, 450.0, LINK_STAGE_UM):
+            r[f'stages_{int(reach)}'] = math.ceil(trunk / reach) + math.ceil(fan / reach)
+        rows.append(r)
+    worst = max(rows, key=lambda r: r['stages_504'])
+    d = worst[f'stages_{int(LINK_STAGE_UM)}'] - worst['stages_504']
+    io = abs(m['io']['collective'].y - (hub.y + hub.h / 2))
+    return dict(paths=rows, worst=worst['stack'], r2_model_total_stages=46,
+                delta_stages_at_430=d, per_token_cycles_delta=2 * 36 * d,
+                per_token_us_delta=round(2 * 36 * d / 1.2e3, 3),
+                hub_to_io=dict(um=round(io, 1), stages_504=math.ceil(io / 504), stages_430=math.ceil(io / LINK_STAGE_UM)),
+                note='hub<->stack stations re-pitched to <= 430.56 um (corridor gate: 504 um spans miss SS setup by '
+                     '29-79 ps); the tile-column corridor already runs 3 x 430.56 um per tile hop (closes). Report to '
+                     'the model: the selected entry prices 45-46 stages.')
+
+
 # ------------------------------------------------------------------------------------------------ plan record
 def plan_record(m):
     die, g = m['die'], m['geo']
@@ -937,6 +968,14 @@ def plan_record(m):
         regions=[dict(name=r['name'], kind=r['kind'], rect=[round(x, 3) for x in r['rect']],
                       pg_coverage_per_net=REGION_PG.get(r['kind']), peak_w_per_mm2=REGION_W_PER_MM2.get(r['kind']))
                  for r in m['regions'] if not r['name'].startswith('corr_')],
+        link_stages=link_stages(m),
+        corridor_gate_constraints=dict(
+            source='claude/qwen-corridor-gate-20261003 @ 89e70dd78 verdict',
+            centred_pin_row='tile tap pin row centred on its station (station at tile mid-height; tap rows on both '
+                            'sides centred on the station centre): satisfied by construction',
+            station_slab=f'station frame {STATION[0]} x {STATION[1]} um >= the 17.28 um slab variant',
+            long_haul_layers='bundled GRT: M2-M5 adjustment 1.0 (no long haul); M6/M8 horizontal, M7/M9 vertical',
+            stage_pitch_um=LINK_STAGE_UM),
         corridors=dict(count=COLS, width_um=CORR, bits=CORRIDOR_BITS, stations_per_column=ROWS, heads=COLS,
                        station_frame_um=list(STATION), tap_bits=TAP_BITS),
         clock_domains=dict(
@@ -1086,13 +1125,14 @@ def case_grt(m, work, k, tag, iters=50):
              for it in m['insts']]
     adj = []
     for ln in ('M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'):
-        adj.append(f'set_global_routing_layer_adjustment {ln} {ORFS_LOW_ADJ if ln in ("M2", "M3") else VIA_OBS + 2 * REGION_PG["tile_field"]:.4f}')
+        # corridor gate constraint (3): no long haul on M2-M5 (pins on M4/M5 are reached by vias at the pin gcell)
+        adj.append(f'set_global_routing_layer_adjustment {ln} {1.0 if ln in ("M2", "M3", "M4", "M5") else VIA_OBS + 2 * REGION_PG["tile_field"]:.4f}')
     for r in m['regions']:
         if r['kind'] in ('tile_field', 'corridor', 'channel', 'phy'):
             continue
         a = VIA_OBS + 2 * REGION_PG[r['kind']]
         x0, y0, x1, y1 = r['rect']
-        for ln in ('M8', 'M9'):     # M4-M7 inside these regions are under macro OBS (GRT underflows there)
+        for ln in ('M8', 'M9'):     # M6-M7 inside these regions are under macro OBS (GRT underflows there)
             adj.append(f'set_global_routing_region_adjustment {{{x0:.3f} {y0:.3f} {x1:.3f} {y1:.3f}}} -layer {ln} -adjustment {a:.4f}')
     tcl = f"""# case (b): bundled (k = {k}) global route of every die-level net
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
@@ -1304,6 +1344,8 @@ def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch
                                       ['  END', f'END {mn}', ''])
             kd = region_at(m, x0 + cx0 + cell / 2, y0 + cy0 + cell / 2)
             dens = REGION_W_PER_MM2[kd] if peak else REGION_W_PER_MM2[kd] * 0.25
+            if signal_bumps_phy and kd in ("phy", "io"):
+                dens = 0.0   # the PHY/IO macro is fed by its own supply bumps among its signal bumps
             n = f'L_{i}_{j}'
             comps.append((n, mn, cx0, cy0))
             power[n] = dens * cell * cell / 1e6

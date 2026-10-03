@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.qwen-rom-fulldie.floorplan.v1",
  "tool": "tools/qwen_rom_fulldie.py",
- "tool_sha256": "6e49c89421d0efae4913a85ad7ceea1147d5f9fd878854065d1fc806a5b73ccc",
+ "tool_sha256": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118",
  "sources_sha256": {
   "results/uarch/qwen_rom_floorplan_nearhbm_20261003/model-r2.json": "e1e8ac2ddab4711d1a6e476a31a7b9f01813a67aa6c27dfd473225d771e7b951",
   "results/uarch/qwen_rom_floorplan_nearhbm_20261003/model-r1.json": "205279c5497bb71fbf5e4a30ccc45597530a4a8ded300dd8e43e1e54f2d22e38",
@@ -222,7 +222,7 @@
   "row_engine": 24,
   "link_fifo": 4,
   "io": 4,
-  "link_station": 22
+  "link_station": 28
  },
  "area_mm2_by_kind": {
   "tile": 517.686,
@@ -235,7 +235,7 @@
   "row_engine": 15.744,
   "link_fifo": 0.053,
   "io": 28.647,
-  "link_station": 0.112
+  "link_station": 0.137
  },
  "bus_classes": {
   "corridor": {
@@ -259,12 +259,12 @@
    "wires": 49152
   },
   "link_spine": {
-   "buses": 6,
-   "wires": 12672
+   "buses": 8,
+   "wires": 16896
   },
   "link_channel": {
-   "buses": 20,
-   "wires": 21120
+   "buses": 24,
+   "wires": 25344
   },
   "strip_fan": {
    "buses": 24,
@@ -475,6 +475,60 @@
    "peak_w_per_mm2": 0.385
   }
  ],
+ "link_stages": {
+  "paths": [
+   {
+    "stack": "WS",
+    "trunk_um": 17204.6,
+    "fan_um": 5063.0,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 52
+   },
+   {
+    "stack": "WN",
+    "trunk_um": 17202.5,
+    "fan_um": 5063.0,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 52
+   },
+   {
+    "stack": "ES",
+    "trunk_um": 17204.6,
+    "fan_um": 5063.0,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 52
+   },
+   {
+    "stack": "EN",
+    "trunk_um": 17202.5,
+    "fan_um": 5063.0,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 52
+   }
+  ],
+  "worst": "WS",
+  "r2_model_total_stages": 46,
+  "delta_stages_at_430": 6,
+  "per_token_cycles_delta": 432,
+  "per_token_us_delta": 0.36,
+  "hub_to_io": {
+   "um": 15596.3,
+   "stages_504": 31,
+   "stages_430": 37
+  },
+  "note": "hub<->stack stations re-pitched to <= 430.56 um (corridor gate: 504 um spans miss SS setup by 29-79 ps); the tile-column corridor already runs 3 x 430.56 um per tile hop (closes). Report to the model: the selected entry prices 45-46 stages."
+ },
+ "corridor_gate_constraints": {
+  "source": "claude/qwen-corridor-gate-20261003 @ 89e70dd78 verdict",
+  "centred_pin_row": "tile tap pin row centred on its station (station at tile mid-height; tap rows on both sides centred on the station centre): satisfied by construction",
+  "station_slab": "station frame 52.704 x 69.12 um >= the 17.28 um slab variant",
+  "long_haul_layers": "bundled GRT: M2-M5 adjustment 1.0 (no long haul); M6/M8 horizontal, M7/M9 vertical",
+  "stage_pitch_um": 430.56
+ },
  "corridors": {
   "count": 64,
   "width_um": 52.704,
@@ -552,5 +606,5 @@
    "count": 2
   }
  ],
- "instances_list_sha256": "f8feb8b380db7a94f09938d79c7ca5cc2d08ab279026cc552613b7255569b725"
+ "instances_list_sha256": "e432956db0ab0392e47da147b7b4a68509f1d36602fff62a0d6d98d92d237ef6"
 }
