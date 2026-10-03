@@ -1,0 +1,53 @@
+{
+  "best4": {
+    "stacks_per_die": 4,
+    "gamma": 5,
+    "verify_positions": 6,
+    "replicas": 6,
+    "cohort": "current_headline_mixed_n36 (gamma<5 derived by truncation of the walk survival)",
+    "tau": 3.6486,
+    "baseline_component_step_us": 752.73,
+    "conditional_verify_us": 565.6850196330236,
+    "conditional_draft_us": 42.32319666995996,
+    "conditional_step_us": 608.0082163029836,
+    "conditional_tokens_s": 6000.905747927959,
+    "selector_saved_us": 13.96108,
+    "selector_gain_fraction": 0.022961992331108405,
+    "model_gate_1pct": true,
+    "adopt": false,
+    "union_stream_penalty_us": 0.0,
+    "draft_stream_penalty_us": 0.0
+  },
+  "best2": {
+    "stacks_per_die": 2,
+    "gamma": 5,
+    "verify_positions": 6,
+    "replicas": 6,
+    "cohort": "current_headline_mixed_n36 (gamma<5 derived by truncation of the walk survival)",
+    "tau": 3.6486,
+    "baseline_component_step_us": 826.5699999999999,
+    "conditional_verify_us": 637.7150196330235,
+    "conditional_draft_us": 44.13319666995996,
+    "conditional_step_us": 681.8482163029835,
+    "conditional_tokens_s": 5351.044283407969,
+    "selector_saved_us": 13.96108,
+    "selector_gain_fraction": 0.020475348715726982,
+    "model_gate_1pct": true,
+    "adopt": false,
+    "union_stream_penalty_us": 72.03,
+    "draft_stream_penalty_us": 1.8099999999999952
+  },
+  "prefetch": {
+    "lag_one_recall": 0.2673971233230134,
+    "optimistic_saved_us": 1.4252266673116616,
+    "optimistic_rate_gain_fraction": 0.003233898098160104,
+    "conditional_shared_first_residual_us": 0,
+    "conditional_incremental_saved_us": 0.0,
+    "measured_prediction_recall": null,
+    "guaranteed_saved_us": 0,
+    "assumption": "free timely hits, linear scaling, no contention; upper sensitivity only, not adoption",
+    "note": "misses still pay first-access; prior-token prefetch fetches 6 experts and most are false; HA5 shared-first can already cover all AR fetch, so do not double count",
+    "predictor_requirements": "GPU-only held-out recall, lead time, false-positive bytes, finite buffers, demand priority"
+  },
+  "stream": 0.10829389625797403
+}
