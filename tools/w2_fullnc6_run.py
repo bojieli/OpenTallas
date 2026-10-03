@@ -65,7 +65,7 @@ def observe_registered_payload(pins, payload, observer):
     pins.hooks[0] = ObservedPayloadHook(payload, observer)
 
 
-def connected_runtime(binary, bindings, socket_path, out):
+def connected_runtime(binary, bindings, socket_path, out, *, portbook=None):
     """Existing fixture attached to the actual enclosing driver's two pipes.
 
     No compiler, arithmetic, memory provider, reset or handler is substituted.
@@ -76,6 +76,14 @@ def connected_runtime(binary, bindings, socket_path, out):
     import sys
     if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
     from tools.gpu_sys.canonical_qwen_ranked_simulator import RankedEnclosingPins as EnclosingPins, build
+    if portbook is not None:
+        from tools.gpu_sys.canonical_qwen_installed_services import InstalledServicePins as EnclosingPins
+        book = json.loads(portbook.read_text())
+        if book['inventory'].get('source_owner_count') != 64:
+            raise ValueError('connected installed sourcebook requires actual64 range owners')
+        for path, digest in book['source_sha256'].items():
+            if sha(ROOT/path) != digest:
+                raise ValueError('connected installed source changed: '+path)
     from tools.gpu_sys.canonical_qwen_transport import UnixDeliveryServer
     from w2_fullnc6_fixture import ConnectedReceiptObserver
     module, separator, name = bindings.partition(':')
@@ -95,6 +103,8 @@ def connected_runtime(binary, bindings, socket_path, out):
         fixture_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         binary=str(binary),binary_sha256=sha(binary),bindings=bindings,
         socket=str(socket_path),physical_or_fulltoken_admission=False)
+    if portbook is not None:
+        record.update(portbook=str(portbook),portbook_sha256=sha(portbook))
     def save():
         (out/'record.json').write_text(json.dumps(record,indent=2)+'\n')
     save()
@@ -104,7 +114,7 @@ def connected_runtime(binary, bindings, socket_path, out):
             process=subprocess.Popen([str(binary)],stdin=subprocess.PIPE,stdout=subprocess.PIPE,
                 stderr=error_log,text=True,bufsize=1)
             record['driver_pid']=process.pid;save()
-            pins=EnclosingPins(process.stdout,process.stdin)
+            pins=EnclosingPins(process.stdout,process.stdin,**({} if portbook is None else {'portbook':portbook}))
             bound=factory(pins)
             runtime=build(pins,bound['authority'],bound['native_handlers'],bound['w2_ports'],enabled=True)
             observer=ConnectedReceiptObserver(pins)
@@ -150,6 +160,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--connected-binary',type=Path,help='actual enclosing pin driver, no standalone compile')
     p.add_argument('--connected-bindings',help='actual source owner module:factory(pins)')
+    p.add_argument('--connected-portbook',type=Path,help='actual installed allocator/service sourcebook; checks pins before launch')
     p.add_argument('--connected-socket',type=Path,help='new socket for complete canonical client')
     p.add_argument('--primary-root',type=Path,default=Path('/home/ubuntu/w2-pc-exact-completion-model-20261003'))
     p.add_argument('--corrector-root',type=Path,default=Path('/tmp/Hubble-W2-corrector-rescue-20261003'))
@@ -170,7 +181,8 @@ def main():
         if not all(connected):p.error('connected binary/bindings/socket all required')
         if a.reference_negative or a.fault_matrix or a.full_double_pairs:
             p.error('connected gate does not launch standalone variants or fault matrix')
-        result=connected_runtime(a.connected_binary.resolve(),a.connected_bindings,a.connected_socket,a.out)
+        result=connected_runtime(a.connected_binary.resolve(),a.connected_bindings,a.connected_socket,a.out,
+                                 portbook=None if a.connected_portbook is None else a.connected_portbook.resolve())
         return int(result['status'].startswith('FAIL'))
     if a.full_double_pairs and not a.fault_matrix:p.error('--full-double-pairs requires --fault-matrix')
     # Run fixed fixture source, not evolving preparation changes.
