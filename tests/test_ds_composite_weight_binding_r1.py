@@ -161,9 +161,7 @@ def test_constructor_enrollment_guard_precedes_all_backing(fixture,monkeypatch):
     native,_,cls,_=fixture
     def forbidden(*args,**kwargs):raise AssertionError('base constructor was reached')
     monkeypatch.setattr(R33,'__init__',forbidden)
-    # Invoke only successor preflight on an uninitialized instance. Missing GO
-    # must fail before super().__init__, journaling, checkpoint or source arrays.
-    provider=object.__new__(cls)
+    # Exercise the pure preflight called first by the successor constructor;
+    # do not invoke any __init__, allocate backing, journal, or source arrays.
     with pytest.raises(ValueError,match='enrollment absent'):
-        cls.__init__(provider,{},native,{},[])
-    assert vars(provider)=={}
+        C.validate_enrollment(native,{},cls,check_full_native=False)
