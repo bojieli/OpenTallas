@@ -58,7 +58,7 @@ class NativeLeaf(unittest.TestCase):
         self.assertLess(script.index('setDoNotTouch true'),script.index('set_voltage_domain'))
     def test_complete_bottom_top_supply_contact_margin(self):
         self.assertEqual(self.m['core_um'][1],.27)
-        self.assertEqual(self.m['die_um'][3]-self.m['core_um'][3],.27)
+        self.assertEqual(round(1000*(self.m['die_um'][3]-self.m['core_um'][3])),270)
         self.assertGreater(self.m['PG_boundary_fixture_area_delta_um2'],0)
         self.assertGreater(self.m['PG_boundary_halo_um'],.009)
 
