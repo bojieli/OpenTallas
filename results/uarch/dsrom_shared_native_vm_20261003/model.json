@@ -342,6 +342,7 @@
     "clock_reset_site_cost": "unmapped, not free; no parent physical admission",
     "read_capture": "existing two512bit skids reused; no additional numerical stage",
     "read_identity": "word-address cookie captured only on actual request acceptance",
+    "collective_causality": "gather output word i requires own e_valid/e_ready word i; retained topk n/words-per-rank is settled by real native read delivery before first gathered load. No impossible response before producer.",
     "retirement": "finish observed then queue empty, no held write, matching visible receipt cleared local debt, native pending false, all issued reads replied and skids consumed; at least one further caller edge after receipt",
     "finite_service": "each collective packet at most4 distinct word batches;26slow edges inclusive before output stall. Full operation sums actual packet count and reverse receipts; consumer stalls never assumed bounded absent actual caller contract"
   },

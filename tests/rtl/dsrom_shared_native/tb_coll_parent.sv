@@ -15,7 +15,8 @@ module tb;
  wire [31:0] tag,wo,wi;
  reg [31:0] cyc=0;integer sent=0,reads=0,writes=0,write_packets=0,holds=0,maxq=0;
  reg allow_write=1;reg [31:0] before_writes;
- wire ov=started && sent<(topk ? 256 : WORDS);
+ // All-gather cannot return a word before its own rank produced that word.
+ wire ov=started && sent<reads && sent<(topk ? 256 : WORDS);
  wire ol=sent==(topk ? 255 : WORDS-1);
  reg [2047:0] od;
  wire er=(cyc%11)<7;

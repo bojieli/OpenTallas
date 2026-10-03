@@ -62,5 +62,14 @@
     "terminal": "/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/0_tb_coll_parent.sv:22: syntax error\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/0_tb_coll_parent.sv:22: error: Invalid module item.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/7_ot_ds_owned_ratio_boundary.sv:5: warning: timescale for ot_ds_owned_ratio_boundary inherited from another file.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/6_ot_coll_topk_merge.sv:1: ...: The inherited timescale is here.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/8_ratio_fifo.sv:45: warning: timescale for ot_ratio_cdc_fifo inherited from another file.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/6_ot_coll_topk_merge.sv:1: ...: The inherited timescale is here.\n",
     "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit",
     "source_commit": "3315423f0fdcf3d76391af2e14f09a77024a4c0c"
+  },
+  "ds-collective-epyc-r2": {
+    "archive": "ds-collective-epyc-r2.tgz",
+    "sha256": "a369197dc559e5190e133aca1361b10b89d39c551a4c471d341011ccdf5371ed",
+    "pid": 388755,
+    "status": "TERMINAL",
+    "terminal": "PASS DMA_GATHER_NATIVE words=266 writes=1064 reads=266 visible_retirement=1 held=5933\nFATAL: /srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r2/sources/0_tb_coll_parent.sv:95: full retainedK8192 queue not reserved count0\n       Time: 56757000  Scope: tb\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit",
+    "source_commit": "5ebf6cd569f98bd67bdd96dedf829f05dd5f456f"
   }
 }

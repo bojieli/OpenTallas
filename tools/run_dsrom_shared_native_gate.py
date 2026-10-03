@@ -11,7 +11,7 @@ CASES={
 TAIL=['rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv','results/uarch/dsrom_seven_class_swap_20261003/inputs/native_sram.v']
 PASS={'collective':'PASS DMA_TOPK_NATIVE','provider':'PASS SHARED_NATIVE_PROVIDER','related':'PASS RELATED_NATIVE_PARENT','transpose':'TRANSPOSE_PASS'}
 def main():
- p=argparse.ArgumentParser();p.add_argument('--case',choices=CASES,required=True);p.add_argument('--out',type=pathlib.Path,required=True);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--case',choices=CASES,required=True);p.add_argument('--simulator',choices=['iverilog','verilator'],default='iverilog');p.add_argument('--out',type=pathlib.Path,required=True);a=p.parse_args()
  from dsrom_shared_native_vm_model import model
  m=model()
  if not m['admission']['isolated_raw_provider_functional']:raise ValueError('raw gate not admitted')
@@ -19,14 +19,19 @@ def main():
  files=[];pins={}
  for i,name in enumerate(CASES[a.case]+([] if a.case=='transpose' else TAIL)):
   data=(ROOT/name).read_bytes();dest=snap/f'{i}_{pathlib.Path(name).name}';dest.write_bytes(data);files.append(str(dest));pins[name]=hashlib.sha256(data).hexdigest()
- rec=dict(pid=os.getpid(),host=os.uname().nodename,source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),source_dirty=subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True),case=a.case,status='RUNNING',source_sha256=pins,scope='raw functional only; no protected VM, full-token, loaded parent clock, or physical credit',threads=1)
+ rec=dict(pid=os.getpid(),host=os.uname().nodename,source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),source_dirty=subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True),case=a.case,simulator=a.simulator,status='RUNNING',source_sha256=pins,scope='raw functional only; no protected VM, full-token, loaded parent clock, or physical credit',threads=1)
  rec['versions']={}
- for k,c in {'iverilog':['iverilog','-V'],'vvp':['vvp','-V']}.items():
+ for k,c in ({'verilator':['verilator','--version']} if a.simulator=='verilator' else {'iverilog':['iverilog','-V'],'vvp':['vvp','-V']}).items():
   v=subprocess.run(c,capture_output=True,text=True);rec['versions'][k]=v.stdout+v.stderr
  (out/'model.json').write_text(json.dumps(m,indent=2)+'\n')
  def save():(out/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
- save();cmd=['iverilog','-g2012','-Wall','-DOT_MEM_NO_INIT','-s','tb','-o',str(out/'gate.vvp')]+files
- for phase,c in [('compile',cmd),('simulation',['vvp',str(out/'gate.vvp')])]:
+ save()
+ if a.simulator=='verilator':
+  cmd=['verilator','--binary','--timing','--assert','--threads','1','-j','1','-Wno-fatal','-DOT_MEM_NO_INIT','--top-module','tb','--Mdir',str(out/'obj')]+files
+  simulation=[str(out/'obj/Vtb')]
+ else:
+  cmd=['iverilog','-g2012','-Wall','-DOT_MEM_NO_INIT','-s','tb','-o',str(out/'gate.vvp')]+files;simulation=['vvp',str(out/'gate.vvp')]
+ for phase,c in [('compile',cmd),('simulation',simulation)]:
   start=time.time()
   with (out/(phase+'.log')).open('w') as log:code=subprocess.run(['/usr/bin/time','-v','-o',str(out/(phase+'.resources'))]+c,stdout=log,stderr=subprocess.STDOUT).returncode
   rec[phase]=dict(command=c,exit_code=code,elapsed_s=time.time()-start);save()
