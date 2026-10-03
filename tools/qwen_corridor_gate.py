@@ -914,29 +914,33 @@ def summary(out_dir: Path):
                 'B': round(T['B']['demand'] / (sum(math.floor(T['B']['width_r2'] / PITCH[l] + 1e-8)
                                                     for l in T['B']['layers'])), 4)}
     r2_ratio['C'] = r2_ratio['D'] = r2_ratio['B']
-    applied = dict(tile_column=dens('B_tile'), horizontal_link=dens('A_tile'), vertical_spine=dens('B_tile'))
+    cden = max([x for x in (dens('C_tile'), dens('D_tile')) if x is not None], default=None)
+    link = dens('A_tile')
+    spine = min([x for x in (link, cden) if x is not None], default=None)
+    applied = dict(tile_column=cden, horizontal_link=link, vertical_spine=spine)
     die = die_statement({k: v for k, v in applied.items() if v is not None})
+    one_sided = dict(applied, tile_column=dens('B_tile'))
+    die_one_sided = die_statement({k: v for k, v in one_sided.items() if v is not None})
     strip = dens('A_strip')
-    link_s = [x for x in (strip, applied['horizontal_link']) if x is not None]
+    link_s = [x for x in (strip, link) if x is not None]
     die_strip = die_statement({k: v for k, v in dict(applied, horizontal_link=min(link_s) if link_s else None).items()
                                if v is not None})
-    cden = max([x for x in (dens('C_tile'), dens('D_tile')) if x is not None], default=None)
-    die_centred = die_statement({k: v for k, v in dict(applied, tile_column=cden, vertical_spine=cden).items()
-                                 if v is not None}) if cden is not None else None
     return dict(schema='opentallas.qwen-corridor-gate-verdict.v1', r2_record=R2_REC, r2_ratio=r2_ratio,
-                die_if_tile_pins_centred=die_centred,
+                die_if_tile_pin_row_one_sided=die_one_sided,
                 series=gate, attempts=[n for n in recs if 'attempt' in n],
                 diagnostics={n: dict(grt_overflow=(d['grt']['final'] or {}).get('overflow'),
                                      drt_final=d['drt']['final_violations'], drt_completed=d.get('drt_completed'),
                                      ss_setup_ns=d['timing']['ss_setup_wns_ns'], ff_hold_ns=d['timing']['ff_hold_wns_ns'],
                                      ratio=d['geometry']['demand_over_raw'])
                              for n, d in recs.items() if d.get('diagnostic_allow_congestion')},
-                density_applied=dict(applied, note='tile_column and vertical_spine (both M7/M9 vertical; the spine '
-                                     'sits under the lighter 2.5% hub PG) take the tile-column series; the horizontal '
-                                     'link takes its own r2-netting (tile-field PG) series; in_strip_fan (0.114) is '
-                                     'left at its r2 width'),
+                density_applied=dict(applied, note='tile_column takes the densest clean ratio of the centred-pin-row '
+                                     'series (C, D); the vertical spine (two links on M7/M9, no tile taps, lighter 2.5% '
+                                     'hub PG) takes min(link, tile column); the horizontal link takes its r2-netting '
+                                     '(tile-field PG) series A_tile; in_strip_fan (0.114) stays at its r2 width.  '
+                                     'die_if_tile_pin_row_one_sided uses series B; die_if_link_at_strip_pg uses '
+                                     'min(A_strip, A_tile)'),
                 die=die, die_if_link_at_strip_pg=die_strip,
-                r2_corridors_route=all((dens(k) or 0) >= r2_ratio[k[0]] - 1e-4 for k in ('A_tile', 'B_tile')))
+                r2_corridors_route=((link or 0) >= r2_ratio['A'] - 1e-4 and (cden or 0) >= r2_ratio['C'] - 1e-4))
 
 
 def main():
