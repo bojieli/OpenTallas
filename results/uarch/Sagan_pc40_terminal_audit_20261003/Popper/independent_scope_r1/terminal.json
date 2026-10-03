@@ -1,0 +1,329 @@
+{
+  "source_commit": "8c3dfbf7910cb74cbc74497c787c3fc3b790bc82",
+  "status": "PASS_CONNECTED_SELECTED_EXACT",
+  "headroom": {
+    "allowed_cpu_idle": [
+      {
+        "cpu": 0,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 1,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 2,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 3,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 4,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 5,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 6,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 7,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 8,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 9,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 10,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 11,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 12,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 13,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 14,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 15,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 16,
+        "idle_fraction": 0.0196078431372549
+      },
+      {
+        "cpu": 17,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 18,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 19,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 20,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 21,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 22,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 23,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 24,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 25,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 26,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 27,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 28,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 29,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 30,
+        "idle_fraction": 0.0
+      },
+      {
+        "cpu": 31,
+        "idle_fraction": 0.0
+      }
+    ],
+    "aggregate_idle_core_equivalent": 0.0196078431372549,
+    "load": [
+      87.30419921875,
+      92.693359375,
+      94.9609375
+    ],
+    "available_memory_bytes": 26235527168
+  },
+  "original_dedicated_predicate_pass": false,
+  "shared_CPU": true,
+  "user_authorized": true,
+  "allocated_cpu": 16,
+  "aggregate_workers": 1,
+  "nice": 19,
+  "memory_reservation_bytes": 4294967296,
+  "no_process_memory_cap": true,
+  "remote_coordinator_stopped": true,
+  "HDL_gate": "PASS_CONNECTED_SELECTED_EXACT",
+  "physical_gate": false,
+  "whole_token_gate": false,
+  "protected_upset_gate": false,
+  "scope": "SAME frozen source/compile/runtime recipe; finite selected RF gate, sharedCPU host timing not hardware rate evidence",
+  "launcher_sha256": "e9870c495b9ecfb8a5997215eff63f6fb9f1ae8fabd7fe722b48f3dbb14899ed",
+  "source_pins": [
+    {
+      "path": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_rf_visibility_fence_w6.sv",
+      "sha256": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_rf_service.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv",
+      "sha256": "ea947bdc66e55a5019af8ddbf1aca96254b2a6a0238021e071142ae53ab04840"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_connected_bridge_r2.sv",
+      "sha256": "26fe690f9f6855959309c5a840ee927ab6930183f9c0acc271de7ac6cd6b43d7"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_fmin_consumer.sv",
+      "sha256": "132026114e0ca96ebe272769b1480915cff46c2768d8b88d8e9142b78bd55553"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_connected_source.sv",
+      "sha256": "2a1b7208df9760c9d6abb51228267b9da444a4ace2f86076bb013b2bc8680f22"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/test/hbm_c0_connected_20261003/r2/tb.sv",
+      "sha256": "9fa712bc28619e4579fb0d2faeda596aa540cbb8d267226154fc101366633205"
+    }
+  ],
+  "compile_command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb",
+    "-o",
+    "/home/ubuntu/hbm-c0-pc40-connected-8c3dfbf79-r2/gate.vvp",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_w6_secded_pkg.sv",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_hdc_prefix.sv",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_rf_visibility_fence_w6.sv",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_rf_service.sv",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_connected_bridge_r2.sv",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_fmin_consumer.sv",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_connected_source.sv",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/test/hbm_c0_connected_20261003/r2/tb.sv"
+  ],
+  "live_child_pid": null,
+  "child_phase": "runtime",
+  "compile_RC": 0,
+  "compile_seconds": 1550.9375575827435,
+  "runtime_command": [
+    "vvp",
+    "/home/ubuntu/hbm-c0-pc40-connected-8c3dfbf79-r2/gate.vvp"
+  ],
+  "runtime_RC": 0,
+  "runtime_seconds": 327.3992460668087,
+  "binary_sha256": "1090c71f113e5dd27898a652abb3b21fbd8d69b695a9a841281fe0fbda7be5c0",
+  "source_lease_trace": [
+    "EVENT cycle=7 phase=accepted nativeTag=0000000100000001 nativeGen=0000000100000012 enteringWorkspaceLive=0 scope=cold_exclusive_actor",
+    "EVENT cycle=8 phase=RF_read a=38 b=38",
+    "EVENT cycle=11 phase=mirrored_write slot=17",
+    "EVENT cycle=12 phase=common_ACK identity=0100000001a413",
+    "EVENT cycle=13 phase=mirrored_write slot=18",
+    "EVENT cycle=14 phase=common_ACK identity=0100000001a413",
+    "EVENT cycle=15 phase=RF_read a=17 b=18",
+    "EVENT cycle=21 phase=mirrored_write slot=17",
+    "EVENT cycle=22 phase=common_ACK identity=0100000001a413",
+    "EVENT cycle=23 phase=mirrored_write slot=18",
+    "EVENT cycle=24 phase=common_ACK identity=0100000001a413",
+    "EVENT cycle=25 phase=RF_read a=17 b=18",
+    "EVENT cycle=29 phase=mirrored_write slot=19",
+    "EVENT cycle=30 phase=common_ACK identity=0100000001a413",
+    "EVENT cycle=35 phase=visible identity=0100000001a413",
+    "EVENT cycle=36 phase=RF_read a=19 b=19",
+    "EVENT cycle=41 phase=FMIN_result_accept identity=0100000001a413",
+    "EVENT cycle=42 phase=W6_consumer identity=0100000001a413",
+    "EVENT cycle=57 phase=retire nativeTag=0000000100000001 nativeGen=0000000100000012",
+    "EVENT cycle=62 phase=accepted nativeTag=0000000100000002 nativeGen=0000000100000012 enteringWorkspaceLive=0 scope=cold_exclusive_actor",
+    "EVENT cycle=63 phase=RF_read a=38 b=38",
+    "EVENT cycle=66 phase=mirrored_write slot=17",
+    "EVENT cycle=67 phase=common_ACK identity=0100000001c413",
+    "EVENT cycle=68 phase=mirrored_write slot=18",
+    "EVENT cycle=69 phase=common_ACK identity=0100000001c413",
+    "EVENT cycle=77 phase=accepted nativeTag=0000000100000003 nativeGen=0000000100000012 enteringWorkspaceLive=0 scope=cold_exclusive_actor",
+    "EVENT cycle=90 phase=accepted nativeTag=0000000100000004 nativeGen=0000000100000012 enteringWorkspaceLive=0 scope=cold_exclusive_actor",
+    "EVENT cycle=91 phase=RF_read a=38 b=38",
+    "EVENT cycle=94 phase=mirrored_write slot=17",
+    "EVENT cycle=95 phase=common_ACK identity=01000000020413",
+    "EVENT cycle=96 phase=mirrored_write slot=18",
+    "EVENT cycle=97 phase=common_ACK identity=01000000020413",
+    "EVENT cycle=98 phase=RF_read a=17 b=18",
+    "EVENT cycle=104 phase=mirrored_write slot=17",
+    "EVENT cycle=105 phase=common_ACK identity=01000000020413",
+    "EVENT cycle=106 phase=mirrored_write slot=18",
+    "EVENT cycle=107 phase=common_ACK identity=01000000020413",
+    "EVENT cycle=108 phase=RF_read a=17 b=18",
+    "EVENT cycle=112 phase=mirrored_write slot=19",
+    "EVENT cycle=113 phase=common_ACK identity=01000000020413",
+    "EVENT cycle=127 phase=accepted nativeTag=0000000100000005 nativeGen=0000000100000012 enteringWorkspaceLive=0 scope=cold_exclusive_actor",
+    "EVENT cycle=128 phase=RF_read a=38 b=38",
+    "EVENT cycle=131 phase=mirrored_write slot=17",
+    "EVENT cycle=132 phase=common_ACK identity=01000000022413",
+    "EVENT cycle=133 phase=mirrored_write slot=18",
+    "EVENT cycle=134 phase=common_ACK identity=01000000022413",
+    "EVENT cycle=135 phase=RF_read a=17 b=18",
+    "EVENT cycle=141 phase=mirrored_write slot=17",
+    "EVENT cycle=142 phase=common_ACK identity=01000000022413",
+    "EVENT cycle=143 phase=mirrored_write slot=18",
+    "EVENT cycle=144 phase=common_ACK identity=01000000022413",
+    "EVENT cycle=145 phase=RF_read a=17 b=18",
+    "EVENT cycle=149 phase=mirrored_write slot=19",
+    "EVENT cycle=150 phase=common_ACK identity=01000000022413",
+    "EVENT cycle=152 phase=visible identity=01000000022413",
+    "EVENT cycle=153 phase=RF_read a=19 b=19",
+    "EVENT cycle=156 phase=FMIN_result_accept identity=01000000022413",
+    "EVENT cycle=157 phase=W6_consumer identity=01000000022413",
+    "EVENT cycle=171 phase=accepted nativeTag=0000000100000006 nativeGen=0000000100000012 enteringWorkspaceLive=0 scope=cold_exclusive_actor",
+    "EVENT cycle=172 phase=RF_read a=38 b=38",
+    "EVENT cycle=175 phase=mirrored_write slot=17",
+    "EVENT cycle=176 phase=common_ACK identity=01000000024413",
+    "EVENT cycle=177 phase=mirrored_write slot=18",
+    "EVENT cycle=178 phase=common_ACK identity=01000000024413",
+    "EVENT cycle=179 phase=RF_read a=17 b=18",
+    "EVENT cycle=185 phase=mirrored_write slot=17",
+    "EVENT cycle=186 phase=common_ACK identity=01000000024413",
+    "EVENT cycle=187 phase=mirrored_write slot=18",
+    "EVENT cycle=188 phase=common_ACK identity=01000000024413",
+    "EVENT cycle=189 phase=RF_read a=17 b=18",
+    "EVENT cycle=193 phase=mirrored_write slot=19",
+    "EVENT cycle=194 phase=common_ACK identity=01000000024413",
+    "EVENT cycle=196 phase=visible identity=01000000024413",
+    "EVENT cycle=197 phase=RF_read a=19 b=19",
+    "EVENT cycle=200 phase=FMIN_result_accept identity=01000000024413",
+    "EVENT cycle=201 phase=W6_consumer identity=01000000024413",
+    "EVENT cycle=222 phase=accepted nativeTag=0000000100000007 nativeGen=0000000100000012 enteringWorkspaceLive=0 scope=cold_exclusive_actor",
+    "EVENT cycle=223 phase=RF_read a=38 b=38",
+    "EVENT cycle=226 phase=mirrored_write slot=17",
+    "EVENT cycle=227 phase=common_ACK identity=01000000026413",
+    "EVENT cycle=228 phase=mirrored_write slot=18",
+    "EVENT cycle=229 phase=common_ACK identity=01000000026413",
+    "EVENT cycle=230 phase=RF_read a=17 b=18",
+    "EVENT cycle=236 phase=mirrored_write slot=17",
+    "EVENT cycle=237 phase=common_ACK identity=01000000026413",
+    "EVENT cycle=238 phase=mirrored_write slot=18",
+    "EVENT cycle=239 phase=common_ACK identity=01000000026413",
+    "EVENT cycle=240 phase=RF_read a=17 b=18",
+    "EVENT cycle=244 phase=mirrored_write slot=19",
+    "EVENT cycle=245 phase=common_ACK identity=01000000026413",
+    "EVENT cycle=247 phase=visible identity=01000000026413",
+    "EVENT cycle=248 phase=RF_read a=19 b=19",
+    "EVENT cycle=251 phase=FMIN_result_accept identity=01000000026413",
+    "EVENT cycle=252 phase=W6_consumer identity=01000000026413",
+    "EVENT cycle=267 phase=retire nativeTag=0000000100000007 nativeGen=0000000100000012"
+  ],
+  "case_results": [
+    "CASE_PASS NONFINITE_REFUSAL retained_owned_debt",
+    "CASE_PASS                        STALE_ACK retained_owned_debt",
+    "CASE_PASS                    RUNTIME_RESET retained_owned_debt",
+    "CASE_PASS                    WRONG_REVERSE retained_owned_debt",
+    "CASE_PASS                      WRONG_DRAIN retained_owned_debt",
+    "CASE_PASS MISSING_ALLCOPY blocks_then_matched_drain"
+  ]
+}
