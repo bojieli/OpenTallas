@@ -149,6 +149,59 @@ def enroll_loaded(pins,manifest,D,*,candidate=None,enable=False,sm_engine_factor
         sm_engine_factory=sm_engine_factory)
 
 
+def prepare_candidate_bundle(original_manifest,candidate_result,out,*,enable=False):
+    """Materialize candidate IMEM plus the SAME validated checkpoint/partition bytes.
+
+    No simulator launch or context acquisition. Original source files are only
+    read and linked; candidate files are copied into a new owned bundle. The
+    existing Sagan Simulator20 factory can load this native schema directly.
+    """
+    if not enable:raise ValueError('explicit candidate source preparation enable required')
+    import os
+    import shutil
+    original_manifest,candidate_result=Path(original_manifest).resolve(),Path(candidate_result).resolve()
+    original=json.loads(original_manifest.read_text());candidate=json.loads(candidate_result.read_text())
+    if original.get('schema')!='opentallas.ds_hbm.simulator20_source.v1':
+        raise ValueError('actual native prepared source bundle required')
+    if candidate['verdict']!='SOURCE_NATIVE_COMPILER_JOIN_PASS' or not candidate['baseline_words_exact']:
+        raise ValueError('exact archived native compiler join required')
+    if original['origin_sha256']!=candidate['origin_sha256']:
+        raise ValueError('candidate was compiled against another source archive')
+    if original['entries']!=candidate['baseline_entries']:
+        raise ValueError('baseline native entries differ')
+    origin_path=original_manifest.parent/original['origin_manifest']
+    if sha(origin_path)!=original['origin_sha256']:raise ValueError('origin lineage changed')
+    for name,digest in original['artifacts'].items():
+        if Path(name).name!=name or sha(original_manifest.parent/name)!=digest:
+            raise ValueError('immutable actual source payload differs: '+name)
+    for name,digest in candidate['candidate_artifacts'].items():
+        if Path(name).name!=name or sha(candidate_result.parent/name)!=digest:
+            raise ValueError('candidate native words changed: '+name)
+    out=Path(out).resolve();out.mkdir(parents=True,exist_ok=False)
+    for name in original['artifacts']:
+        if name in candidate['candidate_artifacts']:
+            shutil.copyfile(candidate_result.parent/name,out/name)
+        else:
+            os.symlink((original_manifest.parent/name).resolve(),out/name)
+    # New origin records the native instruction change explicitly; every
+    # checkpoint byte hash is identical to the validated original source.
+    origin=json.loads(origin_path.read_text())
+    origin['artifacts'].update(candidate['candidate_artifacts'])
+    origin['entries']=candidate['candidate_entries']
+    origin['ha5_lineage']=dict(original_sha256=candidate['origin_sha256'],
+        compiler_result_sha256=sha(candidate_result),numerical_qualified=False)
+    (out/'origin.json').write_text(json.dumps(origin,indent=2)+'\n')
+    result=dict(original)
+    result['origin_manifest']='origin.json';result['origin_sha256']=sha(out/'origin.json')
+    result['entries']=candidate['candidate_entries']
+    result['artifacts']=dict(original['artifacts'],**candidate['candidate_artifacts'])
+    result['ha5_candidate_result_sha256']=sha(candidate_result)
+    result['source_images_numerical_qualified']=False
+    result['transformation']='HA5 native shared-first issue, original expert sum order; memory byte-identical'
+    (out/'source.json').write_text(json.dumps(result,indent=2)+'\n')
+    return result
+
+
 if __name__=='__main__':
     import argparse
     import sys
