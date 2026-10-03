@@ -638,6 +638,7 @@ def parse_logs(work: Path):
     out['drt_errors'] = re.findall(r'\[ERROR DRT-\d+\].*', drt)[:3]
     out['drt_completed'] = 'Complete detail routing' in drt or bool(re.search(r'Total wire length = ', drt))
     out['flow_errors'] = [f'{k}: {e}' for k, v in sorted(logs.items()) for e in re.findall(r'\[ERROR [^\]]+\].*', v)][:5]
+    out['make_errors'] = re.findall(r'make\[1\]: \*\*\* .*Error \d+.*', logs.get('orfs_flow.log', ''))[:3]
     out['last_stage_log'] = max(logs, key=lambda k: (k[:1].isdigit(), k)) if logs else None
     return out
 
@@ -729,7 +730,9 @@ def record(v, jobroot: Path, src_root: Path):
     layer_ok = bool(btw) and blk is not None and blk <= 0.05 * btw and run is not None and run <= LONG_HAUL_UM
     verdict = ('ROUTED_CLEAN' if routed_clean else
                'GRT_OVERFLOW' if grt_ovf else
-               'DRT_VIOLATIONS' if drt else 'INCOMPLETE')
+               'DRT_VIOLATIONS' if (drt and logs.get('drt_completed')) else
+               'INCOMPLETE_KILLED' if any('Error 247' in e or 'Error 137' in e for e in logs.get('make_errors', [])) else
+               'INCOMPLETE')
     return dict(
         schema='opentallas.qwen-corridor-gate.v1', variant=v, test=t['name'], top=t['top'],
         question='does the r2 corridor route at its netted width (demand / raw same-direction tracks on the assigned '
@@ -749,7 +752,8 @@ def record(v, jobroot: Path, src_root: Path):
                  per_layer=logs.get('grt_final_per_layer'), errors=logs.get('grt_errors')),
         drt=dict(final_violations=drt, by_iteration=logs.get('drt_violations_by_iteration'),
                  errors=logs.get('drt_errors')),
-        flow_errors=logs.get('flow_errors'), last_stage_log=logs.get('last_stage_log'),
+        flow_errors=logs.get('flow_errors'), make_errors=logs.get('make_errors'),
+        last_stage_log=logs.get('last_stage_log'), drt_completed=logs.get('drt_completed'),
         timing=dict(**timing, corner_sta=sta,
                     orfs_finish=dict(setup_wns_ns=m.get('setup_wns_ns'), hold_wns_ns=m.get('hold_wns_ns'),
                                      setup_violations=m.get('setup_violations'),
@@ -818,9 +822,67 @@ def die_statement(ratios: dict):
                 corridor_widths=widths)
 
 
+def summary(out_dir: Path):
+    """Gate verdict from every committed variant record (attempt records are listed, never used for the bracket)."""
+    recs = {}
+    for f in sorted(out_dir.glob('*.json')):
+        if f.name in ('verdict.json',):
+            continue
+        d = json.loads(f.read_text())
+        if d.get('schema') == 'opentallas.qwen-corridor-gate.v1':
+            recs[f.name] = d
+    series = {}
+    for name, d in recs.items():
+        if 'attempt' in name:
+            continue
+        key = f"{d['test']}_{d['pg']['region']}"
+        series.setdefault(key, []).append(dict(
+            record=name, ratio=d['geometry']['demand_over_raw'], width_um=d['geometry']['width_um'],
+            ratio_tag=d['geometry']['ratio_tag'], verdict=d['verdict'], routed_clean=d['routed_clean'],
+            timing_met=d['timing_met'], layer_assignment_held=d['layer_assignment_held'],
+            grt_overflow=(d['grt']['final'] or {}).get('overflow'), drt_final=d['drt']['final_violations'],
+            ss_setup_ns=d['timing']['ss_setup_wns_ns'], ff_hold_ns=d['timing']['ff_hold_wns_ns'],
+            grt_usage_assigned_pct={l: (d['grt']['per_layer'] or {}).get(l, {}).get('usage_pct')
+                                    for l in d['geometry']['assigned_layers']}))
+    gate = {}
+    for key, rows in series.items():
+        rows.sort(key=lambda r: -r['ratio'])
+        ok = [r for r in rows if r['routed_clean'] and r['timing_met'] and r['layer_assignment_held']]
+        bad = [r for r in rows if not (r['routed_clean'] and r['timing_met'] and r['layer_assignment_held'])]
+        best = max(ok, key=lambda r: r['ratio']) if ok else None
+        fail_above = min((r['ratio'] for r in bad if best is None or r['ratio'] > best['ratio']), default=None)
+        gate[key] = dict(runs=rows, densest_clean_ratio=best['ratio'] if best else None,
+                         minimum_clean_width_um=best['width_um'] if best else None,
+                         first_failing_denser_ratio=fail_above,
+                         non_monotone=[r['record'] for r in bad if best and r['ratio'] < best['ratio']])
+    T = tests()
+
+    def dens(k):
+        g = gate.get(k)
+        return g['densest_clean_ratio'] if g else None
+    r2_ratio = {'A': round(T['A']['demand'] / (sum(math.floor(T['A']['width_r2'] / PITCH[l] + 1e-8)
+                                                    for l in T['A']['layers'])), 4),
+                'B': round(T['B']['demand'] / (sum(math.floor(T['B']['width_r2'] / PITCH[l] + 1e-8)
+                                                    for l in T['B']['layers'])), 4)}
+    applied = dict(tile_column=dens('B_tile'), horizontal_link=dens('A_tile'), vertical_spine=dens('B_tile'))
+    die = die_statement({k: v for k, v in applied.items() if v is not None})
+    strip = dens('A_strip')
+    link_s = [x for x in (strip, applied['horizontal_link']) if x is not None]
+    die_strip = die_statement({k: v for k, v in dict(applied, horizontal_link=min(link_s) if link_s else None).items()
+                               if v is not None})
+    return dict(schema='opentallas.qwen-corridor-gate-verdict.v1', r2_record=R2_REC, r2_ratio=r2_ratio,
+                series=gate, attempts=[n for n in recs if 'attempt' in n],
+                density_applied=dict(applied, note='tile_column and vertical_spine (both M7/M9 vertical; the spine '
+                                     'sits under the lighter 2.5% hub PG) take the tile-column series; the horizontal '
+                                     'link takes its own r2-netting (tile-field PG) series; in_strip_fan (0.114) is '
+                                     'left at its r2 width'),
+                die=die, die_if_link_at_strip_pg=die_strip,
+                r2_corridors_route=all((dens(k) or 0) >= r2_ratio[k[0]] - 1e-4 for k in ('A_tile', 'B_tile')))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['plan', 'write', 'argv', 'record', 'die'])
+    ap.add_argument('mode', choices=['plan', 'write', 'argv', 'record', 'die', 'summary'])
     ap.add_argument('--variant')
     ap.add_argument('--jobroot', type=Path)
     ap.add_argument('--src-root', type=Path, default=ROOT)
@@ -845,6 +907,12 @@ def main():
                                               'layer_assignment_held')} | dict(grt=rec['grt']['final'],
                                                                               drt=rec['drt']['final_violations'],
                                                                               timing=rec['timing']['ss_setup_wns_ns'])))
+    elif a.mode == 'summary':
+        rec = summary(ROOT / OUTDIR)
+        if a.out:
+            a.out.write_text(json.dumps(rec, indent=1, sort_keys=True) + '\n')
+        print(json.dumps({k: rec[k] for k in ('r2_ratio', 'density_applied', 'r2_corridors_route')} |
+                         dict(die=rec['die']['gated_die_mm2'], within_815=rec['die']['within_815']), indent=1))
     elif a.mode == 'die':
         rec = die_statement(json.loads(a.ratios or '{}'))
         print(json.dumps(rec, indent=1))
