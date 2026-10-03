@@ -454,7 +454,6 @@ module ot_hdc_v41x_idx_pool_adapt_native_vm #(
                         o_mask[l]<=1;o_data[32*l +: 32]<={b_score,16'd0};
                     end
                 end
-                end
                 dbg_elems<=dbg_elems+1;
                 done_count<=done_count+1;
                 dbg_keys_scored<=dbg_keys_scored+1;
