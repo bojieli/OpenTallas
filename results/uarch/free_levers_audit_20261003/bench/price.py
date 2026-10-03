@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+"""Rank the free-lever audit findings and price them against the V4.1 ROM model token at 1M
+(results/uarch/v41_rom.json, design 'proposal').  Measured inputs: measured/phase_merge_flat_bst*.json (this audit)
+and results/rtl/w11_main_compatible_20261001/matched_pairs.json (SU operator fusion, reduced token).
+
+    python3 results/uarch/free_levers_audit_20261003/bench/price.py
+"""
+import hashlib
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[4]
+D = Path(__file__).resolve().parents[1]
+V41 = ROOT / "results/uarch/v41_rom.json"
+SUF = ROOT / "results/rtl/w11_main_compatible_20261001/matched_pairs.json"
+LAYERS = 40                 # configs/models/candidates/deepseek-v4.1-flash.json; hdc_replay_v41 build(range(40))
+GU_PAIRS = 7                # shared + 6 routed experts: w1 and w3 issued as two LINQ ops (L20 PCs 84/85, 97/98 ...)
+AP_PAIRS = 1                # wq_a and wkv issued as two LINQ ops (L20 PCs 7/8)
+
+
+def sha(p):
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def rate_gain(saved, T):
+    return T / (T - saved) - 1.0
+
+
+def main():
+    row = next(r for r in json.loads(V41.read_text())["rows"] if r["design"] == "proposal")
+    clock, T_us = row["clock_hz"], row["T_us"]
+    T = T_us * 1e-6 * clock
+    gate = 0.01 * T
+    meas = {}
+    for p in sorted((D / "measured").glob("phase_merge_flat_bst*.json")):
+        r = json.loads(p.read_text())
+        meas[f"bst{r['params']['bst']}"] = dict(path=str(p.relative_to(ROOT)), sha256=sha(p), status=r["status"],
+                                                golden_rows=r["golden_rows"], golden_mismatch=r["golden_mismatch"],
+                                                ab=r["ab"])
+    base = meas.get("bst17") or meas["bst2"]
+    s_gu = base["ab"]["expert_gate_up"]["saved_cycles"]
+    s_ap = base["ab"]["attn_a_proj"]["saved_cycles"]
+    pm_saved = LAYERS * (GU_PAIRS * s_gu + AP_PAIRS * s_ap)
+    suf = json.loads(SUF.read_text())["pairs"]
+    levers = [
+        dict(rank=1, id="L1_same_x_phase_merge",
+             what="Emit the gate/up pair (w1,w3) of each of the 7 experts and the wq_a/wkv pair as ONE ROM-field phase "
+                  "each, as the model and the bank map already price them (a_proj, shared_gu, gu); the spine runs "
+                  "multi-matrix phases already (one x load, one stream).",
+             evidence=["tools/hdc_replay_v41.py:781-793 (project_gate_up: two linq ops in exact-TP mode)",
+                       "tools/hdc_replay_v41.py (attn: wq_a and wkv as two linq ops; L20 trace PCs 7/8)",
+                       "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_program_bind_rope_hbm.json PCs 7/8, 84/85, 97-124",
+                       "tools/decode_critical_path.py:1069 a_proj, :1201 shared_gu, :1214 experts_gu (one matvec each)",
+                       "results/uarch/v41_rom_ksplit_bankmap.json phase_vs_model a_proj; tools/v41_rom_ksplit_bankmap.py:83,384 (gu = w1+w3)",
+                       "rtl/w17_runtime/v41die/ot_v41_spine.sv header (one phase = one or more matrices sharing one x)",
+                       "rtl/v41die/ot_v41_rom_adapt.sv (phase key = weight base; rows come from the phase ROM)"],
+             measured=meas, saved_cycles_per_pair=dict(gate_up=s_gu, a_proj=s_ap),
+             pairs_per_token=LAYERS * (GU_PAIRS + AP_PAIRS), saved_cycles_per_token=pm_saved,
+             saved_fraction_of_model_token=pm_saved / T, per_user_rate_gain_if_exposed=rate_gain(pm_saved, T),
+             model_rate_change="none: the model already prices one phase per pair; this closes an RTL-program gap",
+             kind="emitter + image (phase layout and key ROM); no new RTL",
+             exactness="class A: row-independent dot products, same arithmetic; measured bit-identical rows split vs merged and 0 golden mismatches",
+             area="none (fewer phase-ROM entries)",
+             caveats=["small field (NP 16) bench: per-phase fixed cost is measured, the full-shape stream per phase "
+                      "is x-read bound (K 5120 / 64 = 80 beats) in both arms per the bank map",
+                      "assumes every saved phase is on the critical chain: field ops are serial on one spine and the "
+                      "following all-gather (wait=31) drains every unit",
+                      "VM layout: KVAL must follow QAL contiguously (rows land at obase + tag)",
+                      "not yet run on the W17 runtime token; default-off emitter option needed"]),
+        dict(rank=2, id="L2_su_operator_fusion_kr",
+             what="Run the token on the lane-register fusion build (HDC_V41_SU_FUSE, ot_hdc_core_v41x_kr + _kr vector "
+                  "unit; tools/w11_su_fuse_die.py --sukr K): 700 producer->consumer edges kept in lane registers.",
+             evidence=["tools/hdc_program_v41_fuse.py:43-57,113-121", "tools/w11_su_fuse_die.py:29,91 (default --sukr 0)",
+                       "tools/uarch_model.py:3429,3853-3863,5730 (VMC_FUSED counted, 'RTL pending')",
+                       "results/rtl/w11_main_compatible_20261001/matched_pairs.json"],
+             measured_reduced_token=suf,
+             saved_cycles_per_token_full_shape_upper=21700, saved_fraction_of_model_token=21700 / T,
+             per_user_rate_gain_if_exposed=rate_gain(21700, T),
+             model_rate_change="none: the product model already counts the fusion",
+             kind="existing RTL (_kr fork) + program option; port the _kr changes into the W17 runtime core",
+             exactness="functional exact on two reduced tokens (logits, VM, KV); overall FAIL was the _kr core's lint "
+                       "(PINMISSING i_preloaded: the fork predates the runtime core)",
+             area="lane registers (KR depth); not priced here"),
+        dict(rank=3, id="L3_window_refill_credits_8_and_retain",
+             what="WINDOW_REFILL_CREDITS=8 (and WINDOW_RETAIN_L0=1) on ot_chip_v41x_die in the token configuration.",
+             evidence=["rtl/chip/ot_chip_v41x_die.sv:124,128", "rtl/test/v41_runtime/ot_v41_rt_die.sv:88 (not set)",
+                       "results/rtl/v41x_window_refill_credits.json (fixture 39-42% fewer cycles; tag_owner_gate FAIL at epoch>=512)",
+                       "results/rtl/v41_window_retention_gate.json",
+                       "results/uarch/w17_window_epoch_contract_20261001/standalone_refill_model.json"],
+             saved_cycles_per_window_layer_rtl="~62k-96k per refill at the recorded cold-HBM latencies",
+             model_rate_change="none: the model has no serial refill term (it already assumes the fast path)",
+             kind="existing RTL; needs a tag-width fix (new RTL) before adoption",
+             exactness="fixture bit-exact; tag aliasing past epoch 511 is a real correctness fault"),
+        dict(rank=4, id="L4_cross_unit_chaining", kind="RTL (per-op scoreboard / producer credits)",
+             what="Program waits drain a whole unit for any cross-unit dependency; the timing model chains on the first vector.",
+             evidence=["tools/hdc_timing_v41x.py:26-37", "tools/hdc_program_v41.py:1340,1360-1404",
+                       "results/arch/v41x_replay.json (195.1 vs 234.0 us at 200K)"],
+             saved_cycles_per_token="~39 us (~40k cycles) at 200K, model", model_rate_change="model already assumes it"),
+        dict(rank=5, id="L5_collective_drains_all_units", kind="RTL (VM port B arbitration)",
+             what="A collective drains every unit regardless of its wait mask (exclusive VM port B), then blocks; 14 per layer.",
+             evidence=["rtl/hdc/v41x/ot_hdc_core_v41x.sv:561-566,581", "tools/hdc_replay_v41.py:341 (wait=31)",
+                       "tools/v41_fullshape_isa.py:799-800"], saved_cycles_per_token="not priced"),
+        dict(rank=6, id="L6_routed_gate_up_one_pass", kind="RTL (multi-key dynamic phase)",
+             what="The model prices all 6 routed experts' gate/up as one matvec (decode_critical_path.py:1214, "
+                  "n_out = 2*FF*KE); the field runs one phase per expert (dynamic key). L1 recovers the w1/w3 half.",
+             saved_cycles_per_token="5 further phases a layer x ~260 = ~52k cycles (bench constant), needs RTL"),
+        dict(rank=7, id="L7_streaming_topk", kind="RTL (ME->XU credit)", decision="REJECT (<1%)",
+             what="Index top-k and MoE top6 start after the scorer drains; model docstring says streamed.",
+             evidence=["tools/decode_critical_path.py:800-849,1116,1197", "rtl/hdc/v41x/ot_hdc_core_v41x.sv:462,566"],
+             saved_cycles_per_token=2351, saved_fraction_of_model_token=2351 / T),
+        dict(rank=8, id="Q1_qwen_lm_head_chunks", kind="emitter", decision="REJECT (<0.1%)",
+             what="Qwen lm_head emitted as 7 x 512-word chunks with barriers; only 2 are forced by the 16-bit me_nout.",
+             evidence=["tools/hdc_qwen_fullshape_program_w12.py:182-201", "tools/hdc_program.py:208-223",
+                       "tools/hdc_isa.py:75"], saved_cycles_per_token=185),
+    ]
+    rec = dict(schema="opentallas.uarch.free_levers_audit.v1", basis=dict(
+        model=str(V41.relative_to(ROOT)), model_sha256=sha(V41), design="proposal", context=1048576,
+        clock_hz=clock, T_us=T_us, T_cycles=T, gate_1pct_cycles=gate, layers=LAYERS),
+        claim_boundary=("Audit and pricing. Only L1 was measured here (small-field flat RTL, bit-exact); every gain is "
+                        "an RTL-program gap against a model that already assumes the fused behaviour, so the model's "
+                        "per-user rate does not change. Nothing is adopted; no default changed."),
+        no_width_split_found=("No descriptor/ISA field width forces a serialized split in the shipped V4.1 program "
+                              "(FULL profile counts 21 bits); HE KCMAX 2560 and COLL_TOPK_MERGE n<=2048 sit exactly at "
+                              "their caps."),
+        model_only_corrections=[
+            "tools/decode_critical_path.py:846 tselect_local: stream not passed, ingest counted twice (model pessimistic ~1.5k cycles)",
+            "tools/decode_critical_path.py:1141 cand.final return value discarded (dangling node)",
+            "tools/uarch_model.py:5585 still says the Qwen one-segment all-reduce is not measured (7d736e8e6 measured it)"],
+        infrastructure=["tools/v41_field_rt_gate.py fails at HEAD (MODMISSING ot_hdc_cg; with it added, composition != "
+                        "flat at tick 252 and the legacy flat writes wrong rows); its record pins predate 541ef17eb. "
+                        "tools/w17_runtime_v41_field_rt_gate.py's flat model is the one used here."],
+        levers=levers)
+    (D / "free_levers_audit.json").write_text(json.dumps(rec, indent=1) + "\n")
+    print(json.dumps(dict(T_cycles=round(T), gate=round(gate), s_gu=s_gu, s_ap=s_ap, pm_saved=pm_saved,
+                          pm_frac=round(pm_saved / T, 4), pm_rate=round(rate_gain(pm_saved, T), 4),
+                          suf_frac=round(21700 / T, 4), meas=list(meas))))
+
+
+if __name__ == "__main__":
+    main()
