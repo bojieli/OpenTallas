@@ -44,7 +44,7 @@ class ConnectedEnrollmentTests(unittest.TestCase):
         import io,json,types
         from tempfile import TemporaryDirectory
         from unittest.mock import patch
-        from tools.gpu_sys import canonical_qwen_simulator as sim
+        from tools.gpu_sys import canonical_qwen_ranked_simulator as sim
         from tools.gpu_sys import canonical_qwen_transport as transport
         class Pins:
             edges=0;stopped=False;edge_open=False
@@ -68,7 +68,7 @@ class ConnectedEnrollmentTests(unittest.TestCase):
             with patch.dict(sys.modules,{module.__name__:module}), \
                  patch.object(runner.subprocess,'check_output',side_effect=['','test-commit']), \
                  patch.object(runner.subprocess,'Popen',return_value=process), \
-                 patch.object(sim,'EnclosingPins',Pins), \
+                 patch.object(sim,'RankedEnclosingPins',Pins), \
                  patch.object(sim,'build',side_effect=lambda pins,*args,**kw: fake_build(pins)), \
                  patch.object(transport,'UnixDeliveryServer',Server):
                 record=runner.connected_runtime(binary,module.__name__+':build',root/'socket',root/'out')

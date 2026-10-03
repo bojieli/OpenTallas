@@ -244,3 +244,25 @@ class RankedConnectedReceiptTests(unittest.TestCase):
         pins=SourceBook();pins.book={'pins':dict(pins.book['pins'])}
         pins.book['pins']['w2_p_req_v']={'count':128}
         with self.assertRaises(m.ProtocolError):m.ConnectedReceiptObserver(pins)
+
+
+class RankedActualPinSnapshotTests(unittest.TestCase):
+    def test_rank1_pc127_snapshot_calls_explicit_rank_api(self):
+        r=m.Request(m.Identity(5,0xfedcba98,15,True),0x300000020,1<<255)
+        class RankedWires:
+            book={'pins':{name:{'count':256} for name in
+                ('w2_rst_n','w2_c_req_v','w2_p_req_v','w2_c_rsp_v','w2_c_wr_done_v')}}
+            def __init__(self):self.calls=[]
+            def get(self,name):
+                return dict(w2_rst_n=(1<<256)-1,w2_c_req_v=32<<(255*6),
+                    w2_p_req_v=0,w2_c_rsp_v=0,w2_c_wr_done_v=0,
+                    c_req_rdy=32,admission_stop=0,c_req_tag=r.identity.tag<<(5*32),
+                    c_req_gen=15<<(5*4),c_req_we=32,c_req_addr=r.address<<(5*34),
+                    c_req_data=r.data<<(5*256),c_rsp_v=0,c_rsp_rdy=0,
+                    c_wr_done_v=0,c_wr_done_rdy=0)[name]
+            def component(self,block,index,*,rank):
+                self.calls.append((block,index,rank));return self
+        pins=RankedWires();o=m.ConnectedReceiptObserver(pins)
+        o.before_edge();o.after_edge()
+        self.assertEqual(pins.calls,[('w2',127,1)])
+        self.assertEqual(o.receipts,{(255,r.identity):r})
