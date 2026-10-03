@@ -1,0 +1,36 @@
+{
+  "artifact_hashes_verified": 29,
+  "canonical_bridge_RTL_intake": false,
+  "checkout": "/tmp/dewey-r8-cold-243evlre",
+  "commands": [
+    {
+      "argv": [
+        "python",
+        "tools/h3_complete_native_calendar_c0_component_r8.py",
+        "--verify"
+      ],
+      "elapsed_seconds": 0.071,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "PASS current source model; actual W2/W6 interface component, production G0/allcopy/whole-token UNKNOWN\n"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-o",
+        "addopts=",
+        "tests/test_hbm_w5_c0_command_component.py"
+      ],
+      "elapsed_seconds": 8.448,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "................                                                         [100%]\n16 passed in 7.41s\n"
+    }
+  ],
+  "git_history_required": false,
+  "production_credit": false,
+  "schema": "DEWEY_R8_COLD_FREEZE_REPLAY"
+}

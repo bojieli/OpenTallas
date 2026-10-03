@@ -1,0 +1,6 @@
+{
+  "verdict": "FAIL_CONTROL_HARNESS",
+  "observed": "W5IDLE W6IDLE count0 fault1",
+  "cause": "valid asserted then ready tested before combinational settling; accepted cold drain was missed and valid held into IDLE",
+  "production_scope": false
+}

@@ -1,0 +1,17 @@
+{
+  "admission_edges_min": 1,
+  "budget_counts_PC": 128,
+  "count_bits": 8,
+  "grant_semantics": "whole emitted command plus causal consumption gang resource reservation; bind SM/native64/gen64/commandparent55 before start, no partial allocation credit as whole-command guarantee",
+  "gross_assumed_restore50pct_mm2": 0.031173672959999996,
+  "net_overlap_with_allocator_or_immutable_compiler_plan": null,
+  "producer_implemented": false,
+  "protected_planning_per_SM": 1152,
+  "protected_total": 36864,
+  "raw_per_SM": 1024,
+  "raw_total": 32768,
+  "replicas": 32,
+  "source_claim": "prospective finite resource guard consumer, installed G0 producer not implemented",
+  "source_grant_clock": "single local clock; actual source/G0 CDC positive cost remains separate",
+  "usage": "sum demand equals16*frames; each physicalPC demand<=128; consume assigned PC budget at actual backend accept; retain until W6 whole command retire, no context reuse on stageACK"
+}

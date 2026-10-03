@@ -1,0 +1,37 @@
+{
+  "DS_staging": "139264 useful/163840 physical bytes/SM;131072 context summary retained as mismatched history, not active DS capacity",
+  "actual_G0_reservation": false,
+  "actual_allcopy_producer": false,
+  "base": "de3c3d6679c58f3df0ccbb40fd9efcf0d00aad4b",
+  "branch": "codex/h3-physical-grants-20261002",
+  "canonical_bridge_owner": "Popper35b5",
+  "commands": [
+    "python tools/h3_complete_native_calendar_c0_component_r8.py --verify",
+    "python -m pytest -q -o addopts=\"\" tests/test_hbm_w5_c0_command_component.py"
+  ],
+  "continuation_policy": "stageACK only after both32B stores, reusable512B assembler after frame commonACK, retain all128child records until consumer/reverse/W6 retire; counts are local controls not production proof",
+  "current_costs": "Ampere51925 exactW2 raw4781/protected9144 perPC/gross6.63848068608; W6 raw71/protected144 perSM/gross.0600441856. No blind gross parent addition; matched inclusion/debits unknown.",
+  "earlier_model": "composed_model_r1.json historical draft retained",
+  "exact_source_components": [
+    "526c76068 W2NC6",
+    "e951f5097 W6 protected fence",
+    "c4c794ad0 W4 RF ACK interface"
+  ],
+  "new_numeric_jobs": 0,
+  "new_physical_jobs": 0,
+  "next_action": "Dewey consume Ampere admitted operand-view adapter, join actual spans and primitive repetitions to paid finite continued-capture/retained-frame/deferred-reverse events. Popper owns actual bridge RTL; reuse source ABI lessons without duplicate implementation.",
+  "not_canonical_RTL_intake": true,
+  "production_operand_views": "REFUSED; actual source SSA/tile/bittypes/homes adapter required",
+  "role": "Dewey35e2",
+  "schema": "DEWEY_C0_PROTOTYPE_SOURCE_MODEL_FREEZE_R8",
+  "source_contract_differences": [
+    "Prototype one aggregate command parent vs canonical perframe anchor owner ABI; not reconciled",
+    "Prototype refill-only frames, lacks actual writeback_RF_capture/backing_visibility path",
+    "Within-command source_gen4 fixed; canonical opaque tuple wrap across a command not covered"
+  ],
+  "source_model": "composed_model_r2.json",
+  "source_profile": "r17 physical address profile; localAW31/LEN5=1/BEAT4=0 exposed; W2 logicalAW34 downstream physical mapper remains to connect",
+  "tests": "16 PASS; W2+W6 actual source local interface join,128children/64fragments/8RFframes; competing KV5 read, wrong full16/meta/client, RFslot reuse/staleACK, runtime retention, missingG0 reservation/extent, disabled outputs",
+  "whole_token_ns": null,
+  "worktree": "/home/ubuntu/OpenTallas-h3-physical-grants"
+}
