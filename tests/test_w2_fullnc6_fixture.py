@@ -185,6 +185,7 @@ class ConnectedReceiptTests(unittest.TestCase):
 
     def test_connected_reset_retains_external_orphan_and_refuses_aba(self):
         class ResetPins:
+            book={'pins':{name:{'count':128} for name in ('w2_rst_n','w2_c_req_v','w2_p_req_v','w2_c_rsp_v','w2_c_wr_done_v')}}
             def get(self,name):return 0
         r=self.original();o=m.ConnectedReceiptObserver(ResetPins())
         o.receipts[127,r.identity]=r;o.issued.add((127,r.identity))
@@ -205,6 +206,7 @@ class ConnectedReceiptTests(unittest.TestCase):
     def test_connected_request_pin_snapshot_uses_full_actual_fields(self):
         r=self.original()
         class Wires:
+            book={'pins':{name:{'count':128} for name in ('w2_rst_n','w2_c_req_v','w2_p_req_v','w2_c_rsp_v','w2_c_wr_done_v')}}
             def __init__(self):self.leaf=dict(admission_stop=0,c_req_rdy=32,
                 c_req_tag=r.identity.tag<<(5*32),c_req_gen=15<<(5*4),c_req_we=32,
                 c_req_addr=r.address<<(5*34),c_req_data=r.data<<(5*256),
@@ -217,3 +219,28 @@ class ConnectedReceiptTests(unittest.TestCase):
                 return self
         o=m.ConnectedReceiptObserver(Wires());o.before_edge();o.after_edge()
         self.assertEqual(o.receipts[127,r.identity],r)
+
+
+class RankedConnectedReceiptTests(unittest.TestCase):
+    def test_same_inner_tag_on_two_ranks_is_not_aliased(self):
+        class SourceBook:
+            book={'pins':{name:{'count':256} for name in
+                ('w2_rst_n','w2_c_req_v','w2_p_req_v','w2_c_rsp_v','w2_c_wr_done_v')}}
+        o=m.ConnectedReceiptObserver(SourceBook())
+        r=m.Request(m.Identity(5,0xffffffff,15,True),0x300000020,1<<255)
+        for bank in (127,255):
+            o.held[bank,5]=r
+            o.events=[('caller',bank,r),('backend',bank,r.wire_tuple)]
+            o.after_edge()
+        self.assertEqual(o.instances,256)
+        self.assertEqual(len(o.receipts),2)
+        o.events=[('terminal',127,r.identity)];o.after_edge()
+        self.assertEqual(o.receipts,{(255,r.identity):r})
+
+    def test_mismatched_actual_portbank_inventory_refuses(self):
+        class SourceBook:
+            book={'pins':{name:{'count':256} for name in
+                ('w2_rst_n','w2_c_req_v','w2_p_req_v','w2_c_rsp_v','w2_c_wr_done_v')}}
+        pins=SourceBook();pins.book={'pins':dict(pins.book['pins'])}
+        pins.book['pins']['w2_p_req_v']={'count':128}
+        with self.assertRaises(m.ProtocolError):m.ConnectedReceiptObserver(pins)

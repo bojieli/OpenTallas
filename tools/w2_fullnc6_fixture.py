@@ -113,6 +113,15 @@ class ConnectedReceiptObserver:
     """
     def __init__(self, pins):
         self.pins = pins
+        # Event-only reference tests have no driver. Live enrollment MUST use
+        # the source portbook: 128 per rank, 256 total in the corrected top.
+        self.instances = 128 if pins is None else pins.book['pins']['w2_rst_n']['count']
+        if self.instances not in (128,256):
+            raise ProtocolError('connected W2 bank inventory outside source topology')
+        if pins is not None:
+            for name in ('c_req_v','p_req_v','c_rsp_v','c_wr_done_v'):
+                if pins.book['pins']['w2_'+name]['count'] != self.instances:
+                    raise ProtocolError('connected W2 portbank counts disagree')
         self.held = {}
         self.receipts = {}
         self.orphans = set()
@@ -129,7 +138,7 @@ class ConnectedReceiptObserver:
         pv = self.pins.get('w2_p_req_v')
         rv = self.pins.get('w2_c_rsp_v')
         wv = self.pins.get('w2_c_wr_done_v')
-        for pc in range(128):
+        for pc in range(self.instances):
             if not (reset >> pc) & 1:
                 self.orphans.update(k for k in self.receipts if k[0] == pc)
                 # Unaccepted offers can be cancelled only at stopped/reset

@@ -48,6 +48,8 @@ class ConnectedEnrollmentTests(unittest.TestCase):
         from tools.gpu_sys import canonical_qwen_transport as transport
         class Pins:
             edges=0;stopped=False;edge_open=False
+            book={'pins':{name:{'count':128} for name in
+                ('w2_rst_n','w2_c_req_v','w2_p_req_v','w2_c_rsp_v','w2_c_wr_done_v')}}
             def __init__(self,*args):self.hooks=[]
             def add_edge_hook(self,hook):self.hooks.append(hook)
         class Server:
