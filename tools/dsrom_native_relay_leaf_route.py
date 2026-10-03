@@ -76,10 +76,19 @@ def construct(p):
     end=[max(c['bbox_DBU'][k] for c in cells) for k in (2,3)]
     die=[0,0,((end[0]-origin[0]+2159)//54+1)*54/1000,
          ((end[1]-origin[1]+2159)//540+1)*540/1000]
+    # The first/last follow-pin rail centres need complete via landings.
+    # Preserve core row phases and all parent-relative positions, translate the
+    # isolated fixture by one native row, and reserve a row outside each end.
+    origin[1]-=270
+    die[3]+=.54
+    core=[0,.27,die[2],die[3]-.27]
     width,widths=legal_PG_width()
     pg=legal_PG_geometry()
     return dict(candidate=p['candidate'], scope=p['scope'], cells=cells,
                 branches=branches, translated_origin_DBU=origin, die_um=die,
+                core_um=core, PG_boundary_halo_um=.27,
+                PG_boundary_fixture_area_delta_um2=.54*die[2],
+                PG_boundary_fixture_not_full_parent_growth=True,
                 fixed_native_cells=9, fixed_priced_relay_pad_cells=8,
                 standard_cell_body_um2=8*1.08*.27+9*.378*.27,
                 original_driver_fanout=8, relay_fanout=1,
@@ -207,7 +216,7 @@ foreach inst [[ord::get_db_block] getInsts] {$inst setDoNotTouch true}
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name native_relay -voltage_domains CORE
 add_pdn_stripe -grid native_relay -layer M1 -width 0.018 -followpins
-'''.lstrip()+f'add_pdn_stripe -grid native_relay -layer M3 -width 0.090 -pitch {pg["pitch_um"]} -spacing {pg["spacing_um"]} -offset 0.54\n'
+'''.lstrip()+f'add_pdn_stripe -grid native_relay -layer M3 -width 0.090 -pitch {pg["pitch_um"]} -spacing {pg["spacing_um"]} -offset 0.54 -extend_to_boundary -allow_out_of_core\n'
         +'add_pdn_connect -grid native_relay -layers {M1 M3}\n')
     (BASE/'model.json').write_text(json.dumps(m,indent=2,sort_keys=True)+'\n')
 

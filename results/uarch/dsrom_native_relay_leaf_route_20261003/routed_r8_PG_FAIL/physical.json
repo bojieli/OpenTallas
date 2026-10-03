@@ -1,0 +1,217 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-03T11:03:37.318726+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 3.252,
+    "block": "ot_ds_native_relay_leaf",
+    "cells": 17,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": true,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/model_ready_ds_relay_20261003/ot_ds_native_relay_leaf.v",
+        "sha256": "7e0cab0b0ee024d167479356d548e1416f4fe39db5c3b968c76de82d7bdb2658",
+        "size_bytes": 1727
+      }
+    ],
+    "top": "ot_ds_native_relay_leaf"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\nad_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_db /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r8/base/6_1_fill.odb\nread_sdc /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r8/base/6_1_fill.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\n[WARNING ODB-0379] VDD is marked do not touch, will be skipped for global connections\n[WARNING ODB-0379] VSS is marked do not touch, will be skipped for global connections\nwrite_db /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r8/base/6_final.odb\nwrite_sdc -no_timestamp /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r8/base/6_final.sdc\nDeleted 0 routing obstructions\n[INFO RCX-0431] Defined process_corner X with ext_model_index 0\n[INFO RCX-0029] Defined extraction corner X\n[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.\n[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...\n[INFO RCX-0436] RC segment generation ot_ds_native_relay_leaf (max_merge_res 50.0) ...\n[INFO RCX-0040] Final 164 rc segments\n[INFO RCX-0439] Coupling Cap extraction ot_ds_native_relay_leaf ...\n[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.\n[INFO RCX-0442] 49% of 205 wires extracted\n[INFO RCX-0442] 100% of 205 wires extracted\n[INFO RCX-0045] Extract 26 nets, 190 rsegs, 190 caps, 81 ccs\n[INFO RCX-0443] 26 nets finished\n[INFO PSM-0040] All shapes on net VDD are connected.\n########## IR report #################\nNet              : VDD\nCorner           : WC\nTotal power      : 3.52e-05 W\nSupply voltage   : 6.30e-01 V\nWorstcase voltage: 6.26e-01 V\nAverage voltage  : 6.28e-01 V\nAverage IR drop  : 2.40e-03 V\nWorstcase IR drop: 4.02e-03 V\nPercentage drop  : 0.64 %\n######################################\n[WARNING PSM-0038] Unconnected shape on net VSS at (0.000um, -0.009um) - (26.190um, 0.009um), layer: M1.\n[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_Left_18/VSS at location (0.054um, 0.000um).\n[WARNING PSM-0039] Unconnected instance TAP_TAPCELL_ROW_0_36/VSS at location (25.002um, 0.000um).\n[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_Right_0/VSS at location (26.136um, 0.000um).\n[ERROR PSM-0069] Check connectivity failed on VSS.\nError: final_report.tcl, 7 PSM-0069\n\nElapsed time: 0:01.59[h:]min:sec. CPU time: user 1.53 sys 0.05 (99%). Peak memory: 297704KB.\nElapsed time: 0:01.65[h:]min:sec. CPU time: user 1.58 sys 0.07 (100%). Peak memory: 316476KB.\nElapsed time: 0:01.59[h:]min:sec. CPU time: user 1.54 sys 0.05 (99%). Peak memory: 294056KB.\nElapsed time: 0:01.58[h:]min:sec. CPU time: user 1.53 sys 0.05 (99%). Peak memory: 296544KB.\nElapsed time: 0:01.59[h:]min:sec. CPU time: user 1.54 sys 0.05 (99%). Peak memory: 297528KB.\nElapsed time: 0:01.61[h:]min:sec. CPU time: user 1.59 sys 0.06 (101%). Peak memory: 297484KB.\nElapsed time: 0:01.58[h:]min:sec. CPU time: user 1.54 sys 0.05 (99%). Peak memory: 296104KB.\nElapsed time: 0:01.67[h:]min:sec. CPU time: user 1.63 sys 0.08 (101%). Peak memory: 432204KB.\nElapsed time: 0:01.64[h:]min:sec. CPU time: user 1.57 sys 0.07 (100%). Peak memory: 313820KB.\nElapsed time: 0:01.60[h:]min:sec. CPU time: user 1.55 sys 0.05 (100%). Peak memory: 300860KB.\nElapsed time: 0:01.58[h:]min:sec. CPU time: user 1.53 sys 0.05 (100%). Peak memory: 299288KB.\nElapsed time: 0:01.93[h:]min:sec. CPU time: user 3.06 sys 0.18 (168%). Peak memory: 460644KB.\nElapsed time: 0:02.41[h:]min:sec. CPU time: user 2.63 sys 0.27 (120%). Peak memory: 1084588KB.\nElapsed time: 0:01.58[h:]min:sec. CPU time: user 1.52 sys 0.06 (99%). Peak memory: 299072KB.\nElapsed time: 0:01.60[h:]min:sec. CPU time: user 1.53 sys 0.07 (99%). Peak memory: 295560KB.\nElapsed time: 0:01.60[h:]min:sec. CPU time: user 1.55 sys 0.05 (100%). Peak memory: 303824KB.\nmake[1]: *** [Makefile:654: do-6_report] Error 1\nmake: *** [Makefile:654: /work/logs/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r8/base/6_report.log] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-03T11:03:02.804736+00:00",
+  "git": {
+    "commit": "191511e1a42d7c78972ae74a88a3444fcffba890",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_ds_native_relay_leaf",
+      "--source",
+      "rtl/model_ready_ds_relay_20261003/ot_ds_native_relay_leaf.v",
+      "--purpose",
+      "characterization",
+      "--stages",
+      "synth,pnr",
+      "--clock-period-ns",
+      "0.833333333333",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--false-path-io",
+      "--io-delay-fraction",
+      "0.2",
+      "--max-transition-ns",
+      "0.32",
+      "--hold-margin-ns",
+      "0",
+      "--die-area",
+      "0",
+      "0",
+      "26.19",
+      "4.86",
+      "--core-area",
+      "0",
+      "0",
+      "26.19",
+      "4.86",
+      "--routing-layers",
+      "M2",
+      "M9",
+      "--step-tcl",
+      "POST_DETAIL_PLACE=physical/dsrom_native_relay_20261003/place.tcl",
+      "--step-tcl",
+      "PRE_CTS=physical/dsrom_native_relay_20261003/fixed_cts.tcl",
+      "--step-tcl",
+      "POST_DETAIL_ROUTE=physical/dsrom_native_relay_20261003/report.tcl",
+      "--orfs-var",
+      "PDN_TCL=/src/physical/dsrom_native_relay_20261003/pdn.tcl",
+      "--orfs-var",
+      "DONT_BUFFER_PORTS=1",
+      "--orfs-var",
+      "CELL_PAD_IN_SITES_GLOBAL_PLACEMENT=0",
+      "--orfs-var",
+      "CELL_PAD_IN_SITES_DETAIL_PLACEMENT=0",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--keep-heavy-artifacts",
+      "--nickname-tag",
+      "ds_native_relay_leaf_r8",
+      "--output",
+      "/srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r8/physical.json",
+      "--step-tcl",
+      "POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl",
+      "--keep-workdir",
+      "/srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r8/work"
+    ],
+    "driver": {
+      "commit": "191511e1a42d7c78972ae74a88a3444fcffba890",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas/repos/dsrom-native-relay-leaf-191511e1a/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "7202e2db930facc2e166f5a73a2cbdf114460d2c6d1b1925382b953373306a43",
+      "tree": "/srv/opentallas/repos/dsrom-native-relay-leaf-191511e1a"
+    },
+    "orfs_num_cores": 2,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.10.22",
+    "source_root": "/srv/opentallas/repos/dsrom-native-relay-leaf-191511e1a"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 833.3333333329999,
+    "cell_area_um2": 3.252,
+    "cell_count": 17,
+    "cell_types_used": 2,
+    "chip_area_um2": 3.25134,
+    "combinational_cell_count": 9,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "6df882b93417cbfad0788c72407fac732b6b1f595c87fc0c962f0049e5761629",
+      "raw_netlist_sha256": "6df882b93417cbfad0788c72407fac732b6b1f595c87fc0c962f0049e5761629",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 2.333,
+    "sequential_cell_count": 8,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.833333333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

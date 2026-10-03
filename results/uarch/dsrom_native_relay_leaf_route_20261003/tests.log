@@ -1,6 +1,7 @@
 test_PG_pitch_contains_both_stripes_and_clear_gaps (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_PG_restores_protection_before_resizer (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_both_native_contacts (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
+test_complete_bottom_top_supply_contact_margin (test_dsrom_native_relay_leaf_route.NativeLeaf) ... FAIL
 test_full_fanout (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_missing_sites_not_admitted (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_pinned_driver_recipe (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
@@ -9,7 +10,15 @@ test_source_legal_PG_width_and_positive_delta (test_dsrom_native_relay_leaf_rout
 test_truncated_not_admitted (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_unique_sites (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 
+======================================================================
+FAIL: test_complete_bottom_top_supply_contact_margin (test_dsrom_native_relay_leaf_route.NativeLeaf)
 ----------------------------------------------------------------------
-Ran 10 tests in 2.989s
+Traceback (most recent call last):
+  File "/home/ubuntu/dsrom-native-relay-route-20261003/tests/test_dsrom_native_relay_leaf_route.py", line 61, in test_complete_bottom_top_supply_contact_margin
+    self.assertEqual(self.m['die_um'][3]-self.m['core_um'][3],.27)
+AssertionError: 0.2699999999999996 != 0.27
 
-OK
+----------------------------------------------------------------------
+Ran 11 tests in 2.104s
+
+FAILED (failures=1)

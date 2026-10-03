@@ -1,6 +1,6 @@
 {
   "PG": "native alternating M1 rails plus ORFS physical PG; actual DRC/PG result required",
-  "PG_M3_extra_metal_exclusion_um2": 0.34992,
+  "PG_M3_extra_metal_exclusion_um2": 0.3888,
   "PG_M3_geometry": {
     "center_step_um": 2.808,
     "pitch_um": 5.616,
@@ -17,6 +17,9 @@
   ],
   "PG_M3_reserved_lanes_per_group": 2,
   "PG_M3_width_um": 0.09,
+  "PG_boundary_fixture_area_delta_um2": 14.142600000000002,
+  "PG_boundary_fixture_not_full_parent_growth": true,
+  "PG_boundary_halo_um": 0.27,
   "SSFF_qualified": false,
   "arithmetic_MACs": 0,
   "branches": [
@@ -383,11 +386,17 @@
   "clocks_per_cycle": 1,
   "component_inputs": "ideal 20ps clock slew; parent waveform remains separate",
   "conditional_clock_leaf_route_admitted": true,
+  "core_um": [
+    0,
+    0.27,
+    26.19,
+    5.130000000000001
+  ],
   "die_um": [
     0,
     0,
     26.19,
-    4.86
+    5.4
   ],
   "extra_architectural_cycles": 0,
   "fixed_native_cells": 9,
@@ -405,7 +414,7 @@
   "tech_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
   "translated_origin_DBU": [
     10977066,
-    15564960
+    15564690
   ],
   "unchanged_global_buffer_count": 68614
 }
