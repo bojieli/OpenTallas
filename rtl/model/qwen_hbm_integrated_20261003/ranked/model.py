@@ -49,7 +49,9 @@ def model():
             'tools/w2_nc6_count_utility_closure.py','tools/w2_nc6_mutable_protection_model.py',
             'rtl/model/qwen_hbm_integrated_20261003/generate.py',
             'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_w2_authority.sv',
-            'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_sector_authority.sv']
+            'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_sector_authority.sv',
+            'tools/gpu_sys/canonical_qwen_kv_controller.py',
+            'rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv']
     inputs+= [x for x in json.loads((BASE/'ports.json').read_text())['source_sha256'] if 'w2_nc6_' in x or 'ot_w2_sealed' in x]
     unified=blob('tools/uarch_model.py').decode()
     assert 'HBM_PCS_DIE = 4 * 32' in unified or 'HBM_PCS_DIE = 4*32' in unified
