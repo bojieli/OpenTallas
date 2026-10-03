@@ -328,12 +328,15 @@ set nb 0
 foreach z [concat $zs [list [list end [expr {($qcg_axis eq "x" ? $W : $H) / double($dbu)}] 0]]] {
   set a $prev; set b [qcg_um [lindex $z 1]]
   if {$b > $a} {
-    if {$qcg_axis eq "x"} { odb::dbBlockage_create $block $a 0 $b $H } else { odb::dbBlockage_create $block 0 $a $W $b }
+    if {$qcg_axis eq "x"} { set bl [odb::dbBlockage_create $block $a 0 $b $H] } else { set bl [odb::dbBlockage_create $block 0 $a $W $b] }
+    # soft: global placement keeps repair cells in the slabs, but CTS buffers may legalise at their tree points in the
+    # corridor whitespace between slabs (a hard blockage left 72 BUFx24 unlegalisable in B at r2, 8d3b065d9..c03835a27)
+    $bl setSoft
     incr nb
   }
   if {[lindex $z 0] ne "end"} { set prev [qcg_um [lindex $z 2]] }
 }
-puts "QCG placement blockages: $nb"
+puts "QCG soft placement blockages: $nb"
 # well taps / end caps exist for cells; none can sit in a blockage, and DPL refuses fixed cells outside usable rows
 set nd 0
 foreach inst [$block getInsts] {
