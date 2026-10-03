@@ -45,7 +45,7 @@ Setup:
 |---|---|---|---|
 | tile field | 74-84 mV **FAIL** | 47 mV FAIL | **21 mV PASS** |
 | spine/hub | 90-118 mV **FAIL** | 55 mV FAIL | **25 mV PASS** |
-| shoreline (PHY bumps = signal) | 74-80 mV **FAIL** | 64 mV FAIL | 35.3 mV (fails by 0.3 mV) |
+| shoreline (PHY bumps = signal) | 74-80 mV **FAIL** | 64 mV FAIL | 35.3 mV (fails by 0.3 mV; a2 pin_access macroNoAp = 0 on the constrained geometry) |
 
 Coverage at 2x the r2 per-net figure passes everywhere: tile field 31-32 mV, shoreline 30-33 mV.
 
