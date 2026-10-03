@@ -1,0 +1,235 @@
+{
+  "cases": [
+    {
+      "actual_hardware_events": false,
+      "final_phase": "REUSE_PENDING",
+      "path": "C0",
+      "reuse_source_quiescence_missing": true,
+      "trace": [
+        {
+          "edge": 0,
+          "event": "source_accept_fixture",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 1,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "backend_echo": {
+            "direction": 1,
+            "p_generation": 4,
+            "p_tag": 25737442390,
+            "physical_PC": 127
+          },
+          "edge": 1,
+          "event": "completion_fixture",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 1,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "edge": 3,
+          "event": "visibility_fixture",
+          "payload_sha256": "110009dcee21620b166f3abfecb5eff7a873be729d1c2d53822e7acc5f34eb9b",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 1,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "edge": 5,
+          "event": "consumer_fixture",
+          "payload_sha256": "110009dcee21620b166f3abfecb5eff7a873be729d1c2d53822e7acc5f34eb9b",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 1,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "edge": 7,
+          "event": "reverse_fixture",
+          "payload_sha256": "110009dcee21620b166f3abfecb5eff7a873be729d1c2d53822e7acc5f34eb9b",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 1,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "edge": 9,
+          "event": "retire_fixture",
+          "payload_sha256": "110009dcee21620b166f3abfecb5eff7a873be729d1c2d53822e7acc5f34eb9b",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 1,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        }
+      ]
+    },
+    {
+      "actual_hardware_events": false,
+      "final_phase": "REUSE_PENDING",
+      "path": "KV_READ",
+      "reuse_source_quiescence_missing": true,
+      "trace": [
+        {
+          "edge": 0,
+          "event": "source_accept_fixture",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 0,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "backend_echo": {
+            "direction": 0,
+            "p_generation": 4,
+            "p_tag": 25737442390,
+            "physical_PC": 127
+          },
+          "edge": 1,
+          "event": "completion_fixture",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 0,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "edge": 3,
+          "event": "visibility_fixture",
+          "payload_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 0,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "edge": 5,
+          "event": "consumer_fixture",
+          "payload_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 0,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "edge": 7,
+          "event": "reverse_fixture",
+          "payload_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 0,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        },
+        {
+          "edge": 9,
+          "event": "retire_fixture",
+          "payload_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "source": {
+            "RF_slot": 511,
+            "SM": 31,
+            "client": 5,
+            "direction": 0,
+            "generation": 4,
+            "home_id": 4275878552,
+            "original_tag": 4262605910,
+            "physical_PC": 127,
+            "program_PC": 1736,
+            "rank": 7
+          }
+        }
+      ]
+    }
+  ],
+  "hardware_qualified": false,
+  "production_lifecycle_qualified": false,
+  "verdict": "PASS_F0_SOURCE_COMPATIBLE_FINITE_REFERENCE_ONLY"
+}

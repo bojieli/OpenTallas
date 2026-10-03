@@ -1,0 +1,47 @@
+{
+  "build_admitted": false,
+  "engine_RTL_written": false,
+  "frozen_history": [
+    "146bc89a5",
+    "1ac56cbbd",
+    "8535c3010"
+  ],
+  "frozen_source_revision": "8535c3010c7354734ececca8a8d9109ced2f50a7",
+  "generated_records_byte_exact": true,
+  "minimal_intake": "this single additive commit; frozen F0 JSON bytes are bundled with strict SHA checks; old W6 helper not imported by new helper",
+  "original_pins": {
+    "rtl/gpu/ot_gpu_full_sm_service.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+    "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "rtl/gpu/ot_gpu_rf_visibility_fence.sv": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3",
+    "tests/test_hbm_w6_fence_contract.py": "1ccf8f6e6543096c85d354a43cc74566944054ffab47166d59f0fbe78a8eee26",
+    "tools/hbm_w6_fence_contract.py": "55c8cbee66f79d40800981752dc09dbe49d5a44280a3841b4335397d0311bc72",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "predecessor": "24d0a93ea239002fec2db6825ad03caa95989a56",
+  "preserved_originals": true,
+  "regenerate": "python3 -B tools/hbm_w6_f0_model_inputs.py --out /tmp/hbm-W6-F0-fresh",
+  "relay": {
+    "Euclid": "W4 commonACK originaltag32/gen4+physicalPC/client/SM/rank/RFslot binding; both bank-copy writes and source retention must be proven; existingbareACK unqualified",
+    "Nash": "W2 NC5 80x38 and NC6 96x38 rows perPC; generation sideband backend echo and direction-match; no taking occupied KVclient5 as directory lane",
+    "Popper": "actual accepted C0/KV/directory caller binding + reversible owner64-to-CTAG32 mapping, 16sectorRF assembly and source allcopies+matched reverse CDC quiescence/cost remain open; no monotonic run cap",
+    "Russell": "read all3 exact F0 records, source-compatible CTAG32/PTAG35 + separategen4 selected for inputs; compact16 not selected"
+  },
+  "scope": "source-compatible golden fixture and finite model inputs only; no production observations/physical credit",
+  "source_pins": {
+    "tests/test_hbm_w6_f0_model_inputs.py": "f42ae92561a333a78fe412823c0f94926b1cc73eecc4fe94e36ac1fcb166605f",
+    "tools/hbm_w6_f0_model_inputs.py": "1a714df4c3981d26ee86d387dfab4786729854846d8b05c9b6b977abc2252336"
+  },
+  "standalone_test_command": "python3 -B -m unittest discover -s tests -p test_hbm_w6_f0_model_inputs.py -v",
+  "status": "F0_SOURCE_COMPATIBLE_INPUTS_READY_COMPOSED_MODEL_PENDING",
+  "tests": {
+    "PASS": true,
+    "combined_with_historical": 28,
+    "new": 13
+  },
+  "whole_program": {
+    "DS_PCs": 2213,
+    "Qwen_PCs": 1737,
+    "repeated_tokens": true,
+    "transaction_count_enrolled": null
+  }
+}
