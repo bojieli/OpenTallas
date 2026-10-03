@@ -56,6 +56,7 @@ def build(work, model="qwen"):
            "-Wno-lint", "-Wno-style", "-Wno-WIDTH", "--x-assign", "0", "--x-initial", "0",
            "--top-module", "tb_gpu_hbm_system", "--Mdir", str(obj)] + \
           [f"-G{k}={v}" for k, v in MODEL_PARAMS[model].items()] + \
+          (["--threads", os.environ["GPU_SYS_THREADS"]] if os.environ.get("GPU_SYS_THREADS") else []) + \
           (["-DGPU_SYS_USE_W2"] if os.environ.get("GPU_SYS_USE_W2") == "1" else []) + [str(ROOT / s) for s in SYS_SRC + DEP_SRC + [TB]]
     t0 = time.time()
     subprocess.run(cmd, check=True, cwd=ROOT, stdout=subprocess.DEVNULL)
@@ -90,12 +91,16 @@ def main():
     ap.add_argument("--nprompt", type=int, default=None, help="v41: teacher-forced prompt prefix length")
     ap.add_argument("--maxcyc", type=int, default=60_000_000)
     ap.add_argument("--out", default=None)
+    ap.add_argument("--prepared", action="store_true", help="reuse WORK/case written by an earlier prepare()")
     a = ap.parse_args()
     work = Path(a.work or f"/tmp/gpu_sys_{a.model}")
     work.mkdir(parents=True, exist_ok=True)
     case = work / "case"
     hashes = {p: sha(p) for p in SYS_SRC + DEP_SRC + [TB] + [str(p.relative_to(ROOT)) for p in sorted(HERE.glob("*.py"))]}
-    meta = prepare(a.model, case, a.ngen, a.nprompt)
+    if a.prepared:
+        meta = json.loads((case / "expected.json").read_text())   # case written earlier by prepare() (e.g. on another host)
+    else:
+        meta = prepare(a.model, case, a.ngen, a.nprompt)
     exe = build(work, a.model)
     t0 = time.time()
     log = case / "sim.log"
