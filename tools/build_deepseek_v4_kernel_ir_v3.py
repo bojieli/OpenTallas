@@ -130,6 +130,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="generation-policy bound; defaults to the deployment context",
     )
     parser.add_argument(
+        "--execution-mode", choices=("generic", "decode", "bounded-prefill"),
+        default="generic", help="V4.1 query lifetime; context capacity is unchanged",
+    )
+    parser.add_argument(
+        "--prefill-chunk-tokens", type=int, default=None,
+        help="V4.1 bounded position-zero prefill block; later chunks are refused",
+    )
+    parser.add_argument(
         "--include-speculative",
         action="store_true",
         help=(
@@ -167,6 +175,14 @@ def build_v41(args: argparse.Namespace) -> int:
     """Build, or plan, the DeepSeek-V4.1-Flash document."""
 
     profile = deepseek_v41.resolve_model_profile(args.model)
+    try:
+        deepseek_v41.query_execution_contract(
+            args.context_tokens, execution_mode=args.execution_mode,
+            prefill_chunk_tokens=args.prefill_chunk_tokens,
+        )
+    except deepseek_v41.DeepSeekV41KernelIRError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
     output = (
         REPOSITORY_ROOT / "build" / "ir-v3" / profile.model_id / "kernel_ir.v3.json"
         if args.output is None
@@ -210,6 +226,8 @@ def build_v41(args: argparse.Namespace) -> int:
             context_tokens=args.context_tokens,
             maximum_new_tokens=args.maximum_new_tokens,
             include_speculative=args.include_speculative,
+            execution_mode=args.execution_mode,
+            prefill_chunk_tokens=args.prefill_chunk_tokens,
         )
     except deepseek_v41.DeepSeekV41KernelIRError as exc:
         print(f"error: {exc}", file=sys.stderr)
@@ -247,6 +265,9 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.model in V41_MODEL_PROFILES:
         return build_v41(args)
+    if args.execution_mode != "generic" or args.prefill_chunk_tokens is not None:
+        print("error: query execution specialization is a V4.1 option", file=sys.stderr)
+        return 1
     if args.plan_only:
         print(
             f"error: --plan-only is a deepseek-v4.1-flash option; {args.model} "

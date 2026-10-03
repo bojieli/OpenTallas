@@ -1747,6 +1747,46 @@ def _nonempty(extent: Symbolic) -> str:
     return f"{extent.symbol} > 0"
 
 
+def query_execution_contract(
+    context_tokens: int, *, execution_mode: str = "generic",
+    prefill_chunk_tokens: int | None = None,
+) -> dict[str, Any]:
+    """Separate retained context from the query block's temporary lifetime.
+
+    Bounded prefill is the released position-zero block, with row-streamed
+    score/top-k dispatch inside it. Appending another prefill block is not the
+    same source operation and is refused; retained-context decode stays legal.
+    """
+    if context_tokens < 1:
+        raise DeepSeekV41KernelIRError("context_tokens must be positive")
+    if execution_mode not in ("generic", "decode", "bounded-prefill"):
+        raise DeepSeekV41KernelIRError(f"unknown execution mode {execution_mode!r}")
+    if execution_mode == "bounded-prefill":
+        if prefill_chunk_tokens is None or not 1 <= prefill_chunk_tokens <= context_tokens:
+            raise DeepSeekV41KernelIRError(
+                "bounded-prefill requires prefill_chunk_tokens in 1..context_tokens"
+            )
+        query_max = prefill_chunk_tokens
+    else:
+        if prefill_chunk_tokens is not None:
+            raise DeepSeekV41KernelIRError(
+                "prefill_chunk_tokens is valid only for bounded-prefill"
+            )
+        query_max = 1 if execution_mode == "decode" else context_tokens
+    return {
+        "schema": "deepseek-v41-query-execution-v1",
+        "mode": execution_mode,
+        "context_tokens": context_tokens,
+        "query_tokens": query_max,
+        "decode_tokens": 1,
+        "prefill_tokens": 0 if execution_mode == "decode" else query_max,
+        "prefill_position_start": 0,
+        "scratch_lifetime": "whole_query_block_through_last_CSA_reuse",
+        "index_dispatch": "source_order_one_query_row_at_a_time",
+        "later_prefill_chunks": "refused_requires_separate_causal_stream_contract",
+    }
+
+
 def export_deepseek_v41_kernel_graph(
     *,
     model: str | DeepSeekV41Profile = MODEL_ID,
@@ -1756,6 +1796,8 @@ def export_deepseek_v41_kernel_graph(
     context_tokens: int = DEFAULT_CONTEXT_TOKENS,
     maximum_new_tokens: int | None = None,
     include_speculative: bool = False,
+    execution_mode: str = "generic",
+    prefill_chunk_tokens: int | None = None,
 ) -> KernelGraph:
     """Export DeepSeek-V4.1-Flash as a neutral Tensor Kernel IR v3 graph.
 
@@ -1801,6 +1843,12 @@ def export_deepseek_v41_kernel_graph(
         raise DeepSeekV41KernelIRError(
             f"generation bound {maximum_new_tokens} is outside 1..{context_tokens}"
         )
+
+    execution = query_execution_contract(
+        context_tokens, execution_mode=execution_mode,
+        prefill_chunk_tokens=prefill_chunk_tokens,
+    )
+    query_tokens = int(execution["query_tokens"])
 
     architecture = released_architecture_config(profile, config_path)
     validate_architecture_pins(profile, architecture)
@@ -1953,15 +2001,15 @@ def export_deepseek_v41_kernel_graph(
     # this export declares a derived name only where the ratio makes one
     # necessary, which on this release is the ratio-2 encoder and the
     # eight-position candidate blocks.
-    span = Symbolic("span_tokens", 1, context_tokens)
+    span = Symbolic("span_tokens", 1, query_tokens)
     context = Symbolic("context_length", 1, context_tokens)
-    dispatch_rows = Symbolic("span_tokens", TOP_K, TOP_K * context_tokens)
+    dispatch_rows = Symbolic("span_tokens", TOP_K, TOP_K * query_tokens)
     ratio_kinds = sorted({ratio for ratio in ratios if ratio > 1})
 
     def span_groups(ratio: int) -> Symbolic:
         if ratio == 1:
             return span
-        return Symbolic(f"span_groups_ratio{ratio}", 1, context_tokens // ratio)
+        return Symbolic(f"span_groups_ratio{ratio}", 1, query_tokens // ratio)
 
     def context_groups(ratio: int) -> Symbolic:
         if ratio == 1:
@@ -1978,11 +2026,11 @@ def export_deepseek_v41_kernel_graph(
         """
 
         if ratio == 1:
-            return Symbolic("span_tokens", 2, 2 * context_tokens)
+            return Symbolic("span_tokens", 2, 2 * query_tokens)
         return Symbolic(
             f"attention_rows_ratio{ratio}",
             1,
-            context_tokens + context_tokens // ratio,
+            query_tokens + query_tokens // ratio,
         )
 
     candidate_blocks_extent = Symbolic(
@@ -1992,14 +2040,14 @@ def export_deepseek_v41_kernel_graph(
     )
 
     symbols: list[RuntimeSymbol] = [
-        RuntimeSymbol("span_tokens", 1, context_tokens, 1, "request"),
+        RuntimeSymbol("span_tokens", 1, query_tokens, 1, "request"),
         RuntimeSymbol("context_length", 1, context_tokens, 1, "request"),
     ]
     for ratio in ratio_kinds:
         symbols.extend(
             (
                 RuntimeSymbol(
-                    f"span_groups_ratio{ratio}", 0, context_tokens // ratio, 1, "derived"
+                    f"span_groups_ratio{ratio}", 0, query_tokens // ratio, 1, "derived"
                 ),
                 RuntimeSymbol(
                     f"context_groups_ratio{ratio}",
@@ -2011,7 +2059,7 @@ def export_deepseek_v41_kernel_graph(
                 RuntimeSymbol(
                     f"attention_rows_ratio{ratio}",
                     1,
-                    context_tokens + context_tokens // ratio,
+                    query_tokens + query_tokens // ratio,
                     1,
                     "derived",
                 ),
@@ -2463,7 +2511,7 @@ def export_deepseek_v41_kernel_graph(
         # reads a selection that is not its own.  The HBM lowering said so ten
         # times over -- ``view 2904: maximum element 18447 needs 73792 bytes but
         # object 1638 is 9216 bytes`` -- once a state-resident operand could be
-        # bound at all.  ``span.maximum`` is ``context_tokens``, so this is the
+        # bound at all.  ``span.maximum`` is the admitted query block, so this is the
         # block the schedule actually presents.
         return ensure_state(
             StateResource(
@@ -2471,7 +2519,7 @@ def export_deepseek_v41_kernel_graph(
                 state_class="scratch",
                 dtype="u32",
                 row_elements=WINDOW + INDEX_TOPK_WIDTH,
-                capacity_rows=context_tokens,
+                capacity_rows=query_tokens,
                 initialization="zero",
             )
         )
@@ -2484,7 +2532,7 @@ def export_deepseek_v41_kernel_graph(
                 dtype="u8",
                 row_elements=context_tokens // ratios[layer],
                 # The query block, for the reason index_selection_state gives.
-                capacity_rows=context_tokens,
+                capacity_rows=query_tokens,
                 initialization="zero",
             )
         )
@@ -4917,6 +4965,7 @@ def export_deepseek_v41_kernel_graph(
     graph = KernelGraph(
         model_id=profile.model_id,
         source={
+            **({"query_execution": execution} if execution_mode != "generic" else {}),
             "architectural_max_context": ARCHITECTURAL_MAX_CONTEXT,
             "candidate_source_layer": profile.candidate_source_layer,
             "checkpoint_lock_id": lock["lock_id"],
@@ -5176,6 +5225,7 @@ __all__ = [
     "confront_layer_modes",
     "contract_for",
     "export_deepseek_v41_kernel_graph",
+    "query_execution_contract",
     "COUNTER_CLASSES",
     "graph_census",
     "graph_census_v41",

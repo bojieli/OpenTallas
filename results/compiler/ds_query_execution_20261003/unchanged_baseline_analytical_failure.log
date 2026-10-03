@@ -1,0 +1,51 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____ test_every_analytical_term_and_every_operator_kind_is_accounted_for ______
+
+profile = DeepSeekV41Profile(release=DeepSeekV4Release(model_id='deepseek-v4.1-flash', repository='deepseek-ai/DeepSeek-V4.1-Fla..., numeric_profile='deepseek_v41_flash_target_precision_v1', generation_policy_id='deepseek_v41_flash_greedy_argmax_v1')
+inventory = OperationInventory(model='DeepSeek-V4.1-Flash', context_tokens=200000, method='deepseek_v41_official_operator_inventor...ash technical report sections 2.2-2.4 arithmetic/storage precision policy', 'no calibration to the report FLOP curve'))
+
+    def test_every_analytical_term_and_every_operator_kind_is_accounted_for(
+        profile, inventory
+    ):
+        """Neither description carries a mechanism the other has never heard of."""
+    
+        by_term = _layers_by_term(inventory)
+        by_auxiliary = _layers_by_auxiliary(inventory)
+    
+        # The vocabulary head is the one unlayered contraction; everything else the
+        # inventory charges is a layer term this file maps.
+        unlayered_terms = {
+            term for term, layers in by_term.items() if layers == {None}
+        }
+        assert unlayered_terms == {"final_vocabulary_head"}
+        assert set(by_term) - unlayered_terms == set(_TERM_TO_SOURCE_KIND)
+        assert "LM_HEAD" in unlayered_source_plan(profile)
+    
+        counted = set(by_auxiliary)
+        assert counted - _UBIQUITOUS_AUXILIARY == set(_AUXILIARY_TO_SOURCE_KIND)
+        for name in _UBIQUITOUS_AUXILIARY:
+            assert by_auxiliary[name] == set(range(profile.layers)), name
+    
+        planned_kinds = set(source_kind_plan(profile))
+        accounted = (
+            set(_TERM_TO_SOURCE_KIND.values())
+            | set(_AUXILIARY_TO_SOURCE_KIND.values())
+            | set(_UNCHARGED_SOURCE_KINDS)
+            | SPECULATIVE_SOURCE_KINDS
+        )
+>       assert planned_kinds - accounted == set(), (
+            "a source operator kind is neither charged by the analytical inventory "
+            "nor listed as deliberately uncharged"
+        )
+E       AssertionError: a source operator kind is neither charged by the analytical inventory nor listed as deliberately uncharged
+E       assert {'BINARY32_TO...NAL_RMS_NORM'} == set()
+E         
+E         Extra items in the left set:
+E         'FINAL_RMS_NORM'
+E         'BINARY32_TO_BF16'
+E         Use -v to get more diff
+
+tests/compiler/test_deepseek_v41_kernel_ir.py:300: AssertionError
+=========================== short test summary info ============================
+FAILED tests/compiler/test_deepseek_v41_kernel_ir.py::test_every_analytical_term_and_every_operator_kind_is_accounted_for

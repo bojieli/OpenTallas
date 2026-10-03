@@ -1,0 +1,55 @@
+..............F.                                                         [100%]
+=================================== FAILURES ===================================
+__________________ test_full_source_specialized_abi_lowering ___________________
+
+shape_exports = {'bounded': KernelGraph(model_id='deepseek-v4.1-flash', source={'query_execution': {'schema': 'deepseek-v41-query-exec...ondition': 'first_official_eos_or_maximum_new_tokens', 'tie_rule': 'lowest_token_id', 'vocabulary_size': 129280}), ...}
+admitted_plan = PhysicalPlan(model_id='deepseek-v4.1-flash', graph_id='ca96eeab4c6152c37bec4e2b6005d5029df7f3868ef1b5f2dc000177c31a1b2... 1 row-lookup table tensors and 1 that are not, so it stays in node HBM: one memory object carries one storage class'))
+
+    def test_full_source_specialized_abi_lowering(shape_exports, admitted_plan):
+        from compiler.backends.hbm_sram.lower import lower_to_abi3
+        from runtime.abi3.verifier import verify_deployment
+        graph = shape_exports["decode_admitted_context"]
+>       deployment = lower_to_abi3(graph, _capability(), plan=admitted_plan)
+
+tests/compiler/test_deepseek_v41_query_execution.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+compiler/backends/hbm_sram/lower.py:336: in lower_to_abi3
+    deployment = emitter.run()
+compiler/backends/hbm_sram/lower.py:525: in run
+    self._emit_sequence(body)
+compiler/backends/hbm_sram/lower.py:3575: in _emit_sequence
+    self._emit_kernel(plan, shared_row_loop=row_loop)
+compiler/backends/hbm_sram/lower.py:3740: in _emit_kernel
+    event = self._emit_phase_consumer(
+compiler/backends/hbm_sram/lower.py:5578: in _emit_phase_consumer
+    gathered = self._emit_sparse_input(
+compiler/backends/hbm_sram/lower.py:6859: in _emit_sparse_input
+    exchange = self._participant_array(gathered_elements, kv.dtype)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <compiler.backends.hbm_sram.lower._Emitter object at 0x754741584880>
+elements = 67174400, dtype = 'bf16'
+
+    def _participant_array(self, elements: int, dtype: str) -> int:
+        """The symmetric receive buffer of an ``elements``-element exchange.
+    
+        Every node holds the whole ``participant_count``-slot array and arrives
+        at the collective with its own slot filled; the all-gather fills in the
+        other thirty-one from the other thirty-one arenas.  That is the ordinary
+        way an all-gather is posted, and it is what makes ``remote_offset +
+        k * byte_extent`` name participant *k*'s contribution on a distributed
+        device exactly as it does on a single one.
+        """
+        requested = bytes_for(elements, dtype)
+        reserved = int(self.plan.proofs.get("communication_scratch_bytes", 0))
+        if requested > reserved:
+>           raise LoweringError(
+                f"cluster exchange needs {requested} bytes, but the physical "
+                f"plan reserved {reserved} bytes of communication scratch"
+            )
+E           compiler.backends.hbm_sram.lower.LoweringError: cluster exchange needs 134348800 bytes, but the physical plan reserved 520192 bytes of communication scratch
+
+compiler/backends/hbm_sram/lower.py:6388: LoweringError
+=========================== short test summary info ============================
+FAILED tests/compiler/test_deepseek_v41_query_execution.py::test_full_source_specialized_abi_lowering
+1 failed, 15 passed in 110.40s (0:01:50)

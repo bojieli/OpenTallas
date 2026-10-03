@@ -80,6 +80,7 @@ from compiler.ir.v3.kernel_ir import (
     require_neutral,
 )
 from compiler.ir.v3.lowering import (
+    phase_inputs as _phase_inputs,
     ABSENT_OPERANDS,
     INDEX_TOPK_DECODE_REBASE_SHIFT,
     abi_input_slots as _shared_input_slots,
@@ -1473,6 +1474,7 @@ def join_extent_under(
     span_max: int,
     constants: Mapping[int, int],
     aliases: Mapping[int, tuple[int, int]],
+    context_max: int | None = None,
 ) -> tuple[RequestExtent | None, int]:
     """:func:`join_extent`, evaluated under one phase's substitutions.
 
@@ -1503,7 +1505,7 @@ def join_extent_under(
             value, _ = _extent_value(entry if entry is not None else 1, span_max)
             bias += int(value)
             continue
-        extent = request_extent_of(tensor, span_max)
+        extent = request_extent_of(tensor, span_max, context_max)
         if extent is None or int(entry.multiplier or 1) != 1:
             raise PlanError(
                 f"join operand {name!r} leads on axis {axis} with "
@@ -1773,6 +1775,7 @@ def join_extent(
     names: Sequence[str],
     axis: int,
     span_max: int,
+    context_max: int | None = None,
 ) -> tuple[RequestExtent | None, int]:
     """The join-axis extent of a set of operands, as one affine statement.
 
@@ -1797,7 +1800,7 @@ def join_extent(
             value, _ = _extent_value(entry if entry is not None else 1, span_max)
             bias += int(value)
             continue
-        extent = request_extent_of(tensor, span_max)
+        extent = request_extent_of(tensor, span_max, context_max)
         if extent is None or int(entry.multiplier or 1) != 1:
             raise PlanError(
                 f"join operand {name!r} leads on axis {axis} with "
@@ -1819,7 +1822,9 @@ def join_extent(
     return RequestExtent(numerator=numerator, unit=unit, bias=bias, symbol=symbol), 0
 
 
-def request_extent_of(tensor: Tensor, span_max: int) -> RequestExtent | None:
+def request_extent_of(
+    tensor: Tensor, span_max: int, context_max: int | None = None
+) -> RequestExtent | None:
     """The A18 function of the leading axis, or ``None`` if it has none.
 
     An unrecognised symbol returns ``None`` and the operand keeps its declared
@@ -1846,12 +1851,17 @@ def request_extent_of(tensor: Tensor, span_max: int) -> RequestExtent | None:
         # capability's context bound.  A disagreement is a coefficient this
         # table has wrong, and computing a wrong extent silently is the exact
         # failure A18 exists to remove, so it is refused here.
-        computed = extent.numerator * int(span_max) // extent.unit + extent.bias
+        bound = (
+            context_max
+            if extent.symbol == "context_length" and context_max is not None
+            else span_max
+        )
+        computed = extent.numerator * int(bound) // extent.unit + extent.bias
         if computed != declared:
             raise PlanError(
                 f"tensor {tensor.tensor_id!r} declares maximum {declared} for "
                 f"{lead.symbol!r}, but amendment A18's function "
-                f"{extent.numerator} * {span_max} / {extent.unit} + "
+                f"{extent.numerator} * {bound} / {extent.unit} + "
                 f"{extent.bias} gives {computed}; one of the two is wrong and "
                 "an extent that is silently wrong is what A18 exists to stop"
             )
@@ -1980,6 +1990,25 @@ def build_plan(
     # `validate=False` here would have been the hole that rule falls through.
     # Nothing called it.
     require_neutral(graph)
+    execution = graph.source.get("query_execution")
+    if execution is not None:
+        from runtime.query_execution import validate_query_execution
+        try:
+            validate_query_execution(execution)
+        except ValueError as exc:
+            raise PlanError(str(exc)) from exc
+        declared = {symbol.name: symbol.maximum for symbol in graph.symbols}
+        if (
+            declared.get("span_tokens") != execution["query_tokens"]
+            or declared.get("context_length") != execution["context_tokens"]
+        ):
+            raise PlanError("query execution and runtime symbol bounds disagree")
+        for resource in graph.states:
+            if (
+                resource.state_id.startswith(("index_selection.", "candidate_pool_mask."))
+                and resource.capacity_rows != execution["query_tokens"]
+            ):
+                raise PlanError("CSA query scratch capacity disagrees with query block")
     tile = tile or TileConfig()
     warnings: list[str] = []
     topology_class = TopologyClass(
@@ -2001,6 +2030,16 @@ def build_plan(
             f"{capability.limits['max_context_positions']}"
         )
 
+    context_max = symbol_maximum(graph, "context_length", span_max)
+    if context_max > int(capability.limits["max_context_positions"]):
+        raise PlanError(f"graph context_length {context_max} exceeds capability")
+    for tensor in graph.tensors:
+        for axis in tensor.shape:
+            if (
+                isinstance(axis, Symbolic)
+                and request_extent_for(axis.symbol) is not None
+            ):
+                request_extent_of(replace(tensor, shape=(axis,)), span_max, context_max)
     tensors = {t.tensor_id: t for t in graph.tensors}
     _check_numeric_contracts(graph, capability)
 
@@ -2125,6 +2164,7 @@ def build_plan(
         node_count,
         host_objects,
         hbm_map,
+        graph=graph,
     )
     if not bool(proofs["hbm_fits"]):
         raise PlanError(
@@ -3367,6 +3407,33 @@ def _streaming_schedule(
                         end_position = kernels.index(end)
                         for member in kernels[position : end_position + 1]:
                             members[member.index] = (gid, block)
+            if kernel.kind == "INDEX_SCORE" and graph.source.get("query_execution"):
+                # CSA2's Full candidate source ranks blocks and publishes the
+                # mask before selecting positions. Reindex reads that retained
+                # mask between its score and top-k. Neither is an adjacent pair.
+                tail = kernels[position:position + 5]
+                kinds = tuple(k.kind for k in tail)
+                chain: list[Kernel] = []
+                if kinds == ("INDEX_SCORE", "BLOCK_MAX", "INDEX_TOPK", "CANDIDATE_MASK", "INDEX_TOPK"):
+                    score, maximum, rank, mask, select = tail
+                    if (score.outputs[0] in maximum.inputs
+                            and maximum.outputs[0] in rank.inputs
+                            and rank.outputs[0] in mask.inputs
+                            and score.outputs[0] in select.inputs
+                            and mask.state_writes):
+                        chain = tail
+                elif kinds[:3] == ("INDEX_SCORE", "STATE_READ", "INDEX_TOPK"):
+                    score, read, select = tail[:3]
+                    if (score.outputs[0] in select.inputs
+                            and read.outputs[0] in select.inputs
+                            and read.state_reads):
+                        chain = tail[:3]
+                if chain:
+                    gid = group_id(kernel, chain[-1], "index_stream")
+                    if gid is not None:
+                        for member in chain:
+                            members[member.index] = (gid, 1)
+                    continue
             if kernel.kind == "INDEX_SCORE" and position + 1 < len(kernels):
                 end = kernels[position + 1]
                 if end.kind != "INDEX_TOPK" or not any(
@@ -3406,7 +3473,9 @@ def _streaming_schedule(
                 continue
             if not all(members.get(index) == spec for index in uses):
                 continue
-            if request_extent_of(tensor, span_max) is None:
+            if request_extent_of(
+                tensor, span_max, symbol_maximum(graph, "context_length", span_max)
+            ) is None:
                 # A rolling arena exists to bound a leading axis that grows with
                 # the request: it holds one block of rows and the pipeline
                 # advances it.  A tensor whose leading axis is a constant is
@@ -3464,6 +3533,7 @@ def _place_activations(
     makes the layer loop legal: the residual stream that layer L reads is the
     buffer layer L-1 wrote, and the loop reuses it in place.
     """
+    context_max = symbol_maximum(graph, "context_length", span_max)
     keys: dict[str, str] = {}
     host_objects: dict[str, dict[str, Any]] = {}
     band_span: dict[int, tuple[int, int]] = {}
@@ -3507,6 +3577,22 @@ def _place_activations(
     if reuse_arenas:
         _unify_loop_carried(graph, bands, keys)
 
+    # A phase-selected KV join's declared axis is the prefill form. Its
+    # storage must also hold decode's committed window and compressed prefix.
+    phase_rows: dict[str, int] = {}
+    for kernel in graph.kernels:
+        selected = _phase_inputs(kernel.inputs, kernel.attributes)
+        if selected is None:
+            continue
+        if int(kernel.attributes.get("axis", 0)) != 0:
+            raise PlanError("phase row capacity requires an axis-zero join")
+        maximum = max(
+            sum(matrix_shape(tensors[kernel.inputs[i]], span_max)[0] for i in indices)
+            for indices in selected.values()
+        )
+        for name in kernel.outputs:
+            phase_rows[name] = maximum
+
     # Size and liveness.
     sizes: dict[str, tuple[int, int, int, str, bool, str]] = {}
     first_use: dict[str, int] = {}
@@ -3526,7 +3612,7 @@ def _place_activations(
             rolling = rolling_tensors.get(name)
             if rolling is not None:
                 rolling_group, rolling_block = rolling
-                extent = request_extent_of(tensor, span_max)
+                extent = request_extent_of(tensor, span_max, context_max)
                 step = extent.step(rolling_block)
                 if step is None:
                     raise PlanError(
@@ -3536,6 +3622,7 @@ def _place_activations(
                 rows = step + extent.bias
             elif symbolic:
                 rows = round_up(rows, block)
+            rows = max(rows, phase_rows.get(name, 0))
             size = bytes_for(rows * cols, tensor.dtype)
             previous = sizes.get(key)
             if previous is None or size > previous[0]:
@@ -3558,7 +3645,7 @@ def _place_activations(
                 rolling = rolling_tensors.get(name)
                 if rolling is not None:
                     rolling_group, rolling_block = rolling
-                    extent = request_extent_of(tensor, span_max)
+                    extent = request_extent_of(tensor, span_max, context_max)
                     step = extent.step(rolling_block)
                     if step is None:
                         raise PlanError(
@@ -3568,6 +3655,7 @@ def _place_activations(
                     rows = step + extent.bias
                 elif symbolic:
                     rows = round_up(rows, block)
+                rows = max(rows, phase_rows.get(name, 0))
                 sizes[key] = (
                     bytes_for(rows * cols, tensor.dtype),
                     rows,
@@ -5017,6 +5105,7 @@ def _plan_kernels(
     kernel and records the tile shape, the bank mask and the port mask for the
     schedule descriptor to carry.
     """
+    context_max = symbol_maximum(graph, "context_length", span_max)
     warnings: list[str] = []
     arity_faults: list[str] = []
     rolling_predicate_names = _rolling_compressor_predicate_names(graph)
@@ -5138,6 +5227,13 @@ def _plan_kernels(
             # bind and these kernels may not declare one.
             kernel_block = 1
         context_op = (int(engine.family), int(engine.sub)) in CONTEXT_LOOP_OPS
+        if graph.source.get("query_execution"):
+            spec = stream_kernels.get(kernel.index)
+            if spec is not None and ".index_stream." in spec[0]:
+                context_op = context_op or any(
+                    context_axis_of(tensors[name], span_max) is not None
+                    for name in (*kernel.inputs, *kernel.outputs)
+                )
         phase_context = bool(kernel.attributes.get("phase_symbol_binding")) or any(
             name in phase_extent_tensors for name in kernel.inputs
         )
@@ -5382,10 +5478,10 @@ def _plan_kernels(
                 # view instead, and this is the loop that resolves it -- one
                 # block over the whole context, run once, which is what
                 # ``_open_context_loop`` gives a request-sized plane.
-                divisor = max(int(span_max), 1)
+                divisor = max(int(context_max), 1)
             else:
                 _axis, context_extent = named
-                capacity = context_extent.numerator * span_max // context_extent.unit
+                capacity = context_extent.numerator * context_max // context_extent.unit
                 divisor = max(
                     capacity * context_extent.unit
                     // max(context_extent.numerator, 1),
@@ -5413,6 +5509,7 @@ def _plan_kernels(
                     activation_keys,
                     state_of_tensor,
                     span_max,
+                    context_max=context_max,
                     contraction=contraction,
                     row_loop=row_loop is not None,
                     kernel_rows=rows,
@@ -5439,6 +5536,7 @@ def _plan_kernels(
                     activation_keys,
                     state_of_tensor,
                     span_max,
+                    context_max=context_max,
                     contraction=contraction,
                     row_loop=row_loop is not None,
                     kernel_rows=rows,
@@ -6054,6 +6152,7 @@ def _operand_plan(
     state_of_tensor: Mapping[str, Sequence[Any]],
     span_max: int,
     *,
+    context_max: int | None = None,
     contraction: bool,
     row_loop: bool,
     kernel_rows: int,
@@ -6119,7 +6218,7 @@ def _operand_plan(
     # attention KV join with a clamped output and unclamped inputs -- but "is
     # your extent a function of the symbol this loop is bound to?".  The
     # coefficients answer it and travel to the view.
-    extent = request_extent_of(tensor, span_max) if symbolic else None
+    extent = request_extent_of(tensor, span_max, context_max) if symbolic else None
     step = extent.step(block) if extent is not None else None
     if extent is None or step is None:
         extent, step = RequestExtent(), None
@@ -6460,6 +6559,7 @@ def _prove(
     node_count: int,
     host_objects: Mapping[str, Mapping[str, Any]],
     hbm_map: Mapping[str, HbmPlacement],
+    *, graph: KernelGraph | None = None,
 ) -> dict[str, Any]:
     weight_bytes = sum(g.size_bytes for g in groups)
     host_resident_groups = tuple(
@@ -6513,7 +6613,7 @@ def _prove(
     )
     host_bytes = sum(int(o["size_bytes"]) for o in host_objects.values())
     sram_bytes = sum(r.size_bytes for r in sram_regions)
-    communication_scratch_bytes = _communication_scratch_bytes(kernels, node_count)
+    communication_scratch_bytes = _communication_scratch_bytes(kernels, node_count, graph=graph)
     compressor_boundary_ratios = {
         int(kernel.aux[1])
         for kernel in kernels
@@ -6668,7 +6768,8 @@ def _prove(
 
 
 def _communication_scratch_bytes(
-    kernels: Sequence[KernelPlan], node_count: int
+    kernels: Sequence[KernelPlan], node_count: int,
+    *, graph: KernelGraph | None = None,
 ) -> int:
     """Maximum symmetric participant array needed by one in-flight exchange.
 
@@ -6678,12 +6779,30 @@ def _communication_scratch_bytes(
     descriptors.  Capacity therefore owes the largest array, not the sum of
     every communication site and not zero (the old proof counted lowerer-
     created exchange objects nowhere).
-    Every extent here is a fixed token block; no maximum-context activation is
-    reintroduced by the fabric schedule.
+    Sparse gathers may exchange a phase-bound committed KV prefix, not just
+    the query block. Reserve the largest source-declared phase row space;
+    serial reuse avoids summing these exchanges, not their actual capacity.
     """
 
     if node_count <= 1:
         return 0
+    phase_rows: dict[str, int] = {}
+    if graph is not None:
+        tensors = {tensor.tensor_id: tensor for tensor in graph.tensors}
+        span_max = symbol_maximum(graph, "span_tokens", 1)
+        for source_kernel in graph.kernels:
+            selected = _phase_inputs(source_kernel.inputs, source_kernel.attributes)
+            if selected is None:
+                continue
+            if int(source_kernel.attributes.get("axis", 0)) != 0:
+                raise PlanError("phase communication requires an axis-zero join")
+            maximum = max(
+                sum(matrix_shape(tensors[source_kernel.inputs[i]], span_max)[0]
+                    for i in indices)
+                for indices in selected.values()
+            )
+            for name in source_kernel.outputs:
+                phase_rows[name] = maximum
     largest = 0
     for kernel in kernels:
         operand: OperandPlan | None = None
@@ -6730,7 +6849,7 @@ def _communication_scratch_bytes(
         largest = max(
             largest,
             bytes_for(
-                participants * max(operand.tile_rows, 1) * max(columns, 1),
+                participants * max(operand.tile_rows, phase_rows.get(operand.tensor_id, 0), 1) * max(columns, 1),
                 operand.dtype,
             ),
         )

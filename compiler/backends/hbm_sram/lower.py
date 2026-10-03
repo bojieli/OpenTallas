@@ -131,6 +131,7 @@ from .plan import (
     substitute_condition,
     RequestExtent,
     request_extent_of,
+    symbol_maximum,
     kernel_condition,
     operand_present,
     predicate_conditions,
@@ -410,6 +411,7 @@ class _Emitter:
         ] = {}
         self._emitted_kernels: set[int] = set()
         self.span_max = plan.span_max
+        self.context_max = symbol_maximum(graph, "context_length", self.span_max)
         self.builder = DeploymentBuilder(
             target_id=target_id
             or f"{backend}-{TopologyClass(plan.topology.topology_class).name.lower()}",
@@ -490,6 +492,7 @@ class _Emitter:
         self._declare_topology()
         self._declare_objects()
         self._declare_states()
+        self._emit_query_admission()
 
         self._hoisted = self._compute_hoisted()
         prepared, committed = self._state_transaction_sites()
@@ -640,6 +643,8 @@ class _Emitter:
                 "ratios": sorted(self._compressor_transition_ratios),
                 "roll_copy": False,
             }
+        if "query_execution" in self.graph.source:
+            builder.notes["query_execution"] = dict(self.graph.source["query_execution"])
         # Same rule as the predicate report: emitted only when non-empty, so a
         # graph whose every state class is exact says nothing here and its
         # manifest is unchanged.
@@ -648,6 +653,42 @@ class _Emitter:
                 sorted(self._state_class_aliases.items())
             )
         return builder.finish()
+
+    def _emit_query_admission(self) -> None:
+        """Enforce specialized bounds on the wire, before mutable work.
+
+        Deployment notes protect host admission; these ordinary ABI predicates
+        and traps also protect consumers that execute the program directly.
+        """
+        contract = self.graph.source.get("query_execution")
+        if contract is None:
+            return
+        builder = self.builder
+
+        def trap(symbol: Symbol, comparison: Comparison, bound: int) -> None:
+            builder.emit(
+                Major.CONTROL, Control.TRAP,
+                predicate_id=self._predicate_from_triple((symbol, comparison, bound)),
+            )
+
+        trap(Symbol.CONTEXT_LENGTH, Comparison.LT, 1)
+        trap(Symbol.CONTEXT_LENGTH, Comparison.GT, contract["context_tokens"])
+        trap(Symbol.SPAN_TOKENS, Comparison.LT, 1)
+        # A branch selects the phase-specific admission block. The common
+        # program contains both entrypoints, so the prefill bound cannot be
+        # imposed on decode (or vice versa).
+        to_decode = builder.emit(
+            Major.CONTROL, Control.BRANCH, control_id=0,
+            predicate_id=self._phase_predicate(("prefill",)),
+            invert_predicate=True,
+        )
+        trap(Symbol.SPAN_TOKENS, Comparison.GT, contract["prefill_tokens"])
+        trap(Symbol.POSITION_START, Comparison.NE, 0)
+        to_end = builder.emit(Major.CONTROL, Control.BRANCH, control_id=0)
+        builder.instructions[to_decode].control_id = len(builder.instructions)
+        trap(Symbol.PHASE, Comparison.NE, int(Phase.DECODE))
+        trap(Symbol.SPAN_TOKENS, Comparison.GT, contract["decode_tokens"])
+        builder.instructions[to_end].control_id = len(builder.instructions)
 
     def _predicate_report(self) -> dict[str, Any]:
         """What this lowering predicated, and what it could not state."""
@@ -4929,7 +4970,7 @@ class _Emitter:
 
     def _declared_join_axis(self, name: str) -> RequestExtent | None:
         """The A18 function the graph declares for one tensor's leading axis."""
-        return request_extent_of(self.tensors[name], self.span_max)
+        return request_extent_of(self.tensors[name], self.span_max, self.context_max)
 
     def _phase_layout_extents(
         self, plan: KernelPlan, kernel: Kernel
@@ -4957,7 +4998,7 @@ class _Emitter:
             )
             names = [kernel.inputs[index] for index in indices]
             extent, static = join_extent_under(
-                self.tensors, names, 0, self.span_max, constants, aliases
+                self.tensors, names, 0, self.span_max, constants, aliases, self.context_max
             )
             # The declared output axis is the one form no loop has to resolve --
             # the instruction reuses the view the kernel already built.  Any other
@@ -5007,11 +5048,11 @@ class _Emitter:
                     pinned, f"kernel {plan.kernel_id} phase {phase!r}"
                 )
                 join_extent_under(
-                    self.tensors, names, 0, self.span_max, constants, aliases
+                    self.tensors, names, 0, self.span_max, constants, aliases, self.context_max
                 )
             return
         derived, _static = join_extent_under(
-            self.tensors, names, 0, self.span_max, {}, {}
+            self.tensors, names, 0, self.span_max, {}, {}, self.context_max
         )
         if declared is None:
             if derived is not None:
@@ -5383,7 +5424,7 @@ class _Emitter:
                     "path is unreachable there and the pair is not a pair"
                 )
             extent, _static = join_extent_under(
-                self.tensors, names, 0, self.span_max, constants, aliases
+                self.tensors, names, 0, self.span_max, constants, aliases, self.context_max
             )
             if extent is None:
                 raise LoweringError(
@@ -5664,7 +5705,7 @@ class _Emitter:
         remaining = [
             name for index, name in enumerate(kernel.inputs) if index != absent
         ]
-        extent, static = join_extent(self.tensors, remaining, axis, self.span_max)
+        extent, static = join_extent(self.tensors, remaining, axis, self.span_max, self.context_max)
         out = next(o for o in plan.operands if o.direction == "out" and o.slot == 0)
         if axis == 0:
             if extent is None:

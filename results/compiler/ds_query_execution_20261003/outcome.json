@@ -1,0 +1,123 @@
+{
+  "schema": "ds-query-specialization-gate-v1",
+  "base_commit": "1538071a0dd86cadda09ace87882aa51ba871760",
+  "verdict": "PASS_SHAPES_STORAGE_ABI_ADMISSION_ONLY",
+  "tests": {
+    "passed": 134,
+    "skipped": 13,
+    "failed": 0,
+    "elapsed_s": 352.1,
+    "skip_reasons": [
+      {
+        "name": "test_real_qwen_ir_lowers_and_is_admitted",
+        "reason": "Qwen IR not published yet"
+      },
+      {
+        "name": "test_real_qwen_head_rms_norm_aux0_is_the_declared_head_count",
+        "reason": "Qwen IR not published yet"
+      },
+      {
+        "name": "test_real_deepseek_head_rms_norm_aux0_is_the_declared_head_count",
+        "reason": "DeepSeek IR not published yet"
+      },
+      {
+        "name": "test_real_qwen_ir_is_deterministic",
+        "reason": "Qwen IR not published yet"
+      },
+      {
+        "name": "test_real_qwen_kv_resource_events_order_attention_and_fail_closed",
+        "reason": "Qwen IR not published yet"
+      },
+      {
+        "name": "test_real_deepseek_rolling_plan_fits_hbm_and_is_admitted",
+        "reason": "DeepSeek IR not built"
+      },
+      {
+        "name": "test_hbm_checker_rejects_a_wait_across_mutually_exclusive_branch_paths",
+        "reason": "DeepSeek IR not built"
+      },
+      {
+        "name": "test_checker_rejects_digest_consistent_node_segment_reordering",
+        "reason": "DeepSeek IR not built"
+      },
+      {
+        "name": "test_checker_rejects_digest_consistent_weight_and_scale_stride_mutation",
+        "reason": "DeepSeek IR not built"
+      },
+      {
+        "name": "test_checker_rejects_wrong_reachable_stride_despite_unreachable_decoy",
+        "reason": "DeepSeek IR not built"
+      },
+      {
+        "name": "test_both_lanes_agree_which_operands_carry_a_block_scale",
+        "reason": "DeepSeek IR not built"
+      },
+      {
+        "name": "test_the_published_deepseek_graph_fits_the_declared_state_slot_file",
+        "reason": "run `make abi3-ir` to build the graph"
+      },
+      {
+        "name": "test_both_backends_declare_the_same_state_resources_for_one_graph",
+        "reason": "run `make abi3-ir` to build the graph"
+      }
+    ]
+  },
+  "source_hashes_unchanged_during_final_tests": true,
+  "one_million_decode_storage": "affine O(N) in actual full-source storage planners; no capability relaxation",
+  "numerical_order": "all released kernel contracts, inputs, outputs, selection attributes, phases and state ownership unchanged; no full-token arithmetic execution",
+  "full_source_abi_admission": {
+    "context_tokens": 262144,
+    "query_tokens": 1,
+    "independent_verifier_pass": true,
+    "wire_guard_negative_controls": 6,
+    "wire_guard_valid_decode": true
+  },
+  "open_scope": [
+    "nonzero-position multi-chunk prefill source contract",
+    "ROM backend specialization qualification",
+    "1M hardware capability qualification",
+    "checkpoint-backed full numerical execution"
+  ],
+  "artifacts": {
+    "HANDOFF.md": {
+      "bytes": 3632,
+      "sha256": "7295d04df7fe40e5ea76937e201df12e43568241b7848216a8a5e94d17bff023"
+    },
+    "final_tests.log": {
+      "bytes": 284,
+      "sha256": "82959b66a6f2d1fcc700ceb2766fc11e539c39d19f83237f30478633770eaba3"
+    },
+    "final_tests.xml": {
+      "bytes": 23411,
+      "sha256": "d6c3851f33b4813363b6c2f96b8d0e7a90a9a07b0590dc39771ef047d4188c85"
+    },
+    "frozen_source_pins.json": {
+      "bytes": 998,
+      "sha256": "2e2c215aeb8afecceccd95223d27cec577d136648c4cd68794102c2666155e10"
+    },
+    "full_abi_exchange_corrected.log": {
+      "bytes": 110,
+      "sha256": "5ad705196ddc139567a7971d4eda62b20309be85ea3d7cfa8dc0c8d4a545599f"
+    },
+    "full_abi_exchange_first_failure.log": {
+      "bytes": 3470,
+      "sha256": "5f592b7343046f787c379dfadebcd7383e3463a05e2af099963333ee0684312c"
+    },
+    "missing_checkpoint_regression.log": {
+      "bytes": 430590,
+      "sha256": "132455e428553033a13e3368e74857df86b91d477dbd74d33b863e3913fc46fd"
+    },
+    "storage_model.json": {
+      "bytes": 883,
+      "sha256": "99994c27b25ad3dddbfa9da56c4503e37d441960da6c4d7002bd60125689c901"
+    },
+    "test_command_path_refusal.log": {
+      "bytes": 100,
+      "sha256": "b63926298d0a9e78dcaeab5ba72fe5e7842e324a146515c9adc282b33d961fae"
+    },
+    "unchanged_baseline_analytical_failure.log": {
+      "bytes": 2811,
+      "sha256": "5609b800f6154a49c39b548a1972c380e9258b8e745ab83d0e244e3433f28d40"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "deepseek-v41-query-storage-v1",
+  "context_tokens": 1048576,
+  "query_tokens": 1,
+  "released_layers": 40,
+  "checkpoint_binding_scope": "authenticated released tensor shapes; synthetic metadata only; no payload",
+  "decode_1M": {
+    "state_bytes": 14644488192,
+    "activation_arena_bytes": 1629130156,
+    "query_scratch_bytes": 5294080,
+    "candidate_mask_bytes": 5242880,
+    "candidate_mask_member_count": 5
+  },
+  "decode_half": {
+    "state_bytes": 7324903424,
+    "activation_arena_bytes": 820546988
+  },
+  "actual_capability_context_max": 262144,
+  "admitted_262K_exchange_scratch_bytes": 268566528,
+  "admitted_262K_hbm_bytes_per_node": 50574503936,
+  "one_million_hardware_admitted": false,
+  "numerical_full_token_qualified": false,
+  "prefill_scope": "bounded position-zero initial block; later chunks refused pending separate causal-stream contract"
+}

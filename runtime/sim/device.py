@@ -678,6 +678,18 @@ class Device:
                 message=f"unknown entrypoint {entrypoint_id}",
                 host_performance=host_performance_delta(),
             )
+        from runtime.query_execution import admit_query_execution
+        try:
+            admit_query_execution(
+                self.deployment.notes.get("query_execution"), symbols, int(entry["phase"]),
+            )
+        except (ValueError, KeyError, TypeError) as exc:
+            return TransactionResult(
+                status=CompletionStatus.FAILED,
+                trap_class=TrapClass.CAPABILITY_OR_RESOURCE,
+                message=f"query execution admission: {exc}",
+                host_performance=host_performance_delta(),
+            )
         if session.finished:
             return TransactionResult(
                 status=CompletionStatus.FAILED,
@@ -1810,6 +1822,15 @@ class Device:
                 f"match entrypoint phase {entry['phase']}",
                 TrapClass.DESCRIPTOR_OR_ADDRESS,
             )
+        from runtime.query_execution import admit_query_execution
+        try:
+            admit_query_execution(
+                self.deployment.notes.get("query_execution"), symbols, int(entry["phase"]),
+            )
+        except (ValueError, KeyError, TypeError) as exc:
+            raise DeviceTrap(
+                f"query execution admission: {exc}", TrapClass.CAPABILITY_OR_RESOURCE,
+            ) from exc
         if symbols[int(Symbol.GENERATION_INDEX)] != len(session.generated):
             raise DeviceTrap(
                 f"request descriptor GENERATION_INDEX="

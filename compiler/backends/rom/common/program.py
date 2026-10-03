@@ -1404,6 +1404,11 @@ class RomLowering:
         generation: int = 1,
     ) -> None:
         require_neutral(graph)
+        if "query_execution" in graph.source:
+            raise RomLoweringError(
+                "query execution specialization currently requires the HBM/SRAM "
+                "phase-capacity planner and request admission; ROM lowering refuses it"
+            )
         self.graph = graph
         self.capability = capability
         self.policy = policy
