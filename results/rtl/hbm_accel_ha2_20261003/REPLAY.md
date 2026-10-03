@@ -12,7 +12,15 @@ The separate snapshot reducer implements an adjacent-pair FP32 RNE tree with a d
 
 The 96-rank run is `ot-agidock128:/tmp/ha2-direct-links-045cc7411`, supervisor PID 419075. `run_045cc7411.sh` captures the exact commands. It builds once under the admission guard and preserves objects, logs, terminal exit files and input hashes. No deadline or per-process limit is imposed. The initial 8 GiB admission estimate was too small: four compiler workers grew to about 41 GiB RSS, so this inventory belongs on the large-build host for future runs. The progressing run is retained.
 
-The additional endpoint fault gate uses unchanged gather RTL at `a4d53ea7a`: 44 directed checks, zero mismatches, Icarus exit 0. Five graph/compiler/price tests passed. The 96-rank live gate is reused, never duplicated. When terminal, collect existing artifacts with:
+The additional endpoint fault gate uses unchanged gather RTL at `a4d53ea7a`: 44 directed checks, zero mismatches, Icarus exit 0. Five graph/compiler/price tests passed. The 96-rank gate completed without a rerun: compile and runtime exit 0, 27,648 packet comparisons / 442,368 FP32 bit lanes, zero mismatches, and all source/fixture hashes unchanged. Snapshot issue-to-last-result cycles are 2,588 (first, unstalled), 2,732 (downstream backpressure), and 2,700 (next unstalled epoch, retaining returning-credit debt). At the simulator's 0.834 ns period these are 2,158.392 / 2,278.488 / 2,251.800 ns. One-picosecond timing precision rounds the intended 416.667 ps half-period to 417 ps. This is conditional RTL simulation, not a qualified silicon clock or full-context latency.
+
+**Verdict: REJECT_SNAPSHOT_CANDIDATE, default-off.** The first-word latency alone is 2,493 cycles / 2,079.162 ns. This misses the candidate gate well before adding real system CDC or refresh. The fixed intercept and payload slope are not separately fitted, so the W15 fixed 777/824 ns references are not a matched slope comparison. No candidate tuning or physical run follows this rejection.
+
+The queued reducer did not run: its original Icarus elaboration exited 95 because the launcher omitted the existing `ot_hdc_lzc32` dependency. This is a launcher omission, not a numerical verdict. The complete failed log is preserved, and the gate is not repeated. Whole-collective all-reduce, the real W19 golden/head and 96×512 top-k remain unmeasured.
+
+The runtime used 80,556 KiB peak RSS and 77.34 seconds wall time. The compiler group exceeded the initial 8 GiB admission estimate; a sample of its four workers totalled about 45.3 GiB RSS. This is an observed sample, not a full-build peak measurement. Future builds of this inventory require the large-build host's admission guard. Original remote objects remain intact.
+
+`terminal_045cc7411.json` records the measured candidate and every failure. The measured composition adopts no HA2 rung and has no measured per-user gain. Collect existing artifacts without any execution with:
 
 ```sh
 python3 tools/hbm_accel_direct_links_collect.py \

@@ -1,0 +1,8 @@
+HA2_GATHER round=0 first_cycles=2493 last_cycles=2588
+HA2_GATHER round=1 first_cycles=2622 last_cycles=2732
+HA2_GATHER round=2 first_cycles=2605 last_cycles=2700
+HA2_TERMINAL checks=27648 mismatches=0
+- rtl/hbm_accel/direct_links/tb_hbm_accel_direct_links.sv:80: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 77.322 s; speed 86.612 ns/s
+- Verilator: cpu 77.321 s on 1 threads; allocated 82 MB
