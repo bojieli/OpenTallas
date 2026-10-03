@@ -152,8 +152,8 @@ def control_allocation(netlist, palette):
     rows = {}
     for corner in ('SS', 'TT', 'FF'):
         coeffs = {n: palette['cells'][n + '/' + corner] for n in inventory}
-        rows[corner] = {'area_um2_predictive_model': sum(inventory[n] * coeffs[n]['area_library_units'] for n in inventory),
-                        'on_rail_leakage_W_upper_model': sum(inventory[n] * coeffs[n]['on_rail_max_state_W'] for n in inventory)}
+        rows[corner] = {'area_um2_predictive_model': math.fsum(inventory[n] * coeffs[n]['area_library_units'] for n in inventory),
+                        'on_rail_leakage_W_upper_model': math.fsum(inventory[n] * coeffs[n]['on_rail_max_state_W'] for n in inventory)}
     return {'generic_cell_count_measured': len(types), 'FF_bits_measured': ffs,
             'constructive_inventory_model': inventory, 'by_corner': rows,
             'exclusions': ['isolation clamp', 'power switch', 'retained external debt', 'CDC', 'CTS', 'fanout buffering', 'PDN', 'SerDes'],
@@ -178,7 +178,7 @@ def compose(base, contract, palette=None, stage_map=None, calendar=None):
     if palette is not None:
         for corner in ('SS', 'TT', 'FF'):
             known = all(cell + '/' + corner in palette['cells'] for cell in inventory)
-            retained[corner] = sum(count * palette['cells'][cell + '/' + corner]['on_rail_max_state_W']
+            retained[corner] = math.fsum(count * palette['cells'][cell + '/' + corner]['on_rail_max_state_W']
                                    for cell, count in inventory.items()) if known and inventory else None
     return {'schema': 'dsrom_c_w5_pg_model_v1', 'status': 'DEFAULT_OFF_COMPONENT_PREPARATION',
             'unified_model_binding': {'raw_uarch_model_sha256': base['raw_uarch_model_sha256'],

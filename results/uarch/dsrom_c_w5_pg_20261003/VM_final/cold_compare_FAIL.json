@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "same_inputs": true,
+  "RTL_passed": true,
+  "difference": "controller_allocation.by_corner.FF.on_rail_leakage_W_upper_model: local 9.424835419999999e-08 vs VM 9.42483542e-08",
+  "cause": "Python floating sum implementations differ by one ulp; use math.fsum for deterministic model totals",
+  "original_model_and_receipt_preserved": true
+}
