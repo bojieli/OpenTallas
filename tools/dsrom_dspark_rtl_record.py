@@ -15,6 +15,8 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_PARTS = ("rom_m1_g5_gold4", "rom_m1_g5_o8s6", "x_heme", "x_heme_guard", "x_all6",
+                  "x_heme_g3", "x_heme_g1", "x_heme_guard_n24", "rom_m1_plain", "x_all6dpi")
 # the model's V4.1 ROM figures (gamma 5, 6 verified positions, m = 1 time-multiplexed)
 MODEL = {
     "uarch_speculation_json": {"source": "results/uarch/speculation.json v41_rom_mtp_m1",
@@ -41,6 +43,7 @@ def checks(run):
          "rtl_accept_counts_equal_isa": r.get("accept_mismatches") == 0,
          "rtl_final_vm_equal_isa": r.get("vm_mismatches") == 0,
          "rtl_final_kv_equal_isa_incl_dead_rows": r.get("kv_mismatches") == 0}
+    c["rtl_exited_successfully"] = r.get("returncode") == 0
     if "activation" in r:
         c["respecified_units_fired"] = r["activation"].get("pass")
     return c
@@ -49,6 +52,7 @@ def checks(run):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--dir", type=Path, default=ROOT / "results/rtl/dsrom_dspark_rtl_20261003")
+    ap.add_argument("--output", type=Path, help="new summary path; existing evidence is never overwritten")
     a = ap.parse_args()
     parts = {p.stem: json.loads(p.read_text()) for p in sorted((a.dir / "parts").glob("*.json"))}
     plain = {}
@@ -59,7 +63,9 @@ def main():
                     plain[r["prompt"]] = r["rtl"]["cycles_per_token"]
     out = {"schema": "opentallas.dsrom-dspark-rtl-summary.v1", "model": MODEL,
            "ar_token_cycles_as_built_same_bench": plain, "parts": {}}
-    allpass = True
+    missing = sorted(set(EXPECTED_PARTS) - set(parts))
+    out["missing_parts"] = missing
+    allpass = bool(parts)
     for name, p in parts.items():
         if p.get("mode") == "plain":
             out["parts"][name] = {"pass": p["pass"], "mode": "plain (one-position baseline)",
@@ -95,13 +101,15 @@ def main():
                               "mutation_engram_restore_slot_plus_1_detected": None if mut is None else mut["detected"],
                               "isa_checks": p.get("isa_checks")}
         allpass &= p["pass"]
-    out["status"] = "pass" if allpass else "fail"
-    (a.dir / "summary.json").write_text(json.dumps(out, indent=1) + "\n")
+    out["status"] = "incomplete" if missing else "pass" if allpass else "fail"
+    target = a.output or a.dir / "summary.json"
+    with target.open("x") as f:
+        f.write(json.dumps(out, indent=1) + "\n")
     for n, p in out["parts"].items():
         print(n, "PASS" if p["pass"] else "FAIL",
               [(r["prompt"], r.get("drafter"), r["pass"], r.get("cycles", {}).get("step", r.get("cycles_per_token")))
                for r in p["runs"]])
-    return 0
+    return 2 if missing else 0 if allpass else 1
 
 
 if __name__ == "__main__":
