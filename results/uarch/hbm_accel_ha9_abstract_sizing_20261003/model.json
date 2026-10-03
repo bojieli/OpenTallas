@@ -1,0 +1,242 @@
+{
+  "DS": {
+    "HBM_service_band_basis": "Comparator 48mm total frontage x 630.72um; already in base, not incremental",
+    "existing_HBM_service_band_mm2": 30.274559999999997,
+    "historical_fabric_reservation_mm2": 18,
+    "planned_die_mm2": 340.5,
+    "planned_ports": 20,
+    "replacement_die_mm2": null,
+    "service_geometry_fit": null
+  },
+  "PDN_qualified": false,
+  "Qwen": [
+    {
+      "alternatives": [
+        {
+          "TT_read_energy_fJ_per_macro_access": 336.65,
+          "abstract_area_mm2_per_die": 419.44973105663996,
+          "abstract_height_um": 20478.96,
+          "abstract_width_um": 20481.984,
+          "capacity_bytes_per_die": 441450496,
+          "columns": 216,
+          "dies": 2,
+          "logic_area_mm2": 1370.49946211328,
+          "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+          "macro_SS_clk_to_q_ps": 455.3,
+          "macro_ports": "1r1w",
+          "macros_per_die": 107776,
+          "packed_area_mm2_per_die": 419.41859844096,
+          "packing_factor_assumed": 1,
+          "qualification": false,
+          "raw_macro_mm2_per_die": 419.41859844096,
+          "rows": 499,
+          "total_residency_MiB": 842,
+          "total_silicon_mm2_assumed_DRAM_range": [
+            8570.49946211328,
+            12970.49946211328
+          ]
+        },
+        {
+          "TT_read_energy_fJ_per_macro_access": 336.65,
+          "abstract_area_mm2_per_die": 549.4791476841983,
+          "abstract_height_um": 23439.241060940858,
+          "abstract_width_um": 23442.70218713908,
+          "capacity_bytes_per_die": 441450496,
+          "columns": 216,
+          "dies": 2,
+          "logic_area_mm2": 1630.5582953683966,
+          "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+          "macro_SS_clk_to_q_ps": 455.3,
+          "macro_ports": "1r1w",
+          "macros_per_die": 107776,
+          "packed_area_mm2_per_die": 549.4383639576577,
+          "packing_factor_assumed": 1.31,
+          "qualification": false,
+          "raw_macro_mm2_per_die": 419.41859844096,
+          "rows": 499,
+          "total_residency_MiB": 842,
+          "total_silicon_mm2_assumed_DRAM_range": [
+            8830.558295368397,
+            13230.558295368397
+          ]
+        },
+        {
+          "TT_read_energy_fJ_per_macro_access": 1381.53,
+          "abstract_area_mm2_per_die": 166.75902748656003,
+          "abstract_height_um": 12896.01,
+          "abstract_width_um": 12931.056,
+          "capacity_bytes_per_die": 441450496,
+          "columns": 74,
+          "dies": 2,
+          "logic_area_mm2": 865.11805497312,
+          "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "macro_SS_clk_to_q_ps": 691.8,
+          "macro_ports": "1r1w",
+          "macros_per_die": 13472,
+          "packed_area_mm2_per_die": 165.89703280895998,
+          "packing_factor_assumed": 1,
+          "qualification": false,
+          "raw_macro_mm2_per_die": 165.89703280895998,
+          "rows": 183,
+          "total_residency_MiB": 842,
+          "total_silicon_mm2_assumed_DRAM_range": [
+            8065.11805497312,
+            12465.11805497312
+          ]
+        },
+        {
+          "TT_read_energy_fJ_per_macro_access": 1381.53,
+          "abstract_area_mm2_per_die": 218.45432600739363,
+          "abstract_height_um": 14760.158089781118,
+          "abstract_width_um": 14800.270070185483,
+          "capacity_bytes_per_die": 441450496,
+          "columns": 74,
+          "dies": 2,
+          "logic_area_mm2": 968.5086520147872,
+          "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "macro_SS_clk_to_q_ps": 691.8,
+          "macro_ports": "1r1w",
+          "macros_per_die": 13472,
+          "packed_area_mm2_per_die": 217.32511297973758,
+          "packing_factor_assumed": 1.31,
+          "qualification": false,
+          "raw_macro_mm2_per_die": 165.89703280895998,
+          "rows": 183,
+          "total_residency_MiB": 842,
+          "total_silicon_mm2_assumed_DRAM_range": [
+            8168.508652014787,
+            12568.508652014787
+          ]
+        }
+      ],
+      "dies": 2,
+      "port_fit": null,
+      "selected_macro": null,
+      "stacks": 8
+    },
+    {
+      "alternatives": [
+        {
+          "TT_read_energy_fJ_per_macro_access": 336.65,
+          "abstract_area_mm2_per_die": 419.44973105663996,
+          "abstract_height_um": 20478.96,
+          "abstract_width_um": 20481.984,
+          "capacity_bytes_per_die": 441450496,
+          "columns": 216,
+          "dies": 4,
+          "logic_area_mm2": 2740.99892422656,
+          "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+          "macro_SS_clk_to_q_ps": 455.3,
+          "macro_ports": "1r1w",
+          "macros_per_die": 107776,
+          "packed_area_mm2_per_die": 419.41859844096,
+          "packing_factor_assumed": 1,
+          "qualification": false,
+          "raw_macro_mm2_per_die": 419.41859844096,
+          "rows": 499,
+          "total_residency_MiB": 1684,
+          "total_silicon_mm2_assumed_DRAM_range": [
+            17140.99892422656,
+            25940.99892422656
+          ]
+        },
+        {
+          "TT_read_energy_fJ_per_macro_access": 336.65,
+          "abstract_area_mm2_per_die": 549.4791476841983,
+          "abstract_height_um": 23439.241060940858,
+          "abstract_width_um": 23442.70218713908,
+          "capacity_bytes_per_die": 441450496,
+          "columns": 216,
+          "dies": 4,
+          "logic_area_mm2": 3261.116590736793,
+          "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+          "macro_SS_clk_to_q_ps": 455.3,
+          "macro_ports": "1r1w",
+          "macros_per_die": 107776,
+          "packed_area_mm2_per_die": 549.4383639576577,
+          "packing_factor_assumed": 1.31,
+          "qualification": false,
+          "raw_macro_mm2_per_die": 419.41859844096,
+          "rows": 499,
+          "total_residency_MiB": 1684,
+          "total_silicon_mm2_assumed_DRAM_range": [
+            17661.116590736794,
+            26461.116590736794
+          ]
+        },
+        {
+          "TT_read_energy_fJ_per_macro_access": 1381.53,
+          "abstract_area_mm2_per_die": 166.75902748656003,
+          "abstract_height_um": 12896.01,
+          "abstract_width_um": 12931.056,
+          "capacity_bytes_per_die": 441450496,
+          "columns": 74,
+          "dies": 4,
+          "logic_area_mm2": 1730.23610994624,
+          "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "macro_SS_clk_to_q_ps": 691.8,
+          "macro_ports": "1r1w",
+          "macros_per_die": 13472,
+          "packed_area_mm2_per_die": 165.89703280895998,
+          "packing_factor_assumed": 1,
+          "qualification": false,
+          "raw_macro_mm2_per_die": 165.89703280895998,
+          "rows": 183,
+          "total_residency_MiB": 1684,
+          "total_silicon_mm2_assumed_DRAM_range": [
+            16130.23610994624,
+            24930.23610994624
+          ]
+        },
+        {
+          "TT_read_energy_fJ_per_macro_access": 1381.53,
+          "abstract_area_mm2_per_die": 218.45432600739363,
+          "abstract_height_um": 14760.158089781118,
+          "abstract_width_um": 14800.270070185483,
+          "capacity_bytes_per_die": 441450496,
+          "columns": 74,
+          "dies": 4,
+          "logic_area_mm2": 1937.0173040295745,
+          "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "macro_SS_clk_to_q_ps": 691.8,
+          "macro_ports": "1r1w",
+          "macros_per_die": 13472,
+          "packed_area_mm2_per_die": 217.32511297973758,
+          "packing_factor_assumed": 1.31,
+          "qualification": false,
+          "raw_macro_mm2_per_die": 165.89703280895998,
+          "rows": 183,
+          "total_residency_MiB": 1684,
+          "total_silicon_mm2_assumed_DRAM_range": [
+            16337.017304029574,
+            25137.017304029574
+          ]
+        }
+      ],
+      "dies": 4,
+      "port_fit": null,
+      "selected_macro": null,
+      "stacks": 16
+    }
+  ],
+  "SS_FF_qualified": false,
+  "abstract_note": "SRAM rectangular envelopes only; 1.31 is study packing sensitivity, not routed halo or channel closure",
+  "fulltoken_qualified": false,
+  "input_sha256": {
+    "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "results/uarch/hbm_accelerator_study_20261003/ladder_model.py": "5266d81b537fe18edd427f853bdb25c6b6533c3c65e7dafc2ac3bedb0378125f",
+    "tools/hbm_gpu_floorplan.py": "2b7241963971fd9fc8991ffd9a0cf89aee11525ad4747cb49efad001bc531205"
+  },
+  "latency_cycles_added": 0,
+  "latency_note": "Area alternatives only; no pipeline or model-rate change",
+  "missing_owner_inputs": [
+    "HA2 lanes/frontage/wires/power and physical abstract",
+    "HA8 bank/port/concurrency selection and channel/halo budget"
+  ],
+  "physical_launch_allowed": false,
+  "schema": "HA9_ABSTRACT_SIZING_V1",
+  "service_area_note": "No controller area shrink or fabric latency gain claimed from this area calculation",
+  "status": "MODEL_ONLY_NOT_QUALIFIED"
+}
