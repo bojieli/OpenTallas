@@ -5,6 +5,7 @@ One new output per invocation; preserve every compile/runtime failure.
 import argparse
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import shutil
@@ -16,6 +17,30 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
+def cpu_sample():
+    rows={}
+    for line in Path('/proc/stat').read_text().splitlines():
+        fields=line.split()
+        if fields and fields[0].startswith('cpu') and fields[0][3:].isdigit():
+            ticks=[int(x) for x in fields[1:9]]
+            rows[int(fields[0][3:])]=(sum(ticks),ticks[3])
+    return rows
+
+def idle_cpu_equivalents(before,after,allowed):
+    available=0.0
+    for cpu in allowed:
+        if cpu not in before or cpu not in after:continue
+        total=after[cpu][0]-before[cpu][0];idle=after[cpu][1]-before[cpu][1]
+        if total>0:available+=max(0.0,min(1.0,idle/total))
+    return available
+
+def choose_jobs(available,requested=None):
+    free=math.floor(available)
+    if free<1:raise ValueError('NO_LOCAL_CPU_HEADROOM')
+    jobs=min(32,free) if requested is None else requested
+    if jobs<1 or jobs>free:raise ValueError('REQUESTED_JOBS_EXCEED_MEASURED_CPU_HEADROOM')
+    return jobs
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--primary-root',type=Path,default=Path('/home/ubuntu/w2-pc-exact-completion-model-20261003'))
@@ -23,6 +48,9 @@ def main():
     p.add_argument('--corrector-sha256',help='require exact admitted split-helper source hash')
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--simulator',choices=['iverilog','verilator'],default='iverilog')
+    p.add_argument('--jobs',type=int,help='compile workers; default up to32 from fresh measured idle CPUs')
+    p.add_argument('--output-split',type=int,default=10000,help='generated C++ statements per file')
+    p.add_argument('--output-split-cfuncs',type=int,default=1000,help='generated model statements per function')
     p.add_argument('--reset-quarantine',action='store_true',help='enroll matching opt-in reset-quarantine successor sources')
     p.add_argument('--reference-negative',choices=['omit','drop','drop_debt','consume'],
                    help='select one expected-FAIL reset receipt mutant in the existing fixture')
@@ -58,8 +86,19 @@ def main():
         if not version.startswith('Verilator 5.050 '):
             raise SystemExit('exact Verilator5.050 required')
         record['simulator_version']=version
+        before=cpu_sample();time.sleep(0.25);after=cpu_sample()
+        available=idle_cpu_equivalents(before,after,os.sched_getaffinity(0))
+        record['capacity']['measured_idle_cpu_equivalents']=available
+        record['capacity']['cpu_sample_seconds']=0.25
+        try:jobs=choose_jobs(available,a.jobs)
+        except ValueError as error:
+            record.update(status='REFUSED_BEFORE_COMPILE',reason=str(error));save()
+            raise SystemExit(str(error))
+        record['compile_workers']=jobs
         cmd=['verilator','--binary','--timing','--top-module','tb_w2_fullnc6',
-             '-Wno-fatal','-j','2','--Mdir',str(a.out/'obj'),'-o',str(a.out/'gate.bin'),
+             '-Wno-fatal','-j',str(jobs),'--output-split',str(a.output_split),
+             '--output-split-cfuncs',str(a.output_split_cfuncs),
+             '--Mdir',str(a.out/'obj'),'-o',str(a.out/'gate.bin'),
              *[str(inputs/f.name) for f in files]]
     else:
         cmd=['iverilog','-g2012','-s','tb_w2_fullnc6','-o',str(a.out/'gate.bin'),*[str(inputs/f.name) for f in files]]
