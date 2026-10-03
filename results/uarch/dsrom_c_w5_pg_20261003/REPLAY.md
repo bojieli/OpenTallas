@@ -1,5 +1,7 @@
 W5 Scenario C default-off component. Base: `4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6`.
 
+Latest authority: `handoff.json`, with deterministic successor `model_r7/model.json` and `VM_model_r7/review.json`. The first committed `model.json` and all failed records remain historical. Source component is `bd4b1fc79`; the final commits add evidence only. `math.fsum` prevents Python-version-dependent leakage totals. Local and VM successor model/Liberty outputs are byte-identical. The raw RTL transcripts differ only by the VM Icarus `$finish` diagnostic; their measured metrics and PASS lines match exactly.
+
 Run from the repository root; choose a fresh output directory:
 
 ```sh
@@ -27,3 +29,5 @@ Measured fixture: zero added scheduled-token cycles and exact clamp payload; del
 `coordination.json` pins read-only W2 Arendt and W4 Maxwell snapshots and specifies required joins. W2's source packing and new split-delivery/auxiliary ABI do not transfer the inherited C rate. Maxwell's W4 attribution provides no qualified replacement PG rectangle or wake-droop result. Acknowledgments, actual stage/link residence, off-rail switch and SerDes standby characterization, inrush/ramp/droop and loaded SS/FF with 60/25 ps uncertainties remain open. Hub routing-layer and slot-fit checks are pending. No hardware adoption or array saving is claimed.
 
 Failed records are retained: `rtl_r2_FAIL/` (cold startup demand), `rtl_r5/` (fixture sleep interaction), `liberty_r3_FAIL/` (dangling FF Liberty alias), `synth_generic_r3_FAIL/` (local old Yosys unsupported syntax), and `validation_discovery_FAIL/` (unrelated ABI package missing from sparse checkout). Historical source/records, including the assumed 7.07 kW PG result, remain byte-identical. The direct test-file invocation avoids unrelated discovery imports.
+
+VM validation ran once from an immutable source package at `/home/ubuntu/w5/dsrom-c-w5-551cf6f8b-r1`, using `~/bin/admit.sh 1` and the host's 12 GB reserve. RAM available was 15.135 GB and disk available 707.570 GB at admission; no other W5 job was observed. Measured child peak was 32.609 MiB. After the one-ulp cold-comparison failure, only model pricing was replayed from `/home/ubuntu/w5/dsrom-c-w5-bd4b1fc79-modelr7`. Both completed directories remain intact. No full-die, analog, P&R or duplicate costly job was launched. The model and contract packet for Arendt/MaxwellPDN is also at `/tmp/dsrom-c-w5-coordination-20261003/`; peer acknowledgment is not claimed.

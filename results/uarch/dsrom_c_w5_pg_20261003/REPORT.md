@@ -1,0 +1,9 @@
+W5 independent component is implemented on `codex/dsrom-c-w5-20261003`, based on Scenario C `4a18e3cc0`. Existing RTL and pinned records are unchanged.
+
+Measured: seven model tests pass. The directed digital fixture passes locally and on agidock128, with zero added scheduled-token cycles and seven added cycles for deliberately late wake. It uses the actual explicit fixture successor 0→2→1→3→0; production W2 adjacency/residence remains unbound. Tests cover stage debt, separate TX/RX debt, both link endpoints, isolation ACK ordering, delayed inrush grant, power-good/relock, reset-retained debt, parity fault, default-off and always-on Engram. VM peak child RSS is 32.609 MiB, admitted with 1 GB reservation and 12 GB reserve. No costly duplicate job was launched.
+
+Model: synthesis inventory is 14 FF bits and 147 generic cells. The conservative Liberty construction allocates 88.89 µm²/controller and 1.91 µW on-rail leakage at SS. A provisional 292-stage-die allocation is about 0.026 mm² and 0.000558 W, excluding links, switches, clamps, external debt, CDC, CTS, fanout and PDN. SS/TT/FF Liberty is pinned; on-rail states provide no qualified off-rail or SerDes standby residual. Wake/relock energy, inrush, droop and production wake cycles remain explicit unknowns.
+
+Gates: directed RTL PASS; deterministic cold-model/Liberty replay PASS; production zero-added-cycles, PG residual, droop, slot/routing and contextual SS/FF PENDING. Engram remains always on. All failures are retained.
+
+Qualified delta against C: dies 0; tok/s, mm² and kW unqualified. The historical assumed 7.07 kW result is not adopted. Latest successor is `model_r7/model.json`; `handoff.json` binds verification and read-only W2/W4 coordination snapshots. Arendt's actual calendar and MaxwellPDN characterization are still required. Peer acknowledgment is not claimed.

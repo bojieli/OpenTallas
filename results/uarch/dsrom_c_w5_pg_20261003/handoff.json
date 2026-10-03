@@ -1,0 +1,72 @@
+{
+  "Engram_always_on": true,
+  "PDN_wake_characterization_and_slot_join": "PENDING_MAXWELLPDN",
+  "RTL_metric_lines_byteidentical": true,
+  "RTL_model_tests": 7,
+  "SSFF_context": "NOT_RUN",
+  "VM_peak_child_RSS_MiB_measured": 32.609375,
+  "adopted": false,
+  "cold_VM_Liberty_byteidentical": true,
+  "cold_VM_model_byteidentical": true,
+  "component_source_commit": "bd4b1fc79",
+  "controller_allocation": {
+    "FF_bits_measured": 14,
+    "area_units": "ASAP7 source cell area in um2; area is a model allocation, not physical closure",
+    "by_corner": {
+      "FF": {
+        "area_um2_predictive_model": 88.89425999999999,
+        "on_rail_leakage_W_upper_model": 9.42483542e-08
+      },
+      "SS": {
+        "area_um2_predictive_model": 88.89425999999999,
+        "on_rail_leakage_W_upper_model": 1.911116522e-06
+      },
+      "TT": {
+        "area_um2_predictive_model": 88.89425999999999,
+        "on_rail_leakage_W_upper_model": 1.086502634e-07
+      }
+    },
+    "constructive_inventory_model": {
+      "DFFASRHQNx1_ASAP7_75t_R": 14,
+      "INVx1_ASAP7_75t_R": 441,
+      "NAND2x1_ASAP7_75t_R": 735
+    },
+    "exclusions": [
+      "isolation clamp",
+      "power switch",
+      "retained external debt",
+      "CDC",
+      "CTS",
+      "fanout buffering",
+      "PDN",
+      "SerDes"
+    ],
+    "generic_cell_count_measured": 147
+  },
+  "delta_against_C_qualified": {
+    "dies": 0,
+    "kW": null,
+    "mm2": null,
+    "tok_s": null
+  },
+  "droop_V": null,
+  "historical_paths_changed": false,
+  "host_admission_reservation_GB": 1,
+  "host_admission_reserve_GB": 12,
+  "hub_routing_layers": "NOT_RUN",
+  "inrush_peak_A": null,
+  "late_wake_added_cycles_measured": 7,
+  "latest_model": "results/uarch/dsrom_c_w5_pg_20261003/model_r7/model.json",
+  "latest_model_sha256": "b399996f252d06270b15ab9bb21a46518200fde2794b3108e20cecd9846cc74a",
+  "production_calendar_and_neighbor_join": "PENDING_W2_ARENDT",
+  "qualified_PG_static_kW": null,
+  "raw_RTL_transcript_byteidentical": false,
+  "raw_transcript_difference": "VM Icarus adds a source-located $finish message after the same PASS line; raw logs retained",
+  "relock_energy_J": null,
+  "scheduled_added_cycles_measured_directed_fixture": 0,
+  "schema": "dsrom_c_w5_final_handoff_v1",
+  "scope": "independent default-off component, not deployed accelerator or analog guarantee",
+  "switched_capacitance_F": null,
+  "wake_cycle_inputs": "production null: no free wake, CDC or inrush-wait credit",
+  "wake_energy_J": null
+}
