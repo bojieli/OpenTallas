@@ -1,0 +1,27 @@
+{
+  "BOUND_MISSING": true,
+  "acceptance_scope": "35 new normalized-packet/source tests plus123 prior=158 PASS. Synthetic callbacks establish validator behavior only; actual current enrollment unavailable.",
+  "actual_entry": "dsrom_I66_bank_VM_deadline_join.enrolled_join(provenance, slots, service, lifecycle)",
+  "actual_entry_prerequisites": [
+    "Current PHW10 source/binary/four-rank program/field/runtime enrollment",
+    "Compiled admission/bank/VM-lease callback sources",
+    "Actual normalized source-read journal and observed R+2 tags",
+    "Reviewed finite service/calendar preimages and shared reservation",
+    "Full phase protocol/all-root interception/all-writer exclusion bundles with reviewed capacities and identical visibility/value/credit edges"
+  ],
+  "actual_journal": null,
+  "entry": "python3 tools/dsrom_I66_bank_VM_deadline_join.py --verify",
+  "lifecycle_flags": "Bank rearm after own actual visibility+positive return+packet/source retirement; VM version held through actual SU read/tag; no downstream payload seat.",
+  "live_job": null,
+  "no_build_or_runtime": true,
+  "no_engine_changes": true,
+  "prerequisite": "69432b644657ec84073ebb8178f4f90520946886",
+  "source_result": "Two wait2 SU operand obligations, ten wait0, no explicit ME/QE wait. Four distinct allocated VM frames through I69. Bank rearm and VM address/version release are separate.",
+  "unresolved": [
+    "Exact observed max frames with SU/read/tag tail",
+    "Finite actual ROM-origin-to-consumer deadline",
+    "c9 root phase/reset release and positive credit/CDC",
+    "Implementation/resource price for retained VM ownership and any selected admission guard"
+  ],
+  "worktree": "/tmp/opentallas-I66-reserved-service-observer-20261002"
+}
