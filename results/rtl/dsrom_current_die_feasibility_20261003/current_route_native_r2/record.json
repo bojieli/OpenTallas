@@ -1,0 +1,45 @@
+{
+  "source_grt": "4b7a99ca5943fed904f2f9ec419c811612a164d8",
+  "source_native_r2": "caf733122ebf4f9fab44b1abf623cc882bd211b1",
+  "jobs": {
+    "grt_D_shard0_r1": {
+      "path": "/srv/opentallas-scratch/codex/dsrom-current-die/jobs/grt_D_shard0_r1",
+      "exit": "exit=1\n2026-10-03T13:31:40Z\n"
+    },
+    "pin_D_shard0_r2": {
+      "path": "/srv/opentallas-scratch/codex/dsrom-current-die/jobs/pin_D_shard0_r2",
+      "exit": "exit=1\n2026-10-03T13:28:14Z\n"
+    },
+    "pdn_D_shard0_r2": {
+      "path": "/srv/opentallas-scratch/codex/dsrom-current-die/jobs/pdn_D_shard0_r2",
+      "exit": null
+    }
+  },
+  "full_die_admitted": false,
+  "qframe_D_signoff_pending": true,
+  "files": {
+    "grt.log": {
+      "original": "/srv/opentallas-scratch/codex/dsrom-current-die/jobs/grt_D_shard0_r1/actual.log",
+      "sha256": "67d754c761d01b8669b499d843339fe24066cec89bb094ebbb8c28372dc8190c"
+    },
+    "pin_q.log": {
+      "original": "/srv/opentallas-scratch/codex/dsrom-current-die/jobs/pin_D_shard0_r2/q.log",
+      "sha256": "ee58424e23704274d11788ae0c5e5a67a28892cec8e697766a239c92e21eb747"
+    },
+    "D_route.log": {
+      "original": "/srv/opentallas-scratch/claude/qframe/D_r2/work/orfs/logs/asap7/opentallas_ot_v41_rom_elem_q_w10_asap7_dsrom_qframe_D_20261003/base/5_2_route.log",
+      "sha256": "ac35ffc53e65b6d300df1d52cbc3189e9ba30d701854257f3c6200c6cb8d962e"
+    },
+    "D_route_drc.rpt": {
+      "original": "/srv/opentallas-scratch/claude/qframe/D_r2/work/orfs/reports/asap7/opentallas_ot_v41_rom_elem_q_w10_asap7_dsrom_qframe_D_20261003/base/5_route_drc.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "tests": "21 tests PASS: current graph 6 and read-only handover collector 15",
+  "outcomes": {
+    "current_graph": "FAIL_GRT_RESOURCE_LIMIT usage4104 limit4100; no completed route",
+    "native_pin": "FAIL_NO_ACCESS_POINT one/clk ds_q",
+    "qframe_D": "DETAIL_ROUTE_DRC0; inherited extraction/signoff chain pending",
+    "PDN": "grid generated; IR terminal pending"
+  }
+}
