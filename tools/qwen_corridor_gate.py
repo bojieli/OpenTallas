@@ -513,9 +513,16 @@ def write(root: Path, chains=None):
 
 
 # ------------------------------------------------------------------ launch
+AC = '_ac'   # diagnostic suffix: global route with -allow_congestion, so detail route runs on an overflowing guide
+
+
+def base_variant(v):
+    return v[:-len(AC)] if v.endswith(AC) else v
+
+
 def argv(v, jobroot: Path, src_root: Path):
     P = plan()
-    var = P['variants'][v]
+    var = P['variants'][base_variant(v)]
     t = P['tests'][var['test']]
     low = t['name'].lower()
     L, Wd = var['length_um'], var['width_um']
@@ -541,6 +548,9 @@ def argv(v, jobroot: Path, src_root: Path):
          '--orfs-var', 'DONT_BUFFER_PORTS=1', '--orfs-var', 'PLACE_DENSITY_LB_ADDON=',
          '--keep-heavy-artifacts', '--nickname-tag', 'qcg_' + v.lower(),
          '--source-root', str(src_root), '--output', str(job / 'physical.json')]
+    if v.endswith(AC):
+        a[a.index('--keep-heavy-artifacts'):a.index('--keep-heavy-artifacts')] = [
+            '--orfs-var', 'GLOBAL_ROUTE_ARGS=-congestion_report_iter_step 5 -verbose -allow_congestion']
     return a
 
 
@@ -701,7 +711,7 @@ def corner_sta(work: Path, nickname: str):
 
 def record(v, jobroot: Path, src_root: Path):
     P = plan()
-    var = P['variants'][v]
+    var = P['variants'][base_variant(v)]
     t = P['tests'][var['test']]
     job = jobroot / v
     work = job / 'work'
@@ -735,6 +745,7 @@ def record(v, jobroot: Path, src_root: Path):
                'INCOMPLETE')
     return dict(
         schema='opentallas.qwen-corridor-gate.v1', variant=v, test=t['name'], top=t['top'],
+        diagnostic_allow_congestion=v.endswith(AC),
         question='does the r2 corridor route at its netted width (demand / raw same-direction tracks on the assigned '
                  'layers), with real stations, repeaters, CTS, PG and tile pins, and close SS setup / FF hold?',
         geometry=dict(width_um=var['width_um'], length_um=var['length_um'], axis=t['axis'], zones=t['zones'],
@@ -833,7 +844,7 @@ def summary(out_dir: Path):
             recs[f.name] = d
     series = {}
     for name, d in recs.items():
-        if 'attempt' in name:
+        if 'attempt' in name or d.get('diagnostic_allow_congestion'):
             continue
         key = f"{d['test']}_{d['pg']['region']}"
         series.setdefault(key, []).append(dict(
@@ -872,6 +883,11 @@ def summary(out_dir: Path):
                                if v is not None})
     return dict(schema='opentallas.qwen-corridor-gate-verdict.v1', r2_record=R2_REC, r2_ratio=r2_ratio,
                 series=gate, attempts=[n for n in recs if 'attempt' in n],
+                diagnostics={n: dict(grt_overflow=(d['grt']['final'] or {}).get('overflow'),
+                                     drt_final=d['drt']['final_violations'], drt_completed=d.get('drt_completed'),
+                                     ss_setup_ns=d['timing']['ss_setup_wns_ns'], ff_hold_ns=d['timing']['ff_hold_wns_ns'],
+                                     ratio=d['geometry']['demand_over_raw'])
+                             for n, d in recs.items() if d.get('diagnostic_allow_congestion')},
                 density_applied=dict(applied, note='tile_column and vertical_spine (both M7/M9 vertical; the spine '
                                      'sits under the lighter 2.5% hub PG) take the tile-column series; the horizontal '
                                      'link takes its own r2-netting (tile-field PG) series; in_strip_fan (0.114) is '
