@@ -6359,9 +6359,16 @@ def qwen_posted_kv_model(records):
                                "measured gain >=1% after token composition", "contextual SS/FF and hub routing"])
 
 
+def clock_region_rows():
+    """Default-off regional-clock candidate cost, including existing combined rows."""
+    from clock_region_candidate_composition import build
+    return build(ROOT)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--clock-region", action="store_true", help="optionC CLOCK_REGION candidate central/bound combined rows; not measured/adopted")
     ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
     ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
@@ -6382,6 +6389,13 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.clock_region:
+        payload = json.dumps(clock_region_rows(), indent=2, sort_keys=True) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.dsrom_s82 or a.qwen_posted_kv_baseline:
         if a.dsrom_s82:
             payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"
