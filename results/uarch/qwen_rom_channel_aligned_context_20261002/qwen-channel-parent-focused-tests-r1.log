@@ -1,0 +1,18 @@
+F.....                                                                   [100%]
+=================================== FAILURES ===================================
+____________ test_current_source_and_handoff_discrepancy_preserved _____________
+
+model = {'PHY_clock_driver_area_um2': 0.9331200000000001, 'PHY_local_release_FFs': 8, 'PHY_local_release_reserved_area_um2': 4.19904, 'PHY_release_recovery_removal_and_ACK_return_qualified': False, ...}
+
+    def test_current_source_and_handoff_discrepancy_preserved(model):
+>       assert model==C.R.obj(C.OUT/'model-r6.json')
+E       AssertionError: assert {'PHY_clock_d...': False, ...} == {'PHY_clock_d...': False, ...}
+E         
+E         Omitting 80 identical items, use -vv to show
+E         Differing items:
+E         {'four_PHY_clock_feeds': {'ff': {'PHY_CLK_cap_fF': 50.0, 'PHY_min_pulse_ps': 400.0, 'cell': 'BUFx12_ASAP7_75t_R', 'inp...: {'PHY_CLK_cap_fF': 50.0, 'PHY_min_pulse_ps': 400.0, 'cell': 'BUFx12_ASAP7_75t_R', 'input_half_period_ps': 500, ...}}} != {'four_PHY_clock_feeds': {'ff': {'PHY_CLK_cap_fF': 50.0, 'PHY_min_pulse_ps': 400.0, 'cell': 'BUFx12_ASAP7_75t_R', 'inp...: {'PHY_CLK_cap_fF': 50.0, 'PHY_min_pulse_ps': 400.0, 'cell': 'BUFx12_ASAP7_75t_R', 'input_half_period_ps': 500, ...}}}
+E         Use -v to get more diff
+
+tests/test_qwen_rom_channel_parent_admission.py:15: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_qwen_rom_channel_parent_admission.py::test_current_source_and_handoff_discrepancy_preserved

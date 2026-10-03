@@ -1,0 +1,22 @@
+....F.........                                                           [100%]
+=================================== FAILURES ===================================
+_______________ test_ack_topology_every_group_no_constant_ready ________________
+
+records = ({'PG_ledger_sha256': '544e856c46e6a75d3fb7d84c40564cf8c8829dc558a1744ae86d4d0f601b1e3e', 'PnR': False, 'accepted_dema...0', 'native_ACK_receiver.ff1'], 'ACK_regional_depths': {'(0, 0)': 2, '(0, 1)': 6, '(0, 2)': 8, '(2, 0)': 2, ...}, ...})
+
+    def test_ack_topology_every_group_no_constant_ready(records):
+        m,g=records;incoming=collections.defaultdict(list)
+        for e in g['ACK_edges']:incoming[e['sink']].append(e['driver'])
+        pending=[g['ACK_root']];seen=set()
+        while pending:
+            n=pending.pop()
+            if n in seen:continue
+            seen.add(n);pending.extend(incoming[n])
+        assert {q['inversions'][1] for q in g['local_release_groups']}<=seen
+>       assert len(g['ACK_regional_roots'])==7
+E       AssertionError: assert 6 == 7
+E        +  where 6 = len(['native_ACK_0_0_1_0', 'native_ACK_0_1_5_0', 'native_ACK_0_2_7_0', 'native_ACK_2_0_1_0', 'native_ACK_2_1_5_0', 'native_ACK_2_2_7_0'])
+
+tests/test_qwen_rom_native_release.py:80: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_qwen_rom_native_release.py::test_ack_topology_every_group_no_constant_ready

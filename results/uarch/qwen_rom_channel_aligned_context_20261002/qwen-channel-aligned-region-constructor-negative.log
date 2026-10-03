@@ -1,0 +1,72 @@
+Process 2294618: python tools/qwen_rom_channel_aligned_context.py
+Python v3.10.12 (/usr/bin/python3.10)
+
+Thread 2294618 (active+gil)
+    <genexpr> (qwen_rom_native_collector_clock.py:53)
+        Arguments:
+            .0: <list_iterator at 0x792474be9000>
+        Locals:
+            a: [231.552, 140.4, 353.376, 203.31]
+    put (qwen_rom_native_collector_clock.py:53)
+        Arguments:
+            self: <Sites at 0x79247489a050>
+            pos: [34.07, 1056.5865762711865]
+            width: 1.404
+            reg: (0, 2)
+        Locals:
+            xmin: 0
+            xmax: 130.464
+            ymin: 489.888
+            ymax: 700
+            xlo: 0
+            xhi: 2390
+            ylo: 1815
+            yhi: 2591
+            request_x: 618
+            request_y: 3913
+            radius: 1434
+            dy: -1338
+            y: 2575
+            dx: 96
+            occupied: [(99, 125), (164, 190), (229, 255), (294, 320), (359, 385), (423, 449), (488, 514), (553, 579), (618, 644), (683, 709), ...]
+    source_placement (qwen_rom_native_collector_clock.py:89)
+        Locals:
+            old: {"added_primitive_cells": {...}, "complete_gate_PASS": False, "entry_ports": {"clock": 2, "reset": 3}, ...}
+            rows: [{"cell": "DFFHQNx1_ASAP7_75t_R", "clock_domain": "stream_1p2GHz", "group": "logic_clock", ...}, {...}, {...}, {...}, ...]
+            direct: <set at 0x7924747b0820>
+            cells: {"A2O1A1Ixp33_ASAP7_75t_R": {"size_um": [0.324, 0.27], ...}, ...}
+            coords: {"$abc$1128272$auto$blifparse.cc:397:parse_blif$1200119": [210.848, 680.4], ...}
+            macro_rect: [[4.32, 2.16, 126.144, 65.07], [4.32, 71.28, 126.144, 134.19], [4.32, 140.4, 126.144, 203.31], ...]
+            placements: {"u_tile.g_col[0].g_bank[0].u_rom": {"origin_um": [4.32, 2.16], "size_um": [121.824, 62.91], "orientation": "R0", ...}, ...}
+            rowdict: {...}
+            macro_names: [{"cell": "ot_rom_4096x266_m8", "clock_domain": "stream_1p2GHz", "group": "ROM_clock", ...}, {...}, {...}, {...}, {...}, ...]
+            kv: 2
+            r: {"cell": "DFFASRHQNx1_ASAP7_75t_R", "clock_domain": "stream_1p2GHz", "group": "logic_clock", ...}
+            c: 1
+            bank: 4
+            x: 231.552
+            y: 278.64000000000004
+            name: "$auto$ff.cc:337:slice$216328"
+            spec: {"area": {"array_efficiency": 0.2749982016544778, "array_height_um": 14.04, "array_width_um": 78.0192, ...}, ...}
+            w: 1.404
+            h: 41.04
+            lef: ?
+            block: "    DIRECTION INPUT ;\n    USE CLOCK ;\n    SHAPE ABUTMENT ;\n    PORT\n      LAYER M4 ;\n      RECT 0.000 0.768 0.024 0.79..."
+            rect: [0, 0.768, 0.024, 0.792]
+            sites: <Sites at 0x79247489a050>
+            capture: {"scope": "PARENT_ACTUAL_MAP_PARTIAL_CONNECTIVITY_NOT_SURVIVAL_OR_PHYSICAL_PASS", ...}
+            selected: <set at 0x792474b76f80>
+            m: {"macro": "u_tile.g_col[1].g_bank[4].u_rom", ...}
+            origin: [231.552, 278.64000000000004]
+            i: 255
+            p: {"origin_um": [29.862, 644.22], "orientation": "R0", "size_um": [1.404, 0.27], "region": [0, 2]}
+            typ: "DFFASRHQNx1_ASAP7_75t_R"
+    construct (qwen_rom_native_collector_clock.py:132)
+    generate (qwen_rom_native_collector_clock.py:162)
+        Locals:
+            root: <PosixPath at 0x7924747ceb60>
+    generate (qwen_rom_channel_aligned_context.py:25)
+        Locals:
+            root: <PosixPath at 0x7924747ceda0>
+            native_input: <PosixPath at 0x7924747ceec0>
+    <module> (qwen_rom_channel_aligned_context.py:50)

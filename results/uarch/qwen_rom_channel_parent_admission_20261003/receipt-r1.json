@@ -1,0 +1,118 @@
+{
+  "PnR": false,
+  "Russell_agent": "01a0fd4d-36ca-7780-9515-f0094cf8cae2",
+  "bandwidth": {
+    "actual_measured_sustained_Bps": null,
+    "reason": "No qualified instantiated successor controller/PHY strict refresh/ACK service measurement; analytical calendar is conditional.",
+    "required_sustained_Bps_per_stack": 113135616000
+  },
+  "base_commit": "28d01b35ac5c82595e5c8a96200cd1f6ecb4269f",
+  "coordination_transport": "committed peer handoff; no direct agent transport available",
+  "current_cut": {
+    "assigned_fill_control": 7973,
+    "available_legacy": 1360,
+    "clock_reset_reserved": 896,
+    "fill": 7336,
+    "legacy_deficit": 6613,
+    "partitioned_channel_capacity": 9520,
+    "remaining_spare": 651,
+    "required": 7973,
+    "shared_control": 637
+  },
+  "die": {
+    "area_mm2": 815.0,
+    "columns": 68,
+    "height_um": 32965.38,
+    "rows": 23,
+    "unused_tile_footprints": 28,
+    "width_limit_um": 26000,
+    "width_um": 24722.906273187207
+  },
+  "finite_service_deficit_us": 79.56796666666669,
+  "handoff_discrepancy": {
+    "committed_conditional_us": 412.9013,
+    "committed_service_mm2": 18.36452103552,
+    "larger_area_reserved": true,
+    "reported_conditional_us": 361.0713,
+    "reported_model_source_available": false,
+    "reported_service_mm2": 18.381568
+  },
+  "known_area_mm2": 812.19873659528,
+  "local_release": {
+    "actual_local_groups": 7137,
+    "area_scope": "Allocated mapped subtotal and explicit primitives; ACK receiver data/hold and whole source launch integration remain unpriced. Not a completed physical provider.",
+    "corners": {
+      "ff": {
+        "ACK_out_of_characterization": 6448,
+        "controlled_reset_failures": 0,
+        "nominal_skew_ps": 74.21113092560245,
+        "raw_reset_failures": 0
+      },
+      "ss": {
+        "ACK_out_of_characterization": 6520,
+        "controlled_reset_failures": 0,
+        "nominal_skew_ps": 138.49441294398662,
+        "raw_reset_failures": 0
+      }
+    },
+    "cuts": {
+      "0:130.464": {
+        "clock": 5,
+        "reservation_each": 64,
+        "reset_ACK": 8
+      },
+      "0:227.232": {
+        "clock": 5,
+        "reservation_each": 64,
+        "reset_ACK": 9
+      },
+      "1:393.12": {
+        "clock": 2,
+        "reservation_each": 64,
+        "reset_ACK": 4
+      },
+      "1:489.888": {
+        "clock": 5,
+        "reservation_each": 64,
+        "reset_ACK": 10
+      },
+      "1:700.0": {
+        "clock": 3,
+        "reservation_each": 64,
+        "reset_ACK": 6
+      },
+      "1:796.768": {
+        "clock": 2,
+        "reservation_each": 64,
+        "reset_ACK": 7
+      }
+    },
+    "model_sha256": "b518fd64377787fde9446c5420f19ef14c579333dac22dbce6c58b68ad1601de",
+    "new_local_FFs": 14274,
+    "reserved_area_um2": 78077.38715971477,
+    "selected_map_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+    "source_clock_pins": 102352,
+    "source_counts_not_new_map": true,
+    "source_reset_pins": 56683,
+    "total_clock_pins": 116628,
+    "total_reset_pins": 70959
+  },
+  "model": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/model-r6.json",
+  "model_sha256": "88f149d6b42c42db4beda418c45a9e30d019351e4b6d0b638441c7225f461d46",
+  "named_allocation": "QROM-SMIN6-KV7-NATIVEPHY-68C",
+  "next_construction": "Balance actual channel-aligned leaf clocks and characterize finite ACK wires; recheck all raw/local release endpoints. Bind 56 assembly pools/seven fill roots and held controller families to every physical cut and actual producer acceptance calendar before build.",
+  "owner": "Ampere",
+  "remaining_before_unknowns_mm2": 2.801263404720018,
+  "remaining_failures": [
+    "finite service calendar exceeds target",
+    "SS/FF clock skew exceeds unchanged 20ps construction demand",
+    "startup ACK outputs outside characterized load domain",
+    "controller/PHY strict refresh, held ACK and sustainable bandwidth unmeasured",
+    "complete source epoch/init/abort/producer accepted-demand binding absent",
+    "exclusive PG/via/OBS/pin landing and every service-family cut unproved",
+    "whole field root distribution and transport pipeline/hold costs incomplete"
+  ],
+  "schema": "QROM_CHANNEL_PHY_CONTROLLER_CLOCK_PG_HANDOFF_R1",
+  "source_map_admission": false,
+  "verdict": "FAIL_G0_CONSTRUCTED_GEOMETRY_AND_LOCAL_CUTS_ONLY"
+}
