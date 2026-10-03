@@ -339,6 +339,11 @@
     "queue_pointer_and_count_bits": 23,
     "queue_FF_cell_floor_um2": 78829.97760000001,
     "queue_50pct_reservation_mm2": 0.15765995520000003,
+    "native_service_sum_slow_edges_without_external_stall": {
+      "gather266_reads266_packets": 9576,
+      "topk256_reads128_packets": 5888
+    },
+    "sum_scope": "native dispatch/ACK service only; caller/topk passes and all forward/reverse receipt/reissue/consumer stall edges remain additive, not token latency or measured cycles",
     "clock_reset_site_cost": "unmapped, not free; no parent physical admission",
     "read_capture": "existing two512bit skids reused; no additional numerical stage",
     "read_identity": "word-address cookie captured only on actual request acceptance",
