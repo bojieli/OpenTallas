@@ -75,6 +75,8 @@ def selected(enabled=False):
 
 def price():
     v,m,maps=selected(True);old=F.build(tree_mode='banded');p=instruction_price()
+    old_stages=F.link_stages(old);new_stages=v.link_stages(m)
+    extra_stages=max(x['stages_430'] for x in new_stages['paths'])-max(x['stages_430'] for x in old_stages['paths'])
     def wire(model):
         by={i.name:i for i in model['insts']}
         # Rectilinear centre MST upper star estimate, not a routed length.
@@ -95,7 +97,10 @@ def price():
         extra_instruction_edges_per_hop=1,critical_hops_upper=44,
         token_delta_cycles='sum exact source critical issue path hops; no <=0.14% claim without program/calendar',
         instruction_component_price=p),
-      lower_split=maps,lower_link_widths_unchanged=True,additional_link_pipeline_cycles=0,
+      lower_split=maps,lower_link_widths_unchanged=True,
+      link_stages_before=old_stages,link_stages_after=new_stages,
+      additional_link_pipeline_cycles=extra_stages*2*36,
+      additional_link_pipeline_us=extra_stages*2*36/1200,
       link_registered_reach_limit_um=430.56,existing_corridor_token_delta_cycles=432,
       modeled_wire_bit_um_before=wire(old),modeled_wire_bit_um_after=wire(m),
       PG=dict(rounded_per_net_coverage=v.REGION_PG,full_die_IR_required=True,

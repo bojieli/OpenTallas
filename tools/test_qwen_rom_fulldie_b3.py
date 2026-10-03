@@ -35,6 +35,6 @@ class B3Tests(unittest.TestCase):
         r=B.price();self.assertEqual(r['PG']['rounded_per_net_coverage']['strip'],.24)
         self.assertFalse(r['PG']['actual_IR_pass']);self.assertFalse(r['qualification']['SSFF'])
         self.assertTrue(r['lower_link_widths_unchanged'])
-        self.assertEqual(r['additional_link_pipeline_cycles'],0)
+        self.assertEqual(r['additional_link_pipeline_cycles'],72)
 
 if __name__=='__main__':unittest.main()
