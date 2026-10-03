@@ -1,0 +1,105 @@
+{
+  "artifacts": [
+    {
+      "bytes": 3327,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/check_figures.log",
+      "sha256": "e3aaa9cced6a30ec2f79491edc35f94d3852e26d1ab30ebd95fd8856e47bc6a5"
+    },
+    {
+      "bytes": 239,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/cold_replay.json",
+      "sha256": "5c057ec751c25be9278c6d58e00864e60c54a68e6a671d8b238f1a9685a521fb"
+    },
+    {
+      "bytes": 4011,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/handoff.json",
+      "sha256": "9bfb3b4511256b5a9598da234673a7166ba3765a3e66f0aed39ec18deec9f347"
+    },
+    {
+      "bytes": 2104,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/input_manifest.json",
+      "sha256": "a5dda94f212cd12ecd9e557f702f21851ec5b705e96ead6eb44f7451d7877d62"
+    },
+    {
+      "bytes": 4213,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/inputs/PC.sv",
+      "sha256": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf"
+    },
+    {
+      "bytes": 2365,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/inputs/RF.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "bytes": 217841,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/inputs/context_geometry.json.gz",
+      "sha256": "7345715dd286663c250837f496f8fd753e29a2ca877a0ba8e1c72a82c9d91f38"
+    },
+    {
+      "bytes": 4056,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/inputs/installed_model.json",
+      "sha256": "a15297e010ca1e16d36f217eb13b8a9124362cd6edbed0567018477606162b45"
+    },
+    {
+      "bytes": 1113,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/inputs/shared.sv",
+      "sha256": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02"
+    },
+    {
+      "bytes": 3773,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/inputs/system.sv",
+      "sha256": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197"
+    },
+    {
+      "bytes": 428737,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/inputs/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    {
+      "bytes": 9824,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/model.json",
+      "sha256": "1789b4d42580500ca840b0b892beae9f3cb44812ca2d546be7c2d8864f150acc"
+    },
+    {
+      "bytes": 1153,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/tests_bound_storage.log",
+      "sha256": "6b53612d5fbcc16ba1364aaa25eec2635444795c4c942af9cba75200573a3051"
+    },
+    {
+      "bytes": 1056,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/tests_final.log",
+      "sha256": "f457d597115f2a867fb5e839e4e0e19515f07660505e3da2deab57b7b8decee4"
+    },
+    {
+      "bytes": 1056,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/tests_r1.log",
+      "sha256": "f7f328933ce5f0ce13de2e83c7914c72b9c8a22076592bed9775991697568acc"
+    },
+    {
+      "bytes": 1056,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/tests_r2.log",
+      "sha256": "3bf0a6a63fd65d9c22a7a89ca5d97710889b4b09e8e021523eda11ba4cbd0254"
+    },
+    {
+      "bytes": 1056,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/tests_r3.log",
+      "sha256": "2def5ec2ad157fa80961740f52cdf6e8214e17f7608c479ec4972c8354da7bf5"
+    },
+    {
+      "bytes": 1153,
+      "path": "results/uarch/h4_hbm_pc_completion_owner_20261003/tests_shared_owner.log",
+      "sha256": "3b1b18b4102f935184fd468acf05078ec6875e533ae4afb429f60f00b9af996d"
+    }
+  ],
+  "schema": "PC_COMPLETION_OWNER_ARTIFACTS_R1",
+  "source_pins": [
+    {
+      "path": "tools/h4_hbm_pc_completion_owner.py",
+      "sha256": "7f2bb0c1f50d9b3dfcb32a86bc095f88da88b9beaab858b39b3d70c71d5d58bb"
+    },
+    {
+      "path": "tests/test_h4_hbm_pc_completion_owner.py",
+      "sha256": "7e58908b86c4f6bcc57d2c174611d9d5cd4a6b281c4e6537174268e964e9878b"
+    }
+  ]
+}

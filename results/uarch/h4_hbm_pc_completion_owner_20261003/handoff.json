@@ -1,0 +1,81 @@
+{
+  "R2_source": "8ba7384cbb25edf55e29b99429242e392e35b24a",
+  "area_screen_mm2_per_die": 158.7242151936,
+  "connected_delta": {
+    "ACK": "RF common two-copy ACK/shared done matched to held local accepted-request owner; valid/ready required",
+    "completion": "match exact tag and direction; indexed reserved sink always captures valid write done, duplicate/unmatched faults without retire",
+    "generation": "no modulo wrap; exhaustion refuses new request; reset requires externally proven quiescence",
+    "held_client_completion": "new c_wr_done_ready accepts held restored original tag; backend p_wr_done still no-ready and captured independently; read capture held through c_rsp_ready",
+    "request": "reserve context before p_req_v; physical tag client3:gen25:slot7; retain original32bit client tag",
+    "retire": "replace installed rsp/write counter decrement with exact post-consumer reverse grant"
+  },
+  "emitted_event_keys": [
+    "reserve",
+    "completion_match",
+    "completion_capture",
+    "dispatch",
+    "local_ACK",
+    "visibility",
+    "consumer",
+    "reverse_match",
+    "credit_release"
+  ],
+  "engine_build_ready": false,
+  "entrypoint": "tools/h4_hbm_pc_completion_owner.py",
+  "full_context": {
+    "DeepSeek": {
+      "existing_contacts_do_not_cover_new_FFs": true,
+      "extra_clock_sinks": 20418048,
+      "fit": false,
+      "new_clock_PG_current_upper": null,
+      "retained_SMs": 32,
+      "retained_clock_contacts": 13248,
+      "retained_cut_count": 6692,
+      "retained_cuts_do_not_admit_new_endpoint_buses": true,
+      "retained_plus_unallocated_screen_mm2": 630.6042706137599,
+      "retained_reserved_die_mm2": 471.8800554201599,
+      "unallocated_candidate_area_mm2_ASSUMED": 158.7242151936
+    },
+    "Qwen": {
+      "existing_contacts_do_not_cover_new_FFs": true,
+      "extra_clock_sinks": 20418048,
+      "fit": false,
+      "new_clock_PG_current_upper": null,
+      "retained_SMs": 32,
+      "retained_clock_contacts": 12480,
+      "retained_cut_count": 6692,
+      "retained_cuts_do_not_admit_new_endpoint_buses": true,
+      "retained_plus_unallocated_screen_mm2": 616.2082065203199,
+      "retained_reserved_die_mm2": 457.48399132671994,
+      "unallocated_candidate_area_mm2_ASSUMED": 158.7242151936
+    }
+  },
+  "hardware_admitted": false,
+  "lease_intervals": [
+    "reservation->backend capture",
+    "capture->local dispatch",
+    "local issue->common ACK accepted",
+    "ACK->visibility",
+    "visibility->consumer",
+    "consumer->matching reverse acceptance",
+    "slot reuse after credit release"
+  ],
+  "model": "results/uarch/h4_hbm_pc_completion_owner_20261003/model.json",
+  "next_gate": "real intervals may shrink envelope; otherwise protected banked memory/controller and connected slot/clock/PG/cut allocation must be sized before RTL",
+  "schema": "PC_COMPLETION_OWNER_TO_DEWEY_GOODALL_R1",
+  "source_base": "63773dd57c1a4b6dd3a927c1602fedc9eb81ce93",
+  "storage_bits_per_die": 20418048,
+  "to_Dewey": [
+    "emit exact operator/PC/lease/source event IDs and all finite hold/contender intervals for reserve through matching reverse release",
+    "prove accepted live owner upper by PC/client and shared local SM sink; only this may narrow12288contexts",
+    "compose backend nonbackpressured completion arrival with reserved sink and four-class control update queue",
+    "existing producer ACK, C0/RMW, I64 and CDC charges referenced once by eventID; no automatic added latency",
+    "proposed controller pipeline edges are not measured target-clock timing; do not convert512softwareticks",
+    "Resolve source sector-child->4096bit RF or512bit shared parent grouping before common ACK; candidate assembly storage priced, dataflow not installed"
+  ],
+  "to_Goodall": [
+    "provide request-generation/physical-tag/source-home/lease linkage, backend write visibility and local consumer origin",
+    "no backend completion or stored checkpoint metadata substitutes local ACK/visibility/consumer/reverse"
+  ],
+  "validated_tests": 11
+}

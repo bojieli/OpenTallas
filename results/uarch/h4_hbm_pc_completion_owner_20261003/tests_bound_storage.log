@@ -1,0 +1,16 @@
+test_causal_order_and_lineage_required (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_exact_replay (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_full_no_ready_capture_capacity_and_no_backend_retire (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_generation_exhaustion_never_wraps (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_generation_stale_after_reuse (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_interval_join_once_only_missing_and_unknown_refuse (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_local_owner_blocks_other_until_common_ACK (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_read_data_held_and_original_tag_restored (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_shared_SM_owner_across_PC_tag_collision (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_source_and_storage_complete_protected_envelope (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+test_unmatched_and_wrong_direction_never_retire (test_h4_hbm_pc_completion_owner.OwnerTests) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.331s
+
+OK

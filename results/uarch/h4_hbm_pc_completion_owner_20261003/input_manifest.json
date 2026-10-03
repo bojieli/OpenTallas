@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    {
+      "archive": "inputs/PC.sv",
+      "bytes": 4213,
+      "origin": "8ba7384cbb25edf55e29b99429242e392e35b24a:results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/PC.sv",
+      "sha256": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf"
+    },
+    {
+      "archive": "inputs/RF.sv",
+      "bytes": 2365,
+      "origin": "8ba7384cbb25edf55e29b99429242e392e35b24a:results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/RF.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "archive": "inputs/shared.sv",
+      "bytes": 1113,
+      "origin": "8ba7384cbb25edf55e29b99429242e392e35b24a:results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/shared.sv",
+      "sha256": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02"
+    },
+    {
+      "archive": "inputs/system.sv",
+      "bytes": 3773,
+      "origin": "8ba7384cbb25edf55e29b99429242e392e35b24a:results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/system.sv",
+      "sha256": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197"
+    },
+    {
+      "archive": "inputs/installed_model.json",
+      "bytes": 4056,
+      "origin": "8ba7384cbb25edf55e29b99429242e392e35b24a:results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/model.json",
+      "sha256": "a15297e010ca1e16d36f217eb13b8a9124362cd6edbed0567018477606162b45"
+    },
+    {
+      "archive": "inputs/uarch_model.py",
+      "bytes": 428737,
+      "origin": "63773dd57c1a4b6dd3a927c1602fedc9eb81ce93:tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    {
+      "archive": "inputs/context_geometry.json.gz",
+      "bytes": 217841,
+      "origin": "63773dd57c1a4b6dd3a927c1602fedc9eb81ce93:results/uarch/h4_hbm_gateway_via_arrays_20261002/model.json.gz",
+      "sha256": "7345715dd286663c250837f496f8fd753e29a2ca877a0ba8e1c72a82c9d91f38"
+    }
+  ],
+  "schema": "HBM_PC_OWNER_INPUTS_R1"
+}
