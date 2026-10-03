@@ -1,0 +1,2026 @@
+{
+  "actual_installed_port_events_observed": false,
+  "bitcheck": {
+    "FMAX_bit_mismatches": 0,
+    "constant_bit_mismatches": 0,
+    "negative_bit_mismatches": 0,
+    "words": 128
+  },
+  "finite_model": {
+    "RF_source": {
+      "archive": "results/uarch/c0_pc40_payload_lease_20261003/inputs/ot_gpu_rf_service.sv",
+      "origin_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+      "origin_path": "rtl/gpu/ot_gpu_rf_service.sv",
+      "scope": "source interface/control; no installed connector or timing claim",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "alias_fence": "RF read response consumed before write; constant slot18 reused only after XOR producer consumer/reverse",
+    "bank_payload_bytes": 32,
+    "banks": 16,
+    "clock_cost_scope": "existing provisional V1 ticks; exact CDC/route/corner service must be owner-priced before build",
+    "default_enabled": false,
+    "domain_policy_GHz": {
+      "RF": 1.2,
+      "serial_chain": 0.9
+    },
+    "finite_resources": {
+      "native_owners": 1,
+      "pending_RF_transactions": 1,
+      "read_ports": 2,
+      "workspace_vectors": 3,
+      "write_ports": 1
+    },
+    "installed_call_admitted": false,
+    "mirrors": 2,
+    "missing_physical_inputs": [
+      "installed rank0/SM0 RF connector and source-owned dispatch/commonACK mux",
+      "actual preparation/CDC service delays, routing cuts, control protection and PG pricing",
+      "SS setup/FF hold in component context under unchanged uncertainty"
+    ],
+    "new_RF_macros": 0,
+    "pages": 4,
+    "parent55": null,
+    "physical_admitted": false,
+    "preparation": "source gate read/copy; exact NEG BITCAST_U/XOR/BITCAST_F; explicit mask and -87 broadcast; all full vector writes require common mirrored ACK",
+    "release": "FMAX output19 held to exp.step1 FMIN consumer and validated reverse; source gate38 lease remains until whole PC40 consumer done",
+    "schema": "C0_PC40_WORKSPACE_PORT_LEASE_MODEL_R1",
+    "selected_slots": [
+      17,
+      18,
+      19
+    ],
+    "source_frame_bytes": 512,
+    "source_native_service": {
+      "RF_read_pair_transactions": 1,
+      "RF_read_vectors": 2,
+      "RF_response_bus_bytes": 1024,
+      "RF_write_physical_mirror_bytes": 1024,
+      "RF_write_vectors": 1,
+      "RMW_codec_cost_recharged": false,
+      "components": {
+        "RF_read": 3,
+        "RF_write_visible": 2,
+        "accept": 1,
+        "complete": 1,
+        "native_only": 6,
+        "reverse_retire": 1
+      },
+      "elements": 128,
+      "folded_lane_groups": 4,
+      "input_bits": [
+        32,
+        32
+      ],
+      "lane_group_II_provisional": 1,
+      "lanes": 32,
+      "measured_cost": null,
+      "native_only_replacement_ticks": 6,
+      "opcode": "FMAX",
+      "ordered_phases": [
+        "accepted",
+        "read_pair/capture/return",
+        "native_exact_leaf",
+        "write_vector/both_mirror_ACK",
+        "complete",
+        "reverse_grant",
+        "retire"
+      ],
+      "output_bits": 32,
+      "owner_credit": 1,
+      "owner_held_through": "all mirrored ACK + consumer acceptance + reverse retirement",
+      "provisional": true,
+      "serialized_service_ticks": 14,
+      "third_operand_extra_read_pairs": 0
+    },
+    "source_ports": {
+      "ACK_tag_bits": 0,
+      "common_ACK_valid_ready": true,
+      "rd_a_bits": 9,
+      "rd_b_bits": 9,
+      "rd_valid_ready": true,
+      "rsp_a_bits": 4096,
+      "rsp_b_bits": 4096,
+      "rsp_valid_ready": true,
+      "wr_addr_bits": 9,
+      "wr_data_bits": 4096,
+      "wr_valid_ready": true
+    },
+    "workspace_bytes": 1536,
+    "workspace_mirror_bytes": 3072
+  },
+  "hardware_admitted": false,
+  "independent_checkpoint_compare": true,
+  "installed_call_admitted": false,
+  "missing_retirement": "source exp.step1 FMIN consumer and validated reverse; no inferred release",
+  "output19_visible_in_software_preparation_model": true,
+  "pending_RF_transactions": 0,
+  "planned_port_events": [
+    {
+      "event": "wr_offer",
+      "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:neg.out",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "payload_sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e",
+      "sequence": 1,
+      "wr_addr": 17,
+      "wr_valid": true
+    },
+    {
+      "both_mirrors_written": true,
+      "event": "wr_accept",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "sequence": 2,
+      "write_go": true
+    },
+    {
+      "both_mirrors_ACK": true,
+      "event": "commonACK_accept",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "parent55": null,
+      "sequence": 3,
+      "slot": 17
+    },
+    {
+      "event": "wr_offer",
+      "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:exp.literal.minus87",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "payload_sha256": "cdd638cefd9b937f1a9f0db589f9fa21174d90e91defa7011cce26b644762a52",
+      "sequence": 4,
+      "wr_addr": 18,
+      "wr_valid": true
+    },
+    {
+      "both_mirrors_written": true,
+      "event": "wr_accept",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "sequence": 5,
+      "write_go": true
+    },
+    {
+      "both_mirrors_ACK": true,
+      "event": "commonACK_accept",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "parent55": null,
+      "sequence": 6,
+      "slot": 18
+    },
+    {
+      "event": "rd_offer",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rd_a": 17,
+      "rd_b": 18,
+      "rd_valid": true,
+      "sequence": 7
+    },
+    {
+      "event": "rd_accept",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "read_go": true,
+      "sequence": 8
+    },
+    {
+      "event": "rsp_accept",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "response_bits": 8192,
+      "sequence": 9
+    },
+    {
+      "event": "native_complete",
+      "opcode": "FMAX",
+      "output_sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "sequence": 10
+    },
+    {
+      "event": "wr_offer",
+      "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:exp.step0.ex",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "payload_sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e",
+      "sequence": 11,
+      "wr_addr": 19,
+      "wr_valid": true
+    },
+    {
+      "both_mirrors_written": true,
+      "event": "wr_accept",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "sequence": 12,
+      "write_go": true
+    },
+    {
+      "both_mirrors_ACK": true,
+      "event": "commonACK_accept",
+      "owner": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "parent55": null,
+      "sequence": 13,
+      "slot": 19
+    }
+  ],
+  "schema": "C0_PC40_CAPTURE_TO_SOURCE_RF_PREPARATION_R1",
+  "source_frames": {
+    "FMAX": {
+      "HBM_byte_address": null,
+      "RF_banks": [
+        {
+          "bank": 0,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "9e530d8ee265feaf7a8d07c18e424e9676ce63cad68903d5f3328482af899857",
+          "source_byte_range": [
+            0,
+            32
+          ]
+        },
+        {
+          "bank": 1,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "8061f7921a599dd0c9b65a326f819cd64a707ce3bbbeca085516d79dec593491",
+          "source_byte_range": [
+            32,
+            64
+          ]
+        },
+        {
+          "bank": 2,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "780f39b8d85d3c00f213ba0dadd1e99c614a605d457a973c9e9b5c8618ffdb48",
+          "source_byte_range": [
+            64,
+            96
+          ]
+        },
+        {
+          "bank": 3,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "a8c99550ce91f7892fe48d2b5fc3546155915f8d1cfe31368ccd6eb276fdf698",
+          "source_byte_range": [
+            96,
+            128
+          ]
+        },
+        {
+          "bank": 4,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "2f382c0b2481cfe64c9cde1f4e628875609f15ec7e3c777dc6c0f408a3c6ef9f",
+          "source_byte_range": [
+            128,
+            160
+          ]
+        },
+        {
+          "bank": 5,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "3724e31a9c7fd89f673edc0410d15a3a0518f451a7fbd45d71202a3a96a48855",
+          "source_byte_range": [
+            160,
+            192
+          ]
+        },
+        {
+          "bank": 6,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "52f056f26fb3be477d963ac85c4d217b11ff3c41758738d0430208de7b87413e",
+          "source_byte_range": [
+            192,
+            224
+          ]
+        },
+        {
+          "bank": 7,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "0cfcdd6db092a4c123df69fa111614a9dadd20c806a46fce0fc5ec895e942edd",
+          "source_byte_range": [
+            224,
+            256
+          ]
+        },
+        {
+          "bank": 8,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "ad95f3fb6df8228312b24b8dfdbfe4cae6bf74563db0ba57302834b1623eba32",
+          "source_byte_range": [
+            256,
+            288
+          ]
+        },
+        {
+          "bank": 9,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "f29316fb721628c3342b99f66c7f30198e23cd4837adab7d144f264f0474acdd",
+          "source_byte_range": [
+            288,
+            320
+          ]
+        },
+        {
+          "bank": 10,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "c971d65b6af08bb06f9cf1179a9294e0170887e05554214bae30aed72a8c5d9d",
+          "source_byte_range": [
+            320,
+            352
+          ]
+        },
+        {
+          "bank": 11,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "cad0579f2b4b158a28ab171b9cf8753fd8a0b349a396e15e0d4fb2cd7792ea10",
+          "source_byte_range": [
+            352,
+            384
+          ]
+        },
+        {
+          "bank": 12,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "c682644eaede7abb64fc008d5b9024091d67ab8d14fc33dd284f6beb683003b7",
+          "source_byte_range": [
+            384,
+            416
+          ]
+        },
+        {
+          "bank": 13,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "b5ba1b256d4a20eaa7b6db130d84f62cf6ccd0b6df098fc29ef90803f90f1a1a",
+          "source_byte_range": [
+            416,
+            448
+          ]
+        },
+        {
+          "bank": 14,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "e4e9b201a82f8619d6793d1263838951ae7b7855401b542fa2b5c06106327961",
+          "source_byte_range": [
+            448,
+            480
+          ]
+        },
+        {
+          "bank": 15,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 19,
+          "sha256": "be6d8f0602ee06168d5115205286b078a925894f7160bddff5a19480984ddde6",
+          "source_byte_range": [
+            480,
+            512
+          ]
+        }
+      ],
+      "RFslot9": 19,
+      "bytes": 512,
+      "lane_words": 128,
+      "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:exp.step0.ex",
+      "packing": "little-endian U32 lane i at wr_data[32*i+:32]",
+      "parent55": null,
+      "physical_mirrors": 2,
+      "role": "FMAX",
+      "sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e",
+      "version": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:exp.step0.ex",
+      "word_bits": 32
+    },
+    "constant": {
+      "HBM_byte_address": null,
+      "RF_banks": [
+        {
+          "bank": 0,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            0,
+            32
+          ]
+        },
+        {
+          "bank": 1,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            32,
+            64
+          ]
+        },
+        {
+          "bank": 2,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            64,
+            96
+          ]
+        },
+        {
+          "bank": 3,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            96,
+            128
+          ]
+        },
+        {
+          "bank": 4,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            128,
+            160
+          ]
+        },
+        {
+          "bank": 5,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            160,
+            192
+          ]
+        },
+        {
+          "bank": 6,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            192,
+            224
+          ]
+        },
+        {
+          "bank": 7,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            224,
+            256
+          ]
+        },
+        {
+          "bank": 8,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            256,
+            288
+          ]
+        },
+        {
+          "bank": 9,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            288,
+            320
+          ]
+        },
+        {
+          "bank": 10,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            320,
+            352
+          ]
+        },
+        {
+          "bank": 11,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            352,
+            384
+          ]
+        },
+        {
+          "bank": 12,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            384,
+            416
+          ]
+        },
+        {
+          "bank": 13,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            416,
+            448
+          ]
+        },
+        {
+          "bank": 14,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            448,
+            480
+          ]
+        },
+        {
+          "bank": 15,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 18,
+          "sha256": "227ea337e1815fc21ad769a9863652bb711411a570da4f55b573b8aa61e417a1",
+          "source_byte_range": [
+            480,
+            512
+          ]
+        }
+      ],
+      "RFslot9": 18,
+      "bytes": 512,
+      "lane_words": 128,
+      "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:exp.literal.minus87",
+      "packing": "little-endian U32 lane i at wr_data[32*i+:32]",
+      "parent55": null,
+      "physical_mirrors": 2,
+      "role": "constant",
+      "sha256": "cdd638cefd9b937f1a9f0db589f9fa21174d90e91defa7011cce26b644762a52",
+      "version": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:exp.literal.minus87",
+      "word_bits": 32
+    },
+    "gate": {
+      "HBM_byte_address": null,
+      "RF_banks": [
+        {
+          "bank": 0,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "7ef454d266f4c58aaf5a0c36df83a466bc52ccba7bffeaf852bf18b8330e57a7",
+          "source_byte_range": [
+            0,
+            32
+          ]
+        },
+        {
+          "bank": 1,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "0b8a32cfeb71b6700d872db12574fc2b7b24960ed9dcd45d774a283b1d35f773",
+          "source_byte_range": [
+            32,
+            64
+          ]
+        },
+        {
+          "bank": 2,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "51df4330f6d0943ca906eb5e48be8bab88fedac80c6730869079ac30c0dfb56a",
+          "source_byte_range": [
+            64,
+            96
+          ]
+        },
+        {
+          "bank": 3,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "bff54d18cc38e53cd0294466603318be6532c01c5c9c7b3dbb82b7780a31cbf1",
+          "source_byte_range": [
+            96,
+            128
+          ]
+        },
+        {
+          "bank": 4,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "246e2f6d3a6d947d010d0e2c4a0462988d936a922c8fd21291be84d90de3023f",
+          "source_byte_range": [
+            128,
+            160
+          ]
+        },
+        {
+          "bank": 5,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "2e3f9546c7f57cd5c0a9d57dcfc3a45e48fd67777c6d256aa99da2d9c7ab0241",
+          "source_byte_range": [
+            160,
+            192
+          ]
+        },
+        {
+          "bank": 6,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "44df8f8019b59c324aa2477c902dd05eb665b66366b976656f810d75c87a5bd5",
+          "source_byte_range": [
+            192,
+            224
+          ]
+        },
+        {
+          "bank": 7,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "9ddb1e199837878f623375ef212f54b9cff71ac06915ffd30e1b0c324933f646",
+          "source_byte_range": [
+            224,
+            256
+          ]
+        },
+        {
+          "bank": 8,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "82e445ca9daf0a6c77dbaa94e5875d11cd51b1ae29220b223c3c6d733ecf8065",
+          "source_byte_range": [
+            256,
+            288
+          ]
+        },
+        {
+          "bank": 9,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "bd44436b0a27dfb76baa0a5ecec619f4ecbbbd027a335311876972513d60c8c3",
+          "source_byte_range": [
+            288,
+            320
+          ]
+        },
+        {
+          "bank": 10,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "e9c42bedff02c4bc33942aecd74dc002ce798a4b8a9875dbc43c2061bbd3f1df",
+          "source_byte_range": [
+            320,
+            352
+          ]
+        },
+        {
+          "bank": 11,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "fd121334a3b9bfc692286a1455621bfa8a5a586ae711b8d037dc4c75ea570558",
+          "source_byte_range": [
+            352,
+            384
+          ]
+        },
+        {
+          "bank": 12,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "d5d51404836a5fa25774e6602f8efbb75c1a3e037e5bf24613c9b87a8b4b849b",
+          "source_byte_range": [
+            384,
+            416
+          ]
+        },
+        {
+          "bank": 13,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "15f4b0792a3a7d3457befd290a43028a024458c9162edd1d529e2c6973e1f3c7",
+          "source_byte_range": [
+            416,
+            448
+          ]
+        },
+        {
+          "bank": 14,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "c393a15e4d9b0a5fdb03f3234fd93168a56a9966e77c162cd044976d3006b46c",
+          "source_byte_range": [
+            448,
+            480
+          ]
+        },
+        {
+          "bank": 15,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 38,
+          "sha256": "594f1be412543fc240ceb00bd09ac5e26088db16bb4bada3bdc884313085816c",
+          "source_byte_range": [
+            480,
+            512
+          ]
+        }
+      ],
+      "RFslot9": 38,
+      "bytes": 512,
+      "lane_words": 128,
+      "lease": "value:Qwen.39.L0.d0.gu_post.49",
+      "packing": "little-endian U32 lane i at wr_data[32*i+:32]",
+      "parent55": null,
+      "physical_mirrors": 2,
+      "role": "source_gate",
+      "sha256": "46e599ee3d76c224d688966baecfeee2f55400b80398cd71c3b918217ad0b8e0",
+      "version": "Qwen.39.L0.d0.gu_post.49",
+      "word_bits": 32
+    },
+    "negative": {
+      "HBM_byte_address": null,
+      "RF_banks": [
+        {
+          "bank": 0,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "9e530d8ee265feaf7a8d07c18e424e9676ce63cad68903d5f3328482af899857",
+          "source_byte_range": [
+            0,
+            32
+          ]
+        },
+        {
+          "bank": 1,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "8061f7921a599dd0c9b65a326f819cd64a707ce3bbbeca085516d79dec593491",
+          "source_byte_range": [
+            32,
+            64
+          ]
+        },
+        {
+          "bank": 2,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "780f39b8d85d3c00f213ba0dadd1e99c614a605d457a973c9e9b5c8618ffdb48",
+          "source_byte_range": [
+            64,
+            96
+          ]
+        },
+        {
+          "bank": 3,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "a8c99550ce91f7892fe48d2b5fc3546155915f8d1cfe31368ccd6eb276fdf698",
+          "source_byte_range": [
+            96,
+            128
+          ]
+        },
+        {
+          "bank": 4,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "2f382c0b2481cfe64c9cde1f4e628875609f15ec7e3c777dc6c0f408a3c6ef9f",
+          "source_byte_range": [
+            128,
+            160
+          ]
+        },
+        {
+          "bank": 5,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "3724e31a9c7fd89f673edc0410d15a3a0518f451a7fbd45d71202a3a96a48855",
+          "source_byte_range": [
+            160,
+            192
+          ]
+        },
+        {
+          "bank": 6,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "52f056f26fb3be477d963ac85c4d217b11ff3c41758738d0430208de7b87413e",
+          "source_byte_range": [
+            192,
+            224
+          ]
+        },
+        {
+          "bank": 7,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "0cfcdd6db092a4c123df69fa111614a9dadd20c806a46fce0fc5ec895e942edd",
+          "source_byte_range": [
+            224,
+            256
+          ]
+        },
+        {
+          "bank": 8,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "ad95f3fb6df8228312b24b8dfdbfe4cae6bf74563db0ba57302834b1623eba32",
+          "source_byte_range": [
+            256,
+            288
+          ]
+        },
+        {
+          "bank": 9,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "f29316fb721628c3342b99f66c7f30198e23cd4837adab7d144f264f0474acdd",
+          "source_byte_range": [
+            288,
+            320
+          ]
+        },
+        {
+          "bank": 10,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "c971d65b6af08bb06f9cf1179a9294e0170887e05554214bae30aed72a8c5d9d",
+          "source_byte_range": [
+            320,
+            352
+          ]
+        },
+        {
+          "bank": 11,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "cad0579f2b4b158a28ab171b9cf8753fd8a0b349a396e15e0d4fb2cd7792ea10",
+          "source_byte_range": [
+            352,
+            384
+          ]
+        },
+        {
+          "bank": 12,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "c682644eaede7abb64fc008d5b9024091d67ab8d14fc33dd284f6beb683003b7",
+          "source_byte_range": [
+            384,
+            416
+          ]
+        },
+        {
+          "bank": 13,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "b5ba1b256d4a20eaa7b6db130d84f62cf6ccd0b6df098fc29ef90803f90f1a1a",
+          "source_byte_range": [
+            416,
+            448
+          ]
+        },
+        {
+          "bank": 14,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "e4e9b201a82f8619d6793d1263838951ae7b7855401b542fa2b5c06106327961",
+          "source_byte_range": [
+            448,
+            480
+          ]
+        },
+        {
+          "bank": 15,
+          "bit_offset": 0,
+          "bits": 256,
+          "page": 0,
+          "row": 17,
+          "sha256": "be6d8f0602ee06168d5115205286b078a925894f7160bddff5a19480984ddde6",
+          "source_byte_range": [
+            480,
+            512
+          ]
+        }
+      ],
+      "RFslot9": 17,
+      "bytes": 512,
+      "lane_words": 128,
+      "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:neg.out",
+      "packing": "little-endian U32 lane i at wr_data[32*i+:32]",
+      "parent55": null,
+      "physical_mirrors": 2,
+      "role": "negative",
+      "sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e",
+      "version": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:neg.out",
+      "word_bits": 32
+    }
+  },
+  "source_gate_RF38_released": false,
+  "source_metadata": {
+    "alias_fence": "read/capture consumed before mirrored write and ACK; slot18 reused only after XOR consumption/reverse",
+    "caller_retention": "gate and up remain live through reciprocal and final ordered gate*inverse*up",
+    "client_assignment": {
+      "client": 0,
+      "scope": "new opt-in source-owned dispatch"
+    },
+    "hardware_admitted": false,
+    "native_command": {
+      "SM": 0,
+      "active_lanes": 128,
+      "destination_bittype": 32,
+      "destination_version_home_ref": {
+        "RF_vectors": [
+          19
+        ],
+        "SM": 0,
+        "arithmetic_dtype": "F32",
+        "connection_scope": "prospective_source_only",
+        "generation": 1,
+        "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:exp.step0.ex",
+        "packing": "binary32 bitcast U32",
+        "parent55": null,
+        "physical_RF_id": "prospective.Qwen.rank0.SM0.RF",
+        "rank": 0,
+        "source_expression": "FMAX(x,f32(-87))",
+        "source_producer": {
+          "ordered_step_index": 0,
+          "template": "exp"
+        },
+        "storage_dtype": "U32",
+        "version": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:exp.step0.ex"
+      },
+      "family": "SILU_GATE",
+      "generation": 1,
+      "model": "Qwen",
+      "opcode": "FMAX",
+      "ordered_step_index": 0,
+      "owner_tag": 1,
+      "predicate": null,
+      "program_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+      "rank": 0,
+      "response_stall_bound": 1,
+      "source_PC": 40,
+      "source_attrs_rounding": {},
+      "source_bittypes": [
+        32,
+        32
+      ],
+      "source_version_home_refs": [
+        {
+          "RF_vectors": [
+            17
+          ],
+          "SM": 0,
+          "arithmetic_dtype": "F32",
+          "connection_scope": "prospective_source_only",
+          "generation": 1,
+          "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:neg.out",
+          "packing": "binary32 bitcast U32",
+          "parent55": null,
+          "physical_RF_id": "prospective.Qwen.rank0.SM0.RF",
+          "rank": 0,
+          "source_expression": "neg(gate)",
+          "source_producer": {
+            "ordered_step_index": 0,
+            "source_home": {
+              "HBM_byte_address": null,
+              "RFslot9": 38,
+              "arithmetic_dtype": "F32",
+              "bit_type": "F32",
+              "lanes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                65,
+                66,
+                67,
+                68,
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80,
+                81,
+                82,
+                83,
+                84,
+                85,
+                86,
+                87,
+                88,
+                89,
+                90,
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97,
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122,
+                123,
+                124,
+                125,
+                126,
+                127
+              ],
+              "lease": "value:Qwen.39.L0.d0.gu_post.49",
+              "mirrors": 2,
+              "packing": "F32 bitcast U32, 128 lanes per 512B vector",
+              "parent55": null,
+              "parent55_scope": "NOT_APPLICABLE_DIRECT_RF: no W2 sector child or frame anchor",
+              "publication_event": "PUBLISH:Qwen.39.L0.d0.gu_post.49:r0:s0",
+              "release_event": "RELEASE:Qwen.39.L0.d0.gu_post.49:r0:s0",
+              "release_requires": [
+                "all listed actual consumers done",
+                "held completion accepted",
+                "all reverse validated grants accepted"
+              ],
+              "remote_from_executor": false,
+              "retire_pc": 40,
+              "side": "read",
+              "source_provider_ref": "Qwen.Qwen.39.L0.d0.gu_post.49.rank0.SM0",
+              "storage_SM": 0,
+              "storage_class": "RF",
+              "storage_dtype": "U32",
+              "storage_rank": 0,
+              "storage_word_bits": 32,
+              "symbol": "gate",
+              "version": "Qwen.39.L0.d0.gu_post.49",
+              "word_count": 128,
+              "word_start": 0
+            },
+            "source_step": {
+              "dst": "out",
+              "op": "NEG",
+              "src": [
+                "x"
+              ]
+            },
+            "template": "neg"
+          },
+          "storage_dtype": "U32",
+          "version": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:neg.out"
+        },
+        {
+          "RF_vectors": [
+            18
+          ],
+          "SM": 0,
+          "arithmetic_dtype": "F32",
+          "connection_scope": "prospective_source_only",
+          "generation": 1,
+          "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:exp.literal.minus87",
+          "packing": "binary32 bitcast U32",
+          "parent55": null,
+          "physical_RF_id": "prospective.Qwen.rank0.SM0.RF",
+          "rank": 0,
+          "source_expression": "f32(-87)",
+          "source_producer": {
+            "broadcast_words": 128,
+            "kind": "literal_scalar_broadcast",
+            "literal_bits_U32": 3266183168,
+            "materialized_bytes": 512,
+            "scalar_words": 1,
+            "source_operand": 1,
+            "source_step": 0,
+            "source_template": "exp"
+          },
+          "storage_dtype": "U32",
+          "version": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:exp.literal.minus87"
+        }
+      ],
+      "template_id": "exp"
+    },
+    "native_owner": [
+      40,
+      [
+        "Qwen.40.L0.d0.act.50"
+      ],
+      0,
+      0,
+      1
+    ],
+    "ordered_producer_actions": [
+      {
+        "action": "read_source_home",
+        "destination_slot": 17,
+        "home": {
+          "HBM_byte_address": null,
+          "RFslot9": 38,
+          "arithmetic_dtype": "F32",
+          "bit_type": "F32",
+          "lanes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127
+          ],
+          "lease": "value:Qwen.39.L0.d0.gu_post.49",
+          "mirrors": 2,
+          "packing": "F32 bitcast U32, 128 lanes per 512B vector",
+          "parent55": null,
+          "parent55_scope": "NOT_APPLICABLE_DIRECT_RF: no W2 sector child or frame anchor",
+          "publication_event": "PUBLISH:Qwen.39.L0.d0.gu_post.49:r0:s0",
+          "release_event": "RELEASE:Qwen.39.L0.d0.gu_post.49:r0:s0",
+          "release_requires": [
+            "all listed actual consumers done",
+            "held completion accepted",
+            "all reverse validated grants accepted"
+          ],
+          "remote_from_executor": false,
+          "retire_pc": 40,
+          "side": "read",
+          "source_provider_ref": "Qwen.Qwen.39.L0.d0.gu_post.49.rank0.SM0",
+          "storage_SM": 0,
+          "storage_class": "RF",
+          "storage_dtype": "U32",
+          "storage_rank": 0,
+          "storage_word_bits": 32,
+          "symbol": "gate",
+          "version": "Qwen.39.L0.d0.gu_post.49",
+          "word_count": 128,
+          "word_start": 0
+        }
+      },
+      {
+        "action": "BITCAST_U",
+        "destination_slot": 17,
+        "source_slot": 17
+      },
+      {
+        "action": "broadcast_U32",
+        "bits": 2147483648,
+        "destination_slot": 18,
+        "words": 128
+      },
+      {
+        "action": "XOR",
+        "destination_slot": 17,
+        "source_slots": [
+          17,
+          18
+        ]
+      },
+      {
+        "action": "BITCAST_F",
+        "destination_slot": 17,
+        "source_slot": 17
+      },
+      {
+        "action": "broadcast_F32",
+        "bits": 3266183168,
+        "destination_slot": 18,
+        "words": 128
+      },
+      {
+        "action": "FMAX",
+        "destination_slot": 19,
+        "source_slots": [
+          17,
+          18
+        ]
+      }
+    ],
+    "original_Popper_compile_admitted": false,
+    "parent55": null,
+    "parent55_scope": "NOT_APPLICABLE_DIRECT_RF",
+    "payload_compared": false,
+    "primitive_workspace_vectors": 3,
+    "retained_caller_vectors": 2,
+    "schema": "C0_SOURCE_ELIGIBLE_OPERAND_VIEWS_R1",
+    "source_SSA_verified": true,
+    "source_arithmetic_contract": "FMAX numpy maximum then F32; source NaN propagation and signed-zero ties",
+    "source_attrs_rounding": {},
+    "source_dtype_verified": true,
+    "source_gate_home": {
+      "HBM_byte_address": null,
+      "RFslot9": 38,
+      "arithmetic_dtype": "F32",
+      "bit_type": "F32",
+      "lanes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127
+      ],
+      "lease": "value:Qwen.39.L0.d0.gu_post.49",
+      "mirrors": 2,
+      "packing": "F32 bitcast U32, 128 lanes per 512B vector",
+      "parent55": null,
+      "parent55_scope": "NOT_APPLICABLE_DIRECT_RF: no W2 sector child or frame anchor",
+      "publication_event": "PUBLISH:Qwen.39.L0.d0.gu_post.49:r0:s0",
+      "release_event": "RELEASE:Qwen.39.L0.d0.gu_post.49:r0:s0",
+      "release_requires": [
+        "all listed actual consumers done",
+        "held completion accepted",
+        "all reverse validated grants accepted"
+      ],
+      "remote_from_executor": false,
+      "retire_pc": 40,
+      "side": "read",
+      "source_provider_ref": "Qwen.Qwen.39.L0.d0.gu_post.49.rank0.SM0",
+      "storage_SM": 0,
+      "storage_class": "RF",
+      "storage_dtype": "U32",
+      "storage_rank": 0,
+      "storage_word_bits": 32,
+      "symbol": "gate",
+      "version": "Qwen.39.L0.d0.gu_post.49",
+      "word_count": 128,
+      "word_start": 0
+    },
+    "source_step": {
+      "dst": "ex",
+      "op": "FMAX",
+      "src": [
+        "x",
+        "f32(-87)"
+      ]
+    },
+    "total_reserved_vectors": 5,
+    "transient_enrollment": [
+      {
+        "RF_vectors": [
+          17
+        ],
+        "SM": 0,
+        "arithmetic_dtype": "F32",
+        "connection_scope": "prospective_source_only",
+        "generation": 1,
+        "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:neg.out",
+        "packing": "binary32 bitcast U32",
+        "parent55": null,
+        "physical_RF_id": "prospective.Qwen.rank0.SM0.RF",
+        "rank": 0,
+        "source_expression": "neg(gate)",
+        "source_producer": {
+          "ordered_step_index": 0,
+          "source_home": {
+            "HBM_byte_address": null,
+            "RFslot9": 38,
+            "arithmetic_dtype": "F32",
+            "bit_type": "F32",
+            "lanes": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63,
+              64,
+              65,
+              66,
+              67,
+              68,
+              69,
+              70,
+              71,
+              72,
+              73,
+              74,
+              75,
+              76,
+              77,
+              78,
+              79,
+              80,
+              81,
+              82,
+              83,
+              84,
+              85,
+              86,
+              87,
+              88,
+              89,
+              90,
+              91,
+              92,
+              93,
+              94,
+              95,
+              96,
+              97,
+              98,
+              99,
+              100,
+              101,
+              102,
+              103,
+              104,
+              105,
+              106,
+              107,
+              108,
+              109,
+              110,
+              111,
+              112,
+              113,
+              114,
+              115,
+              116,
+              117,
+              118,
+              119,
+              120,
+              121,
+              122,
+              123,
+              124,
+              125,
+              126,
+              127
+            ],
+            "lease": "value:Qwen.39.L0.d0.gu_post.49",
+            "mirrors": 2,
+            "packing": "F32 bitcast U32, 128 lanes per 512B vector",
+            "parent55": null,
+            "parent55_scope": "NOT_APPLICABLE_DIRECT_RF: no W2 sector child or frame anchor",
+            "publication_event": "PUBLISH:Qwen.39.L0.d0.gu_post.49:r0:s0",
+            "release_event": "RELEASE:Qwen.39.L0.d0.gu_post.49:r0:s0",
+            "release_requires": [
+              "all listed actual consumers done",
+              "held completion accepted",
+              "all reverse validated grants accepted"
+            ],
+            "remote_from_executor": false,
+            "retire_pc": 40,
+            "side": "read",
+            "source_provider_ref": "Qwen.Qwen.39.L0.d0.gu_post.49.rank0.SM0",
+            "storage_SM": 0,
+            "storage_class": "RF",
+            "storage_dtype": "U32",
+            "storage_rank": 0,
+            "storage_word_bits": 32,
+            "symbol": "gate",
+            "version": "Qwen.39.L0.d0.gu_post.49",
+            "word_count": 128,
+            "word_start": 0
+          },
+          "source_step": {
+            "dst": "out",
+            "op": "NEG",
+            "src": [
+              "x"
+            ]
+          },
+          "template": "neg"
+        },
+        "storage_dtype": "U32",
+        "version": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:neg.out"
+      },
+      {
+        "RF_vectors": [
+          18
+        ],
+        "SM": 0,
+        "arithmetic_dtype": "F32",
+        "connection_scope": "prospective_source_only",
+        "generation": 1,
+        "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:exp.literal.minus87",
+        "packing": "binary32 bitcast U32",
+        "parent55": null,
+        "physical_RF_id": "prospective.Qwen.rank0.SM0.RF",
+        "rank": 0,
+        "source_expression": "f32(-87)",
+        "source_producer": {
+          "broadcast_words": 128,
+          "kind": "literal_scalar_broadcast",
+          "literal_bits_U32": 3266183168,
+          "materialized_bytes": 512,
+          "scalar_words": 1,
+          "source_operand": 1,
+          "source_step": 0,
+          "source_template": "exp"
+        },
+        "storage_dtype": "U32",
+        "version": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:exp.literal.minus87"
+      },
+      {
+        "RF_vectors": [
+          19
+        ],
+        "SM": 0,
+        "arithmetic_dtype": "F32",
+        "connection_scope": "prospective_source_only",
+        "generation": 1,
+        "lease": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:lease:exp.step0.ex",
+        "packing": "binary32 bitcast U32",
+        "parent55": null,
+        "physical_RF_id": "prospective.Qwen.rank0.SM0.RF",
+        "rank": 0,
+        "source_expression": "FMAX(x,f32(-87))",
+        "source_producer": {
+          "ordered_step_index": 0,
+          "template": "exp"
+        },
+        "storage_dtype": "U32",
+        "version": "native:ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc:PC40:tile0:epoch1:exp.step0.ex"
+      }
+    ]
+  },
+  "source_native_payload_observed": true,
+  "verdict": "PASS_SOURCE_PAYLOAD_AND_PLANNED_LEASE",
+  "workspace_owner_retained": true
+}
