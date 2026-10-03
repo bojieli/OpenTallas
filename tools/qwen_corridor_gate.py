@@ -636,7 +636,7 @@ def parse_logs(work: Path):
     out['drt_violations_by_iteration'] = viol
     out['drt_final_violations'] = viol[-1] if viol else None
     out['drt_errors'] = re.findall(r'\[ERROR DRT-\d+\].*', drt)[:3]
-    out['drt_completed'] = 'Complete detail routing' in drt or bool(re.search(r'Total wire length = ', drt))
+    out['drt_completed'] = 'DRT-0198] Complete detail routing' in drt
     out['flow_errors'] = [f'{k}: {e}' for k, v in sorted(logs.items()) for e in re.findall(r'\[ERROR [^\]]+\].*', v)][:5]
     out['make_errors'] = re.findall(r'make\[1\]: \*\*\* .*Error \d+.*', logs.get('orfs_flow.log', ''))[:3]
     out['last_stage_log'] = max(logs, key=lambda k: (k[:1].isdigit(), k)) if logs else None
