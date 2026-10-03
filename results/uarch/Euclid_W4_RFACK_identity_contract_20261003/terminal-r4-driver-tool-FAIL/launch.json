@@ -1,0 +1,23 @@
+{
+  "sourcefreeze": "7216399315bfd198c5c532712e44400fcd64b392",
+  "supervisor_PID": 2968072,
+  "exclusive_out": "/tmp/W4-Euclid-component-native-20261003-r1",
+  "status": "LIVE",
+  "meminfo": "MemTotal:       197661924 kB\nMemFree:         2973216 kB\nMemAvailable:   105303128 kB\nBuffers:         6982272 kB\nCached:         87199996 kB\nSwapCached:        79636 kB\nActive:         110658816 kB\nInactive:       69744600 kB\nActive(anon):   76593320 kB\nInactive(anon):  9650776 kB\nActive(file):   34065496 kB\nInactive(file): 60093824 kB\nUnevictable:       27996 kB\nMlocked:           27996 kB\nSwapTotal:       8388604 kB\nSwapFree:           3048 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:           1979376 kB\nWriteback:             0 kB\nAnonPages:      86170556 kB\nMapped:          1475144 kB\nShmem:             14332 kB\nKReclaimable:    9943532 kB\nSlab:           11009236 kB\nSReclaimable:    9793800 kB\nSUnreclaim:      1215436 kB\nKernelStack:       41168 kB\nPageTables:       288192 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    107219564 kB\nCommitted_AS:   138532136 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116348 kB\nVmallocChunk:          0 kB\nPercpu:            50304 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:      2048 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nUnaccepted:            0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:    77379020 kB\nDirectMap2M:    121651200 kB\nDirectMap1G:     2097152 kB\n",
+  "disk_available_bytes": 479283695616,
+  "limits_unlimited_CPU_AS_FSIZE": true,
+  "source_sha256": {
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv": "0c78df13fc5f356a24b99e42fbf0b7477e0fe57ba6475d3c8f5b80eab966b7d9",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv": "1467492957a70900e969ffee3493e6969a6ac4b0244202a8c0cdd06f6ccfdd18",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_scratch_service.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "jobs": [],
+  "scope": "actual source-selected conditional W4 component; no upstream connector/CDC/physical/rate qualification"
+}

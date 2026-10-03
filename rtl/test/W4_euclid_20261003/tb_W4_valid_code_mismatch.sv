@@ -17,7 +17,7 @@ module tb_W4_valid_code_mismatch;
  reg [45:0] host_owner=46'h123456789ab,simd_owner=46'h2abcdef0123;
  wire [45:0] host_ack_owner,simd_done_owner;wire [8:0] host_ack_slot,simd_done_slot;wire identity_fault;
  ot_gpu_full_sm_service #(.ENABLE(1),.ACK_ID(1)) dut(.*);
- 
+
  integer k,n,cycles;integer consumed=0;reg [71:0] good_code;reg [45:0] wrong_owner;integer wrong_slot;
  always @(posedge clk)if(rst_n&&dut.g_identity.g_enabled.wack&&dut.g_identity.g_enabled.u_rf.ack_ready)consumed=consumed+1;
  reg [4095:0] av,bv,expected;

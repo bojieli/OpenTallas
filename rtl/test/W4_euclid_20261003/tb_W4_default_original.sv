@@ -75,5 +75,5 @@ module tb_full_service_exact;
   run_op(1,127);
   $display("PASS full128 SIMD directed RNE/sign/subnormal/refusal;12cycle done;mirrors;leases");$finish;
  end
- 
+
 endmodule

@@ -22,13 +22,14 @@ if __name__=='__main__':
  freeze=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
  files=sources();test=ROOT/'rtl/test/W4_euclid_20261003';jobs=[]
  for top,extra in [('ot_gpu_rf_service',['-GACK_ID=0']),('ot_gpu_rf_service',['-GACK_ID=1']),('ot_gpu_full_sm_service',['-GENABLE=1','-GACK_ID=0']),('ot_gpu_full_sm_service',['-GENABLE=1','-GACK_ID=1'])]:
-  jobs.append((top+'-lint-'+''.join(extra),['verilator','--lint-only','--timing','-Wno-fatal','-Werror-IMPLICIT','-Werror-UNDRIVEN','--top-module',top,*extra,*files],0))
+  jobs.append((top+'-lint-'+''.join(extra),['/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator','--lint-only','--timing','-Wno-fatal','-Werror-IMPLICIT','-Werror-UNDRIVEN','--top-module',top,*extra,*files],0))
  for name,top in [('tb_W4_RFACK','tb_W4_RFACK'),('tb_W4_full_service','tb_W4_full_service'),('tb_W4_default_original','tb_full_service_exact'),('tb_W4_valid_code_mismatch','tb_W4_valid_code_mismatch')]:
   jobs.append((name+'-compile',['iverilog','-g2012','-s',top,'-o',str(out/name),*files,str(test/(name+'.sv'))],0))
   jobs.append((name+'-run',['vvp',str(out/name)],0))
   if name=='tb_W4_valid_code_mismatch':jobs.append((name+'-wrongslot',['vvp',str(out/name),'+WRONG_SLOT'],0))
+ toolpaths=['/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator','/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin','/usr/bin/iverilog','/usr/bin/vvp']
  stat=os.statvfs(out)
- receipt={'sourcefreeze':freeze,'supervisor_PID':os.getpid(),'exclusive_out':str(out),'status':'LIVE','meminfo':pathlib.Path('/proc/meminfo').read_text(),'disk_available_bytes':stat.f_bavail*stat.f_frsize,'limits_unlimited_CPU_AS_FSIZE':True,'source_sha256':{p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in files},'jobs':[],'scope':'actual source-selected conditional W4 component; no upstream connector/CDC/physical/rate qualification'}
+ receipt={'tool_pins':{p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in toolpaths},'sourcefreeze':freeze,'supervisor_PID':os.getpid(),'exclusive_out':str(out),'status':'LIVE','meminfo':pathlib.Path('/proc/meminfo').read_text(),'disk_available_bytes':stat.f_bavail*stat.f_frsize,'limits_unlimited_CPU_AS_FSIZE':True,'source_sha256':{p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in files},'jobs':[],'scope':'actual source-selected conditional W4 component; no upstream connector/CDC/physical/rate qualification'}
  (out/'launch.json').write_text(json.dumps(receipt,indent=2)+'\n')
  for name,argv,expected in jobs:
   with open(out/(name+'.log'),'w') as f:

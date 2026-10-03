@@ -81,5 +81,5 @@ module tb_W4_full_service;
   run_op(1,127);
   $display("PASS full128 SIMD directed RNE/sign/subnormal/refusal;13cycle done;W4 accepted-owner46+slot9;mirrors;leases");$finish;
  end
- 
+
 endmodule
