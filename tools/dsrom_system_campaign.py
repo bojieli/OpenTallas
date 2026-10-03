@@ -37,6 +37,10 @@ CONFIGS = {
     # 3 body stages + 2 chained lm_head parts on 5 dies in 3 packages {0,1} {2,3} {4}:
     # links 0->1 and 2->3 in-package UCIe, 1->2, 3->4, 4->0 board
     "sys_b5": dict(body=3, hp=2, pkg=[0, 0, 1, 1, 2], users=1, stall=5, plen=2, ngen=1),
+    # two users through the same 5-die array: per-user KV / index namespaces, interleaved stage handoffs
+    "sys_b5_u2": dict(body=3, hp=2, pkg=[0, 0, 1, 1, 2], users=2, stall=5, plen=2, ngen=1),
+    # deeper decode: positions 0..3, two generated tokens fed back through the host queue
+    "sys_b5_p3g2": dict(body=3, hp=2, pkg=[0, 0, 1, 1, 2], users=1, stall=5, plen=3, ngen=2),
 }
 
 
@@ -58,6 +62,7 @@ def build(obj: Path, svh: str, c: dict) -> Path:
            "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MULTIDRIVEN", "-Wno-TIMESCALEMOD",
            "-Wno-MODDUP", "-Wno-VARHIDDEN", "-Wno-UNOPTFLAT", "-Wno-PINMISSING",
            "--top-module", "tb_dsrom_system", f"-GUSERS={c['users']}", f"-GSTALL={c['stall']}",
+           *[f"-G{g}" for g in os.environ.get("OT_SYS_GPARAMS", "").split()],
            "-Mdir", str(obj), f"-I{obj}", f"-I{core.SVH.parent}", str(core.VLT),
            f"+define+HDC_SW={I.SU_LANES}",
            *[f"+define+HDC_X_{x}={2 if x == 'IDX' else 1}" for x in ("HE", "ME", "ATT", "IDX", "SEL", "EG", "SU")],
@@ -141,11 +146,13 @@ def main():
         a.output.write_text(json.dumps(rec, indent=1) + "\n")
         (a.scratch / f"prep_{a.only}.json").write_text(json.dumps(rec, indent=1) + "\n")
         return 0
-    exe, bs = build(a.scratch / f"obj_{a.only}", ctx["svh"], c)
+    tag = os.environ.get("OT_SYS_TAG", "")
+    rec["gparams"] = os.environ.get("OT_SYS_GPARAMS", "")
+    exe, bs = build(a.scratch / f"obj_{a.only}{tag}", ctx["svh"], c)
     rec["build_seconds"] = round(bs, 1)
     rec["prepared_from_scratch"] = bool(a.prepared)
     rec["verilator"] = subprocess.run(["verilator", "--version"], capture_output=True, text=True).stdout.strip()
-    log = a.scratch / f"out_{a.only}.txt"
+    log = a.scratch / f"out_{a.only}{tag}.txt"
     cmd = [str(exe), f"+DIR={ctx['img']}", f"+ROMS={ctx['roms']}", f"+NUSERS={c['users']}",
            f"+NPROMPT={c['plen']}", f"+NGEN={c['ngen']}", "+HB=100000"]
     rec["execution_command"] = cmd
