@@ -28,6 +28,22 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="sector_map_rank"){word(dut.sector_map_rank);} else
  if(name=="sector_reverse_rank"){word(dut.sector_reverse_rank);} else
  if(name=="sector_rank_refusal"){word(dut.sector_rank_refusal);} else
+ if(name=="issuer_inputs_bound_valid"){word(uint32_t(dut.issuer_inputs_bound_valid>>32));word(uint32_t(dut.issuer_inputs_bound_valid));} else
+ if(name=="issuer_inputs_bound_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_inputs_bound_tuple[i]);} else
+ if(name=="issuer_inputs_bound_mask"){for(int i=13;i>=0;i--)word(dut.issuer_inputs_bound_mask[i]);} else
+ if(name=="issuer_issue_output_page_mask"){for(int i=63;i>=0;i--)word(dut.issuer_issue_output_page_mask[i]);} else
+ if(name=="issuer_inputs_bound_ready"){word(uint32_t(dut.issuer_inputs_bound_ready>>32));word(uint32_t(dut.issuer_inputs_bound_ready));} else
+ if(name=="issuer_rf_range_ack_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_rf_range_ack_tuple[i]);} else
+ if(name=="issuer_rf_range_ack_page_mask"){for(int i=63;i>=0;i--)word(dut.issuer_rf_range_ack_page_mask[i]);} else
+ if(name=="issuer_publish_page_mask"){for(int i=63;i>=0;i--)word(dut.issuer_publish_page_mask[i]);} else
+ if(name=="issuer_input_terminal_valid"){word(uint32_t(dut.issuer_input_terminal_valid>>32));word(uint32_t(dut.issuer_input_terminal_valid));} else
+ if(name=="issuer_input_reverse_valid"){word(uint32_t(dut.issuer_input_reverse_valid>>32));word(uint32_t(dut.issuer_input_reverse_valid));} else
+ if(name=="issuer_input_terminal_ready"){word(uint32_t(dut.issuer_input_terminal_ready>>32));word(uint32_t(dut.issuer_input_terminal_ready));} else
+ if(name=="issuer_input_reverse_ready"){word(uint32_t(dut.issuer_input_reverse_ready>>32));word(uint32_t(dut.issuer_input_reverse_ready));} else
+ if(name=="issuer_input_terminal_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_input_terminal_tuple[i]);} else
+ if(name=="issuer_input_reverse_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_input_reverse_tuple[i]);} else
+ if(name=="issuer_input_terminal_mask"){for(int i=13;i>=0;i--)word(dut.issuer_input_terminal_mask[i]);} else
+ if(name=="issuer_input_reverse_mask"){for(int i=13;i>=0;i--)word(dut.issuer_input_reverse_mask[i]);} else
  if(name=="issuer_por_n"){word(dut.issuer_por_n);} else
  if(name=="issuer_run_enable"){word(dut.issuer_run_enable);} else
  if(name=="issuer_session_begin_valid"){word(dut.issuer_session_begin_valid);} else
@@ -46,28 +62,202 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="issuer_backend_go_valid"){word(uint32_t(dut.issuer_backend_go_valid>>32));word(uint32_t(dut.issuer_backend_go_valid));} else
  if(name=="issuer_backend_go_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_backend_go_tuple[i]);} else
  if(name=="issuer_backend_go_owner"){for(int i=109;i>=0;i--)word(dut.issuer_backend_go_owner[i]);} else
- if(name=="issuer_producer_result_valid"){word(uint32_t(dut.issuer_producer_result_valid>>32));word(uint32_t(dut.issuer_producer_result_valid));} else
- if(name=="issuer_rf_ack_valid"){word(uint32_t(dut.issuer_rf_ack_valid>>32));word(uint32_t(dut.issuer_rf_ack_valid));} else
+ if(name=="issuer_producer_visible_valid"){word(uint32_t(dut.issuer_producer_visible_valid>>32));word(uint32_t(dut.issuer_producer_visible_valid));} else
+ if(name=="issuer_rf_range_ack_valid"){word(uint32_t(dut.issuer_rf_range_ack_valid>>32));word(uint32_t(dut.issuer_rf_range_ack_valid));} else
  if(name=="issuer_whole_terminal_valid"){word(uint32_t(dut.issuer_whole_terminal_valid>>32));word(uint32_t(dut.issuer_whole_terminal_valid));} else
  if(name=="issuer_whole_reverse_valid"){word(uint32_t(dut.issuer_whole_reverse_valid>>32));word(uint32_t(dut.issuer_whole_reverse_valid));} else
- if(name=="issuer_producer_result_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_producer_result_tuple[i]);} else
+ if(name=="issuer_producer_visible_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_producer_visible_tuple[i]);} else
  if(name=="issuer_whole_terminal_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_whole_terminal_tuple[i]);} else
  if(name=="issuer_whole_reverse_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_whole_reverse_tuple[i]);} else
- if(name=="issuer_rf_ack_owner"){for(int i=109;i>=0;i--)word(dut.issuer_rf_ack_owner[i]);} else
- if(name=="issuer_producer_result_ready"){word(uint32_t(dut.issuer_producer_result_ready>>32));word(uint32_t(dut.issuer_producer_result_ready));} else
- if(name=="issuer_rf_ack_ready"){word(uint32_t(dut.issuer_rf_ack_ready>>32));word(uint32_t(dut.issuer_rf_ack_ready));} else
+ if(name=="issuer_rf_range_ack_owner"){for(int i=109;i>=0;i--)word(dut.issuer_rf_range_ack_owner[i]);} else
+ if(name=="issuer_producer_visible_ready"){word(uint32_t(dut.issuer_producer_visible_ready>>32));word(uint32_t(dut.issuer_producer_visible_ready));} else
+ if(name=="issuer_rf_range_ack_ready"){word(uint32_t(dut.issuer_rf_range_ack_ready>>32));word(uint32_t(dut.issuer_rf_range_ack_ready));} else
  if(name=="issuer_whole_terminal_ready"){word(uint32_t(dut.issuer_whole_terminal_ready>>32));word(uint32_t(dut.issuer_whole_terminal_ready));} else
  if(name=="issuer_whole_reverse_ready"){word(uint32_t(dut.issuer_whole_reverse_ready>>32));word(uint32_t(dut.issuer_whole_reverse_ready));} else
  if(name=="issuer_publish_valid"){word(uint32_t(dut.issuer_publish_valid>>32));word(uint32_t(dut.issuer_publish_valid));} else
- if(name=="issuer_retire_valid"){word(uint32_t(dut.issuer_retire_valid>>32));word(uint32_t(dut.issuer_retire_valid));} else
+ if(name=="issuer_frame_retire_valid"){word(uint32_t(dut.issuer_frame_retire_valid>>32));word(uint32_t(dut.issuer_frame_retire_valid));} else
  if(name=="issuer_publish_ready"){word(uint32_t(dut.issuer_publish_ready>>32));word(uint32_t(dut.issuer_publish_ready));} else
- if(name=="issuer_retire_ready"){word(uint32_t(dut.issuer_retire_ready>>32));word(uint32_t(dut.issuer_retire_ready));} else
+ if(name=="issuer_frame_retire_ready"){word(uint32_t(dut.issuer_frame_retire_ready>>32));word(uint32_t(dut.issuer_frame_retire_ready));} else
  if(name=="issuer_publish_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_publish_tuple[i]);} else
- if(name=="issuer_retire_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_retire_tuple[i]);} else
+ if(name=="issuer_frame_retire_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_frame_retire_tuple[i]);} else
  if(name=="issuer_publish_owner"){for(int i=109;i>=0;i--)word(dut.issuer_publish_owner[i]);} else
- if(name=="issuer_retire_owner"){for(int i=109;i>=0;i--)word(dut.issuer_retire_owner[i]);} else
+ if(name=="issuer_frame_retire_owner"){for(int i=109;i>=0;i--)word(dut.issuer_frame_retire_owner[i]);} else
  if(name=="issuer_busy"){word(uint32_t(dut.issuer_busy>>32));word(uint32_t(dut.issuer_busy));} else
  if(name=="issuer_fault"){word(uint32_t(dut.issuer_fault>>32));word(uint32_t(dut.issuer_fault));} else
+ if(name=="state_por_n"){word(dut.state_por_n);} else
+ if(name=="state_run_enable"){word(dut.state_run_enable);} else
+ if(name=="state_local_reset"){word(dut.state_local_reset);} else
+ if(name=="state_source_bound"){word(dut.state_source_bound);} else
+ if(name=="state_command_valid"){word(dut.state_command_valid);} else
+ if(name=="state_command_ready"){word(dut.state_command_ready);} else
+ if(name=="state_command_rank"){word(dut.state_command_rank);} else
+ if(name=="state_command_write"){word(dut.state_command_write);} else
+ if(name=="state_command_sector_granted"){word(dut.state_command_sector_granted);} else
+ if(name=="state_state_client_mask"){word(dut.state_state_client_mask);} else
+ if(name=="state_command_identity"){word(uint32_t(dut.state_command_identity>>32));word(uint32_t(dut.state_command_identity));} else
+ if(name=="state_command_source_addr"){word(uint32_t(dut.state_command_source_addr>>32));word(uint32_t(dut.state_command_source_addr));} else
+ if(name=="state_command_physical_addr"){word(uint32_t(dut.state_command_physical_addr>>32));word(uint32_t(dut.state_command_physical_addr));} else
+ if(name=="state_command_owner"){word(uint32_t(dut.state_command_owner>>32));word(uint32_t(dut.state_command_owner));} else
+ if(name=="state_command_new_data"){for(int i=7;i>=0;i--)word(dut.state_command_new_data[i]);} else
+ if(name=="state_command_byte_mask"){word(dut.state_command_byte_mask);} else
+ if(name=="state_reply_valid"){word(dut.state_reply_valid);} else
+ if(name=="state_reply_ready"){word(dut.state_reply_ready);} else
+ if(name=="state_reply_identity"){word(uint32_t(dut.state_reply_identity>>32));word(uint32_t(dut.state_reply_identity));} else
+ if(name=="state_reply_old_data"){for(int i=7;i>=0;i--)word(dut.state_reply_old_data[i]);} else
+ if(name=="state_reply_rank"){word(dut.state_reply_rank);} else
+ if(name=="state_reply_owner"){word(uint32_t(dut.state_reply_owner>>32));word(uint32_t(dut.state_reply_owner));} else
+ if(name=="state_reply_physical_addr"){word(uint32_t(dut.state_reply_physical_addr>>32));word(uint32_t(dut.state_reply_physical_addr));} else
+ if(name=="state_quiescent"){word(dut.state_quiescent);} else
+ if(name=="state_bus_rank"){word(dut.state_bus_rank);} else
+ if(name=="state_bus_PC"){word(dut.state_bus_PC);} else
+ if(name=="state_caller_req_v"){word(dut.state_caller_req_v);} else
+ if(name=="state_caller_req_we"){word(dut.state_caller_req_we);} else
+ if(name=="state_raw_req_rdy"){word(dut.state_raw_req_rdy);} else
+ if(name=="state_caller_req_addr"){for(int i=6;i>=0;i--)word(dut.state_caller_req_addr[i]);} else
+ if(name=="state_caller_req_tag"){for(int i=5;i>=0;i--)word(dut.state_caller_req_tag[i]);} else
+ if(name=="state_caller_req_gen"){word(dut.state_caller_req_gen);} else
+ if(name=="state_caller_req_data"){for(int i=47;i>=0;i--)word(dut.state_caller_req_data[i]);} else
+ if(name=="state_req_permit"){word(dut.state_req_permit);} else
+ if(name=="state_raw_rsp_v"){word(dut.state_raw_rsp_v);} else
+ if(name=="state_raw_wr_done_v"){word(dut.state_raw_wr_done_v);} else
+ if(name=="state_caller_rsp_rdy"){word(dut.state_caller_rsp_rdy);} else
+ if(name=="state_caller_wr_done_rdy"){word(dut.state_caller_wr_done_rdy);} else
+ if(name=="state_raw_rsp_tag"){for(int i=5;i>=0;i--)word(dut.state_raw_rsp_tag[i]);} else
+ if(name=="state_raw_wr_done_tag"){for(int i=5;i>=0;i--)word(dut.state_raw_wr_done_tag[i]);} else
+ if(name=="state_raw_rsp_gen"){word(dut.state_raw_rsp_gen);} else
+ if(name=="state_raw_wr_done_gen"){word(dut.state_raw_wr_done_gen);} else
+ if(name=="state_raw_rsp_data"){for(int i=47;i>=0;i--)word(dut.state_raw_rsp_data[i]);} else
+ if(name=="state_W2_fault"){word(dut.state_W2_fault);} else
+ if(name=="state_repair_busy"){word(dut.state_repair_busy);} else
+ if(name=="state_capture_permit"){word(dut.state_capture_permit);} else
+ if(name=="state_reverse_valid"){word(dut.state_reverse_valid);} else
+ if(name=="state_reverse_ready"){word(dut.state_reverse_ready);} else
+ if(name=="state_reverse_rank"){word(dut.state_reverse_rank);} else
+ if(name=="state_reverse_write"){word(dut.state_reverse_write);} else
+ if(name=="state_reverse_owner"){word(uint32_t(dut.state_reverse_owner>>32));word(uint32_t(dut.state_reverse_owner));} else
+ if(name=="state_reverse_physical_addr"){word(uint32_t(dut.state_reverse_physical_addr>>32));word(uint32_t(dut.state_reverse_physical_addr));} else
+ if(name=="state_observe_valid"){word(dut.state_observe_valid);} else
+ if(name=="state_observe_ready"){word(dut.state_observe_ready);} else
+ if(name=="state_observe_rank"){word(dut.state_observe_rank);} else
+ if(name=="state_observe_old_captured"){word(dut.state_observe_old_captured);} else
+ if(name=="state_observe_source_addr"){word(uint32_t(dut.state_observe_source_addr>>32));word(uint32_t(dut.state_observe_source_addr));} else
+ if(name=="state_observe_physical_addr"){word(uint32_t(dut.state_observe_physical_addr>>32));word(uint32_t(dut.state_observe_physical_addr));} else
+ if(name=="state_observe_owner"){word(uint32_t(dut.state_observe_owner>>32));word(uint32_t(dut.state_observe_owner));} else
+ if(name=="state_observe_old_data"){for(int i=7;i>=0;i--)word(dut.state_observe_old_data[i]);} else
+ if(name=="state_observe_new_data"){for(int i=7;i>=0;i--)word(dut.state_observe_new_data[i]);} else
+ if(name=="state_ACK_valid"){word(dut.state_ACK_valid);} else
+ if(name=="state_ACK_ready"){word(dut.state_ACK_ready);} else
+ if(name=="state_ACK_owner"){word(uint32_t(dut.state_ACK_owner>>32));word(uint32_t(dut.state_ACK_owner));} else
+ if(name=="state_ACK_physical_addr"){word(uint32_t(dut.state_ACK_physical_addr>>32));word(uint32_t(dut.state_ACK_physical_addr));} else
+ if(name=="state_ACK_visible"){word(dut.state_ACK_visible);} else
+ if(name=="state_ACK_reverse"){word(dut.state_ACK_reverse);} else
+ if(name=="state_fault"){word(dut.state_fault);} else
+ if(name=="rfdrain_por_n"){word(uint32_t(dut.rfdrain_por_n>>32));word(uint32_t(dut.rfdrain_por_n));} else
+ if(name=="rfdrain_rst_n"){word(uint32_t(dut.rfdrain_rst_n>>32));word(uint32_t(dut.rfdrain_rst_n));} else
+ if(name=="rfdrain_run_enable"){word(uint32_t(dut.rfdrain_run_enable>>32));word(uint32_t(dut.rfdrain_run_enable));} else
+ if(name=="rfdrain_source_fault"){word(uint32_t(dut.rfdrain_source_fault>>32));word(uint32_t(dut.rfdrain_source_fault));} else
+ if(name=="rfdrain_rf_write_accept"){word(uint32_t(dut.rfdrain_rf_write_accept>>32));word(uint32_t(dut.rfdrain_rf_write_accept));} else
+ if(name=="rfdrain_rf_write_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_rf_write_owner55[i]);} else
+ if(name=="rfdrain_wr_binding_valid"){word(uint32_t(dut.rfdrain_wr_binding_valid>>32));word(uint32_t(dut.rfdrain_wr_binding_valid));} else
+ if(name=="rfdrain_wr_KV_related"){word(uint32_t(dut.rfdrain_wr_KV_related>>32));word(uint32_t(dut.rfdrain_wr_KV_related));} else
+ if(name=="rfdrain_wr_identity"){for(int i=127;i>=0;i--)word(dut.rfdrain_wr_identity[i]);} else
+ if(name=="rfdrain_wr_key"){for(int i=39;i>=0;i--)word(dut.rfdrain_wr_key[i]);} else
+ if(name=="rfdrain_wr_permit"){word(uint32_t(dut.rfdrain_wr_permit>>32));word(uint32_t(dut.rfdrain_wr_permit));} else
+ if(name=="rfdrain_wr_continuation_valid"){word(uint32_t(dut.rfdrain_wr_continuation_valid>>32));word(uint32_t(dut.rfdrain_wr_continuation_valid));} else
+ if(name=="rfdrain_wr_continuation_source"){word(uint32_t(dut.rfdrain_wr_continuation_source>>32));word(uint32_t(dut.rfdrain_wr_continuation_source));} else
+ if(name=="rfdrain_rd_continuation_valid"){word(uint32_t(dut.rfdrain_rd_continuation_valid>>32));word(uint32_t(dut.rfdrain_rd_continuation_valid));} else
+ if(name=="rfdrain_rd_continuation_source"){word(uint32_t(dut.rfdrain_rd_continuation_source>>32));word(uint32_t(dut.rfdrain_rd_continuation_source));} else
+ if(name=="rfdrain_rd_context_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_rd_context_owner55[i]);} else
+ if(name=="rfdrain_simd_context_accept"){word(uint32_t(dut.rfdrain_simd_context_accept>>32));word(uint32_t(dut.rfdrain_simd_context_accept));} else
+ if(name=="rfdrain_simd_binding_valid"){word(uint32_t(dut.rfdrain_simd_binding_valid>>32));word(uint32_t(dut.rfdrain_simd_binding_valid));} else
+ if(name=="rfdrain_simd_KV_related"){word(uint32_t(dut.rfdrain_simd_KV_related>>32));word(uint32_t(dut.rfdrain_simd_KV_related));} else
+ if(name=="rfdrain_simd_context_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_simd_context_owner55[i]);} else
+ if(name=="rfdrain_simd_identity"){for(int i=127;i>=0;i--)word(dut.rfdrain_simd_identity[i]);} else
+ if(name=="rfdrain_simd_key"){for(int i=39;i>=0;i--)word(dut.rfdrain_simd_key[i]);} else
+ if(name=="rfdrain_simd_context_permit"){word(uint32_t(dut.rfdrain_simd_context_permit>>32));word(uint32_t(dut.rfdrain_simd_context_permit));} else
+ if(name=="rfdrain_simd_context_retire"){word(uint32_t(dut.rfdrain_simd_context_retire>>32));word(uint32_t(dut.rfdrain_simd_context_retire));} else
+ if(name=="rfdrain_simd_retire_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_simd_retire_owner55[i]);} else
+ if(name=="rfdrain_rf_ack_valid"){word(uint32_t(dut.rfdrain_rf_ack_valid>>32));word(uint32_t(dut.rfdrain_rf_ack_valid));} else
+ if(name=="rfdrain_rf_ack_accept"){word(uint32_t(dut.rfdrain_rf_ack_accept>>32));word(uint32_t(dut.rfdrain_rf_ack_accept));} else
+ if(name=="rfdrain_rf_ack_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_rf_ack_owner55[i]);} else
+ if(name=="rfdrain_rf_ack_fault"){word(uint32_t(dut.rfdrain_rf_ack_fault>>32));word(uint32_t(dut.rfdrain_rf_ack_fault));} else
+ if(name=="rfdrain_rf_ack_allow"){word(uint32_t(dut.rfdrain_rf_ack_allow>>32));word(uint32_t(dut.rfdrain_rf_ack_allow));} else
+ if(name=="rfdrain_rf_read_accept"){word(uint32_t(dut.rfdrain_rf_read_accept>>32));word(uint32_t(dut.rfdrain_rf_read_accept));} else
+ if(name=="rfdrain_rf_read_a"){for(int i=17;i>=0;i--)word(dut.rfdrain_rf_read_a[i]);} else
+ if(name=="rfdrain_rf_read_b"){for(int i=17;i>=0;i--)word(dut.rfdrain_rf_read_b[i]);} else
+ if(name=="rfdrain_rd_binding_valid"){word(uint32_t(dut.rfdrain_rd_binding_valid>>32));word(uint32_t(dut.rfdrain_rd_binding_valid));} else
+ if(name=="rfdrain_rd_KV_related"){word(uint32_t(dut.rfdrain_rd_KV_related>>32));word(uint32_t(dut.rfdrain_rd_KV_related));} else
+ if(name=="rfdrain_rd_identity"){for(int i=127;i>=0;i--)word(dut.rfdrain_rd_identity[i]);} else
+ if(name=="rfdrain_rd_key"){for(int i=39;i>=0;i--)word(dut.rfdrain_rd_key[i]);} else
+ if(name=="rfdrain_rd_permit"){word(uint32_t(dut.rfdrain_rd_permit>>32));word(uint32_t(dut.rfdrain_rd_permit));} else
+ if(name=="rfdrain_rf_rsp_valid"){word(uint32_t(dut.rfdrain_rf_rsp_valid>>32));word(uint32_t(dut.rfdrain_rf_rsp_valid));} else
+ if(name=="rfdrain_rf_rsp_accept"){word(uint32_t(dut.rfdrain_rf_rsp_accept>>32));word(uint32_t(dut.rfdrain_rf_rsp_accept));} else
+ if(name=="rfdrain_rf_rsp_allow"){word(uint32_t(dut.rfdrain_rf_rsp_allow>>32));word(uint32_t(dut.rfdrain_rf_rsp_allow));} else
+ if(name=="rfdrain_w6_request_accept"){word(uint32_t(dut.rfdrain_w6_request_accept>>32));word(uint32_t(dut.rfdrain_w6_request_accept));} else
+ if(name=="rfdrain_w6_request_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_w6_request_owner55[i]);} else
+ if(name=="rfdrain_w6_binding_valid"){word(uint32_t(dut.rfdrain_w6_binding_valid>>32));word(uint32_t(dut.rfdrain_w6_binding_valid));} else
+ if(name=="rfdrain_w6_KV_related"){word(uint32_t(dut.rfdrain_w6_KV_related>>32));word(uint32_t(dut.rfdrain_w6_KV_related));} else
+ if(name=="rfdrain_w6_internal_SIMD"){word(uint32_t(dut.rfdrain_w6_internal_SIMD>>32));word(uint32_t(dut.rfdrain_w6_internal_SIMD));} else
+ if(name=="rfdrain_w6_identity"){for(int i=127;i>=0;i--)word(dut.rfdrain_w6_identity[i]);} else
+ if(name=="rfdrain_w6_key"){for(int i=39;i>=0;i--)word(dut.rfdrain_w6_key[i]);} else
+ if(name=="rfdrain_w6_permit"){word(uint32_t(dut.rfdrain_w6_permit>>32));word(uint32_t(dut.rfdrain_w6_permit));} else
+ if(name=="rfdrain_w6_host_ACK_accept"){word(uint32_t(dut.rfdrain_w6_host_ACK_accept>>32));word(uint32_t(dut.rfdrain_w6_host_ACK_accept));} else
+ if(name=="rfdrain_w6_SIMD_ACK_accept"){word(uint32_t(dut.rfdrain_w6_SIMD_ACK_accept>>32));word(uint32_t(dut.rfdrain_w6_SIMD_ACK_accept));} else
+ if(name=="rfdrain_w6_ACK_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_w6_ACK_owner55[i]);} else
+ if(name=="rfdrain_w6_consumer_accept"){word(uint32_t(dut.rfdrain_w6_consumer_accept>>32));word(uint32_t(dut.rfdrain_w6_consumer_accept));} else
+ if(name=="rfdrain_w6_consumer_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_w6_consumer_owner55[i]);} else
+ if(name=="rfdrain_w6_child_accept"){word(uint32_t(dut.rfdrain_w6_child_accept>>32));word(uint32_t(dut.rfdrain_w6_child_accept));} else
+ if(name=="rfdrain_w6_child_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_w6_child_owner55[i]);} else
+ if(name=="rfdrain_w6_parent_accept"){word(uint32_t(dut.rfdrain_w6_parent_accept>>32));word(uint32_t(dut.rfdrain_w6_parent_accept));} else
+ if(name=="rfdrain_w6_parent_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_w6_parent_owner55[i]);} else
+ if(name=="rfdrain_w6_CDC_accept"){word(uint32_t(dut.rfdrain_w6_CDC_accept>>32));word(uint32_t(dut.rfdrain_w6_CDC_accept));} else
+ if(name=="rfdrain_w6_CDC_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_w6_CDC_owner55[i]);} else
+ if(name=="rfdrain_w6_retire_accept"){word(uint32_t(dut.rfdrain_w6_retire_accept>>32));word(uint32_t(dut.rfdrain_w6_retire_accept));} else
+ if(name=="rfdrain_w6_retire_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_w6_retire_owner55[i]);} else
+ if(name=="rfdrain_w6_local_drain_owner55"){for(int i=109;i>=0;i--)word(dut.rfdrain_w6_local_drain_owner55[i]);} else
+ if(name=="rfdrain_w6_local_drain_has_owner"){word(uint32_t(dut.rfdrain_w6_local_drain_has_owner>>32));word(uint32_t(dut.rfdrain_w6_local_drain_has_owner));} else
+ if(name=="rfdrain_w6_local_drain_reset_scope"){word(uint32_t(dut.rfdrain_w6_local_drain_reset_scope>>32));word(uint32_t(dut.rfdrain_w6_local_drain_reset_scope));} else
+ if(name=="rfdrain_drain_req_valid"){word(uint32_t(dut.rfdrain_drain_req_valid>>32));word(uint32_t(dut.rfdrain_drain_req_valid));} else
+ if(name=="rfdrain_drain_req_ready"){word(uint32_t(dut.rfdrain_drain_req_ready>>32));word(uint32_t(dut.rfdrain_drain_req_ready));} else
+ if(name=="rfdrain_drain_req_identity"){for(int i=127;i>=0;i--)word(dut.rfdrain_drain_req_identity[i]);} else
+ if(name=="rfdrain_drain_req_key"){for(int i=39;i>=0;i--)word(dut.rfdrain_drain_req_key[i]);} else
+ if(name=="rfdrain_drain_hold"){word(uint32_t(dut.rfdrain_drain_hold>>32));word(uint32_t(dut.rfdrain_drain_hold));} else
+ if(name=="rfdrain_drain_rsp_valid"){word(uint32_t(dut.rfdrain_drain_rsp_valid>>32));word(uint32_t(dut.rfdrain_drain_rsp_valid));} else
+ if(name=="rfdrain_drain_rsp_ready"){word(uint32_t(dut.rfdrain_drain_rsp_ready>>32));word(uint32_t(dut.rfdrain_drain_rsp_ready));} else
+ if(name=="rfdrain_drain_rsp_identity"){for(int i=127;i>=0;i--)word(dut.rfdrain_drain_rsp_identity[i]);} else
+ if(name=="rfdrain_drain_rsp_key"){for(int i=39;i>=0;i--)word(dut.rfdrain_drain_rsp_key[i]);} else
+ if(name=="rfdrain_drain_rsp_empty"){word(uint32_t(dut.rfdrain_drain_rsp_empty>>32));word(uint32_t(dut.rfdrain_drain_rsp_empty));} else
+ if(name=="rfdrain_drain_retained"){word(uint32_t(dut.rfdrain_drain_retained>>32));word(uint32_t(dut.rfdrain_drain_retained));} else
+ if(name=="rfdrain_write_retained"){word(uint32_t(dut.rfdrain_write_retained>>32));word(uint32_t(dut.rfdrain_write_retained));} else
+ if(name=="rfdrain_read_retained"){word(uint32_t(dut.rfdrain_read_retained>>32));word(uint32_t(dut.rfdrain_read_retained));} else
+ if(name=="rfdrain_w6_retained"){word(uint32_t(dut.rfdrain_w6_retained>>32));word(uint32_t(dut.rfdrain_w6_retained));} else
+ if(name=="rfdrain_w6_local_RF_empty"){word(uint32_t(dut.rfdrain_w6_local_RF_empty>>32));word(uint32_t(dut.rfdrain_w6_local_RF_empty));} else
+ if(name=="rfdrain_fault"){word(uint32_t(dut.rfdrain_fault>>32));word(uint32_t(dut.rfdrain_fault));} else
+ if(name=="rfjoin_por_n"){word(dut.rfjoin_por_n);} else
+ if(name=="rfjoin_rst_n"){word(dut.rfjoin_rst_n);} else
+ if(name=="rfjoin_run_enable"){word(dut.rfjoin_run_enable);} else
+ if(name=="rfjoin_drain_req_valid"){word(dut.rfjoin_drain_req_valid);} else
+ if(name=="rfjoin_drain_req_ready"){word(dut.rfjoin_drain_req_ready);} else
+ if(name=="rfjoin_drain_req_identity"){for(int i=3;i>=0;i--)word(dut.rfjoin_drain_req_identity[i]);} else
+ if(name=="rfjoin_drain_req_key"){word(uint32_t(dut.rfjoin_drain_req_key>>32));word(uint32_t(dut.rfjoin_drain_req_key));} else
+ if(name=="rfjoin_drain_hold"){word(dut.rfjoin_drain_hold);} else
+ if(name=="rfjoin_leaf_req_valid"){word(uint32_t(dut.rfjoin_leaf_req_valid>>32));word(uint32_t(dut.rfjoin_leaf_req_valid));} else
+ if(name=="rfjoin_leaf_req_ready"){word(uint32_t(dut.rfjoin_leaf_req_ready>>32));word(uint32_t(dut.rfjoin_leaf_req_ready));} else
+ if(name=="rfjoin_leaf_identity"){for(int i=3;i>=0;i--)word(dut.rfjoin_leaf_identity[i]);} else
+ if(name=="rfjoin_leaf_key"){word(uint32_t(dut.rfjoin_leaf_key>>32));word(uint32_t(dut.rfjoin_leaf_key));} else
+ if(name=="rfjoin_leaf_hold"){word(uint32_t(dut.rfjoin_leaf_hold>>32));word(uint32_t(dut.rfjoin_leaf_hold));} else
+ if(name=="rfjoin_leaf_rsp_valid"){word(uint32_t(dut.rfjoin_leaf_rsp_valid>>32));word(uint32_t(dut.rfjoin_leaf_rsp_valid));} else
+ if(name=="rfjoin_leaf_rsp_ready"){word(uint32_t(dut.rfjoin_leaf_rsp_ready>>32));word(uint32_t(dut.rfjoin_leaf_rsp_ready));} else
+ if(name=="rfjoin_leaf_rsp_tuple"){for(int i=167;i>=0;i--)word(dut.rfjoin_leaf_rsp_tuple[i]);} else
+ if(name=="rfjoin_leaf_rsp_empty"){word(uint32_t(dut.rfjoin_leaf_rsp_empty>>32));word(uint32_t(dut.rfjoin_leaf_rsp_empty));} else
+ if(name=="rfjoin_leaf_fault"){word(uint32_t(dut.rfjoin_leaf_fault>>32));word(uint32_t(dut.rfjoin_leaf_fault));} else
+ if(name=="rfjoin_drain_rsp_valid"){word(dut.rfjoin_drain_rsp_valid);} else
+ if(name=="rfjoin_drain_rsp_ready"){word(dut.rfjoin_drain_rsp_ready);} else
+ if(name=="rfjoin_drain_rsp_identity"){for(int i=3;i>=0;i--)word(dut.rfjoin_drain_rsp_identity[i]);} else
+ if(name=="rfjoin_drain_rsp_key"){word(uint32_t(dut.rfjoin_drain_rsp_key>>32));word(uint32_t(dut.rfjoin_drain_rsp_key));} else
+ if(name=="rfjoin_drain_rsp_empty"){word(dut.rfjoin_drain_rsp_empty);} else
+ if(name=="rfjoin_drain_retained"){word(dut.rfjoin_drain_retained);} else
+ if(name=="rfjoin_fault"){word(dut.rfjoin_fault);} else
  if(name=="sector_por_n"){word(dut.sector_por_n);} else
  if(name=="sector_run_enable"){word(dut.sector_run_enable);} else
  if(name=="sector_local_reset"){word(dut.sector_local_reset);} else
@@ -324,6 +514,53 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="sm_host_ack_slot"){for(int i=17;i>=0;i--)word(dut.sm_host_ack_slot[i]);} else
  if(name=="sm_simd_done_slot"){for(int i=17;i>=0;i--)word(dut.sm_simd_done_slot[i]);} else
  if(name=="sm_identity_fault"){word(uint32_t(dut.sm_identity_fault>>32));word(uint32_t(dut.sm_identity_fault));} else
+ if(name=="sm_simd_context_permit"){word(uint32_t(dut.sm_simd_context_permit>>32));word(uint32_t(dut.sm_simd_context_permit));} else
+ if(name=="sm_rd_permit"){word(uint32_t(dut.sm_rd_permit>>32));word(uint32_t(dut.sm_rd_permit));} else
+ if(name=="sm_wr_permit"){word(uint32_t(dut.sm_wr_permit>>32));word(uint32_t(dut.sm_wr_permit));} else
+ if(name=="sm_rf_rsp_allow"){word(uint32_t(dut.sm_rf_rsp_allow>>32));word(uint32_t(dut.sm_rf_rsp_allow));} else
+ if(name=="sm_rf_ack_allow"){word(uint32_t(dut.sm_rf_ack_allow>>32));word(uint32_t(dut.sm_rf_ack_allow));} else
+ if(name=="sm_simd_binding_valid"){word(uint32_t(dut.sm_simd_binding_valid>>32));word(uint32_t(dut.sm_simd_binding_valid));} else
+ if(name=="sm_simd_KV_related"){word(uint32_t(dut.sm_simd_KV_related>>32));word(uint32_t(dut.sm_simd_KV_related));} else
+ if(name=="sm_simd_source_identity"){for(int i=127;i>=0;i--)word(dut.sm_simd_source_identity[i]);} else
+ if(name=="sm_simd_key"){for(int i=39;i>=0;i--)word(dut.sm_simd_key[i]);} else
+ if(name=="sm_host_rd_binding_valid"){word(uint32_t(dut.sm_host_rd_binding_valid>>32));word(uint32_t(dut.sm_host_rd_binding_valid));} else
+ if(name=="sm_host_rd_KV_related"){word(uint32_t(dut.sm_host_rd_KV_related>>32));word(uint32_t(dut.sm_host_rd_KV_related));} else
+ if(name=="sm_host_rd_identity"){for(int i=127;i>=0;i--)word(dut.sm_host_rd_identity[i]);} else
+ if(name=="sm_host_rd_key"){for(int i=39;i>=0;i--)word(dut.sm_host_rd_key[i]);} else
+ if(name=="sm_host_wr_binding_valid"){word(uint32_t(dut.sm_host_wr_binding_valid>>32));word(uint32_t(dut.sm_host_wr_binding_valid));} else
+ if(name=="sm_host_wr_KV_related"){word(uint32_t(dut.sm_host_wr_KV_related>>32));word(uint32_t(dut.sm_host_wr_KV_related));} else
+ if(name=="sm_host_wr_identity"){for(int i=127;i>=0;i--)word(dut.sm_host_wr_identity[i]);} else
+ if(name=="sm_host_wr_key"){for(int i=39;i>=0;i--)word(dut.sm_host_wr_key[i]);} else
+ if(name=="sm_host_rd_continuation_valid"){word(uint32_t(dut.sm_host_rd_continuation_valid>>32));word(uint32_t(dut.sm_host_rd_continuation_valid));} else
+ if(name=="sm_host_wr_continuation_valid"){word(uint32_t(dut.sm_host_wr_continuation_valid>>32));word(uint32_t(dut.sm_host_wr_continuation_valid));} else
+ if(name=="sm_rf_write_accept"){word(uint32_t(dut.sm_rf_write_accept>>32));word(uint32_t(dut.sm_rf_write_accept));} else
+ if(name=="sm_rf_write_owner55"){for(int i=109;i>=0;i--)word(dut.sm_rf_write_owner55[i]);} else
+ if(name=="sm_rf_ack_valid"){word(uint32_t(dut.sm_rf_ack_valid>>32));word(uint32_t(dut.sm_rf_ack_valid));} else
+ if(name=="sm_rf_ack_accept"){word(uint32_t(dut.sm_rf_ack_accept>>32));word(uint32_t(dut.sm_rf_ack_accept));} else
+ if(name=="sm_rf_ack_owner55"){for(int i=109;i>=0;i--)word(dut.sm_rf_ack_owner55[i]);} else
+ if(name=="sm_rf_ack_fault"){word(uint32_t(dut.sm_rf_ack_fault>>32));word(uint32_t(dut.sm_rf_ack_fault));} else
+ if(name=="sm_rf_read_accept"){word(uint32_t(dut.sm_rf_read_accept>>32));word(uint32_t(dut.sm_rf_read_accept));} else
+ if(name=="sm_rf_read_a"){for(int i=17;i>=0;i--)word(dut.sm_rf_read_a[i]);} else
+ if(name=="sm_rf_read_b"){for(int i=17;i>=0;i--)word(dut.sm_rf_read_b[i]);} else
+ if(name=="sm_rf_rsp_valid"){word(uint32_t(dut.sm_rf_rsp_valid>>32));word(uint32_t(dut.sm_rf_rsp_valid));} else
+ if(name=="sm_rf_rsp_accept"){word(uint32_t(dut.sm_rf_rsp_accept>>32));word(uint32_t(dut.sm_rf_rsp_accept));} else
+ if(name=="sm_simd_context_accept"){word(uint32_t(dut.sm_simd_context_accept>>32));word(uint32_t(dut.sm_simd_context_accept));} else
+ if(name=="sm_simd_context_owner55"){for(int i=109;i>=0;i--)word(dut.sm_simd_context_owner55[i]);} else
+ if(name=="sm_simd_context_retire"){word(uint32_t(dut.sm_simd_context_retire>>32));word(uint32_t(dut.sm_simd_context_retire));} else
+ if(name=="sm_simd_retire_owner55"){for(int i=109;i>=0;i--)word(dut.sm_simd_retire_owner55[i]);} else
+ if(name=="sm_wr_continuation_valid"){word(uint32_t(dut.sm_wr_continuation_valid>>32));word(uint32_t(dut.sm_wr_continuation_valid));} else
+ if(name=="sm_wr_continuation_source"){word(uint32_t(dut.sm_wr_continuation_source>>32));word(uint32_t(dut.sm_wr_continuation_source));} else
+ if(name=="sm_rd_continuation_valid"){word(uint32_t(dut.sm_rd_continuation_valid>>32));word(uint32_t(dut.sm_rd_continuation_valid));} else
+ if(name=="sm_rd_continuation_source"){word(uint32_t(dut.sm_rd_continuation_source>>32));word(uint32_t(dut.sm_rd_continuation_source));} else
+ if(name=="sm_rd_context_owner55"){for(int i=109;i>=0;i--)word(dut.sm_rd_context_owner55[i]);} else
+ if(name=="sm_wr_context_identity"){for(int i=127;i>=0;i--)word(dut.sm_wr_context_identity[i]);} else
+ if(name=="sm_wr_context_key"){for(int i=39;i>=0;i--)word(dut.sm_wr_context_key[i]);} else
+ if(name=="sm_wr_context_binding_valid"){word(uint32_t(dut.sm_wr_context_binding_valid>>32));word(uint32_t(dut.sm_wr_context_binding_valid));} else
+ if(name=="sm_wr_context_KV_related"){word(uint32_t(dut.sm_wr_context_KV_related>>32));word(uint32_t(dut.sm_wr_context_KV_related));} else
+ if(name=="sm_rd_context_identity"){for(int i=127;i>=0;i--)word(dut.sm_rd_context_identity[i]);} else
+ if(name=="sm_rd_context_key"){for(int i=39;i>=0;i--)word(dut.sm_rd_context_key[i]);} else
+ if(name=="sm_rd_context_binding_valid"){word(uint32_t(dut.sm_rd_context_binding_valid>>32));word(uint32_t(dut.sm_rd_context_binding_valid));} else
+ if(name=="sm_rd_context_KV_related"){word(uint32_t(dut.sm_rd_context_KV_related>>32));word(uint32_t(dut.sm_rd_context_KV_related));} else
  if(name=="w2_rst_n"){for(int i=7;i>=0;i--)word(dut.w2_rst_n[i]);} else
  if(name=="w2_admission_stop"){for(int i=7;i>=0;i--)word(dut.w2_admission_stop[i]);} else
  if(name=="w2_rearm_v"){for(int i=7;i>=0;i--)word(dut.w2_rearm_v[i]);} else
@@ -370,6 +607,14 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  else if(op=="SET"){in>>name>>value;if(in>>extra)throw std::runtime_error("extra");
  if(name=="sector_map_rank"){auto v=unpack(value,1);dut.sector_map_rank=v[0];std::cout<<"OK";} else
  if(name=="sector_reverse_rank"){auto v=unpack(value,1);dut.sector_reverse_rank=v[0];std::cout<<"OK";} else
+ if(name=="issuer_inputs_bound_valid"){auto v=unpack(value,64);dut.issuer_inputs_bound_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_inputs_bound_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_inputs_bound_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_inputs_bound_mask"){auto v=unpack(value,448);for(unsigned i=0;i<v.size();i++)dut.issuer_inputs_bound_mask[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_issue_output_page_mask"){auto v=unpack(value,2048);for(unsigned i=0;i<v.size();i++)dut.issuer_issue_output_page_mask[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_rf_range_ack_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_rf_range_ack_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_rf_range_ack_page_mask"){auto v=unpack(value,2048);for(unsigned i=0;i<v.size();i++)dut.issuer_rf_range_ack_page_mask[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_input_terminal_ready"){auto v=unpack(value,64);dut.issuer_input_terminal_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_input_reverse_ready"){auto v=unpack(value,64);dut.issuer_input_reverse_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="issuer_por_n"){auto v=unpack(value,1);dut.issuer_por_n=v[0];std::cout<<"OK";} else
  if(name=="issuer_run_enable"){auto v=unpack(value,1);dut.issuer_run_enable=v[0];std::cout<<"OK";} else
  if(name=="issuer_session_begin_valid"){auto v=unpack(value,1);dut.issuer_session_begin_valid=v[0];std::cout<<"OK";} else
@@ -380,16 +625,61 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="issuer_backend_go_ready"){auto v=unpack(value,64);dut.issuer_backend_go_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="issuer_issue_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_issue_tuple[i]=v[i];std::cout<<"OK";} else
  if(name=="issuer_issue_owner"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.issuer_issue_owner[i]=v[i];std::cout<<"OK";} else
- if(name=="issuer_producer_result_valid"){auto v=unpack(value,64);dut.issuer_producer_result_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="issuer_rf_ack_valid"){auto v=unpack(value,64);dut.issuer_rf_ack_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_producer_visible_valid"){auto v=unpack(value,64);dut.issuer_producer_visible_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_rf_range_ack_valid"){auto v=unpack(value,64);dut.issuer_rf_range_ack_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="issuer_whole_terminal_valid"){auto v=unpack(value,64);dut.issuer_whole_terminal_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="issuer_whole_reverse_valid"){auto v=unpack(value,64);dut.issuer_whole_reverse_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="issuer_producer_result_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_producer_result_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_producer_visible_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_producer_visible_tuple[i]=v[i];std::cout<<"OK";} else
  if(name=="issuer_whole_terminal_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_whole_terminal_tuple[i]=v[i];std::cout<<"OK";} else
  if(name=="issuer_whole_reverse_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_whole_reverse_tuple[i]=v[i];std::cout<<"OK";} else
- if(name=="issuer_rf_ack_owner"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.issuer_rf_ack_owner[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_rf_range_ack_owner"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.issuer_rf_range_ack_owner[i]=v[i];std::cout<<"OK";} else
  if(name=="issuer_publish_ready"){auto v=unpack(value,64);dut.issuer_publish_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="issuer_retire_ready"){auto v=unpack(value,64);dut.issuer_retire_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_frame_retire_ready"){auto v=unpack(value,64);dut.issuer_frame_retire_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_por_n"){auto v=unpack(value,1);dut.state_por_n=v[0];std::cout<<"OK";} else
+ if(name=="state_run_enable"){auto v=unpack(value,1);dut.state_run_enable=v[0];std::cout<<"OK";} else
+ if(name=="state_local_reset"){auto v=unpack(value,1);dut.state_local_reset=v[0];std::cout<<"OK";} else
+ if(name=="state_source_bound"){auto v=unpack(value,1);dut.state_source_bound=v[0];std::cout<<"OK";} else
+ if(name=="state_command_valid"){auto v=unpack(value,1);dut.state_command_valid=v[0];std::cout<<"OK";} else
+ if(name=="state_command_rank"){auto v=unpack(value,1);dut.state_command_rank=v[0];std::cout<<"OK";} else
+ if(name=="state_command_write"){auto v=unpack(value,1);dut.state_command_write=v[0];std::cout<<"OK";} else
+ if(name=="state_command_sector_granted"){auto v=unpack(value,1);dut.state_command_sector_granted=v[0];std::cout<<"OK";} else
+ if(name=="state_state_client_mask"){auto v=unpack(value,6);dut.state_state_client_mask=v[0];std::cout<<"OK";} else
+ if(name=="state_command_identity"){auto v=unpack(value,64);dut.state_command_identity=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_command_source_addr"){auto v=unpack(value,34);dut.state_command_source_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_command_physical_addr"){auto v=unpack(value,34);dut.state_command_physical_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_command_owner"){auto v=unpack(value,46);dut.state_command_owner=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="state_command_new_data"){auto v=unpack(value,256);for(unsigned i=0;i<v.size();i++)dut.state_command_new_data[i]=v[i];std::cout<<"OK";} else
+ if(name=="state_command_byte_mask"){auto v=unpack(value,32);dut.state_command_byte_mask=v[0];std::cout<<"OK";} else
+ if(name=="state_reply_ready"){auto v=unpack(value,1);dut.state_reply_ready=v[0];std::cout<<"OK";} else
+ if(name=="rfdrain_por_n"){auto v=unpack(value,64);dut.rfdrain_por_n=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_rst_n"){auto v=unpack(value,64);dut.rfdrain_rst_n=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_run_enable"){auto v=unpack(value,64);dut.rfdrain_run_enable=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_request_accept"){auto v=unpack(value,64);dut.rfdrain_w6_request_accept=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_request_owner55"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_request_owner55[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_binding_valid"){auto v=unpack(value,64);dut.rfdrain_w6_binding_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_KV_related"){auto v=unpack(value,64);dut.rfdrain_w6_KV_related=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_internal_SIMD"){auto v=unpack(value,64);dut.rfdrain_w6_internal_SIMD=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_identity"){auto v=unpack(value,4096);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_identity[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_key"){auto v=unpack(value,1280);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_key[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_host_ACK_accept"){auto v=unpack(value,64);dut.rfdrain_w6_host_ACK_accept=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_SIMD_ACK_accept"){auto v=unpack(value,64);dut.rfdrain_w6_SIMD_ACK_accept=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_ACK_owner55"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_ACK_owner55[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_consumer_accept"){auto v=unpack(value,64);dut.rfdrain_w6_consumer_accept=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_consumer_owner55"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_consumer_owner55[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_child_accept"){auto v=unpack(value,64);dut.rfdrain_w6_child_accept=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_child_owner55"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_child_owner55[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_parent_accept"){auto v=unpack(value,64);dut.rfdrain_w6_parent_accept=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_parent_owner55"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_parent_owner55[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_CDC_accept"){auto v=unpack(value,64);dut.rfdrain_w6_CDC_accept=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_CDC_owner55"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_CDC_owner55[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_retire_accept"){auto v=unpack(value,64);dut.rfdrain_w6_retire_accept=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_retire_owner55"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_retire_owner55[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_local_drain_owner55"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.rfdrain_w6_local_drain_owner55[i]=v[i];std::cout<<"OK";} else
+ if(name=="rfdrain_w6_local_drain_has_owner"){auto v=unpack(value,64);dut.rfdrain_w6_local_drain_has_owner=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfdrain_w6_local_drain_reset_scope"){auto v=unpack(value,64);dut.rfdrain_w6_local_drain_reset_scope=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="rfjoin_por_n"){auto v=unpack(value,2);dut.rfjoin_por_n=v[0];std::cout<<"OK";} else
+ if(name=="rfjoin_rst_n"){auto v=unpack(value,2);dut.rfjoin_rst_n=v[0];std::cout<<"OK";} else
+ if(name=="rfjoin_run_enable"){auto v=unpack(value,2);dut.rfjoin_run_enable=v[0];std::cout<<"OK";} else
  if(name=="sector_por_n"){auto v=unpack(value,1);dut.sector_por_n=v[0];std::cout<<"OK";} else
  if(name=="sector_run_enable"){auto v=unpack(value,1);dut.sector_run_enable=v[0];std::cout<<"OK";} else
  if(name=="sector_local_reset"){auto v=unpack(value,1);dut.sector_local_reset=v[0];std::cout<<"OK";} else
@@ -448,19 +738,6 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="kv_source_bound"){auto v=unpack(value,1);dut.kv_source_bound=v[0];std::cout<<"OK";} else
  if(name=="kv_state_base_rank0"){auto v=unpack(value,34);dut.kv_state_base_rank0=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="kv_state_base_rank1"){auto v=unpack(value,34);dut.kv_state_base_rank1=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_observe_valid"){auto v=unpack(value,1);dut.kv_observe_valid=v[0];std::cout<<"OK";} else
- if(name=="kv_observe_rank"){auto v=unpack(value,1);dut.kv_observe_rank=v[0];std::cout<<"OK";} else
- if(name=="kv_observe_source_addr"){auto v=unpack(value,34);dut.kv_observe_source_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_observe_physical_addr"){auto v=unpack(value,34);dut.kv_observe_physical_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_observe_owner"){auto v=unpack(value,46);dut.kv_observe_owner=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_observe_old_data"){auto v=unpack(value,256);for(unsigned i=0;i<v.size();i++)dut.kv_observe_old_data[i]=v[i];std::cout<<"OK";} else
- if(name=="kv_observe_new_data"){auto v=unpack(value,256);for(unsigned i=0;i<v.size();i++)dut.kv_observe_new_data[i]=v[i];std::cout<<"OK";} else
- if(name=="kv_observe_old_captured"){auto v=unpack(value,1);dut.kv_observe_old_captured=v[0];std::cout<<"OK";} else
- if(name=="kv_ACK_valid"){auto v=unpack(value,1);dut.kv_ACK_valid=v[0];std::cout<<"OK";} else
- if(name=="kv_ACK_owner"){auto v=unpack(value,46);dut.kv_ACK_owner=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_ACK_physical_addr"){auto v=unpack(value,34);dut.kv_ACK_physical_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_ACK_visible"){auto v=unpack(value,1);dut.kv_ACK_visible=v[0];std::cout<<"OK";} else
- if(name=="kv_ACK_reverse"){auto v=unpack(value,1);dut.kv_ACK_reverse=v[0];std::cout<<"OK";} else
  if(name=="kv_rst_n"){auto v=unpack(value,1);dut.kv_rst_n=v[0];std::cout<<"OK";} else
  if(name=="kv_endpoint_fault"){auto v=unpack(value,1);dut.kv_endpoint_fault=v[0];std::cout<<"OK";} else
  if(name=="kv_native_issue_valid"){auto v=unpack(value,1);dut.kv_native_issue_valid=v[0];std::cout<<"OK";} else
@@ -530,6 +807,20 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="sm_simd_done_ready"){auto v=unpack(value,64);dut.sm_simd_done_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="sm_host_owner"){auto v=unpack(value,2944);for(unsigned i=0;i<v.size();i++)dut.sm_host_owner[i]=v[i];std::cout<<"OK";} else
  if(name=="sm_simd_owner"){auto v=unpack(value,2944);for(unsigned i=0;i<v.size();i++)dut.sm_simd_owner[i]=v[i];std::cout<<"OK";} else
+ if(name=="sm_simd_binding_valid"){auto v=unpack(value,64);dut.sm_simd_binding_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="sm_simd_KV_related"){auto v=unpack(value,64);dut.sm_simd_KV_related=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="sm_simd_source_identity"){auto v=unpack(value,4096);for(unsigned i=0;i<v.size();i++)dut.sm_simd_source_identity[i]=v[i];std::cout<<"OK";} else
+ if(name=="sm_simd_key"){auto v=unpack(value,1280);for(unsigned i=0;i<v.size();i++)dut.sm_simd_key[i]=v[i];std::cout<<"OK";} else
+ if(name=="sm_host_rd_binding_valid"){auto v=unpack(value,64);dut.sm_host_rd_binding_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="sm_host_rd_KV_related"){auto v=unpack(value,64);dut.sm_host_rd_KV_related=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="sm_host_rd_identity"){auto v=unpack(value,4096);for(unsigned i=0;i<v.size();i++)dut.sm_host_rd_identity[i]=v[i];std::cout<<"OK";} else
+ if(name=="sm_host_rd_key"){auto v=unpack(value,1280);for(unsigned i=0;i<v.size();i++)dut.sm_host_rd_key[i]=v[i];std::cout<<"OK";} else
+ if(name=="sm_host_wr_binding_valid"){auto v=unpack(value,64);dut.sm_host_wr_binding_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="sm_host_wr_KV_related"){auto v=unpack(value,64);dut.sm_host_wr_KV_related=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="sm_host_wr_identity"){auto v=unpack(value,4096);for(unsigned i=0;i<v.size();i++)dut.sm_host_wr_identity[i]=v[i];std::cout<<"OK";} else
+ if(name=="sm_host_wr_key"){auto v=unpack(value,1280);for(unsigned i=0;i<v.size();i++)dut.sm_host_wr_key[i]=v[i];std::cout<<"OK";} else
+ if(name=="sm_host_rd_continuation_valid"){auto v=unpack(value,64);dut.sm_host_rd_continuation_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="sm_host_wr_continuation_valid"){auto v=unpack(value,64);dut.sm_host_wr_continuation_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="w2_rst_n"){auto v=unpack(value,256);for(unsigned i=0;i<v.size();i++)dut.w2_rst_n[i]=v[i];std::cout<<"OK";} else
  if(name=="w2_admission_stop"){auto v=unpack(value,256);for(unsigned i=0;i<v.size();i++)dut.w2_admission_stop[i]=v[i];std::cout<<"OK";} else
  if(name=="w2_rearm_v"){auto v=unpack(value,256);for(unsigned i=0;i<v.size();i++)dut.w2_rearm_v[i]=v[i];std::cout<<"OK";} else
