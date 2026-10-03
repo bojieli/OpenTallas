@@ -6,8 +6,8 @@ class TestTrace(unittest.TestCase):
     def setUp(self):
         self.rows=[]
         edge=0
-        for case in (1,2):
-            identity=(127<<48)|((0 if case==1 else 5)<<45)|(0xfe123456<<13)|((15 if case==1 else 0)<<9)|511
+        for case in (1,2,3):
+            identity=(127<<48)|((5 if case==2 else 0)<<45)|(0xfe123456<<13)|((15 if case==1 else 0)<<9)|511
             kinds=G.ORDER.copy()
             if case==2:kinds[1]='simd_ack_retire'
             for kind in kinds:

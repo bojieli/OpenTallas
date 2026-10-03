@@ -212,6 +212,12 @@ module tb_w6_fullwidth_fence;
       @(negedge clk); drain_rsp_reset_scope=1; drain_rsp_identity=keep^55'd1; tick;
       check(!drain_rsp_ready && quarantine,"wrong reset owner rejected");
       @(negedge clk); clear_inputs;
+      // An old ACK is ignored in quarantine; the source drain level remains
+      // false while that copy exists. No invented historical epoch certificate.
+      drain_rsp_valid=1; drain_rsp_identity=keep;
+      host_ack_valid=1; host_ack_identity=keep; alldrain_live=9'h1fe;
+      tick; check(!host_ack_ready && !drain_rsp_ready && quarantine,"old ACK copy blocks external scoped drain");
+      @(negedge clk); clear_inputs; alldrain_live='1;
       send(9,keep); tick; check(!fault && !quarantine,"source coordinated reset recovery");
       drain_rsp_reset_scope=0; drain_rsp_has_owner=1;
     end
@@ -249,6 +255,13 @@ module tb_w6_fullwidth_fence;
     testcase=2; owner={7'd127,3'd5,32'hfe123456,4'h0,9'h1ff};
     req_internal_SIMD=1; send(0,owner); send(2,owner); send(3,owner); send(4,owner);
     send(5,owner); send(6,owner); send(7,owner); send(8,owner); send(9,owner); send(10,owner);
+    testcase=3; owner={7'd127,3'd0,32'hfe123456,4'h0,9'h1ff};
+    req_internal_SIMD=0; send(0,owner); send(1,owner); send(3,owner); send(4,owner);
+    send(5,owner); send(6,owner); send(7,owner);
+    repeat(5) begin tick; check(drain_req_valid && drain_req_identity==owner && !req_ready,"held source drain request"); end
+    send(8,owner); send(9,owner);
+    repeat(5) begin tick; check(retire_valid && retire_identity==owner && !req_ready,"held retirement identity"); end
+    send(10,owner);
     // Wrong field mutants PC,client,tag high/low,gen,slot; no mirrored ACK alias.
     for(i=0;i<6;i=i+1) begin
       testcase=10+i; req_internal_SIMD=0; send(0,owner);
@@ -259,6 +272,10 @@ module tb_w6_fullwidth_fence;
     testcase=20; req_internal_SIMD=1; send(0,owner);
     @(negedge clk); host_ack_valid=1; host_ack_identity=owner; tick;
     check(fault && !visible_valid,"host ACK cannot retire internal SIMD");
+    @(negedge clk); clear_inputs; recover;
+    testcase=21; req_internal_SIMD=0; send(0,owner);
+    @(negedge clk); simd_ack_retire_valid=1; simd_ack_retire_identity=owner; tick;
+    check(fault && !visible_valid,"SIMD ACK cannot retire host origin");
     @(negedge clk); clear_inputs; recover;
     // Reset at each retained phase, including retirement waiting on downstream.
     for(i=0;i<9;i=i+1) begin testcase=30+i; prefix(i); recover; end
@@ -275,6 +292,18 @@ module tb_w6_fullwidth_fence;
     @(negedge clk); drain_rsp_valid=1; drain_rsp_identity=owner; tick;
     check(fault && !retire_valid,"unsolicited drain response refused");
     @(negedge clk); clear_inputs; recover;
+    // Every reverse completion port retains and matches the complete owner.
+    for(i=0;i<3;i=i+1) begin
+      testcase=43+i; prefix(3+i);
+      @(negedge clk);
+      case(i)
+        0:begin child_reverse_valid=1; child_reverse_identity=owner^55'd512; end
+        1:begin parent_reverse_valid=1; parent_reverse_identity=owner^55'd1; end
+        2:begin reverse_CDC_valid=1; reverse_CDC_identity=owner^(55'd1<<44); end
+      endcase
+      tick; check(fault && !drain_req_valid && dut.enabled.identity==owner,"reverse identity mutant refused");
+      @(negedge clk); clear_inputs; recover;
+    end
     // Every retained physical bit corrected and scrubbed while owner held ACK.
     testcase=50; prefix(0); repeat(4) tick;
     pristine=dut.enabled.protected_state;

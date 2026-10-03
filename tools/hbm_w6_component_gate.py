@@ -41,7 +41,7 @@ def verify_trace(log):
     marker=re.findall(r'^PASS_W6_LOCAL_COMPONENT checks=(\d+) accepted=(\d+) raw=71 protected=144 production_alldrain=0 physical=0$',log,re.M)
     require(len(marker)==1,'exact component terminal required')
     require('W6_CHECK_FAIL' not in log and 'FATAL' not in log,'bench assertion failure')
-    traces={1:[],2:[]}
+    traces={1:[],2:[],3:[]}
     for case,kind,edge,identity in re.findall(r'^W6_EDGE case=(\d+) kind=(\w+) edge=(\d+) identity=([0-9a-f]{14})$',log,re.M):
         if int(case) in traces: traces[int(case)].append(dict(kind=kind,edge=int(edge),identity=int(identity,16)))
     summaries=[]
@@ -52,13 +52,14 @@ def verify_trace(log):
         identities={r['identity'] for r in rows}
         require(len(identities)==1,'full identity constant at every boundary')
         identity=identities.pop()
-        expected=(127<<48)|((0 if case==1 else 5)<<45)|(0xfe123456<<13)|((15 if case==1 else 0)<<9)|511
+        expected=(127<<48)|((5 if case==2 else 0)<<45)|(0xfe123456<<13)|((15 if case==1 else 0)<<9)|511
         require(identity==expected,'full PC/client/tag/generation/slot preserved')
         deltas=[b['edge']-a['edge'] for a,b in zip(rows,rows[1:])]
         require(all(d>= (3 if b['kind']=='reverse_CDC' else 2) for d,b in zip(deltas,rows[1:])),'positive modeled boundary edges')
         summaries.append(dict(case=case,identity=identity,handshakes=rows,edge_deltas=deltas,
                               ACK_to_retire_edges=rows[-1]['edge']-rows[1]['edge']))
     require(traces[2][0]['edge']-traces[1][-1]['edge']>=2,'retirement before drained generation wrap')
+    require(traces[3][0]['edge']-traces[1][-1]['edge']>=2,'same-client gen15 to0 after matched drain and retirement')
     require(int(marker[0][0])>=400,'mutant and protection assertions covered')
     return dict(verdict='PASS_LOCAL_C0_KV_FULLWIDTH_CONTROL_ONLY',checks=int(marker[0][0]),
                 accepted=int(marker[0][1]),paths=summaries,
