@@ -347,7 +347,9 @@ module ot_qwen_nearhbm_row_engine #(
                 localparam integer TI = (d % 2 == 0) ? d / 2 : (d - 1) / 2 - tbase(TL > 1 ? TL : 2);
                 wire [15:0] qv = c_g ? q_bf16[(4 + h) * HD * 16 + d * 16 +: 16] : q_bf16[h * HD * 16 + d * 16 +: 16];
                 wire [15:0] ev = e_word[16*h +: 16];
-                ot_qwen_nearhbm_prod u_p (.clk(clk), .rst_n(rst_n), .valid_in(k_issue || (v_issue && c_vrow)),
+                // keep_hierarchy: a flattened 512-lane engine sends Yosys SHARE into hours of SAT over the adders'
+                // shifters (no function change; each unit is mapped once per parameterisation)
+                (* keep_hierarchy *) ot_qwen_nearhbm_prod u_p (.clk(clk), .rst_n(rst_n), .valid_in(k_issue || (v_issue && c_vrow)),
                     .a(k_issue ? qv : ev), .k(row[8*d +: 8]), .y(p_y[32*L +: 32]), .fault(p_f[L]), .valid_out(p_vo[L]));
                 wire [31:0] va = czd ? 32'd0 : fb[32*L +: 32];
                 wire [31:0] vb = vd ? p_y[32*L +: 32] : 32'd0;
@@ -369,7 +371,7 @@ module ot_qwen_nearhbm_row_engine #(
                     assign lb = vb;
                 end
                 wire [1:0] err;
-                ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(kt || vd), .a(la), .b(lb),
+                (* keep_hierarchy *) ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(kt || vd), .a(la), .b(lb),
                     .y(l_y[32*L +: 32]), .err(err), .valid_out(l_vo[L]));
                 assign l_f[L] = l_vo[L] && (err != 2'd0);
                 ot_hdc_delay #(.W(32), .D(8 - ADD_LAT)) u_pad (.clk(clk), .rst_n(rst_n), .d(l_y[32*L +: 32]),
@@ -396,7 +398,7 @@ module ot_qwen_nearhbm_row_engine #(
         for (h = 0; h < 4; h = h + 1) begin : g_root
             localparam integer LR = h * HD + tnode(LV, 0);
             wire [1:0] merr;
-            ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_scale (
+            (* keep_hierarchy *) ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_scale (
                 .clk(clk), .rst_n(rst_n), .valid_in(kroot), .a(l_y[32*LR +: 32]), .b(SCALE),
                 .y(sc_data[32*h +: 32]), .err(merr), .valid_out(sv[h]));
             assign tf[h] = sv[h] && (merr != 2'd0);

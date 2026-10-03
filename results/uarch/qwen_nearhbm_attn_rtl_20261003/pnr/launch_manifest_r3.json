@@ -179,6 +179,6 @@
  },
  "verdict": {
   "hub": "SUPERSEDED, stopped deliberately during ORFS (after the host synthesis: 135,950 um2, hub_r3.host_synth_stat.txt) on the user decision of 2026-10-03 to pipeline every FP unit that misses SS 1.2 GHz: this hub's ot_hdc_recip_q (LAT-3 units, 712 MHz pre-layout SS) could not close. Relaunched as r4 with ot_qwen_nearhbm_recip_p.",
-  "row_engine": "RUNNING (unaffected: its units are ot_qwen_nearhbm_prod, ot_hdc_fp32_add_lat #7, ot_hdc_fp32_mul_lat #6, all closing in the pre-layout screen)"
+  "row_engine": "STOPPED after 2 h 40 min in the driver's flat host synthesis (Yosys SHARE: SAT over the ~2,500 alignment shifters of 640 flattened adders; reproduced locally: >50 min in SHARE). Fix: (* keep_hierarchy *) on the lane product/adder and scale-multiplier instances (no function change; SHARE then finishes in seconds). Relaunched as r4."
  }
 }
