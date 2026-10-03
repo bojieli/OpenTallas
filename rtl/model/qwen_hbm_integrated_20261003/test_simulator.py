@@ -77,16 +77,19 @@ class PinTests(unittest.TestCase):
 
 
 
-    def test_existing_engine_dependency_closure(self):
-        import re
+    def test_exact_selected_four_W2_sources(self):
+        import hashlib
         root=PORTBOOK.parents[3]
         sources=(PORTBOOK.parent/'sources.f').read_text().splitlines()
-        text='\n'.join((root/p).read_text() for p in sources)
-        declarations=set(re.findall(r'\bmodule\s+(ot_\w+)',text))
-        uses=set(re.findall(r'^\s*(ot_\w+)\s+(?:#\s*\(|\w+\s*\()',text,re.M))
-        self.assertEqual(uses-declarations,set())
-        self.assertIn('ot_w2_nc6_correction_control',uses)
-        self.assertIn('ot_gpu_qwen_native_consumer_drain',uses)
+        selected={
+            'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv':'d68dc8d2e9cbd0cf4a42ba6bfe816ab7cad61a4366797e76ab17889057d8d1e6',
+            'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv':'04930aa71137a791935c8ccba0dc1f20689e5bff35a214477cd990a87a36c7ef',
+            'rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv':'7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a',
+            'rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv':'e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45',
+        }
+        for path,want in selected.items():
+            self.assertEqual(sources.count(path),1,path)
+            self.assertEqual(hashlib.sha256((root/path).read_bytes()).hexdigest(),want,path)
 
     def test_single_controller_actual_source_join(self):
         packet=PORTBOOK.parent
