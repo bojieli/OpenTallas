@@ -20,11 +20,14 @@ from tools.h4_qwen_released_provider_delivery import ReleasedProviderDelivery, w
 def run(args):
     if not args.enable_canonical_qwen:
         raise ValueError("canonical Qwen RTL execution is default off")
+    if args.out.exists():
+        raise ValueError("output already exists; retain the previous run and choose a new output")
     module, separator, name = args.backend.partition(":")
     if not separator or not module or not name:
         raise ValueError("backend must be module:factory")
     # Factory owns the actual simulator bindings and original checkpoint loader.
-    backend = getattr(importlib.import_module(module), name)(args)
+    backend_args = argparse.Namespace(**{k: v for k, v in vars(args).items() if k != "expected_token"})
+    backend = getattr(importlib.import_module(module), name)(backend_args)
     required = ("native_module", "byte_module", "machine", "transport")
     if not isinstance(backend, dict) or any(k not in backend for k in required):
         raise ValueError("backend must supply native_module, byte_module, machine, transport")
@@ -39,9 +42,11 @@ def run(args):
                               completed=completed, elapsed_seconds=time.monotonic() - started)), flush=True)
 
     result = delivery.run_full_token(args.token, args.position, observer=progress)
+    if not isinstance(result, dict) or result.get("next_token") != args.expected_token:
+        raise ValueError("complete RTL token differs from the released-checkpoint reference")
     record = dict(status="complete", program_sha256=delivery.transport.native_dispatch_program_sha256,
                   source_commands=len(delivery.machine.done), input_token=args.token,
-                  position=args.position, result=wire_encode(result),
+                  position=args.position, expected_token=args.expected_token, result=wire_encode(result),
                   delivery_counts=delivery.counts, elapsed_seconds=time.monotonic() - started)
     # Publishing completion happens only after the original full-token method
     # has checked all commands, deliveries and persistent-memory enrollment.
@@ -63,12 +68,14 @@ def main():
     parser.add_argument("--backend", required=True, help="actual simulator factory module:function")
     parser.add_argument("--token", type=int, required=True)
     parser.add_argument("--position", type=int, required=True)
+    parser.add_argument("--expected-token", type=int, required=True,
+                        help="released-checkpoint reference next token; never supplied to the RTL backend as an operand")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--socket", type=Path, help="existing simulator socket, if used by backend")
     args = parser.parse_args()
-    if args.token < 0 or args.position < 0:
-        parser.error("token and position must be nonnegative")
+    if args.token < 0 or args.position < 0 or args.expected_token < 0:
+        parser.error("token, position and reference token must be nonnegative")
     run(args)
 
 
