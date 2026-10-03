@@ -8,11 +8,12 @@
   },
   "area": {
     "RF_W4_overlap_not_subtracted": true,
-    "body_um2_ASSUMED": 140643.5455542857,
-    "buffer_fanout8_budget": 4050,
-    "gross50pct_um2_ASSUMED": 281287.0911085714,
-    "logic_NAND2_budget": 1261632,
+    "body_um2_ASSUMED": 149917.36284000002,
+    "buffer_fanout8_budget": 4626,
+    "gross50pct_um2_ASSUMED": 299834.72568000003,
+    "logic_NAND2_budget": 1547968,
     "physical_or_net_replacement_unknown": true,
+    "price_derivation": "same pinned perword encode/currentclean checker;514words+5full239comparators/SM+owner55+mask32+342bitfeedback+guardbudget. No unmapped area credit.",
     "protected_clock_SS_fF": 16060.805855999999
   },
   "inventory": {
