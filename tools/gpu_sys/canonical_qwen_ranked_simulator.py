@@ -53,13 +53,14 @@ class RankedEnclosingPins(EnclosingPins):
 
 class RankedComponentPins(ComponentPins):
     def __init__(self,root,block,index,*,aliases=None):
-        counts={'sector':1,'kv':1,'native':1,'sm':64,'w2':256}
-        if block not in PARAMETERS or type(index) is not int or not 0<=index<counts[block]:
+        counts={'sector':1,'kv':1,'native':1,'sm':64,'w2':256,'issuer':1}
+        if block not in counts or type(index) is not int or not 0<=index<counts[block]:
             raise TransportError('actual rank-qualified instance')
         self.root,self.block,self.index=root,block,index
         self.aliases=dict(aliases or {})
 
     def parameter(self,name):
+        if self.block=='issuer' and name=='ENABLE':return 1
         if self.block=='w2' and name=='PC_ID':return self.index%128
         if self.block=='w2' and name=='RANK_ID':return self.index//128
         return super().parameter(name)

@@ -28,6 +28,46 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="sector_map_rank"){word(dut.sector_map_rank);} else
  if(name=="sector_reverse_rank"){word(dut.sector_reverse_rank);} else
  if(name=="sector_rank_refusal"){word(dut.sector_rank_refusal);} else
+ if(name=="issuer_por_n"){word(dut.issuer_por_n);} else
+ if(name=="issuer_run_enable"){word(dut.issuer_run_enable);} else
+ if(name=="issuer_session_begin_valid"){word(dut.issuer_session_begin_valid);} else
+ if(name=="issuer_session_begin_id"){word(uint32_t(dut.issuer_session_begin_id>>32));word(uint32_t(dut.issuer_session_begin_id));} else
+ if(name=="issuer_source_quiescent"){word(dut.issuer_source_quiescent);} else
+ if(name=="issuer_session_begin_ready"){word(dut.issuer_session_begin_ready);} else
+ if(name=="issuer_session_valid"){word(dut.issuer_session_valid);} else
+ if(name=="issuer_session_fault"){word(dut.issuer_session_fault);} else
+ if(name=="issuer_session_id"){word(uint32_t(dut.issuer_session_id>>32));word(uint32_t(dut.issuer_session_id));} else
+ if(name=="issuer_issue_valid"){word(uint32_t(dut.issuer_issue_valid>>32));word(uint32_t(dut.issuer_issue_valid));} else
+ if(name=="issuer_row_barrier_ready"){word(uint32_t(dut.issuer_row_barrier_ready>>32));word(uint32_t(dut.issuer_row_barrier_ready));} else
+ if(name=="issuer_backend_go_ready"){word(uint32_t(dut.issuer_backend_go_ready>>32));word(uint32_t(dut.issuer_backend_go_ready));} else
+ if(name=="issuer_issue_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_issue_tuple[i]);} else
+ if(name=="issuer_issue_owner"){for(int i=109;i>=0;i--)word(dut.issuer_issue_owner[i]);} else
+ if(name=="issuer_issue_ready"){word(uint32_t(dut.issuer_issue_ready>>32));word(uint32_t(dut.issuer_issue_ready));} else
+ if(name=="issuer_backend_go_valid"){word(uint32_t(dut.issuer_backend_go_valid>>32));word(uint32_t(dut.issuer_backend_go_valid));} else
+ if(name=="issuer_backend_go_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_backend_go_tuple[i]);} else
+ if(name=="issuer_backend_go_owner"){for(int i=109;i>=0;i--)word(dut.issuer_backend_go_owner[i]);} else
+ if(name=="issuer_producer_result_valid"){word(uint32_t(dut.issuer_producer_result_valid>>32));word(uint32_t(dut.issuer_producer_result_valid));} else
+ if(name=="issuer_rf_ack_valid"){word(uint32_t(dut.issuer_rf_ack_valid>>32));word(uint32_t(dut.issuer_rf_ack_valid));} else
+ if(name=="issuer_whole_terminal_valid"){word(uint32_t(dut.issuer_whole_terminal_valid>>32));word(uint32_t(dut.issuer_whole_terminal_valid));} else
+ if(name=="issuer_whole_reverse_valid"){word(uint32_t(dut.issuer_whole_reverse_valid>>32));word(uint32_t(dut.issuer_whole_reverse_valid));} else
+ if(name=="issuer_producer_result_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_producer_result_tuple[i]);} else
+ if(name=="issuer_whole_terminal_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_whole_terminal_tuple[i]);} else
+ if(name=="issuer_whole_reverse_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_whole_reverse_tuple[i]);} else
+ if(name=="issuer_rf_ack_owner"){for(int i=109;i>=0;i--)word(dut.issuer_rf_ack_owner[i]);} else
+ if(name=="issuer_producer_result_ready"){word(uint32_t(dut.issuer_producer_result_ready>>32));word(uint32_t(dut.issuer_producer_result_ready));} else
+ if(name=="issuer_rf_ack_ready"){word(uint32_t(dut.issuer_rf_ack_ready>>32));word(uint32_t(dut.issuer_rf_ack_ready));} else
+ if(name=="issuer_whole_terminal_ready"){word(uint32_t(dut.issuer_whole_terminal_ready>>32));word(uint32_t(dut.issuer_whole_terminal_ready));} else
+ if(name=="issuer_whole_reverse_ready"){word(uint32_t(dut.issuer_whole_reverse_ready>>32));word(uint32_t(dut.issuer_whole_reverse_ready));} else
+ if(name=="issuer_publish_valid"){word(uint32_t(dut.issuer_publish_valid>>32));word(uint32_t(dut.issuer_publish_valid));} else
+ if(name=="issuer_retire_valid"){word(uint32_t(dut.issuer_retire_valid>>32));word(uint32_t(dut.issuer_retire_valid));} else
+ if(name=="issuer_publish_ready"){word(uint32_t(dut.issuer_publish_ready>>32));word(uint32_t(dut.issuer_publish_ready));} else
+ if(name=="issuer_retire_ready"){word(uint32_t(dut.issuer_retire_ready>>32));word(uint32_t(dut.issuer_retire_ready));} else
+ if(name=="issuer_publish_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_publish_tuple[i]);} else
+ if(name=="issuer_retire_tuple"){for(int i=477;i>=0;i--)word(dut.issuer_retire_tuple[i]);} else
+ if(name=="issuer_publish_owner"){for(int i=109;i>=0;i--)word(dut.issuer_publish_owner[i]);} else
+ if(name=="issuer_retire_owner"){for(int i=109;i>=0;i--)word(dut.issuer_retire_owner[i]);} else
+ if(name=="issuer_busy"){word(uint32_t(dut.issuer_busy>>32));word(uint32_t(dut.issuer_busy));} else
+ if(name=="issuer_fault"){word(uint32_t(dut.issuer_fault>>32));word(uint32_t(dut.issuer_fault));} else
  if(name=="sector_por_n"){word(dut.sector_por_n);} else
  if(name=="sector_run_enable"){word(dut.sector_run_enable);} else
  if(name=="sector_local_reset"){word(dut.sector_local_reset);} else
@@ -330,6 +370,26 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  else if(op=="SET"){in>>name>>value;if(in>>extra)throw std::runtime_error("extra");
  if(name=="sector_map_rank"){auto v=unpack(value,1);dut.sector_map_rank=v[0];std::cout<<"OK";} else
  if(name=="sector_reverse_rank"){auto v=unpack(value,1);dut.sector_reverse_rank=v[0];std::cout<<"OK";} else
+ if(name=="issuer_por_n"){auto v=unpack(value,1);dut.issuer_por_n=v[0];std::cout<<"OK";} else
+ if(name=="issuer_run_enable"){auto v=unpack(value,1);dut.issuer_run_enable=v[0];std::cout<<"OK";} else
+ if(name=="issuer_session_begin_valid"){auto v=unpack(value,1);dut.issuer_session_begin_valid=v[0];std::cout<<"OK";} else
+ if(name=="issuer_session_begin_id"){auto v=unpack(value,64);dut.issuer_session_begin_id=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_source_quiescent"){auto v=unpack(value,8);dut.issuer_source_quiescent=v[0];std::cout<<"OK";} else
+ if(name=="issuer_issue_valid"){auto v=unpack(value,64);dut.issuer_issue_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_row_barrier_ready"){auto v=unpack(value,64);dut.issuer_row_barrier_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_backend_go_ready"){auto v=unpack(value,64);dut.issuer_backend_go_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_issue_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_issue_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_issue_owner"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.issuer_issue_owner[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_producer_result_valid"){auto v=unpack(value,64);dut.issuer_producer_result_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_rf_ack_valid"){auto v=unpack(value,64);dut.issuer_rf_ack_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_whole_terminal_valid"){auto v=unpack(value,64);dut.issuer_whole_terminal_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_whole_reverse_valid"){auto v=unpack(value,64);dut.issuer_whole_reverse_valid=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_producer_result_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_producer_result_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_whole_terminal_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_whole_terminal_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_whole_reverse_tuple"){auto v=unpack(value,15296);for(unsigned i=0;i<v.size();i++)dut.issuer_whole_reverse_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_rf_ack_owner"){auto v=unpack(value,3520);for(unsigned i=0;i<v.size();i++)dut.issuer_rf_ack_owner[i]=v[i];std::cout<<"OK";} else
+ if(name=="issuer_publish_ready"){auto v=unpack(value,64);dut.issuer_publish_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
+ if(name=="issuer_retire_ready"){auto v=unpack(value,64);dut.issuer_retire_ready=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="sector_por_n"){auto v=unpack(value,1);dut.sector_por_n=v[0];std::cout<<"OK";} else
  if(name=="sector_run_enable"){auto v=unpack(value,1);dut.sector_run_enable=v[0];std::cout<<"OK";} else
  if(name=="sector_local_reset"){auto v=unpack(value,1);dut.sector_local_reset=v[0];std::cout<<"OK";} else
