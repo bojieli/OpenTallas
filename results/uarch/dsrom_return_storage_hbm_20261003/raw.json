@@ -1,0 +1,101 @@
+{
+ "rom": {
+  "1048576/4_stacks": {
+   "ctx": 1048576,
+   "reader_Bpc": 3000,
+   "ar_tokens_s": 2535.5,
+   "mtp_tokens_s": 3791.0,
+   "ar_sat": 80833.5,
+   "mtp_sat": 35151.8,
+   "busiest": "head",
+   "busiest_us": 12.37,
+   "capacity_users": 866,
+   "wall_s": 19.5
+  },
+  "1048576/3_stacks": {
+   "ctx": 1048576,
+   "reader_Bpc": 2250,
+   "ar_tokens_s": 2508.6,
+   "mtp_tokens_s": 3789.7,
+   "ar_sat": 75640.2,
+   "mtp_sat": 35044.7,
+   "busiest": 29,
+   "busiest_us": 13.22,
+   "capacity_users": 866,
+   "wall_s": 13.0
+  },
+  "1048576/2_stacks": {
+   "ctx": 1048576,
+   "reader_Bpc": 1500,
+   "ar_tokens_s": 2456.4,
+   "mtp_tokens_s": 3787.2,
+   "ar_sat": 60527.0,
+   "mtp_sat": 34832.5,
+   "busiest": 29,
+   "busiest_us": 16.52,
+   "capacity_users": 866,
+   "wall_s": 13.1
+  },
+  "1048576/1_stack": {
+   "ctx": 1048576,
+   "reader_Bpc": 750,
+   "ar_tokens_s": 2312.3,
+   "mtp_tokens_s": 3779.8,
+   "ar_sat": 37843.3,
+   "mtp_sat": 34210.9,
+   "busiest": 29,
+   "busiest_us": 26.42,
+   "capacity_users": 866,
+   "wall_s": 13.5
+  },
+  "200000/4_stacks": {
+   "ctx": 200000,
+   "reader_Bpc": 3000,
+   "ar_tokens_s": 2649.7,
+   "mtp_tokens_s": 4154.5,
+   "ar_sat": 80833.5,
+   "mtp_sat": 35589.1,
+   "busiest": "head",
+   "busiest_us": 12.37,
+   "capacity_users": 4516,
+   "wall_s": 12.3
+  },
+  "200000/3_stacks": {
+   "ctx": 200000,
+   "reader_Bpc": 2250,
+   "ar_tokens_s": 2643.5,
+   "mtp_tokens_s": 4154.2,
+   "ar_sat": 80833.5,
+   "mtp_sat": 35566.0,
+   "busiest": "head",
+   "busiest_us": 12.37,
+   "capacity_users": 4516,
+   "wall_s": 11.3
+  },
+  "200000/2_stacks": {
+   "ctx": 200000,
+   "reader_Bpc": 1500,
+   "ar_tokens_s": 2631.1,
+   "mtp_tokens_s": 4153.5,
+   "ar_sat": 80833.5,
+   "mtp_sat": 35519.7,
+   "busiest": "head",
+   "busiest_us": 12.37,
+   "capacity_users": 4516,
+   "wall_s": 11.4
+  },
+  "200000/1_stack": {
+   "ctx": 200000,
+   "reader_Bpc": 750,
+   "ar_tokens_s": 2594.7,
+   "mtp_tokens_s": 4151.6,
+   "ar_sat": 80833.5,
+   "mtp_sat": 35381.8,
+   "busiest": "head",
+   "busiest_us": 12.37,
+   "capacity_users": 4516,
+   "wall_s": 15.9
+  }
+ },
+ "uarch_model_sha256": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9"
+}
