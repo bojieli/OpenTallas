@@ -1,0 +1,325 @@
+{
+  "status": "SOURCE_SELECTED_DEFAULT_OFF_FULL_PARENT_SUCCESSOR_PLAN_NOT_GENERATED_HDL",
+  "source_commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+  "model": "model_r4.json",
+  "CKV_RX_LEASE_default": 0,
+  "group_size": 4,
+  "geometry": {
+    "designs": {
+      "DS_ROM": "full K512 TP4 selected CKV owner",
+      "DS_HBM": "GPU path unchanged",
+      "Qwen_ROM": "not this service",
+      "Qwen_HBM": "not this service"
+    },
+    "K": 512,
+    "D": 512,
+    "TROWS": 640,
+    "NL": 4,
+    "H": 16,
+    "TD": 32,
+    "NSLOT": 64,
+    "selection_epoch_bits": 16,
+    "CKV_RX_LEASE_default": 0,
+    "clock_ps": 833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25
+  },
+  "changed_namespace_copies": [
+    {
+      "source": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+      "pin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "archive": "inputs/rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251"
+      },
+      "edits": [
+        "default-off CKV_RX_LEASE parameter and sel_ready/nw_ready/vm_busy inputs",
+        "S_ISSUE selected KVT su_go gate consumes a reserved group permit; field arithmetic unchanged",
+        "QDQ4E next-row capture only while own buffer unleased",
+        "collective xb port issue refuses while service ID VM read busy"
+      ]
+    },
+    {
+      "source": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+      "pin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+        "archive": "inputs/rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+        "sha256": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6"
+      },
+      "edits": [
+        "carry lease-ready and VM-busy signals through actual core ports"
+      ]
+    },
+    {
+      "source": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+      "pin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+        "archive": "inputs/rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+        "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663"
+      },
+      "edits": [
+        "carry generation16 and ready/store-ACK endpoints",
+        "latch QK/PV type on actual att_packed_desc_accept",
+        "pass actual att_packed_desc_done and att_packed_idle into lease owner",
+        "wire ready/control through tile, including VM port ownership"
+      ]
+    },
+    {
+      "source": "rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+      "pin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+        "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+        "sha256": "9c6bbc1289f33473c5395511b419bd0bba89b70910f7bc31840bf931b198ac25"
+      },
+      "edits": [
+        "reuse buf_row512 and present512; do not copy payload",
+        "generation16 from shared group grant, counts only accepted rows",
+        "clear branch dominates every collector write/count; invalid rows never mutate",
+        "ACK3 registers +1536 pending bits, retain through reverse ACK",
+        "two explicit started/retired phases, release only actual descriptor/output retire",
+        "wr_wait serializes each own sector until returned c_wr_done, final pub_done after ninth completion"
+      ]
+    },
+    {
+      "source": "rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+      "pin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+        "archive": "inputs/rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+        "sha256": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c"
+      },
+      "edits": [
+        "default-off writer-enable with per-stack outstanding+owner",
+        "fair window/CKV request turn, refuse new write while old write pending",
+        "carry actual CKV write payload/strobes and return completion only to recorded owner"
+      ]
+    },
+    {
+      "source": "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
+      "pin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
+        "archive": "inputs/rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
+        "sha256": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c"
+      },
+      "edits": [
+        "default-off CKV write admission; retain reserved tag/PC ownership",
+        "connect candidate inner mux and keep rope read-only"
+      ]
+    },
+    {
+      "source": "rtl/test/v41_runtime/ot_v41_rt_die_l20.sv",
+      "pin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/test/v41_runtime/ot_v41_rt_die_l20.sv",
+        "archive": "inputs/rtl/test/v41_runtime/ot_v41_rt_die_l20.sv",
+        "sha256": "8deabb0f73e1200a1983a6cf6fcf3ddb23356f0de9d97d2ae033b3af7a2fb0ba"
+      },
+      "edits": [
+        "default-off successor parameter and full new peer/group endpoints; geometry unchanged"
+      ]
+    },
+    {
+      "source": "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+      "pin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+        "archive": "inputs/rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+        "sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+      },
+      "edits": [
+        "carry generation16 through every peer queue and reversed stored ACK",
+        "dequeue solely on observed endpoint acceptance; ACK after actual row write edge",
+        "old-epoch all4 group barrier before granting4 permits, reset/wrap drained predicate",
+        "retain source row inputs; observer expected values are assertions only"
+      ]
+    }
+  ],
+  "unchanged_full_L20_sources": [
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_reduce.sv",
+    "rtl/hdc/ot_hdc_accept.sv",
+    "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv",
+    "rtl/hdc/v41/ot_hdc_select.sv",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv",
+    "rtl/hdc/v41/ot_hdc_chunk8_stack.sv",
+    "rtl/hdc/v41/ot_hdc_actquant.sv",
+    "rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "rtl/hdc/v41/ot_hdc_softplus.sv",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+    "rtl/hdc/v41/ot_hdc_v41_matvec.sv",
+    "rtl/hdc/v41/ot_hdc_v41_stream.sv",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv",
+    "rtl/hdc/v41/ot_hdc_v41_xu.sv",
+    "rtl/hdc/v41/ot_hdc_v41_hcproj.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_egather.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv",
+    "rtl/hdc/hbm/ot_hdc_qstream.sv",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv",
+    "rtl/rom/ot_rom_pkg_ctrl_x.sv",
+    "rtl/rom/ot_rom_fabric_router.sv",
+    "rtl/rom/ot_w15_rom_oneshot_px.sv",
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
+    "rtl/chip/ot_chip_v41x_attn_row_merge.sv",
+    "rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
+    "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
+    "rtl/chip/ot_chip_v41x_karb_q2.sv",
+    "rtl/chip/ot_chip_v41x_karb_qn.sv",
+    "rtl/chip/ot_chip_v41x_karb_region.sv",
+    "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+    "rtl/chip/ot_chip_v41x_karb_slice.sv",
+    "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+    "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv",
+    "rtl/chip/ot_chip_v41x_rope_region_guard.sv",
+    "rtl/chip/ot_chip_v41x_rope_su_word.sv",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv",
+    "rtl/chip/ot_chip_v41x_window_block_guard.sv",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv",
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv",
+    "rtl/chip/ot_chip_v41x_window_retention.sv",
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv",
+    "rtl/chip/ot_chip_v41x_window_stream.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv",
+    "rtl/chip/ot_chip_v41x_kv_prefetch.sv",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv",
+    "rtl/chip/ot_w15_coll_dma.sv",
+    "rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+    "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+    "rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+    "rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+    "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv",
+    "rtl/chip/ot_chip_v41x_ckv_row_encoder.sv",
+    "rtl/chip/ot_coll_topk_merge.sv",
+    "rtl/v41die/ot_v41_rom_adapt.sv",
+    "rtl/v41die/ot_v41_spine_w17w10.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat.sv"
+  ],
+  "new_source_modules": [
+    {
+      "name": "ckv_all4_selection_group",
+      "state_bits": 21,
+      "contract": "latch four permits at OLD group drain; epoch16 supplied atomically to each consumed permit"
+    },
+    {
+      "name": "ckv_full4_ready_gen_routes",
+      "new_row_storage_bits": 0,
+      "contract": "source-clock atomic broadcast to3 reserved validated seats and registered stored-ACK reverse; all12 directed routes, no free CDC credit"
+    }
+  ],
+  "interfaces": {
+    "selection": [
+      "sel_permit1",
+      "grant_epoch16",
+      "sel_ready1",
+      "sel_accept1"
+    ],
+    "peer_forward": [
+      "valid1",
+      "ready1",
+      "rank10",
+      "gid21",
+      "epoch16",
+      "row2304"
+    ],
+    "peer_reverse": [
+      "valid1",
+      "ready1",
+      "rank10",
+      "epoch16"
+    ],
+    "retirement": [
+      "job_is_pv1",
+      "actual_desc_done1",
+      "actual_engine_idle1",
+      "routes_old_generation_drained1",
+      "reset_endpoints_drained1"
+    ],
+    "publication": [
+      "c_v4",
+      "c_rdy4",
+      "c_we4",
+      "c_wr_done4: completion bound to actual accepted writer"
+    ]
+  },
+  "refusals": [
+    "no omission of full125 source inventory",
+    "no replacing retained512 rows by reduced fixture",
+    "no write or count for invalid incoming data",
+    "no physical/fulltoken credit from static proof",
+    "no R14/H4 substitution without frozen Russell allocation/echo/quarantine/reverse/frame costs"
+  ],
+  "HDL_generation": "next source-sized implementation milestone; functional RTL writing authorized by task; build remains fresh source-bound GO only",
+  "source_package_GObinds": [
+    "model_r4 hash",
+    "all generated source hashes",
+    "all immutable input image hashes",
+    "exact benchmark/mutant expected checker",
+    "runner environment/actual resource admission",
+    "first failure receipts preserved"
+  ]
+}
