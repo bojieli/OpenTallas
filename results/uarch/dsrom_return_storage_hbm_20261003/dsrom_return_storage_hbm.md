@@ -155,3 +155,26 @@ Under the power-of-two rule the result is S96 whatever the return size: padding,
 4. Price the HBM PHY and shoreline area credit when a die drops from 4 stacks to 1. None is taken here.
 5. Measure the credit-return tree in RTL: occupancy and rate, against the 64-deep reference.
 6. Check that the gathers on 1-stack dies stay latency-bound in the model.
+
+## Update 2026-10-03: scenario C adopted (owner), re-priced on HEAD's model
+
+The owner approved C as the redesign direction.
+
+**Re-run.** The re-run is on merged origin/main (32d865831 and later). There the PAIR1 baseline is 2,535.5 / 2,649.7 tok/s, not 2,563.7 / 2,680.6. The 4.34 µs shift is the hub-edge wire: 57 hops × 75 ns. The stage hop is therefore 0.482 µs.
+
+The scenario table above predates this re-run. The current values are in `model.json` `scenarios` and `scenario_c`.
+
+**C now:**
+- 2,490 / 2,600 AR;
+- 3,763 / 4,121 at τ 3.649;
+- 4,051 / 4,433 at τ 4;
+- 336 dies, 420 stacks, 0.742M mm²;
+- 19.9 kW static with ICG only, or 7.07 kW at batch 1 with stage and link power gating;
+- 2,742 / 2,870 best tok/s per kW, or 3,619 / 3,891 with power gating.
+
+**Decisions and prices:**
+- **S73 is kept.** Only about 6.5 of the 64.55 mm² post-r4 increment is traced, so S69 stays an upside.
+- **HBM PHY credit:** 30 mm² a one-stack die (24–45), with 25.5 mm of edge freed. It is not yet creditable in the ledger.
+- **Complement removal:** a sensitivity, not adopted. The array would be S54 with an explicit E of 150 mm², or S48 with 75 mm².
+
+The implementation plan is in [HANDOFF_SCENARIO_C.md](HANDOFF_SCENARIO_C.md).
