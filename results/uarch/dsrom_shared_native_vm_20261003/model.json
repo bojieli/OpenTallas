@@ -351,6 +351,122 @@
     "retirement": "finish observed then queue empty, no held write, matching visible receipt cleared local debt, native pending false, all issued reads replied and skids consumed; at least one further caller edge after receipt",
     "finite_service": "each collective packet at most4 distinct word batches;26slow edges inclusive before output stall. Full operation sums actual packet count and reverse receipts; consumer stalls never assumed bounded absent actual caller contract"
   },
+  "caller_integration": {
+    "default_off": true,
+    "MACs_per_cycle_added": 0,
+    "native_peak_bytes_per_cycle_read_write": [
+      256,
+      256
+    ],
+    "related_clock_crossing_destination_cycles": [
+      2,
+      2
+    ],
+    "ME": {
+      "profile": {
+        "AW": 30,
+        "NW": 21,
+        "MP": 1,
+        "G": 4,
+        "KMAX": 5120,
+        "MG": 8
+      },
+      "write_capture": "reuse existing4word masked output registers; hold until actual write_accept; tileOCRED1 returned only matching visible ACK or source-known no-write group",
+      "added_state_bits": 1,
+      "completion": "source write debt + native pending + held output prevent ready/idle"
+    },
+    "attention": {
+      "profile": {
+        "AW": 30,
+        "NW": 21,
+        "MP": 1,
+        "G": 4,
+        "D": 512,
+        "TROWS": 640,
+        "PACKED_KV": 1
+      },
+      "read_cookie_bits": 32,
+      "read_capture_bits": 128,
+      "pending_fault_bits": 2,
+      "write": "reuse existing masked4word output registers; issue next group only after matching visible completion; no reencoder in selected packed path",
+      "added_state_bits": 163
+    },
+    "indexer": {
+      "unchanged_batch_keys": 64,
+      "record": "30bit original index+16bit BF16score+1fault",
+      "queue_records": 64,
+      "queue_bits": 3008,
+      "native_packet": "up to4 FIFO original scalar scores, source order/sameword merge in reused4word output register",
+      "per64key_batch_packets_max": 16,
+      "native_write_service_slow_edges_max_without_external_stall": 416,
+      "pointer_count_debt_bits": 20,
+      "state_bits_added": 3028,
+      "admission": "one actual retained64key batch only when queue empty and prior native visible debt drained; never assume score pulse can stall",
+      "golden_order": "queue original b_index/b_score in source order, no arithmetic change"
+    },
+    "XU": {
+      "profile": {
+        "AW": 30,
+        "NW": 21,
+        "SQ": 4,
+        "SW": 16,
+        "SK": 2048
+      },
+      "added_write_debt_bits": 1,
+      "write_capture": "reuse original1024bit32element masked output registers, hold until actualaccept; last visible ACK before idle",
+      "selected_ops": "BF16 selector only for this native output hook; scalar NW21 and other XU producers remain separate owners; defaultoff legacy path retained"
+    },
+    "field_row": {
+      "width": 128,
+      "reused_accepted_mask_bits": 128,
+      "added_state_bits": 0,
+      "new_logic": "128maskbits AND accepted-mask complement while pending or visible pulse; suppress old held rows on receipt edge, admit only new rows",
+      "visible_is_not_grant": true
+    },
+    "native_write_mux": {
+      "producers": [
+        "ME",
+        "indexer",
+        "attention",
+        "BF16_selector"
+      ],
+      "port_count_added": 0,
+      "input_bits_per_producer": 2236,
+      "output_bits": 2236,
+      "state_bits": 6,
+      "policy": "nonpreemptive round-robin4 sources; one selected held source until positive native visible ACK; exact producer-specific grant/pending/visible demux",
+      "selector_normalization": "32element masked beat at any19bit element base -> at most3 aligned16element native words, original lane order/last-write wins"
+    },
+    "SU_KV": {
+      "existing_held_payload_bits": 16128,
+      "source_id_prefix": 8,
+      "native_clients_namespace": [
+        0,
+        7
+      ],
+      "backend": "actual caller m_wr_done positive completion, not m_rdy, QE_done, FIFOempty or merger_done",
+      "new_state_bits": 0
+    },
+    "source_II": "per-class real native service + forward2/reverse2 + source capture/reissue + positive retirement; serialize four write producers, no four free native ports",
+    "conditional_write_wait": "at most3 other shared-writer packets only if each actual native visible completion is finite; native8way reader/writer arbitration and consumer stalls remain additive",
+    "added_FF_floor_um2": 935.1612000000001,
+    "added_50pct_reservation_mm2": 0.0018703224000000001,
+    "shared_VX_mux": {
+      "producers": [
+        "ME",
+        "index",
+        "attention"
+      ],
+      "state_bits": 6,
+      "policy": "lock offer before acceptance, lock caller until matching reply capture, context low32 carries actual cookie; warm reset with debt faults until cold fence"
+    },
+    "shared_arbiter_fault_bits": 1,
+    "format_fault_bits": 1,
+    "clock_reset": "3207 additional FF sinks, distinct from existing WAKE and transport; no clock/PG/hold credit",
+    "routing": "source4to1 write mux up to4*2236 inputbits +2236 outputbits; all existing13native transport widths unchanged; physical site/channel capacity unbound",
+    "physical_admission": false,
+    "raw_source_integration_admission": true
+  },
   "caller_cost": {
     "ME_activation_wait_bits": 130,
     "ME_result_credit": "existing tile OCRED1; return only actual visible receipt or source-known empty/amax-only group; scalar arithmetic unchanged",
@@ -409,6 +525,14 @@
     "rtl/chip/ot_chip_v41x_tile.sv": "c74505d599728bc0948994ddfe13da6d95eaff343ea2ee08c50fe13e5d8aa46b",
     "rtl/chip/ot_w15_coll_dma.sv": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
     "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
-    "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0"
+    "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0",
+    "rtl/model_ready_ds_shared_native_20261003/ot_hdc_v41x_me_adapt_native_vm.sv": "9bca2dde2760c7af10c6b99a5fff02b8fd4f76ade7b422cbb66a63a925fb3ffc",
+    "rtl/model_ready_ds_shared_native_20261003/ot_hdc_v41x_att_adapt_native_vm.sv": "c514106ee4930db0a530a7086e7800c20ff46cfe9f22d6e354dad325edecd5b8",
+    "rtl/model_ready_ds_shared_native_20261003/ot_hdc_v41x_idx_pool_adapt_native_vm.sv": "38afbbd90e8edae63211bdd775b079f197986759d97993b75dd628e3a140c15e",
+    "rtl/model_ready_ds_shared_native_20261003/ot_hdc_v41x_xu_adapt_native_vm.sv": "0eb55a48e5c2d0e40bdc6bfac6d40870c5ccf5efa148d25652e3f740b49a2853",
+    "rtl/model_ready_ds_shared_native_20261003/ot_ds_native_engine_arbiter.sv": "fc280edb001ebcda7d3876401d6b33616b88fc649fc8fd770f1d9a6c0e3e84db",
+    "rtl/model_ready_ds_shared_native_20261003/ot_ds_native_seven_caller_service.sv": "064cccb3feae2eef947e4057c258935223b82c9ca32470e4625725d8132e0ac8",
+    "rtl/model_ready_ds_shared_native_20261003/ot_ds_native_vm_related_callers.sv": "fe899b5034ba534dd333e7f2872706884f5b211a1475bce0537c557f835b8229",
+    "rtl/model_ready_ds_shared_native_20261003/ot_ds_su_kv_related_namespace.sv": "0c066edce6ab58f8c881eb68c08e1f6a00810b68aecf24555876f9194bb2f1da"
   }
 }

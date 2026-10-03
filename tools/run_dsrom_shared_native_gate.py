@@ -4,13 +4,14 @@ import argparse, hashlib, json, os, pathlib, subprocess, time
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 R='rtl/model_ready_ds_shared_native_20261003/'
 CASES={
+ 'callers':['tests/rtl/dsrom_shared_native/tb_native_callers.sv',R+'ot_ds_native_seven_caller_service.sv',R+'ot_ds_native_engine_arbiter.sv',R+'ot_ds_native_vm_related_callers.sv',R+'ot_ds_native_write_formats.sv',R+'ot_ds_shared_native_vm_provider.sv','rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv','results/uarch/dsrom_seven_class_swap_20261003/inputs/ratio_fifo.sv'],
  'ID':['tests/rtl/dsrom_shared_native/tb_id_parent.sv',R+'ot_hdc_qstream_related_ID.sv',R+'ot_ds_native_vm_related_parent.sv',R+'ot_ds_native_write_formats.sv',R+'ot_ds_shared_native_vm_provider.sv','rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv','results/uarch/dsrom_seven_class_swap_20261003/inputs/ratio_fifo.sv'],
  'collective':['tests/rtl/dsrom_shared_native/tb_coll_parent.sv',R+'ot_w15_coll_dma_related_vm.sv',R+'ot_chip_v41x_coll_transpose_related_vm.sv',R+'ot_ds_native_vm_related_parent.sv',R+'ot_ds_native_write_formats.sv',R+'ot_ds_shared_native_vm_provider.sv','rtl/chip/ot_coll_topk_merge.sv','rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv','results/uarch/dsrom_seven_class_swap_20261003/inputs/ratio_fifo.sv'],
  'provider':['tests/rtl/dsrom_shared_native/tb_provider.sv',R+'ot_ds_shared_native_vm_provider.sv'],
  'related':['tests/rtl/dsrom_shared_native/tb_related_parent.sv',R+'ot_ds_native_vm_related_parent.sv',R+'ot_ds_native_write_formats.sv',R+'ot_ds_shared_native_vm_provider.sv','rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv','results/uarch/dsrom_seven_class_swap_20261003/inputs/ratio_fifo.sv'],
  'transpose':['tests/rtl/dsrom_shared_native/tb_transpose.sv',R+'ot_chip_v41x_coll_transpose_related_vm.sv']}
 TAIL=['rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv','results/uarch/dsrom_seven_class_swap_20261003/inputs/native_sram.v']
-PASS={'ID':'PASS ID_NATIVE_WRONG_COOKIE','collective':'PASS DMA_TOPK_NATIVE','provider':'PASS SHARED_NATIVE_PROVIDER','related':'PASS RELATED_NATIVE_PARENT','transpose':'TRANSPOSE_PASS'}
+PASS={'callers':'PASS NATIVE_CALLER_RESET','ID':'PASS ID_NATIVE_WRONG_COOKIE','collective':'PASS DMA_TOPK_NATIVE','provider':'PASS SHARED_NATIVE_PROVIDER','related':'PASS RELATED_NATIVE_PARENT','transpose':'TRANSPOSE_PASS'}
 def main():
  p=argparse.ArgumentParser();p.add_argument('--case',choices=CASES,required=True);p.add_argument('--simulator',choices=['iverilog','verilator'],default='iverilog');p.add_argument('--out',type=pathlib.Path,required=True);a=p.parse_args()
  from dsrom_shared_native_vm_model import model
