@@ -24,7 +24,7 @@ def entry(arrays, receipt):
     if not 0<=layer<len(R.RATIO):raise ValueError('layer outside retained product')
     ratio=R.RATIO[layer]
     source=max((x for x in R.KV_SRC if x<=layer),default=None) if ratio else None
-    if receipt.get('kv_source_layer')!=source:raise ValueError('KV ownership differs from retained layer map')
+    if (source is not None and type(receipt.get('kv_source_layer')) is not int) or receipt.get('kv_source_layer')!=source:raise ValueError('KV ownership differs from retained layer map')
     values={}
     for key,tail in [('h_in',(4,5120)),('pre_in',(4,)),('win',(512,)),('ckv',(512,)),('ik',(128,))]:
         if key not in arrays:raise ValueError('missing captured '+key)
@@ -35,7 +35,7 @@ def entry(arrays, receipt):
         elif a.ndim!=2 or a.shape[1:]!=tail:raise ValueError(key+' row shape mismatch')
         values[key]=a.copy()
     if not np.array_equal(G.to_bf16(values['h_in']),values['h_in']):raise ValueError('residual must match retained BF16-valued contract')
-    if len(values['win'])>128:raise ValueError('window capacity exceeded')
+    if len(values['win'])>127:raise ValueError('window capacity exceeded')
     if len(values['ckv'])!=len(values['ik']):raise ValueError('compressed KV/index-key global rows differ')
     pos=receipt['position']
     nrows=pos//ratio if ratio else 0
@@ -47,7 +47,10 @@ def entry(arrays, receipt):
     values['open_group']=group.copy()
     if receipt.get('open_group_positions')!=list(range(pos-slots,pos)):raise ValueError('open compressor slot lineage mismatch')
     wp=receipt.get('window_positions');ids=receipt.get('compressed_row_ids')
-    if wp!=list(range(max(0,pos-128),pos)):raise ValueError('entry window must contain all chronological prior rows')
+    for key in ('window_positions','compressed_row_ids','open_group_positions'):
+        xs=receipt.get(key)
+        if type(xs) is not list or any(type(x) is not int or x<0 for x in xs):raise ValueError('typed nonnegative '+key+' required')
+    if wp!=list(range(max(0,pos-127),pos)):raise ValueError('entry window must contain all chronological prior rows')
     if len(wp)!=len(values['win']):raise ValueError('window position/data count mismatch')
     if ids!=list(range(len(values['ckv']))):raise ValueError('compressed global IDs must be explicit dense chronological rows')
     if digest(values['h_in'],values['pre_in'])!=receipt.get('input_sha256'):raise ValueError('captured mHC/pre-mix lineage mismatch')

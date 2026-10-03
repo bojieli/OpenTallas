@@ -36,3 +36,20 @@ def test_refuse_incomplete_or_invented_entry(defect):
  if defect=='wrong_cadence':a['ckv']=np.zeros((2,512),dtype=np.float32);a['ik']=np.zeros((2,128),dtype=np.float32)
  if defect=='float64':a['win']=a['win'].astype(np.float64)
  with pytest.raises(ValueError):M.entry(a,r)
+
+
+def test_entry_reserves_current_window_row_not_129_rows():
+ a,r=fixture();r['position']=130
+ a['win']=np.zeros((127,512),dtype=np.float32)
+ a['ckv']=np.zeros((65,512),dtype=np.float32);a['ik']=np.zeros((65,128),dtype=np.float32)
+ a['open_group']=np.zeros((0,2,512),dtype=np.float32)
+ r['window_positions']=list(range(3,130));r['compressed_row_ids']=list(range(65));r['open_group_positions']=[]
+ r['state_sha256']={k:M.digest(a[k]) for k in ('win','ckv','ik','open_group')}
+ assert M.entry(a,r)[2]['window_rows']==127
+ a['win']=np.zeros((128,512),dtype=np.float32);r['window_positions']=list(range(2,130));r['state_sha256']['win']=M.digest(a['win'])
+ with pytest.raises(ValueError,match='window capacity'):M.entry(a,r)
+
+
+def test_bool_identity_is_not_global_row_zero():
+ a,r=fixture();r['compressed_row_ids']=[False]
+ with pytest.raises(ValueError,match='typed nonnegative'):M.entry(a,r)
