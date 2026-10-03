@@ -44,6 +44,7 @@ module ot_qwen_rom_sys_top #(
     parameter integer TAG_FULL   = 1,
     parameter integer ME_CDC     = 0,
     parameter integer KV_PREFETCH = 0,       // 1: token-start KV prefetch notice to every die's KV service
+    parameter integer COLL_HEADREG = 0,     // registered collective receive heads
     parameter integer SEQ_ASYNC  = 0,        // 1: asynchronous (cut-through) collective sequencer        // 1: matrix engines on fclk (1.2 GHz), the rest on clk (0.9 GHz)
     parameter integer LFW        = 32 + 1 + 1 + 8 + 1 + 8 + 1 + 1 + 3 + (512 + 2 + TAGW)
 ) (
@@ -213,7 +214,7 @@ module ot_qwen_rom_sys_top #(
         end
         ot_qwen_sys_die #(.N(N), .RANK(d), .G(G), .NW(NW), .TAG_FULL(TAG_FULL), .TAGW(TAGW),
                           .WROM_WORDS(WROM_WORDS), .KVWORDS(KVW), .NPC(NPC), .HTAGW(HTAGW), .LINK_TMO(LINK_TMO),
-                          .BOOT_SECTOR(24'(NSLOT * KVW * 2)), .SCRUB_SECTORS(NSLOT * KVW * 2), .ME_CDC(ME_CDC), .KV_PREFETCH(KV_PREFETCH), .SEQ_ASYNC(SEQ_ASYNC)) u_die (
+                          .BOOT_SECTOR(24'(NSLOT * KVW * 2)), .SCRUB_SECTORS(NSLOT * KVW * 2), .ME_CDC(ME_CDC), .KV_PREFETCH(KV_PREFETCH), .SEQ_ASYNC(SEQ_ASYNC), .COLL_HEADREG(COLL_HEADREG)) u_die (
             .clk(clk), .fclk(fclk), .link_rst_n(link_rst_n), .hbm_rst_n(hbm_rst_n), .rst_n(die_rst_n),
             .start(d_start), .token(d_token), .pos(d_pos), .kv_base(d_kv_base[22:0]),
             .done(d_done[d]), .next_token(d_ntok[d*NW +: NW]), .next_val(d_nval[d*32 +: 32]), .drained(d_drained[d]),

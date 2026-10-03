@@ -46,6 +46,7 @@ module ot_qwen_sys_die #(
     // SEQ_ASYNC = 1: the asynchronous-collective sequencer (ot_qwen_tp_seq_async_sys, ASYNC_COLL = 1): an all-reduce
     // whose descriptor carries bit 20 (tools/qwen_rom_sys_async_images.py) is sent while the matrix engine writes it.
     parameter integer SEQ_ASYNC = 0,
+    parameter integer COLL_HEADREG = 0,
     parameter integer LFW        = 32 + 1 + 1 + 8 + 1 + 8 + 1 + 1 + 3 + (512 + 2 + TAGW)
 ) (
     input  wire               clk,
@@ -228,6 +229,15 @@ module ot_qwen_sys_die #(
     wire [N*PW-1:0] e_rxr;
     wire          e_fault;
     wire [2:0]    e_fcode;
+    generate if (COLL_HEADREG) begin : g_coll_headreg
+    ot_rom_oneshot_die_headreg #(.REGISTER_HEAD(1),.N(N), .RANK(RANK), .LANES(FLIT / 32), .TAGW(TAGW), .DEPTH(CDEPTH)) u_coll (
+        .clk(clk), .rst_n(rst_n),
+        .in_valid(cv), .in_ready(crd), .in_data(cd), .in_last(cl), .in_mode(cm), .in_tag(ct),
+        .tx_valid(e_txv), .tx_rec(e_txr), .tx_ready(e_txrdy), .cr_in(e_crin),
+        .rx_valid(e_rxv), .rx_rec(e_rxr), .cr_out(e_crout),
+        .out_valid(rv), .out_data(rd), .out_last(rl), .out_rank(rr), .out_err(re_),
+        .fault(e_fault), .fault_code(e_fcode));
+    end else begin : g_coll_legacy
     ot_rom_oneshot_die #(.N(N), .RANK(RANK), .LANES(FLIT / 32), .TAGW(TAGW), .DEPTH(CDEPTH)) u_coll (
         .clk(clk), .rst_n(rst_n),
         .in_valid(cv), .in_ready(crd), .in_data(cd), .in_last(cl), .in_mode(cm), .in_tag(ct),
@@ -235,6 +245,7 @@ module ot_qwen_sys_die #(
         .rx_valid(e_rxv), .rx_rec(e_rxr), .cr_out(e_crout),
         .out_valid(rv), .out_data(rd), .out_last(rl), .out_rank(rr), .out_err(re_),
         .fault(e_fault), .fault_code(e_fcode));
+    end endgenerate
 
     wire [N-1:0]  l_fault;
     wire [N*32-1:0] l_crc, l_rep, l_drop;

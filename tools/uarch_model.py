@@ -999,6 +999,41 @@ QWEN_EXCHANGE = "q256d64"   # ROOT DECISION 2026-09-29 (W15): the TP-2 oneshot a
 QWEN_EXCHANGE_AS_BUILT = "q16d16"   # ot_qwen_tp_host_binding's engine (16 lanes, depth 16)
 
 
+def qwen_collective_registered_head(n=4, lanes=16, tagw=40, depth=16, collectives=72, clock_hz=1.2e9):
+    """2078c269c control-loop repair, prospective sizing before successor RTL.
+
+    A synchronous head per source removes mem[rp].mode from pop/credit feedback.
+    Head occupancy remains in the existing receive count/credits; no extra FIFO
+    capacity or external wires. Forward push on one-entry pop preserves II=1.
+    Empty-to-nonempty prefetch adds one cycle on the limiting source, priced
+    conservatively once per collective (owner estimate 72 per full token).
+    """
+    pw = lanes * 32 + 2 + tagw
+    bits = n * (pw + 1)
+    return dict(schema="opentallas.qwen-collective-registered-head-model.v1",
+                status="PROSPECTIVE_NOT_ADOPTED", enabled_default=False,
+                basis="owner 2078c269c 490MHz pop loop; DFF_UM2 from unified model",
+                macs_per_cycle=0, compute_intensity=0,
+                replicas_per_die=n, memory_ports_per_die=n,
+                payload_bytes_per_port_per_cycle=lanes*4,
+                internal_record_bits_per_cycle=n*pw,
+                added_external_boundary_bits_per_cycle=0,
+                routing_tracks_added_external=0, external_channel_capacity_change=0,
+                existing_fifo_bits=n*depth*pw, receive_capacity_change_words=0,
+                extra_register_bits=bits,
+                extra_register_area_mm2=bits*DFF_UM2/1e6,
+                extra_placement_area_mm2_at_50pct=2*bits*DFF_UM2/1e6,
+                mux=dict(read=n*pw*(depth-1), forwarding=n*pw,
+                         note="read mux relocated ahead of head register; one two-way push-forward mux per record bit"),
+                fanout=dict(pop_head_enable=n*pw, nonempty_flag=n),
+                floorplan_slot="existing per-die collective endpoint; actual slot/route gate pending",
+                steady_issue_interval_cycles=1,
+                latency_cycles_per_collective=1, collectives_per_token=collectives,
+                token_added_cycles=collectives, token_added_ns=collectives/clock_hz*1e9,
+                serial_domain_token_added_ns=collectives/0.9e9*1e9,
+                gates="exact + measured real-program delta, hub routes and contextual SS/FF pending")
+
+
 def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter=False, wire_model="w5",
               x_read_elems=None, exchange="default"):
     """wire_model "w5": W5's per-op x/conflict/write terms plus per-token tree and UCIe terms; "w12": the W12

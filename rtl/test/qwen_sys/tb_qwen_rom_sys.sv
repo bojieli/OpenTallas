@@ -37,7 +37,8 @@ module tb_qwen_rom_sys #(
     parameter integer LAT_BOARD = 40,
     parameter integer ME_CDC    = 0,
     parameter integer KV_PREFETCH = 0,
-    parameter integer SEQ_ASYNC = 0
+    parameter integer SEQ_ASYNC = 0,
+    parameter integer COLL_HEADREG = 0
 ) (input wire sclk, input wire fclk, input wire [63:0] tick);
     // clocks from rtl/test/qwen_sys/qsys_harness2.cpp: +CLK=slow (one 0.9 GHz clock) or +CLK=split
     // (fclk 1.2 GHz for the matrix engines, sclk 0.9 GHz for everything else, 3:4 from one PLL)
@@ -86,7 +87,7 @@ module tb_qwen_rom_sys #(
     wire [NW-1:0] step_pos;
 
     ot_qwen_rom_sys_top #(.N(N), .G(G), .NW(NW), .NSLOT(NSLOT), .KVW(KVW), .TAGW(TAGW), .NPC(NPC), .HTAGW(HTAGW),
-                          .LINK_TMO(4 * LAT_BOARD + 16), .ME_CDC(ME_CDC), .KV_PREFETCH(KV_PREFETCH), .SEQ_ASYNC(SEQ_ASYNC)) dut (
+                          .LINK_TMO(4 * LAT_BOARD + 16), .ME_CDC(ME_CDC), .KV_PREFETCH(KV_PREFETCH), .SEQ_ASYNC(SEQ_ASYNC), .COLL_HEADREG(COLL_HEADREG)) dut (
         .clk(clk), .fclk(fclk), .por_n(por_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hF),

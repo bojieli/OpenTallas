@@ -54,7 +54,7 @@ CORE = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/o
 SYS = ["rtl/qwen_sys/ot_qwen_rom_sys_top.sv", "rtl/qwen_sys/ot_qwen_sys_die.sv", "rtl/qwen_sys/ot_qwen_sys_kv_svc.sv",
        "rtl/qwen_sys/ot_qwen_d2d_link.sv", "rtl/qwen_sys/ot_qwen_tp_seq_sys.sv", "rtl/qwen_sys/ot_qwen_tp_seq_async_sys.sv", "rtl/qwen_sys/ot_qwen_sys_pkg_ctl.sv",
        "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv", "rtl/qwen_sys/ot_qwen_sys_csr.sv", "rtl/qwen_sys/ot_qwen_sys_rom.sv",
-       "rtl/rom/ot_rom_oneshot_allreduce.sv", "rtl/link/ot_link_crc32.sv", "rtl/lib/ot_reset_sync.sv",
+       "rtl/rom/ot_rom_oneshot_allreduce.sv", "rtl/rom/ot_rom_oneshot_headreg.sv", "rtl/link/ot_link_crc32.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/host/ot_host_if.sv", "rtl/hdc/kv/ot_qwen_hbm_model_ack.sv", "rtl/test/qwen_sys/ot_qwen_d2d_chan.sv"]
 HARNESS = "rtl/test/qwen_sys/qsys_harness.cpp"
 HARNESS2 = "rtl/test/qwen_sys/qsys_harness2.cpp"     # sclk / fclk from one 3.6 GHz VCO (+CLK=slow|split)
