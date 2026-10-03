@@ -14,7 +14,8 @@
   "source_models": [
     "tools/gpu_sys/canonical_qwen_kv_controller_model.py",
     "tools/gpu_sys/canonical_qwen_sector_authority_model.py",
-    "tools/gpu_sys/canonical_qwen_kv_connections_model.py"
+    "tools/gpu_sys/canonical_qwen_kv_connections_model.py",
+    "tools/gpu_sys/qwen_native_consumer_drain_model.py"
   ],
   "assembly_sequential_bits_added": 0,
   "assembly_SRAM_bytes_added": 0,
@@ -34,5 +35,7 @@
   "new_engine_or_PnR_admitted": false,
   "headline_credit": false,
   "connected_shared_services": 64,
-  "KV_connections": "Dewey connected_ports wrapper instantiates original controller + actual shared router + state observer + metadata join + owner55 reader services; no duplicate controller/SRAM"
+  "KV_connections": "ONE original lifecycle controller, Dewey shared router/state observer/metadata join, replacing Dewey owner55 reader leaf with Popper fullnative230 protected consumer/drain. Neither peer controller wrapper instantiated.",
+  "native_bridge_raw_bits": 335,
+  "native_bridge_protected_bits": 432
 }
