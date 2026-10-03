@@ -1,0 +1,76 @@
+{
+  "W4_source_record": "214d0a992 exact6 W4 source/interface/cost records",
+  "W6_source_frozen": true,
+  "all_source_git_blobs_byte_identical": true,
+  "clock_scope": "SS setup60ps / FFhold25ps at0.833333ns, no TT or bench-clock qualification.",
+  "critical_cuts": [
+    {
+      "cone": "W4 w4_encode; publisher write_pending/ACKvalid controls",
+      "end": "RF.g_identity.protected_ACK[71:0]",
+      "id": "W4_CAPTURE_TO_ACK_ENCODE",
+      "start": "RF.g_identity.accepted_identity[54:0]"
+    },
+    {
+      "cone": "W4 SECDED decode/padding-error+host valid mux -> Popper adapter -> W6 full55 comparator/phase -> encode_row",
+      "end": "W6.enabled.protected_state[143:0]",
+      "id": "W4_HOST_ACK_TO_W6_STATE",
+      "start": "RF.g_identity.protected_ACK[71:0]"
+    },
+    {
+      "cone": "W6 SECDED decode/age/phase/expected identity -> ready -> W4 decoded-error and identity_fault gates",
+      "end": "RF.ack_valid",
+      "id": "W6_READY_TO_W4_ACK_CLEAR",
+      "start": "W6.enabled.protected_state[143:0]"
+    },
+    {
+      "cone": "Map this exact source register to final netlist; W4 SIMD saved tuple decode/DONE mux -> adapter -> W6 compare/encode",
+      "end": "W6.enabled.protected_state[143:0]",
+      "id": "W4_INTERNAL_DONE_TO_W6",
+      "start": "FULL_SM.g_identity.g_enabled.simd_identity_q[71:0]"
+    },
+    {
+      "cone": "Actual SS macro clktoq, page select, load and receiving setup; both operand copies retained",
+      "end": "RF.rsp_a/rsp_b",
+      "id": "RF_READ_CAPTURE_CONTEXT",
+      "start": "RF macro rd_out[255:0] repeated 128"
+    },
+    {
+      "cone": "Real SS setup and FF hold for all pages/banks, with postCTS skew and insertion",
+      "end": "both RF copies w_ce_in,w_addr_in,wd_in",
+      "id": "RF_MIRRORED_WRITE_CONTEXT",
+      "start": "write_go,wr_addr,wr_data source FFs"
+    },
+    {
+      "cone": "Clocked W6 runtime quarantine vs W4 ACK abort; recovery/removal, release synchronization and fault/admission stop, no broad false-path waiver",
+      "end": "W4 async reset FFs/W6 protected_state",
+      "id": "RESET_RECOVERY_REMOVAL",
+      "start": "actual por_n/rst_n synchronizer/distribution"
+    }
+  ],
+  "launch_ready": false,
+  "macro_area_not_added_again_to_model": true,
+  "macro_bare_area_mm2": 16.72800864768,
+  "macro_timing_scope": "Memory-compiler calibrated analytical source models with assumptions, not loaded/extracted SS/FF macro measurements.",
+  "model_signer": "Popper",
+  "no_live_PC40_job_touch": true,
+  "owner": "Goodall loadedW4toW6SSFF plan/executor",
+  "pending": [
+    "Popper signed exact composed adapter model incl perport bits/bytes, staged latency, mux/fanout/protectedstate, onceonly area and finite service/wait assumptions",
+    "Clean final source/tool/PDK manifest for W4,W6,adapter,full128 SIMD/scratch and actual fullSM neighbor context",
+    "32 physical SM IDs and W4/W6 slot coordinates, row/site/orientation/bbox, macro4096RF64scratch census and liveOBS/halo/PG exclusions",
+    "Actual loads/launch driver slew/min/max delays and capture arcs for every scoped control/data port; no synthetic idealzero loading",
+    "Legal M2-M5 cut widths/tracks/capacity and selected route/no tuning sweep",
+    "Clock/reset CTS sources/skew/insertion and sameclock or actual adapterCDC seats; mutable protection costs included",
+    "SS/FF macro and standard-cell Liberty/LEF/RC scale coherence, actual corners/voltages and final placed instance census",
+    "Fresh measured fleet CPU/RAM/disk reservation and source-bound GO using guarded aligned launcher"
+  ],
+  "physical_jobs": 0,
+  "selected_route": "W4_W6_FULL32_ORIGINAL_V1_ASAP7_RVT_M2_M5_R1",
+  "source_pins": 13,
+  "tests": 11,
+  "tool_hashes": {
+    "tools/hbm_w6_w4_loaded_plan.py": "c5245a7f31fc5edfe668ee2df3f9b2acd5c2e2b26169dc4a1aed3299da5482ad",
+    "tools/test_hbm_w6_w4_loaded_plan.py": "1db6378e952004e7e03d21b1595161024804693275b574662c2965f59a8f792b"
+  },
+  "wholeHBM_CDC_debt_owner": "Claude"
+}

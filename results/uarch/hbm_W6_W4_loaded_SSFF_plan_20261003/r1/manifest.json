@@ -1,0 +1,70 @@
+{
+  "handoff.json": {
+    "bytes": 3956,
+    "sha256": "bb2d0ba27599de1e58cf954c2929fe9f490b93539d18c05c280b00214dd8287c"
+  },
+  "inputs/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json": {
+    "bytes": 11880,
+    "sha256": "da05b0fef4aa9283ecdba8bfcedc49e4dff706dba5f21af2fbc36f7e8bac0794"
+  },
+  "inputs/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": {
+    "bytes": 150234,
+    "sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4"
+  },
+  "inputs/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib": {
+    "bytes": 29441,
+    "sha256": "b61a1754a9745d3a2039fcc7417f63f72082f4767028fdd4686b0ef18a075b1f"
+  },
+  "inputs/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib": {
+    "bytes": 29474,
+    "sha256": "a2dc21cb376ff58354fd4fe666ab6b4616336ae911ff252766408d3dc4a09a39"
+  },
+  "inputs/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": {
+    "bytes": 11886,
+    "sha256": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87"
+  },
+  "inputs/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": {
+    "bytes": 144422,
+    "sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+  },
+  "inputs/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": {
+    "bytes": 29410,
+    "sha256": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84"
+  },
+  "inputs/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib": {
+    "bytes": 29443,
+    "sha256": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0"
+  },
+  "inputs/physical/common/ot_macro_track_assert_hook.tcl": {
+    "bytes": 677,
+    "sha256": "9a31c37d470232411b116ccbf8607d16e494c968ab743e37992ef3ed2db7e2a1"
+  },
+  "inputs/physical/common/ot_macro_track_snap.tcl": {
+    "bytes": 17860,
+    "sha256": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143"
+  },
+  "inputs/tools/check_macro_track_alignment.py": {
+    "bytes": 23615,
+    "sha256": "21f4957b432b14b142598ee334b9cdb9ef18f09efbbcaa0d2cbd629582ff8a84"
+  },
+  "inputs/tools/run_abi3_physical_aligned.py": {
+    "bytes": 7579,
+    "sha256": "d3e5973b8943e8149f42fc8fd05ce37cc555c83889a693f086d9261237f9cbb8"
+  },
+  "inputs/tools/run_abi3_physical_aligned_guarded.py": {
+    "bytes": 3803,
+    "sha256": "8e614f3ef192ecdc4b67077beb496ca7ef1e53b96bd9074fa0c6040d18802dae"
+  },
+  "selected_plan.json": {
+    "bytes": 6642,
+    "sha256": "c96acf9cb156e51e0181cda606329a396874e671d12676fb73b44fa537619e56"
+  },
+  "source_pins.json": {
+    "bytes": 5181,
+    "sha256": "71fc678098e1da1e6a5b8826ab3a58ec9a683d35ebd3cd2beb0e9278e10d89b4"
+  },
+  "tests.log": {
+    "bytes": 940,
+    "sha256": "047b1d6e229c78dbcaa3f76d46fa813e747a072dcea73e0cf4db6e4f30bf9276"
+  }
+}
