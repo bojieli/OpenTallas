@@ -27,7 +27,7 @@ module tb_txcount;
  end endtask
  task event_pair(input integer n);begin
  @(negedge clk);wa=1;fa=1;wi=n;fi=n;wo=own(n);fo=own(n);tick;
- @(negedge clk);wa=0;fa=0;
+ @(negedge clk);wa=0;fa=0;#0.01;
  end endtask
  initial begin
  setup(2);event_pair(0);ck(!cv,"missing transaction holds");
