@@ -23,6 +23,8 @@ def model():
                 equality_comparators=dict(stage_count=64,stage_width=55,
                                           metadata_count=1,metadata_width=64),
                 quiesce_fanout=dict(stage=64,metadata=1),
+                matched_terminal_ready_bits=65,
+                terminal_offers_held_during_reset_pause=True,
                 quiet_stage_reduction_inputs=64+64+64+1+1,
                 quiet_metadata_reduction_inputs=1+1+1+1+1+1,
                 admitted_children_blocked=False,new_roots_blocked=True,
