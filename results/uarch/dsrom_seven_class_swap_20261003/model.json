@@ -1,4 +1,110 @@
 {
+  "actual_field_x_bridge": {
+    "admission": "raw actual source-connected field read functional admitted; loaded SSFF/protected parent false",
+    "area": "new named FF state plus existing2MiB macro instance body; no physical fit credit",
+    "capacity": "one field read transaction; no other backend read commands while active; writes refused during owned read",
+    "latency_formula": "actual FSM slow edges +2 slow req crossing +2 fast reply crossing +source capture edge; reverse receipts/next-edge acceptance price reuse separately",
+    "maximum_queue_wait": "unbounded unless physical provider/caller service guarantee bound; occupancy finite",
+    "mutable_bits": 16777216,
+    "native_clock": "slow",
+    "native_latency": "read command -> N+4 valid; bridge captures at subsequent slow edge; misaligned64 elements require second native4word read",
+    "native_macros": 256,
+    "new_state_bits": {
+      "service_FSM": 4,
+      "service_address": 30,
+      "service_base": 15,
+      "service_buffer": 4096,
+      "service_owner": 228,
+      "service_receipt_flags": 2,
+      "source_namespace": 59
+    },
+    "parameters": {
+      "AW": 15,
+      "DEPTH_GROUPS": 16,
+      "FIFO_DEPTH": 4,
+      "TAG_W": 228
+    },
+    "receipt_producer": "actual spine reply handshake -> reverse response receipt -> native service sees response owner retired -> request receipt",
+    "retirement_not_request_accept": true,
+    "source_issuer": "actual held spine x_re/x_addr/cookie17; descriptor135 captured from actual phase/xbase/xps/obase/ops/np/fmt; generated epoch32/batch16/RID11"
+  },
+  "actual_implementation_work": {
+    "KV_visible_copy": {
+      "native_latency": "one registered completion event after physical write; HBM producer must bind real completion",
+      "new_ports": "m_wr_done4,x_ready,writes_visible",
+      "new_state_bits": 4,
+      "one_write_outstanding_per_stack": true,
+      "parameter": "WR_VISIBLE=0 default",
+      "queue": "retained four128-sector FIFOs; serializer must hold burst and inject only capacity-admitted lanes",
+      "queue_pop": "positive m_wr_done; never m_rdy",
+      "single_user_cost": "sum per-stack physical write completion service; queues and reset held until visible completion; no fixed perfect service"
+    },
+    "SU_launch_credit": {
+      "credit": "one KV emit reserved before vector launch; source held payload until related FIFO accepts; slot returns only after actual physical KV write completion and reverse receipt",
+      "forward_related_state_bits": 132954,
+      "implementation_latency": "retained emit-to-output pipeline +capture/send +2 fast crossing +256 cursor visits +actual per-stack physical write service +2 slow receipt +2 slow reservation release/next emit; occupancy finite, no assumed service maximum",
+      "named_state": {
+        "FIFO_bits_charged_in_existing_class0_plane": 132954,
+        "new_KV_live_bits": 4,
+        "service_bits": 16369,
+        "source_bits": 16420
+      },
+      "new_vec_control_logic": "destination equality decode and emit AND; no arithmetic changes",
+      "new_vec_state_bits": 0,
+      "original_default_off": "emit condition literal unchanged when KV_BACKPRESSURE0",
+      "parameters": "KV_BACKPRESSURE0 default, retained N/M/LV/arithmetic",
+      "serializer_state_bits": 32789,
+      "source_sink": "new source-selected native KV prefetcher WR_VISIBLE1; no acceptance/empty retirement before all positive m_wr_done"
+    },
+    "gate": "isolated raw source-connected functional components admitted; full protected parent and physical false",
+    "index_query_wait": {
+      "II": "actual provider reply + consumer qv store + subsequent request setup, plus forward and reverse related receipts; no perfect-service upper bound",
+      "MACs_added": 0,
+      "arithmetic_changed": false,
+      "bytes_per_accepted_read": 16,
+      "cell_floor_um2": 37.908,
+      "channel_track_floor": 252,
+      "latency": "request held until actual acceptance; matching reply captured then unchanged qv store next fast edge; weight preparation waits pending/q2 completion",
+      "max_reads_in_flight": 1,
+      "new_state_bits": {
+        "identity_fault": 1,
+        "one_pending": 1,
+        "reply_capture": 128
+      },
+      "parameter": "VM_RESPONSE_WAIT=0 default; actual source MP1/G4/AW30 selected profile",
+      "physical_slot": "unbound in current parent; no physical credit",
+      "ports_bits": {
+        "reply_payload": 128,
+        "request_payload": 124,
+        "source_cookie": 13
+      },
+      "replicas": 1,
+      "retained_state_reused": "qe/q1_e/q2_e 13-bit source query ordinal; address arithmetic and BF16 conversion unchanged"
+    },
+    "no_extra_margin_ps": 0,
+    "remaining_actual_parent_hooks": [
+      "ME issue credit before unstalled output",
+      "field-row producer held until actual visible write ACK",
+      "collective read held/response capture and Topk/transpose elastic output",
+      "BF16 selector request/response holding; scalar variant belongs to Russell",
+      "one shared native VM arbiter and caller-specific typed/address/mask grant; no replicated free provider ports",
+      "actual whole-parent clock/reset source selection and mutable protection"
+    ],
+    "source_clock_ownership": {
+      "KV_HBM_service": "fast",
+      "ME": "fast",
+      "SU": "slow",
+      "VM": "slow",
+      "collective_DMA": "fast",
+      "field_spine": "fast",
+      "index": "fast",
+      "selector": "fast"
+    },
+    "source_clock_targets_ps": {
+      "fast": 833.333333,
+      "slow": 1111.111111
+    }
+  },
   "admission": {
     "physical_build": false,
     "protected_parent_integration": false,
@@ -352,15 +458,50 @@
       "path": "rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv",
       "sha256": "c5e1b8c9ff458bc0995f58b299e8930bb192c4761434fb1c7eb8fe0f803b6a30"
     },
+    "idx_pool_adapt.sv": {
+      "binding": "retained main source exact copy",
+      "sha256": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12",
+      "source": "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv"
+    },
+    "kv_prefetch.sv": {
+      "binding": "retained main source exact copy",
+      "sha256": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
+      "source": "rtl/chip/ot_chip_v41x_kv_prefetch.sv"
+    },
+    "native_sram.v": {
+      "binding": "portable byte-identical source archive",
+      "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+      "source": "actual retained ot_sram_1r1w_512x128_m4_r2c2 source copied exactly"
+    },
     "ratio_fifo.sv": {
       "commit": "54f82299e",
       "path": "rtl/common/ot_ratio_cdc_fifo.sv",
       "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
     },
+    "spine.sv": {
+      "commit": "54f82299e",
+      "path": "rtl/w17_runtime/v41die/ot_v41_spine.sv",
+      "sha256": "a55235b091ceaa0c2b84c2a6097800426e3fc5476a245523f8f5b385ddf119a3"
+    },
+    "spine_related_vm.sv": {
+      "binding": "portable byte-identical source archive",
+      "sha256": "eb7d6a6f3be713bb5ebe256575c4b84faca34254a7086effaea1558d809683dd",
+      "source": "e87bdc97b exact existing caller successor; source copy, no logic change"
+    },
+    "su_adapt.sv": {
+      "binding": "retained main source exact copy",
+      "sha256": "420723862866ec2e7687dfdaf30ee35fd2631409a466163ee46b03831b412a62",
+      "source": "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv"
+    },
     "tile.sv": {
       "commit": "54f82299e",
       "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
       "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+    },
+    "vec.sv": {
+      "binding": "retained main source exact copy",
+      "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13",
+      "source": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv"
     }
   },
   "state_total_bits": 324092
