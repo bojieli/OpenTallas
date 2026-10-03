@@ -220,7 +220,9 @@ class RTLColumnEngine:
             # poll is the ONE CP/SM edge owner. No tick in this adapter.
             receipt=self.sm_engine.poll()
         self.launches+=1
-        self.receipts.append(dict(kind=kind,token=receipt.token,pos=pos,job=job,
+        self.receipts.append(dict(kind=kind,token=token if expected_status==2 else receipt.token,
+                                 input_token=token,
+                                 completion_token=receipt.token,pos=pos,job=job,
                                  generation=generation,start_cycle=start,
                                  final_completion_cycle=self.pins.snapshot()['cycle'],
                                  cycles_by_die=receipt.cycles_by_die,
