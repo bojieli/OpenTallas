@@ -26,3 +26,10 @@ Branch: claude/hbm-system-rtl-20261003 (pushed). Records: results/rtl/hbm_system
   codex_notes.txt (if it wrote one). Not verified by me.
 - W4 (Euclid) RTL was not on any origin branch when checked; W6/W5/W10 not integrated into this system top.
 - HBM controller/PHY remains the behavioural ot_hdc_hbm_model; weight load into HBM is a load-time image (no host DMA path).
+
+## DSpark lowering WIP (tools/gpu_sys/v41_dspark.py, committed as unfinished)
+Prefill, verify columns 0-3 and the real drafter's 4 drafts match the golden; the LAST verify column (4) of the first
+speculative step is wrong (t_4 = 200 vs golden 1566 real drafter; 1002 vs 1374 forced). Unconfirmed suspect: per-column
+state slot stride 4608 B is 36 B short of the DSpark hidden-state area (overwrites the next slot's first residual words):
+grow O_MH/CSTR. --emit never run. Layer kernel 6,289 words, ~12.2k IMEM per SM -> needs IMW=14.
+v41_hbm.py was generalised for it; the committed AR program is byte-identical.

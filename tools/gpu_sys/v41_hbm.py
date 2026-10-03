@@ -51,6 +51,7 @@ U32 = np.uint32
 TP, NSM, NL, L16 = 2, 2, 128, 16
 CTX = 16                 # positions the program serves (state sized for them); max_seq_len is 128
 TPAD = 32                # attention list lanes per head: window CTX + selected compressed <= 32
+SLOT_RING = False        # compressor open slot indexed by position (speculative rollback: tools/gpu_sys/v41_dspark.py)
 SIGN = 0x80000000
 NEG_BIG = int(np.float32(-3.0e38).view(np.uint32))
 BD_FS = {False: 32, True: 16}
@@ -470,14 +471,18 @@ def to_ab(x4x160):
 
 
 class Program:
+    EXTRA = 0                # descriptor rows past the backbone (v41_dspark: the DSpark stages, a globals row)
+    EXTRA_LAYERS = ()        # of which these are layers with weights (checkpoint prefix Model.P(L))
+
     def __init__(self, model: V.Model, dbg=False):
         self.m = m = model
+        self.NLD = m.L + self.EXTRA
         self.mem = [dict() for _ in range(TP)]      # die -> {addr: bytes}
         self.cur = 0x1000
         self.a = {}                                 # same address on every die
         self.consts = {}
         self.desc_fields = {}
-        self.desc = [[dict() for _ in range(m.L)] for _ in range(TP)]
+        self.desc = [[dict() for _ in range(self.NLD)] for _ in range(TP)]
         self.dbg = dbg
         self.CONST = None
 
@@ -533,8 +538,8 @@ class Program:
         for s_ in m.kv_src:
             A(f"CKV{s_}", CTX * 64)
             A(f"IK{s_}", CTX * 64)
-            A(f"SLOT{s_}", 256)
-        A("DESC", m.L * 512)
+            A(f"SLOT{s_}", 256 * (CTX if SLOT_RING else 1))
+        A("DESC", self.NLD * 512)
         # tables
         pad = m.engram.pad
         ctok0 = np.zeros(CTX + 3, dtype=np.uint32)
@@ -578,7 +583,7 @@ class Program:
         self.ehash_names = ["MLO0", "MHI0", "MLO1", "MHI1", "MLO2", "MHI2", "MLO3", "MHI3", "P", "MAG", "R32", "OFF",
                             "MASK1", "MASK2", "MASK3"]
         # per-layer weights
-        for L in range(m.L):
+        for L in list(range(m.L)) + list(self.EXTRA_LAYERS):
             self._layer_images(L)
         hd = m.w["head.weight"]
         self.head = {}
@@ -599,10 +604,10 @@ class Program:
     def _layer_images(self, L):
         m, P = self.m, f"L{L}."
         lw = lambda n: m.lw(L, n)  # noqa: E731
-        yarn = m.ratio[L] > 0
+        yarn = L < m.L and m.ratio[L] > 0
         comp = yarn and L == m.kv_of[L]
         idx = yarn and L == m.idx_of[L]
-        r = m.ratio[L]
+        r = m.ratio[L] if L < m.L else 0
         sd = self.setd
         for d in range(TP):
             sd(d, L, "skip_eng", 0 if L in m.engram.layer_ids else 1)
@@ -613,7 +618,7 @@ class Program:
             sd(d, L, "log2r", 1 if r == 2 else 0)
             sd(d, L, "negr", -r)
             sd(d, L, "rope", self.a["ROPEY"] if yarn else self.a["ROPEP"])
-            sd(d, L, "win", self.a[f"WIN{L}"])
+            sd(d, L, "win", self.a.get(f"WIN{L}", 0))
             if yarn:
                 src = m.kv_of[L]
                 sd(d, L, "ckv", self.a[f"CKV{src}"])
@@ -681,14 +686,14 @@ class Program:
             b2 = bd_tile(w2.q[r2], w2.e[r2], fp4)[0]
             return b13, b2
         def shared(d, s_):
-            b13, b2 = expert_blob(f"layers.{L}.ffn.shared_experts.", 2 * d + s_, False)
+            b13, b2 = expert_blob(f"{m.P(L)}ffn.shared_experts.", 2 * d + s_, False)
             self.sh_w2off = len(b13)
             return np.concatenate([b13, b2])
         put_sm("shexp", shared)
         def routed(d, s_):
             out = []
-            for e in range(m.n_exp):
-                b13, b2 = expert_blob(f"layers.{L}.ffn.experts.{e}.", 2 * d + s_, True)
+            for e in range(m.n_exp if L < m.L else m.dspark_n_exp):
+                b13, b2 = expert_blob(f"{m.P(L)}ffn.experts.{e}.", 2 * d + s_, True)
                 self.ex_w2off = len(b13)
                 out.append(np.concatenate([b13, b2]))
             self.ex_stride = len(out[0])
@@ -723,8 +728,8 @@ class Program:
     def finish_images(self):
         """Descriptor table and constant table (after every kernel registered its fields and vectors)."""
         for d in range(TP):
-            tab = np.zeros((self.m.L, NL), dtype=np.uint32)
-            for L in range(self.m.L):
+            tab = np.zeros((self.NLD, NL), dtype=np.uint32)
+            for L in range(self.NLD):
                 for nm, lane in self.desc_fields.items():
                     tab[L, lane] = self.desc[d][L].get(nm, 0)
             self.wr(d, self.a["DESC"], tab)
@@ -1061,25 +1066,14 @@ class Gen:
     # ----------------------------------------------------------------- attention
     def attention(self, xa, xb):
         k, lib, m, s, g = self.k, self.lib, self.m, self.s, self.g
-        self.bd_x([xa, xb], 160)
-        self.bd_mma("wqakv", 64, 160)
-        v = lib.bf(self.lds(S_TCR, 64))
-        qk = lib.rmsnorm32(v, self.ldd("qkvn", 0, 64), m.eps)
-        cs = self.rope_cs("rope")
-        kvr = lib.qdq_fp8(self.rope(qk, cs, False, lambda l: 32 <= l < 64))
-        kv0 = lib.shfl(kvr, lib.lanes(lambda l: (l + 32) % NL))
+        cs, qk, kv0 = self.attn_front(xa, xb)
         if s == 0:
             self.dfield(6, "win")
             k.umuli(8, 1, 64)
             k.uadd(6, 6, 8)
             k.stg(kv0, 6, 0, 2, 32)
             k.membar()
-        qr = lib.op("AND", qk, lib.mask(lambda l: l < 32))
-        self.bd_x([qr], 32)
-        self.bd_mma(f"wqb{s}", 512, 32)
-        for v_ in range(4):
-            q = self.rope(lib.bf(self.lds(S_TCR + 512 * v_)), cs, False, lambda l: True)
-            self.sts(q, S_QS + 512 * v_)
+        self.attn_q(qk, cs)
         # ---- indexer, part A (index q, head weights) and the compressor
         la = k.newlabel("noidxA")
         self.dfield(10, "skip_idx")
@@ -1108,59 +1102,96 @@ class Gen:
         k.label(lb)
         # ---- the KV list: window rows (oldest first), this position's row, the selected compressed rows
         self.dfield(6, "win")
-        for v_ in range(4):
+        for v_ in range(CTX // 4):
             self.sts(k.ldg(6, 256 * v_, 2, NL), S_KVL + 512 * v_)
-        for v_ in range(4, 8):
+        for v_ in range(CTX // 4, TPAD // 4):
             self.sts(self.zero(), S_KVL + 512 * v_)
         k.umuli(8, 1, 128)
         k.sts(kv0, 8, S_KVL, 32)
         self.dfield(6, "ckv")
-        ck = [k.ldg(6, 256 * v_, 2, NL) for v_ in range(4)]
+        ck = [k.ldg(6, 256 * v_, 2, NL) for v_ in range(CTX // 4)]
         self.dfield(9, "yarnmask")
         ym = k.movu(9)
         slots = lib.select_m(ym, self.ldg(self.A("SEL"), CTX), lib.u(S_DUMMY))
         dcol = lib.lanes(lambda l: (l & 31) * 4)
-        for v_ in range(4):
+        for v_ in range(CTX // 4):
             ad = lib.op("IADD", lib.shfl(slots, lib.lanes(lambda l, v_=v_: 4 * v_ + (l >> 5))), dcol)
             k.stsx(ck[v_], ad, 0)
         nsel = lib.op("AND", self.ldg(self.A("NSEL"), 1), ym)
         T = lib.op("IADD", lib.op("IADD", k.movu(1), lib.u(1)), lib.bcast(nsel, 0))
-        # ---- scores, softmax, P x V for this SM's 16 heads; lanes (head 4v + l / 32, t or d = l % 32)
-        acc = [[None] * 4 for _ in range(4)]
+        return self.attend_core(T, cs)
+
+    def attn_front(self, xa, xb):
+        """wq_a | wkv, q_norm / kv_norm, the position's RoPE; returns (cs, qk, kv0): kv0 = this position's FP8
+        window row in lanes 0..31."""
+        lib, m = self.lib, self.m
+        self.bd_x([xa, xb], 160)
+        self.bd_mma("wqakv", 64, 160)
+        v = lib.bf(self.lds(S_TCR, 64))
+        qk = lib.rmsnorm32(v, self.ldd("qkvn", 0, 64), m.eps)
+        cs = self.rope_cs("rope")
+        kvr = lib.qdq_fp8(self.rope(qk, cs, False, lambda l: 32 <= l < 64))
+        kv0 = lib.shfl(kvr, lib.lanes(lambda l: (l + 32) % NL))
+        return cs, qk, kv0
+
+    def attn_q(self, qk, cs):
+        """wq_b (this SM's 16 heads), RoPE -> S_QS; returns the q registers."""
+        lib = self.lib
+        qr = lib.op("AND", qk, lib.mask(lambda l: l < 32))
+        self.bd_x([qr], 32)
+        self.bd_mma(f"wqb{self.s}", 512, 32)
+        qs = []
+        for v_ in range(4):
+            q = self.rope(lib.bf(self.lds(S_TCR + 512 * v_)), cs, False, lambda l: True)
+            self.sts(q, S_QS + 512 * v_)
+            qs.append(q)
+        return qs
+
+    def attend_core(self, T, cs):
+        """attend() over the KV list at S_KVL (T valid rows, TPAD lanes per head) for this SM's 16 heads (q at
+        S_QS), the sink, inverse RoPE, grouped wo_a, z exchange, wo_b, y exchange."""
+        lib, m, s, g = self.lib, self.m, self.s, self.g
+        hpv = NL // TPAD                       # heads per score register
+        nvs = 16 // hpv
+        acc = [[None] * 4 for _ in range(nvs)]
         for kk in range(32):
-            kop = self.gather([S_KVL // 4 + (l & 31) * 32 + kk for l in range(NL)])
-            for v_ in range(4):
-                qop = self.gather([S_QS // 4 + (4 * v_ + (l >> 5)) * 32 + kk for l in range(NL)])
+            kop = self.gather([S_KVL // 4 + (l % TPAD) * 32 + kk for l in range(NL)])
+            for v_ in range(nvs):
+                qop = self.gather([S_QS // 4 + (hpv * v_ + l // TPAD) * 32 + kk for l in range(NL)])
                 pr = lib.mul(qop, kop)
                 cc = kk // 8
                 acc[v_][cc] = pr if kk % 8 == 0 else lib.add(acc[v_][cc], pr)
-        valid = lib.op("ULT", lib.lanes(lambda l: l & 31), T)
+        valid = lib.op("ULT", lib.lanes(lambda l: l % TPAD), T)
         vm = lib.op("ISUB", lib.u(0), valid)
         fill = lib.op("AND", lib.op("XOR", vm, lib.u(0xFFFFFFFF)), lib.u(NEG_BIG))
-        for v_ in range(4):
+        for v_ in range(nvs):
             sc = lib.mul(lib.add(lib.add(acc[v_][0], acc[v_][1]), lib.add(acc[v_][2], acc[v_][3])),
                          lib.c(m.attn_scale))
             sc = lib.op("OR", lib.op("AND", sc, vm), fill)
-            mx = lib.seg_max(sc, 32)
+            mx = lib.seg_max(sc, TPAD)
             e = lib.op("AND", lib.exp(lib.add(sc, lib.neg(mx))), vm)
             self.sts(e, S_ES + 512 * v_)
             self.sts(lib.bf(e), S_EB + 512 * v_)
             self.sts(mx, S_MS + 512 * v_)
-        es = self.csum_segs([S_ES // 4 + 32 * h for h in range(16)], 32)
-        mh = self.gather([S_MS // 4 + 32 * l if l < 16 else None for l in range(NL)])
+        es = self.csum_segs([S_ES // 4 + TPAD * h for h in range(16)], TPAD)
+        mh = self.gather([S_MS // 4 + TPAD * l if l < 16 else None for l in range(NL)])
         sink = self.ldd(f"sink{s}", 0, 16)
         den = lib.add(es, lib.exp(lib.add(sink, lib.neg(mh))))
-        acc = [[None] * 4 for _ in range(4)]
-        for t in range(32):
+        nch = TPAD // 8
+        acc = [[None] * nch for _ in range(4)]
+        for t in range(TPAD):
             vop = self.gather([S_KVL // 4 + t * 32 + (l & 31) for l in range(NL)])
             for v_ in range(4):
-                eop = self.gather([S_EB // 4 + (4 * v_ + (l >> 5)) * 32 + t for l in range(NL)])
+                eop = self.gather([S_EB // 4 + (4 * v_ + (l >> 5)) * TPAD + t for l in range(NL)])
                 pr = lib.mul(eop, vop)
                 cc = t // 8
                 acc[v_][cc] = pr if t % 8 == 0 else lib.add(acc[v_][cc], pr)
         o = []
         for v_ in range(4):
-            ov = lib.add(lib.add(acc[v_][0], acc[v_][1]), lib.add(acc[v_][2], acc[v_][3]))
+            parts = acc[v_]
+            while len(parts) > 1:
+                parts = [lib.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+            ov = parts[0]
             dv = lib.shfl(den, lib.lanes(lambda l, v_=v_: 4 * v_ + (l >> 5)))
             o.append(self.rope(lib.bf(lib.div(ov, dv)), cs, True, lambda l: True))
         # ---- grouped wo_a (this SM's two o-groups), z exchange, wo_b, y exchange
@@ -1196,12 +1227,18 @@ class Gen:
         l_pool = k.newlabel("pool")
         k.bnz(11, l_pool)
         self.dfield(6, "slot")
+        if SLOT_RING:
+            k.umuli(8, 1, 256)
+            k.uadd(6, 6, 8)
         k.stg(v, 6, 0, 4, 64)
         k.membar()
         k.bra(l_end)
         k.label(l_pool)
         self.dfield(6, "slot")
-        old = k.ldg(6, 0, 4, 64)
+        if SLOT_RING:
+            k.umuli(8, 1, 256)
+            k.uadd(6, 6, 8)
+        old = k.ldg(6, -256 if SLOT_RING else 0, 4, 64)
         mx = lib.op("FMAX", old, v)
         e0 = lib.exp(lib.add(old, lib.neg(mx)))
         e1 = lib.exp(lib.add(v, lib.neg(mx)))
@@ -1253,24 +1290,29 @@ class Gen:
     def indexer(self):
         k, lib, m, s = self.k, self.lib, self.m, self.s
         self.dfield(6, "ik")
-        for v_ in range(4):
+        for v_ in range(CTX // 4):
             self.sts(k.ldg(6, 256 * v_, 2, NL), S_IKS + 512 * v_)
-        acc = None
+        hpv = NL // CTX                                            # index heads per register (lanes: head, key)
+        nv = 8 // hpv
+        acc = [None] * nv
         for kk in range(32):
-            q = self.gather([S_IQS // 4 + (l >> 4) * 32 + kk for l in range(NL)])
-            key = self.gather([S_IKS // 4 + (l & 15) * 32 + kk for l in range(NL)])
-            pr = lib.mul(q, key)
-            acc = pr if kk == 0 else lib.add(acc, pr)              # exact: FP4 x FP4 block terms
-        wl = lib.shfl(self.lds(S_MISC, 8), lib.lanes(lambda l: l >> 4))
-        terms = lib.bf(lib.mul(lib.op("FMAX", lib.bf(acc), lib.u(0)), wl))
+            for v_ in range(nv):
+                q = self.gather([S_IQS // 4 + (hpv * v_ + l // CTX) * 32 + kk for l in range(NL)])
+                if v_ == 0:
+                    key = self.gather([S_IKS // 4 + (l % CTX) * 32 + kk for l in range(NL)])
+                pr = lib.mul(q, key)
+                acc[v_] = pr if kk == 0 else lib.add(acc[v_], pr)  # exact: FP4 x FP4 block terms
+        wv = self.lds(S_MISC, 8)
+        wl = [lib.shfl(wv, lib.lanes(lambda l, v_=v_: hpv * v_ + l // CTX)) for v_ in range(nv)]
+        terms = [lib.bf(lib.mul(lib.op("FMAX", lib.bf(acc[v_]), lib.u(0)), wl[v_])) for v_ in range(nv)]
         part = None
         for h in range(8):
-            t = lib.shfl(terms, lib.lanes(lambda l, h=h: (l & 15) + 16 * h))
+            t = lib.shfl(terms[h // hpv], lib.lanes(lambda l, h=h: (l % CTX) + CTX * (h % hpv)))
             part = t if h == 0 else lib.add(part, t)
-        self.stg(part, self.A("IDXP") + 64 * s, CTX)
+        self.stg(part, self.A("IDXP") + 4 * CTX * s, CTX)
         self.bar()
         if s == 0:
-            tot = lib.add(self.ldg(self.A("IDXP"), CTX), self.ldg(self.A("IDXP") + 64, CTX))
+            tot = lib.add(self.ldg(self.A("IDXP"), CTX), self.ldg(self.A("IDXP") + 4 * CTX, CTX))
             sc = lib.bf(k.coll(tot, 0, CTX))
             self.dfield(9, "log2r")
             n = lib.op("SHR", lib.op("IADD", k.movu(1), lib.u(1)), k.movu(9))
@@ -1311,28 +1353,30 @@ class Gen:
         return v
 
     # ----------------------------------------------------------------- MoE
-    def moe(self, xa, xb):
+    def moe(self, xa, xb, ne=None, ke=None):
         k, lib, m, s, g = self.k, self.lib, self.m, self.s, self.g
+        ne = ne or m.n_exp
+        ke = ke or m.k_exp
         self.tc_stage([xa, xb])
         self.tc_words(2)
-        self.tc_mma("gate", 12, 2)
-        sc = self.k.op("FSQRT", lib.softplus(self.lds(S_TCR, 12)))
-        b = lib.add(sc, self.ldd("gbias", 0, 12))
-        v12 = lib.mask(lambda l: l < 12)
+        self.tc_mma("gate", ne, 2)
+        sc = self.k.op("FSQRT", lib.softplus(self.lds(S_TCR, ne)))
+        b = lib.add(sc, self.ldd("gbias", 0, ne))
+        v12 = lib.mask(lambda l: l < ne)
         bm = lib.select_m(v12, b, lib.u(NEG_BIG))
         cnt = lib.u(0)
-        for j in range(12):
+        for j in range(ne):
             bj = lib.bcast(bm, j)
             gt = lib.op("FCMPGT", bj, bm)
             eq = lib.op("XOR", lib.op("OR", gt, lib.op("FCMPGT", bm, bj)), lib.u(1))
             tie = lib.op("AND", eq, lib.lanes(lambda l, j=j: 1 if l > j else 0))
             cnt = lib.op("IADD", cnt, lib.op("OR", gt, tie))
-        sel = lib.op("AND", lib.op("ULT", cnt, lib.u(m.k_exp)), lib.lanes(lambda l: 1 if l < 12 else 0))
+        sel = lib.op("AND", lib.op("ULT", cnt, lib.u(ke)), lib.lanes(lambda l: 1 if l < ne else 0))
         smask = lib.op("ISUB", lib.u(0), sel)
         excl = lib.op("ISUB", self.scan(sel, 16), sel)
         sm_ = lib.op("AND", sc, smask)
         tot = lib.bcast(sm_, 0)
-        for i in range(1, 12):
+        for i in range(1, ne):
             tot = lib.add(tot, lib.bcast(sm_, i))
         den = lib.add(tot, lib.c(1e-20))
         wgt = lib.mul(lib.div(sc, den), lib.c(m.route_scale))
@@ -1340,16 +1384,16 @@ class Gen:
                           lib.u(S_DUMMY))
         k.stsx(lib.lane(), ad, 0, 16)
         k.stsx(wgt, ad, 64, 16)
-        ids = self.lds(S_MISC + 128, m.k_exp)
-        wts = self.lds(S_MISC + 192, m.k_exp)
+        ids = self.lds(S_MISC + 128, ke)
+        wts = self.lds(S_MISC + 192, ke)
         if self.p.dbg and self.d == 0:
-            self.dbg([b, ids], 7, [12, 6])
+            self.dbg([b, ids], 7, [ne, ke])
         # w1 | w3 rows 16g .. 16g + 15 of every slot (6 routed by id, then the shared expert)
         self.bd_x([xa, xb], 160)
         lim = lib.c(m.limit)
         nlim = lib.c(-m.limit)
-        for e in range(m.k_exp + 1):
-            if e < m.k_exp:
+        for e in range(ke + 1):
+            if e < ke:
                 k.ufromv(9, ids, e)
                 k.umuli(9, 9, self.p.ex_stride)
                 self.bd_mma(f"rexp{s}", 32, 160, fp4=True, uoff=9)
@@ -1359,15 +1403,15 @@ class Gen:
             u = lib.op("FMIN", lib.op("FMAX", lib.shfl(v, lib.lanes(lambda l: (l + 16) % NL)), nlim), lim)
             gg = lib.op("FMIN", v, lim)
             a = lib.mul(lib.silu(gg), u)
-            if e < m.k_exp:
+            if e < ke:
                 a = lib.mul(lib.bcast(wts, e), a)
             self.stg(a, self.A("EA") + 4 * (64 * e + 16 * g), 16)
-        self.allreduce("EA", 64 * (m.k_exp + 1), lambda d, i: (i % 64) // 32 == d)
+        self.allreduce("EA", 64 * (ke + 1), lambda d, i: (i % 64) // 32 == d)
         y = None
-        for e in range(m.k_exp + 1):
+        for e in range(ke + 1):
             a = lib.bf(self.ldg(self.A("EA") + 256 * e, 64))
             self.bd_x([a], 64)
-            if e < m.k_exp:
+            if e < ke:
                 k.ufromv(9, ids, e)
                 k.umuli(9, 9, self.p.ex_stride)
                 self.bd_mma(f"rexp{s}", 40, 64, fp4=True, uoff=9, off=self.p.ex_w2off)
