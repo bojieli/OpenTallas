@@ -115,8 +115,16 @@ ot_phase RAW
 source {PLAT}/setRC.tcl
 initialize_floorplan -utilization {util} -aspect_ratio 1 -core_space 2 -site asap7sc7p5t
 source {PLAT}/openRoad/make_tracks.tcl
-place_pins -hor_layers M4 -ver_layers M5
-global_placement -density 0.6
+# a block with more ports than its perimeter holds (wide memory ports, exposed black boxes) is placed
+# without its I/O (-skip_io): register-to-register paths stay meaningful, I/O paths do not
+set nio [expr {{[llength [all_inputs]] + [llength [all_outputs]]}}]
+puts "OT_NIO $nio"
+if {{$nio <= 4000}} {{
+  place_pins -hor_layers M4 -ver_layers M5
+  global_placement -density 0.6
+}} else {{
+  global_placement -density 0.6 -skip_io
+}}
 estimate_parasitics -placement
 repair_design -slew_margin 0 -cap_margin 0
 detailed_placement
