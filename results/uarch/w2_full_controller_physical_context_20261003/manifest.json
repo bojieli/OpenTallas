@@ -1,0 +1,17 @@
+{
+  "artifacts": {
+    "results/uarch/w2_full_controller_physical_context_20261003/epyc_metadata_review.json": "493f3d3f2e38b95653c6cbb3ad73c3f4e0c5d394bf0da8daf794c9b96e7f1dec",
+    "results/uarch/w2_full_controller_physical_context_20261003/handoff.json": "667c6cb97fca07dd56d9fb3c6ae0d72c58534a09b7f05b055162eac10ab2cb58",
+    "results/uarch/w2_full_controller_physical_context_20261003/model.json": "755187f38a39497546c698e648de271cef05a7315d3946e12f208dc612b16de4",
+    "results/uarch/w2_full_controller_physical_context_20261003/tests.log": "14639fc90180926a999035de21845b084ed2de8a3b56392851372776e8e51bb9",
+    "tests/test_w2_full_controller_physical_context.py": "0a7ec61a1d6bb79faaa47dd677e201b3f9b2ed5dbb2e17fa068fde2af7884117",
+    "tools/w2_full_controller_physical_context.py": "2a6f99f3feb27221460b42e4a2a45ac8436078370a463a8d4a63d8e1426308bf"
+  },
+  "protected_source_sha256": {
+    "rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv": "04930aa71137a791935c8ccba0dc1f20689e5bff35a214477cd990a87a36c7ef",
+    "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv": "d68dc8d2e9cbd0cf4a42ba6bfe816ab7cad61a4366797e76ab17889057d8d1e6"
+  },
+  "schema": "sha256.v1"
+}

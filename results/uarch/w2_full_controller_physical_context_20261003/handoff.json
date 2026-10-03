@@ -1,0 +1,52 @@
+{
+  "PnR_launched": false,
+  "actual_design_PID": null,
+  "aggregate_cost": {
+    "at50pct_placement_mm2_before_actual_PG_routes": 745.7702939136,
+    "bits_total": 20183040,
+    "body_mm2_total": 372.8851469568,
+    "net_replacement_credit": 0,
+    "per_die_existing_PC_geometry": 128,
+    "requested_controllers": 1280,
+    "requested_die_equivalents": 10,
+    "scope": "User requested1280 composition. Per-controller PC_ID7 remains die-local0..127; no 1280-wide tag truncation or unsupported whole-system family assignment. Existing qwen r11 has128PC/die, not a controller-specific slot."
+  },
+  "base_commit": "f6df84e14c2bc5908bdbf85b2bd95cd56b1f5520",
+  "branch": "codex/W2-full-controller-physical-context-20261003",
+  "cold_replay": "python3 tools/w2_full_controller_physical_context.py --model /tmp/FRESH-W2-FULL.json; cmp /tmp/FRESH-W2-FULL.json results/uarch/w2_full_controller_physical_context_20261003/model.json",
+  "compiler_launched": false,
+  "cost": 0.29131652106,
+  "exact_next_input": {
+    "PDK": "Use explicit verified locked executable paths plus locked SS/FF Liberty, LEF, RC and full loaded CTS/reset arcs",
+    "composition": "1280-controller selected-system assignment, net replacement of old F0 budget, accepted request/dependency latency in unified model",
+    "netlist": "Retain 219*72 physical sequential bits, not constant-pruned padding; full NC6/MAX16/AW34 source only",
+    "owner": "Claude HBM floorplan, coordinated with Goodall RF and Kepler capacity",
+    "ports": "Real driver, min/max input slew/arrival, output capture/load for all 4645 real boundary signals. No ideal-I/O context.",
+    "slot": "Named per-controller bbox/home with neighbor/PG/OBS/clock-reset allocation and source-owned port escapes/tracks"
+  },
+  "historical_failures_overwritten": false,
+  "model_admission": "BLOCKED_CONTEXT_ALLOCATION_AND_LOADED_PORT_MODEL",
+  "no_docs_edits": true,
+  "original_RTL_edits": false,
+  "parameters": {
+    "AW": 34,
+    "CTAGW": 32,
+    "GENW": 4,
+    "MAX_OUT": 16,
+    "NC": 6,
+    "OPT_EXACT": 1,
+    "OPT_RESET_QUARANTINE": 1,
+    "PC_ID": 0,
+    "PTAGW": 35,
+    "SIDW": 3
+  },
+  "scope": "Full-source W2 physical sizing milestone, not synthesized or placed area/SSFF/latency qualification",
+  "source_sha256": {
+    "rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv": "04930aa71137a791935c8ccba0dc1f20689e5bff35a214477cd990a87a36c7ef",
+    "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv": "d68dc8d2e9cbd0cf4a42ba6bfe816ab7cad61a4366797e76ab17889057d8d1e6"
+  },
+  "source_top": "ot_w2_nc6_protected_completion_reset_quarantine",
+  "tests": "python3 -m pytest -q tests/test_w2_full_controller_physical_context.py"
+}

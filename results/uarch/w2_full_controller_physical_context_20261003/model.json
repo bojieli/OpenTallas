@@ -1,0 +1,966 @@
+{
+  "actions": {
+    "PnR": false,
+    "compiler": false,
+    "main_edit": false,
+    "runtime": false
+  },
+  "area": {
+    "PG_CTS_routing_hold_repair": "existing analytical floor only; actual loaded construction not included as qualified fit",
+    "actual_mapped_area": null,
+    "actual_mux_simplification_credit": 0,
+    "assigned_slot": null,
+    "clock_reset_SS_CLK_fF": 6843.028176,
+    "full_source_selector_exposed_budget_mm2_per_PC": 0.29131652106,
+    "method": "Retained189 baseline plus exact30CW/count/write-router delta; expose full219 dynamic raw/fixed/peer payload selectors conservatively instead of assumed narrow banks; replace opaque old repair/rescue budgets once. Analytical sizing reserve, NOT exact mapped gates/SSFF fit.",
+    "net_F0_replacement": null,
+    "reset_by_PC": {
+      "0": {
+        "RESETN_bits": 13838,
+        "SETN_bits": 1930,
+        "reset_SS_fF": 11723.269250000001
+      },
+      "1": {
+        "RESETN_bits": 13616,
+        "SETN_bits": 2152,
+        "reset_SS_fF": 11794.83872
+      },
+      "10": {
+        "RESETN_bits": 13398,
+        "SETN_bits": 2370,
+        "reset_SS_fF": 11865.11865
+      },
+      "100": {
+        "RESETN_bits": 13198,
+        "SETN_bits": 2570,
+        "reset_SS_fF": 11929.595650000001
+      },
+      "101": {
+        "RESETN_bits": 12972,
+        "SETN_bits": 2796,
+        "reset_SS_fF": 12002.454660000001
+      },
+      "102": {
+        "RESETN_bits": 12962,
+        "SETN_bits": 2806,
+        "reset_SS_fF": 12005.678510000002
+      },
+      "103": {
+        "RESETN_bits": 12740,
+        "SETN_bits": 3028,
+        "reset_SS_fF": 12077.24798
+      },
+      "104": {
+        "RESETN_bits": 13192,
+        "SETN_bits": 2576,
+        "reset_SS_fF": 11931.529960000002
+      },
+      "105": {
+        "RESETN_bits": 12978,
+        "SETN_bits": 2790,
+        "reset_SS_fF": 12000.52035
+      },
+      "106": {
+        "RESETN_bits": 12956,
+        "SETN_bits": 2812,
+        "reset_SS_fF": 12007.61282
+      },
+      "107": {
+        "RESETN_bits": 12746,
+        "SETN_bits": 3022,
+        "reset_SS_fF": 12075.31367
+      },
+      "108": {
+        "RESETN_bits": 12960,
+        "SETN_bits": 2808,
+        "reset_SS_fF": 12006.32328
+      },
+      "109": {
+        "RESETN_bits": 12742,
+        "SETN_bits": 3026,
+        "reset_SS_fF": 12076.603210000001
+      },
+      "11": {
+        "RESETN_bits": 13180,
+        "SETN_bits": 2588,
+        "reset_SS_fF": 11935.398580000001
+      },
+      "110": {
+        "RESETN_bits": 12758,
+        "SETN_bits": 3010,
+        "reset_SS_fF": 12071.44505
+      },
+      "111": {
+        "RESETN_bits": 12536,
+        "SETN_bits": 3232,
+        "reset_SS_fF": 12143.01452
+      },
+      "112": {
+        "RESETN_bits": 13196,
+        "SETN_bits": 2572,
+        "reset_SS_fF": 11930.240420000002
+      },
+      "113": {
+        "RESETN_bits": 12974,
+        "SETN_bits": 2794,
+        "reset_SS_fF": 12001.80989
+      },
+      "114": {
+        "RESETN_bits": 12960,
+        "SETN_bits": 2808,
+        "reset_SS_fF": 12006.32328
+      },
+      "115": {
+        "RESETN_bits": 12742,
+        "SETN_bits": 3026,
+        "reset_SS_fF": 12076.603210000001
+      },
+      "116": {
+        "RESETN_bits": 12956,
+        "SETN_bits": 2812,
+        "reset_SS_fF": 12007.61282
+      },
+      "117": {
+        "RESETN_bits": 12746,
+        "SETN_bits": 3022,
+        "reset_SS_fF": 12075.31367
+      },
+      "118": {
+        "RESETN_bits": 12754,
+        "SETN_bits": 3014,
+        "reset_SS_fF": 12072.73459
+      },
+      "119": {
+        "RESETN_bits": 12540,
+        "SETN_bits": 3228,
+        "reset_SS_fF": 12141.72498
+      },
+      "12": {
+        "RESETN_bits": 13394,
+        "SETN_bits": 2374,
+        "reset_SS_fF": 11866.40819
+      },
+      "120": {
+        "RESETN_bits": 12962,
+        "SETN_bits": 2806,
+        "reset_SS_fF": 12005.678510000002
+      },
+      "121": {
+        "RESETN_bits": 12740,
+        "SETN_bits": 3028,
+        "reset_SS_fF": 12077.24798
+      },
+      "122": {
+        "RESETN_bits": 12760,
+        "SETN_bits": 3008,
+        "reset_SS_fF": 12070.80028
+      },
+      "123": {
+        "RESETN_bits": 12534,
+        "SETN_bits": 3234,
+        "reset_SS_fF": 12143.65929
+      },
+      "124": {
+        "RESETN_bits": 12758,
+        "SETN_bits": 3010,
+        "reset_SS_fF": 12071.44505
+      },
+      "125": {
+        "RESETN_bits": 12536,
+        "SETN_bits": 3232,
+        "reset_SS_fF": 12143.01452
+      },
+      "126": {
+        "RESETN_bits": 12522,
+        "SETN_bits": 3246,
+        "reset_SS_fF": 12147.52791
+      },
+      "127": {
+        "RESETN_bits": 12304,
+        "SETN_bits": 3464,
+        "reset_SS_fF": 12217.80784
+      },
+      "13": {
+        "RESETN_bits": 13184,
+        "SETN_bits": 2584,
+        "reset_SS_fF": 11934.109040000001
+      },
+      "14": {
+        "RESETN_bits": 13192,
+        "SETN_bits": 2576,
+        "reset_SS_fF": 11931.529960000002
+      },
+      "15": {
+        "RESETN_bits": 12978,
+        "SETN_bits": 2790,
+        "reset_SS_fF": 12000.52035
+      },
+      "16": {
+        "RESETN_bits": 13630,
+        "SETN_bits": 2138,
+        "reset_SS_fF": 11790.32533
+      },
+      "17": {
+        "RESETN_bits": 13416,
+        "SETN_bits": 2352,
+        "reset_SS_fF": 11859.315719999999
+      },
+      "18": {
+        "RESETN_bits": 13394,
+        "SETN_bits": 2374,
+        "reset_SS_fF": 11866.40819
+      },
+      "19": {
+        "RESETN_bits": 13184,
+        "SETN_bits": 2584,
+        "reset_SS_fF": 11934.109040000001
+      },
+      "2": {
+        "RESETN_bits": 13636,
+        "SETN_bits": 2132,
+        "reset_SS_fF": 11788.39102
+      },
+      "20": {
+        "RESETN_bits": 13398,
+        "SETN_bits": 2370,
+        "reset_SS_fF": 11865.11865
+      },
+      "21": {
+        "RESETN_bits": 13180,
+        "SETN_bits": 2588,
+        "reset_SS_fF": 11935.398580000001
+      },
+      "22": {
+        "RESETN_bits": 13196,
+        "SETN_bits": 2572,
+        "reset_SS_fF": 11930.240420000002
+      },
+      "23": {
+        "RESETN_bits": 12974,
+        "SETN_bits": 2794,
+        "reset_SS_fF": 12001.80989
+      },
+      "24": {
+        "RESETN_bits": 13398,
+        "SETN_bits": 2370,
+        "reset_SS_fF": 11865.11865
+      },
+      "25": {
+        "RESETN_bits": 13180,
+        "SETN_bits": 2588,
+        "reset_SS_fF": 11935.398580000001
+      },
+      "26": {
+        "RESETN_bits": 13196,
+        "SETN_bits": 2572,
+        "reset_SS_fF": 11930.240420000002
+      },
+      "27": {
+        "RESETN_bits": 12974,
+        "SETN_bits": 2794,
+        "reset_SS_fF": 12001.80989
+      },
+      "28": {
+        "RESETN_bits": 13198,
+        "SETN_bits": 2570,
+        "reset_SS_fF": 11929.595650000001
+      },
+      "29": {
+        "RESETN_bits": 12972,
+        "SETN_bits": 2796,
+        "reset_SS_fF": 12002.454660000001
+      },
+      "3": {
+        "RESETN_bits": 13410,
+        "SETN_bits": 2358,
+        "reset_SS_fF": 11861.25003
+      },
+      "30": {
+        "RESETN_bits": 12962,
+        "SETN_bits": 2806,
+        "reset_SS_fF": 12005.678510000002
+      },
+      "31": {
+        "RESETN_bits": 12740,
+        "SETN_bits": 3028,
+        "reset_SS_fF": 12077.24798
+      },
+      "32": {
+        "RESETN_bits": 13622,
+        "SETN_bits": 2146,
+        "reset_SS_fF": 11792.90441
+      },
+      "33": {
+        "RESETN_bits": 13396,
+        "SETN_bits": 2372,
+        "reset_SS_fF": 11865.76342
+      },
+      "34": {
+        "RESETN_bits": 13416,
+        "SETN_bits": 2352,
+        "reset_SS_fF": 11859.315719999999
+      },
+      "35": {
+        "RESETN_bits": 13194,
+        "SETN_bits": 2574,
+        "reset_SS_fF": 11930.88519
+      },
+      "36": {
+        "RESETN_bits": 13414,
+        "SETN_bits": 2354,
+        "reset_SS_fF": 11859.96049
+      },
+      "37": {
+        "RESETN_bits": 13196,
+        "SETN_bits": 2572,
+        "reset_SS_fF": 11930.240420000002
+      },
+      "38": {
+        "RESETN_bits": 13182,
+        "SETN_bits": 2586,
+        "reset_SS_fF": 11934.753810000002
+      },
+      "39": {
+        "RESETN_bits": 12960,
+        "SETN_bits": 2808,
+        "reset_SS_fF": 12006.32328
+      },
+      "4": {
+        "RESETN_bits": 13634,
+        "SETN_bits": 2134,
+        "reset_SS_fF": 11789.03579
+      },
+      "40": {
+        "RESETN_bits": 13414,
+        "SETN_bits": 2354,
+        "reset_SS_fF": 11859.96049
+      },
+      "41": {
+        "RESETN_bits": 13196,
+        "SETN_bits": 2572,
+        "reset_SS_fF": 11930.240420000002
+      },
+      "42": {
+        "RESETN_bits": 13182,
+        "SETN_bits": 2586,
+        "reset_SS_fF": 11934.753810000002
+      },
+      "43": {
+        "RESETN_bits": 12960,
+        "SETN_bits": 2808,
+        "reset_SS_fF": 12006.32328
+      },
+      "44": {
+        "RESETN_bits": 13178,
+        "SETN_bits": 2590,
+        "reset_SS_fF": 11936.043350000002
+      },
+      "45": {
+        "RESETN_bits": 12964,
+        "SETN_bits": 2804,
+        "reset_SS_fF": 12005.03374
+      },
+      "46": {
+        "RESETN_bits": 12972,
+        "SETN_bits": 2796,
+        "reset_SS_fF": 12002.454660000001
+      },
+      "47": {
+        "RESETN_bits": 12762,
+        "SETN_bits": 3006,
+        "reset_SS_fF": 12070.15551
+      },
+      "48": {
+        "RESETN_bits": 13410,
+        "SETN_bits": 2358,
+        "reset_SS_fF": 11861.25003
+      },
+      "49": {
+        "RESETN_bits": 13200,
+        "SETN_bits": 2568,
+        "reset_SS_fF": 11928.95088
+      },
+      "5": {
+        "RESETN_bits": 13412,
+        "SETN_bits": 2356,
+        "reset_SS_fF": 11860.60526
+      },
+      "50": {
+        "RESETN_bits": 13178,
+        "SETN_bits": 2590,
+        "reset_SS_fF": 11936.043350000002
+      },
+      "51": {
+        "RESETN_bits": 12964,
+        "SETN_bits": 2804,
+        "reset_SS_fF": 12005.03374
+      },
+      "52": {
+        "RESETN_bits": 13182,
+        "SETN_bits": 2586,
+        "reset_SS_fF": 11934.753810000002
+      },
+      "53": {
+        "RESETN_bits": 12960,
+        "SETN_bits": 2808,
+        "reset_SS_fF": 12006.32328
+      },
+      "54": {
+        "RESETN_bits": 12976,
+        "SETN_bits": 2792,
+        "reset_SS_fF": 12001.165120000001
+      },
+      "55": {
+        "RESETN_bits": 12758,
+        "SETN_bits": 3010,
+        "reset_SS_fF": 12071.44505
+      },
+      "56": {
+        "RESETN_bits": 13182,
+        "SETN_bits": 2586,
+        "reset_SS_fF": 11934.753810000002
+      },
+      "57": {
+        "RESETN_bits": 12960,
+        "SETN_bits": 2808,
+        "reset_SS_fF": 12006.32328
+      },
+      "58": {
+        "RESETN_bits": 12976,
+        "SETN_bits": 2792,
+        "reset_SS_fF": 12001.165120000001
+      },
+      "59": {
+        "RESETN_bits": 12758,
+        "SETN_bits": 3010,
+        "reset_SS_fF": 12071.44505
+      },
+      "6": {
+        "RESETN_bits": 13398,
+        "SETN_bits": 2370,
+        "reset_SS_fF": 11865.11865
+      },
+      "60": {
+        "RESETN_bits": 12978,
+        "SETN_bits": 2790,
+        "reset_SS_fF": 12000.52035
+      },
+      "61": {
+        "RESETN_bits": 12756,
+        "SETN_bits": 3012,
+        "reset_SS_fF": 12072.089820000001
+      },
+      "62": {
+        "RESETN_bits": 12746,
+        "SETN_bits": 3022,
+        "reset_SS_fF": 12075.31367
+      },
+      "63": {
+        "RESETN_bits": 12520,
+        "SETN_bits": 3248,
+        "reset_SS_fF": 12148.17268
+      },
+      "64": {
+        "RESETN_bits": 13620,
+        "SETN_bits": 2148,
+        "reset_SS_fF": 11793.54918
+      },
+      "65": {
+        "RESETN_bits": 13398,
+        "SETN_bits": 2370,
+        "reset_SS_fF": 11865.11865
+      },
+      "66": {
+        "RESETN_bits": 13414,
+        "SETN_bits": 2354,
+        "reset_SS_fF": 11859.96049
+      },
+      "67": {
+        "RESETN_bits": 13196,
+        "SETN_bits": 2572,
+        "reset_SS_fF": 11930.240420000002
+      },
+      "68": {
+        "RESETN_bits": 13416,
+        "SETN_bits": 2352,
+        "reset_SS_fF": 11859.315719999999
+      },
+      "69": {
+        "RESETN_bits": 13194,
+        "SETN_bits": 2574,
+        "reset_SS_fF": 11930.88519
+      },
+      "7": {
+        "RESETN_bits": 13180,
+        "SETN_bits": 2588,
+        "reset_SS_fF": 11935.398580000001
+      },
+      "70": {
+        "RESETN_bits": 13184,
+        "SETN_bits": 2584,
+        "reset_SS_fF": 11934.109040000001
+      },
+      "71": {
+        "RESETN_bits": 12958,
+        "SETN_bits": 2810,
+        "reset_SS_fF": 12006.968050000001
+      },
+      "72": {
+        "RESETN_bits": 13410,
+        "SETN_bits": 2358,
+        "reset_SS_fF": 11861.25003
+      },
+      "73": {
+        "RESETN_bits": 13200,
+        "SETN_bits": 2568,
+        "reset_SS_fF": 11928.95088
+      },
+      "74": {
+        "RESETN_bits": 13178,
+        "SETN_bits": 2590,
+        "reset_SS_fF": 11936.043350000002
+      },
+      "75": {
+        "RESETN_bits": 12964,
+        "SETN_bits": 2804,
+        "reset_SS_fF": 12005.03374
+      },
+      "76": {
+        "RESETN_bits": 13182,
+        "SETN_bits": 2586,
+        "reset_SS_fF": 11934.753810000002
+      },
+      "77": {
+        "RESETN_bits": 12960,
+        "SETN_bits": 2808,
+        "reset_SS_fF": 12006.32328
+      },
+      "78": {
+        "RESETN_bits": 12976,
+        "SETN_bits": 2792,
+        "reset_SS_fF": 12001.165120000001
+      },
+      "79": {
+        "RESETN_bits": 12758,
+        "SETN_bits": 3010,
+        "reset_SS_fF": 12071.44505
+      },
+      "8": {
+        "RESETN_bits": 13634,
+        "SETN_bits": 2134,
+        "reset_SS_fF": 11789.03579
+      },
+      "80": {
+        "RESETN_bits": 13414,
+        "SETN_bits": 2354,
+        "reset_SS_fF": 11859.96049
+      },
+      "81": {
+        "RESETN_bits": 13196,
+        "SETN_bits": 2572,
+        "reset_SS_fF": 11930.240420000002
+      },
+      "82": {
+        "RESETN_bits": 13182,
+        "SETN_bits": 2586,
+        "reset_SS_fF": 11934.753810000002
+      },
+      "83": {
+        "RESETN_bits": 12960,
+        "SETN_bits": 2808,
+        "reset_SS_fF": 12006.32328
+      },
+      "84": {
+        "RESETN_bits": 13178,
+        "SETN_bits": 2590,
+        "reset_SS_fF": 11936.043350000002
+      },
+      "85": {
+        "RESETN_bits": 12964,
+        "SETN_bits": 2804,
+        "reset_SS_fF": 12005.03374
+      },
+      "86": {
+        "RESETN_bits": 12972,
+        "SETN_bits": 2796,
+        "reset_SS_fF": 12002.454660000001
+      },
+      "87": {
+        "RESETN_bits": 12762,
+        "SETN_bits": 3006,
+        "reset_SS_fF": 12070.15551
+      },
+      "88": {
+        "RESETN_bits": 13184,
+        "SETN_bits": 2584,
+        "reset_SS_fF": 11934.109040000001
+      },
+      "89": {
+        "RESETN_bits": 12958,
+        "SETN_bits": 2810,
+        "reset_SS_fF": 12006.968050000001
+      },
+      "9": {
+        "RESETN_bits": 13412,
+        "SETN_bits": 2356,
+        "reset_SS_fF": 11860.60526
+      },
+      "90": {
+        "RESETN_bits": 12978,
+        "SETN_bits": 2790,
+        "reset_SS_fF": 12000.52035
+      },
+      "91": {
+        "RESETN_bits": 12756,
+        "SETN_bits": 3012,
+        "reset_SS_fF": 12072.089820000001
+      },
+      "92": {
+        "RESETN_bits": 12976,
+        "SETN_bits": 2792,
+        "reset_SS_fF": 12001.165120000001
+      },
+      "93": {
+        "RESETN_bits": 12758,
+        "SETN_bits": 3010,
+        "reset_SS_fF": 12071.44505
+      },
+      "94": {
+        "RESETN_bits": 12744,
+        "SETN_bits": 3024,
+        "reset_SS_fF": 12075.95844
+      },
+      "95": {
+        "RESETN_bits": 12522,
+        "SETN_bits": 3246,
+        "reset_SS_fF": 12147.52791
+      },
+      "96": {
+        "RESETN_bits": 13398,
+        "SETN_bits": 2370,
+        "reset_SS_fF": 11865.11865
+      },
+      "97": {
+        "RESETN_bits": 13180,
+        "SETN_bits": 2588,
+        "reset_SS_fF": 11935.398580000001
+      },
+      "98": {
+        "RESETN_bits": 13196,
+        "SETN_bits": 2572,
+        "reset_SS_fF": 11930.240420000002
+      },
+      "99": {
+        "RESETN_bits": 12974,
+        "SETN_bits": 2794,
+        "reset_SS_fF": 12001.80989
+      }
+    },
+    "retained_219_constructive_budget_mm2_per_PC": 0.10102582602000001
+  },
+  "context_requirements": [
+    "Authoritative fullcontroller slot ID/bbox/PG/OBS/neighbor/clockreset allocation from Claude HBM, disjoint Goodall RF",
+    "Named port-driver cells and min/max slew/input arrival/capture arcs/output loads for EVERY real port; no ideal unloaded IO",
+    "Exact legal M2-M5/escape widths/tracks/pitches/sourcefamily capacities and onceonly1280 replica assignments",
+    "Locked SS+FF Liberty/LEF/RC scale coherence, real CTS/reset insertion/skew/loads and clock period833.333ps/60setup25hold",
+    "Mapped sequential census must preserve full15768 CW bits and complete6client/9journal/8engine/219codec cones; reject pruned proxy",
+    "Unified composed token latency/area netF0 debit and actual selected1280 scope binding; no rate credit"
+  ],
+  "decision": "BLOCKED_CONTEXT_ALLOCATION_AND_LOADED_PORT_MODEL",
+  "latency": {
+    "CAP": 4,
+    "FIX": 4,
+    "clock_target_hz": 1200000000,
+    "conditional_1280_backend_payload_Bps": 4915200000000.0,
+    "conditional_backend_payload_B_per_edge": 3.2,
+    "corrector_recurring_II": 9,
+    "different_client_prospective_II_edges": 10,
+    "hold_uncertainty_ps": 25,
+    "measurement": "30case gate functional, no continuous service benchmark.19/10 source calendar retained; no arbitrary timeout, fault repair retirement may stall.",
+    "period_ps": 833.3333333333334,
+    "positive_clock_bound_is_not_admitted": true,
+    "rearm_edges": 1,
+    "same_client_request_II_edges": 19,
+    "setup_uncertainty_ps": 60,
+    "whole_token_composition_required": "Bind this source-calendar controller to actual per-PC accepted request/dependency counts/parallelism in unified HBM model; do not add independent latency estimates or inherit generic500ns loaded-HBM figure.",
+    "whole_token_delta": null
+  },
+  "logic_inventory": {
+    "MACs": 0,
+    "codec_constructive_NAND2": 365980,
+    "corrector_engines": 8,
+    "corrector_payload_bits": 96,
+    "count_worker_payload_bits": 98,
+    "count_workers": 6,
+    "current_check_XOR2": 60444,
+    "encoder_variable_XOR2": 31051,
+    "extra_guard_priority_NAND2_reserve": 54976,
+    "full_word_write_router_NAND2": 447552,
+    "independent_write_encoders": 219,
+    "journal_payload_bits_each": 87,
+    "journal_seats": 9,
+    "normal_primary_writers": 9,
+    "parallel_current_decoders": 219,
+    "peer_payload_dynamic_bitmux_upper": 460416,
+    "proxy_repair_rescue_NAND2_replaced": 14384,
+    "raw_fixed_dynamic_bitmux_upper": 251136,
+    "secondary_count_writers": 6,
+    "selector_NAND2_upper": 2134656,
+    "table_read_lookup_ports": 3,
+    "table_rows": 96,
+    "write_enable_decode_NAND2": 36720,
+    "write_router_BUFx4": 4806
+  },
+  "model_sha256": {
+    "results/uarch/w2_nc6_mutable_protection_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/w2_nc6_count_utility_closure.py": "a4e4b9805860d01ca559f19b40f32e82ddf881c71b663235c38bb961bb0f3e8a",
+    "tools/w2_nc6_mutable_protection_model.py": "c0a3177276d92d9e8d168b310a003597ff5f979d6d5d3a2fee83ebd37e6f7243"
+  },
+  "parameters": {
+    "AW": 34,
+    "CTAGW": 32,
+    "GENW": 4,
+    "MAX_OUT": 16,
+    "NC": 6,
+    "OPT_EXACT": 1,
+    "OPT_RESET_QUARANTINE": 1,
+    "PC_ID": 0,
+    "PTAGW": 35,
+    "SIDW": 3
+  },
+  "ports": {
+    "backend_accepted_payload_bytes_per_edge_upper": 32,
+    "backend_payload_bits": 256,
+    "book": {
+      "admission_stop": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "c_req_addr": {
+        "bits": 204,
+        "direction": "input"
+      },
+      "c_req_data": {
+        "bits": 1536,
+        "direction": "input"
+      },
+      "c_req_gen": {
+        "bits": 24,
+        "direction": "input"
+      },
+      "c_req_rdy": {
+        "bits": 6,
+        "direction": "output"
+      },
+      "c_req_tag": {
+        "bits": 192,
+        "direction": "input"
+      },
+      "c_req_v": {
+        "bits": 6,
+        "direction": "input"
+      },
+      "c_req_we": {
+        "bits": 6,
+        "direction": "input"
+      },
+      "c_rsp_data": {
+        "bits": 1536,
+        "direction": "output"
+      },
+      "c_rsp_gen": {
+        "bits": 24,
+        "direction": "output"
+      },
+      "c_rsp_rdy": {
+        "bits": 6,
+        "direction": "input"
+      },
+      "c_rsp_tag": {
+        "bits": 192,
+        "direction": "output"
+      },
+      "c_rsp_v": {
+        "bits": 6,
+        "direction": "output"
+      },
+      "c_wr_done_gen": {
+        "bits": 24,
+        "direction": "output"
+      },
+      "c_wr_done_rdy": {
+        "bits": 6,
+        "direction": "input"
+      },
+      "c_wr_done_tag": {
+        "bits": 192,
+        "direction": "output"
+      },
+      "c_wr_done_v": {
+        "bits": 6,
+        "direction": "output"
+      },
+      "clk": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "fault": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "idle": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "p_req_addr": {
+        "bits": 34,
+        "direction": "output"
+      },
+      "p_req_data": {
+        "bits": 256,
+        "direction": "output"
+      },
+      "p_req_gen": {
+        "bits": 4,
+        "direction": "output"
+      },
+      "p_req_rdy": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "p_req_tag": {
+        "bits": 35,
+        "direction": "output"
+      },
+      "p_req_v": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "p_req_we": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "p_rsp_data": {
+        "bits": 256,
+        "direction": "input"
+      },
+      "p_rsp_gen": {
+        "bits": 4,
+        "direction": "input"
+      },
+      "p_rsp_rdy": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "p_rsp_tag": {
+        "bits": 35,
+        "direction": "input"
+      },
+      "p_rsp_v": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "p_wr_done_gen": {
+        "bits": 4,
+        "direction": "input"
+      },
+      "p_wr_done_ready": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "p_wr_done_tag": {
+        "bits": 35,
+        "direction": "input"
+      },
+      "p_wr_done_v": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "provider_fenced": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "rearm_rdy": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "rearm_v": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "repair_busy": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "reset_fenced": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "reverse_fenced": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "rst_n": {
+        "bits": 1,
+        "direction": "input"
+      }
+    },
+    "boundary_signal_bits": 4645,
+    "client_lanes": 6,
+    "client_offered_payload_bytes_per_edge": 192,
+    "client_payload_bits_per_lane": 256,
+    "input_bits": 2324,
+    "new_ports": 0,
+    "output_bits": 2323,
+    "service_unit": "controller does no MACs; data32B per accepted beat, physical HBM64B sector distinct"
+  },
+  "replication": {
+    "at50pct_placement_mm2_before_actual_PG_routes": 745.7702939136,
+    "bits_total": 20183040,
+    "body_mm2_total": 372.8851469568,
+    "net_replacement_credit": 0,
+    "per_die_existing_PC_geometry": 128,
+    "requested_controllers": 1280,
+    "requested_die_equivalents": 10,
+    "scope": "User requested1280 composition. Per-controller PC_ID7 remains die-local0..127; no 1280-wide tag truncation or unsupported whole-system family assignment. Existing qwen r11 has128PC/die, not a controller-specific slot."
+  },
+  "resource_policy": "EPYC measured headroom and peer lease required; no wall/CPU/AS/perfile caps; preserve incremental outputs",
+  "schema": "w2.full-controller.physical-context.v1",
+  "selected_top": "ot_w2_nc6_protected_completion_reset_quarantine",
+  "source_commit": "f6df84e14c2bc5908bdbf85b2bd95cd56b1f5520",
+  "source_sha256": {
+    "rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv": "04930aa71137a791935c8ccba0dc1f20689e5bff35a214477cd990a87a36c7ef",
+    "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv": "d68dc8d2e9cbd0cf4a42ba6bfe816ab7cad61a4366797e76ab17889057d8d1e6"
+  },
+  "storage": {
+    "netlist_required": "219*72 live physically-preserved sequential bits INCLUDING seal/padding; keep attributes alone are not proof; reject constant-pruned mapped census",
+    "no_reduced_proxy": true,
+    "payload_bits": 7971,
+    "physical_bits": 15768,
+    "primary_words": 182,
+    "record_CW_census": {
+      "correction_context": 24,
+      "count_pending_delta": 6,
+      "count_worker": 18,
+      "offer_epoch": 6,
+      "outstanding_cache": 6,
+      "prepared_write": 18,
+      "protected_scheduler": 2,
+      "query_pipeline": 12,
+      "read_delivery": 7,
+      "read_query": 7,
+      "request_holder": 8,
+      "round_robin": 1,
+      "sticky_fault": 1,
+      "table": 96,
+      "write_query": 1,
+      "write_selection": 6
+    },
+    "secondary_words": 37,
+    "static_seal_padding_bits": 7797,
+    "words": 219
+  }
+}
