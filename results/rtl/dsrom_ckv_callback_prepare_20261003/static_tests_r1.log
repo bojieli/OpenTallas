@@ -1,0 +1,18 @@
+test_duplicate_storage_rejected (__main__.CallbackTests) ... ok
+test_full512_both_passes (__main__.CallbackTests) ... ok
+test_input_words_reformat_independently (__main__.CallbackTests) ... ok
+test_nine_owner_completions (__main__.CallbackTests) ... ok
+test_package_replay_no_expected_driver_ports (__main__.CallbackTests) ... ok
+test_public_output_drain (__main__.CallbackTests) ... ok
+test_registered_ACK_chain_and_generation (__main__.CallbackTests) ... ok
+test_rejected_RX_no_mutation_and_reason_binding (__main__.CallbackTests) ... ok
+test_selection_atomic_clear_and_epoch (__main__.CallbackTests) ... ok
+test_staging_and_descriptor_frozen (__main__.CallbackTests) ... ok
+test_storage_actual_admission (__main__.CallbackTests) ... ok
+test_terminal_markers_and_identity_strict (__main__.CallbackTests) ... ok
+test_unbounded_stall_no_claim_or_timeout (__main__.CallbackTests) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 15.378s
+
+OK

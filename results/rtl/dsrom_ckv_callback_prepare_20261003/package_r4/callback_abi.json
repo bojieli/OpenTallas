@@ -1,0 +1,103 @@
+{
+  "version": "CKV_CALLBACK_V1",
+  "status": "PROSPECTIVE_EXACT_INTERFACE_NOT_INSTALLED",
+  "model_commit": "eae838a3ad98bde6505694aa8d4d74385856e63f",
+  "full_geometry": {
+    "K": 512,
+    "TROWS": 640,
+    "D": 512,
+    "NL": 4,
+    "TP": 4,
+    "NSLOT": 64
+  },
+  "capacity": {
+    "CKV_bytes_per_rank": 147456,
+    "staging_bytes_per_rank": 339200
+  },
+  "callbacks": [
+    "broadcast_accept",
+    "descriptor_retire",
+    "end",
+    "output_write",
+    "owner_write_accept",
+    "owner_write_visible",
+    "reset_barrier",
+    "rx_reject",
+    "selection_accept",
+    "stage_write",
+    "storage_accept",
+    "stored_ACK_emit",
+    "stored_ACK_return",
+    "table_publish"
+  ],
+  "sampling": "after actual rising-edge eval/NBA settle; report actual strobes and before/after storage, never inferred from offers",
+  "identity": {
+    "group_ref": "uint64 software directory handle preserving native owner mapping; not a physical tag or truncated/hash native identity",
+    "selection_epoch": "uint16 separate from descriptor generation",
+    "rank": "10 bits validated<512",
+    "gid": "21 bits, immutable selected ID table"
+  },
+  "hardware_increment": {
+    "existing_payload_bits_charged_again": 0,
+    "existing_staging_bits_charged_again": 0,
+    "state_bits_per_die": {
+      "selection_epoch": 16,
+      "lease_live": 1,
+      "passes_started": 2,
+      "passes_retired": 2,
+      "stream_retire_pending": 1,
+      "publication_done": 1,
+      "writer_wait": 1,
+      "reset_release_latch": 1,
+      "remote_stored_ACK_registers": 81,
+      "source_destination_ACK_pending": 1536,
+      "mux_write_outstanding": 4,
+      "mux_write_owner": 4,
+      "mux_fair_turn": 4,
+      "core_issue_ready_capture": 1,
+      "own_capture_lock": 1
+    },
+    "total_state_bits_per_die": 1656,
+    "all4_state_bits": 6624,
+    "combinational_gate_screen": {
+      "all_state_hold_muxes": 1656,
+      "ACK_pending_read_muxes": 1533,
+      "TX_and_3_ACK_rank_decode_AND2": 18432,
+      "generation_RX_ACK_XNOR": 96,
+      "owner_RX_XNOR": 6,
+      "pending_zero_tree_AND2": 1535,
+      "qualifier_guard_AND2": 256
+    },
+    "FF_area_um2": 627.75648,
+    "logic_and_state_area_um2": 3849.73236,
+    "terminal_reset_hold_area_um2": 217.30032,
+    "clock_buffer_screen_count": 186,
+    "clock_buffer_screen_area_um2": 18.98316,
+    "new_ASR_clock_pin_load_SS_fF": 718.674192,
+    "new_ASR_clock_pin_load_FF_fF": 833.2197120000001,
+    "requested_50pct_incremental_slot_um2_per_die": 8172.03168,
+    "all4_slot_um2": 32688.12672,
+    "shared_group_controller_bits": 21,
+    "shared_group_controller_slot_um2": 40.41576,
+    "full4_joined_incremental_slot_um2": 32728.54248,
+    "no_mapped_timing_credit": true,
+    "slot_site_assignment": null,
+    "screen_basis": "AND2x2/INVx1/DFFASRHQNx1 .37908 source-library gross bill, 50% util; all new state conservatively ASR. Generic gates unoptimized, source mapper proof pending. BUFx4 source area screen; actual clock/hold/PG union unqualified"
+  },
+  "observer_extra_hardware_bits": 0,
+  "resource_scope": "Python preparation only; no compiler/HDL or new compute lease. Generated header is declarations only; future complete source package needs reviewed measured resource admission and fresh GO.",
+  "numerical_scope": "transport/reformat/retirement contract; output_write proves ownership event only, not full QK/PV arithmetic golden",
+  "program_failure_scope": "illegal RX/reset/duplicate fixtures are negative interface controls; unbounded stalls are not admitted-program failure",
+  "source_hooks": {
+    "selection_accept": "successor actual sel_v&&sel_ready; original core su_go lacks service readiness",
+    "storage_accept": "successor qualified buf_row/present write + npresent snapshots; original accepts bad in-range rows",
+    "stored_ACK_emit": "successor destination registered ACK valid and accepted on reverse link, after actual storage",
+    "stored_ACK_return": "successor source pending-bit clear on matching destination/rank/epoch ACK, never TX/dequeue",
+    "stage_write": "runtime adapter kv_stream_v&&kv_ready -> engine u_stage wr_en/wptr/4",
+    "descriptor_retire": "actual att_packed_desc_done && att_packed_idle, e_idle includes no o_we",
+    "owner_write_visible": "candidate mux recorded owner c_wr_done + idx_hbm actual masked backing write; original mux blocks this path"
+  },
+  "build_GO": false,
+  "physical_credit": false,
+  "fulltoken_credit": false
+}

@@ -1,0 +1,72 @@
+{
+  "status": "READY_FOR_PROSPECTIVE_COMPONENT_MODEL_AND_CALLBACK_REVIEW_NO_HDL",
+  "authoritative_package": "package_r4",
+  "lease_model_commit": "eae838a3ad98bde6505694aa8d4d74385856e63f",
+  "observer_commit": "1cdf9a5174478b287b05774868ffc46ba7cbfef5",
+  "geometry": {
+    "selected_rows": 512,
+    "total_staging_rows": 640,
+    "lanes": 4,
+    "vector_width": 512,
+    "ranks": 4
+  },
+  "capacities": {
+    "CKV_bytes_per_rank": 147456,
+    "staging_bytes_per_rank": 339200,
+    "existing_payload_recharged_bits": 0
+  },
+  "component_state_price": {
+    "bits_per_rank": 1656,
+    "four_rank_bits": 6624,
+    "shared_group_bits_once": 21,
+    "joined_slot_screen_um2": 32728.54248,
+    "physical_site_fit": false
+  },
+  "validation": {
+    "static_tests": 16,
+    "fresh_replay_artifacts": 9,
+    "prior_pinned_paths_unchanged": 204,
+    "full_parent_source_library_connector_pins_verified": 140,
+    "fixture_counts": {
+      "status": "PASS_FINITE_SYNTHETIC_CALLBACK_CONTRACT_ONLY_NO_DUT",
+      "selected_rows_stored": 2048,
+      "selected_rows_staged": 4096,
+      "stage_rows": 5120,
+      "stored_ACK_emits": 1533,
+      "stored_ACKs": 1533,
+      "owner_visible_sectors": 9,
+      "rejected_offers": 0,
+      "callbacks": 6949,
+      "actual_RTL_measured": false
+    },
+    "negative_controls": "malformed/refused callback fixtures, not DUT mutants or admitted-program failures"
+  },
+  "commands": {
+    "prepare": "python3 tools/prepare_dsrom_ckv_callbacks.py --out /tmp/CKV-callback-review-fresh",
+    "tests": "python3 tests/test_prepare_dsrom_ckv_callbacks.py",
+    "validate": "python3 tools/prepare_dsrom_ckv_callbacks.py --trace TRACE.jsonl --images results/rtl/dsrom_ckv_callback_prepare_20261003/package_r4/input_words.json --receipt FRESH.json"
+  },
+  "next_source_implementation": [
+    "source-selected CKV_RX_LEASE=0 namespaced service/core/tile/die/wrapper plus full4-route generation/ready/registered ACK join",
+    "actual window/CKV write ownership through both request muxes, nine returned completions; protect own capture through QK/PV retirement",
+    "bind C++ callback serializer to actual settled source strobes and full carried tags; no offer-derived acceptance",
+    "full512 source gate: legal ready stalls, stale/duplicate/malformed reset/refusal, actual packed words and both output retirements; measured source-bound resource plan before GO"
+  ],
+  "physical_open": [
+    "legal reset/clock/PG/hold and loaded SS/FF sites for priced new state",
+    "actual forward/reverse CDC, or proved common-domain source context",
+    "source-ready bounds and token latency under actual admitted provider service; no arbitrary ACK timeout"
+  ],
+  "ownership": {
+    "Epicurus": "lease/admission/publication source implementation",
+    "Hubble": "observer serializer and binary/event binding",
+    "Maxwell": "field boundary/retirement provider"
+  },
+  "no_live_job": true,
+  "no_duplicate_observer": true,
+  "no_PVE2_PVE3_launch": true,
+  "no_compile_or_HDL_run": true,
+  "full_arithmetic_golden": false,
+  "physical_credit": false,
+  "fulltoken_credit": false
+}

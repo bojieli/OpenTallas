@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/tmp/opentallas-H3-scalar-contract-model-20261002/tools/prepare_dsrom_ckv_callbacks.py", line 324, in <module>
+    result=validate([json.loads(line) for line in a.trace.read_text().splitlines()],im)
+  File "/tmp/opentallas-H3-scalar-contract-model-20261002/tools/prepare_dsrom_ckv_callbacks.py", line 130, in validate
+    if e['echo_epoch']!=s['epoch']:raise ValueError('ACK carried generation mismatch')
+ValueError: ACK carried generation mismatch

@@ -1,0 +1,10 @@
+{
+  "owner_observer_jobs": [],
+  "peer_clock_solver": {
+    "unit": "dsrom-global-clock-constraints-20261003-r1.service",
+    "MainPID": 2629663,
+    "ActiveState": "active",
+    "changed": false
+  },
+  "source": "read-only systemctl --user show; contemporaneous handoff snapshot"
+}

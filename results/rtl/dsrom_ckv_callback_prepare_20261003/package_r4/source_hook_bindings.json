@@ -1,0 +1,149 @@
+{
+  "source_pins_verified": 140,
+  "bindings": {
+    "selection_accept": {
+      "origin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "archive": "inputs/rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251"
+      },
+      "equation": [
+        {
+          "line": 451,
+          "source": "    assign ckv_sel_v = ckv_issue && dst == 2'd3;"
+        }
+      ],
+      "installed_successor": false
+    },
+    "storage_accept": {
+      "origin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+        "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+        "sha256": "9c6bbc1289f33473c5395511b419bd0bba89b70910f7bc31840bf931b198ac25"
+      },
+      "equation": [
+        {
+          "line": 336,
+          "source": "                    buf_row[wrank[i*KW +: KW]] <= wrow[i*2304 +: 2304];"
+        }
+      ],
+      "installed_successor": false
+    },
+    "table_publish": {
+      "origin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+        "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+        "sha256": "9c6bbc1289f33473c5395511b419bd0bba89b70910f7bc31840bf931b198ac25"
+      },
+      "equation": [
+        {
+          "line": 134,
+          "source": "    wire [KW-1:0] id_count; wire id_done; wire [31:0] id_dc;"
+        }
+      ],
+      "installed_successor": false
+    },
+    "stage_write": {
+      "origin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+        "archive": "inputs/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+        "sha256": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74"
+      },
+      "equation": [
+        {
+          "line": 571,
+          "source": "            .clk(clk), .wr_en({NL{kv_go}} & kv_m), .wr_addr(AW'(wptr / NL)), .wr_data(kv_w),"
+        }
+      ],
+      "installed_successor": false
+    },
+    "descriptor_retire": {
+      "origin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+        "archive": "inputs/rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+        "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663"
+      },
+      "equation": [
+        {
+          "line": 738,
+          "source": "            .retain_complete(att_packed_desc_done && att_packed_idle),"
+        }
+      ],
+      "installed_successor": false
+    },
+    "output_write": {
+      "origin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+        "archive": "inputs/rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+        "sha256": "be2cd15b4977825dec71fe890a36f5eabe0345bdcf1ff2718af669f16ebab27a"
+      },
+      "equation": [
+        {
+          "line": 596,
+          "source": "            idle <= (st == A_IDLE) && !go && !(|o_we);"
+        }
+      ],
+      "installed_successor": false
+    },
+    "owner_write_visible": {
+      "origin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+        "archive": "inputs/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+        "sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+      },
+      "equation": [
+        {
+          "line": 484,
+          "source": "                                wr_done[p] <= 1'b1;"
+        }
+      ],
+      "installed_successor": false
+    },
+    "owner_write_accept": {
+      "origin": {
+        "commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+        "path": "rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+        "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+        "sha256": "9c6bbc1289f33473c5395511b419bd0bba89b70910f7bc31840bf931b198ac25"
+      },
+      "equation": [
+        {
+          "line": 328,
+          "source": "            if (wr_act && c_rdy[wr_stack]) begin"
+        }
+      ],
+      "installed_successor": false
+    },
+    "reset_barrier": {
+      "installed_successor": false,
+      "prospective_requirement": "reset_barrier must bind successor actual state/strobes; no installed equivalent is assumed"
+    },
+    "broadcast_accept": {
+      "installed_successor": false,
+      "prospective_requirement": "broadcast_accept must bind successor actual state/strobes; no installed equivalent is assumed"
+    },
+    "rx_reject": {
+      "installed_successor": false,
+      "prospective_requirement": "rx_reject must bind successor actual state/strobes; no installed equivalent is assumed"
+    },
+    "stored_ACK_emit": {
+      "installed_successor": false,
+      "prospective_requirement": "stored_ACK_emit must bind successor actual state/strobes; no installed equivalent is assumed"
+    },
+    "stored_ACK_return": {
+      "installed_successor": false,
+      "prospective_requirement": "stored_ACK_return must bind successor actual state/strobes; no installed equivalent is assumed"
+    },
+    "end": {
+      "installed_successor": false,
+      "prospective_requirement": "end must bind successor actual state/strobes; no installed equivalent is assumed"
+    }
+  }
+}
