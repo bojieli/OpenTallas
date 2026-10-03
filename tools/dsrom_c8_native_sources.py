@@ -67,6 +67,12 @@ def generate():
             end"""
  assert old in s;s=s.replace(old,new)
  s=s.replace('wire rel_ok = step && m_jready && !rel_on;', 'wire rel_ok = step && m_jready && !rel_on && (!C8_PUBLICATION || (rows_ready && !own_pending));')
+ # The original unconditional collector count assignment is later in the
+ # same always block than selection clear. It otherwise overrides npresent=0
+ # on every second selection. Keep legacy default byte-level behavior, and
+ # make the selected publisher clear win without changing arithmetic.
+ s=s.replace("npresent <= npresent + (KW+1)'(nwr);",
+             "if (C8_PUBLICATION && sel_v && !rd_act) npresent <= 0;\n            else npresent <= npresent + (KW+1)'(nwr);")
  emit('ot_chip_v41x_ckv_die_service_c8.sv',s)
  # Native backend exposes metadata from the ACTUAL serviced queue entry.
  s=original('rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv').replace('module ot_hdc_v41x_idx_hbm #(', 'module ot_hdc_v41x_idx_hbm_c8 #(')

@@ -355,7 +355,8 @@ module ot_chip_v41x_ckv_die_service_c8 #(
                     buf_row[wrank[i*KW +: KW]] <= wrow[i*2304 +: 2304];
                     present[wrank[i*KW +: KW]] <= 1'b1;
                 end
-            npresent <= npresent + (KW+1)'(nwr);
+            if (C8_PUBLICATION && sel_v && !rd_act) npresent <= 0;
+            else npresent <= npresent + (KW+1)'(nwr);
             if (wv[0]) st_rows_local <= st_rows_local + 1;
             st_rows_remote <= st_rows_remote + 32'(ag_rx_valid[0]) + 32'(ag_rx_valid[1]) + 32'(ag_rx_valid[2]);
             if (!rows_ready && npresent + (KW+1)'(nwr) == (KW+1)'(K)) st_cycles_to_ready <= cyc;

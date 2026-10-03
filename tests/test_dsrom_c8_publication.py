@@ -83,3 +83,13 @@ def test_actual_l20_top_launch_entry_identity_and_retire_are_connected():
  assert '.engine_done(done),.write_journal_quiet(c8_write_quiet)' in s
  assert '.write_quarantine(c8_write_quarantine),.write_fault(c8_write_fault)' in s
  assert 'C8 context requires actual native publication callbacks' in s
+
+def test_selected_reuse_clear_wins_and_legacy_default_is_preserved():
+ s=(D/'ot_chip_v41x_ckv_die_service_c8.sv').read_text()
+ assert "if (C8_PUBLICATION && sel_v && !rd_act) npresent <= 0;" in s
+ assert "else npresent <= npresent + (KW+1)'(nwr);" in s
+ b=(ROOT/'rtl/test/dsrom_sys/c8/tb_dsrom_c8_two_positions.sv').read_text()
+ assert 'identity={16\'d7,10\'d2,21\'(100+p)}' in b
+ assert 'read_row(510,first_row)' in b
+ assert '(!service.f_ready || !(&quiet))' in b
+ assert 'second selection retained stale present count' in b

@@ -121,5 +121,18 @@
     "added_capture_cycles": 0,
     "constant_parameter_selection_no_runtime_mux_credit": true,
     "functional_parent_measured": false
+  },
+  "two_position_native_reuse": {
+    "selected_control_fix": "C8_PUBLICATION selection clear wins over the later collector npresent assignment; legacy default unchanged",
+    "added_state_bits": 0,
+    "added_MACs_per_cycle": 0,
+    "added_memory_ports": 0,
+    "added_tracks": 0,
+    "added_capture_cycles": 0,
+    "area_charge": "existing collector next-state mux reservation; no area credit",
+    "reuse_contract": "Actual own nine backend ACKs and fetch job_ready plus empty native journal before selection/table reuse; retain first row in actual HBM without reset",
+    "functional_gate": "tb_dsrom_c8_two_positions; two identities same user; second reads first native row; not whole L20 arithmetic or wavefront interval",
+    "option_C_source_pin": "f954ad1ea67f77e8f1a5e86cf48856a96ca650bf",
+    "option_C_integration": "off until Beauvoir primitive ports/reset/debt contract and Maxwell selected physical regions are bound; no inferred FIFO clock closure"
   }
 }
