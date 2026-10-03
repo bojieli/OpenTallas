@@ -1,0 +1,664 @@
+{
+  "arithmetic_operator_instances": [
+    {
+      "instance": "u_ts",
+      "module": "ot_qwen_w12_ksum",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": 14,
+      "source_ports": ".rows(tsh_flat), .s(tsum)",
+      "width": 38
+    },
+    {
+      "instance": "u_os",
+      "module": "ot_qwen_w12_ksum",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": 14,
+      "source_ports": ".rows(osh_flat), .s(osum)",
+      "width": 38
+    },
+    {
+      "instance": "u_a0",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(cur), .b(js_r), .s(cur_js)",
+      "width": 24
+    },
+    {
+      "instance": "u_a1",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(oa), .b(ojs_r), .s(oa_j)",
+      "width": 24
+    },
+    {
+      "instance": "u_a2",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(xc), .b(xjs_r), .s(xc_j)",
+      "width": 24
+    },
+    {
+      "instance": "u_a3",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(base_k), .b(ks_r), .s(bk_k)",
+      "width": 24
+    },
+    {
+      "instance": "u_a4",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(xk), .b(xks_r), .s(xk_k)",
+      "width": 24
+    },
+    {
+      "instance": "u_a5",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(base_t), .b(tstep_r), .s(bt_t)",
+      "width": 24
+    },
+    {
+      "instance": "u_a6",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(ot), .b(ot_step), .s(ot_t)",
+      "width": 24
+    },
+    {
+      "instance": "u_a7",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(nb), .b(WNB), .s(nb_j)",
+      "width": 19
+    },
+    {
+      "instance": "u_a8",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(nb_t), .b(nb_step), .s(nbt_t)",
+      "width": 19
+    },
+    {
+      "instance": "u_a9",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(lb), .b(lb_step), .s(lb_t)",
+      "width": 19
+    },
+    {
+      "instance": "u_a10",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(k), .b(ONE), .s(k_1)",
+      "width": 18
+    },
+    {
+      "instance": "u_a11",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(k), .b(TWO), .s(k_2)",
+      "width": 18
+    },
+    {
+      "instance": "u_a12",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(t), .b(ONE), .s(t_1)",
+      "width": 18
+    },
+    {
+      "instance": "u_a13",
+      "module": "ot_qwen_w12_kadd",
+      "replacement_allowed": false,
+      "required_lemma": "same actual module/parameters + bitexact input equality at delayed qualified edge implies output equality; prove operator circuit before replacing cut cone",
+      "rows": null,
+      "source_ports": ".a(t), .b(TWO), .s(t_2)",
+      "width": 18
+    }
+  ],
+  "arithmetic_shared_or_abstracted_before_exact_lemma": false,
+  "control_address_arithmetic_removed": false,
+  "control_declared_bits": 1949,
+  "coupled_state_candidate": {
+    "arbitrary_binary_go_and_payload_retained": true,
+    "delay_edges": 1,
+    "instruction_and_loop_state": [
+      "nout_r",
+      "tiles_r",
+      "wsrc_r",
+      "round_r",
+      "oen_r",
+      "amax_r",
+      "mmode_r",
+      "rmax_r",
+      "mbase_r",
+      "scale_base_r",
+      "split_r",
+      "wcs_r",
+      "ktot_r",
+      "ts_r",
+      "ks_r",
+      "js_r",
+      "xks_r",
+      "xjs_r",
+      "xcs_r",
+      "ots_r",
+      "ojs_r",
+      "jsh_r",
+      "t",
+      "k",
+      "j",
+      "cur",
+      "base_k",
+      "base_t",
+      "xk",
+      "xc",
+      "xk_base",
+      "oa",
+      "ot",
+      "nb",
+      "nb_t",
+      "lb",
+      "t_last",
+      "k_last"
+    ],
+    "no_added_input_hold": true,
+    "no_behavior_restriction": true,
+    "note": "DYN retention/whole caller behavior not extracted by this control-only projection; separate source obligation remains open",
+    "phase": [
+      "active",
+      "pend",
+      "pcnt",
+      "split_fault",
+      "wrom_re",
+      "kv_re"
+    ],
+    "pipeline_stage1": [
+      "tsh",
+      "osh",
+      "pr_a",
+      "kpad_a"
+    ],
+    "pipeline_stage2": [
+      "tsg_a",
+      "otsg_a",
+      "kc_a",
+      "nb_step",
+      "lb_step"
+    ],
+    "pipeline_stage3": [
+      "tstep_r",
+      "ot_step",
+      "k_r"
+    ],
+    "qualifications": [
+      "phase after shared reset and one delayed edge",
+      "command and loop seeds after matched accepted go; hold while idle/pend unless actual source writes",
+      "stage validity derived from last accepted instruction age and actual every-edge updates; never force unreset values to zero",
+      "wrom_addr compared only under actual qualified ROM read"
+    ],
+    "relation": "tile state at t equals root state at t-1 only under source-derived initialization/use qualifiers",
+    "status": "PREPARATION_ONLY_NOT_PROVED"
+  },
+  "decomposition": [
+    {
+      "goal": "retain accepted go=go&&ready and all379 instruction bits +128 x bits delayed exactly1; reset-valid sampling, every-edge inputs",
+      "id": "P0",
+      "proof_source": "literal launch source proof prerequisite; no independent ready substitute"
+    },
+    {
+      "goal": "accepted instruction fields/counters/cur seed relation after actual root acceptance reaches tile; root go while active/pend ignored",
+      "id": "P1",
+      "state": "all command-latched fields plus t/k/j/t_last/k_last/cur/base/x/address seed; not just7bit exported state"
+    },
+    {
+      "goal": "qualified tsh/osh/pr_a/kpad_a -> tsg/otsg/kc -> tstep/ot_step/k_r correspondence; model exact3stage age",
+      "id": "P2",
+      "state": "invalid/unreset terms excluded only under proven valid-age/use predicates; actual first IL8 boundary deadline"
+    },
+    {
+      "goal": "actual prefix-add/sum circuit contracts at18/19/24/38bit widths; same source operands at one-edge relation",
+      "id": "P3",
+      "state": "all16 operator cuts retain parameters/sign/truncation and bitexact inputs; no free unconstrained output assumptions"
+    },
+    {
+      "goal": "full strengthened state recurrence active/pend/prep/k/t/j/last/address under P0-P3; delayed read strobes and qualified ROM address",
+      "id": "P4",
+      "state": "hold commands/DYN-related retained fields remain source-bound; source legal binary inputs unchanged"
+    },
+    {
+      "goal": "one-step coupled-state preservation only; global induction/reachability composition remains deferred",
+      "id": "P5",
+      "state": "actual owned-ready/globalbroadcast/provider/current datapath and physical pin context remain open"
+    }
+  ],
+  "engine_data_arithmetic_removed": false,
+  "exact_control_registers": [
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "wrom_re",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "kv_re",
+      "width": 1
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "wrom_addr",
+      "width": 24
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "active",
+      "width": 1
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "nout_r",
+      "width": 18
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "tiles_r",
+      "width": 18
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "k_r",
+      "width": 18
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "wsrc_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "round_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "oen_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "amax_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "mmode_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "rmax_r",
+      "width": 1
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "mbase_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "scale_base_r",
+      "width": 24
+    },
+    {
+      "bits": 4,
+      "elements": 1,
+      "name": "split_r",
+      "width": 4
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "tstep_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "wcs_r",
+      "width": 24
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "ktot_r",
+      "width": 18
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ts_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ks_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "js_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xks_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xjs_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xcs_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ots_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ojs_r",
+      "width": 24
+    },
+    {
+      "bits": 3,
+      "elements": 1,
+      "name": "jsh_r",
+      "width": 3
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "t",
+      "width": 18
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "k",
+      "width": 18
+    },
+    {
+      "bits": 3,
+      "elements": 1,
+      "name": "j",
+      "width": 3
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "cur",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "base_k",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "base_t",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xk",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xc",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xk_base",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "oa",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ot",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ot_step",
+      "width": 24
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "nb",
+      "width": 19
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "nb_t",
+      "width": 19
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "nb_step",
+      "width": 19
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "lb",
+      "width": 19
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "lb_step",
+      "width": 19
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "t_last",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "k_last",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "split_fault",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "pend",
+      "width": 1
+    },
+    {
+      "bits": 4,
+      "elements": 1,
+      "name": "pcnt",
+      "width": 4
+    },
+    {
+      "bits": 14,
+      "elements": 1,
+      "name": "pr_a",
+      "width": 14
+    },
+    {
+      "bits": 38,
+      "elements": 1,
+      "name": "tsg_a",
+      "width": 38
+    },
+    {
+      "bits": 38,
+      "elements": 1,
+      "name": "otsg_a",
+      "width": 38
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "kc_a",
+      "width": 18
+    },
+    {
+      "bits": 532,
+      "elements": 14,
+      "name": "tsh",
+      "width": 38
+    },
+    {
+      "bits": 532,
+      "elements": 14,
+      "name": "osh",
+      "width": 38
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "kpad_a",
+      "width": 19
+    }
+  ],
+  "initialization": {
+    "IL8_first_boundary_use_must_be_proved": true,
+    "binary_input_contract_only": true,
+    "full_delayed_register_equality_before_qualification_not_assumed": true,
+    "initial_reset_required": true,
+    "no_zero_initialization_substitution": true,
+    "source_term_pipeline_depth": 3,
+    "unreset_instruction_and_term_regs": true
+  },
+  "model_scope": {
+    "actual_solver_resource_bound": null,
+    "cheap_cut_gate_next": "source extraction/operator/initialization obligations first; no replay of56stepolithic induction",
+    "critical_path": false,
+    "hardware_area_delta": 0,
+    "hardware_cycles_delta": 0,
+    "hardware_ports_delta": 0,
+    "heavy_solver_build_admission": false,
+    "new_RTL": false,
+    "one_step_only": true,
+    "verification_only": true
+  },
+  "mutant_obligations": [
+    "ungated go broadcast rejected",
+    "KV_PREP mismatch rejected",
+    "379bit payload bit/order mutant rejected",
+    "retained-field update under unaccepted ib rejected",
+    "premature3stage term validity rejected",
+    "wrong18/19/24/38width or truncation arithmetic rejected"
+  ],
+  "old_induction_restart": false,
+  "parameters": {
+    "BD": 1,
+    "GT": 6144,
+    "IL": 8,
+    "IREG": 1,
+    "KV_PREP": 3,
+    "PART_root": 2,
+    "PART_tile": 1,
+    "SMIN": 6,
+    "XVM": 0
+  },
+  "proof_pass": false,
+  "schema": "QROM_LITERAL_LOCKSTEP_SOURCE_DECOMPOSITION_PREP_V1",
+  "scope": "same control-only projection as original; not whole engine/ready owner/provider/datapath/physical proof",
+  "solver_launched": false,
+  "source_literal_sha256": "0d51cae6bd27aa36052be5a2e502238d8b435190214f8782f714ba295daac760",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_qwen_rom_tile_context_candidate_r3_retained.sv": "77dfbb108424d639dc16bcbc824f5e00533bd405c6922265070b2359d7a91f41",
+    "rtl/hdc/ot_qwen_w12_arith.sv": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "tools/qwen_rom_issue_lockstep_gate.py": "c3bfd3182dbba49ec41c538b3d7285e1ed37963b59013c7f92af6d2b69913e35",
+    "tools/qwen_rom_literal_launch_pipeline_gate.py": "9bb4012e44e0ccbfd67f62a2f2c2ce0a2bc289d29cf264f7e92861a2d4de8a3c"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "W2_mutable_protection_implemented": false,
+  "artifact_pins_verified": 7,
+  "cold_model_identical": true,
+  "exact_parent_area_unknown": true,
+  "historical_inventory_byte_identical": true,
+  "main_tests_passed": 14,
+  "model_sha256": "9b1a3edd35f5e726766718bb49acd0cfb5eea6716e53140657a036112cfe4981",
+  "owner_commit": "51925cf1853fe4b71e8a4f7086414148b26b6dd4",
+  "physical_admitted": false,
+  "schema": "opentallas.hbm.w2-w6.reconciliation.parent-review.v1",
+  "scope": "Source declarations and gross slot proxies only. Match existing parent debits before adding or replacing any cost. No new RTL or physical qualification.",
+  "selected_W2_raw_protected_per_PC": [
+    4781,
+    9144
+  ],
+  "selected_W6_raw_protected_per_SM": [
+    71,
+    144
+  ],
+  "source_pins_verified": 15
+}
