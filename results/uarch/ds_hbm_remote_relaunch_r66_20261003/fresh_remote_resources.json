@@ -1,0 +1,33 @@
+{
+  "scope": "read-only SSH probes; no launch/transfer/reservation",
+  "pve1": {
+    "time_ns": 1791002088458228985,
+    "hostname": "ot-pve1",
+    "MemAvailable": 241119657984,
+    "free_home_bytes": 59659042816,
+    "free_tmp_bytes": 59659042816,
+    "cpus": 28,
+    "load": [
+      13.75341796875,
+      15.79541015625,
+      15.62060546875
+    ]
+  },
+  "agidock128": {
+    "time_ns": 1791002088475790176,
+    "hostname": "vm-xry57mhfyn",
+    "ssh_alias": "ot-agidock128",
+    "MemAvailable": 40644132864,
+    "free_home_bytes": 931443949568,
+    "free_tmp_bytes": 46644858880,
+    "cpus": 64,
+    "load": [
+      56.76025390625,
+      57.06201171875,
+      59.470703125
+    ],
+    "fleet_RAM_budget_bytes": 103079215104
+  },
+  "admitted": false,
+  "owned_live_numerical_or_constructor_PIDs": []
+}

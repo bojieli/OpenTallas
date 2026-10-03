@@ -1,0 +1,17 @@
+{
+  "command": "/home/ubuntu/bin/python -m pytest -q tests/test_ds_hbm_atomic_checkpoint_r66.py tests/test_ds_hbm_remote_relaunch_plan_r66.py",
+  "exit_code": 0,
+  "passed": 11,
+  "elapsed_seconds": 0.96,
+  "actual_native_PC0_1_smoke_executed": false,
+  "actual_provider_constructor_executed": false,
+  "fresh_subprocess_test": "filesystem seals only; no native arithmetic or RF provider",
+  "regeneration_byte_identical": true,
+  "preserved_preparation_failure": {
+    "exit_code": 1,
+    "exception_type": "FileNotFoundError",
+    "reason": "sparse checkout omitted immutable R58/R57 launch receipt source pin",
+    "resolution": "restored exact tracked pin paths by sparse-checkout; no hash substitution",
+    "source_file": "results/uarch/ds_hbm_checkpoint_execution_r58_20261003/actual_R57_preflight/kepler-ds-r57-dual-constructor-preflight-20261003.launch.json"
+  }
+}

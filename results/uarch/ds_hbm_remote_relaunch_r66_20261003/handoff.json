@@ -1,0 +1,26 @@
+{
+  "status": "READY_FOR_SOURCE_REVIEW_NOT_EXECUTION",
+  "base_commit": "c46c016d6bf19498cf51861c06c89a408349049a",
+  "minimal_dependencies_on_parent_with_R64": "single R66 milestone commit; original a4f36c2661/c46c016d6 already parent-integrated",
+  "worktree": "/tmp/kepler-ds-r66-remote-checkpoint-plan-20261003",
+  "branch": "worker/ds-hbm-r66-remote-atomic",
+  "implemented": [
+    "default-off checksum/fsync/sibling-rename checkpoint publication wrapper around unchanged V3",
+    "fresh-process publication guard",
+    "remote-only gate contract refusing partial resource projection and absent actual smoke"
+  ],
+  "not_implemented": [
+    "actual per-PC native subprocess runner",
+    "actual PC0-1 smoke raw-state equality receipt",
+    "complete remote source/data enrollment and aggregate extended resource projection"
+  ],
+  "next_action": "Implement the actual per-PC producer/cold-restore subprocess controller and price its enrolled helpers, journal bootstraps, metadata/tracebacks and snapshot/restore RAM; no launch while remote capacity fails.",
+  "commands": [
+    "/home/ubuntu/bin/python -m pytest -q tests/test_ds_hbm_atomic_checkpoint_r66.py tests/test_ds_hbm_remote_relaunch_plan_r66.py",
+    "/home/ubuntu/bin/python tools/ds_hbm_remote_relaunch_plan_r66.py"
+  ],
+  "resources": "plan.json preserves R64 resource guards; additional complete costs pending and launch remains failclosed",
+  "R58_failed_evidence_untouched": true,
+  "no_engine_RTL_or_PR": true,
+  "no_docs_main_edits": true
+}
