@@ -1,0 +1,7043 @@
+{
+  "descriptors": [
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 0,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "a",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "b",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "FADD",
+        "src": [
+          "a",
+          "b"
+        ]
+      },
+      "substep": 0,
+      "template": "add",
+      "template_id": 0,
+      "word": "c00311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 1,
+      "lowered_primitive": "FCMP_GT",
+      "opcode": 10,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "FCMP_GT"
+        ],
+        "op": "CMP_GT",
+        "reads": [
+          {
+            "expression": "candidate",
+            "shape_max": []
+          },
+          {
+            "expression": "best",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "win"
+        }
+      },
+      "source_node": {
+        "dst": "win",
+        "op": "CMP_GT",
+        "src": [
+          "candidate",
+          "best"
+        ]
+      },
+      "substep": 0,
+      "template": "argmax",
+      "template_id": 1,
+      "word": "44030a"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 2,
+      "lowered_primitive": "FCMP_NE",
+      "opcode": 13,
+      "ordered_step": 1,
+      "source_contract": {
+        "native_steps": [
+          "FCMP_NE"
+        ],
+        "op": "CMP_NE",
+        "reads": [
+          {
+            "expression": "candidate",
+            "shape_max": []
+          },
+          {
+            "expression": "candidate",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nan"
+        }
+      },
+      "source_node": {
+        "dst": "nan",
+        "op": "CMP_NE",
+        "src": [
+          "candidate",
+          "candidate"
+        ]
+      },
+      "substep": 0,
+      "template": "argmax",
+      "template_id": 1,
+      "word": "44130d"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 3,
+      "lowered_primitive": "FCMP_EQ",
+      "opcode": 12,
+      "ordered_step": 2,
+      "source_contract": {
+        "native_steps": [
+          "FCMP_EQ"
+        ],
+        "op": "CMP_EQ",
+        "reads": [
+          {
+            "expression": "best",
+            "shape_max": []
+          },
+          {
+            "expression": "best",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "best_valid"
+        }
+      },
+      "source_node": {
+        "dst": "best_valid",
+        "op": "CMP_EQ",
+        "src": [
+          "best",
+          "best"
+        ]
+      },
+      "substep": 0,
+      "template": "argmax",
+      "template_id": 1,
+      "word": "44230c"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 4,
+      "lowered_primitive": "AND",
+      "opcode": 3,
+      "ordered_step": 3,
+      "source_contract": {
+        "native_steps": [
+          "AND"
+        ],
+        "op": "AND",
+        "reads": [
+          {
+            "expression": "nan",
+            "shape_max": []
+          },
+          {
+            "expression": "best_valid",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "first_nan"
+        }
+      },
+      "source_node": {
+        "dst": "first_nan",
+        "op": "AND",
+        "src": [
+          "nan",
+          "best_valid"
+        ]
+      },
+      "substep": 0,
+      "template": "argmax",
+      "template_id": 1,
+      "word": "443103"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 5,
+      "lowered_primitive": "OR",
+      "opcode": 4,
+      "ordered_step": 4,
+      "source_contract": {
+        "native_steps": [
+          "OR"
+        ],
+        "op": "OR",
+        "reads": [
+          {
+            "expression": "win",
+            "shape_max": []
+          },
+          {
+            "expression": "first_nan",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "OR",
+        "src": [
+          "win",
+          "first_nan"
+        ]
+      },
+      "substep": 0,
+      "template": "argmax",
+      "template_id": 1,
+      "word": "444104"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 6,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U"
+        ],
+        "op": "BITS",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "bits"
+        }
+      },
+      "source_node": {
+        "dst": "bits",
+        "op": "BITS",
+        "src": [
+          "x"
+        ]
+      },
+      "substep": 0,
+      "template": "bf16",
+      "template_id": 2,
+      "word": "480301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 7,
+      "lowered_primitive": "SHR",
+      "opcode": 8,
+      "ordered_step": 1,
+      "source_contract": {
+        "native_steps": [
+          "SHR"
+        ],
+        "op": "SHR",
+        "reads": [
+          {
+            "expression": "bits",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "16",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "hi"
+        }
+      },
+      "source_node": {
+        "dst": "hi",
+        "op": "SHR",
+        "src": [
+          "bits",
+          "16"
+        ]
+      },
+      "substep": 0,
+      "template": "bf16",
+      "template_id": 2,
+      "word": "481108"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 8,
+      "lowered_primitive": "AND",
+      "opcode": 3,
+      "ordered_step": 2,
+      "source_contract": {
+        "native_steps": [
+          "AND"
+        ],
+        "op": "AND",
+        "reads": [
+          {
+            "expression": "hi",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "1",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "lsb"
+        }
+      },
+      "source_node": {
+        "dst": "lsb",
+        "op": "AND",
+        "src": [
+          "hi",
+          "1"
+        ]
+      },
+      "substep": 0,
+      "template": "bf16",
+      "template_id": 2,
+      "word": "482103"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 9,
+      "lowered_primitive": "IADD",
+      "opcode": 6,
+      "ordered_step": 3,
+      "source_contract": {
+        "native_steps": [
+          "IADD"
+        ],
+        "op": "IADD",
+        "reads": [
+          {
+            "expression": "bits",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "32767",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "bias"
+        }
+      },
+      "source_node": {
+        "dst": "bias",
+        "op": "IADD",
+        "src": [
+          "bits",
+          "32767"
+        ]
+      },
+      "substep": 0,
+      "template": "bf16",
+      "template_id": 2,
+      "word": "483106"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 10,
+      "lowered_primitive": "IADD",
+      "opcode": 6,
+      "ordered_step": 4,
+      "source_contract": {
+        "native_steps": [
+          "IADD"
+        ],
+        "op": "IADD",
+        "reads": [
+          {
+            "expression": "bias",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "lsb",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rounded"
+        }
+      },
+      "source_node": {
+        "dst": "rounded",
+        "op": "IADD",
+        "src": [
+          "bias",
+          "lsb"
+        ]
+      },
+      "substep": 0,
+      "template": "bf16",
+      "template_id": 2,
+      "word": "484106"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 11,
+      "lowered_primitive": "AND",
+      "opcode": 3,
+      "ordered_step": 5,
+      "source_contract": {
+        "native_steps": [
+          "AND"
+        ],
+        "op": "AND",
+        "reads": [
+          {
+            "expression": "rounded",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "4294901760",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "packed"
+        }
+      },
+      "source_node": {
+        "dst": "packed",
+        "op": "AND",
+        "src": [
+          "rounded",
+          "4294901760"
+        ]
+      },
+      "substep": 0,
+      "template": "bf16",
+      "template_id": 2,
+      "word": "485103"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 12,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 6,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_F"
+        ],
+        "op": "FLOAT_BITS",
+        "reads": [
+          {
+            "expression": "packed",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "FLOAT_BITS",
+        "src": [
+          "packed"
+        ]
+      },
+      "substep": 0,
+      "template": "bf16",
+      "template_id": 2,
+      "word": "486302"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 13,
+      "lowered_primitive": "I2F",
+      "opcode": 21,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "I2F"
+        ],
+        "op": "ITOF",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "ITOF",
+        "src": [
+          "x"
+        ]
+      },
+      "substep": 0,
+      "template": "convert",
+      "template_id": 3,
+      "word": "4c0315"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 14,
+      "lowered_primitive": "FMAX",
+      "opcode": 15,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "FMAX"
+        ],
+        "op": "FMAX",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(-87)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "ex"
+        }
+      },
+      "source_node": {
+        "dst": "ex",
+        "op": "FMAX",
+        "src": [
+          "x",
+          "f32(-87)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "50030f"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 15,
+      "lowered_primitive": "FMIN",
+      "opcode": 16,
+      "ordered_step": 1,
+      "source_contract": {
+        "native_steps": [
+          "FMIN"
+        ],
+        "op": "FMIN",
+        "reads": [
+          {
+            "expression": "ex",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(88)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "ex"
+        }
+      },
+      "source_node": {
+        "dst": "ex",
+        "op": "FMIN",
+        "src": [
+          "ex",
+          "f32(88)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "501310"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 16,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 2,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "ex",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(1.4426950408889634)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "t"
+        }
+      },
+      "source_node": {
+        "dst": "t",
+        "op": "FMUL",
+        "src": [
+          "ex",
+          "f32(1.4426950408889634)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d02312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 17,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 3,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "t",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(12582912)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "n"
+        }
+      },
+      "source_node": {
+        "dst": "n",
+        "op": "FADD",
+        "src": [
+          "t",
+          "f32(12582912)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d03311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 18,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 4,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "n",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(-12582912)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "n"
+        }
+      },
+      "source_node": {
+        "dst": "n",
+        "op": "FADD",
+        "src": [
+          "n",
+          "f32(-12582912)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d04311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 19,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 5,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "n",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(.693145751953125)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "nr"
+        }
+      },
+      "source_node": {
+        "dst": "nr",
+        "op": "FMUL",
+        "src": [
+          "n",
+          "f32(.693145751953125)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d05312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 20,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 6,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "nr",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "nr"
+        }
+      },
+      "source_node": {
+        "dst": "nr",
+        "op": "NEG",
+        "src": [
+          "nr"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "506301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 21,
+      "lowered_primitive": "XOR",
+      "opcode": 5,
+      "ordered_step": 6,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "nr",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "nr"
+        }
+      },
+      "source_node": {
+        "dst": "nr",
+        "op": "NEG",
+        "src": [
+          "nr"
+        ]
+      },
+      "substep": 1,
+      "template": "exp",
+      "template_id": 4,
+      "word": "506505"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 22,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 6,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "nr",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "nr"
+        }
+      },
+      "source_node": {
+        "dst": "nr",
+        "op": "NEG",
+        "src": [
+          "nr"
+        ]
+      },
+      "substep": 2,
+      "template": "exp",
+      "template_id": 4,
+      "word": "506b02"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 23,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 7,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "ex",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "nr",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "r"
+        }
+      },
+      "source_node": {
+        "dst": "r",
+        "op": "FADD",
+        "src": [
+          "ex",
+          "nr"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d07311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 24,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 8,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "n",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(1.428606765330187e-6)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "nr"
+        }
+      },
+      "source_node": {
+        "dst": "nr",
+        "op": "FMUL",
+        "src": [
+          "n",
+          "f32(1.428606765330187e-6)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d08312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 25,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 9,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "nr",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "nr"
+        }
+      },
+      "source_node": {
+        "dst": "nr",
+        "op": "NEG",
+        "src": [
+          "nr"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "509301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 26,
+      "lowered_primitive": "XOR",
+      "opcode": 5,
+      "ordered_step": 9,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "nr",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "nr"
+        }
+      },
+      "source_node": {
+        "dst": "nr",
+        "op": "NEG",
+        "src": [
+          "nr"
+        ]
+      },
+      "substep": 1,
+      "template": "exp",
+      "template_id": 4,
+      "word": "509505"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 27,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 9,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "nr",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "nr"
+        }
+      },
+      "source_node": {
+        "dst": "nr",
+        "op": "NEG",
+        "src": [
+          "nr"
+        ]
+      },
+      "substep": 2,
+      "template": "exp",
+      "template_id": 4,
+      "word": "509b02"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 28,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 10,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "r",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "nr",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "r"
+        }
+      },
+      "source_node": {
+        "dst": "r",
+        "op": "FADD",
+        "src": [
+          "r",
+          "nr"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d0a311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 29,
+      "lowered_primitive": "COPY",
+      "opcode": 0,
+      "ordered_step": 11,
+      "source_contract": {
+        "native_steps": [
+          "COPY"
+        ],
+        "op": "MOV",
+        "reads": [
+          {
+            "expression": "f32(0.001388888888888889)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "MOV",
+        "src": [
+          "f32(0.001388888888888889)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "50b300"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 30,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 12,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": []
+          },
+          {
+            "expression": "r",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FMUL",
+        "src": [
+          "poly",
+          "r"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d0c312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 31,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 13,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(0.008333333333333333)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FADD",
+        "src": [
+          "poly",
+          "f32(0.008333333333333333)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d0d311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 32,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 14,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "r",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FMUL",
+        "src": [
+          "poly",
+          "r"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d0e312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 33,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 15,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(0.041666666666666664)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FADD",
+        "src": [
+          "poly",
+          "f32(0.041666666666666664)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d0f311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 34,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 16,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "r",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FMUL",
+        "src": [
+          "poly",
+          "r"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d10312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 35,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 17,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(0.16666666666666666)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FADD",
+        "src": [
+          "poly",
+          "f32(0.16666666666666666)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d11311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 36,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 18,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "r",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FMUL",
+        "src": [
+          "poly",
+          "r"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d12312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 37,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 19,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(0.5)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FADD",
+        "src": [
+          "poly",
+          "f32(0.5)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d13311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 38,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 20,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "r",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FMUL",
+        "src": [
+          "poly",
+          "r"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d14312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 39,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 21,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(1)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FADD",
+        "src": [
+          "poly",
+          "f32(1)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d15311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 40,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 22,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "r",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FMUL",
+        "src": [
+          "poly",
+          "r"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d16312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 41,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 23,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "f32(1)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "poly"
+        }
+      },
+      "source_node": {
+        "dst": "poly",
+        "op": "FADD",
+        "src": [
+          "poly",
+          "f32(1)"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "d17311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 42,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 24,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U"
+        ],
+        "op": "BITS",
+        "reads": [
+          {
+            "expression": "poly",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "pb"
+        }
+      },
+      "source_node": {
+        "dst": "pb",
+        "op": "BITS",
+        "src": [
+          "poly"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "518301"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 43,
+      "lowered_primitive": "F2I",
+      "opcode": 22,
+      "ordered_step": 25,
+      "source_contract": {
+        "native_steps": [
+          "F2I"
+        ],
+        "op": "FTOI",
+        "reads": [
+          {
+            "expression": "n",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 2,
+          "bits_per_element": 64,
+          "shape_max": [
+            128
+          ],
+          "symbol": "ni"
+        }
+      },
+      "source_node": {
+        "dst": "ni",
+        "op": "FTOI",
+        "src": [
+          "n"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "519316"
+    },
+    {
+      "attrs": {
+        "dtype": "I64"
+      },
+      "canonical_zero": false,
+      "id": 44,
+      "lowered_primitive": "SHL",
+      "opcode": 9,
+      "ordered_step": 26,
+      "source_contract": {
+        "native_steps": [
+          "SHL"
+        ],
+        "op": "SHL64",
+        "reads": [
+          {
+            "expression": "ni",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "23",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 2,
+          "bits_per_element": 64,
+          "shape_max": [
+            128
+          ],
+          "symbol": "exponent"
+        }
+      },
+      "source_node": {
+        "dst": "exponent",
+        "op": "SHL64",
+        "src": [
+          "ni",
+          "23"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "51a209"
+    },
+    {
+      "attrs": {
+        "dtype": "I64"
+      },
+      "canonical_zero": false,
+      "id": 45,
+      "lowered_primitive": "IADD",
+      "opcode": 6,
+      "ordered_step": 27,
+      "source_contract": {
+        "native_steps": [
+          "IADD"
+        ],
+        "op": "IADD64",
+        "reads": [
+          {
+            "expression": "pb",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "exponent",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 2,
+          "bits_per_element": 64,
+          "shape_max": [
+            128
+          ],
+          "symbol": "resultbits"
+        }
+      },
+      "source_node": {
+        "dst": "resultbits",
+        "op": "IADD64",
+        "src": [
+          "pb",
+          "exponent"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "51b206"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 46,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 28,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_F"
+        ],
+        "op": "FLOAT_BITS",
+        "reads": [
+          {
+            "expression": "resultbits",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "FLOAT_BITS",
+        "src": [
+          "resultbits"
+        ]
+      },
+      "substep": 0,
+      "template": "exp",
+      "template_id": 4,
+      "word": "51c302"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 47,
+      "lowered_primitive": "FP8_PACK",
+      "opcode": 24,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "FP8_PACK"
+        ],
+        "op": "FP8_PACK",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 8,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "FP8_PACK",
+        "src": [
+          "x"
+        ]
+      },
+      "substep": 0,
+      "template": "fp8pack",
+      "template_id": 5,
+      "word": "540318"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 48,
+      "lowered_primitive": "FP8_UNPACK",
+      "opcode": 25,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "FP8_UNPACK"
+        ],
+        "op": "FP8_UNPACK",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "FP8_UNPACK",
+        "src": [
+          "x"
+        ]
+      },
+      "substep": 0,
+      "template": "fp8unpack",
+      "template_id": 6,
+      "word": "580319"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 49,
+      "lowered_primitive": "FMAX",
+      "opcode": 15,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "FMAX"
+        ],
+        "op": "FMAX",
+        "reads": [
+          {
+            "expression": "a",
+            "shape_max": []
+          },
+          {
+            "expression": "b",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "FMAX",
+        "src": [
+          "a",
+          "b"
+        ]
+      },
+      "substep": 0,
+      "template": "maximum",
+      "template_id": 7,
+      "word": "5c030f"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 50,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "a",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "b",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "FMUL",
+        "src": [
+          "a",
+          "b"
+        ]
+      },
+      "substep": 0,
+      "template": "mul",
+      "template_id": 8,
+      "word": "e00312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 51,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "NEG",
+        "src": [
+          "x"
+        ]
+      },
+      "substep": 0,
+      "template": "neg",
+      "template_id": 9,
+      "word": "640301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 52,
+      "lowered_primitive": "XOR",
+      "opcode": 5,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "NEG",
+        "src": [
+          "x"
+        ]
+      },
+      "substep": 1,
+      "template": "neg",
+      "template_id": 9,
+      "word": "640505"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 53,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "NEG",
+        "src": [
+          "x"
+        ]
+      },
+      "substep": 2,
+      "template": "neg",
+      "template_id": 9,
+      "word": "640b02"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 54,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U"
+        ],
+        "op": "BITS",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rb"
+        }
+      },
+      "source_node": {
+        "dst": "rb",
+        "op": "BITS",
+        "src": [
+          "x"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "680301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 55,
+      "lowered_primitive": "AND",
+      "opcode": 3,
+      "ordered_step": 1,
+      "source_contract": {
+        "native_steps": [
+          "AND"
+        ],
+        "op": "AND",
+        "reads": [
+          {
+            "expression": "rb",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "2147483648",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rsign"
+        }
+      },
+      "source_node": {
+        "dst": "rsign",
+        "op": "AND",
+        "src": [
+          "rb",
+          "2147483648"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "681103"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 56,
+      "lowered_primitive": "AND",
+      "opcode": 3,
+      "ordered_step": 2,
+      "source_contract": {
+        "native_steps": [
+          "AND"
+        ],
+        "op": "AND",
+        "reads": [
+          {
+            "expression": "rb",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "2139095040",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rexponent"
+        }
+      },
+      "source_node": {
+        "dst": "rexponent",
+        "op": "AND",
+        "src": [
+          "rb",
+          "2139095040"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "682103"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 57,
+      "lowered_primitive": "FCMP_EQ",
+      "opcode": 12,
+      "ordered_step": 3,
+      "source_contract": {
+        "native_steps": [
+          "FCMP_EQ"
+        ],
+        "op": "CMP_EQ",
+        "reads": [
+          {
+            "expression": "rsign",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "0",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "positive"
+        }
+      },
+      "source_node": {
+        "dst": "positive",
+        "op": "CMP_EQ",
+        "src": [
+          "rsign",
+          "0"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "68330c"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 58,
+      "lowered_primitive": "FCMP_NE",
+      "opcode": 13,
+      "ordered_step": 4,
+      "source_contract": {
+        "native_steps": [
+          "FCMP_NE"
+        ],
+        "op": "CMP_NE",
+        "reads": [
+          {
+            "expression": "rexponent",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "2139095040",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "finite"
+        }
+      },
+      "source_node": {
+        "dst": "finite",
+        "op": "CMP_NE",
+        "src": [
+          "rexponent",
+          "2139095040"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "68430d"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 59,
+      "lowered_primitive": "FCMP_GT",
+      "opcode": 10,
+      "ordered_step": 5,
+      "source_contract": {
+        "native_steps": [
+          "FCMP_GT"
+        ],
+        "op": "CMP_GT",
+        "reads": [
+          {
+            "expression": "rb",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "2129859015",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "large"
+        }
+      },
+      "source_node": {
+        "dst": "large",
+        "op": "CMP_GT",
+        "src": [
+          "rb",
+          "2129859015"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "68530a"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 60,
+      "lowered_primitive": "AND",
+      "opcode": 3,
+      "ordered_step": 6,
+      "source_contract": {
+        "native_steps": [
+          "AND"
+        ],
+        "op": "AND",
+        "reads": [
+          {
+            "expression": "positive",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "finite",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "saturate"
+        }
+      },
+      "source_node": {
+        "dst": "saturate",
+        "op": "AND",
+        "src": [
+          "positive",
+          "finite"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "686103"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 61,
+      "lowered_primitive": "AND",
+      "opcode": 3,
+      "ordered_step": 7,
+      "source_contract": {
+        "native_steps": [
+          "AND"
+        ],
+        "op": "AND",
+        "reads": [
+          {
+            "expression": "saturate",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "large",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "saturate"
+        }
+      },
+      "source_node": {
+        "dst": "saturate",
+        "op": "AND",
+        "src": [
+          "saturate",
+          "large"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "687103"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 62,
+      "lowered_primitive": "ISUB",
+      "opcode": 7,
+      "ordered_step": 8,
+      "source_contract": {
+        "native_steps": [
+          "ISUB"
+        ],
+        "op": "ISUB",
+        "reads": [
+          {
+            "expression": "2129859015",
+            "shape_max": []
+          },
+          {
+            "expression": "rb",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "seed"
+        }
+      },
+      "source_node": {
+        "dst": "seed",
+        "op": "ISUB",
+        "src": [
+          "2129859015",
+          "rb"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "688107"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 63,
+      "lowered_primitive": "SELECT",
+      "opcode": 14,
+      "ordered_step": 9,
+      "source_contract": {
+        "native_steps": [
+          "SELECT"
+        ],
+        "op": "SELECT",
+        "reads": [
+          {
+            "expression": "saturate",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "0",
+            "shape_max": []
+          },
+          {
+            "expression": "seed",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "seed"
+        }
+      },
+      "source_node": {
+        "dst": "seed",
+        "op": "SELECT",
+        "src": [
+          "saturate",
+          "0",
+          "seed"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "68910e"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 64,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 10,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_F"
+        ],
+        "op": "FLOAT_BITS",
+        "reads": [
+          {
+            "expression": "seed",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "ry"
+        }
+      },
+      "source_node": {
+        "dst": "ry",
+        "op": "FLOAT_BITS",
+        "src": [
+          "seed"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "68a302"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 65,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 11,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "ry",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rp"
+        }
+      },
+      "source_node": {
+        "dst": "rp",
+        "op": "FMUL",
+        "src": [
+          "x",
+          "ry"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "e8b312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 66,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 12,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "rp",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rn"
+        }
+      },
+      "source_node": {
+        "dst": "rn",
+        "op": "NEG",
+        "src": [
+          "rp"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "68c301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 67,
+      "lowered_primitive": "XOR",
+      "opcode": 5,
+      "ordered_step": 12,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "rp",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rn"
+        }
+      },
+      "source_node": {
+        "dst": "rn",
+        "op": "NEG",
+        "src": [
+          "rp"
+        ]
+      },
+      "substep": 1,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "68c505"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 68,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 12,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "rp",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rn"
+        }
+      },
+      "source_node": {
+        "dst": "rn",
+        "op": "NEG",
+        "src": [
+          "rp"
+        ]
+      },
+      "substep": 2,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "68cb02"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 69,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 13,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "f32(2)",
+            "shape_max": []
+          },
+          {
+            "expression": "rn",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rc"
+        }
+      },
+      "source_node": {
+        "dst": "rc",
+        "op": "FADD",
+        "src": [
+          "f32(2)",
+          "rn"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "e8d311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 70,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 14,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "ry",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "rc",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "ry"
+        }
+      },
+      "source_node": {
+        "dst": "ry",
+        "op": "FMUL",
+        "src": [
+          "ry",
+          "rc"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "e8e312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 71,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 15,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "ry",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rp"
+        }
+      },
+      "source_node": {
+        "dst": "rp",
+        "op": "FMUL",
+        "src": [
+          "x",
+          "ry"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "e8f312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 72,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 16,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "rp",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rn"
+        }
+      },
+      "source_node": {
+        "dst": "rn",
+        "op": "NEG",
+        "src": [
+          "rp"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "690301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 73,
+      "lowered_primitive": "XOR",
+      "opcode": 5,
+      "ordered_step": 16,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "rp",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rn"
+        }
+      },
+      "source_node": {
+        "dst": "rn",
+        "op": "NEG",
+        "src": [
+          "rp"
+        ]
+      },
+      "substep": 1,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "690505"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 74,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 16,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "rp",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rn"
+        }
+      },
+      "source_node": {
+        "dst": "rn",
+        "op": "NEG",
+        "src": [
+          "rp"
+        ]
+      },
+      "substep": 2,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "690b02"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 75,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 17,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "f32(2)",
+            "shape_max": []
+          },
+          {
+            "expression": "rn",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rc"
+        }
+      },
+      "source_node": {
+        "dst": "rc",
+        "op": "FADD",
+        "src": [
+          "f32(2)",
+          "rn"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "e91311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 76,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 18,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "ry",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "rc",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "ry"
+        }
+      },
+      "source_node": {
+        "dst": "ry",
+        "op": "FMUL",
+        "src": [
+          "ry",
+          "rc"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "e92312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 77,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 19,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "x",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "ry",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rp"
+        }
+      },
+      "source_node": {
+        "dst": "rp",
+        "op": "FMUL",
+        "src": [
+          "x",
+          "ry"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "e93312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 78,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 20,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "rp",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rn"
+        }
+      },
+      "source_node": {
+        "dst": "rn",
+        "op": "NEG",
+        "src": [
+          "rp"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "694301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 79,
+      "lowered_primitive": "XOR",
+      "opcode": 5,
+      "ordered_step": 20,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "rp",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rn"
+        }
+      },
+      "source_node": {
+        "dst": "rn",
+        "op": "NEG",
+        "src": [
+          "rp"
+        ]
+      },
+      "substep": 1,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "694505"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 80,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 20,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "rp",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rn"
+        }
+      },
+      "source_node": {
+        "dst": "rn",
+        "op": "NEG",
+        "src": [
+          "rp"
+        ]
+      },
+      "substep": 2,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "694b02"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 81,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 21,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "f32(2)",
+            "shape_max": []
+          },
+          {
+            "expression": "rn",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "rc"
+        }
+      },
+      "source_node": {
+        "dst": "rc",
+        "op": "FADD",
+        "src": [
+          "f32(2)",
+          "rn"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "e95311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 82,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 22,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "ry",
+            "shape_max": [
+              128
+            ]
+          },
+          {
+            "expression": "rc",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "ry"
+        }
+      },
+      "source_node": {
+        "dst": "ry",
+        "op": "FMUL",
+        "src": [
+          "ry",
+          "rc"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "e96312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 83,
+      "lowered_primitive": "COPY",
+      "opcode": 0,
+      "ordered_step": 23,
+      "source_contract": {
+        "native_steps": [
+          "COPY"
+        ],
+        "op": "MOV",
+        "reads": [
+          {
+            "expression": "ry",
+            "shape_max": [
+              128
+            ]
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [
+            128
+          ],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "MOV",
+        "src": [
+          "ry"
+        ]
+      },
+      "substep": 0,
+      "template": "reciprocal",
+      "template_id": 10,
+      "word": "697300"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 84,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U"
+        ],
+        "op": "BITS",
+        "reads": [
+          {
+            "expression": "variance",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "vb"
+        }
+      },
+      "source_node": {
+        "dst": "vb",
+        "op": "BITS",
+        "src": [
+          "variance"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6c0301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 85,
+      "lowered_primitive": "SHR",
+      "opcode": 8,
+      "ordered_step": 1,
+      "source_contract": {
+        "native_steps": [
+          "SHR"
+        ],
+        "op": "SHR",
+        "reads": [
+          {
+            "expression": "vb",
+            "shape_max": []
+          },
+          {
+            "expression": "1",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "shift"
+        }
+      },
+      "source_node": {
+        "dst": "shift",
+        "op": "SHR",
+        "src": [
+          "vb",
+          "1"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6c1108"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 86,
+      "lowered_primitive": "ISUB",
+      "opcode": 7,
+      "ordered_step": 2,
+      "source_contract": {
+        "native_steps": [
+          "ISUB"
+        ],
+        "op": "ISUB",
+        "reads": [
+          {
+            "expression": "1597463007",
+            "shape_max": []
+          },
+          {
+            "expression": "shift",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "ybits"
+        }
+      },
+      "source_node": {
+        "dst": "ybits",
+        "op": "ISUB",
+        "src": [
+          "1597463007",
+          "shift"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6c2107"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 87,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 3,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_F"
+        ],
+        "op": "FLOAT_BITS",
+        "reads": [
+          {
+            "expression": "ybits",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "y"
+        }
+      },
+      "source_node": {
+        "dst": "y",
+        "op": "FLOAT_BITS",
+        "src": [
+          "ybits"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6c3302"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 88,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 4,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "variance",
+            "shape_max": []
+          },
+          {
+            "expression": "f32(.5)",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "half"
+        }
+      },
+      "source_node": {
+        "dst": "half",
+        "op": "FMUL",
+        "src": [
+          "variance",
+          "f32(.5)"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ec4312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 89,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 5,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "y",
+            "shape_max": []
+          },
+          {
+            "expression": "y",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "yy"
+        }
+      },
+      "source_node": {
+        "dst": "yy",
+        "op": "FMUL",
+        "src": [
+          "y",
+          "y"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ec5312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 90,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 6,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "half",
+            "shape_max": []
+          },
+          {
+            "expression": "yy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "hyy"
+        }
+      },
+      "source_node": {
+        "dst": "hyy",
+        "op": "FMUL",
+        "src": [
+          "half",
+          "yy"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ec6312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 91,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 7,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "hyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nyy"
+        }
+      },
+      "source_node": {
+        "dst": "nyy",
+        "op": "NEG",
+        "src": [
+          "hyy"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6c7301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 92,
+      "lowered_primitive": "XOR",
+      "opcode": 5,
+      "ordered_step": 7,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "hyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nyy"
+        }
+      },
+      "source_node": {
+        "dst": "nyy",
+        "op": "NEG",
+        "src": [
+          "hyy"
+        ]
+      },
+      "substep": 1,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6c7505"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 93,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 7,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "hyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nyy"
+        }
+      },
+      "source_node": {
+        "dst": "nyy",
+        "op": "NEG",
+        "src": [
+          "hyy"
+        ]
+      },
+      "substep": 2,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6c7b02"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 94,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 8,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "f32(1.5)",
+            "shape_max": []
+          },
+          {
+            "expression": "nyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "corr"
+        }
+      },
+      "source_node": {
+        "dst": "corr",
+        "op": "FADD",
+        "src": [
+          "f32(1.5)",
+          "nyy"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ec8311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 95,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 9,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "y",
+            "shape_max": []
+          },
+          {
+            "expression": "corr",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "y"
+        }
+      },
+      "source_node": {
+        "dst": "y",
+        "op": "FMUL",
+        "src": [
+          "y",
+          "corr"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ec9312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 96,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 10,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "y",
+            "shape_max": []
+          },
+          {
+            "expression": "y",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "yy"
+        }
+      },
+      "source_node": {
+        "dst": "yy",
+        "op": "FMUL",
+        "src": [
+          "y",
+          "y"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "eca312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 97,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 11,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "half",
+            "shape_max": []
+          },
+          {
+            "expression": "yy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "hyy"
+        }
+      },
+      "source_node": {
+        "dst": "hyy",
+        "op": "FMUL",
+        "src": [
+          "half",
+          "yy"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ecb312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 98,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 12,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "hyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nyy"
+        }
+      },
+      "source_node": {
+        "dst": "nyy",
+        "op": "NEG",
+        "src": [
+          "hyy"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6cc301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 99,
+      "lowered_primitive": "XOR",
+      "opcode": 5,
+      "ordered_step": 12,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "hyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nyy"
+        }
+      },
+      "source_node": {
+        "dst": "nyy",
+        "op": "NEG",
+        "src": [
+          "hyy"
+        ]
+      },
+      "substep": 1,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6cc505"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 100,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 12,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "hyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nyy"
+        }
+      },
+      "source_node": {
+        "dst": "nyy",
+        "op": "NEG",
+        "src": [
+          "hyy"
+        ]
+      },
+      "substep": 2,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6ccb02"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 101,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 13,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "f32(1.5)",
+            "shape_max": []
+          },
+          {
+            "expression": "nyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "corr"
+        }
+      },
+      "source_node": {
+        "dst": "corr",
+        "op": "FADD",
+        "src": [
+          "f32(1.5)",
+          "nyy"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ecd311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 102,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 14,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "y",
+            "shape_max": []
+          },
+          {
+            "expression": "corr",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "y"
+        }
+      },
+      "source_node": {
+        "dst": "y",
+        "op": "FMUL",
+        "src": [
+          "y",
+          "corr"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ece312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 103,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 15,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "y",
+            "shape_max": []
+          },
+          {
+            "expression": "y",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "yy"
+        }
+      },
+      "source_node": {
+        "dst": "yy",
+        "op": "FMUL",
+        "src": [
+          "y",
+          "y"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ecf312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 104,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 16,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "half",
+            "shape_max": []
+          },
+          {
+            "expression": "yy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "hyy"
+        }
+      },
+      "source_node": {
+        "dst": "hyy",
+        "op": "FMUL",
+        "src": [
+          "half",
+          "yy"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ed0312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 105,
+      "lowered_primitive": "BITCAST_U",
+      "opcode": 1,
+      "ordered_step": 17,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "hyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nyy"
+        }
+      },
+      "source_node": {
+        "dst": "nyy",
+        "op": "NEG",
+        "src": [
+          "hyy"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6d1301"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 106,
+      "lowered_primitive": "XOR",
+      "opcode": 5,
+      "ordered_step": 17,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "hyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nyy"
+        }
+      },
+      "source_node": {
+        "dst": "nyy",
+        "op": "NEG",
+        "src": [
+          "hyy"
+        ]
+      },
+      "substep": 1,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6d1505"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 107,
+      "lowered_primitive": "BITCAST_F",
+      "opcode": 2,
+      "ordered_step": 17,
+      "source_contract": {
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "op": "NEG",
+        "reads": [
+          {
+            "expression": "hyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "nyy"
+        }
+      },
+      "source_node": {
+        "dst": "nyy",
+        "op": "NEG",
+        "src": [
+          "hyy"
+        ]
+      },
+      "substep": 2,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6d1b02"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 108,
+      "lowered_primitive": "FADD",
+      "opcode": 17,
+      "ordered_step": 18,
+      "source_contract": {
+        "native_steps": [
+          "FADD"
+        ],
+        "op": "FADD",
+        "reads": [
+          {
+            "expression": "f32(1.5)",
+            "shape_max": []
+          },
+          {
+            "expression": "nyy",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "corr"
+        }
+      },
+      "source_node": {
+        "dst": "corr",
+        "op": "FADD",
+        "src": [
+          "f32(1.5)",
+          "nyy"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ed2311"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": true,
+      "id": 109,
+      "lowered_primitive": "FMUL",
+      "opcode": 18,
+      "ordered_step": 19,
+      "source_contract": {
+        "native_steps": [
+          "FMUL"
+        ],
+        "op": "FMUL",
+        "reads": [
+          {
+            "expression": "y",
+            "shape_max": []
+          },
+          {
+            "expression": "corr",
+            "shape_max": []
+          }
+        ],
+        "round_point": "binary32 RNE + canonical zero",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "y"
+        }
+      },
+      "source_node": {
+        "dst": "y",
+        "op": "FMUL",
+        "src": [
+          "y",
+          "corr"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "ed3312"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 110,
+      "lowered_primitive": "COPY",
+      "opcode": 0,
+      "ordered_step": 20,
+      "source_contract": {
+        "native_steps": [
+          "COPY"
+        ],
+        "op": "MOV",
+        "reads": [
+          {
+            "expression": "y",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "MOV",
+        "src": [
+          "y"
+        ]
+      },
+      "substep": 0,
+      "template": "rsqrt",
+      "template_id": 11,
+      "word": "6d4300"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 111,
+      "lowered_primitive": "FCMP_GT",
+      "opcode": 10,
+      "ordered_step": 0,
+      "source_contract": {
+        "native_steps": [
+          "FCMP_GT"
+        ],
+        "op": "CMP_GT",
+        "reads": [
+          {
+            "expression": "b",
+            "shape_max": []
+          },
+          {
+            "expression": "a",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "win"
+        }
+      },
+      "source_node": {
+        "dst": "win",
+        "op": "CMP_GT",
+        "src": [
+          "b",
+          "a"
+        ]
+      },
+      "substep": 0,
+      "template": "winner",
+      "template_id": 12,
+      "word": "70030a"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 112,
+      "lowered_primitive": "FCMP_EQ",
+      "opcode": 12,
+      "ordered_step": 1,
+      "source_contract": {
+        "native_steps": [
+          "FCMP_EQ"
+        ],
+        "op": "CMP_EQ",
+        "reads": [
+          {
+            "expression": "b",
+            "shape_max": []
+          },
+          {
+            "expression": "a",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "equal"
+        }
+      },
+      "source_node": {
+        "dst": "equal",
+        "op": "CMP_EQ",
+        "src": [
+          "b",
+          "a"
+        ]
+      },
+      "substep": 0,
+      "template": "winner",
+      "template_id": 12,
+      "word": "70130c"
+    },
+    {
+      "attrs": {},
+      "canonical_zero": false,
+      "id": 113,
+      "lowered_primitive": "FCMP_LT",
+      "opcode": 11,
+      "ordered_step": 2,
+      "source_contract": {
+        "native_steps": [
+          "FCMP_LT"
+        ],
+        "op": "CMP_LT",
+        "reads": [
+          {
+            "expression": "bi",
+            "shape_max": []
+          },
+          {
+            "expression": "ai",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "lower"
+        }
+      },
+      "source_node": {
+        "dst": "lower",
+        "op": "CMP_LT",
+        "src": [
+          "bi",
+          "ai"
+        ]
+      },
+      "substep": 0,
+      "template": "winner",
+      "template_id": 12,
+      "word": "70230b"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 114,
+      "lowered_primitive": "AND",
+      "opcode": 3,
+      "ordered_step": 3,
+      "source_contract": {
+        "native_steps": [
+          "AND"
+        ],
+        "op": "AND",
+        "reads": [
+          {
+            "expression": "equal",
+            "shape_max": []
+          },
+          {
+            "expression": "lower",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "tie"
+        }
+      },
+      "source_node": {
+        "dst": "tie",
+        "op": "AND",
+        "src": [
+          "equal",
+          "lower"
+        ]
+      },
+      "substep": 0,
+      "template": "winner",
+      "template_id": 12,
+      "word": "703103"
+    },
+    {
+      "attrs": {
+        "dtype": "U32"
+      },
+      "canonical_zero": false,
+      "id": 115,
+      "lowered_primitive": "OR",
+      "opcode": 4,
+      "ordered_step": 4,
+      "source_contract": {
+        "native_steps": [
+          "OR"
+        ],
+        "op": "OR",
+        "reads": [
+          {
+            "expression": "win",
+            "shape_max": []
+          },
+          {
+            "expression": "tie",
+            "shape_max": []
+          }
+        ],
+        "round_point": "bit-exact movement/integer or declared converter",
+        "write": {
+          "RF_vectors_max": 1,
+          "bits_per_element": 32,
+          "shape_max": [],
+          "symbol": "out"
+        }
+      },
+      "source_node": {
+        "dst": "out",
+        "op": "OR",
+        "src": [
+          "win",
+          "tie"
+        ]
+      },
+      "substep": 0,
+      "template": "winner",
+      "template_id": 12,
+      "word": "704104"
+    }
+  ],
+  "opcodes": {
+    "AND": 3,
+    "ASSERT": 36,
+    "BITCAST_F": 2,
+    "BITCAST_U": 1,
+    "BROADCAST": 33,
+    "CONCAT": 32,
+    "CONST": 27,
+    "COPY": 0,
+    "DIV": 19,
+    "F2I": 22,
+    "FADD": 17,
+    "FCMP_EQ": 12,
+    "FCMP_GT": 10,
+    "FCMP_LT": 11,
+    "FCMP_NE": 13,
+    "FMAX": 15,
+    "FMIN": 16,
+    "FMUL": 18,
+    "FP8_PACK": 24,
+    "FP8_UNPACK": 25,
+    "I2F": 21,
+    "IADD": 6,
+    "IMOD": 39,
+    "IMUL": 38,
+    "IOTA": 28,
+    "ISUB": 7,
+    "LDEXP": 23,
+    "LOAD": 26,
+    "OR": 4,
+    "PACKET_COMMIT": 37,
+    "RESHAPE": 29,
+    "SCATTER": 35,
+    "SELECT": 14,
+    "SHL": 9,
+    "SHR": 8,
+    "SLICE": 30,
+    "SQRT": 20,
+    "TAKE": 34,
+    "TRANSPOSE": 31,
+    "XOR": 5
+  },
+  "pc_template_masks": [
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191,
+    8191
+  ],
+  "program_sha256": "ab3fe8d6469d6a1552e2eeaa9efe945c025cc35a567f0d8161e3c2a02fc59354",
+  "source_operations": 1737,
+  "templates": [
+    "add",
+    "argmax",
+    "bf16",
+    "convert",
+    "exp",
+    "fp8pack",
+    "fp8unpack",
+    "maximum",
+    "mul",
+    "neg",
+    "reciprocal",
+    "rsqrt",
+    "winner"
+  ]
+}
