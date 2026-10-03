@@ -6306,6 +6306,59 @@ def dsrom_s82_rows():
     return build(ROOT)
 
 
+def qwen_posted_kv_model(records):
+    """Size the default-off posted-write issue gate, retaining retirement fences.
+
+    The existing 64-entry write table and token assembly buffer retain ownership.
+    This candidate removes only the HBM-ACK dependency of an ordinary SU issue;
+    it keeps SU idle, barriers, END, and layer-context reuse checks unchanged.
+    Stall counters give an opportunity bound, not a measured speedup.
+    """
+    rows = []
+    pins = {}
+    for filename in records:
+        path = Path(filename)
+        rec = json.loads(path.read_text())
+        if rec.get("configuration") != "REAL_MEM":
+            raise ValueError("posted-write sizing requires a REAL_MEM record")
+        pins[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
+        for stage, data in rec["stages"].items():
+            if stage == "E":
+                continue
+            cycles = data["cycles"]
+            opportunity = max(m["stall_drain"] for m in data["memory"].values())
+            rows.append(dict(position=rec["position"], stage=stage, baseline_cycles=cycles,
+                             baseline_qualified=rec["status"] == "pass" and rec["source_stable"],
+                             possible_saved_cycles=[0, opportunity],
+                             counter_opportunity_cycles=[cycles - opportunity, cycles],
+                             counter_opportunity_rate_pct=100 * opportunity / (cycles - opportunity),
+                             measured_saved_cycles=None))
+    return dict(schema="opentallas.uarch.qwen_posted_kv.v1", rows=rows, source_sha256=pins,
+                candidate="POSTED_KV=0 by default; release ordinary SU issue from write-done",
+                fences=["SU idle before next ordinary SU operation",
+                        "real tagged/generation-checked write-done before every barrier and END",
+                        "retire all old read/write/assembly debt before layer-context reuse",
+                        "next-token row reads and rollback cannot cross the retained END fence"],
+                resources=dict(replicas=4, new_macs_per_cycle=0, new_memory_bytes_per_cycle=0,
+                               new_boundary_bits_per_cycle=0, new_routing_tracks=0,
+                               new_muxes=0, new_demuxes=0, new_fanout_loads=0,
+                               new_storage_bits=0, incremental_area_mm2=0,
+                               area_basis="compile-time issue predicate specialization; existing buffers unchanged",
+                               slot_fit="reuse current core and KV service slots",
+                               existing_write_entries_per_die=64,
+                               existing_su_input_bytes_per_cycle=256,
+                               existing_hbm_write_sector_bytes=32,
+                               token_write_sectors_per_die=136),
+                latency=dict(added_cycles=0, saved_cycles="bounded by measured stall_drain; fence residual unknown",
+                             stream_hz=1.2e9, serial_hz=0.9e9,
+                             clock_policy="SS setup 60ps / FF hold 25ps; unchanged, contextual closure pending"),
+                bridge_pipeline="not included: ordinary issue still requires su_idle; needs separate credit sizing",
+                adoption=False, measured_composed_gain_pct=None,
+                qualification=["all pinned baseline runs terminal before successor launch",
+                               "P0/P255/P1023 X and HBM writeback exact; no early visibility or rollback",
+                               "measured gain >=1% after token composition", "contextual SS/FF and hub routing"])
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
@@ -6318,6 +6371,7 @@ def main(argv=None):
     ap.add_argument("--sweep", action="store_true")
     ap.add_argument("--out")
     ap.add_argument("--qwen", action="store_true", help="the Qwen3-8B ROM die rows only")
+    ap.add_argument("--qwen-posted-kv-baseline", action="append", help="REAL_MEM record for default-off posted-write sizing")
     ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM comparators only")
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
@@ -6328,8 +6382,11 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
-    if a.dsrom_s82:
-        payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"
+    if a.dsrom_s82 or a.qwen_posted_kv_baseline:
+        if a.dsrom_s82:
+            payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"
+        else:
+            payload = json.dumps(qwen_posted_kv_model(a.qwen_posted_kv_baseline), indent=2) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(payload)
