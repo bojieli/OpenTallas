@@ -1,0 +1,11 @@
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/rom/ot_rom_pkg_ctrl_x.sv
+hierarchy -check -top ot_rom_pkg_ctrl_x -chparam AW 30 -chparam COMBINE_IN 0 -chparam FLIT 512 -chparam FWD_TOKEN 1 -chparam HID_DEST 0 -chparam KVW 32768 -chparam MAXU 64 -chparam NW 21 -chparam PKG_ID 0 -chparam RESULT_PARTS 1 -chparam RES_DEST 0 -chparam ROW0 0 -chparam RXB 0 -chparam RXWORDS 1 -chparam SEND_HIDDEN 0 -chparam SEND_RESULT 0 -chparam SOURCE 0 -chparam TXB 0 -chparam USER_W 10 -chparam VWA 15 -chparam XWORDS 1
+synth -top ot_rom_pkg_ctrl_x -flatten
+rename -wire
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -D 833
+setundef -zero
+splitnets -ports
+opt_clean
+tee -o /home/ubuntu/rcl-20261003/runs/ds/ds12_pkg_ctrl_u64/named/stat.txt stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_verilog -noattr /home/ubuntu/rcl-20261003/runs/ds/ds12_pkg_ctrl_u64/named/mapped.v

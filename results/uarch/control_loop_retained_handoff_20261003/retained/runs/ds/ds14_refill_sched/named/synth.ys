@@ -1,0 +1,11 @@
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/chip/ot_chip_v41x_window_refill_schedule.sv
+hierarchy -check -top ot_chip_v41x_window_refill_schedule -chparam ALLOW_RETAIN 0 -chparam MAX_CONTEXT 1048576 -chparam POS_W 21 -chparam USER_W 10
+synth -top ot_chip_v41x_window_refill_schedule -flatten
+rename -wire
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -D 833
+setundef -zero
+splitnets -ports
+opt_clean
+tee -o /home/ubuntu/rcl-20261003/runs/ds/ds14_refill_sched/named/stat.txt stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_verilog -noattr /home/ubuntu/rcl-20261003/runs/ds/ds14_refill_sched/named/mapped.v

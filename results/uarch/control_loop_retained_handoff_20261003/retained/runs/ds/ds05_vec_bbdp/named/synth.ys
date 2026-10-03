@@ -1,0 +1,28 @@
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_vec.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_sfu.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/proto/ot_fp32_add_rne_pipe.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/v41/ot_hdc_fsqrt.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fastfp_lat.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fp32_add_lat.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fastfp.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/../jobs/stubs/ot_hdc_v41x_vec_lane.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/../jobs/stubs/ot_hdc_v41x_vec_red.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/../jobs/stubs/ot_hdc_v41x_vec_side.sv
+blackbox ot_hdc_v41x_vec_lane
+blackbox ot_hdc_v41x_vec_red
+blackbox ot_hdc_v41x_vec_side
+hierarchy -check -top ot_hdc_v41x_vec -chparam AW 30 -chparam LV 7 -chparam M 64 -chparam N 256 -chparam NW 21
+synth -top ot_hdc_v41x_vec -flatten
+expose -evert t:ot_hdc_v41x_vec_lane t:$paramod*ot_hdc_v41x_vec_lane* t:ot_hdc_v41x_vec_red t:$paramod*ot_hdc_v41x_vec_red* t:ot_hdc_v41x_vec_side t:$paramod*ot_hdc_v41x_vec_side*
+rename -wire
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -D 1111
+setundef -zero
+splitnets -ports
+opt_clean
+tee -o /home/ubuntu/rcl-20261003/runs/ds/ds05_vec_bbdp/named/stat.txt stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_verilog -noattr /home/ubuntu/rcl-20261003/runs/ds/ds05_vec_bbdp/named/mapped.v

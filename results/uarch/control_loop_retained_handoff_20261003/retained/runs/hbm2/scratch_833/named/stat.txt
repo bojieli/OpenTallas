@@ -1,0 +1,31 @@
+
+10. Printing statistics.
+
+=== ot_gpu_scratch_service ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     2586        - wires
+     2586        - wire bits
+     1553        - public wires
+     1553        - public wire bits
+     1041        - ports
+     1041        - port bits
+     1549  232.886 cells
+        2    0.175   AND3x1_ASAP7_75t_R
+        1    0.117   AND5x1_ASAP7_75t_R
+      512    59.72   AO32x1_ASAP7_75t_R
+        2    0.758   DFFASRHQNx1_ASAP7_75t_R
+      512  149.299   DFFHQNx1_ASAP7_75t_R
+      515   22.526   INVx1_ASAP7_75t_R
+        1    0.087   NOR2x1_ASAP7_75t_R
+        1    0.117   OAI21x1_ASAP7_75t_R
+        1    0.087   OR3x1_ASAP7_75t_R
+        2        -   ot_sram_1r1w_1024x256_m2_r2c2
+
+   Area for cell type \ot_sram_1r1w_1024x256_m2_r2c2 is unknown!
+
+   Chip area for module '\ot_gpu_scratch_service': 232.886340
+     of which used for sequential elements: 150.057360 (64.43%)
+

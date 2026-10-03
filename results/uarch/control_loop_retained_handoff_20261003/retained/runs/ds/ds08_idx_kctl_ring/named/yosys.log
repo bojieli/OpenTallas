@@ -1,0 +1,55 @@
+Warning: Replacing memory \nx_addr with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:243
+Warning: Replacing memory \nx_off with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:242
+Warning: Replacing memory \nx_len with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:241
+Warning: Replacing memory \nx_hi with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:240
+Warning: Replacing memory \g_rem with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:211
+Warning: Replacing memory \g_bidx with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:211
+Warning: Replacing memory \g_abs with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:211
+Warning: Replacing memory \rr_s with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:196, /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:194
+Warning: Replacing memory \g_hi with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv:181
+Warning: Replacing memory \nx_addr with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:241
+Warning: Replacing memory \nx_len with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:240
+Warning: Replacing memory \nx_hi with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:239
+Warning: Replacing memory \g_rem with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:214
+Warning: Replacing memory \g_bidx with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:214
+Warning: Replacing memory \g_abs with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:214
+Warning: Replacing memory \rr_s with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:201, /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:199
+Warning: Replacing memory \g_hi with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:186
+Warning: Replacing memory \sbuf with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:325
+Warning: Replacing memory \fr with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:524
+Warning: Replacing memory \fw with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:529, /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:524
+Warning: Replacing memory \fn with list of registers. See /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:524
+Warning: Drivers conflicting with a constant 1'0 driver:
+    port Q[0] of cell $procdff$59622 ($dff)
+    port Q[1] of cell $procdff$59622 ($dff)
+    port Q[2] of cell $procdff$59622 ($dff)
+    port Q[3] of cell $procdff$59622 ($dff)
+    port Q[4] of cell $procdff$59622 ($dff)
+    port Q[6] of cell $procdff$59622 ($dff)
+    port Q[7] of cell $procdff$59622 ($dff)
+    port Q[8] of cell $procdff$59622 ($dff)
+    port Q[9] of cell $procdff$59622 ($dff)
+    port Q[10] of cell $procdff$59622 ($dff)
+    port Q[11] of cell $procdff$59622 ($dff)
+    port Q[12] of cell $procdff$59622 ($dff)
+    port Q[13] of cell $procdff$59622 ($dff)
+    port Q[14] of cell $procdff$59622 ($dff)
+    port Q[15] of cell $procdff$59622 ($dff)
+    port Q[16] of cell $procdff$59622 ($dff)
+    port Q[17] of cell $procdff$59622 ($dff)
+    port Q[18] of cell $procdff$59622 ($dff)
+    port Q[19] of cell $procdff$59622 ($dff)
+    port Q[20] of cell $procdff$59622 ($dff)
+    port Q[21] of cell $procdff$59622 ($dff)
+    port Q[22] of cell $procdff$59622 ($dff)
+    port Q[23] of cell $procdff$59622 ($dff)
+    port Q[24] of cell $procdff$59622 ($dff)
+    port Q[25] of cell $procdff$59622 ($dff)
+    port Q[26] of cell $procdff$59622 ($dff)
+    port Q[27] of cell $procdff$59622 ($dff)
+    port Q[28] of cell $procdff$59622 ($dff)
+    port Q[29] of cell $procdff$59622 ($dff)
+    port Q[30] of cell $procdff$59622 ($dff)
+    port Q[31] of cell $procdff$59622 ($dff)
+Warning: Drivers conflicting with a constant 1'1 driver:
+    port Q[5] of cell $procdff$59622 ($dff)

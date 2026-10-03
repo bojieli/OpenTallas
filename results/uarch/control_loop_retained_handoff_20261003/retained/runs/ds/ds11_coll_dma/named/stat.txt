@@ -1,0 +1,56 @@
+
+13. Printing statistics.
+
+=== ot_w15_coll_dma ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    26110        - wires
+    26110        - wire bits
+    18273        - public wires
+    18273        - public wire bits
+    12879        - ports
+    12879        - port bits
+    11171 1.48E+03 cells
+      241   21.083   AND2x2_ASAP7_75t_R
+      350   30.618   AND3x1_ASAP7_75t_R
+       11    1.123   AND4x1_ASAP7_75t_R
+       13    1.516   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+     2543  222.462   AO21x1_ASAP7_75t_R
+       60    8.748   AO221x1_ASAP7_75t_R
+        2     0.35   AO222x2_ASAP7_75t_R
+     2056  269.788   AO22x1_ASAP7_75t_R
+        1    0.233   AO31x2_ASAP7_75t_R
+      282   32.892   AO32x1_ASAP7_75t_R
+        1    0.175   AOI211x1_ASAP7_75t_R
+       93   10.848   AOI21x1_ASAP7_75t_R
+        3    0.612   AOI221x1_ASAP7_75t_R
+        5    0.729   AOI22x1_ASAP7_75t_R
+     1319  500.007   DFFASRHQNx1_ASAP7_75t_R
+      915   40.022   INVx1_ASAP7_75t_R
+      168   22.045   MAJx2_ASAP7_75t_R
+      124   10.848   NAND2x1_ASAP7_75t_R
+        4    0.642   NAND3x1_ASAP7_75t_R
+     1769  154.752   NOR2x1_ASAP7_75t_R
+        3    0.481   NOR3x1_ASAP7_75t_R
+       33    3.849   OA211x2_ASAP7_75t_R
+      149   15.207   OA21x2_ASAP7_75t_R
+        1    0.233   OA221x2_ASAP7_75t_R
+        6     1.05   OA222x2_ASAP7_75t_R
+        3    0.437   OA22x2_ASAP7_75t_R
+        7    1.531   OA31x2_ASAP7_75t_R
+        2    0.292   OA33x2_ASAP7_75t_R
+      135   15.746   OAI21x1_ASAP7_75t_R
+        6    0.875   OAI22x1_ASAP7_75t_R
+      127    11.11   OR2x2_ASAP7_75t_R
+       58    5.074   OR3x1_ASAP7_75t_R
+      150   15.309   OR4x1_ASAP7_75t_R
+       46    5.365   OR5x1_ASAP7_75t_R
+      333   53.407   XNOR2x2_ASAP7_75t_R
+      151   24.217   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_w15_coll_dma': 1483.908660
+     of which used for sequential elements: 500.006520 (33.70%)
+

@@ -1,0 +1,34 @@
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_rom_elem_q_w10.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_rom_elem_w10.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_segtree.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/proto/ot_fp32_add_rne_pipe.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_segtree2.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_fadd.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/common/ot_prefix.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_bf16_lanes.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_chain.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_bf16_lanes2.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_chain2.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_bmul2.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_bterm.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/v41rom/ot_v41_bterm2_w10.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_cg.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/../jobs/stubs/ot_rom_4096x274_m8.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/../jobs/stubs/ot_rom_8192x274_m8.sv
+blackbox ot_rom_4096x274_m8
+blackbox ot_rom_8192x274_m8
+hierarchy -check -top ot_v41_rom_elem_q_w10 -chparam EARLY 1 -chparam FAST 1 -chparam MTP 1 -chparam NB 2 -chparam PP 1
+synth -top ot_v41_rom_elem_q_w10 -flatten
+expose -evert t:ot_rom_4096x274_m8 t:$paramod*ot_rom_4096x274_m8* t:ot_rom_8192x274_m8 t:$paramod*ot_rom_8192x274_m8*
+rename -wire
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -D 833
+setundef -zero
+splitnets -ports
+opt_clean
+tee -o /home/ubuntu/rcl-20261003/runs/ds/ds15_elem_q/named/stat.txt stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_verilog -noattr /home/ubuntu/rcl-20261003/runs/ds/ds15_elem_q/named/mapped.v

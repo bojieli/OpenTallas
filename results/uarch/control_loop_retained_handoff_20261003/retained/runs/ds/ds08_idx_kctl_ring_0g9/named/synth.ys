@@ -1,0 +1,12 @@
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv
+hierarchy -check -top ot_hdc_v41x_idx_kctl_ring -chparam AW 30 -chparam BEATW 4 -chparam GA 24 -chparam HW 23 -chparam LENW 4 -chparam NPC 32 -chparam TAGW 16 -chparam WB 32
+synth -top ot_hdc_v41x_idx_kctl_ring -flatten
+rename -wire
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -D 1111
+setundef -zero
+splitnets -ports
+opt_clean
+tee -o /home/ubuntu/rcl-20261003/runs/ds/ds08_idx_kctl_ring_0g9/named/stat.txt stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_verilog -noattr /home/ubuntu/rcl-20261003/runs/ds/ds08_idx_kctl_ring_0g9/named/mapped.v

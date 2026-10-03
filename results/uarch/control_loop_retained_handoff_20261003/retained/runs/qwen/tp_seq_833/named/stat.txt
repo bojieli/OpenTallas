@@ -1,0 +1,52 @@
+
+10. Printing statistics.
+
+=== ot_qwen_tp_seq_w12 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    12523        - wires
+    12523        - wire bits
+     2466        - public wires
+     2466        - public wire bits
+     2371        - ports
+     2371        - port bits
+    11217 1.67E+03 cells
+      519   45.402   AND2x2_ASAP7_75t_R
+      591   51.701   AND3x1_ASAP7_75t_R
+        6    0.612   AND4x1_ASAP7_75t_R
+        6      0.7   AND5x1_ASAP7_75t_R
+     2826  247.218   AO21x1_ASAP7_75t_R
+        4    0.583   AO221x1_ASAP7_75t_R
+       13    1.706   AO22x1_ASAP7_75t_R
+        2    0.233   AO32x1_ASAP7_75t_R
+        4      0.7   AOI211x1_ASAP7_75t_R
+       25    2.916   AOI21x1_ASAP7_75t_R
+        2    0.408   AOI221x1_ASAP7_75t_R
+        6    0.875   AOI22x1_ASAP7_75t_R
+      761   288.48   DFFASRHQNx1_ASAP7_75t_R
+     2048  597.197   DFFHQNx1_ASAP7_75t_R
+      700   30.618   INVx1_ASAP7_75t_R
+       21    2.756   MAJx2_ASAP7_75t_R
+       96    8.398   NAND2x1_ASAP7_75t_R
+        1     0.16   NAND3x1_ASAP7_75t_R
+     2172  190.007   NOR2x1_ASAP7_75t_R
+        1     0.16   NOR3x1_ASAP7_75t_R
+       50    5.832   OA211x2_ASAP7_75t_R
+       82    8.369   OA21x2_ASAP7_75t_R
+      512    89.58   OA222x2_ASAP7_75t_R
+        2    0.292   OA22x2_ASAP7_75t_R
+        3    0.656   OA31x2_ASAP7_75t_R
+      543   63.336   OAI21x1_ASAP7_75t_R
+       19     2.77   OAI22x1_ASAP7_75t_R
+       28    2.449   OR2x2_ASAP7_75t_R
+       36    3.149   OR3x1_ASAP7_75t_R
+        8    0.816   OR4x1_ASAP7_75t_R
+        3     0.35   OR5x1_ASAP7_75t_R
+       70   11.227   XNOR2x2_ASAP7_75t_R
+       57    9.142   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_qwen_tp_seq_w12': 1668.797640
+     of which used for sequential elements: 885.676680 (53.07%)
+

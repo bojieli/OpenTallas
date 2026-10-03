@@ -1,0 +1,62 @@
+
+15. Printing statistics.
+
+=== ot_v41_spine_w17w10 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   622150        - wires
+   622150        - wire bits
+    89467        - public wires
+    89467        - public wire bits
+    22482        - ports
+    22482        - port bits
+   590607 8.22E+04 cells
+       12        -   $scopeinfo
+    11702 1.02E+03   AND2x2_ASAP7_75t_R
+     6555  573.431   AND3x1_ASAP7_75t_R
+      762    77.77   AND4x1_ASAP7_75t_R
+      332   38.724   AND5x1_ASAP7_75t_R
+      179   41.757   AO211x2_ASAP7_75t_R
+   146339 1.28E+04   AO21x1_ASAP7_75t_R
+      916  133.553   AO221x1_ASAP7_75t_R
+      168   29.393   AO222x2_ASAP7_75t_R
+     3747  491.681   AO22x1_ASAP7_75t_R
+      242   56.454   AO31x2_ASAP7_75t_R
+     2044  238.412   AO32x1_ASAP7_75t_R
+       36    5.249   AO33x2_ASAP7_75t_R
+      211   36.917   AOI211x1_ASAP7_75t_R
+     2653  309.446   AOI21x1_ASAP7_75t_R
+       36    7.348   AOI221x1_ASAP7_75t_R
+      757  110.371   AOI22x1_ASAP7_75t_R
+        4    0.292   BUFx2_ASAP7_75t_R
+    28280 1.07E+04   DFFASRHQNx1_ASAP7_75t_R
+   105062 3.06E+04   DFFHQNx1_ASAP7_75t_R
+    69706  3048.94   INVx1_ASAP7_75t_R
+     9875  1.3E+03   MAJx2_ASAP7_75t_R
+    18243  1.6E+03   NAND2x1_ASAP7_75t_R
+      245   39.293   NAND3x1_ASAP7_75t_R
+    67558 5.91E+03   NOR2x1_ASAP7_75t_R
+      114   18.283   NOR3x1_ASAP7_75t_R
+     5750   670.68   OA211x2_ASAP7_75t_R
+    12797 1.31E+03   OA21x2_ASAP7_75t_R
+        8    1.866   OA221x2_ASAP7_75t_R
+      369    64.56   OA222x2_ASAP7_75t_R
+     1562   227.74   OA22x2_ASAP7_75t_R
+      256   55.987   OA31x2_ASAP7_75t_R
+       27    3.937   OA33x2_ASAP7_75t_R
+    11153  1.3E+03   OAI21x1_ASAP7_75t_R
+      917  133.699   OAI22x1_ASAP7_75t_R
+    48182 4.21E+03   OR2x2_ASAP7_75t_R
+     5354  468.368   OR3x1_ASAP7_75t_R
+      753   76.851   OR4x1_ASAP7_75t_R
+      278   32.426   OR5x1_ASAP7_75t_R
+    19391 3.11E+03   XNOR2x2_ASAP7_75t_R
+     8032 1.29E+03   XOR2x2_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_v41_spine_w17w10': 82196.995320
+     of which used for sequential elements: 41356.461600 (50.31%)
+

@@ -1,0 +1,60 @@
+
+24. Printing statistics.
+
+=== ot_hdc_v41x_vec ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   734348        - wires
+   734348        - wire bits
+   669192        - public wires
+   669192        - public wire bits
+   486782        - ports
+   486782        - port bits
+    93622 1.44E+04 cells
+       16        -   $scopeinfo
+     1167  102.089   AND2x2_ASAP7_75t_R
+      583   51.001   AND3x1_ASAP7_75t_R
+      120   12.247   AND4x1_ASAP7_75t_R
+       45    5.249   AND5x1_ASAP7_75t_R
+       11    2.566   AO211x2_ASAP7_75t_R
+     4807  420.516   AO21x1_ASAP7_75t_R
+      214   31.201   AO221x1_ASAP7_75t_R
+       28    4.899   AO222x2_ASAP7_75t_R
+      320    41.99   AO22x1_ASAP7_75t_R
+       16    3.732   AO31x2_ASAP7_75t_R
+      586   68.351   AO32x1_ASAP7_75t_R
+        1    0.146   AO33x2_ASAP7_75t_R
+       13    2.274   AOI211x1_ASAP7_75t_R
+      854   99.611   AOI21x1_ASAP7_75t_R
+        2    0.408   AOI221x1_ASAP7_75t_R
+      247   36.013   AOI22x1_ASAP7_75t_R
+      376  142.534   DFFASRHQNx1_ASAP7_75t_R
+    32538 9.49E+03   DFFHQNx1_ASAP7_75t_R
+    30127 1.32E+03   INVx1_ASAP7_75t_R
+     1700  223.074   MAJx2_ASAP7_75t_R
+     1180  103.226   NAND2x1_ASAP7_75t_R
+       94   15.076   NAND3x1_ASAP7_75t_R
+     3693  323.064   NOR2x1_ASAP7_75t_R
+       36    5.774   NOR3x1_ASAP7_75t_R
+      725   84.564   OA211x2_ASAP7_75t_R
+     1349  137.679   OA21x2_ASAP7_75t_R
+       42    7.348   OA222x2_ASAP7_75t_R
+      388    56.57   OA22x2_ASAP7_75t_R
+       27    5.905   OA31x2_ASAP7_75t_R
+        4    0.583   OA33x2_ASAP7_75t_R
+     2158  251.709   OAI21x1_ASAP7_75t_R
+      289   42.136   OAI22x1_ASAP7_75t_R
+     2718  237.771   OR2x2_ASAP7_75t_R
+     1199  104.889   OR3x1_ASAP7_75t_R
+      222   22.657   OR4x1_ASAP7_75t_R
+       79    9.215   OR5x1_ASAP7_75t_R
+     4139  663.813   XNOR2x2_ASAP7_75t_R
+     1509  242.013   XOR2x2_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_hdc_v41x_vec': 14367.729780
+     of which used for sequential elements: 9630.614880 (67.03%)
+

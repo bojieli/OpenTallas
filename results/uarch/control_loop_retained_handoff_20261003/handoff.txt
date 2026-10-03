@@ -1,0 +1,24 @@
+Retained control-loop outcome and HA6 price — partial campaign, no new job
+
+45 AG128 terminal records archived unchanged with raw logs/Tcl/synthesis records and matching source blobs. 44 source closures byte match; the old ds03_rom_adapt patched source does not. The retained emitter differs from feffc134 and is archived as actually used; no historical immutable Docker ID assumed from current tag inspection. Live screens remain listed and have no invented verdict.
+
+Observed source-bound SS placed screens (not SSFF sign-off):
+- HBM DS/Qwen issue internal paths around750–815MHz, bulkcopy590–682MHz; several focused issue endpoints start at operand inputs and require actual parent timing.
+- W6 protected fence429MHz, KV lifecycle overall internal458MHz (focused control514MHz), MTP accept444MHz. Keep full mutable-state protection, fault/debt/quarantine semantics; no unprotected FF shortcut is selected.
+- DS one-shot pop474MHz, index drain focused671MHz, element need walker635MHz. No naive two-edge issue/walker that halves steady throughput.
+- Qwen one-shot pop about490MHz. Full selected spine/core/vector and HBM W2/RF/fullSM results are still pending or failed; unknown is not PASS.
+
+Retained routed Qwen TP-sequencer:
+- 833ps: SS reg->reg+6.99ps and FF+10.60ps; overall SS-73.69ps is the output boundary. Entire block is NOT SS PASS.
+- 1111ps: overall SS+72.07ps / FF+3.22ps; retained routed variant closes. Do not adopt a new Fmax from fixed-netlist slack sensitivity.
+- Placed negative margins under150ps require route evidence before rejection. No new route launched here; functional/performance gates precede any new physical mutation.
+
+HA6:
+- Reuse27d86 closed ot_ratio_cdc_fifo at related 1.2/0.9GHz; stale-75ps predecessor is historical, no new FIFO fix/job.
+- Worst positive CDC charge2 slow destination cycles+2 fast destination cycles:2.222222ns forward,1.666667ns reverse,3.888889ns summed round trip. Versus old4/5 charge,4.722222ns saved once per actual boundary pair. Actual multiplicity/overlap/stalls must come from measured serial critical path; never add a saving twice.
+- LAT3 dependent add3.333333ns at0.9GHz versus2.749771ns conditionally at1.091GHz;0.583562ns arithmetic difference per dependent add, no cycle count change. The study75% serial share is ASSUMED; its13.1302% local-time reduction is a hypothesis, not measured token gain.
+- 27d86 /3:/4 clock/reset/physical closure does not qualify a different1.091GHz domain. Re-enroll actual LAT3 units, clock phase/CDC/reset and critical path before any clock adoption. No overlap with Beauvoir GALS.
+
+Fix prices are CONDITIONAL, not executed or measured: issue+1edge/op; bulkcopy+1edge/stream; FIFO head+1edge/collective fill; index next-run+1edge/burst; need-walker lookahead+1edge/sweep; KV tag lookup+1edge/lease; adapter setup+1..2edges/op. Require exact protected semantics and preserve throughput; actual full-program counts, added hardware/route and composed gain are unmeasured. Old failures remain unchanged.
+
+Binding addendum applies: EXACT -> measured serial critical path including wires/CDC/credits/refresh -> composed area -> routed corridor -> SS60/FF25 in context -> measured composed gain>=1%. Model ladder rates are excluded from results. No main edit, placement mutation, inference, duplicate screen or new P&R. W2 unique PID304073 and admitted follow-on1884466 are preserved independently.

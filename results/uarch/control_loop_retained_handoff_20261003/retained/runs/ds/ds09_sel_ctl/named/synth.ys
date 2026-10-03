@@ -1,0 +1,13 @@
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_sel.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv
+read_verilog -sv -DV41_ATT_CUT -I/home/ubuntu/rcl-20261003/src/rtl/hdc/v41 /home/ubuntu/rcl-20261003/src/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv
+hierarchy -check -top ot_hdc_v41x_sel_ctl -chparam K 2048 -chparam Q 4
+synth -top ot_hdc_v41x_sel_ctl -flatten
+rename -wire
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -D 833
+setundef -zero
+splitnets -ports
+opt_clean
+tee -o /home/ubuntu/rcl-20261003/runs/ds/ds09_sel_ctl/named/stat.txt stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_verilog -noattr /home/ubuntu/rcl-20261003/runs/ds/ds09_sel_ctl/named/mapped.v

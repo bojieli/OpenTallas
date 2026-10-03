@@ -1,0 +1,61 @@
+
+9. Printing statistics.
+
+=== ot_gpu_router_topk ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   179523        - wires
+   179523        - wire bits
+     1897        - public wires
+     1897        - public wire bits
+      571        - ports
+      571        - port bits
+   177819 2.27E+04 cells
+       66        -   $scopeinfo
+    19376  1.7E+03   AND2x2_ASAP7_75t_R
+     1574  137.694   AND3x1_ASAP7_75t_R
+      791   80.729   AND4x1_ASAP7_75t_R
+      206   24.028   AND5x1_ASAP7_75t_R
+       68   15.863   AO211x2_ASAP7_75t_R
+    37654 3.29E+03   AO21x1_ASAP7_75t_R
+     1467  213.889   AO221x1_ASAP7_75t_R
+      857  149.941   AO222x2_ASAP7_75t_R
+     4668  612.535   AO22x1_ASAP7_75t_R
+      117   27.294   AO31x2_ASAP7_75t_R
+     2031  236.896   AO32x1_ASAP7_75t_R
+       11    1.604   AO33x2_ASAP7_75t_R
+      293   51.263   AOI211x1_ASAP7_75t_R
+     1800  209.952   AOI21x1_ASAP7_75t_R
+      158   32.251   AOI221x1_ASAP7_75t_R
+     2709  394.972   AOI22x1_ASAP7_75t_R
+     5390 2.04E+03   DFFASRHQNx1_ASAP7_75t_R
+    25346 7.39E+03   DFFHQNx1_ASAP7_75t_R
+    24852 1.09E+03   INVx1_ASAP7_75t_R
+      695   91.198   MAJx2_ASAP7_75t_R
+     5951  520.593   NAND2x1_ASAP7_75t_R
+       70   11.227   NAND3x1_ASAP7_75t_R
+    18692 1.64E+03   NOR2x1_ASAP7_75t_R
+      111   17.802   NOR3x1_ASAP7_75t_R
+     4255  496.303   OA211x2_ASAP7_75t_R
+     5107   521.22   OA21x2_ASAP7_75t_R
+        6      1.4   OA221x2_ASAP7_75t_R
+      962  168.312   OA222x2_ASAP7_75t_R
+     1216  177.293   OA22x2_ASAP7_75t_R
+      132   28.868   OA31x2_ASAP7_75t_R
+       43    6.269   OA33x2_ASAP7_75t_R
+     2511  292.883   OAI21x1_ASAP7_75t_R
+     1166  170.003   OAI22x1_ASAP7_75t_R
+     1856  162.363   OR2x2_ASAP7_75t_R
+     1801  157.551   OR3x1_ASAP7_75t_R
+     1204   122.88   OR4x1_ASAP7_75t_R
+      327   38.141   OR5x1_ASAP7_75t_R
+     1964  314.986   XNOR2x2_ASAP7_75t_R
+      316    50.68   XOR2x2_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_gpu_router_topk': 22684.205520
+     of which used for sequential elements: 9434.134800 (41.59%)
+

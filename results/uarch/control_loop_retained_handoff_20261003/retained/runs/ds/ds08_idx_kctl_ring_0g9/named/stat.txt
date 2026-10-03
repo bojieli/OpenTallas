@@ -1,0 +1,56 @@
+
+11. Printing statistics.
+
+=== ot_hdc_v41x_idx_kctl_ring ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    76522        - wires
+    76522        - wire bits
+     2614        - public wires
+     2614        - public wire bits
+     2520        - ports
+     2520        - port bits
+    75436  9.5E+03 cells
+     3354  293.408   AND2x2_ASAP7_75t_R
+     3780  330.674   AND3x1_ASAP7_75t_R
+     1057  107.877   AND4x1_ASAP7_75t_R
+      440   51.322   AND5x1_ASAP7_75t_R
+    10326  903.318   AO21x1_ASAP7_75t_R
+     1380  201.204   AO221x1_ASAP7_75t_R
+       91   15.921   AO222x2_ASAP7_75t_R
+     1095  143.686   AO22x1_ASAP7_75t_R
+        4    0.933   AO31x2_ASAP7_75t_R
+      419   48.872   AO32x1_ASAP7_75t_R
+       17    2.479   AO33x2_ASAP7_75t_R
+       89   15.571   AOI211x1_ASAP7_75t_R
+     1561  182.075   AOI21x1_ASAP7_75t_R
+       26    5.307   AOI221x1_ASAP7_75t_R
+      336   48.989   AOI22x1_ASAP7_75t_R
+    10559 3.08E+03   DFFHQNx1_ASAP7_75t_R
+     6759  295.639   INVx1_ASAP7_75t_R
+      994  130.433   MAJx2_ASAP7_75t_R
+     4072  356.219   NAND2x1_ASAP7_75t_R
+       77   12.349   NAND3x1_ASAP7_75t_R
+     5399  472.305   NOR2x1_ASAP7_75t_R
+       56    8.981   NOR3x1_ASAP7_75t_R
+     3056  356.452   OA211x2_ASAP7_75t_R
+     2952  301.281   OA21x2_ASAP7_75t_R
+        1    0.233   OA221x2_ASAP7_75t_R
+      961  168.137   OA222x2_ASAP7_75t_R
+      825  120.285   OA22x2_ASAP7_75t_R
+        1    0.219   OA31x2_ASAP7_75t_R
+      162    23.62   OA33x2_ASAP7_75t_R
+     3221  375.697   OAI21x1_ASAP7_75t_R
+      914  133.261   OAI22x1_ASAP7_75t_R
+     1796  157.114   OR2x2_ASAP7_75t_R
+     4748  415.355   OR3x1_ASAP7_75t_R
+      655   66.849   OR4x1_ASAP7_75t_R
+      255   29.743   OR5x1_ASAP7_75t_R
+     2413  386.997   XNOR2x2_ASAP7_75t_R
+     1585  254.202   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hdc_v41x_idx_kctl_ring': 9496.012320
+     of which used for sequential elements: 3079.004400 (32.42%)
+

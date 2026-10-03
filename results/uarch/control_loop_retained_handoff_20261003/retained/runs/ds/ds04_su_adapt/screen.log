@@ -1,0 +1,131 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+OT_RAW_R2R_WS -5582.408203
+OT_RAW_ALL_WS -5.582408313387077e-9
+OT_RAW_TNS -4.126271505811019e-6
+OT_RAW_CELLS 6879
+OT_RAW_PATH_BEGIN
+Startpoint: pend$_DFFE_PN0P_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: any_op$_DFFE_PN0P_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ pend$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+   573  313.6 4444.6 2095.5 2095.5 ^ pend$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+   569  301.5 2752.5 4193.9 6289.3 v _10387_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.5  368.0  268.9 6558.2 ^ _12140_/Y (NAND2x1_ASAP7_75t_R)
+               368.0    0.0 6558.2 ^ any_op$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R)
+                            6558.2   data arrival time
+
+                 0.0 1111.0 1111.0   clock clk (rise edge)
+                        0.0 1111.0   clock network delay (ideal)
+                      -60.0 1051.0   clock uncertainty
+                        0.0 1051.0   clock reconvergence pessimism
+                            1051.0 ^ any_op$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                      -75.2  975.8   library setup time
+                             975.8   data required time
+-------------------------------------------------------------------------
+                             975.8   data required time
+                            -6558.2   data arrival time
+-------------------------------------------------------------------------
+                            -5582.4   slack (VIOLATED)
+
+
+OT_RAW_PATH_END
+OT_RAW_FOCUS_N_ctl 1
+OT_RAW_FOCUS_WS_ctl -3025.278320
+OT_RAW_FPATH_ctl_BEGIN
+Startpoint: pend$_DFFE_PN0P_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: pend$_DFFE_PN0P_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ pend$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+   573  313.6 4444.6 2095.5 2095.5 ^ pend$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+   492  364.5 2591.4 1665.6 3761.0 ^ _10386_/Y (AND2x2_ASAP7_75t_R)
+     1    0.5   80.4  267.7 4028.7 ^ _12147_/Y (AO21x1_ASAP7_75t_R)
+                80.4    0.0 4028.7 ^ pend$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R)
+                            4028.7   data arrival time
+
+                 0.0 1111.0 1111.0   clock clk (rise edge)
+                        0.0 1111.0   clock network delay (ideal)
+                      -60.0 1051.0   clock uncertainty
+                        0.0 1051.0   clock reconvergence pessimism
+                            1051.0 ^ pend$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                      -47.6 1003.4   library setup time
+                            1003.4   data required time
+-------------------------------------------------------------------------
+                            1003.4   data required time
+                            -4028.7   data arrival time
+-------------------------------------------------------------------------
+                            -3025.3   slack (VIOLATED)
+
+
+OT_RAW_FPATH_ctl_END
+OT_RAW_IOPATH_BEGIN
+Startpoint: pend$_DFFE_PN0P_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: any_op$_DFFE_PN0P_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout  Delay   Time   Description
+-------------------------------------------------------------
+          0.0    0.0   clock clk (rise edge)
+          0.0    0.0   clock network delay (ideal)
+          0.0    0.0 ^ pend$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+   573 2095.5 2095.5 ^ pend$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+   569 4193.9 6289.3 v _10387_/Y (NAND2x1_ASAP7_75t_R)
+     1  268.9 6558.2 ^ _12140_/Y (NAND2x1_ASAP7_75t_R)
+          0.0 6558.2 ^ any_op$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R)
+              6558.2   data arrival time
+
+       1111.0 1111.0   clock clk (rise edge)
+          0.0 1111.0   clock network delay (ideal)
+        -60.0 1051.0   clock uncertainty
+          0.0 1051.0   clock reconvergence pessimism
+              1051.0 ^ any_op$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+        -75.2  975.8   library setup time
+               975.8   data required time
+-------------------------------------------------------------
+               975.8   data required time
+              -6558.2   data arrival time
+-------------------------------------------------------------
+              -5582.4   slack (VIOLATED)
+
+
+OT_RAW_IOPATH_END
+[INFO IFP-0107] Defining die area using utilization: 30.00% and aspect ratio: 1.
+[WARNING IFP-0028] Core area lower left (2.000, 2.000) snapped to (2.052, 2.160).
+[INFO IFP-0001] Added 201 rows of 1010 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 58.645 58.645 ) um
+[INFO IFP-0101] Core BBox: (  2.052  2.160 ) ( 56.592 56.430 ) um
+[INFO IFP-0102] Core area:                         2959.886 um^2
+[INFO IFP-0103] Total instances area:               895.839 um^2
+[INFO IFP-0104] Effective utilization:                0.303
+[INFO IFP-0105] Number of instances:                   6879
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[ERROR PPL-0024] Number of IO pins (145163) exceeds maximum number of available positions (2380). Increase the die perimeter from 234.58um to 13935.65um.
+Error: screen.tcl, 50 PPL-0024

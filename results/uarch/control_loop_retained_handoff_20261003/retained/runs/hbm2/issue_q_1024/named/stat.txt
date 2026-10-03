@@ -1,0 +1,54 @@
+
+10. Printing statistics.
+
+=== ot_gpu_issue ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     2559        - wires
+     2559        - wire bits
+      105        - public wires
+      105        - public wire bits
+       81        - ports
+       81        - port bits
+     2487  362.051 cells
+       71    6.211   AND2x2_ASAP7_75t_R
+       89    7.786   AND3x1_ASAP7_75t_R
+       25    2.551   AND4x1_ASAP7_75t_R
+       11    1.283   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+      350   30.618   AO21x1_ASAP7_75t_R
+        8    1.166   AO221x1_ASAP7_75t_R
+        5    0.875   AO222x2_ASAP7_75t_R
+       29    3.805   AO22x1_ASAP7_75t_R
+        3      0.7   AO31x2_ASAP7_75t_R
+       15     1.75   AO32x1_ASAP7_75t_R
+        1    0.146   AO33x2_ASAP7_75t_R
+       48    5.599   AOI21x1_ASAP7_75t_R
+        9    1.312   AOI22x1_ASAP7_75t_R
+        1    0.073   BUFx2_ASAP7_75t_R
+      174    65.96   DFFASRHQNx1_ASAP7_75t_R
+      248   72.317   DFFHQNx1_ASAP7_75t_R
+      126    5.511   INVx1_ASAP7_75t_R
+       72    9.448   MAJx2_ASAP7_75t_R
+      158   13.822   NAND2x1_ASAP7_75t_R
+        2    0.321   NAND3x1_ASAP7_75t_R
+      106    9.273   NOR2x1_ASAP7_75t_R
+        3    0.481   NOR3x1_ASAP7_75t_R
+       31    3.616   OA211x2_ASAP7_75t_R
+       76    7.757   OA21x2_ASAP7_75t_R
+       57    9.973   OA222x2_ASAP7_75t_R
+       45    6.561   OA22x2_ASAP7_75t_R
+      275   32.076   OAI21x1_ASAP7_75t_R
+       27    3.937   OAI22x1_ASAP7_75t_R
+       73    6.386   OR2x2_ASAP7_75t_R
+       62    5.424   OR3x1_ASAP7_75t_R
+        9    0.919   OR4x1_ASAP7_75t_R
+        6      0.7   OR5x1_ASAP7_75t_R
+      185    29.67   XNOR2x2_ASAP7_75t_R
+       86   13.793   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_gpu_issue': 362.050560
+     of which used for sequential elements: 138.276720 (38.19%)
+

@@ -1,0 +1,219 @@
+{
+ "blackboxes": [
+  "ot_qwen_me_spine_w12",
+  "ot_hdc_vstream_rt",
+  "ot_hdc_stream"
+ ],
+ "completed_at": "2026-10-03T12:25:13.114188+00:00",
+ "corner": "ASAP7 RVT SS (ORFS asap7 WC liberty: 0.63 V, 100 C)",
+ "defines": [],
+ "domain": "0.9GHz-serial",
+ "image": "openroad/orfs:latest",
+ "includes": [
+  "rtl/hdc"
+ ],
+ "io_delay_fraction": 0.2,
+ "label": "core_bb_833",
+ "mapping": "Yosys 0.68 + ABC on the TT RVT liberty at the target period, the pinned driver's synth.ys (tools/run_abi3_physical.py run_synthesis) plus defines/includes, rename -wire before mapping and opt_clean without -purge so paths read in RTL names; timed on SS",
+ "openroad_rc": 1,
+ "parameters": {
+  "ACC_LAT": "5",
+  "AW": "24",
+  "BD": "41",
+  "FAST_ISSUE": "0",
+  "G": "6144",
+  "INT8_EMBED": "0",
+  "INT8_SCALE_WCS_BASE": "1",
+  "INT8_WEIGHT": "1",
+  "KV_FP8": "1",
+  "KV_PREP": "0",
+  "LV": "7",
+  "MEM_EXTRA": "1",
+  "ME_IDLE_GATE": "1",
+  "ME_STALL": "0",
+  "MUL_LAT": "5",
+  "NW": "18",
+  "NWS": "5",
+  "ORD": "7",
+  "PAW": "12",
+  "QWEN_FULLSHAPE": "1",
+  "SCALE_LOCAL": "0",
+  "SMAX": "11",
+  "SMIN": "7",
+  "SU_VEC": "1",
+  "SW": "64",
+  "TCUT": "7",
+  "TREE_LAT": "3",
+  "TWS": "38",
+  "W": "16",
+  "XVM": "1"
+ },
+ "period_ns": 0.833,
+ "phases": {
+  "raw": {
+   "all_fmax_mhz": null,
+   "all_setup_wns_ps": null,
+   "cells": null,
+   "focus": {
+    "fsm": {
+     "endpoints": null,
+     "fmax_mhz": null,
+     "path": {
+      "arrival_ps": null,
+      "cells": [],
+      "endpoint": null,
+      "logic_cells": 0,
+      "max_fanout_on_path": 0,
+      "startpoint": null,
+      "worst_cell": null
+     },
+     "regex": "(^|\\.)(st|state|pc|fpc)(\\[|\\$)",
+     "setup_wns_ps": null
+    },
+    "icg": {
+     "endpoints": null,
+     "fmax_mhz": null,
+     "path": {
+      "arrival_ps": null,
+      "cells": [],
+      "endpoint": null,
+      "logic_cells": 0,
+      "max_fanout_on_path": 0,
+      "startpoint": null,
+      "worst_cell": null
+     },
+     "regex": "u_icg",
+     "setup_wns_ps": null
+    },
+    "issue": {
+     "endpoints": null,
+     "fmax_mhz": null,
+     "path": {
+      "arrival_ps": null,
+      "cells": [],
+      "endpoint": null,
+      "logic_cells": 0,
+      "max_fanout_on_path": 0,
+      "startpoint": null,
+      "worst_cell": null
+     },
+     "regex": "(^|\\.)(fq_n|pend1|nx_v|d_wait_me|d_wait_su|waited|progress|d_chase_n)(\\[|\\$)",
+     "setup_wns_ps": null
+    }
+   },
+   "io_path": {
+    "arrival_ps": null,
+    "endpoint": null,
+    "logic_cells": 0,
+    "max_fanout_on_path": 0,
+    "startpoint": null,
+    "worst_cell": null
+   },
+   "r2r_fmax_mhz": null,
+   "r2r_path": {
+    "arrival_ps": null,
+    "cells": [],
+    "endpoint": null,
+    "logic_cells": 0,
+    "max_fanout_on_path": 0,
+    "startpoint": null,
+    "worst_cell": null
+   },
+   "r2r_required_period_ps": null,
+   "r2r_setup_wns_ps": null,
+   "tns_ps": null
+  },
+  "rep": {
+   "all_fmax_mhz": null,
+   "all_setup_wns_ps": null,
+   "cells": null,
+   "focus": {
+    "fsm": {
+     "endpoints": null,
+     "fmax_mhz": null,
+     "path": {
+      "arrival_ps": null,
+      "cells": [],
+      "endpoint": null,
+      "logic_cells": 0,
+      "max_fanout_on_path": 0,
+      "startpoint": null,
+      "worst_cell": null
+     },
+     "regex": "(^|\\.)(st|state|pc|fpc)(\\[|\\$)",
+     "setup_wns_ps": null
+    },
+    "icg": {
+     "endpoints": null,
+     "fmax_mhz": null,
+     "path": {
+      "arrival_ps": null,
+      "cells": [],
+      "endpoint": null,
+      "logic_cells": 0,
+      "max_fanout_on_path": 0,
+      "startpoint": null,
+      "worst_cell": null
+     },
+     "regex": "u_icg",
+     "setup_wns_ps": null
+    },
+    "issue": {
+     "endpoints": null,
+     "fmax_mhz": null,
+     "path": {
+      "arrival_ps": null,
+      "cells": [],
+      "endpoint": null,
+      "logic_cells": 0,
+      "max_fanout_on_path": 0,
+      "startpoint": null,
+      "worst_cell": null
+     },
+     "regex": "(^|\\.)(fq_n|pend1|nx_v|d_wait_me|d_wait_su|waited|progress|d_chase_n)(\\[|\\$)",
+     "setup_wns_ps": null
+    }
+   },
+   "io_path": {
+    "arrival_ps": null,
+    "endpoint": null,
+    "logic_cells": 0,
+    "max_fanout_on_path": 0,
+    "startpoint": null,
+    "worst_cell": null
+   },
+   "r2r_fmax_mhz": null,
+   "r2r_path": {
+    "arrival_ps": null,
+    "cells": [],
+    "endpoint": null,
+    "logic_cells": 0,
+    "max_fanout_on_path": 0,
+    "startpoint": null,
+    "worst_cell": null
+   },
+   "r2r_required_period_ps": null,
+   "r2r_setup_wns_ps": null,
+   "tns_ps": null
+  }
+ },
+ "repair": "global_placement, repair_design (max_transition 320 ps, max_fanout 24), repair_timing -setup, legalised; utilisation 30%",
+ "schema": "opentallas-risk-clock-loops-screen-v1",
+ "setup_uncertainty_ps": 60,
+ "source_commit": "e156ed54e8ff31def4b8c58d69da3743bb6b498c",
+ "sources": {
+  "gen_rcl/ot_hdc_vstream_rt.sv": "361e6b16f4ed2f4226e001b83ece289201741ac0c5b52250a255fa1c602c8a55",
+  "gen_rcl/ot_qwen_rom_core.sv": "59492b0f4a1c46b86298fbda105d2c79f2db10ac76fde15f74509099e9a6f97e",
+  "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+  "rtl/hdc/ot_hdc_stream.sv": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+  "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+ },
+ "synth": {
+  "area_um2": 2765.27196,
+  "cells": 18700
+ },
+ "top": "ot_qwen_rom_core",
+ "wires": "raw: none (ideal clock, zero wire load); repaired: global+detailed placement, placement parasitics (asap7 setRC), ideal clock, no route"
+}

@@ -1,0 +1,60 @@
+
+20. Printing statistics.
+
+=== ot_gpu_stack ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    38422        - wires
+    38422        - wire bits
+    23626        - public wires
+    23626        - public wire bits
+       97        - ports
+       97        - port bits
+    22726 3.23E+03 cells
+       85        -   $scopeinfo
+     2074  181.434   AND2x2_ASAP7_75t_R
+      386   33.767   AND3x1_ASAP7_75t_R
+      221   22.555   AND4x1_ASAP7_75t_R
+       94   10.964   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+     3071  268.651   AO21x1_ASAP7_75t_R
+       92   13.414   AO221x1_ASAP7_75t_R
+        5    0.875   AO222x2_ASAP7_75t_R
+       52    6.823   AO22x1_ASAP7_75t_R
+        6      1.4   AO31x2_ASAP7_75t_R
+      118   13.764   AO32x1_ASAP7_75t_R
+      104   18.196   AOI211x1_ASAP7_75t_R
+      204   23.795   AOI21x1_ASAP7_75t_R
+        2    0.408   AOI221x1_ASAP7_75t_R
+       20    2.916   AOI22x1_ASAP7_75t_R
+       30    2.187   BUFx2_ASAP7_75t_R
+     2281  864.681   DFFASRHQNx1_ASAP7_75t_R
+     2642  770.407   DFFHQNx1_ASAP7_75t_R
+     3371  147.448   INVx1_ASAP7_75t_R
+      253   33.199   MAJx2_ASAP7_75t_R
+     1553  135.856   NAND2x1_ASAP7_75t_R
+       10    1.604   NAND3x1_ASAP7_75t_R
+     1581  138.306   NOR2x1_ASAP7_75t_R
+        6    0.962   NOR3x1_ASAP7_75t_R
+      399   46.539   OA211x2_ASAP7_75t_R
+     1496  152.682   OA21x2_ASAP7_75t_R
+      303   53.013   OA222x2_ASAP7_75t_R
+       39    5.686   OA22x2_ASAP7_75t_R
+       17    3.718   OA31x2_ASAP7_75t_R
+        6    0.875   OA33x2_ASAP7_75t_R
+      339   39.541   OAI21x1_ASAP7_75t_R
+      244   35.575   OAI22x1_ASAP7_75t_R
+      414   36.217   OR2x2_ASAP7_75t_R
+      342   29.918   OR3x1_ASAP7_75t_R
+       90    9.185   OR4x1_ASAP7_75t_R
+       25    2.916   OR5x1_ASAP7_75t_R
+      603   96.709   XNOR2x2_ASAP7_75t_R
+      147   23.576   XOR2x2_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_gpu_stack': 3229.994880
+     of which used for sequential elements: 1635.088680 (50.62%)
+

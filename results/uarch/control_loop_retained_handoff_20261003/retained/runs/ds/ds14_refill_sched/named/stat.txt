@@ -1,0 +1,48 @@
+
+10. Printing statistics.
+
+=== ot_chip_v41x_window_refill_schedule ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      658        - wires
+      658        - wire bits
+      204        - public wires
+      204        - public wire bits
+      165        - ports
+      165        - port bits
+      560   78.207 cells
+       23    2.012   AND2x2_ASAP7_75t_R
+       77    6.736   AND3x1_ASAP7_75t_R
+        2    0.204   AND4x1_ASAP7_75t_R
+        2    0.233   AND5x1_ASAP7_75t_R
+        2    0.467   AO211x2_ASAP7_75t_R
+       52    4.549   AO21x1_ASAP7_75t_R
+        1    0.146   AO221x1_ASAP7_75t_R
+        2    0.467   AO31x2_ASAP7_75t_R
+       10    1.166   AOI21x1_ASAP7_75t_R
+        1    0.146   AOI22x1_ASAP7_75t_R
+       92   34.875   DFFASRHQNx1_ASAP7_75t_R
+       91     3.98   INVx1_ASAP7_75t_R
+        5    0.656   MAJx2_ASAP7_75t_R
+       31    2.712   NAND2x1_ASAP7_75t_R
+       12     1.05   NOR2x1_ASAP7_75t_R
+        1     0.16   NOR3x1_ASAP7_75t_R
+        3     0.35   OA211x2_ASAP7_75t_R
+       12    1.225   OA21x2_ASAP7_75t_R
+        1    0.175   OA222x2_ASAP7_75t_R
+        2    0.292   OA22x2_ASAP7_75t_R
+        1    0.219   OA31x2_ASAP7_75t_R
+       15     1.75   OAI21x1_ASAP7_75t_R
+        2    0.292   OAI22x1_ASAP7_75t_R
+       24      2.1   OR2x2_ASAP7_75t_R
+       30    2.624   OR3x1_ASAP7_75t_R
+        9    0.919   OR4x1_ASAP7_75t_R
+       10    1.166   OR5x1_ASAP7_75t_R
+       32    5.132   XNOR2x2_ASAP7_75t_R
+       15    2.406   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_chip_v41x_window_refill_schedule': 78.207120
+     of which used for sequential elements: 34.875360 (44.59%)
+

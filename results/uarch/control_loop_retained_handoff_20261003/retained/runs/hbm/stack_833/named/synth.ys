@@ -1,0 +1,21 @@
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/gpu/ot_gpu_stack.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_sfu.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/proto/ot_fp32_add_rne_pipe.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/gpu/ot_gpu_fadd.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fp32_add_lat.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_prefix.sv
+read_verilog -sv /home/ubuntu/rcl-20261003/src/rtl/hdc/ot_hdc_fastfp.sv
+hierarchy -check -top ot_gpu_stack -chparam ALAT 7 -chparam IL 8 -chparam LEV 5 -chparam TAGW 12
+synth -top ot_gpu_stack -flatten
+rename -wire
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -D 833
+setundef -zero
+splitnets -ports
+opt_clean
+tee -o /home/ubuntu/rcl-20261003/runs/hbm/stack_833/named/stat.txt stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_verilog -noattr /home/ubuntu/rcl-20261003/runs/hbm/stack_833/named/mapped.v

@@ -1,0 +1,66 @@
+
+15. Printing statistics.
+
+=== ot_gpu_full_sm_service ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   144033        - wires
+   144033        - wire bits
+    77577        - public wires
+    77577        - public wire bits
+    13600        - ports
+    13600        - port bits
+    79793 1.02E+04 cells
+        2        -   $scopeinfo
+     4213  368.553   AND2x2_ASAP7_75t_R
+       81    7.086   AND3x1_ASAP7_75t_R
+       30    3.062   AND4x1_ASAP7_75t_R
+        7    0.816   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+    22425 1.96E+03   AO21x1_ASAP7_75t_R
+     5775  841.995   AO221x1_ASAP7_75t_R
+     2425  424.278   AO222x2_ASAP7_75t_R
+        2    0.262   AO22x1_ASAP7_75t_R
+        2    0.467   AO31x2_ASAP7_75t_R
+      525   61.236   AO32x1_ASAP7_75t_R
+        1    0.146   AO33x2_ASAP7_75t_R
+        6     1.05   AOI211x1_ASAP7_75t_R
+       18      2.1   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+        6    0.875   AOI22x1_ASAP7_75t_R
+      222   84.156   DFFASRHQNx1_ASAP7_75t_R
+    12800  3732.48   DFFHQNx1_ASAP7_75t_R
+     8835  386.443   INVx1_ASAP7_75t_R
+     4185  366.104   NAND2x1_ASAP7_75t_R
+        2    0.321   NAND3x1_ASAP7_75t_R
+     4291  375.377   NOR2x1_ASAP7_75t_R
+        4    0.642   NOR3x1_ASAP7_75t_R
+       18      2.1   OA211x2_ASAP7_75t_R
+    10000   1020.6   OA21x2_ASAP7_75t_R
+       19    3.324   OA222x2_ASAP7_75t_R
+     2427  353.857   OA22x2_ASAP7_75t_R
+        5    1.094   OA31x2_ASAP7_75t_R
+      102   11.897   OAI21x1_ASAP7_75t_R
+       14    2.041   OAI22x1_ASAP7_75t_R
+       50    4.374   OR2x2_ASAP7_75t_R
+       86    7.523   OR3x1_ASAP7_75t_R
+       71    7.246   OR4x1_ASAP7_75t_R
+       33    3.849   OR5x1_ASAP7_75t_R
+      558   89.492   XNOR2x2_ASAP7_75t_R
+      165   26.463   XOR2x2_ASAP7_75t_R
+      128        -   ot_gpu_fadd
+      128        -   ot_gpu_fmul
+        2        -   ot_sram_1r1w_1024x256_m2_r2c2
+      128        -   ot_sram_1r1w_128x256_m1_r2c2
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_sram_1r1w_1024x256_m2_r2c2 is unknown!
+   Area for cell type \ot_gpu_fadd is unknown!
+   Area for cell type \ot_gpu_fmul is unknown!
+   Area for cell type \ot_sram_1r1w_128x256_m1_r2c2 is unknown!
+
+   Chip area for module '\ot_gpu_full_sm_service': 10153.482840
+     of which used for sequential elements: 3816.635760 (37.59%)
+

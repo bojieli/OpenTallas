@@ -1,0 +1,56 @@
+
+10. Printing statistics.
+
+=== ot_gpu_issue ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     2403        - wires
+     2403        - wire bits
+      102        - public wires
+      102        - public wire bits
+       78        - ports
+       78        - port bits
+     2331  338.752 cells
+       76    6.648   AND2x2_ASAP7_75t_R
+       91    7.961   AND3x1_ASAP7_75t_R
+       43    4.389   AND4x1_ASAP7_75t_R
+        9     1.05   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+      296   25.894   AO21x1_ASAP7_75t_R
+        6    0.875   AO221x1_ASAP7_75t_R
+        1    0.175   AO222x2_ASAP7_75t_R
+       41     5.38   AO22x1_ASAP7_75t_R
+        1    0.233   AO31x2_ASAP7_75t_R
+       16    1.866   AO32x1_ASAP7_75t_R
+        1    0.175   AOI211x1_ASAP7_75t_R
+       23    2.683   AOI21x1_ASAP7_75t_R
+       17    2.479   AOI22x1_ASAP7_75t_R
+        1    0.073   BUFx2_ASAP7_75t_R
+      168   63.685   DFFASRHQNx1_ASAP7_75t_R
+      224   65.318   DFFHQNx1_ASAP7_75t_R
+      121    5.293   INVx1_ASAP7_75t_R
+       72    9.448   MAJx2_ASAP7_75t_R
+      175   15.309   NAND2x1_ASAP7_75t_R
+        3    0.481   NAND3x1_ASAP7_75t_R
+       79    6.911   NOR2x1_ASAP7_75t_R
+        6    0.962   NOR3x1_ASAP7_75t_R
+       18      2.1   OA211x2_ASAP7_75t_R
+       87    8.879   OA21x2_ASAP7_75t_R
+        1    0.233   OA221x2_ASAP7_75t_R
+       50    8.748   OA222x2_ASAP7_75t_R
+       38     5.54   OA22x2_ASAP7_75t_R
+        3    0.656   OA31x2_ASAP7_75t_R
+      223   26.011   OAI21x1_ASAP7_75t_R
+       27    3.937   OAI22x1_ASAP7_75t_R
+       75    6.561   OR2x2_ASAP7_75t_R
+       59    5.161   OR3x1_ASAP7_75t_R
+       17    1.735   OR4x1_ASAP7_75t_R
+        8    0.933   OR5x1_ASAP7_75t_R
+      170   27.265   XNOR2x2_ASAP7_75t_R
+       84   13.472   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_gpu_issue': 338.751720
+     of which used for sequential elements: 129.003840 (38.08%)
+

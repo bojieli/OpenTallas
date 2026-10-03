@@ -1,0 +1,61 @@
+
+13. Printing statistics.
+
+=== ot_w15_rom_oneshot_die_px ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   476343        - wires
+   476343        - wire bits
+    91891        - public wires
+    91891        - public wire bits
+     9755        - ports
+     9755        - port bits
+   388782 5.31E+04 cells
+      480        -   $scopeinfo
+     7968  697.041   AND2x2_ASAP7_75t_R
+     2929  256.229   AND3x1_ASAP7_75t_R
+     1622  165.541   AND4x1_ASAP7_75t_R
+      905  105.559   AND5x1_ASAP7_75t_R
+       10    2.333   AO211x2_ASAP7_75t_R
+   116645 1.02E+04   AO21x1_ASAP7_75t_R
+     1415  206.307   AO221x1_ASAP7_75t_R
+      715  125.096   AO222x2_ASAP7_75t_R
+      784  102.876   AO22x1_ASAP7_75t_R
+      175   40.824   AO31x2_ASAP7_75t_R
+      983  114.657   AO32x1_ASAP7_75t_R
+        3    0.437   AO33x2_ASAP7_75t_R
+      168   29.393   AOI211x1_ASAP7_75t_R
+     1471  171.577   AOI21x1_ASAP7_75t_R
+       40    8.165   AOI221x1_ASAP7_75t_R
+      385   56.133   AOI22x1_ASAP7_75t_R
+     1816  688.409   DFFASRHQNx1_ASAP7_75t_R
+    82121 2.39E+04   DFFHQNx1_ASAP7_75t_R
+    10770   471.08   INVx1_ASAP7_75t_R
+     1558  204.441   MAJx2_ASAP7_75t_R
+     8245  721.273   NAND2x1_ASAP7_75t_R
+      193   30.953   NAND3x1_ASAP7_75t_R
+    74603  6526.27   NOR2x1_ASAP7_75t_R
+      111   17.802   NOR3x1_ASAP7_75t_R
+    18071 2.11E+03   OA211x2_ASAP7_75t_R
+    25925 2.65E+03   OA21x2_ASAP7_75t_R
+       91   21.228   OA221x2_ASAP7_75t_R
+     2237  391.386   OA222x2_ASAP7_75t_R
+      459   66.922   OA22x2_ASAP7_75t_R
+       65   14.216   OA31x2_ASAP7_75t_R
+       35    5.103   OA33x2_ASAP7_75t_R
+     3007  350.736   OAI21x1_ASAP7_75t_R
+     2438   355.46   OAI22x1_ASAP7_75t_R
+     4300  376.164   OR2x2_ASAP7_75t_R
+     8924  780.672   OR3x1_ASAP7_75t_R
+      561   57.256   OR4x1_ASAP7_75t_R
+      267   31.143   OR5x1_ASAP7_75t_R
+     4458  714.974   XNOR2x2_ASAP7_75t_R
+     1829  293.335   XOR2x2_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_w15_rom_oneshot_die_px': 53105.288040
+     of which used for sequential elements: 24634.892880 (46.39%)
+

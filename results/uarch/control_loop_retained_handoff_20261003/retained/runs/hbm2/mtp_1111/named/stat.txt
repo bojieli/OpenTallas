@@ -1,0 +1,57 @@
+
+11. Printing statistics.
+
+=== ot_hdc_mtp_accept_guarded ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    34569        - wires
+    34569        - wire bits
+     9111        - public wires
+     9111        - public wire bits
+      637        - ports
+      637        - port bits
+    25857 3.49E+03 cells
+      959   83.893   AND2x2_ASAP7_75t_R
+      977   85.468   AND3x1_ASAP7_75t_R
+      580   59.195   AND4x1_ASAP7_75t_R
+      313   36.508   AND5x1_ASAP7_75t_R
+       15    3.499   AO211x2_ASAP7_75t_R
+     2315  202.516   AO21x1_ASAP7_75t_R
+      118   17.204   AO221x1_ASAP7_75t_R
+       30    5.249   AO222x2_ASAP7_75t_R
+      306   40.153   AO22x1_ASAP7_75t_R
+       28    6.532   AO31x2_ASAP7_75t_R
+      419   48.872   AO32x1_ASAP7_75t_R
+        5    0.729   AO33x2_ASAP7_75t_R
+       33    5.774   AOI211x1_ASAP7_75t_R
+      264   30.793   AOI21x1_ASAP7_75t_R
+       16    3.266   AOI221x1_ASAP7_75t_R
+       94   13.705   AOI22x1_ASAP7_75t_R
+     1657  628.136   DFFASRHQNx1_ASAP7_75t_R
+     1313   57.431   INVx1_ASAP7_75t_R
+        5    0.656   MAJx2_ASAP7_75t_R
+     1040   90.979   NAND2x1_ASAP7_75t_R
+       24    3.849   NAND3x1_ASAP7_75t_R
+     2550  223.074   NOR2x1_ASAP7_75t_R
+       28    4.491   NOR3x1_ASAP7_75t_R
+      269   31.376   OA211x2_ASAP7_75t_R
+      878   89.609   OA21x2_ASAP7_75t_R
+       15    3.499   OA221x2_ASAP7_75t_R
+      226   39.541   OA222x2_ASAP7_75t_R
+      397   57.883   OA22x2_ASAP7_75t_R
+       51   11.154   OA31x2_ASAP7_75t_R
+        3    0.437   OA33x2_ASAP7_75t_R
+      318   37.092   OAI21x1_ASAP7_75t_R
+      397   57.883   OAI22x1_ASAP7_75t_R
+      338   29.568   OR2x2_ASAP7_75t_R
+     1041   91.067   OR3x1_ASAP7_75t_R
+      290   29.597   OR4x1_ASAP7_75t_R
+      162   18.896   OR5x1_ASAP7_75t_R
+     6650 1.07E+03   XNOR2x2_ASAP7_75t_R
+     1733  277.939   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hdc_mtp_accept_guarded': 3494.038680
+     of which used for sequential elements: 628.135560 (17.98%)
+

@@ -1,0 +1,57 @@
+
+15. Printing statistics.
+
+=== ot_hdc_sinkhorn_seq ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    19988        - wires
+    19988        - wire bits
+     5462        - public wires
+     5462        - public wire bits
+     1031        - ports
+     1031        - port bits
+    16869 2.32E+03 cells
+        7        -   $scopeinfo
+      488    42.69   AND2x2_ASAP7_75t_R
+      566   49.514   AND3x1_ASAP7_75t_R
+       53    5.409   AND4x1_ASAP7_75t_R
+       35    4.082   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+     2450  214.326   AO21x1_ASAP7_75t_R
+      313   45.635   AO221x1_ASAP7_75t_R
+       38    6.648   AO222x2_ASAP7_75t_R
+       21    2.756   AO22x1_ASAP7_75t_R
+       14    3.266   AO31x2_ASAP7_75t_R
+       89   10.381   AO32x1_ASAP7_75t_R
+        2    0.292   AO33x2_ASAP7_75t_R
+       22    3.849   AOI211x1_ASAP7_75t_R
+      229   26.711   AOI21x1_ASAP7_75t_R
+        3    0.612   AOI221x1_ASAP7_75t_R
+       13    1.895   AOI22x1_ASAP7_75t_R
+      416  157.697   DFFASRHQNx1_ASAP7_75t_R
+     3121  910.084   DFFHQNx1_ASAP7_75t_R
+     3183  139.224   INVx1_ASAP7_75t_R
+      602   78.994   MAJx2_ASAP7_75t_R
+      675   59.049   NAND2x1_ASAP7_75t_R
+        5    0.802   NAND3x1_ASAP7_75t_R
+      625   54.675   NOR2x1_ASAP7_75t_R
+      626   73.017   OA211x2_ASAP7_75t_R
+      647   66.033   OA21x2_ASAP7_75t_R
+       17    2.974   OA222x2_ASAP7_75t_R
+      164   23.911   OA22x2_ASAP7_75t_R
+      467   54.471   OAI21x1_ASAP7_75t_R
+      144   20.995   OAI22x1_ASAP7_75t_R
+      174   15.222   OR2x2_ASAP7_75t_R
+      226    19.77   OR3x1_ASAP7_75t_R
+       18    1.837   OR4x1_ASAP7_75t_R
+       12      1.4   OR5x1_ASAP7_75t_R
+      831  133.276   XNOR2x2_ASAP7_75t_R
+      572   91.737   XOR2x2_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_hdc_sinkhorn_seq': 2323.468800
+     of which used for sequential elements: 1067.780880 (45.96%)
+
