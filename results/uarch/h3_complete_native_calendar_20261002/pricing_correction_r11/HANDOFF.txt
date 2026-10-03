@@ -1,0 +1,68 @@
+R11 ADDITIVE PRICING CORRECTION — default no headline adoption
+
+Ready dependency: standalone new pricing module and its committed input directory.
+No modification of decode_critical_path.py, uarch_model.py, the emitters, or pinned
+complete-native calendar/test. No whole-system, numerical, or physical job launched.
+
+Replay (from any intake checkout):
+ python3 tools/h3_complete_native_calendar_pricing_r11.py --verify
+ python3 -m pytest -o addopts='' -q tests/test_h3_complete_native_calendar_pricing_r11.py
+
+Current-source graph authority: main 962f1c4ce890607f439b78691d0485bf7db41c93,
+2634-node uarch.evaluate(PRESETS['proposal'],1048576) snapshot. All priced node
+costs/dependencies and the sink are retained. The standalone solver reproduces
+its 266.83727404606174 us exactly, without importing canonical source modules.
+Graph producer recipe in a clean checkout of that commit:
+ PYTHONPATH=tools python3 -c "import json,uarch_model as U; r=U.evaluate(U.PRESETS['proposal'].copy()); g=r.pop('_g'); json.dump(dict(row=r,nodes=g.nodes,sink=U.arch_graph(1048576)[1].sink,config=U.A._env()['c']),open('/tmp/pricing-graph.json','w'))"
+This recipe reads the broader producer checkout. The archived graph is the
+portable cold pricing input; it is not a replacement claim for cold regeneration
+of every producer dependency from this small archive.
+
+Historical 3809 authority: retained v41_rom.json proposal row 262.5486581257596 us,
+clock 1033900000 Hz, tokens_s 3808.8177907235945. Current-source graph is 4.2886159203
+us slower. These authorities are not silently equated. No historical-DAG replay
+is claimed. The historical exposed-pair sensitivity is 347.4698303861329 us.
+
+1. Direct Ops.tselect_local successor is an actual callable generated from the
+retained literal method, guarding its original expression before replacement.
+Issue charges ingress plus prior cohort occupancy; local last-input tail belongs
+in depth once. Cohort occupancy uses ingress + selected measured local tail,
+not the stale fixed 36. Final multi-unit merge remains a separate tail. There is
+no credited scorer overlap. Nine campaign-backed shipped-context cases retained.
+Architecture proposal already replaces this issue/depth via _select_price;
+subtracting the direct-Ops correction again there would be incorrect.
+
+2. L20 candidate final now binds L24/L28/L32/L36 index score address consumers.
+The source model contract is retained; no synthetic global token barrier. These
+edges do not change the current DAG critical-path time, because the candidate
+publication is already early enough. Complete runtime reindex semantics remain
+unqualified; no observed runtime receipt is invented.
+
+3. Literal exact-TP same-X calls resolve w1/w3 and wq_a/wkv. Forty layers, one
+shared + six routed experts + one attention pair give 320 pairs. Each second
+phase has an explicit positive cost and completion dependency. Calibration is
+b98b05222 small-field split/merged bit-identical differential: GU275, AP270.
+The all-exposed serial sum is 87800 cycles. Actual replay of the current model
+DAG exposes 76800 cycles: paired-merged 266.83727404606174 us, current-two-phase
+sensitivity 341.11911948566046 us. Different exposure is retained, not hidden.
+Neither value is a full-shape measurement or a hardware rate qualification.
+Claude DS system owns default-off pair merge; this module does not modify emitter.
+The model already assumes pair merge, so it earns no new free gain.
+Six routed experts still grouped into one base phase and additional attention
+index/compressor fusion are NOT closed by this pair correction. Their unknown
+full-shape service terms remain explicit; no 52k fixture estimate is silently added.
+
+4. Qwen measured source c5ae2f69d: same binary/depth matched A/B, four die x hashes
+for L0/L1 identical, zero mismatches. Split1284669/4668 vs one2563931/3930 is
+738 cycles saved per layer. Depth256 C has same3931/3930. Corrects the stale
+unmeasured annotation in additive evidence only; no36-layer extrapolation,
+whole-token, physical, or headline adoption.
+
+Failure preserved: initial source-mode replay failed 3/22 tests because SWA mode
+omits scans_index. Literal original attention uses mode.get; successor now does
+likewise. Exact failed source bytes, checksum and failure verdict are retained.
+Intermediate successful model records are also retained rather than overwritten.
+
+No active owned jobs. Parent may intake this milestone independently of PC40
+RTL/caller/payload work. R9 source-span/r33 and R10 entering lease/CDC gaps stay
+unchanged. Original calendar/tool test hashes are recorded in validation.json.

@@ -1,0 +1,18 @@
+{
+  "cold_replay": "byte-identical model.json, 12 archived input hashes checked",
+  "combined_command": "python3 -m pytest -o addopts= -q tests/test_h3_complete_native_calendar_pricing_r11.py tests/test_h3_complete_native_calendar_pc40_ports_r10.py tests/test_h3_complete_native_calendar_event_adapter_r9.py",
+  "combined_tests": "72 passed in 57.04s",
+  "headline_adoption": false,
+  "historical_failure_replay": "PASS: exact failed source reproduces KeyError('scans_index')",
+  "intake_dependencies": "new module/tests/result directory only; no prior calendar helper imports",
+  "new_tests": "24 passed in 9.24s",
+  "original_pins": {
+    "tests/test_h3_complete_native_calendar.py": "0aabf43fe6565e625db665584c99791b98ba644f8e97c90462c98772d2f86636",
+    "tests/test_h3_complete_native_calendar_pricing_r11.py": "ca354c8b834289599eafc78c2220b0d22c524896bf093a8193c71eb0b6c39855",
+    "tools/h3_complete_native_calendar.py": "c0370e63dba0eadcc06c5522c28a956ddebfd10af9b8765a61fe0e4fe025b817",
+    "tools/h3_complete_native_calendar_pricing_r11.py": "3c8c29dc8f947f5412880d19a0dea902b73408855891fe53cce6b7eed7a5f07c"
+  },
+  "owned_live_jobs": [],
+  "predecessor": "2722d9e6c649a4f50766761039368b43a3adce74",
+  "verdict": "PASS"
+}

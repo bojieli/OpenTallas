@@ -1,0 +1,34 @@
+{
+  "artifacts": {
+    "HANDOFF.txt": "32c588b509370cabcd3418fa022d74eebdb59503b60e18e07e87bbe834b18f9b",
+    "cold_replay.txt": "4d6cc75b90d65f014f66fb449f25220f0d752bfec4980cb9a3e4be117e6f11d7",
+    "combined_tests.txt": "76377482f5f66ceb3f9174b8fdaf40ef37a97704893516eb173e9c2ce664dbf2",
+    "failure_scan_flag.json": "dba9b5b950894d524d9e9b3dcbd5e2f8f4e7dc992d4096fb866ad9c267940128",
+    "failure_scan_flag_source.py": "c30cc54f445b318caa8df0498b3812d05e9c15b45b550743aa55fad5433c7e5f",
+    "input_manifest.json": "93e3a6e1681de2e43efe819e05fe760a8a0ca1fe1d66464a80120a8f90cff11b",
+    "inputs/architecture.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+    "inputs/decoder.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+    "inputs/emitter.py": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+    "inputs/graph.json": "3950584d73ed564f991de846c53adeca7c1bba5385e80bc05a58f4250cb00876",
+    "inputs/historical_row.json": "6a9c98b60b18d2281749e1d16e6201e36421c0a15bd32c6460fcc6b44368b160",
+    "inputs/model_config.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "inputs/phase_audit.json": "b087681895be1dba7a4b9cce2d49a7c7b635ebae5467eb7897b8c0476a4e6abd",
+    "inputs/phase_measurement.json": "24210c6f8d15665902302305f73b4e2357721d8aee4f7a078f3e7c6790e4c215",
+    "inputs/qwen_measurement.json": "5d5e0a7f7cf5d87653ef1a3782efac387762f0d410289ce1fb306301665e1287",
+    "inputs/select_candidate.json": "b83aad197d0fff78cf5663d0ce4b790b7ddb24bddb83093eb4a8ad662efd4789",
+    "inputs/select_scale.json": "ee7dde83a8d3f68b355549d54bdec5fbd6c5005c6ddb769c21a1286c8c9a592e",
+    "inputs/uarch.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "model.json": "a1b5d417a3316cc50db05a2dff6b67f79945705e813a296b7bd3e25fa1d9595a",
+    "model_before_measured_occupancy.json": "debb3b5a2c1dc3fb1df5197c5a9a13f2b9ca796ec783051ca9750d54489811b0",
+    "model_before_select_campaign_replay.json": "77b84b97ab567bd18b8ea1b6e0df49da31c79ffbc6b041f1d120b8283e055cff",
+    "model_initial_generation.json": "1d120e3874fd98a7a1e56147b344ad102e68c0629b303a827132471a918456c2",
+    "test_result.txt": "147c91f707d5663dd44698ff9111ba9c76da784b45d6d509d39e0f43f041b974",
+    "validation.json": "b555e0c73b1253fb45bbda2009caa6ccc57308c677fdc8a1a0c90ead6b59f19e"
+  },
+  "module_pins": {
+    "tests/test_h3_complete_native_calendar.py": "0aabf43fe6565e625db665584c99791b98ba644f8e97c90462c98772d2f86636",
+    "tests/test_h3_complete_native_calendar_pricing_r11.py": "ca354c8b834289599eafc78c2220b0d22c524896bf093a8193c71eb0b6c39855",
+    "tools/h3_complete_native_calendar.py": "c0370e63dba0eadcc06c5522c28a956ddebfd10af9b8765a61fe0e4fe025b817",
+    "tools/h3_complete_native_calendar_pricing_r11.py": "3c8c29dc8f947f5412880d19a0dea902b73408855891fe53cce6b7eed7a5f07c"
+  }
+}

@@ -1,0 +1,6310 @@
+{
+  "authority_gap_us": 4.288615920302163,
+  "candidate_consumers": [
+    "L24.attn.idx.score",
+    "L28.attn.idx.score",
+    "L32.attn.idx.score",
+    "L36.attn.idx.score"
+  ],
+  "current_DAG_exposed_delta_cycles": 76800.00000000114,
+  "current_source_DAG_cases_us": {
+    "candidate_bound_merged_pairs": 266.83727404606174,
+    "candidate_bound_two_phase_sensitivity": 341.11911948566046,
+    "unchanged": 266.83727404606174
+  },
+  "emitter_contract": {
+    "attention": [
+      "self.linq(lay.qmat[L, 'wq_a'], 'XN', 'QAL' if self.tp_exact else 'QA', set(), set(), t)",
+      "self.linq(lay.qmat[L, 'wkv'], 'XN', 'KVAL' if self.tp_exact else 'KVA', set(), set(), t)"
+    ],
+    "gate_up": [
+      "self.linq(lay.qmat[(*key, 'w1')], 'XN', f'GU{k}', {'EID'}, set(), te, **ind_w1)",
+      "self.linq(lay.qmat[(*key, 'w3')], 'XN', f'GU{k}', {'EID'}, set(), te, qe_obase=gu + ff, **ind_w3)"
+    ]
+  },
+  "headline_adoption": false,
+  "historical_3809_exposed_sensitivity_us": 347.4698303861329,
+  "historical_3809_row": {
+    "T_us": 262.5486581257596,
+    "arch_T_us": 202.71250592870817,
+    "arch_tokens_s": 4933.094756135517,
+    "area": {
+      "attention": 16.69,
+      "bf16_chain": 14.289,
+      "bf16_lanes": 16.69,
+      "blockdot_chain": 12.699,
+      "blockdot_lanes": 69.292,
+      "capture_regs": 1.102,
+      "chunk_partials": 1.03,
+      "fits": true,
+      "hub_avail_mm2": 233.7,
+      "hub_logic_mm2": 56.558,
+      "indexer": 20.57,
+      "return_adders": 2.66,
+      "rom_field_strip_avail_mm2": 132.34,
+      "rom_field_strip_used_mm2": 117.763,
+      "rom_macros": 207.004,
+      "sfu_lanes": 8.819,
+      "su_lanes": 4.183,
+      "vm_ports": 0.296
+    },
+    "breakdown_us": {
+      "collective_latency": 62.272,
+      "compute_chain": 137.467,
+      "control": 6.354,
+      "kv_sweep": 12.77,
+      "pipeline_hops": 11.946,
+      "weight_sweep": 31.74
+    },
+    "clock_hz": 1033900000.0,
+    "critical_path_by_node_us": {
+      "attn.a_allgather": 7.533,
+      "attn.a_proj": 8.937,
+      "attn.exp": 5.509,
+      "attn.idx.score": 13.493,
+      "attn.idx.topk_local": 11.322,
+      "attn.norm.rsqrt": 4.178,
+      "attn.normalize": 4.217,
+      "attn.out_allreduce": 18.621,
+      "attn.pv": 6.689,
+      "attn.q_norm.rsqrt": 4.178,
+      "attn.rows_allgather": 8.317,
+      "attn.scores": 6.385,
+      "attn.wo_a": 14.044,
+      "attn.wo_b": 6.19,
+      "attn.wq_b": 7.173,
+      "ffn.combine_allreduce": 18.621,
+      "ffn.down": 8.473,
+      "ffn.experts_gu": 9.053,
+      "ffn.norm.rsqrt": 4.178,
+      "ffn.router": 8.279,
+      "ffn.router_allgather": 7.107,
+      "ffn.softplus_sqrt": 11.142,
+      "ffn.swiglu": 5.184,
+      "head.lm_head": 5.058,
+      "substage_hop0": 10.038
+    },
+    "ctx": 1048576,
+    "design": "proposal",
+    "layer20_matvecs": {
+      "L20.attn.a_proj": {
+        "K": 5120,
+        "adder_levels": 5,
+        "bind": "vm_read_x",
+        "depth": 128,
+        "fmt": "fp8",
+        "holding": 11520.0,
+        "issue": 160.0,
+        "key": "a_proj",
+        "ksplit": 32,
+        "region": "dense",
+        "rows": 712.0,
+        "t_mac": 0.0,
+        "t_read": 80.0,
+        "t_ret": 5.6,
+        "t_x": 160.0,
+        "tree": 5,
+        "wire": 20,
+        "words": 113920.0
+      },
+      "L20.attn.cmp.wk": {
+        "K": 512,
+        "adder_levels": 1,
+        "bind": "rom_read",
+        "depth": 106,
+        "fmt": "bf16",
+        "holding": 256.0,
+        "issue": 40.0,
+        "key": "cmp.wk",
+        "ksplit": 2,
+        "region": "dense",
+        "rows": 128.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 1.0,
+        "t_x": 8.0,
+        "tree": 3,
+        "wire": 20,
+        "words": 4096.0
+      },
+      "L20.attn.wo_a": {
+        "K": 4096,
+        "adder_levels": 0,
+        "bind": "rom_read",
+        "depth": 100,
+        "fmt": "bf16",
+        "holding": 2048,
+        "issue": 256.0,
+        "key": "wo_a",
+        "ksplit": 1,
+        "region": "me",
+        "rows": 2048.0,
+        "t_mac": 0.0,
+        "t_read": 256.0,
+        "t_ret": 16.0,
+        "t_x": 64.0,
+        "tree": 4,
+        "wire": 18,
+        "words": 524288.0
+      },
+      "L20.attn.wo_b": {
+        "K": 2048,
+        "adder_levels": 2,
+        "bind": "rom_read",
+        "depth": 113,
+        "fmt": "fp8",
+        "holding": 13798,
+        "issue": 40.0,
+        "key": "wo_b",
+        "ksplit": 4,
+        "region": "dense",
+        "rows": 5120.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 40.0,
+        "t_x": 32.0,
+        "tree": 5,
+        "wire": 20,
+        "words": 327680.0
+      },
+      "L20.attn.wq_b": {
+        "K": 1280,
+        "adder_levels": 1,
+        "bind": "vm_write_ret",
+        "depth": 108,
+        "fmt": "fp8",
+        "holding": 13798,
+        "issue": 96.0,
+        "key": "wq_b",
+        "ksplit": 2,
+        "region": "dense",
+        "rows": 12288.0,
+        "t_mac": 0.0,
+        "t_read": 64.0,
+        "t_ret": 96.0,
+        "t_x": 20.0,
+        "tree": 5,
+        "wire": 20,
+        "words": 491520.0
+      },
+      "L20.ffn.down": {
+        "K": 2304,
+        "adder_levels": 3,
+        "bind": "vm_write_ret",
+        "depth": 142,
+        "fmt": "fp4",
+        "holding": 13798,
+        "issue": 70.0,
+        "key": "down",
+        "ksplit": 8,
+        "region": "expert",
+        "rows": 8960.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 70.0,
+        "t_x": 36.0,
+        "tree": 5,
+        "wire": 44,
+        "words": 322560.0
+      },
+      "L20.ffn.experts_gu": {
+        "K": 5120,
+        "adder_levels": 4,
+        "bind": "vm_read_x",
+        "depth": 147,
+        "fmt": "fp4",
+        "holding": 13798,
+        "issue": 80.0,
+        "key": "experts_gu",
+        "ksplit": 16,
+        "region": "expert",
+        "rows": 6912.0,
+        "t_mac": 0.0,
+        "t_read": 48.0,
+        "t_ret": 54.0,
+        "t_x": 80.0,
+        "tree": 5,
+        "wire": 44,
+        "words": 552960.0
+      },
+      "L20.ffn.router": {
+        "K": 5120,
+        "adder_levels": 5,
+        "bind": "vm_read_x",
+        "depth": 127,
+        "fmt": "bf16",
+        "holding": 1920.0,
+        "issue": 80.0,
+        "key": "router",
+        "ksplit": 32,
+        "region": "dense",
+        "rows": 96.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 0.8,
+        "t_x": 80.0,
+        "tree": 4,
+        "wire": 20,
+        "words": 30720.0
+      },
+      "L20.ffn.shared_gu": {
+        "K": 5120,
+        "adder_levels": 4,
+        "bind": "vm_read_x",
+        "depth": 123,
+        "fmt": "fp8",
+        "holding": 11520.0,
+        "issue": 80.0,
+        "key": "shared_gu",
+        "ksplit": 16,
+        "region": "dense",
+        "rows": 1152.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 9.0,
+        "t_x": 80.0,
+        "tree": 5,
+        "wire": 20,
+        "words": 184320.0
+      }
+    },
+    "network": {
+      "column_tracks": 2361,
+      "column_utilisation": 0.557,
+      "column_wires": 1316,
+      "register_bits": 2047784,
+      "register_mm2": 0.597,
+      "return_bits_per_cycle": 4096,
+      "spine_corridors_needed": 5,
+      "stages_trunk": 18,
+      "trunk_wires": 5184,
+      "x_bits_per_cycle": 1024
+    },
+    "params": {
+      "att_macs": 32768,
+      "att_measured_job_cycles": 609,
+      "bcast_um": {
+        "dense": 9040.0,
+        "expert": 20465.5,
+        "hub": 0.0,
+        "me": 7690.0,
+        "spill": 9590.0
+      },
+      "bf16_macs_die": null,
+      "bf16_stripe_macros": 2048,
+      "collective_cycles": 232,
+      "collective_w15": "v41p17_r0d1024",
+      "elem_fill": 78,
+      "expert_fill_rows": 5760,
+      "idx_macs": 262144,
+      "idx_reader_Bpc": null,
+      "mac_lanes_per_macro": null,
+      "macros": 13798,
+      "mapping": "striped",
+      "name": "proposal",
+      "return_fanin": 8,
+      "return_leaf_elems": null,
+      "row_split": "ksplit",
+      "sfu_lanes": 256,
+      "su_lanes": 1024,
+      "su_layout_extra_cycles": 14,
+      "su_softmax_measured_cycles": 3280,
+      "su_vm_ports_mm2": 6.0,
+      "use_measured_attention": false,
+      "vm_read_elems": 64,
+      "vm_write_elems": 128,
+      "weight_macs_die": null,
+      "wire_ps_per_um": 0.76
+    },
+    "power": {
+      "busiest_stage": 9,
+      "clock_w": 567.5,
+      "cooling_limit_w": 474.56,
+      "dynamic_w_saturated": 96.5,
+      "dynamic_w_single_user": 4.8,
+      "energy_per_token_uJ": 1252.34,
+      "field": {
+        "basis": "MEASURED per pair (PAIR_W, W18)",
+        "busy_pair_us_per_token": 7055.6,
+        "busy_pairs_equiv_saturated": 543.4,
+        "busy_pairs_equiv_single_user": 26.9,
+        "clock_w": 562.6,
+        "dynamic_energy_per_token_uJ": 980.46,
+        "leakage_w": 1.56,
+        "pair_w": {
+          "busy": 0.21817,
+          "clock": 0.07921,
+          "leak": 0.00022
+        },
+        "peak_busy_pairs": 6899,
+        "placed_pairs": 7102
+      },
+      "fits_cooling_saturated": false,
+      "hbm_idle_w": 11.2,
+      "hbm_stack_energy_per_token_uJ": 894.38,
+      "hbm_stack_w_saturated": 68.9,
+      "hub": {
+        "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+        "clock_w": 5.0,
+        "leakage_w": 5.7
+      },
+      "leakage_w": 7.2,
+      "per_pair_icg": {
+        "cooling_throttled_tokens_s_per_stage": 77021.9,
+        "energy_per_token_uJ": 1811.22,
+        "fits_cooling_saturated": true,
+        "peak_fits_cooling": false,
+        "peak_w_saturated": 1549.5,
+        "static_w": 23.4,
+        "total_w_saturated": 162.9,
+        "total_w_single_user": 30.3
+      },
+      "saturated_tokens_s_per_stage": 77021.9,
+      "switch_rings": {
+        "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots",
+        "fits_spare_slots": true,
+        "pair_slots": 9931,
+        "pair_slots_needed": 7457,
+        "switch_ring_mm2": 24.04
+      },
+      "total_w_saturated": 682.4,
+      "total_w_single_user": 590.7,
+      "ungated": {
+        "cooling_throttled_tokens_s_per_stage": 0.0,
+        "energy_per_token_uJ": 1252.34,
+        "fits_cooling_saturated": false,
+        "peak_fits_cooling": false,
+        "peak_w_saturated": 1565.6,
+        "static_w": 586.0,
+        "total_w_saturated": 682.4,
+        "total_w_single_user": 590.7
+      },
+      "wire_j_per_bit_mm": 1e-13
+    },
+    "power_wire_0p4": {
+      "busiest_stage": 9,
+      "clock_w": 567.5,
+      "cooling_limit_w": 474.56,
+      "dynamic_w_saturated": 134.1,
+      "dynamic_w_single_user": 6.6,
+      "energy_per_token_uJ": 1741.24,
+      "field": {
+        "basis": "MEASURED per pair (PAIR_W, W18)",
+        "busy_pair_us_per_token": 7055.6,
+        "busy_pairs_equiv_saturated": 543.4,
+        "busy_pairs_equiv_single_user": 26.9,
+        "clock_w": 562.6,
+        "dynamic_energy_per_token_uJ": 980.46,
+        "leakage_w": 1.56,
+        "pair_w": {
+          "busy": 0.21817,
+          "clock": 0.07921,
+          "leak": 0.00022
+        },
+        "peak_busy_pairs": 6899,
+        "placed_pairs": 7102
+      },
+      "fits_cooling_saturated": false,
+      "hbm_idle_w": 11.2,
+      "hbm_stack_energy_per_token_uJ": 894.38,
+      "hbm_stack_w_saturated": 68.9,
+      "hub": {
+        "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+        "clock_w": 5.0,
+        "leakage_w": 5.7
+      },
+      "leakage_w": 7.2,
+      "per_pair_icg": {
+        "cooling_throttled_tokens_s_per_stage": 77021.9,
+        "energy_per_token_uJ": 2300.12,
+        "fits_cooling_saturated": true,
+        "peak_fits_cooling": false,
+        "peak_w_saturated": 1587.2,
+        "static_w": 23.4,
+        "total_w_saturated": 200.6,
+        "total_w_single_user": 32.2
+      },
+      "saturated_tokens_s_per_stage": 77021.9,
+      "switch_rings": {
+        "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots",
+        "fits_spare_slots": true,
+        "pair_slots": 9931,
+        "pair_slots_needed": 7457,
+        "switch_ring_mm2": 24.04
+      },
+      "total_w_saturated": 720.1,
+      "total_w_single_user": 592.6,
+      "ungated": {
+        "cooling_throttled_tokens_s_per_stage": 0.0,
+        "energy_per_token_uJ": 1741.24,
+        "fits_cooling_saturated": false,
+        "peak_fits_cooling": false,
+        "peak_w_saturated": 1603.3,
+        "static_w": 586.0,
+        "total_w_saturated": 720.1,
+        "total_w_single_user": 592.6
+      },
+      "wire_j_per_bit_mm": 4e-13
+    },
+    "tokens_s": 3808.8177907235945
+  },
+  "historical_exposed_serial_assumption": "all 320 paired phase deltas exposed; not full-shape bound",
+  "literal_direct_select_cases": [
+    {
+      "candidate": false,
+      "corrected_issue_cycles": 128.0,
+      "layer": 2,
+      "old_issue_cycles": 420.0,
+      "positions_per_die": 131072,
+      "scorer_overlap": false,
+      "source_units_selected": 16,
+      "tail_cycles": 770.0
+    },
+    {
+      "candidate": false,
+      "corrected_issue_cycles": 128.0,
+      "layer": 8,
+      "old_issue_cycles": 420.0,
+      "positions_per_die": 131072,
+      "scorer_overlap": false,
+      "source_units_selected": 16,
+      "tail_cycles": 770.0
+    },
+    {
+      "candidate": false,
+      "corrected_issue_cycles": 128.0,
+      "layer": 14,
+      "old_issue_cycles": 420.0,
+      "positions_per_die": 131072,
+      "scorer_overlap": false,
+      "source_units_selected": 16,
+      "tail_cycles": 770.0
+    },
+    {
+      "candidate": false,
+      "corrected_issue_cycles": 256.0,
+      "layer": 20,
+      "old_issue_cycles": 804.0,
+      "positions_per_die": 262144,
+      "scorer_overlap": false,
+      "source_units_selected": 16,
+      "tail_cycles": 1026.0
+    },
+    {
+      "candidate": true,
+      "corrected_issue_cycles": 1024.0,
+      "layer": 20,
+      "old_issue_cycles": 1316.0,
+      "positions_per_die": 262144,
+      "scorer_overlap": false,
+      "source_units_selected": 4,
+      "tail_cycles": 774.0
+    },
+    {
+      "candidate": false,
+      "corrected_issue_cycles": 64.0,
+      "layer": 24,
+      "old_issue_cycles": 228.0,
+      "positions_per_die": 4096,
+      "scorer_overlap": false,
+      "source_units_selected": 1,
+      "tail_cycles": 193.0
+    },
+    {
+      "candidate": false,
+      "corrected_issue_cycles": 64.0,
+      "layer": 28,
+      "old_issue_cycles": 228.0,
+      "positions_per_die": 4096,
+      "scorer_overlap": false,
+      "source_units_selected": 1,
+      "tail_cycles": 193.0
+    },
+    {
+      "candidate": false,
+      "corrected_issue_cycles": 64.0,
+      "layer": 32,
+      "old_issue_cycles": 228.0,
+      "positions_per_die": 4096,
+      "scorer_overlap": false,
+      "source_units_selected": 1,
+      "tail_cycles": 193.0
+    },
+    {
+      "candidate": false,
+      "corrected_issue_cycles": 64.0,
+      "layer": 36,
+      "old_issue_cycles": 228.0,
+      "positions_per_die": 4096,
+      "scorer_overlap": false,
+      "source_units_selected": 1,
+      "tail_cycles": 193.0
+    }
+  ],
+  "phase_calibration_cycles": {
+    "a_proj": 270,
+    "gate_up": 275
+  },
+  "phase_exposed_serial_sum_cycles": 87800,
+  "phase_ledger": [
+    {
+      "cycles": 270,
+      "deps": [
+        "L0.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L0.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L0.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L0.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L0.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L0.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L0.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L0.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L0.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L0.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L0.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L0.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L0.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L0.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L0.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L0.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L0.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L0.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L0.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L0.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L0.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L0.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L0.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L0.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L1.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L1.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L1.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L1.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L1.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L1.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L1.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L1.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L1.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L1.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L1.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L1.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L1.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L1.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L1.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L1.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L1.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L1.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L1.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L1.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L1.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L1.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L1.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L1.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L2.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L2.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L2.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L2.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L2.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L2.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L2.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L2.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L2.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L2.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L2.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L2.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L2.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L2.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L2.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L2.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L2.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L2.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L2.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L2.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L2.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L2.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L2.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L2.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L3.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L3.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L3.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L3.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L3.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L3.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L3.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L3.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L3.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L3.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L3.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L3.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L3.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L3.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L3.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L3.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L3.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L3.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L3.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L3.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L3.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L3.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L3.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L3.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L4.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L4.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L4.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L4.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L4.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L4.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L4.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L4.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L4.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L4.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L4.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L4.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L4.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L4.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L4.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L4.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L4.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L4.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L4.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L4.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L4.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L4.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L4.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L4.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L5.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L5.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L5.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L5.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L5.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L5.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L5.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L5.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L5.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L5.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L5.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L5.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L5.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L5.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L5.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L5.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L5.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L5.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L5.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L5.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L5.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L5.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L5.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L5.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L6.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L6.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L6.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L6.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L6.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L6.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L6.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L6.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L6.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L6.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L6.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L6.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L6.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L6.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L6.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L6.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L6.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L6.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L6.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L6.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L6.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L6.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L6.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L6.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L7.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L7.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L7.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L7.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L7.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L7.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L7.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L7.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L7.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L7.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L7.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L7.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L7.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L7.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L7.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L7.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L7.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L7.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L7.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L7.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L7.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L7.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L7.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L7.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L8.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L8.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L8.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L8.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L8.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L8.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L8.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L8.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L8.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L8.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L8.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L8.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L8.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L8.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L8.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L8.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L8.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L8.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L8.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L8.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L8.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L8.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L8.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L8.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L9.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L9.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L9.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L9.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L9.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L9.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L9.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L9.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L9.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L9.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L9.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L9.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L9.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L9.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L9.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L9.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L9.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L9.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L9.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L9.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L9.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L9.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L9.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L9.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L10.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L10.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L10.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L10.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L10.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L10.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L10.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L10.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L10.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L10.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L10.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L10.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L10.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L10.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L10.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L10.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L10.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L10.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L10.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L10.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L10.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L10.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L10.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L10.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L11.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L11.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L11.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L11.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L11.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L11.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L11.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L11.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L11.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L11.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L11.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L11.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L11.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L11.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L11.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L11.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L11.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L11.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L11.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L11.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L11.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L11.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L11.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L11.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L12.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L12.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L12.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L12.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L12.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L12.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L12.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L12.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L12.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L12.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L12.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L12.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L12.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L12.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L12.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L12.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L12.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L12.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L12.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L12.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L12.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L12.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L12.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L12.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L13.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L13.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L13.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L13.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L13.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L13.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L13.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L13.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L13.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L13.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L13.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L13.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L13.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L13.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L13.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L13.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L13.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L13.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L13.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L13.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L13.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L13.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L13.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L13.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L14.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L14.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L14.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L14.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L14.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L14.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L14.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L14.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L14.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L14.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L14.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L14.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L14.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L14.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L14.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L14.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L14.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L14.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L14.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L14.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L14.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L14.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L14.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L14.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L15.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L15.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L15.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L15.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L15.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L15.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L15.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L15.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L15.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L15.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L15.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L15.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L15.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L15.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L15.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L15.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L15.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L15.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L15.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L15.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L15.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L15.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L15.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L15.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L16.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L16.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L16.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L16.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L16.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L16.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L16.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L16.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L16.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L16.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L16.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L16.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L16.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L16.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L16.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L16.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L16.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L16.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L16.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L16.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L16.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L16.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L16.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L16.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L17.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L17.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L17.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L17.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L17.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L17.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L17.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L17.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L17.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L17.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L17.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L17.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L17.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L17.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L17.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L17.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L17.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L17.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L17.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L17.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L17.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L17.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L17.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L17.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L18.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L18.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L18.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L18.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L18.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L18.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L18.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L18.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L18.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L18.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L18.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L18.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L18.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L18.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L18.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L18.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L18.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L18.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L18.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L18.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L18.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L18.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L18.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L18.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L19.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L19.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L19.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L19.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L19.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L19.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L19.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L19.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L19.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L19.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L19.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L19.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L19.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L19.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L19.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L19.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L19.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L19.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L19.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L19.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L19.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L19.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L19.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L19.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L20.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L20.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L20.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L20.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L20.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L20.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L20.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L20.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L20.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L20.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L20.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L20.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L20.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L20.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L20.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L20.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L20.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L20.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L20.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L20.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L20.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L20.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L20.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L20.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L21.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L21.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L21.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L21.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L21.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L21.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L21.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L21.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L21.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L21.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L21.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L21.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L21.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L21.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L21.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L21.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L21.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L21.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L21.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L21.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L21.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L21.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L21.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L21.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L22.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L22.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L22.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L22.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L22.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L22.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L22.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L22.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L22.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L22.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L22.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L22.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L22.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L22.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L22.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L22.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L22.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L22.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L22.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L22.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L22.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L22.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L22.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L22.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L23.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L23.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L23.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L23.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L23.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L23.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L23.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L23.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L23.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L23.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L23.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L23.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L23.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L23.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L23.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L23.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L23.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L23.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L23.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L23.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L23.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L23.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L23.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L23.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L24.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L24.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L24.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L24.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L24.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L24.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L24.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L24.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L24.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L24.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L24.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L24.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L24.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L24.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L24.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L24.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L24.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L24.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L24.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L24.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L24.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L24.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L24.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L24.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L25.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L25.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L25.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L25.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L25.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L25.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L25.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L25.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L25.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L25.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L25.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L25.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L25.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L25.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L25.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L25.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L25.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L25.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L25.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L25.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L25.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L25.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L25.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L25.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L26.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L26.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L26.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L26.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L26.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L26.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L26.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L26.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L26.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L26.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L26.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L26.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L26.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L26.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L26.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L26.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L26.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L26.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L26.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L26.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L26.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L26.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L26.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L26.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L27.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L27.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L27.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L27.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L27.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L27.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L27.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L27.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L27.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L27.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L27.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L27.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L27.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L27.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L27.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L27.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L27.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L27.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L27.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L27.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L27.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L27.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L27.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L27.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L28.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L28.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L28.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L28.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L28.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L28.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L28.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L28.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L28.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L28.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L28.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L28.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L28.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L28.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L28.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L28.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L28.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L28.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L28.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L28.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L28.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L28.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L28.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L28.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L29.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L29.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L29.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L29.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L29.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L29.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L29.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L29.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L29.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L29.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L29.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L29.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L29.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L29.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L29.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L29.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L29.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L29.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L29.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L29.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L29.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L29.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L29.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L29.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L30.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L30.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L30.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L30.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L30.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L30.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L30.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L30.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L30.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L30.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L30.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L30.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L30.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L30.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L30.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L30.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L30.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L30.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L30.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L30.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L30.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L30.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L30.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L30.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L31.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L31.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L31.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L31.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L31.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L31.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L31.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L31.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L31.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L31.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L31.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L31.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L31.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L31.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L31.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L31.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L31.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L31.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L31.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L31.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L31.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L31.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L31.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L31.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L32.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L32.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L32.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L32.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L32.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L32.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L32.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L32.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L32.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L32.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L32.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L32.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L32.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L32.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L32.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L32.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L32.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L32.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L32.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L32.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L32.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L32.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L32.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L32.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L33.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L33.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L33.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L33.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L33.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L33.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L33.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L33.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L33.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L33.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L33.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L33.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L33.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L33.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L33.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L33.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L33.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L33.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L33.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L33.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L33.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L33.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L33.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L33.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L34.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L34.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L34.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L34.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L34.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L34.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L34.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L34.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L34.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L34.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L34.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L34.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L34.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L34.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L34.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L34.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L34.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L34.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L34.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L34.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L34.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L34.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L34.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L34.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L35.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L35.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L35.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L35.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L35.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L35.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L35.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L35.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L35.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L35.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L35.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L35.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L35.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L35.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L35.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L35.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L35.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L35.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L35.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L35.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L35.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L35.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L35.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L35.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L36.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L36.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L36.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L36.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L36.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L36.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L36.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L36.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L36.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L36.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L36.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L36.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L36.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L36.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L36.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L36.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L36.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L36.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L36.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L36.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L36.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L36.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L36.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L36.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L37.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L37.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L37.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L37.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L37.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L37.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L37.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L37.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L37.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L37.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L37.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L37.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L37.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L37.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L37.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L37.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L37.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L37.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L37.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L37.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L37.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L37.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L37.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L37.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L38.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L38.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L38.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L38.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L38.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L38.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L38.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L38.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L38.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L38.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L38.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L38.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L38.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L38.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L38.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L38.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L38.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L38.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L38.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L38.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L38.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L38.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L38.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L38.ffn.experts_gu"
+    },
+    {
+      "cycles": 270,
+      "deps": [
+        "L39.attn.a_proj"
+      ],
+      "family": "a_proj",
+      "name": "L39.attn.a_proj.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L39.attn.a_proj"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L39.ffn.shared_gu"
+      ],
+      "family": "gate_up",
+      "name": "L39.ffn.shared_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L39.ffn.shared_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L39.ffn.experts_gu"
+      ],
+      "family": "gate_up",
+      "name": "L39.ffn.experts_gu.asbuilt_second_phase0",
+      "repetition": 0,
+      "same_x": "XN",
+      "source": "L39.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L39.ffn.experts_gu.asbuilt_second_phase0"
+      ],
+      "family": "gate_up",
+      "name": "L39.ffn.experts_gu.asbuilt_second_phase1",
+      "repetition": 1,
+      "same_x": "XN",
+      "source": "L39.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L39.ffn.experts_gu.asbuilt_second_phase1"
+      ],
+      "family": "gate_up",
+      "name": "L39.ffn.experts_gu.asbuilt_second_phase2",
+      "repetition": 2,
+      "same_x": "XN",
+      "source": "L39.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L39.ffn.experts_gu.asbuilt_second_phase2"
+      ],
+      "family": "gate_up",
+      "name": "L39.ffn.experts_gu.asbuilt_second_phase3",
+      "repetition": 3,
+      "same_x": "XN",
+      "source": "L39.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L39.ffn.experts_gu.asbuilt_second_phase3"
+      ],
+      "family": "gate_up",
+      "name": "L39.ffn.experts_gu.asbuilt_second_phase4",
+      "repetition": 4,
+      "same_x": "XN",
+      "source": "L39.ffn.experts_gu"
+    },
+    {
+      "cycles": 275,
+      "deps": [
+        "L39.ffn.experts_gu.asbuilt_second_phase4"
+      ],
+      "family": "gate_up",
+      "name": "L39.ffn.experts_gu.asbuilt_second_phase5",
+      "repetition": 5,
+      "same_x": "XN",
+      "source": "L39.ffn.experts_gu"
+    }
+  ],
+  "phase_pair_count": 320,
+  "producer_baseline": {
+    "T_us": 266.83727404606174,
+    "arch_T_us": 202.71250592870817,
+    "arch_tokens_s": 4933.094756135517,
+    "breakdown_us": {
+      "collective_latency": 63.3,
+      "compute_chain": 140.728,
+      "control": 6.354,
+      "kv_sweep": 12.77,
+      "pipeline_hops": 11.946,
+      "weight_sweep": 31.74
+    },
+    "clock_hz": 1033900000.0,
+    "critical_path_by_node_us": {
+      "attn.a_allgather": 7.765,
+      "attn.a_proj": 9.401,
+      "attn.exp": 5.509,
+      "attn.idx.score": 13.493,
+      "attn.idx.topk_local": 11.322,
+      "attn.norm.rsqrt": 4.178,
+      "attn.normalize": 4.217,
+      "attn.out_allreduce": 18.853,
+      "attn.pv": 6.689,
+      "attn.q_norm.rsqrt": 4.178,
+      "attn.rows_allgather": 8.364,
+      "attn.scores": 6.385,
+      "attn.wo_a": 14.508,
+      "attn.wo_b": 6.654,
+      "attn.wq_b": 7.637,
+      "ffn.combine_allreduce": 18.853,
+      "ffn.down": 8.937,
+      "ffn.experts_gu": 9.517,
+      "ffn.norm.rsqrt": 4.178,
+      "ffn.router": 8.744,
+      "ffn.router_allgather": 7.339,
+      "ffn.softplus_sqrt": 11.142,
+      "ffn.swiglu": 5.184,
+      "head.lm_head": 5.069,
+      "substage_hop0": 10.038
+    },
+    "ctx": 1048576,
+    "design": "proposal",
+    "layer20_matvecs": {
+      "L20.attn.a_proj": {
+        "K": 5120,
+        "adder_levels": 5,
+        "bind": "vm_read_x",
+        "depth": 140,
+        "fmt": "fp8",
+        "holding": 11520.0,
+        "issue": 160.0,
+        "key": "a_proj",
+        "ksplit": 32,
+        "region": "dense",
+        "rows": 712.0,
+        "t_mac": 0.0,
+        "t_read": 80.0,
+        "t_ret": 5.6,
+        "t_x": 160.0,
+        "tree": 5,
+        "wire": 32,
+        "words": 113920.0
+      },
+      "L20.attn.cmp.wk": {
+        "K": 512,
+        "adder_levels": 1,
+        "bind": "rom_read",
+        "depth": 118,
+        "fmt": "bf16",
+        "holding": 256.0,
+        "issue": 40.0,
+        "key": "cmp.wk",
+        "ksplit": 2,
+        "region": "dense",
+        "rows": 128.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 1.0,
+        "t_x": 8.0,
+        "tree": 3,
+        "wire": 32,
+        "words": 4096.0
+      },
+      "L20.attn.wo_a": {
+        "K": 4096,
+        "adder_levels": 0,
+        "bind": "rom_read",
+        "depth": 112,
+        "fmt": "bf16",
+        "holding": 2048,
+        "issue": 256.0,
+        "key": "wo_a",
+        "ksplit": 1,
+        "region": "me",
+        "rows": 2048.0,
+        "t_mac": 0.0,
+        "t_read": 256.0,
+        "t_ret": 16.0,
+        "t_x": 64.0,
+        "tree": 4,
+        "wire": 30,
+        "words": 524288.0
+      },
+      "L20.attn.wo_b": {
+        "K": 2048,
+        "adder_levels": 2,
+        "bind": "rom_read",
+        "depth": 125,
+        "fmt": "fp8",
+        "holding": 13798,
+        "issue": 40.0,
+        "key": "wo_b",
+        "ksplit": 4,
+        "region": "dense",
+        "rows": 5120.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 40.0,
+        "t_x": 32.0,
+        "tree": 5,
+        "wire": 32,
+        "words": 327680.0
+      },
+      "L20.attn.wq_b": {
+        "K": 1280,
+        "adder_levels": 1,
+        "bind": "vm_write_ret",
+        "depth": 120,
+        "fmt": "fp8",
+        "holding": 13798,
+        "issue": 96.0,
+        "key": "wq_b",
+        "ksplit": 2,
+        "region": "dense",
+        "rows": 12288.0,
+        "t_mac": 0.0,
+        "t_read": 64.0,
+        "t_ret": 96.0,
+        "t_x": 20.0,
+        "tree": 5,
+        "wire": 32,
+        "words": 491520.0
+      },
+      "L20.ffn.down": {
+        "K": 2304,
+        "adder_levels": 3,
+        "bind": "vm_write_ret",
+        "depth": 154,
+        "fmt": "fp4",
+        "holding": 13798,
+        "issue": 70.0,
+        "key": "down",
+        "ksplit": 8,
+        "region": "expert",
+        "rows": 8960.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 70.0,
+        "t_x": 36.0,
+        "tree": 5,
+        "wire": 56,
+        "words": 322560.0
+      },
+      "L20.ffn.experts_gu": {
+        "K": 5120,
+        "adder_levels": 4,
+        "bind": "vm_read_x",
+        "depth": 159,
+        "fmt": "fp4",
+        "holding": 13798,
+        "issue": 80.0,
+        "key": "experts_gu",
+        "ksplit": 16,
+        "region": "expert",
+        "rows": 6912.0,
+        "t_mac": 0.0,
+        "t_read": 48.0,
+        "t_ret": 54.0,
+        "t_x": 80.0,
+        "tree": 5,
+        "wire": 56,
+        "words": 552960.0
+      },
+      "L20.ffn.router": {
+        "K": 5120,
+        "adder_levels": 5,
+        "bind": "vm_read_x",
+        "depth": 139,
+        "fmt": "bf16",
+        "holding": 1920.0,
+        "issue": 80.0,
+        "key": "router",
+        "ksplit": 32,
+        "region": "dense",
+        "rows": 96.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 0.8,
+        "t_x": 80.0,
+        "tree": 4,
+        "wire": 32,
+        "words": 30720.0
+      },
+      "L20.ffn.shared_gu": {
+        "K": 5120,
+        "adder_levels": 4,
+        "bind": "vm_read_x",
+        "depth": 135,
+        "fmt": "fp8",
+        "holding": 11520.0,
+        "issue": 80.0,
+        "key": "shared_gu",
+        "ksplit": 16,
+        "region": "dense",
+        "rows": 1152.0,
+        "t_mac": 0.0,
+        "t_read": 40.0,
+        "t_ret": 9.0,
+        "t_x": 80.0,
+        "tree": 5,
+        "wire": 32,
+        "words": 184320.0
+      }
+    },
+    "tokens_s": 3747.602367678883
+  },
+  "qwen": {
+    "depth256_cycles": {
+      "L0": 3931,
+      "L1": 3930
+    },
+    "headline_adoption": false,
+    "one256_cycles": {
+      "L0": 3931,
+      "L1": 3930
+    },
+    "physical_qualification": false,
+    "saved_cycles": {
+      "L0": 738,
+      "L1": 738
+    },
+    "scope": "matched L0/L1 functional component only",
+    "split128_cycles": {
+      "L0": 4669,
+      "L1": 4668
+    }
+  },
+  "schema": "native-calendar.pricing-correction.r11",
+  "select_correction": {
+    "architecture_proposal": "arch_budget._select_price already replaces direct Ops issue/depth; no duplicate subtraction",
+    "direct_Ops": "issue=max(ingress, preceding-cohort occupancy+ingress); depth=tail once",
+    "occupancy_policy": "ingress + selected measured local tail; final merge priced separately",
+    "scorer_overlap_adopted": false
+  },
+  "sensitivity_critical_path": [
+    "token",
+    "embed",
+    "L0.attn.hc_pre",
+    "L0.attn.norm.sumsq",
+    "L0.attn.norm.rsqrt",
+    "L0.attn.norm.scale",
+    "L0.attn.quant",
+    "L0.attn.a_proj",
+    "L0.attn.a_proj.asbuilt_second_phase0",
+    "L0.attn.a_allgather",
+    "L0.attn.q_norm.sumsq",
+    "L0.attn.q_norm.rsqrt",
+    "L0.attn.q_norm.scale",
+    "L0.attn.q_quant",
+    "L0.attn.wq_b",
+    "L0.attn.q_rope",
+    "L0.attn.scores",
+    "L0.attn.max",
+    "L0.attn.exp",
+    "L0.attn.den",
+    "L0.attn.sink",
+    "L0.attn.normalize",
+    "L0.attn.wo_a",
+    "L0.attn.z_quant",
+    "L0.attn.wo_b",
+    "L0.attn.out_allreduce",
+    "L0.attn.hc_post",
+    "L0.ffn.hc_pre",
+    "L0.ffn.norm.sumsq",
+    "L0.ffn.norm.rsqrt",
+    "L0.ffn.norm.scale",
+    "L0.ffn.router",
+    "L0.ffn.softplus_sqrt",
+    "L0.ffn.router_allgather",
+    "L0.ffn.bias",
+    "L0.ffn.top6",
+    "L0.ffn.top6_order",
+    "L0.ffn.experts_gu",
+    "L0.ffn.experts_gu.asbuilt_second_phase0",
+    "L0.ffn.experts_gu.asbuilt_second_phase1",
+    "L0.ffn.experts_gu.asbuilt_second_phase2",
+    "L0.ffn.experts_gu.asbuilt_second_phase3",
+    "L0.ffn.experts_gu.asbuilt_second_phase4",
+    "L0.ffn.experts_gu.asbuilt_second_phase5",
+    "L0.ffn.swiglu",
+    "L0.ffn.route_w",
+    "L0.ffn.quant2",
+    "L0.ffn.down",
+    "L0.ffn.combine_allreduce",
+    "L0.ffn.hc_post",
+    "L1.eng.hh",
+    "L1.eng.gate",
+    "L1.eng.add",
+    "L1.attn.hc_pre",
+    "L1.attn.norm.sumsq",
+    "L1.attn.norm.rsqrt",
+    "L1.attn.norm.scale",
+    "L1.attn.quant",
+    "L1.attn.a_proj",
+    "L1.attn.a_proj.asbuilt_second_phase0",
+    "L1.attn.a_allgather",
+    "L1.attn.q_norm.sumsq",
+    "L1.attn.q_norm.rsqrt",
+    "L1.attn.q_norm.scale",
+    "L1.attn.q_quant",
+    "L1.attn.wq_b",
+    "L1.attn.q_rope",
+    "L1.attn.scores",
+    "L1.attn.max",
+    "L1.attn.exp",
+    "L1.attn.den",
+    "L1.attn.sink",
+    "L1.attn.normalize",
+    "L1.attn.wo_a",
+    "L1.attn.z_quant",
+    "L1.attn.wo_b",
+    "L1.attn.out_allreduce",
+    "L1.attn.hc_post",
+    "L1.substage_hop0",
+    "L1.ffn.hc_pre",
+    "L1.ffn.norm.sumsq",
+    "L1.ffn.norm.rsqrt",
+    "L1.ffn.norm.scale",
+    "L1.ffn.router",
+    "L1.ffn.softplus_sqrt",
+    "L1.ffn.router_allgather",
+    "L1.ffn.bias",
+    "L1.ffn.top6",
+    "L1.ffn.top6_order",
+    "L1.ffn.experts_gu",
+    "L1.ffn.experts_gu.asbuilt_second_phase0",
+    "L1.ffn.experts_gu.asbuilt_second_phase1",
+    "L1.ffn.experts_gu.asbuilt_second_phase2",
+    "L1.ffn.experts_gu.asbuilt_second_phase3",
+    "L1.ffn.experts_gu.asbuilt_second_phase4",
+    "L1.ffn.experts_gu.asbuilt_second_phase5",
+    "L1.ffn.swiglu",
+    "L1.ffn.route_w",
+    "L1.ffn.quant2",
+    "L1.ffn.down",
+    "L1.ffn.combine_allreduce",
+    "L1.ffn.hc_post",
+    "L2.attn.hc_pre",
+    "L2.attn.norm.sumsq",
+    "L2.attn.norm.rsqrt",
+    "L2.attn.norm.scale",
+    "L2.attn.quant",
+    "L2.attn.a_proj",
+    "L2.attn.a_proj.asbuilt_second_phase0",
+    "L2.attn.a_allgather",
+    "L2.attn.q_norm.sumsq",
+    "L2.attn.q_norm.rsqrt",
+    "L2.attn.q_norm.scale",
+    "L2.attn.q_quant",
+    "L2.attn.wq_b",
+    "L2.attn.idx.q",
+    "L2.attn.idx.score",
+    "L2.attn.idx.topk_local",
+    "L2.attn.idx.topk_merge",
+    "L2.attn.idx.topk_final",
+    "L2.attn.gather",
+    "L2.attn.rows_allgather",
+    "L2.attn.scores",
+    "L2.attn.max",
+    "L2.attn.exp",
+    "L2.attn.pv",
+    "L2.attn.normalize",
+    "L2.attn.wo_a",
+    "L2.attn.z_quant",
+    "L2.attn.wo_b",
+    "L2.attn.out_allreduce",
+    "L2.attn.hc_post",
+    "L2.substage_hop0",
+    "L2.ffn.hc_pre",
+    "L2.ffn.norm.sumsq",
+    "L2.ffn.norm.rsqrt",
+    "L2.ffn.norm.scale",
+    "L2.ffn.router",
+    "L2.ffn.softplus_sqrt",
+    "L2.ffn.router_allgather",
+    "L2.ffn.bias",
+    "L2.ffn.top6",
+    "L2.ffn.top6_order",
+    "L2.ffn.experts_gu",
+    "L2.ffn.experts_gu.asbuilt_second_phase0",
+    "L2.ffn.experts_gu.asbuilt_second_phase1",
+    "L2.ffn.experts_gu.asbuilt_second_phase2",
+    "L2.ffn.experts_gu.asbuilt_second_phase3",
+    "L2.ffn.experts_gu.asbuilt_second_phase4",
+    "L2.ffn.experts_gu.asbuilt_second_phase5",
+    "L2.ffn.swiglu",
+    "L2.ffn.route_w",
+    "L2.ffn.quant2",
+    "L2.ffn.down",
+    "L2.ffn.combine_allreduce",
+    "L2.ffn.hc_post",
+    "L3.attn.hc_pre",
+    "L3.attn.norm.sumsq",
+    "L3.attn.norm.rsqrt",
+    "L3.attn.norm.scale",
+    "L3.attn.quant",
+    "L3.attn.a_proj",
+    "L3.attn.a_proj.asbuilt_second_phase0",
+    "L3.attn.a_allgather",
+    "L3.attn.q_norm.sumsq",
+    "L3.attn.q_norm.rsqrt",
+    "L3.attn.q_norm.scale",
+    "L3.attn.q_quant",
+    "L3.attn.wq_b",
+    "L3.attn.q_rope",
+    "L3.attn.scores",
+    "L3.attn.max",
+    "L3.attn.exp",
+    "L3.attn.pv",
+    "L3.attn.normalize",
+    "L3.attn.wo_a",
+    "L3.attn.z_quant",
+    "L3.attn.wo_b",
+    "L3.attn.out_allreduce",
+    "L3.attn.hc_post",
+    "L3.ffn.hc_pre",
+    "L3.ffn.norm.sumsq",
+    "L3.ffn.norm.rsqrt",
+    "L3.ffn.norm.scale",
+    "L3.ffn.router",
+    "L3.ffn.softplus_sqrt",
+    "L3.ffn.router_allgather",
+    "L3.ffn.bias",
+    "L3.ffn.top6",
+    "L3.ffn.top6_order",
+    "L3.ffn.experts_gu",
+    "L3.ffn.experts_gu.asbuilt_second_phase0",
+    "L3.ffn.experts_gu.asbuilt_second_phase1",
+    "L3.ffn.experts_gu.asbuilt_second_phase2",
+    "L3.ffn.experts_gu.asbuilt_second_phase3",
+    "L3.ffn.experts_gu.asbuilt_second_phase4",
+    "L3.ffn.experts_gu.asbuilt_second_phase5",
+    "L3.ffn.swiglu",
+    "L3.ffn.route_w",
+    "L3.ffn.quant2",
+    "L3.ffn.down",
+    "L3.ffn.combine_allreduce",
+    "L3.ffn.hc_post",
+    "L4.attn.hc_pre",
+    "L4.attn.norm.sumsq",
+    "L4.attn.norm.rsqrt",
+    "L4.attn.norm.scale",
+    "L4.attn.quant",
+    "L4.attn.a_proj",
+    "L4.attn.a_proj.asbuilt_second_phase0",
+    "L4.attn.a_allgather",
+    "L4.attn.q_norm.sumsq",
+    "L4.attn.q_norm.rsqrt",
+    "L4.attn.q_norm.scale",
+    "L4.attn.q_quant",
+    "L4.attn.wq_b",
+    "L4.attn.q_rope",
+    "L4.attn.scores",
+    "L4.attn.max",
+    "L4.attn.exp",
+    "L4.attn.pv",
+    "L4.attn.normalize",
+    "L4.attn.wo_a",
+    "L4.attn.z_quant",
+    "L4.attn.wo_b",
+    "L4.attn.out_allreduce",
+    "L4.attn.hc_post",
+    "L4.substage_hop0",
+    "L4.ffn.hc_pre",
+    "L4.ffn.norm.sumsq",
+    "L4.ffn.norm.rsqrt",
+    "L4.ffn.norm.scale",
+    "L4.ffn.router",
+    "L4.ffn.softplus_sqrt",
+    "L4.ffn.router_allgather",
+    "L4.ffn.bias",
+    "L4.ffn.top6",
+    "L4.ffn.top6_order",
+    "L4.ffn.experts_gu",
+    "L4.ffn.experts_gu.asbuilt_second_phase0",
+    "L4.ffn.experts_gu.asbuilt_second_phase1",
+    "L4.ffn.experts_gu.asbuilt_second_phase2",
+    "L4.ffn.experts_gu.asbuilt_second_phase3",
+    "L4.ffn.experts_gu.asbuilt_second_phase4",
+    "L4.ffn.experts_gu.asbuilt_second_phase5",
+    "L4.ffn.swiglu",
+    "L4.ffn.route_w",
+    "L4.ffn.quant2",
+    "L4.ffn.down",
+    "L4.ffn.combine_allreduce",
+    "L4.ffn.hc_post",
+    "L5.attn.hc_pre",
+    "L5.attn.norm.sumsq",
+    "L5.attn.norm.rsqrt",
+    "L5.attn.norm.scale",
+    "L5.attn.quant",
+    "L5.attn.a_proj",
+    "L5.attn.a_proj.asbuilt_second_phase0",
+    "L5.attn.a_allgather",
+    "L5.attn.q_norm.sumsq",
+    "L5.attn.q_norm.rsqrt",
+    "L5.attn.q_norm.scale",
+    "L5.attn.q_quant",
+    "L5.attn.wq_b",
+    "L5.attn.q_rope",
+    "L5.attn.scores",
+    "L5.attn.max",
+    "L5.attn.exp",
+    "L5.attn.pv",
+    "L5.attn.normalize",
+    "L5.attn.wo_a",
+    "L5.attn.z_quant",
+    "L5.attn.wo_b",
+    "L5.attn.out_allreduce",
+    "L5.attn.hc_post",
+    "L5.substage_hop0",
+    "L5.ffn.hc_pre",
+    "L5.ffn.norm.sumsq",
+    "L5.ffn.norm.rsqrt",
+    "L5.ffn.norm.scale",
+    "L5.ffn.router",
+    "L5.ffn.softplus_sqrt",
+    "L5.ffn.router_allgather",
+    "L5.ffn.bias",
+    "L5.ffn.top6",
+    "L5.ffn.top6_order",
+    "L5.ffn.experts_gu",
+    "L5.ffn.experts_gu.asbuilt_second_phase0",
+    "L5.ffn.experts_gu.asbuilt_second_phase1",
+    "L5.ffn.experts_gu.asbuilt_second_phase2",
+    "L5.ffn.experts_gu.asbuilt_second_phase3",
+    "L5.ffn.experts_gu.asbuilt_second_phase4",
+    "L5.ffn.experts_gu.asbuilt_second_phase5",
+    "L5.ffn.swiglu",
+    "L5.ffn.route_w",
+    "L5.ffn.quant2",
+    "L5.ffn.down",
+    "L5.ffn.combine_allreduce",
+    "L5.ffn.hc_post",
+    "L6.attn.hc_pre",
+    "L6.attn.norm.sumsq",
+    "L6.attn.norm.rsqrt",
+    "L6.attn.norm.scale",
+    "L6.attn.quant",
+    "L6.attn.a_proj",
+    "L6.attn.a_proj.asbuilt_second_phase0",
+    "L6.attn.a_allgather",
+    "L6.attn.q_norm.sumsq",
+    "L6.attn.q_norm.rsqrt",
+    "L6.attn.q_norm.scale",
+    "L6.attn.q_quant",
+    "L6.attn.wq_b",
+    "L6.attn.q_rope",
+    "L6.attn.scores",
+    "L6.attn.max",
+    "L6.attn.exp",
+    "L6.attn.pv",
+    "L6.attn.normalize",
+    "L6.attn.wo_a",
+    "L6.attn.z_quant",
+    "L6.attn.wo_b",
+    "L6.attn.out_allreduce",
+    "L6.attn.hc_post",
+    "L6.ffn.hc_pre",
+    "L6.ffn.norm.sumsq",
+    "L6.ffn.norm.rsqrt",
+    "L6.ffn.norm.scale",
+    "L6.ffn.router",
+    "L6.ffn.softplus_sqrt",
+    "L6.ffn.router_allgather",
+    "L6.ffn.bias",
+    "L6.ffn.top6",
+    "L6.ffn.top6_order",
+    "L6.ffn.experts_gu",
+    "L6.ffn.experts_gu.asbuilt_second_phase0",
+    "L6.ffn.experts_gu.asbuilt_second_phase1",
+    "L6.ffn.experts_gu.asbuilt_second_phase2",
+    "L6.ffn.experts_gu.asbuilt_second_phase3",
+    "L6.ffn.experts_gu.asbuilt_second_phase4",
+    "L6.ffn.experts_gu.asbuilt_second_phase5",
+    "L6.ffn.swiglu",
+    "L6.ffn.route_w",
+    "L6.ffn.quant2",
+    "L6.ffn.down",
+    "L6.ffn.combine_allreduce",
+    "L6.ffn.hc_post",
+    "L7.attn.hc_pre",
+    "L7.attn.norm.sumsq",
+    "L7.attn.norm.rsqrt",
+    "L7.attn.norm.scale",
+    "L7.attn.quant",
+    "L7.attn.a_proj",
+    "L7.attn.a_proj.asbuilt_second_phase0",
+    "L7.attn.a_allgather",
+    "L7.attn.q_norm.sumsq",
+    "L7.attn.q_norm.rsqrt",
+    "L7.attn.q_norm.scale",
+    "L7.attn.q_quant",
+    "L7.attn.wq_b",
+    "L7.attn.q_rope",
+    "L7.attn.scores",
+    "L7.attn.max",
+    "L7.attn.exp",
+    "L7.attn.pv",
+    "L7.attn.normalize",
+    "L7.attn.wo_a",
+    "L7.attn.z_quant",
+    "L7.attn.wo_b",
+    "L7.attn.out_allreduce",
+    "L7.attn.hc_post",
+    "L7.substage_hop0",
+    "L7.ffn.hc_pre",
+    "L7.ffn.norm.sumsq",
+    "L7.ffn.norm.rsqrt",
+    "L7.ffn.norm.scale",
+    "L7.ffn.router",
+    "L7.ffn.softplus_sqrt",
+    "L7.ffn.router_allgather",
+    "L7.ffn.bias",
+    "L7.ffn.top6",
+    "L7.ffn.top6_order",
+    "L7.ffn.experts_gu",
+    "L7.ffn.experts_gu.asbuilt_second_phase0",
+    "L7.ffn.experts_gu.asbuilt_second_phase1",
+    "L7.ffn.experts_gu.asbuilt_second_phase2",
+    "L7.ffn.experts_gu.asbuilt_second_phase3",
+    "L7.ffn.experts_gu.asbuilt_second_phase4",
+    "L7.ffn.experts_gu.asbuilt_second_phase5",
+    "L7.ffn.swiglu",
+    "L7.ffn.route_w",
+    "L7.ffn.quant2",
+    "L7.ffn.down",
+    "L7.ffn.combine_allreduce",
+    "L7.ffn.hc_post",
+    "L8.attn.hc_pre",
+    "L8.attn.norm.sumsq",
+    "L8.attn.norm.rsqrt",
+    "L8.attn.norm.scale",
+    "L8.attn.quant",
+    "L8.attn.a_proj",
+    "L8.attn.a_proj.asbuilt_second_phase0",
+    "L8.attn.a_allgather",
+    "L8.attn.q_norm.sumsq",
+    "L8.attn.q_norm.rsqrt",
+    "L8.attn.q_norm.scale",
+    "L8.attn.q_quant",
+    "L8.attn.wq_b",
+    "L8.attn.idx.q",
+    "L8.attn.idx.score",
+    "L8.attn.idx.topk_local",
+    "L8.attn.idx.topk_merge",
+    "L8.attn.idx.topk_final",
+    "L8.attn.gather",
+    "L8.attn.rows_allgather",
+    "L8.attn.scores",
+    "L8.attn.max",
+    "L8.attn.exp",
+    "L8.attn.pv",
+    "L8.attn.normalize",
+    "L8.attn.wo_a",
+    "L8.attn.z_quant",
+    "L8.attn.wo_b",
+    "L8.attn.out_allreduce",
+    "L8.attn.hc_post",
+    "L8.substage_hop0",
+    "L8.ffn.hc_pre",
+    "L8.ffn.norm.sumsq",
+    "L8.ffn.norm.rsqrt",
+    "L8.ffn.norm.scale",
+    "L8.ffn.router",
+    "L8.ffn.softplus_sqrt",
+    "L8.ffn.router_allgather",
+    "L8.ffn.bias",
+    "L8.ffn.top6",
+    "L8.ffn.top6_order",
+    "L8.ffn.experts_gu",
+    "L8.ffn.experts_gu.asbuilt_second_phase0",
+    "L8.ffn.experts_gu.asbuilt_second_phase1",
+    "L8.ffn.experts_gu.asbuilt_second_phase2",
+    "L8.ffn.experts_gu.asbuilt_second_phase3",
+    "L8.ffn.experts_gu.asbuilt_second_phase4",
+    "L8.ffn.experts_gu.asbuilt_second_phase5",
+    "L8.ffn.swiglu",
+    "L8.ffn.route_w",
+    "L8.ffn.quant2",
+    "L8.ffn.down",
+    "L8.ffn.combine_allreduce",
+    "L8.ffn.hc_post",
+    "L9.attn.hc_pre",
+    "L9.attn.norm.sumsq",
+    "L9.attn.norm.rsqrt",
+    "L9.attn.norm.scale",
+    "L9.attn.quant",
+    "L9.attn.a_proj",
+    "L9.attn.a_proj.asbuilt_second_phase0",
+    "L9.attn.a_allgather",
+    "L9.attn.q_norm.sumsq",
+    "L9.attn.q_norm.rsqrt",
+    "L9.attn.q_norm.scale",
+    "L9.attn.q_quant",
+    "L9.attn.wq_b",
+    "L9.attn.q_rope",
+    "L9.attn.scores",
+    "L9.attn.max",
+    "L9.attn.exp",
+    "L9.attn.pv",
+    "L9.attn.normalize",
+    "L9.attn.wo_a",
+    "L9.attn.z_quant",
+    "L9.attn.wo_b",
+    "L9.attn.out_allreduce",
+    "L9.attn.hc_post",
+    "L9.ffn.hc_pre",
+    "L9.ffn.norm.sumsq",
+    "L9.ffn.norm.rsqrt",
+    "L9.ffn.norm.scale",
+    "L9.ffn.router",
+    "L9.ffn.softplus_sqrt",
+    "L9.ffn.router_allgather",
+    "L9.ffn.bias",
+    "L9.ffn.top6",
+    "L9.ffn.top6_order",
+    "L9.ffn.experts_gu",
+    "L9.ffn.experts_gu.asbuilt_second_phase0",
+    "L9.ffn.experts_gu.asbuilt_second_phase1",
+    "L9.ffn.experts_gu.asbuilt_second_phase2",
+    "L9.ffn.experts_gu.asbuilt_second_phase3",
+    "L9.ffn.experts_gu.asbuilt_second_phase4",
+    "L9.ffn.experts_gu.asbuilt_second_phase5",
+    "L9.ffn.swiglu",
+    "L9.ffn.route_w",
+    "L9.ffn.quant2",
+    "L9.ffn.down",
+    "L9.ffn.combine_allreduce",
+    "L9.ffn.hc_post",
+    "L10.attn.hc_pre",
+    "L10.attn.norm.sumsq",
+    "L10.attn.norm.rsqrt",
+    "L10.attn.norm.scale",
+    "L10.attn.quant",
+    "L10.attn.a_proj",
+    "L10.attn.a_proj.asbuilt_second_phase0",
+    "L10.attn.a_allgather",
+    "L10.attn.q_norm.sumsq",
+    "L10.attn.q_norm.rsqrt",
+    "L10.attn.q_norm.scale",
+    "L10.attn.q_quant",
+    "L10.attn.wq_b",
+    "L10.attn.q_rope",
+    "L10.attn.scores",
+    "L10.attn.max",
+    "L10.attn.exp",
+    "L10.attn.pv",
+    "L10.attn.normalize",
+    "L10.attn.wo_a",
+    "L10.attn.z_quant",
+    "L10.attn.wo_b",
+    "L10.attn.out_allreduce",
+    "L10.attn.hc_post",
+    "L10.substage_hop0",
+    "L10.ffn.hc_pre",
+    "L10.ffn.norm.sumsq",
+    "L10.ffn.norm.rsqrt",
+    "L10.ffn.norm.scale",
+    "L10.ffn.router",
+    "L10.ffn.softplus_sqrt",
+    "L10.ffn.router_allgather",
+    "L10.ffn.bias",
+    "L10.ffn.top6",
+    "L10.ffn.top6_order",
+    "L10.ffn.experts_gu",
+    "L10.ffn.experts_gu.asbuilt_second_phase0",
+    "L10.ffn.experts_gu.asbuilt_second_phase1",
+    "L10.ffn.experts_gu.asbuilt_second_phase2",
+    "L10.ffn.experts_gu.asbuilt_second_phase3",
+    "L10.ffn.experts_gu.asbuilt_second_phase4",
+    "L10.ffn.experts_gu.asbuilt_second_phase5",
+    "L10.ffn.swiglu",
+    "L10.ffn.route_w",
+    "L10.ffn.quant2",
+    "L10.ffn.down",
+    "L10.ffn.combine_allreduce",
+    "L10.ffn.hc_post",
+    "L11.attn.hc_pre",
+    "L11.attn.norm.sumsq",
+    "L11.attn.norm.rsqrt",
+    "L11.attn.norm.scale",
+    "L11.attn.quant",
+    "L11.attn.a_proj",
+    "L11.attn.a_proj.asbuilt_second_phase0",
+    "L11.attn.a_allgather",
+    "L11.attn.q_norm.sumsq",
+    "L11.attn.q_norm.rsqrt",
+    "L11.attn.q_norm.scale",
+    "L11.attn.q_quant",
+    "L11.attn.wq_b",
+    "L11.attn.q_rope",
+    "L11.attn.scores",
+    "L11.attn.max",
+    "L11.attn.exp",
+    "L11.attn.pv",
+    "L11.attn.normalize",
+    "L11.attn.wo_a",
+    "L11.attn.z_quant",
+    "L11.attn.wo_b",
+    "L11.attn.out_allreduce",
+    "L11.attn.hc_post",
+    "L11.substage_hop0",
+    "L11.ffn.hc_pre",
+    "L11.ffn.norm.sumsq",
+    "L11.ffn.norm.rsqrt",
+    "L11.ffn.norm.scale",
+    "L11.ffn.router",
+    "L11.ffn.softplus_sqrt",
+    "L11.ffn.router_allgather",
+    "L11.ffn.bias",
+    "L11.ffn.top6",
+    "L11.ffn.top6_order",
+    "L11.ffn.experts_gu",
+    "L11.ffn.experts_gu.asbuilt_second_phase0",
+    "L11.ffn.experts_gu.asbuilt_second_phase1",
+    "L11.ffn.experts_gu.asbuilt_second_phase2",
+    "L11.ffn.experts_gu.asbuilt_second_phase3",
+    "L11.ffn.experts_gu.asbuilt_second_phase4",
+    "L11.ffn.experts_gu.asbuilt_second_phase5",
+    "L11.ffn.swiglu",
+    "L11.ffn.route_w",
+    "L11.ffn.quant2",
+    "L11.ffn.down",
+    "L11.ffn.combine_allreduce",
+    "L11.ffn.hc_post",
+    "L12.attn.hc_pre",
+    "L12.attn.norm.sumsq",
+    "L12.attn.norm.rsqrt",
+    "L12.attn.norm.scale",
+    "L12.attn.quant",
+    "L12.attn.a_proj",
+    "L12.attn.a_proj.asbuilt_second_phase0",
+    "L12.attn.a_allgather",
+    "L12.attn.q_norm.sumsq",
+    "L12.attn.q_norm.rsqrt",
+    "L12.attn.q_norm.scale",
+    "L12.attn.q_quant",
+    "L12.attn.wq_b",
+    "L12.attn.q_rope",
+    "L12.attn.scores",
+    "L12.attn.max",
+    "L12.attn.exp",
+    "L12.attn.pv",
+    "L12.attn.normalize",
+    "L12.attn.wo_a",
+    "L12.attn.z_quant",
+    "L12.attn.wo_b",
+    "L12.attn.out_allreduce",
+    "L12.attn.hc_post",
+    "L12.ffn.hc_pre",
+    "L12.ffn.norm.sumsq",
+    "L12.ffn.norm.rsqrt",
+    "L12.ffn.norm.scale",
+    "L12.ffn.router",
+    "L12.ffn.softplus_sqrt",
+    "L12.ffn.router_allgather",
+    "L12.ffn.bias",
+    "L12.ffn.top6",
+    "L12.ffn.top6_order",
+    "L12.ffn.experts_gu",
+    "L12.ffn.experts_gu.asbuilt_second_phase0",
+    "L12.ffn.experts_gu.asbuilt_second_phase1",
+    "L12.ffn.experts_gu.asbuilt_second_phase2",
+    "L12.ffn.experts_gu.asbuilt_second_phase3",
+    "L12.ffn.experts_gu.asbuilt_second_phase4",
+    "L12.ffn.experts_gu.asbuilt_second_phase5",
+    "L12.ffn.swiglu",
+    "L12.ffn.route_w",
+    "L12.ffn.quant2",
+    "L12.ffn.down",
+    "L12.ffn.combine_allreduce",
+    "L12.ffn.hc_post",
+    "L13.attn.hc_pre",
+    "L13.attn.norm.sumsq",
+    "L13.attn.norm.rsqrt",
+    "L13.attn.norm.scale",
+    "L13.attn.quant",
+    "L13.attn.a_proj",
+    "L13.attn.a_proj.asbuilt_second_phase0",
+    "L13.attn.a_allgather",
+    "L13.attn.q_norm.sumsq",
+    "L13.attn.q_norm.rsqrt",
+    "L13.attn.q_norm.scale",
+    "L13.attn.q_quant",
+    "L13.attn.wq_b",
+    "L13.attn.q_rope",
+    "L13.attn.scores",
+    "L13.attn.max",
+    "L13.attn.exp",
+    "L13.attn.pv",
+    "L13.attn.normalize",
+    "L13.attn.wo_a",
+    "L13.attn.z_quant",
+    "L13.attn.wo_b",
+    "L13.attn.out_allreduce",
+    "L13.attn.hc_post",
+    "L13.substage_hop0",
+    "L13.ffn.hc_pre",
+    "L13.ffn.norm.sumsq",
+    "L13.ffn.norm.rsqrt",
+    "L13.ffn.norm.scale",
+    "L13.ffn.router",
+    "L13.ffn.softplus_sqrt",
+    "L13.ffn.router_allgather",
+    "L13.ffn.bias",
+    "L13.ffn.top6",
+    "L13.ffn.top6_order",
+    "L13.ffn.experts_gu",
+    "L13.ffn.experts_gu.asbuilt_second_phase0",
+    "L13.ffn.experts_gu.asbuilt_second_phase1",
+    "L13.ffn.experts_gu.asbuilt_second_phase2",
+    "L13.ffn.experts_gu.asbuilt_second_phase3",
+    "L13.ffn.experts_gu.asbuilt_second_phase4",
+    "L13.ffn.experts_gu.asbuilt_second_phase5",
+    "L13.ffn.swiglu",
+    "L13.ffn.route_w",
+    "L13.ffn.quant2",
+    "L13.ffn.down",
+    "L13.ffn.combine_allreduce",
+    "L13.ffn.hc_post",
+    "L14.eng.hh",
+    "L14.eng.gate",
+    "L14.eng.add",
+    "L14.attn.hc_pre",
+    "L14.attn.norm.sumsq",
+    "L14.attn.norm.rsqrt",
+    "L14.attn.norm.scale",
+    "L14.attn.quant",
+    "L14.attn.a_proj",
+    "L14.attn.a_proj.asbuilt_second_phase0",
+    "L14.attn.a_allgather",
+    "L14.attn.q_norm.sumsq",
+    "L14.attn.q_norm.rsqrt",
+    "L14.attn.q_norm.scale",
+    "L14.attn.q_quant",
+    "L14.attn.wq_b",
+    "L14.attn.idx.q",
+    "L14.attn.idx.score",
+    "L14.attn.idx.topk_local",
+    "L14.attn.idx.topk_merge",
+    "L14.attn.idx.topk_final",
+    "L14.attn.gather",
+    "L14.attn.rows_allgather",
+    "L14.attn.scores",
+    "L14.attn.max",
+    "L14.attn.exp",
+    "L14.attn.pv",
+    "L14.attn.normalize",
+    "L14.attn.wo_a",
+    "L14.attn.z_quant",
+    "L14.attn.wo_b",
+    "L14.attn.out_allreduce",
+    "L14.attn.hc_post",
+    "L14.substage_hop0",
+    "L14.ffn.hc_pre",
+    "L14.ffn.norm.sumsq",
+    "L14.ffn.norm.rsqrt",
+    "L14.ffn.norm.scale",
+    "L14.ffn.router",
+    "L14.ffn.softplus_sqrt",
+    "L14.ffn.router_allgather",
+    "L14.ffn.bias",
+    "L14.ffn.top6",
+    "L14.ffn.top6_order",
+    "L14.ffn.experts_gu",
+    "L14.ffn.experts_gu.asbuilt_second_phase0",
+    "L14.ffn.experts_gu.asbuilt_second_phase1",
+    "L14.ffn.experts_gu.asbuilt_second_phase2",
+    "L14.ffn.experts_gu.asbuilt_second_phase3",
+    "L14.ffn.experts_gu.asbuilt_second_phase4",
+    "L14.ffn.experts_gu.asbuilt_second_phase5",
+    "L14.ffn.swiglu",
+    "L14.ffn.route_w",
+    "L14.ffn.quant2",
+    "L14.ffn.down",
+    "L14.ffn.combine_allreduce",
+    "L14.ffn.hc_post",
+    "L15.attn.hc_pre",
+    "L15.attn.norm.sumsq",
+    "L15.attn.norm.rsqrt",
+    "L15.attn.norm.scale",
+    "L15.attn.quant",
+    "L15.attn.a_proj",
+    "L15.attn.a_proj.asbuilt_second_phase0",
+    "L15.attn.a_allgather",
+    "L15.attn.q_norm.sumsq",
+    "L15.attn.q_norm.rsqrt",
+    "L15.attn.q_norm.scale",
+    "L15.attn.q_quant",
+    "L15.attn.wq_b",
+    "L15.attn.q_rope",
+    "L15.attn.scores",
+    "L15.attn.max",
+    "L15.attn.exp",
+    "L15.attn.pv",
+    "L15.attn.normalize",
+    "L15.attn.wo_a",
+    "L15.attn.z_quant",
+    "L15.attn.wo_b",
+    "L15.attn.out_allreduce",
+    "L15.attn.hc_post",
+    "L15.ffn.hc_pre",
+    "L15.ffn.norm.sumsq",
+    "L15.ffn.norm.rsqrt",
+    "L15.ffn.norm.scale",
+    "L15.ffn.router",
+    "L15.ffn.softplus_sqrt",
+    "L15.ffn.router_allgather",
+    "L15.ffn.bias",
+    "L15.ffn.top6",
+    "L15.ffn.top6_order",
+    "L15.ffn.experts_gu",
+    "L15.ffn.experts_gu.asbuilt_second_phase0",
+    "L15.ffn.experts_gu.asbuilt_second_phase1",
+    "L15.ffn.experts_gu.asbuilt_second_phase2",
+    "L15.ffn.experts_gu.asbuilt_second_phase3",
+    "L15.ffn.experts_gu.asbuilt_second_phase4",
+    "L15.ffn.experts_gu.asbuilt_second_phase5",
+    "L15.ffn.swiglu",
+    "L15.ffn.route_w",
+    "L15.ffn.quant2",
+    "L15.ffn.down",
+    "L15.ffn.combine_allreduce",
+    "L15.ffn.hc_post",
+    "L16.attn.hc_pre",
+    "L16.attn.norm.sumsq",
+    "L16.attn.norm.rsqrt",
+    "L16.attn.norm.scale",
+    "L16.attn.quant",
+    "L16.attn.a_proj",
+    "L16.attn.a_proj.asbuilt_second_phase0",
+    "L16.attn.a_allgather",
+    "L16.attn.q_norm.sumsq",
+    "L16.attn.q_norm.rsqrt",
+    "L16.attn.q_norm.scale",
+    "L16.attn.q_quant",
+    "L16.attn.wq_b",
+    "L16.attn.q_rope",
+    "L16.attn.scores",
+    "L16.attn.max",
+    "L16.attn.exp",
+    "L16.attn.pv",
+    "L16.attn.normalize",
+    "L16.attn.wo_a",
+    "L16.attn.z_quant",
+    "L16.attn.wo_b",
+    "L16.attn.out_allreduce",
+    "L16.attn.hc_post",
+    "L16.substage_hop0",
+    "L16.ffn.hc_pre",
+    "L16.ffn.norm.sumsq",
+    "L16.ffn.norm.rsqrt",
+    "L16.ffn.norm.scale",
+    "L16.ffn.router",
+    "L16.ffn.softplus_sqrt",
+    "L16.ffn.router_allgather",
+    "L16.ffn.bias",
+    "L16.ffn.top6",
+    "L16.ffn.top6_order",
+    "L16.ffn.experts_gu",
+    "L16.ffn.experts_gu.asbuilt_second_phase0",
+    "L16.ffn.experts_gu.asbuilt_second_phase1",
+    "L16.ffn.experts_gu.asbuilt_second_phase2",
+    "L16.ffn.experts_gu.asbuilt_second_phase3",
+    "L16.ffn.experts_gu.asbuilt_second_phase4",
+    "L16.ffn.experts_gu.asbuilt_second_phase5",
+    "L16.ffn.swiglu",
+    "L16.ffn.route_w",
+    "L16.ffn.quant2",
+    "L16.ffn.down",
+    "L16.ffn.combine_allreduce",
+    "L16.ffn.hc_post",
+    "L17.attn.hc_pre",
+    "L17.attn.norm.sumsq",
+    "L17.attn.norm.rsqrt",
+    "L17.attn.norm.scale",
+    "L17.attn.quant",
+    "L17.attn.a_proj",
+    "L17.attn.a_proj.asbuilt_second_phase0",
+    "L17.attn.a_allgather",
+    "L17.attn.q_norm.sumsq",
+    "L17.attn.q_norm.rsqrt",
+    "L17.attn.q_norm.scale",
+    "L17.attn.q_quant",
+    "L17.attn.wq_b",
+    "L17.attn.q_rope",
+    "L17.attn.scores",
+    "L17.attn.max",
+    "L17.attn.exp",
+    "L17.attn.pv",
+    "L17.attn.normalize",
+    "L17.attn.wo_a",
+    "L17.attn.z_quant",
+    "L17.attn.wo_b",
+    "L17.attn.out_allreduce",
+    "L17.attn.hc_post",
+    "L17.substage_hop0",
+    "L17.ffn.hc_pre",
+    "L17.ffn.norm.sumsq",
+    "L17.ffn.norm.rsqrt",
+    "L17.ffn.norm.scale",
+    "L17.ffn.router",
+    "L17.ffn.softplus_sqrt",
+    "L17.ffn.router_allgather",
+    "L17.ffn.bias",
+    "L17.ffn.top6",
+    "L17.ffn.top6_order",
+    "L17.ffn.experts_gu",
+    "L17.ffn.experts_gu.asbuilt_second_phase0",
+    "L17.ffn.experts_gu.asbuilt_second_phase1",
+    "L17.ffn.experts_gu.asbuilt_second_phase2",
+    "L17.ffn.experts_gu.asbuilt_second_phase3",
+    "L17.ffn.experts_gu.asbuilt_second_phase4",
+    "L17.ffn.experts_gu.asbuilt_second_phase5",
+    "L17.ffn.swiglu",
+    "L17.ffn.route_w",
+    "L17.ffn.quant2",
+    "L17.ffn.down",
+    "L17.ffn.combine_allreduce",
+    "L17.ffn.hc_post",
+    "L18.attn.hc_pre",
+    "L18.attn.norm.sumsq",
+    "L18.attn.norm.rsqrt",
+    "L18.attn.norm.scale",
+    "L18.attn.quant",
+    "L18.attn.a_proj",
+    "L18.attn.a_proj.asbuilt_second_phase0",
+    "L18.attn.a_allgather",
+    "L18.attn.q_norm.sumsq",
+    "L18.attn.q_norm.rsqrt",
+    "L18.attn.q_norm.scale",
+    "L18.attn.q_quant",
+    "L18.attn.wq_b",
+    "L18.attn.q_rope",
+    "L18.attn.scores",
+    "L18.attn.max",
+    "L18.attn.exp",
+    "L18.attn.pv",
+    "L18.attn.normalize",
+    "L18.attn.wo_a",
+    "L18.attn.z_quant",
+    "L18.attn.wo_b",
+    "L18.attn.out_allreduce",
+    "L18.attn.hc_post",
+    "L18.ffn.hc_pre",
+    "L18.ffn.norm.sumsq",
+    "L18.ffn.norm.rsqrt",
+    "L18.ffn.norm.scale",
+    "L18.ffn.router",
+    "L18.ffn.softplus_sqrt",
+    "L18.ffn.router_allgather",
+    "L18.ffn.bias",
+    "L18.ffn.top6",
+    "L18.ffn.top6_order",
+    "L18.ffn.experts_gu",
+    "L18.ffn.experts_gu.asbuilt_second_phase0",
+    "L18.ffn.experts_gu.asbuilt_second_phase1",
+    "L18.ffn.experts_gu.asbuilt_second_phase2",
+    "L18.ffn.experts_gu.asbuilt_second_phase3",
+    "L18.ffn.experts_gu.asbuilt_second_phase4",
+    "L18.ffn.experts_gu.asbuilt_second_phase5",
+    "L18.ffn.swiglu",
+    "L18.ffn.route_w",
+    "L18.ffn.quant2",
+    "L18.ffn.down",
+    "L18.ffn.combine_allreduce",
+    "L18.ffn.hc_post",
+    "L19.attn.hc_pre",
+    "L19.attn.norm.sumsq",
+    "L19.attn.norm.rsqrt",
+    "L19.attn.norm.scale",
+    "L19.attn.quant",
+    "L19.attn.a_proj",
+    "L19.attn.a_proj.asbuilt_second_phase0",
+    "L19.attn.a_allgather",
+    "L19.attn.q_norm.sumsq",
+    "L19.attn.q_norm.rsqrt",
+    "L19.attn.q_norm.scale",
+    "L19.attn.q_quant",
+    "L19.attn.wq_b",
+    "L19.attn.q_rope",
+    "L19.attn.scores",
+    "L19.attn.max",
+    "L19.attn.exp",
+    "L19.attn.pv",
+    "L19.attn.normalize",
+    "L19.attn.wo_a",
+    "L19.attn.z_quant",
+    "L19.attn.wo_b",
+    "L19.attn.out_allreduce",
+    "L19.attn.hc_post",
+    "L19.substage_hop0",
+    "L19.ffn.hc_pre",
+    "L19.ffn.norm.sumsq",
+    "L19.ffn.norm.rsqrt",
+    "L19.ffn.norm.scale",
+    "L19.ffn.router",
+    "L19.ffn.softplus_sqrt",
+    "L19.ffn.router_allgather",
+    "L19.ffn.bias",
+    "L19.ffn.top6",
+    "L19.ffn.top6_order",
+    "L19.ffn.experts_gu",
+    "L19.ffn.experts_gu.asbuilt_second_phase0",
+    "L19.ffn.experts_gu.asbuilt_second_phase1",
+    "L19.ffn.experts_gu.asbuilt_second_phase2",
+    "L19.ffn.experts_gu.asbuilt_second_phase3",
+    "L19.ffn.experts_gu.asbuilt_second_phase4",
+    "L19.ffn.experts_gu.asbuilt_second_phase5",
+    "L19.ffn.swiglu",
+    "L19.ffn.route_w",
+    "L19.ffn.quant2",
+    "L19.ffn.down",
+    "L19.ffn.combine_allreduce",
+    "L19.ffn.hc_post",
+    "L20.attn.hc_pre",
+    "L20.attn.norm.sumsq",
+    "L20.attn.norm.rsqrt",
+    "L20.attn.norm.scale",
+    "L20.attn.quant",
+    "L20.attn.a_proj",
+    "L20.attn.a_proj.asbuilt_second_phase0",
+    "L20.attn.a_allgather",
+    "L20.attn.q_norm.sumsq",
+    "L20.attn.q_norm.rsqrt",
+    "L20.attn.q_norm.scale",
+    "L20.attn.q_quant",
+    "L20.attn.wq_b",
+    "L20.attn.idx.q",
+    "L20.attn.idx.score",
+    "L20.attn.idx.topk_local",
+    "L20.attn.idx.topk_merge",
+    "L20.attn.idx.topk_final",
+    "L20.attn.gather",
+    "L20.attn.rows_allgather",
+    "L20.attn.scores",
+    "L20.attn.max",
+    "L20.attn.exp",
+    "L20.attn.pv",
+    "L20.attn.normalize",
+    "L20.attn.wo_a",
+    "L20.attn.z_quant",
+    "L20.attn.wo_b",
+    "L20.attn.out_allreduce",
+    "L20.attn.hc_post",
+    "L20.substage_hop0",
+    "L20.ffn.hc_pre",
+    "L20.ffn.norm.sumsq",
+    "L20.ffn.norm.rsqrt",
+    "L20.ffn.norm.scale",
+    "L20.ffn.router",
+    "L20.ffn.softplus_sqrt",
+    "L20.ffn.router_allgather",
+    "L20.ffn.bias",
+    "L20.ffn.top6",
+    "L20.ffn.top6_order",
+    "L20.ffn.experts_gu",
+    "L20.ffn.experts_gu.asbuilt_second_phase0",
+    "L20.ffn.experts_gu.asbuilt_second_phase1",
+    "L20.ffn.experts_gu.asbuilt_second_phase2",
+    "L20.ffn.experts_gu.asbuilt_second_phase3",
+    "L20.ffn.experts_gu.asbuilt_second_phase4",
+    "L20.ffn.experts_gu.asbuilt_second_phase5",
+    "L20.ffn.swiglu",
+    "L20.ffn.route_w",
+    "L20.ffn.quant2",
+    "L20.ffn.down",
+    "L20.ffn.combine_allreduce",
+    "L20.ffn.hc_post",
+    "L21.attn.hc_pre",
+    "L21.attn.norm.sumsq",
+    "L21.attn.norm.rsqrt",
+    "L21.attn.norm.scale",
+    "L21.attn.quant",
+    "L21.attn.a_proj",
+    "L21.attn.a_proj.asbuilt_second_phase0",
+    "L21.attn.a_allgather",
+    "L21.attn.q_norm.sumsq",
+    "L21.attn.q_norm.rsqrt",
+    "L21.attn.q_norm.scale",
+    "L21.attn.q_quant",
+    "L21.attn.wq_b",
+    "L21.attn.q_rope",
+    "L21.attn.scores",
+    "L21.attn.max",
+    "L21.attn.exp",
+    "L21.attn.pv",
+    "L21.attn.normalize",
+    "L21.attn.wo_a",
+    "L21.attn.z_quant",
+    "L21.attn.wo_b",
+    "L21.attn.out_allreduce",
+    "L21.attn.hc_post",
+    "L21.substage_hop0",
+    "L21.ffn.hc_pre",
+    "L21.ffn.norm.sumsq",
+    "L21.ffn.norm.rsqrt",
+    "L21.ffn.norm.scale",
+    "L21.ffn.router",
+    "L21.ffn.softplus_sqrt",
+    "L21.ffn.router_allgather",
+    "L21.ffn.bias",
+    "L21.ffn.top6",
+    "L21.ffn.top6_order",
+    "L21.ffn.experts_gu",
+    "L21.ffn.experts_gu.asbuilt_second_phase0",
+    "L21.ffn.experts_gu.asbuilt_second_phase1",
+    "L21.ffn.experts_gu.asbuilt_second_phase2",
+    "L21.ffn.experts_gu.asbuilt_second_phase3",
+    "L21.ffn.experts_gu.asbuilt_second_phase4",
+    "L21.ffn.experts_gu.asbuilt_second_phase5",
+    "L21.ffn.swiglu",
+    "L21.ffn.route_w",
+    "L21.ffn.quant2",
+    "L21.ffn.down",
+    "L21.ffn.combine_allreduce",
+    "L21.ffn.hc_post",
+    "L22.attn.hc_pre",
+    "L22.attn.norm.sumsq",
+    "L22.attn.norm.rsqrt",
+    "L22.attn.norm.scale",
+    "L22.attn.quant",
+    "L22.attn.a_proj",
+    "L22.attn.a_proj.asbuilt_second_phase0",
+    "L22.attn.a_allgather",
+    "L22.attn.q_norm.sumsq",
+    "L22.attn.q_norm.rsqrt",
+    "L22.attn.q_norm.scale",
+    "L22.attn.q_quant",
+    "L22.attn.wq_b",
+    "L22.attn.q_rope",
+    "L22.attn.scores",
+    "L22.attn.max",
+    "L22.attn.exp",
+    "L22.attn.pv",
+    "L22.attn.normalize",
+    "L22.attn.wo_a",
+    "L22.attn.z_quant",
+    "L22.attn.wo_b",
+    "L22.attn.out_allreduce",
+    "L22.attn.hc_post",
+    "L22.ffn.hc_pre",
+    "L22.ffn.norm.sumsq",
+    "L22.ffn.norm.rsqrt",
+    "L22.ffn.norm.scale",
+    "L22.ffn.router",
+    "L22.ffn.softplus_sqrt",
+    "L22.ffn.router_allgather",
+    "L22.ffn.bias",
+    "L22.ffn.top6",
+    "L22.ffn.top6_order",
+    "L22.ffn.experts_gu",
+    "L22.ffn.experts_gu.asbuilt_second_phase0",
+    "L22.ffn.experts_gu.asbuilt_second_phase1",
+    "L22.ffn.experts_gu.asbuilt_second_phase2",
+    "L22.ffn.experts_gu.asbuilt_second_phase3",
+    "L22.ffn.experts_gu.asbuilt_second_phase4",
+    "L22.ffn.experts_gu.asbuilt_second_phase5",
+    "L22.ffn.swiglu",
+    "L22.ffn.route_w",
+    "L22.ffn.quant2",
+    "L22.ffn.down",
+    "L22.ffn.combine_allreduce",
+    "L22.ffn.hc_post",
+    "L23.attn.hc_pre",
+    "L23.attn.norm.sumsq",
+    "L23.attn.norm.rsqrt",
+    "L23.attn.norm.scale",
+    "L23.attn.quant",
+    "L23.attn.a_proj",
+    "L23.attn.a_proj.asbuilt_second_phase0",
+    "L23.attn.a_allgather",
+    "L23.attn.q_norm.sumsq",
+    "L23.attn.q_norm.rsqrt",
+    "L23.attn.q_norm.scale",
+    "L23.attn.q_quant",
+    "L23.attn.wq_b",
+    "L23.attn.q_rope",
+    "L23.attn.scores",
+    "L23.attn.max",
+    "L23.attn.exp",
+    "L23.attn.pv",
+    "L23.attn.normalize",
+    "L23.attn.wo_a",
+    "L23.attn.z_quant",
+    "L23.attn.wo_b",
+    "L23.attn.out_allreduce",
+    "L23.attn.hc_post",
+    "L23.substage_hop0",
+    "L23.ffn.hc_pre",
+    "L23.ffn.norm.sumsq",
+    "L23.ffn.norm.rsqrt",
+    "L23.ffn.norm.scale",
+    "L23.ffn.router",
+    "L23.ffn.softplus_sqrt",
+    "L23.ffn.router_allgather",
+    "L23.ffn.bias",
+    "L23.ffn.top6",
+    "L23.ffn.top6_order",
+    "L23.ffn.experts_gu",
+    "L23.ffn.experts_gu.asbuilt_second_phase0",
+    "L23.ffn.experts_gu.asbuilt_second_phase1",
+    "L23.ffn.experts_gu.asbuilt_second_phase2",
+    "L23.ffn.experts_gu.asbuilt_second_phase3",
+    "L23.ffn.experts_gu.asbuilt_second_phase4",
+    "L23.ffn.experts_gu.asbuilt_second_phase5",
+    "L23.ffn.swiglu",
+    "L23.ffn.route_w",
+    "L23.ffn.quant2",
+    "L23.ffn.down",
+    "L23.ffn.combine_allreduce",
+    "L23.ffn.hc_post",
+    "L24.attn.hc_pre",
+    "L24.attn.norm.sumsq",
+    "L24.attn.norm.rsqrt",
+    "L24.attn.norm.scale",
+    "L24.attn.quant",
+    "L24.attn.a_proj",
+    "L24.attn.a_proj.asbuilt_second_phase0",
+    "L24.attn.a_allgather",
+    "L24.attn.q_norm.sumsq",
+    "L24.attn.q_norm.rsqrt",
+    "L24.attn.q_norm.scale",
+    "L24.attn.q_quant",
+    "L24.attn.wq_b",
+    "L24.attn.idx.q",
+    "L24.attn.idx.score",
+    "L24.attn.idx.topk_local",
+    "L24.attn.idx.topk_merge",
+    "L24.attn.idx.topk_final",
+    "L24.attn.gather",
+    "L24.attn.rows_allgather",
+    "L24.attn.scores",
+    "L24.attn.max",
+    "L24.attn.exp",
+    "L24.attn.pv",
+    "L24.attn.normalize",
+    "L24.attn.wo_a",
+    "L24.attn.z_quant",
+    "L24.attn.wo_b",
+    "L24.attn.out_allreduce",
+    "L24.attn.hc_post",
+    "L24.substage_hop0",
+    "L24.ffn.hc_pre",
+    "L24.ffn.norm.sumsq",
+    "L24.ffn.norm.rsqrt",
+    "L24.ffn.norm.scale",
+    "L24.ffn.router",
+    "L24.ffn.softplus_sqrt",
+    "L24.ffn.router_allgather",
+    "L24.ffn.bias",
+    "L24.ffn.top6",
+    "L24.ffn.top6_order",
+    "L24.ffn.experts_gu",
+    "L24.ffn.experts_gu.asbuilt_second_phase0",
+    "L24.ffn.experts_gu.asbuilt_second_phase1",
+    "L24.ffn.experts_gu.asbuilt_second_phase2",
+    "L24.ffn.experts_gu.asbuilt_second_phase3",
+    "L24.ffn.experts_gu.asbuilt_second_phase4",
+    "L24.ffn.experts_gu.asbuilt_second_phase5",
+    "L24.ffn.swiglu",
+    "L24.ffn.route_w",
+    "L24.ffn.quant2",
+    "L24.ffn.down",
+    "L24.ffn.combine_allreduce",
+    "L24.ffn.hc_post",
+    "L25.attn.hc_pre",
+    "L25.attn.norm.sumsq",
+    "L25.attn.norm.rsqrt",
+    "L25.attn.norm.scale",
+    "L25.attn.quant",
+    "L25.attn.a_proj",
+    "L25.attn.a_proj.asbuilt_second_phase0",
+    "L25.attn.a_allgather",
+    "L25.attn.q_norm.sumsq",
+    "L25.attn.q_norm.rsqrt",
+    "L25.attn.q_norm.scale",
+    "L25.attn.q_quant",
+    "L25.attn.wq_b",
+    "L25.attn.q_rope",
+    "L25.attn.scores",
+    "L25.attn.max",
+    "L25.attn.exp",
+    "L25.attn.pv",
+    "L25.attn.normalize",
+    "L25.attn.wo_a",
+    "L25.attn.z_quant",
+    "L25.attn.wo_b",
+    "L25.attn.out_allreduce",
+    "L25.attn.hc_post",
+    "L25.ffn.hc_pre",
+    "L25.ffn.norm.sumsq",
+    "L25.ffn.norm.rsqrt",
+    "L25.ffn.norm.scale",
+    "L25.ffn.router",
+    "L25.ffn.softplus_sqrt",
+    "L25.ffn.router_allgather",
+    "L25.ffn.bias",
+    "L25.ffn.top6",
+    "L25.ffn.top6_order",
+    "L25.ffn.experts_gu",
+    "L25.ffn.experts_gu.asbuilt_second_phase0",
+    "L25.ffn.experts_gu.asbuilt_second_phase1",
+    "L25.ffn.experts_gu.asbuilt_second_phase2",
+    "L25.ffn.experts_gu.asbuilt_second_phase3",
+    "L25.ffn.experts_gu.asbuilt_second_phase4",
+    "L25.ffn.experts_gu.asbuilt_second_phase5",
+    "L25.ffn.swiglu",
+    "L25.ffn.route_w",
+    "L25.ffn.quant2",
+    "L25.ffn.down",
+    "L25.ffn.combine_allreduce",
+    "L25.ffn.hc_post",
+    "L26.attn.hc_pre",
+    "L26.attn.norm.sumsq",
+    "L26.attn.norm.rsqrt",
+    "L26.attn.norm.scale",
+    "L26.attn.quant",
+    "L26.attn.a_proj",
+    "L26.attn.a_proj.asbuilt_second_phase0",
+    "L26.attn.a_allgather",
+    "L26.attn.q_norm.sumsq",
+    "L26.attn.q_norm.rsqrt",
+    "L26.attn.q_norm.scale",
+    "L26.attn.q_quant",
+    "L26.attn.wq_b",
+    "L26.attn.q_rope",
+    "L26.attn.scores",
+    "L26.attn.max",
+    "L26.attn.exp",
+    "L26.attn.pv",
+    "L26.attn.normalize",
+    "L26.attn.wo_a",
+    "L26.attn.z_quant",
+    "L26.attn.wo_b",
+    "L26.attn.out_allreduce",
+    "L26.attn.hc_post",
+    "L26.substage_hop0",
+    "L26.ffn.hc_pre",
+    "L26.ffn.norm.sumsq",
+    "L26.ffn.norm.rsqrt",
+    "L26.ffn.norm.scale",
+    "L26.ffn.router",
+    "L26.ffn.softplus_sqrt",
+    "L26.ffn.router_allgather",
+    "L26.ffn.bias",
+    "L26.ffn.top6",
+    "L26.ffn.top6_order",
+    "L26.ffn.experts_gu",
+    "L26.ffn.experts_gu.asbuilt_second_phase0",
+    "L26.ffn.experts_gu.asbuilt_second_phase1",
+    "L26.ffn.experts_gu.asbuilt_second_phase2",
+    "L26.ffn.experts_gu.asbuilt_second_phase3",
+    "L26.ffn.experts_gu.asbuilt_second_phase4",
+    "L26.ffn.experts_gu.asbuilt_second_phase5",
+    "L26.ffn.swiglu",
+    "L26.ffn.route_w",
+    "L26.ffn.quant2",
+    "L26.ffn.down",
+    "L26.ffn.combine_allreduce",
+    "L26.ffn.hc_post",
+    "L27.attn.hc_pre",
+    "L27.attn.norm.sumsq",
+    "L27.attn.norm.rsqrt",
+    "L27.attn.norm.scale",
+    "L27.attn.quant",
+    "L27.attn.a_proj",
+    "L27.attn.a_proj.asbuilt_second_phase0",
+    "L27.attn.a_allgather",
+    "L27.attn.q_norm.sumsq",
+    "L27.attn.q_norm.rsqrt",
+    "L27.attn.q_norm.scale",
+    "L27.attn.q_quant",
+    "L27.attn.wq_b",
+    "L27.attn.q_rope",
+    "L27.attn.scores",
+    "L27.attn.max",
+    "L27.attn.exp",
+    "L27.attn.pv",
+    "L27.attn.normalize",
+    "L27.attn.wo_a",
+    "L27.attn.z_quant",
+    "L27.attn.wo_b",
+    "L27.attn.out_allreduce",
+    "L27.attn.hc_post",
+    "L27.substage_hop0",
+    "L27.ffn.hc_pre",
+    "L27.ffn.norm.sumsq",
+    "L27.ffn.norm.rsqrt",
+    "L27.ffn.norm.scale",
+    "L27.ffn.router",
+    "L27.ffn.softplus_sqrt",
+    "L27.ffn.router_allgather",
+    "L27.ffn.bias",
+    "L27.ffn.top6",
+    "L27.ffn.top6_order",
+    "L27.ffn.experts_gu",
+    "L27.ffn.experts_gu.asbuilt_second_phase0",
+    "L27.ffn.experts_gu.asbuilt_second_phase1",
+    "L27.ffn.experts_gu.asbuilt_second_phase2",
+    "L27.ffn.experts_gu.asbuilt_second_phase3",
+    "L27.ffn.experts_gu.asbuilt_second_phase4",
+    "L27.ffn.experts_gu.asbuilt_second_phase5",
+    "L27.ffn.swiglu",
+    "L27.ffn.route_w",
+    "L27.ffn.quant2",
+    "L27.ffn.down",
+    "L27.ffn.combine_allreduce",
+    "L27.ffn.hc_post",
+    "L28.attn.hc_pre",
+    "L28.attn.norm.sumsq",
+    "L28.attn.norm.rsqrt",
+    "L28.attn.norm.scale",
+    "L28.attn.quant",
+    "L28.attn.a_proj",
+    "L28.attn.a_proj.asbuilt_second_phase0",
+    "L28.attn.a_allgather",
+    "L28.attn.q_norm.sumsq",
+    "L28.attn.q_norm.rsqrt",
+    "L28.attn.q_norm.scale",
+    "L28.attn.q_quant",
+    "L28.attn.wq_b",
+    "L28.attn.idx.q",
+    "L28.attn.idx.score",
+    "L28.attn.idx.topk_local",
+    "L28.attn.idx.topk_merge",
+    "L28.attn.idx.topk_final",
+    "L28.attn.gather",
+    "L28.attn.rows_allgather",
+    "L28.attn.scores",
+    "L28.attn.max",
+    "L28.attn.exp",
+    "L28.attn.pv",
+    "L28.attn.normalize",
+    "L28.attn.wo_a",
+    "L28.attn.z_quant",
+    "L28.attn.wo_b",
+    "L28.attn.out_allreduce",
+    "L28.attn.hc_post",
+    "L28.ffn.hc_pre",
+    "L28.ffn.norm.sumsq",
+    "L28.ffn.norm.rsqrt",
+    "L28.ffn.norm.scale",
+    "L28.ffn.router",
+    "L28.ffn.softplus_sqrt",
+    "L28.ffn.router_allgather",
+    "L28.ffn.bias",
+    "L28.ffn.top6",
+    "L28.ffn.top6_order",
+    "L28.ffn.experts_gu",
+    "L28.ffn.experts_gu.asbuilt_second_phase0",
+    "L28.ffn.experts_gu.asbuilt_second_phase1",
+    "L28.ffn.experts_gu.asbuilt_second_phase2",
+    "L28.ffn.experts_gu.asbuilt_second_phase3",
+    "L28.ffn.experts_gu.asbuilt_second_phase4",
+    "L28.ffn.experts_gu.asbuilt_second_phase5",
+    "L28.ffn.swiglu",
+    "L28.ffn.route_w",
+    "L28.ffn.quant2",
+    "L28.ffn.down",
+    "L28.ffn.combine_allreduce",
+    "L28.ffn.hc_post",
+    "L29.attn.hc_pre",
+    "L29.attn.norm.sumsq",
+    "L29.attn.norm.rsqrt",
+    "L29.attn.norm.scale",
+    "L29.attn.quant",
+    "L29.attn.a_proj",
+    "L29.attn.a_proj.asbuilt_second_phase0",
+    "L29.attn.a_allgather",
+    "L29.attn.q_norm.sumsq",
+    "L29.attn.q_norm.rsqrt",
+    "L29.attn.q_norm.scale",
+    "L29.attn.q_quant",
+    "L29.attn.wq_b",
+    "L29.attn.q_rope",
+    "L29.attn.scores",
+    "L29.attn.max",
+    "L29.attn.exp",
+    "L29.attn.pv",
+    "L29.attn.normalize",
+    "L29.attn.wo_a",
+    "L29.attn.z_quant",
+    "L29.attn.wo_b",
+    "L29.attn.out_allreduce",
+    "L29.attn.hc_post",
+    "L29.substage_hop0",
+    "L29.ffn.hc_pre",
+    "L29.ffn.norm.sumsq",
+    "L29.ffn.norm.rsqrt",
+    "L29.ffn.norm.scale",
+    "L29.ffn.router",
+    "L29.ffn.softplus_sqrt",
+    "L29.ffn.router_allgather",
+    "L29.ffn.bias",
+    "L29.ffn.top6",
+    "L29.ffn.top6_order",
+    "L29.ffn.experts_gu",
+    "L29.ffn.experts_gu.asbuilt_second_phase0",
+    "L29.ffn.experts_gu.asbuilt_second_phase1",
+    "L29.ffn.experts_gu.asbuilt_second_phase2",
+    "L29.ffn.experts_gu.asbuilt_second_phase3",
+    "L29.ffn.experts_gu.asbuilt_second_phase4",
+    "L29.ffn.experts_gu.asbuilt_second_phase5",
+    "L29.ffn.swiglu",
+    "L29.ffn.route_w",
+    "L29.ffn.quant2",
+    "L29.ffn.down",
+    "L29.ffn.combine_allreduce",
+    "L29.ffn.hc_post",
+    "L30.attn.hc_pre",
+    "L30.attn.norm.sumsq",
+    "L30.attn.norm.rsqrt",
+    "L30.attn.norm.scale",
+    "L30.attn.quant",
+    "L30.attn.a_proj",
+    "L30.attn.a_proj.asbuilt_second_phase0",
+    "L30.attn.a_allgather",
+    "L30.attn.q_norm.sumsq",
+    "L30.attn.q_norm.rsqrt",
+    "L30.attn.q_norm.scale",
+    "L30.attn.q_quant",
+    "L30.attn.wq_b",
+    "L30.attn.q_rope",
+    "L30.attn.scores",
+    "L30.attn.max",
+    "L30.attn.exp",
+    "L30.attn.pv",
+    "L30.attn.normalize",
+    "L30.attn.wo_a",
+    "L30.attn.z_quant",
+    "L30.attn.wo_b",
+    "L30.attn.out_allreduce",
+    "L30.attn.hc_post",
+    "L30.substage_hop0",
+    "L30.ffn.hc_pre",
+    "L30.ffn.norm.sumsq",
+    "L30.ffn.norm.rsqrt",
+    "L30.ffn.norm.scale",
+    "L30.ffn.router",
+    "L30.ffn.softplus_sqrt",
+    "L30.ffn.router_allgather",
+    "L30.ffn.bias",
+    "L30.ffn.top6",
+    "L30.ffn.top6_order",
+    "L30.ffn.experts_gu",
+    "L30.ffn.experts_gu.asbuilt_second_phase0",
+    "L30.ffn.experts_gu.asbuilt_second_phase1",
+    "L30.ffn.experts_gu.asbuilt_second_phase2",
+    "L30.ffn.experts_gu.asbuilt_second_phase3",
+    "L30.ffn.experts_gu.asbuilt_second_phase4",
+    "L30.ffn.experts_gu.asbuilt_second_phase5",
+    "L30.ffn.swiglu",
+    "L30.ffn.route_w",
+    "L30.ffn.quant2",
+    "L30.ffn.down",
+    "L30.ffn.combine_allreduce",
+    "L30.ffn.hc_post",
+    "L31.attn.hc_pre",
+    "L31.attn.norm.sumsq",
+    "L31.attn.norm.rsqrt",
+    "L31.attn.norm.scale",
+    "L31.attn.quant",
+    "L31.attn.a_proj",
+    "L31.attn.a_proj.asbuilt_second_phase0",
+    "L31.attn.a_allgather",
+    "L31.attn.q_norm.sumsq",
+    "L31.attn.q_norm.rsqrt",
+    "L31.attn.q_norm.scale",
+    "L31.attn.q_quant",
+    "L31.attn.wq_b",
+    "L31.attn.q_rope",
+    "L31.attn.scores",
+    "L31.attn.max",
+    "L31.attn.exp",
+    "L31.attn.pv",
+    "L31.attn.normalize",
+    "L31.attn.wo_a",
+    "L31.attn.z_quant",
+    "L31.attn.wo_b",
+    "L31.attn.out_allreduce",
+    "L31.attn.hc_post",
+    "L31.ffn.hc_pre",
+    "L31.ffn.norm.sumsq",
+    "L31.ffn.norm.rsqrt",
+    "L31.ffn.norm.scale",
+    "L31.ffn.router",
+    "L31.ffn.softplus_sqrt",
+    "L31.ffn.router_allgather",
+    "L31.ffn.bias",
+    "L31.ffn.top6",
+    "L31.ffn.top6_order",
+    "L31.ffn.experts_gu",
+    "L31.ffn.experts_gu.asbuilt_second_phase0",
+    "L31.ffn.experts_gu.asbuilt_second_phase1",
+    "L31.ffn.experts_gu.asbuilt_second_phase2",
+    "L31.ffn.experts_gu.asbuilt_second_phase3",
+    "L31.ffn.experts_gu.asbuilt_second_phase4",
+    "L31.ffn.experts_gu.asbuilt_second_phase5",
+    "L31.ffn.swiglu",
+    "L31.ffn.route_w",
+    "L31.ffn.quant2",
+    "L31.ffn.down",
+    "L31.ffn.combine_allreduce",
+    "L31.ffn.hc_post",
+    "L32.attn.hc_pre",
+    "L32.attn.norm.sumsq",
+    "L32.attn.norm.rsqrt",
+    "L32.attn.norm.scale",
+    "L32.attn.quant",
+    "L32.attn.a_proj",
+    "L32.attn.a_proj.asbuilt_second_phase0",
+    "L32.attn.a_allgather",
+    "L32.attn.q_norm.sumsq",
+    "L32.attn.q_norm.rsqrt",
+    "L32.attn.q_norm.scale",
+    "L32.attn.q_quant",
+    "L32.attn.wq_b",
+    "L32.attn.idx.q",
+    "L32.attn.idx.score",
+    "L32.attn.idx.topk_local",
+    "L32.attn.idx.topk_merge",
+    "L32.attn.idx.topk_final",
+    "L32.attn.gather",
+    "L32.attn.rows_allgather",
+    "L32.attn.scores",
+    "L32.attn.max",
+    "L32.attn.exp",
+    "L32.attn.pv",
+    "L32.attn.normalize",
+    "L32.attn.wo_a",
+    "L32.attn.z_quant",
+    "L32.attn.wo_b",
+    "L32.attn.out_allreduce",
+    "L32.attn.hc_post",
+    "L32.substage_hop0",
+    "L32.ffn.hc_pre",
+    "L32.ffn.norm.sumsq",
+    "L32.ffn.norm.rsqrt",
+    "L32.ffn.norm.scale",
+    "L32.ffn.router",
+    "L32.ffn.softplus_sqrt",
+    "L32.ffn.router_allgather",
+    "L32.ffn.bias",
+    "L32.ffn.top6",
+    "L32.ffn.top6_order",
+    "L32.ffn.experts_gu",
+    "L32.ffn.experts_gu.asbuilt_second_phase0",
+    "L32.ffn.experts_gu.asbuilt_second_phase1",
+    "L32.ffn.experts_gu.asbuilt_second_phase2",
+    "L32.ffn.experts_gu.asbuilt_second_phase3",
+    "L32.ffn.experts_gu.asbuilt_second_phase4",
+    "L32.ffn.experts_gu.asbuilt_second_phase5",
+    "L32.ffn.swiglu",
+    "L32.ffn.route_w",
+    "L32.ffn.quant2",
+    "L32.ffn.down",
+    "L32.ffn.combine_allreduce",
+    "L32.ffn.hc_post",
+    "L33.attn.hc_pre",
+    "L33.attn.norm.sumsq",
+    "L33.attn.norm.rsqrt",
+    "L33.attn.norm.scale",
+    "L33.attn.quant",
+    "L33.attn.a_proj",
+    "L33.attn.a_proj.asbuilt_second_phase0",
+    "L33.attn.a_allgather",
+    "L33.attn.q_norm.sumsq",
+    "L33.attn.q_norm.rsqrt",
+    "L33.attn.q_norm.scale",
+    "L33.attn.q_quant",
+    "L33.attn.wq_b",
+    "L33.attn.q_rope",
+    "L33.attn.scores",
+    "L33.attn.max",
+    "L33.attn.exp",
+    "L33.attn.pv",
+    "L33.attn.normalize",
+    "L33.attn.wo_a",
+    "L33.attn.z_quant",
+    "L33.attn.wo_b",
+    "L33.attn.out_allreduce",
+    "L33.attn.hc_post",
+    "L33.substage_hop0",
+    "L33.ffn.hc_pre",
+    "L33.ffn.norm.sumsq",
+    "L33.ffn.norm.rsqrt",
+    "L33.ffn.norm.scale",
+    "L33.ffn.router",
+    "L33.ffn.softplus_sqrt",
+    "L33.ffn.router_allgather",
+    "L33.ffn.bias",
+    "L33.ffn.top6",
+    "L33.ffn.top6_order",
+    "L33.ffn.experts_gu",
+    "L33.ffn.experts_gu.asbuilt_second_phase0",
+    "L33.ffn.experts_gu.asbuilt_second_phase1",
+    "L33.ffn.experts_gu.asbuilt_second_phase2",
+    "L33.ffn.experts_gu.asbuilt_second_phase3",
+    "L33.ffn.experts_gu.asbuilt_second_phase4",
+    "L33.ffn.experts_gu.asbuilt_second_phase5",
+    "L33.ffn.swiglu",
+    "L33.ffn.route_w",
+    "L33.ffn.quant2",
+    "L33.ffn.down",
+    "L33.ffn.combine_allreduce",
+    "L33.ffn.hc_post",
+    "L34.attn.hc_pre",
+    "L34.attn.norm.sumsq",
+    "L34.attn.norm.rsqrt",
+    "L34.attn.norm.scale",
+    "L34.attn.quant",
+    "L34.attn.a_proj",
+    "L34.attn.a_proj.asbuilt_second_phase0",
+    "L34.attn.a_allgather",
+    "L34.attn.q_norm.sumsq",
+    "L34.attn.q_norm.rsqrt",
+    "L34.attn.q_norm.scale",
+    "L34.attn.q_quant",
+    "L34.attn.wq_b",
+    "L34.attn.q_rope",
+    "L34.attn.scores",
+    "L34.attn.max",
+    "L34.attn.exp",
+    "L34.attn.pv",
+    "L34.attn.normalize",
+    "L34.attn.wo_a",
+    "L34.attn.z_quant",
+    "L34.attn.wo_b",
+    "L34.attn.out_allreduce",
+    "L34.attn.hc_post",
+    "L34.ffn.hc_pre",
+    "L34.ffn.norm.sumsq",
+    "L34.ffn.norm.rsqrt",
+    "L34.ffn.norm.scale",
+    "L34.ffn.router",
+    "L34.ffn.softplus_sqrt",
+    "L34.ffn.router_allgather",
+    "L34.ffn.bias",
+    "L34.ffn.top6",
+    "L34.ffn.top6_order",
+    "L34.ffn.experts_gu",
+    "L34.ffn.experts_gu.asbuilt_second_phase0",
+    "L34.ffn.experts_gu.asbuilt_second_phase1",
+    "L34.ffn.experts_gu.asbuilt_second_phase2",
+    "L34.ffn.experts_gu.asbuilt_second_phase3",
+    "L34.ffn.experts_gu.asbuilt_second_phase4",
+    "L34.ffn.experts_gu.asbuilt_second_phase5",
+    "L34.ffn.swiglu",
+    "L34.ffn.route_w",
+    "L34.ffn.quant2",
+    "L34.ffn.down",
+    "L34.ffn.combine_allreduce",
+    "L34.ffn.hc_post",
+    "L35.attn.hc_pre",
+    "L35.attn.norm.sumsq",
+    "L35.attn.norm.rsqrt",
+    "L35.attn.norm.scale",
+    "L35.attn.quant",
+    "L35.attn.a_proj",
+    "L35.attn.a_proj.asbuilt_second_phase0",
+    "L35.attn.a_allgather",
+    "L35.attn.q_norm.sumsq",
+    "L35.attn.q_norm.rsqrt",
+    "L35.attn.q_norm.scale",
+    "L35.attn.q_quant",
+    "L35.attn.wq_b",
+    "L35.attn.q_rope",
+    "L35.attn.scores",
+    "L35.attn.max",
+    "L35.attn.exp",
+    "L35.attn.pv",
+    "L35.attn.normalize",
+    "L35.attn.wo_a",
+    "L35.attn.z_quant",
+    "L35.attn.wo_b",
+    "L35.attn.out_allreduce",
+    "L35.attn.hc_post",
+    "L35.substage_hop0",
+    "L35.ffn.hc_pre",
+    "L35.ffn.norm.sumsq",
+    "L35.ffn.norm.rsqrt",
+    "L35.ffn.norm.scale",
+    "L35.ffn.router",
+    "L35.ffn.softplus_sqrt",
+    "L35.ffn.router_allgather",
+    "L35.ffn.bias",
+    "L35.ffn.top6",
+    "L35.ffn.top6_order",
+    "L35.ffn.experts_gu",
+    "L35.ffn.experts_gu.asbuilt_second_phase0",
+    "L35.ffn.experts_gu.asbuilt_second_phase1",
+    "L35.ffn.experts_gu.asbuilt_second_phase2",
+    "L35.ffn.experts_gu.asbuilt_second_phase3",
+    "L35.ffn.experts_gu.asbuilt_second_phase4",
+    "L35.ffn.experts_gu.asbuilt_second_phase5",
+    "L35.ffn.swiglu",
+    "L35.ffn.route_w",
+    "L35.ffn.quant2",
+    "L35.ffn.down",
+    "L35.ffn.combine_allreduce",
+    "L35.ffn.hc_post",
+    "L36.attn.hc_pre",
+    "L36.attn.norm.sumsq",
+    "L36.attn.norm.rsqrt",
+    "L36.attn.norm.scale",
+    "L36.attn.quant",
+    "L36.attn.a_proj",
+    "L36.attn.a_proj.asbuilt_second_phase0",
+    "L36.attn.a_allgather",
+    "L36.attn.q_norm.sumsq",
+    "L36.attn.q_norm.rsqrt",
+    "L36.attn.q_norm.scale",
+    "L36.attn.q_quant",
+    "L36.attn.wq_b",
+    "L36.attn.idx.q",
+    "L36.attn.idx.score",
+    "L36.attn.idx.topk_local",
+    "L36.attn.idx.topk_merge",
+    "L36.attn.idx.topk_final",
+    "L36.attn.gather",
+    "L36.attn.rows_allgather",
+    "L36.attn.scores",
+    "L36.attn.max",
+    "L36.attn.exp",
+    "L36.attn.pv",
+    "L36.attn.normalize",
+    "L36.attn.wo_a",
+    "L36.attn.z_quant",
+    "L36.attn.wo_b",
+    "L36.attn.out_allreduce",
+    "L36.attn.hc_post",
+    "L36.substage_hop0",
+    "L36.ffn.hc_pre",
+    "L36.ffn.norm.sumsq",
+    "L36.ffn.norm.rsqrt",
+    "L36.ffn.norm.scale",
+    "L36.ffn.router",
+    "L36.ffn.softplus_sqrt",
+    "L36.ffn.router_allgather",
+    "L36.ffn.bias",
+    "L36.ffn.top6",
+    "L36.ffn.top6_order",
+    "L36.ffn.experts_gu",
+    "L36.ffn.experts_gu.asbuilt_second_phase0",
+    "L36.ffn.experts_gu.asbuilt_second_phase1",
+    "L36.ffn.experts_gu.asbuilt_second_phase2",
+    "L36.ffn.experts_gu.asbuilt_second_phase3",
+    "L36.ffn.experts_gu.asbuilt_second_phase4",
+    "L36.ffn.experts_gu.asbuilt_second_phase5",
+    "L36.ffn.swiglu",
+    "L36.ffn.route_w",
+    "L36.ffn.quant2",
+    "L36.ffn.down",
+    "L36.ffn.combine_allreduce",
+    "L36.ffn.hc_post",
+    "L37.attn.hc_pre",
+    "L37.attn.norm.sumsq",
+    "L37.attn.norm.rsqrt",
+    "L37.attn.norm.scale",
+    "L37.attn.quant",
+    "L37.attn.a_proj",
+    "L37.attn.a_proj.asbuilt_second_phase0",
+    "L37.attn.a_allgather",
+    "L37.attn.q_norm.sumsq",
+    "L37.attn.q_norm.rsqrt",
+    "L37.attn.q_norm.scale",
+    "L37.attn.q_quant",
+    "L37.attn.wq_b",
+    "L37.attn.q_rope",
+    "L37.attn.scores",
+    "L37.attn.max",
+    "L37.attn.exp",
+    "L37.attn.pv",
+    "L37.attn.normalize",
+    "L37.attn.wo_a",
+    "L37.attn.z_quant",
+    "L37.attn.wo_b",
+    "L37.attn.out_allreduce",
+    "L37.attn.hc_post",
+    "L37.ffn.hc_pre",
+    "L37.ffn.norm.sumsq",
+    "L37.ffn.norm.rsqrt",
+    "L37.ffn.norm.scale",
+    "L37.ffn.router",
+    "L37.ffn.softplus_sqrt",
+    "L37.ffn.router_allgather",
+    "L37.ffn.bias",
+    "L37.ffn.top6",
+    "L37.ffn.top6_order",
+    "L37.ffn.experts_gu",
+    "L37.ffn.experts_gu.asbuilt_second_phase0",
+    "L37.ffn.experts_gu.asbuilt_second_phase1",
+    "L37.ffn.experts_gu.asbuilt_second_phase2",
+    "L37.ffn.experts_gu.asbuilt_second_phase3",
+    "L37.ffn.experts_gu.asbuilt_second_phase4",
+    "L37.ffn.experts_gu.asbuilt_second_phase5",
+    "L37.ffn.swiglu",
+    "L37.ffn.route_w",
+    "L37.ffn.quant2",
+    "L37.ffn.down",
+    "L37.ffn.combine_allreduce",
+    "L37.ffn.hc_post",
+    "L38.attn.hc_pre",
+    "L38.attn.norm.sumsq",
+    "L38.attn.norm.rsqrt",
+    "L38.attn.norm.scale",
+    "L38.attn.quant",
+    "L38.attn.a_proj",
+    "L38.attn.a_proj.asbuilt_second_phase0",
+    "L38.attn.a_allgather",
+    "L38.attn.q_norm.sumsq",
+    "L38.attn.q_norm.rsqrt",
+    "L38.attn.q_norm.scale",
+    "L38.attn.q_quant",
+    "L38.attn.wq_b",
+    "L38.attn.q_rope",
+    "L38.attn.scores",
+    "L38.attn.max",
+    "L38.attn.exp",
+    "L38.attn.pv",
+    "L38.attn.normalize",
+    "L38.attn.wo_a",
+    "L38.attn.z_quant",
+    "L38.attn.wo_b",
+    "L38.attn.out_allreduce",
+    "L38.attn.hc_post",
+    "L38.substage_hop0",
+    "L38.ffn.hc_pre",
+    "L38.ffn.norm.sumsq",
+    "L38.ffn.norm.rsqrt",
+    "L38.ffn.norm.scale",
+    "L38.ffn.router",
+    "L38.ffn.softplus_sqrt",
+    "L38.ffn.router_allgather",
+    "L38.ffn.bias",
+    "L38.ffn.top6",
+    "L38.ffn.top6_order",
+    "L38.ffn.experts_gu",
+    "L38.ffn.experts_gu.asbuilt_second_phase0",
+    "L38.ffn.experts_gu.asbuilt_second_phase1",
+    "L38.ffn.experts_gu.asbuilt_second_phase2",
+    "L38.ffn.experts_gu.asbuilt_second_phase3",
+    "L38.ffn.experts_gu.asbuilt_second_phase4",
+    "L38.ffn.experts_gu.asbuilt_second_phase5",
+    "L38.ffn.swiglu",
+    "L38.ffn.route_w",
+    "L38.ffn.quant2",
+    "L38.ffn.down",
+    "L38.ffn.combine_allreduce",
+    "L38.ffn.hc_post",
+    "L39.attn.hc_pre",
+    "L39.attn.norm.sumsq",
+    "L39.attn.norm.rsqrt",
+    "L39.attn.norm.scale",
+    "L39.attn.quant",
+    "L39.attn.a_proj",
+    "L39.attn.a_proj.asbuilt_second_phase0",
+    "L39.attn.a_allgather",
+    "L39.attn.q_norm.sumsq",
+    "L39.attn.q_norm.rsqrt",
+    "L39.attn.q_norm.scale",
+    "L39.attn.q_quant",
+    "L39.attn.wq_b",
+    "L39.attn.q_rope",
+    "L39.attn.scores",
+    "L39.attn.max",
+    "L39.attn.exp",
+    "L39.attn.pv",
+    "L39.attn.normalize",
+    "L39.attn.wo_a",
+    "L39.attn.z_quant",
+    "L39.attn.wo_b",
+    "L39.attn.out_allreduce",
+    "L39.attn.hc_post",
+    "L39.substage_hop0",
+    "L39.ffn.hc_pre",
+    "L39.ffn.norm.sumsq",
+    "L39.ffn.norm.rsqrt",
+    "L39.ffn.norm.scale",
+    "L39.ffn.router",
+    "L39.ffn.softplus_sqrt",
+    "L39.ffn.router_allgather",
+    "L39.ffn.bias",
+    "L39.ffn.top6",
+    "L39.ffn.top6_order",
+    "L39.ffn.experts_gu",
+    "L39.ffn.experts_gu.asbuilt_second_phase0",
+    "L39.ffn.experts_gu.asbuilt_second_phase1",
+    "L39.ffn.experts_gu.asbuilt_second_phase2",
+    "L39.ffn.experts_gu.asbuilt_second_phase3",
+    "L39.ffn.experts_gu.asbuilt_second_phase4",
+    "L39.ffn.experts_gu.asbuilt_second_phase5",
+    "L39.ffn.swiglu",
+    "L39.ffn.route_w",
+    "L39.ffn.quant2",
+    "L39.ffn.down",
+    "L39.ffn.combine_allreduce",
+    "L39.ffn.hc_post",
+    "head.hop",
+    "head.hc_pre",
+    "head.norm.sumsq",
+    "head.norm.rsqrt",
+    "head.norm.scale",
+    "head.lm_head",
+    "head.argmax",
+    "head.argmax_merge",
+    "token.return"
+  ],
+  "unknowns": [
+    "small-field phase differential transfer to full shape is not a measured bound",
+    "six routed experts still grouped into one base phase; five extra phases/layer not closed by pair merge",
+    "attention base phase also fuses index/compressor weights beyond the wq_a/wkv pair",
+    "candidate dependency is source model contract; complete runtime reindex consumption not qualified",
+    "current-source graph differs from historical 3809 row; scalar historical sensitivity is not a historical DAG replay",
+    "whole token endpoint ownership/CDC/backpressure and SS/FF timing remain unqualified"
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "inputs": {
+    "architecture": {
+      "archive": "inputs/architecture.py",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "retained input",
+      "sha256": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+      "source": "tools/arch_budget_v41.py"
+    },
+    "decoder": {
+      "archive": "inputs/decoder.py",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "retained input",
+      "sha256": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+      "source": "tools/decode_critical_path.py"
+    },
+    "emitter": {
+      "archive": "inputs/emitter.py",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "retained input",
+      "sha256": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+      "source": "tools/hdc_replay_v41.py"
+    },
+    "graph": {
+      "archive": "inputs/graph.json",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "derived full proposal DAG snapshot from uarch.evaluate; producer rerun recipe retained",
+      "sha256": "3950584d73ed564f991de846c53adeca7c1bba5385e80bc05a58f4250cb00876",
+      "source": "/tmp/dewey-pricing-r11-graph.json"
+    },
+    "historical_row": {
+      "archive": "inputs/historical_row.json",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "retained input",
+      "sha256": "6a9c98b60b18d2281749e1d16e6201e36421c0a15bd32c6460fcc6b44368b160",
+      "source": "results/uarch/v41_rom.json"
+    },
+    "model_config": {
+      "archive": "inputs/model_config.json",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "retained input",
+      "sha256": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+      "source": "configs/models/candidates/deepseek-v4.1-flash.json"
+    },
+    "phase_audit": {
+      "archive": "inputs/phase_audit.json",
+      "commit": "b98b0522243835062c0700b60a462fe8c0acaf89",
+      "scope": "retained input",
+      "sha256": "b087681895be1dba7a4b9cce2d49a7c7b635ebae5467eb7897b8c0476a4e6abd",
+      "source": "results/uarch/free_levers_audit_20261003/free_levers_audit.json"
+    },
+    "phase_measurement": {
+      "archive": "inputs/phase_measurement.json",
+      "commit": "b98b0522243835062c0700b60a462fe8c0acaf89",
+      "scope": "retained input",
+      "sha256": "24210c6f8d15665902302305f73b4e2357721d8aee4f7a078f3e7c6790e4c215",
+      "source": "results/uarch/free_levers_audit_20261003/measured/phase_merge_flat_bst17.json"
+    },
+    "qwen_measurement": {
+      "archive": "inputs/qwen_measurement.json",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "retained input",
+      "sha256": "5d5e0a7f7cf5d87653ef1a3782efac387762f0d410289ce1fb306301665e1287",
+      "source": "results/rtl/qwen_rom_TP4_allreduce_oneseg_20261003/measured.json"
+    },
+    "select_candidate": {
+      "archive": "inputs/select_candidate.json",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "retained RTL campaign",
+      "sha256": "b83aad197d0fff78cf5663d0ce4b790b7ddb24bddb83093eb4a8ad662efd4789",
+      "source": "results/rtl/hdc_v41_cand_campaign.json"
+    },
+    "select_scale": {
+      "archive": "inputs/select_scale.json",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "retained RTL campaign",
+      "sha256": "ee7dde83a8d3f68b355549d54bdec5fbd6c5005c6ddb769c21a1286c8c9a592e",
+      "source": "results/rtl/hdc_v41_tselect_scale_campaign.json"
+    },
+    "uarch": {
+      "archive": "inputs/uarch.py",
+      "commit": "962f1c4ce890607f439b78691d0485bf7db41c93",
+      "scope": "retained input",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "source": "tools/uarch_model.py"
+    }
+  }
+}

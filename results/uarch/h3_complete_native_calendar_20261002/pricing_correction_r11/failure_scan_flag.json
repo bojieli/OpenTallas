@@ -1,0 +1,7 @@
+{
+  "verdict": "FAIL",
+  "tests": "3 failed, 19 passed in 8.31s",
+  "source_sha256": "c30cc54f445b318caa8df0498b3812d05e9c15b45b550743aa55fad5433c7e5f",
+  "reason": "KeyError scans_index: SWA modes omit the flag; literal attention uses mode.get('scans_index')",
+  "resolution": "use literal mode.get semantics; preserve this record"
+}
