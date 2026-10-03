@@ -10,7 +10,7 @@ W4='d1b6dd52a'
 W3='7c5b6a79b'
 W1='046bf5026'
 
-def build(out,maproot=BASE/'attempt_r2'):
+def build(out,maproot=BASE/'baseline_s82_successor_r1'):
     out.mkdir(parents=True,exist_ok=True)
     inv=json.loads((maproot/'inventory.json').read_text())
     S=inv['stages'];NP=inv['pairs_per_rank_die']
@@ -95,7 +95,12 @@ def build(out,maproot=BASE/'attempt_r2'):
         baseline_depth_ragged_return_NOT_QUALIFIED=True,successor_interface_exactness_and_loaded_timing_NOT_QUALIFIED=True,
         measured_program_loss=None,latency_credit_cycles=0)
     save(out/'return_baseline.json',baseline)
-    mapping=json.loads((maproot/'mapping_verdict.json').read_text())
+    def mapping_input(name):
+        path=maproot/name
+        if not path.exists() and maproot==BASE/'baseline_s82_successor_r1':
+            path=BASE/'baseline_s82_mapping_r1'/name
+        return path
+    mapping=json.loads(mapping_input('mapping_verdict.json').read_text())
     stages=json.loads((maproot/'stage_map.json').read_text())
     # A complete source directory is a conservation record, not a claim that every entry has a legal runtime owner.
     headers=C.load_headers(ROOT/'results/uarch/dsrom_fixed4096_owner_compiler_20261002/inputs/tensor_headers.jsonl.gz')
@@ -131,7 +136,7 @@ def build(out,maproot=BASE/'attempt_r2'):
          additional_token_us_shared_link=sum(x['shared_link_model_us'] for x in broadcasts),
          all_calls_serially_charged=True,source_schedule_and_link_port_gates_open=True,
          adoption=False))
-    providers=json.loads((maproot/'providers.json').read_text())
+    providers=json.loads(mapping_input('providers.json').read_text())
     for p in providers:
         used[p['stage']].update(p['pairs'])
         for t in p['declarations']:owners[t['tensor']].append(dict(kind=p['kind'],stage=p['stage'],canonical_source_rank=0,
@@ -266,5 +271,5 @@ def build(out,maproot=BASE/'attempt_r2'):
         area='area_ledger.json retains fixed/residual/halo/whitespace/cfg/RNE/WAKE/full return; only PAR2 corridor removed',floorplan_admission=False))
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,default=BASE)
-    ap.add_argument('--map-dir',type=Path,default=BASE/'attempt_r2');a=ap.parse_args();build(a.out,a.map_dir)
+    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--map-dir',type=Path,default=BASE/'baseline_s82_successor_r1');a=ap.parse_args();build(a.out,a.map_dir)

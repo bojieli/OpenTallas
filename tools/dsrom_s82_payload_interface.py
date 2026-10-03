@@ -242,3 +242,47 @@ class SourceExecution:
             output_VM_base=b['consumer_output_base_elements'],predicate=b['instruction_predicate'],
             output_format=b['output_format'],source_identity_verified=True,
             native_dispatch_qualified=False,calendar_qualified=False)
+
+class DieROM:
+    """Bind one actual S82 rank die's physical macros to native payload owners.
+
+    The index uses only this die's word intervals. Unowned/padding words are
+    rejected, so a missing initializer cannot masquerade as a zero weight.
+    """
+    def __init__(self,stage,rank,matrices,providers,auxiliary):
+        if stage not in range(82) or rank not in range(4):raise ValueError('S82 rank die')
+        self.stage,self.rank=stage,rank;self.intervals={};self.providers={};self.aux={}
+        for m in matrices:
+            if m['stage']!=stage or rank not in m['physical_owner_ranks']:continue
+            for si,p,first,n,stride,start,w in m['plans']:
+                self.intervals.setdefault(p,[]).append((start,start+n*w,m))
+        for p in providers:
+            if p['stage']!=stage or rank!=p['physical_owner_rank']:continue
+            for pair in p['pairs']:
+                if pair in self.providers:raise ValueError('duplicate raw provider')
+                self.providers[pair]=p
+        for t in auxiliary:
+            for s in t['payload_spans']:
+                if (s['stage'],s['rank'])==(stage,rank):
+                    entries=self.aux.setdefault(s['pair'],[])
+                    if not any(existing is t for existing in entries):entries.append(t)
+        if (set(self.intervals)&set(self.providers) or set(self.intervals)&set(self.aux)
+                or set(self.providers)&set(self.aux)):raise ValueError('physical payload class overlap')
+        for pair,runs in self.intervals.items():
+            if pair not in range(2388):raise ValueError('element bounds')
+            runs.sort(key=lambda r:r[0])
+            if any(a[1]>b[0] for a,b in zip(runs,runs[1:])):raise ValueError('physical matrix overlap')
+    def read(self,source,macro,row):
+        if macro not in range(9552) or row not in range(4096):raise ValueError('physical macro bounds')
+        pair,leaf=divmod(macro,4);word=2*row+leaf%2
+        if pair in self.providers:return provider_word(self.providers[pair],source,macro,row)
+        if pair in self.aux:return auxiliary_word(self.aux[pair],source,self.stage,self.rank,macro,row)
+        matches=[m for a,b,m in self.intervals.get(pair,[]) if a<=word<b]
+        if len(matches)!=1:raise ValueError('no unique physical payload owner')
+        return matrix_word(matches[0],source,self.rank,macro,row)
+    def inventory(self):
+        return dict(stage=self.stage,rank=self.rank,die_id=4*self.stage+self.rank,
+            physical_weight_macros=9552,actual_field_pairs=2388,BF_dual_pairs=512,q_only_pairs=1876,
+            matrix_owner_pairs=len(self.intervals),raw_provider_owner_pairs=len(self.providers),
+            auxiliary_owner_pairs=len(self.aux),ROM_ECC=False,field_padding_pairs=0,
+            unowned_frames_still_charged=True,physical_admission=False)
