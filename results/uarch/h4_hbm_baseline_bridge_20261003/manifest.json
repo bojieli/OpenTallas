@@ -1,0 +1,215 @@
+{
+  "artifacts": [
+    {
+      "bytes": 3498932,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/DS_directory.bin.gz",
+      "sha256": "6ad31f796a1828d7390bdd5c2c94a46af535d8a432ed66c55e816b1e6bfbe025"
+    },
+    {
+      "bytes": 358243,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/Qwen_directory.bin.gz",
+      "sha256": "3532f02d42ed259033ac2744c4d8100a1291a9bb39c649429c7097e9f7284721"
+    },
+    {
+      "bytes": 3323,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/check_figures.log",
+      "sha256": "5f4aa37e363de4ff2c251ebc6b4bcec53619217029341c83202c72d0db622fa2"
+    },
+    {
+      "bytes": 3323,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/check_figures_consumer.log",
+      "sha256": "5f4aa37e363de4ff2c251ebc6b4bcec53619217029341c83202c72d0db622fa2"
+    },
+    {
+      "bytes": 769,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/cold_replay.json",
+      "sha256": "a7cc318980a39583863ed77641048b68b7d4dead04f2fb5824d248a8c306d9a3"
+    },
+    {
+      "bytes": 897,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/cold_replay_consumer.json",
+      "sha256": "6ec872f6ed6a077f36ddd858cec55335b605c9245ebe5ab975c964151df30582"
+    },
+    {
+      "bytes": 7276,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/consumer_delta.json",
+      "sha256": "a8034cf8df06963187e9af17ebef4babaee910b74e2d1fbb21430031475a2c9f"
+    },
+    {
+      "bytes": 9680,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/handoff.json",
+      "sha256": "5aa9734f7d30521e4865fe49a8b075ab5e17e209877d95d3083b91831b1fa1a4"
+    },
+    {
+      "bytes": 346,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/history_scope.json",
+      "sha256": "63fe9d810c6532c1d862ac140c9470919424a2e511f3d1865dafd57fd40b220a"
+    },
+    {
+      "bytes": 8278,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/implementation_graph.json",
+      "sha256": "769e98ff120eeb4c31e63b83cc5efa397ad1f54674f5f720140d5d04bc561110"
+    },
+    {
+      "bytes": 5140,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/input_manifest.json",
+      "sha256": "719d763c5f8699458cd03774d8b5a2b7bdeda7721bd0157dcca23f9f6a9eb491"
+    },
+    {
+      "bytes": 4011420,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/DS_homes.json.gz",
+      "sha256": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a"
+    },
+    {
+      "bytes": 4213,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/PC.sv",
+      "sha256": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf"
+    },
+    {
+      "bytes": 1813760,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/Qwen_homes.json.gz",
+      "sha256": "01cb064303e809b2389dad4da6932bb1ffa9d7e40f93cd0918b1eba43ca56da1"
+    },
+    {
+      "bytes": 2365,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/RF.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "bytes": 874,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/bridge.sv",
+      "sha256": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47"
+    },
+    {
+      "bytes": 6787,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/bulk_copy.sv",
+      "sha256": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4"
+    },
+    {
+      "bytes": 3623,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/context.sv",
+      "sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    {
+      "bytes": 6061,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/emitted_calendar_summary.json",
+      "sha256": "de32ca2223f4ea8b1699824b9b8ff443c5272444da96860cc67ee0d8683ceb2a"
+    },
+    {
+      "bytes": 1427,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/fifo.sv",
+      "sha256": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903"
+    },
+    {
+      "bytes": 34836,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/hbm_bridge_dependency_and_fields.json",
+      "sha256": "4d88b003fc730ded5fab4abe7fc8c6903f1ae647a8504e01cfaefca1b800a069"
+    },
+    {
+      "bytes": 6569,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/hbm_bridge_dependency_and_fields.md",
+      "sha256": "bf74b35b0b0971a743f7d13d62aef9a9195f1d49c70400252767cc5d5fc7d1c1"
+    },
+    {
+      "bytes": 35299,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/hbm_owner_ack_gaps.json",
+      "sha256": "44f4e634232e79776704d4efc0bbd10015f51e5ceca58b579745ca8710880fab"
+    },
+    {
+      "bytes": 10126,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/hbm_owner_ack_gaps.md",
+      "sha256": "0ebd61f798c21f4295a7f5aee063e31ebcfcbd8033c750e4c373f080c4bf299f"
+    },
+    {
+      "bytes": 9831,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/ingress.py",
+      "sha256": "2cb8984d2c86feef0e308a5b2d875b404238a1eb16c28bdccc026fc2d501333e"
+    },
+    {
+      "bytes": 9357,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/ingress_model.json",
+      "sha256": "fb70742365a23ba728f000ef4c23dc4f4f681f1128c483e00d5259083536cbcf"
+    },
+    {
+      "bytes": 9824,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/predecessor_model.json",
+      "sha256": "1789b4d42580500ca840b0b892beae9f3cb44812ca2d546be7c2d8864f150acc"
+    },
+    {
+      "bytes": 9668,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/provider.sv",
+      "sha256": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77"
+    },
+    {
+      "bytes": 815,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/route.sv",
+      "sha256": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c"
+    },
+    {
+      "bytes": 1113,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/shared.sv",
+      "sha256": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02"
+    },
+    {
+      "bytes": 34589,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/model.json",
+      "sha256": "d52cf907ac8f32e7113b23b5e97a5ba7c0ae7ba2b906a706201c7412769cbd3e"
+    },
+    {
+      "bytes": 292,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/preserved_failure_r1.json",
+      "sha256": "8c6d1568ab1035d2d79ca3a089c4b133d31907308a94d5f1bcfa32e29539b366"
+    },
+    {
+      "bytes": 7921,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/preserved_wide_implementation_graph.json",
+      "sha256": "8693c990f8105fc49f977d7c9639b7332cc76a138e311120f7c0f34702434a60"
+    },
+    {
+      "bytes": 26934,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/preserved_wide_tuple_model_unadopted.json",
+      "sha256": "fa55d4f9000c477d1628906e632d942e8613a9637cafea14bdf5a04f16d21162"
+    },
+    {
+      "bytes": 77,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/replay_final.log",
+      "sha256": "c7b4b6ffa334920c47c4e0d0d83969ce4595bd51d3a907ed4d9151647cfc73bf"
+    },
+    {
+      "bytes": 1000,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/tests_consumer_delta.log",
+      "sha256": "e5ae7f9e2e931738af2a9ab929a14af7177540abe48b68a18f3bacd3188b46a8"
+    },
+    {
+      "bytes": 994,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/tests_directory_gate.log",
+      "sha256": "84d0e9aede1c44e21c07803229d49abd8ddf0773fc5ee0c219401a64a27de02e"
+    },
+    {
+      "bytes": 1000,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/tests_final_consumer.log",
+      "sha256": "a185387e73563ab7a4ce53763b3f7896ee1e74d8f5b1427fc58d66739b7a3b02"
+    },
+    {
+      "bytes": 1001,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/tests_frozen_final.log",
+      "sha256": "f797c6b0d5f933a4bbbb67a4c80a28c2fae0eb80d3a2be8b9b288dad1a6f8b8b"
+    },
+    {
+      "bytes": 872,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/tests_r1.log",
+      "sha256": "41180672779f2385865e4dccd2e6e6be3e1dc3fe9b76f96c5338e7002816cea9"
+    }
+  ],
+  "schema": "HBM_BASELINE_FROZEN_ARTIFACTS_R2",
+  "source_pins": [
+    {
+      "path": "tools/h4_hbm_baseline_bridge.py",
+      "sha256": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2"
+    },
+    {
+      "path": "tests/test_h4_hbm_baseline_bridge.py",
+      "sha256": "786553406f6995e60529a0fffcf20c9742a41a9d52a48aadf4b986840d074dbb"
+    }
+  ]
+}
