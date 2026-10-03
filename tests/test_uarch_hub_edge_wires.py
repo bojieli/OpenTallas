@@ -88,7 +88,11 @@ def test_composed_model_binds_current_sources_and_preserves_historical_record():
             # A separately priced GPU-source correction follows this frozen
             # wire record; it must bind current code and the unchanged record.
             successor = json.loads((root / "results/uarch/dsrom_gpu_index_scan_correction_20261003/model.json").read_text())
-            assert successor["source_sha256"][source] == actual
+            if successor["source_sha256"][source] != actual:
+                from hbm_accelerator_model import verify_preserved_default_source
+                assert verify_preserved_default_source(root, successor["source_sha256"][source])
+            else:
+                assert successor["source_sha256"][source] == actual
             assert successor["unchanged_wire_result_sha256"] == hashlib.sha256(
                 (root / "results/uarch/dsrom_hub_edge_wires_20261003/model.json").read_bytes()).hexdigest()
         else:

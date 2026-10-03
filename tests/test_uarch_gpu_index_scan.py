@@ -80,7 +80,12 @@ def test_all_three_GPU_pricers_use_one_source_inventory():
 def test_current_repricing_record_matches_sources_and_retains_old_results():
     r = json.loads((ROOT / 'results/uarch/dsrom_gpu_index_scan_correction_20261003/model.json').read_text())
     for source, pin in r['source_sha256'].items():
-        assert hashlib.sha256((ROOT / source).read_bytes()).hexdigest() == pin
+        actual = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
+        if source == 'tools/uarch_model.py' and actual != pin:
+            from hbm_accelerator_model import verify_preserved_default_source
+            assert verify_preserved_default_source(ROOT, pin)
+        else:
+            assert actual == pin
     assert r['unchanged_wire_result_sha256'] == hashlib.sha256(
         (ROOT / 'results/uarch/dsrom_hub_edge_wires_20261003/model.json').read_bytes()).hexdigest()
     assert r['before']['tier2'][1]['tokens_s'] == 277.7
