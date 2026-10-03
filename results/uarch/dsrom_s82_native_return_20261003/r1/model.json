@@ -1,0 +1,62 @@
+{
+  "PnR_admitted": false,
+  "SSFF_timing_qualified": false,
+  "actual_mapping": {
+    "FF50_component_reservation_um2": 15999.5088,
+    "cell_area_um2": 7999.7544,
+    "cell_counts": {
+      "DFFASRHQNx1_ASAP7_75t_R": 428,
+      "DFFHQNx1_ASAP7_75t_R": 8715,
+      "INVx1_ASAP7_75t_R": 16534,
+      "NAND2x1_ASAP7_75t_R": 52275
+    },
+    "cells": 77952,
+    "flops": 9143,
+    "port_bits": 202,
+    "ports": 16
+  },
+  "allocation_target": "Replace retained per-node storage slots with complete-node home; bind logic delta to named residual/fixed union before charging twice or taking credit",
+  "candidate": "DS4096-TP4-S82-PAIR1",
+  "canonical_commit": "feba0739366dfe9adb98991e59bd0cee687f5d55",
+  "capacity_impossibility_claim": false,
+  "existing_area_screen_is_not_composed_native_area": true,
+  "full_die_fit": false,
+  "hold_clock_PG_route_added": false,
+  "job": {
+    "MainPID": 0,
+    "admit_GB": 16,
+    "directory": "/srv/opentallas-scratch/codex/s82-return-area-r1",
+    "host": "5.199.165.104",
+    "run_memory_time_caps": false,
+    "source_worktree_clean": true,
+    "terminal": "exit0",
+    "unit": "dsrom-s82-return-area-r1.service"
+  },
+  "metadata_only_no_weight_reads": true,
+  "native_node_instances": 8064,
+  "node_FF50_projection_mm2": 129.0200389632,
+  "node_cell_area_projection_mm2": 64.5100194816,
+  "node_logic_delta_before_containment_mm2": 77.74969337856,
+  "one_explicit_NAND_INV_construction_not_minimum_area_proof": true,
+  "parameters": {
+    "BYPASS": 1,
+    "RD": 64,
+    "RST": 1
+  },
+  "retained_node_FF50_storage_mm2": 51.27034558464,
+  "root_instances_retained": 128,
+  "root_logic_mapped": false,
+  "root_storage_retained_mm2": 1.62724184064,
+  "source_commit": "fecb33b6dcfdecc79308c1c885ff458791803144",
+  "source_sha256": {
+    "results/uarch/dsrom_s82_native_return_20261003/r1/exit.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "results/uarch/dsrom_s82_native_return_20261003/r1/launch.json": "2a6847e8a495a48093910697ba381e0b4116daf4685b84b968cbbae93acc12ce",
+    "results/uarch/dsrom_s82_native_return_20261003/r1/library.sha256": "cf4f18d1cf5e1e74317249e69915c90d12356dbac35d661baea8ed4fece8b8ed",
+    "results/uarch/dsrom_s82_native_return_20261003/r1/map.ys": "70d39ba1e01c67ec9640db11b8f18b6248e0be8c21355d2855933e1a106e3930",
+    "results/uarch/dsrom_s82_native_return_20261003/r1/mapped.json.gz": "df555fbc5a0cb0df24a0eb08bb23bc6ef878d95638efe449c83238208cc3bbd5",
+    "results/uarch/dsrom_s82_native_return_20261003/r1/mapped.log": "05478b58edd61253e717289fa43ce300b894458817e13b70cdf5af60c4e55bdd",
+    "results/uarch/dsrom_s82_native_return_20261003/r1/mapped.v.gz": "8eb4af8571af8652a626884827e77a326ab733cfd07158c60b7d6d34d4d512eb",
+    "results/uarch/dsrom_s82_native_return_20261003/r1/source_after.txt": "180d50e2bb97d99493a5bc8d545e7e4b004a56c2f7c654c8601272aa58ba2496",
+    "results/uarch/dsrom_s82_native_return_20261003/r1/tool_identity.txt": "c3d3e0c173c138a7ca1436700ddd784d77529f58fb69bb8395e4fe77e46742e6"
+  }
+}

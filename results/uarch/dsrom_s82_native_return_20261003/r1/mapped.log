@@ -1,0 +1,2102 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Executing script file `map.ys' --
+
+1. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+2. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+Imported 37 cell types from liberty file.
+
+3. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+Imported 56 cell types from liberty file.
+
+4. Executing SLANG frontend.
+Top level design units:
+    ot_v41_retn_w17w10
+
+
+Build succeeded: 0 errors, 0 warnings
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_v41_retn_w17w10.$696'.
+Removing empty process `ot_v41_retn_w17w10.$689'.
+Found and cleaned up 1 empty switch in `\ot_v41_retn_w17w10.$439'.
+Removing empty process `ot_v41_retn_w17w10.$438'.
+Removing empty process `ot_v41_retn_w17w10.$432'.
+Removing empty process `ot_v41_retn_w17w10.$426'.
+Found and cleaned up 1 empty switch in `\ot_v41_retn_w17w10.$404'.
+Found and cleaned up 1 empty switch in `\ot_v41_retn_w17w10.$298'.
+Removing empty process `ot_v41_retn_w17w10.$268'.
+Found and cleaned up 1 empty switch in `\ot_v41_retn_w17w10.$229'.
+Removing empty process `ot_v41_retn_w17w10.$221'.
+Found and cleaned up 1 empty switch in `\ot_v41_retn_w17w10.$113'.
+Removing empty process `ot_v41_retn_w17w10.$106'.
+Removing empty process `ot_v41_retn_w17w10.$50'.
+Removing empty process `ot_v41_retn_w17w10.$33'.
+Removing empty process `ot_v41_retn_w17w10.$20'.
+Cleaned up 5 empty switches.
+<suppressed ~181 debug messages>
+
+4.2. Executing TRIBUF pass.
+
+4.3. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 10 switch rules as full_case in process $483 in module ot_v41_retn_w17w10.
+Marked 31 switch rules as full_case in process $113 in module ot_v41_retn_w17w10.
+Marked 4 switch rules as full_case in process $404 in module ot_v41_retn_w17w10.
+Marked 5 switch rules as full_case in process $298 in module ot_v41_retn_w17w10.
+Marked 4 switch rules as full_case in process $439 in module ot_v41_retn_w17w10.
+Marked 26 switch rules as full_case in process $229 in module ot_v41_retn_w17w10.
+Removed a total of 0 dead cases.
+
+4.4. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 7 redundant assignments.
+Promoted 0 assignments to connections.
+
+4.5. Executing PROC_INIT pass (extract init attributes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~157 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_v41_retn_w17w10.$483'.
+     1/16: $$root.ot_v41_ret_pkg.norm.k$652
+     2/16: $$root.ot_v41_ret_pkg.norm.k$636
+     3/16: $$root.ot_v41_ret_pkg.norm.k$620
+     4/16: $$root.ot_v41_ret_pkg.norm.k$604
+     5/16: $$root.ot_v41_ret_pkg.norm.k$588
+     6/16: $$root.ot_v41_ret_pkg.norm.k$563
+     7/16: $$root.ot_v41_ret_pkg.norm.k$547
+     8/16: $$root.ot_v41_ret_pkg.norm.k$531
+     9/16: $$root.ot_v41_ret_pkg.norm.k$515
+    10/16: $$root.ot_v41_ret_pkg.norm.k$499
+    11/16: $660
+    12/16: $657
+    13/16: $654
+    14/16: $571
+    15/16: $568
+    16/16: $565
+Creating decoders for process `\ot_v41_retn_w17w10.$113'.
+     1/35: $u_n.u_add.shift_right_jam_28.shifted$205 [27:1]
+     2/35: $u_n.u_add.shift_right_jam_28.discarded$199
+     3/35: $u_n.u_add.shift_right_jam_28.discarded$196
+     4/35: $u_n.u_add.shift_right_jam_28.discarded$193
+     5/35: $u_n.u_add.shift_right_jam_28.discarded$190
+     6/35: $u_n.u_add.shift_right_jam_28.discarded$187
+     7/35: $u_n.u_add.shift_right_jam_28.discarded$184
+     8/35: $u_n.u_add.shift_right_jam_28.discarded$181
+     9/35: $u_n.u_add.shift_right_jam_28.discarded$178
+    10/35: $u_n.u_add.shift_right_jam_28.discarded$175
+    11/35: $u_n.u_add.shift_right_jam_28.discarded$172
+    12/35: $u_n.u_add.shift_right_jam_28.discarded$169
+    13/35: $u_n.u_add.shift_right_jam_28.discarded$166
+    14/35: $u_n.u_add.shift_right_jam_28.discarded$163
+    15/35: $u_n.u_add.shift_right_jam_28.discarded$160
+    16/35: $u_n.u_add.shift_right_jam_28.discarded$157
+    17/35: $u_n.u_add.shift_right_jam_28.discarded$154
+    18/35: $u_n.u_add.shift_right_jam_28.discarded$151
+    19/35: $u_n.u_add.shift_right_jam_28.discarded$148
+    20/35: $u_n.u_add.shift_right_jam_28.discarded$145
+    21/35: $u_n.u_add.shift_right_jam_28.discarded$142
+    22/35: $u_n.u_add.shift_right_jam_28.discarded$139
+    23/35: $u_n.u_add.shift_right_jam_28.discarded$136
+    24/35: $u_n.u_add.shift_right_jam_28.discarded$133
+    25/35: $u_n.u_add.shift_right_jam_28.discarded$130
+    26/35: $u_n.u_add.shift_right_jam_28.discarded$127
+    27/35: $u_n.u_add.shift_right_jam_28.discarded$124
+    28/35: $u_n.u_add.shift_right_jam_28.discarded$121
+    29/35: $u_n.u_add.shift_right_jam_28.discarded$202
+    30/35: $u_n.u_add.shift_right_jam_28.bit_index$206
+    31/35: $u_n.u_add.shift_right_jam_28.shifted$205 [0]
+    32/35: $u_n.u_add.shift_right_jam_28.discarded$204
+    33/35: $u_n.u_add.shift_right_jam_28.shifted$208
+    34/35: $u_n.u_add.shift_right_jam_28.bit_index$209
+    35/35: $u_n.u_add.shift_right_jam_28.discarded$207
+Creating decoders for process `\ot_v41_retn_w17w10.$404'.
+     1/5: $$root.ot_v41_ret_pkg.norm.k$403
+     2/5: $$root.ot_v41_ret_pkg.norm.k$387
+     3/5: $$root.ot_v41_ret_pkg.norm.k$371
+     4/5: $$root.ot_v41_ret_pkg.norm.k$355
+     5/5: $$root.ot_v41_ret_pkg.norm.k$339
+Creating decoders for process `\ot_v41_retn_w17w10.$298'.
+     1/6: $u_n.u_add.err$304
+     2/6: $u_n.u_add.y$303
+     3/6: $u_n.u_add.err$306
+     4/6: $u_n.u_add.y$305
+     5/6: $u_n.u_add.err$308
+     6/6: $u_n.u_add.y$307
+Creating decoders for process `\ot_v41_retn_w17w10.$439'.
+     1/5: $u_n.fault$482
+     2/5: $u_n.br$452
+     3/5: $u_n.ar$450
+     4/5: $u_n.bw$448
+     5/5: $u_n.aw$446
+Creating decoders for process `\ot_v41_retn_w17w10.$229'.
+     1/27: $u_n.u_add.s4_lz$256
+     2/27: $u_n.u_add.s4_lz$255
+     3/27: $u_n.u_add.s4_lz$254
+     4/27: $u_n.u_add.s4_lz$253
+     5/27: $u_n.u_add.s4_lz$252
+     6/27: $u_n.u_add.s4_lz$251
+     7/27: $u_n.u_add.s4_lz$250
+     8/27: $u_n.u_add.s4_lz$249
+     9/27: $u_n.u_add.s4_lz$248
+    10/27: $u_n.u_add.s4_lz$247
+    11/27: $u_n.u_add.s4_lz$246
+    12/27: $u_n.u_add.s4_lz$245
+    13/27: $u_n.u_add.s4_lz$244
+    14/27: $u_n.u_add.s4_lz$243
+    15/27: $u_n.u_add.s4_lz$242
+    16/27: $u_n.u_add.s4_lz$241
+    17/27: $u_n.u_add.s4_lz$240
+    18/27: $u_n.u_add.s4_lz$239
+    19/27: $u_n.u_add.s4_lz$238
+    20/27: $u_n.u_add.s4_lz$237
+    21/27: $u_n.u_add.s4_lz$236
+    22/27: $u_n.u_add.s4_lz$235
+    23/27: $u_n.u_add.s4_lz$234
+    24/27: $u_n.u_add.s4_lz$233
+    25/27: $u_n.u_add.s4_lz$232
+    26/27: $u_n.u_add.s4_lz$231
+    27/27: $u_n.u_add.s4_lz$230
+
+4.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 22 empty switches in `\ot_v41_retn_w17w10.$483'.
+Removing empty process `ot_v41_retn_w17w10.$483'.
+Found and cleaned up 59 empty switches in `\ot_v41_retn_w17w10.$113'.
+Removing empty process `ot_v41_retn_w17w10.$113'.
+Found and cleaned up 9 empty switches in `\ot_v41_retn_w17w10.$404'.
+Removing empty process `ot_v41_retn_w17w10.$404'.
+Found and cleaned up 5 empty switches in `\ot_v41_retn_w17w10.$298'.
+Removing empty process `ot_v41_retn_w17w10.$298'.
+Found and cleaned up 9 empty switches in `\ot_v41_retn_w17w10.$439'.
+Removing empty process `ot_v41_retn_w17w10.$439'.
+Found and cleaned up 53 empty switches in `\ot_v41_retn_w17w10.$229'.
+Removing empty process `ot_v41_retn_w17w10.$229'.
+Cleaned up 157 empty switches.
+
+4.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+<suppressed ~60 debug messages>
+
+5. Executing SYNTH pass.
+
+5.1. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1.1. Analyzing design hierarchy..
+Top module:  \ot_v41_retn_w17w10
+
+5.1.2. Analyzing design hierarchy..
+Top module:  \ot_v41_retn_w17w10
+Removed 0 unused modules.
+
+5.2. Executing PROC pass (convert processes to netlists).
+
+5.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+5.2.4. Executing PROC_INIT pass (extract init attributes).
+
+5.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+5.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.3. Executing CHECK pass (checking for obvious problems).
+Checking module ot_v41_retn_w17w10...
+Found and reported 0 problems.
+
+5.4. Executing FLATTEN pass (flatten design).
+
+5.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 22 unused cells and 353 unused wires.
+<suppressed ~129 debug messages>
+
+5.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_v41_retn_w17w10...
+Found and reported 0 problems.
+
+5.8. Executing OPT pass (performing simple optimizations).
+
+5.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 676 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 641 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+<suppressed ~105 debug messages>
+Removed a total of 35 cells.
+
+5.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_retn_w17w10..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port B of cell $283: \u_n.u_add.s5_round [24:1] -> { 1'1 \u_n.u_add.s5_round [23:1] }
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$401.
+    dead port 1/2 on $mux $procmux$394.
+    dead port 1/2 on $mux $procmux$387.
+    dead port 1/2 on $mux $procmux$384.
+    dead port 1/2 on $mux $procmux$378.
+    dead port 1/2 on $mux $procmux$375.
+    dead port 1/2 on $mux $procmux$81.
+    dead port 1/2 on $mux $procmux$78.
+    dead port 1/2 on $mux $procmux$72.
+    dead port 1/2 on $mux $procmux$336.
+    dead port 1/2 on $mux $procmux$313.
+    dead port 1/2 on $mux $procmux$310.
+    dead port 1/2 on $mux $procmux$306.
+    dead port 1/2 on $mux $procmux$303.
+Removed 14 multiplexer ports.
+<suppressed ~325 debug messages>
+
+5.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    New input vector for $reduce_or cell $118: \u_n.u_add.s1_small
+    Consolidated identical input bits for $mux cell $658:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$658y
+      New ports: A=1'0, B=1'1, Y=$658y [0]
+      New connections: $658y [31:1] = { $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] $658y [0] }
+    Consolidated identical input bits for $mux cell $655:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$655y
+      New ports: A=1'0, B=1'1, Y=$655y [0]
+      New connections: $655y [31:1] = { $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] $655y [0] }
+    Consolidated identical input bits for $mux cell $569:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$569y
+      New ports: A=1'0, B=1'1, Y=$569y [0]
+      New connections: $569y [31:1] = { $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] $569y [0] }
+    Consolidated identical input bits for $mux cell $566:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$566y
+      New ports: A=1'0, B=1'1, Y=$566y [0]
+      New connections: $566y [31:1] = { $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] $566y [0] }
+  Optimizing cells in module \ot_v41_retn_w17w10.
+Performed a total of 5 changes.
+
+5.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 627 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 623 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 619 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+<suppressed ~24 debug messages>
+Removed a total of 8 cells.
+
+5.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Changing const-value async load to async reset on $driver$u_n.u_add.s1_byp ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s1_sub ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s1_sign ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s1_err ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s1_code ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s1_exp ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s1_dist ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s1_big ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s1_small ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s2_byp ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s2_sub ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s2_sign ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s2_err ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s2_code ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s2_exp ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s2_big ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s2_small ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s3_byp ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s3_sub ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s3_sign ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s3_zero ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s3_err ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s3_code ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s3_exp ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s3_val ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s4_byp ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s4_sign ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s4_zero ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s4_err ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s4_code ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s4_exp ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.s4_val ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.y ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.u_add.err ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.fault ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.ar ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.aw ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.br ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.bw ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.ac ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.bc ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.aw8 ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.bw8 ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.ap ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.vp ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$u_n.by_v ($aldff) from module ot_v41_retn_w17w10.
+Changing const-value async load to async reset on $driver$g_rv[0].q ($aldff) from module ot_v41_retn_w17w10.
+Setting constant 0-bit at position 0 on $driver$u_n.u_add.s2_big ($adff) from module ot_v41_retn_w17w10.
+Setting constant 0-bit at position 1 on $driver$u_n.u_add.s2_big ($adff) from module ot_v41_retn_w17w10.
+Setting constant 0-bit at position 2 on $driver$u_n.u_add.s2_big ($adff) from module ot_v41_retn_w17w10.
+Setting constant 0-bit at position 27 on $driver$u_n.u_add.s2_big ($adff) from module ot_v41_retn_w17w10.
+
+5.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 0 unused cells and 57 unused wires.
+<suppressed ~1 debug messages>
+
+5.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_retn_w17w10..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~295 debug messages>
+
+5.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_retn_w17w10.
+Performed a total of 0 changes.
+
+5.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 619 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+
+5.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5.9. Executing FSM pass (extract and optimize FSM).
+
+5.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+Not marking ot_v41_retn_w17w10.u_n.u_add.s1_err as FSM state register:
+    Users of register don't seem to benefit from recoding.
+
+5.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+5.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+
+5.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+5.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+5.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+5.10. Executing OPT pass (performing simple optimizations).
+
+5.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 619 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_retn_w17w10..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~295 debug messages>
+
+5.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_retn_w17w10.
+Performed a total of 0 changes.
+
+5.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 619 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $driver$u_n.fault ($adff) from module ot_v41_retn_w17w10 (D = 1'1, Q = \u_n.fault).
+Adding EN signal on $driver$u_n.ar ($adff) from module ot_v41_retn_w17w10 (D = $449y, Q = \u_n.ar).
+Adding EN signal on $driver$u_n.aw ($adff) from module ot_v41_retn_w17w10 (D = $445y, Q = \u_n.aw).
+Adding EN signal on $driver$u_n.br ($adff) from module ot_v41_retn_w17w10 (D = $451y, Q = \u_n.br).
+Adding EN signal on $driver$u_n.bw ($adff) from module ot_v41_retn_w17w10 (D = $447y, Q = \u_n.bw).
+Adding EN signal on $driver$u_n.aw8 ($adff) from module ot_v41_retn_w17w10 (D = $466y, Q = \u_n.aw8).
+Adding EN signal on $driver$u_n.bw8 ($adff) from module ot_v41_retn_w17w10 (D = $472y, Q = \u_n.bw8).
+
+5.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 5 unused cells and 5 unused wires.
+<suppressed ~6 debug messages>
+
+5.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_retn_w17w10..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~285 debug messages>
+
+5.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_retn_w17w10.
+Performed a total of 0 changes.
+
+5.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 616 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+
+5.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 4 bits (of 5) from port A of cell ot_v41_retn_w17w10.$17 ($shl).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$30 ($shl).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$31 ($ge).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$47 ($shl).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$48 ($ge).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$51 ($ge).
+Removed top 30 bits (of 32) from port B of cell ot_v41_retn_w17w10.$51 ($ge).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$53 ($ge).
+Removed top 30 bits (of 32) from port B of cell ot_v41_retn_w17w10.$53 ($ge).
+Removed top 1 bits (of 2) from mux cell ot_v41_retn_w17w10.$109 ($mux).
+Removed top 1 bits (of 2) from FF cell ot_v41_retn_w17w10.$driver$u_n.u_add.s1_err ($adff).
+Removed top 3 bits (of 8) from port B of cell ot_v41_retn_w17w10.$117 ($ge).
+Removed top 1 bits (of 28) from port A of cell ot_v41_retn_w17w10.$119 ($shr).
+Removed top 30 bits (of 32) from port A of cell ot_v41_retn_w17w10.$128 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$128 ($lt).
+Removed top 29 bits (of 32) from port A of cell ot_v41_retn_w17w10.$131 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$131 ($lt).
+Removed top 29 bits (of 32) from port A of cell ot_v41_retn_w17w10.$134 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$134 ($lt).
+Removed top 29 bits (of 32) from port A of cell ot_v41_retn_w17w10.$137 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$137 ($lt).
+Removed top 29 bits (of 32) from port A of cell ot_v41_retn_w17w10.$140 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$140 ($lt).
+Removed top 28 bits (of 32) from port A of cell ot_v41_retn_w17w10.$143 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$143 ($lt).
+Removed top 28 bits (of 32) from port A of cell ot_v41_retn_w17w10.$146 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$146 ($lt).
+Removed top 28 bits (of 32) from port A of cell ot_v41_retn_w17w10.$149 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$149 ($lt).
+Removed top 28 bits (of 32) from port A of cell ot_v41_retn_w17w10.$152 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$152 ($lt).
+Removed top 28 bits (of 32) from port A of cell ot_v41_retn_w17w10.$155 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$155 ($lt).
+Removed top 28 bits (of 32) from port A of cell ot_v41_retn_w17w10.$158 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$158 ($lt).
+Removed top 28 bits (of 32) from port A of cell ot_v41_retn_w17w10.$161 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$161 ($lt).
+Removed top 28 bits (of 32) from port A of cell ot_v41_retn_w17w10.$164 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$164 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$167 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$167 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$170 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$170 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$173 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$173 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$176 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$176 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$179 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$179 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$182 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$182 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$185 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$185 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$188 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$188 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$191 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$191 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$194 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$194 ($lt).
+Removed top 27 bits (of 32) from port A of cell ot_v41_retn_w17w10.$197 ($lt).
+Removed top 24 bits (of 32) from port B of cell ot_v41_retn_w17w10.$197 ($lt).
+Removed top 1 bits (of 2) from FF cell ot_v41_retn_w17w10.$driver$u_n.u_add.s2_err ($adff).
+Removed top 1 bits (of 28) from port A of cell ot_v41_retn_w17w10.$210 ($add).
+Removed top 1 bits (of 28) from port A of cell ot_v41_retn_w17w10.$212 ($sub).
+Removed top 1 bits (of 28) from mux cell ot_v41_retn_w17w10.$214 ($mux).
+Removed top 7 bits (of 8) from port B of cell ot_v41_retn_w17w10.$226 ($add).
+Removed top 1 bits (of 2) from FF cell ot_v41_retn_w17w10.$driver$u_n.u_add.s3_err ($adff).
+Removed top 7 bits (of 8) from port B of cell ot_v41_retn_w17w10.$258 ($sub).
+Removed top 3 bits (of 8) from port A of cell ot_v41_retn_w17w10.$260 ($gt).
+Removed top 1 bits (of 2) from FF cell ot_v41_retn_w17w10.$driver$u_n.u_add.s4_err ($adff).
+Removed top 1 bits (of 25) from port A of cell ot_v41_retn_w17w10.$280 ($add).
+Removed top 24 bits (of 25) from port B of cell ot_v41_retn_w17w10.$280 ($add).
+Removed top 7 bits (of 8) from port B of cell ot_v41_retn_w17w10.$285 ($add).
+Removed top 7 bits (of 8) from port B of cell ot_v41_retn_w17w10.$288 ($eq).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$323 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$326 ($ge).
+Converting cell ot_v41_retn_w17w10.$329 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$329 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$329 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$334 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$335 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$336 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$338 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$342 ($ge).
+Converting cell ot_v41_retn_w17w10.$345 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$345 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$345 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$350 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$351 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$352 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$354 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$358 ($ge).
+Converting cell ot_v41_retn_w17w10.$361 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$361 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$361 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$366 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$367 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$368 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$370 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$374 ($ge).
+Converting cell ot_v41_retn_w17w10.$377 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$377 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$377 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$382 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$383 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$384 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$386 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$390 ($ge).
+Converting cell ot_v41_retn_w17w10.$393 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$393 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$393 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$398 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$399 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$400 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$402 ($add).
+Removed top 5 bits (of 6) from port B of cell ot_v41_retn_w17w10.$445 ($add).
+Removed top 5 bits (of 6) from port B of cell ot_v41_retn_w17w10.$447 ($add).
+Removed top 5 bits (of 6) from port B of cell ot_v41_retn_w17w10.$449 ($add).
+Removed top 5 bits (of 6) from port B of cell ot_v41_retn_w17w10.$451 ($add).
+Removed top 6 bits (of 7) from mux cell ot_v41_retn_w17w10.$453 ($mux).
+Removed top 6 bits (of 7) from port B of cell ot_v41_retn_w17w10.$454 ($add).
+Removed top 6 bits (of 7) from mux cell ot_v41_retn_w17w10.$455 ($mux).
+Removed top 6 bits (of 7) from port B of cell ot_v41_retn_w17w10.$456 ($sub).
+Removed top 6 bits (of 7) from mux cell ot_v41_retn_w17w10.$457 ($mux).
+Removed top 6 bits (of 7) from port B of cell ot_v41_retn_w17w10.$458 ($add).
+Removed top 6 bits (of 7) from mux cell ot_v41_retn_w17w10.$459 ($mux).
+Removed top 6 bits (of 7) from port B of cell ot_v41_retn_w17w10.$460 ($sub).
+Removed top 4 bits (of 5) from port B of cell ot_v41_retn_w17w10.$464 ($add).
+Removed top 4 bits (of 5) from port B of cell ot_v41_retn_w17w10.$470 ($add).
+Removed top 1 bits (of 5) from FF cell ot_v41_retn_w17w10.$driver$u_n.ap ($adff).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$486 ($ge).
+Converting cell ot_v41_retn_w17w10.$489 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$489 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$489 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$494 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$495 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$496 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$498 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$502 ($ge).
+Converting cell ot_v41_retn_w17w10.$505 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$505 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$505 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$510 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$511 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$512 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$514 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$518 ($ge).
+Converting cell ot_v41_retn_w17w10.$521 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$521 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$521 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$526 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$527 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$528 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$530 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$534 ($ge).
+Converting cell ot_v41_retn_w17w10.$537 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$537 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$537 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$542 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$543 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$544 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$546 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$550 ($ge).
+Converting cell ot_v41_retn_w17w10.$553 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$553 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$553 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$558 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$559 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$560 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$562 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$575 ($ge).
+Converting cell ot_v41_retn_w17w10.$578 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$578 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$578 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$583 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$584 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$585 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$587 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$591 ($ge).
+Converting cell ot_v41_retn_w17w10.$594 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$594 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$594 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$599 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$600 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$601 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$603 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$607 ($ge).
+Converting cell ot_v41_retn_w17w10.$610 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$610 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$610 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$615 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$616 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$617 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$619 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$623 ($ge).
+Converting cell ot_v41_retn_w17w10.$626 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$626 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$626 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$631 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$632 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$633 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$635 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$639 ($ge).
+Converting cell ot_v41_retn_w17w10.$642 ($lt) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell ot_v41_retn_w17w10.$642 ($lt).
+Removed top 1 bits (of 5) from port B of cell ot_v41_retn_w17w10.$642 ($lt).
+Removed top 5 bits (of 6) from port A of cell ot_v41_retn_w17w10.$647 ($shl).
+Removed top 1 bits (of 6) from port A of cell ot_v41_retn_w17w10.$648 ($add).
+Removed top 1 bits (of 6) from port B of cell ot_v41_retn_w17w10.$649 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_v41_retn_w17w10.$651 ($add).
+Removed top 4 bits (of 5) from mux cell ot_v41_retn_w17w10.$procmux$503 ($mux).
+Removed top 6 bits (of 7) from wire ot_v41_retn_w17w10.$459y.
+Removed top 6 bits (of 7) from wire ot_v41_retn_w17w10.$457y.
+Removed top 6 bits (of 7) from wire ot_v41_retn_w17w10.$455y.
+Removed top 6 bits (of 7) from wire ot_v41_retn_w17w10.$453y.
+Removed top 1 bits (of 2) from wire ot_v41_retn_w17w10.$109y.
+Removed top 4 bits (of 5) from wire ot_v41_retn_w17w10.$procmux$503_Y.
+
+5.12. Executing PEEPOPT pass (run peephole optimizers).
+
+5.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 0 unused cells and 6 unused wires.
+<suppressed ~1 debug messages>
+
+5.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_v41_retn_w17w10:
+  creating $macc model for $651 ($add).
+  creating $macc model for $648 ($add).
+  creating $macc model for $635 ($add).
+  creating $macc model for $632 ($add).
+  creating $macc model for $619 ($add).
+  creating $macc model for $616 ($add).
+  creating $macc model for $603 ($add).
+  creating $macc model for $600 ($add).
+  creating $macc model for $587 ($add).
+  creating $macc model for $584 ($add).
+  creating $macc model for $562 ($add).
+  creating $macc model for $559 ($add).
+  creating $macc model for $546 ($add).
+  creating $macc model for $543 ($add).
+  creating $macc model for $530 ($add).
+  creating $macc model for $527 ($add).
+  creating $macc model for $514 ($add).
+  creating $macc model for $511 ($add).
+  creating $macc model for $498 ($add).
+  creating $macc model for $495 ($add).
+  creating $macc model for $470 ($add).
+  creating $macc model for $464 ($add).
+  creating $macc model for $460 ($sub).
+  creating $macc model for $458 ($add).
+  creating $macc model for $456 ($sub).
+  creating $macc model for $454 ($add).
+  creating $macc model for $451 ($add).
+  creating $macc model for $449 ($add).
+  creating $macc model for $447 ($add).
+  creating $macc model for $445 ($add).
+  creating $macc model for $402 ($add).
+  creating $macc model for $399 ($add).
+  creating $macc model for $386 ($add).
+  creating $macc model for $383 ($add).
+  creating $macc model for $370 ($add).
+  creating $macc model for $367 ($add).
+  creating $macc model for $354 ($add).
+  creating $macc model for $351 ($add).
+  creating $macc model for $338 ($add).
+  creating $macc model for $335 ($add).
+  creating $macc model for $323 ($add).
+  creating $macc model for $285 ($add).
+  creating $macc model for $280 ($add).
+  creating $macc model for $271 ($sub).
+  creating $macc model for $258 ($sub).
+  creating $macc model for $226 ($add).
+  creating $macc model for $212 ($sub).
+  creating $macc model for $210 ($add).
+  creating $macc model for $112 ($sub).
+  merging $macc model for $454 into $456.
+  merging $macc model for $458 into $460.
+  creating $alu model for $macc $212.
+  creating $alu model for $macc $226.
+  creating $alu model for $macc $258.
+  creating $alu model for $macc $271.
+  creating $alu model for $macc $280.
+  creating $alu model for $macc $285.
+  creating $alu model for $macc $323.
+  creating $alu model for $macc $335.
+  creating $alu model for $macc $338.
+  creating $alu model for $macc $351.
+  creating $alu model for $macc $354.
+  creating $alu model for $macc $367.
+  creating $alu model for $macc $370.
+  creating $alu model for $macc $383.
+  creating $alu model for $macc $386.
+  creating $alu model for $macc $399.
+  creating $alu model for $macc $402.
+  creating $alu model for $macc $445.
+  creating $alu model for $macc $447.
+  creating $alu model for $macc $449.
+  creating $alu model for $macc $451.
+  creating $alu model for $macc $210.
+  creating $alu model for $macc $112.
+  creating $alu model for $macc $464.
+  creating $alu model for $macc $470.
+  creating $alu model for $macc $495.
+  creating $alu model for $macc $498.
+  creating $alu model for $macc $511.
+  creating $alu model for $macc $514.
+  creating $alu model for $macc $527.
+  creating $alu model for $macc $530.
+  creating $alu model for $macc $543.
+  creating $alu model for $macc $546.
+  creating $alu model for $macc $559.
+  creating $alu model for $macc $562.
+  creating $alu model for $macc $584.
+  creating $alu model for $macc $587.
+  creating $alu model for $macc $600.
+  creating $alu model for $macc $603.
+  creating $alu model for $macc $616.
+  creating $alu model for $macc $619.
+  creating $alu model for $macc $632.
+  creating $alu model for $macc $635.
+  creating $alu model for $macc $648.
+  creating $alu model for $macc $651.
+  creating $macc cell for $456: $auto$alumacc.cc:399:replace_macc$523
+  creating $macc cell for $460: $auto$alumacc.cc:399:replace_macc$524
+  creating $alu model for $649 ($ge): new $alu
+  creating $alu model for $642 ($lt): new $alu
+  creating $alu model for $639 ($ge): new $alu
+  creating $alu model for $633 ($ge): new $alu
+  creating $alu model for $626 ($lt): new $alu
+  creating $alu model for $623 ($ge): new $alu
+  creating $alu model for $617 ($ge): new $alu
+  creating $alu model for $610 ($lt): new $alu
+  creating $alu model for $607 ($ge): new $alu
+  creating $alu model for $601 ($ge): new $alu
+  creating $alu model for $594 ($lt): new $alu
+  creating $alu model for $591 ($ge): new $alu
+  creating $alu model for $585 ($ge): new $alu
+  creating $alu model for $578 ($lt): new $alu
+  creating $alu model for $575 ($ge): new $alu
+  creating $alu model for $560 ($ge): new $alu
+  creating $alu model for $553 ($lt): new $alu
+  creating $alu model for $550 ($ge): new $alu
+  creating $alu model for $544 ($ge): new $alu
+  creating $alu model for $537 ($lt): new $alu
+  creating $alu model for $534 ($ge): new $alu
+  creating $alu model for $528 ($ge): new $alu
+  creating $alu model for $521 ($lt): new $alu
+  creating $alu model for $518 ($ge): new $alu
+  creating $alu model for $512 ($ge): new $alu
+  creating $alu model for $505 ($lt): new $alu
+  creating $alu model for $502 ($ge): new $alu
+  creating $alu model for $496 ($ge): new $alu
+  creating $alu model for $489 ($lt): new $alu
+  creating $alu model for $486 ($ge): new $alu
+  creating $alu model for $400 ($ge): new $alu
+  creating $alu model for $393 ($lt): new $alu
+  creating $alu model for $390 ($ge): new $alu
+  creating $alu model for $384 ($ge): new $alu
+  creating $alu model for $377 ($lt): new $alu
+  creating $alu model for $374 ($ge): new $alu
+  creating $alu model for $368 ($ge): new $alu
+  creating $alu model for $361 ($lt): new $alu
+  creating $alu model for $358 ($ge): new $alu
+  creating $alu model for $352 ($ge): new $alu
+  creating $alu model for $345 ($lt): new $alu
+  creating $alu model for $342 ($ge): new $alu
+  creating $alu model for $336 ($ge): new $alu
+  creating $alu model for $329 ($lt): new $alu
+  creating $alu model for $326 ($ge): new $alu
+  creating $alu model for $321 ($lt): new $alu
+  creating $alu model for $295 ($ge): new $alu
+  creating $alu model for $294 ($ge): new $alu
+  creating $alu model for $260 ($gt): new $alu
+  creating $alu model for $197 ($lt): new $alu
+  creating $alu model for $194 ($lt): new $alu
+  creating $alu model for $191 ($lt): new $alu
+  creating $alu model for $188 ($lt): new $alu
+  creating $alu model for $185 ($lt): new $alu
+  creating $alu model for $182 ($lt): new $alu
+  creating $alu model for $179 ($lt): new $alu
+  creating $alu model for $176 ($lt): new $alu
+  creating $alu model for $173 ($lt): new $alu
+  creating $alu model for $170 ($lt): new $alu
+  creating $alu model for $167 ($lt): new $alu
+  creating $alu model for $164 ($lt): new $alu
+  creating $alu model for $161 ($lt): new $alu
+  creating $alu model for $158 ($lt): new $alu
+  creating $alu model for $155 ($lt): new $alu
+  creating $alu model for $152 ($lt): new $alu
+  creating $alu model for $149 ($lt): new $alu
+  creating $alu model for $146 ($lt): new $alu
+  creating $alu model for $143 ($lt): new $alu
+  creating $alu model for $140 ($lt): new $alu
+  creating $alu model for $137 ($lt): new $alu
+  creating $alu model for $134 ($lt): new $alu
+  creating $alu model for $131 ($lt): new $alu
+  creating $alu model for $128 ($lt): new $alu
+  creating $alu model for $117 ($ge): new $alu
+  creating $alu model for $94 ($gt): new $alu
+  creating $alu model for $92 ($gt): new $alu
+  creating $alu model for $53 ($ge): new $alu
+  creating $alu model for $51 ($ge): new $alu
+  creating $alu model for $48 ($ge): new $alu
+  creating $alu model for $31 ($ge): new $alu
+  creating $alu model for $93 ($eq): merged with $92.
+  creating $alu cell for $31: $auto$alumacc.cc:548:replace_alu$605
+  creating $alu cell for $48: $auto$alumacc.cc:548:replace_alu$618
+  creating $alu cell for $51: $auto$alumacc.cc:548:replace_alu$631
+  creating $alu cell for $53: $auto$alumacc.cc:548:replace_alu$644
+  creating $alu cell for $92, $93: $auto$alumacc.cc:548:replace_alu$657
+  creating $alu cell for $94: $auto$alumacc.cc:548:replace_alu$668
+  creating $alu cell for $117: $auto$alumacc.cc:548:replace_alu$679
+  creating $alu cell for $128: $auto$alumacc.cc:548:replace_alu$692
+  creating $alu cell for $131: $auto$alumacc.cc:548:replace_alu$697
+  creating $alu cell for $134: $auto$alumacc.cc:548:replace_alu$702
+  creating $alu cell for $137: $auto$alumacc.cc:548:replace_alu$707
+  creating $alu cell for $140: $auto$alumacc.cc:548:replace_alu$712
+  creating $alu cell for $143: $auto$alumacc.cc:548:replace_alu$717
+  creating $alu cell for $146: $auto$alumacc.cc:548:replace_alu$722
+  creating $alu cell for $149: $auto$alumacc.cc:548:replace_alu$727
+  creating $alu cell for $152: $auto$alumacc.cc:548:replace_alu$732
+  creating $alu cell for $155: $auto$alumacc.cc:548:replace_alu$737
+  creating $alu cell for $158: $auto$alumacc.cc:548:replace_alu$742
+  creating $alu cell for $161: $auto$alumacc.cc:548:replace_alu$747
+  creating $alu cell for $164: $auto$alumacc.cc:548:replace_alu$752
+  creating $alu cell for $167: $auto$alumacc.cc:548:replace_alu$757
+  creating $alu cell for $170: $auto$alumacc.cc:548:replace_alu$762
+  creating $alu cell for $173: $auto$alumacc.cc:548:replace_alu$767
+  creating $alu cell for $176: $auto$alumacc.cc:548:replace_alu$772
+  creating $alu cell for $179: $auto$alumacc.cc:548:replace_alu$777
+  creating $alu cell for $182: $auto$alumacc.cc:548:replace_alu$782
+  creating $alu cell for $185: $auto$alumacc.cc:548:replace_alu$787
+  creating $alu cell for $188: $auto$alumacc.cc:548:replace_alu$792
+  creating $alu cell for $191: $auto$alumacc.cc:548:replace_alu$797
+  creating $alu cell for $194: $auto$alumacc.cc:548:replace_alu$802
+  creating $alu cell for $197: $auto$alumacc.cc:548:replace_alu$807
+  creating $alu cell for $260: $auto$alumacc.cc:548:replace_alu$812
+  creating $alu cell for $294: $auto$alumacc.cc:548:replace_alu$823
+  creating $alu cell for $295: $auto$alumacc.cc:548:replace_alu$836
+  creating $alu cell for $321: $auto$alumacc.cc:548:replace_alu$849
+  creating $alu cell for $326: $auto$alumacc.cc:548:replace_alu$854
+  creating $alu cell for $329: $auto$alumacc.cc:548:replace_alu$867
+  creating $alu cell for $336: $auto$alumacc.cc:548:replace_alu$872
+  creating $alu cell for $342: $auto$alumacc.cc:548:replace_alu$885
+  creating $alu cell for $345: $auto$alumacc.cc:548:replace_alu$898
+  creating $alu cell for $352: $auto$alumacc.cc:548:replace_alu$903
+  creating $alu cell for $358: $auto$alumacc.cc:548:replace_alu$916
+  creating $alu cell for $361: $auto$alumacc.cc:548:replace_alu$929
+  creating $alu cell for $368: $auto$alumacc.cc:548:replace_alu$934
+  creating $alu cell for $374: $auto$alumacc.cc:548:replace_alu$947
+  creating $alu cell for $377: $auto$alumacc.cc:548:replace_alu$960
+  creating $alu cell for $384: $auto$alumacc.cc:548:replace_alu$965
+  creating $alu cell for $390: $auto$alumacc.cc:548:replace_alu$978
+  creating $alu cell for $393: $auto$alumacc.cc:548:replace_alu$991
+  creating $alu cell for $400: $auto$alumacc.cc:548:replace_alu$996
+  creating $alu cell for $486: $auto$alumacc.cc:548:replace_alu$1009
+  creating $alu cell for $489: $auto$alumacc.cc:548:replace_alu$1022
+  creating $alu cell for $496: $auto$alumacc.cc:548:replace_alu$1027
+  creating $alu cell for $502: $auto$alumacc.cc:548:replace_alu$1040
+  creating $alu cell for $505: $auto$alumacc.cc:548:replace_alu$1053
+  creating $alu cell for $512: $auto$alumacc.cc:548:replace_alu$1058
+  creating $alu cell for $518: $auto$alumacc.cc:548:replace_alu$1071
+  creating $alu cell for $521: $auto$alumacc.cc:548:replace_alu$1084
+  creating $alu cell for $528: $auto$alumacc.cc:548:replace_alu$1089
+  creating $alu cell for $534: $auto$alumacc.cc:548:replace_alu$1102
+  creating $alu cell for $537: $auto$alumacc.cc:548:replace_alu$1115
+  creating $alu cell for $544: $auto$alumacc.cc:548:replace_alu$1120
+  creating $alu cell for $550: $auto$alumacc.cc:548:replace_alu$1133
+  creating $alu cell for $553: $auto$alumacc.cc:548:replace_alu$1146
+  creating $alu cell for $560: $auto$alumacc.cc:548:replace_alu$1151
+  creating $alu cell for $575: $auto$alumacc.cc:548:replace_alu$1164
+  creating $alu cell for $578: $auto$alumacc.cc:548:replace_alu$1177
+  creating $alu cell for $585: $auto$alumacc.cc:548:replace_alu$1182
+  creating $alu cell for $591: $auto$alumacc.cc:548:replace_alu$1195
+  creating $alu cell for $594: $auto$alumacc.cc:548:replace_alu$1208
+  creating $alu cell for $601: $auto$alumacc.cc:548:replace_alu$1213
+  creating $alu cell for $607: $auto$alumacc.cc:548:replace_alu$1226
+  creating $alu cell for $610: $auto$alumacc.cc:548:replace_alu$1239
+  creating $alu cell for $617: $auto$alumacc.cc:548:replace_alu$1244
+  creating $alu cell for $623: $auto$alumacc.cc:548:replace_alu$1257
+  creating $alu cell for $626: $auto$alumacc.cc:548:replace_alu$1270
+  creating $alu cell for $633: $auto$alumacc.cc:548:replace_alu$1275
+  creating $alu cell for $639: $auto$alumacc.cc:548:replace_alu$1288
+  creating $alu cell for $642: $auto$alumacc.cc:548:replace_alu$1301
+  creating $alu cell for $649: $auto$alumacc.cc:548:replace_alu$1306
+  creating $alu cell for $651: $auto$alumacc.cc:548:replace_alu$1319
+  creating $alu cell for $648: $auto$alumacc.cc:548:replace_alu$1322
+  creating $alu cell for $635: $auto$alumacc.cc:548:replace_alu$1325
+  creating $alu cell for $632: $auto$alumacc.cc:548:replace_alu$1328
+  creating $alu cell for $619: $auto$alumacc.cc:548:replace_alu$1331
+  creating $alu cell for $616: $auto$alumacc.cc:548:replace_alu$1334
+  creating $alu cell for $603: $auto$alumacc.cc:548:replace_alu$1337
+  creating $alu cell for $600: $auto$alumacc.cc:548:replace_alu$1340
+  creating $alu cell for $587: $auto$alumacc.cc:548:replace_alu$1343
+  creating $alu cell for $584: $auto$alumacc.cc:548:replace_alu$1346
+  creating $alu cell for $562: $auto$alumacc.cc:548:replace_alu$1349
+  creating $alu cell for $559: $auto$alumacc.cc:548:replace_alu$1352
+  creating $alu cell for $546: $auto$alumacc.cc:548:replace_alu$1355
+  creating $alu cell for $543: $auto$alumacc.cc:548:replace_alu$1358
+  creating $alu cell for $530: $auto$alumacc.cc:548:replace_alu$1361
+  creating $alu cell for $527: $auto$alumacc.cc:548:replace_alu$1364
+  creating $alu cell for $514: $auto$alumacc.cc:548:replace_alu$1367
+  creating $alu cell for $511: $auto$alumacc.cc:548:replace_alu$1370
+  creating $alu cell for $498: $auto$alumacc.cc:548:replace_alu$1373
+  creating $alu cell for $495: $auto$alumacc.cc:548:replace_alu$1376
+  creating $alu cell for $470: $auto$alumacc.cc:548:replace_alu$1379
+  creating $alu cell for $464: $auto$alumacc.cc:548:replace_alu$1382
+  creating $alu cell for $112: $auto$alumacc.cc:548:replace_alu$1385
+  creating $alu cell for $451: $auto$alumacc.cc:548:replace_alu$1388
+  creating $alu cell for $449: $auto$alumacc.cc:548:replace_alu$1391
+  creating $alu cell for $447: $auto$alumacc.cc:548:replace_alu$1394
+  creating $alu cell for $445: $auto$alumacc.cc:548:replace_alu$1397
+  creating $alu cell for $402: $auto$alumacc.cc:548:replace_alu$1400
+  creating $alu cell for $399: $auto$alumacc.cc:548:replace_alu$1403
+  creating $alu cell for $386: $auto$alumacc.cc:548:replace_alu$1406
+  creating $alu cell for $383: $auto$alumacc.cc:548:replace_alu$1409
+  creating $alu cell for $370: $auto$alumacc.cc:548:replace_alu$1412
+  creating $alu cell for $367: $auto$alumacc.cc:548:replace_alu$1415
+  creating $alu cell for $354: $auto$alumacc.cc:548:replace_alu$1418
+  creating $alu cell for $351: $auto$alumacc.cc:548:replace_alu$1421
+  creating $alu cell for $338: $auto$alumacc.cc:548:replace_alu$1424
+  creating $alu cell for $335: $auto$alumacc.cc:548:replace_alu$1427
+  creating $alu cell for $323: $auto$alumacc.cc:548:replace_alu$1430
+  creating $alu cell for $285: $auto$alumacc.cc:548:replace_alu$1433
+  creating $alu cell for $280: $auto$alumacc.cc:548:replace_alu$1436
+  creating $alu cell for $271: $auto$alumacc.cc:548:replace_alu$1439
+  creating $alu cell for $258: $auto$alumacc.cc:548:replace_alu$1442
+  creating $alu cell for $226: $auto$alumacc.cc:548:replace_alu$1445
+  creating $alu cell for $210: $auto$alumacc.cc:548:replace_alu$1448
+  creating $alu cell for $212: $auto$alumacc.cc:548:replace_alu$1451
+  created 125 $alu and 2 $macc cells.
+
+5.15. Executing SHARE pass (SAT-based resource sharing).
+Found 4 cells in module ot_v41_retn_w17w10 that may be considered for resource sharing.
+  Analyzing resource sharing options for $119 ($shr):
+    Found 1 activation_patterns using ctrl signal { $116y $auto$rtlil.cc:3271:ReduceOr$691 }.
+    No candidates found.
+  Analyzing resource sharing options for $273 ($shl):
+    Found 1 activation_patterns using ctrl signal \u_n.u_add.s4_apply.
+    No candidates found.
+  Analyzing resource sharing options for $419 ($memrd_v2):
+    Found 2 activation_patterns using ctrl signal { \u_n.fwd_a \u_n.add }.
+    No candidates found.
+  Analyzing resource sharing options for $421 ($memrd_v2):
+    Found 2 activation_patterns using ctrl signal { \u_n.fwd_a \u_n.add }.
+    No candidates found.
+
+5.16. Executing OPT pass (performing simple optimizations).
+
+5.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+<suppressed ~41 debug messages>
+
+5.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 852 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_retn_w17w10..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~285 debug messages>
+
+5.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_retn_w17w10.
+Performed a total of 0 changes.
+
+5.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 852 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 850 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+5.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 43 unused cells and 126 unused wires.
+<suppressed ~44 debug messages>
+
+5.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_retn_w17w10..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~281 debug messages>
+
+5.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_retn_w17w10.
+Performed a total of 0 changes.
+
+5.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 807 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+
+5.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5.17. Executing MEMORY pass.
+
+5.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+5.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+5.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+  Analyzing ot_v41_retn_w17w10.u_n.be write port 0.
+  Analyzing ot_v41_retn_w17w10.u_n.ae write port 0.
+  Analyzing ot_v41_retn_w17w10.u_n.bd write port 0.
+  Analyzing ot_v41_retn_w17w10.u_n.ad write port 0.
+  Analyzing ot_v41_retn_w17w10.u_n.bt write port 0.
+  Analyzing ot_v41_retn_w17w10.u_n.at write port 0.
+
+5.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+5.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+Checking read port `\u_n.be'[0] in module `\ot_v41_retn_w17w10': no output FF found.
+Checking read port `\u_n.ae'[0] in module `\ot_v41_retn_w17w10': no output FF found.
+Checking read port `\u_n.bd'[0] in module `\ot_v41_retn_w17w10': no output FF found.
+Checking read port `\u_n.ad'[0] in module `\ot_v41_retn_w17w10': no output FF found.
+Checking read port `\u_n.bt'[0] in module `\ot_v41_retn_w17w10': no output FF found.
+Checking read port `\u_n.at'[0] in module `\ot_v41_retn_w17w10': no output FF found.
+Checking read port address `\u_n.be'[0] in module `\ot_v41_retn_w17w10': address FF has async set and/or reset, not supported.
+Checking read port address `\u_n.ae'[0] in module `\ot_v41_retn_w17w10': address FF has async set and/or reset, not supported.
+Checking read port address `\u_n.bd'[0] in module `\ot_v41_retn_w17w10': address FF has async set and/or reset, not supported.
+Checking read port address `\u_n.ad'[0] in module `\ot_v41_retn_w17w10': address FF has async set and/or reset, not supported.
+Checking read port address `\u_n.bt'[0] in module `\ot_v41_retn_w17w10': address FF has async set and/or reset, not supported.
+Checking read port address `\u_n.at'[0] in module `\ot_v41_retn_w17w10': address FF has async set and/or reset, not supported.
+
+5.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+
+5.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+5.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+
+5.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+
+5.19. Executing OPT pass (performing simple optimizations).
+
+5.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+<suppressed ~118 debug messages>
+
+5.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 787 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 753 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+<suppressed ~130 debug messages>
+Removed a total of 34 cells.
+
+5.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 48 unused cells and 201 unused wires.
+<suppressed ~49 debug messages>
+
+5.19.5. Finished fast OPT passes.
+
+5.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+Mapping memory \u_n.be in module \ot_v41_retn_w17w10:
+  created 64 $dff cells and 0 static cells of width 1.
+  read interface: 0 $dff and 63 $mux cells.
+  write interface: 64 write mux blocks.
+Mapping memory \u_n.ae in module \ot_v41_retn_w17w10:
+  created 64 $dff cells and 0 static cells of width 1.
+  read interface: 0 $dff and 63 $mux cells.
+  write interface: 64 write mux blocks.
+Mapping memory \u_n.bd in module \ot_v41_retn_w17w10:
+  created 64 $dff cells and 0 static cells of width 32.
+  read interface: 0 $dff and 63 $mux cells.
+  write interface: 64 write mux blocks.
+Mapping memory \u_n.ad in module \ot_v41_retn_w17w10:
+  created 64 $dff cells and 0 static cells of width 32.
+  read interface: 0 $dff and 63 $mux cells.
+  write interface: 64 write mux blocks.
+Mapping memory \u_n.bt in module \ot_v41_retn_w17w10:
+  created 64 $dff cells and 0 static cells of width 32.
+  read interface: 0 $dff and 63 $mux cells.
+  write interface: 64 write mux blocks.
+Mapping memory \u_n.at in module \ot_v41_retn_w17w10:
+  created 64 $dff cells and 0 static cells of width 32.
+  read interface: 0 $dff and 63 $mux cells.
+  write interface: 64 write mux blocks.
+
+5.21. Executing OPT pass (performing simple optimizations).
+
+5.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+<suppressed ~24 debug messages>
+
+5.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 2417 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 2161 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+<suppressed ~768 debug messages>
+Removed a total of 256 cells.
+
+5.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_retn_w17w10..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~1453 debug messages>
+
+5.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$372:
+      Old ports: A=2'00, B=2'10, Y=$procmux$372_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$372_Y [1]
+      New connections: $procmux$372_Y [0] = 1'0
+    Consolidated identical input bits for $mux cell $procmux$501:
+      Old ports: A={ 4'1101 $auto$wreduce.cc:514:run$522 [0] }, B=5'11001, Y=$procmux$501_Y
+      New ports: A={ 1'1 $auto$wreduce.cc:514:run$522 [0] }, B=2'01, Y=$procmux$501_Y [1:0]
+      New connections: $procmux$501_Y [4:2] = 3'110
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$391:
+      Old ports: A=$procmux$372_Y, B=2'00, Y=$procmux$391_Y
+      New ports: A=$procmux$372_Y [1], B=1'0, Y=$procmux$391_Y [1]
+      New connections: $procmux$391_Y [0] = 1'0
+    Consolidated identical input bits for $mux cell $procmux$498:
+      Old ports: A=$procmux$501_Y, B=5'11000, Y=$procmux$498_Y
+      New ports: A=$procmux$501_Y [1:0], B=2'00, Y=$procmux$498_Y [1:0]
+      New connections: $procmux$498_Y [4:2] = 3'110
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$495:
+      Old ports: A=$procmux$498_Y, B=5'10111, Y=$procmux$495_Y
+      New ports: A={ 2'10 $procmux$498_Y [1:0] }, B=4'0111, Y=$procmux$495_Y [3:0]
+      New connections: $procmux$495_Y [4] = 1'1
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$492:
+      Old ports: A=$procmux$495_Y, B=5'10110, Y=$procmux$492_Y
+      New ports: A=$procmux$495_Y [3:0], B=4'0110, Y=$procmux$492_Y [3:0]
+      New connections: $procmux$492_Y [4] = 1'1
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$489:
+      Old ports: A=$procmux$492_Y, B=5'10101, Y=$procmux$489_Y
+      New ports: A=$procmux$492_Y [3:0], B=4'0101, Y=$procmux$489_Y [3:0]
+      New connections: $procmux$489_Y [4] = 1'1
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$486:
+      Old ports: A=$procmux$489_Y, B=5'10100, Y=$procmux$486_Y
+      New ports: A=$procmux$489_Y [3:0], B=4'0100, Y=$procmux$486_Y [3:0]
+      New connections: $procmux$486_Y [4] = 1'1
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$483:
+      Old ports: A=$procmux$486_Y, B=5'10011, Y=$procmux$483_Y
+      New ports: A=$procmux$486_Y [3:0], B=4'0011, Y=$procmux$483_Y [3:0]
+      New connections: $procmux$483_Y [4] = 1'1
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$480:
+      Old ports: A=$procmux$483_Y, B=5'10010, Y=$procmux$480_Y
+      New ports: A=$procmux$483_Y [3:0], B=4'0010, Y=$procmux$480_Y [3:0]
+      New connections: $procmux$480_Y [4] = 1'1
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$477:
+      Old ports: A=$procmux$480_Y, B=5'10001, Y=$procmux$477_Y
+      New ports: A=$procmux$480_Y [3:0], B=4'0001, Y=$procmux$477_Y [3:0]
+      New connections: $procmux$477_Y [4] = 1'1
+  Optimizing cells in module \ot_v41_retn_w17w10.
+    Consolidated identical input bits for $mux cell $procmux$474:
+      Old ports: A=$procmux$477_Y, B=5'10000, Y=$procmux$474_Y
+      New ports: A=$procmux$477_Y [3:0], B=4'0000, Y=$procmux$474_Y [3:0]
+      New connections: $procmux$474_Y [4] = 1'1
+  Optimizing cells in module \ot_v41_retn_w17w10.
+Performed a total of 12 changes.
+
+5.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 2161 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.21.6. Executing OPT_SHARE pass.
+
+5.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 0 unused cells and 1036 unused wires.
+<suppressed ~1 debug messages>
+
+5.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+<suppressed ~1 debug messages>
+
+5.21.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.21.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_retn_w17w10..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~1452 debug messages>
+
+5.21.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_retn_w17w10.
+Performed a total of 0 changes.
+
+5.21.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 2160 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.21.14. Executing OPT_SHARE pass.
+
+5.21.15. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $memory\u_n.be[0]$1608 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[0]).
+Adding EN signal on $memory\u_n.be[1]$1610 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[1]).
+Adding EN signal on $memory\u_n.be[2]$1612 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[2]).
+Adding EN signal on $memory\u_n.be[3]$1614 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[3]).
+Adding EN signal on $memory\u_n.be[4]$1616 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[4]).
+Adding EN signal on $memory\u_n.be[5]$1618 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[5]).
+Adding EN signal on $memory\u_n.be[6]$1620 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[6]).
+Adding EN signal on $memory\u_n.be[7]$1622 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[7]).
+Adding EN signal on $memory\u_n.be[8]$1624 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[8]).
+Adding EN signal on $memory\u_n.be[9]$1626 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[9]).
+Adding EN signal on $memory\u_n.be[10]$1628 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[10]).
+Adding EN signal on $memory\u_n.be[11]$1630 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[11]).
+Adding EN signal on $memory\u_n.be[12]$1632 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[12]).
+Adding EN signal on $memory\u_n.be[13]$1634 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[13]).
+Adding EN signal on $memory\u_n.be[14]$1636 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[14]).
+Adding EN signal on $memory\u_n.be[15]$1638 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[15]).
+Adding EN signal on $memory\u_n.be[16]$1640 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[16]).
+Adding EN signal on $memory\u_n.be[17]$1642 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[17]).
+Adding EN signal on $memory\u_n.be[18]$1644 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[18]).
+Adding EN signal on $memory\u_n.be[19]$1646 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[19]).
+Adding EN signal on $memory\u_n.be[20]$1648 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[20]).
+Adding EN signal on $memory\u_n.be[21]$1650 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[21]).
+Adding EN signal on $memory\u_n.be[22]$1652 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[22]).
+Adding EN signal on $memory\u_n.be[23]$1654 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[23]).
+Adding EN signal on $memory\u_n.be[24]$1656 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[24]).
+Adding EN signal on $memory\u_n.be[25]$1658 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[25]).
+Adding EN signal on $memory\u_n.be[26]$1660 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[26]).
+Adding EN signal on $memory\u_n.be[27]$1662 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[27]).
+Adding EN signal on $memory\u_n.be[28]$1664 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[28]).
+Adding EN signal on $memory\u_n.be[29]$1666 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[29]).
+Adding EN signal on $memory\u_n.be[30]$1668 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[30]).
+Adding EN signal on $memory\u_n.be[31]$1670 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[31]).
+Adding EN signal on $memory\u_n.be[32]$1672 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[32]).
+Adding EN signal on $memory\u_n.be[33]$1674 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[33]).
+Adding EN signal on $memory\u_n.be[34]$1676 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[34]).
+Adding EN signal on $memory\u_n.be[35]$1678 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[35]).
+Adding EN signal on $memory\u_n.be[36]$1680 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[36]).
+Adding EN signal on $memory\u_n.be[37]$1682 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[37]).
+Adding EN signal on $memory\u_n.be[38]$1684 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[38]).
+Adding EN signal on $memory\u_n.be[39]$1686 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[39]).
+Adding EN signal on $memory\u_n.be[40]$1688 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[40]).
+Adding EN signal on $memory\u_n.be[41]$1690 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[41]).
+Adding EN signal on $memory\u_n.be[42]$1692 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[42]).
+Adding EN signal on $memory\u_n.be[43]$1694 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[43]).
+Adding EN signal on $memory\u_n.be[44]$1696 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[44]).
+Adding EN signal on $memory\u_n.be[45]$1698 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[45]).
+Adding EN signal on $memory\u_n.be[46]$1700 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[46]).
+Adding EN signal on $memory\u_n.be[47]$1702 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[47]).
+Adding EN signal on $memory\u_n.be[48]$1704 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[48]).
+Adding EN signal on $memory\u_n.be[49]$1706 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[49]).
+Adding EN signal on $memory\u_n.be[50]$1708 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[50]).
+Adding EN signal on $memory\u_n.be[51]$1710 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[51]).
+Adding EN signal on $memory\u_n.be[52]$1712 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[52]).
+Adding EN signal on $memory\u_n.be[53]$1714 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[53]).
+Adding EN signal on $memory\u_n.be[54]$1716 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[54]).
+Adding EN signal on $memory\u_n.be[55]$1718 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[55]).
+Adding EN signal on $memory\u_n.be[56]$1720 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[56]).
+Adding EN signal on $memory\u_n.be[57]$1722 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[57]).
+Adding EN signal on $memory\u_n.be[58]$1724 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[58]).
+Adding EN signal on $memory\u_n.be[59]$1726 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[59]).
+Adding EN signal on $memory\u_n.be[60]$1728 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[60]).
+Adding EN signal on $memory\u_n.be[61]$1730 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[61]).
+Adding EN signal on $memory\u_n.be[62]$1732 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[62]).
+Adding EN signal on $memory\u_n.be[63]$1734 ($dff) from module ot_v41_retn_w17w10 (D = \b_e, Q = \u_n.be[63]).
+Adding EN signal on $memory\u_n.at[0]$4873 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[0]).
+Adding EN signal on $memory\u_n.at[1]$4875 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[1]).
+Adding EN signal on $memory\u_n.at[2]$4877 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[2]).
+Adding EN signal on $memory\u_n.at[3]$4879 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[3]).
+Adding EN signal on $memory\u_n.at[4]$4881 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[4]).
+Adding EN signal on $memory\u_n.at[5]$4883 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[5]).
+Adding EN signal on $memory\u_n.at[6]$4885 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[6]).
+Adding EN signal on $memory\u_n.at[7]$4887 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[7]).
+Adding EN signal on $memory\u_n.at[8]$4889 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[8]).
+Adding EN signal on $memory\u_n.at[9]$4891 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[9]).
+Adding EN signal on $memory\u_n.at[10]$4893 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[10]).
+Adding EN signal on $memory\u_n.at[11]$4895 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[11]).
+Adding EN signal on $memory\u_n.at[12]$4897 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[12]).
+Adding EN signal on $memory\u_n.at[13]$4899 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[13]).
+Adding EN signal on $memory\u_n.at[14]$4901 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[14]).
+Adding EN signal on $memory\u_n.at[15]$4903 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[15]).
+Adding EN signal on $memory\u_n.at[16]$4905 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[16]).
+Adding EN signal on $memory\u_n.at[17]$4907 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[17]).
+Adding EN signal on $memory\u_n.at[18]$4909 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[18]).
+Adding EN signal on $memory\u_n.at[19]$4911 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[19]).
+Adding EN signal on $memory\u_n.at[20]$4913 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[20]).
+Adding EN signal on $memory\u_n.at[21]$4915 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[21]).
+Adding EN signal on $memory\u_n.at[22]$4917 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[22]).
+Adding EN signal on $memory\u_n.at[23]$4919 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[23]).
+Adding EN signal on $memory\u_n.at[24]$4921 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[24]).
+Adding EN signal on $memory\u_n.at[25]$4923 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[25]).
+Adding EN signal on $memory\u_n.at[26]$4925 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[26]).
+Adding EN signal on $memory\u_n.at[27]$4927 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[27]).
+Adding EN signal on $memory\u_n.at[28]$4929 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[28]).
+Adding EN signal on $memory\u_n.at[29]$4931 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[29]).
+Adding EN signal on $memory\u_n.at[30]$4933 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[30]).
+Adding EN signal on $memory\u_n.at[31]$4935 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[31]).
+Adding EN signal on $memory\u_n.at[32]$4937 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[32]).
+Adding EN signal on $memory\u_n.at[33]$4939 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[33]).
+Adding EN signal on $memory\u_n.at[34]$4941 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[34]).
+Adding EN signal on $memory\u_n.at[35]$4943 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[35]).
+Adding EN signal on $memory\u_n.at[36]$4945 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[36]).
+Adding EN signal on $memory\u_n.at[37]$4947 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[37]).
+Adding EN signal on $memory\u_n.at[38]$4949 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[38]).
+Adding EN signal on $memory\u_n.at[39]$4951 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[39]).
+Adding EN signal on $memory\u_n.at[40]$4953 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[40]).
+Adding EN signal on $memory\u_n.at[41]$4955 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[41]).
+Adding EN signal on $memory\u_n.at[42]$4957 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[42]).
+Adding EN signal on $memory\u_n.at[43]$4959 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[43]).
+Adding EN signal on $memory\u_n.at[44]$4961 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[44]).
+Adding EN signal on $memory\u_n.at[45]$4963 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[45]).
+Adding EN signal on $memory\u_n.at[46]$4965 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[46]).
+Adding EN signal on $memory\u_n.at[47]$4967 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[47]).
+Adding EN signal on $memory\u_n.at[48]$4969 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[48]).
+Adding EN signal on $memory\u_n.at[49]$4971 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[49]).
+Adding EN signal on $memory\u_n.at[50]$4973 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[50]).
+Adding EN signal on $memory\u_n.at[51]$4975 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[51]).
+Adding EN signal on $memory\u_n.at[52]$4977 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[52]).
+Adding EN signal on $memory\u_n.ae[0]$2381 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[0]).
+Adding EN signal on $memory\u_n.ae[1]$2383 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[1]).
+Adding EN signal on $memory\u_n.ae[2]$2385 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[2]).
+Adding EN signal on $memory\u_n.ae[3]$2387 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[3]).
+Adding EN signal on $memory\u_n.ae[4]$2389 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[4]).
+Adding EN signal on $memory\u_n.ae[5]$2391 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[5]).
+Adding EN signal on $memory\u_n.ae[6]$2393 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[6]).
+Adding EN signal on $memory\u_n.ae[7]$2395 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[7]).
+Adding EN signal on $memory\u_n.ae[8]$2397 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[8]).
+Adding EN signal on $memory\u_n.ae[9]$2399 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[9]).
+Adding EN signal on $memory\u_n.ae[10]$2401 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[10]).
+Adding EN signal on $memory\u_n.ae[11]$2403 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[11]).
+Adding EN signal on $memory\u_n.ae[12]$2405 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[12]).
+Adding EN signal on $memory\u_n.ae[13]$2407 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[13]).
+Adding EN signal on $memory\u_n.ae[14]$2409 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[14]).
+Adding EN signal on $memory\u_n.ae[15]$2411 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[15]).
+Adding EN signal on $memory\u_n.ae[16]$2413 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[16]).
+Adding EN signal on $memory\u_n.ae[17]$2415 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[17]).
+Adding EN signal on $memory\u_n.ae[18]$2417 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[18]).
+Adding EN signal on $memory\u_n.ae[19]$2419 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[19]).
+Adding EN signal on $memory\u_n.ae[20]$2421 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[20]).
+Adding EN signal on $memory\u_n.ae[21]$2423 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[21]).
+Adding EN signal on $memory\u_n.ae[22]$2425 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[22]).
+Adding EN signal on $memory\u_n.ae[23]$2427 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[23]).
+Adding EN signal on $memory\u_n.ae[24]$2429 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[24]).
+Adding EN signal on $memory\u_n.ae[25]$2431 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[25]).
+Adding EN signal on $memory\u_n.ae[26]$2433 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[26]).
+Adding EN signal on $memory\u_n.ae[27]$2435 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[27]).
+Adding EN signal on $memory\u_n.ae[28]$2437 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[28]).
+Adding EN signal on $memory\u_n.ae[29]$2439 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[29]).
+Adding EN signal on $memory\u_n.ae[30]$2441 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[30]).
+Adding EN signal on $memory\u_n.ae[31]$2443 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[31]).
+Adding EN signal on $memory\u_n.ae[32]$2445 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[32]).
+Adding EN signal on $memory\u_n.ae[33]$2447 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[33]).
+Adding EN signal on $memory\u_n.ae[34]$2449 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[34]).
+Adding EN signal on $memory\u_n.ae[35]$2451 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[35]).
+Adding EN signal on $memory\u_n.ae[36]$2453 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[36]).
+Adding EN signal on $memory\u_n.ae[37]$2455 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[37]).
+Adding EN signal on $memory\u_n.ae[38]$2457 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[38]).
+Adding EN signal on $memory\u_n.ae[39]$2459 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[39]).
+Adding EN signal on $memory\u_n.ae[40]$2461 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[40]).
+Adding EN signal on $memory\u_n.ae[41]$2463 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[41]).
+Adding EN signal on $memory\u_n.ae[42]$2465 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[42]).
+Adding EN signal on $memory\u_n.ae[43]$2467 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[43]).
+Adding EN signal on $memory\u_n.ae[44]$2469 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[44]).
+Adding EN signal on $memory\u_n.ae[45]$2471 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[45]).
+Adding EN signal on $memory\u_n.ae[46]$2473 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[46]).
+Adding EN signal on $memory\u_n.ae[47]$2475 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[47]).
+Adding EN signal on $memory\u_n.ae[48]$2477 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[48]).
+Adding EN signal on $memory\u_n.ae[49]$2479 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[49]).
+Adding EN signal on $memory\u_n.ae[50]$2481 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[50]).
+Adding EN signal on $memory\u_n.ae[51]$2483 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[51]).
+Adding EN signal on $memory\u_n.ae[52]$2485 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[52]).
+Adding EN signal on $memory\u_n.ae[53]$2487 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[53]).
+Adding EN signal on $memory\u_n.ae[54]$2489 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[54]).
+Adding EN signal on $memory\u_n.ae[55]$2491 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[55]).
+Adding EN signal on $memory\u_n.ae[56]$2493 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[56]).
+Adding EN signal on $memory\u_n.ae[57]$2495 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[57]).
+Adding EN signal on $memory\u_n.ae[58]$2497 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[58]).
+Adding EN signal on $memory\u_n.ae[59]$2499 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[59]).
+Adding EN signal on $memory\u_n.ae[60]$2501 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[60]).
+Adding EN signal on $memory\u_n.ae[61]$2503 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[61]).
+Adding EN signal on $memory\u_n.ae[62]$2505 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[62]).
+Adding EN signal on $memory\u_n.ae[63]$2507 ($dff) from module ot_v41_retn_w17w10 (D = \a_e, Q = \u_n.ae[63]).
+Adding EN signal on $memory\u_n.at[53]$4979 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[53]).
+Adding EN signal on $memory\u_n.at[54]$4981 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[54]).
+Adding EN signal on $memory\u_n.at[55]$4983 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[55]).
+Adding EN signal on $memory\u_n.at[56]$4985 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[56]).
+Adding EN signal on $memory\u_n.at[57]$4987 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[57]).
+Adding EN signal on $memory\u_n.at[58]$4989 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[58]).
+Adding EN signal on $memory\u_n.at[59]$4991 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[59]).
+Adding EN signal on $memory\u_n.at[60]$4993 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[60]).
+Adding EN signal on $memory\u_n.at[61]$4995 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[61]).
+Adding EN signal on $memory\u_n.at[62]$4997 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[62]).
+Adding EN signal on $memory\u_n.at[63]$4999 ($dff) from module ot_v41_retn_w17w10 (D = { \a_t [31:8] $$root.ot_v41_ret_pkg.norm.k$563 \a_t [4:0] }, Q = \u_n.at[63]).
+Adding EN signal on $memory\u_n.bd[0]$3154 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[0]).
+Adding EN signal on $memory\u_n.bd[1]$3156 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[1]).
+Adding EN signal on $memory\u_n.bd[2]$3158 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[2]).
+Adding EN signal on $memory\u_n.bd[3]$3160 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[3]).
+Adding EN signal on $memory\u_n.bd[4]$3162 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[4]).
+Adding EN signal on $memory\u_n.bd[5]$3164 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[5]).
+Adding EN signal on $memory\u_n.bd[6]$3166 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[6]).
+Adding EN signal on $memory\u_n.bd[7]$3168 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[7]).
+Adding EN signal on $memory\u_n.bd[8]$3170 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[8]).
+Adding EN signal on $memory\u_n.bd[9]$3172 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[9]).
+Adding EN signal on $memory\u_n.bd[10]$3174 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[10]).
+Adding EN signal on $memory\u_n.bd[11]$3176 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[11]).
+Adding EN signal on $memory\u_n.bd[12]$3178 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[12]).
+Adding EN signal on $memory\u_n.bd[13]$3180 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[13]).
+Adding EN signal on $memory\u_n.bd[14]$3182 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[14]).
+Adding EN signal on $memory\u_n.bd[15]$3184 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[15]).
+Adding EN signal on $memory\u_n.bd[16]$3186 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[16]).
+Adding EN signal on $memory\u_n.bd[17]$3188 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[17]).
+Adding EN signal on $memory\u_n.bd[18]$3190 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[18]).
+Adding EN signal on $memory\u_n.bd[19]$3192 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[19]).
+Adding EN signal on $memory\u_n.bd[20]$3194 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[20]).
+Adding EN signal on $memory\u_n.bd[21]$3196 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[21]).
+Adding EN signal on $memory\u_n.bd[22]$3198 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[22]).
+Adding EN signal on $memory\u_n.bd[23]$3200 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[23]).
+Adding EN signal on $memory\u_n.bd[24]$3202 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[24]).
+Adding EN signal on $memory\u_n.bd[25]$3204 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[25]).
+Adding EN signal on $memory\u_n.bd[26]$3206 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[26]).
+Adding EN signal on $memory\u_n.bd[27]$3208 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[27]).
+Adding EN signal on $memory\u_n.bd[28]$3210 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[28]).
+Adding EN signal on $memory\u_n.bd[29]$3212 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[29]).
+Adding EN signal on $memory\u_n.bd[30]$3214 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[30]).
+Adding EN signal on $memory\u_n.bd[31]$3216 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[31]).
+Adding EN signal on $memory\u_n.bd[32]$3218 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[32]).
+Adding EN signal on $memory\u_n.bd[33]$3220 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[33]).
+Adding EN signal on $memory\u_n.bd[34]$3222 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[34]).
+Adding EN signal on $memory\u_n.bd[35]$3224 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[35]).
+Adding EN signal on $memory\u_n.bd[36]$3226 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[36]).
+Adding EN signal on $memory\u_n.bd[37]$3228 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[37]).
+Adding EN signal on $memory\u_n.bd[38]$3230 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[38]).
+Adding EN signal on $memory\u_n.bd[39]$3232 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[39]).
+Adding EN signal on $memory\u_n.bd[40]$3234 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[40]).
+Adding EN signal on $memory\u_n.bd[41]$3236 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[41]).
+Adding EN signal on $memory\u_n.bd[42]$3238 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[42]).
+Adding EN signal on $memory\u_n.bd[43]$3240 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[43]).
+Adding EN signal on $memory\u_n.bd[44]$3242 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[44]).
+Adding EN signal on $memory\u_n.bd[45]$3244 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[45]).
+Adding EN signal on $memory\u_n.bd[46]$3246 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[46]).
+Adding EN signal on $memory\u_n.bd[47]$3248 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[47]).
+Adding EN signal on $memory\u_n.bd[48]$3250 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[48]).
+Adding EN signal on $memory\u_n.bd[49]$3252 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[49]).
+Adding EN signal on $memory\u_n.bd[50]$3254 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[50]).
+Adding EN signal on $memory\u_n.bd[51]$3256 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[51]).
+Adding EN signal on $memory\u_n.bd[52]$3258 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[52]).
+Adding EN signal on $memory\u_n.bd[53]$3260 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[53]).
+Adding EN signal on $memory\u_n.bd[54]$3262 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[54]).
+Adding EN signal on $memory\u_n.bd[55]$3264 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[55]).
+Adding EN signal on $memory\u_n.bd[56]$3266 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[56]).
+Adding EN signal on $memory\u_n.bd[57]$3268 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[57]).
+Adding EN signal on $memory\u_n.bd[58]$3270 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[58]).
+Adding EN signal on $memory\u_n.bd[59]$3272 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[59]).
+Adding EN signal on $memory\u_n.bd[60]$3274 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[60]).
+Adding EN signal on $memory\u_n.bd[61]$3276 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[61]).
+Adding EN signal on $memory\u_n.bd[62]$3278 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[62]).
+Adding EN signal on $memory\u_n.bd[63]$3280 ($dff) from module ot_v41_retn_w17w10 (D = \b_d, Q = \u_n.bd[63]).
+Adding EN signal on $memory\u_n.ad[0]$3727 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[0]).
+Adding EN signal on $memory\u_n.ad[1]$3729 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[1]).
+Adding EN signal on $memory\u_n.ad[2]$3731 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[2]).
+Adding EN signal on $memory\u_n.ad[3]$3733 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[3]).
+Adding EN signal on $memory\u_n.ad[4]$3735 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[4]).
+Adding EN signal on $memory\u_n.ad[5]$3737 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[5]).
+Adding EN signal on $memory\u_n.ad[6]$3739 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[6]).
+Adding EN signal on $memory\u_n.ad[7]$3741 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[7]).
+Adding EN signal on $memory\u_n.ad[8]$3743 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[8]).
+Adding EN signal on $memory\u_n.ad[9]$3745 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[9]).
+Adding EN signal on $memory\u_n.ad[10]$3747 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[10]).
+Adding EN signal on $memory\u_n.ad[11]$3749 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[11]).
+Adding EN signal on $memory\u_n.ad[12]$3751 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[12]).
+Adding EN signal on $memory\u_n.ad[13]$3753 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[13]).
+Adding EN signal on $memory\u_n.ad[14]$3755 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[14]).
+Adding EN signal on $memory\u_n.ad[15]$3757 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[15]).
+Adding EN signal on $memory\u_n.ad[16]$3759 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[16]).
+Adding EN signal on $memory\u_n.ad[17]$3761 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[17]).
+Adding EN signal on $memory\u_n.ad[18]$3763 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[18]).
+Adding EN signal on $memory\u_n.ad[19]$3765 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[19]).
+Adding EN signal on $memory\u_n.ad[20]$3767 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[20]).
+Adding EN signal on $memory\u_n.ad[21]$3769 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[21]).
+Adding EN signal on $memory\u_n.ad[22]$3771 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[22]).
+Adding EN signal on $memory\u_n.ad[23]$3773 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[23]).
+Adding EN signal on $memory\u_n.ad[24]$3775 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[24]).
+Adding EN signal on $memory\u_n.ad[25]$3777 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[25]).
+Adding EN signal on $memory\u_n.ad[26]$3779 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[26]).
+Adding EN signal on $memory\u_n.ad[27]$3781 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[27]).
+Adding EN signal on $memory\u_n.ad[28]$3783 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[28]).
+Adding EN signal on $memory\u_n.ad[29]$3785 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[29]).
+Adding EN signal on $memory\u_n.ad[30]$3787 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[30]).
+Adding EN signal on $memory\u_n.ad[31]$3789 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[31]).
+Adding EN signal on $memory\u_n.ad[32]$3791 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[32]).
+Adding EN signal on $memory\u_n.ad[33]$3793 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[33]).
+Adding EN signal on $memory\u_n.ad[34]$3795 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[34]).
+Adding EN signal on $memory\u_n.ad[35]$3797 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[35]).
+Adding EN signal on $memory\u_n.ad[36]$3799 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[36]).
+Adding EN signal on $memory\u_n.ad[37]$3801 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[37]).
+Adding EN signal on $memory\u_n.ad[38]$3803 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[38]).
+Adding EN signal on $memory\u_n.ad[39]$3805 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[39]).
+Adding EN signal on $memory\u_n.ad[40]$3807 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[40]).
+Adding EN signal on $memory\u_n.ad[41]$3809 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[41]).
+Adding EN signal on $memory\u_n.ad[42]$3811 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[42]).
+Adding EN signal on $memory\u_n.ad[43]$3813 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[43]).
+Adding EN signal on $memory\u_n.ad[44]$3815 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[44]).
+Adding EN signal on $memory\u_n.ad[45]$3817 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[45]).
+Adding EN signal on $memory\u_n.ad[46]$3819 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[46]).
+Adding EN signal on $memory\u_n.ad[47]$3821 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[47]).
+Adding EN signal on $memory\u_n.ad[48]$3823 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[48]).
+Adding EN signal on $memory\u_n.ad[49]$3825 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[49]).
+Adding EN signal on $memory\u_n.ad[50]$3827 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[50]).
+Adding EN signal on $memory\u_n.ad[51]$3829 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[51]).
+Adding EN signal on $memory\u_n.ad[52]$3831 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[52]).
+Adding EN signal on $memory\u_n.ad[53]$3833 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[53]).
+Adding EN signal on $memory\u_n.ad[54]$3835 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[54]).
+Adding EN signal on $memory\u_n.ad[55]$3837 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[55]).
+Adding EN signal on $memory\u_n.ad[56]$3839 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[56]).
+Adding EN signal on $memory\u_n.ad[57]$3841 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[57]).
+Adding EN signal on $memory\u_n.ad[58]$3843 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[58]).
+Adding EN signal on $memory\u_n.ad[59]$3845 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[59]).
+Adding EN signal on $memory\u_n.ad[60]$3847 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[60]).
+Adding EN signal on $memory\u_n.ad[61]$3849 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[61]).
+Adding EN signal on $memory\u_n.ad[62]$3851 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[62]).
+Adding EN signal on $memory\u_n.ad[63]$3853 ($dff) from module ot_v41_retn_w17w10 (D = \a_d, Q = \u_n.ad[63]).
+Adding EN signal on $memory\u_n.bt[0]$4300 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[0]).
+Adding EN signal on $memory\u_n.bt[1]$4302 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[1]).
+Adding EN signal on $memory\u_n.bt[2]$4304 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[2]).
+Adding EN signal on $memory\u_n.bt[3]$4306 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[3]).
+Adding EN signal on $memory\u_n.bt[4]$4308 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[4]).
+Adding EN signal on $memory\u_n.bt[5]$4310 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[5]).
+Adding EN signal on $memory\u_n.bt[6]$4312 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[6]).
+Adding EN signal on $memory\u_n.bt[7]$4314 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[7]).
+Adding EN signal on $memory\u_n.bt[8]$4316 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[8]).
+Adding EN signal on $memory\u_n.bt[9]$4318 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[9]).
+Adding EN signal on $memory\u_n.bt[10]$4320 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[10]).
+Adding EN signal on $memory\u_n.bt[11]$4322 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[11]).
+Adding EN signal on $memory\u_n.bt[12]$4324 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[12]).
+Adding EN signal on $memory\u_n.bt[13]$4326 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[13]).
+Adding EN signal on $memory\u_n.bt[14]$4328 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[14]).
+Adding EN signal on $memory\u_n.bt[15]$4330 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[15]).
+Adding EN signal on $memory\u_n.bt[16]$4332 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[16]).
+Adding EN signal on $memory\u_n.bt[17]$4334 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[17]).
+Adding EN signal on $memory\u_n.bt[18]$4336 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[18]).
+Adding EN signal on $memory\u_n.bt[19]$4338 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[19]).
+Adding EN signal on $memory\u_n.bt[20]$4340 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[20]).
+Adding EN signal on $memory\u_n.bt[21]$4342 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[21]).
+Adding EN signal on $memory\u_n.bt[22]$4344 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[22]).
+Adding EN signal on $memory\u_n.bt[23]$4346 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[23]).
+Adding EN signal on $memory\u_n.bt[24]$4348 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[24]).
+Adding EN signal on $memory\u_n.bt[25]$4350 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[25]).
+Adding EN signal on $memory\u_n.bt[26]$4352 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[26]).
+Adding EN signal on $memory\u_n.bt[27]$4354 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[27]).
+Adding EN signal on $memory\u_n.bt[28]$4356 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[28]).
+Adding EN signal on $memory\u_n.bt[29]$4358 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[29]).
+Adding EN signal on $memory\u_n.bt[30]$4360 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[30]).
+Adding EN signal on $memory\u_n.bt[31]$4362 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[31]).
+Adding EN signal on $memory\u_n.bt[32]$4364 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[32]).
+Adding EN signal on $memory\u_n.bt[33]$4366 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[33]).
+Adding EN signal on $memory\u_n.bt[34]$4368 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[34]).
+Adding EN signal on $memory\u_n.bt[35]$4370 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[35]).
+Adding EN signal on $memory\u_n.bt[36]$4372 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[36]).
+Adding EN signal on $memory\u_n.bt[37]$4374 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[37]).
+Adding EN signal on $memory\u_n.bt[38]$4376 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[38]).
+Adding EN signal on $memory\u_n.bt[39]$4378 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[39]).
+Adding EN signal on $memory\u_n.bt[40]$4380 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[40]).
+Adding EN signal on $memory\u_n.bt[41]$4382 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[41]).
+Adding EN signal on $memory\u_n.bt[42]$4384 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[42]).
+Adding EN signal on $memory\u_n.bt[43]$4386 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[43]).
+Adding EN signal on $memory\u_n.bt[44]$4388 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[44]).
+Adding EN signal on $memory\u_n.bt[45]$4390 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[45]).
+Adding EN signal on $memory\u_n.bt[46]$4392 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[46]).
+Adding EN signal on $memory\u_n.bt[47]$4394 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[47]).
+Adding EN signal on $memory\u_n.bt[48]$4396 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[48]).
+Adding EN signal on $memory\u_n.bt[49]$4398 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[49]).
+Adding EN signal on $memory\u_n.bt[50]$4400 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[50]).
+Adding EN signal on $memory\u_n.bt[51]$4402 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[51]).
+Adding EN signal on $memory\u_n.bt[52]$4404 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[52]).
+Adding EN signal on $memory\u_n.bt[53]$4406 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[53]).
+Adding EN signal on $memory\u_n.bt[54]$4408 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[54]).
+Adding EN signal on $memory\u_n.bt[55]$4410 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[55]).
+Adding EN signal on $memory\u_n.bt[56]$4412 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[56]).
+Adding EN signal on $memory\u_n.bt[57]$4414 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[57]).
+Adding EN signal on $memory\u_n.bt[58]$4416 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[58]).
+Adding EN signal on $memory\u_n.bt[59]$4418 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[59]).
+Adding EN signal on $memory\u_n.bt[60]$4420 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[60]).
+Adding EN signal on $memory\u_n.bt[61]$4422 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[61]).
+Adding EN signal on $memory\u_n.bt[62]$4424 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[62]).
+Adding EN signal on $memory\u_n.bt[63]$4426 ($dff) from module ot_v41_retn_w17w10 (D = { \b_t [31:8] $$root.ot_v41_ret_pkg.norm.k$652 \b_t [4:0] }, Q = \u_n.bt[63]).
+
+5.21.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 384 unused cells and 385 unused wires.
+<suppressed ~385 debug messages>
+
+5.21.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.21.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.21.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_retn_w17w10..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~556 debug messages>
+
+5.21.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_retn_w17w10.
+Performed a total of 0 changes.
+
+5.21.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 1776 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.21.22. Executing OPT_SHARE pass.
+
+5.21.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.21.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+
+5.21.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+
+5.21.26. Finished fast OPT passes. (There is nothing left to do.)
+
+5.22. Executing TECHMAP pass (map to technology primitives).
+
+5.22.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+5.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$1f5ecc07cd5dcf6a7d1c0e9bb53ee372ecbec124\_90_alu for cells of type $alu.
+Using template $paramod$65216b304e0e600b68271885889e654586c4a1b6\_90_alu for cells of type $alu.
+Using template $paramod$c3cd1564c35d873179656addd6052d7ea8b6d991\_90_alu for cells of type $alu.
+Using template $paramod$403a3c2fa431a154c52a6a5429d7a6260b5d144f\_90_alu for cells of type $alu.
+Using template $paramod$a1bc51c02ce12ac21eb18988e83292af48ed7d72\_90_alu for cells of type $alu.
+Using template $paramod$f137a8bfbd1456d75171dc760be33d0c1f0b83ab\_90_alu for cells of type $alu.
+Using template $paramod$3ef7d3dd227da7627a99c5e5a6a4deb817573e39\_90_alu for cells of type $alu.
+Using template $paramod$constmap:8b59f9a5758bd363101f485cff312d1204837bc3$paramod$0d2a58a8a4a8088529a6e9e1eced295c78f98e90\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shl.
+Using template $paramod$e04283ca12514baf3d204c6994bec8f178dd89f8\_90_alu for cells of type $alu.
+Using template $paramod$32efbfac1c4dc57230cf86180788fdfd12e3b511\_90_alu for cells of type $alu.
+Using template $paramod$672a140277c71df8314410f22acc08d55222c3c7\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$a40b3a69ab2154dca9743e30e1e84efb03b892b4\_90_alu for cells of type $alu.
+Using template $paramod$b18e16801adf491a64caa0542270798e5d4ac6b6\_90_alu for cells of type $alu.
+Using template $paramod$cc48387a3f2cae79a81035f3d5a9b4758cb77854\_90_alu for cells of type $alu.
+Using template $paramod$4bdb94ac02745db6fc41e2e497d9b9793cd51dc6\_90_alu for cells of type $alu.
+Using template $paramod$3ac6e4268d0279df14823f25676acf685165517e\_90_alu for cells of type $alu.
+Using template $paramod$4f7462fd7944a40ab328577064922bdf555975a5\_90_alu for cells of type $alu.
+Using template $paramod$6b90a16b6f3b57b9c9d958838204f952a01dc262\_90_alu for cells of type $alu.
+Using template $paramod$b9513f2555ba02118b069422fea717af39120cf7\_90_alu for cells of type $alu.
+Using template $paramod$08b2a3505d8f2cd2b03f068ccaf5ce95d4eb0556\_90_alu for cells of type $alu.
+Using template $paramod$9970e6a829a899c1fae39c88305c3c80d98a6bfd\_90_alu for cells of type $alu.
+Using template $paramod$3e96e356bb68fcbd4f9c12f6d97ec8513d1af8c6\_90_alu for cells of type $alu.
+Using template $paramod$fa8d9e4c2749d63ae521a69564d54ead1ad1232d\_90_alu for cells of type $alu.
+Using template $paramod$e82bc780abe45b949d821aa3d0d92433ac3b9e09\_90_alu for cells of type $alu.
+Using template $paramod$821d2886e47353e724eaca46af4992e9c3e6ac1d\_90_alu for cells of type $alu.
+Using template $paramod$68eb2ee261b49d479fb9d9ec0659e1d20891082b\_90_alu for cells of type $alu.
+Using template $paramod$e82d3fc1811c5751348a3964470632b35a435fc7\_90_alu for cells of type $alu.
+Using template $paramod$8742280fdebca84e1c87f2a86ed84f62d558f4cc\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \u_n.bc (7 bits, unsigned)
+  sub \u_n.pop_b (1 bits, unsigned)
+  add \b_v (1 bits, unsigned)
+  packed 1 (1) bits / 1 words into adder tree
+  add \u_n.ac (7 bits, unsigned)
+  sub \u_n.pop_a (1 bits, unsigned)
+  add \a_v (1 bits, unsigned)
+  packed 1 (1) bits / 1 words into adder tree
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$constmap:df6f2666b7bf24f0bb5af3c5a09c564d7821ce7d$paramod$f4c43f49f680b818979e2c468a541ad5c59d3377\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shl.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_or.
+Using template $paramod$constmap:fd81f960df5879cd2a108632fe60ac3bc24730cd$paramod$e8b591ded2f31b8293e49842ccce7369fe6a6df7\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shr.
+Using template $paramod$constmap:b9e726072dadc4aa42f4046eb21634e9d4f268f3$paramod$4c57ec4eb7e143e6c88db8fd7c6705da426751e1\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shl.
+Using extmapper simplemap for cells of type $bmux.
+Using extmapper simplemap for cells of type $dff.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000111 for cells of type $fa.
+Using template $paramod$dbcdc7e8aa1a4080cea2deda6fdc8772064f4d90\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000110 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000110 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001000 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000011001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000011001 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000011100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000011100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000111 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000011000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000011000 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~8365 debug messages>
+
+5.23. Executing OPT pass (performing simple optimizations).
+
+5.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+<suppressed ~5010 debug messages>
+
+5.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 24064 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 23445 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 23320 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 23266 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 23243 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 23236 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Computing hashes of 23235 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+<suppressed ~2487 debug messages>
+Removed a total of 829 cells.
+
+5.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$16614 ($_DFF_PN0_) from module ot_v41_retn_w17w10.
+
+5.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 931 unused cells and 5827 unused wires.
+<suppressed ~932 debug messages>
+
+5.23.5. Rerunning OPT passes. (Removed registers in this run.)
+
+5.23.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_retn_w17w10.
+<suppressed ~9 debug messages>
+
+5.23.7. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_retn_w17w10'.
+Computing hashes of 22295 cells of `\ot_v41_retn_w17w10'.
+Finding duplicate cells in `\ot_v41_retn_w17w10'.
+Removed a total of 0 cells.
+
+5.23.8. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.23.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_retn_w17w10..
+Removed 2 unused cells and 9 unused wires.
+<suppressed ~3 debug messages>
+
+5.23.10. Finished fast OPT passes.
+
+5.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_v41_retn_w17w10'. Setting top module to ot_v41_retn_w17w10.
+
+5.24.1. Analyzing design hierarchy..
+Top module:  \ot_v41_retn_w17w10
+
+5.24.2. Analyzing design hierarchy..
+Top module:  \ot_v41_retn_w17w10
+Removed 0 unused modules.
+
+5.25. Printing statistics.
+
+=== ot_v41_retn_w17w10 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2944 wires
+    24149 wire bits
+      544 public wires
+    10796 public wire bits
+       16 ports
+      202 port bits
+    22293 cells
+     1585   $_AND_
+       35   $_DFFE_PN0P_
+     8320   $_DFFE_PP_
+      393   $_DFF_PN0_
+      395   $_DFF_P_
+     9720   $_MUX_
+      366   $_NOT_
+      829   $_OR_
+      650   $_XOR_
+
+5.26. Executing CHECK pass (checking for obvious problems).
+Checking module ot_v41_retn_w17w10...
+Found and reported 0 problems.
+
+6. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+6.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\ot_v41_retn_w17w10':
+  mapped 428 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 8715 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+7. Executing ABC pass (technology mapping using ABC).
+
+7.1. Extracting gate netlist of module `\ot_v41_retn_w17w10' to `<abc-temp-dir>/input.blif'..
+Replacing 30 occurrences of constant undef bits with constant zero bits
+
+7.1.1. Executed ABC.
+Extracted 30648 gates and 39926 wires to a netlist network with 9275 inputs and 9209 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+7.1.2. Re-integrating ABC results.
+ABC RESULTS:              NAND cells:    52275
+ABC RESULTS:               NOT cells:    16534
+ABC RESULTS:        internal signals:    21442
+ABC RESULTS:           input signals:     9275
+ABC RESULTS:          output signals:     9209
+Removing temp directory.
+Removing global temp directory.
+
+8. Executing TECHMAP pass (map to technology primitives).
+
+8.1. Executing Verilog-2005 frontend: native_map.v
+Parsing Verilog input from `native_map.v' to AST representation.
+Generating RTLIL representation for module `$_NAND_'.
+Generating RTLIL representation for module `$_NOT_'.
+Successfully finished Verilog frontend.
+
+8.2. Continuing TECHMAP pass.
+Using template $_NOT_ for cells of type $_NOT_.
+Using template $_NAND_ for cells of type $_NAND_.
+No more expansions possible.
+<suppressed ~68813 debug messages>
+Removed 0 unused cells and 211152 unused wires.
+
+9. Executing CHECK pass (checking for obvious problems).
+Checking module ot_v41_retn_w17w10...
+Found and reported 0 problems.
+
+10. Executing JSON backend.
+
+11. Executing Verilog backend.
+
+11.1. Executing BMUXMAP pass.
+
+11.2. Executing DEMUXMAP pass.
+Dumping module `\ot_v41_retn_w17w10'.
+
+12. Printing statistics.
+
+=== ot_v41_retn_w17w10 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    77267 wires
+    79006 wire bits
+       95 public wires
+     1737 public wire bits
+       16 ports
+      202 port bits
+    77952 cells
+      428   DFFASRHQNx1_ASAP7_75t_R
+     8715   DFFHQNx1_ASAP7_75t_R
+    16534   INVx1_ASAP7_75t_R
+    52275   NAND2x1_ASAP7_75t_R
+

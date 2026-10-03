@@ -1,0 +1,896 @@
+{
+ "schema": "opentallas.rom_die_clocking_decision.v1",
+ "date": "2026-10-03",
+ "status": "MODEL_ONLY_DECISION_RECORD",
+ "scope": "Qwen3-8B ROM die (fulldie r2 frame, 792.36 mm2) and DeepSeek-V4.1 ROM die (scenario C, S73, one rank a die). Streaming 1.2 GHz, serial 0.9 GHz (3:4 related, ratio FIFO at the hub), HBM 976.6 MHz (async). Sign-off SS setup 60 ps / FF hold 25 ps, not relaxed. No P&R run.",
+ "options": {
+  "A": "GALS: one local tree per hardened element (tile+station, head, link station, spine slab, row engine) from a common reference (mesochronous), FIFO at every inter-element bus. A per-COLUMN tree is not an option: a half column is 15.5 mm, beyond the measured synchronous extent (0.33-5.25 mm), and a clock run along the column is a forwarded clock, i.e. option C.",
+  "B": "Global mesh on M8/M9 driven by an H-tree, local trees below, one synchronous die, no FIFOs.",
+  "C": "Mesochronous regions <= 5.25 mm (Qwen: a 4x4-tile ME tree block, 1.25 x 5.17 mm; DS: ~4.9 mm field squares; hub, spine segments, strips, IO band each a region) fed by a short trunk; the pipelined links carry a forwarded clock with their data; one mesochronous FIFO where a link delivers into a region; links ending at an existing async FIFO (SerDes/UCIe RX/TX, HBM) merge into it by placing that FIFO's far side at the hub edge (dataflow level 2)."
+ },
+ "comparison_table": [
+  {
+   "option": "A",
+   "name": "GALS per hardened element",
+   "qwen_cycles": 15396,
+   "qwen_pct_calibrated": -3.46,
+   "qwen_pct_near_hbm": -6.296,
+   "qwen_pct_near_hbm_bound": -6.792,
+   "ds_cycles": 8737,
+   "ds_pct": -1.781,
+   "ds_pct_bound": -2.118,
+   "qwen_fifo_mm2": 7.92,
+   "clock_dist_W": 0.55,
+   "risk": "low per element, but every per-cycle loop or credit path crossing an element boundary gains FIFO latency; ~8 mm2 of FIFOs"
+  },
+  {
+   "option": "B",
+   "name": "global mesh + local trees",
+   "qwen_cycles": 0,
+   "qwen_pct_calibrated": -0.0,
+   "qwen_pct_near_hbm": -0.0,
+   "qwen_pct_near_hbm_bound": -0.0,
+   "ds_cycles": 0,
+   "ds_pct": -0.0,
+   "ds_pct_bound": -0.0,
+   "qwen_fifo_mm2": 0.0,
+   "clock_dist_W": 2.87,
+   "risk": "HIGH: no mesh synthesis or multi-driver clock timing in the flow (SPICE sign-off), ~3 W ungatable, jitter over budget unless the mesh is on a filtered rail"
+  },
+  {
+   "option": "C",
+   "name": "mesochronous regions + forwarded link clocks",
+   "qwen_cycles": 506,
+   "qwen_pct_calibrated": -0.118,
+   "qwen_pct_near_hbm": -0.22,
+   "qwen_pct_near_hbm_bound": -0.876,
+   "ds_cycles": 661,
+   "ds_pct": -0.137,
+   "ds_pct_bound": -0.545,
+   "qwen_fifo_mm2": 2.53,
+   "clock_dist_W": 0.98,
+   "risk": "MEDIUM-LOW: per-region OpenROAD CTS, one new FIFO primitive (mesochronous), forwarded-clock link stage + SDC; drift monitor fails closed"
+  }
+ ],
+ "recommendation": {
+  "qwen_rom": "C",
+  "deepseek_rom": "C",
+  "why": [
+   "A costs 3.5% (calibrated) / 6.3% (near-HBM) of Qwen per-user rate and 1.8-2.3% of DS: ~60 crossings an ME op on the head chain, corridor, tree and return stations; fails the latency-first objective.",
+   "B adds no crossing latency, but its gain over C is 0.1-0.3% (below the 1% adoption gate) for HIGH implementation risk: no mesh synthesis or timing in the flow, ~3 W ungatable a die, and period jitter over the 60 ps budget unless the mesh is on a filtered rail.",
+   "C puts FIFOs only where the measured trunk says a single tree must split (H-tree root divergence 0.38-2.9 ns): 2 crossings a field op, +0.12-0.22% (Qwen) / +0.14% (DS) at central wander, <= 0.9% at the SS-routed bound; ~2.5 mm2 of the Qwen die's 22.6 mm2 margin; region trees are ordinary CTS."
+  ],
+  "price_to_model": {
+   "qwen": {
+    "term": "+2 x DELTA cycles on every ME op (tap + tree top) and +2 x DELTA on each near-HBM attention round trip; DELTA = 1 central, 4 bound",
+    "central_cycles": 506,
+    "central_us": 0.422,
+    "bound_cycles": 2024,
+    "if_tree_top_banded_extra_cycles": 217,
+    "if_link_fifos_not_merged_extra_cycles": 144,
+    "rate_change_pct": {
+     "calibrated": -0.118,
+     "near_hbm": -0.22
+    }
+   },
+   "deepseek": {
+    "term": "+2 x DELTA cycles on every field matvec and every streamed attention/index op",
+    "central_cycles": 661,
+    "central_us": 0.551,
+    "bound_cycles": 2642,
+    "unmerged_cycles": 967,
+    "rate_change_pct": -0.137
+   }
+  }
+ },
+ "implementation_items": [
+  "RTL rtl/common/ot_meso_fifo.sv: same-frequency, unknown-static-phase FIFO (forwarded write clock, region read clock); DOWN->WAIT->RUN reset handshake as ot_ratio_cdc_fifo; read pointer placed at reset from a 3-FF-synchronised write-pointer sample; no steady-state synchroniser; DEPTH 4 (8 for the bound); credit return; pointer-distance monitor -> sticky fail-closed fault. Gate: dual-clock Verilator bench sweeping static phase 0..T and sinusoidal wander to +-w, mutants, 1e8 words; ORFS SS 60 ps / FF 25 ps at W=512 D4.",
+  "RTL rtl/common/ot_fwd_link_stage.sv: data + forwarded clock register stage at <= 430.56 um; capture on the opposite edge (or matched delay) for hold; SDC create_generated_clock per segment; route the forwarded clock as a clock net (shielded M7/M8) beside its bus.",
+  "Qwen: tile-tap meso FIFO (511 b) in the tile wrapper, 96 block-word FIFOs at the spine tree top, strip-return FIFOs at the hub; head chain + corridors become forwarded-clock links from the hub x root; all behind TAP_MESO=0 default-off; exact gate = bit-identical logits/VM/KV with only cycle shifts.",
+  "DS: region entry/exit meso FIFOs on the field broadcast/return trees at each <= 4.9 mm region boundary; the ratio CDC (ot_ratio_cdc_fifo) stays inside the hub region; die-to-die RX/TX async FIFOs move their hub-side port to the hub edge; default-off parameter; same exact gate on L0/L20.",
+  "All async crossings (HBM H1-H24/K1-K4, UCIe/SerDes, die-to-die): ot_async_fifo with SYNC_STAGES=3.",
+  "Physical: REGIONS/GROUPS per clock region in the die DEF; one OpenROAD CTS per region root; a <= 130-leaf shielded trunk H-tree on M8/M9 from the PLL to region roots, and the forwarded link clocks, on a filtered clock rail (LDO; ~1.5 W load); per-region SDC create_clock at 0.833 ns, set_clock_groups -asynchronous between regions, set_max_delay -datapath_only 1 period on FIFO data/pointer arcs.",
+  "Model: add the CLOCK_REGION term above to tools/uarch_model.py (Qwen ME op +2, attention +2; DS matvec +2, streamed op +2; DELTA 1 central, 4 bound) and re-price after the meso FIFO bench measures DELTA.",
+  "Characterise ASAP7 synchroniser tau at SS (SPICE on DFFHQNx1) to confirm the 3-FF rule.",
+  "Do NOT build a clock mesh; do NOT split below the hardened block (A)."
+ ],
+ "derivation": {
+  "wire_models_insertion_ps": {
+   "central_thick_metal": 3840.0,
+   "tt_routed": 15480.0,
+   "bound_ss_routed": 29050.0
+  },
+  "mesochronous_crossing": {
+   "central_thick_metal": {
+    "insertion_ps": 3840.0,
+    "wander_ps": 192.0,
+    "added_cycles": 1,
+    "depth": 4,
+    "depth_pow2": 4
+   },
+   "tt_routed": {
+    "insertion_ps": 15480.0,
+    "wander_ps": 774.0,
+    "added_cycles": 3,
+    "depth": 5,
+    "depth_pow2": 8
+   },
+   "bound_ss_routed": {
+    "insertion_ps": 29050.0,
+    "wander_ps": 1452.5,
+    "added_cycles": 4,
+    "depth": 7,
+    "depth_pow2": 8
+   }
+  },
+  "bases": {
+   "qwen": {
+    "calibrated_us": 357.9902,
+    "near_hbm_selected_us": 190.965
+   },
+   "deepseek": {
+    "scenario_c_ar_us": 401.623,
+    "scenario_c_ar_tok_s": 2489.9,
+    "stages": 73
+   }
+  },
+  "counts": {
+   "qwen": {
+    "model": {
+     "basis": "qwen_tp_point(4, 6144, 'board', 1.2 GHz, me_lat_extra 167 vs 177, SU64): cycles a token per added ME-op cycle = ME ops on the token path",
+     "me_ops_per_token": 217.0,
+     "me_ops_per_layer": 6.0,
+     "allreduces_per_token": 72,
+     "allreduce_src": "calendar compute.measured.allreduces_per_layer 1,982 = 2 x 991",
+     "near_hbm_attention_round_trips": 36,
+     "attention_src": "one hub<->strip row-engine round trip a layer (r2 frame)"
+    },
+    "A": {
+     "per_me_op": 60,
+     "per_me_op_terms": {
+      "spine_to_head": 1,
+      "head_chain": 32,
+      "corridor_stations": 12,
+      "block_tree_levels": 4,
+      "block_word_waypoints": 10,
+      "tree_top_to_vm": 1
+     },
+     "per_attention_round_trip": 26,
+     "per_allreduce": 20,
+     "root_split_crossings_per_me_op": 2
+    },
+    "C": {
+     "per_me_op": 2,
+     "per_me_op_terms": {
+      "tile_tap_fifo": 1,
+      "tree_top_fifo": 1
+     },
+     "per_me_op_banded_tree": 3,
+     "per_attention_round_trip": 2,
+     "per_allreduce_merged": 0,
+     "per_allreduce_unmerged": 2
+    }
+   },
+   "deepseek": {
+    "model": {
+     "basis": "cons_v41_rom S58 PAIR1 rank die, 1M, the settings of tools/dsrom_return_storage_hbm.py run(); per-layer op structure is unchanged by the S73 restatement (stage count changes hops only). Rates are rounded to 0.1 tok/s, so a +10-cycle probe resolves +-2 edges.",
+     "base_ar_tok_s": 2535.5,
+     "stage_hops_S58": 57,
+     "field_ops": 281.7,
+     "allreduces": 80.4,
+     "streamed_attention_index_ops": 48.6,
+     "cdc_fast_to_slow_edges": 448.0,
+     "cdc_slow_to_fast_edges": 374.4
+    },
+    "A": {
+     "per_field_op_central": 18,
+     "per_field_op_high": 28,
+     "terms": "2 x ceil(one-way field wire stages / 4) link-station domains + 6 return-tree levels (log4 of 2,682 pairs) + hub exit/entry; central = dense region, high = expert region",
+     "field_one_way_stages": {
+      "dense": 17,
+      "me": 14,
+      "expert": 37
+     },
+     "per_stream_op": 6,
+     "per_allreduce": 22,
+     "per_stage_hop": 22
+    },
+    "C": {
+     "per_field_op": 2,
+     "per_stream_op": 2,
+     "per_allreduce_merged": 0,
+     "per_stage_hop_merged": 0,
+     "per_allreduce_unmerged": 2,
+     "per_stage_hop_unmerged": 2
+    },
+    "stage_hops_S73": 73
+   }
+  },
+  "latency": {
+   "central_thick_metal": {
+    "qwen": {
+     "A": {
+      "vs_calibrated": {
+       "cycles": 15396,
+       "us": 12.83,
+       "rate_change_pct": -3.46
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 15396,
+       "us": 12.83,
+       "rate_change_pct": -6.296
+      }
+     },
+     "B": {
+      "vs_calibrated": {
+       "cycles": 0,
+       "us": 0.0,
+       "rate_change_pct": -0.0
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 0,
+       "us": 0.0,
+       "rate_change_pct": -0.0
+      }
+     },
+     "C": {
+      "vs_calibrated": {
+       "cycles": 506,
+       "us": 0.422,
+       "rate_change_pct": -0.118
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 506,
+       "us": 0.422,
+       "rate_change_pct": -0.22
+      }
+     },
+     "C_unmerged": {
+      "vs_calibrated": {
+       "cycles": 650,
+       "us": 0.542,
+       "rate_change_pct": -0.151
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 650,
+       "us": 0.542,
+       "rate_change_pct": -0.283
+      }
+     },
+     "C_banded": {
+      "vs_calibrated": {
+       "cycles": 723,
+       "us": 0.602,
+       "rate_change_pct": -0.168
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 723,
+       "us": 0.602,
+       "rate_change_pct": -0.315
+      }
+     }
+    },
+    "deepseek": {
+     "A": {
+      "cycles": 8737,
+      "us": 7.281,
+      "rate_change_pct": -1.781
+     },
+     "B": {
+      "cycles": 0,
+      "us": 0.0,
+      "rate_change_pct": -0.0
+     },
+     "C": {
+      "cycles": 661,
+      "us": 0.551,
+      "rate_change_pct": -0.137
+     },
+     "C_unmerged": {
+      "cycles": 967,
+      "us": 0.806,
+      "rate_change_pct": -0.2
+     },
+     "A_expert_paths": {
+      "cycles": 11554,
+      "us": 9.628,
+      "rate_change_pct": -2.341
+     }
+    }
+   },
+   "tt_routed": {
+    "qwen": {
+     "A": {
+      "vs_calibrated": {
+       "cycles": 16264,
+       "us": 13.553,
+       "rate_change_pct": -3.648
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 16264,
+       "us": 13.553,
+       "rate_change_pct": -6.627
+      }
+     },
+     "B": {
+      "vs_calibrated": {
+       "cycles": 0,
+       "us": 0.0,
+       "rate_change_pct": -0.0
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 0,
+       "us": 0.0,
+       "rate_change_pct": -0.0
+      }
+     },
+     "C": {
+      "vs_calibrated": {
+       "cycles": 1518,
+       "us": 1.265,
+       "rate_change_pct": -0.352
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 1518,
+       "us": 1.265,
+       "rate_change_pct": -0.658
+      }
+     },
+     "C_unmerged": {
+      "vs_calibrated": {
+       "cycles": 1950,
+       "us": 1.625,
+       "rate_change_pct": -0.452
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 1950,
+       "us": 1.625,
+       "rate_change_pct": -0.844
+      }
+     },
+     "C_banded": {
+      "vs_calibrated": {
+       "cycles": 2169,
+       "us": 1.808,
+       "rate_change_pct": -0.502
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 2169,
+       "us": 1.808,
+       "rate_change_pct": -0.938
+      }
+     }
+    },
+    "deepseek": {
+     "A": {
+      "cycles": 9864,
+      "us": 8.22,
+      "rate_change_pct": -2.006
+     },
+     "B": {
+      "cycles": 0,
+      "us": 0.0,
+      "rate_change_pct": -0.0
+     },
+     "C": {
+      "cycles": 1982,
+      "us": 1.652,
+      "rate_change_pct": -0.41
+     },
+     "C_unmerged": {
+      "cycles": 2902,
+      "us": 2.419,
+      "rate_change_pct": -0.599
+     },
+     "A_expert_paths": {
+      "cycles": 12681,
+      "us": 10.567,
+      "rate_change_pct": -2.564
+     }
+    }
+   },
+   "bound_ss_routed": {
+    "qwen": {
+     "A": {
+      "vs_calibrated": {
+       "cycles": 16698,
+       "us": 13.915,
+       "rate_change_pct": -3.742
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 16698,
+       "us": 13.915,
+       "rate_change_pct": -6.792
+      }
+     },
+     "B": {
+      "vs_calibrated": {
+       "cycles": 0,
+       "us": 0.0,
+       "rate_change_pct": -0.0
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 0,
+       "us": 0.0,
+       "rate_change_pct": -0.0
+      }
+     },
+     "C": {
+      "vs_calibrated": {
+       "cycles": 2024,
+       "us": 1.687,
+       "rate_change_pct": -0.469
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 2024,
+       "us": 1.687,
+       "rate_change_pct": -0.876
+      }
+     },
+     "C_unmerged": {
+      "vs_calibrated": {
+       "cycles": 2600,
+       "us": 2.167,
+       "rate_change_pct": -0.602
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 2600,
+       "us": 2.167,
+       "rate_change_pct": -1.122
+      }
+     },
+     "C_banded": {
+      "vs_calibrated": {
+       "cycles": 2892,
+       "us": 2.41,
+       "rate_change_pct": -0.669
+      },
+      "vs_near_hbm_selected": {
+       "cycles": 2892,
+       "us": 2.41,
+       "rate_change_pct": -1.246
+      }
+     }
+    },
+    "deepseek": {
+     "A": {
+      "cycles": 10427,
+      "us": 8.689,
+      "rate_change_pct": -2.118
+     },
+     "B": {
+      "cycles": 0,
+      "us": 0.0,
+      "rate_change_pct": -0.0
+     },
+     "C": {
+      "cycles": 2642,
+      "us": 2.202,
+      "rate_change_pct": -0.545
+     },
+     "C_unmerged": {
+      "cycles": 3870,
+      "us": 3.225,
+      "rate_change_pct": -0.797
+     },
+     "A_expert_paths": {
+      "cycles": 13244,
+      "us": 11.037,
+      "rate_change_pct": -2.675
+     }
+    }
+   }
+  },
+  "area": {
+   "qwen": {
+    "A": {
+     "fifo_bits": 10441984,
+     "mm2": 7.92,
+     "basis": "every inter-element bus of floorplan.json bus_classes (corridor, head chain, ME tree, block words, links, strip fan) at depth 4"
+    },
+    "B": {
+     "fifo_bits": 0,
+     "mm2": 0.0,
+     "basis": "no FIFOs; hold-fix buffers on split-free mesh not priced"
+    },
+    "C": {
+     "fifo_bits": 3332608,
+     "mm2": 2.53,
+     "bound_mm2": 5.05,
+     "basis": "1,536 tile-tap FIFOs x 509 b + 96 block-word FIFOs x 512 b + 4 strip-return x 544 b at depth 4 (bound depth 8); gross (each replaces one existing input register)"
+    },
+    "die_margin_mm2": 22.636
+   },
+   "deepseek": {
+    "A": {
+     "mm2_estimate": "~6-9 (every field broadcast/return link station and tree edge at depth 4; widths 732 b x-broadcast, 512-1024 b return words, ASSUMED)"
+    },
+    "B": {
+     "mm2": 0.0
+    },
+    "C": {
+     "regions": 36,
+     "fifo_bits": 196032,
+     "mm2": 0.15,
+     "bound_mm2": 0.3,
+     "basis": "36 field regions of <= 4.9 x 4.9 mm on the 855.9 mm2 screen, each an entry FIFO (732 b, the 4/3-widened VM x read) and an exit FIFO (512 b return word, ASSUMED) + 4 hub-edge link FIFOs (1,056 b)"
+    }
+   }
+  },
+  "clock_power": {
+   "note": "P = C V^2 f, full swing, activity 1 (clock); the local trees and flop clock pins are identical in all three options and dominate (ICG mandatory: V4.1 ungated pair clock 593 W a die); only the distribution above the local trees differs",
+   "B_mesh_W": {
+    "pitch_100um": 4.11,
+    "pitch_150um": 2.87,
+    "pitch_300um": 1.63
+   },
+   "B_gating": "ungatable inside a running die (the mesh is one net); stops only with the whole die",
+   "A_reference_tree_W": 0.55,
+   "A_gating": "reference tree always on; element trees gate at their roots",
+   "C_region_trunk_W": 0.11,
+   "C_forwarded_clocks_W_ungated": 0.87,
+   "C_forwarded_clocks_W_gated_40pct": 0.35,
+   "C_gating": "trunk always on (~0.1 W); every region and every forwarded link clock gates at its root when idle",
+   "forwarded_length_mm": 3710,
+   "deepseek_scale": 1.08
+  },
+  "skew_jitter": {
+   "rule": "a pipelined link (<= 430.56 um a stage) only sees the skew between its two flops; a tree's skew matters where physically adjacent leaves diverge high in the tree (the top-level split lines)",
+   "single_tree_root_divergence_ps": {
+    "asap7_ss_routed": [
+     1161.9,
+     2904.7,
+     4647.5
+    ],
+    "asap7_tt_routed_1mm": [
+     619.3,
+     1548.3,
+     2477.3
+    ],
+    "thick_metal_n5": [
+     153.6,
+     383.9,
+     614.2
+    ]
+   },
+   "A": {
+    "intra_element_ps": "<= 5 (element <= 1.3 mm)",
+    "crossings": "FIFO: no skew constraint",
+    "trunk_insertion_ps": 3840,
+    "jitter_ps": {
+     "2.0mV": 13.8,
+     "4.5mV": 31.1,
+     "9.0mV": 62.2
+    }
+   },
+   "B": {
+    "adjacent_point_skew_ps": "~10-20 (mesh shorts adjacent drivers; ASSUMED)",
+    "die_corner_to_corner_ps": "115-192 (0.3-0.5 x the 5% thick-metal root divergence, the systematic share a grid does not average; ASSUMED)",
+    "insertion_ps": 4140,
+    "jitter_ps": {
+     "2.0mV": 14.9,
+     "4.5mV": 33.5,
+     "9.0mV": 67.1
+    },
+    "reading": "the mesh driver tree carries ~5 nF on the core rail: at 9 mV a cycle its period jitter (~65 ps) alone exceeds the 60 ps setup uncertainty; within budget only on a filtered rail (~15 ps) or with adaptive clocking"
+   },
+   "C": {
+    "region_internal_split_ps": 48.0,
+    "region_basis": "4x4-tile block (1.25 x 5.17 mm): non-shared root-to-leaf ~3.2 mm on thick metal at 5% OCV -> <= 60 ps setup; > 25 ps hold on the few buses crossing the region's own split (hold-fixed in STA, propagated clocks)",
+    "trunk_jitter_ps": {
+     "2.0mV": 13.8,
+     "4.5mV": 31.1,
+     "9.0mV": 62.2
+    },
+    "forwarded_link_jitter_ps": {
+     "2.0mV": 13.8,
+     "4.5mV": 31.1,
+     "9.0mV": 62.2
+    },
+    "reading": "trunk (~130 loads, ~0.1 W) and forwarded link clocks (~1.4 nF) put on a filtered clock rail: ~14 ps; wander between a forwarded clock and the receiving region is absorbed by the FIFO window, not by the uncertainty"
+   },
+   "policy": {
+    "setup_ps": 60.0,
+    "hold_ps": 25.0,
+    "relaxed": false
+   }
+  },
+  "metastability": {
+   "mesochronous": "no steady-state synchroniser: the read pointer is placed at reset from a synchronised sample (exposure only during the reset handshake); a pointer-distance monitor fails closed if the wander ever exceeds the window",
+   "qwen_async_2ff": {
+    "tau10": {
+     "stages": 2,
+     "tau_ps": 10.0,
+     "t_r_ps": 763.3,
+     "mtbf_one_s": 9.84e+25,
+     "n_sync_bits": 720,
+     "mtbf_system_years": 4330000000000000.0
+    },
+    "tau20": {
+     "stages": 2,
+     "tau_ps": 20.0,
+     "t_r_ps": 763.3,
+     "mtbf_one_s": 2610000000.0,
+     "n_sync_bits": 720,
+     "mtbf_system_years": 0.115
+    },
+    "tau30": {
+     "stages": 2,
+     "tau_ps": 30.0,
+     "t_r_ps": 763.3,
+     "mtbf_one_s": 7800.0,
+     "n_sync_bits": 720,
+     "mtbf_system_years": 3.43e-07
+    }
+   },
+   "qwen_async_3ff": {
+    "tau10": {
+     "stages": 3,
+     "tau_ps": 10.0,
+     "t_r_ps": 1551.7,
+     "mtbf_one_s": 1.7e+60,
+     "n_sync_bits": 720,
+     "mtbf_system_years": 7.47e+49
+    },
+    "tau20": {
+     "stages": 3,
+     "tau_ps": 20.0,
+     "t_r_ps": 1551.7,
+     "mtbf_one_s": 3.43e+26,
+     "n_sync_bits": 720,
+     "mtbf_system_years": 1.51e+16
+    },
+    "tau30": {
+     "stages": 3,
+     "tau_ps": 30.0,
+     "t_r_ps": 1551.7,
+     "mtbf_one_s": 2020000000000000.0,
+     "n_sync_bits": 720,
+     "mtbf_system_years": 88700.0
+    }
+   },
+   "deepseek_async_2ff": {
+    "tau10": {
+     "stages": 2,
+     "tau_ps": 10.0,
+     "t_r_ps": 763.3,
+     "mtbf_one_s": 9.84e+25,
+     "n_sync_bits": 16128,
+     "mtbf_system_years": 193000000000000.0
+    },
+    "tau20": {
+     "stages": 2,
+     "tau_ps": 20.0,
+     "t_r_ps": 763.3,
+     "mtbf_one_s": 2610000000.0,
+     "n_sync_bits": 16128,
+     "mtbf_system_years": 0.00513
+    },
+    "tau30": {
+     "stages": 2,
+     "tau_ps": 30.0,
+     "t_r_ps": 763.3,
+     "mtbf_one_s": 7800.0,
+     "n_sync_bits": 16128,
+     "mtbf_system_years": 1.53e-08
+    }
+   },
+   "deepseek_async_3ff": {
+    "tau10": {
+     "stages": 3,
+     "tau_ps": 10.0,
+     "t_r_ps": 1551.7,
+     "mtbf_one_s": 1.7e+60,
+     "n_sync_bits": 16128,
+     "mtbf_system_years": 3.33e+48
+    },
+    "tau20": {
+     "stages": 3,
+     "tau_ps": 20.0,
+     "t_r_ps": 1551.7,
+     "mtbf_one_s": 3.43e+26,
+     "n_sync_bits": 16128,
+     "mtbf_system_years": 674000000000000.0
+    },
+    "tau30": {
+     "stages": 3,
+     "tau_ps": 30.0,
+     "t_r_ps": 1551.7,
+     "mtbf_one_s": 2020000000000000.0,
+     "n_sync_bits": 16128,
+     "mtbf_system_years": 3960.0
+    }
+   },
+   "reading": "2-FF synchronisers: system MTBF ~6 weeks (Qwen, 4 dies) / ~2 days (DS, 336 dies) at tau 20 ps and under a second at tau 30 ps; 3-FF: > 1e14 years at tau 20 ps and ~4,000 years (DS) at tau 30 ps. Every truly asynchronous crossing uses 3 FFs (+1 cycle each). Under a plesiochronous A every one of the ~60 crossings an ME op would need this too (3 cycles each instead of 1).",
+   "three_ff_price": {
+    "qwen_cycles_per_token": 180,
+    "deepseek_cycles_per_token": 350,
+    "note": "+1 cycle at each async crossing on the path (HBM KV read a layer, all-reduce TX/RX, stage hop TX/RX); identical in all options, <0.1%"
+   }
+  },
+  "related_ratio_fifo": {
+   "f2s_slow_cycles": "2",
+   "s2f_fast_cycles": "2",
+   "note": "ot_ratio_cdc_fifo needs RELATED, STA-timed clocks (278 ps window): it must sit inside one clock region (the hub), so a field-region crossing cannot be merged into it; a merged mesochronous-ratio FIFO would save 1 cycle a field op each way (DS 0.14%, below the 1% gate)"
+  },
+  "constants": {
+   "dyn_derate": {
+    "v": 0.05,
+    "cls": "ASSUMED",
+    "why": "dynamic (uncalibrated: droop + temperature) share of the non-shared insertion that a mesochronous crossing must absorb; the same 5% as the central OCV row of clock_trunk.json"
+   },
+   "supply_sens_per_mV": {
+    "v": 0.0018,
+    "cls": "ASSUMED",
+    "why": "d ln(delay)/dV of an ASAP7 buffer near 0.7 V (alpha-power law, Vt ~0.3 V, alpha 1.3): 0.18 %/mV"
+   },
+   "dV_per_cycle_mV": {
+    "v": [
+     2.0,
+     4.5,
+     9.0
+    ],
+    "cls": "ASSUMED",
+    "why": "supply change within one 833 ps cycle on the rail that feeds a clock buffer: 9 mV = the 35 mV first-droop budget slewing over ~3 ns (core rail, worst), 2 mV = a filtered clock rail; jitter = sens x dV x insertion"
+   },
+   "wire_cap_fF_per_um": {
+    "v": 0.2,
+    "cls": "ASSUMED",
+    "why": "clock wire on M8/M9 at ~2x minimum width with shields; ASAP7 setRC M8/M9 minimum width is 0.104 / 0.093 fF/um (setRC.tcl pinned below)"
+   },
+   "driver_load_factor": {
+    "v": 1.0,
+    "cls": "ASSUMED",
+    "why": "repeater/driver input+self load = 1x the wire C"
+   },
+   "vdd": {
+    "v": 0.7,
+    "cls": "ASSUMED",
+    "why": "ASAP7 nominal supply (power at TT)"
+   },
+   "ff_um2_per_bit": {
+    "v": 0.75816,
+    "cls": "MEASURED",
+    "why": "DFFASRHQNx1_ASAP7_75t_R 0.37908 um2 at 50% placement utilisation (the reservation rule of tools/dsrom_return_storage_hbm.py)"
+   },
+   "mesh_pitch_um": {
+    "v": [
+     100.0,
+     150.0,
+     300.0
+    ],
+    "cls": "ASSUMED",
+    "why": "global grid pitch (fine / central / coarse); local trees hang below it"
+   },
+   "sync": {
+    "tau_ps": [
+     10.0,
+     20.0,
+     30.0
+    ],
+    "tw_ps": 20.0,
+    "tcq_ps": 45.0,
+    "tsu_ps": 25.0,
+    "cls": "ASSUMED",
+    "why": "synchroniser regeneration constant tau at SS is not characterised for ASAP7; range given; MTBF = exp(t_r/tau)/(T_w f_c f_d) (Ginosar 2011)"
+   },
+   "region_extent_mm": {
+    "v": 5.25,
+    "cls": "MEASURED-MODEL",
+    "why": "clock_trunk.json thick-metal 5% OCV: largest H-tree subtree within the 60 ps setup uncertainty (1.97 mm within 25 ps hold; skew of a region's internal split above 25 ps is hold-fixed by STA on the few buses that cross it)"
+   },
+   "link_stage_um": {
+    "v": 430.56,
+    "cls": "MEASURED",
+    "why": "corridor gate verdict 89e70dd78 (fulldie README)"
+   },
+   "waypoint_stages": {
+    "v": 4,
+    "cls": "MODEL",
+    "why": "LINK_WAYPOINT_UM = 4 x 430.56 um in tools/qwen_rom_fulldie.py: the hardened link station, the finest element a link can be split into under A"
+   }
+  }
+ },
+ "references": [
+  {
+   "id": "Vangal08",
+   "cite": "S. R. Vangal et al., \"An 80-Tile Sub-100-W TeraFLOPS Processor in 65-nm CMOS,\" IEEE JSSC 43(1):29-41, 2008",
+   "supports": "mesochronous tile-to-tile interfaces (FIFO absorbs arbitrary static phase) instead of a die-wide skew budget"
+  },
+  {
+   "id": "Howard11",
+   "cite": "J. Howard et al., \"A 48-Core IA-32 Processor in 45 nm CMOS Using On-Die Message-Passing and DVFS for Performance and Power Scaling,\" IEEE JSSC 46(1):173-183, 2011",
+   "supports": "per-tile frequency domains joined to the mesh by clock-crossing FIFOs (Intel SCC)"
+  },
+  {
+   "id": "Restle01",
+   "cite": "P. J. Restle et al., \"A clock distribution network for microprocessors,\" IEEE JSSC 36(5):792-799, 2001",
+   "supports": "tree-driven global grid (mesh) for low skew in IBM high-performance processors"
+  },
+  {
+   "id": "Kurd01",
+   "cite": "N. A. Kurd et al., \"A multigigahertz clocking scheme for the Pentium 4 microprocessor,\" IEEE JSSC 36(11):1647-1653, 2001",
+   "supports": "die-wide distribution needs active deskew to hold skew at multi-GHz"
+  },
+  {
+   "id": "Tam00",
+   "cite": "S. Tam et al., \"Clock generation and distribution for the first IA-64 microprocessor,\" IEEE JSSC 35(11):1545-1552, 2000",
+   "supports": "regional active deskew of a global clock"
+  },
+  {
+   "id": "Gronowski98",
+   "cite": "P. E. Gronowski et al., \"High-performance microprocessor design,\" IEEE JSSC 33(5):676-686, 1998",
+   "supports": "global clock distribution is a large fraction of chip power in grid-clocked processors (Alpha)"
+  },
+  {
+   "id": "Chapiro84",
+   "cite": "D. M. Chapiro, \"Globally-Asynchronous Locally-Synchronous Systems,\" PhD thesis, Stanford University, 1984",
+   "supports": "origin of GALS"
+  },
+  {
+   "id": "Krstic07",
+   "cite": "M. Krstic, E. Grass, F. K. Gurkaynak, P. Vivet, \"Globally Asynchronous, Locally Synchronous Circuits: Overview and Outlook,\" IEEE Design & Test 24(5):430-441, 2007",
+   "supports": "GALS trade-offs: crossing latency, verification, synchroniser cost"
+  },
+  {
+   "id": "Ginosar11",
+   "cite": "R. Ginosar, \"Metastability and Synchronizers: A Tutorial,\" IEEE Design & Test 28(5):23-35, 2011",
+   "supports": "synchroniser MTBF = exp(t_r/tau)/(T_w f_c f_d); mesochronous/plesiochronous synchronisers"
+  },
+  {
+   "id": "DallyPoulton98",
+   "cite": "W. J. Dally, J. W. Poulton, Digital Systems Engineering, Cambridge University Press, 1998",
+   "supports": "mesochronous / plesiochronous timing, source-synchronous (forwarded-clock) signalling"
+  },
+  {
+   "id": "Keller15",
+   "cite": "B. Keller, M. Fojtik, B. Khailany, \"A Pausible Bisynchronous FIFO for GALS Systems,\" ASYNC 2015",
+   "supports": "low-latency bisynchronous FIFO for fine-grained GALS (NVIDIA Research)"
+  },
+  {
+   "id": "Fojtik19",
+   "cite": "M. Fojtik et al., \"A Fine-Grained GALS SoC with Pausible Adaptive Clocking in 16 nm FinFET,\" ASYNC 2019",
+   "supports": "fine-grained GALS in a recent NVIDIA research SoC: per-partition clocks with FIFO crossings"
+  },
+  {
+   "id": "Naffziger21",
+   "cite": "S. Naffziger et al., \"Pioneering Chiplet Technology and Design for the AMD EPYC and Ryzen Processor Families,\" ISCA 2021",
+   "supports": "product practice: separate core / fabric / memory clock domains joined by FIFOs"
+  },
+  {
+   "id": "Grenat14",
+   "cite": "A. Grenat et al., \"Adaptive clocking system for improved power efficiency in a 28nm x86-64 microprocessor,\" ISSCC 2014",
+   "supports": "supply droop vs clock distribution timing handled by adaptive clock stretching"
+  },
+  {
+   "id": "Ho01",
+   "cite": "R. Ho, K. W. Mai, M. A. Horowitz, \"The future of wires,\" Proc. IEEE 89(4):490-504, 2001",
+   "supports": "repeated global wire reach per cycle shrinks: die-crossing paths must be pipelined"
+  },
+  {
+   "id": "Lie23",
+   "cite": "S. Lie, \"Cerebras Architecture Deep Dive: First Look Inside the Hardware/Software Co-Design for Deep Learning,\" IEEE Micro 43(3):18-30, 2023",
+   "supports": "wafer-scale fabric is a 2D mesh of nearest-neighbour links (no die-spanning synchronous path); its clock distribution is not published in detail and is NOT relied on here"
+  },
+  {
+   "id": "Choquette23",
+   "cite": "J. Choquette, \"NVIDIA Hopper H100 GPU: Scaling Performance,\" IEEE Micro 43(3):9-17, 2023",
+   "supports": "814 mm2-class single die; NVIDIA does not publish H100/B200 on-die clock topology, so no claim about it is made here (B200's two dies are joined by a die-to-die link, necessarily a clock crossing)"
+  },
+  {
+   "id": "Ajayi19",
+   "cite": "T. Ajayi et al., \"Toward an Open-Source Digital Flow: First Learnings from the OpenROAD Project,\" DAC 2019",
+   "supports": "the repository's flow (OpenROAD CTS) synthesises buffered trees; it has no clock-mesh synthesis"
+  }
+ ],
+ "pins": {
+  "c3a5675416cf435591a6213a88fe0c5f09956fed:results/rtl/qwen_rom_fulldie_20261003/clock_trunk.json": "81b4e38b962d07ac676b46ec346a4da0e85ef88ccf1165b0537f103aa471b9e7",
+  "c3a5675416cf435591a6213a88fe0c5f09956fed:results/rtl/qwen_rom_fulldie_20261003/floorplan.json": "3cdf1fa44c892b9e15364be093d2991dbeffce5996427428315e78b1c35cb0a9",
+  "27d86cfe4b8f87dab020886b70f4d75f89a819e6:results/rtl/two_clock_crossing_20261003/crossing_model.json": "c212d98c9c803fb2aa71420d80f7b6ca98af60a2d7808d605c74a4c98f4d73db",
+  "results/uarch/qwen_rom_calibrated_calendar_20261003/summary-r1.json": "1120d1e11699461a7f1e7eb620488c0262df75f1588e01a0e91c826fa8dab522",
+  "results/uarch/dsrom_return_storage_hbm_20261003/model.json": "620e7b8be078e4b90e5986340cb7c719351beba39029d4e66b7b193a9ea2b5d2",
+  "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/setRC.tcl": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14",
+  "tools/uarch_model.py": "611ddd1158bafdda67ccc63f51091757f822efdd4b1b40c0b80afd2b99304bce",
+  "tools/rom_die_clocking_model.py": "6ec7536e880838fb1ca0ed78379a15c21b8c03a6fb6685e1e9618ae7370a5b6c"
+ }
+}

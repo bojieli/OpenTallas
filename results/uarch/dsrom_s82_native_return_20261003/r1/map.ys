@@ -1,0 +1,13 @@
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+read_slang --top ot_v41_retn_w17w10 -G RD=64 -G RST=1 -G BYPASS=1 source/rtl/v41rom/ot_v41_ret.sv source/rtl/v41die/ot_v41_retn_w17w10.sv source/rtl/proto/ot_fp32_add_rne_pipe.sv source/rtl/hdc/ot_hdc_delay.sv
+synth -top ot_v41_retn_w17w10 -flatten -noabc
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -g NAND
+techmap -map native_map.v
+clean
+check
+write_json mapped.json
+write_verilog -noattr mapped.v
+stat

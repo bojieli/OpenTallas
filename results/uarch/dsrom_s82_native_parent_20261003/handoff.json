@@ -1,0 +1,67 @@
+{
+  "FIFO_D4_gross_FF50_proxy_mm2": 5.55657283584,
+  "PnR_admitted": false,
+  "SSFF_qualified": false,
+  "candidate": "DS4096-TP4-S82-PAIR1",
+  "clock_C_regions": 71,
+  "clock_mesh": false,
+  "clock_trunk_guide_mm": 369.7936650755112,
+  "complete_node_FF50_mm2": 129.0200389632,
+  "forwarded_link_state_gross_FF50_proxy_mm2": 48.47018776704,
+  "full_die_fit": false,
+  "gross_costs_not_added_to_debit_without_containment": true,
+  "guide_metal_is_not_available_tracks": true,
+  "implementation_step": "Measured existing complete native RD64 node -> one relocated S82 named allocation -> clock-C groups and dependency guides",
+  "named_collisions": 0,
+  "named_out_of_die": 0,
+  "named_rectangle_count": 27318,
+  "named_rectangles_are_not_site_pin_PG_fit": true,
+  "native_mapping_cells": 77952,
+  "native_mapping_terminal": {
+    "MainPID": 0,
+    "exit": 0,
+    "host": "5.199.165.104",
+    "source_commit": "fecb33b6dcfdecc79308c1c885ff458791803144",
+    "unit": "dsrom-s82-return-area-r1.service"
+  },
+  "next_construction": {
+    "Archimedes": "Regional CTS/native clock pins, root gather, capture and clock/reset/PG contacts at the selected source pipeline.",
+    "Beauvoir": "Exact meso FIFO and forwarded-link widths/II/credits/state, measured DELTA and legal stage input/output clock pins.",
+    "Chandra": "W3 controller/PHY actual subinstance rectangles, pin endpoints and separate HBM clock/FIFO homes.",
+    "Epicurus": "Selected q/BF pipeline source abstracts and contextual SS/FF; preserve live qpipe route.",
+    "Maxwell": "Replace opaque service reservations with source-owned subinstances; allocate root control and actual PLL/LDO/CTS cells against the fixed/residual union, then route named M8/M9 guides around native OBS and PG."
+  },
+  "not_transferred_from_S73_clock_study": true,
+  "opaque_region_owner_decomposition": [
+    "ATTENTION64TILES_STATIONARY_STAGE_PVMERGE_WINDOW_RAW_QE_SERVICE",
+    "HUB_SU_VECTOR",
+    "HUB_HC"
+  ],
+  "original_RTL_modified": false,
+  "parameter_count_depth_sweep": false,
+  "rate_adopted": false,
+  "region_limit_um": 5250,
+  "replay_command": "python3 tools/dsrom_s82_native_parent.py --out /tmp/S82-native-C-replay.json.gz",
+  "replay_compare": "cmp /tmp/S82-native-C-replay.json.gz results/uarch/dsrom_s82_native_parent_20261003/model.json.gz",
+  "retained_S58_PDN_diagnostic": {
+    "error": "PSM-0069 Check connectivity failed on VDD",
+    "exit": 1,
+    "qualification_transfer_to_S82": false,
+    "source": "caf733122ebf4f9fab44b1abf623cc882bd211b1"
+  },
+  "return_dependency_guide_cycles": {
+    "bound_guide_cycles": [
+      88,
+      174
+    ],
+    "central_guide_cycles": [
+      76,
+      162
+    ]
+  },
+  "shield_guide_mm2": 0.1183339728241636,
+  "tests_command": "python3 -m pytest -q tests/test_dsrom_s82_native_return.py tests/test_dsrom_s82_native_parent.py tests/test_dsrom_c_s82_combined.py tests/test_dsrom_c_s82_placement.py tests/test_dsrom_c_w4_ledger.py",
+  "tests_passed": 40,
+  "token_cycle_delta": null,
+  "universal_area_impossibility_claim": false
+}
