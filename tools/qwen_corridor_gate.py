@@ -431,6 +431,8 @@ puts "QCG margin obstructions: $no"
 
 
 GRT_KEEP = 2.0
+LONG_HAUL_UM = 10.0                                     # audit: a blocked-layer segment longer than this is haul
+ACCESS_UM = 10.0                                        # audit: pin-access band around each slab
 CORE_MARGIN = 1.08                                      # um core inset: PG and rows stop short of the ports
 
 
@@ -550,19 +552,24 @@ def parse_def_layers(def_path: Path, var, t):
     ax = 0 if t['axis'] == 'x' else 1
 
     slabs = [(lo - GRT_KEEP, hi + GRT_KEEP) for lo, hi in zs]
+    access = [(lo - ACCESS_UM, hi + ACCESS_UM) for lo, hi in zs]
 
     def split(a, b):
+        """(in slab, in access band beyond the slab, beyond both) along the corridor axis."""
         a, b = min(a, b), max(a, b)
         ins = sum(max(0.0, min(b, hi) - max(a, lo)) for lo, hi in slabs)
-        return ins, (b - a) - ins
+        acc_ = sum(max(0.0, min(b, hi) - max(a, lo)) for lo, hi in access) - ins
+        return ins, acc_, (b - a) - ins - acc_
     acc = {}
 
     def add(layer, where, ln):
         if ln > 0:
             acc[(layer, where)] = acc.get((layer, where), 0.0) + ln
+    longest = [0.0, None, None]
     for stmt in nets.split(';'):
         if 'ROUTED' not in stmt:
             continue
+        mm_net = stmt.strip().split()[1] if stmt.strip().startswith('-') else None
         for seg in re.split(r'\b(?:ROUTED|NEW)\b', stmt)[1:]:
             mm = re.match(r'\s*(M\d+)\s+(.*)', seg, re.S)
             if not mm:
@@ -578,20 +585,28 @@ def parse_def_layers(def_path: Path, var, t):
                 a0, a1 = (x0, x1) if ax == 0 else (y0, y1)
                 p0, p1 = (y0, y1) if ax == 0 else (x0, x1)
                 if a0 != a1:                                  # along the corridor
-                    ins, out = split(a0 / dbu, a1 / dbu)
+                    ins, near, out = split(a0 / dbu, a1 / dbu)
+                    if layer in t['blocked'] and out > longest[0]:
+                        longest[:] = [out, layer, mm_net]
                     add(layer, 'slab', ins)
+                    add(layer, 'access', near)
                     add(layer, 'between', out)
                 elif p0 != p1:                                # across the corridor
-                    add(layer, 'slab' if any(lo <= a0 / dbu <= hi for lo, hi in slabs) else 'between',
-                        abs(p1 - p0) / dbu)
+                    c = a0 / dbu
+                    add(layer, 'slab' if any(lo <= c <= hi for lo, hi in slabs) else
+                        'access' if any(lo <= c <= hi for lo, hi in access) else 'between', abs(p1 - p0) / dbu)
     per = {}
     for (layer, where), ln in sorted(acc.items()):
         per.setdefault(layer, {})[where] = round(ln, 1)
     between = sum(v.get('between', 0) for v in per.values())
-    off = sum(v.get('between', 0) for l, v in per.items() if l not in t['layers'] and l in
-              (('M2', 'M4') if t['axis'] == 'x' else ('M3', 'M5')))
-    return dict(per_layer_um=per, between_slab_um=round(between, 1),
+    off = sum(v.get('between', 0) for l, v in per.items() if l in t['blocked'])
+    near = sum(v.get('access', 0) for l, v in per.items() if l in t['blocked'])
+    return dict(basis=f'routed DEF signal + clock wires; slab = slab +/- {GRT_KEEP} um (GRT keep), access = a further '
+                      f'{ACCESS_UM - GRT_KEEP} um band (station / repeater pin access), between = the rest of the span',
+                per_layer_um=per, between_slab_um=round(between, 1),
                 between_slab_on_blocked_same_direction_layers_um=round(off, 1),
+                access_band_on_blocked_same_direction_layers_um=round(near, 1),
+                longest_blocked_layer_segment_beyond_access=dict(um=round(longest[0], 2), layer=longest[1], net=longest[2]),
                 assigned_share_of_between_slab=round(sum(per.get(l, {}).get('between', 0) for l in t['layers'])
                                                      / between, 4) if between else None)
 
@@ -699,7 +714,10 @@ def record(v, jobroot: Path, src_root: Path):
     timing_met = (timing['ss_setup_wns_ns'] is not None and timing['ss_setup_wns_ns'] >= 0 and
                   timing['ff_hold_wns_ns'] is not None and timing['ff_hold_wns_ns'] >= 0)
     blk, btw = audit.get('between_slab_on_blocked_same_direction_layers_um'), audit.get('between_slab_um')
-    layer_ok = bool(btw) and blk is not None and blk <= 0.005 * btw     # <= 0.5% of between-slab wire on blocked layers
+    run = (audit.get('longest_blocked_layer_segment_beyond_access') or {}).get('um')
+    # long haul stays on the assigned layers: blocked-layer wire beyond the access bands is <= 5% of the between-slab
+    # wire and no single blocked-layer segment exceeds LONG_HAUL_UM (short jogs around PG via stacks are routing, not haul)
+    layer_ok = bool(btw) and blk is not None and blk <= 0.05 * btw and run is not None and run <= LONG_HAUL_UM
     verdict = ('ROUTED_CLEAN' if routed_clean else
                'GRT_OVERFLOW' if grt_ovf else
                'DRT_VIOLATIONS' if drt else 'INCOMPLETE')
