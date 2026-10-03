@@ -129,6 +129,18 @@ dict set wanted {provider.g_identity.g_page[0].g_bank[15].u_operand_b} {724.14 6
 dict set wanted {provider.g_identity.g_page[1].g_bank[15].u_operand_b} {724.14 650.1600000000002}
 dict set wanted {provider.g_identity.g_page[2].g_bank[15].u_operand_b} {724.14 699.8400000000001}
 dict set wanted {provider.g_identity.g_page[3].g_bank[15].u_operand_b} {724.14 749.5200000000001}
+# Clear only this exact RF inventory's provisional auto-placement before
+# deterministic aligned placement; otherwise later auto-placed macros can
+# occupy an earlier macro's priced target. No other macro is allowed.
+set seen 0
+foreach inst [$block getInsts] {
+ if {![[$inst getMaster] isBlock]} {continue}
+ set name [string map {\\ {}} [$inst getName]]
+ if {![dict exists $wanted $name]} {error "unexpected RF macro before placement $name"}
+ $inst setPlacementStatus UNPLACED
+ incr seen
+}
+if {$seen != 128} {error "full RF128 pre-placement census failed $seen"}
 set n 0
 foreach inst [$block getInsts] {
  if {[[$inst getMaster] getType] ne "BLOCK"} { continue }
