@@ -1,0 +1,51 @@
+ONE fullwidth greedy-accept leaf: prospective model enrollment receipt, no RTL/build
+Isolated branch codex/ds-mtp-accept-leaf-model-20261003, basebf99ccc864cb02579ae6637b629bef660a386722.
+Coverage70ee archived findings are joined once incoverage_composition.json. Main/docs/uarchengine/RTL originals unchanged. No drafter/acceptance run, checkpointcopies or P&R.
+
+Selected semantic shape NSLOT8/NW21: same longest matching greedy prefix and bonus as ot_hdc_accept. Slots0..g carry pending+draft inputs and targetoutputs; n_emit=a+1, bonus=target[a]. Runtime caller usesgamma5 or smallernearboundary, generic8slot leaf accepts0..7. Seven21bitcomparators retained, not optimized to fixedgamma. No probabilistic policy, KVcommit, rollback or physicalresource release insideleaf.
+
+Exact finite state/port sizing:
+- source accept366rawFF retained inleaf ledger once (16x21tokens336 +a3/done1/any1/n4/bonus21=30);
+- add valid16, header33, independentstickyfault1, acceptquery29, TOKXquery50, AMAXquery50, fencequery33, protectedmatch36 =>leaf614rawbits;
+- caller select21 +two25bit origin/heldvalid records26each =>73grossraw (existingselect16 matchedolddebitunknown); grossleaf+caller687raw;
+-24leafrecords+3callerrecords, everyrecord independently existingW6 systematic Hamming64->72 protected, padding checked:1944physicalFFbits. No assumed768gate/word shortcut. Fullencode/decode27replicas, all64data correction/72codeword bits priced. No SRAMmacros. Protection remains required for mutablecontrol, ROMwaiver doesn'tapply.
+- exposed source/held-request signal union636tracks, target168bus shared withresult ratherthan doublecharged; ports listedmodel.json. Start45payload/47signals, TOKX49/51, AMAX49/51, ACCEPT28/30, result221payload/250signals includingacklease25+ready, fence32/34, source-stok168, clk/reset/stop/fault/corrected5.
+- oneaccepted perkind ingress seat, nominalTOKX/AMAXII2; oneacceptquery, oneresult occupancy. No newcohort overwrites untilmatchingresulttake pluspositive allcopies fence.
+
+Controls/identity:
+start storespendingbasepos21 andg3, allocatesleafownedgen4 onlyafterpreviousmatchingsixreceiptsfence. Export{basepos21,gen4}; acceptedTOKX/AMAX/ACCEPT/outputACK/fence echofull25bitkey. Slot3 isimplicitonlyinactualprivate8rowbank. Oneactualcoreinstance suppliescontextnamespace; sharedmulti-client/contextfabrics notenrolled.
+Incomingtoken must<vocab129280, basepos+g mustfit21bits, draftslot1..g,targetslot0..g; duplicatewritten slot refused. Allrequiredmembersmust befresh currentcohort beforeaccept; zero/oldresetvalues nevercountasfresh. Querystore and bankpublication aredifferentedges; simultaneous newestwrite cannot satisfyoldstatefreshness.
+Jointoldstate: malformedkey/bounds/freshness/record/padding oruncorrectablecodec refusesallnormalgrant/output/consumeon discoveryedge, preservesaccepteddebt andstickyfault. Singlebitcorrectedbeforeuse; correctionstatusretained. No mandatorybackgroundscrub or silentdiscard ofcorrectedchecks. Valid-codeword corruption isnot universalerrordetection; bounds/padding/identity checks supplementSECDED.
+Resultstok/ttok, prefixcount,bonus,leaseheldstablethroughmatchingready. acc_done iscompatibilitypulse onlyafterprotectedresultguard; localresulttake isNOTKVrollback/providerrelease.
+Admission_stop blocksnewcohort/queryacceptance whilealreadyacceptedholdersmaypublish. Coldrst_n requiresexternaltruthfulallcopies/resetfence. Runtimerearm isidle+stopped+positivefences only; faultwithaccepteddebtcannotberearmed/erased. All24mutable records pluscallerrecords protected; acceptedfaultrecovery isseparatelyowned causalproviderwork.
+Modulo16wrapdoesnotcapcontinuousprogram. Itrequirespositive sourceallcopiesabsenceeverycohortincludingproducer/stamp/core/XU/ME/result/forward/return/reverse/reset endpoints. Falsefence allowingidenticaloldtuple isundetectable; no outstandingcount/ringformula proof. Fortycohortfunctionalmodelchecktestsreusewithsuppliedtruthfulfences, notactualproductionproof or secondtokenrun.
+
+Actual source connection requiring adapter:
+Core d_ctl1 currentlytakes xu_sel_first[20:0] froma16bitwire; bothXU variants expose16bit sel_first. AMAX alreadycaptures21bit am_idx_v atd_ctl2. X_SEL recomposedselectorhasIW20andcanrepresentvocab129280, butadapter extracts16bits. Requiredlosslessbranchusesfull20bitindex zeroextendedto21,21bitselectregister/corewire; neverzeroextendalreadytruncated16. LegacyX_SEL0scalarselectIW16 isnotcoveredbythisleafcallerproposal.
+TOKX/AMAX/ACCEPT sourcepulses becomeheldrequests; coreS_ISSUE muststalluntilmatchingready/accepted. Sourceoriginstamps capturedwhencommandaccepted, notrelabeledwhenreturndelivered. Grosscallerstatefull21select+two26originholderspriced; selectoritselfnotreplicatedorclaimednewarea. Actualupstreamselector/headnumericalgates remainseparate.
+S_ACC presentlyusesacc_done andacc_a torst_slot Engramhistory; S_RST spendsanotheredge. Newadapteracknowledgesonlylocalresultconsumption/restore sequencing, holdsresultthroughstall andmustnotinferKVfree. Actualgen/fence/ready wiring isuninstalled; connectsPopper/Dewey leases ratherthan competingwiththeirnative/rollbackwork.
+
+Cells/clock/slot price:
+Model enumeratesallowedSS/FF ASAP7R-cell mastercounts bysection: sevencomparators,prefix/bonusmux, everybounds/key/freshness/decodepredicate, positivefence/stickyfault/occupancylogic, conservative8-source rawrecordselectors, all27fullW6codecs,paddingchecks,1944resettableFF+QNrestore/holdmux+twofeedbackBUFfloor, tiecells, clock/resettrees and8/32sinkbroadcasttrees. No sharing/dedup credit. Thisisaconstructiveconservativeunmappedcellconstruction, not exactsynthesizednetlistarea/timing.
+Grossbody11782.0251um2; at50%util0.0235640502mm2PERenrolledcore. Exactmatchedoldaccept/selectdebit andfleetreplicacountunknown; cannotblindaddgross across96ranks/32SMs nor subtractsharedprivateproviderstate. ROM/HBM inputsreuseonecomponentbutactualcallerinstantiationmustbeassigned.
+Prospectiveoneclockserial-chain0.9GHz/1111.111ps, SSsetup60ps/FFhold25psunchanged. Querycapture ->checkedfreshness/protectedmatch ->prefix/bonusencodedresult ->protectedresultguard: minimum3leafedges afteracceptversusold1, +2serialedges=2.222222ns. SourceS_ACC/S_RST sequencing andallproducerwaits remain. NoSS/FFloadedpathclaim; realcodec/controlconesmayrequireadditionalstages, andextra72bitrecord/codec/cut/edge mustbepricedBEFOREanyRTLchanges.
+Clock1944FFsinks: SS843.661008fF, FF978.127488fF unbufferedsourcepinloads.558clock+resetBUFtreeinstancescharged, additionalfanout/holdrelease trees included. Actualdriverarrival/slew/route/load/skew/minpulse unknown. Sameclockcomponentkernelonly; anyactualproducerclockdifference needsseparatelypricedCDC, neverfreeL1/IItransfer.
+RequestednamedslotMTP_ACCEPT_SERIAL_SPINE_PER_ACTUAL_CORE: minimum128x184.14umstandardcellrectangleat50%, NOTreserved/placed.636signaltracks need30.528um at48nmpitch asgeometricflooronly; actuallegalchannelafterPG/clock/viaexclusionsunknown. No globalPHYbandwidthcredit. Parentphysicalowner mustassignslot/channel andclockload; defaultoffleaf functionalenrollment canbereviewedindependentlywholeMTP, physicaladmissionstillpending.
+
+Validation/failure scope:
+63finalfunctionalmodeltestsPASS (initial58retained): allprefixlengths/g0..7, highfullwidthtokens, inputcredit/stop/heldoutput, freshness/bounds/duplicates/wronggeneration, reset/rearm, positivewrappedreuse, padding+semanticinvalidstate, all24recorddoublefaults; all72singlebit andall2556doublebitpairs forfour64bitpatterns. Includesprospectivecaller20->21fullindex/stampholdandall3callermutablerecordsdoublefaultjointconsumegating. OnefinalpricingtestPASS; generatorcoldbyteexact,13sourcepinschecked. Thesearemodeltests, NOTliteralHDL equivalence/correctRTL/silicon/reliabilityproof.
+Initialtwohandwrittenarithmeticassertionfailures(raw714vsenumerated614; tracks736vsenumerated636) preserved; exactfields/ports unchanged. Correctedledgerderivedfromactualenumeration. Calleradapterfirstsyntaxcollectionfailure preservedseparately; fixedmissingwhitespace, final63testsPASS. No source failures overwritten.
+
+Parent next minimal enrollment decisions:
+1. AcceptsourceABI/finiteonecohortfullwidthkernel andnominal3edgeprotectedstageplanforcomponentfunctionaltest. DefaultoffRTL/fullwidthcasesbelongtoassignedimplementationowner, notthisreceipt.
+2. Assignactualonecore, namedrectangle/channel/clock/reset/loads; characterizecodec/controlcutsatSS/FFwithoutrelaxing60/25. Anyextrastage/clockchange pricedbeforebuild.
+3. EnrollactuallosslessX_SEL20->21TOKX+heldsourceadapter andmatchedreplacementdebit. Oldcallerremainsdisconnecteduntilthiswork; leafcomponentcanprogressseparately.
+Dewey/Popper nativegeneration/rollback/actualtruthfulfences continueinparallel; Claude matchedacceptance/wholeDSparkdrafter independent. WholeMTPG2/rateunknown; historicalverify715.82/draft49.9/fetch38.97unaltered, no addedrate/rollbackcredit.
+
+Replay, no hardware/job launch:
+cd /home/ubuntu/OpenTallas-ds-mtp-accept-leaf-model
+python3 -m pytest -o addopts='' -q tests/test_ds_mtp_accept_leaf_model.py
+python3 tools/ds_mtp_accept_leaf_model.py --verify
+python3 tools/ds_mtp_accept_leaf_model.py --out /tmp/ds-mtp-accept-leaf-independent-20261003/model.json
+cmp results/uarch/ds_mtp_accept_leaf_20261003/model.json /tmp/ds-mtp-accept-leaf-independent-20261003/model.json
+(cd results/uarch/ds_mtp_accept_leaf_20261003 && sha256sum -c receipt.sha256)
