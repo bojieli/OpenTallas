@@ -1,0 +1,270 @@
+{
+ "schema": "dsrom_wavefront_verify/1",
+ "base": {
+  "record": "results/uarch/dsrom_return_storage_hbm_20261003/model.json",
+  "branch_base": "ba4dc1a18",
+  "model_git": "ba4dc1a18335e406698c964bcf2b62be5a104884"
+ },
+ "q1_pass_composition": {
+  "rows": {
+   "S58/1048576": {
+    "T1_us": 394.404,
+    "Tp_us": 932.968,
+    "ratio": 2.366,
+    "critical_path_issue_us": 107.7,
+    "latency_us": 286.7,
+    "max_stage_occupancy_us": 12.37,
+    "max_stage_occupancy_at": "head",
+    "max_stage_window_us": 18.69,
+    "max_stage_window_at": "29",
+    "second_occupancy": [
+     "29",
+     11.57
+    ]
+   },
+   "S73/1048576": {
+    "T1_us": 403.207,
+    "Tp_us": 952.437,
+    "ratio": 2.362,
+    "critical_path_issue_us": 109.8,
+    "latency_us": 293.4,
+    "max_stage_occupancy_us": 12.37,
+    "max_stage_occupancy_at": "head",
+    "max_stage_window_us": 19.24,
+    "max_stage_window_at": "36",
+    "second_occupancy": [
+     "36",
+     11.62
+    ]
+   },
+   "S73/200000": {
+    "T1_us": 386.198,
+    "Tp_us": 869.491,
+    "ratio": 2.251,
+    "critical_path_issue_us": 96.7,
+    "latency_us": 289.5,
+    "max_stage_occupancy_us": 12.37,
+    "max_stage_occupancy_at": "head",
+    "max_stage_window_us": 15.42,
+    "max_stage_window_at": "head",
+    "second_occupancy": [
+     "36",
+     4.51
+    ]
+   }
+  },
+  "reading": "v41_verify_T / _v41_graph: every node's issue is multiplied by p (lane nodes by ceil(p/m)) and the graph is re-solved, so each node finishes all 6 positions before its successor starts. Fill, wires, hops and dependency latency are paid once; the issue of EVERY node on the critical path is paid p times. Verify = T1 + (p-1) x (critical-path issue). While one stage works on 6 positions, the other 72 stages idle (for this user). It is not p x AR: ~73% of AR is latency, shared already."
+ },
+ "q2_wavefront_scenario_c": {
+  "1048576": {
+   "ar_us": 401.62,
+   "ar_tok_s": 2489.9,
+   "draft_us": 47.11,
+   "pass_m1": {
+    "verify_us": 940.2,
+    "ratio": 2.341,
+    "mtp_tau3.649": 3695.9,
+    "mtp_tau4.0": 4051.4
+   },
+   "wavefront_occupancy": {
+    "ii_us": 12.37,
+    "verify_us": 463.48,
+    "ratio": 1.154,
+    "mtp_tau3.649": 7146.7,
+    "mtp_tau4.0": 7834.1,
+    "vs_hbm_tau3649": 1.191,
+    "vs_hbm_tau4": 1.191
+   },
+   "wavefront_window": {
+    "ii_us": 19.24,
+    "verify_us": 497.82,
+    "ratio": 1.24,
+    "mtp_tau3.649": 6696.3,
+    "mtp_tau4.0": 7340.4,
+    "vs_hbm_tau3649": 1.116,
+    "vs_hbm_tau4": 1.116
+   },
+   "wavefront_occupancy_head_doubled": {
+    "ii_us": 11.62,
+    "verify_us": 459.73,
+    "ratio": 1.145,
+    "mtp_tau3.649": 7199.5,
+    "mtp_tau4.0": 7892.1,
+    "vs_hbm_tau3649": 1.2,
+    "vs_hbm_tau4": 1.2
+   },
+   "saturated": {
+    "pass_mtp_tok_s": 34929.6,
+    "wavefront_mtp_tok_s": 34929.6,
+    "pass_busiest_us": 104.47,
+    "wavefront_busiest_us": 104.47,
+    "busiest": "head"
+   },
+   "energy": {
+    "extra_mJ_per_pass": 95.82,
+    "extra_mJ_per_emitted_token": 26.26,
+    "basis": "(p-1) x TP x (hbm_if + stack) per-die categories, minus the per-position KV rows the pass already charges (MTP_KV_PER_POSITION); i.e. index keys read once per position"
+   }
+  },
+  "200000": {
+   "ar_us": 384.63,
+   "ar_tok_s": 2599.9,
+   "draft_us": 45.12,
+   "pass_m1": {
+    "verify_us": 857.27,
+    "ratio": 2.229,
+    "mtp_tau3.649": 4043.7,
+    "mtp_tau4.0": 4432.7
+   },
+   "wavefront_occupancy": {
+    "ii_us": 12.37,
+    "verify_us": 446.49,
+    "ratio": 1.161,
+    "mtp_tau3.649": 7422.7,
+    "mtp_tau4.0": 8136.7,
+    "vs_hbm_tau3649": 1.237,
+    "vs_hbm_tau4": 1.237
+   },
+   "wavefront_window": {
+    "ii_us": 15.42,
+    "verify_us": 461.72,
+    "ratio": 1.2,
+    "mtp_tau3.649": 7199.6,
+    "mtp_tau4.0": 7892.1,
+    "vs_hbm_tau3649": 1.2,
+    "vs_hbm_tau4": 1.2
+   },
+   "wavefront_occupancy_head_doubled": {
+    "ii_us": 6.19,
+    "verify_us": 415.56,
+    "ratio": 1.08,
+    "mtp_tau3.649": 7921.0,
+    "mtp_tau4.0": 8682.9,
+    "vs_hbm_tau3649": 1.32,
+    "vs_hbm_tau4": 1.32
+   },
+   "saturated": {
+    "pass_mtp_tok_s": 35361.4,
+    "wavefront_mtp_tok_s": 35361.5,
+    "pass_busiest_us": 103.19,
+    "wavefront_busiest_us": 103.19,
+    "busiest": "head"
+   },
+   "energy": {
+    "extra_mJ_per_pass": 20.17,
+    "extra_mJ_per_emitted_token": 5.53,
+    "basis": "(p-1) x TP x (hbm_if + stack) per-die categories, minus the per-position KV rows the pass already charges (MTP_KV_PER_POSITION); i.e. index keys read once per position"
+   }
+  }
+ },
+ "q2_rules": {
+  "occupancy": "II = the slowest stage's per-position issue occupancy (field + hub), the same rule the model uses for multi-user saturation (two tokens may be in one stage on different nodes). Slowest = the LM head (8 head dies), 12.37 us; next is the L20-scan stage at 11.62 us (1M) / 4.51 us (200K).",
+  "window": "II = the slowest stage's critical-path window (one position per stage at a time; no intra-stage overlap): 19.24 us (1M, stage 36) / 15.42 us (200K, head).",
+  "occupancy_head_doubled": "head dies 8 -> 16: II falls only to the next stage (11.62 us at 1M) -- not worth it at 1M."
+ },
+ "q3_m_sweep_on_c": {
+  "rows": {
+   "1048576": {
+    "m1": {
+     "ver_over_ar": 2.35,
+     "dies_rel_to_m1": [
+      1.0,
+      1.0
+     ],
+     "mtp_tau3.649": 3682.4,
+     "mtp_tau4.0": 4036.6
+    },
+    "m2": {
+     "ver_over_ar": 1.8,
+     "dies_rel_to_m1": [
+      1.0,
+      1.08
+     ],
+     "mtp_tau3.649": 4738.8,
+     "mtp_tau4.0": 5194.6
+    },
+    "m3": {
+     "ver_over_ar": 1.62,
+     "dies_rel_to_m1": [
+      1.13,
+      1.33
+     ],
+     "mtp_tau3.649": 5229.8,
+     "mtp_tau4.0": 5732.8
+    },
+    "m6": {
+     "ver_over_ar": 1.43,
+     "dies_rel_to_m1": [
+      1.57,
+      2.06
+     ],
+     "mtp_tau3.649": 5871.9,
+     "mtp_tau4.0": 6436.8
+    },
+    "wavefront_m1_occupancy": {
+     "ver_over_ar": 1.154,
+     "dies_rel_to_m1": [
+      1.0,
+      1.0
+     ],
+     "mtp_tau3.649": 7146.7,
+     "mtp_tau4.0": 7834.1
+    }
+   },
+   "200000": {
+    "m1": {
+     "ver_over_ar": 2.35,
+     "dies_rel_to_m1": [
+      1.0,
+      1.0
+     ],
+     "mtp_tau3.649": 3845.1,
+     "mtp_tau4.0": 4215.0
+    },
+    "m2": {
+     "ver_over_ar": 1.8,
+     "dies_rel_to_m1": [
+      1.0,
+      1.08
+     ],
+     "mtp_tau3.649": 4948.1,
+     "mtp_tau4.0": 5424.1
+    },
+    "m3": {
+     "ver_over_ar": 1.62,
+     "dies_rel_to_m1": [
+      1.13,
+      1.33
+     ],
+     "mtp_tau3.649": 5460.8,
+     "mtp_tau4.0": 5986.1
+    },
+    "m6": {
+     "ver_over_ar": 1.43,
+     "dies_rel_to_m1": [
+      1.57,
+      2.06
+     ],
+     "mtp_tau3.649": 6131.3,
+     "mtp_tau4.0": 6721.1
+    },
+    "wavefront_m1_occupancy": {
+     "ver_over_ar": 1.161,
+     "dies_rel_to_m1": [
+      1.0,
+      1.0
+     ],
+     "mtp_tau3.649": 7422.7,
+     "mtp_tau4.0": 8136.7
+    }
+   }
+  },
+  "basis": "verify/AR from the S58 m sweep (8bb540cd1) applied to scenario C's AR; added stages for m >= 2 ignored (upper bound for m >= 2)."
+ },
+ "hbm_accelerator": {
+  "ar": 3015.2,
+  "mtp_tau3649": 6001.1,
+  "mtp_tau4": 6579.0,
+  "src": "a3ed9c36d:results/uarch/hbm_accelerator_study_20261003/ladder.json compare.ds[1]"
+ }
+}
