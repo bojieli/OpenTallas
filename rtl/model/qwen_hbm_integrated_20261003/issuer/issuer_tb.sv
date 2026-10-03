@@ -47,21 +47,21 @@ module issuer_tb;
   need(issue_ready && backend_go_valid,"legal GO not offered");saved=issue_tuple;edge_step();
   need(busy && !issue_ready,"accepted whole GO not retained");issue_valid=0;
   issue_tuple=0;issue_owner=0; // live request changes must not retag completion.
-  whole_terminal_tuple=saved;whole_terminal_valid=1;#1;need(whole_terminal_ready,"actual whole terminal refused");edge_step();whole_terminal_valid=0;
+  whole_terminal_tuple=saved;whole_terminal_valid=1;#1;need(whole_terminal_ready,"actual whole terminal refused");edge_step();whole_terminal_valid=0;#1;
   repeat(2)begin edge_step();need(busy && !retire_valid && !publish_valid,"terminal alone retired/published");end
-  rf_ack_owner=55'h123;rf_ack_valid=1;#1;need(rf_ack_ready,"actual matching RFcommonACK refused");edge_step();rf_ack_valid=0;
+  rf_ack_owner=55'h123;rf_ack_valid=1;#1;need(rf_ack_ready,"actual matching RFcommonACK refused");edge_step();rf_ack_valid=0;#1;
   need(!publish_valid,"RFACK alone published without fullproducer");
-  producer_result_tuple=saved;producer_result_valid=1;#1;need(producer_result_ready,"fullproducer refused");edge_step();producer_result_valid=0;
+  producer_result_tuple=saved;producer_result_valid=1;#1;need(producer_result_ready,"fullproducer refused");edge_step();producer_result_valid=0;#1;
   need(publish_valid && publish_tuple==saved && publish_owner==55'h123,"publication not saved actual owner");
   repeat(2)begin edge_step();need(publish_valid && busy && !retire_valid,"held publication lost debt");end
   publish_ready=1;edge_step();publish_ready=0;need(!publish_valid && busy && !retire_valid,"publication ignored reverse debt");
-  whole_reverse_tuple=saved;whole_reverse_valid=1;#1;need(whole_reverse_ready,"whole reverse refused");edge_step();whole_reverse_valid=0;
+  whole_reverse_tuple=saved;whole_reverse_valid=1;#1;need(whole_reverse_ready,"whole reverse refused");edge_step();whole_reverse_valid=0;#1;
   need(retire_valid && retire_tuple==saved && retire_owner==55'h123,"matched whole closure not available");
   repeat(2)begin edge_step();need(retire_valid && busy && !issue_ready,"held row retirement forgotten");end
   retire_ready=1;edge_step();retire_ready=0;need(!busy && !fault,"matched row retirement failed");
   issue_tuple=saved;issue_owner=55'h123;issue_valid=1;edge_step();issue_valid=0;
   whole_terminal_tuple=saved^239'h100000;whole_terminal_valid=1;#1;
-  need(!whole_terminal_ready,"wrong whole identity consumed");edge_step();whole_terminal_valid=0;
+  need(!whole_terminal_ready,"wrong whole identity consumed");edge_step();whole_terminal_valid=0;#1;
   need(fault && busy && !publish_valid && !retire_valid && !issue_ready,"wrong whole identity did not retain fault/debt");
   $display("PASS_FULL_ISSUER_ACCEPTED_GO_PUBLICATION_WHOLE_REVERSE_FAULT");$finish;
  end
