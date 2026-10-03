@@ -49,9 +49,11 @@ import w19_sm_real_ops as WS  # noqa: E402
 
 F = np.float32
 RCHUNK = 256
-# W13's SM source list, plus the prefix-adder file ot_hdc_fp32_add_lat.sv now instantiates (rtl_gpu_sm_exact.SMV_SRC
-# predates that dependency; it is left untouched and the list is completed here)
-SMV_SRC = S.SMV_SRC[:-1] + ["rtl/hdc/ot_hdc_prefix.sv", S.SMV_SRC[-1]]
+# W13's SM source list, plus the prefix adders ot_hdc_fp32_add_lat.sv now instantiates (rtl_gpu_sm_exact.SMV_SRC
+# predates that dependency; it is left untouched and the list is completed here).  The adders come from
+# rtl/test/ot_hdc_prefix_sim.sv, the repository's SAT-proved behavioural stand-ins for rtl/hdc/ot_hdc_prefix.sv: with
+# the (* keep *) Kogge-Stone file Icarus did not finish elaborating the SM bench in > 20 CPU-minutes.
+SMV_SRC = S.SMV_SRC[:-1] + ["rtl/test/ot_hdc_prefix_sim.sv", S.SMV_SRC[-1]]
 _EXE, _LOCK = {}, __import__("threading").Lock()
 _KLOCK: dict = {}
 EXE_DIR = os.environ.get("DSHBM_SM_EXE", "/tmp/claude-1000/dshbm/smexe")
