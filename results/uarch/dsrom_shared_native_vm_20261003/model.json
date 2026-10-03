@@ -355,6 +355,23 @@
     "transpose": "retain original output register, make it elastic; no extra capture stage",
     "topk_output_queue": "retained N4/NMAX2048 allows K8192:128*2112bits plus occupancy/pointers. Actual K512 uses8 records; no capacity shrinking."
   },
+  "ID_implementation": {
+    "default_VM_RESPONSE_WAIT": 0,
+    "selected_VM_RESPONSE_WAIT": 1,
+    "FULL_SHAPE": 1,
+    "AW": 30,
+    "NW": 21,
+    "LIST_BITS": 160,
+    "capture_bits": 32,
+    "pending_received_fault_bits": 3,
+    "address_cookie": "actual vi_addr held until matching reply; context low30 at owner bit59",
+    "service_slow_edges_bound_without_external_stall": 10,
+    "single_credit_II": "actual held request + forward2 + native10 + caller matching capture + reverse2 + reissue; no average rate claim",
+    "arithmetic": "retained96bit expert-ID*stride, full descriptor bounds; no address truncation or arithmetic changes",
+    "fault": "wrong-cookie reply remains accepted debt; no HBM publication or unchecked retirement",
+    "current_DSROM_activity": false,
+    "reason": "actual tile W_HBM0 disables this producer; reserved seven-class source binding only"
+  },
   "source_roles": {
     "expert_ID": "tile xi_re belongs to ot_hdc_qstream under W_HBM1; W_HBM0 ties it off. Keep reserved diagnostic endpoint, no unconditional DSROM activity or HBM->ROM performance transfer",
     "vx_query": "actual core e_vx mux shares ME/index/attention; upstream owner stays held through accepted read/reply, four element addresses"
@@ -378,6 +395,8 @@
     "Qwen_HBM": "not adopted; different source ports"
   },
   "source_sha256": {
+    "rtl/model_ready_ds_shared_native_20261003/ot_hdc_qstream_related_ID.sv": "5e5983972aca74f289a7bbca3cf42ea710977fdccfd71858ec0fef8690ade42f",
+    "rtl/hdc/hbm/ot_hdc_qstream.sv": "e222d06c2fabfb86197852ccb63873bb65f5cd73b281971fa743fb3bf183d3ee",
     "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984",
     "results/uarch/dsrom_seven_class_swap_20261003/inputs/native_sram.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
     "rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv": "9a567e896e7fe2b203938c091ebc1b0714cd3cc8fe25c5242141d46786c0a3f8",

@@ -88,3 +88,15 @@ def test_full_retained_collective_reservation_and_visible_contract():
  assert '!write_debt && !vm_write_pending' in p and 'tq_count==0' in p
  assert 'N*TK_NMAX + TKW*LANES-1' in p
  assert 'ELASTIC_PIPE(VISIBLE_COMPLETION)' in p
+
+def test_actual_ID_cookie_and_descriptor_source_selected():
+ c=M.model()['ID_implementation']
+ assert c['LIST_BITS']==160 and c['AW']==30 and c['NW']==21
+ assert c['capture_bits']+c['pending_received_fault_bits']==35
+ assert not c['current_DSROM_activity']
+ source=(ROOT/'rtl/model_ready_ds_shared_native_20261003/ot_hdc_qstream_related_ID.sv').read_text()
+ assert 'parameter integer VM_RESPONSE_WAIT=0' in source
+ assert 'else if(vi_re&&vi_req_ready)' in source
+ assert 'vi_reply_cookie!=vi_addr' in source
+ assert 'VM_RESPONSE_WAIT ? vi_capture : vi_q' in source
+ assert "96'(e_istride)" in source

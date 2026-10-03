@@ -71,5 +71,11 @@
     "terminal": "PASS DMA_GATHER_NATIVE words=266 writes=1064 reads=266 visible_retirement=1 held=5933\nFATAL: /srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r2/sources/0_tb_coll_parent.sv:95: full retainedK8192 queue not reserved count0\n       Time: 56757000  Scope: tb\n",
     "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit",
     "source_commit": "5ebf6cd569f98bd67bdd96dedf829f05dd5f456f"
+  },
+  "ds-collective-epyc-r3": {
+    "archive": "ds-collective-epyc-r3.tgz",
+    "sha256": "531ac71e313b26ac35279aba21b1d91246c7d2f0081ce7700b74315f7e5f2559",
+    "terminal": "[48675000] %Fatal: 0_tb_coll_parent.sv:90: Assertion failed in tb: gather counts read266 sent266 writes1064\n%Error: /srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r3/sources/0_tb_coll_parent.sv:90: Verilog $stop\nAborting...\n",
+    "scope": "causal native gather counts exact; fixture did not force output stall, rejected before full topk. No full collective PASS."
   }
 }

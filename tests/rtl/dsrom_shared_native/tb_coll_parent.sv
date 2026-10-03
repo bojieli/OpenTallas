@@ -85,7 +85,8 @@ module tb;
   repeat(5)@(negedge slow_clk);cold_n=1;fast_rst_n=1;slow_rst_n=1;
   // Pad initialization to a full four-word packet; caller still reads exact266 words.
   init_words(SRC,268,0);
-  @(negedge fast_clk);go=1;@(negedge fast_clk);go=0;started=1;
+  @(negedge fast_clk);go=1;@(negedge fast_clk);go=0;started=1;allow_write=0;
+  wait(holds>0);repeat(8)@(negedge fast_clk);allow_write=1;
   wait(!busy);@(negedge fast_clk);started=0;
   if(reads!=266||sent!=266||writes!=1064||wi!=1064||wo!=266||holds==0)$fatal(1,"gather counts read%0d sent%0d writes%0d",reads,sent,writes);
   wait(debt==0);$display("PASS DMA_GATHER_NATIVE words=266 writes=1064 reads=266 visible_retirement=1 held=%0d",holds);
