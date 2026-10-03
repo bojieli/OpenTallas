@@ -39,6 +39,11 @@ class TestTrace(unittest.TestCase):
     def test_terminal_duplicate(self):
         with self.assertRaises(ValueError):self.replay(self.rows+[self.marker])
     def test_field_truncated(self):
-        with self.assertRaises(ValueError):self.replay([r.replace('fe123456','00123456') for r in self.rows])
+        r=[]
+        for row in self.rows:
+            left,value=row.rsplit('identity=',1)
+            # Clear the high original-tag byte within the packed55bit wire.
+            r.append(left+'identity='+format(int(value,16)&~(0xff<<37),'014x'))
+        with self.assertRaises(ValueError):self.replay(r)
 
 if __name__=='__main__':unittest.main()
