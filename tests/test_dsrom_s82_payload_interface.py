@@ -107,5 +107,24 @@ class PayloadTest(unittest.TestCase):
                 if d.get('dtype')=='BF16':expected<<=16
                 self.assertEqual((w>>a['bit_range'][0])&0xffffffff,expected)
                 self.assertEqual(w>>256,0)
+    def test_actual_die_macro_to_payload_inventory_join(self):
+        providers=json.loads((ROOT/(E.BASE+'baseline_s82_mapping_r1/providers.json')).read_text())
+        for p in providers:
+            cursor=0;p['physical_owner_rank']=0
+            for d in p['declarations']:
+                if p['kind']=='HE':d['native_bank_word_base']=cursor;cursor+=d['rows']*((d['K']+63)//64)
+                else:d['native_FP32_element_base']=cursor;cursor+=d['elements']
+        aux=json.loads((BASE/'auxiliary_map.json').read_text())['tensors']
+        m=self.matrices[0];a=M.physical_address(m,0,0,0)
+        die=P.DieROM(m['stage'],0,self.matrices,providers,aux)
+        self.assertEqual(die.read(self.source,a['physical_macro'],a['physical_row']),P.matrix_word(m,self.source,0,a['physical_macro'],a['physical_row']))
+        provider=next(p for p in providers if p['stage']==m['stage'])
+        macro=4*provider['pairs'][0]
+        self.assertEqual(die.read(self.source,macro,0),P.provider_word(provider,self.source,macro,0))
+        t=aux[0];a=P.auxiliary_address(t,0)
+        die=P.DieROM(a['stage'],a['rank'],self.matrices,providers,aux)
+        self.assertEqual(die.read(self.source,a['macro'],a['row']),P.auxiliary_word(aux,self.source,a['stage'],a['rank'],a['macro'],a['row']))
+        self.assertEqual(die.inventory()['physical_weight_macros'],9552)
+        with self.assertRaises(ValueError):die.read(self.source,9552,0)
 
 if __name__=='__main__':unittest.main()

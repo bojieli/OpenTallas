@@ -6300,9 +6300,16 @@ def w10_pinaccess_contract_review(inputs):
         source_sha256=inputs["sources_sha256"])
 
 
+def dsrom_s82_rows():
+    """Opt-in retained-RD64 conditional composition; defaults are unchanged."""
+    from dsrom_s82_token_pricing import build
+    return build(ROOT)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
     ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
     ap.add_argument("--w10-baseline", action="store_true", help="audit existing FAST/PP/BP baseline only")
@@ -6321,6 +6328,13 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.dsrom_s82:
+        payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.w10_pinaccess_contract:
         payload = json.dumps(w10_pinaccess_contract_review(json.loads(Path(a.w10_pinaccess_contract).read_text())), indent=2) + "\n"
         if a.out:

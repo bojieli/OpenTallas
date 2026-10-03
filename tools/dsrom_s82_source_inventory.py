@@ -17,8 +17,9 @@ FILES = ['tools/dsrom_s73_pair1.py', 'tools/dsrom_s73_pair1_records.py'] + [
         'stage_map.json', 'auxiliary_map.json', 'shipped_weight_directory.jsonl.gz',
         'physical_contract.json', 'uarch_contract.json', 'return_baseline.json',
         'indexer_multicast_model.json', 'weight_conservation.json',
-        'matrix_coordinate_coverage.json', 'inputs/W1_RD4_rejection.json', 'inputs/W3.json', 'inputs/W4.json')
-] + [BASE + 'baseline_s82_mapping_r1/providers.json']
+        'inputs/W1_RD4_rejection.json', 'inputs/W3.json', 'inputs/W4.json')
+] + [BASE + 'baseline_s82_mapping_r1/mapping_verdict.json',
+     BASE + 'baseline_s82_mapping_r1/providers.json']
 
 def export(out):
     out.mkdir(parents=True, exist_ok=False)
