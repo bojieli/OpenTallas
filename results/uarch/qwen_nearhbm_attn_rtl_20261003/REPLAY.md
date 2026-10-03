@@ -6,7 +6,7 @@ This directory holds the evidence for the near-HBM attention unit. The design is
 |---|---|---|
 | 1. partitioned scheme == golden (Python) | `partition_exactness.json` | PASS, 400 cases (ctx 1..8192, 6 stimulus kinds); negative controls are caught |
 | exact BF16 x E4M3 product unit | `prod_exhaustive.json` | PASS on all 2^24 operand pairs |
-| 3. RTL 4 stacks + hub vs golden, head_dim 128 | `gate_hd128_r1_dpi.json` | PASS, 20/20 cases bit-exact (1,024 outputs each), including 5 at ctx 8191/8192 |
+| 3. RTL 4 stacks + hub vs golden, head_dim 128 | `gate_hd128_r{1,6,8}_dpi.json` | PASS, 20/20 cases bit-exact (1,024 outputs each) at R = 1, 6 (the full instance, 3,072 lanes per stack) and 8 row engines per stack, including 5 cases at ctx 8191/8192 |
 | real arithmetic RTL == host-float stand-ins | `real_vs_dpi_hd16.json` | PASS: identical outputs and cycle marks |
 | 4. SS 1.2 GHz pre-layout unit screens | `ss_screens.json` | see the table below |
 
@@ -46,6 +46,24 @@ rtl/test/nearhbm/build_nearhbm_tb.sh /tmp/nhb/r16r1 16 1 real; rtl/test/nearhbm/
 The head_dim-128 bench uses host-float stand-ins (`rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv` and the repo's `sim_hdc_v41x_fastfp_dpi.sv`) for the binary32 adder and multiplier. The real units' Kogge-Stone networks make Verilator emit about 1 MB of C++ per instance, and this bench has about 13,000 instances. The precedent is `rtl/test/sim_hdc_v41x_fastfp_dpi.sv`.
 
 The exact product unit and every composition, control path and order run as RTL. At head_dim 16 the real-unit bench and the stand-in bench give identical results.
+
+## Cycles per layer at ctx 8192 vs the model's 1,700-cycle budget
+
+Measured on the full instance at R = 6. The HBM model is 750 B a cycle per stack (0.9 TB/s) with 16 cycles of latency. The links are 45 stages each way.
+
+| phase | budget | R = 6 (3,072 lanes per stack) | R = 8 (4,096 lanes per stack) |
+|---|---|---|---|
+| q in (K rows prefetch during it) | 85 | 78 | 78 |
+| K stream | 700 | 746 | 739 |
+| K to V gap (max exchange + exp lead not hidden) | 0 | 30 | 22 |
+| V stream | 700 | 902 | 789 |
+| drain (last V row to the last stack's P.V partial) | 76 | 94 | 102 |
+| return + hub | 139 | 98 | 98 |
+| **layer total** | **1,700** | **1,872 (+10.1%)** | **1,752 (+3.1%)** |
+
+The V excess at R = 6 is structural. The golden's P.V chunk is a sequential chain of 16 positions, and 256 chains per stack are spread over 6 x 8 loop slots. The floor is therefore 6 chains a slot, which is 768 cycles against the HBM's 699. Each residue group's 8 leaves also hold their slots for one 8-cycle turn while their final value leaves the 12-cycle product-plus-adder loop.
+
+R = 8 makes the V pass HBM-bound. At 0.9 GHz, 8 engines match the HBM rate.
 
 ## Unit closure at SS 1.2 GHz (pre-layout screen, 60 ps; `ss_screens.json`)
 
