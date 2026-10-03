@@ -1,0 +1,33 @@
+{
+  "Arch_input": "Exact fixed graph supplied. Still need driver/master/Y or inlet literal pin for each raw root and selector/hook CLK; bounded arrival/slew/relativephase; reset source and named sink/master map; shared layer/via/PG occupancy and supply current source. Commonprefix excludes originalupper cells and hook/identity already.",
+  "Hubble_input": "CurrentPHW10 compiledword/program/user/gen/origin enrollment and actual accepted F/SUread/R+2 callbacks. Does not block constructing an existing raw clockroute; required for actual absolute latency/C/adoption.",
+  "Nash_input": "Actual named selector698354/common1483+46+2 ASR CLK/RESETN hierarchy/master/load ownership and retirement169-context F/credit/packet ports; do not substitute anonymousFF counts.",
+  "all_nodes": 68614,
+  "cold_files_byteidentical": 3,
+  "fixed_counts": [
+    38383,
+    30231
+  ],
+  "legal_sites": [
+    167687,
+    134252
+  ],
+  "minimum_common_firstnodes_with_padding": [
+    106,
+    70
+  ],
+  "no_locked_first_hop": true,
+  "no_random_sweep": true,
+  "physical_build_admitted": false,
+  "planned_unit": "dsrom-global-clock-constraints-20261003-r1.service",
+  "possible_independent_preparation": "Pinned root/contact/BUF/PG tech binding and existing-cone SSFF scripts/netlists can be prepared. No P&R or hardware experiment until its complete constraint/endpoint gate passes.",
+  "post_SAT_required": "Independent all-node/actual-contact edge audit then actual native upper-stack PG/OBS/contact/stub/coupling routes, parent clock/reset waveform bound and loadedSSFF. GeometricSAT alone never admits P&R.",
+  "previous_partial_firsthop_commit": "53dfdf1c9d2bdc4d6a88a24fd785529b1ffad75d",
+  "replay": "python3 tools/dsrom_capture_global_clock_constraints.py --out /tmp/FRESH-global-clock-problem",
+  "search": "python3 tools/dsrom_capture_global_clock_constraints.py --solve results/uarch/dsrom_capture_global_clock_constraints_20261003 --out /tmp/FRESH-global-clock-search",
+  "search_output": "/tmp/dsrom-global-clock-constraints-20261003-r1",
+  "solver": "installedZ3; one simultaneous source-contact/site/child-contact placement, owner-array injectivity instead of quadratic pairwise expansion",
+  "source_failed_commit": "cb6949b2effdfc6db953070c6685ad824e33a5c1",
+  "source_pin_purpose": "Immutable source for the authorized single software search; no hardware source change or launch.",
+  "tests": 22
+}
