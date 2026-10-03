@@ -1,0 +1,119 @@
+{
+  "SETN_tie_allowance": {
+    "FF_SETN_cap_fF": 1.16446,
+    "FF_SETN_sinks": 112608,
+    "TIEHI_body_um2": 0.04374,
+    "conservative_TIEHI_per_FF": 112608,
+    "gross50pct_mm2": 0.00985094784,
+    "scope": "Allowance, not fundamental minimum. Actual shared static tie provider fanout/sites/vias must be source-mapped; no silent zero-cost SETN.",
+    "source_counted": false
+  },
+  "admission": {
+    "context_build": false,
+    "physical": false,
+    "scalar_RTL": false,
+    "source_inventory_price_review": true,
+    "whole_MTP": false
+  },
+  "clock": {
+    "FF_hold_ps": 25,
+    "FF_unbuffered_CLK_fF": 56658.940416000005,
+    "FF_unbuffered_RESETN_fF": 90413.976672,
+    "GHz": 0.9,
+    "SS_setup_ps": 60,
+    "SS_unbuffered_CLK_fF": 48869.845056,
+    "candidate_extra_BUF_count": 6641,
+    "candidate_extra_gross50pct_mm2": 0.0013555609199999998,
+    "clock8_FF_leaf_wire_cap_budget_fF": 1.7347839999999994,
+    "clock8_pin_only_tree": [
+      14076,
+      1760,
+      220,
+      28,
+      4,
+      1
+    ],
+    "reset7_FF_leaf_wire_cap_budget_fF": 0.13963699999999957,
+    "reset7_pin_only_tree": [
+      16087,
+      2011,
+      252,
+      32,
+      4,
+      1
+    ],
+    "scope": "Load/site construction candidate, not qualified clock/reset tree. Native leaf wire/via load and upper relays must fit each named branch, no equal-depth/skew credit. Counts cannot certify25ps.",
+    "sinks": 112608,
+    "six_FF_reset_leaf_wire_cap_budget_fF": 0.9425460000000001,
+    "six_reset_leaf_candidate": [
+      18768,
+      4692,
+      1173,
+      294,
+      74,
+      19,
+      5,
+      2,
+      1
+    ],
+    "upper_four_BUF_pin_wire_cap_budget_fF": 3.432136
+  },
+  "independent_body_um2": 651089.83086,
+  "independent_gross50pct_mm2": 1.3021796617199999,
+  "interfaces": {
+    "distinct_source_signal_count": 384,
+    "origin_and_leaf_clock": "0.9GHz prospective, actual XU/ME arrival domains not installed. Cross-domain ports need priced CDC, no singleclock proof transfer.",
+    "producer_origin_cuts": [
+      52,
+      52
+    ],
+    "signal_only_48nm_width_floor_um": 18.432000000000002
+  },
+  "named_origin_cost_already_inside_source": {
+    "FF_sinks": 144,
+    "codewords": 2,
+    "encoder_decoder_pairs": 2,
+    "raw_bits": 108,
+    "separate_clock_or_area_addition": false
+  },
+  "next_source_actions": {
+    "Archimedes": "Native reset leaf and root wire/via/site construction and actual loaded encode/compare/decode cut qualification.",
+    "Maxwell": "Select one disjoint current core/shard home and compose existing role replacement, clock/reset/PG/escape; no free co-resident space.",
+    "Russell": "Provide full source-selected scalar record/cut adapter and actual origin command enrollment. No scalar source build duplicate here."
+  },
+  "one_home_request": {
+    "available_area_credit": 0,
+    "fullfleet_replica_count_enrolled": false,
+    "included_gross50pct_floor_mm2": 1.3133861704799998,
+    "local_height_um": 1282.77,
+    "local_rectangle_mm2": 1.31355904554,
+    "local_width_um": 1024.002,
+    "name": "DS_FULLK512_PROTECTED_SCALAR_ORIGIN_PER_CORE",
+    "owner": "Maxwell selected serial-spine containment",
+    "replicas_per_enrolled_core": 1,
+    "rule": "One disjoint named home must replace exact matched oldscalar roles and debit native reset/clock/wires/PG once; HUB_SU_VECTOR coarse bbox is not free space. No leafaccept128x191.7 substitution.",
+    "selected_global_xy": null,
+    "selected_parent_instance": null
+  },
+  "schema": "DS_FULLK512_PROTECTED_SCALAR_ORIGIN_PHYSICAL_REPLY_R1",
+  "scope": "One fullK512/IW21/ORDER1 scalar+two protected origins per actual enrolled core, not accept leaf and not free PAR2 replication",
+  "source_SHA": "594fee25fd9b5ba5a29e99b2b14c381841dd44d8",
+  "source_cells": {
+    "BUFx4_ASAP7_75t_R": 324905,
+    "DFFASRHQNx1_ASAP7_75t_R": 112608,
+    "INVx1_ASAP7_75t_R": 1797076,
+    "NAND2x1_ASAP7_75t_R": 5677166
+  },
+  "source_model_sha256": "2c9fa60538ba931b28d61fdf02d7c99338c5d8766531213cbab36da880c4cce8",
+  "timing": {
+    "VM_protected_return_functional_candidate_edges": 8,
+    "VM_raw_return_edges": 4,
+    "decode_compare_encode_feedback_SSFF_measured": false,
+    "logical_tick_II1_admitted": false,
+    "no_added_cut_assumption": true,
+    "reason": "Source coded feedback adds full64/72 decode+originalFP32/insertion compare+encode. Existing rawscalar and ROMchecker timings cannot transfer. Loaded source cone must select cuts and update held VM reservations/score feedback schedule.",
+    "source_emission_bank_edges": 512,
+    "source_tail_edges": 1026,
+    "two_pending_VM_reads_not_sufficient_for_unstallable_fixed_source": "Whole bank/controller freeze and request/return reservation must use actual held VM service; source fixed-latency pulse cannot be connected directly."
+  }
+}

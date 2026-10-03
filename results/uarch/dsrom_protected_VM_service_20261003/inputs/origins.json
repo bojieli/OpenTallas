@@ -1,0 +1,68 @@
+[
+  {
+    "copy": "w6_codec.sv",
+    "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+    "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/w6_codec.sv",
+    "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+  },
+  {
+    "copy": "codec_model.py",
+    "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+    "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/codec_model.py",
+    "sha256": "64e561298a7970012db2750452a5ef0cc19236c9d467d7e5348800d404545350"
+  },
+  {
+    "copy": "cell_prices.json",
+    "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+    "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/cell_prices.json",
+    "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+  },
+  {
+    "copy": "SRAM.json",
+    "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+    "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/SRAM.json",
+    "sha256": "4749acc7f92350b8d1ec05baebec1a0f75de1bbc0cb8dee29eb63b5cd382eec3"
+  },
+  {
+    "copy": "callbacks.json",
+    "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+    "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/callback_contract.json",
+    "sha256": "96855ce9f120d538ceaf9183542a8ab4d8116ce6b457f46a1c76efa76eddaf6b"
+  },
+  {
+    "copy": "native_sram.v",
+    "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+    "path": "results/uarch/dsrom_native_masked_backend_r2_20261003/inputs/native_sram.v",
+    "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+  },
+  {
+    "copy": "raw_backend_r2.sv",
+    "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+    "path": "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv",
+    "sha256": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984"
+  },
+  {
+    "copy": "scalar_model.json",
+    "git": "594fee25fd9b5ba5a29e99b2b14c381841dd44d8",
+    "path": "results/uarch/ds_mtp_protected_scalar_origin_20261003/model.json",
+    "sha256": "2c9fa60538ba931b28d61fdf02d7c99338c5d8766531213cbab36da880c4cce8"
+  },
+  {
+    "copy": "services.json",
+    "git": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+    "path": "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/services.json",
+    "sha256": "239d49564e9dc0aa3e98ca95c80cb5ca8d3a8963816ab7caf235614bd6f01975"
+  },
+  {
+    "copy": "ratio_fifo.sv",
+    "git": "27d86cfe4b8f87dab020886b70f4d75f89a819e6",
+    "path": "rtl/common/ot_ratio_cdc_fifo.sv",
+    "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+  },
+  {
+    "copy": "prior_parent_graph.json",
+    "git": "9ffc7a30c13af94c9dc2f4c69b9fc1c276dd9cdc",
+    "path": "results/uarch/dsrom_split_domain_parent_20261003/model.json",
+    "sha256": "3cdef28378588029dbf83d2cc44bc383df1f1fc5949b95755504a1e50ed3ec10"
+  }
+]

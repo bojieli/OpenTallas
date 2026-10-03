@@ -1,0 +1,337 @@
+{
+  "ASR_body_floor_mm2": 0.0024564384,
+  "CDC_parent_swap": {
+    "4_over_3_slow_port_widening": false,
+    "FIFO_control_protection_installed": false,
+    "FIFO_encoded_data_plus_raw_control_FF": 31182,
+    "FIFO_instances": 3,
+    "FIFO_unprotected_control_bits_each": 26,
+    "channel_signal_floor_bits": 3888,
+    "channel_signal_only_48nm_width_um": 186.624,
+    "classes_scope": "This reply models only protected nativeVM service request/response and links prior fullparent graph as separate unadopted scope. Not fullDS7classes orQwen53kbit parent closure.",
+    "current_physical_G0": false,
+    "forward_W6_coded_bits": 936,
+    "latency_scope": "Related phase no-stall bounds F2S5..8VCOticks andS2F4..6 from actual source; total roundtrip9..14ticks=2.5..3.8889ns before endpoint guard/protection/cuts/stalls. Not actual loaded-parent timing.",
+    "loaded_actual_parent_sources_and_receivers_bound": false,
+    "one_service_owner_credit": 1,
+    "prospective_forward_raw_bits": 773,
+    "prospective_reverse_raw_bits": 2343,
+    "rate_policy": "Keep actual port widths; fast source requests must honor finite ready/one-owner credit. No continuous1.2G stream consumed at0.9G without stalls.",
+    "receipt_rule": "ThirdF2S receipt plane transports full228owner+6positivefencebits+kind2+taken1. Sending checkedresponse toFIFO is not serviceconsumer receipt or bank reuse; pendingowner stays until matching reverse event. Fault quarantine never clears onFIFOflush.",
+    "replicas_per_selected_VM_service": 1,
+    "reset": "LocalFIFO DOWNWAIT flush/empty cannot clear pending owner. Stop admission, hold/quarantine accepted owner, require service visible/consumer/reverse/allcopies positive receipts before era rearm.",
+    "reverse_W6_coded_bits": 2664,
+    "reverse_consumer_receipt_W6_bits": 288,
+    "reverse_consumer_receipt_raw_bits": 237,
+    "shared_FIFO_parameters": {
+      "DEPTH": 4,
+      "HOLD": 2
+    },
+    "source": "27d86cfe4b8f87dab020886b70f4d75f89a819e6"
+  },
+  "MACs_per_cycle": 0,
+  "admission": {
+    "SSFF": false,
+    "connected_protected_VM_build": false,
+    "finite_reference_model": true,
+    "physical": false,
+    "protected_parent_engine_RTL": false,
+    "sidecar_component_source_preparation": true,
+    "whole_token": false
+  },
+  "calendar": {
+    "INIT": {
+      "capture": 0,
+      "checked_compare": 11,
+      "data_and_parity_visible": 4,
+      "guard_encode": 1,
+      "publication": 12,
+      "raw_ack": 5,
+      "verify_issue": 6,
+      "verify_return": 10,
+      "write_issue": 2
+    },
+    "READ4": {
+      "capture": 0,
+      "checked_decode": 7,
+      "guard": 1,
+      "publication": 8,
+      "read_issue": 2,
+      "read_return": 6
+    },
+    "WRITE_FULL": {
+      "capture": 0,
+      "checked_compare": 11,
+      "data_and_parity_visible": 4,
+      "guard_encode": 1,
+      "publication": 12,
+      "raw_ack": 5,
+      "verify_issue": 6,
+      "verify_return": 10,
+      "write_issue": 2
+    },
+    "WRITE_MASKED": {
+      "capture": 0,
+      "checked_compare": 18,
+      "data_and_parity_visible": 11,
+      "guard": 1,
+      "merge_encode": 8,
+      "old_check": 7,
+      "old_read_issue": 2,
+      "old_read_return": 6,
+      "publication": 19,
+      "raw_ack": 12,
+      "verify_issue": 13,
+      "verify_return": 17,
+      "write_issue": 9
+    }
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "clock_load": {
+    "FF_CLK_fF": 3260.4249600000003,
+    "FF_RESETN_fF": 5202.85032,
+    "SS_CLK_fF": 2812.20336,
+    "service_ASR_sinks": 6480,
+    "sidecar_macro_FF_CLK_fF": 331.9424,
+    "sidecar_macro_SS_CLK_fF": 277.88032
+  },
+  "codec_body_mm2": 0.00923228928,
+  "codec_gate_construction": {
+    "INVx1_ASAP7_75t_R": 24320,
+    "NAND2x1_ASAP7_75t_R": 93376
+  },
+  "codec_replicas": {
+    "decoder": 32,
+    "encoder": 32,
+    "sharing": "Serialized whole-bank write uses8 of32 encoders; full checked read/held output uses32. No32perwritebank multiplication."
+  },
+  "four_targets": {
+    "DS_HBM": "Mutable protection methodology; no DSROM bank layout transfer",
+    "DS_ROM": "Selected raw backend candidate finite service only",
+    "Qwen_HBM": "GPU SRAM protection separate; no DSROM topology credit",
+    "Qwen_ROM": "No source instance or service capacity credit"
+  },
+  "global_solver_unchanged": true,
+  "latency": {
+    "all_VM_full_initialization_min_edges": 425984,
+    "clock_GHz": 0.9,
+    "fullwrite_checked_publication_edges": 12,
+    "fullwrite_min_II": 13,
+    "held_wait_charge": "actual H edges added to each transaction; no assumed perfect service or capped timeout",
+    "masked_write_checked_publication_edges": 19,
+    "maskedwrite_min_II": 20,
+    "per_user_composition": "Sum actual source-selected READ4/WRITE_FULL/WRITE_MASKED counts times service II plus actual waits/CDC. Whole-token counts belong to system-stream peer, not invented here.",
+    "read_min_II": 9,
+    "read_min_edges": 8,
+    "source_model_only": "Functional stage placement, not loaded SSFF timing guarantee. Any additional codec/control cut changes calendar/state/II before engine adoption."
+  },
+  "no_PVE2_PVE3_jobs": true,
+  "no_new_jobs": true,
+  "port_bandwidth": {
+    "native_data_read_bits": 2048,
+    "native_data_read_bytes": 256,
+    "native_data_write_bits_max": 512,
+    "native_data_write_bytes_max": 64,
+    "raw_owner_bits": 228,
+    "sidecar_checked_bits_selected": 256,
+    "sidecar_enabled_write_bits": 64,
+    "sidecar_read_bits_physical": 512,
+    "sidecar_write_bits_physical": 128
+  },
+  "protected_service_state_bits": 6480,
+  "routing": {
+    "48nm_signal_only_width_floor_um": 15.36,
+    "PG_OBS_via_clock_exclusion_capacity": "Not bound; selected full288macro union required. No borrowed HUB_VM/co-resident space.",
+    "new_boundary_bits_lower_bound": 320,
+    "new_data_checks_boundary_bits": 320
+  },
+  "schema": "DS_PROTECTED_VM_FINITE_SERVICE_R1",
+  "service": {
+    "bank_issue_policy": "One write word total, selected actual bank; reads one aligned consecutive4word command. No simultaneous transactions; no free1520 ports or4write grants.",
+    "consumer_stall": "Arbitrary held response wait consumes the sole credit. No finite liveness bound without actual consumer guarantee; memory completion independent of ready.",
+    "fault": "UE/postwrite mismatch quarantines full owner. Normal write/read receipt forbidden. Positive owner recovery/reset fence separately required, no local empty inference.",
+    "held_response_seats": 1,
+    "initialization": "Explicit in-order full-word writes, checked readback before advancing prefix. Uninitialized reads/partial writes refuse. No constructor zero. No invented golden checkpoint payload.",
+    "initialized_prefix_words": 32768,
+    "producer_stall": "req_ready false during service/held response/fault/reset; cannot lose accepted request.",
+    "transaction_seats": 1
+  },
+  "sidecar": {
+    "actual_address": "bank=word&3,pair=word>>12,row=(word>>2)&511,half=(word>>11)&1",
+    "bit_layout": "8 check bits/64data stripe, positions1,2,4,8,16,32,64,72; 8stripes/512word;64checks/half.",
+    "macros": 32,
+    "mask": "Only selected64-bit half written. Paired group otherhalf preserved.",
+    "native_macro": "ot_sram_1r1w_512x128_m4_r2c2",
+    "ports_per_macro": "1R1W; group halves share ports. Serialized service eliminates simultaneous conflicting half requests; not two independent ports.",
+    "sidecar_body_mm2": 0.1654608384,
+    "total_data_and_sidecar_body_mm2": 1.4891475456
+  },
+  "sidecar_component": {
+    "ASR_body_floor_mm2": 0.0014101776,
+    "FF_macro_CLK_fF": 331.9424,
+    "R_pipe_records": 5,
+    "SS_macro_CLK_fF": 277.88032,
+    "W_pipe_records": 4,
+    "checks_capture_state_bits": 768,
+    "codec_decoder_count": 41,
+    "codec_encoder_count": 10,
+    "codec_extra_encoder_allowance": 31,
+    "codec_unmapped_conservative_41_fullpair_body_mm2": 0.011828870640000001,
+    "command_record_R_bits": 288,
+    "command_record_W_bits": 360,
+    "fault_record_bits": 72,
+    "functional_component_build_allowed_after_source_freeze": true,
+    "latency": {
+      "parity_write_visible": 2,
+      "raw_parity_read": 4,
+      "tagged_parity_ACK": 3
+    },
+    "native_source_prepared_path": "rtl/model_ready_ds_vm_sidecar_20261003/ot_ds_vm_check_sidecar.sv",
+    "physical_admission": false,
+    "source_guard_and_readmux_body_um2": 670.84038,
+    "source_guard_and_readmux_gate_construction": {
+      "INVx1_ASAP7_75t_R": 1123,
+      "NAND2x1_ASAP7_75t_R": 7107
+    },
+    "source_prep_allowed": true,
+    "total_FF_bits": 3720
+  },
+  "source_control_gap": {
+    "actual_raw_backend_address_and_selector_protection_installed": false,
+    "conservative_full_codec_body_mm2": 0.46074893688000007,
+    "packing_rule": "Salt/selector64 bits per group all update on same edge; same-stage root control vector grouped, never pack across pipeline ages. Codecs/decoded fanout need actual source mapping, no synthesized sharing credit.",
+    "prospective_codec_encoder_decoder_pairs": 1597,
+    "prospective_protected_bits": 114984,
+    "prospective_protected_codewords": 1597,
+    "raw_register_inventory": {
+      "64_group_local_write_data_mask_row_enable_and_masked_read": {
+        "codewords": 1216,
+        "raw_bits": 67200
+      },
+      "64_group_salt_selector_same_edge_64bit_records": {
+        "codewords": 64,
+        "raw_bits": 4096
+      },
+      "bank_partial_reduction": {
+        "codewords": 128,
+        "raw_bits": 8192
+      },
+      "four_bank_command_data_masks": {
+        "codewords": 52,
+        "raw_bits": 2216
+      },
+      "read_owner_5_records": {
+        "codewords": 20,
+        "raw_bits": 1140
+      },
+      "root_pipeline_and_output": {
+        "codewords": 37,
+        "raw_bits": 2082
+      },
+      "write_ACK_16_owner_address_mask_valid_records": {
+        "codewords": 80,
+        "raw_bits": 4160
+      }
+    },
+    "raw_state_bits": 89086,
+    "reason": "r2 has unprotected address/group/row/selector/command tags. External data check alone cannot prove every wrong-address/control fault is detected; these exact mutable control registrations require protection adapter or source-selected replacement. No complete protected-provider claim.",
+    "replacement_FF_delta_bits": 25898
+  },
+  "source_interfaces": {
+    "owner_layout": "context169 +resetera32 +batch16 +requestID11=228; source readframe1520 requires11 bits, previous227 write-only tag10 must not truncate. r2 instantiatedTAG_W228; +21raw tagpipelineFF/+10interfacepins, unchanged W6wordcounts.",
+    "raw_backend": "Reviewed r2 N+2 data visible/N+3 rawACK/N+4 rawread",
+    "req": "valid/ready +kind2 +word15 +data512 +mask16 +owner228",
+    "rsp": "held valid/ready +kind2 +status2 +word15 +checkeddata2048 +mask16 +corrected32 +owner228; faults cannot normalretire",
+    "system_peer": "Publish credit only after matching held checked response; read-old/source NBA frame order and12writer guards remain peer parent responsibilities."
+  },
+  "source_pins": [
+    {
+      "copy": "w6_codec.sv",
+      "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+      "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/w6_codec.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+    },
+    {
+      "copy": "codec_model.py",
+      "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+      "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/codec_model.py",
+      "sha256": "64e561298a7970012db2750452a5ef0cc19236c9d467d7e5348800d404545350"
+    },
+    {
+      "copy": "cell_prices.json",
+      "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+      "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/cell_prices.json",
+      "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+    },
+    {
+      "copy": "SRAM.json",
+      "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+      "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/SRAM.json",
+      "sha256": "4749acc7f92350b8d1ec05baebec1a0f75de1bbc0cb8dee29eb63b5cd382eec3"
+    },
+    {
+      "copy": "callbacks.json",
+      "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+      "path": "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/callback_contract.json",
+      "sha256": "96855ce9f120d538ceaf9183542a8ab4d8116ce6b457f46a1c76efa76eddaf6b"
+    },
+    {
+      "copy": "native_sram.v",
+      "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+      "path": "results/uarch/dsrom_native_masked_backend_r2_20261003/inputs/native_sram.v",
+      "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+    },
+    {
+      "copy": "raw_backend_r2.sv",
+      "git": "e910546f7258604be491ac83e32f73ba1d272ad9",
+      "path": "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv",
+      "sha256": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984"
+    },
+    {
+      "copy": "scalar_model.json",
+      "git": "594fee25fd9b5ba5a29e99b2b14c381841dd44d8",
+      "path": "results/uarch/ds_mtp_protected_scalar_origin_20261003/model.json",
+      "sha256": "2c9fa60538ba931b28d61fdf02d7c99338c5d8766531213cbab36da880c4cce8"
+    },
+    {
+      "copy": "services.json",
+      "git": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+      "path": "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/services.json",
+      "sha256": "239d49564e9dc0aa3e98ca95c80cb5ca8d3a8963816ab7caf235614bd6f01975"
+    },
+    {
+      "copy": "ratio_fifo.sv",
+      "git": "27d86cfe4b8f87dab020886b70f4d75f89a819e6",
+      "path": "rtl/common/ot_ratio_cdc_fifo.sv",
+      "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+    },
+    {
+      "copy": "prior_parent_graph.json",
+      "git": "9ffc7a30c13af94c9dc2f4c69b9fc1c276dd9cdc",
+      "path": "results/uarch/dsrom_split_domain_parent_20261003/model.json",
+      "sha256": "3cdef28378588029dbf83d2cc44bc383df1f1fc5949b95755504a1e50ed3ec10"
+    }
+  ],
+  "state_records": {
+    "raw_checked_capture_metadata": {
+      "bits": 2664,
+      "codewords": 5,
+      "raw_bits": 310
+    },
+    "request": {
+      "bits": 936,
+      "codewords": 13,
+      "raw_bits": 774
+    },
+    "response_metadata": {
+      "bits": 2736,
+      "codewords": 6,
+      "raw_bits": 326
+    },
+    "state_init_era_phase_debt": {
+      "bits": 144,
+      "codewords": 2,
+      "raw_bits": 73
+    }
+  }
+}

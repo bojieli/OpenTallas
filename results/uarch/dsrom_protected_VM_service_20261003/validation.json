@@ -1,0 +1,33 @@
+{
+  "artifact_hashes": {
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/SRAM.json": "4749acc7f92350b8d1ec05baebec1a0f75de1bbc0cb8dee29eb63b5cd382eec3",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/callbacks.json": "96855ce9f120d538ceaf9183542a8ab4d8116ce6b457f46a1c76efa76eddaf6b",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/cell_prices.json": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/codec_model.py": "64e561298a7970012db2750452a5ef0cc19236c9d467d7e5348800d404545350",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/native_sram.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/origins.json": "bfdcc1f14f827b676f6e09f259641824caad2e9da0135ec0ffde71703c596683",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/prior_parent_graph.json": "3cdef28378588029dbf83d2cc44bc383df1f1fc5949b95755504a1e50ed3ec10",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/ratio_fifo.sv": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/raw_backend_r2.sv": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/scalar_model.json": "2c9fa60538ba931b28d61fdf02d7c99338c5d8766531213cbab36da880c4cce8",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/services.json": "239d49564e9dc0aa3e98ca95c80cb5ca8d3a8963816ab7caf235614bd6f01975",
+    "results/uarch/dsrom_protected_VM_service_20261003/inputs/w6_codec.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "results/uarch/dsrom_protected_VM_service_20261003/model.json": "a1a64bd9fe475bf85c01a2016774c90d9fe2e8420bbb35834c462a3936e60529",
+    "results/uarch/dsrom_protected_VM_service_20261003/scalar_physical_reply.json": "b143e548f7fe7966c8a90df8e55f5d01c5cf72a254b5fcc268cb8b1f3c8cada5",
+    "results/uarch/dsrom_protected_VM_service_20261003/source_model_tests.log": "3469bbeef044e307c215ff3e305b7d5f4750f835f997199cc5cbe3e3aab34b89",
+    "rtl/model_ready_ds_vm_sidecar_20261003/ot_ds_vm_check_sidecar.sv": "1e2293d4238f6795af751cfef9005a543302890856c53dde776281fad921f7f8",
+    "tests/rtl/dsrom_vm_sidecar/tb.sv": "7a2dc3e70144943b901ccfac67f436471475b87f3e9fd1ff03d884ce2c80fb98",
+    "tests/test_dsrom_protected_VM_service.py": "518bd827d10c4e1ad0ecb542d7354c2a0ee09b57f5420b465cc931732472fd5e",
+    "tests/test_dsrom_scalar_origin_physical_reply.py": "ca79090528b4222b646ba790abb52ece77f5588de266bfdc02a751065df05c92",
+    "tools/dsrom_protected_VM_service.py": "4102e84fe6bc5672138fa0580139fa0b4ba4ed3ad51ea9cb121e13b71810db32",
+    "tools/dsrom_scalar_origin_physical_reply.py": "80a9cf406d544d31d99433897ed5c35d03d27410821cdfc9b9b44b95b266692b"
+  },
+  "hardware_terminal_pending": true,
+  "physical": false,
+  "protected_VM_engine_build": false,
+  "schema": "DS_VM_SERVICE_SCALAR_SOURCE_PREPARE_R1",
+  "seven_class_source_swap": "separate owned followup; peer FIFO source bound, actual classes must source-map first",
+  "sidecar_component_functional_build_model_admitted": true,
+  "source_only_nested_loader": true,
+  "tests_PASS": 31
+}
