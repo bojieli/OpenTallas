@@ -106,18 +106,19 @@ def same_client_calendar(requests,*,same_client_II=19,different_client_II=10):
     need(same_client_II==19 and different_client_II==10,'selected W2 II contract unchanged')
     pc_last={};client_last={};done=[];out=[]
     for i,r in enumerate(requests):
-        pc,client=r['physical_PC'],r['client']
+        rank,pc,client=r.get('rank'),r['physical_PC'],r['client']
+        need(type(rank) is int and 0<=rank<2,'explicit rank required; no modulo128 folding')
         need(type(pc) is int and 0<=pc<128 and type(client) is int and 0<=client<6,'actual W2 route')
         for k in ('offer_edge','request_edges','backend_edges','capture_edges','reverse_edges'):
             need(type(r[k]) is int and r[k]>=(0 if k=='offer_edge' else 1),'positive actual phase '+k)
         deps=r.get('depends_on',[])
         need(all(type(d) is int and 0<=d<i for d in deps),'previous actual reverse dependencies')
         offer=max([r['offer_edge']]+[done[d] for d in deps])
-        accept=max(offer+r['request_edges'],pc_last.get(pc,-10)+10,client_last.get((pc,client),-19)+19)
+        accept=max(offer+r['request_edges'],pc_last.get((rank,pc),-10)+10,client_last.get((rank,pc,client),-19)+19)
         capture=accept+r['backend_edges']+r['capture_edges']
         reverse=capture+r['reverse_edges']
-        pc_last[pc]=accept;client_last[pc,client]=accept;done.append(reverse)
-        out.append(dict(index=i,physical_PC=pc,client=client,offer_edge=offer,
+        pc_last[rank,pc]=accept;client_last[rank,pc,client]=accept;done.append(reverse)
+        out.append(dict(index=i,rank=rank,physical_PC=pc,client=client,offer_edge=offer,
                         accept_edge=accept,capture_edge=capture,reverse_edge=reverse))
     return out
 
@@ -215,6 +216,8 @@ def compose(native,position,kv_model,profile=None,*,raw_source):
     for row in counts:
         interval=Interval();pc=row['pc'];family=row['family']
         interval.charge('PC_launch',1,prices)
+        interval.charge(f'PC{pc}/outer_rank_request_ACK_reverse',1,prices)
+        interval.charge(f'PC{pc}/clock_phase_alignment',1,prices)
         # RPC counts for page traffic are not the old huge conservative word
         # budgets, or guessed shape/32SM homes. Real source trace must calibrate
         # this PC interval. It excludes native scratch and all KV/state RPCs.
@@ -238,7 +241,7 @@ def compose(native,position,kv_model,profile=None,*,raw_source):
                          loop=row['loop'],recipes=row['recipes'],source_counts=row['source_counts']))
     need(sum(kv_counts[k] for k in ('kv_commit',))==72,'once-only72fence commits')
     need(kv_counts['kv_consumer_done']==144 and kv_counts['kv_reader_release']==72,'fullSCORES/PV reader lifecycle')
-    return dict(schema='QWEN_CANONICAL_NATIVE_SERVICE_CALENDAR_R1',program_sha256=PROGRAM_SHA,
+    return dict(schema='QWEN_CANONICAL_NATIVE_SERVICE_CALENDAR_R2',program_sha256=PROGRAM_SHA,
         original_runtime='870c5fe581b768df28dd2998b2d0aecc24510c23',position=position,
         worker_policy='actual original serialPC+retirement, one synchronous delivery sequence; no speculative32SM parallelism',
         period_ps=dict(streaming=str(FAST),serial=str(SERIAL)),setup_uncertainty_ps=60,hold_uncertainty_ps=25,
@@ -252,8 +255,9 @@ def compose(native,position,kv_model,profile=None,*,raw_source):
         native_service_demands=dict(native_counts),KV_RPC_demands=dict(kv_counts),
         finite_resources=dict(RF_vectors_per_worker=32,shared_reserved_bytes=17408,
                               synchronous_RPCs=1,KV_writer_slots=1,KV_stage_bytes=1024,
-                              W2_clients_per_PC=6,W2_tags_per_PC=16,KV_reader_drains=72),
+                              W2_ranks=2,W2_PCs_per_rank=128,W2_PCs_total=256,W2_clients_per_PC=6,W2_tags_per_PC=16,KV_reader_drains=72),
         W2=dict(same_client_II_measured=19,different_client_II_source=10,
+                route_identity=['rank','physical_PC','client'],rank_route_binding=None,
                 application='mapped max recurrence, not RTT or added19; Peirce commit owns its528request recurrence',
                 commit_floor_already_contains_II=True,endpoint_RTT_route_refresh_CDC_not_measured=True),
         joins=dict(KV_commit=kv_model['schema'],KV_write_PCs=writers,KV_commit_PCs=fences,
@@ -269,6 +273,73 @@ def compose(native,position,kv_model,profile=None,*,raw_source):
             kv_commit='Peirce complete source-bound interval inclusive physical request/capture/reverse. Replace localfloor once; never floor+RTT sum',
             service_total_convention='launch/capture/ACK/retirement and ordered route/CDC stages are separate, no overlapping gross branch sums; calibrate observed intervals only',
             physical_admission='not granted by source minimum, hypothetical positive profile, or complete metadata calendar'))
+
+
+
+# Intrinsic pipeline figures are not complete operator service prices. These
+# sources are inventoried against the selected filelist; none is enrolled here.
+ENGINE_SOURCES=(
+ ('matrix','rtl/gpu/ot_gpu_sm_q.sv',{'tree_add_edges':7,'stack_add_edges':7},
+  'Bind exact MATRIX/SCORES/PV split-K/tree/packing, source tile descriptors, finite xstore/staging, output RF writes and ACK/retirement.'),
+ ('SFU','rtl/hdc/ot_hdc_sfu_q.sv',{'exp_edges':49,'reciprocal_edges':28,'rsqrt_edges':37},
+  'Bind original ordered recipe and 64-bit integer intermediates; hdc_golden equivalence alone is not original870 recipe admission. Price serial-domain CDC.'),
+ ('reducer','rtl/hdc/ot_hdc_reduce_q.sv',{'tail_after_last_element_edges':19},
+  'Bind original adjacent-8/tree order and segment boundaries, scalar broadcast and RF publication; do not substitute interleaved partial sums without proof.'),
+ ('W4_FP32','results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv',{'FADD_pipeline_edges':7,'FMUL_pipeline_edges':7},
+  'Pipeline LAT7 excludes RF read, write ACK, ownership and DONE; install whole-loop dispatcher and all-result W6 retirement.'),
+)
+
+
+def engine_inventory(root):
+    filelist='rtl/model/qwen_hbm_integrated_20261003/sources.f'
+    selected=set((root/filelist).read_text().splitlines());modules=[]
+    for family,path,intrinsic,gap in ENGINE_SOURCES:
+        raw=(root/path).read_bytes()
+        need(bool(raw),'actual engine source exists '+path)
+        text=raw.decode()
+        markers={'matrix':['.ALAT(7)','MAX_OUT = 512'],
+                 'SFU':['exp 49','28, rsqrt 37'],
+                 'reducer':['1 + LM + DEPTH = 19','partial i mod 8'],
+                 'W4_FP32':['.LAT(7)']}
+        need(all(marker in text for marker in markers[family]),'source intrinsic contract '+family)
+        modules.append(dict(family=family,path=path,sha256=sha(raw),
+            selected_filelist_member=path in selected,intrinsic_pipeline_edges=intrinsic,
+            complete_operator_latency_ps=None,canonical1737_handler_bound=False,
+            missing_join=gap,pricing_scope='source pipeline only; not measured contextual engine'))
+    return dict(selected_filelist=filelist,modules=modules,
+        full_engine_available=False,PC40_fragment_is_full_engine=False,
+        dispatcher_owner='Claude/native owner; calendar does not implement handlers',
+        topology='2 ranks x128 W2; explicit outer rank route still required, no PC census reduction')
+
+
+def host_expansion(model):
+    families={};templates=Counter()
+    for row in model['operations']:
+        f=families.setdefault(row['family'],dict(source_PCs=0,native_primitive_host_RPCs=0,
+                                                source_recipe_invocations=0,state_read_host_RPCs=0))
+        f['source_PCs']+=1;f['native_primitive_host_RPCs']+=sum(row['native_units'].values())
+        f['state_read_host_RPCs']+=sum(n for k,n in row['kv_RPCs'].items() if k.startswith('kv_state_read/'))
+        for recipe in row['recipes']:
+            templates[recipe['template']]+=recipe['repetitions']
+            f['source_recipe_invocations']+=recipe['repetitions']
+    reads=model['KV_RPC_demands']['kv_state_read/1']
+    joins={
+      'MATRIX/SCORES/PV':dict(source_method='TiledMachine.dot',join='Bound row128/split-K descriptor executes original strided K recurrence and tree in engine; source weight/tile transfers and finite staging remain physical.',forbidden='One descriptor per scalar add/mul recipe still retains the dominant host expansion; a tensor macro is not proof of the original split/reduction rounding.'),
+      'EXP_SUM':dict(source_method='TiledMachine.execute EXP_SUM',join='Engine performs ordered maximum scan, exact exp recipe, BF16 publication, sequential adjacent-eight sums then padded tree; capture row/scalar outputs with ACK.',forbidden='The standalone reducer interleaves i mod8 partials; that is not the original sequential adjacent-eight reduction and cannot be substituted unproved.'),
+      'KV_READ':dict(source_method='BoundKVStorage.acquire/read + TiledMachine.execute KV_READ',join='A range command requires physical bitmap/record identity validation for every decoded byte, all actual state/payload sector captures and finite fp8-unpack/RF delivery; acquire/done/reverse remains once per source operator.',forbidden='Do not replace per-byte checks with prefix assumption, host bitmap shadow, unleased cache or software payload fallback.'),
+    }
+    return dict(families=families,recipe_invocations=dict(templates),
+        total_recipe_invocations=sum(templates.values()),whole_operator_joins=joins,
+        ranked_native_expansion=sorted(families,key=lambda k:families[k]['native_primitive_host_RPCs'],reverse=True),
+        per_byte_state_read_RPCs=reads,
+        installed_batch_command_count=None,batched_token_latency_ps=None,
+        arithmetic_commands_removed=0,source_metadata_checks_removed=0,
+        advice=[
+          'Native arithmetic demand stays unchanged. Replace per-primitive host launches only with one source-owned bounded recipe/tile command after dispatcher enrollment, not an entire-token Python numeric shortcut.',
+          'Carry template identity and ordered source steps, dtype/packing/scale, row/K bounds, version/home/rank/client leases, finite RF/workspace ports and completion generations in each engine descriptor.',
+          'Return one held completion after all actual output writes, W4 ACKs, W6 publication and reverse retirement. Internal arithmetic/port/CDC edges remain charged; do not multiply whole-loop launch overhead by primitive count.',
+          'BoundKVStorage currently checks bitmap for every payload byte. An actual RTL range-validator may batch sector delivery while validating every addressed byte, record generation and acquire/done debt; retain original class/method contracts and reject stale or partially invalid ranges before payload release.',
+          'Recipe invocation counts are source loop opportunities, not installed batch command counts. No source loop fusion or bitmap-cache policy is admitted by this inventory.' ])
 
 
 def main():
@@ -292,6 +363,8 @@ def main():
         need(set(profile.get('verified_same_clock_source_sha256',[]))<=set(verified),'same-clock proof must be source-pinned')
     result=compose(native,args.position,kv,profile,raw_source=source)
     result['W2']['verified_actual16_request_accept_edges']=measured
+    result['host_expansion']=host_expansion(result)
+    result['engine_source_inventory']=engine_inventory(ROOT)
     result['KV_peer_input_origin']=dict(owner='Peirce',commit=KV_OWNER_COMMIT,sha256=KV_MODEL_SHA,
         nested_source_pins_scope='retained historical peer provenance; only top-level source_pins are current replay dependencies')
     paths=[ROOT/PROGRAM,ROOT/SOURCE,args.kv_model,Path(__file__),ROOT/'tools/h4_qwen_released_provider_delivery.py',
@@ -300,6 +373,8 @@ def main():
            ROOT/'results/rtl/w2_fullnc6_functional_20261003/r7_reset_quarantine_pass/runtime.log',
            ROOT/'results/uarch/h4_hbm_pc40_physical_ack_r3_20261003/model.json',
            ROOT/'results/uarch/qwen_native_consumer_drain_20261003/model.json']
+    paths.extend(ROOT/item['path'] for item in result['engine_source_inventory']['modules'])
+    paths.append(ROOT/result['engine_source_inventory']['selected_filelist'])
     if args.prices:paths.append(args.prices)
     result['source_pins']={str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p):sha(p.read_bytes()) for p in paths}
     raw=canonical(result)

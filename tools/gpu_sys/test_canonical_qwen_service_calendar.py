@@ -58,7 +58,7 @@ class CalendarTests(unittest.TestCase):
 
     def test_same_client_II_is_max_not_added_RTT(self):
         def request(pc=0,client=1):
-            return dict(physical_PC=pc,client=client,offer_edge=0,request_edges=8,
+            return dict(rank=0,physical_PC=pc,client=client,offer_edge=0,request_edges=8,
                         backend_edges=1,capture_edges=8,reverse_edges=1)
         rows=C.same_client_calendar([request(),request()])
         self.assertEqual([r['accept_edge'] for r in rows],[8,27])
@@ -70,7 +70,36 @@ class CalendarTests(unittest.TestCase):
 
     def test_same_client_contract_and_unmapped_route_refused(self):
         with self.assertRaises(ValueError):C.same_client_calendar([],same_client_II=8)
-        with self.assertRaises(ValueError):C.same_client_calendar([dict(physical_PC=128,client=1)])
+        with self.assertRaises(ValueError):C.same_client_calendar([dict(rank=0,physical_PC=128,client=1)])
+
+    def test_rank_routes_do_not_collide_or_fold(self):
+        req=dict(rank=0,physical_PC=7,client=1,offer_edge=0,request_edges=8,
+                 backend_edges=1,capture_edges=8,reverse_edges=1)
+        rows=C.same_client_calendar([req,dict(req,rank=1),req])
+        self.assertEqual([r['accept_edge'] for r in rows],[8,8,27])
+        self.assertEqual([r['rank'] for r in rows],[0,1,0])
+        with self.assertRaises(ValueError):C.same_client_calendar([dict(req,rank=None)])
+        self.assertEqual(self.model['finite_resources']['W2_PCs_total'],256)
+        self.assertEqual(len(self.model['operations']),1737)
+
+    def test_engine_inventory_does_not_enroll_unbound_sources(self):
+        inv=C.engine_inventory(C.ROOT)
+        self.assertFalse(inv['full_engine_available'])
+        self.assertFalse(inv['PC40_fragment_is_full_engine'])
+        self.assertEqual([r['selected_filelist_member'] for r in inv['modules']],[False,False,False,True])
+        for row in inv['modules']:
+            self.assertIsNone(row['complete_operator_latency_ps'])
+            self.assertFalse(row['canonical1737_handler_bound'])
+
+    def test_host_expansion_is_advice_not_removed_arithmetic(self):
+        x=C.host_expansion(self.model)
+        self.assertEqual(sum(r['native_primitive_host_RPCs'] for r in x['families'].values()),269956823)
+        self.assertEqual(sum(r['source_PCs'] for r in x['families'].values()),1737)
+        self.assertEqual(sum(r['state_read_host_RPCs'] for r in x['families'].values()),609288552)
+        self.assertEqual(x['arithmetic_commands_removed'],0)
+        self.assertIsNone(x['installed_batch_command_count'])
+        self.assertIn('PC40/outer_rank_request_ACK_reverse',self.model['total']['unresolved'])
+        self.assertIn('PC40/clock_phase_alignment',self.model['total']['unresolved'])
 
     def test_native_zero_or_clock_relaxation_refused(self):
         key='native/FADD/bits32/launch'
