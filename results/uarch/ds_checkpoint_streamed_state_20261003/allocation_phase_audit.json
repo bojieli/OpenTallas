@@ -1,0 +1,84 @@
+{
+  "actual_helper_changes": [
+    "new stream_typed_state retains pinned V3 leaf Writer; container recursion emits source canonical typed metadata directly",
+    "new save_streamed uses original V3 snapshot/inventory/identity/quiescence/backing/role/shards/journal calls and actual payload format; no capture/atomic/restore or numerical admission",
+    "two payload traversal passes detect drift before COMPLETE; source contract must name successor helper selection",
+    "profile_streamed_state is read-only actual traversal, default off, reports workspace_page_upper=None"
+  ],
+  "allowance_formula": {
+    "canonical_identity_workspace": 1035636830,
+    "twenty_constructor_graph_slots": 24611743040,
+    "whole_checkpoint_mmap_upper": 1717634984
+  },
+  "allowance_formula_sum_verified": true,
+  "candidate_base_excluding_inherited_allowance_bytes": 43899508682,
+  "candidate_base_is_complete_peak_or_admission": false,
+  "capture_path_reconstructs_constructor_graphs": false,
+  "frozen_R68_model_sha256": "ae5e031ebbf51413095a5ae6aeee02958ea653ecedcd26ffe38860f12dafcfda",
+  "full_homes": 290730,
+  "full_program_PCs": 2213,
+  "immutable_R68": "915558caaa3742e32ab46343fef9c437807a1f28",
+  "inherited_serialization_allowance_bytes": 27365014854,
+  "live_object_phase_audit": [
+    {
+      "live": "two complete provider+engine graphs, original+bound programs/homes, lineage checks, source images/caches, gzip/JSON construction temporaries",
+      "original_source": "R68 child constructors branch + R67 constructors + R41 bind_storage",
+      "phase": "full dual constructor preflight",
+      "price": "R68constructor40910816974 unchanged; no sharing/release credit"
+    },
+    {
+      "live": "existing producer; snapshot wrappers alias state; original Writer.tree builds encoded metadata; canonical creates JSON text/bytes; profile deep_metadata seen set; no second full constructor",
+      "phase": "project_checkpoint/measure_state",
+      "remaining": "actual full-state leaf/stack and allocator page upper required",
+      "successor": "profile_streamed_state counts payload/metadata/leaf/depth without full encoded-container tree; not wired into project_checkpoint"
+    },
+    {
+      "live": "existing producer; aliased snapshot state; original encoded tree+closure, canonical text+bytes; one noncontiguous array temporary if needed; sector record32+46B and perport identity table; payload write chunks1MiB",
+      "phase": "capture save",
+      "remaining": "source-capture/project/atomic caller must be additive and keep all witness/shard/historical checks; no R68 hook",
+      "successor": "save_streamed: first pass payload+count-only metadata, close/fsync, second canonical closure stream + discarded payload hash, COMPLETE only after equal payload hash/size plus rechecked identity/quiescence/backing"
+    },
+    {
+      "live": "R67verify_payload parses state.json and actual_observations again; actual file hashes read1MiB; producer still resident; directory rename has no second payload disk copy",
+      "phase": "atomic publication",
+      "successor": "not changed; full closure parser peak still required"
+    },
+    {
+      "live": "fresh full constructor; typed closure parsed fromJSON; saved decoded sectors+arrays; readonly payload mmap; apply_port_state creates extra CompactSectors dictionary table temporarily; arrays are copies, immutable initial views restored to source images",
+      "phase": "cold restore",
+      "successor": "not changed; source constructor/saved metadata slots and old restored-array/raw charges retained"
+    },
+    {
+      "live": "full restored engine; new state.json decode; snapshot wrapper aliases state; second readonly payload mmap; two1MiB byte compare chunks; caller actual state/provenance validation",
+      "phase": "actual restore verification",
+      "successor": "not changed; no constructor/process exit discount"
+    },
+    {
+      "live": "guest anonymous allocations freed; filecache and QEMU private backing may remain; subsequent process may COW different baseline-shared pages",
+      "phase": "process exits",
+      "successor": "no host release credit; cumulative backing/peer lease required"
+    }
+  ],
+  "next_implementation_gate": "Kepler reviews helper ABI and selects additive project/capture/atomic source wrapper; source schema leaf-depth/count lifetime proof+full constructor accounting+physical host lease required BEFORE a lower successor guard or actualPC0run.",
+  "original_R56_sha256": "edbf6366f660e205fcbc40a703e83e7b11237748412524dbde6e36906a71831d",
+  "original_V3_sha256": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e",
+  "other_R68_component_prices_retained": true,
+  "schema": "DS_CHECKPOINT_STREAMING_ALLOCATION_PHASE_AUDIT_V1",
+  "scope_constraints": {
+    "R68_runtime_or_constructor_jobs": 0,
+    "complete_future_source_identity_retained": true,
+    "oracle_or_reference_stimulus": false,
+    "original_files_edited": false,
+    "physical_admission": false,
+    "source_copy_elimination_gains_measured_as_fullproducer_peak": false
+  },
+  "status": "IMPLEMENTED_DEFAULT_OFF_PRIMITIVES_NO_ADMITTED_PRODUCTION_PEAK",
+  "unchanged_R68_RAM_bytes": 71264523536,
+  "why_not_admitted": [
+    "Snapshot streaming removes encoded metadata-container tree and whole-closure canonical buffers; payload V3 already streamed and no fullpayload RAM saving is claimed",
+    "No retained actual quiescent PC0/1 state exists for profiling for profiling; source template shapes alone do not prove all constructor/transient builtins/allocator pages",
+    "Cold JSON decode, source/cfg identity canonical calls and original atomic verifier remain and must be priced",
+    "Cumulative journal/checkpoint/source filecache and host kernel/peer growth are not zero; even run-only27.751GB filecache worstcase exceeds remaining physical margin if charged in addition",
+    "New helper is not wired into original project/capture/atomic runner. Updating a numeric RAM field alone cannot select or qualify it"
+  ]
+}
