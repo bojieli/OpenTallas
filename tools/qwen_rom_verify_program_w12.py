@@ -354,6 +354,37 @@ def profile(die, p, matrix_rows, post_scale_bases):
             'su_ops': sum(f['unit'] == I.UNIT_SU for f in program)}
 
 
+K_ARGNEXT = 3     # rtl/rom/ot_qwen_tp_seq_w12_vp.sv ENABLE_ARP: gather, record, continue
+
+
+def profile_lm_head_p(die, geometry, p, final_norm_base=0, chunk_words=512):
+    """lm_head stage for p positions: per position j (its X_j, H_j, SSX_j, RX_j of
+    vm_map_p) the final RMSNorm and the chunked lm_head with running argmax
+    (FP.profile_lm_head, unchanged), each ending in an argmax all-gather:
+    ARGMAX_NEXT for j < p-1, ARGMAX for the last.  p = 1 is FP.profile_lm_head."""
+    vms, _ = vm_map_p(p)
+    place = FP.placement()
+    words, desc = [], []
+    for j in range(p):
+        lay = FP.LayerZero(place, die)
+        lay.row0 = die * (151936 // FP.TP)
+        lay.cb['final'] = final_norm_base
+        lay.mat['lm_head'] = {'base': geometry['base'], 'scale_base': geometry['scale_base'],
+                              'n': 151936 // FP.TP, 'k': geometry['k_per_split'],
+                              'tiles': geometry['rounds'], 'split': geometry['split']}
+        with FP.program_geometry(vms[j]):
+            program = P.build_program(lay, layers=[], embed=False, head=True, wchunk=chunk_words, scale_bases=True)
+        segs = P.segments(program)
+        if len(segs) != 1 or segs[0][1][0] != P.COLL_ARGMAX:
+            raise ValueError('lm_head stage must be one argmax segment')
+        instrs, (kind, vw, nw, row0) = segs[0]
+        desc.append(encode_descriptor(P.COLL_ARGMAX if j == p - 1 else K_ARGNEXT, vw, nw, len(words), row0))
+        words.extend(encode_instruction(f) for f in instrs)
+    return {'die': die, 'p': p, 'program_hex': [f'{x:0256x}' for x in words],
+            'descriptor_hex': [f'{x:016x}' for x in desc], 'instructions': len(words),
+            'x_bases': [m['X'] for m in vms]}
+
+
 def self_check(manifests, ar256_dirs):
     res = {}
     for mpath, d in zip(manifests, ar256_dirs):
@@ -377,6 +408,8 @@ def main():
     ap.add_argument('--out', type=Path)
     ap.add_argument('--only', default='')
     ap.add_argument('--self-check', action='store_true')
+    ap.add_argument('--head-dirs', help='format string {die}: img_tp4 head dirs (head_rom.json geometry); emits the head stage')
+    ap.add_argument('--head-src', help='format string {die}: pinned SW64 head stage dirs (crom/matrix links; p = 1 check)')
     ap.add_argument('--manifests', default='')
     ap.add_argument('--ar256', default='')
     a = ap.parse_args()
@@ -414,7 +447,33 @@ def main():
         (a.out / 'stages.txt').write_text(''.join(x + '\n' for x in lines))
         report['stages'] = stages
         (a.out / 'verify_images.json').write_text(json.dumps(report, indent=1) + '\n')
-    print(json.dumps({k: v for k, v in report.items() if k != 'stages'}, indent=1))
+    if a.head_dirs:
+        nd, heads = [], []
+        for die in range(FP.TP):
+            geo = dict(json.loads(Path(a.head_dirs.format(die=die), 'head_rom.json').read_text())['geometry'])
+            geo['scale_base'] = 0
+            geo.setdefault('base', 0)
+            r = profile_lm_head_p(die, geo, a.p)
+            src = Path(a.head_src.format(die=die))
+            if a.p == 1:
+                same = (r['program_hex'] == src.joinpath('program.hex').read_text().split()
+                        and [x.lower() for x in r['descriptor_hex']] == [x.lower() for x in src.joinpath('segments.hex').read_text().split()])
+                if not same:
+                    raise SystemExit(f'head p=1 differs from the pinned SW64 head stage die {die}')
+            dst = a.out / f'head-d{die}'
+            dst.mkdir(parents=True, exist_ok=False)
+            (dst / 'program.hex').write_text(''.join(x + '\n' for x in r['program_hex']))
+            (dst / 'segments.hex').write_text(''.join(x + '\n' for x in r['descriptor_hex']))
+            for f in LINK:
+                os.symlink((src / f).resolve(), dst / f)
+            heads.append({'die': die, 'instructions': r['instructions'], 'x_bases': r['x_bases'],
+                          'program_sha256': sha(dst / 'program.hex'), 'segments_sha256': sha(dst / 'segments.hex'),
+                          'p1_equals_pinned': a.p == 1})
+            nd.append(str(dst))
+        (a.out / 'stages_head.txt').write_text(' '.join(['head', *nd, '0']) + '\n')
+        report['head'] = heads
+        (a.out / 'verify_head_images.json').write_text(json.dumps(report, indent=1) + '\n')
+    print(json.dumps({k: v for k, v in report.items() if k not in ('stages', 'head')}, indent=1))
 
 
 if __name__ == '__main__':

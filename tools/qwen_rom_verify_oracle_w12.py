@@ -47,6 +47,10 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+def sha_bytes(b):
+    return hashlib.sha256(b).hexdigest()
+
+
 # one decode of a matrix per (image, base): the ISA golden re-reads the hex per op otherwise
 _matrix = L0.Image.matrix
 
