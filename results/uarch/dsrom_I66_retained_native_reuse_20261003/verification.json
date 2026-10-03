@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "30 metadata SHA256 rechecked",
+    "8 full runtime metadata commands explicitly ROM_PHW6",
+    "sole explicit PHW10 component top is local dsrom_runtime_consumers",
+    "3 retained executable SHA256 freshly rehashed, no execution"
+  ],
+  "generated_CPP_read": false,
+  "scope_nonexhaustive": true,
+  "source_payloads_read": false,
+  "status": "PASS_READ_ONLY_METADATA_IDENTITY_CHECK"
+}

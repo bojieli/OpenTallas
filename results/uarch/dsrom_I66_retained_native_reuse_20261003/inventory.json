@@ -1,0 +1,1170 @@
+{
+  "actual_current_trace_handle": null,
+  "compiler_or_runtime_launched": false,
+  "current_required": {
+    "ROM_FBW": 1632,
+    "ROM_PHW": 10,
+    "core_sha256": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+    "patched_I66_word_sha256": "7d6b2b75445e34120a69fbe6fad3e6bffc7be53734200f3386f33fbe3c514dc5"
+  },
+  "generated_CPP_read": false,
+  "metadata_read_max_bytes": 4194304,
+  "qualified_current_connected_artifact": null,
+  "records": [
+    {
+      "assets": [
+        {
+          "bytes": 44316,
+          "path": "/home/ubuntu/w17work/isa/coll_build/Vtb_v41_tp_layer0_collectives.h",
+          "sha256": "f3f4e0323312c1382f3e79d6e8944281fa72acaf9ee7e6f793a130270a4c044a"
+        },
+        {
+          "bytes": 113127,
+          "path": "/home/ubuntu/w17work/isa/coll_build/Vtb_v41_tp_layer0_collectives___024root.h",
+          "sha256": "9faad8eef19d79d6da23f1e795c1fdb94ebdbbcd76101fe7a45ffb694f17da8c"
+        },
+        {
+          "bytes": 5740464,
+          "path": "/home/ubuntu/w17work/isa/coll_build/Vtb_v41_tp_layer0_collectives__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 2073,
+          "path": "/home/ubuntu/w17work/isa/coll_build/Vtb_v41_tp_layer0_collectives.mk",
+          "sha256": "b38f4fa7a6b2f354a173c4844d68a69285b0c4bdf44a0d6e508c6ae85aa42935"
+        },
+        {
+          "bytes": 2042,
+          "path": "/home/ubuntu/w17work/isa/coll_build/Vtb_v41_tp_layer0_collectives_classes.mk",
+          "sha256": "27227740a44734269587c3984414a91e7bd378b45bc112781a0195a3eafbc691"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/isa/coll_build/Vtb_v41_tp_layer0_collectives__verFiles.dat",
+      "parameters": {},
+      "prefix": "Vtb_v41_tp_layer0_collectives",
+      "sha256": "51c9193a695b6cf735170dd521f52dae798a81259628b8eb7c776c5af087e3cb",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "tb_v41_tp_layer0_collectives"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 6225,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w12/Vtb_v41_qe_shared_stall.h",
+          "sha256": "04b1bf253e12ace6c4b8e93b4af430e5dc56ca58728857eb9aa9c6fc5de1a96b"
+        },
+        {
+          "bytes": 65729,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w12/Vtb_v41_qe_shared_stall___024root.h",
+          "sha256": "eb9cccfc13e8f0ba84de3c4eb03d0ca161e08e20c0ed6ae0b3a8457f84a68bb7"
+        },
+        {
+          "bytes": 2676144,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w12/Vtb_v41_qe_shared_stall__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 2043,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w12/Vtb_v41_qe_shared_stall.mk",
+          "sha256": "58df8c5b133389975f3d3c749cd3638360c227ccba83aa4d0eaf12b3e7eb17fa"
+        },
+        {
+          "bytes": 3636,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w12/Vtb_v41_qe_shared_stall_classes.mk",
+          "sha256": "b8d369e3304ef1db7ea08e1bcd01e87b0de75b9c9f45d45d3c73569944b4cf94"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w12/Vtb_v41_qe_shared_stall__verFiles.dat",
+      "parameters": {
+        "LWIN": "12",
+        "STALL": "0"
+      },
+      "prefix": "Vtb_v41_qe_shared_stall",
+      "sha256": "acc41f09ca93754c46ccd670079e61132a001043527555cf5f5beb2830911182",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "tb_v41_qe_shared_stall"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 6225,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w10/Vtb_v41_qe_shared_stall.h",
+          "sha256": "04b1bf253e12ace6c4b8e93b4af430e5dc56ca58728857eb9aa9c6fc5de1a96b"
+        },
+        {
+          "bytes": 65707,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w10/Vtb_v41_qe_shared_stall___024root.h",
+          "sha256": "974e0d1d21c5d0bc7ad475c3aae8366a2a08b19b05bc28dfe574b859c5a411fd"
+        },
+        {
+          "bytes": 2707490,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w10/Vtb_v41_qe_shared_stall__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 2043,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w10/Vtb_v41_qe_shared_stall.mk",
+          "sha256": "58df8c5b133389975f3d3c749cd3638360c227ccba83aa4d0eaf12b3e7eb17fa"
+        },
+        {
+          "bytes": 3636,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w10/Vtb_v41_qe_shared_stall_classes.mk",
+          "sha256": "b8d369e3304ef1db7ea08e1bcd01e87b0de75b9c9f45d45d3c73569944b4cf94"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/isa/qess/work/obj_s0_w10/Vtb_v41_qe_shared_stall__verFiles.dat",
+      "parameters": {
+        "LWIN": "10",
+        "STALL": "0"
+      },
+      "prefix": "Vtb_v41_qe_shared_stall",
+      "sha256": "64c560acdf81937a5c59a7a5ce2189e00206f5f67b844cce36f511df8969e0a4",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "tb_v41_qe_shared_stall"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 6225,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s1_w10/Vtb_v41_qe_shared_stall.h",
+          "sha256": "04b1bf253e12ace6c4b8e93b4af430e5dc56ca58728857eb9aa9c6fc5de1a96b"
+        },
+        {
+          "bytes": 65332,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s1_w10/Vtb_v41_qe_shared_stall___024root.h",
+          "sha256": "62afe67ed0116dbab1c97ebb3ff7531786b693a786549f160e6e4a1d90e1f420"
+        },
+        {
+          "bytes": 2706498,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s1_w10/Vtb_v41_qe_shared_stall__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 2043,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s1_w10/Vtb_v41_qe_shared_stall.mk",
+          "sha256": "58df8c5b133389975f3d3c749cd3638360c227ccba83aa4d0eaf12b3e7eb17fa"
+        },
+        {
+          "bytes": 3636,
+          "path": "/home/ubuntu/w17work/isa/qess/work/obj_s1_w10/Vtb_v41_qe_shared_stall_classes.mk",
+          "sha256": "b8d369e3304ef1db7ea08e1bcd01e87b0de75b9c9f45d45d3c73569944b4cf94"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/isa/qess/work/obj_s1_w10/Vtb_v41_qe_shared_stall__verFiles.dat",
+      "parameters": {
+        "LWIN": "10",
+        "STALL": "1"
+      },
+      "prefix": "Vtb_v41_qe_shared_stall",
+      "sha256": "63aaec93603ee7c72233c5aeee16f3a3dfcf7748a95158440670af73b10ad93a",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "tb_v41_qe_shared_stall"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 6225,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w12/Vtb_v41_qe_shared_stall.h",
+          "sha256": "04b1bf253e12ace6c4b8e93b4af430e5dc56ca58728857eb9aa9c6fc5de1a96b"
+        },
+        {
+          "bytes": 65729,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w12/Vtb_v41_qe_shared_stall___024root.h",
+          "sha256": "eb9cccfc13e8f0ba84de3c4eb03d0ca161e08e20c0ed6ae0b3a8457f84a68bb7"
+        },
+        {
+          "bytes": 2676144,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w12/Vtb_v41_qe_shared_stall__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 2043,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w12/Vtb_v41_qe_shared_stall.mk",
+          "sha256": "58df8c5b133389975f3d3c749cd3638360c227ccba83aa4d0eaf12b3e7eb17fa"
+        },
+        {
+          "bytes": 3636,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w12/Vtb_v41_qe_shared_stall_classes.mk",
+          "sha256": "b8d369e3304ef1db7ea08e1bcd01e87b0de75b9c9f45d45d3c73569944b4cf94"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w12/Vtb_v41_qe_shared_stall__verFiles.dat",
+      "parameters": {
+        "LWIN": "12",
+        "STALL": "0"
+      },
+      "prefix": "Vtb_v41_qe_shared_stall",
+      "sha256": "babe41c1754f538970f35caa18419757d35af77edf184f29fc13952999890096",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "tb_v41_qe_shared_stall"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 6225,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w10/Vtb_v41_qe_shared_stall.h",
+          "sha256": "04b1bf253e12ace6c4b8e93b4af430e5dc56ca58728857eb9aa9c6fc5de1a96b"
+        },
+        {
+          "bytes": 65707,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w10/Vtb_v41_qe_shared_stall___024root.h",
+          "sha256": "974e0d1d21c5d0bc7ad475c3aae8366a2a08b19b05bc28dfe574b859c5a411fd"
+        },
+        {
+          "bytes": 2707490,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w10/Vtb_v41_qe_shared_stall__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 2043,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w10/Vtb_v41_qe_shared_stall.mk",
+          "sha256": "58df8c5b133389975f3d3c749cd3638360c227ccba83aa4d0eaf12b3e7eb17fa"
+        },
+        {
+          "bytes": 3636,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w10/Vtb_v41_qe_shared_stall_classes.mk",
+          "sha256": "b8d369e3304ef1db7ea08e1bcd01e87b0de75b9c9f45d45d3c73569944b4cf94"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/isa/qess/work2/obj_s0_w10/Vtb_v41_qe_shared_stall__verFiles.dat",
+      "parameters": {
+        "LWIN": "10",
+        "STALL": "0"
+      },
+      "prefix": "Vtb_v41_qe_shared_stall",
+      "sha256": "fcda3145c96e3727b1d76953927380fea75932a7ae96aa3e2f5854df9efcb36a",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "tb_v41_qe_shared_stall"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 6225,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s1_w10/Vtb_v41_qe_shared_stall.h",
+          "sha256": "04b1bf253e12ace6c4b8e93b4af430e5dc56ca58728857eb9aa9c6fc5de1a96b"
+        },
+        {
+          "bytes": 65332,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s1_w10/Vtb_v41_qe_shared_stall___024root.h",
+          "sha256": "62afe67ed0116dbab1c97ebb3ff7531786b693a786549f160e6e4a1d90e1f420"
+        },
+        {
+          "bytes": 2706498,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s1_w10/Vtb_v41_qe_shared_stall__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 2043,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s1_w10/Vtb_v41_qe_shared_stall.mk",
+          "sha256": "58df8c5b133389975f3d3c749cd3638360c227ccba83aa4d0eaf12b3e7eb17fa"
+        },
+        {
+          "bytes": 3636,
+          "path": "/home/ubuntu/w17work/isa/qess/work2/obj_s1_w10/Vtb_v41_qe_shared_stall_classes.mk",
+          "sha256": "b8d369e3304ef1db7ea08e1bcd01e87b0de75b9c9f45d45d3c73569944b4cf94"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/isa/qess/work2/obj_s1_w10/Vtb_v41_qe_shared_stall__verFiles.dat",
+      "parameters": {
+        "LWIN": "10",
+        "STALL": "1"
+      },
+      "prefix": "Vtb_v41_qe_shared_stall",
+      "sha256": "53a56dbbf86c5e5256d6d272230c0bd1e806f768720077e8e4e304df0da27d50",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "tb_v41_qe_shared_stall"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 10906,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vattn.h",
+          "sha256": "7fba4ca34e83a39f2cdf79a1325f3920335bd4955cf39187a3181199f61da4b2"
+        },
+        {
+          "bytes": 13820600,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vattn___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 77986704,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vattn__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 77986704,
+          "path": "/home/ubuntu/w17work/dierun/attn/libVattn.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1896,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vattn.mk",
+          "sha256": "929d728d801d6b32274f1fdc1cbb0f533c4427bc7a44d57da40f6f17e7e644f6"
+        },
+        {
+          "bytes": 32349,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vattn_classes.mk",
+          "sha256": "0ef91141ce6812c4dd68b08eabf6374038e0138a97e20620d0822067b697c49f"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun/attn/Vattn__verFiles.dat",
+      "parameters": {
+        "D": "512",
+        "H": "16",
+        "NL": "4",
+        "PWORDS": "1",
+        "TD": "32",
+        "TROWS": "640"
+      },
+      "prefix": "Vattn",
+      "sha256": "5ccddf38129973dadc85f16189e20caa93073b226b311e135fc0078c7c7a393d",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_hdc_v41x_attn"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 15321,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_merge_6/Vot_hdc_v41x_attn_merge_6.h",
+          "sha256": "4d9cd44630be357d3af13290941ec18f938cb294d962926851c7bf42f99053ed"
+        },
+        {
+          "bytes": 26309,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_merge_6/Vot_hdc_v41x_attn_merge_6___024root.h",
+          "sha256": "a5e5369ca655f327f0fe6913addd860bbaa64f1dc90704f1e444a841ef1ae127"
+        },
+        {
+          "bytes": 1978,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_merge_6/Vot_hdc_v41x_attn_merge_6.mk",
+          "sha256": "45ee70f92565f7fd06d5308c3f5f47d0a0f0671c6cac577be3240d39c3f01857"
+        },
+        {
+          "bytes": 2030,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_merge_6/Vot_hdc_v41x_attn_merge_6_classes.mk",
+          "sha256": "aea07979d314e6ce1779e78a5f4218d1b1b47b430ffd3f42601001eedf1599ff"
+        }
+      ],
+      "disposition": "UNQUALIFIED_NO_FULL_CURRENT_ENROLLMENT",
+      "metadata": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_merge_6/Vot_hdc_v41x_attn_merge_6__verFiles.dat",
+      "parameters": {},
+      "prefix": "Vot_hdc_v41x_attn_merge_6",
+      "sha256": "25e9c05024d75528a800b1523089234df40b2a0512fa702cce84145d05012cf6",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": null
+    },
+    {
+      "assets": [
+        {
+          "bytes": 3638,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_qadd/Vot_hdc_qadd.h",
+          "sha256": "c2c380900c0d39217ccd0c77ef9a3778dc1dba13f27cd65849b3f76972191fc1"
+        },
+        {
+          "bytes": 5627,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_qadd/Vot_hdc_qadd___024root.h",
+          "sha256": "118dd5c95a7bfd545a79bb2cded3ed8227cbb5ef3b8d6d89aa0e232fb3c47654"
+        },
+        {
+          "bytes": 1861,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_qadd/Vot_hdc_qadd.mk",
+          "sha256": "b1761bac199f633edd869302b9e7d58c4d28df25375b8ea01147cc7fc4864a15"
+        },
+        {
+          "bytes": 1671,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_qadd/Vot_hdc_qadd_classes.mk",
+          "sha256": "a4d087ccd9077080a1c104e9a576dd850e04ad1696d0610a8cecddf0a5fb2d44"
+        }
+      ],
+      "disposition": "UNQUALIFIED_NO_FULL_CURRENT_ENROLLMENT",
+      "metadata": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_qadd/Vot_hdc_qadd__verFiles.dat",
+      "parameters": {},
+      "prefix": "Vot_hdc_qadd",
+      "sha256": "15ede140d43f47d469ed594e1572581728fa586dc4e174608f06e91b83b9b63c",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": null
+    },
+    {
+      "assets": [
+        {
+          "bytes": 3818,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_staging_3/Vot_hdc_v41x_attn_staging_3.h",
+          "sha256": "aae1e9579ef4b20cc0ee918723c01603236e90c2c05e6e95a9aaea4059e81733"
+        },
+        {
+          "bytes": 2376,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_staging_3/Vot_hdc_v41x_attn_staging_3___024root.h",
+          "sha256": "42143cd768c336022b7bc7f4b4b7f263a17bee5340d55b9ec6364a57bd93d538"
+        },
+        {
+          "bytes": 1996,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_staging_3/Vot_hdc_v41x_attn_staging_3.mk",
+          "sha256": "9165d1043f40fc07b8faf12202254ba3aacf09dc579f265d0f54eeed73d40e75"
+        },
+        {
+          "bytes": 1813,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_staging_3/Vot_hdc_v41x_attn_staging_3_classes.mk",
+          "sha256": "7abf5c3915c6c74127af354e3f2006cb358080f32f015b1c6ae613e0bd09dc66"
+        }
+      ],
+      "disposition": "UNQUALIFIED_NO_FULL_CURRENT_ENROLLMENT",
+      "metadata": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_staging_3/Vot_hdc_v41x_attn_staging_3__verFiles.dat",
+      "parameters": {},
+      "prefix": "Vot_hdc_v41x_attn_staging_3",
+      "sha256": "f16dc00d46b47cc0ad101fbd2c59ba1354f78b01d3178fdf0b57a6dbefcabdc2",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": null
+    },
+    {
+      "assets": [
+        {
+          "bytes": 6143,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_tile_e/Vot_hdc_v41x_attn_tile_e.h",
+          "sha256": "8c64c51bca55c73d623df650ed12828214997f059cf542b357b535f0e0bc53d5"
+        },
+        {
+          "bytes": 49220,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_tile_e/Vot_hdc_v41x_attn_tile_e___024root.h",
+          "sha256": "53d6ef50665baf34ff59b8c7e970f3d04e93a278535264c68ba7f00a0c363942"
+        },
+        {
+          "bytes": 1969,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_tile_e/Vot_hdc_v41x_attn_tile_e.mk",
+          "sha256": "0a5eb77696b9b87eebca2505caf4deba02f104c195480a705c117bf08c462f43"
+        },
+        {
+          "bytes": 3034,
+          "path": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_tile_e/Vot_hdc_v41x_attn_tile_e_classes.mk",
+          "sha256": "556e6a1ae6efcc3080cd4eb24434d2e760ec896bc954bef389e7536b10311ec0"
+        }
+      ],
+      "disposition": "UNQUALIFIED_NO_FULL_CURRENT_ENROLLMENT",
+      "metadata": "/home/ubuntu/w17work/dierun/attn/Vot_hdc_v41x_attn_tile_e/Vot_hdc_v41x_attn_tile_e__verFiles.dat",
+      "parameters": {},
+      "prefix": "Vot_hdc_v41x_attn_tile_e",
+      "sha256": "ed35fdee685c3c43ab55e11e38624b9e3bbb0b081ca343851dd04c3ad13c19ec",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": null
+    },
+    {
+      "assets": [],
+      "disposition": "UNQUALIFIED_NO_FULL_CURRENT_ENROLLMENT",
+      "metadata": "/home/ubuntu/w17work/dierun/attn/Vattn__hier.dir/Vattn__verFiles.dat",
+      "parameters": {},
+      "prefix": "Vattn",
+      "sha256": "3c167fd86f4a30bcc6d1684386e7ec6b5b55e00723e9fe1ee6242e7462185108",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": null
+    },
+    {
+      "assets": [
+        {
+          "bytes": 4673,
+          "path": "/home/ubuntu/w17work/dierun/pb/Vpb.h",
+          "sha256": "295dfae95519d36971c251fd4ccfafe26df3872e2e11c7b87efb2d3bace4858e"
+        },
+        {
+          "bytes": 125568,
+          "path": "/home/ubuntu/w17work/dierun/pb/Vpb___024root.h",
+          "sha256": "9b2156d32d6954e871ffbb7c8d2d512534908077f922cd8d7d8a0ea499eb9381"
+        },
+        {
+          "bytes": 768888,
+          "path": "/home/ubuntu/w17work/dierun/pb/Vpb__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1848,
+          "path": "/home/ubuntu/w17work/dierun/pb/Vpb.mk",
+          "sha256": "4363459e042e1d61bfb132c7ad38d40cc05f778bb0f4b87651ac03b23bf94387"
+        },
+        {
+          "bytes": 2207,
+          "path": "/home/ubuntu/w17work/dierun/pb/Vpb_classes.mk",
+          "sha256": "2bb198d2557f149d715960343a8eab08dd1c16b96511244fdf23232bf3e5c3b8"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun/pb/Vpb__verFiles.dat",
+      "parameters": {
+        "BF16": "1",
+        "PHW": "6",
+        "XF": "8"
+      },
+      "prefix": "Vpb",
+      "sha256": "4270f86ee8845bf81a95ceb5c052afe591a3d12182e2a567577a5099d13a6d30",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_pair"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 4841,
+          "path": "/home/ubuntu/w17work/dierun/pq/Vpq.h",
+          "sha256": "b3f0311c6a36ef8567444bcb15bdd84b335b474fbbaa99edf2e04651366ce631"
+        },
+        {
+          "bytes": 73180,
+          "path": "/home/ubuntu/w17work/dierun/pq/Vpq___024root.h",
+          "sha256": "1e8c03fee7d3f6561ab0929fe5ab4ef8dc93772db289e189f0942e586394ba8e"
+        },
+        {
+          "bytes": 268162,
+          "path": "/home/ubuntu/w17work/dierun/pq/Vpq__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1848,
+          "path": "/home/ubuntu/w17work/dierun/pq/Vpq.mk",
+          "sha256": "2a78e90bddf65b5061758fdd30be77132f27fd66d9c10ba8a56e3b37f1853dbd"
+        },
+        {
+          "bytes": 1992,
+          "path": "/home/ubuntu/w17work/dierun/pq/Vpq_classes.mk",
+          "sha256": "c2768cc874a4d47d024f1988a7cbaa1a5e01c2cbd4df254e3c4046f3b9b1d5a8"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun/pq/Vpq__verFiles.dat",
+      "parameters": {
+        "BF16": "0",
+        "PHW": "6",
+        "XF": "4"
+      },
+      "prefix": "Vpq",
+      "sha256": "3257c20796219b728b2122d95cb9378bec4f855785c770bedbdca5ada5e05f87",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_pair"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 15158,
+          "path": "/home/ubuntu/w17work/dierun/die1/Vdie1.h",
+          "sha256": "084514b5c0b6405146299130c79bd587b319314952de3df0550046d91b363284"
+        },
+        {
+          "bytes": 12794911,
+          "path": "/home/ubuntu/w17work/dierun/die1/Vdie1___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 22413250,
+          "path": "/home/ubuntu/w17work/dierun/die1/Vdie1__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun/die1/Vdie1.mk",
+          "sha256": "312f1c10163e5eb221d70c2ccd526e76d262924a8f74a39ca7e1735eec2a36b5"
+        },
+        {
+          "bytes": 10350,
+          "path": "/home/ubuntu/w17work/dierun/die1/Vdie1_classes.mk",
+          "sha256": "2c8a3eedbcfd37f67741caf0c0bd65f9af61bde886ebbc3dafe94ef43319ac72"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun/die1/Vdie1__verFiles.dat",
+      "parameters": {
+        "CL_DEPTH": "512",
+        "CL_LANES": "16",
+        "CL_RELAY": "0",
+        "RANK": "1",
+        "ROM_PHW": "6"
+      },
+      "prefix": "Vdie1",
+      "sha256": "482eacaac78c49f27f6f9840d97bce03ac34f53ee99a7a92ecb3aa89639e81a0",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_rt_die"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 15158,
+          "path": "/home/ubuntu/w17work/dierun/die2/Vdie2.h",
+          "sha256": "576ab236472eca9da2723c384c846c2fb0309c892d3f46affe795278469b70ea"
+        },
+        {
+          "bytes": 12794911,
+          "path": "/home/ubuntu/w17work/dierun/die2/Vdie2___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 22413314,
+          "path": "/home/ubuntu/w17work/dierun/die2/Vdie2__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun/die2/Vdie2.mk",
+          "sha256": "1b6e0303109c290c490c7231960b12907b40d167b183c3ec98f28f21cf9db1dc"
+        },
+        {
+          "bytes": 10350,
+          "path": "/home/ubuntu/w17work/dierun/die2/Vdie2_classes.mk",
+          "sha256": "5cb11a98f5196ebffb48fbf7b5d690df6bf513de26ac436afd1e7d81d9a46d56"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun/die2/Vdie2__verFiles.dat",
+      "parameters": {
+        "CL_DEPTH": "512",
+        "CL_LANES": "16",
+        "CL_RELAY": "0",
+        "RANK": "2",
+        "ROM_PHW": "6"
+      },
+      "prefix": "Vdie2",
+      "sha256": "e7e0b69d1926c5c02967bd30c5b7cd70b395ee8d33b7024524fa8c1b8aad3888",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_rt_die"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 3720,
+          "path": "/home/ubuntu/w17work/dierun/root/Vroot.h",
+          "sha256": "81b30a8efa8d4e77e3c013e7723ece704d54849880854f46d366bab8a9bb70c7"
+        },
+        {
+          "bytes": 7614,
+          "path": "/home/ubuntu/w17work/dierun/root/Vroot___024root.h",
+          "sha256": "9afe9944818bd9b659eb4cf8e8564799f0278a443408e5d0749bd6396ffae228"
+        },
+        {
+          "bytes": 36418,
+          "path": "/home/ubuntu/w17work/dierun/root/Vroot__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun/root/Vroot.mk",
+          "sha256": "e472e7ca9b1480c8a39ae58e5c9ed6fdb86691b7f1c119a3699e3611230032aa"
+        },
+        {
+          "bytes": 1665,
+          "path": "/home/ubuntu/w17work/dierun/root/Vroot_classes.mk",
+          "sha256": "4813d3c45651b87348e670bd86a1c8860e753af6acd4799b6b159f47487d314f"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun/root/Vroot__verFiles.dat",
+      "parameters": {
+        "D": "128",
+        "QD": "128"
+      },
+      "prefix": "Vroot",
+      "sha256": "18c074b6b8851d1e5a35c0d109418e136ca5c6c41598869d4de1687c6afea619",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_ret_root"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 3748,
+          "path": "/home/ubuntu/w17work/dierun/retn/Vretn.h",
+          "sha256": "e71d1ded941c79b35b43a9b1b10221bb7134ae0a6a929bac218a3fa30c2c1d6a"
+        },
+        {
+          "bytes": 7938,
+          "path": "/home/ubuntu/w17work/dierun/retn/Vretn___024root.h",
+          "sha256": "50f2deabf5c6e32dcedffe80568d859e7d4197625b5d2bcf1a4123ef4ff683fd"
+        },
+        {
+          "bytes": 33810,
+          "path": "/home/ubuntu/w17work/dierun/retn/Vretn__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun/retn/Vretn.mk",
+          "sha256": "29a9583d900557b44f58516cb562829133ff9a0d9b7735ab9b4fc41f2385b6bb"
+        },
+        {
+          "bytes": 1665,
+          "path": "/home/ubuntu/w17work/dierun/retn/Vretn_classes.mk",
+          "sha256": "f61f2a90d4aa08979217eb57535a1bc0eb8855668da1f3e129c20dfc70fd6d4e"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun/retn/Vretn__verFiles.dat",
+      "parameters": {
+        "BYPASS": "1",
+        "RD": "64",
+        "RST": "1"
+      },
+      "prefix": "Vretn",
+      "sha256": "eaa7056263a0712a50be8e9a8516e8556b672edcf9fbb1c2d69e742d0d6f597c",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_retn"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 15158,
+          "path": "/home/ubuntu/w17work/dierun/die3/Vdie3.h",
+          "sha256": "08821282cdc6f6e6bd50a09e3b02d59ee7dbef3373e1ec9884ab369cade41f4b"
+        },
+        {
+          "bytes": 12794911,
+          "path": "/home/ubuntu/w17work/dierun/die3/Vdie3___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 22413274,
+          "path": "/home/ubuntu/w17work/dierun/die3/Vdie3__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun/die3/Vdie3.mk",
+          "sha256": "af25c9af2b358601864fa5293177666e96f8f93aff333e9da8f27de0c1dbab80"
+        },
+        {
+          "bytes": 10350,
+          "path": "/home/ubuntu/w17work/dierun/die3/Vdie3_classes.mk",
+          "sha256": "43c06e14dacc6c3f4719216455c6854a17b2de7dc5ae7768b5e350b4da881ce9"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun/die3/Vdie3__verFiles.dat",
+      "parameters": {
+        "CL_DEPTH": "512",
+        "CL_LANES": "16",
+        "CL_RELAY": "0",
+        "RANK": "3",
+        "ROM_PHW": "6"
+      },
+      "prefix": "Vdie3",
+      "sha256": "a0d0fd14001c15024fbd7738b3b300b9abd3df50c51f15ef15bd8ab1e34e7b8e",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_rt_die"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 15158,
+          "path": "/home/ubuntu/w17work/dierun/die0/Vdie0.h",
+          "sha256": "bda5dcffba38928a4e361036f59480051e85340a19242e47f5f9f1f6221138bb"
+        },
+        {
+          "bytes": 12794911,
+          "path": "/home/ubuntu/w17work/dierun/die0/Vdie0___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 22413194,
+          "path": "/home/ubuntu/w17work/dierun/die0/Vdie0__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun/die0/Vdie0.mk",
+          "sha256": "9b6c1b19875326f3877635d3597b1288dfccfda67f9fc532d5acd1750c09027f"
+        },
+        {
+          "bytes": 10350,
+          "path": "/home/ubuntu/w17work/dierun/die0/Vdie0_classes.mk",
+          "sha256": "0fcb3f2c9607669988e3fa7dcd7e09762d42c3e2290c663ceb1aad7d28e06327"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun/die0/Vdie0__verFiles.dat",
+      "parameters": {
+        "CL_DEPTH": "512",
+        "CL_LANES": "16",
+        "CL_RELAY": "0",
+        "RANK": "0",
+        "ROM_PHW": "6"
+      },
+      "prefix": "Vdie0",
+      "sha256": "d9ccb0478228624f4f778ef76f6f9dcb4745c5458b2750343a05a0a9f0e56b37",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_rt_die"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 4698,
+          "path": "/home/ubuntu/w17work/dierun2/pb/Vpb.h",
+          "sha256": "7a20697ee7f81eef1914c0b982f2b94e81e93b7202d0ca9511e9c78d0973b6c4"
+        },
+        {
+          "bytes": 125596,
+          "path": "/home/ubuntu/w17work/dierun2/pb/Vpb___024root.h",
+          "sha256": "9f60831dd8f30d24b7ac7eca3dc3255522c610d05937ddeb3bdf93e8d4d27276"
+        },
+        {
+          "bytes": 769152,
+          "path": "/home/ubuntu/w17work/dierun2/pb/Vpb__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1848,
+          "path": "/home/ubuntu/w17work/dierun2/pb/Vpb.mk",
+          "sha256": "4363459e042e1d61bfb132c7ad38d40cc05f778bb0f4b87651ac03b23bf94387"
+        },
+        {
+          "bytes": 2207,
+          "path": "/home/ubuntu/w17work/dierun2/pb/Vpb_classes.mk",
+          "sha256": "2bb198d2557f149d715960343a8eab08dd1c16b96511244fdf23232bf3e5c3b8"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun2/pb/Vpb__verFiles.dat",
+      "parameters": {
+        "BF16": "1",
+        "PHW": "6",
+        "XF": "8"
+      },
+      "prefix": "Vpb",
+      "sha256": "f4db349ba326295f9a27b7df6e99656095258e377a5023e076ecf049c113a05d",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_pair"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 4866,
+          "path": "/home/ubuntu/w17work/dierun2/pq/Vpq.h",
+          "sha256": "9434b69fed30188b78ec61fc67c5068a5c0b3c674e9cb1079f5b331a3067e6cf"
+        },
+        {
+          "bytes": 73208,
+          "path": "/home/ubuntu/w17work/dierun2/pq/Vpq___024root.h",
+          "sha256": "e3461582bf9174411c113cb590e9a614f1b7172c10f7071d3e96535f7893d3f0"
+        },
+        {
+          "bytes": 268234,
+          "path": "/home/ubuntu/w17work/dierun2/pq/Vpq__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1848,
+          "path": "/home/ubuntu/w17work/dierun2/pq/Vpq.mk",
+          "sha256": "2a78e90bddf65b5061758fdd30be77132f27fd66d9c10ba8a56e3b37f1853dbd"
+        },
+        {
+          "bytes": 1992,
+          "path": "/home/ubuntu/w17work/dierun2/pq/Vpq_classes.mk",
+          "sha256": "c2768cc874a4d47d024f1988a7cbaa1a5e01c2cbd4df254e3c4046f3b9b1d5a8"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun2/pq/Vpq__verFiles.dat",
+      "parameters": {
+        "BF16": "0",
+        "PHW": "6",
+        "XF": "4"
+      },
+      "prefix": "Vpq",
+      "sha256": "a910b008b8177127d8dfdc1cd25d1603710bd05a7453ae4239723aaae7686440",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_pair"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 152402,
+          "path": "/home/ubuntu/w17work/dierun2/die1/Vdie1.h",
+          "sha256": "05a7b3f17f11133e8dd9916fc320cba9a0a081910c3d5d7302c2d1cdadbea4f3"
+        },
+        {
+          "bytes": 13501340,
+          "path": "/home/ubuntu/w17work/dierun2/die1/Vdie1___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 91955636,
+          "path": "/home/ubuntu/w17work/dierun2/die1/Vdie1__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun2/die1/Vdie1.mk",
+          "sha256": "312f1c10163e5eb221d70c2ccd526e76d262924a8f74a39ca7e1735eec2a36b5"
+        },
+        {
+          "bytes": 51152,
+          "path": "/home/ubuntu/w17work/dierun2/die1/Vdie1_classes.mk",
+          "sha256": "f73fc00444a44d23e60d25f8dd773340578b6e723ad924ff84f68ac17f93ce85"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun2/die1/Vdie1__verFiles.dat",
+      "parameters": {
+        "CL_DEPTH": "512",
+        "CL_LANES": "16",
+        "CL_RELAY": "0",
+        "RANK": "1",
+        "ROM_PHW": "6"
+      },
+      "prefix": "Vdie1",
+      "sha256": "06dbfb2611c719fbff4169318255e64dac23aeaedcc286593cef518be7fbd119",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_rt_die"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 152402,
+          "path": "/home/ubuntu/w17work/dierun2/die2/Vdie2.h",
+          "sha256": "1f575f96e90b20d198dd89f40558ef93e071634adbfc443cbdebf2af426b9d2d"
+        },
+        {
+          "bytes": 13501340,
+          "path": "/home/ubuntu/w17work/dierun2/die2/Vdie2___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 91955644,
+          "path": "/home/ubuntu/w17work/dierun2/die2/Vdie2__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun2/die2/Vdie2.mk",
+          "sha256": "1b6e0303109c290c490c7231960b12907b40d167b183c3ec98f28f21cf9db1dc"
+        },
+        {
+          "bytes": 51152,
+          "path": "/home/ubuntu/w17work/dierun2/die2/Vdie2_classes.mk",
+          "sha256": "1c5ef988d8bbc26b61aeebba14ac4dafc85fd800a0868a3f2cc25f9d1f32159b"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun2/die2/Vdie2__verFiles.dat",
+      "parameters": {
+        "CL_DEPTH": "512",
+        "CL_LANES": "16",
+        "CL_RELAY": "0",
+        "RANK": "2",
+        "ROM_PHW": "6"
+      },
+      "prefix": "Vdie2",
+      "sha256": "4f0e6eab859f7ee060bb5cbf075a11dcd5ae61b23e18a752ea03ccae2865151c",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_rt_die"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 3773,
+          "path": "/home/ubuntu/w17work/dierun2/retn/Vretn.h",
+          "sha256": "7ffecba1d3999ec12c556230e709a2b1fab6218243366bea64a81a9071fc32c7"
+        },
+        {
+          "bytes": 8642,
+          "path": "/home/ubuntu/w17work/dierun2/retn/Vretn___024root.h",
+          "sha256": "480b79246ab4e328048ff7455cb083b54da2f9ae089d01ba75cd6de604b99ea2"
+        },
+        {
+          "bytes": 35368,
+          "path": "/home/ubuntu/w17work/dierun2/retn/Vretn__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun2/retn/Vretn.mk",
+          "sha256": "29a9583d900557b44f58516cb562829133ff9a0d9b7735ab9b4fc41f2385b6bb"
+        },
+        {
+          "bytes": 1665,
+          "path": "/home/ubuntu/w17work/dierun2/retn/Vretn_classes.mk",
+          "sha256": "f61f2a90d4aa08979217eb57535a1bc0eb8855668da1f3e129c20dfc70fd6d4e"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun2/retn/Vretn__verFiles.dat",
+      "parameters": {
+        "BYPASS": "1",
+        "RD": "64",
+        "RST": "1"
+      },
+      "prefix": "Vretn",
+      "sha256": "b777de3da7d19f1dfb9dddc97e729500f399712c995c24ace946b325cb6c986f",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_retn"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 152402,
+          "path": "/home/ubuntu/w17work/dierun2/die3/Vdie3.h",
+          "sha256": "b3bac6fb14a563c1fbf82f0f66624673e4b70a288f4f75d230f8aaed54c69720"
+        },
+        {
+          "bytes": 13501340,
+          "path": "/home/ubuntu/w17work/dierun2/die3/Vdie3___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 91955652,
+          "path": "/home/ubuntu/w17work/dierun2/die3/Vdie3__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun2/die3/Vdie3.mk",
+          "sha256": "af25c9af2b358601864fa5293177666e96f8f93aff333e9da8f27de0c1dbab80"
+        },
+        {
+          "bytes": 51152,
+          "path": "/home/ubuntu/w17work/dierun2/die3/Vdie3_classes.mk",
+          "sha256": "f97d003358c2cf35688b64c4197cf0a6c40116831dd5d027b77317967c3d702c"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun2/die3/Vdie3__verFiles.dat",
+      "parameters": {
+        "CL_DEPTH": "512",
+        "CL_LANES": "16",
+        "CL_RELAY": "0",
+        "RANK": "3",
+        "ROM_PHW": "6"
+      },
+      "prefix": "Vdie3",
+      "sha256": "53dec469c0956c0cdc0321e9d8e804f7c88e33d13357db78840e7e2d7195109d",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_rt_die"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 152402,
+          "path": "/home/ubuntu/w17work/dierun2/die0/Vdie0.h",
+          "sha256": "de35b9215d665088dc5e0b8310f9cc0eb64296a640b47922d8ee5e89f9196568"
+        },
+        {
+          "bytes": 13501340,
+          "path": "/home/ubuntu/w17work/dierun2/die0/Vdie0___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 91955716,
+          "path": "/home/ubuntu/w17work/dierun2/die0/Vdie0__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1864,
+          "path": "/home/ubuntu/w17work/dierun2/die0/Vdie0.mk",
+          "sha256": "9b6c1b19875326f3877635d3597b1288dfccfda67f9fc532d5acd1750c09027f"
+        },
+        {
+          "bytes": 51152,
+          "path": "/home/ubuntu/w17work/dierun2/die0/Vdie0_classes.mk",
+          "sha256": "cc9b07c0f5c6eeda14e6eabb93d6484bc9882ccfc925c709b77f7f2ca9e1f0ec"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/home/ubuntu/w17work/dierun2/die0/Vdie0__verFiles.dat",
+      "parameters": {
+        "CL_DEPTH": "512",
+        "CL_LANES": "16",
+        "CL_RELAY": "0",
+        "RANK": "0",
+        "ROM_PHW": "6"
+      },
+      "prefix": "Vdie0",
+      "sha256": "31ecb145ebc38746f3ec290700850fd01b269a0e687a974e0c369d4bb100ed9c",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "ot_v41_rt_die"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 180570,
+          "path": "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core.h",
+          "sha256": "d3772aa09da0d45b7ddb626c8620eec76ffdbb5f3b1a0bba8356e2fe1bbf2103"
+        },
+        {
+          "bytes": 110103200,
+          "path": "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core___024root.h",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 537632098,
+          "path": "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1973,
+          "path": "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core.mk",
+          "sha256": "3ceeadad9daba5bd750e54c7fd2d84ca3002ad96620a60867f47aaac6b52c498"
+        },
+        {
+          "bytes": 187902,
+          "path": "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core_classes.mk",
+          "sha256": "f826bab35aa0cc346b1e3e6242fda40813f491ca2a8875cba0690eb10e3dec72"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core__verFiles.dat",
+      "parameters": {},
+      "prefix": "Vtb_D1_scope_core",
+      "sha256": "1c33a048292e7ca3460fd5621e6dccdf8990e128e597ced0e69dffbaa28c4c4e",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "tb_D1_scope_core"
+    },
+    {
+      "assets": [
+        {
+          "bytes": 5357,
+          "path": "/tmp/dsrom-PAR2-runtime-consumer-20261002-r1/cut/Vcut.h",
+          "sha256": "cd16197a5fd1ac6178e4cc778382a7b8e72ac8eeafdc9977fe1027281707b99b"
+        },
+        {
+          "bytes": 71798,
+          "path": "/tmp/dsrom-PAR2-runtime-consumer-20261002-r1/cut/Vcut___024root.h",
+          "sha256": "eacf04a88200f5a6c7cbe137c4bb971bdb277181438792ff1a22e27009f57bb8"
+        },
+        {
+          "bytes": 193306,
+          "path": "/tmp/dsrom-PAR2-runtime-consumer-20261002-r1/cut/Vcut__ALL.a",
+          "payload_not_read": true
+        },
+        {
+          "bytes": 1818,
+          "path": "/tmp/dsrom-PAR2-runtime-consumer-20261002-r1/cut/Vcut.mk",
+          "sha256": "cbcf699e1ff16282f27574d93de6646fc4449c2e85bdcee59e62060745513ec2"
+        },
+        {
+          "bytes": 1764,
+          "path": "/tmp/dsrom-PAR2-runtime-consumer-20261002-r1/cut/Vcut_classes.mk",
+          "sha256": "a4b3ec0969848c968adc115bbd86ba7f3d7637742f20cea55cd8804087299237"
+        }
+      ],
+      "disposition": "REJECT_FULL_CURRENT_PHW10",
+      "metadata": "/tmp/dsrom-PAR2-runtime-consumer-20261002-r1/cut/Vcut__verFiles.dat",
+      "parameters": {
+        "BP": "0",
+        "BST": "17",
+        "FAST": "1",
+        "NBF": "724",
+        "NP": "4096",
+        "PHW": "10",
+        "PP": "1",
+        "R": "128",
+        "VAW": "30"
+      },
+      "prefix": "Vcut",
+      "sha256": "ffdd3ea236de3bb3138d8fbc77747b837af7a4f926c289c76a29a62d5addafc8",
+      "source_context_fingerprint": "metadata only; Verilator timestamp/hash tokens are not source SHA256",
+      "top": "dsrom_runtime_consumers"
+    }
+  ],
+  "roots": [
+    "/home/ubuntu/w17work",
+    "/tmp/w17-D1-native-joined-20261002-r1/obj",
+    "/tmp/dsrom-PAR2-runtime-consumer-20261002-r1/cut"
+  ],
+  "scope": "READ_ONLY_NAMED_RETAINED_NATIVE_METADATA_SEARCH_NOT_GLOBAL_EXHAUSTIVE"
+}

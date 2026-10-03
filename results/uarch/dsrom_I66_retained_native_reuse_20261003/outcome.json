@@ -1,0 +1,72 @@
+{
+  "absolute_F": null,
+  "actual_max_live_versions": null,
+  "all_retained_full_die_ROM_PHW": 6,
+  "available_PHW10_component": "dsrom_runtime_consumers Vcut: local adapter/spine/field/memory cone; no core scheduler/selected provider",
+  "baseline_feasibility": {
+    "baseline_outputs": [
+      "actual source phase acceptance/native idle edges",
+      "actual operand/context lifetime and peak live native VM address versions from accepted full trace"
+    ],
+    "can_measure_without_physical_provider": true,
+    "cannot_measure": [
+      "selected bank rearm/positive CDC credits/packet debt",
+      "qualified candidate F from new retirement hook",
+      "all384 runtime dispatch qualification without actual implementation/coverage",
+      "physical route/CDC service guarantee"
+    ],
+    "requirements": "New source-matched current PHW10 complete program/field/compiled configuration and native eval/clock/reset enrollment; passive collector must observe actual admissions, original postNBA VM values, SU vectors/reads/R+2 tags. Identity sidecar must identify observer-only generations separately from hardware provider IDs."
+  },
+  "current_accepted_journal": null,
+  "current_compiled_binary": null,
+  "current_complete_sourceclosure": null,
+  "current_full_die_ROM_PHW_required": 10,
+  "current_source_hooks_commit": "9709cbe00298c34fe7efe828b2ad64407c266788",
+  "existing_jobs_changed": false,
+  "fulltoken": false,
+  "hardware_admission": false,
+  "hook_owner": "Hubble owns passive source hooks and collector/admission schema. No native launch owned. Parent owns coordination of one reviewed current source build; no duplicate build prepared/launched.",
+  "jobs_launched": 0,
+  "metadata_records_checked": 30,
+  "missing_selected_source_interfaces": [
+    {
+      "endpoint": "per-shard captured row credit return",
+      "fields": "full169 context, physical_shard1, row16, positive captured return edge",
+      "native_equivalent": null
+    },
+    {
+      "endpoint": "wire packet accept/ACK/outstanding retirement",
+      "fields": "same full169 owner, packet identity, actual accepted/ACK edge and outstanding count",
+      "native_equivalent": null
+    },
+    {
+      "endpoint": "source capture-bank generation/rearm",
+      "fields": "active full169 owner, actual row/seat credit debt, rearm edge",
+      "native_equivalent": null
+    },
+    {
+      "endpoint": "effective adapter completion F",
+      "fields": "phase_active, context-qualified VM visibility+captured credits+wire debt predicate at u_radapt.s_idle; default-off source implementation",
+      "native_equivalent": "current .s_idle(s_idle) is raw native spine idle, not selected qualified retirement"
+    },
+    {
+      "endpoint": "separate VM address/version lease retirement",
+      "fields": "full169 version, entire writer exclusion interval, actual native SU read and observed R+2 tag completion",
+      "native_equivalent": "native VM writes/reads exist; selected address/version owner lease does not"
+    },
+    {
+      "endpoint": "full169 user32 provider identity",
+      "fields": "stage6/rank2/expert9/phase10/key32/gen32/user32/Xversion32/PC14 plus separate shard1",
+      "native_equivalent": "wrapper user10 is not user32; no source generation/Xversion lease port"
+    },
+    {
+      "endpoint": "actual all384 stage dispatcher acceptance",
+      "fields": "EID VM response and exact stage/phase/key binding to actual dispatched provider",
+      "native_equivalent": "source key/phase available; reviewed runtime stage_dispatch_adapter_implemented=false"
+    }
+  ],
+  "retained_full_die_elaborations": 8,
+  "smallest_next_operation": "One coordinated, reviewed PHW10 compile/enrollment (new affected frontend required, no wholemake duplication) followed by passive original-native baseline; functional candidate run additionally waits selected provider/hook implementation and unified source/model GO.",
+  "trace_producing_handle": null,
+  "verdict": "NO_IDENTITY_MATCHED_CURRENT_PHW10_FULLPROGRAM_NATIVE_REUSE_IN_CHECKED_ROOTS"
+}
