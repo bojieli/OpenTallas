@@ -1,0 +1,25 @@
+{
+  "RTL_or_physical_runs": 0,
+  "codec_cache": "bounded4096entry software memoization of exact pure encode64/decode64; sourcecodec unchanged, no hardwarecache",
+  "full_vocab_cases": [
+    65535,
+    65536,
+    100000,
+    129279
+  ],
+  "functional_source_seals": {
+    "K1": "f023de8fe30b850b622f6bb2f86d56f6de4200b49d1c82690eadb1bb07cbf307",
+    "NativeAdapter": "54b7dc6913b6abd25f4e9adafc4158639bbfcd2147c5c2631ad741c0dc1d27e4",
+    "checked_meta": "12813ddb1bc9a56914156f379b58bbb9e72bce66efb6f868a3172471a2ed7b38",
+    "fpkey": "5507bc4294bf0cb781c318816cf3d7e79effda339f8f6c57ee646d81c91537c8",
+    "full512_reference": "c6aff1fe7482f2303896001c713b581763d778d272908d3c48e0bfe3ffc49b80",
+    "pack": "b8d0b243ea762074c58c27162b3ae22b541fc1b7d0d5a4f92db8fc0c54081da6",
+    "unpack": "7d5d2b580f3966a1f0e0dc90a25ca2f2b9a5a4a60b269e5c076f4d0c543e697e",
+    "width": "538af4fc14444e9218ce0ea84a4dbe2bbecc330781fbe8091ffcaa7a4cd5c409"
+  },
+  "model_cost_revision": "subsequent additive ledger names variable count/address guards; behavior remains identical",
+  "pytest_elapsed_s": 253.76,
+  "tests_passed": 119,
+  "verdict": "PASS_BEHAVIORAL_MODEL_ONLY_PRICE_LEDGER_SUPERSEDED",
+  "whole_MTP": false
+}

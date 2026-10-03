@@ -1,0 +1,439 @@
+{
+  "admission": {
+    "model_only": true,
+    "no_RTL_or_P_and_R": true,
+    "physical_G0": false,
+    "rate_or_tau_adopted": false,
+    "standalone_native_cost_does_not_depend_on_K512_capacity": true,
+    "whole_MTP": false
+  },
+  "base": "f1a9eb944dc01992012eab62bca78ae194ecf5eb",
+  "blockers": {
+    "EAM_mismatch": "me_eng uses X_ME||X_ROM, EAM uses only X_ME; bind retained actual engine and real return-valid",
+    "ROM_AMAX": "X_ROM branch engine1 am_idx/am_any zero; ot_v41_rom_adapt m_ok explicitly rejects m_amax, rom_fault_w not e_fault1. Need actual priced/gated ROM head-result provider; fixing EAM alone insufficient",
+    "XU21": "current sel_first16 cannot produce full21; requires selected exactk1 or widened/protected source endpoint",
+    "actual_program_pairs": "Builder serial=True protects head/CTL pairs and excludes AMAX batching; actual installed whole program/cmdPC trace not supplied",
+    "clock_and_home": "Arch/Maxwell loaded stage/sourceclock/home/channel decisions pending",
+    "reset_wrap": "positive provider+holder+reverseCDC drain required; localempty/mask cannot prove externaloldcopies",
+    "upstream_descriptor_protection": "core descriptors held until actual acceptance; their full protection/source clock/reset still unenrolled"
+  },
+  "comparison": {
+    "actual_indexed_K512_remaining_price_and_protection_unknown": true,
+    "conditional_saved_edges_per_TOKX": 1535,
+    "new_after_last_through_first_handshake_edges": 2,
+    "new_joint_gross50pct_mm2": 0.01588619304,
+    "no_blind_add_to_594": true,
+    "old_after_last_through_tail_edges": 1537,
+    "one_percent_per_user_rate_gate": "PASS only if actual old whole-iteration time_ns <=101*net_saved_ns and net_saved_ns>0. Exact actual producer counts and whole calendar must be supplied; no current whole-token PASS",
+    "reference": "594fee full source-compatible private protected scalar allowance, NOT built/adopted and NOT an actual net area debit",
+    "reference_gross50pct_mm2": 1.3021796617199999,
+    "same_adapter_same_II_segment_rate_gain_pct": 1.1873269287294441,
+    "scalar_physical_slot_not_required_for_native_component_model": true,
+    "source_vocab": 129280,
+    "vs_original_with_new_adapter": "net saved edges =1535*nTOKX -6*nAllNativeOrigins - extra loaded-stage/VM/CDC/wait edges, then /0.9 ns prospective only",
+    "whole_token_saving_qualified": false
+  },
+  "default_enable": false,
+  "k1": {
+    "calendar": {
+      "after_last_input_to_held_output_edges": 1,
+      "after_last_to_output_handshake_min_edges": 2,
+      "loaded_decode_compare_encode_SS_FF": false,
+      "no_threshold_wave_or_sort": true,
+      "post_first_emission_tail_removed": 511,
+      "prospective_input_II": 1,
+      "unbounded_held_waits": true
+    },
+    "conditional_selection": "ONLY active FP32 OP_SEL static count>0<=vocab runtimek1, full21 native walker; BF16/dynamic/TOPK512/routerk6 use preserved original K512 paths",
+    "cost": {
+      "cell_counts_by_section": {
+        "current_codecs_padding_and_joint_guard": {
+          "INVx1_ASAP7_75t_R": 5544,
+          "NAND2x1_ASAP7_75t_R": 20538
+        },
+        "explicit_original_XU_K1_shared_VM_ports_mux_and_return_fanout": {
+          "BUFx4_ASAP7_75t_R": 32,
+          "INVx1_ASAP7_75t_R": 49,
+          "NAND2x1_ASAP7_75t_R": 323
+        },
+        "source_comparison_or_native_identity_route_and_controls": {
+          "INVx1_ASAP7_75t_R": 1550,
+          "NAND2x1_ASAP7_75t_R": 10212
+        },
+        "storage_hold_restore_clock_reset_and_fanout_minimum": {
+          "BUFx4_ASAP7_75t_R": 1452,
+          "DFFASRHQNx1_ASAP7_75t_R": 504,
+          "INVx1_ASAP7_75t_R": 1008,
+          "NAND2x1_ASAP7_75t_R": 1512
+        }
+      },
+      "cell_counts_total": {
+        "BUFx4_ASAP7_75t_R": 1484,
+        "DFFASRHQNx1_ASAP7_75t_R": 504,
+        "INVx1_ASAP7_75t_R": 8151,
+        "NAND2x1_ASAP7_75t_R": 32585
+      },
+      "clock_minimum": [
+        63,
+        8,
+        1
+      ],
+      "codewords": 7,
+      "gross50pct_mm2": 0.0070991477999999995,
+      "gross_body_um2": 3549.5739,
+      "protected_bits": 504,
+      "raw_bits": 342,
+      "reset_minimum": [
+        72,
+        9,
+        2,
+        1
+      ],
+      "wire_sites_and_net_debit": null
+    },
+    "exactness": "same FP32 order key, -0=+0, lower index ties, +/-Inf retained; NaN outside pinned contract, no arithmetic or rounding change",
+    "literal_RTL_gate_run": false,
+    "literal_required_RTL_oracle": "unchanged rtl/hdc/v41/ot_hdc_select.sv K512 VW32 IW21 ORDER1 runtimek1, allfull21/highindex/held/fault cases; NEVER K1oracle",
+    "ports": {
+      "MACs_per_cycle": 0,
+      "VM_fixed_latency_enrolled": false,
+      "VM_read_bytes_per_edge": 4,
+      "VM_request_signals": 31,
+      "VM_return_signals": 32,
+      "VM_write_bytes_per_edge": 4,
+      "VM_write_signals": 63,
+      "index_payload_bits": 23,
+      "index_valid_ready": 2,
+      "reservations_before_issue": 2,
+      "score_payload_bits": 54,
+      "score_valid_ready": 2,
+      "shared_VM_return_fanout_bits": 32,
+      "shared_original_XU_port_mux_bits": 97,
+      "source_VM_return_has_ready": false,
+      "source_mode_lock": "derive from protected accepted native job until completion; no current descriptor selects a delayed return"
+    },
+    "records": {
+      "VM_reservation_raw_each": 56,
+      "VM_reservation_records": 2,
+      "held_index_output_raw": 24,
+      "meta_fields": [
+        [
+          "src",
+          30
+        ],
+        [
+          "dst",
+          30
+        ],
+        [
+          "n",
+          21
+        ],
+        [
+          "issued",
+          21
+        ],
+        [
+          "captured",
+          21
+        ],
+        [
+          "consumed",
+          21
+        ],
+        [
+          "phase",
+          3
+        ],
+        [
+          "stop",
+          1
+        ],
+        [
+          "fault",
+          1
+        ],
+        [
+          "head",
+          1
+        ],
+        [
+          "tail",
+          1
+        ]
+      ],
+      "winner_raw": 55
+    },
+    "source_K512_unchanged": true
+  },
+  "native_adapter": {
+    "MP": 1,
+    "NW": 21,
+    "PC_wire_bits": 32,
+    "acceptance": "source S_ISSUE registers oldgo; adapter captures offer, ARM oneedge later; actual next accepted backendgo requires current native ready+holder beginready and current joint coded guard. Hold core S_GO and descriptors until matching launchreceipt; no launchintent called native acceptance",
+    "calendar": {
+      "actual_accept_to_core_launchreceipt_take_edges_min": 1,
+      "codec_feedback_loaded_SS_FF": false,
+      "extra_vs_legacy_upper_edges_per_native_child": 6,
+      "finite_child_slots": 2,
+      "held_wait_bound": null,
+      "installed_split_serial_clock": false,
+      "issue_offer_to_actual_native_accept_edges_min": 2,
+      "prospective_clock_GHz": 0.9,
+      "source_clk_same_as_core": true,
+      "terminal_capture_to_core_CTL_release_edges_min": 4,
+      "terminal_capture_to_holder_finish_edges_min": 3
+    },
+    "component_functional_preparation_eligible": "conditional parent enrollment at specified sameclock interface; independent of K512 physical slot, not build authorization",
+    "component_model_verdict": "PASS_CONDITIONAL_SAMECLOCK_PORT_STATE_CALENDAR; connected-source and physical gates fail separately",
+    "connected_source_G0": false,
+    "cost": {
+      "cell_counts_by_section": {
+        "current_codecs_padding_and_joint_guard": {
+          "INVx1_ASAP7_75t_R": 7130,
+          "NAND2x1_ASAP7_75t_R": 26407
+        },
+        "source_comparison_or_native_identity_route_and_controls": {
+          "INVx1_ASAP7_75t_R": 1546,
+          "NAND2x1_ASAP7_75t_R": 11886
+        },
+        "storage_hold_restore_clock_reset_and_fanout_minimum": {
+          "BUFx4_ASAP7_75t_R": 1879,
+          "DFFASRHQNx1_ASAP7_75t_R": 648,
+          "INVx1_ASAP7_75t_R": 1296,
+          "NAND2x1_ASAP7_75t_R": 1944
+        }
+      },
+      "cell_counts_total": {
+        "BUFx4_ASAP7_75t_R": 1879,
+        "DFFASRHQNx1_ASAP7_75t_R": 648,
+        "INVx1_ASAP7_75t_R": 9972,
+        "NAND2x1_ASAP7_75t_R": 40237
+      },
+      "clock_minimum": [
+        81,
+        11,
+        2,
+        1
+      ],
+      "codewords": 9,
+      "gross50pct_mm2": 0.00878704524,
+      "gross_body_um2": 4393.52262,
+      "protected_bits": 648,
+      "raw_bits": 439,
+      "reset_minimum": [
+        93,
+        12,
+        2,
+        1
+      ],
+      "wire_sites_and_net_debit": null
+    },
+    "model_state_ports_calendar_complete": true,
+    "publication": "matching actual CTL query lease/slot/lane with current ctlPC32 captured, checked, then original finish52 held through holderready; core CTL PCadvance waits matching receipt. No expectedconsumerPC fabricated; actual whole-program serialized pair audit still required",
+    "records": {
+      "cohort_fields": [
+        [
+          "lease",
+          25
+        ],
+        [
+          "g",
+          3
+        ],
+        [
+          "used",
+          16
+        ],
+        [
+          "stop",
+          1
+        ],
+        [
+          "fault",
+          1
+        ],
+        [
+          "fenced",
+          1
+        ]
+      ],
+      "job_fields": [
+        [
+          "lease",
+          25
+        ],
+        [
+          "slot",
+          3
+        ],
+        [
+          "engine",
+          2
+        ],
+        [
+          "lane",
+          3
+        ],
+        [
+          "cmdpc",
+          32
+        ],
+        [
+          "token",
+          21
+        ],
+        [
+          "phase",
+          3
+        ],
+        [
+          "seen",
+          1
+        ],
+        [
+          "launch_receipt",
+          1
+        ],
+        [
+          "n",
+          21
+        ],
+        [
+          "k",
+          12
+        ],
+        [
+          "bf16",
+          1
+        ],
+        [
+          "op",
+          2
+        ],
+        [
+          "amax",
+          1
+        ],
+        [
+          "m",
+          3
+        ],
+        [
+          "wsrc",
+          1
+        ]
+      ],
+      "query_fields": [
+        [
+          "lease",
+          25
+        ],
+        [
+          "slot",
+          3
+        ],
+        [
+          "lane",
+          3
+        ],
+        [
+          "ctlpc",
+          32
+        ],
+        [
+          "valid",
+          1
+        ]
+      ]
+    },
+    "selected_NSLOT": 8,
+    "source_PC_default14_reduced_peer16": "32bit zeroextension priced; actual selected program bounds must be checked",
+    "source_ports": {
+      "CTL_query_body_bits": 63,
+      "CTL_query_valid_ready": 2,
+      "CTL_receipt_body_bits": 57,
+      "CTL_receipt_valid_ready": 2,
+      "ME_go_demux_bits": 4,
+      "ME_readies_bits": 4,
+      "ME_return4engines_bits": 96,
+      "XU_return_bits": 24,
+      "fence_cut_bits": 36,
+      "holder_begin_finish_cuts": [
+        52,
+        52
+      ],
+      "issue_body_bits": 106,
+      "issue_valid_ready_signals": 2,
+      "launch_receipt_body_bits": 57,
+      "launch_receipt_valid_ready": 2,
+      "lease_g_cut_bits": 30,
+      "legal_channel_tracks": null,
+      "source_fault_reset_stop_bits": 6
+    },
+    "terminal": "retain accepted engine2/lane3/lease25/slot3/cmdPC32; observe active then idle+valid final21 token; XU full21 and ME actual selected engine required; ignore intermediate ov"
+  },
+  "schema": "DS_MTP_NATIVE_ADAPTER_AND_EXACT_K1_R1",
+  "source_pins": [
+    {
+      "archive": "inputs/rtl/hdc/v41/ot_hdc_select.sv",
+      "path": "rtl/hdc/v41/ot_hdc_select.sv",
+      "sha256": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e"
+    },
+    {
+      "archive": "inputs/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+      "sha256": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0"
+    },
+    {
+      "archive": "inputs/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+      "sha256": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259"
+    },
+    {
+      "archive": "inputs/rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv",
+      "path": "rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv",
+      "sha256": "c5e1b8c9ff458bc0995f58b299e8930bb192c4761434fb1c7eb8fe0f803b6a30"
+    },
+    {
+      "archive": "inputs/rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+      "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+      "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+    },
+    {
+      "archive": "inputs/rtl/v41die/ot_v41_rom_adapt.sv",
+      "path": "rtl/v41die/ot_v41_rom_adapt.sv",
+      "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f"
+    },
+    {
+      "archive": "inputs/tools/hdc_program_v41.py",
+      "path": "tools/hdc_program_v41.py",
+      "sha256": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f"
+    },
+    {
+      "archive": "inputs/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+    },
+    {
+      "archive": "inputs/rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv",
+      "path": "rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv",
+      "sha256": "9881428846246f96cd84ac2c5bbc1f59156fa03a02c96d44e6fc6db4d05e3ca2"
+    },
+    {
+      "archive": "inputs/rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_source_holders.sv",
+      "path": "rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_source_holders.sv",
+      "sha256": "e7c8ee4239b2ef8b349fc3eb89db14d31acd186fdbaa71cb43ca2acc9bfe4b4e"
+    },
+    {
+      "archive": "inputs/tools/ds_mtp_accept_leaf_model.py",
+      "path": "tools/ds_mtp_accept_leaf_model.py",
+      "sha256": "64e561298a7970012db2750452a5ef0cc19236c9d467d7e5348800d404545350"
+    },
+    {
+      "archive": "inputs/results/uarch/ds_mtp_accept_leaf_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json",
+      "path": "results/uarch/ds_mtp_accept_leaf_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json",
+      "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+    }
+  ]
+}

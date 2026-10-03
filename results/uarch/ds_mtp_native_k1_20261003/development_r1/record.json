@@ -1,0 +1,33 @@
+{
+  "elapsed_s_reported": 765.42,
+  "failed": 3,
+  "failed_nodeids": [
+    "test_actual_launch_and_matching_ctl_before_held_finish[0]",
+    "test_actual_launch_and_matching_ctl_before_held_finish[1]",
+    "test_onepercent_segment_not_whole_token_claim"
+  ],
+  "failure_reasons": [
+    "two fixtures used Python bool slot; strict field pack requires int",
+    "model function record fields tuples versus JSON list comparison; serialized cold model itself is byteexact"
+  ],
+  "full_vocab_cases_passed": [
+    65535,
+    65536,
+    100000,
+    129279
+  ],
+  "full_vocab_source_behavior_seals": {
+    "K1": "559f9a028154a7c5f917a6a94b615adf153ae53986fbe00718546ba398d10576",
+    "fpkey": "5507bc4294bf0cb781c318816cf3d7e79effda339f8f6c57ee646d81c91537c8",
+    "full512_reference": "c6aff1fe7482f2303896001c713b581763d778d272908d3c48e0bfe3ffc49b80",
+    "pack": "b8d0b243ea762074c58c27162b3ae22b541fc1b7d0d5a4f92db8fc0c54081da6",
+    "unpack": "7d5d2b580f3966a1f0e0dc90a25ca2f2b9a5a4a60b269e5c076f4d0c543e697e",
+    "width": "538af4fc14444e9218ce0ea84a4dbe2bbecc330781fbe8091ffcaa7a4cd5c409"
+  },
+  "passed": 111,
+  "pytest_returncode": 1,
+  "stdout_complete_file_archived": false,
+  "terminal_evidence": "tool session73433 actual terminal3failed111passed; no HDL/runtime job",
+  "test_and_model_snapshots_preserved": true,
+  "verdict": "FAIL_DEVELOPMENT_FIXTURE"
+}

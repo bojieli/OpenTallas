@@ -1,0 +1,208 @@
+DS MTP independent native origin adapter / conditional exact runtime-k1 model
+Base main f1a9eb944dc01992012eab62bca78ae194ecf5eb. Additive model/tests only.
+Original scalar/core/ROM source unchanged. No RTL or P&R, no accept rerun,
+no Claude DSpark stream or acceptance/nativecalendar duplication.
+
+SOURCE-COMPATIBLE NATIVE ADAPTER (SEPARATE FROM K512 PHYSICAL BLOCK)
+NSLOT8/NW21/MP1, PC32 envelope (original corePAW14/reduced peerPAW16; actual
+selected program PC bounds still to enroll). Captured original core .lease25,
+actual destination3, native accepted me_eng2/lane3 and commandPC32 survive all
+waits. Source descriptors/qualifiers are retained in 3 atomic K64/N72 words
+perkind, two1-word actualCTLqueries, one1-word cohort/masks/stop/fault/fenced/ITERmode/startpending.
+9words648protectedbits. Native records carry accepted-result token21,
+phase3, seenbusy and held launchreceipt. No unprotected sticky flag/lease cache.
+
+Exact native source issue stages: S_ISSUE registers go then S_GO consumes it
+nextedge. Original issue intent IS NOT backend acceptance. New optin adapter
+captures offer, validates ARM, then actual backendgo AND native ready AND
+holder-begin-ready must handshake at SAME edge. Original go is not simultaneously
+forwarded. Core S_GO/descriptors hold until matching launchreceipt consumes.
+ME readiness must use RETAINED engine and the original other-engine idle/go
+exclusion predicate, not current me_eng. XU readiness likewise source idle+
+selector/other-unit idle. Owned adapter blocks new sameunit commands through
+terminal+CTL publishing; source serialized head/CTL pairs already have this
+ownership. Upstream whole descriptor protection/source reset remain separate.
+Perkind native launch + holder begin body originallease25/slot3/token0/finish0.
+Do not reserve holder from issueintent and later silently cancel accepted debt.
+Only recognized active nonzero FP32SEL runtimek1 belongs to TOKX; preserve
+current K512/BF16/dynamic/router/index paths. AMAX is accepted weight engine
+with i_amax, wsrc0 and m1/currentMP1; no underpriced multilane assumption.
+
+TERM / PUBLICATION / RECEIPTS
+Observe accepted producer active, then drained idle. Old accepting-edge idle
+is not terminal; intermediate ME ov=t_ov is not terminal. Actual accepted ME
+engine's final idx21+am_any are required. TOKX uses full21 firstindex and drained
+XU idle. A pending launch receipt cannot be skipped. Captured token holds until
+actual CTL_TOKX/AMAX query (lease25/slot3/lane3/currentCTLPC32). Query captured
+then checked, then original finish52 held until existing holderready. Core CTL
+PC advances only after matching finish receipt, not bare native idle or pulse.
+No fabricated expectedconsumerPC/tag sidecar. Whole actual program serialized
+command/CTL pair observations must still be bound by the system owner.
+One immutable commandPC is a source witness; hardware ownership is private
+perkind scoped actual lease/slot/engine/lane, not software witness truncation.
+Published16-bit kind/slot mask forbids duplicate tuple after local delivery;
+source reset/fault with owned debt quarantines all normal grants on discovery.
+Reset/reuse/wrap only previous matching lease+63 external positive receipts,
+provideridle+holderempty+reverseCDCempty, no owned jobs/queries, then accepted
+next leafstart with same source modulo16 generation. Cold reset externally
+truthfully allcopiesfenced only. Localempty/4bitringcount does NOT prove drain.
+Local delivery/CTLreceipt NOT KV rollback, HBM visibility or tag retirement.
+
+SOURCE DEFECTS / BLOCKERS (DO NOT HIDE WITH FIXTURE)
+1 me_eng weight chooses engine1 when X_ME OR X_ROM. Legacy EAM chooses1 only
+when X_ME, so X_ROM1/X_ME0 readswrongengine. Canonical adapter selects retained
+accepted engine, not legacy EAM/current me_own.
+2 Stronger ROM-specific defect: core g_me_rom ties engine1 am_idx/am_any to0,
+e_fault1=0; ot_v41_rom_adapt m_ok REJECTS m_amax. Include rom_fault_w in joint
+fault input; a selector fix does NOT create ROM argmax. Claude ROM integrator
+needs actual source-backed ROM head-result provider, separately priced/gated.
+X_ROM0/X_ME1 has actual ME adapter argmax; reduced DSpark campaign uses it,
+which does NOT qualify adopted ROM field. Model refuses unsupported ROMAMAX.
+3 Current native XU sel_first is16, scalar IW16, fullNW21 caller does NOT fixit.
+Exactk1/full21 endpoint below is prospective, not an installed native source.
+4 Originalcore goes/CTL strobes have no adapter receiptready; core S_GO and CTL
+stall/route enrollment must be defaultoff. Shared source clk is actual; .9GHz
+clock split/SSFF/context enrollment still prospective, no silent CDC.
+
+CONDITIONAL EXACT K1 PRODUCER (NOT SHRUNK K512 SCOPE)
+Full literal ot_hdc_select K512/VW32/IW21/ORDER1 remains required RTL oracle.
+Specialize ONLY active FP32 static count>0<=vocab/k1. Source key canonicalises
+-0/+0, flips sign-order magnitude, compares key then lower21bit index; winner
+ninf retained. No FP arithmetic, rounding or reduction reorder. +/-Inf allowed;
+NaN outside original golden/source contract, no stochastic acceptance claim.
+Seven K64/N72 records: 3-word protected VM descriptor151raw, two56raw VM pending
+reservations, winner55raw, held output24raw =>342raw/504protectedbits.
+VM descriptor tracks addresses/count/issued/captured/consumed/head/tail/phase/
+stop/fault. Accepted native VM read reserves before issue, fixed-latency returns
+cannot be backpressured. Two reservations price pending+captured data; actual
+fixed VM read timing and write-ready/visibility must be enrolled. At mostone
+score4B peredge, one indexpacked4B write. Compare current checked winner with
+current checked score, encode newwinner; direct feedback II1 prospective only.
+After lastscore winner committed; nextedge heldoutput, followingedge earliest
+ready handshake. Held waits arbitrary; source declareddone onlyafter output
+accepted and all VM debt drained. No512sort/wave/emissionbank or511tail in k1.
+Current loaded decode/compare/encode cone unknown; newstage must price coded
+intermediates, feedbackII, VM stalls and whole segment before RTL.
+
+PRICE / CUTS / ONE-PERCENT CONDITION
+Native441raw/648protected bits gross 0.00884670660mm2@50%.
+K1 504b gross 0.00736674912mm2@50%; joint 0.01621345572mm2, vs historical594fee
+privatefullscalar1.30217966172 allowance. This is GROSS unmapped allowedcell
+construction including full codecs/padding/currentjointguard, identity/mux/
+selectors/held controls/hold restore and pin-only clock/reset/fanout. Explicit
+97bit VM request/write/status mux,32bit return fanout and all current21bit
+count/index ownership plus31bit address carry guards are separately charged. Actual
+wire/sites/slot/SSFF not inferred. Existing K512 physical/protection costs for
+indexed paths REMAIN and matchedreplacement/net debit UNKNOWN. Never add new
+native price blindly onto594fee native rows, or subtract1.302 as built area.
+model.json is authoritative counts and exact final arithmetic.
+Native namedcuts: offer106payload+2v/r, actual 4MEengine returns96bits +4readies
+and4go demux, XU return24bits, perkind52holder interface, launchreceipt57body+2v/r,
+CTLquery63body+2v/r, CTLreceipt57body+2v/r, lease/g28body+2v/r,
+fence34body+2v/r. Source fault/reset/stop union is6 bits. Actual channels/capacity
+unknown. K1 score54body+2v/r, index23body+2v/r, VM request31/return32/write63.
+No aggregated lane capacity or unrelated freecorridor assumed.
+Native min issueoffer->actualaccept2edges; actualaccept->core receipt1edge;
+terminalcapture->holderfinish3edges, ->CTLcore release4edges. Each presented
+ready wait is finite-credit but unbounded-duration, charged in full calendar.
+Conservative added native control allowance6edges/child relativelegacy;
+count actual TOKX and AMAX separately, no free verification heads.
+Full K512 source lastscore->firstoutput1026 plus511remainingbanktail=1537;
+conditional k1 lastscore->earliestoutputhandshake2 =>1535savededges/TOKX
+if common VM/clock/drain and loaded feedbackII1. Segment129280score gains
+1.1873269% rate with SAME adapter cost in both variants. WHOLE TOKEN NOT PROVEN.
+Vs current source with new adapter:
+ net_saved_edges=1535*nTOKX-6*nAllNativeOrigins-extra_stage/VM/CDC/wait_edges.
+ net_saved_ns=net_saved_edges/0.9 at prospective .9GHz only.
+Per-user >=1% rate iff net_saved_ns>0 AND actual old wholeiteration_ns <=
+101*net_saved_ns. No actual selected fulliteration/count/latency supplied;
+therefore whole-token saving/adoption FAIL/unknown, not an unconditional1% claim.
+Do not transfer empirical acceptance tau or reduced-clock functional results.
+
+ADMISSION / NEXT ACTIONS
+Native component state/ports/finitecalendar model passes conditional sameclock
+interface independently oflargeK512 physical slot. This is NOT build/adoption
+permission. Connectedsource fails exact points above. Physical G0 fails loaded
+codec cuts/sourceclk/load/context home and legalchannels. Parent may assign
+independent defaultoff native component preparation using FULL21 mock provider
+while retaining explicit lackofconnectedROM/XU source coverage.
+Arch/Maxwell price648b native +504b k1 cuts/loaded feedback/check tree at
+.9GHz SS60ps/FF25ps, actual reset7sink/clock8sink+wire/site, named core home;
+nofull1.302 replication allocation for MTP unless chosen fullscalar is needed.
+Claude DSpark owners bind real S_GO acceptance/descriptor holding, current
+accepted me_eng/lane, ROMAMAX provider, actualXU21/k1 selectedpoint, CTLready/
+receipt progression, actual program source hashes/pairs and positive drain.
+Russell next optin implementation follows positive stage/port/clock model and
+parent assignment. No whole drafter/acceptance calendar/model sweep here.
+
+REPLAY ONLY (NO RTL JOB)
+python3 tools/ds_mtp_native_k1_model.py --verify
+python3 -m pytest -o addopts='' -q tests/test_ds_mtp_native_k1_model.py
+python3 tools/ds_mtp_native_k1_model.py --out /tmp/ds-mtp-native-k1-independent-r1.json
+cmp results/uarch/ds_mtp_native_k1_20261003/model.json /tmp/ds-mtp-native-k1-independent-r1.json
+(cd results/uarch/ds_mtp_native_k1_20261003 && sha256sum -c manifest.sha256)
+
+FAULT-GUARD DAG REQUIRED AT INTEGRATION
+Adapter own_fault_out depends current coded/native protocol errors, never on
+current leaf fault. own_fault_out -> leaf caller_bad -> leaf fault; leaf fault
+masks adapter actuallaunch/finish/receipt grants and is sampled into coded
+quarantine on that edge, but is not combinationally fed back to own_fault_out.
+This preserves sameedge refusal in both directions without ownbad/leafbad loop.
+Price no new normal-latency stage: existing coded cohort fault receives sampled
+leaf fault. New named own_fault_out->caller_bad cut1 must have actual route;
+source leaf .fault already includes caller_bad, not an independent basefault.
+K1 fault -> selected XU fault input, with no ungated consume. No fault-reset
+shortcut can clear accepted job/query/read/output debt. RTL must gate every
+normal handshake on current checked ownership and these one-way fault guards.
+
+VERIFICATION / REUSE RECEIPT
+Original development_r1 FAIL preserved: two Python Boolean slot fixtures and
+one tuple-vs-JSON-list comparison; 111passed/3failed765.42s, no RTL test.
+functional_gate_r2 retains actual complete119PASS log253.76s and exact model/
+test sources. All four full129280-score streams passed highindices65535/65536/
+100000/129279; full512 insertion reference beyond512candidates, ties/signedzero/
+Inf,72singlewinner faults, acceptedorigin3x72 perkind, currentdoublefaults,
+source reset, query/receipt mismatch, heldready and40explicitfencedcohorts.
+Final cost-only ledger correction does not change any functional reference
+body (ASTSHA seals checked), so fullstreams are retained, not rerun again.
+Final controls also check current source bindings/byteexact model/ledger cuts.
+Software codec memoization only avoids recomputing pure reference values; it
+is not a model hardware cache, latency gain, clock measurement or RTL proof.
+The literal K512 RTL oracle is STILL a required prospective implementation gate.
+
+FINAL SOURCE CONSTRUCTION
+Use c_dslot=ir[O_DSLOT+:W_DSLOT] from the native descriptor, NOT d_cslot
+(decoded CTL_SLOT, meaningful at the later publication instruction). Source
+constructor source_offer checks TOKX DSLOT+1 with4bit carry, AMAX DSLOT directly;
+source root g3 bounds checked before offer, retained jobslot used on all returns.
+4bit add and3bit variable bounds comparator charged, no unpriced mapping logic.
+Final121control tests PASS with4fullstream cases deselected/reused from actual
+119PASS functional_gate_r2; all prior tested functional bodies remain SHA-sealed.
+Additional source constructor cases separately pass DSLOT0/6 ->TOKX1/7,
+AMAX0/7 direct, TOKX source7 carry refused before native/holder acceptance.
+Native441raw/648protected +K1 342raw/504protected =>783raw/1152protected total.
+Exact gross native 0.00884670660 +K1 .00736674912 =0.01621345572mm2@50% ASSUMED.
+Physical/net/context/wholeMTP/1% whole-token adoption remain unqualified.
+All Python jobs terminal; no hardware job/PID/lease or source mutation.
+
+SOURCE STEP/ITER CORRECTION (FINAL AUTHORITY OVER EARLIER SCOPE TEXT)
+Actual build_mtp STEP calls position_body(verify=False), emits a head with
+AMAX but no CTL_AMAX. Blind recognition of every i_amax would deadlock STEP.
+Native source_route therefore bypasses STEP/AR unchanged; only real selected
+ITER entry with accepted guarded leafcohort can allocate native publishingjobs.
+Actual source acceptedstart entry32 is compared against IMMUTABLE pinned program
+ITER-entry32 parameter; equality32 and4bit go/ready route mux separately priced.
+Runtime mutable program/entry switching would require its own protected model.
+Source mode and accepted-start pending are2bits in current cohort49raw/1word;
+not an unpriced pending context. Capture mode at actual accepted source start,
+then NEXTEDGE SAME accepted leaf header pos21/gen4/g3 clears pending. No sameedge
+postheader assumed. While pending no child may launch; pendingstart is owned
+debt, so source_fence refuses even claimed63receipts/localempty. Actual leaf
+accepted-start receipt/currentfault validity still needs installed root binding.
+This join fits recorded S_DYN then fetch/cap/dec before first native issue only
+when header is ready nextedge. Any latejoin beyondfirstoffer is charged.
+Current loaded clock/stage decisions may lengthen this, must reprice before RTL.
+Actual fullMTP program/ITER entry pin not supplied; CONNECTED G0 remains FAIL.
+Final root controls129PASS, four fullvocab cases reused from119PASS run with
+K1/FPkey/pack/unpack/control functions +META constant +sourcecodec pins exact.
+No claim of a single133case run or installed source/wholeMTP qualification.
