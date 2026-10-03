@@ -1,0 +1,111 @@
+"""Source-sized prelaunch PC0..10 checkpoint storage envelope, no execution.
+
+V3 writes a46-byte record per resident sector, including validity. Price all
+RF/state/shared apertures even though the actual live producer is much smaller.
+At PC9 the launcher must replace this envelope with the actual V3 projection
+and refuse any unexpected state shape before capture/continuation.
+"""
+import hashlib
+import io
+import json
+from collections import Counter
+from pathlib import Path
+import numpy as np
+from ds_hbm_pc10_projection_r46 import source_inputs
+import ds_producer_checkpoint_resume_v3 as helper
+from h3_ds_connected_provider_r37 import ROOT
+
+U=(1<<64)-1
+FAMILIES=['hc_mixes','hc_pre_norm','linear_q','linear_q','all_gather',
+          'q_norm_kv_row','linear_q','q_rope','attend','wo_a_part','all_reduce']
+
+
+def typed_bytes(value):
+    writer=helper.Writer.__new__(helper.Writer)
+    writer.f=io.BytesIO();writer.bytes=0;writer.arrays=0;writer.array_temporary_bytes=0
+    tree=writer.tree(value)
+    return len(helper.canonical(tree)),writer.bytes
+
+
+def model(native,homes,manifest,*,output_root):
+    if [o['family'] for o in native['instructions'][:11]]!=FAMILIES:
+        raise ValueError('exact source PC0..10 family chain required')
+    if helper.sha(helper.__file__)!='e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e':
+        raise ValueError('exact reviewed compact V3 helper required')
+    if helper.SECTOR_RECORD.size!=46:raise ValueError('exact validity-preserving sector codec required')
+    initial=manifest['initial_versions']
+    versions=[v['version'] for v in initial]
+    for op in native['instructions'][:11]:versions.extend(w['version'] for w in op['writes'])
+    max_version=max(versions,key=len)
+    max_shape=max(len(node.get('shape',[])) for op in native['instructions'][:11]
+                  for owner in op['rank_bindings'] if not owner.get('empty_owned_extent') for key in ([owner['template']] if not owner.get('buffer_programs') else [b['template'] for b in owner['buffer_programs']])
+                  for node in native['templates'][key]['code'])
+    entries=[];maximum_indices=0
+    for op in native['instructions'][:11]:
+        for owned in op['rank_bindings']:
+            if owned.get('empty_owned_extent'):continue
+            for write in op['writes']:
+                indices=[i for i in write['home_indices'] if owned['rank'] in homes[i]['rank_group']]
+                maximum_indices=max(maximum_indices,len(indices));entries.append((write['version'],owned['rank']))
+    states=[h.get('binding',{}) for h in homes if h['home']['class']=='HBM_NATIVE_STATE']
+    binding=max(states,key=lambda b:len(helper.canonical(b)),default={})
+    location=dict(kind='state_fragment',binding=binding,indices=[U]*maximum_indices,
+                  shape=[U]*max_shape,dtype=np.dtype('<f8'),pc=U)
+    location_entry=typed_bytes(((max_version,U),location))[0]+1
+    array_metadata=typed_bytes(((max_version,U),{'array':[U,U,'<f8',[U]*max_shape,False]}))[0]+1
+    image_key=typed_bytes((max_version,U))[0]+1
+    # Word counts include both actual RF fragments and bound persistent states.
+    # All source births through10, including initial embedding, are retained in
+    # this envelope regardless of releases.8B/word deliberately covers both
+    # data-array and repeated cached backing payload; no physical capacity credit.
+    def birth(h):
+        if 'birth_pc' in h:return h['birth_pc']
+        if h['home']['class']=='HBM_NATIVE_STATE' and 'PC' in h.get('binding',{}):return h['binding']['PC']
+        raise ValueError('source home lacks explicit birth or produced-state PC')
+    words=sum(h['word_count']*len(h['rank_group']) for h in homes if birth(h)<=10)
+    compound=max([1+max([len(v) for v in op.get('compound_output_fields',{}).values()] or [0]) for op in native['instructions'][:11]])
+    array_payload=words*8*compound
+    ranks=96;sms=32
+    sectors=ranks*((16<<20)+(32<<20)+sms*65536)//32
+    sector_payload=sectors*helper.SECTOR_RECORD.size
+    costs=dict(admission=U,forward_CDC=U,read_service=U,write_service=U,owner_lookup=U,
+               held_accept=U,write_visibility=U,consume=U,reverse_CDC=U,reverse_grant=U,retire=U)
+    owner=dict(PC=10,rank=U,SM=U,generation=U,tile=U,template='f'*64,die=U,address_class='native_state_fragment')
+    port=dict(extents={('DeepSeek',U):[dict(base=U,bytes=U)]},tags=4,qd=64,write_cap=4,
+              read_ticks=U,write_ticks=U,reverse_ticks=U,costs=costs,cost_scope='Positive provisional abstract software ticks; no real DRAM timing or clock claim',
+              accept_sequence=U,backing={'sector_backing':dict(table=[('DeepSeek',U)],offset=U,count=U,record_bytes=46)},
+              generations=[U]*4,now=U,order=U,allocation_identity=owner,
+              compact_lifecycle=dict(generations={i:U for i in range(4)},last_tick=U,tag_capacity=4,write_capacity=4))
+    # Include shared owner/extent/serial wrapper for EVERY port, even RF/state.
+    port_record=typed_bytes(((U,U),dict(extent=dict(base=U,bytes=U,rank=U,SM=U),owner=owner,serial=U,port=port)))[0]+1
+    ports=ranks*(sms+2);streams=ports+4
+    files=2*streams+1
+    file_row=dict(path=str(output_root)+('/9'*20)+'.events',bytes=U,sha256='f'*64,
+                  stamp=[U]*5,relative_path='9'*20+'.events',name='9'*20+'.events',dev=U,ino=U,mtime_ns=U,ctime_ns=U)
+    file_record=len(helper.canonical(file_row))+1
+    seen_row=typed_bytes((U,max_version,U,U,'data'))[0]+1
+    # Source identity and source-contract lists: price every committed tools
+    # filename, not merely the much smaller enrolled class MRO source set.
+    paths=[str(p.relative_to(ROOT)) for p in (ROOT/'tools').glob('*.py')]
+    identity_reserve=len(helper.canonical({p:'f'*64 for p in paths}))+len(helper.canonical(manifest))
+    components=dict(resident_sector_payload_bytes=sector_payload,cached_array_payload_bytes=array_payload,
+        all_port_and_shared_metadata_bytes=ports*port_record,
+        source_publication_metadata_bytes=(len(entries)+192)*(location_entry+array_metadata)*compound,
+        two_full_source_image_key_lists_bytes=2*len(initial)*image_key,
+        six_complete_journal_inventory_copies_bytes=6*files*file_record,
+        six_source_identity_and_contract_copies_bytes=6*identity_reserve,
+        four_complete_observation_metadata_copies_bytes=4*1664*seen_row,
+        source_control_scalar_and_wrapper_bytes=typed_bytes(dict(seq=U,retired=set(range(11)),
+            group_completed={(10,r,1) for r in range(96)},history=dict(visible={},sequence=0),
+            unconsumed_retired=[dict(PC=U,version=v,generation=U) for v in versions]))[0],
+        helper_fixed_metadata_and_IO_workspace_bytes=16384+(1<<20))
+    return dict(schema='DS_PC0_10_SOURCE_CHECKPOINT_STORAGE_ENVELOPE_R55',components=components,
+        checkpoint_new_bytes=sum(components.values()),resident_sector_upper=sectors,port_upper=ports,
+        journal_file_upper=files,cached_source_word_upper=words,published_key_upper=len(entries)+192,
+        max_source_shape_rank=max_shape,max_home_indices_per_publication=maximum_indices,
+        source_family_chain=FAMILIES,actual_checkpoint_not_measured=True,actual_state_restored=False,
+        source_control_invariants=['no query/expert/route/compressor family in0..10; query/route/Engram/history append maps remain empty',
+          'base provider backing/field_locations caches empty; raw bytes in addressed ports, immutable images referenced',
+          'live views/memories/reverse debts zero at capture; exact actual V3 projection must fit this envelope',
+          'all accepted scalar counters remain within finite prefix request*128/u64 bound; no hardware timer inference'],
+        hardware_qualified=False)
