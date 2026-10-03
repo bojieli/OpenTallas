@@ -1,0 +1,19 @@
+{
+  "source_commit": "8c3dfbf7910cb74cbc74497c787c3fc3b790bc82",
+  "coordinator_pid": 3514360,
+  "status": "SUBMITTED_ONCE_WAITING_FRESH_FLEET_ADMISSION",
+  "command": [
+    "python3",
+    "tools/h4_hbm_c0_pc40_exact_run_r2.py",
+    "--out",
+    "/home/ubuntu/hbm-c0-pc40-connected-8c3dfbf79-r2"
+  ],
+  "output": "/home/ubuntu/hbm-c0-pc40-connected-8c3dfbf79-r2",
+  "manifest": "/home/ubuntu/hbm-c0-pc40-8c3dfbf79-r2-coordinator/job_manifest.json",
+  "log": "/home/ubuntu/hbm-c0-pc40-8c3dfbf79-r2-coordinator/coordinator.log",
+  "hardware_runtime": "NOT_STARTED",
+  "hosts_allowed": [
+    "ot-pve1",
+    "155.103.253.226"
+  ]
+}

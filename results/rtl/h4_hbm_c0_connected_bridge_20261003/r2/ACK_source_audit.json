@@ -1,0 +1,32 @@
+{
+  "source": "8c3dfbf7910cb74cbc74497c787c3fc3b790bc82",
+  "review": "b3551c996a7d4981d6edf2fe5fd4cd418645e292",
+  "physical_RF": "archived original ot_gpu_rf_service",
+  "physical_ACK_tuple": false,
+  "ACK_phase_slots": {
+    "A_ACK": 17,
+    "B_ACK": 18,
+    "OUT_ACK": 17,
+    "CONST_ACK": 18,
+    "FMAX_ACK": 19
+  },
+  "local_wr_addr_in_ACK_phase": 19,
+  "current_address_used_for_matching": false,
+  "gate_W6_forward": "bare ACK enabled only in FMAX_ACK; retained request owner46+slot19 supplies context, conditional causal RF invariant only",
+  "producer_causal_invariant": [
+    "actual write_go creates registered ACK after both physical SRAM write edges",
+    "heldACK blocks further RF read/write acceptance",
+    "exclusive source write mux while lease live",
+    "shared RF reset",
+    "no extra ACK producers except explicit out-of-phase mutant"
+  ],
+  "not_proven": "unsolicited ACK in expected phase cannot be identity-matched with bare bit",
+  "caller_status": "external accepted opaque owner46, source64 tag/gen retained; production native allocator and lease snapshot absent",
+  "required_successor": {
+    "provider": "W4 ACK_ID1 c4c794ad0b4b3c295d11330fc06de3be0e94da0f",
+    "accepted_tuple": "capture wr_owner46 and actual wr_slot9 at write_go, never current wr_addr in ACK phase",
+    "sink": "compare physical held ACKowner/slot to retained accepted tuple + expected source phase; gate all normal grants/ACK/visibility and sticky quarantine on mismatch",
+    "latency": "provider +1 edge each of five writes; matcher/load stages must be priced before source successor",
+    "unchanged_live_gate": true
+  }
+}

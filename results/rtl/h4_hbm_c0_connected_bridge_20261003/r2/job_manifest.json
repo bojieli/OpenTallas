@@ -1,0 +1,21 @@
+{
+  "source_head": "8c3dfbf7910cb74cbc74497c787c3fc3b790bc82",
+  "command": [
+    "python3",
+    "tools/h4_hbm_c0_pc40_exact_run_r2.py",
+    "--out",
+    "/home/ubuntu/hbm-c0-pc40-connected-8c3dfbf79-r2"
+  ],
+  "memory_gib": 4,
+  "threads": 1,
+  "model_ready": true,
+  "thread_limits_priced": true,
+  "source_pins": {
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/tools/h4_hbm_c0_pc40_exact_run_r2.py": "ddf3c1c5dbed6cb3083bbf86ffa7b72912c8734bc26b99b2c645868653137303",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/tools/h4_hbm_c0_pc40_exact_gate_r2.py": "3b514eb2a4480e53e6c1c97aff647e555859b197a3f1c727d4a9555d1557d6b9",
+    "/tmp/claude-1000/queue/fleet-admission-guard-20261002/remote_gate_guarded.py": "4f69017dba2e612f2834d8ff0151d53eb7aafe00a9472bbe4ff48c9859681a7d"
+  },
+  "scope": "functional defaultoff selected RF/ACK/W6/FMIN gate only; prospective model with readiness<=4 edges after dependencies. Physical/fullprogram admission FALSE",
+  "reservation": "one worker,4GiB floor; scheduler rounds reservation to8GiB and retains24GiB host live reserve",
+  "no_retry": true
+}
