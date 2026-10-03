@@ -1,0 +1,135 @@
+{
+  "base_git": "86996e8f4a62f02f58b0f5592d3352b130dd57cb",
+  "historical_archives_are_not_current_source_equivalence": true,
+  "schema": "opentallas.hbm.inventory-source-pins.v1",
+  "sources": {
+    "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json": {
+      "bytes": 5088,
+      "sha256": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444"
+    },
+    "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.lef": {
+      "bytes": 1719810,
+      "sha256": "4d671aba6f1110d9dd74e6452499197e2dbe52f0fda448108b93d534c56b8b12"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": {
+      "bytes": 150234,
+      "sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": {
+      "bytes": 144422,
+      "sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef": {
+      "bytes": 145697,
+      "sha256": "72036137c53eda29ac3b432fb704791ac864ad9b5c32dc81e2e71bbe906862bf"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef": {
+      "bytes": 281541,
+      "sha256": "36346864c98588e41d85c8c9f095ce69bfe477119633ca9458aef3ee41127070"
+    },
+    "results/floorplan/hbm_gpu/qwen_hbm_die.json": {
+      "bytes": 8898,
+      "sha256": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4"
+    },
+    "results/floorplan/hbm_gpu/v41_hbm_die.json": {
+      "bytes": 9731,
+      "sha256": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67"
+    },
+    "results/uarch/full_sm_actual_parent_route_20261002/model.json": {
+      "bytes": 342211,
+      "sha256": "4292e592cfddc4e5ed65e5587f6e5f653aa29261fcbbe64c05becee376242eed"
+    },
+    "results/uarch/full_sm_rf_service_20261002/model_final.json": {
+      "bytes": 9920,
+      "sha256": "6707df368b3fde7bb8e481efd5a0d7f35051cc569562dd3af7e3e8534b4fc2c9"
+    },
+    "results/uarch/h4_hbm_baseline_bridge_20261003/w5_w10_r4/model.json": {
+      "bytes": 131919,
+      "sha256": "fff00ad9ba9e342912143e404beb3f58762ec719c94503d70ae0506231fa4672"
+    },
+    "results/uarch/h4_hbm_gateway_constructive_20261002/final_handoff_r10.json": {
+      "bytes": 4044,
+      "sha256": "99fcabb2afdc16a1f2af2d0744ecba1656f032c79894598551d3b5bd6b307885"
+    },
+    "results/uarch/h4_hbm_gateway_constructive_20261002/inputs/0.json": {
+      "bytes": 350235,
+      "sha256": "50017c9effd6bed078339f6370465d9cbeeb9606e0240fb3377f0ac49b9c3b4c"
+    },
+    "results/uarch/h4_hbm_gateway_constructive_20261002/inputs/5.json": {
+      "bytes": 105264,
+      "sha256": "9097facd9fdf71d82240ad18b0d830fba4cc31a75a2a29fda7ddcde3e2eb62e8"
+    },
+    "results/uarch/h4_hbm_gateway_constructive_20261002/inputs/6.json": {
+      "bytes": 15414993,
+      "sha256": "b635b1106650df1ed14701837c0cfdb3f22b678159e5aed300c0d86ec6e48920"
+    },
+    "results/uarch/h4_hbm_gateway_constructive_20261002/inputs/7.json": {
+      "bytes": 179217,
+      "sha256": "97a6d79ee1ba22fbc89f70f90745d3799a64b3e45ed651312da540e91539e3ab"
+    },
+    "results/uarch/h4_hbm_gateway_constructive_20261002/inputs/8.json": {
+      "bytes": 51109,
+      "sha256": "6ec1792b3abba1ee23ece46b46b0f3b4e4ae96b8118d27d9829bd04df4ed0cca"
+    },
+    "results/uarch/h4_hbm_gateway_constructive_20261002/manifest.json": {
+      "bytes": 8083,
+      "sha256": "326addae9e83cefed65a78270688a5709792e0c74d8407e0fd9e152b30c9d9b8"
+    },
+    "results/uarch/h4_hbm_kv_validity_fence_20261003/model.json": {
+      "bytes": 3664,
+      "sha256": "1ed614f1f5b1b1d400f3dfc1e4bf729da61280f989b8fe9370cb69926e5df4dd"
+    },
+    "results/uarch/hbm_W6_connector_model_20261003/r1/model.json": {
+      "bytes": 23809,
+      "sha256": "5b2f0b8b31dac8415b3ac57f2cb6c967ab103420120ee7d89171de1268d96bbf"
+    },
+    "results/uarch/hbm_rf_visibility_fence_20261002/model_connected_review.json": {
+      "bytes": 6861,
+      "sha256": "04efae69bb9e1a6f5943ce28ffea63affd2978a5f2495414ee0e07d9c0722daf"
+    },
+    "results/uarch/hbm_tc_parent_capacity_20261002/model.json": {
+      "bytes": 6433289,
+      "sha256": "56c1f650b5f2b67e1cb02554a8dc811f6782e7fdc876e247ecfe940b87c6088b"
+    },
+    "results/uarch/native_software_parent_intake_20261002/HBM_32SM_constructive_parent_review.json": {
+      "bytes": 1763,
+      "sha256": "ba297dbc38b8b4edf3e771458c25af21cd18c13ca2be33672a78a8a1d22040c5"
+    },
+    "rtl/gpu/ot_gpu_bulk_copy.sv": {
+      "bytes": 6787,
+      "sha256": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4"
+    },
+    "rtl/gpu/ot_gpu_hbm_rf_shared_context.sv": {
+      "bytes": 3623,
+      "sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "rtl/gpu/ot_gpu_rf_service.sv": {
+      "bytes": 2365,
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "rtl/gpu/ot_gpu_rf_visibility_fence.sv": {
+      "bytes": 3538,
+      "sha256": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3"
+    },
+    "rtl/gpu/ot_gpu_scratch_service.sv": {
+      "bytes": 1113,
+      "sha256": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02"
+    },
+    "rtl/gpu/ot_gpu_sm_q.sv": {
+      "bytes": 10936,
+      "sha256": "8e0aa477664f385a8536b1610c508fdd637bb020377adf744671c960d984b06f"
+    },
+    "rtl/gpu/ot_gpu_sm_v.sv": {
+      "bytes": 11348,
+      "sha256": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c"
+    },
+    "rtl/gpu/ot_gpu_xstore.sv": {
+      "bytes": 5297,
+      "sha256": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca"
+    },
+    "tools/uarch_model.py": {
+      "bytes": 428737,
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    }
+  }
+}
