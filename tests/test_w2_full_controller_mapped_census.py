@@ -46,3 +46,11 @@ def test_state_dependent_supply_leakage_summed_before_bounds(tmp_path):
  p=tmp_path/'STATE_TEST.lib';p.write_text('library(TEST) { leakage_power_unit : "1pW"; capacitive_load_unit(1,ff); cell(X) { area : .1; leakage_power () { when : "A"; value : 100; related_pg_pin : VDD; } leakage_power () { when : "A"; value : 10; related_pg_pin : VSS; } leakage_power () { when : "!A"; value : 200; related_pg_pin : VDD; } leakage_power () { when : "!A"; value : 0; related_pg_pin : VSS; } pin(Y) { direction : output; } } }')
  d=M.liberty_facts([p]);assert d['cells']['X']['leakage_W'] is None
  assert d['cells']['X']['state_leakage_bounds_W']==pytest.approx([110e-12,200e-12])
+
+
+def test_slang_whole_cw_vectors_are_traced_without_word_name_assumption():
+ net,facts=fixture();net['modules']['TEST_ONLY']['netnames']={
+  'cw':{'bits':list(range(100,100+182*72))},
+  'secondary.cw':{'bits':list(range(100+182*72,100+219*72))}}
+ d=M.census(net,facts);assert d['full219_storage_census_PASS']
+ assert d['cw_distinct_flop_cells']==15768

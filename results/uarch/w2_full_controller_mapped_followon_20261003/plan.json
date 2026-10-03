@@ -1,0 +1,47 @@
+{
+  "admission": "/srv/opentallas-scratch/admit.sh DYNAMIC_EXPECTED_PEAK_GiB -- docker run ...",
+  "admission_reserve_GiB": 150,
+  "capacity_method": "max(2*observed synthesis RSS17.6GiB,64*actual mapped JSON+Verilog bytes), rounded up GiB; admission estimate only, not measured STA peak or cap",
+  "constraints": {
+    "hold_uncertainty_ps": 25,
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60
+  },
+  "excluded_credit": [
+    "No synthesis rerun",
+    "No P&R",
+    "No functional equivalence",
+    "No timing/rate adoption",
+    "No inference",
+    "No whole-token result"
+  ],
+  "existing_Yosys_PID": 304073,
+  "existing_supervisor_PID": 271791,
+  "libraries": "Only five production RVT libs per SS/FF,211120/220122/220123; no FAKE cells",
+  "prerequisite_input": "/srv/opentallas-scratch/builds/hubble-w2-full219-ss-synthesis-20261003-r2",
+  "prerequisite_synthesis_source_commit": "8af31e3a5e02aa20d6a62a9498a6a86d09960f9c",
+  "resource_limits": {
+    "AS": null,
+    "CPU_time": null,
+    "file_size": null,
+    "memory": null,
+    "wall": null
+  },
+  "runner": "tools/w2_full_controller_mapped_followon.py",
+  "schema": "w2.full219.mapped-followon.plan.v1",
+  "sequence": [
+    "Wait for existing immutable synthesis terminal; no new synthesis",
+    "Require exact source8af/four source hashes/full NC6 MAX16 AW34 PC7 params and all ports exposed",
+    "Inventory+hash actual mapped JSON/Verilog; shared capacity admission",
+    "One SS library census: protected CW bit ownership/area/leakage bounds/clock pin C",
+    "Stop if actual full219 storage census fails; retain mapped census",
+    "One SS setup internal-path screen, then one FF hold internal-path screen, both same mapped netlist",
+    "Postcheck both mapped input hashes; retain all terminal receipts/logs"
+  ],
+  "source_files": {
+    "tools/w2_full_controller_mapped_census.py": "ade733af3d56608a15899ee032d922daf07e12596695456051a91ce3e0993789",
+    "tools/w2_full_controller_mapped_followon.py": "5acedbcf672b1bb6a2d57f75d0f2347bd5a36f6821b32b17549f269165932509"
+  },
+  "timing_scope": "Ideal zero-slew clock, zero wire RC, register output->register data only. Missing primary I/O constraints reported, no ties/case-analysis. Internal screen is not loaded physical closure.",
+  "tool_metadata_check": "OpenSTA3.1.0 actual help confirms set_cmd_units,all_registers -output_pins/-data_pins,find_timing_paths and report_checks -group_path_count/-fields capacitance"
+}

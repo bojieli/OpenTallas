@@ -76,7 +76,7 @@ def census(netlist,facts):
    ins=[b for p,bs in c['connections'].items() if book[c['type']]['pins'].get(p,{}).get('direction')=='input' for b in bs]
    return state_owner(ins[0],seen) if len(ins)==1 else None
   return None
- cw={n:x['bits'] for n,x in top['netnames'].items() if re.search(r'(?:^|[.])cw\[\d+\](?:\[\d+\])?$',n.lstrip('\\'))}
+ cw={n:x['bits'] for n,x in top['netnames'].items() if re.search(r'(?:^|[.])cw(?:\[\d+\]){0,2}$',n.lstrip('\\'))}
  cwbits=[b for bs in cw.values() for b in bs];owners=[state_owner(b) for b in cwbits]
  area=sum(count*book[t]['area_um2'] for t,count in counts.items())
  leakage=None if any(book[t]['leakage_W'] is None for t in counts) else sum(count*book[t]['leakage_W'] for t,count in counts.items())
