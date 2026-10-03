@@ -485,86 +485,6 @@
       "leaf": "rsp_stage_beat",
       "block": "kv"
     },
-    "kv_shared_valid": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "shared_valid",
-      "block": "kv"
-    },
-    "kv_shared_write": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "shared_write",
-      "block": "kv"
-    },
-    "kv_shared_ready": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "shared_ready",
-      "block": "kv"
-    },
-    "kv_shared_addr": {
-      "direction": "output",
-      "bits": 10,
-      "count": 1,
-      "leaf_bits": 10,
-      "leaf": "shared_addr",
-      "block": "kv"
-    },
-    "kv_shared_SM": {
-      "direction": "output",
-      "bits": 5,
-      "count": 1,
-      "leaf_bits": 5,
-      "leaf": "shared_SM",
-      "block": "kv"
-    },
-    "kv_shared_rank": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "shared_rank",
-      "block": "kv"
-    },
-    "kv_shared_wdata": {
-      "direction": "output",
-      "bits": 512,
-      "count": 1,
-      "leaf_bits": 512,
-      "leaf": "shared_wdata",
-      "block": "kv"
-    },
-    "kv_shared_done": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "shared_done",
-      "block": "kv"
-    },
-    "kv_shared_done_ready": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "shared_done_ready",
-      "block": "kv"
-    },
-    "kv_shared_rdata": {
-      "direction": "input",
-      "bits": 512,
-      "count": 1,
-      "leaf_bits": 512,
-      "leaf": "shared_rdata",
-      "block": "kv"
-    },
     "kv_commit_valid": {
       "direction": "output",
       "bits": 1,
@@ -773,142 +693,6 @@
       "leaf": "payload_req_rmw_last",
       "block": "kv"
     },
-    "kv_metadata_valid": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "metadata_valid",
-      "block": "kv"
-    },
-    "kv_metadata_ready": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "metadata_ready",
-      "block": "kv"
-    },
-    "kv_metadata_identity": {
-      "direction": "input",
-      "bits": 64,
-      "count": 1,
-      "leaf_bits": 64,
-      "leaf": "metadata_identity",
-      "block": "kv"
-    },
-    "kv_metadata_key": {
-      "direction": "input",
-      "bits": 20,
-      "count": 1,
-      "leaf_bits": 20,
-      "leaf": "metadata_key",
-      "block": "kv"
-    },
-    "kv_metadata_record": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "metadata_record",
-      "block": "kv"
-    },
-    "kv_consumer_valid": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "consumer_valid",
-      "block": "kv"
-    },
-    "kv_consumer_ready": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "consumer_ready",
-      "block": "kv"
-    },
-    "kv_consumer_identity": {
-      "direction": "input",
-      "bits": 64,
-      "count": 1,
-      "leaf_bits": 64,
-      "leaf": "consumer_identity",
-      "block": "kv"
-    },
-    "kv_consumer_key": {
-      "direction": "input",
-      "bits": 20,
-      "count": 1,
-      "leaf_bits": 20,
-      "leaf": "consumer_key",
-      "block": "kv"
-    },
-    "kv_consumer_stage": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "consumer_stage",
-      "block": "kv"
-    },
-    "kv_consumer_accepted": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "consumer_accepted",
-      "block": "kv"
-    },
-    "kv_consumer_reverse": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "consumer_reverse",
-      "block": "kv"
-    },
-    "kv_reader_metadata_valid": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "reader_metadata_valid",
-      "block": "kv"
-    },
-    "kv_reader_metadata_ready": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "reader_metadata_ready",
-      "block": "kv"
-    },
-    "kv_reader_metadata_identity": {
-      "direction": "input",
-      "bits": 64,
-      "count": 1,
-      "leaf_bits": 64,
-      "leaf": "reader_metadata_identity",
-      "block": "kv"
-    },
-    "kv_reader_metadata_key": {
-      "direction": "input",
-      "bits": 20,
-      "count": 1,
-      "leaf_bits": 20,
-      "leaf": "reader_metadata_key",
-      "block": "kv"
-    },
-    "kv_reader_metadata_stage": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "reader_metadata_stage",
-      "block": "kv"
-    },
     "kv_hydrate_valid": {
       "direction": "input",
       "bits": 1,
@@ -941,86 +725,6 @@
       "leaf": "hydrate_producer",
       "block": "kv"
     },
-    "kv_drain_valid": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "drain_valid",
-      "block": "kv"
-    },
-    "kv_drain_ready": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "drain_ready",
-      "block": "kv"
-    },
-    "kv_drain_identity": {
-      "direction": "output",
-      "bits": 64,
-      "count": 1,
-      "leaf_bits": 64,
-      "leaf": "drain_identity",
-      "block": "kv"
-    },
-    "kv_drain_key": {
-      "direction": "output",
-      "bits": 20,
-      "count": 1,
-      "leaf_bits": 20,
-      "leaf": "drain_key",
-      "block": "kv"
-    },
-    "kv_drain_done_valid": {
-      "direction": "input",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "drain_done_valid",
-      "block": "kv"
-    },
-    "kv_drain_done_ready": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "drain_done_ready",
-      "block": "kv"
-    },
-    "kv_drain_done_identity": {
-      "direction": "input",
-      "bits": 64,
-      "count": 1,
-      "leaf_bits": 64,
-      "leaf": "drain_done_identity",
-      "block": "kv"
-    },
-    "kv_drain_done_key": {
-      "direction": "input",
-      "bits": 20,
-      "count": 1,
-      "leaf_bits": 20,
-      "leaf": "drain_done_key",
-      "block": "kv"
-    },
-    "kv_drain_done_allcopies": {
-      "direction": "input",
-      "bits": 8,
-      "count": 1,
-      "leaf_bits": 8,
-      "leaf": "drain_done_allcopies",
-      "block": "kv"
-    },
-    "kv_fault": {
-      "direction": "output",
-      "bits": 1,
-      "count": 1,
-      "leaf_bits": 1,
-      "leaf": "fault",
-      "block": "kv"
-    },
     "kv_writer_retained": {
       "direction": "output",
       "bits": 1,
@@ -1035,6 +739,414 @@
       "count": 1,
       "leaf_bits": 1,
       "leaf": "idle",
+      "block": "kv"
+    },
+    "kv_native_valid": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "native_valid",
+      "block": "kv"
+    },
+    "kv_native_write": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "native_write",
+      "block": "kv"
+    },
+    "kv_native_addr": {
+      "direction": "input",
+      "bits": 640,
+      "count": 1,
+      "leaf_bits": 640,
+      "leaf": "native_addr",
+      "block": "kv"
+    },
+    "kv_native_wdata": {
+      "direction": "input",
+      "bits": 32768,
+      "count": 1,
+      "leaf_bits": 32768,
+      "leaf": "native_wdata",
+      "block": "kv"
+    },
+    "kv_native_ready": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "native_ready",
+      "block": "kv"
+    },
+    "kv_native_done": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "native_done",
+      "block": "kv"
+    },
+    "kv_native_done_ready": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "native_done_ready",
+      "block": "kv"
+    },
+    "kv_native_rdata": {
+      "direction": "output",
+      "bits": 32768,
+      "count": 1,
+      "leaf_bits": 32768,
+      "leaf": "native_rdata",
+      "block": "kv"
+    },
+    "kv_shared_drained": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "shared_drained",
+      "block": "kv"
+    },
+    "kv_source_bound": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "source_bound",
+      "block": "kv"
+    },
+    "kv_state_base_rank0": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "state_base_rank0",
+      "block": "kv"
+    },
+    "kv_state_base_rank1": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "state_base_rank1",
+      "block": "kv"
+    },
+    "kv_observe_valid": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "observe_valid",
+      "block": "kv"
+    },
+    "kv_observe_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "observe_ready",
+      "block": "kv"
+    },
+    "kv_observe_rank": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "observe_rank",
+      "block": "kv"
+    },
+    "kv_observe_source_addr": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "observe_source_addr",
+      "block": "kv"
+    },
+    "kv_observe_physical_addr": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "observe_physical_addr",
+      "block": "kv"
+    },
+    "kv_observe_owner": {
+      "direction": "input",
+      "bits": 46,
+      "count": 1,
+      "leaf_bits": 46,
+      "leaf": "observe_owner",
+      "block": "kv"
+    },
+    "kv_observe_old_data": {
+      "direction": "input",
+      "bits": 256,
+      "count": 1,
+      "leaf_bits": 256,
+      "leaf": "observe_old_data",
+      "block": "kv"
+    },
+    "kv_observe_new_data": {
+      "direction": "input",
+      "bits": 256,
+      "count": 1,
+      "leaf_bits": 256,
+      "leaf": "observe_new_data",
+      "block": "kv"
+    },
+    "kv_observe_old_captured": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "observe_old_captured",
+      "block": "kv"
+    },
+    "kv_ACK_valid": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "ACK_valid",
+      "block": "kv"
+    },
+    "kv_ACK_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "ACK_ready",
+      "block": "kv"
+    },
+    "kv_ACK_owner": {
+      "direction": "input",
+      "bits": 46,
+      "count": 1,
+      "leaf_bits": 46,
+      "leaf": "ACK_owner",
+      "block": "kv"
+    },
+    "kv_ACK_physical_addr": {
+      "direction": "input",
+      "bits": 34,
+      "count": 1,
+      "leaf_bits": 34,
+      "leaf": "ACK_physical_addr",
+      "block": "kv"
+    },
+    "kv_ACK_visible": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "ACK_visible",
+      "block": "kv"
+    },
+    "kv_ACK_reverse": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "ACK_reverse",
+      "block": "kv"
+    },
+    "kv_state_observer_drained": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "state_observer_drained",
+      "block": "kv"
+    },
+    "kv_operation_valid": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "operation_valid",
+      "block": "kv"
+    },
+    "kv_operation_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "operation_ready",
+      "block": "kv"
+    },
+    "kv_operation_identity": {
+      "direction": "input",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "operation_identity",
+      "block": "kv"
+    },
+    "kv_operation_key": {
+      "direction": "input",
+      "bits": 20,
+      "count": 1,
+      "leaf_bits": 20,
+      "leaf": "operation_key",
+      "block": "kv"
+    },
+    "kv_operation_stage": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "operation_stage",
+      "block": "kv"
+    },
+    "kv_operation_owner": {
+      "direction": "input",
+      "bits": 55,
+      "count": 1,
+      "leaf_bits": 55,
+      "leaf": "operation_owner",
+      "block": "kv"
+    },
+    "kv_operator_done_valid": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "operator_done_valid",
+      "block": "kv"
+    },
+    "kv_operator_done_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "operator_done_ready",
+      "block": "kv"
+    },
+    "kv_operator_done_owner": {
+      "direction": "input",
+      "bits": 55,
+      "count": 1,
+      "leaf_bits": 55,
+      "leaf": "operator_done_owner",
+      "block": "kv"
+    },
+    "kv_operator_reverse_valid": {
+      "direction": "input",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "operator_reverse_valid",
+      "block": "kv"
+    },
+    "kv_operator_reverse_ready": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "operator_reverse_ready",
+      "block": "kv"
+    },
+    "kv_operator_reverse_owner": {
+      "direction": "input",
+      "bits": 55,
+      "count": 1,
+      "leaf_bits": 55,
+      "leaf": "operator_reverse_owner",
+      "block": "kv"
+    },
+    "kv_endpoint_req_valid": {
+      "direction": "output",
+      "bits": 8,
+      "count": 1,
+      "leaf_bits": 8,
+      "leaf": "endpoint_req_valid",
+      "block": "kv"
+    },
+    "kv_endpoint_req_ready": {
+      "direction": "input",
+      "bits": 8,
+      "count": 1,
+      "leaf_bits": 8,
+      "leaf": "endpoint_req_ready",
+      "block": "kv"
+    },
+    "kv_endpoint_req_identity": {
+      "direction": "output",
+      "bits": 64,
+      "count": 1,
+      "leaf_bits": 64,
+      "leaf": "endpoint_req_identity",
+      "block": "kv"
+    },
+    "kv_endpoint_req_key": {
+      "direction": "output",
+      "bits": 20,
+      "count": 1,
+      "leaf_bits": 20,
+      "leaf": "endpoint_req_key",
+      "block": "kv"
+    },
+    "kv_endpoint_rsp_valid": {
+      "direction": "input",
+      "bits": 8,
+      "count": 1,
+      "leaf_bits": 8,
+      "leaf": "endpoint_rsp_valid",
+      "block": "kv"
+    },
+    "kv_endpoint_rsp_ready": {
+      "direction": "output",
+      "bits": 8,
+      "count": 1,
+      "leaf_bits": 8,
+      "leaf": "endpoint_rsp_ready",
+      "block": "kv"
+    },
+    "kv_endpoint_rsp_identity": {
+      "direction": "input",
+      "bits": 512,
+      "count": 1,
+      "leaf_bits": 512,
+      "leaf": "endpoint_rsp_identity",
+      "block": "kv"
+    },
+    "kv_endpoint_rsp_key": {
+      "direction": "input",
+      "bits": 160,
+      "count": 1,
+      "leaf_bits": 160,
+      "leaf": "endpoint_rsp_key",
+      "block": "kv"
+    },
+    "kv_endpoint_rsp_quiet": {
+      "direction": "input",
+      "bits": 8,
+      "count": 1,
+      "leaf_bits": 8,
+      "leaf": "endpoint_rsp_quiet",
+      "block": "kv"
+    },
+    "kv_reader_services_drained": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "reader_services_drained",
+      "block": "kv"
+    },
+    "kv_fault": {
+      "direction": "output",
+      "bits": 1,
+      "count": 1,
+      "leaf_bits": 1,
+      "leaf": "fault",
       "block": "kv"
     },
     "native_por_n": {
@@ -1830,7 +1942,7 @@
       "block": "sm"
     },
     "sm_scratch_valid": {
-      "direction": "input",
+      "direction": "output",
       "bits": 64,
       "count": 64,
       "leaf_bits": 1,
@@ -1838,7 +1950,7 @@
       "block": "sm"
     },
     "sm_scratch_write": {
-      "direction": "input",
+      "direction": "output",
       "bits": 64,
       "count": 64,
       "leaf_bits": 1,
@@ -1854,7 +1966,7 @@
       "block": "sm"
     },
     "sm_scratch_addr": {
-      "direction": "input",
+      "direction": "output",
       "bits": 640,
       "count": 64,
       "leaf_bits": 10,
@@ -1862,7 +1974,7 @@
       "block": "sm"
     },
     "sm_scratch_wdata": {
-      "direction": "input",
+      "direction": "output",
       "bits": 32768,
       "count": 64,
       "leaf_bits": 512,
@@ -1878,7 +1990,7 @@
       "block": "sm"
     },
     "sm_scratch_done_ready": {
-      "direction": "input",
+      "direction": "output",
       "bits": 64,
       "count": 64,
       "leaf_bits": 1,
@@ -2302,6 +2414,11 @@
     "rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_connector_r5.sv": "a2163a70deb5fd091fdb57d5abdfda5e964a63383b4dfbecd2427ef7cc638439",
     "rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_ingress_r5.sv": "58c20c4a27304af4f31f2cbd3b7acf2f2d40817d733881900089bbad712f80f9",
     "rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_physical_ack_source_r5.sv": "83ba96237297c4cf34c5fbb1a4312b370a13617b6381642358bb18b289269d32",
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_connected_ports.sv": "277e235be66e434e0bafc041c7067927c6f8f92d9de0412e24cbb50ce6de854f",
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_metadata_join.sv": "6d602e7d832d265cbdcb133337a8c31919f65614078d628a317eb503c46d433f",
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_reader_services.sv": "5d53ea6cded79a16fa12877bfda5016fee9c151bcccbff8a0f0151ff7eb0ac55",
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_shared_router.sv": "f40fdf52eb6a1a4ab74adbf805cb2d50dd68d090342c1b7049d68f477f77df70",
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_observer.sv": "2c1bcffe9d8f9536f23dcccd93e695e174cbdb1b9590f4d37cd2e9db451555f8",
     "rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv": "ea947bdc66e55a5019af8ddbf1aca96254b2a6a0238021e071142ae53ab04840",
     "rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396",
     "rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv": "dc5857a61d3fdfb188888b9d8f6d30a8b4b0dbcc4afca6438c699884fe35396c",
@@ -2310,7 +2427,7 @@
     "rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_sector_authority.sv": "83a03177efb955fe3b053c0f157dcc400471477117e04a7bcf9d08792b051dc1",
     "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv": "04930aa71137a791935c8ccba0dc1f20689e5bff35a214477cd990a87a36c7ef",
     "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
-    "rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_hbm_integrated.sv": "8d826f3811d7099121ac623dad7eb6df7bba2a97d526397e1d83b6fcc5488ee3"
+    "rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_hbm_integrated.sv": "033dc1cc1c96379a160c49347c4703a4e6de585369dfb7a1de5ec4776093d12b"
   },
   "inventory": {
     "rank_count": 2,
@@ -2322,10 +2439,10 @@
   "scope": "literal reuse; native r5 is PC40 FMIN, NOT complete canonical operator dispatch",
   "unresolved": [
     "native RF-to-selected SM arbitration/source ownership",
-    "shared-SM router",
+    "native shared contender source binding",
     "physical source allocator/prior-sector+selected-client drain proof",
-    "packed-state visibility observer",
-    "native accepted consumer and eight-cohort drain",
+    "actual W2 state-write/capture/visibility/reverse observer enrollment",
+    "source fulloperator accepted consumer and individual eight-cohort endpoints",
     "real backend and request/reverse CDC",
     "source issuer allocation, reset/quiescence enrollment",
     "complete1737 operator dispatcher"
