@@ -1,0 +1,54 @@
+{
+  "0": {
+    "expected_existing_BUF_count": 38383,
+    "assigned_BUF_count": 23160,
+    "raw_pool_count": 167264,
+    "raw_new_BUF": 23058,
+    "common_new_BUF": 102,
+    "minimum_outside_first_hops_including_pad_only": 106,
+    "assignment_failures": 7528,
+    "first_hop_screen": "all_literal_pin_rectangle_optimistic_bound_not_fixed_landing",
+    "optimistic_literal_metal_budget_excess_edges": 320,
+    "declared_centroid_metal_budget_excess_edges": 323,
+    "logical_source_root_cell_depth": 25,
+    "equal_depth_not_skew": true,
+    "common_prefix_patch_DBU": [
+      11188476,
+      15567120,
+      11197116,
+      15572520
+    ],
+    "common_prefix_patch_reserve_um2": 46.656,
+    "common_control_instance_union_not_complete": true,
+    "common_prefix_patch_requires_Maxwell_disjoint_ledger": true,
+    "cell_artifact_sha256": "43543255cf8db2cc7bb7521c3bf4569ab6974906f8563d17f303cf05d6202d43",
+    "edge_artifact_sha256": "90f6707221666ddbc8a98d5e0a7f49acfb17dd01c752bc720a5cb9fd6687ce65",
+    "native_pin_vias_PG_upfeeds_current_R_C_and_clock_reset_skew_not_qualified": true
+  },
+  "1": {
+    "expected_existing_BUF_count": 30231,
+    "assigned_BUF_count": 18271,
+    "raw_pool_count": 133824,
+    "raw_new_BUF": 18205,
+    "common_new_BUF": 66,
+    "minimum_outside_first_hops_including_pad_only": 70,
+    "assignment_failures": 5960,
+    "first_hop_screen": "all_literal_pin_rectangle_optimistic_bound_not_fixed_landing",
+    "optimistic_literal_metal_budget_excess_edges": 256,
+    "declared_centroid_metal_budget_excess_edges": 259,
+    "logical_source_root_cell_depth": 23,
+    "equal_depth_not_skew": true,
+    "common_prefix_patch_DBU": [
+      11188476,
+      15567120,
+      11197116,
+      15572520
+    ],
+    "common_prefix_patch_reserve_um2": 46.656,
+    "common_control_instance_union_not_complete": true,
+    "common_prefix_patch_requires_Maxwell_disjoint_ledger": true,
+    "cell_artifact_sha256": "7acbdcee1cc5fce1670e43b6acfdb9b6f028e94d01c12fae9801de1e079fdded",
+    "edge_artifact_sha256": "204677a24cbf49bbf4ec7aa853ebb61b0a93a84bacf0b59e0241175ba54d035d",
+    "native_pin_vias_PG_upfeeds_current_R_C_and_clock_reset_skew_not_qualified": true
+  }
+}

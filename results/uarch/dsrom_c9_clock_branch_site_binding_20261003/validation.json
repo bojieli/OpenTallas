@@ -1,0 +1,377 @@
+{
+  "all_static_generator_sessions_terminal": true,
+  "base_HEAD": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+  "cold_input_files": 114,
+  "cold_reproduced_artifacts": [
+    {
+      "byte_identical": true,
+      "path": "model.json",
+      "sha256": "f9ce473dc6c11804e3f54ff0fbfc386c74cc147d43964cc33d4b741d158e25e4"
+    },
+    {
+      "byte_identical": true,
+      "path": "access_model.json",
+      "sha256": "75562be742e85ad94fa869d4d01d6e5de04ca70e4e0643918d011abbcb413841"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard0_assigned_cells.jsonl.gz",
+      "sha256": "43543255cf8db2cc7bb7521c3bf4569ab6974906f8563d17f303cf05d6202d43"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard0_assigned_edges.jsonl.gz",
+      "sha256": "90f6707221666ddbc8a98d5e0a7f49acfb17dd01c752bc720a5cb9fd6687ce65"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard0_assignment_failures.json",
+      "sha256": "641be723f6b7528b2a18ba422082ce7f662a8d299104d72c2af1b007390b1266"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard0_enclosed_VIA12_failures.jsonl.gz",
+      "sha256": "3dca73b5739d301e0a3fc676705cb676fb5ae0b7931bcf5b95e832a0f6b1ea9f"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard1_assigned_cells.jsonl.gz",
+      "sha256": "7acbdcee1cc5fce1670e43b6acfdb9b6f028e94d01c12fae9801de1e079fdded"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard1_assigned_edges.jsonl.gz",
+      "sha256": "204677a24cbf49bbf4ec7aa853ebb61b0a93a84bacf0b59e0241175ba54d035d"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard1_assignment_failures.json",
+      "sha256": "ab4a16d865d28b91a9ac63154e72a65d0321ac92b41321c857cae866eddc1519"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard1_enclosed_VIA12_failures.jsonl.gz",
+      "sha256": "b7dd31a489a1ce99beae1746c5040a4ec716042bfb8fde879d241f02ce18d33e"
+    }
+  ],
+  "cold_tests_passed": 11,
+  "contextual_physical_admission": false,
+  "hook_source": "2ae90a0116f20654005e479fec2f1b951a014b8f",
+  "independent_full_assignment_is_unselected_diagnostic": true,
+  "local_tests_passed": 11,
+  "minimal_current_main_dependencies": [
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/cold_generator.log",
+      "sha256": "8adb97e681e91f840d19db8d6d2273aa1abf312beecb260488cf8931d4478773"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/cold_replay.json",
+      "sha256": "b196298b3cd961bc6d8364e50a1695d66bdf698dea8da49715a1881c9fdc9d2e"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/cold_tests.log",
+      "sha256": "feb1797636d6307f40468004b7c88c5be930e3c8c853aeb3fb46716e6b44d519"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/cold_workspace.json",
+      "sha256": "ceca8165136f70d98015a0484f771d17d05aacbaa1235446a9392ff38d5dc54d"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/development_construction_failure.json",
+      "sha256": "d25918770817d4bf04be46385baa746e668b44eaa26c434579d94721fa8558c8"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/development_failure.json",
+      "sha256": "b84bead0211b1bf592319e7c9b853b5792cd1d1c8a64dcc87a6dac7bf9078cfd"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/generator.log",
+      "sha256": "8adb97e681e91f840d19db8d6d2273aa1abf312beecb260488cf8931d4478773"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/Epic_allowed_cut.json",
+      "sha256": "7a1aedba1d44a5d5b66543babe3b7a8125d801a07df98ef0bc18158ce38c5e62"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/Epic_core.json",
+      "sha256": "3e723748844ca5031657ca21ac13a202000dbd06eec54e9017ad980be2cf8ac7"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/Epic_selector_join_r2.json",
+      "sha256": "36e4e1346a8ec184b3ea995c3b42067a56f24578eebde05179304a2e5b36ff6f"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/Maxwell_R49_home.json",
+      "sha256": "05beef441966843bb925370d33b514015fbd0ea236442bf8e82a67d8923b270c"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/Maxwell_home.json",
+      "sha256": "c952055e1d46c3d86095965ee0bc92162256649f398d723ef70b5e7b13c0a0a0"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/R49.json",
+      "sha256": "1a75456348de769a591a8d765c754da002e460752675ea012abfb48894f83f71"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/bands.json.gz",
+      "sha256": "721e4a189d5f79a043770edc87027336089a37f85716ab9e8bfadfecec17bae3"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/capture.json.gz",
+      "sha256": "951910802701c2f0d7922dfd14e54da39cc4a2d39e92ea03b4a02419aa0c694d"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/cell_LEF.json.gz",
+      "sha256": "007ab8c4d064f668c503257c26444ee7751fab732926f49d6517d76534d61207"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/cfg.json.gz",
+      "sha256": "1340321aa101959123236eca5da37eac6f44ab64af6292e3e4c21bfe9d18f18b"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/field.json.gz",
+      "sha256": "527ce659bb50db911baee236ec2d0298cbd8f44aaf68426f6bfc3aa71d914f2e"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/frames.json.gz",
+      "sha256": "d130d68fdcd0a611e4c515987f7c37f3877b03553f1286cf6f25ba64a8225403"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/origins.json",
+      "sha256": "54113248755c0cb46c10878326d2ccb6188b9498502c06dabf27b3f7776749e3"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/prior_selector_station.json",
+      "sha256": "526b640282104e8b95a2b35dfbad6be3d12b8656b29bb10333835fe28a2830f3"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/selector_parent_review.json",
+      "sha256": "cc149c72d974e7eb120875df115f1e06a14d8ff9c1592a21754632f077fe4000"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/inputs/services.json.gz",
+      "sha256": "99cd991bbb0f5135a38b9bd6e05241b6cfa85167bfa3aea37598abe10917c488"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/main_dependency_comparison.json",
+      "sha256": "1c4f273b39828271d67c6dee5c34a26b60f1c03cb601594de09fb53f4b1e36a4"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/milestone_manifest.json",
+      "sha256": "bab0b32ed0e174c04701a16bc30923ce23e07315bf261c451f7fdc246fe9bed7"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/model.json",
+      "sha256": "67422d0104f488858cfd497b3515bd081c2824389514e43d17b0ea7ab72f3449"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/prior_home_control_overlap_FAIL.json",
+      "sha256": "c51a3aec651ba6ceb0f555d1b4fef894ae148ef0608b4c0118bba8fc5d4dca79"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/prior_unadopted_enclosure.json",
+      "sha256": "61c5ef0d4a762594759508eee5eadd4f5919b28132219a57eda287d12c22b69f"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/prior_unadopted_enclosure_model.json.gz",
+      "sha256": "207ab54262fa630724f89a7f6a014107c0668b3a243c02fb8291b476ba6887b9"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/prior_unadopted_enclosure_tool.py.gz",
+      "sha256": "74af09dc6a6d643209c606d56907b2862fdb694d39325057c0640cb3ab744b1f"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/selector_core_clock_cells.jsonl.gz",
+      "sha256": "ab576968dddf57dacdd632b3e561dd2dca101c37b1e94239711cc802404c7b04"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/shard0_cells.jsonl.gz",
+      "sha256": "cd5aebfd7effea93ab83f8264cd339797550a7a4e886726c47e992eb6c501ff0"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/shard0_clock_nets.jsonl.gz",
+      "sha256": "c196bb327cc1c4436ae61164d5a6aa2f45729848f62ee427dae23318e54fa90a"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/shard1_cells.jsonl.gz",
+      "sha256": "3312bd57a32a36f9a5e9735582ad51ecec48aac34ea4738c51d4e0a8a93b42c4"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/shard1_clock_nets.jsonl.gz",
+      "sha256": "4da10810342a87e223655e89320f3e74a86e2ab89339d97438c2c778625cab73"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/source_dependency_receipts.json",
+      "sha256": "d9482a1b5d521447ac502eba90de8f6d7dd0887a83b4d033cd60b7a40350274d"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/tests.log",
+      "sha256": "a9c26262ff66f138fe93b244b389dc2a4548daacbf3a2ed4ed9886044cff5f94"
+    },
+    {
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/validation_and_handoff.json",
+      "sha256": "c3ade0972283c9390d986690e336d7c6b2caae10fdb147cbfde1f88f3f7fb9bf"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/cold_generator.log",
+      "sha256": "943c6b2334dd4a8c9e992ded9b95b9f55c99f8ea77a89d6156263e35b5bfba38"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/cold_replay.json",
+      "sha256": "113e621dac5ead9b84ffc21abe271bb5b657f1256dd15e4ede1f2fbd8478c21e"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/cold_tests.log",
+      "sha256": "924ea8634d46cb48e84d8128a7eccd3bd852f3a270fba317b7e690b1800cd38b"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/cold_workspace.json",
+      "sha256": "2ca4097409004982ac24889708753efaf9a0b7e59f83664ddfcef0afe3a0e514"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/generator.log",
+      "sha256": "943c6b2334dd4a8c9e992ded9b95b9f55c99f8ea77a89d6156263e35b5bfba38"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/initial_generator_source.py.gz",
+      "sha256": "a801ebaf07ca188d7200494ac2c625bf9c2cb0d1a41ea524a762ec0147e03a2e"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/model.json",
+      "sha256": "5fc207fa190513f8394e26b9177c1a032fd148dd0ddd6cf3abbe231753715ae0"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/origins.json",
+      "sha256": "8c7c2ee12fac39a52cce74ce6515ba8ce5cab1d104cd12cbbb8932084d5991e0"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/shard0_clock_branches.json.gz",
+      "sha256": "7b7830eaf0d4cdac251759533ea60e89544daad3145be8c44984f4c93e9ed09a"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/shard0_correction_sites.json.gz",
+      "sha256": "c1c7dc2959c613706ac3affa3353ba1d70bb77953834a7ff68879c96e8501632"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/shard1_clock_branches.json.gz",
+      "sha256": "7512943b5cedee9fd934313331764155f15eb62544127357aedf34d9983d8f81"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/shard1_correction_sites.json.gz",
+      "sha256": "33752f0d0352c86eac2d51090a358385d3fa6908a36288d2b67d6c3b61cd6d70"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/milestone_manifest.json",
+      "sha256": "92622405ab8517bfa0681681c029ec67ade2aa59975a59ceda05c4b9fc1da465"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/model.json",
+      "sha256": "b65134a6f5e1e1a4b12dc078336ebabef7866046eea762a28c03fc3f89da1d22"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/shard0_first_hop_deficits.json.gz",
+      "sha256": "0d22e43191cfc7c0835055bccb30f4459fd39a2de5c7291d1bd802c3eedb836a"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/shard1_first_hop_deficits.json.gz",
+      "sha256": "27c86f97e1ff9a8e175b475c3553140fbffdcaf00ad9fbe3e8f5f8258facb775"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/source_dependency_receipts.json",
+      "sha256": "0e0511f260e7c2fa8e891d4dd530af4706bfe313c3ca5916d3acce778cc29e9d"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/tests.log",
+      "sha256": "4fc13ec92ea7cadf230d57aee84a2945a41666a4d204241791e8cdf85d7a05e4"
+    },
+    {
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/validation_and_handoff.json",
+      "sha256": "c0ac7b077f518f94638ed709ddb66d68878975562fb1b60fa15fcce27aef1e70"
+    },
+    {
+      "path": "results/uarch/dsrom_noECC_hold_station_geometry_20261002/model.json",
+      "sha256": "983b53453dc7f6c0275b97854d1117ed6be40a734274e557ccc18bd34fcfb1c9"
+    },
+    {
+      "path": "tests/test_dsrom_c9_clock_branch_site_binding.py",
+      "sha256": "ff24c3d0ae7726ef4340c7f40a2ba342168b2ae96bdc31eaf98578b3776db2e1"
+    },
+    {
+      "path": "tools/dsrom_c9_clock_assignment_access.py",
+      "sha256": "5f770611859c66a6e65684a8c6cef29170874a71ed24e085487aeb7b7bbd3888"
+    },
+    {
+      "path": "tools/dsrom_c9_clock_branch_site_binding.py",
+      "sha256": "a36c071fb7e9d6cafb9f958ed40547fbdf43b73728c194803484f0d2e7ad49e1"
+    },
+    {
+      "path": "tools/dsrom_c9_selected_clock_access.py",
+      "sha256": "772aeebf5ce8469cf1fca275ea6eed4d15585ba2ff284dc557a73c500f9dbd2e"
+    },
+    {
+      "path": "tools/dsrom_noECC_enable_distribution.py",
+      "sha256": "6991e9780e562c759a4af2aafc9bf0609fba7f4c2ac3882547b031293eba4b68"
+    },
+    {
+      "path": "tools/dsrom_noECC_hold_station_geometry.py",
+      "sha256": "157884c7e9be8a8d035d2e2db95acf8db842120aa08e21bc4a280ef8651a9ba8"
+    },
+    {
+      "path": "tools/dsrom_noECC_liberty.py",
+      "sha256": "d4e478d2ca4217dee1394225576245364509b23ba5265cc955eccc170e865595"
+    },
+    {
+      "path": "tools/dsrom_noECC_production_context.py",
+      "sha256": "07feabc4539bfd8d65905ef59e4fd43abdaf8682647e59244a251003028698f5"
+    },
+    {
+      "path": "tools/dsrom_noECC_slew_enable_diagnosis.py",
+      "sha256": "f3249be31a49cb76dcd07503bcbcf355f1b58478c0e0816db8e893c47221de12"
+    }
+  ],
+  "new_remote_jobs": [],
+  "next_action": "One owner-coordinated same-count redistribution, with pad-only ingress and endpoints included; native upper stack/PG current/clock-reset-skew must be bounded before contextual P&R.",
+  "no_new_PVE2_PVE3": true,
+  "python_version": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+  "schema": "DS_C9_SELECTED_DOWNSTREAM_FROZEN_MILESTONE_V1",
+  "selected_failure_scope": "No complete branch assignment at exact selected site set. Preserve 53df first relays; complete pad graph has 4 common ingress deficits/shard. 320/256 locked one-relay branches have final literal metal-distance violations. Other incomplete greedy interiors are not a fundamental capacity impossibility.",
+  "selected_reallocation_commit": "53dfdf1c9d2bdc4d6a88a24fd785529b1ffad75d",
+  "source_hashes": [
+    {
+      "path": "tests/test_dsrom_c9_clock_branch_site_binding.py",
+      "sha256": "ff24c3d0ae7726ef4340c7f40a2ba342168b2ae96bdc31eaf98578b3776db2e1"
+    },
+    {
+      "path": "tools/dsrom_c9_clock_assignment_access.py",
+      "sha256": "5f770611859c66a6e65684a8c6cef29170874a71ed24e085487aeb7b7bbd3888"
+    },
+    {
+      "path": "tools/dsrom_c9_clock_branch_site_binding.py",
+      "sha256": "a36c071fb7e9d6cafb9f958ed40547fbdf43b73728c194803484f0d2e7ad49e1"
+    },
+    {
+      "path": "tools/dsrom_c9_selected_clock_access.py",
+      "sha256": "772aeebf5ce8469cf1fca275ea6eed4d15585ba2ff284dc557a73c500f9dbd2e"
+    },
+    {
+      "path": "tools/dsrom_noECC_enable_distribution.py",
+      "sha256": "6991e9780e562c759a4af2aafc9bf0609fba7f4c2ac3882547b031293eba4b68"
+    },
+    {
+      "path": "tools/dsrom_noECC_hold_station_geometry.py",
+      "sha256": "157884c7e9be8a8d035d2e2db95acf8db842120aa08e21bc4a280ef8651a9ba8"
+    },
+    {
+      "path": "tools/dsrom_noECC_liberty.py",
+      "sha256": "d4e478d2ca4217dee1394225576245364509b23ba5265cc955eccc170e865595"
+    },
+    {
+      "path": "tools/dsrom_noECC_production_context.py",
+      "sha256": "07feabc4539bfd8d65905ef59e4fd43abdaf8682647e59244a251003028698f5"
+    },
+    {
+      "path": "tools/dsrom_noECC_slew_enable_diagnosis.py",
+      "sha256": "f3249be31a49cb76dcd07503bcbcf355f1b58478c0e0816db8e893c47221de12"
+    }
+  ]
+}
