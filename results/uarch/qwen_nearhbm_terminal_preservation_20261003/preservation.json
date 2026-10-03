@@ -1,0 +1,50 @@
+{
+  "schema": "nearhbm-preserved-terminal-v1",
+  "observed_utc": "2026-10-03T13:07:06.095692+00:00",
+  "source_commit": "58144881b6088347006298a4eb684a2e648b11ee",
+  "source_root": "/home/ubuntu/nhbp/wt4",
+  "host": "ot-agidock128",
+  "launcher_pid": 4076819,
+  "classification": "FAIL_GLOBAL_PLACEMENT_BEFORE_ROUTED_SSFF",
+  "launcher_exit_code": 1,
+  "orfs_exit_code": 2,
+  "global_placement_make_error": 247,
+  "cause": "underlying termination cause unproven; no OOM/timeout/timing classification",
+  "terminal_at": "2026-10-03T12:40:44.196590+00:00",
+  "preserve_remote_workdir": true,
+  "ssff_qualified": false,
+  "corridor_constraints": {
+    "source_commit": "dba1bd39d7346588939e2d0ccede6f0de1fc1489",
+    "minimum_slab_um": 17.28,
+    "maximum_reach_um": 430.56,
+    "longhaul_M2_to_M5": false,
+    "added_stages": 6,
+    "added_cycles_per_token": 432,
+    "admission": false
+  },
+  "live_epyc": {
+    "source_commit": "84c4edbd18e5b2a6bc265fff5426802e371ece98",
+    "row_engine_r6": 287311,
+    "hub_r7": 287312,
+    "qpipe_cap0": 292344,
+    "qpipe_cap1": 292373
+  },
+  "artifacts": {
+    "3_3_place_gp.log": {
+      "bytes": 8974,
+      "sha256": "7f5889b0f0a26ec449b7c0d2a40f2ba5eed983a8b363e52c200239a4123b4519"
+    },
+    "driver.log": {
+      "bytes": 4188,
+      "sha256": "7e55a7e76a5a0bfc88716a2cec48a27214d0bcf1c52dae2effa032450a0161d4"
+    },
+    "launcher_receipt.json": {
+      "bytes": 2180,
+      "sha256": "89f49150a93ba61202fddf4e08f6448201ce378e2370656615a42fa90966157f"
+    },
+    "physical.json": {
+      "bytes": 12744,
+      "sha256": "822282e83f5d91f27cbc6893e493a54af3399e05b71bfe698145884b9750f60e"
+    }
+  }
+}

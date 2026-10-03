@@ -1,0 +1,61 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+et density:       0.5730
+[INFO GPL-0024] Movable insts average area:      0.143 um^2
+[INFO GPL-0025] Ideal bin area:                  0.249 um^2
+[INFO GPL-0026] Ideal bin count:               2596574
+[INFO GPL-0027] Total bin area:             645952.320 um^2
+[INFO GPL-0028] Bin count (X, Y):         512 ,   2048
+[INFO GPL-0029] Bin size (W * H):       0.633 *  0.973 um
+[INFO GPL-0030] Number of bins:                1048576
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9571 |  1.017673e+07 |   +0.00% |  4.94e-14 |      
+       10 |   0.9215 |  1.168693e+07 |  +14.84% |  6.57e-14 |      
+       20 |   0.8966 |  1.214527e+07 |   +3.92% |  1.01e-13 |      
+       30 |   0.8774 |  1.228510e+07 |   +1.15% |  1.62e-13 |      
+       40 |   0.8630 |  1.235455e+07 |   +0.57% |  2.62e-13 |      
+       50 |   0.8524 |  1.240486e+07 |   +0.41% |  4.24e-13 |      
+       60 |   0.8448 |  1.238451e+07 |   -0.16% |  6.90e-13 |      
+       70 |   0.8412 |  1.229305e+07 |   -0.74% |  1.12e-12 |      
+       80 |   0.8396 |  1.219863e+07 |   -0.77% |  1.83e-12 |      
+       90 |   0.8380 |  1.213650e+07 |   -0.51% |  2.98e-12 |      
+      100 |   0.8363 |  1.210354e+07 |   -0.27% |  4.85e-12 |      
+      110 |   0.8343 |  1.208999e+07 |   -0.11% |  7.91e-12 |      
+      120 |   0.8321 |  1.209152e+07 |   +0.01% |  1.29e-11 |      
+      130 |   0.8294 |  1.209695e+07 |   +0.04% |  2.10e-11 |      
+      140 |   0.8272 |  1.209619e+07 |   -0.01% |  3.41e-11 |      
+      150 |   0.8249 |  1.209136e+07 |   -0.04% |  5.56e-11 |      
+      160 |   0.8224 |  1.208405e+07 |   -0.06% |  9.06e-11 |      
+      170 |   0.8193 |  1.208989e+07 |   +0.05% |  1.47e-10 |      
+      180 |   0.8152 |  1.212365e+07 |   +0.28% |  2.39e-10 |      
+      190 |   0.8089 |  1.221268e+07 |   +0.73% |  3.86e-10 |      
+      200 |   0.7996 |  1.237715e+07 |   +1.35% |  6.19e-10 |      
+      210 |   0.7863 |  1.264669e+07 |   +2.18% |  9.80e-10 |      
+      220 |   0.7694 |  1.303913e+07 |   +3.10% |  1.53e-09 |      
+      230 |   0.7459 |  1.371750e+07 |   +5.20% |  2.33e-09 |      
+      240 |   0.7232 |  1.444790e+07 |   +5.32% |  3.49e-09 |      
+      250 |   0.7062 |  1.496697e+07 |   +3.59% |  5.37e-09 |      
+      260 |   0.6877 |  1.539288e+07 |   +2.85% |  8.33e-09 |      
+      270 |   0.6685 |  1.557428e+07 |   +1.18% |  1.32e-08 |      
+      280 |   0.6463 |  1.552686e+07 |   -0.30% |  2.15e-08 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 286, overflow: 0.633, keep resizer changes at: 1, HPWL: 15497977208
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |   2426560
+
+Elapsed time: 1:17.05[h:]min:sec. CPU time: user 71.30 sys 5.72 (99%). Peak memory: 6393972KB.
+Elapsed time: 1:21:55.87[h:]min:sec. CPU time: user 5579.40 sys 634.20 (126%). Peak memory: 13089824KB.
+Elapsed time: 0:19.98[h:]min:sec. CPU time: user 16.04 sys 4.03 (100%). Peak memory: 4748208KB.
+Elapsed time: 0:14.44[h:]min:sec. CPU time: user 11.61 sys 2.85 (100%). Peak memory: 3236700KB.
+Elapsed time: 0:54.55[h:]min:sec. CPU time: user 50.47 sys 4.10 (100%). Peak memory: 4945052KB.
+Elapsed time: 9:03.28[h:]min:sec. CPU time: user 7886.51 sys 22.41 (1455%). Peak memory: 8473580KB.
+Elapsed time: 0:25.12[h:]min:sec. CPU time: user 21.11 sys 4.03 (100%). Peak memory: 5005516KB.
+Elapsed time: 2:24:43.34[h:]min:sec. CPU time: user 20798.17 sys 35697.22 (650%). Peak memory: 21401092KB.
+make[1]: *** [Makefile:499: do-3_3_place_gp] Error 247
+make: *** [Makefile:499: /work/results/asap7/opentallas_ot_qwen_nearhbm_row_engine_asap7_nhb_row_engine_hd128_r6_58144881/base/3_3_place_gp.odb] Error 2
+
+partial record written to /home/ubuntu/nhbp/wt4/results/physical_abi3/asap7/nearhbm/row_engine_hd128_r6_r4/physical.json
+exit 1

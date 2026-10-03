@@ -1,0 +1,262 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-03T12:40:44.196590+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 1148190.448,
+    "block": "ot_qwen_nearhbm_row_engine",
+    "cells": 4412420,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "DQ": 32,
+      "E": 0,
+      "HD": 128,
+      "R": 6,
+      "S": 0
+    },
+    "sources": [
+      {
+        "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack.sv",
+        "sha256": "e71cdd9e5fb2a595332ebf7f95e11258fc27d631ce158bca24b2916940ed3b84",
+        "size_bytes": 56847
+      },
+      {
+        "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv",
+        "sha256": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+        "size_bytes": 4835
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+        "size_bytes": 12112
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+        "size_bytes": 11377
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_prefix.sv",
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "size_bytes": 2803
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      }
+    ],
+    "top": "ot_qwen_nearhbm_row_engine"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\net density:       0.5730\n[INFO GPL-0024] Movable insts average area:      0.143 um^2\n[INFO GPL-0025] Ideal bin area:                  0.249 um^2\n[INFO GPL-0026] Ideal bin count:               2596574\n[INFO GPL-0027] Total bin area:             645952.320 um^2\n[INFO GPL-0028] Bin count (X, Y):         512 ,   2048\n[INFO GPL-0029] Bin size (W * H):       0.633 *  0.973 um\n[INFO GPL-0030] Number of bins:                1048576\n[INFO GPL-0084] ---- Execute Nesterov Global Placement.\n[INFO GPL-0031] HPWL: Half-Perimeter Wirelength\nIteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group\n---------------------------------------------------------------\n        0 |   0.9571 |  1.017673e+07 |   +0.00% |  4.94e-14 |      \n       10 |   0.9215 |  1.168693e+07 |  +14.84% |  6.57e-14 |      \n       20 |   0.8966 |  1.214527e+07 |   +3.92% |  1.01e-13 |      \n       30 |   0.8774 |  1.228510e+07 |   +1.15% |  1.62e-13 |      \n       40 |   0.8630 |  1.235455e+07 |   +0.57% |  2.62e-13 |      \n       50 |   0.8524 |  1.240486e+07 |   +0.41% |  4.24e-13 |      \n       60 |   0.8448 |  1.238451e+07 |   -0.16% |  6.90e-13 |      \n       70 |   0.8412 |  1.229305e+07 |   -0.74% |  1.12e-12 |      \n       80 |   0.8396 |  1.219863e+07 |   -0.77% |  1.83e-12 |      \n       90 |   0.8380 |  1.213650e+07 |   -0.51% |  2.98e-12 |      \n      100 |   0.8363 |  1.210354e+07 |   -0.27% |  4.85e-12 |      \n      110 |   0.8343 |  1.208999e+07 |   -0.11% |  7.91e-12 |      \n      120 |   0.8321 |  1.209152e+07 |   +0.01% |  1.29e-11 |      \n      130 |   0.8294 |  1.209695e+07 |   +0.04% |  2.10e-11 |      \n      140 |   0.8272 |  1.209619e+07 |   -0.01% |  3.41e-11 |      \n      150 |   0.8249 |  1.209136e+07 |   -0.04% |  5.56e-11 |      \n      160 |   0.8224 |  1.208405e+07 |   -0.06% |  9.06e-11 |      \n      170 |   0.8193 |  1.208989e+07 |   +0.05% |  1.47e-10 |      \n      180 |   0.8152 |  1.212365e+07 |   +0.28% |  2.39e-10 |      \n      190 |   0.8089 |  1.221268e+07 |   +0.73% |  3.86e-10 |      \n      200 |   0.7996 |  1.237715e+07 |   +1.35% |  6.19e-10 |      \n      210 |   0.7863 |  1.264669e+07 |   +2.18% |  9.80e-10 |      \n      220 |   0.7694 |  1.303913e+07 |   +3.10% |  1.53e-09 |      \n      230 |   0.7459 |  1.371750e+07 |   +5.20% |  2.33e-09 |      \n      240 |   0.7232 |  1.444790e+07 |   +5.32% |  3.49e-09 |      \n      250 |   0.7062 |  1.496697e+07 |   +3.59% |  5.37e-09 |      \n      260 |   0.6877 |  1.539288e+07 |   +2.85% |  8.33e-09 |      \n      270 |   0.6685 |  1.557428e+07 |   +1.18% |  1.32e-08 |      \n      280 |   0.6463 |  1.552686e+07 |   -0.30% |  2.15e-08 |      \n[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.\n[INFO GPL-0101]    Iter: 286, overflow: 0.633, keep resizer changes at: 1, HPWL: 15497977208\nIteration |   Area    | Resized | Buffers | Nets repaired | Remaining\n---------------------------------------------------------------------\n        0 |     +0.0% |       0 |       0 |             0 |   2426560\n\nElapsed time: 1:17.05[h:]min:sec. CPU time: user 71.30 sys 5.72 (99%). Peak memory: 6393972KB.\nElapsed time: 1:21:55.87[h:]min:sec. CPU time: user 5579.40 sys 634.20 (126%). Peak memory: 13089824KB.\nElapsed time: 0:19.98[h:]min:sec. CPU time: user 16.04 sys 4.03 (100%). Peak memory: 4748208KB.\nElapsed time: 0:14.44[h:]min:sec. CPU time: user 11.61 sys 2.85 (100%). Peak memory: 3236700KB.\nElapsed time: 0:54.55[h:]min:sec. CPU time: user 50.47 sys 4.10 (100%). Peak memory: 4945052KB.\nElapsed time: 9:03.28[h:]min:sec. CPU time: user 7886.51 sys 22.41 (1455%). Peak memory: 8473580KB.\nElapsed time: 0:25.12[h:]min:sec. CPU time: user 21.11 sys 4.03 (100%). Peak memory: 5005516KB.\nElapsed time: 2:24:43.34[h:]min:sec. CPU time: user 20798.17 sys 35697.22 (650%). Peak memory: 21401092KB.\nmake[1]: *** [Makefile:499: do-3_3_place_gp] Error 247\nmake: *** [Makefile:499: /work/results/asap7/opentallas_ot_qwen_nearhbm_row_engine_asap7_nhb_row_engine_hd128_r6_58144881/base/3_3_place_gp.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-03T08:00:40.867453+00:00",
+  "git": {
+    "commit": "58144881b6088347006298a4eb684a2e648b11ee",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--top",
+      "ot_qwen_nearhbm_row_engine",
+      "--source",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack.sv",
+      "--source",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--param",
+      "HD=128",
+      "--param",
+      "S=0",
+      "--param",
+      "R=6",
+      "--param",
+      "E=0",
+      "--param",
+      "DQ=32",
+      "--view",
+      "asap7",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--hold-margin-ns",
+      "0.01",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--force",
+      "--die-area",
+      "0",
+      "0",
+      "328.32",
+      "1998",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "326.16",
+      "1995.84",
+      "--place-density",
+      "0.65",
+      "--nickname-tag",
+      "nhb_row_engine_hd128_r6_58144881",
+      "--purpose",
+      "signoff_target",
+      "--output",
+      "results/physical_abi3/asap7/nearhbm/row_engine_hd128_r6_r4/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/nhbp/run/row_engine_r4.work"
+    ],
+    "driver": {
+      "commit": "58144881b6088347006298a4eb684a2e648b11ee",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/nhbp/wt4/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "7202e2db930facc2e166f5a73a2cbdf114460d2c6d1b1925382b953373306a43",
+      "tree": "/home/ubuntu/nhbp/wt4"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/home/ubuntu/nhbp/wt4"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 833.0,
+    "cell_area_um2": 1148190.448,
+    "cell_count": 4412420,
+    "cell_types_used": 45,
+    "chip_area_um2": 33864.966,
+    "combinational_cell_count": 1780038,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 2207238,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "c97106efa51c7923c743f29594578fc0ae756688d60eb43b21b6d7abc7b0dee7",
+      "raw_netlist_sha256": "c97106efa51c7923c743f29594578fc0ae756688d60eb43b21b6d7abc7b0dee7",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 145100.0,
+    "sequential_cell_count": 425144,
+    "unmapped_cell_types": [
+      "$paramod\\ot_hdc_fp32_add_lat\\LAT=s32'00000000000000000000000000000111",
+      "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000110",
+      "ot_qwen_nearhbm_prod",
+      "ot_qwen_nearhbm_row_engine",
+      "submodules"
+    ]
+  },
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
