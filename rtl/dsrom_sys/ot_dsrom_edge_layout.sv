@@ -64,15 +64,16 @@ module ot_dsrom_edge_kwr #(
 );
     reg [AW:0] n_q;
     reg installed_q, pending;
-    reg descriptor_fault;
+    reg descriptor_fault, record_bad;
     wire hit=su_go && i_dst==3 && (i_obase>>4)>=cfg_ik_base;
     wire accept=hit && !pending;
     always @(posedge clk or negedge rst_n) begin
-        if(!rst_n) begin n_q<=0; installed_q<=0; pending<=0; descriptor_fault<=0; end
+        if(!rst_n) begin n_q<=0; installed_q<=0; pending<=0; descriptor_fault<=0; record_bad<=0; end
         else begin
             descriptor_fault<=hit && pending;
+            if(inner_fault) begin record_bad<=1; if(!v) pending<=0; end
             if(v && (w_rdy || !w_v)) pending<=0;
-            if(accept) begin n_q<=layout_n; installed_q<=layout_installed; pending<=1; end
+            if(accept) begin n_q<=layout_n; installed_q<=layout_installed; pending<=1; record_bad<=0; end
         end
     end
     wire v,inner_fault,map_valid;
@@ -90,10 +91,10 @@ module ot_dsrom_edge_kwr #(
     wire [HAW:0] code_sec = {1'b0,region} + ((local_row >> 10)*17 + 1 + ((local_row & 1023) >> 6))*128 + 2*(local_row & 63);
     wire [HAW:0] scale_sec = {1'b0,region} + (local_row >> 10)*17*128 + ((local_row & 1023) >> 3);
     wire region_valid = ((local_row >> 10)*17 + 17 <= RING_UBLK) && (row < (1<<AW));
-    assign w_v=v && installed_q && map_valid && region_valid && !code_sec[HAW] && !scale_sec[HAW];
+    assign w_v=v && !record_bad && !inner_fault && installed_q && map_valid && region_valid && !code_sec[HAW] && !scale_sec[HAW];
     assign w_stack_mask=4'b1<<stack;
     assign w_csec=code_sec[HAW-1:0];
     assign w_ssec=scale_sec[HAW-1:0];
     assign w_sslot=local_row[2:0];
-    assign fault=descriptor_fault || inner_fault || (v && (!installed_q || !map_valid || !region_valid || code_sec[HAW] || scale_sec[HAW]));
+    assign fault=descriptor_fault || inner_fault || (v && record_bad) || (v && (!installed_q || !map_valid || !region_valid || code_sec[HAW] || scale_sec[HAW]));
 endmodule

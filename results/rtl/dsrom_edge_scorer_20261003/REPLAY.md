@@ -67,3 +67,19 @@ python3 tools/dsrom_edge_scorer_campaign.py select --real-cache <pickle of rtl_h
   - The selector: 10 x 128x256 macros = 0.039 mm2, plus logic not yet measured. The tselect logic was priced at 0.072 mm2.
   - The hub: one tselect + 10 macros + merge, which replaces the removed pooled indexer (7.48 mm2).
 - **Net.** The margin stays at about +18.2 mm2 pending the measured selector and hub areas. No figure here is P&R evidence yet.
+
+## Codex execution milestone
+
+- Baseline score pin `722c2d26c`: `score_roundrobin_722c2d26c.json`, all four stacks PASS; 15,082 keys checked, zero score/candidate errors. This completes the original score-array/local-selection functional path. Existing select history above remains unchanged.
+- Opt-in `CONTIGUOUS=1` implementation pin `67d69cb75`: the same 84 functional queries in all three modes plus seven shipped queries PASS (`select_contiguous_67d69cb75.json`). Real-scaled 200K/1M tails are 412/366 cycles, versus 570/490; ascending 1M is 735 versus 745. HBM scan rate and zero stalls are unchanged.
+- `ot_dsrom_edge_layout` preserves eight-key candidate blocks and maps both scanner positions and the new writer adapter. `ot_dsrom_edge_kwr` reuses the unchanged native encoder and packs code/scales into the native sector layout. Its descriptor stays held through backpressure. Faulted records are suppressed; `writer_map.json` checks held coordinates/payload, collisions, encoding faults and recovery.
+- Layout extent is **frozen and installed**, not an automatically changing query length. `layout_installed` must come from the actual image owner after any required relocation. The system peer must enroll this descriptor/ACK and map compressed-KV coordinates coherently; this branch does not implement a migration engine or modify peer full-system sources. Include `rtl/dsrom_sys/ot_dsrom_edge_layout.sv` with the scorer source list.
+- `tools/dsrom_edge_scorer_contribution.py` substitutes only matched AR L20 sizes into the unchanged S58 near-HBM graph. The graph already prices 324/350 cycles of composed selection depth at 200K/1M; 161 is only its added hub term. Measured contiguous versus measured round-robin L20 gives +0.037245%/+0.026773% AR. Other layers and simultaneous full-system timing remain unmeasured.
+- Runtime dynamic dense repartition is **rejected**, default remains zero: boundary-changing appends relocate old dense local addresses. Index-only movement near 1M costs about 2.5–7.4 us at ideal aggregate HBM bandwidth; if compressed KV shares the new map, total payload movement alone costs 13–39 us, before quiescence/ACK/sector overhead. This outweighs the 0.103 us measured L20 select saving. See the migration lower-bound record and one-line verdict. No rescue or physical launch.
+- Frozen-image contiguous mixed/context score campaign remains on PVE1: `/home/ubuntu/otjobs/dsrom-edge-score-67d69cb75`, clean snapshot `3af9f3d` of source `67d69cb75`, supervisor `2377338`; mixed then contexts200000/1048576 reuse one binary. No claim of its PASS before terminal collection. Original EPYC build and completed objects are preserved.
+
+Replay the matched contribution and migration pricing:
+
+```
+python3 tools/dsrom_edge_scorer_contribution.py --old-select results/rtl/dsrom_edge_scorer_20261003/select.json --select results/rtl/dsrom_edge_scorer_20261003/select_contiguous_67d69cb75.json --out /tmp/edge-contribution.json --migration-out /tmp/edge-migration.json
+```
