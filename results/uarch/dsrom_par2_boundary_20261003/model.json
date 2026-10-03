@@ -1,0 +1,2744 @@
+{
+ "baseline_reproduced": true,
+ "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+ "census": {
+  "calls": 1149,
+  "crossing_calls": 1050,
+  "local_calls": 99,
+  "per_alias": [
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "exp.w1",
+    "calls": 240,
+    "calls_per_layer": 6.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "experts_gu",
+    "remote_result_bits_per_call": 17664,
+    "remote_rows": 256,
+    "selected_choice": true
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 73728,
+    "alias": "exp.w2",
+    "calls": 240,
+    "calls_per_layer": 6.0,
+    "crosses": true,
+    "input_VM_words": 2304,
+    "layers": 40,
+    "model_key": "down",
+    "remote_result_bits_per_call": 44160,
+    "remote_rows": 640,
+    "selected_choice": true
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "exp.w3",
+    "calls": 240,
+    "calls_per_layer": 6.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "experts_gu",
+    "remote_result_bits_per_call": 17664,
+    "remote_rows": 256,
+    "selected_choice": true
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "gate",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "router",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "shared.w1",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "shared_gu",
+    "remote_result_bits_per_call": 17664,
+    "remote_rows": 256,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 73728,
+    "alias": "shared.w2",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 2304,
+    "layers": 40,
+    "model_key": "down",
+    "remote_result_bits_per_call": 44160,
+    "remote_rows": 640,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "shared.w3",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "shared_gu",
+    "remote_result_bits_per_call": 17664,
+    "remote_rows": 256,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "wkv",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 131072,
+    "alias": "wo_a.group0",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 4096,
+    "layers": 40,
+    "model_key": "wo_a",
+    "remote_result_bits_per_call": 35328,
+    "remote_rows": 512,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 131072,
+    "alias": "wo_a.group1",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 4096,
+    "layers": 40,
+    "model_key": "wo_a",
+    "remote_result_bits_per_call": 35328,
+    "remote_rows": 512,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 65536,
+    "alias": "wo_b",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 2048,
+    "layers": 40,
+    "model_key": "wo_b",
+    "remote_result_bits_per_call": 176640,
+    "remote_rows": 2560,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "wq_a",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 8832,
+    "remote_rows": 128,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 40960,
+    "alias": "wq_b",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 1280,
+    "layers": 40,
+    "model_key": "wq_b",
+    "remote_result_bits_per_call": 282624,
+    "remote_rows": 4096,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "indexer.weights_proj",
+    "calls": 8,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 8,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 40960,
+    "alias": "indexer.wq_b",
+    "calls": 8,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 1280,
+    "layers": 8,
+    "model_key": "wq_b",
+    "remote_result_bits_per_call": 141312,
+    "remote_rows": 2048,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "compressor.wkv",
+    "calls": 4,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 4,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "indexer.wk",
+    "calls": 4,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 512,
+    "layers": 4,
+    "model_key": "cmp.wk",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "compressor.wgate",
+    "calls": 3,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 3,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 196608,
+    "alias": "engram.wkv",
+    "calls": 2,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 6144,
+    "layers": 2,
+    "model_key": "wkv",
+    "remote_result_bits_per_call": 220800,
+    "remote_rows": 3200,
+    "selected_choice": false
+   }
+  ],
+  "per_model_key": {
+   "a_proj": {
+    "calls": 95,
+    "crosses": true,
+    "crossing_calls": 40
+   },
+   "cmp.wk": {
+    "calls": 4,
+    "crosses": false,
+    "crossing_calls": 0
+   },
+   "down": {
+    "calls": 280,
+    "crosses": true,
+    "crossing_calls": 280
+   },
+   "experts_gu": {
+    "calls": 480,
+    "crosses": true,
+    "crossing_calls": 480
+   },
+   "router": {
+    "calls": 40,
+    "crosses": false,
+    "crossing_calls": 0
+   },
+   "shared_gu": {
+    "calls": 80,
+    "crosses": true,
+    "crossing_calls": 80
+   },
+   "wkv": {
+    "calls": 2,
+    "crosses": true,
+    "crossing_calls": 2
+   },
+   "wo_a": {
+    "calls": 80,
+    "crosses": true,
+    "crossing_calls": 80
+   },
+   "wo_b": {
+    "calls": 40,
+    "crosses": true,
+    "crossing_calls": 40
+   },
+   "wq_b": {
+    "calls": 48,
+    "crosses": true,
+    "crossing_calls": 48
+   }
+  },
+  "source": "results/uarch/dsrom_parallel_owner_binding_20261002/r1/native_shard_choices.jsonl.gz"
+ },
+ "clock_hz": 1200000000.0,
+ "default_off": true,
+ "link": {
+  "bandwidth": {
+   "headroom": 4.592422502870264,
+   "need_bytes_s": 914550000000.0,
+   "serialisation_exposed_s": 0.0,
+   "ucie_bytes_s": 4200000000000.0
+  },
+  "link_core_s": 8.5e-09,
+  "one_way_ns": {
+   "layer_split": 65.17,
+   "mirror_full": 65.17,
+   "mirror_hub": 65.17,
+   "owner": 65.17,
+   "owner_board": 205.0,
+   "owner_edge": 56.83
+  },
+  "ss_reach_um": 504.0,
+  "stage_period_ps": 833.0,
+  "ucie_bytes_s": 4200000000000.0,
+  "ucie_hop_s": 1e-08,
+  "ucie_ondie_routing_replaced_s": 1.5e-09,
+  "vm_to_serdes_stages": 45,
+  "vm_to_ucie_stages": 34
+ },
+ "model_extension": "par2-boundary",
+ "results": [
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": 0.0,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2563.7,
+   "ar_token_us": 390.06,
+   "cfg": {},
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "base_S58",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": 0.0,
+   "mtp_tok_s": 3809.4,
+   "note": "unified model as pinned: no PAR2 term",
+   "one_way_ns": null,
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": 0.0,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2680.6,
+   "ar_token_us": 373.05,
+   "cfg": {},
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "base_S58",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": 0.0,
+   "mtp_tok_s": 4176.7,
+   "note": "unified model as pinned: no PAR2 term",
+   "one_way_ns": null,
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -8.05,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2357.3,
+   "ar_token_us": 424.21,
+   "cfg": {
+    "board": "mesh",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": false,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "pkgA_collectives_only_mesh",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -4.47,
+   "mtp_tok_s": 3639.1,
+   "note": "PAR2 pair in package -> TP-4 over 4 packages on the model's board mesh; field crossings not added",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 34.154,
+      "collectives": 177,
+      "field": 0,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 45.016,
+      "collectives": 177,
+      "field": 0,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -8.39,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2455.7,
+   "ar_token_us": 407.22,
+   "cfg": {
+    "board": "mesh",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": false,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "pkgA_collectives_only_mesh",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -4.88,
+   "mtp_tok_s": 3972.8,
+   "note": "PAR2 pair in package -> TP-4 over 4 packages on the model's board mesh; field crossings not added",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 34.154,
+      "collectives": 177,
+      "field": 0,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 45.016,
+      "collectives": 177,
+      "field": 0,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -1.18,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2533.4,
+   "ar_token_us": 394.73,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": false,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "pkgA_collectives_only_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -3.45,
+   "mtp_tok_s": 3677.9,
+   "note": "same, four-package quad fully connected on the board (fc4)",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 4.662,
+      "collectives": 177,
+      "field": 0,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 33.914,
+      "collectives": 137,
+      "field": 0,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -1.23,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2647.5,
+   "ar_token_us": 377.71,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": false,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "pkgA_collectives_only_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -3.78,
+   "mtp_tok_s": 4019.0,
+   "note": "same, four-package quad fully connected on the board (fc4)",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 4.662,
+      "collectives": 177,
+      "field": 0,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 33.914,
+      "collectives": 137,
+      "field": 0,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -14.37,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2195.4,
+   "ar_token_us": 455.5,
+   "cfg": {
+    "board": "mesh",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "owner_mesh",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -7.85,
+   "mtp_tok_s": 3510.4,
+   "note": "as designed, board mesh",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 65.434,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 76.676,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -14.93,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2280.5,
+   "ar_token_us": 438.5,
+   "cfg": {
+    "board": "mesh",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "owner_mesh",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -8.54,
+   "mtp_tok_s": 3820.0,
+   "note": "as designed, board mesh",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 65.434,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 76.676,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -8.44,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2347.4,
+   "ar_token_us": 426.0,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "owner_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -7.09,
+   "mtp_tok_s": 3539.3,
+   "note": "as designed, fc4 quad",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 35.942,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 70.407,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -8.79,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2445.0,
+   "ar_token_us": 409.0,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "owner_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -7.72,
+   "mtp_tok_s": 3854.2,
+   "note": "as designed, fc4 quad",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 35.942,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 70.407,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -7.57,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2369.6,
+   "ar_token_us": 422.01,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner_edge",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "owner_edge_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -6.64,
+   "mtp_tok_s": 3556.5,
+   "note": "remote tree rooted at the shared-edge PHY",
+   "one_way_ns": 56.83,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 31.942,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 56.83
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 65.741,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 56.83
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -7.89,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2469.1,
+   "ar_token_us": 405.01,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner_edge",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "owner_edge_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -7.24,
+   "mtp_tok_s": 3874.5,
+   "note": "remote tree rooted at the shared-edge PHY",
+   "one_way_ns": 56.83,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 31.942,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 56.83
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 65.741,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 56.83
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -20.15,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2047.2,
+   "ar_token_us": 488.47,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner_board",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "owner_board",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -11.31,
+   "mtp_tok_s": 3378.5,
+   "note": "PAR2 pair split across packages (light-FEC board link)",
+   "one_way_ns": 205.0,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 0,
+     "field": 282,
+     "hops": 0,
+     "on_path": {
+      "added_s_on_path": 98.4,
+      "collectives": 0,
+      "field": 240,
+      "hops": 0
+     },
+     "one_way_s": 205.0
+    },
+    {
+     "P": 6,
+     "collectives": 0,
+     "field": 282,
+     "hops": 0,
+     "on_path": {
+      "added_s_on_path": 114.8,
+      "collectives": 0,
+      "field": 280,
+      "hops": 0
+     },
+     "one_way_s": 205.0
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -20.87,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2121.1,
+   "ar_token_us": 471.45,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner_board",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "owner_board",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -12.27,
+   "mtp_tok_s": 3664.2,
+   "note": "PAR2 pair split across packages (light-FEC board link)",
+   "one_way_ns": 205.0,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 0,
+     "field": 282,
+     "hops": 0,
+     "on_path": {
+      "added_s_on_path": 98.4,
+      "collectives": 0,
+      "field": 240,
+      "hops": 0
+     },
+     "one_way_s": 205.0
+    },
+    {
+     "P": 6,
+     "collectives": 0,
+     "field": 282,
+     "hops": 0,
+     "on_path": {
+      "added_s_on_path": 114.8,
+      "collectives": 0,
+      "field": 280,
+      "hops": 0
+     },
+     "one_way_s": 205.0
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -6.4,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2399.5,
+   "ar_token_us": 416.75,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "mirror_hub",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "mirror_hub_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -5.94,
+   "mtp_tok_s": 3583.0,
+   "note": "replicated hubs run the chain; attention on shard 0",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 26.688,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 58.547,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -6.68,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2501.6,
+   "ar_token_us": 399.74,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "mirror_hub",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "mirror_hub_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -6.48,
+   "mtp_tok_s": 3906.0,
+   "note": "replicated hubs run the chain; attention on shard 0",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 26.688,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 58.547,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -5.82,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2414.6,
+   "ar_token_us": 414.15,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "mirror_full",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "mirror_full_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -5.69,
+   "mtp_tok_s": 3592.8,
+   "note": "mirror_hub + attention/indexer mirrored (KV x2)",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 24.082,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 55.94,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -6.07,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2518.0,
+   "ar_token_us": 397.14,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "mirror_full",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "mirror_full_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -6.2,
+   "mtp_tok_s": 3917.7,
+   "note": "mirror_hub + attention/indexer mirrored (KV x2)",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 24.082,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 55.94,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -13.11,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2227.5,
+   "ar_token_us": 448.93,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "layer_split",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 1888,
+   "id": "layer_split_S116_fc4",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -28.15,
+   "mtp_tok_s": 2737.0,
+   "note": "no row split: die pair = consecutive packed groups, odd hops in-package UCIe",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": -12.275,
+      "collectives": 177,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 16.977,
+      "collectives": 137,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 115,
+   "stages": 116
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -13.63,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2315.2,
+   "ar_token_us": 431.93,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "layer_split",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 1888,
+   "id": "layer_split_S116_fc4",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -30.05,
+   "mtp_tok_s": 2921.6,
+   "note": "no row split: die pair = consecutive packed groups, odd hops in-package UCIe",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": -12.275,
+      "collectives": 177,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 16.977,
+      "collectives": 137,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 115,
+   "stages": 116
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -18.47,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2090.2,
+   "ar_token_us": 478.42,
+   "cfg": {
+    "board": "mesh",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "layer_split",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 1888,
+   "id": "layer_split_S116_mesh",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -28.61,
+   "mtp_tok_s": 2719.7,
+   "note": "same on the board mesh",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 17.218,
+      "collectives": 177,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 23.246,
+      "collectives": 137,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 115,
+   "stages": 116
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -19.15,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2167.2,
+   "ar_token_us": 461.42,
+   "cfg": {
+    "board": "mesh",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "layer_split",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 1888,
+   "id": "layer_split_S116_mesh",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -30.52,
+   "mtp_tok_s": 2901.9,
+   "note": "same on the board mesh",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 17.218,
+      "collectives": 177,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 23.246,
+      "collectives": 137,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 115,
+   "stages": 116
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -15.43,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2168.2,
+   "ar_token_us": 461.21,
+   "cfg": {},
+   "ctx": 1048576,
+   "hbm_stacks": 1888,
+   "id": "unpaired_S116",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -27.17,
+   "mtp_tok_s": 2774.2,
+   "note": "reference: S116 with every hop on the board, TP pair in package (no PAR2)",
+   "one_way_ns": null,
+   "stage_hops": 115,
+   "stages": 116
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -16.02,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2251.2,
+   "ar_token_us": 444.21,
+   "cfg": {},
+   "ctx": 200000,
+   "hbm_stacks": 1888,
+   "id": "unpaired_S116",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -29.03,
+   "mtp_tok_s": 2964.0,
+   "note": "reference: S116 with every hop on the board, TP pair in package (no PAR2)",
+   "one_way_ns": null,
+   "stage_hops": 115,
+   "stages": 116
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -2.47,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2500.4,
+   "ar_token_us": 399.94,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "expert_split_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -4.0,
+   "mtp_tok_s": 3657.2,
+   "note": "split by whole routed experts (dense on shard 0): one crossing in, one out per layer",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 9.875,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 39.127,
+      "collectives": 137,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -2.58,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2611.4,
+   "ar_token_us": 382.94,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "expert_split_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -4.36,
+   "mtp_tok_s": 3994.4,
+   "note": "split by whole routed experts (dense on shard 0): one crossing in, one out per layer",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 9.875,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 39.127,
+      "collectives": 137,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -1.03,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2537.2,
+   "ar_token_us": 394.14,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": true,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "expert_split_fc4_overlap",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -0.49,
+   "mtp_tok_s": 3790.6,
+   "note": "same, four-package collective's extra bytes credited to the existing overlap (level 5)",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 4.067,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 4.467,
+      "collectives": 137,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -1.08,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2651.6,
+   "ar_token_us": 377.13,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": true,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "expert_split_fc4_overlap",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -0.54,
+   "mtp_tok_s": 4154.0,
+   "note": "same, four-package collective's extra bytes credited to the existing overlap (level 5)",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 4.067,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 4.467,
+      "collectives": 137,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -9.17,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2328.6,
+   "ar_token_us": 429.44,
+   "cfg": {
+    "board": "mesh",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "expert_split_mesh",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -5.0,
+   "mtp_tok_s": 3618.9,
+   "note": "same on the board mesh",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 39.368,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 50.229,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -9.55,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2424.7,
+   "ar_token_us": 412.42,
+   "cfg": {
+    "board": "mesh",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "expert_split_mesh",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -5.46,
+   "mtp_tok_s": 3948.7,
+   "note": "same on the board mesh",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 39.368,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 50.229,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -4.04,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2460.2,
+   "ar_token_us": 406.47,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner_board",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "expert_split_board",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -1.81,
+   "mtp_tok_s": 3740.6,
+   "note": "expert split, shards in different packages (TP pair kept in package)",
+   "one_way_ns": 205.0,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 0,
+     "field": 80,
+     "hops": 0,
+     "on_path": {
+      "added_s_on_path": 16.4,
+      "collectives": 0,
+      "field": 80,
+      "hops": 0
+     },
+     "one_way_s": 205.0
+    },
+    {
+     "P": 6,
+     "collectives": 0,
+     "field": 80,
+     "hops": 0,
+     "on_path": {
+      "added_s_on_path": 16.4,
+      "collectives": 0,
+      "field": 80,
+      "hops": 0
+     },
+     "one_way_s": 205.0
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -4.21,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2567.7,
+   "ar_token_us": 389.45,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner_board",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "expert_split_board",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -1.98,
+   "mtp_tok_s": 4094.0,
+   "note": "expert split, shards in different packages (TP pair kept in package)",
+   "one_way_ns": 205.0,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 0,
+     "field": 80,
+     "hops": 0,
+     "on_path": {
+      "added_s_on_path": 16.4,
+      "collectives": 0,
+      "field": 80,
+      "hops": 0
+     },
+     "one_way_s": 205.0
+    },
+    {
+     "P": 6,
+     "collectives": 0,
+     "field": 80,
+     "hops": 0,
+     "on_path": {
+      "added_s_on_path": 16.4,
+      "collectives": 0,
+      "field": 80,
+      "hops": 0
+     },
+     "one_way_s": 205.0
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -7.17,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2379.8,
+   "ar_token_us": 420.2,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": true,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "owner_fc4_overlap",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -3.81,
+   "mtp_tok_s": 3664.1,
+   "note": "owner, overlap credited",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 30.134,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 35.747,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -7.48,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2480.2,
+   "ar_token_us": 403.19,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": true,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "owner_fc4_overlap",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -4.17,
+   "mtp_tok_s": 4002.5,
+   "note": "owner, overlap credited",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 30.134,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 35.747,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -2.7,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2494.6,
+   "ar_token_us": 400.87,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 2e-08,
+    "mode": "owner",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "expert_split_fc4_link20ns",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -4.09,
+   "mtp_tok_s": 3653.6,
+   "note": "UCIe core 20 ns",
+   "one_way_ns": 76.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 10.795,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 40.047,
+      "collectives": 137,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -2.81,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2605.2,
+   "ar_token_us": 383.85,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 2e-08,
+    "mode": "owner",
+    "split": "experts",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "expert_split_fc4_link20ns",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -4.47,
+   "mtp_tok_s": 3990.1,
+   "note": "UCIe core 20 ns",
+   "one_way_ns": 76.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 10.795,
+      "collectives": 177,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 80,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 40.047,
+      "collectives": 137,
+      "field": 80,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -7.87,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2362.0,
+   "ar_token_us": 423.37,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 3e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "owner_fc4_link3ns",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -6.79,
+   "mtp_tok_s": 3550.6,
+   "note": "UCIe core 3 ns",
+   "one_way_ns": 59.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 33.302,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 59.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 67.327,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 59.67
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -8.2,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2460.9,
+   "ar_token_us": 406.36,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 3e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "owner_fc4_link3ns",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -7.4,
+   "mtp_tok_s": 3867.6,
+   "note": "UCIe core 3 ns",
+   "one_way_ns": 59.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 33.302,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 59.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 67.327,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 59.67
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -9.61,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2317.3,
+   "ar_token_us": 431.54,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 2e-08,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "owner_fc4_link20ns",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -7.7,
+   "mtp_tok_s": 3515.9,
+   "note": "UCIe core 20 ns",
+   "one_way_ns": 76.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 41.462,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 76.847,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -10.01,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2412.4,
+   "ar_token_us": 414.52,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 2e-08,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "owner_fc4_link20ns",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -8.38,
+   "mtp_tok_s": 3826.5,
+   "note": "UCIe core 20 ns",
+   "one_way_ns": 76.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 41.462,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 76.847,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -6.59,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2394.8,
+   "ar_token_us": 417.57,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 2e-08,
+    "mode": "mirror_full",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "mirror_full_fc4_link20ns",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -6.07,
+   "mtp_tok_s": 3578.2,
+   "note": "UCIe core 20 ns",
+   "one_way_ns": 76.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 27.509,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 59.827,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -6.87,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2496.5,
+   "ar_token_us": 400.56,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 2e-08,
+    "mode": "mirror_full",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "mirror_full_fc4_link20ns",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -6.62,
+   "mtp_tok_s": 3900.4,
+   "note": "UCIe core 20 ns",
+   "one_way_ns": 76.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 27.509,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 59.827,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 76.67
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -13.24,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2224.2,
+   "ar_token_us": 449.6,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 2e-08,
+    "mode": "layer_split",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 1888,
+   "id": "layer_split_S116_fc4_link20ns",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -28.18,
+   "mtp_tok_s": 2736.1,
+   "note": "UCIe core 20 ns",
+   "one_way_ns": 76.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": -11.608,
+      "collectives": 177,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 76.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 17.644,
+      "collectives": 137,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 76.67
+    }
+   ],
+   "stage_hops": 115,
+   "stages": 116
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -13.77,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2311.6,
+   "ar_token_us": 432.6,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 2e-08,
+    "mode": "layer_split",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 1888,
+   "id": "layer_split_S116_fc4_link20ns",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -30.08,
+   "mtp_tok_s": 2920.5,
+   "note": "UCIe core 20 ns",
+   "one_way_ns": 76.67,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": -11.608,
+      "collectives": 177,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 76.67
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 17.644,
+      "collectives": 137,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 76.67
+    }
+   ],
+   "stage_hops": 115,
+   "stages": 116
+  }
+ ],
+ "schema": "opentallas.dsrom.par2-boundary.v1",
+ "scope": "Analytical; dataflow levels 1-5 only; golden rounding/reduction order unchanged in every mode (row split cuts no reduction; mirrored hubs compute bit-identical chains; layer split moves whole matrices).  No RTL/P&R; not adopted.",
+ "source_sha256": {
+  "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+  "results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154",
+  "results/uarch/dsrom_parallel_owner_binding_20261002/r1/native_shard_choices.jsonl.gz": "a723482a46ab7843a83399f666c9c3571c499891d02a449c6d8d89eb356eb2b3",
+  "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+  "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+  "tools/dsrom_par2_boundary.py": "72663f77d5973961c61484673b9ef4f18219c7f00c6112752886fb20776427e4",
+  "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "tools/uarch_model_par2_boundary.py": "b898f4a34bfa061c92690a7566644eea33a7b411aae7e798c855443c27d2f274"
+ }
+}
