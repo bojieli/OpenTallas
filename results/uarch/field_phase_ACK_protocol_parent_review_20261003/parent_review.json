@@ -1,0 +1,57 @@
+{
+  "ACK_protocol": {
+    "CLI_verify_supported": false,
+    "W4_origin_pins_checked": 6,
+    "actual_connected_adapter_RTL": false,
+    "packet_artifacts_checked": 9,
+    "protocol_check_requires_trace_owner_slot": true,
+    "subtests_passed": 13,
+    "tests_passed": 14
+  },
+  "current_emitter_system_gate_pending": true,
+  "full_token_saved_cycle_upper_arithmetic": 87800,
+  "headline_adoption": false,
+  "known_new_priorities": [
+    "Source-current field gate diagnostic",
+    "Window epoch alias executable negative",
+    "Actual ACK owner55 adapter and admission stop",
+    "As-built versus merged field schedule calibration"
+  ],
+  "model_prices_single_phase_already": true,
+  "phase_merge_records": [
+    {
+      "golden_rows_reported": 80,
+      "historical_measured_result_review": true,
+      "new_RTL_run": false,
+      "params": {
+        "bst": 17,
+        "nbf": 8,
+        "np": 16,
+        "phw": 4,
+        "regions": 4,
+        "vaw": 16,
+        "vrd": 64
+      },
+      "record": "results/uarch/free_levers_audit_20261003/measured/phase_merge_flat_bst17.json",
+      "source_pins_checked": 28
+    },
+    {
+      "golden_rows_reported": 80,
+      "historical_measured_result_review": true,
+      "new_RTL_run": false,
+      "params": {
+        "bst": 2,
+        "nbf": 8,
+        "np": 16,
+        "phw": 4,
+        "regions": 4,
+        "vaw": 16,
+        "vrd": 64
+      },
+      "record": "results/uarch/free_levers_audit_20261003/measured/phase_merge_flat_bst2.json",
+      "source_pins_checked": 28
+    }
+  ],
+  "physical_adoption": false,
+  "upper_is_measured_full_token_gain": false
+}
