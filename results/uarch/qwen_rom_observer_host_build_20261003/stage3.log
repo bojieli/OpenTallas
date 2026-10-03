@@ -1,0 +1,23 @@
+	Command being timed: "/usr/bin/x86_64-linux-gnu-g++-11 -std=c++20 -O2 -pthread -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -I/home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1 -I/home/ubuntu/w12/rt_tp4d/coll -I/home/ubuntu/w12/rt_tp4d/die -I/home/ubuntu/w12/rt_tp4d/die/Vot_hdc_fmul -I/home/ubuntu/w12/rt_tp4d/die/Vot_hdc_qadd -I/home/ubuntu/w12/rt_tp4d/die/Vot_hdc_vstream_lane_a -I/home/ubuntu/w12/rt_tp4d/tile -I/home/ubuntu/w12/wt4/rtl/test/qwen_rom_runtime -I/home/ubuntu/w12/wt4/rtl/test/qwen_runtime -c /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_dpi.cpp -o /home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1/verilated_dpi.o"
+	User time (seconds): 2.88
+	System time (seconds): 0.26
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:03.14
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 244920
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 59012
+	Voluntary context switches: 7
+	Involuntary context switches: 18
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 432
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

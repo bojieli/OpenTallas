@@ -14,10 +14,11 @@ def file_sha256(path):
   for chunk in iter(lambda:f.read(1024*1024),b''):h.update(chunk)
  return h.hexdigest()
 
-def replay(bundle,raw,require_reads=False):
+def replay(bundle,raw,require_reads=False,layers=36):
+ if type(layers) is not int or not 1<=layers<=36:raise ValueError("historical prefix layer aperture")
  if (bundle['su_width'],bundle['ar_words'],bundle['TP'],bundle['groups'])!=(64,128,4,6144):raise ValueError('frozen historical program/config only')
  gates={};snapshots={};tickets={};writers={};controls={};lifetimes={};memory={};last_me={};last_write_edge={};read_slots={};read_edges={}
- for layer in range(36):
+ for layer in range(layers):
   for rank in range(4):
    key=f'L{layer}/die{rank}';f=bundle['stages'][key]['files'];owner=Owner(0,rank,layer,0)
    g=DispatchJournal(decoded(f['program.hex']),decoded(f['segments.hex']),owner,0,0)
@@ -120,15 +121,15 @@ def replay(bundle,raw,require_reads=False):
   life['source_read_deadlines_complete']=len(life['current_row_first_read'])==512 and set(life['source_port_reads'])=={str(e['pc']) for e in life['KV_consumer_accepts']}
   if require_reads and not life['source_read_deadlines_complete']:raise ValueError('all current row reads and consumer deadlines required')
   state['source_lifetimes']=life;states[f'L{l}/die{r}']=state
- return {'status':'PASS_HISTORICAL_DISPATCH_PRODUCER_SNAPSHOT_CONSISTENCY','states':states,
+ return {'status':'PASS_HISTORICAL_DISPATCH_PRODUCER_SNAPSHOT_CONSISTENCY' if layers==36 else 'PASS_HISTORICAL_PREFIX_DISPATCH_PRODUCER_SNAPSHOT_CONSISTENCY','states':states,'layers':layers,'whole36':layers==36,
   'source_provenance_independently_qualified':False,'runtime_source_owner_instantiated':False,
   'identity_scope':'actual stage/rank dispatch; user0/epoch0 observer labels, not provider owner state',
   'SMIN6_plus55_physical_transfer':False,'physical_adoption':False,'provider_calendar_adoption':False}
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--bundle',type=Path,required=True);p.add_argument('--raw',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--require-reads',action='store_true');a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--bundle',type=Path,required=True);p.add_argument('--raw',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--require-reads',action='store_true');p.add_argument('--layers',type=int,default=36);a=p.parse_args()
  b=json.loads(gzip.decompress(a.bundle.read_bytes()))
- with a.raw.open() as raw:result=replay(b,raw,require_reads=a.require_reads)
+ with a.raw.open() as raw:result=replay(b,raw,require_reads=a.require_reads,layers=a.layers)
  result['raw_sha256']=file_sha256(a.raw)
  with a.out.open('x') as f:json.dump(result,f,sort_keys=True,indent=2);f.write('\n')
 if __name__=='__main__':main()

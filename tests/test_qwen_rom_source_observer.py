@@ -103,6 +103,17 @@ class ObserverTests(unittest.TestCase):
  def test_source_duplicate_read_port_rejected(self):
   raw=self.read_raw();line=next(l for l in raw.splitlines() if l.startswith('R '));raw=raw.replace(line,line+'\n'+line,1)
   with self.assertRaisesRegex(ValueError,'duplicate source read'):R.replay(self.bundle,raw,require_reads=True)
+ def test_L0_probe_cannot_export_full_calendar(self):
+  raw='\n'.join(l for l in self.read_raw().splitlines() if l.split()[2]=='0')+'\n'
+  r=R.replay(self.bundle,raw,require_reads=True,layers=1)
+  self.assertEqual(len(r['states']),4);self.assertFalse(r['whole36'])
+  with self.assertRaisesRegex(ValueError,'historical replay required'):E.export(r)
+ def test_probe_rejects_extra_layers(self):
+  with self.assertRaisesRegex(ValueError,'layer4rank identity'):R.replay(self.bundle,self.read_raw(),require_reads=True,layers=1)
+ def test_portable_file_hash(self):
+  with tempfile.TemporaryDirectory() as td:
+   p=pathlib.Path(td)/'trace';p.write_bytes(b'actual-source-raw')
+   self.assertEqual(R.file_sha256(p),sha(p.read_bytes()))
  def test_native_defaultoff_and_formatter(self):
   with tempfile.TemporaryDirectory() as td:
    p=pathlib.Path(td);hpp=P.ROOT/'rtl/test/qwen_rom_runtime/observer/qwen_rom_observer.hpp'
