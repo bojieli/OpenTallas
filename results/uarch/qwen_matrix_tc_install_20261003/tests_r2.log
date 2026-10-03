@@ -1,0 +1,15 @@
+test_actual64_TC_source_and_consumption (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_actual64_TC_source_and_consumption) ... ok
+test_cold_generation_byte_equal (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_cold_generation_byte_equal) ... ok
+test_controller_refuses_without_real_hook (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_controller_refuses_without_real_hook) ... ok
+test_driver_only_actual_TC_inputs (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_driver_only_actual_TC_inputs) ... ok
+test_enabled_actual_TC_constructor_has_no_edges (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_enabled_actual_TC_constructor_has_no_edges) ... ok
+test_existing_mux_and_owner_wiring_unchanged (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_existing_mux_and_owner_wiring_unchanged) ... ok
+test_factory_enrollment_reuses_ONE_builder_hook (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_factory_enrollment_reuses_ONE_builder_hook) ... ok
+test_missing_TC_enabled_provider_and_source_manifest_refusals (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_missing_TC_enabled_provider_and_source_manifest_refusals) ... ok
+test_shared_consumption_settles_without_extra_edge (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_shared_consumption_settles_without_extra_edge) ... ok
+test_source_dependencies_no_duplicate_differing_definitions (tools.gpu_sys.test_canonical_qwen_matrix_tc_install.Tests.test_source_dependencies_no_duplicate_differing_definitions) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.661s
+
+OK
