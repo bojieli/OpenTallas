@@ -1,0 +1,105 @@
+{
+ "schema": "opentallas.dsrom.die_feasibility.legality_screen.v1",
+ "variants": {
+  "C_asmapped": {
+   "instances": 16409,
+   "elements": 2048,
+   "cfg_macros": 14336,
+   "blocks": 25,
+   "outside_die": [],
+   "overlaps": 0,
+   "overlap_examples": [],
+   "element_grid_site54_track48_row270": {
+    "(True, True, True)": 66,
+    "(False, False, True)": 1933,
+    "(True, False, True)": 49
+   },
+   "element_on_joint_grid": 66,
+   "cfg_grid_site54_row270": {
+    "(True, True)": 14336
+   },
+   "cfg_M4_pins_on_track": 14336,
+   "cfg_M4_pins_off_track": 0,
+   "min_same_row_element_gap_um": [
+    8.64
+   ]
+  },
+  "C_snapped": {
+   "instances": 16409,
+   "elements": 2048,
+   "cfg_macros": 14336,
+   "blocks": 25,
+   "outside_die": [],
+   "overlaps": 0,
+   "overlap_examples": [],
+   "element_grid_site54_track48_row270": {
+    "(True, True, True)": 2048
+   },
+   "element_on_joint_grid": 2048,
+   "cfg_grid_site54_row270": {
+    "(True, True)": 14336
+   },
+   "cfg_M4_pins_on_track": 14336,
+   "cfg_M4_pins_off_track": 0,
+   "min_same_row_element_gap_um": [
+    8.422,
+    8.424,
+    8.854
+   ]
+  },
+  "D_asmapped": {
+   "instances": 16409,
+   "elements": 2048,
+   "cfg_macros": 14336,
+   "blocks": 25,
+   "outside_die": [],
+   "overlaps": 0,
+   "overlap_examples": [],
+   "element_grid_site54_track48_row270": {
+    "(True, True, True)": 66,
+    "(False, False, True)": 1933,
+    "(True, False, True)": 49
+   },
+   "element_on_joint_grid": 66,
+   "cfg_grid_site54_row270": {
+    "(True, True)": 14336
+   },
+   "cfg_M4_pins_on_track": 14336,
+   "cfg_M4_pins_off_track": 0,
+   "min_same_row_element_gap_um": [
+    8.64
+   ]
+  },
+  "D_snapped": {
+   "instances": 16409,
+   "elements": 2048,
+   "cfg_macros": 14336,
+   "blocks": 25,
+   "outside_die": [],
+   "overlaps": 0,
+   "overlap_examples": [],
+   "element_grid_site54_track48_row270": {
+    "(True, True, True)": 2048
+   },
+   "element_on_joint_grid": 2048,
+   "cfg_grid_site54_row270": {
+    "(True, True)": 14336
+   },
+   "cfg_M4_pins_on_track": 14336,
+   "cfg_M4_pins_off_track": 0,
+   "min_same_row_element_gap_um": [
+    8.422,
+    8.424,
+    8.854
+   ]
+  }
+ },
+ "inputs": {
+  "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/field.json.gz": "527ce659bb50db911baee236ec2d0298cbd8f44aaf68426f6bfc3aa71d914f2e",
+  "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/cfg.json.gz": "1340321aa101959123236eca5da37eac6f44ab64af6292e3e4c21bfe9d18f18b",
+  "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/bands.json.gz": "721e4a189d5f79a043770edc87027336089a37f85716ab9e8bfadfecec17bae3",
+  "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/services.json.gz": "99cd991bbb0f5135a38b9bd6e05241b6cfa85167bfa3aea37598abe10917c488",
+  "results/uarch/dsrom_capture_home_20261002/inputs/budget.json.gz": "d3daee9f2e2e052bc56272c5233accc1064d51e84c40f2123c86c042b17e45df",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05"
+ }
+}
