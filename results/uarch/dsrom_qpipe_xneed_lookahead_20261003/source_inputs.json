@@ -1,0 +1,142 @@
+{
+  "schema": "qpipe-xneed-source-inputs-v1",
+  "origins": [
+    {
+      "commit": "0b831a7d45b503b0d7ab1108761c44b34e093955",
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "archive": "inputs/baseline_element.sv",
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+      "bytes": 57081
+    },
+    {
+      "commit": "0b831a7d45b503b0d7ab1108761c44b34e093955",
+      "path": "rtl/v41rom/ot_v41_rom_elem_qp_w10.sv",
+      "archive": "inputs/qpipe_element.sv",
+      "sha256": "46038fedfe348b2576d310b079c353c9e09e9136990f4649592be4cd103903c3",
+      "bytes": 74826
+    },
+    {
+      "commit": "0b831a7d45b503b0d7ab1108761c44b34e093955",
+      "path": "rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv",
+      "archive": "inputs/qpipe_wrapper.sv",
+      "sha256": "83eea3416c455bd4c49d6043e997e8bd33e7a081556d51bfbb05983ad9976df5",
+      "bytes": 2625
+    },
+    {
+      "commit": "0b831a7d45b503b0d7ab1108761c44b34e093955",
+      "path": "tools/uarch_model.py",
+      "archive": "inputs/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "bytes": 428737
+    },
+    {
+      "commit": "0b831a7d45b503b0d7ab1108761c44b34e093955",
+      "path": "results/uarch/dsrom_qelem_pipeline_pricing_20261003.json",
+      "archive": "inputs/historical_fill_pricing.json",
+      "sha256": "ee358df2dcf36cb9cf18d6eea70af0b86e3f5891070d2048d4428790d699c5e3",
+      "bytes": 18317
+    },
+    {
+      "commit": "0b831a7d45b503b0d7ab1108761c44b34e093955",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef",
+      "archive": "inputs/rom_macro.lef",
+      "sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+      "bytes": 56346
+    },
+    {
+      "commit": "2078c269c4a14dd566b96a73b52a272582faa13f",
+      "path": "results/rtl/risk_clock_loops_20261003/screens/ds/ds15_elem_q.json",
+      "archive": "inputs/clock_screen.json",
+      "sha256": "90daf530e98858f431ebaa20e0f4554fb0747c37eec06c47776d5c1b801f67e2",
+      "bytes": 24534
+    }
+  ],
+  "ss_cell_blocks": {
+    "DFFHQNx1_ASAP7_75t_R": {
+      "area_um2": 0.2916,
+      "archive": "inputs/DFFHQNx1_ASAP7_75t_R.lib",
+      "sha256": "1d32b002f96a32f5fb45285d66f679b8d4ea0aec6db61919e13b9b24f10b2280",
+      "bytes": 20573,
+      "library_file": "SEQ_SS.lib",
+      "library_raw_sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+      "uncompressed_byte_range": [
+        118374,
+        138947
+      ]
+    },
+    "DFFHQNx2_ASAP7_75t_R": {
+      "area_um2": 0.30618,
+      "archive": "inputs/DFFHQNx2_ASAP7_75t_R.lib",
+      "sha256": "e0a7c7262a46eedfa501a0d49a5adc5a1728714f0ee0930705e8d0f73939f066",
+      "bytes": 20586,
+      "library_file": "SEQ_SS.lib",
+      "library_raw_sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+      "uncompressed_byte_range": [
+        138950,
+        159536
+      ]
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "area_um2": 0.37908,
+      "archive": "inputs/DFFASRHQNx1_ASAP7_75t_R.lib",
+      "sha256": "a5546e6de6531d9c87de47f8d2b1e32a33c5f8a1f7473d1a4ec6363b05d42b8c",
+      "bytes": 111033,
+      "library_file": "SEQ_SS.lib",
+      "library_raw_sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+      "uncompressed_byte_range": [
+        7337,
+        118370
+      ]
+    },
+    "AND2x2_ASAP7_75t_R": {
+      "area_um2": 0.08748,
+      "archive": "inputs/AND2x2_ASAP7_75t_R.lib",
+      "sha256": "7eb1a5069b059aaa6f6e63e8f42d4498ece911c8a63f80ec9a774fa6bb062876",
+      "bytes": 17861,
+      "library_file": "SIMPLE_SS.lib.gz",
+      "library_raw_sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db",
+      "uncompressed_byte_range": [
+        7349,
+        25210
+      ]
+    },
+    "OR2x2_ASAP7_75t_R": {
+      "area_um2": 0.08748,
+      "archive": "inputs/OR2x2_ASAP7_75t_R.lib",
+      "sha256": "1538ff4d3a67be21831eb581a0f80a7b7b781a939b81e49b6e8a031d89541aab",
+      "bytes": 17878,
+      "library_file": "SIMPLE_SS.lib.gz",
+      "library_raw_sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db",
+      "uncompressed_byte_range": [
+        1678981,
+        1696859
+      ]
+    },
+    "INVxp33_ASAP7_75t_R": {
+      "area_um2": 0.04374,
+      "archive": "inputs/INVxp33_ASAP7_75t_R.lib",
+      "sha256": "6b5689ee6ae0c1cac1794a1fec56ba4fd259867c67b034ad51704d8e89f76f4c",
+      "bytes": 8430,
+      "library_file": "INVBUF_SS.lib.gz",
+      "library_raw_sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+      "uncompressed_byte_range": [
+        292229,
+        300659
+      ]
+    },
+    "BUFx4_ASAP7_75t_R": {
+      "area_um2": 0.10206,
+      "archive": "inputs/BUFx4_ASAP7_75t_R.lib",
+      "sha256": "284ba5f233fb09fafe93ed005679184accb767112b619b614bd0e80b30a337c8",
+      "bytes": 8070,
+      "library_file": "INVBUF_SS.lib.gz",
+      "library_raw_sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+      "uncompressed_byte_range": [
+        63338,
+        71408
+      ]
+    }
+  },
+  "lib_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "library_source": "read-only docker exec from existing live kind_antonelli; no new container/build; ASAP7 RVT SS"
+}

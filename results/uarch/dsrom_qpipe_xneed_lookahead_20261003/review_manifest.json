@@ -1,0 +1,32 @@
+{
+  "schema": "qpipe-xneed-preparation-gate-v1",
+  "tests": {
+    "passed": 11,
+    "elapsed_s": 3.9
+  },
+  "verdict": "PASS_MODEL_ONLY",
+  "RTL_and_physical_admission": false,
+  "existing_live_jobs_unchanged": true,
+  "artifact_hashes": {
+    "tools/model_dsrom_qpipe_xneed_lookahead.py": "91450554f27d9a1a5b43027a24c11f7924ea8ddfada317362f7f19a0e32cc4b2",
+    "tests/test_dsrom_qpipe_xneed_lookahead_model.py": "7614ce79ffee0edc6b38e8f326a0e469f825c6ab37e66d48be616af20470ddbf",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/SOURCEPLAN.md": "3e60c6a7294d692946b5454eef7bebf953cd4ed43cc971b5cf1fb4630ffc44a1",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/AND2x2_ASAP7_75t_R.lib": "7eb1a5069b059aaa6f6e63e8f42d4498ece911c8a63f80ec9a774fa6bb062876",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/BUFx4_ASAP7_75t_R.lib": "284ba5f233fb09fafe93ed005679184accb767112b619b614bd0e80b30a337c8",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/DFFASRHQNx1_ASAP7_75t_R.lib": "a5546e6de6531d9c87de47f8d2b1e32a33c5f8a1f7473d1a4ec6363b05d42b8c",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/DFFHQNx1_ASAP7_75t_R.lib": "1d32b002f96a32f5fb45285d66f679b8d4ea0aec6db61919e13b9b24f10b2280",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/DFFHQNx2_ASAP7_75t_R.lib": "e0a7c7262a46eedfa501a0d49a5adc5a1728714f0ee0930705e8d0f73939f066",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/INVxp33_ASAP7_75t_R.lib": "6b5689ee6ae0c1cac1794a1fec56ba4fd259867c67b034ad51704d8e89f76f4c",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/OR2x2_ASAP7_75t_R.lib": "1538ff4d3a67be21831eb581a0f80a7b7b781a939b81e49b6e8a031d89541aab",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/baseline_element.sv": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/clock_screen.json": "90daf530e98858f431ebaa20e0f4554fb0747c37eec06c47776d5c1b801f67e2",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/historical_fill_pricing.json": "ee358df2dcf36cb9cf18d6eea70af0b86e3f5891070d2048d4428790d699c5e3",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/qpipe_element.sv": "46038fedfe348b2576d310b079c353c9e09e9136990f4649592be4cd103903c3",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/qpipe_wrapper.sv": "83eea3416c455bd4c49d6043e997e8bd33e7a081556d51bfbb05983ad9976df5",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/rom_macro.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/inputs/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/model.json": "e3e4dae1c96f25d6c219f521d422e1e0a504caa8bbd5e4c691b14ca157946c26",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/model_tests.log": "cf26699e4b66aa18c9a14789cfd7bde0b2227607c432fc8e57c2e2ab48021b66",
+    "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/source_inputs.json": "07063dfa69a3534a669a5f1a8fb3b02e9f7bc4308abcd706a6509f6b74136d0f"
+  }
+}

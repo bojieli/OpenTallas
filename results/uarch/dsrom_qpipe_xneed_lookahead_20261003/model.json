@@ -1,0 +1,103 @@
+{
+  "admission_required": [
+    "finite slot/clock/reset/PG/track fit with physical owners",
+    "SS60/FF25 loaded recurrence and go/init paths at 0.833ns",
+    "full-shape actual immutable-ROM numerical oracle + all public valid/fault/tag/reset/drain signals",
+    "consecutive accepted beats, stalls, empty-go, q/round/class/position seams; stale-cache and II2 mutants explicit DIFF",
+    "source-bound config decode repair in baseline and candidate: original qpipe still has second-row truncation bug",
+    "actual cycle/performance comparison then adoption decision"
+  ],
+  "compile_launched": false,
+  "construction": {
+    "SRAM_ROM_bits_increment": 0,
+    "accepted_beat_II_cycles": 1,
+    "adder_or_CSA_change": false,
+    "async_valid_FF_increment": 3,
+    "critical_cones": [
+      "registered lastu/hasnext -> local successor mux -> need/shadow state",
+      "successor choice -> parallel selected class metadata -> fact FF",
+      "go/current/next table load -> local table FF",
+      "beat match -> local update enables; no serial priority encoder in this loop"
+    ],
+    "data_FF_increment": 249,
+    "existing_nA_nB_nQ2_state_charged_again": false,
+    "external_ports_increment": 0,
+    "facts_per_local_copy_bits": 11,
+    "facts_update": "on each accepted beat, compute facts for EXACT successor; on stalls hold; reset/empty-go invalidate",
+    "fill_cycles_increment": 0,
+    "local_copies": 3,
+    "recurrence_extra_cycles": 0,
+    "table_ready_bound": "next-q cache from stable nB must be ready before q changes; at least eight round-end accepts per q",
+    "table_update": "go seeds current/next priority tables; q advance copies next to current; next table refreshed from source nB",
+    "tables_per_local_copy_bits": 72,
+    "total_FF_increment": 252
+  },
+  "cost": {
+    "MAC_per_cycle_increment": 0,
+    "added_external_boundary_bits_per_cycle": 0,
+    "added_memory_bytes_per_cycle": 0,
+    "bit_mux_reserve": 729,
+    "buffer_area_reserve_um2": 16.023419999999998,
+    "clock_buffer_reserve": 37,
+    "combined_incremental_cell_area_reserve_um2": 486.66582,
+    "control_buffer_reserve": 120,
+    "local_metadata_logical_wire_reserve": 252,
+    "logic_area_reserve_um2": 393.26634,
+    "method": "source-sized unshared Boolean construction and actual pinned SS cell areas; buffers use eight-sink tree reservation; not an RTL synthesis measurement",
+    "placed_area_at_50pct_um2": 973.33164,
+    "priority_elementary_gate_reserve": 1944,
+    "replication": "incremental area R*per_element; current Scenario C element count handoff pending, no die/stage regeneration",
+    "state_area_um2": 77.37606000000001,
+    "track_capacity_and_extracted_RC": "pending physical station placement; storage bits are not proof of routed tracks",
+    "unified_DFF_basis_um2": 0.2916
+  },
+  "default_off_parameter": "QP_NEED_LOOKAHEAD=0 (proposed, no RTL yet)",
+  "geometry": {
+    "HC": 3,
+    "NB": 2,
+    "NCH": 16,
+    "NSEG": 8,
+    "XF": 4,
+    "physical_ROM_instances": 4
+  },
+  "hardware_written": false,
+  "latency": {
+    "existing_Rcap0_added_cycles": 2,
+    "existing_Rcap1_added_cycles": 3,
+    "existing_pricing_retained": {
+      "bf16_stripe_macros": "2 x BF16_pairs_per_die (S58 row of partition_token_options.json)",
+      "candidate": "DS4096-TP4-S58 (base, no PAR2 term)",
+      "clock_hz": 1200000000.0,
+      "cycle_ns": 0.8333,
+      "elem_stages": 8,
+      "head_dies": 8,
+      "mtp": {
+        "draft_fraction_of_ar": 0.075,
+        "positions": 6,
+        "step": "verify pass (6 positions) + draft_fraction x AR token",
+        "tau": 3.649
+      },
+      "serial_domain_hz": 900000000.0,
+      "stages": 58,
+      "table_dies": 36
+    },
+    "half_field_rate_walker_rejected": true,
+    "historical_pricing_is_current_scenarioC": false,
+    "new_added_cycles_per_qop": 0,
+    "nominal_1p2GHz_qualified": false,
+    "single_user_delta_formula_s": "new_added_cycles_per_qop * current_source_bound_qops / 1.2e9 = 0 for this proposed successor"
+  },
+  "observed_baseline": {
+    "endpoint": "u_e.n_q[2]$_SDFFCE_PP0P_",
+    "fmax_mhz": 634.6712900997713,
+    "record_commit": "2078c269c4a14dd566b96a73b52a272582faa13f",
+    "scope": "placement parasitics, ideal clock, not routed SS/FF; baseline is not qpipe successor",
+    "setup_wns_ps": -742.618774,
+    "source_commit": "e156ed54e8ff31def4b8c58d69da3743bb6b498c",
+    "startpoint": "u_e.n_c[1]$_DFFE_PP_"
+  },
+  "schema": "dsrom-qpipe-xneed-lookahead-model-v1",
+  "scope": "successor in existing qpipe branch; unchanged full NB2/MTP1/EARLY1/FAST1/PP1 shape",
+  "stage_or_die_records_regenerated": false,
+  "verdict": "MODEL_PREPARED_PHYSICAL_AND_RTL_ADMISSION_PENDING"
+}
