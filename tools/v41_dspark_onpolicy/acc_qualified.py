@@ -21,12 +21,13 @@ def rom_rate(t): return ROM['mtp_at_3649'] * t / V41_TAU
 def hbm_rate(t): return t * 1e6 / (HBM['mtp_pass_us'] + HBM['drafter_us'])
 
 
-def greedy_prompt(tr):
-    cy = A.walk(tr, A.rows_of(tr))
+def greedy_prompt(tr, g=G):
+    """g < 5: the same DSpark block truncated to its first g drafts (exact; the row set stays the full-depth one)."""
+    cy = A.walk(tr, {p: min(a, g) for p, a in A.rows_of(tr).items()})
     return dict(cycles=len(cy), committed=sum(a + 1 for a in cy), hist=[cy.count(k) for k in range(G + 1)])
 
 
-def t1_prompt(tr, seed):
+def t1_prompt(tr, seed, g=G):
     toks, L, pt, qt = tr['tokens'], tr['L'], tr['p_tok'], tr['q_tok']
     last = len(toks) - 1
     n = len(toks)
@@ -38,6 +39,8 @@ def t1_prompt(tr, seed):
         for k in range(1, G + 1):
             px = pt[p + 1 + k - L]
             r[p, k - 1] = min(1.0, q[k - 1] / px) if px > 0 else 1.0
+    if g < G:
+        r = np.where(r[:, :1] >= 0, r, -1.0)[:, :g]
     rng = np.random.default_rng(seed)
     pos = np.full(R, L); cyc = np.zeros(R); com = np.zeros(R); hist = np.zeros(G + 1)
     act = r[pos, 0] >= 0
@@ -45,7 +48,7 @@ def t1_prompt(tr, seed):
         rr = r[pos[act]]
         u = rng.random(rr.shape)
         a = np.cumprod(u < rr, axis=1).sum(1)
-        cyc[act] += 1; com[act] += a + 1; hist += np.bincount(a, minlength=G + 1)
+        cyc[act] += 1; com[act] += a + 1; hist += np.bincount(a, minlength=G + 1)[:G + 1]
         pos[act] += a + 1
         act = np.zeros(R, bool); act[:] = r[np.minimum(pos, n + G), 0] >= 0
     return dict(cycles=float(cyc.mean()), committed=float(com.mean()), hist=(hist / R).tolist(),
@@ -104,18 +107,40 @@ def main(path, out):
         pp[mode].append(dict(workload=tr['item']['workload'], prompt_id=tr['item']['prompt_id'], n_prompt=tr['L'],
                              n_generated=len(tr['tokens']) - tr['L'], **st,
                              tau=round(st['committed'] / st['cycles'], 4) if st['cycles'] else None))
+    # tau at gamma 1..5 by exact truncation of the same drafts (requested 2026-10-03 by the speculation study)
+    by_gamma = {}
+    for i, tr in enumerate(trs):
+        mode = tr.get('mode', 'greedy')
+        for g in range(1, G + 1):
+            st = greedy_prompt(tr, g) if mode == 'greedy' else t1_prompt(tr, 1000 + i, g)
+            by_gamma.setdefault(mode, {}).setdefault(g, []).append(dict(workload=tr['item']['workload'], cycles=st['cycles'],
+                                                                        committed=st['committed']))
+    gam = {}
+    for mode, d in by_gamma.items():
+        gam[mode] = {}
+        for g, v in d.items():
+            for name, sel in (('headline_multiturn', HEADLINE), ('separate_single_shot', SEPARATE)):
+                x = [y for y in v if y['workload'] in sel and y['cycles'] > 0]
+                if not x:
+                    continue
+                gam[mode].setdefault(name, {})[g] = dict(
+                    tau_pooled=round(sum(y['committed'] for y in x) / sum(y['cycles'] for y in x), 3),
+                    tau_median_of_prompts=round(statistics.median(y['committed'] / y['cycles'] for y in x), 3))
     res = dict(protocol='results/speculative/v41_mtp_acceptance_qualified_20261003/PROTOCOL.md', gamma=G, t1_replays_per_prompt=R,
                rate_basis=dict(rom=ROM, hbm_w19=HBM, v41_tau_current=V41_TAU,
                                draft_cost='V41_DRAFT_FRACTION = 3/40 of AR (ROM) / 49.9 us modelled (HBM): UNVALIDATED',
                                ar=dict(rom=ROM['ar'], hbm_w19=round(1e6 / HBM['ar_us'], 1)),
                                breakeven_tau=dict(rom=round(V41_TAU * ROM['ar'] / ROM['mtp_at_3649'], 3),
                                                   hbm_w19=round((HBM['mtp_pass_us'] + HBM['drafter_us']) / HBM['ar_us'], 3))),
-               modes={})
+               modes={}, tau_by_gamma_truncated=gam,
+               tau_by_gamma_note='gamma g < 5 truncates the same native DSpark block (5 slots) to its first g drafts; the verify '
+                                 'checks g+1 positions.  Exact for greedy; for T=1 the coupling at depth g+1 becomes the bonus token.')
     for mode, v in pp.items():
         res['modes'][mode] = dict(headline_multiturn=summ([x for x in v if x['workload'] in HEADLINE]),
                                   separate_single_shot=summ([x for x in v if x['workload'] in SEPARATE]),
                                   all_agentic=summ(v), per_prompt=v)
     json.dump(res, open(out, 'w'), indent=1)
+    print('tau by gamma', json.dumps(gam))
     for mode, r in res['modes'].items():
         for k in ('headline_multiturn', 'separate_single_shot', 'all_agentic'):
             s = r[k]
