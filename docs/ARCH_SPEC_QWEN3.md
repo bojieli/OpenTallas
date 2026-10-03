@@ -1,5 +1,7 @@
 # Qwen3-8B decode core: architecture specification (top-down)
 
+> **Superseded design point — correction of 2026-10-03.** This specification describes the TP-2 two-reticle package with DFlash. Its 10,874 tok/s autoregressive and 18,720 tok/s DFlash rates are that superseded design. The adopted Qwen3-8B ROM target is option C: TP-4, four dies in two packages, AR only. The corrected per-user figure at 8K is 357.99 µs = 2,793 tok/s. It is a calibrated finite-calendar model with KV delivery; the near-HBM attention entry selected for build is 5,237 tok/s, model only. Sources and caveats: [HEADLINE_BUNDLE_SCOPE.md](HEADLINE_BUNDLE_SCOPE.md), section "Corrected numbers". The text below is retained as history.
+
 Scope: Qwen3-8B (hidden 4,096, 36 layers, 32/8 heads of 128, FFN 12,288,
 vocabulary 151,936), greedy and bit-exact against the golden
 (`tools/hdc_golden.py`), on two designs. The design point, set by the user,

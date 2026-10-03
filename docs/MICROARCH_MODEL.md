@@ -346,6 +346,11 @@ This audit is analysis only: no P&R and no RTL. It walks the V4.1 HBM chain node
 | Qwen HBM, 8K | 881 | 880.6 (DFlash b16 2,671) | bulk-copy weight supply prefetching through boundaries; hardware barrier (30 cycles) |
 | V4.1 HBM, 1M | 3,579 | 2,801.8 (MTP 5,539.4; model only) | SM op latency on 1/96 row slices (group-slot issue); 78-cycle boundary; bulk-copy supply |
 
+**Corrected numbers, 2026-10-03 (user decision: publish now; all model only).** Sources and evidence classes are in [HEADLINE_BUNDLE_SCOPE.md](HEADLINE_BUNDLE_SCOPE.md), section "Corrected numbers".
+- **Qwen ROM (option C, TP-4, AR).** The 10,874 figure above is the superseded TP-2 + DFlash-era package. It is not the option C design, so the row is not a comparison. The calibrated finite-calendar token at 8K is **357.99 µs = 2,793 tok/s**: decode position 8,191, batch 1, FP8 KV, cold per-layer KV lease, measured 4,668-cycle RTL layer (`results/uarch/qwen_rom_calibrated_calendar_20261003/summary-r1.json`). The near-HBM attention entry selected for build is **190.97 µs = 5,237 tok/s** on unqualified HBM and closure inputs; with a one-segment all-reduce it is 160.9–168.7 µs (sensitivity). The 9,851 / 9,368 / 8,460 / 6,222 / 10,262 rows in this document are compute-chain compositions with no KV-delivery term, and are superseded as rates.
+- **V4.1 HBM.** The 2,801.8 record row does not charge the 40 routed-expert HBM fetches. Charging them, with a 4-cycle boundary service term, gives about 2,651 (MTP about 5,362; `results/uarch/v41_hbm_service_term_20261003/dshbm_service_term.json`, model-only pricing, patch not applied). The RTL-op composition `w19_hbm_token_ar.json` gives 2,019.2, with collectives at 283.7 µs against 125.9 µs. Which composition is authoritative is unresolved.
+- **V4.1 MTP.** τ 3.649 is a mixed-set measurement. A pilot agentic median is 4.69, and multi-turn agents alone give 3.92 (`results/speculative/v41_mtp_acceptance_pilot_20261003/mtp_acceptance.json`). τ 3.78 is a third-party verify window, not an accepted length. MTP acceptance is not yet qualified.
+
 ## Speculation (`--spec`, `results/uarch/speculation.json`)
 
 The lane multiplier m counts the positions that multiply one ROM weight word in the same cycle.
@@ -386,7 +391,7 @@ Every multi-die design here assumes deterministic hardware collectives at link l
 | 5 µs | 881 | 863 | 2,155 | 667 |
 | 10 µs | 493 | 476 | — | — |
 
-The sweep cells above retain the independently stored [`fabric.json`](../results/uarch/fabric.json) sensitivity: its DS group-slot point at 0.668 µs is 2,919.7 tok/s (rounded to 2,920). That frozen sweep is not the selected `hbm_gpu.json` row at 2,801.8; it has not been regenerated to that row's clock/barrier basis. The own-baseline DS cell selects `hbm_gpu.json`; the remaining sweep comparison below stays on the stored fabric basis. None establishes a current product headline.
+The sweep cells above retain the independently stored [`fabric.json`](../results/uarch/fabric.json) sensitivity: its DS group-slot point at 0.668 µs is 2,919.7 tok/s (rounded to 2,920). That frozen sweep is not the selected `hbm_gpu.json` row at 2,801.8; it has not been regenerated to that row's clock/barrier basis. The own-baseline DS cell selects `hbm_gpu.json`; the remaining sweep comparison below stays on the stored fabric basis. None establishes a current product headline. The selected row itself omits the routed-expert HBM fetch, which costs about 5.4% (≈ 2,651; see the corrected numbers above). An RTL-op composition gives 2,019.2.
 
 **Within that stored sweep, at equal collective latency, V4.1 ROM and V4.1 HBM have almost the same single-user speed.** Both are latency-bound, not bandwidth-bound.
 - The stored fabric comparison (3,809 against 2,920) is structural on that historical sensitivity basis. Its weights are local, so small TP-4 groups on direct links suffice.
@@ -713,8 +718,8 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 | Design | Tier | Per-user AR | Per-user DFlash | Saturated tok/s | mJ/token, B = 1 / saturated | Capex | Users at 8K |
 |---|---|---:|---:|---:|---:|---:|---:|
 | Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144), TT | ROM | 9,368 | — | 23,842 | 98 / 85 | $29k | 536 |
-| Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, KV_PREP, droop cap75 + preramp256) | ROM | 8,460 | — | 23,842 | 120 / 107 | $29k | 536 |
-| Qwen ROM option C at 1.2 GHz SS, RTL-attributed, as built: per-layer body x 1.0923 (W12b 2,687 / model 2,460) + 2 all-reduces at the measured 991 cycles (2 serialized 128-word TP segments; W12b a17a3c79) | ROM | 6,222 | — | 23,842 | — / — | $29k | 536 |
+| Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, KV_PREP, droop cap75 + preramp256); superseded 2026-10-03: compute chain only, KV delivery not modelled | ROM | 8,460 | — | 23,842 | 120 / 107 | $29k | 536 |
+| Qwen ROM option C at 1.2 GHz SS, RTL-attributed, as built (superseded 2026-10-03: mixes a position-0 body ratio with the 8K chain, no KV delivery; calibrated calendar 2,793): per-layer body x 1.0923 (W12b 2,687 / model 2,460) + 2 all-reduces at the measured 991 cycles (2 serialized 128-word TP segments; W12b a17a3c79) | ROM | 6,222 | — | 23,842 | — / — | $29k | 536 |
 | Qwen ROM option C at 1.2 GHz SS, RTL-attributed, body only: per-layer body x 1.0923; all-reduces at the model's 442 cycles, PENDING W12b's one-segment fix (79783ff9, unmeasured; est. ~620 at LAT 339) | ROM | 7,921 | — | 23,842 | — / — | $29k | 536 |
 | Qwen HBM, 1 right-sized die(s) x 6 stacks (388.9 mm2 each) (tier 3, idealised; DFlash W19 audit -14%) | 3 | 660 | 1,722 | 5,328 | 356 / 128 | $19k | 188 |
 | Qwen HBM, 2 right-sized die(s) x 4 stacks (265.8 mm2 each) (tier 3, idealised; DFlash W19 audit -14%) | 3 | 880 | 2,296 | 7,104 | 356 / 128 | $20k | 255 |
@@ -940,6 +945,8 @@ Two attributed rows replace the single calibrated ratio. **As built:** the per-l
 | L1 + overlap (KR credit, SU chase), estimate | 8,825 | 6,418 |
 | + one-segment all-reduce (as built), estimate | 8,825 | 7,541 |
 
+**Superseded 2026-10-03.** These step rows are compute-chain compositions with no KV-delivery term, and the as-built column mixes positions. The finite calendar with KV delivery, at measured compute, gives 357.99 µs = 2,793 tok/s at 8K (model only; `results/uarch/qwen_rom_calibrated_calendar_20261003/baseline-r1.json`). Its binder is the KV fill service: the 7 × 64 B fill network has a 281.4 µs floor, and the command bus a 308.16 µs floor.
+
 Lane registers alone save about nothing on Qwen: the vstream drains on every SFU class change and releases dependents only on a full drain, so the saving needs the per-vector credit (overlap). W12b's earlier 13,455 / 11,346-cycle bounds are withdrawn: they removed each op's pipeline depth, which a register file does not.
 
 **Clock-domain cases** (`clock_domain_cases`, all with the cap; the measured W11 FP32 add prices every serial chain):
@@ -999,7 +1006,7 @@ The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5
 - **G = 6,144 (W12's die, layer 0 exact) is the product.** It uses 529.5 of 560 mm² (5.45% margin).
 - **the TP-4 token is not lane-bound: G 6,144 -> 6,336 buys +0.04% (9,367.6 -> 9,371.4 tok/s) and the saturated rate is KV-stream bound at every G >= 4,096, so extra area does not buy per-user speed; legal G step is 64 groups (the program's embedding-word rule).**
 - **ROMA-safe sensitivity:** G = 4,928 at 8,673 tok/s (−7.4%).
-- **At 1.2 GHz SS:** C runs at 10,262 tok/s, and 10,556 with W12's TP-4 wire count (66 cycles per ME op, including the SS pin-capture register).
+- **At 1.2 GHz SS:** C runs at 10,262 tok/s, and 10,556 with W12's TP-4 wire count (66 cycles per ME op, including the SS pin-capture register). Superseded 2026-10-03: compute chain only; the calibrated calendar with KV delivery gives 2,793 tok/s.
 - **A smaller die** holds the placed tiles, spine, PHYs and UCIe with a 10% margin:
   - W12 estimate 308 mm2 (ASAP7 tiles): 443.9 mm², yield 0.661, $210.7 per die, $10,643 for 4 dies and 2 packages.
   - W12 estimate 359 mm2 (ASAP7 tiles): 504.0 mm², yield 0.6276, $256.3 per die, $10,825 for 4 dies and 2 packages.
@@ -1007,6 +1014,8 @@ The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5
   - 815 mm2 reference: 815.0 mm², yield 0.4863, $578.2 per die, $12,113 for 4 dies and 2 packages.
 
 **Qwen context sweep** (`qwen_context_sweep`). W12b context audit (claude/w12-qwen-rom b4d2715f): KV read 18,432 x T bytes a token a die; HBM binds from ~32K (W12b ~1.4k tok/s at 128K, ~0.9k at 200K with SW 1,024, matching this sweep); 32K needs parameters and 2 larger SRAMs (+~10 mm2 a die); 128K and 200K need a 27-bit address and a larger VM (or head-serial scores).  Qwen3-8B is natively 32K and 128K with YaRN; 200K is beyond official support.  FP8 KV (baseline); the FP4/INT4-KV rows halve the KV bytes and are QUALITY-UNTESTED
+
+**Correction, 2026-10-03.** The 8K ROM rows below assume the KV fill runs at PHY rate. In the calibrated calendar the binder is the KV fill service, not the compute chain: the fill network has a 281.4 µs floor and the command bus a 308.16 µs floor. The resulting token is 357.99 µs = 2,793 tok/s (`results/uarch/qwen_rom_calibrated_calendar_20261003/baseline-r1.json`, model only). The off-chip KV read is 150,690,816 B per die per token.
 
 | Context | Design | AR tok/s | KV bytes per token | KV read µs | Binding | Users | Saturated | mJ, B = 1 / saturated |
 |---:|---|---:|---:|---:|---|---:|---:|---:|
@@ -1068,7 +1077,7 @@ The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5
 
 - To hold 866 users at 1M, the comparator needs 17 dies × 4 stacks or 11 × 6.
 - Its existing 811-user figure uses a pipelined busiest-die rule; under TP-96 it holds 7,763.
-- W13 at SS pre-layout: an 8-stage fp32_add_rne_pipe breaks the IL = 8 circulating accumulator; IL = 16 gives V4.1 HBM ~2,500 AR (from ~2,920); a 7-stage adder keeps IL = 8 (W13 estimate, not priced here).
+- W13 at SS pre-layout: an 8-stage fp32_add_rne_pipe breaks the IL = 8 circulating accumulator; IL = 16 gives V4.1 HBM ~2,500 AR (from ~2,920, the stale fabric sweep point; the record row is 2,801.8); a 7-stage adder keeps IL = 8 (W13 estimate, not priced here).
 
 ### Cost: die area with a yield model (`fab`), replacing the iso-package B200 price
 
