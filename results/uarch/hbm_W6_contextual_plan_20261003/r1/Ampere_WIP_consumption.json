@@ -1,0 +1,35 @@
+{
+  "actual_W6_slot_pin_minmax_clock_layer_inventory_absent": true,
+  "local_one_route": "W6_FULL32_DISTRIBUTED_ASAP7_RVT_M2_M5_R1",
+  "no_whole_caller_gate_for_local_timing": true,
+  "peer_source_status": "uncommitted WIP snapshot; await frozen commit, no physical launch admission",
+  "schema": "W6_AMPERE_WIP_INVENTORY_CONSUMPTION_V1",
+  "source_envelopes": {
+    "DeepSeek": {
+      "SMs": 32,
+      "SRAM_macros": 8000,
+      "W6_added_again": false,
+      "W6_current_component_proxy": 0.0600441856,
+      "W6_old_proxy_in_inventory": 0.054770585600000005,
+      "W6_replace_delta": 0.0052736,
+      "current_full_context_timing_qualified": false,
+      "gateway_macros_perSM": 138,
+      "parent_RF_count": 4096,
+      "parent_scratch_count": 64
+    },
+    "Qwen": {
+      "SMs": 32,
+      "SRAM_macros": 5472,
+      "W6_added_again": false,
+      "W6_current_component_proxy": 0.0600441856,
+      "W6_old_proxy_in_inventory": 0.054770585600000005,
+      "W6_replace_delta": 0.0052736,
+      "current_full_context_timing_qualified": false,
+      "gateway_macros_perSM": 130,
+      "parent_RF_count": 4096,
+      "parent_scratch_count": 64
+    }
+  },
+  "source_path": "/tmp/opentallas-hbm-fullsize-inventory-20261003/results/uarch/hbm_fullsize_inventory_20261003/model-r1.json",
+  "source_sha256": "774c50e28e39d06c9c7a3e80b69c6442a262af69640d5167126b6ef708cf465b"
+}

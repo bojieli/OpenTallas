@@ -1,0 +1,68 @@
+{
+  "MemAvailable_bytes": 89996808192,
+  "PnR_launched": false,
+  "disk_available_bytes": 392145715200,
+  "exclusive_resource_reservation": false,
+  "kernel_allowed_CPUs": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "limits": {
+    "AS": [
+      -1,
+      -1
+    ],
+    "CPU": [
+      -1,
+      -1
+    ],
+    "FSIZE": [
+      -1,
+      -1
+    ]
+  },
+  "memory_or_swap_caps_set": false,
+  "observed_tools": {
+    "/usr/bin/iverilog": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+    "/usr/bin/openroad": "93fe61454a52b927602fd6c798c4402214c19e80e7d614636345f0f427ea2f46",
+    "/usr/bin/vvp": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+    "/usr/bin/yosys": "dab84e88b53146fe22d675a142de32b1e545ee9b7fe1054238f6220245b24c8d"
+  },
+  "observed_tools_not_yet_selected_source_bound_PnR_GO": true,
+  "observed_versions": {
+    "openroad": "v2.0-17598-ga008522d8",
+    "yosys": "Yosys 0.9 (git sha1 1979e0b)"
+  },
+  "schema": "W6_PHYSICAL_PREPARATION_HOST_SNAPSHOT_V1",
+  "timestamp_UTC": "2026-10-03T04:44:39Z"
+}

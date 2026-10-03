@@ -1,0 +1,48 @@
+{
+  "Ampere_frozen_inventory_commit": null,
+  "Ampere_slot_pin_clock_layer_receipt_sha256": null,
+  "PDK_tool_LEF_lib_RC_manifest_sha256": null,
+  "artifact_retention": "all mapped objects/netlist/placement/SPEF/cornerlogs/geometry/route failures immutable; no arbitrary costlybuild cap",
+  "automatic_retry": false,
+  "clock": {
+    "FF_min": true,
+    "SS_max": true,
+    "TT_qualified": false,
+    "hold_uncertainty_ps": 25,
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60
+  },
+  "command": null,
+  "command_missing": "Ampere frozen actualslot/endpoints/loads/CTS/layers plus physical runner/toolcorner enrollment; template cannot launch",
+  "fresh_measured_resource_and_fleet_lease_sha256": null,
+  "layers": [
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "limits": {
+    "AS": null,
+    "CPU_time": null,
+    "FSIZE": null,
+    "memory": null,
+    "swap": null,
+    "wall": null
+  },
+  "original_production_source_guard": "current full bridge caller/reset/allcopy producers remain independent; no actual producer installed claim",
+  "parameter": {
+    "ENABLE": 1,
+    "replicas": 32
+  },
+  "physical_contract": "physical input/output source-register timing envelope and pinload per named boundary must be scoped and source-pinned; a prospective boundary constraint is labelled prospective, never accepted-functional source proof",
+  "reject": "preserve exact candidate SS/FF/slot/layer/routing failure; no silent pipeline/timing/clock/area modification",
+  "route_count": 1,
+  "schema": "W6_FULL32_PHYSICAL_GO_TEMPLATE_V1",
+  "selected_plan_sha256": "ad98aa5b1e6fd8f06a589f0ce382302113d92530be500993f825f639f00438c5",
+  "selected_route": "W6_FULL32_DISTRIBUTED_ASAP7_RVT_M2_M5_R1",
+  "source_commit": null,
+  "source_manifest_sha256": null,
+  "source_model_parent_review_commit": null,
+  "standalone_compiled_source_guard": "literal frontend representation must match exact original611/157 trace and preserve every original55bit port; full32 elaboration only is not mapping qualification",
+  "status": "NOT_A_GO"
+}
