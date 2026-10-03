@@ -1,0 +1,137 @@
+--- results/rtl/dsrom_ckv_publication_source_prepare_20261003/inputs/ot_chip_v41x_kv_reqmux.sv
++++ results/rtl/dsrom_ckv_publication_source_prepare_20261003/package_r1/ot_chip_v41x_kv_reqmux_ckvlease_r1.sv
+@@ -3,10 +3,13 @@
+ // FP4 fetchers.  The existing per-PC arbiter still chooses between this K
+ // channel and the pooled indexer.  A tag bit distinguishes interleaved read
+ // responses; only the window writer may receive K write completions.
+-module ot_chip_v41x_kv_reqmux #(
++module ot_chip_v41x_kv_reqmux_ckvlease_r1 #(
++    parameter integer CKV_RX_LEASE = 0,
+     parameter integer HAW = 30,
+     parameter integer TAGW = 16
+ ) (
++    input wire clk, rst_n,
++    output wire [3:0] writer_idle, writer_fault,
+     input  wire [3:0]          w_v,
+     output wire [3:0]          w_rdy,
+     input  wire [4*HAW-1:0]    w_addr,
+@@ -55,11 +58,39 @@
+ `endif
+     genvar s;
+     generate for (s = 0; s < 4; s = s + 1) begin : g_s
+-        wire choose_w = w_v[s];
++        wire write_pending, write_owner_c, fair_turn;
++        if (CKV_RX_LEASE != 0) begin : g_lease
++            // Exactly three new bits per stack, already in the full-parent model.
++            reg pending_r, owner_c_r, turn_r;
++            assign write_pending = pending_r;
++            assign write_owner_c = owner_c_r;
++            assign fair_turn = turn_r;
++            always @(posedge clk or negedge rst_n)
++                if (!rst_n) begin pending_r <= 0; owner_c_r <= 0; turn_r <= 0; end
++                else begin
++                    if (m_wr_done[s] && pending_r) pending_r <= 0;
++                    if (m_v[s] && m_rdy[s]) begin
++                        turn_r <= choose_w;
++                        if (m_we[s]) begin pending_r <= 1; owner_c_r <= !choose_w; end
++                    end
++                end
++        end else begin : g_original
++            assign write_pending = 1'b0;
++            assign write_owner_c = 1'b0;
++            assign fair_turn = 1'b0;
++        end
++        // Pending writes block new writes, but not tagged reads. No same-edge
++        // completion credit: readiness uses the pre-edge pending register.
++        wire eligible_w = w_v[s] && (!w_we[s] || !write_pending);
++        wire eligible_c = c_v[s] && (!c_we[s] || !write_pending);
++        wire choose_w = CKV_RX_LEASE ?
++            (eligible_w && (!eligible_c || !fair_turn)) : w_v[s];
++        assign writer_idle[s] = !write_pending;
++        assign writer_fault[s] = CKV_RX_LEASE && m_wr_done[s] && !write_pending;
+         wire rsp_c = s_tag[s*TAGW + TAGW-1];
+-        assign m_v[s] = w_v[s] || c_v[s];
++        assign m_v[s] = CKV_RX_LEASE ? (eligible_w || eligible_c) : (w_v[s] || c_v[s]);
+         assign w_rdy[s] = choose_w && m_rdy[s];
+-        assign c_rdy[s] = !choose_w && m_rdy[s];
++        assign c_rdy[s] = CKV_RX_LEASE ? (eligible_c && !choose_w && m_rdy[s]) : (!choose_w && m_rdy[s]);
+         assign m_addr[s*HAW +: HAW] = choose_w ? w_addr[s*HAW +: HAW] : c_addr[s*HAW +: HAW];
+         assign m_len[s*4 +: 4] = choose_w ? w_len[s*4 +: 4] : c_len[s*4 +: 4];
+         assign m_tag[s*TAGW +: TAGW] = choose_w ?
+@@ -67,11 +98,11 @@
+             {1'b1, c_tag[s*TAGW +: TAGW-1]};
+         // CKV is published by ingest, then read-only to this DMA.  Fail
+         // closed if a future CKV requester accidentally asserts write.
+-        assign m_we[s] = choose_w ? w_we[s] : 1'b0;
+-        assign m_wdata[s*256 +: 256] = choose_w ? w_wdata[s*256 +: 256] : '0;
+-        assign m_wstrb[s*32 +: 32] = choose_w ? w_wstrb[s*32 +: 32] : '0;
+-        assign w_wr_done[s] = m_wr_done[s];
+-        assign c_wr_done[s] = 1'b0; // selected CKV is read-only
++        assign m_we[s] = choose_w ? w_we[s] : (CKV_RX_LEASE ? c_we[s] : 1'b0);
++        assign m_wdata[s*256 +: 256] = choose_w ? w_wdata[s*256 +: 256] : (CKV_RX_LEASE ? c_wdata[s*256 +: 256] : '0);
++        assign m_wstrb[s*32 +: 32] = choose_w ? w_wstrb[s*32 +: 32] : (CKV_RX_LEASE ? c_wstrb[s*32 +: 32] : '0);
++        assign w_wr_done[s] = CKV_RX_LEASE ? (m_wr_done[s] && write_pending && !write_owner_c) : m_wr_done[s];
++        assign c_wr_done[s] = CKV_RX_LEASE && m_wr_done[s] && write_pending && write_owner_c;
+         assign w_sv[s] = s_v[s] && !rsp_c;
+         assign c_sv[s] = s_v[s] && rsp_c;
+         assign w_stag[s*TAGW +: TAGW] = {1'b0, s_tag[s*TAGW +: TAGW-1]};
+--- results/rtl/dsrom_ckv_publication_source_prepare_20261003/inputs/ot_chip_v41x_kv_rope_reqmux.sv
++++ results/rtl/dsrom_ckv_publication_source_prepare_20261003/package_r1/ot_chip_v41x_kv_rope_reqmux_ckvlease_r1.sv
+@@ -4,11 +4,13 @@
+ // contends this one K channel with the indexer; RoPE gains no independent port.
+ // Master tag [TAGW-1:TAGW-2]: 00 window, 01 CKV, 10 RoPE. Client tags must
+ // keep both high bits zero. The inner window/CKV mux uses one of those bits.
+-module ot_chip_v41x_kv_rope_reqmux #(
++module ot_chip_v41x_kv_rope_reqmux_ckvlease_r1 #(
++    parameter integer CKV_RX_LEASE = 0,
+     parameter integer HAW = 30,
+     parameter integer TAGW = 16
+ ) (
+     input  wire clk, rst_n,
++    output wire [3:0] writer_idle,
+     input  wire [3:0] w_v,
+     output wire [3:0] w_rdy,
+     input  wire [4*HAW-1:0] w_addr,
+@@ -82,7 +84,7 @@
+     wire [4*(TAGW-1)-1:0] k_master_tag, k_master_stag;
+     wire [15:0] k_master_sbeat;
+     wire [1023:0] k_master_sdata;
+-    wire [3:0] bad_tag;
++    wire [3:0] bad_tag, writer_fault;
+     wire [3:0] w_req_v,c_req_v,p_req_v;
+     wire [3:0] w_inner_rdy,c_inner_rdy;
+     wire [2:0] p_grant_n = {2'b0,p_v[0]&&p_rdy[0]}+{2'b0,p_v[1]&&p_rdy[1]}+
+@@ -98,12 +100,12 @@
+         assign w_t[s*(TAGW-1) +: TAGW-1]=wt[TAGW-2:0];
+         assign c_t[s*(TAGW-1) +: TAGW-1]=ct[TAGW-2:0];
+         assign w_req_v[s]=w_v[s] && !(|wt[TAGW-1:TAGW-2]);
+-        assign c_req_v[s]=c_v[s] && !(|ct[TAGW-1:TAGW-2]) && !c_we[s];
++        assign c_req_v[s]=c_v[s] && !(|ct[TAGW-1:TAGW-2]) && (CKV_RX_LEASE || !c_we[s]);
+         assign p_req_v[s]=p_v[s] && !(|pt[TAGW-1:TAGW-2]) && !p_we[s];
+         assign w_rdy[s]=w_inner_rdy[s] && w_req_v[s];
+         assign c_rdy[s]=c_inner_rdy[s] && c_req_v[s];
+         assign bad_tag[s]=(w_v[s] && |wt[TAGW-1:TAGW-2]) ||
+-                           (c_v[s] && (|ct[TAGW-1:TAGW-2] || c_we[s])) ||
++                           (c_v[s] && (|ct[TAGW-1:TAGW-2] || (!CKV_RX_LEASE && c_we[s]))) ||
+                            (p_v[s] && (|pt[TAGW-1:TAGW-2] || p_we[s])) ||
+                            (s_v[s] && s_tag[s*TAGW+TAGW-1 -: 2] == 2'b11);
+         wire choose_k=k_v[s] && (!p_req_v[s] || !turn[s]);
+@@ -135,7 +137,8 @@
+             if (!rst_n) turn[s]<=0;
+             else if (m_v[s] && m_rdy[s]) turn[s]<=choose_k;
+     end endgenerate
+-    ot_chip_v41x_kv_reqmux #(.HAW(HAW), .TAGW(TAGW-1)) u_kv (
++    ot_chip_v41x_kv_reqmux_ckvlease_r1 #(.CKV_RX_LEASE(CKV_RX_LEASE), .HAW(HAW), .TAGW(TAGW-1)) u_kv (
++        .clk(clk), .rst_n(rst_n), .writer_idle(writer_idle), .writer_fault(writer_fault),
+         .w_v(w_req_v), .w_rdy(w_inner_rdy), .w_addr(w_addr), .w_len(w_len),
+         .w_tag(w_t), .w_we(w_we), .w_wdata(w_wdata), .w_wstrb(w_wstrb),
+         .w_wr_done(w_wr_done), .w_sv(w_sv), .w_srdy(w_srdy),
+@@ -156,7 +159,7 @@
+     always @(posedge clk or negedge rst_n)
+         if (!rst_n) begin fault<=0; rope_grants<=0; rope_wait_cycles<=0; end
+         else begin
+-            if (|bad_tag) fault<=1;
++            if ((|bad_tag) || (|writer_fault)) fault<=1;
+             rope_grants<=rope_grants+{29'd0,p_grant_n};
+             rope_wait_cycles<=rope_wait_cycles+{29'd0,p_wait_n};
+         end

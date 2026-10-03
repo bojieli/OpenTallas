@@ -1,0 +1,39 @@
+{
+  "status": "PUBLICATION_SOURCE_SUCCESSOR_FRAGMENT_FROZEN_FULL512_CONNECTED_GATE_NOT_READY",
+  "owner": "Epicurus",
+  "callback_SHA": "a019e516c1d237a1dbacf5aece5eb11ea6a6029d",
+  "lease_model_SHA": "eae838a3ad98bde6505694aa8d4d74385856e63f",
+  "main": "7b4509c23a8a67891f250bef78d7459e6050883c",
+  "current_main_source_files_checked": 132,
+  "current_main_changed_paths": [],
+  "package": "package_r1",
+  "static_tests": 7,
+  "byte_exact_replay_artifacts": 4,
+  "prior_pins_unchanged": 233,
+  "implementation_completed": "two actual default-off namespaced publication muxes route CKV writes, retain per-stack accepted writer, return completion only to that owner, expose writer_idle and refuse unowned completion",
+  "exact_gate_status": {
+    "callback_contract": "16 static tests, synthetic full4 x512 QK/PV ownership contract only",
+    "source_fragment": "7 source/model tests, no HDL frontend/simulation",
+    "full512_connected_lease": "NOT_PREPARED: service/core/tile/die/wrapper/forward+reverse host bindings pending",
+    "arithmetic": "no full QK/PV arithmetic qualification",
+    "physical": "not admitted"
+  },
+  "next_implementation_blocker": "actual service still counts raw valids and writes invalid in-range rows, lacks RX-ready/epoch/reverse ACKs, and advances publication on request rather than completion. Implement qualified writes plus writer_wait/ninth returned completion in namespaced source, then bind both actual descriptor/output retirements and all4 caller permits.",
+  "next_source_scope": "use full K512, D512, TROWS640, NL4, H16, TD32, NSLOT64; reuse original 147456B CKV and339200B staging per rank, no narrower fixture or duplicate payload",
+  "default_off": "CKV_RX_LEASE=0",
+  "new_mux_state_per_die": 12,
+  "new_mux_state_all4": 48,
+  "already_in_frozen_model": true,
+  "launch": {
+    "permitted": false,
+    "reason": "full connected source/checker/runtime plan and fresh source-bound GO pending",
+    "new_large_job": false,
+    "existing_jobs_untouched": true,
+    "PVE2_PVE3_new_jobs": false
+  },
+  "commands": {
+    "prepare": "python3 tools/prepare_dsrom_ckv_publication.py --out FRESH_DIRECTORY",
+    "tests": "python3 tests/test_prepare_dsrom_ckv_publication.py"
+  },
+  "fulltoken_credit": false
+}

@@ -1,0 +1,50 @@
+{
+  "status": "ACTUAL_PUBLICATION_MUX_SOURCE_COPIES_ONLY_NOT_CONNECTED_FULL_GATE",
+  "model_commit": "eae838a3ad98bde6505694aa8d4d74385856e63f",
+  "callback_commit": "a019e516c1d237a1dbacf5aece5eb11ea6a6029d",
+  "default_off": "CKV_RX_LEASE=0",
+  "instance": {
+    "stacks": 4,
+    "sector_bits": 256,
+    "mask_bits": 32,
+    "HAW": 30,
+    "outer_TAGW": 16,
+    "inner_TAGW": 15,
+    "own_row_sectors": 9
+  },
+  "ledger": {
+    "new_mux_state_bits_per_die": 12,
+    "new_state_per_stack": 3,
+    "new_full_group_bits": 48,
+    "already_in_eae_price": true,
+    "additional_payload_storage_bits": 0,
+    "existing_outer_arbitration_bits": 4,
+    "existing_outer_arbitration_charged_again": false
+  },
+  "semantics": {
+    "owner": "one accepted write owner per stack retained until returned m_wr_done, independent of current arbitration",
+    "publication": "request admission is not visibility; actual idx_hbm backing-write and returned completion callbacks required",
+    "drain": "writer_idle exposed for complete lease/group barrier; must be joined before reset/reuse",
+    "credit": "pre-edge pending prevents same-edge freed-slot reuse",
+    "reads": "tagged reads may proceed during pending write; write completion cannot be routed from current selected requester",
+    "fault": "unowned m_wr_done produces candidate combinational writer_fault, sampled by existing outer sticky fault; no added fault FF",
+    "reset": "common reset requires all actual downstream writes/endpoints drained; reset while outstanding is not an admitted transition"
+  },
+  "source_backend": "retained idx_hbm source masked backing write then registered wr_done; no Russell R14 substitution or seventh client",
+  "readiness": {
+    "HDL_generated": true,
+    "HDL_compiled": false,
+    "connected_service": false,
+    "connected_full512_gate": false,
+    "hardware_area_mapping": false,
+    "physical_admission": false,
+    "fulltoken_credit": false
+  },
+  "remaining": [
+    "full service lease/accepted-write counter + 16-bit peer generation/registered ACKs",
+    "nine-sector service writer_wait advancing only returned completion",
+    "actual core/tile/die ready and QK/PV descriptor/output retirement join",
+    "four-route wrapper/host callback serializer and generation reverse",
+    "reviewed source-sized full512 gate and measured host resource admission before compile"
+  ]
+}
