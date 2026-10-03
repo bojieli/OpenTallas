@@ -1,0 +1,158 @@
+{
+ "schema": "qrom-calibrated-calendar-summary.v1",
+ "status": "MODEL_ONLY_SUMMARY",
+ "headline_numbers": {
+  "calibrated_current": {
+   "token_us": 357.9902,
+   "tokens_per_s": 2793.4,
+   "at_8k_attention_unmeasured": {
+    "token_us": 359.7128,
+    "tokens_per_s": 2780.0
+   }
+  },
+  "streaming_rejected": {
+   "token_us": 347.0602,
+   "tokens_per_s": 2881.3,
+   "rate_gain": 0.03149309845891257,
+   "at_8k_attention_unmeasured": {
+    "token_us": 356.6548,
+    "tokens_per_s": 2803.8,
+    "rate_gain": 0.008574116244043584
+   }
+  },
+  "near_hbm_selected_for_build": {
+   "token_us": 190.965,
+   "tokens_per_s": 5236.6,
+   "one_segment_AR_620": 168.705,
+   "one_segment_AR_490": 160.905
+  }
+ },
+ "identity_fields": [
+  "model",
+  "design",
+  "decode_mode",
+  "speculation",
+  "batch_users",
+  "context_window_positions",
+  "decode_position",
+  "position_basis",
+  "kv_format",
+  "kv_bytes_per_element",
+  "kv_home",
+  "kv_on_die_reuse",
+  "kv_delivery_policy",
+  "kv_offchip_read_B_per_die_token",
+  "kv_write_B_per_die_token",
+  "fill_lanes",
+  "fill_bytes_per_edge",
+  "stream_clock_hz",
+  "rate_basis",
+  "numerical_evidence_position"
+ ],
+ "delivery_fields_declarable": [
+  "fill_bytes_per_edge",
+  "fill_lanes",
+  "kv_delivery_policy",
+  "kv_offchip_read_B_per_die_token",
+  "kv_on_die_reuse",
+  "kv_write_B_per_die_token",
+  "rate_basis"
+ ],
+ "basis_keys": [
+  "compute_calibration_id",
+  "service_assumptions_id"
+ ],
+ "comparison_rule": "Two rates are related only when every workload field matches; delivery fields and the compute/service basis may differ only when declared as the cause.",
+ "comparisons": {
+  "streaming_vs_baseline_pos0": {
+   "a_token_s": 0.0003470601666666667,
+   "b_token_s": 0.00035799016666666667,
+   "rate_gain_a_over_b": 0.03149309845891257,
+   "declared_causes": [
+    "kv_delivery_policy"
+   ]
+  },
+  "streaming_vs_baseline_8k": {
+   "a_token_s": 0.00035665483333333336,
+   "b_token_s": 0.0003597128333333333,
+   "rate_gain_a_over_b": 0.008574116244043584,
+   "declared_causes": [
+    "kv_delivery_policy"
+   ]
+  },
+  "near_hbm_vs_baseline_pos0": {
+   "a_token_s": 0.000190965,
+   "b_token_s": 0.00035799016666666667,
+   "rate_gain_a_over_b": 0.8746375862941727,
+   "declared_causes": [
+    "compute_calibration_id",
+    "fill_bytes_per_edge",
+    "fill_lanes",
+    "kv_delivery_policy",
+    "kv_offchip_read_B_per_die_token",
+    "kv_on_die_reuse",
+    "rate_basis",
+    "service_assumptions_id"
+   ]
+  },
+  "near_hbm_vs_baseline_8k": {
+   "a_token_s": 0.000190965,
+   "b_token_s": 0.0003597128333333333,
+   "rate_gain_a_over_b": 0.8836584365372362,
+   "declared_causes": [
+    "compute_calibration_id",
+    "fill_bytes_per_edge",
+    "fill_lanes",
+    "kv_delivery_policy",
+    "kv_offchip_read_B_per_die_token",
+    "kv_on_die_reuse",
+    "rate_basis",
+    "service_assumptions_id"
+   ]
+  }
+ },
+ "refused_comparisons": {
+  "atlas_headline_TP2_DFlash": "REFUSED: mismatched identity, undeclared: design,speculation,compute_calibration_id,service_assumptions_id",
+  "microarch_6222_mixed_position": "REFUSED: mismatched identity, undeclared: position_basis,compute_calibration_id,service_assumptions_id",
+  "uncalibrated_credit17_r2": "REFUSED: mismatched identity, undeclared: compute_calibration_id,service_assumptions_id"
+ },
+ "records": [
+  "baseline-r1.json",
+  "streaming-rejected-r1.json",
+  "near-hbm-selected-r1.json"
+ ],
+ "pins": {
+  "repo_sources_sha256": {
+   "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+   "tools/uarch_model_qwen_kv_credit17.py": "69b5d8a94d208ddf6fb35e719578c5cc6189efbf9c87abecd3e3af099001fdae",
+   "tools/uarch_model_qwen_kv_credit_allocator.py": "28ace77b8f9eda67139b2cb24a7c0aa07ea76b83368194ef255a98909f3594a4",
+   "tools/uarch_model_qwen_kv_successor.py": "a88a32eae4e8fd0cb43535bd6ef24be1bbf33ca569ddf6db94a1b08a8a2e3b3b",
+   "tools/uarch_model_qwen_kv_bank_groups.py": "0050f1be26a913427c5334e59cf7561b5a18a3ad0aa5f4aa05f23ea6a89ee30b",
+   "tools/uarch_model_qwen_kv_decoupled_lease.py": "966c2cd4ca8b5924ddc68158a226b9f37dcdbf203885a4a7a5568be2d28cc078",
+   "tools/uarch_model_qwen_rom_calibrated_calendar.py": "711087c86150219ed80a784cbf0c4f2be6aab7e6c6112e8dde79ee5ea2108e27",
+   "results/uarch/qwen_rom_kv_credit17_20261003/model-r2.json": "d8d08f004057530b4c1f11c6f3a072bbe5e756a26175195eb45433056a13d46b",
+   "results/uarch/qwen_rom_kv_credit17_20261003/model-r3.json": "7df91f3da986e6cf909ef3098580657ac8b67d863729c11ebc5ff9fc062d277d",
+   "results/uarch/qwen_rom_kv_credit_allocator_20261002/model-r4.json": "0b2c886fec5f35b8a12aeabf184b5bcd55685bfbe234b787e119451d1d114c8b",
+   "results/rtl/qwen_rom_TP4_terminal_20261002/terminal_manifest.json": "3aa197d53a24e4d2e5590f0666700395ba60cdca45ed9c05e224d1b13fa2ed54"
+  },
+  "review_inputs_sha256": {
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/l0cal/l0_reconciliation.json": "7d978fa53cdfb6ba93c0774600d2f8ddd7ce8e96d7b6729e8fcf55abac33b3c7",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/l0cal/l0_reconciliation.md": "becda125e6e47a75c3e2ccb53ce49b0075dc66eabe9f2b5e6a50c563f1534351",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/policy/workload_identity.json": "c6e4210574c306df37713224f5c124976bedaaf8f8ea8e89173a94a661f6b887",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/policy/workload_identity.md": "176f77c63dd71da29a3e33fabd068e5021e1408fde916329742c743daf52d244",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/prefetch/decoupled_kv_service_pricing.json": "5e5e0d58d1e28599b533cbf9224e1a87435d1708dcb2d3dd623afdb6664beae5",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/prefetch/decoupled_kv_service_pricing.md": "155c59c3a3b195f27c30f9274c3f00af843fd2021ae2fcebaa3c42481d77cb21",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/prefetch/work/decoupled.py": "3c776a522b4f2bdae02a22c9ae55f9e238fd21c49d16daf19f55fe9f3970706a",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/protref/protection_refresh_pricing.json": "85228235c0957b0c937f62e669f2654ebbc98f8b4dcd857bfd2d2e3fe1091adc",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/protref/protection_refresh_pricing.md": "ea44e5d236045ddad8a0226a06d02dc177aaf8a0edc619b25c31d1419fed2db7",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/protref/run_variants.py": "8e6b0d69513d26381b7c9c043b823db03cad7dcf2fd8bd3dc7658a4d78a7a421",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/nearhbm/near_hbm_attention_pricing.json": "d6aa247886f1da97e2e5671bb8c165cfb06a81c44735814f4037c1bb86e3c504",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/nearhbm/near_hbm_attention_pricing.md": "0a67b489ee0403e2ea800b2a54caf6268a2579d7f8f635d101e475a785d73114",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/nearhbm/price_near_hbm_attention.py": "4df3d6b54eba49cf41654b64d6d0c4ca2ab5018d8c449d1da26ae7573ec3ba2d",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/cooling/qwen_rom_cooling_recheck.json": "ed1208f8b136074ef2adab4ff3583fed5573fe23373b69b37a489e1a7092a319",
+   "results/uarch/qwen_rom_calibrated_calendar_20261003/inputs/cooling/qwen_rom_cooling_recheck.md": "efda4557bfa3c1a8d1659e6ca986ea396190af303dd000eeae8ce3f22e582ca8"
+  },
+  "credit17_production_sources_verified": true,
+  "credit17_production_source_count": 57
+ }
+}

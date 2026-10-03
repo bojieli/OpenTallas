@@ -1,0 +1,48 @@
+{
+  "RTL_written": false,
+  "area_scope": "Gross allowed-cell construction planning, exact state/ports/mux fanout but not mapped control/ECC/clock/reset/routes. Protected72/64 and768NAND-equiv/codeword are inherited F0 assumptions. Existing baseline and private199bit context not blindly recharged.",
+  "base_commit": "103d3ec89373119898c5662d490676f6ff8ab570",
+  "builds_or_jobs_launched": 0,
+  "canonical_fullwidth_commit": "887c76704954ebee8fa61f47d18da6140947ab5a",
+  "cold_replay_byteidentical": true,
+  "entry": "tools/w2_pc_exact_completion_model.py",
+  "model": "model.json",
+  "next_gate": "Popper choose actual accepted C0/KV requester->adapter->W2->R14 source route and price source all-copy/reset/reverse CDC positive reuse waits + once-only slots/channels/wholecalendar. Then parent reviews defaultoff exact leaf/source frontend copy and finite C0. Actual KVread contract follows NC6 mappedclient5. No disconnected prelabelled matcher run.",
+  "originals_verified_byteidentical": {
+    "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197",
+    "rtl/hdc/hbm/ot_hdc_qwen_kv_pc_adapter.sv": "de20a96bfcef1d16e2059eb6f3925de18071549a50314cffc624f78c31def44c",
+    "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf",
+    "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+    "rtl/test/tb_hdc_qwen_hbm_service.sv": "c388030d4236324af042007a2b0ff9400d9ef20bd029da492e9063902e19c6b2",
+    "rtl/test/tb_hdc_qwen_pc_service.sv": "3adc4add0b98e804bea55283c31a30b15b3d61123c5015c1bdeaf14d4bef9f08",
+    "tools/h4_hbm_baseline_bridge.py": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "physical_or_hardware_admission": false,
+  "planned_latency": "Checked associative L=1 prospect: request selected->backend+1edge, backend read->client+2, backend writevisible->client+3; L2/3 sensitivity included. No installed/SS clock or unconditional time bound. Required R14 native12CORE lookup separate, replacement/CDC join owned by Popper.",
+  "primary": "NC5/CTAG32/PTAG35/GEN4/MAX16/AW34 proposed legal parameter copy. NC6 current full wrapper separately priced; client5 occupied KV.",
+  "production_rate": null,
+  "protected_state_bits_per_PC": {
+    "full_wrapper_variant": 9144,
+    "successor": 7848
+  },
+  "raw_state_bits_per_PC": {
+    "full_wrapper_variant": 4779,
+    "successor": 4145
+  },
+  "reference_limits": "Completion reference starts at actual-arbitrated request acceptance; prospective registered request holder/full arbitration is sized but not simulated. Namespace history is environment oracle only. No actual protected-bit upset campaign or actual backend visibility qualification.",
+  "replay": [
+    "python3 -m pytest -q -o addopts='' tests/test_w2_pc_exact_completion_model.py",
+    "python3 tools/w2_pc_exact_completion_model.py --output /tmp/w2-pc-exact-model.json"
+  ],
+  "source_files_modified": 0,
+  "source_route_blocker": "Qwen low7guard vs R14 hash: sector4 routes PC4 vsPC1. R14tag16/privateidentity192 is not owner46 or generation4 echo. Need actual Popper caller/adapter/owned-return mapping, LEN/BEAT ownership and accepted WRvisible event before any connectedC0 build.",
+  "standalone_archives": true,
+  "status": "FULLWIDTH_W2_MODEL_SOURCE_INTERFACE_AND_COMPLETION_REFERENCE_PASS_CONNECTED_ADMISSION_BLOCKED",
+  "table": "38bit frozen minimum +1 HELD-state bit,3 independent associative lookup ports, preserved originaltag32 and explicitgen4; PC/client implicit only at actual bank, owner46 at aggregation.",
+  "tests": "26PASS",
+  "unselected_record_preserved": "unselected_GEN32_planning.json: initial pre-freeze exploration, not canonical and not a passed connected record.",
+  "wrap": "Modulo16 accepted only after source-owned all-copy/reset fence, no monotonic generation run cap. Actual predicate/wait unknown."
+}

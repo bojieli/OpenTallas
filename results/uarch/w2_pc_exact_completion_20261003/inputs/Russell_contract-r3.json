@@ -1,0 +1,314 @@
+{
+  "actual_source": {
+    "HBM_service_instantiated_clients": 6,
+    "KV_adapter": {
+      "generation_or_epoch_match": false,
+      "logical_outstanding": 1,
+      "wr_pending_pc_bits": 7,
+      "wr_pending_source_tag_bits": 25,
+      "write_done_ready": false
+    },
+    "KV_client_tag_bits": 32,
+    "KV_source_lane_bits": 7,
+    "KV_tag_bits": 25,
+    "MAX_OUT_per_client_PC": 16,
+    "PC_count": 128,
+    "PC_module_default_clients": 5,
+    "bulk_ring": {
+      "MAX_OUT": 512,
+      "depth": 1024,
+      "return_ready": false,
+      "slot_bits": 10
+    },
+    "client_class_to_physical_SM_PC_map": "NOT_PROVEN; only test instantiations of service found; caller must bind accepted port",
+    "client_tag_bits": 32,
+    "default_PC_tag_basis": "NC5/SIDW3 plus default CTAGW17; not full service CTAGW32",
+    "default_PC_tag_bits": 20,
+    "fixture_KV_client_index": 5,
+    "fixture_client_map_is_production_binding": false,
+    "generic_new_issuer_lane": "not proven spare; client5 is already KV in source fixture; no automatic added sixth lane from PC default NC5",
+    "installed_PC_exact_match": false,
+    "installed_PC_slot_table": false,
+    "installed_write_done_ready": false,
+    "physical_tag_bits": 35
+  },
+  "admission": {
+    "model_price_complete": false,
+    "new_PnR": false,
+    "new_RTL": false,
+    "root_adoption": false
+  },
+  "base_commit": "103d3ec89",
+  "common_candidate": {
+    "SM_field_does_not_multiply_PC_credits": true,
+    "aggregate_per_client_PC_limit": 16,
+    "bit_slices": {
+      "client": "15:13",
+      "generation": "3:0",
+      "requester_SM": "12:8",
+      "slot": "7:4"
+    },
+    "coalescer_tag": {
+      "bits": 16,
+      "identical_numeric_tag_is_not_same_owner": true,
+      "layout": [
+        [
+          "client",
+          6
+        ],
+        [
+          "batch_slot",
+          6
+        ],
+        [
+          "generation",
+          4
+        ]
+      ]
+    },
+    "generation1_admitted": false,
+    "generation_bits": 4,
+    "generation_in_tag": true,
+    "home_id32_private": true,
+    "line_four_sector_assembly_and_duplicate_mask_required": true,
+    "line_ring_slot10_private": true,
+    "mapping": "exact PC handle -> coalescer handle -> original SM ring slot; three namespaces remain distinct",
+    "minimum_20bit_generic_identity_admitted": false,
+    "original_client_tag32_private": true,
+    "per_client_PC_slots": 16,
+    "physical_PC_namespace": "explicit sideband if lane identity is dropped, or proven lossless mapping BEFORE aggregation/CDC; not free discarded bits",
+    "physical_PC_namespace_bits": 7,
+    "rank7_private": true,
+    "tag_bits": 16,
+    "tag_layout_MSB_to_LSB": [
+      [
+        "client",
+        3
+      ],
+      [
+        "requester_SM",
+        5
+      ],
+      [
+        "slot",
+        4
+      ],
+      [
+        "generation",
+        4
+      ]
+    ],
+    "total_PC_candidate_slots": 12288
+  },
+  "layout_authorities": {
+    "RF_home": "real requester SM and static birth/retire eligibility plus dynamic full lease drain",
+    "baseline_preserved_wide_identity_bits": 344,
+    "descriptor_container_bits": 512,
+    "descriptor_encoded_bits": 504,
+    "descriptor_fields": [
+      [
+        "id",
+        32
+      ],
+      [
+        "reference",
+        32
+      ],
+      [
+        "base",
+        64
+      ],
+      [
+        "span",
+        32
+      ],
+      [
+        "birth",
+        12
+      ],
+      [
+        "retire",
+        12
+      ],
+      [
+        "ranks",
+        96
+      ],
+      [
+        "SM",
+        5
+      ],
+      [
+        "kind",
+        3
+      ],
+      [
+        "words",
+        32
+      ],
+      [
+        "flags",
+        8
+      ]
+    ],
+    "descriptor_padded_payload_bits": 448,
+    "descriptor_raw_bits": 328,
+    "persistent_HBM_home": "publication/version/read lease; no invented requesting SM or RF retire PC",
+    "private_context_fields": {
+      "RF_slot": 9,
+      "SM": 5,
+      "byte_count": 32,
+      "captured": 1,
+      "client": 3,
+      "generation": 4,
+      "home_id": 32,
+      "home_offset": 32,
+      "original_tag": 32,
+      "phase": 3,
+      "physical_sector": 34,
+      "physical_stack": 2,
+      "rank": 7,
+      "reverse_seen": 1,
+      "valid": 1,
+      "write": 1
+    },
+    "private_context_raw_bits": 199,
+    "program_PC_bits": 12,
+    "program_PC_is_not_physical_PC7": true,
+    "program_PC_rule": "RF birth/retire admission uses source instruction PC; cannot derive it from low7 HBM address bits",
+    "reduced_hardware20_claim_admitted": false,
+    "software_witness_bits": 324,
+    "software_witness_fields": {
+      "PC": 12,
+      "SM": 5,
+      "SRAM_bank_ACK_mask": 32,
+      "address_sector": 29,
+      "client": 3,
+      "client_tag": 32,
+      "generation": 64,
+      "lease": 64,
+      "phase": 3,
+      "provider_reference": 32,
+      "rank": 7,
+      "sequence": 40,
+      "write": 1
+    },
+    "software_witness_is_wire": false
+  },
+  "next_owner_actions": {
+    "Euclid": "accepted requester SM/PC/home, publication and all-copies drain/source lifecycle receipts",
+    "Goodall": "bind actual accepted C0/KV request and consumer identities to common freeze; W4/W6 use matching ACK/fence contract",
+    "Nash": "review common release/drain and generation/reset contracts; parent assigns actual W2 implementation owner",
+    "Popper": "bind NC/default versus actual callers, exact mapping/table/mux/protection costs and global finite calendar",
+    "parent": "relay common freeze; authorize W2/W4/W6 only after composed model price/fit/gates; this receipt supplies no build permission"
+  },
+  "peer_git_object": {
+    "sha256": "da8baedc9ca5473b88336562d43d6360712d387f412ac5cb612c2eb67680e1e8",
+    "spec": "1e537382a:tools/h4_hbm_bridge_f0_r3.py"
+  },
+  "ports": {
+    "RF_common_ACK": {
+      "RF_slot": 9,
+      "common_copy_ACK": 1,
+      "parent_tag": 16,
+      "ready": 1,
+      "valid": 1
+    },
+    "original_source_ports": "retain CTAGW32/PTAGW35 until exact compact adapter is modeled and proven; restore original client tag on completion",
+    "owner_identity": "same scoped structured handle through capture/fence/consumer/reverse; generation is already within parent_tag, no one-bit replacement",
+    "read_return": {
+      "beat": 5,
+      "data": 256,
+      "parent_tag": 16
+    },
+    "request": {
+      "address": 34,
+      "data": 256,
+      "length": 6,
+      "parent_tag": 16,
+      "write": 1
+    },
+    "reverse": {
+      "beat": 5,
+      "parent_tag": 16,
+      "ready": 1,
+      "status": 2,
+      "valid": 1
+    },
+    "write_completion": {
+      "beat": 5,
+      "parent_tag": 16,
+      "ready": 1,
+      "status": 2,
+      "valid": 1
+    }
+  },
+  "priced_lower_and_reference": {
+    "area_clock_route_admission": false,
+    "baseline_reservation_not_recharged": true,
+    "complete_reference_context_protected_bits": 3538944,
+    "complete_reference_context_raw_bits": 2445312,
+    "missing_from_W2_lower": [
+      "original32 tag",
+      "SM/rank/home identity",
+      "address/count",
+      "phase",
+      "captured/reverse state",
+      "read ownership",
+      "duplicate/multibeat masks",
+      "selectors",
+      "protection",
+      "held ACK",
+      "CDC/control",
+      "reset/quiescence"
+    ],
+    "price_basis": "existing bridge consumer_delta per-context SECDED64 chunks, mutable control protection retained",
+    "rejected_three_bit_W2_lower": 36864,
+    "valid_write_gen4_only_raw_bits": 73728
+  },
+  "prior_namespace_receipt": "b77a0f83bc8892b148718649766d50845e714caa",
+  "recipients": [
+    "Popper",
+    "Euclid",
+    "Nash",
+    "Goodall",
+    "parent/root"
+  ],
+  "release_and_reset_contract": {
+    "all_empty": "source receipts covering PC contexts/held commands/read-return assembly/backend pending/coalescer/SM ring/RF ACK/fence/consumer/reverse and CDC plus reset; NOT currently proven",
+    "allocate": "reserve exact free slot before request valid; accept v&&ready once; no counter-only identity admission",
+    "completion": "read captured or held matching write completion accepted; no live decrement on unexpected/stale/duplicate response",
+    "immutable": "hold tag, original tag, address/data/write and owner while stalled; exact live match gates every grant/write/ACK",
+    "release": "all expected beats captured+visible+consumed; all child reverse accepted; parent reverse accepted; no forward/return/ACK/CDC copies remain before context/slot reuse",
+    "reset": "stop new grants, drain or coordinated flush every endpoint/backend and both CDC directions; synchronize reset deassert per domain; no restart with old responses/ACKs/reverse copies. Reinitializing local counters or valid bits alone is insufficient",
+    "visibility": "both RF copy writes accepted, one identity-bearing common ACK held until ready; metadata visible before consumer",
+    "wrap": "generation modulo16; block wrap until ALL-COPIES drain proven. Four bits do not establish drain. One bit cannot be accepted without identical proof plus reset safety"
+  },
+  "schema": "HBM_F0_SOURCE_PINNED_FIELD_FREEZE_REVIEW_V1",
+  "source_sha256": {
+    "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/DS_homes.json.gz": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a",
+    "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/Qwen_homes.json.gz": "01cb064303e809b2389dad4da6932bb1ffa9d7e40f93cd0918b1eba43ca56da1",
+    "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/RF.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/context.sv": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90",
+    "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/hbm_bridge_dependency_and_fields.json": "4d88b003fc730ded5fab4abe7fc8c6903f1ae647a8504e01cfaefca1b800a069",
+    "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+    "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197",
+    "rtl/hdc/hbm/ot_hdc_qwen_kv_pc_adapter.sv": "de20a96bfcef1d16e2059eb6f3925de18071549a50314cffc624f78c31def44c",
+    "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+    "rtl/test/tb_hdc_qwen_hbm_mixed_service.sv": "029a07509ec68ae704d19b853a29c4e2e1419c8208da38b8907976b96ecbe2f8",
+    "rtl/test/tb_hdc_qwen_kv_shared_service.sv": "d28fb895b8107e1aad56c2baa823864dea09f904d7ded1a888144b3db3964506",
+    "tools/h4_hbm_baseline_bridge.py": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2",
+    "tools/uarch_qwen_hbm_ingress.py": "2cb8984d2c86feef0e308a5b2d875b404238a1eb16c28bdccc026fc2d501333e"
+  },
+  "symbolic_checks": {
+    "PC_namespace_alias_without_map": true,
+    "fourbit_wrap_alias_after_reuses": 16,
+    "nonempty_copy_blocks_reuse": true,
+    "onebit_wrap_alias_after_reuses": 2,
+    "structured_code_count": 49152,
+    "tests_are_source_model_contract_not_connected_RTL": true,
+    "unique_within_one_PC_namespace": true
+  },
+  "verdict": "CONSERVATIVE_MODEL_FIELD_CONTRACT_ONLY_NO_HARDWARE_ADMISSION"
+}
