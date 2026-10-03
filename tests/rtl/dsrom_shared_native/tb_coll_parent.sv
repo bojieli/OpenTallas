@@ -19,7 +19,7 @@ module tb;
  wire ol=sent==(topk ? 255 : WORDS-1);
  reg [2047:0] od;
  wire er=(cyc%11)<7;
- wire [4:0] rv=5'b00100&{5{vm_re}},rr,qv;
+ wire [4:0] rv,rr,qv;assign rv=5'b00100&{5{vm_re}};
  wire [4:0] qr=5'b00100&{5{vm_reply_ready}};
  wire [10239:0] qdata;wire [1139:0] qowner;
  wire [19:0] ren=20'h00100;
