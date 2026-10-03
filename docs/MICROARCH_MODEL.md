@@ -177,6 +177,12 @@ It also checks tile area against the 560 mm² tile array. The area model is cali
 - a group-offset slice parameter and pruning parameters in `ot_hdc_matvec`;
 - a registered VM conflict stage.
 
+## Qwen REAL_MEM layer-service calibration
+
+The [matched calibration](../results/uarch/qwen_rom_real_memory_calibration_20261003/model.json) prices six observed layer deltas with the same 46-source/binary/image/KV/oracle identity in each A/B pair. P0 L0/L1/L2 add 156/932/544 cycles to the matched 4,804-cycle ideal layer; P255 adds 247/608/759 to 4,828 cycles. The layer overhead range is 3.247–19.400%, including P0/L1. The older 4,668-cycle compute baseline is not the matched denominator. Functional CLK_PS=833 conversion grants no physical clock credit.
+
+Use these measured service terms only at their source/design/position/layer scope. Do not sum overlapping per-die stall maxima, multiply a layer percentage across the whole model or add the delta to a calendar that already charges the same KV delivery. Full-token and physical calibration remain open. Posted-write gain is unknown until its actual matched run. The [publication scope table](HEADLINE_BUNDLE_SCOPE.md#matched-real_mem-functional-layer-calibration) binds all six values; `python3 tools/qwen_rom_real_memory_calibration.py --verify` replays them without a simulation, payload read or build. The old calendar and failed/drifted attempts remain unchanged.
+
 ## GPU-organised HBM comparators (`--hbm`, `results/uarch/hbm_gpu.json`)
 
 Both HBM dies replicate a GPU organisation (AGENTS.md rule 3). `hbm_gpu_design()` sizes the element and its networks, and the RTL (`rtl/gpu/`) and floorplans (`results/floorplan/hbm_gpu/`) measure them.
