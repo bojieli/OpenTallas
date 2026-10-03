@@ -40,3 +40,9 @@ def test_QN_restore_traces_actual_ff_without_counting_INV_as_storage():
 def test_actual_liberty_units_and_ff_group(tmp_path):
  p=tmp_path/'TEST_ONLY.lib';p.write_text('library(TEST) { leakage_power_unit : "1nW"; capacitive_load_unit(1,pf); cell(DFF) { area : 0.5184; cell_leakage_power : 2.5; ff(IQ,IQN) { next_state : "D"; clocked_on : "CLK"; } pin(CLK) { direction : input; capacitance : 0.000434; } pin(QN) { direction : output; function : "IQN"; } } }')
  d=M.liberty_facts([p]);assert d['cells']['DFF']['sequential'];assert d['cells']['DFF']['pins']['CLK']['cap_fF']==pytest.approx(.434);assert d['cells']['DFF']['leakage_W']==pytest.approx(2.5e-9)
+
+
+def test_state_dependent_supply_leakage_summed_before_bounds(tmp_path):
+ p=tmp_path/'STATE_TEST.lib';p.write_text('library(TEST) { leakage_power_unit : "1pW"; capacitive_load_unit(1,ff); cell(X) { area : .1; leakage_power () { when : "A"; value : 100; related_pg_pin : VDD; } leakage_power () { when : "A"; value : 10; related_pg_pin : VSS; } leakage_power () { when : "!A"; value : 200; related_pg_pin : VDD; } leakage_power () { when : "!A"; value : 0; related_pg_pin : VSS; } pin(Y) { direction : output; } } }')
+ d=M.liberty_facts([p]);assert d['cells']['X']['leakage_W'] is None
+ assert d['cells']['X']['state_leakage_bounds_W']==pytest.approx([110e-12,200e-12])

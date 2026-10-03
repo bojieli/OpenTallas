@@ -4,7 +4,7 @@ import argparse,collections,gzip,hashlib,json,re
 from pathlib import Path
 
 def groups(text,kind):
- for match in re.finditer(r'\b'+kind+r'\s*\(\s*"?([^"()\s]+)"?\s*\)\s*\{',text):
+ for match in re.finditer(r'\b'+kind+r'\s*\(\s*"?([^"()\s]*)"?\s*\)\s*\{',text):
   start=match.end();level=1;quoted=False;escape=False;end=start
   for end in range(start,len(text)):
    c=text[end]
@@ -41,7 +41,12 @@ def liberty_facts(paths):
     cp=value(pb,'capacitance')
     pins[pn]={'direction':dr[1] if dr else None,'cap_fF':cp*cap_scale if cp is not None and cap_scale is not None else None}
    lp=value(body,'cell_leakage_power')
-   cells[name]={'area_um2':value(body,'area'),'sequential':bool(re.search(r'\bff\s*\(',body)),'latch':bool(re.search(r'\blatch\s*\(',body)),'pins':pins,'leakage_W':lp*power_scale if lp is not None and power_scale is not None else None}
+   states={}
+   for _,lb in groups(body,'leakage_power'):
+    v=value(lb,'value');wm=re.search(r'\bwhen\s*:\s*"([^"]*)"',lb)
+    if v is not None:states[wm[1] if wm else 'unconditional']=states.get(wm[1] if wm else 'unconditional',0)+v
+   bounds=[min(states.values())*power_scale,max(states.values())*power_scale] if states and power_scale is not None else ([lp*power_scale]*2 if lp is not None and power_scale is not None else None)
+   cells[name]={'area_um2':value(body,'area'),'sequential':bool(re.search(r'\bff\s*\(',body)),'latch':bool(re.search(r'\blatch\s*\(',body)),'pins':pins,'leakage_W':lp*power_scale if lp is not None and power_scale is not None else None,'state_leakage_bounds_W':bounds}
   libs[str(p)]={'SHA256':hashlib.sha256(b).hexdigest(),'leakage_power_unit':leak[1] if leak else None,'cap_unit':cap[0] if cap else None}
  return {'cells':cells,'libraries':libs}
 
@@ -75,12 +80,14 @@ def census(netlist,facts):
  cwbits=[b for bs in cw.values() for b in bs];owners=[state_owner(b) for b in cwbits]
  area=sum(count*book[t]['area_um2'] for t,count in counts.items())
  leakage=None if any(book[t]['leakage_W'] is None for t in counts) else sum(count*book[t]['leakage_W'] for t,count in counts.items())
+ ranges=[(count,book[t].get('state_leakage_bounds_W')) for t,count in counts.items()]
+ leak_range=None if any(r is None for _,r in ranges) else [sum(count*r[i] for count,r in ranges) for i in (0,1)]
  clock_caps=[book[top['cells'][n]['type']]['pins'].get('CLK',{}).get('cap_fF') for n in seq]
  clock=None if any(v is None for v in clock_caps) else sum(clock_caps)
  cwseq=len({v for v in owners if v is not None});passed=len(cwbits)==15768 and cwseq==15768 and all(v is not None for v in owners) and not latches
  return dict(schema='w2.full219.mapped-census.v1',top=name,cells_total=sum(counts.values()),cell_counts=dict(counts),area_um2=area,body_mm2=area/1e6,actual_flop_cells=len(seq),latch_cells=len(latches),cw_logical_bits=len(cwbits),cw_distinct_flop_cells=cwseq,cw_nonstate_or_constant_bits=sum(v is None for v in owners),full219_storage_census_PASS=passed,
   replication1280={'mapped_body_mm2':area/1e6*1280,'50pct_placement_before_PG_CTS_routes_mm2':area/1e6*2560,'mapped_flops':len(seq)*1280,'CW_flops':cwseq*1280,'F0_replacement_credit':None},
-  power={'SS_cell_leakage_W':leakage,'1280_SS_cell_leakage_W':None if leakage is None else leakage*1280,'clock_pin_cap_fF':clock,'clock_pin_CV2f_only_W':None if clock is None else clock*1e-15*.63**2*1.2e9,'scope':'Library leakage at SS100C/0.63V; clock-pin CV2f only if1.2GHz reached. Actual state/activity, internal/signal dynamic, CTS/PG/route power unknown; no total-chip power claim.'},
+  power={'SS_cell_leakage_W':leakage,'1280_SS_cell_leakage_W':None if leakage is None else leakage*1280,'SS_state_leakage_bounds_W':leak_range,'1280_SS_state_leakage_bounds_W':None if leak_range is None else [x*1280 for x in leak_range],'clock_pin_cap_fF':clock,'clock_pin_CV2f_only_W':None if clock is None else clock*1e-15*.63**2*1.2e9,'scope':'Library leakage at SS100C/0.63V; clock-pin CV2f only if1.2GHz reached. Actual state/activity, internal/signal dynamic, CTS/PG/route power unknown; no total-chip power claim.'},
   latency={'source_II_sameclient':19,'source_II_differentclient':10,'source_repair_II':9,'target_period_ps':2500/3,'mapped_or_physical_slack':None,'actual_service_cycles_or_whole_token_delta':None,'scope':'Mapping changes area only; no new pipeline or source cycle change. Functional equivalence, loaded timing and provider-bound service still separate.'},
   decision='MAPPED_SOURCE_FULL_STORAGE_CENSUS_PASS_NOT_PHYSICAL_OR_FUNCTIONAL_QUALIFICATION' if passed else 'MAPPED_SOURCE_STORAGE_CENSUS_FAIL',libraries=facts['libraries'])
 
