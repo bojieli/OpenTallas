@@ -45,7 +45,7 @@ struct Simulation {
   while(*std::min_element(next.begin(),next.end())<=target)event();
   context->time(target);top->eval();
  }
- static uint64_t wide(const WData*data,int offset,int count){
+ static uint64_t wide(const uint32_t*data,int offset,int count){
   uint64_t value=0;for(int i=0;i<count;i++)value|=uint64_t((data[(offset+i)/32]>>((offset+i)%32))&1)<<i;
   return value;
  }
@@ -55,7 +55,7 @@ struct Simulation {
   for(int d=0;d<2;d++){
    if(d)std::cout<<",";
    std::cout<<"{\"db_rdy\":"<<((top->db_rdy>>d)&1)<<",\"cpl_v\":"<<((top->cpl_v>>d)&1)
-    <<",\"cpl_lo\":"<<wide(top->cpl_data,d*109,64)<<",\"cpl_hi\":"<<wide(top->cpl_data,d*109+64,45)<<"}";
+    <<",\"cpl_lo\":"<<wide(top->cpl_data.data(),d*109,64)<<",\"cpl_hi\":"<<wide(top->cpl_data.data(),d*109+64,45)<<"}";
   }
   std::cout<<"],\"sms\":[";
   for(int i=0;i<4;i++){
