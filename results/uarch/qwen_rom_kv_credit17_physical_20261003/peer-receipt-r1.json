@@ -1,0 +1,148 @@
+{
+  "Russell_contract_commit": "af7c7112ef7a76ed42bceb67c058a5447c36aab4",
+  "additional_boundary_bits": 804,
+  "additional_route_buffers": 124419,
+  "affected_existing_collectors_upgraded": 2385824,
+  "build_admission": false,
+  "candidate_replayed": false,
+  "capacity_admitted": false,
+  "clock_domains_Hz": [
+    1000000000,
+    1200000000,
+    900000000
+  ],
+  "collector_load_slew": {
+    "ff": {
+      "BUF4_with_same_spurs_rise_slew_ps": [
+        56.20591862656251,
+        57.275626873125006
+      ],
+      "cell": "BUFx8_ASAP7_75t_R",
+      "clock_delay_ps": [
+        28.6096135028125,
+        45.399304166875
+      ],
+      "fall_slew_ps": [
+        27.983642979062502,
+        29.954366343125002
+      ],
+      "fanout": 8,
+      "load_fF": 34.032024,
+      "rise_slew_ps": [
+        32.552574736875,
+        34.00934122625
+      ],
+      "route_segment_fall_slew_ps": [
+        20.224411381015628,
+        22.503225643671875
+      ],
+      "route_segment_load_fF": 22.159323,
+      "route_segment_rise_slew_ps": [
+        23.007622391640627,
+        24.774722667421877
+      ],
+      "segment_um": 32,
+      "terminal_spur_um": 16,
+      "terminal_spurs_per_driver": 8,
+      "whole_clock_or_reset_timing_qualified": false
+    },
+    "ss": {
+      "BUF4_with_same_spurs_rise_slew_ps": [
+        125.53107073156252,
+        125.9424500870139
+      ],
+      "cell": "BUFx8_ASAP7_75t_R",
+      "clock_delay_ps": [
+        56.41799265180556,
+        82.41564473819446
+      ],
+      "fall_slew_ps": [
+        54.177957194270846,
+        55.121833170659734
+      ],
+      "fanout": 8,
+      "load_fF": 32.892808,
+      "rise_slew_ps": [
+        69.16953060538195,
+        70.12552268715278
+      ],
+      "route_segment_fall_slew_ps": [
+        40.71853952930556,
+        41.87184702948785
+      ],
+      "route_segment_load_fF": 22.016921,
+      "route_segment_rise_slew_ps": [
+        49.597067155633674,
+        50.861990050815976
+      ],
+      "segment_um": 32,
+      "terminal_spur_um": 16,
+      "terminal_spurs_per_driver": 8,
+      "whole_clock_or_reset_timing_qualified": false
+    }
+  },
+  "contextual_SSFF": false,
+  "controller_minimum_utilization": 0.9854139602897908,
+  "delta_known_mm2": 1.8627512684400003,
+  "known_composed_area_mm2": 814.06148786372,
+  "missing_physical_costs": [
+    "tie supply/hold and source atomic protection binding",
+    "actual collector/codec/spill sites and per-family pin landing",
+    "full root balance and ACK characterization",
+    "PG/via/OBS/hold routing and transport capture stages"
+  ],
+  "model": "results/uarch/qwen_rom_kv_credit17_physical_20261003/model-r4.json",
+  "model_sha256": "68284be5712d118816dce89950edddf2ff82105fceeb1097f1e42073de5c84f8",
+  "name": "QROM-SMIN6-KV7-NATIVEPHY-68C",
+  "new_FFs": 778522,
+  "new_clock_pins_by_domain": {
+    "service": 414624,
+    "stream": 363898
+  },
+  "new_collector_buffers": 223672,
+  "new_reset_pin_upper": 778522,
+  "next_Euclid_action": "Bind actual accepted descriptor/release/visibility/acquire/drain/404ACK/tag-retire journal and persistent payload; no obligatory cold policy assumption.",
+  "next_Russell_action": "One17/136 finite replay with68combined pending/64RAM+4FFspill,85words/pool,protected atomic alloc/retire/404ACK/strict refresh; include proposed mutable protection encode/decode edges or return a fully priced source protection implementation. Do not infer sufficiency from330.668us fixed-work floor.",
+  "owner": "Ampere",
+  "parent_relay_required": true,
+  "predecessor_allocation_commit": "e5469108728c539764335dedd7ab7d8f66f9d86d",
+  "protected_scope": "new mutable FF records only; no ROM ECC added",
+  "protection_edges": {
+    "decoder": 1,
+    "encoder": 1
+  },
+  "remaining_before_unknowns_mm2": 0.9385121362800177,
+  "schema": "QROM_CREDIT17_PHYSICAL_PEER_RECEIPT_R1",
+  "selected_drive": "BUFx8_ASAP7_75t_R",
+  "source_lookup_edges": 12,
+  "sustainable_PHY_Bps": null,
+  "target": {
+    "additional_FF_spill_entries_per_PC": 4,
+    "change": "Regular credit-window sizing17/group; prove end-to-end service with finite spill rather than add transport lanes.",
+    "column_paths_per_stack": 4,
+    "existing_pending_return_RAM_entries": 64,
+    "global_fill_lanes": 7,
+    "global_necessary_bound": 129,
+    "group_credits": 17,
+    "group_lane_pools": 56,
+    "lookup_edges": 12,
+    "needed_context_records_per_PC_at_most": 17,
+    "no_context_macro_replication": true,
+    "pending_entries_per_PC": 68,
+    "proof": "17cohorts/group*<=4sectors/PC/cohort=68 combined pending. 17*<=5words/group/lane=85 slots. Source context128 records/PC can hold17 burst contexts; context records are not per-sector pending slots. Eight identical17-cohort banks require136 physical header slots;129 is only the pooled fixed-work minimum.",
+    "qualification": "Necessary fixed-work sizing only. Larger windows change queueing and refresh, so17 is not a fit prediction.68 spill/protection/1R1W selection/collectors/route/CDC and source-active tag/update/ACK must be fully priced and replayed before any build.",
+    "regular_total_cohort_capacity": 136,
+    "return_groups_per_stack": 8,
+    "source_context_RAM_entries_per_PC": 128,
+    "source_tag_namespace_copied": false,
+    "total_assembly_words": 4760,
+    "words_per_group_lane_pool": 85,
+    "write_slots_per_PC": 4
+  },
+  "uncertainty_ps": {
+    "FF_hold": 25,
+    "SS_setup": 60
+  },
+  "verdict": "FAIL_G0_CREDIT17_PRICED_RESERVATION_NO_CAPACITY_ADMISSION",
+  "write_slots_per_PC": 4
+}

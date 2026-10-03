@@ -1,0 +1,73 @@
+{
+  "source_parent_verified": "bb05583a32ff8bb45b79d068eff4d042ed2ccd0d",
+  "frozen_predecessor": "02e9c04b773642e1f88118815bae6d164f8b1fcf",
+  "verdict": "FINITE_CREDIT_CIRCULATION_DEFICIT_NOT_PHY_WAIT",
+  "model_sha256": "0fd637801967dfef3ca7feeea1c34aac0a960728cf573477cb8d5d639c4b6bd8",
+  "bound_sha256": "cb45c6c6b49464d86b154cfde7f1e85ad7afc43b1c77fa91de27610337055e0e",
+  "same_topology": {
+    "fill_demand_port_s": 0.0002814,
+    "owner_DATA_plus_GRANT_port_s": 0.000294912,
+    "column_payload_only_port_s": 0.000294624,
+    "column_with_observed_maintenance_witness_s": 0.000308227,
+    "maintenance_scope": "Observed source-native command counts depend on this finite ordering and refresh placement; not a universal lower bound for another ordering.",
+    "PC_feedback_payload_only_port_s": 0.00018414,
+    "refresh_source_interval_edges": 3900,
+    "refresh_busy_edges": 350,
+    "owner_counts_include_two_receipts_not_two_payload_transfers": true,
+    "bounds_overlap_not_sum": true,
+    "PHY_wait_assumed": 0,
+    "actual_PHY_qualified": false,
+    "scope": "Same8/4/7 topology and conditional cold demand. Physical/producer qualification is separate. Strict refresh still unqualified."
+  },
+  "fixed_lease": {
+    "group16_full_token_floor_s": 0.0003511698541666667,
+    "global128_full_token_floor_s": 0.00033586701822916666,
+    "maximum_group_work_sum_ps": 5576531000,
+    "global_lease_work_sum_ps": 42653485000,
+    "minimum_uniform_group_credits": 17,
+    "minimum_global_credits": 129,
+    "group17_floor_if_lifetimes_unchanged_s": 0.0003306679019607843,
+    "scope": "Little law / area under occupancy: sum(cohort retirement-allocation)<=credits*span. Apply independently to each group/layer, sum sequentiallayer spans, add known nonlayer cost once. Fixed recorded lifetimes, not universal lower bound under another ordering or earlier per-beat retirement.",
+    "necessary_change": "Current16/group and128global cannot sustain the recorded lease work within333.333us. Change credit circulation: increase finite capacity or reduce source-valid lease holds; no additional fill/column/owner port is implied."
+  },
+  "ONE_next_target": {
+    "change": "Regular credit-window sizing17/group; prove end-to-end service with finite spill rather than add transport lanes.",
+    "group_credits": 17,
+    "regular_total_cohort_capacity": 136,
+    "global_necessary_bound": 129,
+    "pending_entries_per_PC": 68,
+    "existing_pending_return_RAM_entries": 64,
+    "additional_FF_spill_entries_per_PC": 4,
+    "words_per_group_lane_pool": 85,
+    "group_lane_pools": 56,
+    "total_assembly_words": 4760,
+    "source_context_RAM_entries_per_PC": 128,
+    "needed_context_records_per_PC_at_most": 17,
+    "no_context_macro_replication": true,
+    "return_groups_per_stack": 8,
+    "column_paths_per_stack": 4,
+    "global_fill_lanes": 7,
+    "write_slots_per_PC": 4,
+    "lookup_edges": 12,
+    "source_tag_namespace_copied": false,
+    "proof": "17cohorts/group*<=4sectors/PC/cohort=68 combined pending. 17*<=5words/group/lane=85 slots. Source context128 records/PC can hold17 burst contexts; context records are not per-sector pending slots. Eight identical17-cohort banks require136 physical header slots;129 is only the pooled fixed-work minimum.",
+    "qualification": "Necessary fixed-work sizing only. Larger windows change queueing and refresh, so17 is not a fit prediction.68 spill/protection/1R1W selection/collectors/route/CDC and source-active tag/update/ACK must be fully priced and replayed before any build."
+  },
+  "delivery": "PARENT_RELAY_REQUIRED_SEND_INPUT_NOT_EXPOSED",
+  "peers": {
+    "Euclid": {
+      "address": "01a0fab1-2dbc-74c3-a225-72b1f846f3aa",
+      "required": "Actual accepted36-layer descriptor/release/visibility/acquire/drain/beat404ACK/tagretire journal and persistent payload provider. Preserve379-bit accepted instruction and128x capture. Bind earliest prefix and source-valid per-beat versus whole-cohort retirement; do not assert obligatory cold refills. Cold model prefix wait observed0 is not actual producer qualification."
+    },
+    "Ampere": {
+      "address": "01a0fd69-551c-7521-bb30-67c4bd8c3c6b",
+      "required": "Named8/4/7 legal separate channels/PHY/clock/reset/PG/hold allocation:7973fill/control tracks and43256full boundary bits, sustained113.135616GB/s/stack unknown. Retain12lookup,1GHz candidate/1.2GHz streaming/.9GHz serial andSS60ps/FF25ps. Plan one17/group finite credit-window delta:64RAM+4FFpending spill/PC,56x85word pools and136regular cohort slots; additional storage/selector/collector/protection/route must be priced before any hardware. Existing128contextRAMdepth/PC supports17burst records with no duplicated CAM namespace."
+    },
+    "Popper_Kepler": {
+      "required": "For the one next capacity target prove68combined pending/64RAM+4spill, unchanged4write slots, duplicate/epoch/sector match, perPC1R1W capture/hold, protected atomic tag/remaining_PC alloc-retire, strict refresh and404beatcredit. Bigger window alters lifetimes; no claim17fits without composed replay."
+    },
+    "Maxwell": {
+      "required": "Named baseline and whole service slot debit; price source-backed68spill/85pool/136header increment once against3.38304819634mm2 current conditional remainder. No additional return/column/fill/PHY replica selected."
+    }
+  }
+}

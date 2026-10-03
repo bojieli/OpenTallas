@@ -1,0 +1,26 @@
+{
+  "model-r1.json": {
+    "admission": false,
+    "constructor": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/credit17-constructor-r1.py",
+    "constructor_sha256": "a5b4d3ecba9fc6e6141a86472dd02001d180e2a25159513225ae0cbfc83a8390",
+    "model_sha256": "c1a56d44b4bc28a7641b0b2194f5f3295f567f0964c241f38fbc6bc566395db9"
+  },
+  "model-r2.json": {
+    "admission": false,
+    "constructor": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/credit17-constructor-r2.py",
+    "constructor_sha256": "47b468110ebd4fff6ea518d5c58459b8438616ff4917c4af6be52c23af97b404",
+    "model_sha256": "8f7979301831319efb8f91903c2818fe1c6c5e662018f4b18fe49e23c791f302"
+  },
+  "model-r3.json": {
+    "admission": false,
+    "constructor": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/credit17-constructor-r3.py",
+    "constructor_sha256": "e9e207fb603dfce2559a46cac25802deffdf6ebff00ff9056bf7882fd9667536",
+    "model_sha256": "1901a67337a53008f2b56eec0af23f7bfdfce9038c691001ed753fa9e196da68"
+  },
+  "model-r4.json": {
+    "admission": false,
+    "constructor": "tools/qwen_rom_kv_credit17_physical.py",
+    "constructor_sha256": "15f3c966fc3011b43ab3dd5c96e3100eacf49c5f0e5e9133a2801bdf7c4c51d8",
+    "model_sha256": "68284be5712d118816dce89950edddf2ff82105fceeb1097f1e42073de5c84f8"
+  }
+}
