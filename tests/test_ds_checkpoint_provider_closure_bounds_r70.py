@@ -153,3 +153,15 @@ def test_decoded_node_forms_and_restored_class_headers_are_priced(graphs,record)
 
 def test_decoded_unknown_leaf_is_not_zero():
     with pytest.raises(ValueError):m.decoded_metadata_count(m.Leaf({'unknown':[]}))
+
+
+def test_r71_named_live_roots_have_finite_complete_histograms():
+    profiles=m.r71_profiles()
+    assert set(profiles)=={'typed_state','state_closure','actual_observations','source_contract','projection','atomic_publication','runner_receipt','producer_seal','caller_actual','verified_actual','fresh_actual','run_scope_transition'}
+    for p in profiles.values():
+        assert sum(p['kinds'].values())==p['nodes'] and p['nodes']>0
+        assert p['encoded_bytes']>0 and p['unshared_python_object_heap_upper_bytes']>0
+        assert p['max_depth']<1000 and p['max_integer_chars']<=20
+        assert p['kinds'].get('float',0)==0
+        assert p['ensure_ascii'] and p['no_custom_hooks'] and p['finite_source_upper']
+    assert profiles['run_scope_transition']['dict_entries']>2*profiles['source_contract']['dict_entries']-30

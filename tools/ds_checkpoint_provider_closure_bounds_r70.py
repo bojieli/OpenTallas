@@ -192,8 +192,42 @@ def model(root=D):
       required_enrollment=['exact source hashes','enrolled runtime/provenance paths no longer than source path bound','all counters <= finite u64 source prefix bound; actual current values remain source-owned','actual nodes and bytes fit each selected profile','96port/576publication/3840sourcekey schema'],
       composition='Use node_profiles.closure and actual_observations for decoded object heap; snapshot is a separate projection graph, source_manifest belongs to retained constructor identity. Do not add all profiles as simultaneously live or charge payload again.')
 
+
+def r71_profiles(root=D):
+    """Exactly the source-retained roots requested by Kepler's R71 composer.
+    Arrays remain binary payload; no production parser or provider is replaced.
+    """
+    g,e=source_schemas(root);actual=g['actual_observations'];seal=actual['producer_seal']
+    receipt=dict(producer_seal=seal,actual_observations_sha256='f'*64)
+    publication=dict(schema='DS_ACTUAL_ATOMIC_CHECKPOINT_R67',boundary_pc=1,producer_pid=U,
+        destination='x'*e['path_char_upper'],files={name:dict(bytes=U,sha256='f'*64) for name in
+        ('payload.bin','state.json','COMPLETE.json','actual_observations.json','RUNNER_COMPLETE.json')},
+        producer_receipt=receipt,requires_fresh_process_restore=True)
+    transition=dict(schema='DS_EXPLICIT_RUN_SCOPE_TRANSITION_V1',old_identity=g['identity'],new_identity=g['identity'],
+        old_run_scope=actual['run_scope'],new_run_scope=actual['run_scope'],next_pc=2,
+        checkpoint_receipt=receipt,role_proof=g['scope_role'],seal_sha256='f'*64)
+    roots=dict(typed_state=typed(g['snapshot']),state_closure=g['closure'],actual_observations=actual,
+        source_contract=actual['source_contract'],projection=actual['projection'],
+        atomic_publication=publication,runner_receipt=receipt,producer_seal=seal,
+        caller_actual=actual,verified_actual=actual,fresh_actual=actual,run_scope_transition=transition)
+    def depth(v):
+        if type(v)is dict:return 1+max((depth(x) for x in v.values()),default=0)
+        if type(v)in (list,tuple):return 1+max((depth(x) for x in v),default=0)
+        return 0
+    out={}
+    for name,value in roots.items():
+        c=count(value)
+        out[name]=dict(schema='DS_JSON_CARDINALITY_R71',encoded_bytes=c['canonical_byte_upper'],nodes=c['nodes'],
+            kinds=c['kinds'],list_items=c['list_items'],dict_entries=c['dict_entries'],
+            max_decoded_string_chars=c['max_decoded_string_chars'],max_integer_chars=c['max_integer_chars'],
+            unique_key_upper=len(c['JSON_dictionary_key_names']),max_list_len=c['max_list_len'],max_dict_len=c['max_dict_len'],
+            max_depth=depth(value),unshared_python_object_heap_upper_bytes=c['unshared_python_object_heap_upper_bytes'],
+            ensure_ascii=True,no_custom_hooks=True,finite_source_upper=True)
+    return out
+
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--generate',type=Path);ap.add_argument('--verify',action='store_true');a=ap.parse_args();r=model()
+    ap=argparse.ArgumentParser();ap.add_argument('--generate',type=Path);ap.add_argument('--verify',action='store_true');ap.add_argument('--r71-profiles',type=Path);a=ap.parse_args();r=model()
+    if a.r71_profiles:a.r71_profiles.write_text(json.dumps(r71_profiles(),indent=2,sort_keys=True)+'\n')
     if a.generate:a.generate.write_text(json.dumps(r,indent=2,sort_keys=True)+'\n')
     if a.verify:require(r==read(D/'model.json'),'exact node bound replay')
     print(json.dumps({'extents':r['allocation_shapes'],'object_bytes':{k:v['unshared_python_object_heap_upper_bytes'] for k,v in r['node_profiles'].items()}},sort_keys=True))
