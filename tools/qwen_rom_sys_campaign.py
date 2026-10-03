@@ -73,8 +73,9 @@ BENCHES = {
 SYS_FILES = ([f for f in CORE if f != "rtl/hdc/ot_hdc_core.sv"] +
              [CORE2, "rtl/hdc/ot_hdc_me_2clk.sv", "rtl/common/ot_ratio_cdc_fifo.sv", "rtl/hdc/ot_hdc_cg.sv"] +
              SYS + ["rtl/test/qwen_sys/tb_qwen_rom_sys.sv"])
-# system variants: (ME_CDC, KV_PREFETCH)
-VARIANTS = {"c0p0": (0, 0), "c1p0": (1, 0), "c0p1": (0, 1), "c1p1": (1, 1)}
+# system variants: (ME_CDC, KV_PREFETCH, SEQ_ASYNC); async is explicitly opt-in.
+VARIANTS = {"c0p0": (0, 0, 0), "c1p0": (1, 0, 0), "c0p1": (0, 1, 0), "c1p1": (1, 1, 0),
+            "c0p0a": (0, 0, 1), "c1p1a": (1, 1, 1)}
 AR256 = ["rtl/rom/ot_rom_oneshot_allreduce.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/test/tb_qwen_tp4_ar256.sv"]
 # ports that must never be tied high in the system top (rom_bridge_gaps Z-list / DA6)
 READY_PORTS = ["kv_ok", "kv_write_drained", "w_ok", "emb_ok", "me_mem_ok", "c_ready", "h_req_rdy", "tx_ready",
@@ -188,7 +189,12 @@ def main():
     ap.add_argument("--jobs", type=int, default=24)
     ap.add_argument("--skip-system", action="store_true")
     ap.add_argument("--img", type=Path, help="existing tools/hdc_program.py --tp 4 images (else generated)")
+    ap.add_argument("--include-async", action="store_true", help="include the measured SEQ_ASYNC system variants")
+    ap.add_argument("--async-img", type=Path, help="existing cut-through images; required with --include-async")
     a = ap.parse_args()
+    if a.include_async and (a.async_img is None or not (a.async_img / "expect.json").is_file()):
+        ap.error("--include-async requires existing --async-img images (no golden generation)")
+    variants = {v: cfg for v, cfg in VARIANTS.items() if not cfg[2] or a.include_async}
     res_path = a.out / "campaign.json"
     if res_path.exists():
         raise SystemExit("refusing to overwrite an existing verdict")
@@ -225,6 +231,22 @@ def main():
                         "oracle": exp["end_to_end"]["oracle"],
                         "logits_bit_exact_every_step": exp["end_to_end"]["logits_bit_exact"],
                         "image_sha256": {p.name: sha(p) for p in sorted(img.glob("*.hex"))}}
+    if a.include_async:
+        # Only descriptor CUT bits may differ; every golden/program/payload file is retained.
+        for src in sorted(img.iterdir()):
+            if not src.is_file():
+                continue
+            dst = a.async_img / src.name
+            if not dst.is_file():
+                raise SystemExit(f"async images missing {src.name}")
+            if src.name.startswith("desc_d") and src.suffix == ".hex":
+                before = [int(x, 16) for x in src.read_text().split()]
+                after = [int(x, 16) for x in dst.read_text().split()]
+                if len(before) != len(after) or any(y not in (x, x | (1 << 20)) for x, y in zip(before, after)):
+                    raise SystemExit(f"async descriptor changes more than CUT: {src.name}")
+            elif sha(src) != sha(dst):
+                raise SystemExit(f"async images changed pinned payload/golden: {src.name}")
+        result["async_image_sha256"] = {p.name: sha(p) for p in sorted(a.async_img.glob("*.hex"))}
     # the two-clock core variant (a build product of the pinned core)
     rc, o, _ = sh([sys.executable, "tools/qwen_rom_sys_core2clk_emit.py", "--out", ROOT / "build/qwen_sys"])
     if rc:
@@ -236,9 +258,9 @@ def main():
         futs = {k: ex.submit(vbuild, top, files, a.work / f"obj_{k}", ("-GPREFETCH=1",) if k == "kv_pf" else (), a.jobs)
                 for k, (top, files) in BENCHES.items()}
         if not a.skip_system:
-            for v, (cdc, pf) in VARIANTS.items():
+            for v, (cdc, pf, seq_async) in variants.items():
                 futs[f"sys_{v}"] = ex.submit(vbuild, "tb_qwen_rom_sys", SYS_FILES, a.work / f"obj_sys_{v}",
-                                             (f"-GME_CDC={cdc}", f"-GKV_PREFETCH={pf}"), a.jobs, HARNESS2)
+                                             (f"-GME_CDC={cdc}", f"-GKV_PREFETCH={pf}", f"-GSEQ_ASYNC={seq_async}"), a.jobs, HARNESS2)
         for k, f in futs.items():
             bins[k], bt = f.result()
             result.setdefault("build_wall_s", {})[k] = round(bt, 1)
@@ -255,9 +277,10 @@ def main():
              ("ctrl", "ctrl_hbm_bad", ["+HBM_BAD"])]
     if not a.skip_system:
         d = f"+DIR={img}"
-        for v, (cdc, pf) in VARIANTS.items():
+        for v, (cdc, pf, seq_async) in variants.items():
             clk = "+CLK=split" if cdc else "+CLK=slow"
             b = f"sys_{v}"
+            d = f"+DIR={a.async_img if seq_async else img}"
             jobs += [(b, f"{b}_users1", [d, clk, "+USERS=1"]),
                      (b, f"{b}_users2", [d, clk, "+USERS=2"]),
                      (b, f"{b}_users4_flip97", [d, clk, "+USERS=4", "+FLIP=97"]),
@@ -265,6 +288,7 @@ def main():
             if cdc:
                 jobs += [(b, f"{b}_users1_fphase1", [d, clk, "+USERS=1", "+FPHASE=1"]),
                          (b, f"{b}_users1_fphase2", [d, clk, "+USERS=1", "+FPHASE=2"])]
+        d = f"+DIR={img}"
         jobs += [("sys_c0p0", "sys_fault_hbm_tag", [d, "+CLK=slow", "+USERS=1", "+HBM_TAG_FLIP=400", "+EXPECT_FAULT=14"]),
                  ("sys_c0p0", "sys_fault_link_break", [d, "+CLK=slow", "+USERS=1", "+BREAK=60000", "+EXPECT_FAULT=5"]),
                  ("sys_c1p1", "sys_c1p1_fault_hbm_tag", [d, "+CLK=split", "+USERS=1", "+HBM_TAG_FLIP=900", "+EXPECT_FAULT=14"])]
@@ -273,12 +297,14 @@ def main():
         for name, f in futs.items():
             runs[name] = f.result()
     result["runs"] = runs
+    if a.include_async:
+        result["async_images_stable"] = result["async_image_sha256"] == {p.name: sha(p) for p in sorted(a.async_img.glob("*.hex"))}
     result["seq_equivalence"] = seq_equivalence(a.work, a.out)
     result["static_ready"] = static_ready_check()
     result["source_stable"] = pins == {f: sha(ROOT / f) for f in srcs}
     result["wall_s"] = round(time.monotonic() - t0, 1)
     ok = (all(r["pass"] for r in runs.values()) and result["seq_equivalence"]["pass"]
-          and result["static_ready"]["pass"] and result["source_stable"])
+          and result["static_ready"]["pass"] and result["source_stable"] and result.get("async_images_stable", True))
     result["status"] = "pass" if ok else "fail"
     with res_path.open("x") as f:
         f.write(json.dumps(result, indent=2, sort_keys=True) + "\n")
