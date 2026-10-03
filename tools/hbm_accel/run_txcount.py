@@ -44,7 +44,7 @@ def run(out):
    if result.returncode:break
   row['pass']=len(row['stages'])==2 and all(s['exit_code']==0 for s in row['stages'])
   results.append(row)
- record={'schema':'opentallas.ha1.txcount.run.v1','source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+ record={'schema':'opentallas.ha1.txcount.run.v1','source_commit':(subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() if (ROOT/'.git').exists() else (ROOT/'SOURCE_COMMIT').read_text().strip()),
          'input_sha256':pins,'jobs':results,'protocol_pass':all(j['pass'] for j in results),
          'exact_real_program':'UNMEASURED','serial_path_including_wire_CDC_credits_refresh':'UNMEASURED',
          'boundary_target_cycles':47,'priced_boundary_cycles':78,'measured_composed_gain':None,
