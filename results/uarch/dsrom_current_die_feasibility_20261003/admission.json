@@ -23,6 +23,7 @@
   },
   "memory_policy": "admit.sh +150GB shared reserve, admission wait only, no running memory/time cap",
   "model_replay_byteidentical": true,
+  "native_instance_track_gate": "all2048element+14336cfg source origins/masters required, no empty master bypass",
   "native_pin_scope": "q/BF source-port interface abstracts plus actual v1 cfg macro; full co-resident OBS and element hard abstract still separate",
   "old_runs_untouched": true,
   "pipeline_owner": "Epicurus",
@@ -30,7 +31,7 @@
   "source_sha256": {
     "jobs/dsrom_current_die_20261003/run_job.sh": "dc4e2962fee361fe681552075ff1f684389f8c49ece8cab70c0ead8a2a3a6f48",
     "tests/test_dsrom_current_die_feasibility.py": "5a9c5791e6ff65735fb010d7d50af3d67c085e464fb2b7ee27576c86b4f57605",
-    "tools/dsrom_current_die_feasibility.py": "23f4bff53a578f1c987a8da23235cf807af62a386dafbc8faff0c12b3467fb63"
+    "tools/dsrom_current_die_feasibility.py": "cbf02f8a188a1a7241fd7fb0d000b1709047bc43b7bde28fd152db051b8c042f"
   },
   "tests_pass": 6
 }

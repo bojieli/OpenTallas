@@ -82,6 +82,17 @@ def prepare_grt(out,frame,shard):
  D.geometry=lambda f,s:geometry(f,shard)
  D.build_grt=graph
  result=D.write_grt_case(out,frame,'local',16,2*8/90,.25,True)
+ # The inherited renderer predates explicit element clock/reset ports. Add the
+ # requested pins in two reserved bottom-edge bundled tracks outside the data span.
+ text=(out/'blocks.lef').read_text();pk=.048*16
+ for name,span in [(f'dsq_elem_{frame}_b',D.Q_PIN_SPAN[0]),('dsbf_elem_b',.05*D.BF_FRAME[0])]:
+  start=text.index('MACRO '+name+'\n');end=text.index('END '+name+'\n',start)
+  chunk=text[start:end];pins=''
+  for j,pin in enumerate(('clk','rst_n')):
+   x=(math.floor(span/pk)-4+j+.25)*pk
+   pins+=f'  PIN {pin}[0]\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n'+D.rect(x-pk/4,0,x+pk/4,pk)+f'\n    END\n  END {pin}[0]\n'
+  chunk=chunk.replace('  OBS\n',pins+'  OBS\n');text=text[:start]+chunk+text[end:]
+ (out/'blocks.lef').write_text(text)
  result.update(PHW=10,control_bits=CTL,R49_c9_bound=True,clock_and_reset_explicit=True,model_only=False)
  (out/'manifest.json').write_text(json.dumps(result,indent=2)+'\n')
  # Initial floorplan limits: source instance census and native pins are checked separately.
@@ -98,6 +109,20 @@ def prepare_pin(out,frame,shard):
   i=next(e for e in g['elems'] if e.kind==kind)
   (out/f'{kind}.lef').write_text(D.element_real_lef('ds_'+kind,kind,i.w,i.h))
  (out/'cfg.lef').write_bytes((ROOT/CFGLEF).read_bytes())
+ import check_macro_track_alignment as track
+ masters={}
+ for kind in ('q','bf','cfg'):
+  mm=track.parse_lef((out/f'{kind}.lef').read_text())
+  if len(mm)!=1:raise ValueError('missing/duplicate requested native master')
+  masters[kind]=mm[0]
+ gate=[]
+ for inst in g['elems']+g['cfgs']:
+  kind=inst.kind
+  checked=track.check_placement(masters[kind],'R0',round(inst.x*1000),round(inst.y*1000))
+  bad=sum(layer['offtrack'] for layer in checked['layers'].values())
+  if bad:raise ValueError(f'native instance offtrack {inst.name}: {bad}')
+  gate.append({'instance':inst.name,'master':masters[kind]['name'],'origin_nm':[round(inst.x*1000),round(inst.y*1000)],'offtrack':bad})
+ (out/'macro_track_gate.json').write_text(json.dumps({'requested_masters':[m['name'] for m in masters.values()],'actual_instance_census':len(gate),'instances':gate,'verdict':'PASS','hook':'ot_mts phase-equivalent R0 joint432nm source origins; no reframe'},sort_keys=True)+'\n')
  cases=[]
  for name,w,h in [('q',D.FRAMES[frame][0],D.FRAMES[frame][1]),('bf',*D.BF_FRAME),('cfg',38.016,62.910)]:
   master='ot_rom_4096x72_m8' if name=='cfg' else 'ds_'+name
