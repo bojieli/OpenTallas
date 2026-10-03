@@ -8,6 +8,12 @@ from qwen_rom_persistent_kv_g0 import Owner
 from qwen_rom_kv_launch_readiness import FIELDS,instruction
 from qwen_rom_kv_production_join import producer_byte
 
+def file_sha256(path):
+ h=hashlib.sha256()
+ with path.open('rb') as f:
+  for chunk in iter(lambda:f.read(1024*1024),b''):h.update(chunk)
+ return h.hexdigest()
+
 def replay(bundle,raw,require_reads=False):
  if (bundle['su_width'],bundle['ar_words'],bundle['TP'],bundle['groups'])!=(64,128,4,6144):raise ValueError('frozen historical program/config only')
  gates={};snapshots={};tickets={};writers={};controls={};lifetimes={};memory={};last_me={};last_write_edge={};read_slots={};read_edges={}
@@ -123,6 +129,6 @@ def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--bundle',type=Path,required=True);p.add_argument('--raw',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--require-reads',action='store_true');a=p.parse_args()
  b=json.loads(gzip.decompress(a.bundle.read_bytes()))
  with a.raw.open() as raw:result=replay(b,raw,require_reads=a.require_reads)
- with a.raw.open('rb') as raw:result['raw_sha256']=hashlib.file_digest(raw,'sha256').hexdigest()
+ result['raw_sha256']=file_sha256(a.raw)
  with a.out.open('x') as f:json.dump(result,f,sort_keys=True,indent=2);f.write('\n')
 if __name__=='__main__':main()
