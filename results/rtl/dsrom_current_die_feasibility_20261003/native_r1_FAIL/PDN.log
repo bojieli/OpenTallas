@@ -1,0 +1,45 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/load_125361_78840.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_127710_75600.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_38016_62910.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_500000_10800.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_500000_401760.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_500000_198720.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_500000_25920.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_425088_366696.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_425088_440100.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_425088_144720.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_425088_38880.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_490590_484920.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_498744_457920.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_498744_498960.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_498744_363960.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_498744_10800.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_315360_440640.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_315360_471600.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_315360_440208.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_440122_484920.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_449589_484920.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_500000_500000.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_204930_172800.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_106110_424170.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/load_18144_396360.lef, created 1 library cells
+[INFO ODB-0127] Reading DEF file: /work/top.def
+[INFO ODB-0128] Design: dsrom_current_pdn
+[INFO ODB-0131]     Created 34604 components and 69208 component-terminals.
+[INFO ODB-0134] Finished DEF file: /work/top.def
+[INFO IFP-0001] Added 96296 rows of 611111 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 33000.000 26000.000 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 32999.994 25999.920 ) um
+[INFO IFP-0102] Core area:                    857997204.000 um^2
+[INFO IFP-0103] Total instances area:         394133586.992 um^2
+[INFO IFP-0104] Effective utilization:                0.459
+[INFO IFP-0105] Number of instances:                  34604
+[ERROR PDN-0107] Width (8.0000 um) specified for layer M8 is greater than maximum width (2.0000 um).
+Error: run.tcl, 38 PDN-0107

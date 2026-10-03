@@ -39,6 +39,8 @@ def test_native_pin_cases_have_real_macro_and_positive_pin_count(tmp_path):
  assert all(c['signal_pins']>0 for c in cases)
  assert cases[-1]['abstract_scope']=='actual v1 macro'
  assert 'pin_access' in (tmp_path/'pin/cfg.tcl').read_text()
+ assert '-bottom_routing_layer' not in (tmp_path/'pin/cfg.tcl').read_text()
+ assert 'set_routing_layers -signal M1-M9' in (tmp_path/'pin/cfg.tcl').read_text()
 
 def test_PDN204_power_conserved_and_mesh_debit(tmp_path):
  r=C.prepare_pdn(tmp_path/'pdn','D',0)
@@ -48,3 +50,6 @@ def test_PDN204_power_conserved_and_mesh_debit(tmp_path):
  powers=json.loads((tmp_path/'pdn/power_map.json').read_text())
  assert sum(powers.values())==pytest.approx(204)
  assert all(p>0 for p in powers.values())
+ assert r['mesh_width_um']<=r['native_max_width_um']
+ assert r['actual_mesh_fraction']<=r['M8_M9_each_PG_fraction']
+ assert r['mesh_pitch_um']/.08==pytest.approx(round(r['mesh_pitch_um']/.08))

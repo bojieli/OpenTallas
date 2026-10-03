@@ -132,7 +132,7 @@ def prepare_pin(out,frame,shard):
   signal=[p for p in pins if p not in ('VDD','VSS')]
   definition=['VERSION 5.8 ;','DIVIDERCHAR "/" ;','BUSBITCHARS "[]" ;',f'DESIGN pin_{name} ;','UNITS DISTANCE MICRONS 1000 ;',f'DIEAREA ( 0 0 ) ( {round((w+8.64)*1000)} {round((h+8.64)*1000)} ) ;','COMPONENTS 1 ;',f'- one {master} + FIXED ( 4320 4320 ) N ;','END COMPONENTS',f'NETS {len(signal)} ;']+[f'- n{k} ( one {p} ) ;' for k,p in enumerate(signal)]+['END NETS','END DESIGN']
   (out/f'{name}.def').write_text('\n'.join(definition)+'\n')
-  (out/f'{name}.tcl').write_text(header+f'read_def /work/{name}.def\nsource {D.PLAT}/openRoad/make_tracks.tcl\npin_access -bottom_routing_layer M1 -top_routing_layer M9 -verbose 1\nwrite_db /work/{name}_pin.odb\nputs "CURRENT_NATIVE_PIN_ACCESS_DONE {name} {len(signal)}"\nexit\n')
+  (out/f'{name}.tcl').write_text(header+f'read_def /work/{name}.def\nsource {D.PLAT}/openRoad/make_tracks.tcl\nset_routing_layers -signal M1-M9\npin_access -verbose 1\nwrite_db /work/{name}_pin.odb\nputs "CURRENT_NATIVE_PIN_ACCESS_DONE {name} {len(signal)}"\nexit\n')
   cases.append({'kind':name,'master':master,'signal_pins':len(signal),'abstract_scope':'actual v1 macro' if name=='cfg' else 'source-port model interface, not hardened element abstract'})
  (out/'manifest.json').write_text(json.dumps({'cases':cases,'all_instances':len(g['elems'])+len(g['cfgs']),'full_die_context_pin_access_qualified':False,'selected_clock_leaves_not_replaced':True},indent=2)+'\n')
  return cases
@@ -169,8 +169,8 @@ add_global_connection -net VSS -inst_pattern .* -pin_pattern ^VSS$ -ground
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name die -voltage_domains CORE -pins M9
-add_pdn_stripe -grid die -layer M8 -width 8 -spacing 37 -pitch 90 -offset 2
-add_pdn_stripe -grid die -layer M9 -width 8 -spacing 37 -pitch 90 -offset 2
+add_pdn_stripe -grid die -layer M8 -width 2 -spacing 9.28 -pitch 22.56 -offset 2
+add_pdn_stripe -grid die -layer M9 -width 2 -spacing 9.28 -pitch 22.56 -offset 2
 add_pdn_connect -grid die -layers {M8 M9}
 pdngen
 read_liberty '''+D.PLAT+'''/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
@@ -186,7 +186,7 @@ puts "CURRENT_PDN204_DONE"
 exit
 '''
  (out/'run.tcl').write_text(t)
- m={'total_W':sum(power.values()),'loads':len(comps),'masters':len(lefs),'current_A':204/.7,'allocation':'area-proportional source-shape capacity screen; not measured switching map','M8_M9_each_PG_fraction':16/90,'bumps_pitch_um':90,'load_pin_to_internal_M7_upfeed_qualified':False,'global_source_mesh_case':True,'full_die_PG_admitted':False,'actual_macro_local_grid_not_replaced':True}
+ m={'total_W':sum(power.values()),'loads':len(comps),'masters':len(lefs),'current_A':204/.7,'allocation':'area-proportional source-shape capacity screen; not measured switching map','M8_M9_each_PG_fraction':16/90,'actual_mesh_fraction':4/22.56,'mesh_width_um':2,'mesh_pitch_um':22.56,'native_max_width_um':2,'original_reserved_metal_fraction_not_reduced':True,'bumps_pitch_um':90,'load_pin_to_internal_M7_upfeed_qualified':False,'global_source_mesh_case':True,'full_die_PG_admitted':False,'actual_macro_local_grid_not_replaced':True}
  if abs(m['total_W']-204)>1e-7:raise ValueError('power conservation')
  (out/'manifest.json').write_text(json.dumps(m,indent=2)+'\n');return m
 

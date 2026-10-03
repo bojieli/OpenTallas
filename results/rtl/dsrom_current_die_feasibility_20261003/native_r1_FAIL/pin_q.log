@@ -1,0 +1,15 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/q.lef, created 1 library cells
+[INFO ODB-0127] Reading DEF file: /work/q.def
+[INFO ODB-0128] Design: pin_q
+[INFO ODB-0131]     Created 1 components and 756 component-terminals.
+[INFO ODB-0133]     Created 754 nets and 754 connections.
+[INFO ODB-0134] Finished DEF file: /work/q.def
+[ERROR DRT-0511] -bottom_routing_layer is deprecated. Use set_routing_layers command instead.
+Error: q.tcl, 6 DRT-0511
