@@ -1,0 +1,54 @@
+{
+  "schema": "QWEN_ACTIVE_ISSUER_HANDOFF_R1",
+  "source_base": "7b4d51a08",
+  "endpoint_directory_sha256": "9f0d0371f5568c7540969336a88acc7a2cdd1037f98d4d7d29b16632b5dc8624",
+  "helper_sha256": "a9df7178a215f0ba28111015bdd142f57db644702c2d25cbcc53848e6c2f05a5",
+  "test_sha256": "29c77e151c8e7480ca89729029c45f2672a05602cf4c7be6af850759a1e8aa7a",
+  "source_native_sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+  "active_spans_sha256": "4c623d310fd56b5681ac9112c1347571c7cb49b587a73defb86581ed806c6b87",
+  "tests": "8PASS7.060s",
+  "all72groups_exact_Popper_plan_crosscheck": "PASS",
+  "checkpoint_extents_changed": false,
+  "numerical_execution": false,
+  "source_values": "Existing raw trained extents retained; helper consumes shapes/homes only",
+  "producer_pages": {
+    "per_group": 8,
+    "total": 576,
+    "required_two_copy_ACKs": 1152,
+    "actual_mirror_ACK_receipts": null
+  },
+  "decoded_outputs": {
+    "per_group_active_FP32_words": 1024,
+    "per_group_32B_spill_sectors": 128,
+    "total_32B_spill_sectors": 9216,
+    "actual_visibility_receipts": null
+  },
+  "source_metadata_order": "bitmap-before-record in actual BoundKVStorage; hold writer lock and exclude readers through both visibility receipts; do not reorder golden source",
+  "partial_RF_SCORES_EXP_per_group": {
+    "active_words_each": 16,
+    "old_tail_bytes_each": 448,
+    "initialization_or_preservation_receipts": null
+  },
+  "old_sector_positive_receipt_gate": "verify_old_origin accepts explicitly recorded full-sector initialization-visible or backend-refill capture matched by backendSHA/generation/rank/address/sequence/payload; synthetic positive tests establish interface only",
+  "old_sector_production_status": "UNKNOWN_MISSING_ACTUAL_OLD_SECTOR_ORIGIN",
+  "to_Popper": [
+    "Use exact source TileWords.key active spans, including SM0/1 spill sectors and producer eight RF vectors",
+    "Bind old origin and capture to actual backend event journal and sector validity ledger; no intervening invalidation/overwrite may be ignored",
+    "Actual paired SRAM write_go and accepted hostACK receipts are required; software mirror counters are not ACKs"
+  ],
+  "to_Dewey": [
+    "Use actual128decoded spill sectors/group, not full-context allocated4194304 words/K or V",
+    "SCORES/EXP active16 word partial RF vector tails need initialized or preserved old mirrors",
+    "Join same bank ownership and finite stage intervals once; no inferred cycles or PHYcommands"
+  ],
+  "remaining": [
+    "actual source issuer event hook and active-span accepted transfers",
+    "positive backend old-sector init/refill journal and no-intervening-overwrite proof",
+    "actual RF mirror and decoded-spill visibility ACKs",
+    "actual SCORES/EXP_SUM/PV arithmetic result/completion through parent reverse",
+    "complete priced port/cycle/boundary/replica/area/crossing model before any engineRTL"
+  ],
+  "hardware_build_ready": false,
+  "whole_token_production_journal": "UNKNOWN_NOT_CAPTURED",
+  "physical_credit": false
+}
