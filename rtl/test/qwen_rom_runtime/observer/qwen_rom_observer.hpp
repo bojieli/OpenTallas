@@ -32,6 +32,11 @@ struct QromObserver {
  void write(long edge,size_t stage,int rank,unsigned address,unsigned value){
   std::fprintf(file,"W %ld %zu %d %u %08x\n",edge,stage,rank,address,value);
  }
+ void read(long edge,size_t stage,int rank,unsigned tile,unsigned group,unsigned address,const unsigned* values){
+  std::fprintf(file,"R %ld %zu %d %u %u %u",edge,stage,rank,tile,group,address);
+  for(unsigned lane=0;lane<16;++lane)std::fprintf(file," %08x",values[lane]);
+  std::fputc('\n',file);
+ }
  template<class Values>void snapshot(long edge,size_t stage,int rank,const Values& kv){
   // Actual committed FP32 host values, not reconstructed producer output.
   for(unsigned kind=0;kind<2;++kind)for(unsigned head=0;head<2;++head)for(unsigned dim=0;dim<128;++dim){

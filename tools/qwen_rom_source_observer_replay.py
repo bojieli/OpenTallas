@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Replay passive historical TP4-pos0 exports; no current physical transfer."""
-import argparse,gzip,json
+import argparse,gzip,json,hashlib
 from pathlib import Path
 from qwen_rom_program_identity import decoded,sha
 from qwen_rom_accepted_stage_journal import DispatchJournal
@@ -8,21 +8,21 @@ from qwen_rom_persistent_kv_g0 import Owner
 from qwen_rom_kv_launch_readiness import FIELDS,instruction
 from qwen_rom_kv_production_join import producer_byte
 
-def replay(bundle,raw):
+def replay(bundle,raw,require_reads=False):
  if (bundle['su_width'],bundle['ar_words'],bundle['TP'],bundle['groups'])!=(64,128,4,6144):raise ValueError('frozen historical program/config only')
- gates={};snapshots={};tickets={};writers={};controls={};lifetimes={}
+ gates={};snapshots={};tickets={};writers={};controls={};lifetimes={};memory={};last_me={};last_write_edge={};read_slots={};read_edges={}
  for layer in range(36):
   for rank in range(4):
    key=f'L{layer}/die{rank}';f=bundle['stages'][key]['files'];owner=Owner(0,rank,layer,0)
    g=DispatchJournal(decoded(f['program.hex']),decoded(f['segments.hex']),owner,0,0)
-   gates[(layer,rank)]=g;controls[(layer,rank)]=[];lifetimes[(layer,rank)]={'producer_accepts':[],'KV_consumer_accepts':[],'descriptor_events':[],'committed_writes':[],'first_committed_write_edge':None,'last_committed_write_edge':None,'snapshot_edge':None};snapshots[(layer,rank)]={};tickets[(layer,rank)]=0
+   gates[(layer,rank)]=g;controls[(layer,rank)]=[];lifetimes[(layer,rank)]={'producer_accepts':[],'KV_consumer_accepts':[],'descriptor_events':[],'committed_writes':[],'first_committed_write_edge':None,'last_committed_write_edge':None,'snapshot_edge':None,'source_port_reads':{},'current_row_first_read':{}};snapshots[(layer,rank)]={};tickets[(layer,rank)]=0
    addresses={}
    for pc,aa in g.stage.producer.expected.items():
     for a in aa:
      if a in addresses:raise ValueError('ambiguous producer source address partition')
      addresses[a]=pc
-   writers[(layer,rank)]=addresses
- for line in raw.splitlines():
+   writers[(layer,rank)]=addresses;memory[(layer,rank)]={};last_write_edge[(layer,rank)]=-1
+ for line in (raw.splitlines() if isinstance(raw,str) else raw):
   if not line:raise ValueError('empty raw record')
   a=line.split();kind=a[0]
   if len(a)<4:raise ValueError('short source record')
@@ -58,7 +58,28 @@ def replay(bundle,raw):
    else:raise ValueError('actual issue unit')
    g.event(e)
    if unit==2 and pc in g.stage.producer.expected:lifetimes[key]['producer_accepts'].append({'pc':pc,'ticket':ticket,'edge':edge})
+   if unit==1:last_me[key]=e
    if unit==1 and e['fields']['wsrc']:lifetimes[key]['KV_consumer_accepts'].append({'pc':pc,'ticket':ticket,'edge':edge,'fields':e['fields'],'ib379':e['ib379']})
+  elif kind=='R':
+   if len(a)!=23:raise ValueError('actual16lane source KV read width')
+   tile,group,address=map(int,a[4:7]);values=[int(v,16) for v in a[7:]]
+   if not 0<=tile<1536 or not 0<=group<4 or not 0<=address<1<<24 or any(not 0<=v<1<<32 for v in values):raise ValueError('source KV read geometry')
+   if edge<read_edges.get(key,-1):raise ValueError('source read order')
+   if edge!=read_edges.get(key):read_edges[key]=edge;read_slots[key]=set()
+   if (tile,group) in read_slots[key]:raise ValueError('duplicate source read port sameedge')
+   read_slots[key].add((tile,group))
+   e=last_me.get(key)
+   if e is None or not e['fields']['wsrc'] or edge<e['edge']:raise ValueError('source read without accepted KV consumer')
+   if edge<=last_write_edge[key]:raise ValueError('source read must precede sameedge commit')
+   for lane,value in enumerate(values):
+    scalar=address*16+lane
+    if value!=memory[key].get(scalar,0):raise ValueError('actual KV read differs from committed host state')
+    if scalar in writers[key]:
+     if scalar not in memory[key]:raise ValueError('current row read before producer commit')
+     lifetimes[key]['current_row_first_read'].setdefault(str(scalar),{'edge':edge,'consumer_pc':e['pc'],'ticket':e['ticket'],'tile':tile,'group':group})
+   reads=lifetimes[key]['source_port_reads'].setdefault(str(e['pc']),{'first_edge':edge,'last_edge':edge,'word_reads':0})
+   if edge<reads['last_edge']:raise ValueError('source read order')
+   reads['last_edge']=edge;reads['word_reads']+=1
   elif kind=='W':
    if len(a)!=6:raise ValueError('lane record width')
    address=int(a[4]);value=int(a[5],16)
@@ -68,6 +89,7 @@ def replay(bundle,raw):
    if lifetimes[key]['first_committed_write_edge'] is None:lifetimes[key]['first_committed_write_edge']=edge
    lifetimes[key]['last_committed_write_edge']=edge
    lifetimes[key]['committed_writes'].append({'pc':pc,'ticket':g.stage.issue_ticket[pc],'edge':edge,'address':address,'fp32_hex':f'{value:08x}','fp8':producer_byte(value)})
+   memory[key][address]=value;last_write_edge[key]=edge
    g.event(dict(common,kind='kv_lane_write',pc=pc,word_sha256=sha(f'{g.stage.words[pc]:0256x}'.encode()),ticket=g.stage.issue_ticket[pc],accepted_lane_write=1,address=address,fp32_bits=value))
   elif kind=='K':
    if len(a)!=6:raise ValueError('snapshot record width')
@@ -89,6 +111,8 @@ def replay(bundle,raw):
   if not drains:raise ValueError('source ME idle after last KV consumer absent')
   life['first_source_ME_idle_after_last_KV_consumer']=min(drains);life['HBM_or_window_owner_reader_drain']=None
   life['producer_completions']=[{'pc':pc,'ticket':g.stage.issue_ticket[pc],'accepted_edge':next(e['edge'] for e in life['producer_accepts'] if e['pc']==pc),'first_write_edge':min(w['edge'] for w in life['committed_writes'] if w['pc']==pc),'last_write_edge':max(w['edge'] for w in life['committed_writes'] if w['pc']==pc),'write_count':len(aa)} for pc,aa in sorted(g.stage.producer.expected.items())]
+  life['source_read_deadlines_complete']=len(life['current_row_first_read'])==512 and set(life['source_port_reads'])=={str(e['pc']) for e in life['KV_consumer_accepts']}
+  if require_reads and not life['source_read_deadlines_complete']:raise ValueError('all current row reads and consumer deadlines required')
   state['source_lifetimes']=life;states[f'L{l}/die{r}']=state
  return {'status':'PASS_HISTORICAL_DISPATCH_PRODUCER_SNAPSHOT_CONSISTENCY','states':states,
   'source_provenance_independently_qualified':False,'runtime_source_owner_instantiated':False,
@@ -96,7 +120,9 @@ def replay(bundle,raw):
   'SMIN6_plus55_physical_transfer':False,'physical_adoption':False,'provider_calendar_adoption':False}
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--bundle',type=Path,required=True);p.add_argument('--raw',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
- b=json.loads(gzip.decompress(a.bundle.read_bytes()));raw=a.raw.read_bytes();result=replay(b,raw.decode());result['raw_sha256']=sha(raw)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--bundle',type=Path,required=True);p.add_argument('--raw',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--require-reads',action='store_true');a=p.parse_args()
+ b=json.loads(gzip.decompress(a.bundle.read_bytes()))
+ with a.raw.open() as raw:result=replay(b,raw,require_reads=a.require_reads)
+ with a.raw.open('rb') as raw:result['raw_sha256']=hashlib.file_digest(raw,'sha256').hexdigest()
  with a.out.open('x') as f:json.dump(result,f,sort_keys=True,indent=2);f.write('\n')
 if __name__=='__main__':main()

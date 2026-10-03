@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Validate a reviewed historical observation replay, including all144 saved Xs."""
-import argparse,gzip,json,re
+import argparse,gzip,json,re,hashlib
 from pathlib import Path
 from qwen_rom_program_identity import ROOT,decoded,sha
 from qwen_rom_source_observer_replay import replay
@@ -20,8 +20,9 @@ def verify(out,bundle):
  for name,fields in done:
   parts=dict(p.split('=',1) for p in fields.split() if '=' in p)
   if any(parts[k]!='0' for k in ('seq_fault','core_fault','coll_fault')):raise ValueError('source terminal fault')
- raw=(out/'accepted-state.raw').read_bytes();joined=replay(bundle,raw.decode())
- joined.update(retained_X_checks=checks,raw_sha256=sha(raw),capture_sha256=sha(CAP.read_bytes()),status='PASS_HISTORICAL144_SOURCE_PRODUCER_STATE_OBSERVATION_ONLY',current_source_physical_qualified=False,full_token_repeated=False)
+ with (out/'accepted-state.raw').open() as raw:joined=replay(bundle,raw,require_reads=True)
+ with (out/'accepted-state.raw').open('rb') as raw:raw_sha=hashlib.file_digest(raw,'sha256').hexdigest()
+ joined.update(retained_X_checks=checks,raw_sha256=raw_sha,capture_sha256=sha(CAP.read_bytes()),status='PASS_HISTORICAL144_SOURCE_PRODUCER_STATE_OBSERVATION_ONLY',current_source_physical_qualified=False,full_token_repeated=False)
  # Archive/header/source pins must separately be verified before/after by supervisor.
  joined['external_source_archive_stability_receipt_required']=True
  return joined

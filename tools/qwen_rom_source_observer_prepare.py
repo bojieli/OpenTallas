@@ -42,7 +42,7 @@ static void qrom_pre(QromObserver& obs, Vdie& t,long edge,size_t stage,int rank)
 #endif
 '''
  src=once(src,'#include "Vdie.h"','#include "Vdie.h"\n#include "qwen_rom_observer.hpp"')
- src=once(src,'int main(int argc, char** argv) {',accessor+'\nint main(int argc, char** argv) {\n#if QROM_OBSERVER\n    static_assert(D==4 && G==6144 && SW==64 && TCUT==7 && CB==5 && XVM==1, "observer frozen TP4 source geometry");\n    QromObserver observer;\n#endif')
+ src=once(src,'int main(int argc, char** argv) {',accessor+'\nint main(int argc, char** argv) {\n#if QROM_OBSERVER\n    static_assert(D==4 && G==6144 && W==16 && TG==4 && SW==64 && TCUT==7 && CB==5 && XVM==1, "observer frozen TP4 source geometry");\n    QromObserver observer;\n#endif')
  src=once(src,'                stage_done = true;','''                stage_done = true;
 #if QROM_OBSERVER
                 if(cur<36)for(int d=0;d<D;++d)observer.snapshot(edges,cur,d,mem[d].kv);
@@ -58,6 +58,7 @@ static void qrom_pre(QromObserver& obs, Vdie& t,long edge,size_t stage,int rank)
                 if(cur<36)observer.write(edges-1,cur,d,w.a,w.v);
 #endif
             }''')
+ src=once(src,'                            for (int j = 0; j < W; j++) r.kv_q[(i * TG + g) * W + j] = (a < KV_ELEMS / W) ? m.kv[a * W + j] : 0;', '                            for (int j = 0; j < W; j++) r.kv_q[(i * TG + g) * W + j] = (a < KV_ELEMS / W) ? m.kv[a * W + j] : 0;\n#if QROM_OBSERVER\n                            if(cur<36)observer.read(edges,cur,d,i,g,a,&r.kv_q[(i * TG + g) * W]);\n#endif')
  out.mkdir(exist_ok=False)
  stage_bytes=decoded(cap['files']['stages.txt'])
  rows=stage_bytes.decode().splitlines()

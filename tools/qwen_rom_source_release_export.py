@@ -31,8 +31,10 @@ def export(replay):
             raise ValueError('producer completion partition')
         releases[key] = {
             'source_lifetimes': life,
-            'deadline_scope': 'accepted ME consumer edge in historical source clock; not a future provider deadline',
+            'deadline_scope': 'actual source KV host read edge when supplied; accepted ME edge otherwise; no future provider deadline',
+            'actual_source_read_deadlines_complete': life.get('source_read_deadlines_complete',False),
             'provider_owner_generation': None,
+            'attention_effective_lane_mask_qualified': False,
             'next_layer_prefetch_release': None,
             'published_prefix_masked_macro_visible': None,
             'window_reader_drain_reverse_grant_retire': None,

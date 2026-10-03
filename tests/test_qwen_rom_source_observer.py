@@ -37,7 +37,7 @@ class ObserverTests(unittest.TestCase):
   return '\n'.join(records)+'\n'
  def test_prepare_has_no_build(self):
   with tempfile.TemporaryDirectory() as td:
-   p=pathlib.Path(td)/'prep';r=P.prepare(p);self.assertFalse(r['build_launched']);self.assertFalse(r['default_enabled']);s=(p/'qwen_rom_rt_observed.cpp').read_text();self.assertIn('observer.snapshot',s);self.assertIn('observer.write(edges-1',s)
+   p=pathlib.Path(td)/'prep';r=P.prepare(p);self.assertFalse(r['build_launched']);self.assertFalse(r['default_enabled']);s=(p/'qwen_rom_rt_observed.cpp').read_text();self.assertIn('observer.snapshot',s);self.assertIn('observer.write(edges-1',s);self.assertIn('observer.read(edges,cur,d,i,g,a',s)
  def test_exclusive_outputs(self):
   with tempfile.TemporaryDirectory() as td:
    with self.assertRaises(FileExistsError):P.prepare(pathlib.Path(td))
@@ -80,6 +80,29 @@ class ObserverTests(unittest.TestCase):
  def test_release_missing_rank_rejected(self):
   r=R.replay(self.bundle,self.raw());del r['states']['L35/die3']
   with self.assertRaisesRegex(ValueError,'all144'):E.export(r)
+ def read_raw(self):
+  # Fabricated reads of current row; never actual provider ownership evidence.
+  records=[]
+  words=sorted({(h*512*128*16+d*16)//16 for h in range(2) for d in range(128)} | {(2097152+h*8192*128+d)//16 for h in range(2) for d in range(128)})
+  for line in self.raw().splitlines():
+   records.append(line);a=line.split()
+   if a[0]=='I' and a[7]=='1' and int(a[11]):
+    for n,word in enumerate(words):records.append('R '+' '.join(a[1:4])+f' {n//4} {n%4} {word} '+' '.join(['00000000']*16))
+  return '\n'.join(records)+'\n'
+ def test_source_read_deadlines_all144_fixture(self):
+  r=R.replay(self.bundle,iter(self.read_raw().splitlines()),require_reads=True)
+  self.assertTrue(all(s['source_lifetimes']['source_read_deadlines_complete'] for s in r['states'].values()))
+  result=E.export(r)
+  self.assertTrue(result['releases']['L0/die0']['actual_source_read_deadlines_complete'])
+  self.assertIsNone(result['releases']['L0/die0']['window_reader_drain_reverse_grant_retire'])
+ def test_source_read_return_mutant_rejected(self):
+  raw=self.read_raw();line=next(l for l in raw.splitlines() if l.startswith('R '));raw=raw.replace(line,line[:-8]+'3f800000',1)
+  with self.assertRaisesRegex(ValueError,'read differs'):R.replay(self.bundle,raw,require_reads=True)
+ def test_source_read_missing_deadlines_rejected(self):
+  with self.assertRaisesRegex(ValueError,'consumer deadlines required'):R.replay(self.bundle,self.raw(),require_reads=True)
+ def test_source_duplicate_read_port_rejected(self):
+  raw=self.read_raw();line=next(l for l in raw.splitlines() if l.startswith('R '));raw=raw.replace(line,line+'\n'+line,1)
+  with self.assertRaisesRegex(ValueError,'duplicate source read'):R.replay(self.bundle,raw,require_reads=True)
  def test_native_defaultoff_and_formatter(self):
   with tempfile.TemporaryDirectory() as td:
    p=pathlib.Path(td);hpp=P.ROOT/'rtl/test/qwen_rom_runtime/observer/qwen_rom_observer.hpp'
@@ -87,10 +110,10 @@ class ObserverTests(unittest.TestCase):
    (p/'off.cpp').write_text(f'#include "{hpp}"\nint main(){{return 0;}}\n')
    subprocess.run(['g++','-std=c++20','-fsyntax-only',str(p/'off.cpp')],check=True,capture_output=True)
    (p/'Vdie___024root.h').write_text('#pragma once\n')
-   (p/'on.cpp').write_text(f'#define QROM_OBSERVER 1\n#include "{hpp}"\nstruct State{{unsigned at(unsigned)const{{return 0;}}}};\nint main(){{QromObserver o;unsigned f[24]={{}};o.dispatch(\'S\',1,0,0,0,0,17);o.issue(2,0,0,0,0,0,1,f);o.write(3,0,0,0,0);o.snapshot(4,0,0,State{{}});}}\n')
+   (p/'on.cpp').write_text(f'#define QROM_OBSERVER 1\n#include "{hpp}"\nstruct State{{unsigned at(unsigned)const{{return 0;}}}};\nint main(){{QromObserver o;unsigned f[24]={{}};unsigned v[16]={{}};o.read(0,0,0,0,0,0,v);o.dispatch(\'S\',1,0,0,0,0,17);o.issue(2,0,0,0,0,0,1,f);o.write(3,0,0,0,0);o.snapshot(4,0,0,State{{}});}}\n')
    subprocess.run(['g++','-std=c++20','-O2','-I'+str(p),str(p/'on.cpp'),'-o',str(p/'unit')],check=True,capture_output=True)
    env=dict(os.environ,RT_QROM_JOURNAL=str(p/'raw'))
    subprocess.run([str(p/'unit')],env=env,check=True,capture_output=True)
-   lines=(p/'raw').read_text().splitlines();self.assertEqual(len(lines),515);self.assertEqual(lines[0],'S 1 0 0 0 0 0000000000000011');self.assertEqual(len(lines[1].split()),32)
+   lines=(p/'raw').read_text().splitlines();self.assertEqual(len(lines),516);self.assertEqual(len(lines[0].split()),23);self.assertEqual(lines[1],'S 1 0 0 0 0 0000000000000011');self.assertEqual(len(lines[2].split()),32)
    self.assertNotEqual(subprocess.run([str(p/'unit')],env=env,capture_output=True).returncode,0)
 if __name__=='__main__':unittest.main()
