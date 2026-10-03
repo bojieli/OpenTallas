@@ -41,8 +41,93 @@ def choose_jobs(available,requested=None):
     if jobs<1 or jobs>free:raise ValueError('REQUESTED_JOBS_EXCEED_MEASURED_CPU_HEADROOM')
     return jobs
 
+
+def connected_runtime(binary, bindings, socket_path, out):
+    """Existing fixture attached to the actual enclosing driver's two pipes.
+
+    No compiler, arithmetic, memory provider, reset or handler is substituted.
+    All sixteen handlers come from the source-owner factory. Socket EOF is
+    recorded as session closure, never as full-token qualification.
+    """
+    import importlib
+    import sys
+    if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
+    from tools.gpu_sys.canonical_qwen_simulator import EnclosingPins, build
+    from tools.gpu_sys.canonical_qwen_transport import UnixDeliveryServer
+    from w2_fullnc6_fixture import ConnectedReceiptObserver
+    module, separator, name = bindings.partition(':')
+    if not separator or not module or not name:
+        raise ValueError('connected bindings must be actual module:factory')
+    factory = getattr(importlib.import_module(module), name)
+    if not callable(factory):
+        raise ValueError('actual connected factory missing')
+    if subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT,text=True).strip():
+        raise ValueError('connected fixture source dirty')
+    if not binary.is_file():
+        raise ValueError('actual connected binary missing')
+    if socket_path.exists():
+        raise ValueError('existing connected socket is owned; refuse launch')
+    out.mkdir()
+    record = dict(status='STARTING_CONNECTED', pid=os.getpid(),
+        fixture_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        binary=str(binary),binary_sha256=sha(binary),bindings=bindings,
+        socket=str(socket_path),physical_or_fulltoken_admission=False)
+    def save():
+        (out/'record.json').write_text(json.dumps(record,indent=2)+'\n')
+    save()
+    process=server=observer=pins=None
+    try:
+        with (out/'driver.stderr.log').open('w') as error_log:
+            process=subprocess.Popen([str(binary)],stdin=subprocess.PIPE,stdout=subprocess.PIPE,
+                stderr=error_log,text=True,bufsize=1)
+            record['driver_pid']=process.pid;save()
+            pins=EnclosingPins(process.stdout,process.stdin)
+            bound=factory(pins)
+            runtime=build(pins,bound['authority'],bound['native_handlers'],bound['w2_ports'],enabled=True)
+            observer=ConnectedReceiptObserver(pins)
+            pins.add_edge_hook(observer)  # AFTER payload, before first edge.
+            server=UnixDeliveryServer(socket_path,runtime['handlers'],require_kv=True)
+            record['status']='CONNECTED_READY';save()
+            print('CONNECTED_READY',process.pid,socket_path,flush=True)
+            # Optional owner callback is actual boot/reset/provider enrollment.
+            # Absence drives no fence or ready: downstream RTL stays unchanged.
+            if 'enroll' in bound:
+                if not callable(bound['enroll']):
+                    raise ValueError('actual enrollment callback is not callable')
+                bound['enroll']()
+            server.serve_once()
+            if server.session.stopped or pins.stopped:
+                raise ValueError('connected source session stopped with retained debt')
+            record['status']='CONNECTED_SESSION_CLOSED_NOT_TOKEN_VERDICT'
+    except BaseException as error:
+        record.update(status='FAIL_CONNECTED',error=repr(error));raise
+    finally:
+        if observer is not None:
+            record.update(backend_accepts=observer.backend_accepts,
+                client_terminals=observer.client_terminals,external_receipts=len(observer.receipts),
+                reset_orphans=len(observer.orphans))
+        if pins is not None:record['actual_edges']=pins.edges
+        if server is not None:
+            record['delivery_sequence']=server.session.sequence
+            record['session_stopped']=server.session.stopped
+            server.close()
+        if process is not None:
+            # Only this runner's pin process: EOF closes its input loop. Never
+            # signal another owner's simulator or impose an elapsed deadline.
+            process.stdin.close()
+            process.stdout.close()
+            record['driver_rc']=process.wait()
+            if record['driver_rc'] and record['status']!='FAIL_CONNECTED':
+                record['status']='FAIL_CONNECTED_DRIVER'
+        save()
+    return record
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--connected-binary',type=Path,help='actual enclosing pin driver, no standalone compile')
+    p.add_argument('--connected-bindings',help='actual source owner module:factory(pins)')
+    p.add_argument('--connected-socket',type=Path,help='new socket for complete canonical client')
     p.add_argument('--primary-root',type=Path,default=Path('/home/ubuntu/w2-pc-exact-completion-model-20261003'))
     p.add_argument('--corrector-root',type=Path,default=Path('/tmp/Hubble-W2-corrector-rescue-20261003'))
     p.add_argument('--corrector-sha256',help='require exact admitted split-helper source hash')
@@ -57,6 +142,13 @@ def main():
     p.add_argument('--fault-matrix',action='store_true')
     p.add_argument('--full-double-pairs',action='store_true')
     a=p.parse_args()
+    connected=(a.connected_binary,a.connected_bindings,a.connected_socket)
+    if any(connected):
+        if not all(connected):p.error('connected binary/bindings/socket all required')
+        if a.reference_negative or a.fault_matrix or a.full_double_pairs:
+            p.error('connected gate does not launch standalone variants or fault matrix')
+        result=connected_runtime(a.connected_binary.resolve(),a.connected_bindings,a.connected_socket,a.out)
+        return int(result['status'].startswith('FAIL'))
     if a.full_double_pairs and not a.fault_matrix:p.error('--full-double-pairs requires --fault-matrix')
     # Run fixed fixture source, not evolving preparation changes.
     if subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT,text=True).strip():
