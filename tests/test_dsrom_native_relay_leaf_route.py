@@ -44,5 +44,12 @@ class NativeLeaf(unittest.TestCase):
         self.assertEqual(width,.09)
         self.assertNotIn(.054,widths)
         self.assertGreater(self.m['PG_M3_extra_metal_exclusion_um2'],0)
+    def test_PG_pitch_contains_both_stripes_and_clear_gaps(self):
+        pg=R.legal_PG_geometry()
+        self.assertEqual(pg['track_um'],.036)
+        self.assertEqual(pg['pitch_um'],5.616)
+        self.assertGreaterEqual(pg['spacing_um'],2.7)
+        self.assertAlmostEqual(pg['pitch_um'],2*(pg['spacing_um']+.09))
+        self.assertAlmostEqual(pg['center_step_um']/pg['track_um'],78)
 
 if __name__=='__main__':unittest.main()

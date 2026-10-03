@@ -4,7 +4,7 @@
 All eight priced relay/pad cells are matched simultaneously to enclosed-contact
 sites and checked against BOTH endpoint budgets. No global solver mutation.
 """
-import gzip, hashlib, json, re
+import gzip, hashlib, json, re, math
 from pathlib import Path
 import numpy as np
 from scipy.spatial import cKDTree
@@ -19,6 +19,15 @@ def legal_PG_width():
     layer=re.search(r'^LAYER M3\s*\n(.*?)^END M3\s*$',text,re.M|re.S)[1]
     widths=[float(v) for v in re.search(r'WIDTHTABLE\s+([0-9.\s]+);',layer)[1].split()]
     return min(v for v in widths if v>=.054), widths
+
+def legal_PG_geometry():
+    text=(BASE/'inputs/actual_tech.lef').read_text()
+    layer=re.search(r'^LAYER M3\s*\n(.*?)^END M3\s*$',text,re.M|re.S)[1]
+    track=float(re.search(r'PITCH\s+([0-9.]+)',layer)[1])
+    width,_=legal_PG_width()
+    step=round(math.ceil((2.7+width)/track)*track,9)
+    return dict(track_um=track, center_step_um=step,
+                spacing_um=round(step-width,9), pitch_um=round(2*step,9))
 
 def construct(p):
     ts = p['tasks']
@@ -68,12 +77,14 @@ def construct(p):
     die=[0,0,((end[0]-origin[0]+2159)//54+1)*54/1000,
          ((end[1]-origin[1]+2159)//540+1)*540/1000]
     width,widths=legal_PG_width()
+    pg=legal_PG_geometry()
     return dict(candidate=p['candidate'], scope=p['scope'], cells=cells,
                 branches=branches, translated_origin_DBU=origin, die_um=die,
                 fixed_native_cells=9, fixed_priced_relay_pad_cells=8,
                 standard_cell_body_um2=8*1.08*.27+9*.378*.27,
                 original_driver_fanout=8, relay_fanout=1,
-                PG_M3_reserved_lanes_per_5p4um=2, PG_M3_width_um=width,
+                PG_M3_reserved_lanes_per_group=2, PG_M3_width_um=width,
+                PG_M3_geometry=pg,
                 PG_M3_legal_widths_um=widths,
                 PG_M3_extra_metal_exclusion_um2=2*(width-.054)*die[3],
                 tech_sha256=hashlib.sha256((BASE/'inputs/actual_tech.lef').read_bytes()).hexdigest(),
@@ -142,6 +153,7 @@ puts "DS_NATIVE_RELAY_ROUTED_CENSUS_17"
 '''.lstrip())
     (ROOT/'physical/dsrom_native_relay_20261003/clock.sdc').write_text(
         'set_clock_transition 20 [get_clocks core_clk]\n')
+    pg=m['PG_M3_geometry']
     (ROOT/'physical/dsrom_native_relay_20261003/pdn.tcl').write_text('''
 foreach inst [[ord::get_db_block] getInsts] {$inst setDoNotTouch false}
 add_global_connection -net VDD -inst_pattern .* -pin_pattern ^VDD$ -power
@@ -150,9 +162,8 @@ global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name native_relay -voltage_domains CORE
 add_pdn_stripe -grid native_relay -layer M1 -width 0.018 -followpins
-add_pdn_stripe -grid native_relay -layer M3 -width 0.090 -pitch 5.4 -spacing 2.7 -offset 0.54
-add_pdn_connect -grid native_relay -layers {M1 M3}
-'''.lstrip())
+'''.lstrip()+f'add_pdn_stripe -grid native_relay -layer M3 -width 0.090 -pitch {pg["pitch_um"]} -spacing {pg["spacing_um"]} -offset 0.54\n'
+        +'add_pdn_connect -grid native_relay -layers {M1 M3}\n')
     (BASE/'model.json').write_text(json.dumps(m,indent=2,sort_keys=True)+'\n')
 
 if __name__ == '__main__':

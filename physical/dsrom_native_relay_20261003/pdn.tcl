@@ -5,5 +5,5 @@ global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name native_relay -voltage_domains CORE
 add_pdn_stripe -grid native_relay -layer M1 -width 0.018 -followpins
-add_pdn_stripe -grid native_relay -layer M3 -width 0.090 -pitch 5.4 -spacing 2.7 -offset 0.54
+add_pdn_stripe -grid native_relay -layer M3 -width 0.090 -pitch 5.616 -spacing 2.718 -offset 0.54
 add_pdn_connect -grid native_relay -layers {M1 M3}

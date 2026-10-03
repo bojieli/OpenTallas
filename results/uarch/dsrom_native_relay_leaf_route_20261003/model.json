@@ -1,6 +1,12 @@
 {
   "PG": "native alternating M1 rails plus ORFS physical PG; actual DRC/PG result required",
   "PG_M3_extra_metal_exclusion_um2": 0.34992,
+  "PG_M3_geometry": {
+    "center_step_um": 2.808,
+    "pitch_um": 5.616,
+    "spacing_um": 2.718,
+    "track_um": 0.036
+  },
   "PG_M3_legal_widths_um": [
     0.018,
     0.09,
@@ -9,7 +15,7 @@
     0.306,
     0.378
   ],
-  "PG_M3_reserved_lanes_per_5p4um": 2,
+  "PG_M3_reserved_lanes_per_group": 2,
   "PG_M3_width_um": 0.09,
   "SSFF_qualified": false,
   "arithmetic_MACs": 0,

@@ -1,0 +1,48 @@
+MACRO_TRACK_GATE PASS macros=0 hooks=3 warnings=0 record=/srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r5/receipt.json.macro_gate.json
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+orms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r5/base/2_2_floorplan_macro.odb
+read_sdc /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r5/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+Tap and End Cap cell insertion
+  TAP Cell          : TAPCELL_ASAP7_75t_R
+  ENDCAP Cell       : TAPCELL_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO TAP-0004] Inserted 36 endcaps.
+[INFO TAP-0005] Inserted 10 tapcells.
+source /work/hooks/post_tapcell_ot_macro_track_assert_hook.tcl
+OT_MACRO_TRACK_ASSERT PASS label=POST_TAPCELL macros=0 pins_checked=0 offtrack=0 max_offset_nm=0.0 no_track_grid=0
+Design area 5 um^2 4% utilization.
+write_db /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r5/base/2_3_floorplan_tapcell.odb
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            1            286 f90392e6b500dbb9bb8e
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+Running pdn.tcl, stage 2_4_floorplan_pdn
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r5/base/2_3_floorplan_tapcell.odb
+read_sdc /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r5/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[ERROR PDN-0175] Pitch 5.4000 is too small for M3, must be at least 5.5800
+Error: pdn.tcl, 6 PDN-0175
+
+Elapsed time: 0:01.60[h:]min:sec. CPU time: user 1.53 sys 0.06 (99%). Peak memory: 297340KB.
+Elapsed time: 0:01.64[h:]min:sec. CPU time: user 1.58 sys 0.07 (100%). Peak memory: 316136KB.
+Elapsed time: 0:01.60[h:]min:sec. CPU time: user 1.54 sys 0.06 (99%). Peak memory: 293592KB.
+Elapsed time: 0:01.60[h:]min:sec. CPU time: user 1.55 sys 0.05 (99%). Peak memory: 292936KB.
+Elapsed time: 0:01.60[h:]min:sec. CPU time: user 1.56 sys 0.04 (99%). Peak memory: 297608KB.
+make[1]: *** [Makefile:464: do-2_4_floorplan_pdn] Error 1
+make: *** [Makefile:464: /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r5/base/2_4_floorplan_pdn.odb] Error 2
+
+partial record written to /srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r5/physical.json
