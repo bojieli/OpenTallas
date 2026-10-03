@@ -1,0 +1,73 @@
+{
+  "Goodall_sender_domain_mutant_owner": "Dewey; not duplicated",
+  "base": "35b24cd075a949cbc92c8b8cf37371cd1e584cf5",
+  "build_admission": "verification leaves only, no engine/P&R; inventory/delta fixed before bench RTL",
+  "clock_scope": "Functional directed clocks only; production RF ACK sender/receiver pair unbound",
+  "conditions": {
+    "common_reset": "RF/fence common rst_n in direct bench; R14 both FIFOs/route share rst_n; external owner invalidation unbound",
+    "sole_outstanding": "RF idle excludes read_pending/rsp_valid/ack_valid; new write cannot overtake held ACK",
+    "source_reuse": "all accepted RF responses/ACK/SIMD/scratch sinks must drain before owner switch; owner proof absent",
+    "stale_external_bare_ACK": "Fence pending AND host_ack_valid exposes local epoch; no wire tag/epoch match"
+  },
+  "existing_inventory": {
+    "FP32_lanes_per_vector": 128,
+    "R14_FIFO_entries_each": 2,
+    "R14_FIFO_replicas": 2,
+    "R14_bridge_control_state_bits": 59,
+    "R14_bridge_default_width_bits": 471,
+    "R14_bridge_payload_state_bits": 2355,
+    "R14_route_FAST_edges": 38,
+    "R14_route_single_owned": true,
+    "RF_128x256_macros_per_SM": 128,
+    "RF_ACK_wire_bits": 1,
+    "RF_ACK_wire_identity": null,
+    "RF_data_bits_per_SM": 4194304,
+    "RF_scheduling": "one read or write outstanding per SM until held ACK/response consumed",
+    "RF_vectors": 512,
+    "epoch_is_local_not_wire_authenticated": true,
+    "fence_epoch_bits": 8,
+    "operand_copies": 2,
+    "wrapper_SM_replicas": 32
+  },
+  "hardware_or_rate_admitted": false,
+  "implementation_delta": {
+    "MACs_per_cycle": 0,
+    "area_um2": 0,
+    "boundary_bits_per_cycle": 0,
+    "clock_reset_loads": 0,
+    "latency_cycles": 0,
+    "memory_bytes_per_cycle": 0,
+    "ports": 0,
+    "replicas": 0,
+    "tracks": 0
+  },
+  "known_source_conditional_edges": {
+    "R14_route_countdown_FAST_edges": 38,
+    "RF_write_to_bare_ack_valid_local_posedge": 1
+  },
+  "schema": "EUCLID_INSTALLED_RFACK_CDC_PRE_VERIFICATION_MODEL_R1",
+  "scope": "No implementation RTL. Exact installed modules compile and directed leaf contract verification only; no connected RF ACK CDC production path inferred.",
+  "source_pins": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/gpu/ot_gpu_full_sm_service.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+    "rtl/gpu/ot_gpu_hbm_rf_shared_context.sv": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90",
+    "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "rtl/gpu/ot_gpu_rf_visibility_fence.sv": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_route.sv": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c",
+    "rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv": "4734d48732ee80d9c04f622b6ce53c64f5744003a786e9c0cae947d2d351ce74",
+    "rtl/test/model_ready_hbm_r14/tb_hbm_finite_stage.sv": "ad6648ee9d866953e8a996b702a18d249505b95bfe307d0dc3d2a4ec8083f404"
+  },
+  "unified_model_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "unknown": {
+    "CDC_phase_synchronizer_latency_in_common_units": null,
+    "RF_ACK_transport_cycles": null,
+    "RF_macro_SS_write_visibility_cycles": null,
+    "SSFF_installed_macro_clock": null,
+    "finite_backpressure_wait_upper": null,
+    "owner_switch_stale_drain_cycles": null,
+    "production_clock_pair": null,
+    "whole_operator_or_token_latency": null
+  }
+}

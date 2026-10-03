@@ -1,0 +1,10 @@
+{
+  "failed_commit": "c9068ec34ae24bf30559e9d35e0fafd88d9b5c4f",
+  "failed_ref": "refs/heads/archive/Euclid_RFACK_sparse_setup_FAIL_20261003",
+  "intake_failed_ref": false,
+  "main_tracked_sources_modified": false,
+  "qualification_attempted": false,
+  "reason": "no-checkout sparse setup lacked materialized source/index; script continued to empty-index commit after source read failure",
+  "recovery": "preserved failed ref; restored only isolated worktree to35b24cd075a949cbc92c8b8cf37371cd1e584cf5; clean tracked source check PASS",
+  "status": "FAIL_ISOLATED_SPARSE_CHECKOUT_PREPARATION"
+}
