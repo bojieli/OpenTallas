@@ -524,7 +524,7 @@ module ot_qwen_rt_kv_fill_service #(
             rr <= (rr == NPC - 1) ? 0 : rr + 1'b1;
             // -- layer start
             if (start) begin
-                if (active && (!fill_done || tok_pending || w_valid != 0 || r_valid != 0)) begin
+                if (active && (!fill_done || (!idl && tok_pending) || w_valid != 0 || r_valid != 0)) begin   // A/B mode writes nothing back
                     fault <= 1'b1; fault_code[0] <= 1'b1;          // previous layer not retired
                 end
                 active <= 1'b1; gen <= gen + 1'b1;
