@@ -1,0 +1,18 @@
+{
+  "binary_sha256": "6aec2484244af3e15f33f42c51b69612e3898b4d00c1d29973087c01c5dfae40",
+  "caller_double_fault_records": 4,
+  "continuous_cohorts": 40,
+  "directed_runs": 43,
+  "full_MTP": false,
+  "leaf_and_caller_single_bit_positions_each": 72,
+  "leaf_double_fault_records": 24,
+  "mutant_detected_by_actual_behavior": true,
+  "physical_SS_FF": false,
+  "positive_cycles": 2709,
+  "prefix_cases": 36,
+  "rate_qualified": false,
+  "source_commit": "58bfa6afaf487c0b303dfa1452031f188b331722",
+  "source_native_caller": false,
+  "status": "PASS_COMPONENT_PROTECTED_FUNCTIONAL_ONLY",
+  "strict_markers_verified": true
+}
