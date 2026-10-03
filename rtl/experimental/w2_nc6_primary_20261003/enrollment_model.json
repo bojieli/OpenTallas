@@ -46,13 +46,13 @@
   "readiness": {
     "functional_build": false,
     "physical_build": false,
-    "primary_in_progress": true,
+    "primary_in_progress": false,
     "system_provider": false
   },
   "remaining": [
-    "finish primary execution and exceptional source enrollment",
-    "lint full source and directed gate preparation",
-    "reconcile final source ports/calendar/cell price before functional build"
+    "Russell single full NC6 runtime with actual helper and frozen source",
+    "exceptional source fault/held/reset gate enrollment",
+    "final synthesis/load/cell/route accounting before physical admission"
   ],
   "request_record_bits": 335,
   "same_client_request_II_min": 19,
