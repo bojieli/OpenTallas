@@ -1,0 +1,249 @@
+{
+ "schema": "rom_model_sweep.profile.v1",
+ "slug": "gpt-oss-120b",
+ "repo": "openai/gpt-oss-120b",
+ "revision": "b5c939de8f754692c1647ca79fbf85e8c1e70f8a",
+ "original_repo": "openai/gpt-oss-120b",
+ "license": "apache-2.0",
+ "mirror_note": null,
+ "config_sha256": "933aeb666a3fd851133ddd7686414f369bc564c4185fb5704416550879f10566",
+ "index_sha256": "ede2655fdc05008561983b6e0829c600727c28d591e071077377059f03a6c00e",
+ "shards": 15,
+ "tensors": 687,
+ "header_storage_bytes_by_dtype": {
+  "BF16": 4334742144,
+  "U8": 60914073600
+ },
+ "method": "config.json + safetensors JSON headers via opentallas.profiling range reads; no tensor payload fetched, no inference run",
+ "model_type": "gpt_oss",
+ "architectures": [
+  "GptOssForCausalLM"
+ ],
+ "layers": 36,
+ "hidden": 2880,
+ "heads": 64,
+ "kv_heads": 8,
+ "head_dim": 64,
+ "vocab": 201088,
+ "tied_embeddings": false,
+ "max_context": 131072,
+ "intermediate": 2880,
+ "moe_intermediate": null,
+ "moe": {
+  "experts": 128,
+  "top_k": 4,
+  "shared": 0
+ },
+ "params": {
+  "dense_layers": 969291072,
+  "routed": 114701598720,
+  "embed": 579133440,
+  "head": 579133440,
+  "mtp": 0,
+  "vision": 0,
+  "total_text": 116829156672,
+  "total_all": 116829156672,
+  "active_per_token": 5132849472,
+  "active_routed": 3584424960,
+  "head_streamed": 579133440
+ },
+ "header_bytes": {
+  "routed": 60993699840,
+  "dense": 1938582144,
+  "head": 1158266880,
+  "embed": 1158266880
+ },
+ "layer_count_in_headers": 36,
+ "kv_layers": [
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  }
+ ],
+ "mtp": {
+  "native_modules": 0,
+  "weights_present": false,
+  "params": 0
+ },
+ "drafters_published": {
+  "eagle3": "nvidia/gpt-oss-120b-Eagle3-v3",
+  "dflash": "z-lab/gpt-oss-120b-DFlash"
+ },
+ "quantization": "mxfp4"
+}
