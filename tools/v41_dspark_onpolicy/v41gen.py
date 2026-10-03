@@ -158,6 +158,7 @@ def my_linear(x, weight, bias=None):
 M.linear = my_linear
 VERBOSE = os.environ.get('V41_VERBOSE') == '1'
 MH_TAIL = 0
+BATCHED_DECODE = False
 FIT_CACHES = 0   # opt-in: args.max_seq_len when per-trace caches are sized to need
 
 # ---------------------------------------------------------------- checkpoint access
@@ -412,6 +413,9 @@ def swap_caches(blk, d):
 # ---------------------------------------------------------------- one forward over a group of traces
 def forward_group(traces, chunks, blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats, want_logits=False):
     """chunks[b] = list of token ids to process for trace b at its current pos. Returns next greedy token per trace."""
+    if BATCHED_DECODE and all(len(c) == 1 for c in chunks):
+        return forward_decode_batched(traces, chunks, blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats,
+                                      want_logits)
     H, premix, start = [], [], []
     for tr, ch in zip(traces, chunks):
         ids = torch.tensor(ch, device='cuda').view(1, -1)
@@ -470,6 +474,63 @@ def forward_group(traces, chunks, blocks, hps, stores, embed_w, head_w, norm_w, 
     return torch.cat(nxt).tolist()
 
 
+def forward_decode_batched(traces, chunks, blocks, hps, stores, embed_w, head_w, norm_w, engram_hash, args, stats, want_logits):
+    """opt-in (--batched-decode): one decode token per trace, the traces stacked on the sequence axis for every
+    per-token operation (embedding, Engram, hc mixes / Sinkhorn, hc pre/post, norms, MoE, head).  Only the vendor
+    attention, which owns the per-trace caches and positions, runs per trace.  Same modules and arithmetic per row;
+    GEMMs see M = N rows instead of 1, so rounding can differ from the per-trace path (as it already does with batch
+    composition).  Engram hashes use each trace's last max_ngram_size tokens (identical to hashing the full history)."""
+    N = len(traces)
+    start = [tr.pos for tr in traces]
+    ids = torch.tensor([c[0] for c in chunks], device='cuda').view(1, N)
+    H = F.embedding(ids, embed_w).unsqueeze(2).repeat(1, 1, args.hc_mult, 1)          # [1, N, hc, d]
+    premix = M.make_identity_pre_mix(H, args.hc_mult)
+    K = engram_hash.layout.max_ngram_size
+    hl = []
+    for tr, c in zip(traces, chunks):
+        full = tr.tokens[:tr.pos + 1]
+        tail = torch.tensor(full[-K:], device='cuda').view(1, -1)
+        hl.append(engram_hash(tail, 0)[:, -1:])
+    hashes = torch.cat(hl, 1)                                                          # [1, N, layers, cols]
+    mh = []
+    for i, blk in enumerate(blocks):
+        t0 = time.time()
+        to_gpu(blk, hps[i])
+        t1 = time.time()
+        if blk.engram is not None:
+            H = blk.engram(H, hashes[:, :, blk.engram.layer_hash_index, :], None)
+        if i in args.dspark_target_layer_ids:
+            mh.append(H.mean(dim=2))
+        residual = H
+        attn_pre, attn_post, attn_comb = blk.hc_mixes(H, blk.hc_attn_fn, blk.hc_attn_scale, blk.hc_attn_base)
+        x = blk.attn_norm(blk.hc_pre(H, premix))                                       # [1, N, d]
+        outs = []
+        for b, tr in enumerate(traces):
+            swap_caches(blk, tr.caches[i]); M.shared_attn = tr.shared
+            outs.append(blk.attn(x[:, b:b + 1], start[b]))
+        x = torch.cat(outs, 1)
+        H = blk.hc_post(x, residual, attn_post, attn_comb)
+        residual = H
+        ffn_pre, ffn_post, ffn_comb = blk.hc_mixes(H, blk.hc_ffn_fn, blk.hc_ffn_scale, blk.hc_ffn_base)
+        y = blk.ffn_norm(blk.hc_pre(H, attn_pre))
+        stats['attn_s'] += time.time() - t1
+        Y = moe_stream(blk.ffn, stores[i], y.view(-1, args.dim), args.swiglu_limit, stats)
+        H = blk.hc_post(Y.view(1, N, args.dim), residual, ffn_post, ffn_comb)
+        premix = ffn_pre
+        del Y, y, x, outs
+        to_meta(blk, hps[i])
+    h = blocks[-1].hc_pre(H, premix)
+    hf = h.float(); h = (norm_w * (hf * torch.rsqrt(hf.square().mean(-1, keepdim=True) + args.norm_eps))).to(h.dtype)
+    logits = torch.cat([F.linear(h.float().view(N, -1), head_w[v:v + 32768].float()) for v in range(0, head_w.size(0), 32768)], -1)
+    mhs = torch.cat(mh, dim=-1)[0].cpu()                                               # [N, 3*d]
+    for b, tr in enumerate(traces):
+        tr.pos = start[b] + 1
+        tr.main_hidden.append(mhs[b:b + 1])
+    if want_logits:
+        return [logits[b:b + 1] for b in range(N)]
+    return logits.argmax(-1).tolist()
+
+
 # ---------------------------------------------------------------- opt-in: T=1 twin traces (qualified run, 2026-10-03)
 def pick(tr, logits):
     """greedy (mode 'greedy') or vendor sample() at T=1, top_p 1 (mode 't1') with a per-trace seeded generator;
@@ -522,13 +583,16 @@ def main():
     ap.add_argument('--mh-prompt-tail', type=int, default=0, help='opt-in: keep only the last N prompt rows of main_hidden '
                     '(DSpark prefill only seeds its window_size=128 ring)')
     ap.add_argument('--save-every', type=int, default=10)
+    ap.add_argument('--batched-decode', action='store_true', help='opt-in: stack the traces for every per-token op in decode')
+    ap.add_argument('--stop-after-steps', type=int, default=0, help='opt-in: save and stop after this many decode steps')
     ap.add_argument('--fit-caches', action='store_true', help='opt-in: size each trace\'s compressed/indexer caches to L+max_new')
     a = ap.parse_args()
     torch.cuda.set_per_process_memory_fraction(a.gpu_frac)
     torch.set_default_dtype(torch.bfloat16)
     torch.set_grad_enabled(False)
     args = load_args(a.max_seq_len)
-    global MH_TAIL, FIT_CACHES
+    global MH_TAIL, FIT_CACHES, BATCHED_DECODE
+    BATCHED_DECODE = a.batched_decode
     MH_TAIL = a.mh_prompt_tail
     FIT_CACHES = a.max_seq_len if a.fit_caches else 0
     init_pinned(3 * 48 + 8)
@@ -608,6 +672,8 @@ def main():
                 tr.done = True
         step += 1
         print(f'step {step} active {len(act)} {time.time()-ts:.1f}s experts {stats["experts"]} moe {stats["moe_s"]:.0f} attn {stats["attn_s"]:.0f} h2d {stats["h2d_s"]:.0f} gpu_peak {torch.cuda.max_memory_allocated()/1e9:.2f}', flush=True)
+        if a.stop_after_steps and step >= a.stop_after_steps:
+            break
         if step % a.save_every == 0 or not [tr for tr in traces if not tr.done]:
             save(traces, a.out, tok)
     save(traces, a.out, tok)
