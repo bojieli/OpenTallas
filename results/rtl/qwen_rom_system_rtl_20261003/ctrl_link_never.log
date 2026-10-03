@@ -1,0 +1,3 @@
+CTRL mode=link_never mismatches=0
+PASS
+- rtl/test/qwen_sys/tb_qwen_sys_ctrl.sv:194: Verilog $finish
