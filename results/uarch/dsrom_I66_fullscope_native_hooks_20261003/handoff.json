@@ -1,0 +1,87 @@
+{
+  "W2_policy": "Native emitter only: no576-seat interception and no inferred writer count from nin1280. Actual counts remain null.",
+  "absolute_F": null,
+  "actual_journal": null,
+  "base": "442b47f6288ef7753d8df0e0ea4a4a59a4e9e96b",
+  "build_prerequisites": [
+    "model pricing actual closure/frontend inventory and observer log cost; no guessed wall/AS/file limits",
+    "fresh independent GO/headroom after source selection review",
+    "no duplicate frozen component/frontend/native job"
+  ],
+  "clock_routes_and_endpoint_qualification_owner": "Arch/Maxwell; no substitute physical timing claim by emitter",
+  "commands": [
+    "python3 tools/dsrom_I66_fullscope_native_hooks.py --generate /tmp/PHW10_FULLSCOPE.sv --schema /tmp/PHW10_FULLSCOPE_SCHEMA.json --model /tmp/PHW10_FULLSCOPE_MODEL.json",
+    "python3 tools/dsrom_I66_fullscope_native_hooks.py --parse ACTUAL_ENROLLED_NATIVE_RUNTIME.log"
+  ],
+  "compiled_current_binary": null,
+  "copied_top": "ot_v41_rt_die_i66_fullscope",
+  "correction": "I101 operand A consumes400448 and C consumes403456; I102..105 C consumes406464/409472/412480/415488. I106 c_base418496 is logged, never assigned to I100 by address-stride inference.",
+  "default_parameter": "I66_OBSERVE=0",
+  "downstream_lifetime_F_owner": "Nash/user",
+  "emit_ranges": "All native clocks/PCs; I66..I105 source enrollment includes18 phases. No event cutoff at105 or arbitrary cycle count. Read/tag and native vector last-retire/postNBA cr_dseq hooks continue globally.",
+  "emitter_and_elaboration_owner": "Hubble; no compiler/job started",
+  "entry": "tools/dsrom_I66_fullscope_native_hooks.py",
+  "final_selected_run_sourceclosure_complete": false,
+  "fulltoken": false,
+  "jobs_launched": 0,
+  "legacy_candidate_paths_missing": 0,
+  "legacy_candidate_sources": 130,
+  "live_handle": null,
+  "max_live_versions": null,
+  "milestone": "FULL_SELECTED18_GU0_SOURCE_AND_POST105_RAW_NATIVE_HOOK_SCHEMA",
+  "native_schema": "opentallas.PHW10.native-fullscope.raw.v1",
+  "old_sources_and_failures_unchanged": true,
+  "owner_tree": "/tmp/opentallas-I66-reserved-service-observer-20261002",
+  "physical_admission": false,
+  "post105_validation": "Downstream owns complete address/version leases through actual read R+2 tags and native last retirement, plus selected packet/debt retirement. EOF or core PC boundary cannot establish complete lease release.",
+  "raw_identity": "Core PC and SU seq/copy/bases are raw observations. Full169 user32/gen/Xversion/stage and separate physical shard require actual enrolled provider callbacks. No observer field pretends to be that hardware identity.",
+  "required_selected_source_changes": [
+    "PHW6 default must become explicitly selected PHW10 across die/host/field after review",
+    "default runtime core c5e1b8... must use pinned CKV_SEL core8f0f967...; future isolated source-list proposal only",
+    "new copied top and I66_OBSERVE=1 require actual hierarchy/elaboration + native ABI review",
+    "selected current field/384 dispatch/provider/hook source closure and complete perrank program/field enrollment absent"
+  ],
+  "schema_path": "results/uarch/dsrom_I66_fullscope_native_hooks_20261003/schema.json",
+  "selected_provider_callbacks_unimplemented": [
+    "full169 owned bankphase accept/rearm",
+    "positive captured CDC row credits",
+    "actual packet ACK/outstanding retirement",
+    "qualified effective-idle completion hook",
+    "separate VMaddress/version lease callback"
+  ],
+  "service_upper_bound": null,
+  "source_plan": "results/uarch/dsrom_I66_fullscope_native_hooks_20261003/run_source_plan.json",
+  "source_range": {
+    "captured12": [
+      66,
+      67,
+      68,
+      69,
+      72,
+      73,
+      82,
+      83,
+      87,
+      88,
+      92,
+      93
+    ],
+    "nativeW2": [
+      79,
+      84,
+      89,
+      94,
+      97,
+      100
+    ],
+    "post_range_context": [
+      106,
+      107
+    ],
+    "selected": [
+      66,
+      105
+    ]
+  },
+  "whole_token_rate": null
+}
