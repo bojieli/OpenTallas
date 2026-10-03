@@ -1,0 +1,20 @@
+{
+  "contract_model_only": true,
+  "coverage_join_executed": false,
+  "historical_b343_source_sha256": "d9bbfb3565cc81477eee94827c6b776001ffd517095bdd019801505c7952e743",
+  "independent_actual_census_generated": false,
+  "schema_required_fields": [
+    "schema",
+    "scope",
+    "placement_source",
+    "extractor",
+    "selected_macro_lefs",
+    "tracks_sha256",
+    "row_site_canonical_sha256",
+    "instance_count",
+    "instance_name_identity_sha256",
+    "instance_placement_identity_sha256",
+    "instances"
+  ],
+  "status": "PASS_CONTRACT_SCHEMA_STRUCTURE"
+}

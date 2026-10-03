@@ -1,0 +1,197 @@
+{
+  "$id": "urn:opentallas:complete-macro-instance-census:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "extractor": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "DIRECT_DEF",
+            "DIRECT_ODB",
+            "GENERATOR_COMPLETE_ROSTER"
+          ]
+        },
+        "source": {
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "source",
+        "mode"
+      ],
+      "type": "object"
+    },
+    "instance_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "instance_name_identity_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "instance_placement_identity_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "instances": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "lef_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "macro": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "orientation": {
+            "enum": [
+              "R0",
+              "MX",
+              "MY",
+              "R180"
+            ]
+          },
+          "x_nm": {
+            "type": "integer"
+          },
+          "y_nm": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "macro",
+          "lef_sha256",
+          "orientation",
+          "x_nm",
+          "y_nm"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "placement_source": {
+      "additionalProperties": false,
+      "properties": {
+        "coordinate_frame": {
+          "const": "ORIENTED_MACRO_BBOX_LOWER_LEFT"
+        },
+        "coordinate_units": {
+          "const": "INTEGER_NM_EXACT_NO_ROUNDING"
+        },
+        "kind": {
+          "enum": [
+            "DEF",
+            "ODB",
+            "GENERATOR_COMPLETE_ROSTER"
+          ]
+        },
+        "snapshot": {
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "type": "object"
+        },
+        "source_DBU_per_micron": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot",
+        "source_DBU_per_micron",
+        "coordinate_frame",
+        "coordinate_units"
+      ],
+      "type": "object"
+    },
+    "row_site_canonical_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema": {
+      "const": "OT_COMPLETE_MACRO_INSTANCE_CENSUS_V1"
+    },
+    "scope": {
+      "const": "ALL_INSTANCES_OF_SELECTED_MACROS"
+    },
+    "selected_macro_lefs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "lef_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "macro": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "macro",
+          "lef_sha256"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "tracks_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "scope",
+    "placement_source",
+    "extractor",
+    "selected_macro_lefs",
+    "tracks_sha256",
+    "row_site_canonical_sha256",
+    "instance_count",
+    "instance_name_identity_sha256",
+    "instance_placement_identity_sha256",
+    "instances"
+  ],
+  "type": "object"
+}
