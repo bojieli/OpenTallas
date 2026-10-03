@@ -1,0 +1,28 @@
+test_all72_native_chains_and_active_extent (test_h3_complete_native_calendar_owner_join_r3.ConsumerSpanJoinTests) ... ok
+test_wrong_directory_RF_slot_and_extent_rejected (test_h3_complete_native_calendar_owner_join_r3.ConsumerSpanJoinTests) ... ok
+test_wrong_instruction_version_and_span_rejected (test_h3_complete_native_calendar_owner_join_r3.ConsumerSpanJoinTests) ... ok
+test_DS_boundary_unknown_and_positive_multidomain_parameterization (test_h3_complete_native_calendar_owner_join_r3.CostAndCompositionTests) ... ok
+test_composed_model_corrects_source_audit_without_credit (test_h3_complete_native_calendar_owner_join_r3.CostAndCompositionTests) ... ok
+test_current_metadata_source_order_counts_and_old_graph_unadopted (test_h3_complete_native_calendar_owner_join_r3.CostAndCompositionTests) ... ok
+test_exact_paid_interval_reuse_once_and_wrong_instruction_rejected (test_h3_complete_native_calendar_owner_join_r3.CostAndCompositionTests) ... ok
+test_native_recipe_frontier_not_generic_one_event_cost (test_h3_complete_native_calendar_owner_join_r3.CostAndCompositionTests) ... ok
+test_unknown_never_paid_by_numeric_zero (test_h3_complete_native_calendar_owner_join_r3.CostAndCompositionTests) ... ok
+test_ACK_without_all_banks_and_token_only_cannot_capture (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_actual_owner_RMW_opaque_tail_exact_common_ACK_and_retirement (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_complete_emitted_command_replay_through_real_Popper_owner (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_completion_capture_independent_of_consumer_ready (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_cross_rank_completion_token_cannot_consume_other_owner (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_duplicate_completion_pulse_cannot_overwrite_held_payload (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_foreign_completion_payload_not_in_captured_SRAM_receipts (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_lease_ref_generation_and_source_command_receipt_negative (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_mismatched_word_capture_payload_and_old_mirrors_reject (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_no_missing_pin_or_held_ACK_implicit_admission (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_retained_owner_class_inspection_and_canonical_modules_unchanged (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_same_SM_contender_waits_through_consumer_and_reverse (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_wrong_parent_and_stale_prior_child_completions_reject (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+test_wrong_source_write_bytes_not_accepted_by_bank (test_h3_complete_native_calendar_owner_join_r3.OwnerJoinTests) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 10.900s
+
+OK

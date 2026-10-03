@@ -1,0 +1,63 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_default_off_and_physical_refusal _____________________
+
+    def test_default_off_and_physical_refusal():
+        class Prefix:pass
+>       assert a.engine_class(Prefix).__name__=='Engine'
+
+tests/test_ds_hbm_additive_endpoint_join_r54.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_hbm_additive_endpoint_join_r54.py:113: in engine_class
+    base=predecessor_engine(prefix,finite_pc10=finite_pc10,retire_unconsumed=retire_unconsumed,physical_backend=physical_backend)
+tools/ds_hbm_pc10_composed_engine_r46.py:26: in engine_class
+    base=endpoint_engine_class(prefix,finite_pc10=finite_pc10,physical_backend=physical_backend)
+tools/ds_hbm_pc10_engine_r44.py:86: in engine_class
+    reference = reference_engine_class(prefix)
+tools/ds_hbm_bound_engine_r43.py:53: in engine_class
+    source=native_execution()
+tools/ds_hbm_source_prefix_r39.py:17: in sagan
+    for name in ('h3_deepseek_full_token_driver','h4_c0_ds_tiled_continuation','h4_c0_ds_expected_outputs'):peer(name)
+tools/h3_ds_connected_provider_r37.py:29: in peer
+    if dep!=name and str((D/'inputs'/(dep+'.py')).relative_to(ROOT)) in pins:peer(dep)
+tools/h3_ds_connected_provider_r37.py:29: in peer
+    if dep!=name and str((D/'inputs'/(dep+'.py')).relative_to(ROOT)) in pins:peer(dep)
+tools/h3_ds_connected_provider_r37.py:30: in peer
+    spec.loader.exec_module(m)
+<frozen importlib._bootstrap_external>:883: in exec_module
+    ???
+<frozen importlib._bootstrap>:241: in _call_with_frames_removed
+    ???
+results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h4_c0_model.py:4: in <module>
+    from uarch_model import DFF_UM2, GPU_LOGIC_UTIL
+tools/uarch_model.py:36: in <module>
+    import arch_budget_v41 as A  # noqa: E402
+tools/arch_budget_v41.py:64: in <module>
+    import decode_critical_path as D  # noqa: E402
+tools/decode_critical_path.py:139: in <module>
+    SK = sinkhorn_unit()
+tools/decode_critical_path.py:131: in sinkhorn_unit
+    camp = json.loads(SINKHORN_CAMPAIGN.read_text())
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/OpenTallas-review-dewey-owner-r3/results/rtl/hdc_v41_sinkhorn_campaign.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/OpenTallas-review-dewey-owner-r3/results/rtl/hdc_v41_sinkhorn_campaign.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_ds_hbm_additive_endpoint_join_r54.py::test_default_off_and_physical_refusal
+1 failed in 0.50s

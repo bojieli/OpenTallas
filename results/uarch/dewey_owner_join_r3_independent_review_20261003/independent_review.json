@@ -1,0 +1,1385 @@
+{
+  "status": "PASS_SOURCE_CONTROL_AND_QWEN_RAW_SPANS_WITH_OPEN_CDC_QUALIFICATION",
+  "reviewed_commit": "b8290b552d914763961f0fd206b8a6d62b46e61c",
+  "current_main_comparison_commit": "42437d39a5ce1a69fca6acb6250d85382203f686",
+  "source_tool_sha256": "c3c0e800dbd6ea09a7fc35d1a2643244c19016de54bc6d4067e598d7a3731844",
+  "source_test_sha256": "9a88b76eec960e632c43ef080dc9af5a8b44d174d3f0c46cf944a25c3f41943b",
+  "pins": {
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/Goodall_requirements.json": {
+      "archived_sha256": "bf94c549f58901af3bdb816e90aa622730454b8e03122058481f90178d9ef980",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz": {
+      "archived_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+      "current_main_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+      "current_matches_archived": true
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/DS_chain_boundaries.json": {
+      "archived_sha256": "69d671da20cd9793d7a9c407564e2a48683944969e8957b4392a713df96fe547",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/V1_serialized_owner.py": {
+      "archived_sha256": "bcbc01538348a37609451307816471a702482dc551b6917fc66ae8ef3ccc2cda",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/hbm_gpu.json": {
+      "archived_sha256": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/codex_notes.txt": {
+      "archived_sha256": "f9ef2c698f3d9fa5992823d8d2fab13899e16f7a1a01a895bba45ae3c73ac099",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/dependency_fields.json": {
+      "archived_sha256": "4d88b003fc730ded5fab4abe7fc8c6903f1ae647a8504e01cfaefca1b800a069",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/zero_classification.json": {
+      "archived_sha256": "5cbd5556118befd8ce10a8d43272b56bda0a6a0a9740953d9da50788e97b4e39",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/KV_current_plan.json.gz": {
+      "archived_sha256": "ba50d70cfcb2c4d73eff56a707bf4d99470681de06117d428c15af2eb962801a",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/KV_current_owner.py": {
+      "archived_sha256": "019b08bdca39d3c9c851d9139e0de0d247beff72265b2dd9fcc57a6c425f0547",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/C0_owner_addressed.py": {
+      "archived_sha256": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/fifo2.sv": {
+      "archived_sha256": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/uarch_model.py": {
+      "archived_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/audit.md": {
+      "archived_sha256": "0ebd61f798c21f4295a7f5aee063e31ebcfcbd8033c750e4c373f080c4bf299f",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/audit.json": {
+      "archived_sha256": "44f4e634232e79776704d4efc0bbd10015f51e5ceca58b579745ca8710880fab",
+      "current_main_sha256": null,
+      "current_matches_archived": false
+    },
+    "tools/h4_hbm_atomic_source_g0.py": {
+      "archived_sha256": "3d76eacbd22a39745af395db77215fd19468dd26b233465dee5e49c6b822121b",
+      "current_main_sha256": "3d76eacbd22a39745af395db77215fd19468dd26b233465dee5e49c6b822121b",
+      "current_matches_archived": true
+    },
+    "tools/h4_hbm_selected_cache_rmw.py": {
+      "archived_sha256": "04f271fa5a647e7132a2bd36f6c764cb5fe440e18cec7c096c9c860be3e50ade",
+      "current_main_sha256": "04f271fa5a647e7132a2bd36f6c764cb5fe440e18cec7c096c9c860be3e50ade",
+      "current_matches_archived": true
+    },
+    "tools/h3_complete_native_calendar_grants_r1.py": {
+      "archived_sha256": "4bbd9ce96f4cf0afef069d6b0a94379d04a0e054e337477d125ed6cf999d6dbd",
+      "current_main_sha256": "4bbd9ce96f4cf0afef069d6b0a94379d04a0e054e337477d125ed6cf999d6dbd",
+      "current_matches_archived": true
+    },
+    "results/uarch/h4_hbm_selected_cache_rmw_20261002/selected_r4/commands.json.gz": {
+      "archived_sha256": "9f8c0fbf277c3405f09444efa7a592496b6c92761cc9c8c9fa22da9af41f5464",
+      "current_main_sha256": "9f8c0fbf277c3405f09444efa7a592496b6c92761cc9c8c9fa22da9af41f5464",
+      "current_matches_archived": true
+    }
+  },
+  "independent_requirements_sha256": "bf94c549f58901af3bdb816e90aa622730454b8e03122058481f90178d9ef980",
+  "raw432_sha256": "5e0359215e020e35702b2946348f382953926037c77ee3c7e361277cc2d1e8c1",
+  "raw_archive_commit": "f9212629928a027742c12bfcfb4a7423b2f0dfd7",
+  "Qwen_groups": [
+    {
+      "key": [
+        0,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        13,
+        14,
+        15
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        0,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        29,
+        30,
+        31
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        1,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        61,
+        62,
+        63
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        1,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        77,
+        78,
+        79
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        2,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        109,
+        110,
+        111
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        2,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        125,
+        126,
+        127
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        3,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        157,
+        158,
+        159
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        3,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        173,
+        174,
+        175
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        4,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        205,
+        206,
+        207
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        4,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        221,
+        222,
+        223
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        5,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        253,
+        254,
+        255
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        5,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        269,
+        270,
+        271
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        6,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        301,
+        302,
+        303
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        6,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        317,
+        318,
+        319
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        7,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        349,
+        350,
+        351
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        7,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        365,
+        366,
+        367
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        8,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        397,
+        398,
+        399
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        8,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        413,
+        414,
+        415
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        9,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        445,
+        446,
+        447
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        9,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        461,
+        462,
+        463
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        10,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        493,
+        494,
+        495
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        10,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        509,
+        510,
+        511
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        11,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        541,
+        542,
+        543
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        11,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        557,
+        558,
+        559
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        12,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        589,
+        590,
+        591
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        12,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        605,
+        606,
+        607
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        13,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        637,
+        638,
+        639
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        13,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        653,
+        654,
+        655
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        14,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        685,
+        686,
+        687
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        14,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        701,
+        702,
+        703
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        15,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        733,
+        734,
+        735
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        15,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        749,
+        750,
+        751
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        16,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        781,
+        782,
+        783
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        16,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        797,
+        798,
+        799
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        17,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        829,
+        830,
+        831
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        17,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        845,
+        846,
+        847
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        18,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        877,
+        878,
+        879
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        18,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        893,
+        894,
+        895
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        19,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        925,
+        926,
+        927
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        19,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        941,
+        942,
+        943
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        20,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        973,
+        974,
+        975
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        20,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        989,
+        990,
+        991
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        21,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1021,
+        1022,
+        1023
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        21,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1037,
+        1038,
+        1039
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        22,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1069,
+        1070,
+        1071
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        22,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1085,
+        1086,
+        1087
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        23,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1117,
+        1118,
+        1119
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        23,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1133,
+        1134,
+        1135
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        24,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1165,
+        1166,
+        1167
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        24,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1181,
+        1182,
+        1183
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        25,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1213,
+        1214,
+        1215
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        25,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1229,
+        1230,
+        1231
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        26,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1261,
+        1262,
+        1263
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        26,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1277,
+        1278,
+        1279
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        27,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1309,
+        1310,
+        1311
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        27,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1325,
+        1326,
+        1327
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        28,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1357,
+        1358,
+        1359
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        28,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1373,
+        1374,
+        1375
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        29,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1405,
+        1406,
+        1407
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        29,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1421,
+        1422,
+        1423
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        30,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1453,
+        1454,
+        1455
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        30,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1469,
+        1470,
+        1471
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        31,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1501,
+        1502,
+        1503
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        31,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1517,
+        1518,
+        1519
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        32,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1549,
+        1550,
+        1551
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        32,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1565,
+        1566,
+        1567
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        33,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1597,
+        1598,
+        1599
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        33,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1613,
+        1614,
+        1615
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        34,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1645,
+        1646,
+        1647
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        34,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1661,
+        1662,
+        1663
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        35,
+        0,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1693,
+        1694,
+        1695
+      ],
+      "metadata_raw_snapshot_match": true
+    },
+    {
+      "key": [
+        35,
+        1,
+        0
+      ],
+      "decoded_sectors": 128,
+      "actual_raw_events": 6,
+      "consumer_PCs": [
+        1709,
+        1710,
+        1711
+      ],
+      "metadata_raw_snapshot_match": true
+    }
+  ],
+  "CDC_mutants": {
+    "wrong_token": {
+      "accepted": false,
+      "error": "matching source consumer, held sinks and explicit reverse CDC receipt",
+      "remaining_owner": 1
+    },
+    "wrong_receiver_edge": {
+      "accepted": false,
+      "error": "matching source consumer, held sinks and explicit reverse CDC receipt",
+      "remaining_owner": 1
+    },
+    "unknown_sender_domain": {
+      "accepted": true,
+      "remaining_owner": 0
+    },
+    "epoch_fields_unsupported": {
+      "accepted": false,
+      "error": "matching source consumer, held sinks and explicit reverse CDC receipt",
+      "remaining_owner": 1
+    }
+  },
+  "CDC_epoch_binding": "UNIMPLEMENTED_NOT_QUALIFIED; API does not accept reset epochs or bind sender_domain to source",
+  "metadata_contract": "R3 preserves outdated87ca record-before-bitmap requirement; be3629 actual source correction requires bitmap-before-record plus writer exclusion/fence; no source reorder",
+  "production_receipts": false,
+  "software_ordinals_are_physical_ticks": false,
+  "hardware_qualified": false,
+  "R4_authority_review": "not reviewed here; no current headline adoption",
+  "current_canonical_comparison": {
+    "C0_owner_addressed.py": {
+      "archived_sha256": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528",
+      "current_canonical_path": "tools/h4_c0_v1_owner_lock_addressed.py",
+      "current_sha256": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528",
+      "exact": true
+    },
+    "KV_current_owner.py": {
+      "archived_sha256": "019b08bdca39d3c9c851d9139e0de0d247beff72265b2dd9fcc57a6c425f0547",
+      "current_canonical_path": "tools/h4_hbm_kv_validity_fence_model.py",
+      "current_sha256": "019b08bdca39d3c9c851d9139e0de0d247beff72265b2dd9fcc57a6c425f0547",
+      "exact": true
+    },
+    "V1_serialized_owner.py": {
+      "archived_sha256": "bcbc01538348a37609451307816471a702482dc551b6917fc66ae8ef3ccc2cda",
+      "current_canonical_path": "tools/h4_v1_physical_join.py",
+      "current_sha256": "bcbc01538348a37609451307816471a702482dc551b6917fc66ae8ef3ccc2cda",
+      "exact": true
+    },
+    "uarch_model.py": {
+      "archived_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "current_canonical_path": "tools/uarch_model.py",
+      "current_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "exact": true
+    },
+    "fifo2.sv": {
+      "archived_sha256": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+      "current_canonical_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv",
+      "current_sha256": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+      "exact": true
+    },
+    "hbm_gpu.json": {
+      "archived_sha256": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+      "current_canonical_path": "results/uarch/hbm_gpu.json",
+      "current_sha256": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+      "exact": true
+    }
+  },
+  "candidate_artifacts_verified": {
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/R1_default_path_FAIL.log": {
+      "bytes": 722,
+      "sha256": "bb04ae0dfbd64525db1f6592188280343e1088199864a410e4efca84be633609"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/R1_default_path_failure.json": {
+      "bytes": 622,
+      "sha256": "584c4f18b3e962106790f06a3b8e0a295cf5616956d4c04066286b553779696e"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/SRAM_control_events.json.gz": {
+      "bytes": 1265633,
+      "sha256": "df4fb32bef40ea4a169e0b3d9c82abd753f68f1ea09fa02ab88c7490ca5009e8"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/active_consumer_binding.json.gz": {
+      "bytes": 40951,
+      "sha256": "65262bf3306493e1157605609143ef2cc553aa40b01a1ca8bd0119f3c42319c6"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/composition_model.json": {
+      "bytes": 24096,
+      "sha256": "f016e263c6980d3356c8defc3f303e496a2d5e5bc686f93302d4d9c37e8a40a9"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/current_metadata_binding.json.gz": {
+      "bytes": 105230,
+      "sha256": "e55f7fe5a37f76560d59e0e946e47d058fbaea98b9c3127140b75047a9ba0470"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/C0_owner_addressed.py": {
+      "bytes": 29566,
+      "sha256": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/DS_chain_boundaries.json": {
+      "bytes": 92856,
+      "sha256": "69d671da20cd9793d7a9c407564e2a48683944969e8957b4392a713df96fe547"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/Goodall_requirements.json": {
+      "bytes": 435768,
+      "sha256": "bf94c549f58901af3bdb816e90aa622730454b8e03122058481f90178d9ef980"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/KV_current_owner.py": {
+      "bytes": 26520,
+      "sha256": "019b08bdca39d3c9c851d9139e0de0d247beff72265b2dd9fcc57a6c425f0547"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/KV_current_plan.json.gz": {
+      "bytes": 611985,
+      "sha256": "ba50d70cfcb2c4d73eff56a707bf4d99470681de06117d428c15af2eb962801a"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/V1_serialized_owner.py": {
+      "bytes": 14482,
+      "sha256": "bcbc01538348a37609451307816471a702482dc551b6917fc66ae8ef3ccc2cda"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/audit.json": {
+      "bytes": 35299,
+      "sha256": "44f4e634232e79776704d4efc0bbd10015f51e5ceca58b579745ca8710880fab"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/audit.md": {
+      "bytes": 10126,
+      "sha256": "0ebd61f798c21f4295a7f5aee063e31ebcfcbd8033c750e4c373f080c4bf299f"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/codex_notes.txt": {
+      "bytes": 26848,
+      "sha256": "f9ef2c698f3d9fa5992823d8d2fab13899e16f7a1a01a895bba45ae3c73ac099"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/dependency_fields.json": {
+      "bytes": 34836,
+      "sha256": "4d88b003fc730ded5fab4abe7fc8c6903f1ae647a8504e01cfaefca1b800a069"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/fifo2.sv": {
+      "bytes": 1427,
+      "sha256": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/hbm_gpu.json": {
+      "bytes": 18553,
+      "sha256": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/uarch_model.py": {
+      "bytes": 428737,
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/zero_classification.json": {
+      "bytes": 28796,
+      "sha256": "5cbd5556118befd8ce10a8d43272b56bda0a6a0a9740953d9da50788e97b4e39"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/summary.json": {
+      "bytes": 5614,
+      "sha256": "9bdf63c5b805f6e35cecfd24a1b7afe9b2c0159085dda166def59a3382b5edbb"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/summary_pre_audit_unadopted.json": {
+      "bytes": 2928,
+      "sha256": "817ad12a037eb33a342bc82b2e63684a20260eace04b3677a793459ec81d52f4"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/validation.json": {
+      "bytes": 337,
+      "sha256": "ff7107b371a6dcbaa0c87c1388ee33a404b9b0110e19b5e509fd1ec1bcde8d4c"
+    }
+  },
+  "candidate_artifact_count": 23,
+  "source_worktree_clean_before_receipt": true,
+  "meaningful_tests": {
+    "focused": "23PASS10.900s",
+    "primary": "121PASS63.64s",
+    "R54": "4PASS4.95s",
+    "combined_unique_cases": 125,
+    "initial_combined": "124PASS+1FAIL sparse dependency missing; all failures preserved; final125cases verified in121+4 split"
+  },
+  "cold_replay": {
+    "command": "python3 -B tools/h3_complete_native_calendar_owner_join_r3.py --verify",
+    "result": "PASS byte exact five outputs plus explicit R1 final_causal",
+    "generated_output_SHA256": {
+      "summary.json": "9bdf63c5b805f6e35cecfd24a1b7afe9b2c0159085dda166def59a3382b5edbb",
+      "SRAM_control_events.json.gz": "df4fb32bef40ea4a169e0b3d9c82abd753f68f1ea09fa02ab88c7490ca5009e8",
+      "active_consumer_binding.json.gz": "65262bf3306493e1157605609143ef2cc553aa40b01a1ca8bd0119f3c42319c6",
+      "composition_model.json": "f016e263c6980d3356c8defc3f303e496a2d5e5bc686f93302d4d9c37e8a40a9",
+      "current_metadata_binding.json.gz": "e55f7fe5a37f76560d59e0e946e47d058fbaea98b9c3127140b75047a9ba0470"
+    }
+  },
+  "review_conclusion": {
+    "source_control_intake": "PASS_WITH_EXPLICIT_LIMITATIONS",
+    "Popper_actual_class_bound": true,
+    "all_class_owners_installed": false,
+    "both_mirror_ACK": "same-go32bankacceptances+onecommonACK ledger validated; no ACK wire identity or observed SRAM timing",
+    "visibility_reverse": "held completion and readback/fence/consumer/reverse enforced in software ledger",
+    "CDC_epoch_qualification": "UNKNOWN_NOT_IMPLEMENTED",
+    "CDC_sender_domain_validation": "unbound nonempty senderdomain accepted; independent mutant preserved; requires qualified source-domain/epoch adapter for production use",
+    "Qwen": "72 exact source chains,9216active spill sectors,576producer vectors; raw432events+metadata snapshot binding PASS",
+    "metadata": "actual bitmap-before-record producer semantics authoritative; former87ca requirement obsolete; do not reorder source",
+    "macro_corner": "functional bothcopies posedge writes only; CLKtoQ/write visibility in SS/context unqualified",
+    "R4": "63authority parent review parallel; not reviewed or adopted here",
+    "fulltoken_rerun": false,
+    "hardware_ticks_credited": false,
+    "hardware_qualified": false,
+    "fulltoken_production_lifecycle": "UNKNOWN_NOT_CAPTURED"
+  }
+}

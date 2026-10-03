@@ -1,0 +1,27 @@
+{
+  "status": "PASS_SOURCE_CONTROL_AND_QWEN_RAW_SPANS_WITH_OPEN_CDC_QUALIFICATION",
+  "pins_verified": 19,
+  "groups": 72,
+  "events": 432,
+  "CDC_mutants": {
+    "wrong_token": {
+      "accepted": false,
+      "error": "matching source consumer, held sinks and explicit reverse CDC receipt",
+      "remaining_owner": 1
+    },
+    "wrong_receiver_edge": {
+      "accepted": false,
+      "error": "matching source consumer, held sinks and explicit reverse CDC receipt",
+      "remaining_owner": 1
+    },
+    "unknown_sender_domain": {
+      "accepted": true,
+      "remaining_owner": 0
+    },
+    "epoch_fields_unsupported": {
+      "accepted": false,
+      "error": "matching source consumer, held sinks and explicit reverse CDC receipt",
+      "remaining_owner": 1
+    }
+  }
+}

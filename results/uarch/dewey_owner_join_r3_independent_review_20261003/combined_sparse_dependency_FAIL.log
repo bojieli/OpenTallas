@@ -1,0 +1,44 @@
+........................................................................ [ 57%]
+...................................................F.                    [100%]
+=================================== FAILURES ===================================
+____________________ test_default_off_and_physical_refusal _____________________
+
+    def test_default_off_and_physical_refusal():
+        class Prefix:pass
+>       assert a.engine_class(Prefix).__name__=='Engine'
+
+tests/test_ds_hbm_additive_endpoint_join_r54.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_hbm_additive_endpoint_join_r54.py:113: in engine_class
+    base=predecessor_engine(prefix,finite_pc10=finite_pc10,retire_unconsumed=retire_unconsumed,physical_backend=physical_backend)
+tools/ds_hbm_pc10_composed_engine_r46.py:26: in engine_class
+    base=endpoint_engine_class(prefix,finite_pc10=finite_pc10,physical_backend=physical_backend)
+tools/ds_hbm_pc10_engine_r44.py:86: in engine_class
+    reference = reference_engine_class(prefix)
+tools/ds_hbm_bound_engine_r43.py:50: in engine_class
+    sagan=peer('h3_deepseek_full_token_driver')
+tools/h3_ds_connected_provider_r37.py:17: in peer
+    pins=json.loads((D/'peer_source_pins.json').read_bytes());path=D/'inputs'/(name+'.py')
+/usr/lib/python3.10/pathlib.py:1126: in read_bytes
+    with self.open(mode='rb') as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/OpenTallas-review-dewey-owner-r3/results/uarch/ds_hbm_connected_source_r37_20261002/peer_source_pins.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/OpenTallas-review-dewey-owner-r3/results/uarch/ds_hbm_connected_source_r37_20261002/peer_source_pins.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_ds_hbm_additive_endpoint_join_r54.py::test_default_off_and_physical_refusal
+1 failed, 124 passed in 86.70s (0:01:26)
