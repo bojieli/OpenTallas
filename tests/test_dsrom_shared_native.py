@@ -43,3 +43,36 @@ def test_retained_registered_transpose_hold_no_capture_edge():
  assert 'pipe_can_load = !pipe_v || out_ready' in p
  assert p.count('ELASTIC_PIPE == 0 || pipe_can_load')==4
  assert 'pipe_last && (ELASTIC_PIPE == 0 || out_ready)' in p
+def test_terminal_archives_complete_and_unchanged():
+ import tarfile
+ d=ROOT/'results/uarch/dsrom_shared_native_vm_20261003/evidence'
+ receipts=json.loads((d/'receipts.json').read_text())
+ for name,r in receipts.items():
+  p=d/r['archive'];assert hashlib.sha256(p.read_bytes()).hexdigest()==r['sha256']
+  with tarfile.open(p) as t:
+   record=next(n for n in t.getnames() if n.endswith('record.json'))
+   actual=json.load(t.extractfile(record));assert actual['status']=='TERMINAL'
+   assert actual['terminal']==r['terminal']
+   if 'source_sha256' in actual:
+    for name,h in actual['source_sha256'].items():
+     saved=next(n for n in t.getnames() if n.startswith('sources/') and n.endswith(Path(name).name))
+     assert hashlib.sha256(t.extractfile(saved).read()).hexdigest()==h
+   else:
+    manifest=next(n for n in t.getnames() if n.endswith('sources.json'))
+    for x in json.load(t.extractfile(manifest))['snapshot']:
+     saved=next(n for n in t.getnames() if n.endswith(x['copy']))
+     measured=hashlib.sha256(t.extractfile(saved).read()).hexdigest()
+     if r.get('source_manifest_valid') is False:
+      assert 'diagnostic only' in r['source_manifest_failure']
+      assert measured==r['diagnostic_source_hashes'][x['copy']]
+     else:assert measured==x['sha256']
+def test_raw_complete_macros_reset_and_failure_scopes():
+ d=json.loads((ROOT/'results/uarch/dsrom_shared_native_vm_20261003/evidence/receipts.json').read_text())
+ assert 'PASS SHARED_NATIVE_PROVIDER clients=8 macros=256' in d['ds-shared-native-provider-epyc-r1']['terminal']
+ p=d['ds-related-native-parent-epyc-r2']['terminal']
+ assert 'related_planes=13 macros=256' in p and 'reset_debt=1' in p and 'masked_row_receipt=1' in p
+ assert 'syntax error' in d['ds-related-native-parent-epyc-r1']['terminal']
+ assert 'writes=1060' in d['ds-related-transpose-epyc-r1']['terminal']
+ assert 'commitx' in d['ds-transpose-first-word-trace']['terminal']
+ assert 'TRANSPOSE_PASS words=266 writes=1064 stalls=132 holds=103' in d['ds-related-transpose-epyc-r2']['terminal']
+ assert not json.loads((ROOT/'results/uarch/dsrom_shared_native_vm_20261003/implementation.json').read_text())['whole_parent_swapped']
