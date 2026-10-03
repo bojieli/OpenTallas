@@ -36,7 +36,16 @@ The repaired screen is therefore about 150 ps pessimistic. A screen miss inside 
 | same, ENABLE_AR256=1 | 1.2 | screen | repaired -143 ps (within calibration): needs a route |
 | Qwen `ot_rom_oneshot_die` (collective credit/pop loop), DEPTH=32 | 1.2 | screen `screens/qwen/oneshot_die_d32_833.json` | **FAIL, real loop**: repaired -1,208 ps, 490 MHz. The path is `rp` → 32:1 flop-FIFO head mux → `head_mode` → `pop` → fans out to every `rp`/`cnt`/`cr` (`rtl/rom/ot_rom_oneshot_allreduce.sv:122-162`). Routed SS run is in flight on ot-pve1. |
 | Qwen ME spine (FAST_ISSUE 0/1), core sequencer (spine and SU black-boxed), vstream SW=64 | 1.2 / 0.9 | screens running on ot-pve1 | pending |
-| DS ROM (18 blocks) and HBM comparators (~15 blocks) | | helper screens running; see STATUS.md | pending |
+| DS ROM (18 blocks) | | helper screens running; see STATUS.md | pending |
+| HBM `ot_gpu_issue` (SM issue: `item = wb+si < items_q` → row_ok → adv → cursor) | 1.2 | screen `screens/hbm/issue_*` | **FAIL, real loop**: Qwen 813 MHz (-397 ps), DS 752 MHz; it stays about 810 MHz at 1.024 and 1.111 ns too |
+| HBM `ot_gpu_bulk_copy` (consume: cons_p → 1024:1 `full[cons_p]` → take) | 1.2 | screen | **FAIL, real loop**: Qwen 682 MHz, DS 590 MHz |
+| HBM `ot_gpu_rf_visibility_fence_w6` (SECDED decode → update → re-encode in one cycle) | 1.2 | screen | **FAIL, real loop**: 429 MHz |
+| HBM KV lifecycle controller (72-entry tag match → reader state) | 1.2 | screen | **FAIL, real loop**: 458 MHz |
+| DS MTP accept, guarded (SECDED-coded slot state) | 0.9 | screen | **FAIL, real loop**: 444 MHz |
+| HBM `ot_gpu_router_topk` (`lane <= insert(lane,x)`), bench-only | 1.2 | screen | FAIL, loop: 621 MHz |
+| HBM `ot_gpu_stack` control, fence (H1), barrier | 1.2 | screen | pass (control focus +34 / +27 / +602 ps) |
+| HBM `ot_gpu_scratch_service` | 1.2 | screen | -130 ps, from SRAM clk→Q 707 ps at SS: a route is needed, not a loop |
+| Streaming HBM controller (branch 52ce3e9c1, routed) | HBM CK/2 | routed | PASS at 1.024 ns (+19 ps); -4.7 ps at 0.833 ns. Acceptable in the service clock |
 
 ## Fix for the one confirmed failing loop (one-shot collective pop)
 - **The fix:**
@@ -47,6 +56,22 @@ The repaired screen is therefore about 150 ps pessimistic. A screen miss inside 
 - **Per-token impact:** about 72 all-reduces per token gives +72 cycles on about 144,954, i.e. 0.05% of the per-user rate.
 - **With the chosen DEPTH 256 SRAM FIFO:** the macro read latency already forces a registered head, so the same structure applies.
 
+## Fixes for the HBM comparator loops (all standard GPU practice; screen only, not yet routed)
+- **`ot_gpu_issue`:**
+  - The fix is look-ahead: register `row_ok`/`last` for the next item, precomputed from `si+1` and `wb+IL`, so `adv` is a registered-flag AND.
+  - Cost: 0 cycles per iteration, +1 cycle of latency per op.
+  - Alternative: two-warp interleaving, where each issue slot alternates between two independent rows. That gives 0 throughput loss when at least 2 rows are in flight (IL=8 already has 8).
+- **`ot_gpu_bulk_copy`:**
+  - The fix is a registered `full[cons_p+1]` look-ahead (a next-slot valid bit), or a per-bank occupancy split into 8×128 banks.
+  - Cost: +1 cycle of latency per stream, no rate loss.
+- **SECDED state loops** (fence_w6, MTP accept, W2):
+  - Keep the live state unencoded in flops and encode only on write-back or for checking.
+  - Mutable control-state protection must stay (AGENTS.md), so the alternative is a check that runs one cycle behind and raises a fault, rather than a decode in the loop.
+  - Cost: 0 cycles per iteration plus one cycle of fault-detection latency.
+- **KV lifecycle:**
+  - The fix is to register the 72-way tag match, i.e. a two-cycle lookup pipelined over independent keys.
+  - Cost: +1 cycle per lease operation. That is per layer-KV access, not per element, so the token impact is negligible (to be priced).
+
 ## Pricing basis (Qwen ROM)
 - 31 fused instructions per layer per die (`program.hex`) and about 1,150 per token.
 - A +1 cycle per issue on the core or ME issue handshake (`ready = !active && !pend`) would cost at most about 1,150 cycles per token, i.e. 0.8%.
@@ -54,7 +79,14 @@ The repaired screen is therefore about 150 ps pessimistic. A screen miss inside 
 
 ## Verdict (provisional)
 - **Qwen ROM:** the sequencer's loops close at 1.2 GHz routed, so the earlier pre-layout "miss" was a fanout artifact. The collective pop loop fails by about 1.2 ns in the screen. It has a cheap fix (0.05%). The ME/core/SU results are pending.
-- **DS ROM, HBM:** pending. See STATUS.md.
+- **HBM comparators: AT RISK.**
+  - Four per-token control loops miss 1.2 GHz by far more than the 150 ps screen pessimism: SM issue at about 810 MHz, bulk-copy consume at 590-680 MHz, the SECDED fence at 429 MHz and KV lifecycle at 458 MHz.
+  - Each has a standard look-ahead or register-split fix with no per-iteration cycle cost. As built, though, the SM would run at about 0.6 GHz unless they are fixed.
+  - A routed confirmation of `ot_gpu_issue` and `ot_gpu_bulk_copy` is the next step.
+- **DS ROM:** pending. See STATUS.md.
+- **Screen notes:**
+  - The HBM screens used a tool copy (`jobs/risk_clock_loops_screen_hbm.py`) that adds SRAM macro LEF/lib, enlarges the floorplan for high-pin-count blocks and cuts the FP black boxes, plus RTL copies with the w6 SECDED package functions inlined (a Yosys import crash).
+  - Its "all fmax" print is wrong (slack in seconds); only the register-to-register figures are quoted.
 
 ## Replay
 ```

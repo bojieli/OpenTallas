@@ -20,6 +20,9 @@
    - Launcher: `~/rcl-20261003/jobs/hbm_jobs*.sh`.
    - Copy them to `screens/hbm/`.
    - Blocks: gpu_issue, bulk_copy, stack, rf_service, full_sm_service, scratch_service, rf_visibility_fence(+w6), w2_nc6 quarantine, KV lifecycle, hbm_r14_pc, barrier, router_topk, expert_fetch, nvls_switch, mtp_accept_guarded.
+   - Done in the screens (see REPLAY.md): issue, bulk_copy, stack, fence, fence_w6, mtp, kvlife, topk, scratch, barrier.
+   - Still running: rfsvc_ack_833, fullsm_ack_833, r14pc_1024/833, w2nc6_833/1024, kvjoined_833 and efetch_nr_833 on agidock; nvls_833/967 on pve1, all under `runs/hbm2/`.
+   - Summary script: `jobs/hbm_sum.py hbm2`.
    - The streaming HBM controller already has a routed record on branch `claude/qwen-hbm-sustained-bw-20261003` @ 52ce3e9c1:
 
      | Period | Result | WNS | fmax |
@@ -29,6 +32,7 @@
 
      It runs in the HBM service clock, so this is acceptable.
 5. **Next routes.** Route the worst one or two genuinely loop-carried paths that the screen fails by more than 150 ps, using the TP-sequencer recipe in `jobs/route_tpseq.sh` (`--orfs-corner WC --hold-corners WC,BC`, 60/25 ps, `ADDER_MAP_FILE=`, `OT_ORFS_NUM_CORES=16`), then run `corner_sta.py`.
+   - Route `ot_gpu_issue` (Qwen params) and `ot_gpu_bulk_copy` FIRST: they are the HBM per-token loops at 590-810 MHz.
    - Candidates already known: DS q-element ICG enable (`ot_v41_rom_elem_w10.sv:172-180`, earlier estimate -530 ps) and `ot_coll_topk_merge`.
 6. **Memory policy.** Launch every synth through `~/bin/admit.sh <GB> --`. Synths over 5 GB go to ot-pve1 or ot-epyc1tb. agidock ran out of memory once in this session, and the first ME-spine and vstream screens died there.
 
