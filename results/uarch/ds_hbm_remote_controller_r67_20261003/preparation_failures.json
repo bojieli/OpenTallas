@@ -1,0 +1,23 @@
+{
+  "historical_parent_refusals": [
+    "boundary labels unvalidated against actual serialized state",
+    "caller-supplied PID could fabricate cold process"
+  ],
+  "local_preparation_failures": [
+    {
+      "reason": "sparse retained h3_exact_scalar_contract.py absent",
+      "stage": "component fixture"
+    },
+    {
+      "reason": "sparse retained PC10 input_manifest absent",
+      "stage": "component fixture"
+    },
+    {
+      "reason": "sparse retained rope_cos auxiliary input absent",
+      "stage": "price generator"
+    }
+  ],
+  "preserved_R66": "7d910f5af686ac10d0dea50a30f9036f8c9ed7a8",
+  "production_run_count": 0,
+  "resolution": "restore exact tracked dependency bytes; no pinned source changes; final17 testsPASS; final price generation exit0"
+}

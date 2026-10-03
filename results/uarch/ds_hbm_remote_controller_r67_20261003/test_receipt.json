@@ -1,0 +1,7 @@
+{
+  "command": "/home/ubuntu/bin/python -m pytest -q tests/test_ds_hbm_atomic_checkpoint_r67.py tests/test_ds_hbm_per_pc_r67.py",
+  "elapsed_seconds": 65.16,
+  "exit_code": 0,
+  "scope": "filesystem/control and real finite-provider component; not released-checkpoint actual PC0-1 smoke",
+  "tests": 17
+}
