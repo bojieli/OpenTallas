@@ -47,7 +47,10 @@ def price():
     mux_bits = 15*record_bits*5   # six-source mux per local TX, five 2:1 mux equivalents/bit
     wire_bits = 20*2*wire*record_bits
     reg_mm2 = (snapshot_bits + wire_bits) * DFF_UM2 / 1e6
-    fixed_gather = 2*hop + 3 + 96
+    uncontended_gather = 2*hop + 3 + 96
+    # Each local TX sends own + five relays; only one record may be in flight.
+    # Charge all five returning-credit waits, not just the route diameter.
+    fixed_gather = 5*(2*hop+2) + hop + 3 + 96
     fixed_ar = fixed_gather - 96 + 7*7 + 1  # ESTIMATE LAT7, seven levels; exact program gate pending
     baseline = 1e6 / 2261.7
     saved_us = (225*(777-fixed_gather*period) + 40*(824-fixed_ar*period))/1000
@@ -84,8 +87,11 @@ def price():
         power=dict(serdes_w=lanes*33/42, budget_w=33,
                    grade='ESTIMATE transferred budget; excludes endpoint/wires/clock', endpoint_w=None),
         latency=dict(gather_fixed_cycles_estimate=fixed_gather,
+                     uncontended_two_hop_cycles_estimate=uncontended_gather,
+                     finite_credit_waits_per_local_port=5,
                      gather_fixed_ns_estimate=fixed_gather*period,
                      ar_fixed_ns_estimate=fixed_ar*period,
+                     correction='r1 omitted six-way local-port contention and returning-credit waits; preserved as failed hypothesis',
                      gather_payload_slope_cycles_per_rank_word=None,
                      per_token_saved_us_estimate=saved_us,
                      per_user_gain_pct_estimate=100*(baseline/(baseline-saved_us)-1),
