@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""Construct the complete native eight-sink clock leaf, not a parent closure.
+
+All eight priced relay/pad cells are matched simultaneously to enclosed-contact
+sites and checked against BOTH endpoint budgets. No global solver mutation.
+"""
+import gzip, hashlib, json
+from pathlib import Path
+import numpy as np
+from scipy.spatial import cKDTree
+from scipy.sparse import csr_matrix
+from scipy.sparse.csgraph import maximum_bipartite_matching
+
+ROOT = Path(__file__).resolve().parents[1]
+BASE = ROOT / 'results/uarch/dsrom_native_relay_leaf_route_20261003'
+
+def construct(p):
+    ts = p['tasks']
+    if len(ts) != 8 or any(len(t['node_ids']) != 1 for t in ts):
+        raise ValueError('Complete fixed eight-sink, one-relay-per-branch leaf required')
+    if len({t['source_instance'] for t in ts}) != 1:
+        raise ValueError('One actual native driver required')
+    rc = np.array([p['RC_fF_per_um']['M8'], p['RC_fF_per_um']['M9']])
+    sites = p['sites']
+    a = np.array([[v['bbox_DBU'][0]+27, v['bbox_DBU'][1]+135] for v in sites])
+    tree = cKDTree(a*rc)
+    edges, ptr = [], [0]
+    for t in ts:
+        near = tree.query_ball_point(np.array(t['source_contact_DBU'])*rc,
+                                    t['first_metal_budget_fF']*1000+1e-9, p=1)
+        for j in sorted(near):
+            last = np.sum(np.abs(a[j]+[321, 0]-t['sink_contact_DBU'])*rc)/1000
+            if last <= t['relay_metal_budget_fF']+1e-12:
+                edges.append(j)
+        ptr.append(len(edges))
+    graph = csr_matrix((np.ones(len(edges), dtype=np.int8), edges, ptr),
+                       shape=(8, len(sites)))
+    matching = maximum_bipartite_matching(graph, perm_type='column')
+    if any(j < 0 for j in matching):
+        raise ValueError('No complete eight-branch contact/site matching; no route admission')
+    cells = [dict(c) for c in p['cells']]
+    branches = []
+    for i, j in enumerate(matching):
+        t = ts[i]; v = dict(sites[int(j)])
+        v['instance'] = f'relay_{i}'; v['role'] = 'existing_priced_relay_or_pad'
+        cells.append(v)
+        first = np.sum(np.abs(a[j]-t['source_contact_DBU'])*rc)/1000
+        last = np.sum(np.abs(a[j]+[321, 0]-t['sink_contact_DBU'])*rc)/1000
+        branches.append(dict(source=t['source_instance'], sink=t['destination'],
+                             relay=v['instance'], first_C_fF=float(first),
+                             last_C_fF=float(last), first_limit_fF=t['first_metal_budget_fF'],
+                             last_limit_fF=t['relay_metal_budget_fF'],
+                             source_contact=t['source_contact_DBU'], sink_contact=t['sink_contact_DBU']))
+    for i, c in enumerate(cells):
+        for d in cells[:i]:
+            x,y,X,Y=c['bbox_DBU']; a0,b,A,B=d['bbox_DBU']
+            if x<A and a0<X and y<B and b<Y:
+                raise ValueError('Cell overlap')
+    box=[min(c['bbox_DBU'][k] for c in cells) for k in (0,1)]
+    origin=[box[0]//54*54-2160,box[1]//540*540-2160]
+    end=[max(c['bbox_DBU'][k] for c in cells) for k in (2,3)]
+    die=[0,0,((end[0]-origin[0]+2159)//54+1)*54/1000,
+         ((end[1]-origin[1]+2159)//540+1)*540/1000]
+    return dict(candidate=p['candidate'], scope=p['scope'], cells=cells,
+                branches=branches, translated_origin_DBU=origin, die_um=die,
+                fixed_native_cells=9, fixed_priced_relay_pad_cells=8,
+                standard_cell_body_um2=8*1.08*.27+9*.378*.27,
+                original_driver_fanout=8, relay_fanout=1,
+                PG_M3_reserved_lanes_per_5p4um=2, PG_M3_width_um=.054,
+                clocks_per_cycle=1, arithmetic_MACs=0, memory_bytes_per_cycle=0,
+                unchanged_global_buffer_count=68614, extra_architectural_cycles=0,
+                source_parent_clock_waveform_qualified=False,
+                source_reset_pins=0, reset_construction_covered=False,
+                conditional_clock_leaf_route_admitted=True,
+                full_parent_build_admitted=False, SSFF_qualified=False,
+                component_inputs='ideal 20ps clock slew; parent waveform remains separate',
+                PG='native alternating M1 rails plus ORFS physical PG; actual DRC/PG result required',
+                source_sha256=hashlib.sha256((BASE/'inputs/leaf.json.gz').read_bytes()).hexdigest())
+
+def emit(m):
+    out=ROOT/'rtl/model_ready_ds_relay_20261003/ot_ds_native_relay_leaf.v'
+    lines=['module ot_ds_native_relay_leaf(input clk, input [7:0] d, output [7:0] qn);',
+           'wire source_y; wire [7:0] leaf_y;',
+           '(* keep, dont_touch *) BUFx4_ASAP7_75t_R source_buf (.A(clk), .Y(source_y));']
+    for i in range(8):
+        lines += [f'(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_{i} (.A(source_y), .Y(leaf_y[{i}]));',
+                  f'(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_{i} (.CLK(leaf_y[{i}]), .D(d[{i}]), .QN(qn[{i}]));']
+    lines += ['endmodule'];out.write_text('\n'.join(lines)+'\n')
+    ox,oy=m['translated_origin_DBU'];tcl=['set block [ord::get_db_block]',
+        'set scale [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])/1000.0}]']
+    names={m['branches'][0]['source']:'source_buf'}
+    names.update({b['sink']:f'sink_{i}' for i,b in enumerate(m['branches'])})
+    for c in m['cells']:
+        name=names.get(c['instance'],c['instance']); x,y=c['bbox_DBU'][:2]
+        tcl += [f'set inst [$block findInst {name}]',
+                f'if {{$inst == "NULL"}} {{error "Missing actual fixed instance {name}"}}',
+                f'if {{[[$inst getMaster] getName] ne "{c["master"]}"}} {{error "Master changed {name}"}}',
+                f'$inst setOrient {c["orientation"]}',
+                f'$inst setLocation [expr {{round({x-ox}*$scale)}}] [expr {{round({y-oy}*$scale)}}]',
+                '$inst setPlacementStatus LOCKED']
+    tcl += ['set_dont_touch [get_cells *]', 'set_dont_touch [get_nets *]',
+            'puts "DS_NATIVE_RELAY_FIXED_CENSUS_17"']
+    (ROOT/'physical/dsrom_native_relay_20261003/place.tcl').write_text('\n'.join(tcl)+'\n')
+    # This component already contains its selected clock tree. Bypass automatic
+    # CTS insertion, not timing checks: retain exact priced cells, propagate the
+    # clock, validate placement, and produce the normal ORFS stage artifacts.
+    (ROOT/'physical/dsrom_native_relay_20261003/fixed_cts.tcl').write_text('''
+set_propagated_clock [all_clocks]
+check_placement -verbose
+estimate_parasitics -placement
+report_metrics 4 "native fixed clock tree"
+orfs_write_db $::env(RESULTS_DIR)/4_1_cts.odb
+orfs_write_sdc $::env(RESULTS_DIR)/4_cts.sdc
+exit
+'''.lstrip())
+    (ROOT/'physical/dsrom_native_relay_20261003/report.tcl').write_text('''
+set block [ord::get_db_block]
+set expected [concat source_buf {relay_0 relay_1 relay_2 relay_3 relay_4 relay_5 relay_6 relay_7 sink_0 sink_1 sink_2 sink_3 sink_4 sink_5 sink_6 sink_7}]
+foreach n $expected {
+  set inst [$block findInst $n]
+  if {$inst == "NULL"} {error "Native clock instance lost: $n"}
+  if {[$inst getPlacementStatus] ne "LOCKED"} {error "Native fixed instance moved: $n"}
+}
+report_clock_skew -setup
+report_clock_skew -hold
+report_check_types -max_slew -max_capacitance -max_fanout -violators
+puts "DS_NATIVE_RELAY_ROUTED_CENSUS_17"
+'''.lstrip())
+    (ROOT/'physical/dsrom_native_relay_20261003/clock.sdc').write_text(
+        'set_clock_transition 20 [get_clocks core_clk]\n')
+    (ROOT/'physical/dsrom_native_relay_20261003/pdn.tcl').write_text('''
+add_global_connection -net VDD -inst_pattern .* -pin_pattern ^VDD$ -power
+add_global_connection -net VSS -inst_pattern .* -pin_pattern ^VSS$ -ground
+set_voltage_domain -name CORE -power VDD -ground VSS
+define_pdn_grid -name native_relay -voltage_domains CORE
+add_pdn_stripe -grid native_relay -layer M1 -width 0.018 -followpins
+add_pdn_stripe -grid native_relay -layer M3 -width 0.054 -pitch 5.4 -spacing 2.7 -offset 0.54
+add_pdn_connect -grid native_relay -layers {M1 M3}
+'''.lstrip())
+    (BASE/'model.json').write_text(json.dumps(m,indent=2,sort_keys=True)+'\n')
+
+if __name__ == '__main__':
+    p=json.loads(gzip.decompress((BASE/'inputs/leaf.json.gz').read_bytes()))
+    emit(construct(p))

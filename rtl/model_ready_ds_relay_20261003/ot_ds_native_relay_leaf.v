@@ -1,0 +1,20 @@
+module ot_ds_native_relay_leaf(input clk, input [7:0] d, output [7:0] qn);
+wire source_y; wire [7:0] leaf_y;
+(* keep, dont_touch *) BUFx4_ASAP7_75t_R source_buf (.A(clk), .Y(source_y));
+(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_0 (.A(source_y), .Y(leaf_y[0]));
+(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_0 (.CLK(leaf_y[0]), .D(d[0]), .QN(qn[0]));
+(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_1 (.A(source_y), .Y(leaf_y[1]));
+(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_1 (.CLK(leaf_y[1]), .D(d[1]), .QN(qn[1]));
+(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_2 (.A(source_y), .Y(leaf_y[2]));
+(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_2 (.CLK(leaf_y[2]), .D(d[2]), .QN(qn[2]));
+(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_3 (.A(source_y), .Y(leaf_y[3]));
+(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_3 (.CLK(leaf_y[3]), .D(d[3]), .QN(qn[3]));
+(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_4 (.A(source_y), .Y(leaf_y[4]));
+(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_4 (.CLK(leaf_y[4]), .D(d[4]), .QN(qn[4]));
+(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_5 (.A(source_y), .Y(leaf_y[5]));
+(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_5 (.CLK(leaf_y[5]), .D(d[5]), .QN(qn[5]));
+(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_6 (.A(source_y), .Y(leaf_y[6]));
+(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_6 (.CLK(leaf_y[6]), .D(d[6]), .QN(qn[6]));
+(* keep, dont_touch *) BUFx4_ASAP7_75t_R relay_7 (.A(source_y), .Y(leaf_y[7]));
+(* keep, dont_touch *) DFFHQNx1_ASAP7_75t_R sink_7 (.CLK(leaf_y[7]), .D(d[7]), .QN(qn[7]));
+endmodule

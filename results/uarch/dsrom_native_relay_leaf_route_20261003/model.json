@@ -1,0 +1,395 @@
+{
+  "PG": "native alternating M1 rails plus ORFS physical PG; actual DRC/PG result required",
+  "PG_M3_reserved_lanes_per_5p4um": 2,
+  "PG_M3_width_um": 0.054,
+  "SSFF_qualified": false,
+  "arithmetic_MACs": 0,
+  "branches": [
+    {
+      "first_C_fF": 0.005925834,
+      "first_limit_fF": 0.32762649999999993,
+      "last_C_fF": 0.10896537599999999,
+      "last_limit_fF": 2.88,
+      "relay": "relay_0",
+      "sink": "s0_r0_seat0_b0_dataFF",
+      "sink_contact": [
+        10979307,
+        15567255
+      ],
+      "source": "s0_r0_seat0_clock_leaf0",
+      "source_contact": [
+        10979736,
+        15567525
+      ]
+    },
+    {
+      "first_C_fF": 0.04522347,
+      "first_limit_fF": 0.32762649999999993,
+      "last_C_fF": 0.210640212,
+      "last_limit_fF": 2.88,
+      "relay": "relay_1",
+      "sink": "s0_r0_seat0_b1_dataFF",
+      "sink_contact": [
+        10982277,
+        15567255
+      ],
+      "source": "s0_r0_seat0_clock_leaf0",
+      "source_contact": [
+        10979736,
+        15567525
+      ]
+    },
+    {
+      "first_C_fF": 0.084521106,
+      "first_limit_fF": 0.32762649999999993,
+      "last_C_fF": 0.48010971599999996,
+      "last_limit_fF": 2.88,
+      "relay": "relay_2",
+      "sink": "s0_r0_seat0_b2_dataFF",
+      "sink_contact": [
+        10985247,
+        15567255
+      ],
+      "source": "s0_r0_seat0_clock_leaf0",
+      "source_contact": [
+        10979736,
+        15567525
+      ]
+    },
+    {
+      "first_C_fF": 0.123818742,
+      "first_limit_fF": 0.32762649999999993,
+      "last_C_fF": 0.74957922,
+      "last_limit_fF": 2.88,
+      "relay": "relay_3",
+      "sink": "s0_r0_seat0_b3_dataFF",
+      "sink_contact": [
+        10988217,
+        15567255
+      ],
+      "source": "s0_r0_seat0_clock_leaf0",
+      "source_contact": [
+        10979736,
+        15567525
+      ]
+    },
+    {
+      "first_C_fF": 0.163116378,
+      "first_limit_fF": 0.32762649999999993,
+      "last_C_fF": 1.019048724,
+      "last_limit_fF": 2.88,
+      "relay": "relay_4",
+      "sink": "s0_r0_seat0_b4_dataFF",
+      "sink_contact": [
+        10991187,
+        15567255
+      ],
+      "source": "s0_r0_seat0_clock_leaf0",
+      "source_contact": [
+        10979736,
+        15567525
+      ]
+    },
+    {
+      "first_C_fF": 0.202414014,
+      "first_limit_fF": 0.32762649999999993,
+      "last_C_fF": 1.288518228,
+      "last_limit_fF": 2.88,
+      "relay": "relay_5",
+      "sink": "s0_r0_seat0_b5_dataFF",
+      "sink_contact": [
+        10994157,
+        15567255
+      ],
+      "source": "s0_r0_seat0_clock_leaf0",
+      "source_contact": [
+        10979736,
+        15567525
+      ]
+    },
+    {
+      "first_C_fF": 0.24171165,
+      "first_limit_fF": 0.32762649999999993,
+      "last_C_fF": 1.557987732,
+      "last_limit_fF": 2.88,
+      "relay": "relay_6",
+      "sink": "s0_r0_seat0_b6_dataFF",
+      "sink_contact": [
+        10997127,
+        15567255
+      ],
+      "source": "s0_r0_seat0_clock_leaf0",
+      "source_contact": [
+        10979736,
+        15567525
+      ]
+    },
+    {
+      "first_C_fF": 0.28100928599999997,
+      "first_limit_fF": 0.32762649999999993,
+      "last_C_fF": 1.827457236,
+      "last_limit_fF": 2.88,
+      "relay": "relay_7",
+      "sink": "s0_r0_seat0_b7_dataFF",
+      "sink_contact": [
+        11000097,
+        15567255
+      ],
+      "source": "s0_r0_seat0_clock_leaf0",
+      "source_contact": [
+        10979736,
+        15567525
+      ]
+    }
+  ],
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cells": [
+    {
+      "bbox_DBU": [
+        10979226,
+        15567120,
+        10980306,
+        15567390
+      ],
+      "instance": "s0_r0_seat0_b0_dataFF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "orientation": "R0",
+      "role": "dataFF"
+    },
+    {
+      "bbox_DBU": [
+        10982196,
+        15567120,
+        10983276,
+        15567390
+      ],
+      "instance": "s0_r0_seat0_b1_dataFF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "orientation": "R0",
+      "role": "dataFF"
+    },
+    {
+      "bbox_DBU": [
+        10985166,
+        15567120,
+        10986246,
+        15567390
+      ],
+      "instance": "s0_r0_seat0_b2_dataFF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "orientation": "R0",
+      "role": "dataFF"
+    },
+    {
+      "bbox_DBU": [
+        10988136,
+        15567120,
+        10989216,
+        15567390
+      ],
+      "instance": "s0_r0_seat0_b3_dataFF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "orientation": "R0",
+      "role": "dataFF"
+    },
+    {
+      "bbox_DBU": [
+        10991106,
+        15567120,
+        10992186,
+        15567390
+      ],
+      "instance": "s0_r0_seat0_b4_dataFF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "orientation": "R0",
+      "role": "dataFF"
+    },
+    {
+      "bbox_DBU": [
+        10994076,
+        15567120,
+        10995156,
+        15567390
+      ],
+      "instance": "s0_r0_seat0_b5_dataFF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "orientation": "R0",
+      "role": "dataFF"
+    },
+    {
+      "bbox_DBU": [
+        10997046,
+        15567120,
+        10998126,
+        15567390
+      ],
+      "instance": "s0_r0_seat0_b6_dataFF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "orientation": "R0",
+      "role": "dataFF"
+    },
+    {
+      "bbox_DBU": [
+        11000016,
+        15567120,
+        11001096,
+        15567390
+      ],
+      "instance": "s0_r0_seat0_b7_dataFF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "orientation": "R0",
+      "role": "dataFF"
+    },
+    {
+      "bbox_DBU": [
+        10979388,
+        15567390,
+        10979766,
+        15567660
+      ],
+      "instance": "s0_r0_seat0_clock_leaf0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "orientation": "MX",
+      "role": "raw_clock_buffer"
+    },
+    {
+      "bbox_DBU": [
+        10979766,
+        15567390,
+        10980144,
+        15567660
+      ],
+      "home": "raw",
+      "instance": "relay_0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "orientation": "MX",
+      "proposed_site_ID": "s0.raw.10979766.15567390",
+      "role": "existing_priced_relay_or_pad"
+    },
+    {
+      "bbox_DBU": [
+        10980144,
+        15567390,
+        10980522,
+        15567660
+      ],
+      "home": "raw",
+      "instance": "relay_1",
+      "master": "BUFx4_ASAP7_75t_R",
+      "orientation": "MX",
+      "proposed_site_ID": "s0.raw.10980144.15567390",
+      "role": "existing_priced_relay_or_pad"
+    },
+    {
+      "bbox_DBU": [
+        10980522,
+        15567390,
+        10980900,
+        15567660
+      ],
+      "home": "raw",
+      "instance": "relay_2",
+      "master": "BUFx4_ASAP7_75t_R",
+      "orientation": "MX",
+      "proposed_site_ID": "s0.raw.10980522.15567390",
+      "role": "existing_priced_relay_or_pad"
+    },
+    {
+      "bbox_DBU": [
+        10980900,
+        15567390,
+        10981278,
+        15567660
+      ],
+      "home": "raw",
+      "instance": "relay_3",
+      "master": "BUFx4_ASAP7_75t_R",
+      "orientation": "MX",
+      "proposed_site_ID": "s0.raw.10980900.15567390",
+      "role": "existing_priced_relay_or_pad"
+    },
+    {
+      "bbox_DBU": [
+        10981278,
+        15567390,
+        10981656,
+        15567660
+      ],
+      "home": "raw",
+      "instance": "relay_4",
+      "master": "BUFx4_ASAP7_75t_R",
+      "orientation": "MX",
+      "proposed_site_ID": "s0.raw.10981278.15567390",
+      "role": "existing_priced_relay_or_pad"
+    },
+    {
+      "bbox_DBU": [
+        10981656,
+        15567390,
+        10982034,
+        15567660
+      ],
+      "home": "raw",
+      "instance": "relay_5",
+      "master": "BUFx4_ASAP7_75t_R",
+      "orientation": "MX",
+      "proposed_site_ID": "s0.raw.10981656.15567390",
+      "role": "existing_priced_relay_or_pad"
+    },
+    {
+      "bbox_DBU": [
+        10982034,
+        15567390,
+        10982412,
+        15567660
+      ],
+      "home": "raw",
+      "instance": "relay_6",
+      "master": "BUFx4_ASAP7_75t_R",
+      "orientation": "MX",
+      "proposed_site_ID": "s0.raw.10982034.15567390",
+      "role": "existing_priced_relay_or_pad"
+    },
+    {
+      "bbox_DBU": [
+        10982412,
+        15567390,
+        10982790,
+        15567660
+      ],
+      "home": "raw",
+      "instance": "relay_7",
+      "master": "BUFx4_ASAP7_75t_R",
+      "orientation": "MX",
+      "proposed_site_ID": "s0.raw.10982412.15567390",
+      "role": "existing_priced_relay_or_pad"
+    }
+  ],
+  "clocks_per_cycle": 1,
+  "component_inputs": "ideal 20ps clock slew; parent waveform remains separate",
+  "conditional_clock_leaf_route_admitted": true,
+  "die_um": [
+    0,
+    0,
+    26.19,
+    4.86
+  ],
+  "extra_architectural_cycles": 0,
+  "fixed_native_cells": 9,
+  "fixed_priced_relay_pad_cells": 8,
+  "full_parent_build_admitted": false,
+  "memory_bytes_per_cycle": 0,
+  "original_driver_fanout": 8,
+  "relay_fanout": 1,
+  "reset_construction_covered": false,
+  "scope": "actual complete eight-sink native leaf, independent of global placement; no parent reset or full tile claim",
+  "source_parent_clock_waveform_qualified": false,
+  "source_reset_pins": 0,
+  "source_sha256": "49330eacd658918b8f7bfae78c2c938f7190d99d686152571bd8f653ac11727e",
+  "standard_cell_body_um2": 3.2513400000000003,
+  "translated_origin_DBU": [
+    10977066,
+    15564960
+  ],
+  "unchanged_global_buffer_count": 68614
+}
