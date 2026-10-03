@@ -1,0 +1,22 @@
+{
+  "actual_artifacts_or_old_manifest_modified": false,
+  "actual_checkpoint_comparison_verdict": "PASS",
+  "actual_payload_terminal_verdict": "PASS",
+  "corrects_commit": "93b75ccf9f50b6162fb5a52dff3c11065f20efe6",
+  "corrects_file_sha256": "f88f9ad0156b4e1b9e0edb45cc622a1b83a48fb0e9aa51d6e83c9b96681b8b65",
+  "corrects_path": "results/uarch/c0_pc40_payload_lease_20261003/actual_terminal_manifest_r1.json",
+  "hardware_admitted": false,
+  "historical_producer_exit_RC": null,
+  "historical_producer_exit_RC_retained": false,
+  "interpretation": "The archived unit query is a later observation. Do not use its default/current exit fields as independently retained historical process RC. Payload and checkpoint PASS come from actual saved terminal and bytes.",
+  "later_unit_status_is_retained_historical_process_RC": false,
+  "later_unit_status_observation": {
+    "ActiveState": "inactive",
+    "ExecMainStatus": 0,
+    "MainPID": 0,
+    "Result": "success"
+  },
+  "numerical_prefix_rerun": false,
+  "prior_exit_status_0_language_withdrawn": true,
+  "schema": "C0_PC40_TERMINAL_EXIT_PROVENANCE_CORRECTION_R1"
+}
