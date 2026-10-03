@@ -21,7 +21,7 @@ def price():
     # One-hot saved row, registered snapshot of one actual row. Existing arrays
     # and authority ports retained. Additional two command-dispatch edges only.
     snapshot = 1+13+64+1+64+13+2+2+2+2
-    added = 72+snapshot+1  # FSM extends 4 -> 5 bits
+    added = 72+snapshot+8+1  # FSM extends 4 -> 5 bits
     return dict(schema='opentallas.hbm_accel.ha4.price.v1', status='ESTIMATE_NOT_ADOPTED',
         source_sha256={str(source.relative_to(ROOT)): hashlib.sha256(source.read_bytes()).hexdigest()},
         reuse={'model_parent':'8564e79eaf906c820aec5eb92bfda1cca80ee43d',
