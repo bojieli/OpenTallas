@@ -178,6 +178,12 @@ def main():
             for k in ("two_op", "fused"):
                 case[k]["r"] = f"{case[k]['r']:08x}"
             result["cases"][tag] = case
+            # non-finite operands are a FAULT in this RTL (qmul/qadd err), not IEEE inf/NaN: there the criterion is
+            # the two programs' identical bits and identical fault, not the golden's IEEE specials
+            if not finite:
+                if not (same and case["fault_agrees"] and two["fault_cycles"] > 0):
+                    raise RuntimeError(f"{tag}: non-finite case: fused and two-op differ: {json.dumps(case)[:800]}")
+                continue
             if not (same and vs_gold_two == 0 and vs_gold_fused == 0 and case["fault_agrees"] and nan_ok):
                 raise RuntimeError(f"{tag}: fused epilogue not bit-exact: {json.dumps(case)[:800]}")
             if finite and not (case["r_equals_golden_two_op"] and case["r_equals_golden_fused"]
