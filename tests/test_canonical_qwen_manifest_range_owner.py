@@ -52,3 +52,16 @@ def test_witness_is_read_from_installed_hardware_not_a_callback():
  class Owner:physical=Port()
  a.owners=[Owner()]
  assert a.workspace_view(0)==dict(tuple239=19,owner55=7,new_admit=False)
+
+
+def test_future_consumers_preserve_PC5_and_PC11_leases(placement):
+ hs=[h for h in placement.rf.values() if h.rank==0 and h.sm==0]
+ def survivors(pc):
+  return {placement.version_ids[h.version] for h in hs
+          if h.birth<=pc and h.consumers and h.consumers[-1]>pc}
+ assert survivors(5)=={0,2,3,1378,1379,1380}
+ assert survivors(11)=={0,2,3,1773}
+ # Early consumers cannot authorize lease retirement.
+ for v,last in ((2,35),(3,20)):
+  h=next(h for h in hs if placement.version_ids[h.version]==v)
+  assert h.consumers[-1]==last
