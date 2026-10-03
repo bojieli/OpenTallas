@@ -1,0 +1,57 @@
+{
+  "Ampere_input_contract": "selected_plan.Ampere_inventory_contract",
+  "P_and_R_launched": false,
+  "SSFF_qualified": false,
+  "additional_area_for_CTS_reset_hold_route_required": true,
+  "clock": {
+    "FF_uncertainty_ps": 25,
+    "SS_uncertainty_ps": 60,
+    "bench_period_ps": 10000,
+    "model_target_GHz": 1.2,
+    "period_ps": 833.3333333333334
+  },
+  "exact_literal_frontend_acceptances": 157,
+  "exact_literal_frontend_assertions": 611,
+  "exact_next_inputs": [
+    "Ampere frozen full32 macro/slot/row/track/OBS/PG census and sourcepin/minmax-driver/load plussameclockminmaxCTS",
+    "selectedphysical runner tool/corner/RC manifest and source modelreview",
+    "freshmeasuredresource/fleetlease before one selectedcontext GO"
+  ],
+  "focused_tests": 44,
+  "full32_elaboration_only": true,
+  "full32_enabled_instances_in_actual_vvp": 32,
+  "fullbridge_prerequisites_not_blocking_local_timing": [
+    "installedactualcaller",
+    "actualallcopy/resetsource",
+    "whole1737/2213 numericaltoken"
+  ],
+  "historical_fc62_24d0_required": false,
+  "immutable_readonly_failures": [
+    "Liberty1D pulsewidth parser preparation failure retained; selectivearc handling fixed; no P&R executed"
+  ],
+  "original_trace_byteidentical": true,
+  "prospective_area_mm2_full32": 0.0600441856,
+  "schema": "W6_FULL32_CONTEXTUAL_PLAN_READY_FOR_INPUT_REVIEW_V1",
+  "script_and_current_F0_dependencies": "component/new fullwidth+connector models pluscanonical9b; no historicalfence_contract/f0_inputs helper import",
+  "selected_context": "results/uarch/hbm_W6_contextual_plan_20261003/r1/selected_context.json",
+  "selected_model": "Qwen",
+  "selected_plan": "results/uarch/hbm_W6_contextual_plan_20261003/r1/selected_plan.json",
+  "selected_route": "W6_FULL32_DISTRIBUTED_ASAP7_RVT_M2_M5_R1",
+  "source_static": "eabc7de5375f9c1a8be8d765c5d172aba3fd72c7",
+  "subtests": 8,
+  "timing_screen": {
+    "actual_placement_driver_load_unknown": true,
+    "analytical_envelope_is_not_STA_and_not_optimized_mapping": true,
+    "envelope_includes_FF_INV_setup_uncertainty": true,
+    "ideal_balanced_parity_envelope_ps": 2475.344,
+    "identity_and_correction_FSM_wire_skew_extra": true,
+    "mandatory_baseline_not_optional_gain_gate": true,
+    "price_extra_pipeline_if_exact_mapped_path_requires_it": "new source/control-stage inventory and actual latency in model, then separate reviewed defaultoff successor; not an automatic tuning sweep",
+    "serial_parity_envelope_ps": 9250.904,
+    "source_decode_fold_XOR": 36,
+    "source_encode_fold_XOR": 35,
+    "source_seven_XOR_input_load_fF": 9.90689,
+    "unpipelined_source_not_prospectively_closed": true
+  },
+  "wholebridge_qualified": false
+}

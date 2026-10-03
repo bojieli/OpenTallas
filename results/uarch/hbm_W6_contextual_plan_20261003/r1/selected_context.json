@@ -1,0 +1,19 @@
+{
+  "Ampere_WIP_basis": "selected-expanded32SM context metadata only; await frozen actualplacement slot and pinload records; retained abstractSM views do not qualify final fit",
+  "DeepSeek_physical_credit": false,
+  "NC": 6,
+  "RF_macros": 4096,
+  "SMs": 32,
+  "build_admitted": false,
+  "installed_caller_allcopy_hardware_is_independent": true,
+  "model": "Qwen",
+  "model_plan_sha256": "ad98aa5b1e6fd8f06a589f0ce382302113d92530be500993f825f639f00438c5",
+  "physical_source_requirement": "retain neighbor RF128x256 mirrored4096 and scratch1024x25664 inventory/OBS/PG, fullQwen matrix neighbor inventory from Ampere; do not centralize onlyW6 or invent macro origins",
+  "projection_contains_CTS_reset_hold_repair": false,
+  "prospective_IO_constraints_are_functional_producers": false,
+  "route_id": "W6_FULL32_DISTRIBUTED_ASAP7_RVT_M2_M5_R1",
+  "schema": "W6_SINGLE_SELECTED_PHYSICAL_CONTEXT_V1",
+  "scratch_macros": 64,
+  "source_component": "e951f5097b852eeb94bf8511d86ecb5344dc9cd9",
+  "static_preparation_source": "eabc7de5375f9c1a8be8d765c5d172aba3fd72c7"
+}

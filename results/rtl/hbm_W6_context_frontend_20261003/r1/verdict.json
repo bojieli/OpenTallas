@@ -1,0 +1,24 @@
+{
+  "P_and_R_launched": false,
+  "SSFF_qualified": false,
+  "acceptances": 157,
+  "assertions": 611,
+  "flat_binary_sha256": "833f091304192456ae0a9b255649fddec9c9033545b281b75d40cb73a15170bb",
+  "full32_elaboration_binary_sha256": "c687b87408b7b66021d97743964a99adb70959d836cecf4aa66f69944268119b",
+  "physical": false,
+  "source_commit": "eabc7de5375f9c1a8be8d765c5d172aba3fd72c7",
+  "source_representation": {
+    "full32_top_sha256": "3f7b80603c2ea538f6f82febd714e9806bf026fc4ff57df0f6fe3fbce56883e7",
+    "literal_inline_sha256": "0bf3fc72dac78d405f5418dd001770491fb50b717b403110ed7bef0b0235fb7c",
+    "numerical_or_hardware_qualified": false,
+    "original_module_sha256": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396",
+    "original_package_sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "original_source_modified": false,
+    "physical_requested_ENABLE": 1,
+    "replicas": 32,
+    "schema": "W6_LITERAL_FRONTEND_ADAPTER_V1",
+    "source_default_ENABLE": 0,
+    "unchanged_function_body_sha256": "15567afce2877dd8887738adab95756f0e16b760ad880891bca42920ae3e440e"
+  },
+  "verdict": "PASS_LITERAL_FRONTEND_AND_FULL32_ELABORATION_ONLY"
+}
