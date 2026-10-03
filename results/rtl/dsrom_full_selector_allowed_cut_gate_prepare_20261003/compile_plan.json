@@ -1,0 +1,91 @@
+{
+  "FSIZE": "infinity",
+  "PVE2_PVE3_newjobs": false,
+  "checker": "tools/verify_dsrom_balanced_selector_completion.py",
+  "compile_GO": false,
+  "compile_argv": [
+    "--binary",
+    "--timing",
+    "--assert",
+    "-Wno-SPECIFYIGN",
+    "--top-module",
+    "bench_dsrom_full_selector_allowed_cut_prepare",
+    "-I<fresh_package>/gate/fixture",
+    "-GMUTANT=<profile>",
+    "--Mdir",
+    "<fresh_build>/profile_<profile>"
+  ],
+  "component_G0": "unchanged hardware sized under pinned complete model/c9; literal ports/root/reset/function interface source-reviewed; actual primitive backend PASS required before this frontend",
+  "current_c9_clock_bank_and_old_capture_FAILURE_preserved": true,
+  "current_owned_execution_job": null,
+  "default1024_CAPTURE_FAIL_preserved": true,
+  "explicit_tool_version": "Verilator5.050",
+  "fresh_directories_required": true,
+  "include_path": "<fresh_package>/gate/fixture",
+  "incremental_objects_retained": true,
+  "memory_CPU_disk_resources": "fresh measured host inventory and owned capacity-based reservation before source-bound GO; fullshape complexity1,174,534modelstatebits and1,441,192literaldata/terminalBUFs must not inherit guessed primitive/pilot caps",
+  "no_timeout_change": true,
+  "one_attempt_no_retry_or_fallback": true,
+  "per_process_AS_cap": null,
+  "physical_G0": false,
+  "physical_or_token_credit": false,
+  "primitive_gate_required": {
+    "actual_PASS_receipt": null,
+    "exact_mutant_DIFF_modes": [
+      1,
+      2,
+      3
+    ],
+    "normal_counts": {
+      "assertions": 252,
+      "async_events": 7,
+      "steps": 33
+    },
+    "prepared_commit": "05d99ed89102c88a694279b5676ee259b6ab8650"
+  },
+  "profiles": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "runtime_cwd": "<fresh_package>/gate/fixture",
+  "schema": "opentallas.fullselector.allowed-cut.compile-proposal.v1",
+  "source_inventory": [
+    "bench_dsrom_full_selector_allowed_cut_prepare.sv",
+    "allowed/candidate/ot_w15_coll_dma_balanced_allowed_cut_prepare.sv",
+    "allowed/candidate/ot_topk_allowed_cut_packet_prepare.sv",
+    "gate/candidate/ot_chip_v41x_coll_transpose.sv",
+    "gate/candidate/ot_coll_topk_merge.sv",
+    "gate/candidate/ot_coll_topk_merge_balanced_prepare.sv",
+    "gate/candidate/ot_coll_topk_merge_staged_impl_prepare.sv",
+    "gate/candidate/ot_topk_fixed_packet_delay_prepare.sv",
+    "gate/candidate/ot_w15_coll_dma.sv",
+    "allowed/library_sources/asap7sc7p5t_SEQ_RVT_TT_220101.v",
+    "allowed/library_sources/asap7sc7p5t_INVBUF_RVT_TT_201020.v",
+    "allowed/library_sources/asap7sc7p5t_SIMPLE_RVT_TT_201020.v"
+  ],
+  "source_prepare_only": true,
+  "timeout4096_adopted": false,
+  "tool_observations": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "resolved_path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "resolved_path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41"
+    },
+    {
+      "path": "/usr/bin/g++",
+      "resolved_path": "/usr/bin/x86_64-linux-gnu-g++-11",
+      "sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0"
+    }
+  ],
+  "top": "bench_dsrom_full_selector_allowed_cut_prepare",
+  "wall_CPU_time_caps": null,
+  "warning_policy": "SPECIFYIGN only explicitly ignored for functional zero-delay model; all other frontend failures terminal pending independent diagnosis; no Wno-fatal or standin substitution"
+}

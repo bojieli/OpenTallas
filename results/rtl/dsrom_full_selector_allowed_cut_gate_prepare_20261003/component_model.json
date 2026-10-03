@@ -1,0 +1,111 @@
+{
+  "actual_consumer_deadline": null,
+  "boundary": {
+    "actual_clock_reset_PG_congestion_known": false,
+    "formed_write_bits": 2113,
+    "input_bits": 2122,
+    "main_corridor_proposed_tracks": 4214,
+    "remaining_H_V_before_PG_escape": [
+      28,
+      38
+    ],
+    "return_bits": 2088
+  },
+  "build_GO": false,
+  "candidate_and_original_engine_RTL_unchanged": true,
+  "component_root_contract": {
+    "VM_ALWAYS_READY": 1,
+    "all_literal_CLK_pins_bind_unchanged_helperclk": true,
+    "async_reset_check_settle_ps": 1,
+    "c9_phase_pin_routes_not_implied_by_fixture": true,
+    "fall_compare_settle_ps": 1,
+    "fixture_consumption_not_actual_field_credit": true,
+    "fixture_period_ps": 833,
+    "native_VM_capture_pre_NBA": true,
+    "no_new_clock_domain_or_ICG": true,
+    "one_fixture_clk_to_original_and_candidate": true,
+    "timing_or_frequency_credit": false
+  },
+  "core_incremental_model_bits": 127140,
+  "core_model_bits": 698354,
+  "cut_edges": [
+    99,
+    99,
+    28
+  ],
+  "default1024_capture_FAIL_preserved": true,
+  "engine_state_or_stage_or_port_increment": 0,
+  "expected_values_assertions_only": true,
+  "full_integrated_deadline_is_not_fixture_expectation": true,
+  "fulltoken_credit": false,
+  "geometry": {
+    "CB": 14,
+    "DIG": 8,
+    "LDW": 4,
+    "N": 4,
+    "NMAX": 2048,
+    "P": 64,
+    "PF": 64
+  },
+  "immutable_synthetic_input_only": true,
+  "live1950286": "untouched",
+  "main_context": "75c71c1b3d885face9b93c2637e8d747d7c7ec6e",
+  "memory_ports": {
+    "filter_read_B_per_edge": 512,
+    "hist_read_B_per_edge": 256,
+    "load_B_per_edge": 256,
+    "new_ports": 0,
+    "result_B_per_edge": 256
+  },
+  "new_jobs": [],
+  "nine_call_increment": 3312,
+  "no_standin_library": true,
+  "old_failures_unchanged": true,
+  "only_new_bench_connections": [
+    "candidate literal allowed-cut caller selected",
+    "TK_CELL_MAP enabled for profiles0..3; disabled for defaultoff4"
+  ],
+  "physical_admitted": false,
+  "primitive_backend_PASS_evidence": null,
+  "primitive_backend_gate_required": "05d99ed89102c88a694279b5676ee259b6ab8650; exact primitive PASS plus three bound DIFFs before full mapped-cut compile",
+  "schema": "opentallas.full-selector.allowed-cut.functional-component.v1",
+  "selected_physical_context": {
+    "clock_reset_and_PG_pin_via_union_qualified": false,
+    "complete_selector_with_existing_core_rectangle_headroom_mm2": 2.32266450888,
+    "core_clock_BUFs": 70406,
+    "core_clock_bank_DBU": [
+      3129786,
+      8953200,
+      3147930,
+      9745920
+    ],
+    "core_clock_bank_reserve_mm2": 0.01438311168,
+    "owner_c9": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+    "physical_fit": false,
+    "previous_Maxwell_annex_charge_mm2": 0,
+    "previous_Maxwell_annex_selected": false,
+    "sink_to_site_routes_or_root_skew_bound": false,
+    "transport_clock_BUFs": 48007
+  },
+  "service_increment": 142,
+  "source_pins": {
+    "results/rtl/dsrom_balanced_selector_candidate_prepare_20261002/gate_r4/artifact_manifest.json": "2d18488b320038a991a7dfe09edcd5235c269d9b32037a5d09822d6d9368e47f",
+    "results/rtl/dsrom_balanced_selector_candidate_prepare_20261002/implementation_model.json": "3e723748844ca5031657ca21ac13a202000dbd06eec54e9017ad980be2cf8ac7",
+    "results/rtl/dsrom_selector_allowed_cut_prepare_20261002/model.json": "7a1aedba1d44a5d5b66543babe3b7a8125d801a07df98ef0bc18158ce38c5e62",
+    "results/rtl/dsrom_selector_allowed_cut_prepare_20261002/package_r2/artifact_manifest.json": "d70015d46d89e4e93705371d36266e24f6d5a1ada57d6a8b2bf2fe1561f27a44",
+    "results/uarch/dsrom_selector_join_admissibility_20261002/model_r2.json": "36e4e1346a8ec184b3ea995c3b42067a56f24578eebde05179304a2e5b36ff6f"
+  },
+  "status": "FULL_COMPONENT_MODEL_SOURCE_PREPARATION_ONLY",
+  "tests_prepared": {
+    "defaultoff_cases": 37,
+    "fault_cases": 15,
+    "legal_cases": 37,
+    "mutants": 3,
+    "reset_aborts": 4
+  },
+  "timeout4096_adopted": false,
+  "total_model_state_bits": 1174534,
+  "total_per_call_increment": 368,
+  "transport_ASR_present_FF": 226,
+  "transport_payload_FF": 475954
+}

@@ -1,0 +1,82 @@
+{
+  "actual_field_accepted_trace": false,
+  "compile_GO": false,
+  "component_GO_required": true,
+  "component_model_sha256": "5c927adabff39e79f8b2b9bae2b01cf19f54eb9b489401aaf041f58ff71987c5",
+  "core_physical_cell_mapping_qualified": false,
+  "full_geometry": {
+    "CB": 14,
+    "DIG": 8,
+    "LDW": 4,
+    "N": 4,
+    "NMAX": 2048,
+    "P": 64,
+    "PF": 64
+  },
+  "fulltoken_credit": false,
+  "gate_and_allowed_original_packages_unchanged": true,
+  "include_path": "gate/fixture",
+  "integrated_parent_admitted": false,
+  "mapped_cuts": true,
+  "no_new_ACK_or_timeout": true,
+  "physical_admitted": false,
+  "prepared_counts": {
+    "defaultoff_cases": 37,
+    "fault_cases": 15,
+    "legal_cases": 37,
+    "mutants": 3,
+    "reset_aborts": 4
+  },
+  "primitive_gate_PASS_required": true,
+  "profiles": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "run_cwd": "gate/fixture",
+  "same_complete_fault_contract": true,
+  "same_independent_expected_values": true,
+  "same_strict_completion_checker": "tools/verify_dsrom_balanced_selector_completion.py",
+  "schema": "opentallas.fullselector.literal-cut.functional-package.v1",
+  "selected_clock_context": {
+    "c9_consumer_deadline": null,
+    "c9_physical_admitted": false,
+    "literal_source_to_clock_site_assignment_present": false,
+    "raw_clock_corrections_separate_not_selector_recharge": 68614,
+    "selected_clock_bank": {
+      "complete_selector_reserved_with_core_rectangle_headroom_mm2": 2.3226645088799995,
+      "core_clock70406": 70406,
+      "named_bank_bbox_DBU": [
+        3129786,
+        8953200,
+        3147930,
+        9745920
+      ],
+      "reserved_bank_mm2": 0.01438311168,
+      "source_cells_hash": "ab576968dddf57dacdd632b3e561dd2dca101c37b1e94239711cc802404c7b04",
+      "source_commit": "d4a3deb550aa71afec39e0549adb0e0a7f4c2894",
+      "spare_sites": 58,
+      "transport_clock48007_not_readded": true
+    },
+    "site_instances": 70406
+  },
+  "source_clock_binding": "all original/inferred core and actual literal cut CLK bind unchanged fixtureclk; physical sink assignments absent",
+  "source_inventory": [
+    "bench_dsrom_full_selector_allowed_cut_prepare.sv",
+    "allowed/candidate/ot_w15_coll_dma_balanced_allowed_cut_prepare.sv",
+    "allowed/candidate/ot_topk_allowed_cut_packet_prepare.sv",
+    "gate/candidate/ot_chip_v41x_coll_transpose.sv",
+    "gate/candidate/ot_coll_topk_merge.sv",
+    "gate/candidate/ot_coll_topk_merge_balanced_prepare.sv",
+    "gate/candidate/ot_coll_topk_merge_staged_impl_prepare.sv",
+    "gate/candidate/ot_topk_fixed_packet_delay_prepare.sv",
+    "gate/candidate/ot_w15_coll_dma.sv",
+    "allowed/library_sources/asap7sc7p5t_SEQ_RVT_TT_220101.v",
+    "allowed/library_sources/asap7sc7p5t_INVBUF_RVT_TT_201020.v",
+    "allowed/library_sources/asap7sc7p5t_SIMPLE_RVT_TT_201020.v"
+  ],
+  "timeout4096_adopted": false,
+  "top": "bench_dsrom_full_selector_allowed_cut_prepare"
+}
