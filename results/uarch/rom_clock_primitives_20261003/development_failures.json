@@ -1,0 +1,13 @@
+{
+  "status": "IMMUTABLE_DEVELOPMENT_FAILURE_HISTORY",
+  "failures": [
+    {
+      "case": "build-r1",
+      "failure": "Relative C++ path was not resolvable from external Mdir; changed build invocation to absolute source path."
+    },
+    {
+      "case": "clock_stop-r1",
+      "failure": "Bench incorrectly required stopped-clock port valid level to clear within running-clock time. Parked receiver has no acceptance edge. Corrected gate to running port; restart requires reset. No metastability/phase-window claim."
+    }
+  ]
+}
