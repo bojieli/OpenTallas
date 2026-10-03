@@ -1,0 +1,704 @@
+{
+  "admission": {
+    "RTL_GO": false,
+    "global_solver_changed": false,
+    "named_one_provider_cellsite_and_corridor_reservation_ready": true,
+    "new_jobs": 0,
+    "original_RTL_changed": false,
+    "physical_G0": false,
+    "rate_or_tau": false,
+    "reason": "All cells have a named disjoint source-row reservation; loaded codecs, upperclock relays, legal native contacts/vias, PGupfeed and source VM/provider fence still require construction. No wholeparent placedfit or actualfleet mapping transferred."
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cells": {
+    "additional_CLK_RESET_BUF_vs_pin_minimum": 51328,
+    "additional_per_ASR_SETN_TIE": 112608,
+    "body_um2": 661253.8404600001,
+    "exact_conserved": true,
+    "full112608_protected_bits": 112608,
+    "gross50pct_mm2": 1.3225076809200003,
+    "leaf2016_and578buffer_cost_not_inside_this_provider": true,
+    "old_scalar_removal_or_containment_credit": 0,
+    "original_full_gross50pct_mm2": 1.3021796617199999,
+    "selected_counts": {
+      "BUFx4_ASAP7_75t_R": 376233,
+      "DFFASRHQNx1_ASAP7_75t_R": 112608,
+      "INVx1_ASAP7_75t_R": 1797076,
+      "NAND2x1_ASAP7_75t_R": 5677166,
+      "TIEHIx1_ASAP7_75t_R": 112608
+    },
+    "source_full_counts": {
+      "BUFx4_ASAP7_75t_R": 324905,
+      "DFFASRHQNx1_ASAP7_75t_R": 112608,
+      "INVx1_ASAP7_75t_R": 1797076,
+      "NAND2x1_ASAP7_75t_R": 5677166
+    },
+    "width7690_already_inside_full112608": true,
+    "width_only_0p03135116988_NOT_ADDED": true
+  },
+  "clock_reset": {
+    "FF_hold_ps": 25,
+    "SS_setup_ps": 60,
+    "domain_GHz": 0.9,
+    "first_upper8_leaf_cluster_span_um": 81.27,
+    "full_K512_clock_baseline_not_removed": true,
+    "local_R0_PG_rails_DBU": {
+      "BUFx4_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      },
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      },
+      "INVx1_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      },
+      "NAND2x1_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      },
+      "TIEHIx1_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      }
+    },
+    "local_branch_loads": {
+      "CLK": {
+        "actual_pin_via_route_verified": false,
+        "pins_fF": 1.5094560000000001,
+        "positive_wire_length_envelope_um": 15,
+        "remaining_to5p76_for_all_vias_fF": 1.573419,
+        "sinks": 3,
+        "total_excluding_via_fF": 4.186581,
+        "wire_fF": 2.6771249999999998
+      },
+      "RESETN": {
+        "actual_pin_via_route_verified": false,
+        "pins_fF": 2.408727,
+        "positive_wire_length_envelope_um": 15,
+        "remaining_to5p76_for_all_vias_fF": 0.6741480000000002,
+        "sinks": 3,
+        "total_excluding_via_fF": 5.085851999999999,
+        "wire_fF": 2.6771249999999998
+      }
+    },
+    "local_matched3sink_levels_per_network": [
+      37536,
+      4692,
+      587,
+      74,
+      10,
+      2,
+      1
+    ],
+    "native_CLK_RESET_ASR_polygons": {
+      "CLK": "\n    DIRECTION INPUT ;\n    USE CLOCK ;\n    PORT\n      LAYER M1 ;\n        RECT 0.099 0.182 0.117 0.236 ;\n        RECT 0.072 0.182 0.117 0.2 ;\n        RECT 0.072 0.07 0.09 0.2 ;\n    END\n  ",
+      "RESETN": "\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M2 ;\n        RECT 0.632 0.144 1.067 0.162 ;\n      LAYER M1 ;\n        RECT 1.044 0.102 1.062 0.167 ;\n        RECT 0.612 0.072 0.668 0.09 ;\n        RECT 0.612 0.144 0.662 0.162 ;\n        RECT 0.612 0.072 0.63 0.162 ;\n      LAYER V1 ;\n        RECT 0.637 0.144 0.655 0.162 ;\n        RECT 1.044 0.144 1.062 0.162 ;\n    END\n  "
+    },
+    "pin_minimum_tree_not_spatially_reachable_without_added_relays": true,
+    "reset_assert_does_not_clear_accepted_holder_debt": true,
+    "root_Clock_reset_native_contact_and_M8_upfeed": null,
+    "total_BUF_floor_two_networks": 85804,
+    "upper8_BUF_pin_load_fF": 4.655728,
+    "upper8_branch_wire_length_ceiling_um": 6.1872643227342765,
+    "upper_FO8_spatial_relays_not_in_minimum_cell_counts": true
+  },
+  "instance": {
+    "allocated_instances_this_receipt": 1,
+    "fleet_replica_count": null,
+    "model_home_binding_only_not_new_topology_adoption": true,
+    "name": "DS_S58_S0_TP_R0_PAR2_SHARD0_NATIVE_CORE_K512_ORIGIN",
+    "namespace": "die.u_tile.u_core.u_xu.u_sel + source XU/ME origins",
+    "other_shards_or_head_provider_not_instantiated_here": true,
+    "physical_shard": 0,
+    "rank": 0,
+    "representative_parent_binding_not_proof_stage0_owns_native_MTP_program": true,
+    "source_cores_per_wrapper": 1,
+    "stage": 0
+  },
+  "latency": {
+    "VM_freeze_read_reservation2_retained": true,
+    "allcopies_delivery_reverseCDC_stalls_not_zero": true,
+    "conditional_ns_at0p9GHz": 145352.22222222222,
+    "extra_pipeline_edges_selected": 0,
+    "full_iteration_latency": null,
+    "loaded_codec_compare_encode_II_unqualified": true,
+    "source_129280score_segment_edges": 130817,
+    "source_after_last_edges": 1026,
+    "source_logical_tick_II": 1,
+    "zero_extra_edge_measured": false
+  },
+  "named_corridor": {
+    "area_mm2": 0.0138638304,
+    "bbox_DBU": [
+      13300794,
+      14925870,
+      13313754,
+      15995610
+    ],
+    "cuts": [
+      {
+        "actual_available_after_PG_via_clock": null,
+        "bbox_DBU": [
+          13300794,
+          14938830,
+          13313754,
+          14945310
+        ],
+        "direction": "HORIZONTAL",
+        "first_grid_track": 311226,
+        "gross_grid_tracks": 135,
+        "last_grid_track": 311360,
+        "layer": "M4",
+        "name": "score",
+        "policy_half_reserved_tracks": 67,
+        "signals": 66
+      },
+      {
+        "actual_available_after_PG_via_clock": null,
+        "bbox_DBU": [
+          13300794,
+          14949630,
+          13313754,
+          14952060
+        ],
+        "direction": "HORIZONTAL",
+        "first_grid_track": 311451,
+        "gross_grid_tracks": 50,
+        "last_grid_track": 311500,
+        "layer": "M4",
+        "name": "index",
+        "policy_half_reserved_tracks": 25,
+        "signals": 25
+      },
+      {
+        "actual_available_after_PG_via_clock": null,
+        "bbox_DBU": [
+          13300794,
+          14956380,
+          13313754,
+          14959350
+        ],
+        "direction": "HORIZONTAL",
+        "first_grid_track": 311591,
+        "gross_grid_tracks": 62,
+        "last_grid_track": 311652,
+        "layer": "M4",
+        "name": "original_lease",
+        "policy_half_reserved_tracks": 31,
+        "signals": 30
+      },
+      {
+        "actual_available_after_PG_via_clock": null,
+        "bbox_DBU": [
+          13300794,
+          14963670,
+          13313754,
+          14966910
+        ],
+        "direction": "HORIZONTAL",
+        "first_grid_track": 311743,
+        "gross_grid_tracks": 68,
+        "last_grid_track": 311810,
+        "layer": "M4",
+        "name": "fence",
+        "policy_half_reserved_tracks": 34,
+        "signals": 33
+      },
+      {
+        "actual_available_after_PG_via_clock": null,
+        "bbox_DBU": [
+          13300794,
+          14971230,
+          13313754,
+          14974470
+        ],
+        "direction": "HORIZONTAL",
+        "first_grid_track": 311901,
+        "gross_grid_tracks": 67,
+        "last_grid_track": 311967,
+        "layer": "M4",
+        "name": "VM_read_request",
+        "policy_half_reserved_tracks": 33,
+        "signals": 31
+      },
+      {
+        "actual_available_after_PG_via_clock": null,
+        "bbox_DBU": [
+          13300794,
+          14978790,
+          13313754,
+          14982030
+        ],
+        "direction": "HORIZONTAL",
+        "first_grid_track": 312058,
+        "gross_grid_tracks": 68,
+        "last_grid_track": 312125,
+        "layer": "M4",
+        "name": "VM_read_return",
+        "policy_half_reserved_tracks": 34,
+        "signals": 32
+      },
+      {
+        "actual_available_after_PG_via_clock": null,
+        "bbox_DBU": [
+          13300794,
+          14986350,
+          13313754,
+          14992560
+        ],
+        "direction": "HORIZONTAL",
+        "first_grid_track": 312216,
+        "gross_grid_tracks": 129,
+        "last_grid_track": 312344,
+        "layer": "M4",
+        "name": "VM_write",
+        "policy_half_reserved_tracks": 64,
+        "signals": 63
+      },
+      {
+        "actual_available_after_PG_via_clock": null,
+        "bbox_DBU": [
+          13300794,
+          14996880,
+          13313754,
+          15002010
+        ],
+        "direction": "HORIZONTAL",
+        "first_grid_track": 312435,
+        "gross_grid_tracks": 107,
+        "last_grid_track": 312541,
+        "layer": "M4",
+        "name": "XU_origin",
+        "policy_half_reserved_tracks": 53,
+        "signals": 52
+      },
+      {
+        "actual_available_after_PG_via_clock": null,
+        "bbox_DBU": [
+          13300794,
+          15006330,
+          13313754,
+          15011460
+        ],
+        "direction": "HORIZONTAL",
+        "first_grid_track": 312632,
+        "gross_grid_tracks": 107,
+        "last_grid_track": 312738,
+        "layer": "M4",
+        "name": "ME_origin",
+        "policy_half_reserved_tracks": 53,
+        "signals": 52
+      }
+    ],
+    "full_router_to_VM_HUB_or_leaf_accept_path_unbound": true,
+    "policy_half_is_reservation_not_actual_available_tracks": true,
+    "ports_not_deduplicated_or_renamed": true,
+    "total_interface_signals": 384
+  },
+  "named_home": {
+    "all_cell_runs": [
+      {
+        "bbox_relative_DBU": [
+          0,
+          0,
+          1300050,
+          703620
+        ],
+        "runs": [
+          {
+            "count": 1252686,
+            "first_row_DBU": 0,
+            "group_width_DBU": 162,
+            "members": [
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 0
+              }
+            ],
+            "name": "INVx1_ASAP7_75t_R",
+            "per_row": 8025,
+            "row_pitch_DBU": 540,
+            "rows": 157
+          },
+          {
+            "count": 4595775,
+            "first_row_DBU": 84780,
+            "group_width_DBU": 324,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 0
+              }
+            ],
+            "name": "NAND2x1_ASAP7_75t_R",
+            "per_row": 4012,
+            "row_pitch_DBU": 540,
+            "rows": 1146
+          }
+        ],
+        "section": "all_current_codecs_padding_and_joint_fault_reduction"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          707940,
+          1300050,
+          718200
+        ],
+        "runs": [
+          {
+            "count": 65213,
+            "first_row_DBU": 707940,
+            "group_width_DBU": 378,
+            "members": [
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 0
+              }
+            ],
+            "name": "BUFx4_ASAP7_75t_R",
+            "per_row": 3439,
+            "row_pitch_DBU": 540,
+            "rows": 19
+          }
+        ],
+        "section": "global_and_descriptor_fanout_minimum"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          722520,
+          1300050,
+          724680
+        ],
+        "runs": [
+          {
+            "count": 1385,
+            "first_row_DBU": 722520,
+            "group_width_DBU": 162,
+            "members": [
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 0
+              }
+            ],
+            "name": "INVx1_ASAP7_75t_R",
+            "per_row": 8025,
+            "row_pitch_DBU": 540,
+            "rows": 1
+          },
+          {
+            "count": 8240,
+            "first_row_DBU": 723060,
+            "group_width_DBU": 324,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 0
+              }
+            ],
+            "name": "NAND2x1_ASAP7_75t_R",
+            "per_row": 4012,
+            "row_pitch_DBU": 540,
+            "rows": 3
+          }
+        ],
+        "section": "read_reservations_address_counts_identity_held_output_and_fence"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          729000,
+          1300050,
+          849960
+        ],
+        "runs": [
+          {
+            "count": 317789,
+            "first_row_DBU": 729000,
+            "group_width_DBU": 162,
+            "members": [
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 0
+              }
+            ],
+            "name": "INVx1_ASAP7_75t_R",
+            "per_row": 8025,
+            "row_pitch_DBU": 540,
+            "rows": 40
+          },
+          {
+            "count": 735327,
+            "first_row_DBU": 750600,
+            "group_width_DBU": 324,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 0
+              }
+            ],
+            "name": "NAND2x1_ASAP7_75t_R",
+            "per_row": 4012,
+            "row_pitch_DBU": 540,
+            "rows": 184
+          }
+        ],
+        "section": "source_insertion_sort_and_bank_update_construction"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          854280,
+          1300050,
+          1039500
+        ],
+        "runs": [
+          {
+            "count": 37536,
+            "first_row_DBU": 854280,
+            "group_width_DBU": 11610,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 1404
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 1728
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 2052
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 2376
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 2700
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 3078
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 3456
+              },
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_DBU": 3618
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 5022
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 5184
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 5346
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 5670
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 5994
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 6318
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 6696
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 7074
+              },
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_DBU": 7236
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 8640
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 8802
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 8964
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 9288
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_DBU": 9612
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 9936
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 10314
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_DBU": 10692
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 10854
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 11232
+              }
+            ],
+            "name": "protected3FF_CLK_RESET_leaf",
+            "per_row": 111,
+            "row_pitch_DBU": 540,
+            "rows": 339
+          },
+          {
+            "count": 10732,
+            "first_row_DBU": 1037340,
+            "group_width_DBU": 378,
+            "members": [
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_DBU": 0
+              }
+            ],
+            "name": "BUFx4_ASAP7_75t_R",
+            "per_row": 3439,
+            "row_pitch_DBU": 540,
+            "rows": 4
+          }
+        ],
+        "section": "storage_QN_restore_hold_clock_reset_lower_bound"
+      }
+    ],
+    "all_compiled2048pairs_and14336cfg_macros_unchanged": true,
+    "bbox_DBU": [
+      13313754,
+      14925870,
+      14639724,
+      15995610
+    ],
+    "gross_mm2": 1.4184431478,
+    "halo_DBU": 12960,
+    "height_um": 1069.74,
+    "orientation": "R0",
+    "placed_fit": false,
+    "reader_reservation_kept": [
+      10974906,
+      14894010,
+      13300794,
+      15995610
+    ],
+    "retained_rectangle_conflicts": [],
+    "row_pitch_DBU": 540,
+    "site_DBU": 54,
+    "source_geometry_reservation": true,
+    "width_um": 1325.97
+  },
+  "owner_actions": {
+    "Arch": "Place/capture complete feedback codec at0.9GHz within named runs and corridor; join native CLK/RESET/SETN contacts, upperrelays and actual M8/PGupfeed. Local3sink wire model leaves only explicit viaCap allowance, not proof.",
+    "Maxwell": "Join constructed routes and loaded stage costs back into selected field-parent budget; no copy to allS58/PAR2 fleet until actual core namespaces enrolled.",
+    "Russell": "Use named one fullK512 origin home, full112608bit state and complete sourcecost; no extra7690width-only debit. Own actual defaultoff source control/native acceptance and loaded feedback cuts."
+  },
+  "schema": "DS_MTP_FULL_K512_NAMED_HOME_R1",
+  "source": "594fee25fd9b5ba5a29e99b2b14c381841dd44d8"
+}

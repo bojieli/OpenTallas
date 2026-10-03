@@ -1,0 +1,53 @@
+{
+  "RTL_GO": false,
+  "actual_available_tracks": null,
+  "additional_BUF": 51328,
+  "cell_gross50pct_mm2": 1.32250768092,
+  "clock_limit": "Local3sink15um wirecap screen passes before viaCap; RESETremaining0.674148fF. Firstupper8leafspan81.27um exceeds6.187264um loadbound, needs actual spatial relays/clock construction, not charged pinminimum sufficiency.",
+  "commands": [
+    "python3 -B -m pytest -q tests/test_dsrom_MTP_full_scalar_home.py",
+    "python3 -B tools/dsrom_MTP_full_scalar_home.py --verify",
+    "python3 -B tools/dsrom_MTP_full_scalar_home.py --out /tmp/FRESH-full-K512-home.json"
+  ],
+  "corridor_um": [
+    13300.794,
+    14925.87,
+    13313.754,
+    15995.61
+  ],
+  "home_gross_mm2": 1.4184431478,
+  "home_um": [
+    13313.754,
+    14925.87,
+    14639.724,
+    15995.61
+  ],
+  "individual_SETN_TIE": 112608,
+  "instance": "DS_S58_S0_TP_R0_PAR2_SHARD0_NATIVE_CORE_K512_ORIGIN",
+  "models_original_unchanged": true,
+  "new_jobs": 0,
+  "next": {
+    "Arch": "Use exact named rows/masters, sameflopclusters, portcuts and native CLK/RESET/SETN polygons to construct loaded codec/feedback cuts and complete clock/PG/via routes. No new cold system RTL or oldclocksolver mutation.",
+    "Maxwell": "Consume measured cuts, real routes and actual invocation instance map into selected parent/fullMTP latency; no adoptedfleet replication or unqualified1.302area-only fit.",
+    "Russell": "Bind actual native accepted-origin/VM reservations to one fullK512 instance. Confirm real invocation owner separately from representativeS0geometry; no .031351width delta stacked onto full1.3225cost."
+  },
+  "old_scalar_or_width_only_credit": 0,
+  "owner_mapping": "Representative layer-parent physical reservation only; source594does not prove stage0 owns actual MTP invocation. No implicit PAR2/fleet copies.",
+  "physical_G0": false,
+  "predecessor": "7e249bb221123946ff0ec7d2a67bee5b9cff4924",
+  "scope": "One fullK512 protected scalar/native-origin named source geometry reservation, not a new system architecture or physical GO.",
+  "source": "594fee25fd9b5ba5a29e99b2b14c381841dd44d8",
+  "source_cuts": [
+    66,
+    25,
+    30,
+    33,
+    31,
+    32,
+    63,
+    52,
+    52
+  ],
+  "total_signals": 384,
+  "width7690_in_full_cost": true
+}

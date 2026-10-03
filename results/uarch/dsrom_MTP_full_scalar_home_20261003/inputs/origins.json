@@ -1,0 +1,50 @@
+[
+  {
+    "commit": "594fee25fd9b5ba5a29e99b2b14c381841dd44d8",
+    "copy": "scalar_model.json",
+    "path": "results/uarch/ds_mtp_protected_scalar_origin_20261003/model.json",
+    "sha256": "2c9fa60538ba931b28d61fdf02d7c99338c5d8766531213cbab36da880c4cce8"
+  },
+  {
+    "commit": "594fee25fd9b5ba5a29e99b2b14c381841dd44d8",
+    "copy": "scalar_handoff.txt",
+    "path": "results/uarch/ds_mtp_protected_scalar_origin_20261003/HANDOFF.txt",
+    "sha256": "cbf9d0837bf62f23c216c05dea9952ce766f925eb66321dc506dee5d938feb51"
+  },
+  {
+    "commit": "594fee25fd9b5ba5a29e99b2b14c381841dd44d8",
+    "copy": "scalar_source.py",
+    "path": "tools/ds_mtp_protected_scalar_origin_model.py",
+    "sha256": "6eab578e98c5892066395bc0216f453eef3d15a6ae1faf5c69af9334a2e4e098"
+  },
+  {
+    "copy": "cell_prices.json",
+    "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "source_path": "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/cell_prices.json"
+  },
+  {
+    "copy": "cell_LEF.json",
+    "sha256": "802969ef259feebb2c8c1cab7f8b2e2f367a832605cc59d1156342b6c9153130",
+    "source_path": "results/uarch/dsrom_I66_capture_cells_20261002/inputs/cell_LEF.json"
+  },
+  {
+    "copy": "RC.json",
+    "sha256": "d5028f25dfb271289b1740218aa99b046c104fd49d8b018dceabcab2b643a90c",
+    "source_path": "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/RC_screen.json"
+  },
+  {
+    "copy": "tracks.txt",
+    "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632",
+    "source_path": "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/tracks.txt"
+  },
+  {
+    "copy": "field_parent.json",
+    "sha256": "9abf77f17e63977f54465e97b0f3fa6ee5f1c8ca1f6f6031ae6e1b0df0e8a192",
+    "source_path": "results/uarch/dsrom_field_parent_component_20261003/model.json"
+  },
+  {
+    "copy": "parent_inventory.json",
+    "sha256": "6c01050a581992eb820c6f2d697e7fddf92d6f069d570c6fbf5bb0391cbaa3f9",
+    "source": "Source-matched retained compiled field/config/bands/services, same dimensions as06f7; no reframe"
+  }
+]
