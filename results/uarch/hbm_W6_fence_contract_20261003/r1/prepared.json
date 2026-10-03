@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "Euclid": "W4 actual source-latched tagged common mirror ACK, no inference from old bare ACK",
+    "Nash": "W2 exact source request/completion and versioned KV read provenance",
+    "Popper": "unified full model positive per-boundary cycles/bytes/bits/tracks/replicas/table/mux/fanout/area/slot/token",
+    "Russell": "F0 immutable field/schema freeze including owner_tag/gen/reset cohort/version"
+  },
+  "engine_RTL_ready": false,
+  "engine_RTL_written": false,
+  "hardware_credit": false,
+  "limitations": [
+    "golden fixture widths are not frozen F0",
+    "reset_release Boolean is a fixture, not an actual drain witness",
+    "mirror and completion calls are fixture inputs, not observed SRAM ports",
+    "same-domain reverse fixture does not attest installed CDC",
+    "diagnostic trace list is output-only; finite hardware state uses one slot and a generation high-water register",
+    "fullshape and contextual SS/FF plus wholeprogram connected gates remain mandatory"
+  ],
+  "old_R3_fix_owner": "Dewey; this adds no R3 code changes",
+  "original_source_byte_identical": true,
+  "regenerate": "python3 -B tools/hbm_w6_fence_contract.py --out /tmp/hbm-W6-contract-fresh",
+  "source_base": "103d3ec89373119898c5662d490676f6ff8ab570",
+  "source_sha256": {
+    "tests/test_hbm_w6_fence_contract.py": "2e8820b45cfb00d57bd0f0a4e2b034e6efcdfa85ad3b5677bd94de66d944c97a",
+    "tools/hbm_w6_fence_contract.py": "f3495003cb7a2942cf8c91308965dcb89a767bff50d788325d64d18e71e1a43d"
+  },
+  "status": "PASS_CONTRACT_AND_GOLDEN_ONLY_WAIT_F0_MODEL",
+  "test_command": "python3 -B -m unittest discover -s tests -p test_hbm_w6_fence_contract.py -v",
+  "tests": 15,
+  "whole_program_credit": false
+}
