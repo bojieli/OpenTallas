@@ -67,13 +67,40 @@ class PinTests(unittest.TestCase):
     def test_exact_generation_and_sourcepins(self):
         root=PORTBOOK.parents[3]
         packet=PORTBOOK.parent
-        paths=['ot_gpu_qwen_hbm_integrated.sv','sources.f','ports.json','pin_driver.cpp']
+        paths=['ot_gpu_qwen_joined_kv.sv','ot_gpu_qwen_hbm_integrated.sv','sources.f','ports.json','pin_driver.cpp']
         old={n:(packet/n).read_bytes() for n in paths}
         subprocess.run(['python3',str(packet/'generate.py')],check=True)
         self.assertEqual(old,{n:(packet/n).read_bytes() for n in paths})
         import hashlib
         for source,want in json.loads(PORTBOOK.read_text())['source_sha256'].items():
             self.assertEqual(hashlib.sha256((root/source).read_bytes()).hexdigest(),want,source)
+
+
+    def test_single_controller_actual_source_join(self):
+        packet=PORTBOOK.parent
+        joined=(packet/'ot_gpu_qwen_joined_kv.sv').read_text()
+        self.assertEqual(joined.count('ot_gpu_qwen_kv_lifecycle_controller #'),1)
+        self.assertEqual(joined.count('ot_gpu_qwen_native_consumer_drain #'),1)
+        self.assertNotIn('ot_gpu_qwen_kv_reader_services #',joined)
+        self.assertNotIn('ot_gpu_qwen_kv_native_lifecycle #',joined)
+        self.assertIn('.consumer_identity(c_consumer_identity)',joined)
+        self.assertIn('.drain_done_allcopies(c_drain_done_allcopies)',joined)
+        self.assertIn('.native_complete_tuple(native_complete_tuple)',joined)
+        s=(packet/'ot_gpu_qwen_hbm_integrated.sv').read_text()
+        self.assertIn('.service_wdata(sm_scratch_wdata)',s)
+        self.assertIn('.scratch_wdata(sm_scratch_wdata[i*512 +: 512])',s)
+        self.assertIn('input wire [671:0] kv_cohort_rsp_tuple',s)
+        sources=(packet/'sources.f').read_text().splitlines()
+        self.assertEqual(sources[0],'rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv')
+
+    def test_no_hook_enrollment_with_boot_debt(self):
+        p,w=self.pins('1\n1\n')
+        p.edges=3
+        class Hook:
+            def before_edge(self):pass
+            def after_edge(self):pass
+        with self.assertRaisesRegex(TransportError,'local debt'):p.add_edge_hook(Hook())
+        self.assertEqual(p.hooks,[])
 
     def test_actual_w2_guarded_source_connections(self):
         s=(PORTBOOK.parent/'ot_gpu_qwen_hbm_integrated.sv').read_text()

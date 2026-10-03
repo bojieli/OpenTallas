@@ -144,28 +144,28 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="kv_ACK_visible"){word(dut.kv_ACK_visible);} else
  if(name=="kv_ACK_reverse"){word(dut.kv_ACK_reverse);} else
  if(name=="kv_state_observer_drained"){word(dut.kv_state_observer_drained);} else
- if(name=="kv_operation_valid"){word(dut.kv_operation_valid);} else
- if(name=="kv_operation_ready"){word(dut.kv_operation_ready);} else
- if(name=="kv_operation_identity"){word(uint32_t(dut.kv_operation_identity>>32));word(uint32_t(dut.kv_operation_identity));} else
- if(name=="kv_operation_key"){word(dut.kv_operation_key);} else
- if(name=="kv_operation_stage"){word(dut.kv_operation_stage);} else
- if(name=="kv_operation_owner"){word(uint32_t(dut.kv_operation_owner>>32));word(uint32_t(dut.kv_operation_owner));} else
- if(name=="kv_operator_done_valid"){word(dut.kv_operator_done_valid);} else
- if(name=="kv_operator_done_ready"){word(dut.kv_operator_done_ready);} else
- if(name=="kv_operator_done_owner"){word(uint32_t(dut.kv_operator_done_owner>>32));word(uint32_t(dut.kv_operator_done_owner));} else
- if(name=="kv_operator_reverse_valid"){word(dut.kv_operator_reverse_valid);} else
- if(name=="kv_operator_reverse_ready"){word(dut.kv_operator_reverse_ready);} else
- if(name=="kv_operator_reverse_owner"){word(uint32_t(dut.kv_operator_reverse_owner>>32));word(uint32_t(dut.kv_operator_reverse_owner));} else
- if(name=="kv_endpoint_req_valid"){word(dut.kv_endpoint_req_valid);} else
- if(name=="kv_endpoint_req_ready"){word(dut.kv_endpoint_req_ready);} else
- if(name=="kv_endpoint_req_identity"){word(uint32_t(dut.kv_endpoint_req_identity>>32));word(uint32_t(dut.kv_endpoint_req_identity));} else
- if(name=="kv_endpoint_req_key"){word(dut.kv_endpoint_req_key);} else
- if(name=="kv_endpoint_rsp_valid"){word(dut.kv_endpoint_rsp_valid);} else
- if(name=="kv_endpoint_rsp_ready"){word(dut.kv_endpoint_rsp_ready);} else
- if(name=="kv_endpoint_rsp_identity"){for(int i=15;i>=0;i--)word(dut.kv_endpoint_rsp_identity[i]);} else
- if(name=="kv_endpoint_rsp_key"){for(int i=4;i>=0;i--)word(dut.kv_endpoint_rsp_key[i]);} else
- if(name=="kv_endpoint_rsp_quiet"){word(dut.kv_endpoint_rsp_quiet);} else
- if(name=="kv_reader_services_drained"){word(dut.kv_reader_services_drained);} else
+ if(name=="kv_rst_n"){word(dut.kv_rst_n);} else
+ if(name=="kv_endpoint_fault"){word(dut.kv_endpoint_fault);} else
+ if(name=="kv_native_issue_valid"){word(dut.kv_native_issue_valid);} else
+ if(name=="kv_native_issue_ready"){word(dut.kv_native_issue_ready);} else
+ if(name=="kv_native_issue_tuple"){for(int i=7;i>=0;i--)word(dut.kv_native_issue_tuple[i]);} else
+ if(name=="kv_native_complete_valid"){word(dut.kv_native_complete_valid);} else
+ if(name=="kv_native_complete_ready"){word(dut.kv_native_complete_ready);} else
+ if(name=="kv_native_complete_tuple"){for(int i=7;i>=0;i--)word(dut.kv_native_complete_tuple[i]);} else
+ if(name=="kv_native_reverse_valid"){word(dut.kv_native_reverse_valid);} else
+ if(name=="kv_native_reverse_ready"){word(dut.kv_native_reverse_ready);} else
+ if(name=="kv_native_reverse_tuple"){for(int i=7;i>=0;i--)word(dut.kv_native_reverse_tuple[i]);} else
+ if(name=="kv_cohort_quiesce"){word(dut.kv_cohort_quiesce);} else
+ if(name=="kv_cohort_req_valid"){word(dut.kv_cohort_req_valid);} else
+ if(name=="kv_cohort_req_ready"){word(dut.kv_cohort_req_ready);} else
+ if(name=="kv_cohort_identity"){word(uint32_t(dut.kv_cohort_identity>>32));word(uint32_t(dut.kv_cohort_identity));} else
+ if(name=="kv_cohort_key"){word(dut.kv_cohort_key);} else
+ if(name=="kv_cohort_rsp_valid"){word(dut.kv_cohort_rsp_valid);} else
+ if(name=="kv_cohort_rsp_ready"){word(dut.kv_cohort_rsp_ready);} else
+ if(name=="kv_cohort_rsp_tuple"){for(int i=20;i>=0;i--)word(dut.kv_cohort_rsp_tuple[i]);} else
+ if(name=="kv_cohort_rsp_empty"){word(dut.kv_cohort_rsp_empty);} else
+ if(name=="kv_native_retained"){word(dut.kv_native_retained);} else
+ if(name=="kv_drain_retained"){word(dut.kv_drain_retained);} else
  if(name=="kv_fault"){word(dut.kv_fault);} else
  if(name=="native_por_n"){word(dut.native_por_n);} else
  if(name=="native_rst_n"){word(dut.native_rst_n);} else
@@ -396,20 +396,18 @@ int main(int argc,char**argv){VerilatedContext context;context.commandArgs(argc,
  if(name=="kv_ACK_physical_addr"){auto v=unpack(value,34);dut.kv_ACK_physical_addr=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
  if(name=="kv_ACK_visible"){auto v=unpack(value,1);dut.kv_ACK_visible=v[0];std::cout<<"OK";} else
  if(name=="kv_ACK_reverse"){auto v=unpack(value,1);dut.kv_ACK_reverse=v[0];std::cout<<"OK";} else
- if(name=="kv_operation_valid"){auto v=unpack(value,1);dut.kv_operation_valid=v[0];std::cout<<"OK";} else
- if(name=="kv_operation_identity"){auto v=unpack(value,64);dut.kv_operation_identity=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_operation_key"){auto v=unpack(value,20);dut.kv_operation_key=v[0];std::cout<<"OK";} else
- if(name=="kv_operation_stage"){auto v=unpack(value,1);dut.kv_operation_stage=v[0];std::cout<<"OK";} else
- if(name=="kv_operation_owner"){auto v=unpack(value,55);dut.kv_operation_owner=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_operator_done_valid"){auto v=unpack(value,1);dut.kv_operator_done_valid=v[0];std::cout<<"OK";} else
- if(name=="kv_operator_done_owner"){auto v=unpack(value,55);dut.kv_operator_done_owner=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_operator_reverse_valid"){auto v=unpack(value,1);dut.kv_operator_reverse_valid=v[0];std::cout<<"OK";} else
- if(name=="kv_operator_reverse_owner"){auto v=unpack(value,55);dut.kv_operator_reverse_owner=uint64_t(v[0])|(uint64_t(v[1])<<32);std::cout<<"OK";} else
- if(name=="kv_endpoint_req_ready"){auto v=unpack(value,8);dut.kv_endpoint_req_ready=v[0];std::cout<<"OK";} else
- if(name=="kv_endpoint_rsp_valid"){auto v=unpack(value,8);dut.kv_endpoint_rsp_valid=v[0];std::cout<<"OK";} else
- if(name=="kv_endpoint_rsp_identity"){auto v=unpack(value,512);for(unsigned i=0;i<v.size();i++)dut.kv_endpoint_rsp_identity[i]=v[i];std::cout<<"OK";} else
- if(name=="kv_endpoint_rsp_key"){auto v=unpack(value,160);for(unsigned i=0;i<v.size();i++)dut.kv_endpoint_rsp_key[i]=v[i];std::cout<<"OK";} else
- if(name=="kv_endpoint_rsp_quiet"){auto v=unpack(value,8);dut.kv_endpoint_rsp_quiet=v[0];std::cout<<"OK";} else
+ if(name=="kv_rst_n"){auto v=unpack(value,1);dut.kv_rst_n=v[0];std::cout<<"OK";} else
+ if(name=="kv_endpoint_fault"){auto v=unpack(value,1);dut.kv_endpoint_fault=v[0];std::cout<<"OK";} else
+ if(name=="kv_native_issue_valid"){auto v=unpack(value,1);dut.kv_native_issue_valid=v[0];std::cout<<"OK";} else
+ if(name=="kv_native_issue_tuple"){auto v=unpack(value,230);for(unsigned i=0;i<v.size();i++)dut.kv_native_issue_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="kv_native_complete_valid"){auto v=unpack(value,1);dut.kv_native_complete_valid=v[0];std::cout<<"OK";} else
+ if(name=="kv_native_complete_tuple"){auto v=unpack(value,230);for(unsigned i=0;i<v.size();i++)dut.kv_native_complete_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="kv_native_reverse_valid"){auto v=unpack(value,1);dut.kv_native_reverse_valid=v[0];std::cout<<"OK";} else
+ if(name=="kv_native_reverse_tuple"){auto v=unpack(value,230);for(unsigned i=0;i<v.size();i++)dut.kv_native_reverse_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="kv_cohort_req_ready"){auto v=unpack(value,8);dut.kv_cohort_req_ready=v[0];std::cout<<"OK";} else
+ if(name=="kv_cohort_rsp_valid"){auto v=unpack(value,8);dut.kv_cohort_rsp_valid=v[0];std::cout<<"OK";} else
+ if(name=="kv_cohort_rsp_tuple"){auto v=unpack(value,672);for(unsigned i=0;i<v.size();i++)dut.kv_cohort_rsp_tuple[i]=v[i];std::cout<<"OK";} else
+ if(name=="kv_cohort_rsp_empty"){auto v=unpack(value,8);dut.kv_cohort_rsp_empty=v[0];std::cout<<"OK";} else
  if(name=="native_por_n"){auto v=unpack(value,1);dut.native_por_n=v[0];std::cout<<"OK";} else
  if(name=="native_rst_n"){auto v=unpack(value,1);dut.native_rst_n=v[0];std::cout<<"OK";} else
  if(name=="native_publish_valid"){auto v=unpack(value,1);dut.native_publish_valid=v[0];std::cout<<"OK";} else
