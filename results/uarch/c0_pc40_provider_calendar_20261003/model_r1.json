@@ -1,0 +1,122 @@
+{
+  "actual_NoC_handshake_observed": false,
+  "actual_RF_ACK_observed": false,
+  "actual_up_payload_observed": false,
+  "area": {
+    "bridge32SM_mm2_ASSUMED": 14.784072499199999,
+    "collector_clock_reset_PG_slot_price": null,
+    "complete_composed_area_mm2": null,
+    "existing_RF20_reservation_not_new_macro_area": true,
+    "new_caller_controller_and_link_cell_mm2": null
+  },
+  "blockers": [
+    "actual PC39 up page and ordered PC40 read receipt from existing integration run",
+    "source-owned entering lease including RF20 versus native VM dynamic workspace",
+    "Popper issuer binding and actual commonACK/visibility/consumer/reverse receipt",
+    "actual finite NoC link/route/cut capacity and CDC service upper bound",
+    "caller control protection, clock/reset/PG and whole latency/area composition",
+    "SS setup/FF hold in loaded context under unchanged uncertainty"
+  ],
+  "build_admission": false,
+  "calendar_owner": "Dewey",
+  "caller_policy": {
+    "actual_entering_workspace_lease": false,
+    "caller_up20_held_until": "final gate*inverse*up and validated reverse",
+    "existing_native_VM_dynamic_slot20_disjointness_proved": false,
+    "no_release_at_FMAX_or_FMIN": true,
+    "publication_held_until": "entire PC40 SILU_GATE consumer",
+    "source_static_disjoint": true,
+    "up_stage_RFslot9": 20,
+    "up_stage_SM": 0,
+    "up_stage_rank": 0,
+    "workspace_slots": [
+      17,
+      18,
+      19
+    ]
+  },
+  "conditional_latency": {
+    "added_fixed_ns": 4.166666666666667,
+    "added_fixed_stream_edges": 5,
+    "complete_caller_ns": null,
+    "expression": "existing_PC39_ready + SM24_RF_read + finite_NoC/CDC + RF20_write/commonACK + existing_r2_117_edges; full remaining exp/reciprocal/SILU separately",
+    "finite_service_upper_ns": null,
+    "hold_uncertainty_ps": 25,
+    "loaded_SS_FF": false,
+    "provisional_RF20_write_visible_edges": 2,
+    "provisional_SM24_read_edges": 3,
+    "serial_GHz": 0.9,
+    "setup_uncertainty_ps": 60,
+    "streaming_GHz": 1.2,
+    "whole_token_ns": null
+  },
+  "constructor_free_source_capture_tests_are_payload_PASS": false,
+  "cuts": {
+    "NoC_physical_link_bits": null,
+    "PG_and_control_tracks": null,
+    "RF20_write_bits": 4096,
+    "minimum_payload_flits_expression": "ceil(4096 / actual_NoC_link_bits)",
+    "mirrored_write_sink_bits": 8192,
+    "route_track_capacity": null,
+    "up_data_bits": 4096,
+    "zero_delay_assumed": false
+  },
+  "default_enabled": false,
+  "fullsystem_owner": "Claude",
+  "once_only": {
+    "PC39_all_SM_producer_writes": "existing source debit, never recharge",
+    "bridge_edges": 117,
+    "bridge_ns": 97.5,
+    "gateRF38_read": "already included in Popper r2",
+    "old_r9_RF_events": "replace selected subtree once; never add its60 edges again",
+    "replaced_subtree": "selected PC40/tile0 producer+FMAX+FMIN; replace paid r9 events once, never add atop previous per-action RF/ACK",
+    "up_read_stage_ACK": "additional caller prerequisite"
+  },
+  "owner55_adapter_created": false,
+  "owner55_adapter_owner": "Popper",
+  "packing": "128 little-endian U32 bitcasts per512B",
+  "payload_scope": "actual gate first128 archived; up publication/read capture awaits existing joint integration run",
+  "physical_admission": false,
+  "replicas": {
+    "RF20_reservation_bytes_at32SM": 32768,
+    "inventory_SMs": 32,
+    "replication_does_not_imply32_independent_NoC_channels": true,
+    "selected_caller": 1,
+    "simultaneous_remote_up_transfers_admitted": 1
+  },
+  "schema": "C0_PC40_SOURCE_PROVIDER_CALLER_COMPOSITION_R1",
+  "source_delivery": {
+    "RF20_mirrored_write_bytes": 1024,
+    "RF20_write_payload_bytes": 512,
+    "RF_read_payload_bytes": 512,
+    "added_SM24_RF_read_commands": 1,
+    "additional_RF_macros": 0,
+    "caller_SM0_RF20_write_commands": 1,
+    "common_ACKs": 1,
+    "final_SILU_read_pair_scope": "gate38/up20, charged at full caller, not this FMAX/FMIN bridge",
+    "final_SILU_source_read_pair_bytes": 1024,
+    "gate_existing_bridge_read_already_paid": true,
+    "held_vectors": 1,
+    "remote_up_payload_bits": 4096,
+    "remote_up_payload_pages": 1,
+    "reserved_existing_RF_logical_bytes": 512,
+    "reserved_existing_RF_physical_bytes": 1024
+  },
+  "source_dtype": "F32",
+  "source_gate": {
+    "RFslot9": 38,
+    "SM": 0,
+    "rank": 0,
+    "word_start": 0,
+    "words": 128
+  },
+  "source_provider_owner": "Ampere",
+  "source_publication": "Qwen.39.L0.d0.gu_post.49",
+  "source_up": {
+    "RFslot9": 32,
+    "SM": 24,
+    "rank": 0,
+    "word_start": 6144,
+    "words": 128
+  }
+}

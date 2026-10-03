@@ -1,0 +1,106 @@
+{
+  "actual_gate_payload_prior_commit": "93b75ccf9f50b6162fb5a52dff3c11065f20efe6",
+  "actual_up_NoC_handshake_observed": false,
+  "actual_up_payload_observed": false,
+  "calendar_join": {
+    "accepted_call_admitted": false,
+    "added_source_SM24_read_and_RF20_write_visible_provisional_edges": 5,
+    "baseline_peer": "Popper 8c3dfbf7910cb74cbc74497c787c3fc3b790bc82 / Dewey r9",
+    "do_not_release_up_or_source_gate_at_FMAX_or_FMIN": true,
+    "exclusive_caller_lease_still_required": true,
+    "gate_read_already_paid": true,
+    "route_CDC_service_upper_unknown": true,
+    "source_VM_dynamic_RF20_nonalias_still_required": true,
+    "up_stage_page_prospective": "rank0/SM0/RF20",
+    "whole_PC40_lifetime_required": true
+  },
+  "historical_exit_RC_gap_correction_commit": "0646d9296",
+  "model_artifact": {
+    "path": "results/uarch/c0_pc40_provider_calendar_20261003/model_r1.json",
+    "sha256": "e834a1f8737cc99e2e4448de0311babd23455d2111404c5e8f693d423d16f2b3"
+  },
+  "new_RTL_or_PnR": false,
+  "numerical_prefix_launched": false,
+  "originals_modified": false,
+  "owner55_adapter_created": false,
+  "owners": {
+    "bridge_owner55": "Popper",
+    "calendar": "Dewey",
+    "fullsystem": "Claude",
+    "source_provider_capture": "Ampere"
+  },
+  "schema": "C0_PC40_PROVIDER_CALENDAR_CAPTURE_HANDOFF_R1",
+  "scope": "default-off source capture and one finite caller allocation before RTL",
+  "source_capture_api": {
+    "PC39_observer": "observe_publication(actual_op, actual_original_store) AFTER the original producer writes and publishes",
+    "PC40_source_provider": "gate, up = read_pair(same_actual_original_store); use returned native arrays in original ordered NEG/exp caller, never inject oracle inputs",
+    "checkpoint_identity_requires_joint_run_provenance": true,
+    "construction": "PublicationCapture(original_source_module, fresh_output_directory, enabled=True)",
+    "output_files": [
+      "gate_publication.bin",
+      "up_publication.bin",
+      "publication.json",
+      "gate_caller.bin",
+      "up_caller.bin",
+      "caller_reads.json"
+    ],
+    "physical_RF_ACK_and_NoC_receipts_claimed": false,
+    "publications_retained": true
+  },
+  "source_guard": "exact original TileWords/AddressedTileWords class identities and exact compiled source methods; no subclass/MRO/provider constructor exemption",
+  "source_pins": [
+    {
+      "bytes": 8221,
+      "path": "tools/h4_c0_pc40_provider_capture_r1.py",
+      "sha256": "c3329b1baf9e4ffd4498a9f17d81d81a0815bf90f65ab06d167269fa3ffe3288"
+    },
+    {
+      "bytes": 6932,
+      "path": "tools/h4_c0_pc40_provider_calendar_model_r1.py",
+      "sha256": "8434a3a9d6ad4f3c1295c8af8ecda1f988e6dd1536afc2afc4f245eb22dc7e88"
+    },
+    {
+      "bytes": 5790,
+      "path": "tests/test_c0_pc40_provider_capture_r1.py",
+      "sha256": "49cc6fbd274e8baac02f4cb75fa3fc19ceb80872887279348d5663e9cc35fc01"
+    },
+    {
+      "bytes": 1987,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/numeric_input_manifest_r1.json",
+      "sha256": "82461160e03285bebca32cd314d1bf1c1f71ca8231b3f60727f5bfa8b3d897e3"
+    },
+    {
+      "bytes": 86695,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/inputs/h3_qwen_bounded_native.py",
+      "sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b"
+    },
+    {
+      "bytes": 12489,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_terminal_manifest_r1.json",
+      "sha256": "f88f9ad0156b4e1b9e0edb45cc622a1b83a48fb0e9aa51d6e83c9b96681b8b65"
+    },
+    {
+      "bytes": 36337,
+      "path": "results/uarch/c0_pc40_provider_calendar_20261003/inputs/Dewey_PC40_demand.json",
+      "sha256": "bb8c7d578f66463ee3015ae00abba65ca96c2dd6c0438274f0f746eeab5a7876"
+    },
+    {
+      "bytes": 19372,
+      "path": "results/uarch/c0_pc40_provider_calendar_20261003/inputs/Popper_connected_r2_model.json",
+      "sha256": "03369a02155132b278c138bbf967ca849f58cc392ddc329f01f04d87be8ae915"
+    },
+    {
+      "bytes": 419,
+      "path": "results/uarch/c0_pc40_provider_calendar_20261003/input_manifest_r1.json",
+      "sha256": "fcae7a94712a63e02a0ecd613d1b16b8adac62e1acf265ef2a0cf73dbc2fdbd6"
+    }
+  ],
+  "verification": {
+    "actual_released_up_payload_PASS": false,
+    "cold_model_byte_exact": true,
+    "command": "cd tests && python -m unittest test_c0_pc40_provider_capture_r1",
+    "hardware_admitted": false,
+    "tests": 17,
+    "verdict": "PASS_CONSTRUCTOR_FREE_SOURCE_FIXTURES_ONLY"
+  }
+}
