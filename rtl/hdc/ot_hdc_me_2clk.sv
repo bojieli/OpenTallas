@@ -23,8 +23,9 @@
 //     slow side pops every entry the cycle it is visible, so the vector-memory
 //     writes keep the engine's order and contents exactly;
 //   * a full result FIFO stops the engine clock (ot_hdc_cg) for that cycle --
-//     the ME_STALL mechanism: an exact pause, with the engine's memory requests
-//     held (the fast-domain memories re-read the same address).
+//     the ME_STALL mechanism: an exact pause.  Every engine read enable is ANDed
+//     with the clock enable, so a read-response register loads only on edges
+//     that clock the engine (the ME_STALL supply contract).
 // Slow-side status: idle = every issued op's completion marker has been popped
 // (the engine is idle and all its writes are in the vector memory); progress =
 // the latest op's progress as carried with its writes; am_* = the engine's
@@ -175,6 +176,15 @@ module ot_hdc_me_2clk #(
         wire [31:0] me_am_val;
         wire [15:0] me_progress;
         wire [WQ-1:0] me_wrom_q;
+        wire me_scale_re, me_kv_re;
+        wire [G-1:0] me_scale_gre, me_x_re;
+        //: ME_STALL contract: a read-response register may load only on the edges that clock the engine, so the
+        //: engine finds, after a held edge, the word it requested before it.  Every engine read enable is ANDed with
+        //: the engine clock enable (a ROM/SRAM macro holds Q while its read enable is low), which costs no state.
+        assign scale_re = me_scale_re && en;
+        assign scale_gre = me_scale_gre & {G{en}};
+        assign kv_re = me_kv_re && en;
+        assign x_re = me_x_re & {G{en}};
         ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(INT8_WEIGHT),
                         .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .SMIN(SMIN), .ORD(ORD)) u_me (
             .clk(gclk), .rst_n(frst_n), .go(cmd_v), .ready(me_ready), .idle(me_idle),
@@ -185,16 +195,16 @@ module ot_hdc_me_2clk #(
             .i_mmode(f_mmode), .i_oen(f_oen), .i_amax(f_amax), .i_rmax(f_rmax), .i_mbase(f_mbase),
             .mx_we(me_mx_we), .mx_addr(me_mx_addr), .mx_mask(me_mx_mask), .mx_data(me_mx_data),
             .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(me_wrom_q),
-            .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
-            .kv_re(kv_re), .kv_addr(kv_addr), .kv_q(kv_q),
-            .x_re(x_re), .x_addr(x_addr), .x_q(x_q),
+            .scale_re(me_scale_re), .scale_gre(me_scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
+            .kv_re(me_kv_re), .kv_addr(kv_addr), .kv_q(kv_q),
+            .x_re(me_x_re), .x_addr(x_addr), .x_q(x_q),
             .ov(me_ov), .o_we(me_o_we), .o_addr(me_o_addr), .o_mask(me_o_mask), .o_data(me_o_data),
             .am_idx(me_am_idx), .am_val(me_am_val), .am_any(me_am_any), .progress(me_progress), .fault(me_fault));
         if (INT8_WEIGHT != 0) begin : g_wq_int8          // the INT8 code port is the engine's own (fast) port
-            assign wrom_re = me_wrom_re; assign wrom_addr = me_wrom_addr; assign me_wrom_q = wrom_q;
+            assign wrom_re = me_wrom_re && en; assign wrom_addr = me_wrom_addr; assign me_wrom_q = wrom_q;
             assign f_wrom_re = 1'b0; assign f_wrom_addr = {AW{1'b0}};
         end else begin : g_wq_bf16                        // the shared BF16 port stays the stream unit's (slow)
-            assign f_wrom_re = me_wrom_re; assign f_wrom_addr = me_wrom_addr; assign me_wrom_q = f_wrom_q[WQ-1:0];
+            assign f_wrom_re = me_wrom_re && en; assign f_wrom_addr = me_wrom_addr; assign me_wrom_q = f_wrom_q[WQ-1:0];
             assign wrom_re = 1'b0; assign wrom_addr = {AW{1'b0}};
         end
 

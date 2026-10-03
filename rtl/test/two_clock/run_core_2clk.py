@@ -6,7 +6,8 @@
 Builds three Verilator binaries of rtl/test/two_clock/tb_hdc_core_2clk.sv:
   pinned  -- the pinned rtl/hdc/ot_hdc_core_vector_weight.sv (reference cycles);
   cdc0    -- the emitted ot_hdc_core_vector_weight_2clk with ME_CDC = 0 (default-off: must be cycle-identical);
-  cdc1    -- ME_CDC = 1: matrix engine on the 1.2 GHz clock behind ot_ratio_cdc_fifo crossings.
+  cdc1    -- ME_CDC = 1: matrix engine on the 1.2 GHz clock behind ot_ratio_cdc_fifo crossings;
+  cdc1_rowchase -- ME_CDC = 1 with ME_CDC_SAFE_CHASE = 0 (diagnostic: the single-clock row chase, not proven rate-safe).
 Runs: one decode step on the golden-prefilled KV (every logit / vector-memory / KV word exact vs the ISA model)
 and the 16-prompt + 3-generated multi-step run (every step's logits / VM / KV vs the ISA model's per-step snapshot,
 generated ids vs the torch oracle), at +CLK=slow (all 0.9 GHz), +CLK=fast (all 1.2 GHz, reference only) and
@@ -126,8 +127,9 @@ def main(argv=None):
     emitted = w / "gen/ot_hdc_core_vector_weight_2clk.sv"
     builds = {"pinned": ([*BASE_RTL, PINNED, TB], ["+define+PINNED_CORE"], []),
               "cdc0": ([*BASE_RTL, CG, FIFO, WRAP, emitted, TB], [], ["-GME_CDC=0"]),
-              "cdc1": ([*BASE_RTL, CG, FIFO, WRAP, emitted, TB], [], ["-GME_CDC=1"])}
-    with cf.ThreadPoolExecutor(3) as ex:
+              "cdc1": ([*BASE_RTL, CG, FIFO, WRAP, emitted, TB], [], ["-GME_CDC=1"]),
+              "cdc1_rowchase": ([*BASE_RTL, CG, FIFO, WRAP, emitted, TB], [], ["-GME_CDC=1", "-GSAFE_CHASE=0"])}
+    with cf.ThreadPoolExecutor(4) as ex:
         futs = {k: ex.submit(build, w / f"obj_{k}", *v, a.jobs) for k, v in builds.items()}
         exes = {k: f.result() for k, f in futs.items()}
     single_args = (img / "run.args").read_text().split()
@@ -140,6 +142,7 @@ def main(argv=None):
                  (f"cdc0/{kind}/split", "cdc0", args, "split", 0),
                  (f"cdc1/{kind}/slow", "cdc1", args, "slow", 0)]
         plan += [(f"cdc1/{kind}/split/fphase{ph}", "cdc1", args, "split", ph) for ph in (0, 1, 2)]
+        plan += [(f"cdc1_rowchase/{kind}/split/fphase{ph}", "cdc1_rowchase", args, "split", ph) for ph in (0, 1, 2)]
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         res = dict(zip([p[0] for p in plan], ex.map(lambda p: run(exes[p[1]], img, p[2], p[3], p[4]), plan)))
     srcs = sorted({*BASE_RTL, PINNED, WRAP, FIFO, CG, TB, HARNESS, EMIT, Path(__file__),
@@ -172,7 +175,13 @@ def main(argv=None):
                                 split=[x["total_ns"] for x in mp]),
             multi_total_slow_cycles=dict(all_0p9=ml["total_cycles"], split=[x["total_cycles"] for x in mp]),
             split_vs_all_0p9_single=[round(x["token_ns"] / sl["token_ns"] - 1, 5) for x in sp],
-            split_vs_all_0p9_multi=[round(x["total_ns"] / ml["total_ns"] - 1, 5) for x in mp])
+            split_vs_all_0p9_multi=[round(x["total_ns"] / ml["total_ns"] - 1, 5) for x in mp],
+            diagnostic_rowchase_unproven=dict(
+                single_step_ns=[s[f"cdc1_rowchase/single/split/fphase{p}"]["token_ns"] for p in (0, 1, 2)],
+                multi_total_ns=[s[f"cdc1_rowchase/multi/split/fphase{p}"]["total_ns"] for p in (0, 1, 2)]),
+            cdc1_same_clock_overhead_slow_cycles=dict(
+                single=s["cdc1/single/slow"]["cycles"] - sl["cycles"],
+                multi=s["cdc1/multi/slow"]["total_cycles"] - ml["total_cycles"]))
     except KeyError as exc:
         rec["timing_summary_error"] = str(exc)
     a.output.parent.mkdir(parents=True, exist_ok=True)
