@@ -1,0 +1,42 @@
+{
+  "DS_ROM_raw_VM": {
+    "actual_diagnostic_cases": 43,
+    "actual_diagnostic_terminal": true,
+    "actual_native_macros": 256,
+    "commit": "d33a531f7",
+    "historical_cache_pins_excluded": 1,
+    "historical_failure_preserved": true,
+    "historical_source_pins_checked": 19,
+    "negative_control": "RESET_ACCEPTANCE_DEFECT; exit 1",
+    "protected_VM_admission": false,
+    "reset_acceptance_gated": true,
+    "source_pins": 9,
+    "source_verifier": "PASS",
+    "terminal_artifact_hashes_checked": 13
+  },
+  "W4": {
+    "artifact_pins": 39,
+    "commit": "a48bed8c5a1b779cafe504f0b2447edc89b593d9",
+    "design_sources": 10,
+    "directed_SIMD_done_cycles": 13,
+    "fullSM_compile_rc": 0,
+    "fullSM_run_rc": 0,
+    "historical_missing_dependency_failure_preserved": true,
+    "overall_gate_terminal": false,
+    "verdict": "PASS_SELFCONTAINED_SOURCE_AND_ENABLED_STAGE_ONLY"
+  },
+  "connected_HBM_bridge": {
+    "commit": "8c3dfbf7910cb74cbc74497c787c3fc3b790bc82",
+    "model_and_test_intake": true,
+    "production_caller_CDC_SSFF": false,
+    "runtime_terminal": false
+  },
+  "full_token_adoption": false,
+  "headline_changed": false,
+  "parent_tests": {
+    "passed": 39,
+    "subtests_passed": 8
+  },
+  "physical_adoption": false,
+  "scope": "Source bundle and model review; no complete-token or physical qualification"
+}
