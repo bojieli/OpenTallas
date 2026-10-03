@@ -84,6 +84,16 @@ class ParentBinding:
     def scan_home(self, layer):
         return self.stage_map['scan_service_homes'][str(layer)]
 
+    def write_field_meta(self, path):
+        """Native runtime inventory, with no invented power-of-two field slots."""
+        path=Path(path)
+        if path.exists():raise FileExistsError(path)
+        bf=self.stage_map['BF_site_IDs']
+        path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_text(f'np {self.pairs}\nr {len(self.stage_map["region_bounds"])-1}\n'
+                        +'active '+' '.join(map(str,range(self.pairs)))+'\n'
+                        +'bf16 '+' '.join(map(str,bf))+'\n')
+
     def bind_execution(self, resolved):
         """Join the owner's resolved source operation to actual field parameters.
 

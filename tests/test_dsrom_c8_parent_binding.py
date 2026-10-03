@@ -78,3 +78,13 @@ def test_native_dispatch_join_preserves_owner_multicast_and_source_order(owner):
     with pytest.raises(ValueError):p.bind_execution(dict(resolved,source_identity_verified=False))
     fragment['matrix']['compiled_NP']=2682
     with pytest.raises(ValueError,match='different partition'):p.bind_execution(resolved)
+
+
+def test_runtime_field_meta_contains_actual_complete_elements_no_padding(owner):
+    p=m.ParentBinding(owner,BASE,PIN,API);path=owner/'r0/field.txt'
+    p.write_field_meta(path)
+    rows={line.split()[0]:list(map(int,line.split()[1:])) for line in path.read_text().splitlines()}
+    assert rows['np']==[2388] and rows['r']==[128]
+    assert rows['active']==list(range(2388))
+    assert rows['bf16']==p.stage_map['BF_site_IDs']
+    with pytest.raises(FileExistsError):p.write_field_meta(path)
