@@ -45,6 +45,7 @@ def main():
     ap.add_argument('--x-bases', required=True)
     ap.add_argument('--layers', type=int, default=36)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--resume-head', action='store_true', help='skip the layers: x_after_layers.npy in --out')
     a = ap.parse_args()
     if I.SU_WIDTH != 1024 or G.SU_WIDTH != 1024 or G.KV_FMT != 'fp8':
         raise SystemExit('oracle requires HDC_SU_WIDTH=1024 and HDC_KV_FMT=fp8')
@@ -55,6 +56,12 @@ def main():
         raise SystemExit('one X base per token')
     a.out.mkdir(parents=True, exist_ok=True)
     xs = [L0._preload_x(a.preload_dir / f'tok{t}' / 'vm_x_fp32.hex') for t in tokens]
+    resume = a.out / 'x_after_layers.npy'
+    if a.resume_head and resume.exists():
+        xs = list(np.load(resume))
+        a.layers_run = 0
+    else:
+        a.layers_run = a.layers
     rec = {'schema': 'opentallas.qwen-rom-verify-head-oracle.v1', 'status': 'ISA_golden_only', 'tokens': tokens,
            'positions': list(range(p)), 'layers': a.layers, 'x_bases': x_bases,
            'source_sha256': {q: VO.sha(ROOT / q) for q in (
@@ -63,7 +70,7 @@ def main():
                'tools/hdc_program.py', 'tools/hdc_isa.py')},
            'layer_x_sha256': {}}
     with FP.program_geometry(VM1):
-        for n in range(a.layers):
+        for n in range(a.layers_run):
             images = [VO.LayerImage(a.img_dirs.format(layer=n, die=d), n) for d in range(TP)]
             ms = [L0.DieMachine(im) for im in images]
             for j in range(p):
@@ -77,6 +84,8 @@ def main():
             rec['layer_x_sha256'][f'L{n}'] = [VO.sha_bytes(G.bits(x).tobytes()) for x in xs]
             VO._matrix_cached.cache_clear()
             print(f'layer {n} done', flush=True)
+        np.save(a.out / 'x_after_layers.npy', np.stack(xs))   # checkpoint: the head can be re-run from here
+        layout0 = json.loads(Path(a.img_dirs.format(layer=0, die=0), 'layer0_rom.json').read_text())['matrix_layout']
         heads = []
         for j in range(p):
             logits_all, per_die = [], []
@@ -84,7 +93,7 @@ def main():
                 im = TO.HeadImage(a.head_dirs.format(die=d), a.binding, d)
                 vm = np.zeros(L0.VM_ELEMS, dtype=np.float32)
                 vm[VM1['X']:VM1['X'] + 4096] = xs[j]
-                m = TO.HeadMachine(im, d, vm, images[0].manifest['matrix_layout'])
+                m = TO.HeadMachine(im, d, vm, layout0)
                 dyn = P.dyn_values(m.lay, token=0, pos=j)
                 for f in im.program:
                     if f['unit'] == I.UNIT_ME:

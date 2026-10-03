@@ -61,7 +61,8 @@ def _matrix_cached(image, base):
 
 
 def _matrix_by_meta(self, meta):
-    if meta.get('base') in self.layout and self.layout[meta['base']] is meta:
+    layout = getattr(self, 'layout', None)
+    if layout is not None and meta.get('base') in layout and layout[meta['base']] is meta:
         return _matrix_cached(self, meta['base'])
     return _matrix(self, meta)
 
