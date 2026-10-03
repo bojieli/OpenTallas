@@ -1,0 +1,41 @@
+{
+  "reason": "user-authorized exact invalid run termination: released payload files missing due global prefix override",
+  "processes": {
+    "2536389": {
+      "command": "bash /srv/opentallas-scratch/sagan/ds20-source-token-632cf1e89-r1/launch.sh",
+      "pgid": 2536389,
+      "start_ticks": "2140331"
+    },
+    "2536390": {
+      "command": "python3 -m tools.gpu_sys.run_ds_hbm_source20 --enable --phase token --executable /srv/opentallas-scratch/sagan/ds20-persistent-backend-e762c3d00-r1/build/obj/Vot_ds_hbm_simulator20 --source-manifest /srv/opentallas-scratch/sagan/ds20-persistent-source-924acd58a-r1/source.json --out /srv/opentallas-scratch/sagan/ds20-source-token-632cf1e89-r1/run",
+      "pgid": 2536389,
+      "start_ticks": "2140331"
+    },
+    "2536393": {
+      "command": "/srv/opentallas-scratch/sagan/ds20-persistent-backend-e762c3d00-r1/build/obj/Vot_ds_hbm_simulator20 +gpu_sys_mem_prefix=/srv/opentallas-scratch/sagan/ds20-persistent-source-924acd58a-r1/mem",
+      "pgid": 2536389,
+      "start_ticks": "2140398"
+    }
+  },
+  "signal": "SIGTERM",
+  "numerical_qualified": false,
+  "remaining_active_pids": [],
+  "retained_files": {
+    "run/kernels.jsonl": {
+      "bytes": 312,
+      "sha256": "2919df21ab05dc3aef0d8852e3f3b0dcb21672d47bfa19cca2f95b0694641043"
+    },
+    "run/backend/simulator.log": {
+      "bytes": 456,
+      "sha256": "8916c6830cacf4cc608147ac85b3fc5419bd05dc08bfa8e6209f665fbaac12c8"
+    },
+    "run/backend/owner.json": {
+      "bytes": 429,
+      "sha256": "5b7b87d084abc432087a1726c680aa7293d83440074c2df442d54f8bf462816e"
+    },
+    "launch.log": {
+      "bytes": 635,
+      "sha256": "9a2aae07bfa54dea6f037fc76de925573e7849ea8e7ae7786116f4da0dc0b440"
+    }
+  }
+}

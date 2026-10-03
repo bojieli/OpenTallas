@@ -1,0 +1,17 @@
+{
+  "source_commit": "0455075096f39068260b9acdbd0f3d19ab55ce73",
+  "verdict": "FAIL",
+  "failure_cycle": 300,
+  "original_PC5_failure_preserved": true,
+  "exact_PC5_six_rows_and_three_children_PASS_in_prefix": true,
+  "category": "zero-time fixture sampling after input deassertion",
+  "source_chain": [
+    "B_EMPTY_VISIBLE captured on producer_visible acceptance",
+    "producer_visible_valid remains1 through step until negedge+1",
+    "unexpected combinational duplicate detection masks active",
+    "fixture deasserts producer_visible_valid and reads ACK without settling"
+  ],
+  "correction": "one #1 observer settle after deassert before reading ACK; source/controller/events/cycle expectations unchanged",
+  "RTL_sha256": "eb8a74eb0386fdecf5b3c2b5dc904536e1a2f8d3f7da32a415d823ea5e927f58",
+  "full_factory_ready": false
+}
