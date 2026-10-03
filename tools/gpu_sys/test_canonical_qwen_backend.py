@@ -1,6 +1,7 @@
 """Factory construction/refusal only: no checkpoint payload or RTL token verdict."""
 import argparse
 import json
+import os
 from pathlib import Path
 import shutil
 import socket
@@ -17,14 +18,16 @@ from tools import h4_qwen_released_provider_delivery as D
 class FactoryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.N, cls.B = F.load_originals(F.DEFAULT_SOURCE_ROOT)
+        cls.source_root = Path(os.environ.get(
+            'OPENTALLAS_QWEN_RELEASED_SOURCE_ROOT', str(F.DEFAULT_SOURCE_ROOT)))
+        cls.N, cls.B = F.load_originals(cls.source_root)
         cls.native = cls.B.native()
         D.validate_program(cls.native)
 
     def args(self, directory):
         return argparse.Namespace(enable_canonical_qwen=True, checkpoint=Path(directory),
                                   socket=Path(directory)/'rtl.sock', token=9707, position=0,
-                                  released_source_root=F.DEFAULT_SOURCE_ROOT)
+                                  released_source_root=self.source_root)
 
     def manifest(self, directory):
         # Metadata fixture only. No images, weights, KV or arithmetic responses
@@ -37,7 +40,7 @@ class FactoryTests(unittest.TestCase):
                               segments=[dict(start=0,bytes=e['bytes'],file=f'absent-{number}.bin',sha256='0'*64)])
         manifest = dict(schema='opentallas.Qwen.trained-byte-images.v1', complete=True,
                         identity=dict(native_sha256=D.PROGRAM_SHA, source_sha256={},
-                                      checkpoint_lock_sha256=self.B.sha(F.DEFAULT_SOURCE_ROOT/'compiler/models/qwen3-8b/checkpoint_source.json')),
+                                      checkpoint_lock_sha256=self.B.sha(self.source_root/'compiler/models/qwen3-8b/checkpoint_source.json')),
                         images=images)
         raw=D.canonical(manifest);(Path(directory)/'manifest.json').write_bytes(raw)
         return D.sha(raw)
@@ -78,11 +81,11 @@ class FactoryTests(unittest.TestCase):
         poison={name:SimpleNamespace(poison=True) for name in F.MODULES}
         before=list(sys.path)
         with patch.dict(sys.modules,poison):
-            N,B=F.load_originals(F.DEFAULT_SOURCE_ROOT)
+            N,B=F.load_originals(self.source_root)
             self.assertIsNot(N,self.N)
             self.assertIs(N.TiledMachine.__init__.__globals__['BoundKVStorage'],N.BoundKVStorage)
             self.assertIsNot(N.TiledMachine,self.N.TiledMachine)
-            self.assertEqual(Path(B.__file__).parent,F.DEFAULT_SOURCE_ROOT/'tools')
+            self.assertEqual(Path(B.__file__).parent,self.source_root/'tools')
             for name,value in poison.items():self.assertIs(sys.modules[name],value)
             self.assertEqual(sys.path,before)
 
@@ -122,14 +125,14 @@ class FactoryTests(unittest.TestCase):
 
     def test_source_commit_refused(self):
         with patch.object(F.subprocess,'check_output',return_value='moving-main\n'):
-            with self.assertRaisesRegex(ValueError,'commit'):F.load_originals(F.DEFAULT_SOURCE_ROOT)
+            with self.assertRaisesRegex(ValueError,'commit'):F.load_originals(self.source_root)
 
     def test_tampered_source_refused_before_import(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td)
             for row in json.loads(D.PINS.read_text()):
                 dest=root/row['source_path'];dest.parent.mkdir(parents=True,exist_ok=True)
-                shutil.copyfile(F.DEFAULT_SOURCE_ROOT/row['source_path'],dest)
+                shutil.copyfile(self.source_root/row['source_path'],dest)
             (root/'tools/h3_qwen_bounded_native.py').write_text('raise RuntimeError("must never import")')
             with patch.object(F.subprocess,'check_output',return_value=F.SOURCE_COMMIT+'\n'):
                 with self.assertRaisesRegex(ValueError,'original runtime source'):F.load_originals(root)
