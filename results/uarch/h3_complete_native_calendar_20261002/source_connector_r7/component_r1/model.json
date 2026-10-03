@@ -1,0 +1,141 @@
+{
+  "MAC_per_cycle": 0,
+  "actual_hardware_integration_missing": [
+    "actual emitted native client mapping and parentref allocator",
+    "C0 MAX64 fragmentation spanning8frames/command and semantic parent lease continuation",
+    "DS PC12/rank96 mapping; translator is exact r17 physical profile only",
+    "actual backend allocation full16 echo/quarantine",
+    "held reverse completion rather than bare pulse",
+    "source-owned nine debt counters/reset cohort and both CDC endpoint exports",
+    "mutable protection implementation and actual context timing"
+  ],
+  "area_and_routes": "gross full-parent reservation remains fa8009; exact added mux/CDC/clock/cuts/net reconciliation pending",
+  "drain_debt_order": [
+    "native_ingress",
+    "W2_reserved_held_terminal",
+    "provider_backend_pending",
+    "R14_lookup_held_return",
+    "metadata_transport_queues",
+    "RF_both_copy_common_ACK",
+    "visibility_consumer_reader",
+    "child_parent_reverse",
+    "forward_return_reverse_CDC"
+  ],
+  "drain_request_bits": 97,
+  "drain_response_bits": 106,
+  "enabled_default": false,
+  "existing_assembly_data_bits_not_added_again": 131072,
+  "extra_fields_are_local_adapter_checks_not_unpriced_W10_pipeline_fields": true,
+  "extra_over_W6_57_66_bits_each": 40,
+  "full_command_inventory": "inputs/Russell_allocator_r3.json",
+  "full_command_protected_state_bits": 940464,
+  "full_command_storage_only_assumed_mm2": 2.55042551232,
+  "generation": "childtag32 wrap blocks next frame until actual explicit producer_gen4 successor after previous parent drain; backendgen4 is independently allocated and echoed full16",
+  "lease_policy": "stage credit1 releases after paired32B durable capture plus matched stageACK; backend16/meta92 remain retained through RF commonACK, consumer, all16 reverse, matched nine-debt drain",
+  "local_gross_raw_bits_32SM": 198176,
+  "local_gross_raw_bits_per_SM": 6193,
+  "local_latency_edges": {
+    "RF_write_accept": 1,
+    "accepted_child_store": 1,
+    "consumer_to_reverse": 1,
+    "host_ACK_to_visibility": 1,
+    "matched_allcopy_drain_to_release": 1,
+    "response_capture": 1,
+    "reverse_accept_per_child": 1,
+    "stage_ACK_observation": 1,
+    "stage_credit_return": 1
+  },
+  "local_metadata_overlaps_conservative_child_rows": true,
+  "local_protection_and_net_overlap": "not implemented or debited; no SRAM/HBM control reliability qualification",
+  "local_register_fields": {
+    "RF_slot": 9,
+    "assembly_data": 4096,
+    "backend16": 256,
+    "base": 64,
+    "captured_mask": 16,
+    "child_meta92": 1472,
+    "child_tag_counter": 32,
+    "client": 3,
+    "fault": 1,
+    "fragment": 3,
+    "issued": 5,
+    "native_generation": 64,
+    "native_owner": 64,
+    "parent_ref": 32,
+    "phase": 3,
+    "producer_gen": 4,
+    "reset_epoch": 8,
+    "reset_pending": 1,
+    "reverse_index": 4,
+    "stable_parent": 55,
+    "wrap_pending": 1
+  },
+  "one_active_frame_per_SM": true,
+  "ports": {
+    "RF": {
+      "data4096": 4096,
+      "host_common_ACK": 1,
+      "internal_SIMD_ACK": 1,
+      "parent55": 55,
+      "slot9": 9,
+      "valid_ready": 2
+    },
+    "drain_request_payload": {
+      "epoch8": 8,
+      "parent55": 55,
+      "parentref32": 32,
+      "valid_ready": 2
+    },
+    "drain_response_payload": {
+      "epoch8": 8,
+      "parent55": 55,
+      "parentref32": 32,
+      "valid_ready": 2,
+      "zero_debts9": 9
+    },
+    "request": {
+      "BEAT": 1,
+      "LEN": 6,
+      "atomic_accepted_backend16": 16,
+      "byte_local64": 64,
+      "meta92": 92,
+      "owner46": 46,
+      "translated_PC": 7,
+      "valid_ready": 2
+    },
+    "response": {
+      "BEAT": 1,
+      "backend16": 16,
+      "meta92": 92,
+      "payload256": 256,
+      "valid_ready": 2
+    },
+    "reverse": {
+      "backend16": 16,
+      "meta92": 92,
+      "valid_ready": 2
+    }
+  },
+  "prospective_target_GHz": 1.2,
+  "qualified_clock": null,
+  "rate_credit": false,
+  "replicas": 32,
+  "reset": "cold common rst_n only before traffic; operational reset_req stops new frames and demands exact retained parent/ref/epoch with all nine debt predicates zero; never clears live metadata",
+  "schema": "W5_LOCAL_READ_COMPONENT_PROSPECTIVE_MODEL_R1",
+  "selection": {
+    "RF_read_width": 4096,
+    "assembler_write_lanes": 16,
+    "match_width": 108,
+    "payload_bits": 256,
+    "response_matches": 16
+  },
+  "service_upper": "conditional on actual held endpoint/consumer/reverse/drain services; no always-ready finite bound",
+  "source_bound_clock": "single local clock; real CDC external, not a same-clock CDC substitution",
+  "source_full32SM_parent_model": "inputs/W5_W10_parent_model.json",
+  "sustained_port_ceiling": {
+    "RF_bytes_per_accept": 512,
+    "minimum_sector_requests_per_frame": 16,
+    "response_bytes_per_cycle": 32
+  },
+  "whole_program_contender_calendar": false
+}

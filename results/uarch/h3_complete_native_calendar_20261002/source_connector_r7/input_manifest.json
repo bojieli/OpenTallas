@@ -1,0 +1,104 @@
+{
+  "PORTBOOK.md": {
+    "bytes": 15854,
+    "commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/PORTBOOK.md",
+    "sha256": "9b0190be53f872e2015b8ecd57eba6f0a0583005029e840a72157181ba33c870"
+  },
+  "Russell_allocator_r3.json": {
+    "bytes": 6400,
+    "commit": "source-snapshot-r3-whole-command",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/r3/allocator.json",
+    "sha256": "3081fba04e9afbec8d1b6093136fbb921c2546e7a05e9efaac43f24d64c09b8a"
+  },
+  "W2_HANDOFF.txt": {
+    "bytes": 5916,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/r2/HANDOFF.txt",
+    "sha256": "fa41cb56e09a65fed3b16b6f2c450e1571b650cd38e95547e89829d4d92581e0"
+  },
+  "W2_composition.json": {
+    "bytes": 8052,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/r2/composition.json",
+    "sha256": "cf6c5c70ead99ced96012f5a7d667e2ebe2c7f9861476fa2d050ca2443f6c97f"
+  },
+  "W5_W10_parent_model.json": {
+    "bytes": 131919,
+    "commit": "fa8009aefd3ba2c211bff0307022e1e5b21f4bb1",
+    "path": "results/uarch/h4_hbm_baseline_bridge_20261003/w5_w10_r4/model.json",
+    "sha256": "fff00ad9ba9e342912143e404beb3f58762ec719c94503d70ae0506231fa4672"
+  },
+  "W6_connector.json": {
+    "bytes": 23809,
+    "commit": "a3b7e982424d29f1fa1804cba2138950aefe63db",
+    "path": "results/uarch/hbm_W6_connector_model_20261003/r1/model.json",
+    "sha256": "5b2f0b8b31dac8415b3ac57f2cb6c967ab103420120ee7d89171de1268d96bbf"
+  },
+  "W6_model.json": {
+    "bytes": 11056,
+    "commit": "9b8ae395d4a1999962c8818cbece490c1bb31efe",
+    "path": "results/uarch/hbm_W6_fullwidth_model_20261003/r1/model.json",
+    "sha256": "ee0b3bb1925f5ec6adcf0a3f0bd2b2583e8dbc212c9aabe47aab8a7891693ad4"
+  },
+  "atomic_owner_contract.json": {
+    "bytes": 6121,
+    "origin": "Russell r3 read-only WIP source-contract archive; no allocator adoption",
+    "path": "/home/ubuntu/OpenTallas-hbm-source-connector-review/results/uarch/h4_hbm_source_connector_review_20261003/r3/inputs/atomic_owner_contract.json",
+    "sha256": "2614837337c407eb801a0844440fd07d34a244e28dd4d660384a0de4c0a4146d"
+  },
+  "backing_fixture.sv": {
+    "bytes": 3096,
+    "commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/inputs/main/rtl/test/model_ready_hbm_r14/ot_hbm_r14_backing_fixture.sv",
+    "sha256": "d21888753aea5957bc135ac2e78ee076267a26f095c4a4a8856a5aec245841a6"
+  },
+  "connector_manifest.json": {
+    "bytes": 14972,
+    "commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/input_manifest.json",
+    "sha256": "a9ecd0d881b96811d9eda1e816b64f0165263133dcaa7af6f0fda3b4ec8982a9"
+  },
+  "costs.json": {
+    "bytes": 1925,
+    "commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/cost-inputs.json",
+    "sha256": "826d16f5004c6d6a35e04880a14b2e0cb811eaa48cbd04ecdf38301a76af1f95"
+  },
+  "pc.sv": {
+    "bytes": 10299,
+    "commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/inputs/main/rtl/model_ready_hbm_r14/ot_hbm_r14_pc.sv",
+    "sha256": "5de049782df95ea81bf79458839e12e987fe2316c19237483788e3d578011025"
+  },
+  "physical.py": {
+    "bytes": 22125,
+    "commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/inputs/main/tools/qwen_hbm_provider_bindings_r17.py",
+    "sha256": "df61c383a1eeb7666f5b62b2829b8c9d6ef35086265ba3ac387fc8eb3b6745c4"
+  },
+  "pkg.sv": {
+    "bytes": 1827,
+    "commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/inputs/main/rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv",
+    "sha256": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98"
+  },
+  "provider.sv": {
+    "bytes": 9664,
+    "commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/inputs/main/rtl/model_ready_hbm_w1_euclid_20261003/ot_hbm_causal_command_provider.sv",
+    "sha256": "05b038db38dbe937a2f1d88719c1e8f93b7941ce731e6c764f1c2f0e353908f3"
+  },
+  "r6.py": {
+    "bytes": 17808,
+    "commit": "4aed3cff8769f53caf3a1a9ac3a504bcab8819ad",
+    "path": "tools/h3_complete_native_calendar_fullwidth_service_r6.py",
+    "sha256": "6e7f3f6b66dba263783ef4595a459221fce0760fde77eea3b588e5e926fae4e3"
+  },
+  "tag_owner.sv": {
+    "bytes": 5250,
+    "commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/inputs/main/rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv",
+    "sha256": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a"
+  }
+}

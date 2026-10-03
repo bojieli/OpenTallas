@@ -1,0 +1,38 @@
+{
+  "commands": [
+    {
+      "command": [
+        "python",
+        "tools/h3_complete_native_calendar_source_connector_r7.py",
+        "--verify"
+      ],
+      "output": "PASS source-connected prospective model; actual caller/full16/drain/codec/wholeprogram UNKNOWN",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python",
+        "results/uarch/h3_complete_native_calendar_20261002/source_connector_r7/replay_proof.py"
+      ],
+      "output": "{\n  \"actual_caller_full16_quarantine_installed\": false,\n  \"artifact_sha256\": \"9f63ac6fcb38bb66a441a4d5018a863db963cb2aa2a8b0ad073cb0a8c27e8d30\",\n  \"runs\": {\n    \"elastic_proposal.bound256\": {\n      \"capacity_peaks\": {\n        \"R14_context_perPC\": 8,\n        \"W2_perPC_client\": 2\n      },\n      \"events\": 1192,\n      \"last_retire\": 47614,\n      \"parents\": 4,\n      \"resource_overlap\": false,\n      \"sector_children\": 64\n    },\n    \"elastic_proposal.bound64\": {\n      \"capacity_peaks\": {\n        \"R14_context_perPC\": 8,\n        \"W2_perPC_client\": 2\n      },\n      \"events\": 1192,\n      \"last_retire\": 17086,\n      \"parents\": 4,\n      \"resource_overlap\": false,\n      \"sector_children\": 64\n    },\n    \"elastic_proposal.bound8\": {\n      \"capacity_peaks\": {\n        \"R14_context_perPC\": 8,\n        \"W2_perPC_client\": 2\n      },\n      \"events\": 1192,\n      \"last_retire\": 8182,\n      \"parents\": 4,\n      \"resource_overlap\": false,\n      \"sector_children\": 64\n    },\n    \"held.bound256\": {\n      \"capacity_peaks\": {\n        \"R14_context_perPC\": 8,\n        \"W2_perPC_client\": 2\n      },\n      \"events\": 1192,\n      \"last_retire\": 47614,\n      \"parents\": 4,\n      \"resource_overlap\": false,\n      \"sector_children\": 64\n    },\n    \"held.bound64\": {\n      \"capacity_peaks\": {\n        \"R14_context_perPC\": 8,\n        \"W2_perPC_client\": 2\n      },\n      \"events\": 1192,\n      \"last_retire\": 17086,\n      \"parents\": 4,\n      \"resource_overlap\": false,\n      \"sector_children\": 64\n    },\n    \"held.bound8\": {\n      \"capacity_peaks\": {\n        \"R14_context_perPC\": 8,\n        \"W2_perPC_client\": 2\n      },\n      \"events\": 1192,\n      \"last_retire\": 8182,\n      \"parents\": 4,\n      \"resource_overlap\": false,\n      \"sector_children\": 64\n    }\n  },\n  \"schema\": \"INDEPENDENT_SOURCE_CONNECTOR_R7_PROOF\",\n  \"verdict\": \"PASS_PROSPECTIVE_CONTROLS_ONLY\",\n  \"whole_token_ns\": null\n}",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-o",
+        "addopts=",
+        "tests/test_hbm_w5_read_frame_component.py",
+        "tests/test_h3_complete_native_calendar_source_connector_r7.py"
+      ],
+      "output": ".....................                                                [100%]\n21 passed, 4 subtests passed in 1.86s",
+      "returncode": 0
+    }
+  ],
+  "copied_from": "git index exact selected files",
+  "historical_git_objects_required": false,
+  "source_and_artifact_hashes_verified": 35
+}

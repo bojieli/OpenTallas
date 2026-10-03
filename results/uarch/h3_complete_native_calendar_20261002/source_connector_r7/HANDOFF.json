@@ -1,0 +1,24 @@
+{
+  "base": "4aed3cff8769f53caf3a1a9ac3a504bcab8819ad",
+  "blockers": "actual native allocator/whole-command lease adapter, DS96 mapping, backend echo/quarantine, installed reverse/CDC/debt counters and commonreset, component protection/physical timing",
+  "commands": [
+    "python tools/h3_complete_native_calendar_source_connector_r7.py --verify",
+    "python results/uarch/h3_complete_native_calendar_20261002/source_connector_r7/replay_proof.py",
+    "python -m pytest -q -o addopts=\"\" tests/test_hbm_w5_read_frame_component.py tests/test_h3_complete_native_calendar_source_connector_r7.py tests/test_h3_complete_native_calendar_fullwidth_service_r6.py tests/test_h3_complete_native_calendar_causal_domains_r5.py tests/test_h3_complete_native_calendar_owner_join_r3.py"
+  ],
+  "components": [
+    "tools/h3_complete_native_calendar_source_connector_r7.py",
+    "rtl/gpu/hbm_w5_candidate/ot_hbm_w5_read_frame.sv"
+  ],
+  "current_calendars": "run_r4",
+  "historic_unadopted_intermediates": "untracked final/run_r2/run_r3 retained locally; not selected",
+  "input_origins": "input_manifest.json; exact bytes archived, no historical Git object or sibling checkout needed",
+  "local_RTL_gate": true,
+  "next_action": "Parent compose caller lease adapter and backend16 echo/quarantine with this opt-in perSM issuer/assembler; map drain97/106 into W6 connector without dropping identity/reset epoch. Reconcile matched overlaps once, no headline or fulltoken build claim.",
+  "numerical_jobs_started": 0,
+  "parent_installation": false,
+  "physical_jobs_started": 0,
+  "schema": "SOURCE_CONNECTED_R7_AND_LOCAL_W5_COMPONENT_HANDOFF",
+  "standalone_additive": true,
+  "tests": "58 +30 subtests combined; final local8tests rerun after native64 generation retention and wrap/disabled harness fix"
+}

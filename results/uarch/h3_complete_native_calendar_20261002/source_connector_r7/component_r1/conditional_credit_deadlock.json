@@ -1,0 +1,16 @@
+{
+  "captured_bytes_before_block": 64,
+  "fix": "8 retained tickets/16sector identities, release ONLY staging credit after paired captured-storeACK, defer physical reverse and source parent lease",
+  "fragment_bytes": 64,
+  "frame_bytes": 512,
+  "missing_bytes": 448,
+  "schema": "SOURCE_CREDIT_CONDITIONAL_FAILURE_PRESERVED",
+  "source": "inputs/atomic_owner_contract.json",
+  "source_credit": 1,
+  "wait_cycle": [
+    "staging_credit held to RF_ACK",
+    "RF_ACK waits512B assembly",
+    "assembly waits next7fragments",
+    "nextfragment waits staging_credit"
+  ]
+}
