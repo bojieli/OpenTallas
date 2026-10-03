@@ -1,0 +1,32 @@
+{
+  "Ampere_frozen_source": "c8dafdfe0da8a537f9cea2d833a2a834308833a6",
+  "Ampere_inventory_sha256": "774c50e28e39d06c9c7a3e80b69c6442a262af69640d5167126b6ef708cf465b",
+  "SSFF_qualified": false,
+  "actual_instance_census_qualified": false,
+  "actual_readonly_guard": "PASS2requested_v1_masters_RF_scratch",
+  "binding": "binding.json",
+  "geometry_model_delta": 0,
+  "guarded_launch_dependencies": "parentmain194417d02 provides alignedguard/base/checker/snap/assert hooks; this additivebinding does not duplicate or relax parenttools",
+  "historical_fc62_24d0_required": false,
+  "launch_policy": "every futurephysical command enters tools/run_abi3_physical_aligned_guarded.py --macro-track-gate; actual macroplacement uses ot_mts::place andassert; abstract gate alone never authorizes launch",
+  "new_binding_tests": 8,
+  "physical_jobs": 0,
+  "remaining": [
+    "actual32SM slot/neighbor placement census and scopeddriver/load/clockroute inventory",
+    "mapped source combinational timing risk, CTS/reset/holdrepair/escape cost",
+    "source/model/resource GO for one selectedroute"
+  ],
+  "schema": "W6_ALIGNED_LAUNCH_POLICY_HANDOFF_V1",
+  "source_inventory_scope": "frozen source-sized macro counts/once-only envelope; actual placement/pinload/CTS/layer/census still missing",
+  "source_parent": "194417d0227349f01a414c2a56c1175e8ebce6b0",
+  "subtests": 8,
+  "total_current_focused_tests": 52,
+  "unchanged": [
+    "originalW6RTL",
+    "RF/SIMD/scratch geometry",
+    "1.2GHzSS60/FF25 policy",
+    "livepinnedjobs",
+    "all priorfailures andreceipts"
+  ],
+  "v2_geometry_selected": false
+}

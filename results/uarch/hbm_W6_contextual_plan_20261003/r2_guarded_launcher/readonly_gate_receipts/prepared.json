@@ -1,0 +1,18 @@
+{
+  "SSFF_qualified": false,
+  "aligned_actual_placement_hook_required": true,
+  "argv": [
+    "python3",
+    "/home/ubuntu/OpenTallas/tools/run_abi3_physical_aligned_guarded.py",
+    "--macro-track-gate",
+    "--macro-view",
+    "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+    "--macro-view",
+    "ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "complete_placed_instance_census": false,
+  "geometry": "original_v1",
+  "launch_executed": false,
+  "launch_ready": false,
+  "source_binding": "194417d0227349f01a414c2a56c1175e8ebce6b0"
+}

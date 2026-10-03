@@ -1,0 +1,115 @@
+{
+ "assert_hook": "physical/common/ot_macro_track_assert_hook.tcl",
+ "assert_hook_sha256": "9a31c37d470232411b116ccbf8607d16e494c968ab743e37992ef3ed2db7e2a1",
+ "checker": "tools/check_macro_track_alignment.py",
+ "checker_sha256": "21f4957b432b14b142598ee334b9cdb9ef18f09efbbcaa0d2cbd629582ff8a84",
+ "created_ns": 1791004855422606785,
+ "driver_args": [
+  "--macro-view",
+  "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+  "--macro-view",
+  "ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+  "--step-tcl",
+  "POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl"
+ ],
+ "hooks": [],
+ "macros": [
+  {
+   "allowed_orientations": [
+    "R0",
+    "MX",
+    "MY",
+    "R180",
+    "R90",
+    "R270",
+    "MXR90",
+    "MYR90"
+   ],
+   "layers": {
+    "M4": {
+     "invariant": false,
+     "no_legal_origin": [],
+     "rule_mod_track_nm": {
+      "MX": [
+       24
+      ],
+      "MY": [
+       0
+      ],
+      "R0": [
+       0
+      ],
+      "R180": [
+       24
+      ]
+     }
+    }
+   },
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+   "lef_sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2"
+  },
+  {
+   "allowed_orientations": [
+    "R0",
+    "MX",
+    "MY",
+    "R180",
+    "R90",
+    "R270",
+    "MXR90",
+    "MYR90"
+   ],
+   "layers": {
+    "M4": {
+     "invariant": false,
+     "no_legal_origin": [],
+     "rule_mod_track_nm": {
+      "MX": [
+       18
+      ],
+      "MY": [
+       0
+      ],
+      "R0": [
+       0
+      ],
+      "R180": [
+       18
+      ]
+     }
+    }
+   },
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+   "lef_sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+   "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+  }
+ ],
+ "refusals": [],
+ "required_master_guard": {
+  "complete_placed_instance_census": false,
+  "masters": [
+   {
+    "lef": "/home/ubuntu/OpenTallas/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+    "lef_sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "requested_master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "signal_pins_checked": 819
+   },
+   {
+    "lef": "/home/ubuntu/OpenTallas/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+    "lef_sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+    "requested_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "signal_pins_checked": 829
+   }
+  ],
+  "sha256": "8e614f3ef192ecdc4b67077beb496ca7ef1e53b96bd9074fa0c6040d18802dae",
+  "tool": "tools/run_abi3_physical_aligned_guarded.py"
+ },
+ "schema": "opentallas.macro_track_gate.v1",
+ "snap_library_sha256": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143",
+ "verdict": "PASS",
+ "warnings": [
+  "ot_sram_1r1w_128x256_m1_r2c2: M4 mirror-variant ({'R0': [0], 'MX': [24], 'MY': [0], 'R180': [24]}); place it with physical/common/ot_macro_track_snap.tcl or use the *_v2 abstract",
+  "ot_sram_1r1w_1024x256_m2_r2c2: M4 mirror-variant ({'R0': [0], 'MX': [18], 'MY': [0], 'R180': [18]}); place it with physical/common/ot_macro_track_snap.tcl or use the *_v2 abstract"
+ ]
+}

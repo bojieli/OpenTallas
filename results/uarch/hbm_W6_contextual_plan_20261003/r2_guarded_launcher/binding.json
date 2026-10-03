@@ -1,0 +1,51 @@
+{
+  "PnR_jobs": 0,
+  "census": "Actual placed-instance census must join source counts+instance paths+master hashes+orientation+site/row grid+all transformed signal pin rectangles and tracks. Abstract guard PASS is not census PASS.",
+  "dimension_or_pitch_change": false,
+  "full_context_v1_master_list_requires_Ampere_frozen_census": true,
+  "inherited_parent_claims": {
+    "EW_OpenROAD_checks": 1,
+    "SSFF_wholeparent": false,
+    "abstracts": 28,
+    "independently_repeated_here": false,
+    "metadata_guard_tests": 26,
+    "pins": 119632,
+    "representative_SRAM_DRC": 0,
+    "representative_SRAM_corner": "TT_ONLY"
+  },
+  "macro_geometry_adopted_from_v2": false,
+  "macro_geometry_selection": "original_v1",
+  "macro_place": "ot_mts::place for every actual macro instance; replace raw orientation-blind placement",
+  "mandatory_flag": "--macro-track-gate",
+  "mandatory_launcher": "tools/run_abi3_physical_aligned_guarded.py",
+  "model_geometry_change": false,
+  "no_live_job_changes": true,
+  "parent_source": "194417d0227349f01a414c2a56c1175e8ebce6b0",
+  "pre_route_assert": "ot_mts::assert_on_track and mandatory POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl",
+  "previous_selected_plan_sha256": "ad98aa5b1e6fd8f06a589f0ce382302113d92530be500993f825f639f00438c5",
+  "readiness": "pending Ampere actual32slot/load/clock/layer/census and scoped timing risk review; installedcaller/allcopy producer independent",
+  "replicas": 32,
+  "schema": "W6_GUARDED_LAUNCHER_SOURCE_BINDING_V1",
+  "scope": "source-bound launcher/abstract preflight only; no physical launch",
+  "selected_model": "Qwen",
+  "selected_route": "W6_FULL32_DISTRIBUTED_ASAP7_RVT_M2_M5_R1",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "physical/common/ot_macro_track_assert_hook.tcl": "9a31c37d470232411b116ccbf8607d16e494c968ab743e37992ef3ed2db7e2a1",
+    "physical/common/ot_macro_track_snap.tcl": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143",
+    "tools/check_macro_track_alignment.py": "21f4957b432b14b142598ee334b9cdb9ef18f09efbbcaa0d2cbd629582ff8a84",
+    "tools/run_abi3_physical_aligned.py": "d3e5973b8943e8149f42fc8fd05ce37cc555c83889a693f086d9261237f9cbb8",
+    "tools/run_abi3_physical_aligned_guarded.py": "8e614f3ef192ecdc4b67077beb496ca7ef1e53b96bd9074fa0c6040d18802dae"
+  },
+  "target": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "bench_period_ps": 10000,
+    "period_ps": 833.3333333333334
+  },
+  "unchanged_original_RTL": true,
+  "v1_RF_count": 4096,
+  "v1_scratch_count": 64,
+  "v2_consequence": "New selection requires revised source-sized slot/area/capture/timing model, including stackedpair64.80um; not inherited from this binding"
+}
