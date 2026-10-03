@@ -42,6 +42,7 @@ module ot_qwen_sys_die #(
     // (1.2 GHz streaming domain); sequencer, stream unit, reducers, VM writes, KV service, collective engine and
     // links on clk (0.9 GHz).  The core is ot_hdc_core_2clk (tools/qwen_rom_sys_core2clk_emit.py).
     parameter integer ME_CDC = 0,
+    parameter integer KV_PREFETCH = 0,
     parameter integer LFW        = 32 + 1 + 1 + 8 + 1 + 8 + 1 + 1 + 3 + (512 + 2 + TAGW)
 ) (
     input  wire               clk,
@@ -243,7 +244,7 @@ module ot_qwen_sys_die #(
     wire [31:0] kv_fill, kv_wb, kv_wait;
     ot_qwen_sys_kv_svc #(.W(W), .G(G), .AW(AW), .KVWORDS(KVWORDS), .LWB(LWB), .HAW(24), .SECW(256),
                          .NPC(NPC), .LOT(HTAGW - 1), .LENW(5), .BEATW(4), .BOOT_SECTOR(BOOT_SECTOR), .SCRUB_SECTORS(SCRUB_SECTORS),
-                         .RCLK_SEP(ME_CDC)) u_kv (
+                         .RCLK_SEP(ME_CDC), .PREFETCH(KV_PREFETCH)) u_kv (
         .clk(clk), .rclk(fclk), .rst_n(hbm_rst_n), .tok_start(start), .kv_base(kv_base),
         .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kv_ok(kv_ok),
         .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q),

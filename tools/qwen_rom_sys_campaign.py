@@ -57,16 +57,24 @@ SYS = ["rtl/qwen_sys/ot_qwen_rom_sys_top.sv", "rtl/qwen_sys/ot_qwen_sys_die.sv",
        "rtl/rom/ot_rom_oneshot_allreduce.sv", "rtl/link/ot_link_crc32.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/host/ot_host_if.sv", "rtl/hdc/kv/ot_qwen_hbm_model_ack.sv", "rtl/test/qwen_sys/ot_qwen_d2d_chan.sv"]
 HARNESS = "rtl/test/qwen_sys/qsys_harness.cpp"
+HARNESS2 = "rtl/test/qwen_sys/qsys_harness2.cpp"     # sclk / fclk from one 3.6 GHz VCO (+CLK=slow|split)
+CORE2 = "build/qwen_sys/ot_hdc_core_2clk.sv"           # emitted by tools/qwen_rom_sys_core2clk_emit.py
 BENCHES = {
     "link": ("tb_qwen_d2d_link", ["rtl/test/qwen_sys/tb_qwen_d2d_link.sv", "rtl/test/qwen_sys/ot_qwen_d2d_chan.sv",
                                   "rtl/qwen_sys/ot_qwen_d2d_link.sv", "rtl/link/ot_link_crc32.sv"]),
     "kv": ("tb_qwen_sys_kv_svc", ["rtl/test/qwen_sys/tb_qwen_sys_kv_svc.sv", "rtl/qwen_sys/ot_qwen_sys_kv_svc.sv",
                                   "rtl/hdc/kv/ot_qwen_hbm_model_ack.sv"]),
+    "kv_pf": ("tb_qwen_sys_kv_svc", ["rtl/test/qwen_sys/tb_qwen_sys_kv_svc.sv", "rtl/qwen_sys/ot_qwen_sys_kv_svc.sv",
+                                     "rtl/hdc/kv/ot_qwen_hbm_model_ack.sv"]),
     "ctrl": ("tb_qwen_sys_ctrl", ["rtl/test/qwen_sys/tb_qwen_sys_ctrl.sv", "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv",
                                   "rtl/qwen_sys/ot_qwen_sys_csr.sv", "rtl/qwen_sys/ot_qwen_tp_seq_sys.sv",
                                   "rtl/lib/ot_reset_sync.sv"]),
-    "system": ("tb_qwen_rom_sys", CORE + SYS + ["rtl/test/qwen_sys/tb_qwen_rom_sys.sv"]),
 }
+SYS_FILES = ([f for f in CORE if f != "rtl/hdc/ot_hdc_core.sv"] +
+             [CORE2, "rtl/hdc/ot_hdc_me_2clk.sv", "rtl/common/ot_ratio_cdc_fifo.sv", "rtl/hdc/ot_hdc_cg.sv"] +
+             SYS + ["rtl/test/qwen_sys/tb_qwen_rom_sys.sv"])
+# system variants: (ME_CDC, KV_PREFETCH)
+VARIANTS = {"c0p0": (0, 0), "c1p0": (1, 0), "c0p1": (0, 1), "c1p1": (1, 1)}
 AR256 = ["rtl/rom/ot_rom_oneshot_allreduce.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/test/tb_qwen_tp4_ar256.sv"]
 # ports that must never be tied high in the system top (rom_bridge_gaps Z-list / DA6)
 READY_PORTS = ["kv_ok", "kv_write_drained", "w_ok", "emb_ok", "me_mem_ok", "c_ready", "h_req_rdy", "tx_ready",
@@ -83,20 +91,22 @@ def sh(cmd, cwd=ROOT, timeout=None, env=None):
     return p.returncode, p.stdout + p.stderr, round(time.monotonic() - t0, 2)
 
 
-def vbuild(top, files, mdir: Path, extra=(), jobs=24):
+VERILATOR = os.environ.get("VERILATOR", os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"))
+
+
+def vbuild(top, files, mdir: Path, extra=(), jobs=24, harness=HARNESS):
+    """Verilator 5 (--build -j); the bench's top class is passed to the harness as QSYS_TOP / QSYS_TOPH."""
     mdir.parent.mkdir(parents=True, exist_ok=True)
-    cmd = ["verilator", "--cc", "--exe", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
-           "-Wno-WIDTHCONCAT", "-Wno-CASEINCOMPLETE", "-Wno-MULTIDRIVEN", "--output-split", "20000",
-           "--top-module", top, "-Mdir", mdir, f"-Irtl/hdc", *extra,
-           "-CFLAGS", f'-DTOP=V{top} -DTOPH=\\"V{top}.h\\"', *files, HARNESS]
-    rc, out, t1 = sh(cmd)
+    cmd = [VERILATOR, "--cc", "--exe", "--build", "-j", str(jobs), "-O2", "-Wno-fatal", "-Wno-lint", "-Wno-style",
+           "-Wno-WIDTH", "-Wno-BLKSEQ", "-Wno-MULTIDRIVEN", "-Wno-TIMESCALEMOD", "-Wno-PINMISSING",
+           "-Wno-INITIALDLY", "--top-module", top, "-Mdir", mdir, "-Irtl/hdc", *extra,
+           "-CFLAGS", f'-DQSYS_TOP=V{top} -DQSYS_TOPH=\\"V{top}.h\\"', *files, harness]
+    t0 = time.monotonic()
+    rc, out, _ = sh(cmd)
+    (mdir.parent / f"{mdir.name}.build.log").write_text(out)
     if rc:
-        raise RuntimeError(f"verilator {top}: {out[-3000:]}")
-    rc, out2, t2 = sh(["make", "-j", str(jobs), "-C", mdir, "-f", f"V{top}.mk", "OPT_FAST=-O1", "OPT_SLOW=-O0",
-                       f"V{top}"])
-    if rc:
-        raise RuntimeError(f"make {top}: {out2[-3000:]}")
-    return mdir / f"V{top}", t1 + t2
+        raise RuntimeError(f"verilator {top} {extra}: {out[-3000:]}")
+    return mdir / f"V{top}", time.monotonic() - t0
 
 
 def run(binary: Path, args, log: Path, timeout=None):
@@ -177,6 +187,7 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--jobs", type=int, default=24)
     ap.add_argument("--skip-system", action="store_true")
+    ap.add_argument("--img", type=Path, help="existing tools/hdc_program.py --tp 4 images (else generated)")
     a = ap.parse_args()
     res_path = a.out / "campaign.json"
     if res_path.exists():
@@ -185,7 +196,8 @@ def main():
     a.work.mkdir(parents=True, exist_ok=True)
     srcs = sorted({*CORE, *SYS, *[f for _, fs in BENCHES.values() for f in fs], *AR256, HARNESS,
                    "rtl/rom/ot_qwen_tp_seq_w12.sv", "rtl/hdc/ot_hdc_isa.svh", "tools/hdc_golden.py",
-                   "tools/hdc_program.py", "tools/hdc_isa.py", "tools/qwen_rom_sys_campaign.py"})
+                   "tools/hdc_program.py", "tools/hdc_isa.py", "tools/qwen_rom_sys_campaign.py",
+                   "tools/qwen_rom_sys_core2clk_emit.py", HARNESS2, *[f for f in SYS_FILES if f != CORE2]})
     pins = {f: sha(ROOT / f) for f in srcs}
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     dirty = subprocess.run(["git", "status", "--porcelain", "--", *srcs], cwd=ROOT, capture_output=True,
@@ -193,15 +205,16 @@ def main():
     result = {"schema": "opentallas.qwen-rom-system-rtl-campaign.v1", "git_head": head,
               "sources_dirty_at_launch": dirty.splitlines(), "source_sha256": pins, "status": "fail",
               "vehicle": "qwen3-reduced-v1 (hidden 128, 4 layers, 8/2 heads, head_dim 16, ffn 384, vocab 4096), TP-4",
-              "claim_boundary": ("Functional, cycle-accurate RTL simulation (Verilator 4.038) of the Qwen3 ROM system "
+              "claim_boundary": ("Functional, cycle-accurate RTL simulation (Verilator 5.050) of the Qwen3 ROM system "
                                  "top at the REDUCED vehicle shape: four ot_hdc_core dies (scalar stream unit, single "
                                  "clock), real link layers over simulated channels, KV in per-die HBM models (sim-only "
                                  "timing models with tagged write-done), the host interface driven by a register-level "
                                  "host. No full-shape token, no timing/P&R/SS-FF claim, no near-HBM attention on this "
-                                 "token path, no two-clock (0.9/1.2 GHz) split inside the dies.")}
+                                 "token path. ME_CDC variants run the matrix engines at 1.2 GHz and the rest at 0.9 GHz (3:4, one PLL) through the "
+                                 "ot_ratio_cdc_fifo crossings; the host and the links stay on the 0.9 GHz clock.")}
     t0 = time.monotonic()
     # images
-    img = a.work / "img"
+    img = a.img or a.work / "img"
     if not (img / "expect.json").exists():
         rc, o, t = sh([sys.executable, "tools/hdc_program.py", "--tp", "4", "--ngen", "3", "--out", img])
         (a.out / "images.log").write_text(o)
@@ -212,11 +225,20 @@ def main():
                         "oracle": exp["end_to_end"]["oracle"],
                         "logits_bit_exact_every_step": exp["end_to_end"]["logits_bit_exact"],
                         "image_sha256": {p.name: sha(p) for p in sorted(img.glob("*.hex"))}}
+    # the two-clock core variant (a build product of the pinned core)
+    rc, o, _ = sh([sys.executable, "tools/qwen_rom_sys_core2clk_emit.py", "--out", ROOT / "build/qwen_sys"])
+    if rc:
+        raise SystemExit("core emit failed: " + o)
+    result["core2clk"] = json.loads((ROOT / "build/qwen_sys/ot_hdc_core_2clk.json").read_text())
     # builds (parallel)
     bins = {}
-    with cf.ThreadPoolExecutor(4) as ex:
-        futs = {k: ex.submit(vbuild, top, files, a.work / f"obj_{k}", (), a.jobs)
-                for k, (top, files) in BENCHES.items() if not (k == "system" and a.skip_system)}
+    with cf.ThreadPoolExecutor(8) as ex:
+        futs = {k: ex.submit(vbuild, top, files, a.work / f"obj_{k}", ("-GPREFETCH=1",) if k == "kv_pf" else (), a.jobs)
+                for k, (top, files) in BENCHES.items()}
+        if not a.skip_system:
+            for v, (cdc, pf) in VARIANTS.items():
+                futs[f"sys_{v}"] = ex.submit(vbuild, "tb_qwen_rom_sys", SYS_FILES, a.work / f"obj_sys_{v}",
+                                             (f"-GME_CDC={cdc}", f"-GKV_PREFETCH={pf}"), a.jobs, HARNESS2)
         for k, f in futs.items():
             bins[k], bt = f.result()
             result.setdefault("build_wall_s", {})[k] = round(bt, 1)
@@ -225,18 +247,28 @@ def main():
     for fp in (0, 101, 37, 5, 3):
         jobs.append(("link", f"link_flip{fp}", [f"+FLIP={fp}"]))
     jobs.append(("link", "link_break", ["+BREAK"]))
-    jobs += [("kv", "kv_ntok200", ["+NTOK=200"]), ("kv", "kv_tag_flip50", ["+TAG_FLIP=50"]),
-             ("kv", "kv_tag_flip700", ["+TAG_FLIP=700"]), ("kv", "kv_read_invalid", ["+READ_INVALID"])]
+    for p in ("0", "1"):
+        kvb = "kv" if p == "0" else "kv_pf"
+        jobs += [(kvb, f"kv_p{p}_ntok200", ["+NTOK=200"]), (kvb, f"kv_p{p}_tag_flip50", ["+TAG_FLIP=50"]),
+                 (kvb, f"kv_p{p}_tag_flip700", ["+TAG_FLIP=700"]), (kvb, f"kv_p{p}_read_invalid", ["+READ_INVALID"])]
     jobs += [("ctrl", "ctrl_normal", []), ("ctrl", "ctrl_link_never", ["+LINK_NEVER"]),
              ("ctrl", "ctrl_hbm_bad", ["+HBM_BAD"])]
     if not a.skip_system:
         d = f"+DIR={img}"
-        jobs += [("system", "sys_users2", [d]),
-                 ("system", "sys_users2_flip97", [d, "+FLIP=97"]),
-                 ("system", "sys_users1_flip23", [d, "+FLIP=23", "+USERS=1"]),
-                 ("system", "sys_fault_hbm_tag", [d, "+HBM_TAG_FLIP=400", "+EXPECT_FAULT=14"]),
-                 ("system", "sys_fault_link_break", [d, "+BREAK=60000", "+EXPECT_FAULT=5"])]
-    with cf.ThreadPoolExecutor(8) as ex:
+        for v, (cdc, pf) in VARIANTS.items():
+            clk = "+CLK=split" if cdc else "+CLK=slow"
+            b = f"sys_{v}"
+            jobs += [(b, f"{b}_users1", [d, clk, "+USERS=1"]),
+                     (b, f"{b}_users2", [d, clk, "+USERS=2"]),
+                     (b, f"{b}_users4_flip97", [d, clk, "+USERS=4", "+FLIP=97"]),
+                     (b, f"{b}_users1_flip23", [d, clk, "+USERS=1", "+FLIP=23"])]
+            if cdc:
+                jobs += [(b, f"{b}_users1_fphase1", [d, clk, "+USERS=1", "+FPHASE=1"]),
+                         (b, f"{b}_users1_fphase2", [d, clk, "+USERS=1", "+FPHASE=2"])]
+        jobs += [("sys_c0p0", "sys_fault_hbm_tag", [d, "+CLK=slow", "+USERS=1", "+HBM_TAG_FLIP=400", "+EXPECT_FAULT=14"]),
+                 ("sys_c0p0", "sys_fault_link_break", [d, "+CLK=slow", "+USERS=1", "+BREAK=60000", "+EXPECT_FAULT=5"]),
+                 ("sys_c1p1", "sys_c1p1_fault_hbm_tag", [d, "+CLK=split", "+USERS=1", "+HBM_TAG_FLIP=900", "+EXPECT_FAULT=14"])]
+    with cf.ThreadPoolExecutor(64) as ex:
         futs = {name: ex.submit(run, bins[b], args, a.out / f"{name}.log") for b, name, args in jobs}
         for name, f in futs.items():
             runs[name] = f.result()

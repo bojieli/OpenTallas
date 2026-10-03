@@ -58,7 +58,12 @@ module ot_qwen_sys_kv_svc #(
     parameter integer SCRUB_SECTORS = 0,         // boot: zero sectors [0, SCRUB_SECTORS) first (the KV region)
     // RCLK_SEP = 1: the core read port (kv_re / kv_raddr / kv_q) is clocked by rclk -- the matrix engine's 1.2 GHz
     // clock (ME_CDC) -- a 1R1W staging SRAM with a fast read clock; everything else stays on clk.
-    parameter integer RCLK_SEP = 0
+    parameter integer RCLK_SEP = 0,
+    // PREFETCH = 1: the token start is the sequencer's KV prefetch NOTICE: the service walks every block in the
+    // program's layer order (K0, V0, K1, V1, ...) from the token start, ahead of each op's own announcement
+    // (kvd_v, which still pre-empts the walk).  Words the core writes before their fill keep their lanes (the
+    // dirty merge), so the order of notice, write and fill never changes a value.  0 (default): fill on kvd_v only.
+    parameter integer PREFETCH = 0
 ) (
     input  wire                 clk,
     input  wire                 rclk,
@@ -158,6 +163,10 @@ module ot_qwen_sys_kv_svc #(
     reg [KB-LWB-1:0] cur_blk;
     reg             cur_v;
     wire [KB-1:0]   bf_word = bf_base + bf_k[LWB-1:0];
+    reg             bf_pf, pf_on;
+    reg [KB-LWB:0]  pf_i;
+    // program order of the blocks: K of layer l is block l, V of layer l is block NBLK/2 + l
+    wire [KB-LWB-1:0] pf_blk = pf_i[0] ? (NBLK / 2 + (pf_i >> 1)) : (pf_i >> 1);
     wire [KB-LWB-1:0] kvd_blk = kvd_wbase[KB-1:LWB];
 
     // -- boot check ------------------------------------------------------------------------
@@ -219,6 +228,7 @@ module ot_qwen_sys_kv_svc #(
             valid <= 0; inflight <= 0; queued <= 0;
             ot_v <= 0; ot_gen <= 0; ot_we <= 0; ot_n <= 0;
             wq_r <= 0; wq_w <= 0; wq_n <= 0;
+            bf_pf <= 1'b0; pf_on <= 1'b0; pf_i <= 0;
             wb_st <= WB_IDLE; bf_act <= 1'b0; bf_k <= 0; bf_base <= 0; cur_blk <= 0; cur_v <= 1'b0;
             kv_ok <= 1'b0; h_req_v <= 1'b0; h_req_we <= 1'b0; h_req_addr <= 0; h_req_len <= 0;
             h_req_tag <= 0; h_req_wdata <= 0;
@@ -314,13 +324,18 @@ module ot_qwen_sys_kv_svc #(
 
             // ---- block fill walk
             if (kvd_v) begin
-                bf_act <= 1'b1; bf_k <= 0; bf_base <= {kvd_blk, {LWB{1'b0}}};
+                bf_act <= 1'b1; bf_k <= 0; bf_base <= {kvd_blk, {LWB{1'b0}}}; bf_pf <= 1'b0;
                 cur_blk <= kvd_blk; cur_v <= 1'b1; kv_ok <= 1'b0;
                 if (kvd_wbase[AW-1:KB] != 0) begin f_r <= 1'b1; fc_r[5] <= 1'b1; end
             end else begin
                 if (bf_act && (g_bf || bf_skip)) begin
                     bf_k <= bf_k + 1'b1;
-                    if (bf_k == (1 << LWB) - 1) bf_act <= 1'b0;
+                    if (bf_k == (1 << LWB) - 1) begin
+                        bf_act <= 1'b0;
+                        if (bf_pf) pf_i <= pf_i + 1'b1;
+                    end
+                end else if (PREFETCH != 0 && !bf_act && pf_on && pf_i < NBLK) begin
+                    bf_act <= 1'b1; bf_k <= 0; bf_base <= {pf_blk, {LWB{1'b0}}}; bf_pf <= 1'b1;
                 end
                 kv_ok <= cur_v && (&valid[{cur_blk, {LWB{1'b0}}} +: (1 << LWB)]);
                 if (cur_v && !(&valid[{cur_blk, {LWB{1'b0}}} +: (1 << LWB)])) n_kvok_wait <= n_kvok_wait + 1;
@@ -361,6 +376,7 @@ module ot_qwen_sys_kv_svc #(
                 // (a block walk still skipping valid words is cancelled; outstanding requests are not allowed)
                 if (!drained) begin f_r <= 1'b1; fc_r[3] <= 1'b1; end
                 valid <= 0; cur_v <= 1'b0; kv_ok <= 1'b0; bf_act <= 1'b0;
+                pf_on <= (PREFETCH != 0); pf_i <= 0; bf_pf <= 1'b0;
             end
 
             // ---- boot

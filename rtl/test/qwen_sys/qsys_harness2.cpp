@@ -5,7 +5,7 @@
 //   +FPHASE=k  : split only -- fclk edges at ticks = k (mod 3)
 // The top module class is passed as -DTOP=V<top> -DTOPH="V<top>.h".
 #include <verilated.h>
-#include TOPH
+#include QSYS_TOPH
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     int sper = 4, fper = 4, foff = 0;
     if (clk == "split") { fper = 3; foff = fph % 3; }
     else if (clk != "slow") { fprintf(stderr, "bad +CLK\n"); return 2; }
-    TOP* t = new TOP;
+    QSYS_TOP* t = new QSYS_TOP;
     t->sclk = 0; t->fclk = 0; t->tick = 0; t->eval();
     unsigned long long tick = 0;
     while (!Verilated::gotFinish()) {

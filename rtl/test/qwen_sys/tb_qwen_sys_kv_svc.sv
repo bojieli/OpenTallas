@@ -11,7 +11,7 @@
 // (fault_code[0] expected); +READ_INVALID reads a word of an unfilled block
 // (fault_code[2] expected).
 // ---------------------------------------------------------------------------
-module tb_qwen_sys_kv_svc (input wire clk);
+module tb_qwen_sys_kv_svc #(parameter integer PREFETCH = 0) (input wire clk);
     localparam integer W = 16, G = 4, AW = 24, KVWORDS = 512, LWB = 6, NPC = 4, LOT = 6, TAGW = 7;
     localparam integer SECTORS = 2 * KVWORDS + 2;
     reg rst_n = 0;
@@ -31,7 +31,7 @@ module tb_qwen_sys_kv_svc (input wire clk);
     wire [NPC*256-1:0] h_rsp_data;
     wire [31:0] n_fill, n_wb, n_wait;
     ot_qwen_sys_kv_svc #(.W(W), .G(G), .AW(AW), .KVWORDS(KVWORDS), .LWB(LWB), .NPC(NPC), .LOT(LOT),
-                         .BOOT_SECTOR(24'(SECTORS - 1)), .SCRUB_SECTORS(2 * KVWORDS)) dut (
+                         .BOOT_SECTOR(24'(SECTORS - 1)), .SCRUB_SECTORS(2 * KVWORDS), .PREFETCH(PREFETCH)) dut (
         .clk(clk), .rclk(clk), .rst_n(rst_n), .tok_start(tok_start), .kv_base(23'd0),
         .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kv_ok(kv_ok),
         .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q),

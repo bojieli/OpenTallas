@@ -35,7 +35,8 @@
 module tb_qwen_rom_sys #(
     parameter integer LAT_PKG   = 8,
     parameter integer LAT_BOARD = 40,
-    parameter integer ME_CDC    = 0
+    parameter integer ME_CDC    = 0,
+    parameter integer KV_PREFETCH = 0
 ) (input wire sclk, input wire fclk, input wire [63:0] tick);
     // clocks from rtl/test/qwen_sys/qsys_harness2.cpp: +CLK=slow (one 0.9 GHz clock) or +CLK=split
     // (fclk 1.2 GHz for the matrix engines, sclk 0.9 GHz for everything else, 3:4 from one PLL)
@@ -84,7 +85,7 @@ module tb_qwen_rom_sys #(
     wire [NW-1:0] step_pos;
 
     ot_qwen_rom_sys_top #(.N(N), .G(G), .NW(NW), .NSLOT(NSLOT), .KVW(KVW), .TAGW(TAGW), .NPC(NPC), .HTAGW(HTAGW),
-                          .LINK_TMO(4 * LAT_BOARD + 16), .ME_CDC(ME_CDC)) dut (
+                          .LINK_TMO(4 * LAT_BOARD + 16), .ME_CDC(ME_CDC), .KV_PREFETCH(KV_PREFETCH)) dut (
         .clk(clk), .fclk(fclk), .por_n(por_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hF),
@@ -143,10 +144,11 @@ module tb_qwen_rom_sys #(
     end endgenerate
     // fault injection: one corrupted response tag on die 2 (+HBM_TAG_FLIP=n)
     reg tag_hit;
-    always @(*) tag_hit = (tag_flip >= 0) && h_rsp_v[2*NPC] && (rsp_count2 == tag_flip);
+    always @(*) tag_hit = (tag_flip >= 0) && sys_ready && h_rsp_v[2*NPC] && (rsp_count2 == tag_flip);
     // the generation bit (HTAGW-1) of die 2's port-0 response
     assign h_rsp_tag_dut = h_rsp_tag ^ (tag_hit ? ({{(N*NPC*HTAGW-1){1'b0}}, 1'b1} << (2*NPC*HTAGW + HTAGW - 1)) : 0);
-    always @(posedge clk) if (h_rsp_v[2*NPC]) rsp_count2 <= rsp_count2 + 1;
+    // counted from system ready (the boot scrub's write-dones are not counted)
+    always @(posedge clk) if (sys_ready && h_rsp_v[2*NPC]) rsp_count2 <= rsp_count2 + 1;
 
     // ------------------------------------------------------------ dual-clock collision monitor (ME_CDC)
     // The safe ordering rule of the two-clock core: every fast-clock read (engine x port of the VM, engine KV
@@ -306,7 +308,8 @@ module tb_qwen_rom_sys #(
                 w0 = hmem[(CQ >> 3) + 2*cq_i];
                 if (w0[0] == cq_ph) begin
                     cq_entries = cq_entries + 1;
-                    if (w0[2:1] == 2'd3) begin
+                    // kind 3 (error) or a last entry with status 7 (ST_FAULT: the step was aborted by a fault)
+                    if (w0[2:1] == 2'd3 || w0[7:4] == 4'd7) begin
                         err_got = err_got + 1;
                         $display("CQ error slot=%0d tag=%04x status=%0d", w0[15:8], w0[31:16], w0[7:4]);
                     end else begin
@@ -388,6 +391,12 @@ module tb_qwen_rom_sys #(
         else $display("FAIL");
         $finish;
     end
+    integer prog_every = 0;
+    always @(posedge clk) if (prog_every > 0 && cyc % prog_every == 0) begin
+        $display("PROGRESS cyc=%0d boot_state=%0d sys_ready=%0d h_st=%0d op_busy=%0d arv=%0d arr=%0d rv=%0d rd=%08x steps_checked=%0d fault_src=%08x",
+                 cyc, dut.boot_state, sys_ready, h_st, op_busy, s_arvalid, s_arready, s_rvalid, rd_val, steps_checked, fault_src);
+        $fflush();
+    end
     always @(posedge clk) if (cyc > 60000000 || h_st == 90) begin
         $display("TIMEOUT h_st=%0d steps_checked=%0d fault_src=%08x", h_st, steps_checked, fault_src);
         $display("FAIL"); $finish;
@@ -396,6 +405,7 @@ module tb_qwen_rom_sys #(
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
         if (!$value$plusargs("FLIP=%d", flip)) flip = 0;
+        if (!$value$plusargs("PROGRESS=%d", prog_every)) prog_every = 0;
         if (!$value$plusargs("USERS=%d", USERS)) USERS = 2;
         if (!$value$plusargs("HBM_TAG_FLIP=%d", tag_flip)) tag_flip = -1;
         if (!$value$plusargs("BREAK=%d", brk)) brk = -1;
