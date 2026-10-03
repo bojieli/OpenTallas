@@ -1,0 +1,461 @@
+{
+  "CW_required": 219,
+  "basis": "e859 full219 analytical reserve, not a mapped measurement",
+  "clock": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "period_ps": 833.3333333333334
+  },
+  "global_screen": {
+    "PCs_per_die": 128,
+    "RF_scratch_L2_body_added_again": 0,
+    "additional_band_depth_um": 196.01999999999998,
+    "body_mm2_per_128": 37.28851469568,
+    "current_r11_service_bands_mm2": 66.4063488,
+    "die_local_namespace": 128,
+    "footprint_mm2_per_128": 78.8436097827176,
+    "matched_old_W2_replacement_credit": null,
+    "neighbor_collisions_if_stretched": [
+      {
+        "band": "svc_south",
+        "neighbor": "l2_s0"
+      },
+      {
+        "band": "svc_south",
+        "neighbor": "l2_s1"
+      },
+      {
+        "band": "svc_north",
+        "neighbor": "l2_n0"
+      },
+      {
+        "band": "svc_north",
+        "neighbor": "l2_n1"
+      }
+    ],
+    "new_band_width_um": 31760.64,
+    "old_band_height_um": 1045.44,
+    "requested_controllers": 1280,
+    "service_envelope_is_NOT_free": true,
+    "service_envelope_mm2": 123.4944
+  },
+  "independent_mapping_verified": false,
+  "local_context": {
+    "PG_policy_not_extracted_mask": true,
+    "PG_profile": "configs/signoff/pdn_m7_m8_wide_upper_grid.tcl",
+    "PG_site_exclusion_fraction": 0.05015582990397805,
+    "area_mm2": 0.6160869396,
+    "body_um2": 291316.52106,
+    "buffer_SS_max_load_fF": 184.32,
+    "buffer_fanout": 8,
+    "clock_leaf_load_fF": 3.471856,
+    "clock_reset_additional_debit_um2": 0,
+    "clock_reset_buffer_area_reserve_um2": 528.05844,
+    "clock_reset_floor_already_in_e859": true,
+    "clock_total_pin_load_fF": 7851.168361999999,
+    "controller_reset_pin_load_fF_range": [
+      11723.269250000001,
+      12217.80784
+    ],
+    "driver_load_choices": "qualification-context cells; not instantiated parent producer proof",
+    "height_um": 1241.46,
+    "loaded_cell_arc_skew_and_voltage_drop": null,
+    "placement_fraction": 0.5,
+    "port_termination_area_um2": 1219.19418,
+    "reset_leaf_load_upper_fF": 8.21128,
+    "width_um": 496.26
+  },
+  "mapped_input_present": false,
+  "new_jobs": 0,
+  "physical_admitted": false,
+  "ports": {
+    "admission_stop": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "c_req_addr": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 204,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "c_req_data": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1536,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "c_req_gen": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 24,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "c_req_rdy": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 6,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "c_req_tag": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 192,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "c_req_v": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 6,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "c_req_we": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 6,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "c_rsp_data": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1536,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "c_rsp_gen": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 24,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "c_rsp_rdy": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 6,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "c_rsp_tag": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 192,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "c_rsp_v": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 6,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "c_wr_done_gen": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 24,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "c_wr_done_rdy": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 6,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "c_wr_done_tag": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 192,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "c_wr_done_v": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 6,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "fault": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "idle": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "p_req_addr": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 34,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "p_req_data": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 256,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "p_req_gen": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 4,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "p_req_rdy": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "p_req_tag": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 35,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "p_req_v": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "p_req_we": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "p_rsp_data": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 256,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "p_rsp_gen": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 4,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "p_rsp_rdy": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "p_rsp_tag": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 35,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "p_rsp_v": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "p_wr_done_gen": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 4,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "p_wr_done_ready": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "p_wr_done_tag": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 35,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "p_wr_done_v": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "provider_fenced": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "rearm_rdy": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "rearm_v": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "repair_busy": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "direction": "output",
+      "driver_cell": null,
+      "per_bit_load_fF": 0.527811
+    },
+    "reset_fenced": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    },
+    "reverse_fenced": {
+      "actual_arrival_slew_and_wire_RC": null,
+      "actual_source_owner": null,
+      "bits": 1,
+      "capture_cell": null,
+      "direction": "input",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "per_bit_load_fF": null
+    }
+  },
+  "protected_FF_required": 15768,
+  "required": [
+    "Hubble exact SS mapping and unique15768 CW cell census before final dimension selection",
+    "Claude actual slot/home/neighbor relocation and matched old W2 debit",
+    "Installed client/backend driver/capture source identities and measured SS/FF arcs plus RC",
+    "Actual PG/CTS/reset/route exclusions and power/IR; current reserves are constructive planning only"
+  ],
+  "routing": {
+    "actual_PG_OBS_pin_escape_capacity": null,
+    "complete_boundary_bits": 4645,
+    "prospective_vertical_M3_M5_half_signal_tracks": 12061
+  },
+  "source_model": "e859a4d278786fb4847fc668209e7a8ca5093aa3",
+  "source_sha256": {
+    "rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv": "04930aa71137a791935c8ccba0dc1f20689e5bff35a214477cd990a87a36c7ef",
+    "rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv": "d68dc8d2e9cbd0cf4a42ba6bfe816ab7cad61a4366797e76ab17889057d8d1e6"
+  }
+}
