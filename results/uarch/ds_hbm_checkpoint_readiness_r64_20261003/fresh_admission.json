@@ -1,0 +1,27 @@
+{
+  "status": "HELD_FULL_GUARD_RESOURCE_ADMISSION",
+  "sample_ns": 1790999272516509339,
+  "MemAvailable_bytes": 109886210048,
+  "disk_available_bytes": 466802819072,
+  "constructor_started": false,
+  "numerical_started": false,
+  "resource_limits_or_affinity_added": false,
+  "phases": [
+    {
+      "label": "preflight",
+      "required_disk_bytes": 528693705466,
+      "required_RAM_bytes": 129877099956,
+      "disk_margin_bytes": -61890886394,
+      "RAM_margin_bytes": -19990889908,
+      "source_gate_and_hashes_PASS": true
+    },
+    {
+      "label": "runtime",
+      "required_disk_bytes": 528690667972,
+      "required_RAM_bytes": 129877021512,
+      "disk_margin_bytes": -61887848900,
+      "RAM_margin_bytes": -19990811464,
+      "source_gate_and_hashes_PASS": true
+    }
+  ]
+}

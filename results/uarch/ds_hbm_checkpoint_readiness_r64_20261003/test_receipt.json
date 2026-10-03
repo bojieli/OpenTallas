@@ -1,0 +1,18 @@
+{
+  "tests_PASS": 2,
+  "exit_code": 0,
+  "argv": [
+    "/home/ubuntu/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_ds_hbm_resources_r64.py"
+  ],
+  "regeneration_argv": [
+    "/home/ubuntu/bin/python",
+    "tools/ds_hbm_resources_r64.py"
+  ],
+  "regeneration_exit_code": 0,
+  "actual_payload_execution": false,
+  "fresh_actual_constructor_admission": false
+}
