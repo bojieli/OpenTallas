@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_hbm_checkpoint_execution_r58.py", line 41, in <module>
+    if __name__=='__main__':main()
+  File "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_hbm_checkpoint_execution_r58.py", line 39, in main
+    original.main() # Fresh prefix -> sealed actual PC9 -> separate cold restore -> PC10.
+  File "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_hbm_checkpointed_prefix_r55.py", line 237, in main
+    source_contract=dict(identity=helper.identity(provider,engine),runner_source_sha256=sha(__file__),
+  File "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_hbm_connected_prepare_r37.py", line 7, in sha
+    def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+AttributeError: 'str' object has no attribute 'read_bytes'

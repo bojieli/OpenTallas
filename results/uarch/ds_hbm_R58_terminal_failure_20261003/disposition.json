@@ -1,0 +1,40 @@
+{
+  "status": "FAILURE_PRESERVED_NO_RESTART",
+  "producer_PID": 2591875,
+  "producer_source": "10c7d4ab0189460f823dbfddb46e34a9899d20d4",
+  "end_UTC": "2026-10-03T03:21:30.375721+00:00",
+  "retired_PCs": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "observed_outputs": 1568,
+  "exact_failure": "'str' object has no attribute 'read_bytes'",
+  "source_location": "tools/ds_hbm_checkpointed_prefix_r55.py:237",
+  "cause": "sha(__file__) supplies str to imported sha requiring Path.read_bytes",
+  "checkpoint_projection_reached": false,
+  "checkpoint_capture_reached": false,
+  "capture_RAM_guard_reached": false,
+  "cold_constructor_or_PC10_reached": false,
+  "actual_in_memory_producer_state_available": false,
+  "actual_checkpoint_available": false,
+  "journal_preserved_path": "/tmp/kepler-ds-r58-PC0-10-checkpoint-runtime-20261003/actual-prefix-journal",
+  "journal_stat_only_file_count": 395,
+  "journal_stat_only_bytes": 702340988,
+  "journal_full_hash_audit_performed": false,
+  "source_bound_artifacts_preserved": [
+    "actual_manifest.json.gz",
+    "bound_native.json.gz",
+    "bound_homes.json.gz",
+    "initialization_provenance.json",
+    "storage_home_binding.json"
+  ],
+  "owner_action": "Peirce/Sagan: no restoreable producer state exists; retained comparisons/events are evidence, not checkpoint stimuli. Fix Path typing in additive source-bound successor and test exact post-prefix source-contract construction before any restart. No restart launched."
+}
