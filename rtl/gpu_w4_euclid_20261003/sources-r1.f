@@ -1,0 +1,2 @@
+rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv
+rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv
