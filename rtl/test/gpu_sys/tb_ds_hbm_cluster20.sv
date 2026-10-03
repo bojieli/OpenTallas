@@ -21,7 +21,7 @@ module tb_ds_hbm_cluster20;
  .por_n(por),.clk_host(ch),.clk_sm(cs),.clk_mem(cm),.clk_link(cl),
  .cmd_we(cw),.cmd_addr(ca),.cmd_wdata(cd),.db_v(dv),.db_rdy(dr),.db_token(dt),.db_pos(dp),.db_job(job),.db_generation(generation),
  .cpl_v(cv),.cpl_rdy(cr),.cpl_data(completion),.im_we(iw),.im_addr(ia),.im_data(id),
- .rst_sm_n(rn),.sys_fault(fault));
+ .rst_sm_n(rn),.fault(fault));
  task automatic instruction(input integer pc,input reg [63:0] word);
   @(negedge cs);iw=4'b1111;ia=pc;id=word;
   @(negedge cs);iw=0;
