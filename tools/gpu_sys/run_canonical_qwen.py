@@ -72,6 +72,9 @@ def main():
                         help="released-checkpoint reference next token; never supplied to the RTL backend as an operand")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
+    parser.add_argument("--released-source-root", type=Path,
+                        default=Path("/home/ubuntu/OpenTallas-qwen-trained-native-execution"),
+                        help="unchanged original 870c5fe runtime checkout for the released factory")
     parser.add_argument("--socket", type=Path, help="existing simulator socket, if used by backend")
     args = parser.parse_args()
     if args.token < 0 or args.position < 0 or args.expected_token < 0:
