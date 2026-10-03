@@ -1,0 +1,39 @@
+{
+  "archive": "/home/ubuntu/otarchives/w6-source-preservation-20261003-r1/compiled-terminal-r3.tar.gz",
+  "bytes": 4597459,
+  "sha256": "34f84d5a81021335ab27a4fcbba816c7d22f7814ce6bac9e73623bef7b70daf6",
+  "records": [
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/gate",
+      "sha256": "8bafc29c8a677ba2d37494f941e74b9345ea757488f8b6d7d0419c7469fcd7b7",
+      "archive_equal": true,
+      "bytes": 12127624
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/layer0",
+      "sha256": "8be8442c4d4eee7ce521fa77dd728bb7c7184506be2354c0d244cfbcb57481aa",
+      "archive_equal": true,
+      "bytes": 2644704
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/vm_x_fp32.hex",
+      "symlink": "/home/ubuntu/w6/img/qwen-vocab-embed-token0/vm_x_fp32.hex",
+      "archive_equal": true
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/leaf.vlt",
+      "sha256": "c6d9645051ea40e3506ee1860652be0748d257f9e4d25f14776221b088e2304b",
+      "archive_equal": true,
+      "bytes": 84
+    },
+    {
+      "path": "/home/ubuntu/w6/img/qwen-vocab-embed-token0/vm_x_fp32.hex",
+      "sha256": "11f5ae1f3a68ddad9e459b113f35b3a13625932e41533aab31f44ee804dcc948",
+      "archive_equal": true,
+      "bytes": 36870
+    }
+  ],
+  "all_equal": true,
+  "prior_r2_archive_unchanged": true,
+  "prior_verify_failure": "extractfile on absolute vm_x_fp32.hex symlink without target member raised KeyError; preserved r2 archive, additive r3 includes target payload and verifies symlink separately."
+}

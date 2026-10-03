@@ -1,0 +1,660 @@
+{
+  "archive": "/home/ubuntu/otarchives/w6-source-preservation-20261003-r1/small-evidence-r2.tar.gz",
+  "bytes": 55988,
+  "sha256": "077aadb5e0d1857900b3d41c50328d6ae67890df6de640c0047732057e836f8c",
+  "records": 130,
+  "source_to_archive_all_equal": true,
+  "records_preserved": [
+    {
+      "path": "/home/ubuntu/w6/g64.log",
+      "bytes": 259,
+      "sha256": "8cf433b12477a3723c56c7404352ef92fe78f3352cddcd9032480a3d5e07c620"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0.driver.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/verilate_cella.log",
+      "bytes": 290,
+      "sha256": "bbc08a70392779df21db9be8fd0ea9e268d4dfedac9c8e804d4d171ad45a95d8"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/build_ref.log",
+      "bytes": 95854,
+      "sha256": "f68cd959a6510efe1bc6171f619ea7f30fc7c959701ab34a974e79916ac19ebd"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/verilate_seq.log",
+      "bytes": 5765,
+      "sha256": "5ed261d492d74b03a57b974a6ccc2b95772c215c88ed9711e8dcdfb2604a4eb9"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/verilate_ref.log",
+      "bytes": 15012,
+      "sha256": "e357f16684cad5c22995911ef994e2bbaa80e8f205fe0fcab0a09932624b31e5"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/build_seq.log",
+      "bytes": 1058,
+      "sha256": "389adbb1c9dbb434d29e1046b3cf6b786b5834c44d0fba86ac715c0b5039ea6a"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/mutant.log",
+      "bytes": 40,
+      "sha256": "149ac45295c3b1067eeded5237e4f9bc555e1c7093cf28e2df18398ff337322e"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/verilate_amaxlo.log",
+      "bytes": 289,
+      "sha256": "7fa22de8bc535b5b3f6a3e81924a28bf08ee968fa5c8e1d74b5580f7318ef7ab"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/build_slice.log",
+      "bytes": 8011,
+      "sha256": "5d36c94fdd37a522683e0c36011b97d019b452578840f01483a996c022854abe"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/build_amaxlo.log",
+      "bytes": 1062,
+      "sha256": "18750e24bb0bccfd11acf8e3c140713ea5b42e9a385aca0dae8c52827f1fe843"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/verilate_cellh.log",
+      "bytes": 289,
+      "sha256": "1fc8df0f4a458d7cefade9ab11a40e7a6b24f5cf867c900d62d4e731adb8d88b"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/build_cellh.log",
+      "bytes": 1051,
+      "sha256": "e217b71a16e4c76cd242b3b57d6403ead97206c471d88fd6a9ef1424864e8c51"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/verilate_slice.log",
+      "bytes": 9824,
+      "sha256": "22f7aebe4cfd1e1f1262f5aa67b0597ba9ee9be2e87d850d31baa8c31c6e3928"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/result.json",
+      "bytes": 2515,
+      "sha256": "22f733538bf8db0460a790e4388d9c19976af734f620f0028558dab6ff5e2692"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/build_cella.log",
+      "bytes": 6703,
+      "sha256": "cd9e9fdf61c55b8c49412a425ecffe8ce701fc4ea2e969418aabc3a02367dc8d"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/simulate.log",
+      "bytes": 125,
+      "sha256": "0b81c168986592161e794e3c24d0b280f16e4d1db0bf19baabb4c845c1935f78"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/ref/Vref__verFiles.dat",
+      "bytes": 3328,
+      "sha256": "bfb85a5cd7b39863b9d8b79c2955f3b2bff101627017a65fd0537f5541894d4c"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/ref/Vref__hier.dir/Vref__verFiles.dat",
+      "bytes": 22940,
+      "sha256": "6694315bc07bf6dca1e13cb0b1829e5ec502616a746b1c9875e8d010e1ea7b25"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/ref/Vot_hdc_qadd/Vot_hdc_qadd__verFiles.dat",
+      "bytes": 4418,
+      "sha256": "88b147b3574ce67f992089952e0493c4e9d5a0dcb650855253eecc970baeef6f"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/ref/Vot_hdc_fmul/Vot_hdc_fmul__verFiles.dat",
+      "bytes": 4418,
+      "sha256": "405209223c919e9d7039c936e591f5aa673bcc9d9639c142f2f271f937ea70f1"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/amaxlo/Vamaxlo__verFiles.dat",
+      "bytes": 4051,
+      "sha256": "f84a31006d5929b1ded9e7e81203ba917372f13f7d9e9cc779fa8d3585668d37"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/seq/Vseq__verFiles.dat",
+      "bytes": 4166,
+      "sha256": "0351775441554a4d951cebbfbad7579ef297530178bc2df4fb54021baef3ec65"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/slice/Vslice__verFiles.dat",
+      "bytes": 4773,
+      "sha256": "0ec36254ed9f6cd6f5c5ef6c6be4c26851c5c744548c99fe8d70f2297fff5ffc"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/cellh/Vcellh__verFiles.dat",
+      "bytes": 4020,
+      "sha256": "67ad7c9e0b20cb489895553c396fac57ceca057cc3e173e863bb04e95c978489"
+    },
+    {
+      "path": "/home/ubuntu/w6/g64_nw18_s1/cella/Vcella__verFiles.dat",
+      "bytes": 4452,
+      "sha256": "ce3b78b083524119a05e11bd5d06e8458ba97afd368c36f8635a96382a518da9"
+    },
+    {
+      "path": "/home/ubuntu/w6/img/qwen-real-layer0-d1/layer0_rom.json",
+      "bytes": 4254,
+      "sha256": "cfeed5851c63c84c8c20c0ea2dd3461f169f2c87257e954bf2acba1d324d0a58"
+    },
+    {
+      "path": "/home/ubuntu/w6/img/qwen-vocab-embed-token0/embedding_window.json",
+      "bytes": 1614,
+      "sha256": "ca76a9d171b9eb4fb5b7c0ee7b19cde48a29c2f6cba2507f36278f4c8d1b2a6f"
+    },
+    {
+      "path": "/home/ubuntu/w6/img/qwen-real-layer0-d0/layer0_rom.json",
+      "bytes": 4254,
+      "sha256": "37cbea2a5ac39e85370f637f4f00d838e421ab86168d1d89348eb50929885f8a"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/verilate_cella.log",
+      "bytes": 290,
+      "sha256": "ddfbb18682c65c5758a2ca474177563152afef146cc43e3bd94d4321ba77de64"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/verilate_die.log",
+      "bytes": 1569,
+      "sha256": "fc225557216fedd6e09940ec8036b1b44ec3a14b3215fcda753fd30fad5eed1c"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/verilate_amaxhi.log",
+      "bytes": 288,
+      "sha256": "0c8df43e70ee7929dbba4f39a107063ab5ec46af7fff1fbc0134db11bc13851f"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/sim.log",
+      "bytes": 1573,
+      "sha256": "e256ef2cf6f5dc3a08557cc25401056ecfff3202b913c22d2251e3d9a0f3b4eb"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/verilate_coll.log",
+      "bytes": 883,
+      "sha256": "22b88da126f56e39f0d28089d1c9426926defab25c88f474980d9c105d3b4849"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/verilate_amaxlo.log",
+      "bytes": 288,
+      "sha256": "69d2873300fc14cfc71bb65abe8ff89803d34001210eca747709c2b5afc39c47"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/build_die.log",
+      "bytes": 14470,
+      "sha256": "49d55b004b6932c5575382d176e025b36b1c4bb138bf5f8e6bb26de083a9da60"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/build_slice.log",
+      "bytes": 7993,
+      "sha256": "b7b7efc522f6dc545616c5e890c12e0508863adc4930b2c10a6c383252b9b0f1"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/build_amaxlo.log",
+      "bytes": 1044,
+      "sha256": "41ce23c9c9e123eab8ffd047257e0f25b2b57391d78dcfac6778305e56eb13e6"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/verilate_cellh.log",
+      "bytes": 289,
+      "sha256": "71b1a414f873e15fa2fa2b6ce5ae814b9b88c5ffdf3632aa4fd10638233a321c"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/build_cellh.log",
+      "bytes": 1033,
+      "sha256": "d4a66776fc06c9a8396268d05acc48039e565dfee1d8e970454ec273231ad55c"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/build_amaxhi.log",
+      "bytes": 1044,
+      "sha256": "702526d63d2e847c42f5d58505efbc9c4bf152d3866951d3529cc367cb649382"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/verilate_slice.log",
+      "bytes": 290,
+      "sha256": "3cbe106f73fb081b7d348108370087e703170cee6a70d69128a8405d4a04b351"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/build_coll.log",
+      "bytes": 6656,
+      "sha256": "ed4726ada0cf5f162a131eaef10abef3d4b0ef1fa372991accf9eee0fd12f2c5"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/build_cella.log",
+      "bytes": 6685,
+      "sha256": "8944d8c29b609baac477f1e3b70a6589664485cdba72c9154595080f5981b7a0"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/coll/Vcoll__verFiles.dat",
+      "bytes": 5064,
+      "sha256": "9686ea2f8559c56947a55f82ef1e6976d479714726a37ac02148303265bdbb08"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/amaxhi/Vamaxhi__verFiles.dat",
+      "bytes": 2932,
+      "sha256": "421855c06474721c2b3bb3e32ae0244680474489f8c3cd88d84d98f8b59ebfde"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/die/Vdie__verFiles.dat",
+      "bytes": 9782,
+      "sha256": "dd83477c92f946c8b4349f419721120de60fcc0b98cb6149dbea183a1f8a2b15"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/amaxlo/Vamaxlo__verFiles.dat",
+      "bytes": 2932,
+      "sha256": "d7095c9dfe3bb23fc33d4a45d67027d87bcaaede71a55186eb78e980299744cd"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/slice/Vslice__verFiles.dat",
+      "bytes": 4684,
+      "sha256": "2b7777887e299b865ec57f892e0ce555c7b63f7880202e30ec8d4d27960e2901"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/cellh/Vcellh__verFiles.dat",
+      "bytes": 3974,
+      "sha256": "7266b34dee6bff90b40009c1fb7018d599948571c9d1bf5d04fde6a7ed9f1130"
+    },
+    {
+      "path": "/home/ubuntu/w6/l0/cella/Vcella__verFiles.dat",
+      "bytes": 4379,
+      "sha256": "382df2fe2dcf4078aef8acabe937e7a48c34a50acc292b5e2f484d739b039bbb"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/emit.sh",
+      "bytes": 438,
+      "sha256": "f367139b7cdb6baf7af4601cf9b7525acb8d21722808cb5312b48d5ded9d3f3e"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/oracle1/oracle.json",
+      "bytes": 2174,
+      "sha256": "d51b280d16e428e8a1596515f6863efaf2673094638b969fffb249a90f77dea6"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L27-d0/layer27_rom.json",
+      "bytes": 4396,
+      "sha256": "3231940466192c2383a71554cf76fff53baf37c4aa824910d743f49b9c980a91"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L0-d0/layer0_rom.json",
+      "bytes": 4395,
+      "sha256": "65a7a92d062e3adb6ba77b0b2c71868f7781b342b1dacd7b1285cee08621fe85"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L31-d1/layer31_rom.json",
+      "bytes": 4396,
+      "sha256": "792a5c9492eea26b7f4a3e29c1bc1960d769d072cc4de0fd177831f460e3b0cd"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L18-d1/layer18_rom.json",
+      "bytes": 4396,
+      "sha256": "f4ce1286dd1201a908f93ff7af136ca3dd4f50cf32c851798d0ef2b9477fab50"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L6-d1/layer6_rom.json",
+      "bytes": 4395,
+      "sha256": "a09ba1bd338c2a685ff1056f2265690f63e7c99e8fd16fbce9d4698983dc5fb6"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L33-d1/layer33_rom.json",
+      "bytes": 4396,
+      "sha256": "9f90c9e0c841e001a2f59d186ba18a82e1f658fd0b43c07bae5952c7b8b3baf5"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L26-d1/layer26_rom.json",
+      "bytes": 4396,
+      "sha256": "cb9ed8d6a1183653439982e2e4b21b4f2d4fcaa39bb40533e292820eacbeaf6e"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L14-d0/layer14_rom.json",
+      "bytes": 4396,
+      "sha256": "ef047fe04f9114a9a547db194a62f51a42860f8a396a40abdee97c0ad687f24d"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L14-d1/layer14_rom.json",
+      "bytes": 4396,
+      "sha256": "bb69667ed9dbe7c9d64006b5ccf7526d7c41dc3a84b57ebdc15b5907b0db5496"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L23-d1/layer23_rom.json",
+      "bytes": 4396,
+      "sha256": "372a2fc06cc276fa4c823f2194fb868d0f3aac121d576cc5b14c58ab9b2783fc"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L24-d0/layer24_rom.json",
+      "bytes": 4396,
+      "sha256": "4783d74e7711f4f6542d36f32dac5d44d2352d7f3e2863f421db831d33fdd351"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L24-d1/layer24_rom.json",
+      "bytes": 4396,
+      "sha256": "f5615737f070201accfc5a01666d8d20c9d364916cbd0df4a649005354f2ce08"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L8-d1/layer8_rom.json",
+      "bytes": 4395,
+      "sha256": "c193635d4d210a9a86d596a7d354934acc95fb60b7a70e150e21e62942114826"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L1-d0/layer1_rom.json",
+      "bytes": 4395,
+      "sha256": "2fba0d41ab837953640ffb1ff06e4c0290aa3ee6e7420fd672680292da53be69"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L33-d0/layer33_rom.json",
+      "bytes": 4396,
+      "sha256": "110e29e675805539b87b321da569d6707be5ccd1727c4e1e409e4cba9fadae8d"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L16-d0/layer16_rom.json",
+      "bytes": 4396,
+      "sha256": "83a265e85de3f8a7de5e80057522aecbbbe7c7989321772db4b94b6d43564e74"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L7-d0/layer7_rom.json",
+      "bytes": 4395,
+      "sha256": "49c93135e49044cf45cc5a0e36a48eaf67a375f92e160c626df45dbad86c4720"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L15-d1/layer15_rom.json",
+      "bytes": 4396,
+      "sha256": "36c198008b3ced8b55912a6a3ca6a8d3812326ece6f82fe43e78b513f26b3028"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L3-d1/layer3_rom.json",
+      "bytes": 4395,
+      "sha256": "8a4d7fc4fd8a1e0bbe87370a4dbe19af6beee0b164ca23fbec152e6f9e4bf53a"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L9-d1/layer9_rom.json",
+      "bytes": 4395,
+      "sha256": "4d7e62ffc0d93d7d0faee1a3fbaa1e98b5cdb95f9698bea169964d554bea832a"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L13-d0/layer13_rom.json",
+      "bytes": 4396,
+      "sha256": "444dbadc867d823b7501522da01f23741ed0e01e5059acedd97a256b843e42c3"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L1-d1/layer1_rom.json",
+      "bytes": 4395,
+      "sha256": "c60fb8a1579a0d69604f3a66b6b87c1c06205fd46502b30c9b51133b88720616"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L17-d0/layer17_rom.json",
+      "bytes": 4396,
+      "sha256": "6368e7a8628f7ecf28626f3587497af891f9efcea6472a048191b8f4c6403770"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L21-d1/layer21_rom.json",
+      "bytes": 4396,
+      "sha256": "cc9768d0a8eb8fee45639dc6eb91f89866900f5bedd33a162e46599a99bb0f00"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L7-d1/layer7_rom.json",
+      "bytes": 4395,
+      "sha256": "0af9d2937dca148e33135fd54b16e59784cb197a173ca50e2dc69908d3fe832f"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L6-d0/layer6_rom.json",
+      "bytes": 4395,
+      "sha256": "f8f28e1c676a2bea1235a0e363dd89d1732c9b098b7c0e0685c06ad23490a26e"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L4-d0/layer4_rom.json",
+      "bytes": 4395,
+      "sha256": "8e1420bd50a5440b038adafafdeb863b1c9d9610c39cdd34595b7bb31d7a3801"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L10-d1/layer10_rom.json",
+      "bytes": 4396,
+      "sha256": "e48572f5cdb5ca31bedcc8721c597ee12450a3b598954434b6246e81bd3effd8"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L16-d1/layer16_rom.json",
+      "bytes": 4396,
+      "sha256": "c9f71d15faa55bb24877ac160c4077dca2f5ba6be65ef10622340ec3fb8df543"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L5-d1/layer5_rom.json",
+      "bytes": 4395,
+      "sha256": "381097208783ca120e0d4223d68404aa71a88e4f822e5820e95f9f2a56832827"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L29-d1/layer29_rom.json",
+      "bytes": 4396,
+      "sha256": "5ca64d31efa5fbe3ae390c89d5e154d91826088bf27d529fd2f4edb172634551"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L25-d0/layer25_rom.json",
+      "bytes": 4396,
+      "sha256": "083b936c06963684a8facb496b0695a546b41b2115358b6b55590bc2dfb176dc"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L31-d0/layer31_rom.json",
+      "bytes": 4396,
+      "sha256": "9573566e1244d66674779214d3297132bc39176f881a27d54c1f74587291d62a"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L34-d1/layer34_rom.json",
+      "bytes": 4396,
+      "sha256": "375979cdc34bcf50abbdc4ec6556301cec5f0bb373406baab490e440ee829538"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L23-d0/layer23_rom.json",
+      "bytes": 4396,
+      "sha256": "43f6a927436c5931e5850530671ece8e24e43be898f3b4053bfb063a4a5dafdb"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/oracle/oracle.json",
+      "bytes": 43551,
+      "sha256": "916e7874c0b92211cba68bf0a4a02746c8bce8b4bf59c4f630f798dec35cc43a"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L11-d0/layer11_rom.json",
+      "bytes": 4396,
+      "sha256": "4cc0a84ec7199b01e8197de2aa82c7c2beaae998b6545910891bff61c2197095"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L30-d1/layer30_rom.json",
+      "bytes": 4396,
+      "sha256": "b8c701d733a4901b73a21d6713995ac014ae46f199e3523d8e0d8c0f2821985b"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L10-d0/layer10_rom.json",
+      "bytes": 4396,
+      "sha256": "330e1bdd46622aceba86381ca8cdc016069cb27b1b50d65387d08e3089f8424c"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L34-d0/layer34_rom.json",
+      "bytes": 4396,
+      "sha256": "f1cbd916033e0c1ceb30a8304dc11f8f6a5380470518d6faa7f8e4accebafea9"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L27-d1/layer27_rom.json",
+      "bytes": 4396,
+      "sha256": "e1a314b795562c0958a1ac5eeaab12b86dcae6896e4280034d1e5480172fcd7f"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L2-d0/layer2_rom.json",
+      "bytes": 4395,
+      "sha256": "182f8ddfe972f329f7f887cb9e5f47ef98f4e299db5d9ca97ba073141ca12006"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L30-d0/layer30_rom.json",
+      "bytes": 4396,
+      "sha256": "d7f538f6c9c9ec2e4a3aa2a21e0402356d3f4453fc7e853c461b5169bd344798"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L15-d0/layer15_rom.json",
+      "bytes": 4396,
+      "sha256": "3684f75de0aa4b74141576a37c627ec779f5643510a6ff4628545c98a9fe4a2a"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L13-d1/layer13_rom.json",
+      "bytes": 4396,
+      "sha256": "61b022b82d0e2257c430eb535602aa2b3745c2145d5e79cc10df06b047219bc4"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L28-d1/layer28_rom.json",
+      "bytes": 4396,
+      "sha256": "9226040772120ed5663516e6bb6659c1683b5c58504a21597cfa8edf8ebe923b"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L0-d1/layer0_rom.json",
+      "bytes": 4395,
+      "sha256": "ebe2d769bb2fb6a24d5e7f231913cd5723ee7e6d734880367743b6fff434462e"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L5-d0/layer5_rom.json",
+      "bytes": 4395,
+      "sha256": "c68222f1e2a1a229386d2cff98ac6619f47b3fc43cd5a15147fe7f56680128d0"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L8-d0/layer8_rom.json",
+      "bytes": 4395,
+      "sha256": "026642a7dab4daf74e68e8e2383d2aa74f03b6ec93f97d0f82ae28b77c0e0651"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L19-d0/layer19_rom.json",
+      "bytes": 4396,
+      "sha256": "a560346d9f3c07a1a8b0359a908dcfa517a63bf096f179ac3f6f1e737e797b55"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L2-d1/layer2_rom.json",
+      "bytes": 4395,
+      "sha256": "190927b85bb1f3a1c75098ce5b6b9f3ba722c6631e02a0873ed70224eee8436e"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L3-d0/layer3_rom.json",
+      "bytes": 4395,
+      "sha256": "6030a9995a0ebc43577ca88fbaa7b5104177efd6055334931eb3471648227448"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L32-d1/layer32_rom.json",
+      "bytes": 4396,
+      "sha256": "45679462bce1c4b3b0194b5ab32b24b388e0564c0641ef0642cfd123fb4ce029"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L12-d1/layer12_rom.json",
+      "bytes": 4396,
+      "sha256": "78d3323847d7bb0e5447522342012122bfa08a429767d9859b2bf1a26854492c"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L17-d1/layer17_rom.json",
+      "bytes": 4396,
+      "sha256": "4d61240fbc76566b90401cf4d25ab455376422ec4999cf49df1d3121b2600007"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L12-d0/layer12_rom.json",
+      "bytes": 4396,
+      "sha256": "254f5566ada0e89cde417e88e5e88964918cb836af303dcdcd8134627458b682"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L35-d1/layer35_rom.json",
+      "bytes": 4396,
+      "sha256": "3385987c7071e0bd18ff8ee9f94a87c98d4b69ce8c5f2c5e09b68b6591d0ef6f"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L20-d0/layer20_rom.json",
+      "bytes": 4396,
+      "sha256": "4020e42727c15d2810f264167c2327077adc96872091fed2a3555236171b75da"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L4-d1/layer4_rom.json",
+      "bytes": 4395,
+      "sha256": "52e40029069b8291ec0de3d5eeb7c3693721f75e6cd64ec8e389e9b8425c6a85"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L29-d0/layer29_rom.json",
+      "bytes": 4396,
+      "sha256": "02b1e8669be57333e05bf91388ff673546c555b08e7c607a4187ab3ee4a48f3e"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L18-d0/layer18_rom.json",
+      "bytes": 4396,
+      "sha256": "e152203329eff471128ccfc9854d8c612124480dac4b6c5820e8158c80757205"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L28-d0/layer28_rom.json",
+      "bytes": 4396,
+      "sha256": "1287c296a65a24c8d68308ba010e5baece7013b3fd6f5eb04fe2a2f22f5d4ccf"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L25-d1/layer25_rom.json",
+      "bytes": 4396,
+      "sha256": "338742d5e6790f0f93df8192b242304742e328b61ef1231d8e1f1ab0d409e336"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L11-d1/layer11_rom.json",
+      "bytes": 4396,
+      "sha256": "b7a102fd74fc575a105cf4c730986e8c733505a871d97fc54cf457c2a6eaacbc"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L21-d0/layer21_rom.json",
+      "bytes": 4396,
+      "sha256": "804c4b19127cf073d5c850b002d18848bb683fa7590d29053d4245bac09ab644"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L35-d0/layer35_rom.json",
+      "bytes": 4396,
+      "sha256": "e553096fbf6a8e3fc541d6a3a063964ffc673f0a9051d9bc5d4860e3fa59bdb5"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L20-d1/layer20_rom.json",
+      "bytes": 4396,
+      "sha256": "39ab8d586778862e234781593ff4836410b02435b57be8528f3a21f0d4930a4d"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L26-d0/layer26_rom.json",
+      "bytes": 4396,
+      "sha256": "57c4befdcbbb02fdbaee2624f1dfb5ec101157561619d79d327640fa7c3e7cc0"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L9-d0/layer9_rom.json",
+      "bytes": 4395,
+      "sha256": "66c45b2f2cc0ffd4db87ade03621e68f8561f04c645d8bb7857667b5cb75ab5e"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L19-d1/layer19_rom.json",
+      "bytes": 4396,
+      "sha256": "0873988915097f61c468c593fc20f4916e7385b7f41aa7a544d208f3e72f57e9"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L32-d0/layer32_rom.json",
+      "bytes": 4396,
+      "sha256": "a6f9e42ac9fbae4e04cc550d48c54fff28f7ef945e7adeb8deae8ffb8ad19376"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L22-d0/layer22_rom.json",
+      "bytes": 4396,
+      "sha256": "02302cf5d1e7ca4a91f2301e0eba1c2077ce65086d7843cfa75f011e3e0c99c7"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/head-d1/head_rom.json",
+      "bytes": 1568,
+      "sha256": "0e5befcb6966ff9d6f7bcd31ca8acf05b349204799c1928da4d14fbcf2ed4a0d"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/L22-d1/layer22_rom.json",
+      "bytes": 4396,
+      "sha256": "f3cb91240107839005d5c158658c76e4b1bf9fd66ed3d02e559ee2d8f4a75c53"
+    },
+    {
+      "path": "/home/ubuntu/w6/img2/head-d0/head_rom.json",
+      "bytes": 1564,
+      "sha256": "f8ca2ac17bb5388b530fa3045c3c74d0231d47df6d1d22c2d46b4cded7c7bbad"
+    }
+  ],
+  "no_deletion": true
+}

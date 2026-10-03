@@ -1,0 +1,1522 @@
+[
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img/qwen-real-layer0-d0/layer0_rom.json",
+        "manifest_sha256": "37cbea2a5ac39e85370f637f4f00d838e421ab86168d1d89348eb50929885f8a",
+        "recorded_image_sha256": "9c7497bbc25d1f30b624e9236a624a0926399664251d27e926b170d0a757efee"
+      }
+    ],
+    "inode": 3370661,
+    "mtime_ns": 1790592744670896053,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img/qwen-real-layer0-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img/qwen-real-layer0-d1/layer0_rom.json",
+        "manifest_sha256": "cfeed5851c63c84c8c20c0ea2dd3461f169f2c87257e954bf2acba1d324d0a58",
+        "recorded_image_sha256": "d1bf9a095c9b855d5a817b1a28356a09ecbca628fced0a0cea8a5f753cb1901a"
+      }
+    ],
+    "inode": 3370667,
+    "mtime_ns": 1790592744710897012,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img/qwen-real-layer0-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L0-d0/layer0_rom.json",
+        "manifest_sha256": "65a7a92d062e3adb6ba77b0b2c71868f7781b342b1dacd7b1285cee08621fe85",
+        "recorded_image_sha256": "9c7497bbc25d1f30b624e9236a624a0926399664251d27e926b170d0a757efee"
+      }
+    ],
+    "inode": 3376186,
+    "mtime_ns": 1790676371181667584,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L0-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L0-d1/layer0_rom.json",
+        "manifest_sha256": "ebe2d769bb2fb6a24d5e7f231913cd5723ee7e6d734880367743b6fff434462e",
+        "recorded_image_sha256": "d1bf9a095c9b855d5a817b1a28356a09ecbca628fced0a0cea8a5f753cb1901a"
+      }
+    ],
+    "inode": 3376192,
+    "mtime_ns": 1790676371499673555,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L0-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L1-d0/layer1_rom.json",
+        "manifest_sha256": "2fba0d41ab837953640ffb1ff06e4c0290aa3ee6e7420fd672680292da53be69",
+        "recorded_image_sha256": "1b0b750643eb40c1311d3bf57b6a51af3f1d399f119647d9fb21a0b0d698256b"
+      }
+    ],
+    "inode": 3376198,
+    "mtime_ns": 1790676371132666664,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L1-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L1-d1/layer1_rom.json",
+        "manifest_sha256": "c60fb8a1579a0d69604f3a66b6b87c1c06205fd46502b30c9b51133b88720616",
+        "recorded_image_sha256": "5e0d420bb8d51d6a4d0b65eb0fd0c2171364786c39d875ee6c45eb057cbf7d2a"
+      }
+    ],
+    "inode": 3376204,
+    "mtime_ns": 1790676371582675114,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L1-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L10-d0/layer10_rom.json",
+        "manifest_sha256": "330e1bdd46622aceba86381ca8cdc016069cb27b1b50d65387d08e3089f8424c",
+        "recorded_image_sha256": "80513e4018e120d4da28d30f933e157228a35aebb6a0006531b33aa9012a9dfc"
+      }
+    ],
+    "inode": 3376210,
+    "mtime_ns": 1790676656777420291,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L10-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L10-d1/layer10_rom.json",
+        "manifest_sha256": "e48572f5cdb5ca31bedcc8721c597ee12450a3b598954434b6246e81bd3effd8",
+        "recorded_image_sha256": "f0a18c79ba2309e1dc92cb535f4b20819b4d5ce4f118694221051a41800bc050"
+      }
+    ],
+    "inode": 3376216,
+    "mtime_ns": 1790676659406473140,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L10-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L11-d0/layer11_rom.json",
+        "manifest_sha256": "4cc0a84ec7199b01e8197de2aa82c7c2beaae998b6545910891bff61c2197095",
+        "recorded_image_sha256": "584772873b41b32dc070a1f599ca58f238b913e85ce2e143305d645538053b6c"
+      }
+    ],
+    "inode": 3376222,
+    "mtime_ns": 1790676660435493821,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L11-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L11-d1/layer11_rom.json",
+        "manifest_sha256": "b7a102fd74fc575a105cf4c730986e8c733505a871d97fc54cf457c2a6eaacbc",
+        "recorded_image_sha256": "c79f340d72525ed0bc3aa5579a026013160022d74b3d2fc141dbb3baf3387f8f"
+      }
+    ],
+    "inode": 3376228,
+    "mtime_ns": 1790676659554476115,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L11-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L12-d0/layer12_rom.json",
+        "manifest_sha256": "254f5566ada0e89cde417e88e5e88964918cb836af303dcdcd8134627458b682",
+        "recorded_image_sha256": "62c5653414c16d2eb591d67bdb431161fa036a88d4dcef7439e38d2a356ff3e3"
+      }
+    ],
+    "inode": 3376234,
+    "mtime_ns": 1790676755610397296,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L12-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L12-d1/layer12_rom.json",
+        "manifest_sha256": "78d3323847d7bb0e5447522342012122bfa08a429767d9859b2bf1a26854492c",
+        "recorded_image_sha256": "e0d56594252662bfd7659be7b5b71786a1b7c065144a7a9f4374780b9d4e06ca"
+      }
+    ],
+    "inode": 3376240,
+    "mtime_ns": 1790676757222429387,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L12-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L13-d0/layer13_rom.json",
+        "manifest_sha256": "444dbadc867d823b7501522da01f23741ed0e01e5059acedd97a256b843e42c3",
+        "recorded_image_sha256": "f7df1e3f56bab0a11ebd1a256efb1ffeac8ec82f01fc2efac84d7cc63f0c93d8"
+      }
+    ],
+    "inode": 3376246,
+    "mtime_ns": 1790676757816441211,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L13-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L13-d1/layer13_rom.json",
+        "manifest_sha256": "61b022b82d0e2257c430eb535602aa2b3745c2145d5e79cc10df06b047219bc4",
+        "recorded_image_sha256": "751f11a2d5a59fad6b7ee9bddae3cec0f3cd0f2bce27fa19d06f827edbb5a604"
+      }
+    ],
+    "inode": 3376252,
+    "mtime_ns": 1790676759502474768,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L13-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L14-d0/layer14_rom.json",
+        "manifest_sha256": "ef047fe04f9114a9a547db194a62f51a42860f8a396a40abdee97c0ad687f24d",
+        "recorded_image_sha256": "c108565f8a7e8df9ab0400e6b819215ffa3bb415b08d985b6d9b67d6719e109a"
+      }
+    ],
+    "inode": 3376258,
+    "mtime_ns": 1790676759650477714,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L14-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L14-d1/layer14_rom.json",
+        "manifest_sha256": "bb69667ed9dbe7c9d64006b5ccf7526d7c41dc3a84b57ebdc15b5907b0db5496",
+        "recorded_image_sha256": "edf4ce4b4ab95e583c25340d2ef73ed468b8d40572a6c5e7008477c4b1486e3e"
+      }
+    ],
+    "inode": 3376264,
+    "mtime_ns": 1790676759865481993,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L14-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L15-d0/layer15_rom.json",
+        "manifest_sha256": "3684f75de0aa4b74141576a37c627ec779f5643510a6ff4628545c98a9fe4a2a",
+        "recorded_image_sha256": "117c5dbb21e215749fa7b04c2c094e955ee6ffe1279656e6a8bbf869cf911274"
+      }
+    ],
+    "inode": 3376270,
+    "mtime_ns": 1790676862450514752,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L15-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L15-d1/layer15_rom.json",
+        "manifest_sha256": "36c198008b3ced8b55912a6a3ca6a8d3812326ece6f82fe43e78b513f26b3028",
+        "recorded_image_sha256": "3df1458e670fee6c83164336bef2443d29351759b96337604afa76611850c116"
+      }
+    ],
+    "inode": 3376276,
+    "mtime_ns": 1790676863268530895,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L15-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L16-d0/layer16_rom.json",
+        "manifest_sha256": "83a265e85de3f8a7de5e80057522aecbbbe7c7989321772db4b94b6d43564e74",
+        "recorded_image_sha256": "af98554a18ed917881daf9bf2281999e983d60595028fc8a94ea0856ad5a58a3"
+      }
+    ],
+    "inode": 3376282,
+    "mtime_ns": 1790676862500515739,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L16-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L16-d1/layer16_rom.json",
+        "manifest_sha256": "c9f71d15faa55bb24877ac160c4077dca2f5ba6be65ef10622340ec3fb8df543",
+        "recorded_image_sha256": "5cdc02ac0d098e40d34fa03fb354e1cd6e49f76bb3c5162fb6587735362f5032"
+      }
+    ],
+    "inode": 3376288,
+    "mtime_ns": 1790676863777540940,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L16-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L17-d0/layer17_rom.json",
+        "manifest_sha256": "6368e7a8628f7ecf28626f3587497af891f9efcea6472a048191b8f4c6403770",
+        "recorded_image_sha256": "d39835905432411c76e5489956cd4c7e6700cd142fbf33fe9a2f0ea3a78e69df"
+      }
+    ],
+    "inode": 3376294,
+    "mtime_ns": 1790676863810541591,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L17-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L17-d1/layer17_rom.json",
+        "manifest_sha256": "4d61240fbc76566b90401cf4d25ab455376422ec4999cf49df1d3121b2600007",
+        "recorded_image_sha256": "560488abc8732293127bebb85293273d9ac2ad184f56e9580b99a1b3bd46a447"
+      }
+    ],
+    "inode": 3376300,
+    "mtime_ns": 1790676863954544433,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L17-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L18-d0/layer18_rom.json",
+        "manifest_sha256": "e152203329eff471128ccfc9854d8c612124480dac4b6c5820e8158c80757205",
+        "recorded_image_sha256": "10d4ebed72a9d38a814ba23dea42aa30cd62bd557bf793fe31c0faf7bc692225"
+      }
+    ],
+    "inode": 3376306,
+    "mtime_ns": 1790676963157495294,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L18-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L18-d1/layer18_rom.json",
+        "manifest_sha256": "f4ce1286dd1201a908f93ff7af136ca3dd4f50cf32c851798d0ef2b9477fab50",
+        "recorded_image_sha256": "50230c8ff7a4a8267a503e05f26251b5c129ec8bd179cc2a1f3600b11b087811"
+      }
+    ],
+    "inode": 3376312,
+    "mtime_ns": 1790676962509482591,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L18-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L19-d0/layer19_rom.json",
+        "manifest_sha256": "a560346d9f3c07a1a8b0359a908dcfa517a63bf096f179ac3f6f1e737e797b55",
+        "recorded_image_sha256": "86fea0ca881bdcca37ba5631c86408031d6960c3af043341a801a321cd90700d"
+      }
+    ],
+    "inode": 3376318,
+    "mtime_ns": 1790676964935530145,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L19-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L19-d1/layer19_rom.json",
+        "manifest_sha256": "0873988915097f61c468c593fc20f4916e7385b7f41aa7a544d208f3e72f57e9",
+        "recorded_image_sha256": "75e48833eb1636dbd84266e828b69c9187fc333f1f832f7c5be4f0bb8cffff51"
+      }
+    ],
+    "inode": 3376324,
+    "mtime_ns": 1790676965229535907,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L19-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L2-d0/layer2_rom.json",
+        "manifest_sha256": "182f8ddfe972f329f7f887cb9e5f47ef98f4e299db5d9ca97ba073141ca12006",
+        "recorded_image_sha256": "0bfe924758034137c4f4c450feb941776844a8f7c209f0b950b1145bfa0cc4ad"
+      }
+    ],
+    "inode": 3376330,
+    "mtime_ns": 1790676372112685065,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L2-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L2-d1/layer2_rom.json",
+        "manifest_sha256": "190927b85bb1f3a1c75098ce5b6b9f3ba722c6631e02a0873ed70224eee8436e",
+        "recorded_image_sha256": "9b498676afbde5c88d675f92c54c7e029306dbc9c4001df9984a98440ea02f6d"
+      }
+    ],
+    "inode": 3376336,
+    "mtime_ns": 1790676371951682042,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L2-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L20-d0/layer20_rom.json",
+        "manifest_sha256": "4020e42727c15d2810f264167c2327077adc96872091fed2a3555236171b75da",
+        "recorded_image_sha256": "2d5975f7af96174436f513b83e937761fee88285244010d1f975afefe13422da"
+      }
+    ],
+    "inode": 3376342,
+    "mtime_ns": 1790676964908529616,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L20-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L20-d1/layer20_rom.json",
+        "manifest_sha256": "39ab8d586778862e234781593ff4836410b02435b57be8528f3a21f0d4930a4d",
+        "recorded_image_sha256": "b13a333da8ce2e05aa550df6de61f16312416a462f2688c3dce2722cdaa3e89c"
+      }
+    ],
+    "inode": 3376348,
+    "mtime_ns": 1790676965113533634,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L20-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L21-d0/layer21_rom.json",
+        "manifest_sha256": "804c4b19127cf073d5c850b002d18848bb683fa7590d29053d4245bac09ab644",
+        "recorded_image_sha256": "f6e6bbae4c679b86d6f71bf4928e808b2876f03e98fc617f385fdf60ffdbaf75"
+      }
+    ],
+    "inode": 3376354,
+    "mtime_ns": 1790677050650205977,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L21-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L21-d1/layer21_rom.json",
+        "manifest_sha256": "cc9768d0a8eb8fee45639dc6eb91f89866900f5bedd33a162e46599a99bb0f00",
+        "recorded_image_sha256": "067554d2abb20cb18cca35ca0cb4ddff44a227825c4e5848fb5cf63fd91abec7"
+      }
+    ],
+    "inode": 3376360,
+    "mtime_ns": 1790677053566262852,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L21-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L22-d0/layer22_rom.json",
+        "manifest_sha256": "02302cf5d1e7ca4a91f2301e0eba1c2077ce65086d7843cfa75f011e3e0c99c7",
+        "recorded_image_sha256": "41672c9088653c442609816e07adebfdca61c7faab9f738479a86994eb655de4"
+      }
+    ],
+    "inode": 3376366,
+    "mtime_ns": 1790677055269296064,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L22-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L22-d1/layer22_rom.json",
+        "manifest_sha256": "f3cb91240107839005d5c158658c76e4b1bf9fd66ed3d02e559ee2d8f4a75c53",
+        "recorded_image_sha256": "f33fc08d6ef73b63d04162a5faac46cef8a402f9b0c3c1e22010666e4f4d0f86"
+      }
+    ],
+    "inode": 3376372,
+    "mtime_ns": 1790677056011310534,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L22-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L23-d0/layer23_rom.json",
+        "manifest_sha256": "43f6a927436c5931e5850530671ece8e24e43be898f3b4053bfb063a4a5dafdb",
+        "recorded_image_sha256": "b5196a641ecd3b067d6fa494a608f82ea5de82d729b0df00af9a22707554b397"
+      }
+    ],
+    "inode": 3376378,
+    "mtime_ns": 1790677056694323852,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L23-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L23-d1/layer23_rom.json",
+        "manifest_sha256": "372a2fc06cc276fa4c823f2194fb868d0f3aac121d576cc5b14c58ab9b2783fc",
+        "recorded_image_sha256": "67beb7525ecfde1209f24558c96f55af9d4cc3fec452947a425222e10e8b9097"
+      }
+    ],
+    "inode": 3376384,
+    "mtime_ns": 1790677055844307277,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L23-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L24-d0/layer24_rom.json",
+        "manifest_sha256": "4783d74e7711f4f6542d36f32dac5d44d2352d7f3e2863f421db831d33fdd351",
+        "recorded_image_sha256": "25abfbe98b333e20c2750e23c3a5fbfdfcee073c605c064bb41ea61eff9e3036"
+      }
+    ],
+    "inode": 3376390,
+    "mtime_ns": 1790677140312951061,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L24-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L24-d1/layer24_rom.json",
+        "manifest_sha256": "f5615737f070201accfc5a01666d8d20c9d364916cbd0df4a649005354f2ce08",
+        "recorded_image_sha256": "0ddddba7154b733054688e0d514f8da75c8e68ae2362099c6e7183d00da7313b"
+      }
+    ],
+    "inode": 3376396,
+    "mtime_ns": 1790677138715920042,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L24-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L25-d0/layer25_rom.json",
+        "manifest_sha256": "083b936c06963684a8facb496b0695a546b41b2115358b6b55590bc2dfb176dc",
+        "recorded_image_sha256": "07050fe905dad76248a712e4f72b9874d23ef01e28db014b85f2363404b66454"
+      }
+    ],
+    "inode": 3376402,
+    "mtime_ns": 1790677141999983827,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L25-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L25-d1/layer25_rom.json",
+        "manifest_sha256": "338742d5e6790f0f93df8192b242304742e328b61ef1231d8e1f1ab0d409e336",
+        "recorded_image_sha256": "1b3c6bd2cc1afa87d3c807e4c5a819531a4a1288eb7c5e15a636562e419fe36d"
+      }
+    ],
+    "inode": 3376408,
+    "mtime_ns": 1790677143148006122,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L25-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L26-d0/layer26_rom.json",
+        "manifest_sha256": "57c4befdcbbb02fdbaee2624f1dfb5ec101157561619d79d327640fa7c3e7cc0",
+        "recorded_image_sha256": "38c9be302971da6266e3ec1e268f5467228d76cbea9204c101d54b3bf5f30fc8"
+      }
+    ],
+    "inode": 3376414,
+    "mtime_ns": 1790677142809999558,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L26-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L26-d1/layer26_rom.json",
+        "manifest_sha256": "cb9ed8d6a1183653439982e2e4b21b4f2d4fcaa39bb40533e292820eacbeaf6e",
+        "recorded_image_sha256": "2e64da4c4da1b8d4435dea45ac476555cff1e370e33c4074391fcb7fcdb20626"
+      }
+    ],
+    "inode": 3376420,
+    "mtime_ns": 1790677144932040767,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L26-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L27-d0/layer27_rom.json",
+        "manifest_sha256": "3231940466192c2383a71554cf76fff53baf37c4aa824910d743f49b9c980a91",
+        "recorded_image_sha256": "92170ce5043a81f42985232f4d6a60b00cbe86add615fa4f8c08904c98cbc466"
+      }
+    ],
+    "inode": 3376426,
+    "mtime_ns": 1790677234705780841,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L27-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L27-d1/layer27_rom.json",
+        "manifest_sha256": "e1a314b795562c0958a1ac5eeaab12b86dcae6896e4280034d1e5480172fcd7f",
+        "recorded_image_sha256": "59ba7f45f04c3aaf0228cfbb57f2d5454ba1e418a6d49c819fe905ee556cf9d4"
+      }
+    ],
+    "inode": 3376432,
+    "mtime_ns": 1790677233616759769,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L27-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L28-d0/layer28_rom.json",
+        "manifest_sha256": "1287c296a65a24c8d68308ba010e5baece7013b3fd6f5eb04fe2a2f22f5d4ccf",
+        "recorded_image_sha256": "46814ac947f19cb337444973a9666bde665f7c8fcb07ffce7208cc741601f860"
+      }
+    ],
+    "inode": 3376438,
+    "mtime_ns": 1790677235054787594,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L28-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L28-d1/layer28_rom.json",
+        "manifest_sha256": "9226040772120ed5663516e6bb6659c1683b5c58504a21597cfa8edf8ebe923b",
+        "recorded_image_sha256": "f2e5b52ee8ace0c65c651ac21b97fde7c6dc63385e80e842e5cd526533e68d54"
+      }
+    ],
+    "inode": 3376444,
+    "mtime_ns": 1790677235520796611,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L28-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L29-d0/layer29_rom.json",
+        "manifest_sha256": "02b1e8669be57333e05bf91388ff673546c555b08e7c607a4187ab3ee4a48f3e",
+        "recorded_image_sha256": "8caa959730349f855874547e3855209327bcfa791683f600c6b6abd8581fb8d4"
+      }
+    ],
+    "inode": 3376451,
+    "mtime_ns": 1790677236653818533,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L29-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L29-d1/layer29_rom.json",
+        "manifest_sha256": "5ca64d31efa5fbe3ae390c89d5e154d91826088bf27d529fd2f4edb172634551",
+        "recorded_image_sha256": "16289ea7841dbf10d40efee7a085f542916f61be51cdf47641f5fa6bff12125b"
+      }
+    ],
+    "inode": 3376458,
+    "mtime_ns": 1790677237742839603,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L29-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L3-d0/layer3_rom.json",
+        "manifest_sha256": "6030a9995a0ebc43577ca88fbaa7b5104177efd6055334931eb3471648227448",
+        "recorded_image_sha256": "b944ec251781bedd8e2234b51d843665bf5bc9d6f75bbc86340df1d4f77168fb"
+      }
+    ],
+    "inode": 3376464,
+    "mtime_ns": 1790676455331319594,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L3-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L3-d1/layer3_rom.json",
+        "manifest_sha256": "8a4d7fc4fd8a1e0bbe87370a4dbe19af6beee0b164ca23fbec152e6f9e4bf53a",
+        "recorded_image_sha256": "f008a085dfd38e2d6a94821923765e3c76c3c9611a74c68a8fd6ec7ff55de2c0"
+      }
+    ],
+    "inode": 3376470,
+    "mtime_ns": 1790676455557324260,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L3-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L30-d0/layer30_rom.json",
+        "manifest_sha256": "d7f538f6c9c9ec2e4a3aa2a21e0402356d3f4453fc7e853c461b5169bd344798",
+        "recorded_image_sha256": "bfdc0246ac6a17c96d5112236b5e0fed758447a72878d939a2a049d75795401b"
+      }
+    ],
+    "inode": 3376476,
+    "mtime_ns": 1790677327268569028,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L30-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L30-d1/layer30_rom.json",
+        "manifest_sha256": "b8c701d733a4901b73a21d6713995ac014ae46f199e3523d8e0d8c0f2821985b",
+        "recorded_image_sha256": "20248aa70f84d71beea48cb9c5d48718f8b54bf76ed154463b1a83918e71ad7e"
+      }
+    ],
+    "inode": 3376482,
+    "mtime_ns": 1790677328511593005,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L30-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L31-d0/layer31_rom.json",
+        "manifest_sha256": "9573566e1244d66674779214d3297132bc39176f881a27d54c1f74587291d62a",
+        "recorded_image_sha256": "59c41d5b7f978fef20626a536d682330f91386fe6654e2cc8b1a4a16be297a53"
+      }
+    ],
+    "inode": 3376488,
+    "mtime_ns": 1790677328485592503,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L31-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L31-d1/layer31_rom.json",
+        "manifest_sha256": "792a5c9492eea26b7f4a3e29c1bc1960d769d072cc4de0fd177831f460e3b0cd",
+        "recorded_image_sha256": "6a6c1035cf23efad1f772550e541ac5fd4ffc62c973de5de1131ae5fa4cc5237"
+      }
+    ],
+    "inode": 3376494,
+    "mtime_ns": 1790677328879600104,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L31-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L32-d0/layer32_rom.json",
+        "manifest_sha256": "a6f9e42ac9fbae4e04cc550d48c54fff28f7ef945e7adeb8deae8ffb8ad19376",
+        "recorded_image_sha256": "0b92bfe86a79f9f2db317ac41b8c53a4166f8a31967ffcc75e8672cc00c5b858"
+      }
+    ],
+    "inode": 3376500,
+    "mtime_ns": 1790677328673596130,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L32-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L32-d1/layer32_rom.json",
+        "manifest_sha256": "45679462bce1c4b3b0194b5ab32b24b388e0564c0641ef0642cfd123fb4ce029",
+        "recorded_image_sha256": "435c8f611bdbcc1eff2332b5589d51419e94bc92e7e144891993de6df72f50b0"
+      }
+    ],
+    "inode": 3376506,
+    "mtime_ns": 1790677329948620723,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L32-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L33-d0/layer33_rom.json",
+        "manifest_sha256": "110e29e675805539b87b321da569d6707be5ccd1727c4e1e409e4cba9fadae8d",
+        "recorded_image_sha256": "2e4d9d55948c2cdc202da61aaeff1ca3e854b9f9c6702a84e37f07b86a94317d"
+      }
+    ],
+    "inode": 3376517,
+    "mtime_ns": 1790677420266360532,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L33-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L33-d1/layer33_rom.json",
+        "manifest_sha256": "9f90c9e0c841e001a2f59d186ba18a82e1f658fd0b43c07bae5952c7b8b3baf5",
+        "recorded_image_sha256": "8871bc679623d9aaa57810973c225ea2790b666abfb743011ea0b5843f2b1519"
+      }
+    ],
+    "inode": 3376524,
+    "mtime_ns": 1790677421225378983,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L33-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L34-d0/layer34_rom.json",
+        "manifest_sha256": "f1cbd916033e0c1ceb30a8304dc11f8f6a5380470518d6faa7f8e4accebafea9",
+        "recorded_image_sha256": "e89432a89e9a656e02acc01ecce25408a764da91ea9f843b0b0581d6781c82f7"
+      }
+    ],
+    "inode": 3376530,
+    "mtime_ns": 1790677419525346275,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L34-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L34-d1/layer34_rom.json",
+        "manifest_sha256": "375979cdc34bcf50abbdc4ec6556301cec5f0bb373406baab490e440ee829538",
+        "recorded_image_sha256": "9a52c8d87edb41891f85538002e63cc0e5f67694b0faaed7568332fd282c2e5e"
+      }
+    ],
+    "inode": 3376536,
+    "mtime_ns": 1790677420873372210,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L34-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L35-d0/layer35_rom.json",
+        "manifest_sha256": "e553096fbf6a8e3fc541d6a3a063964ffc673f0a9051d9bc5d4860e3fa59bdb5",
+        "recorded_image_sha256": "1179d91a14756b25643296b3de884ac3eaaa5268ac57f4f003d468c82b38216f"
+      }
+    ],
+    "inode": 3376542,
+    "mtime_ns": 1790677421870391392,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L35-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L35-d1/layer35_rom.json",
+        "manifest_sha256": "3385987c7071e0bd18ff8ee9f94a87c98d4b69ce8c5f2c5e09b68b6591d0ef6f",
+        "recorded_image_sha256": "2365b13d19beb083c30a1b0658b7abb8e50394355d55bd3994f955046477074d"
+      }
+    ],
+    "inode": 3376548,
+    "mtime_ns": 1790677424386439797,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L35-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L4-d0/layer4_rom.json",
+        "manifest_sha256": "8e1420bd50a5440b038adafafdeb863b1c9d9610c39cdd34595b7bb31d7a3801",
+        "recorded_image_sha256": "f7fb9b12fc1ac668261b758eb389546ac4c8b7137fdf6bc3ad08fd0e12da5d01"
+      }
+    ],
+    "inode": 3376554,
+    "mtime_ns": 1790676457580366013,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L4-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L4-d1/layer4_rom.json",
+        "manifest_sha256": "52e40029069b8291ec0de3d5eeb7c3693721f75e6cd64ec8e389e9b8425c6a85",
+        "recorded_image_sha256": "6610a9d943c32e591ec00b18669908350dcac2a1b910bfbd47dbadf8b973eac0"
+      }
+    ],
+    "inode": 3376560,
+    "mtime_ns": 1790676457495364260,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L4-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L5-d0/layer5_rom.json",
+        "manifest_sha256": "c68222f1e2a1a229386d2cff98ac6619f47b3fc43cd5a15147fe7f56680128d0",
+        "recorded_image_sha256": "0e0a7b940b5f822eb4046b759e7355daa05ca93b5ceabf7490ba279368d28f04"
+      }
+    ],
+    "inode": 3376566,
+    "mtime_ns": 1790676457483364012,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L5-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L5-d1/layer5_rom.json",
+        "manifest_sha256": "381097208783ca120e0d4223d68404aa71a88e4f822e5820e95f9f2a56832827",
+        "recorded_image_sha256": "f554cb0eeac91bd123fd3aac87e583163d9d1c40e08ab01994f9bf930f847f6e"
+      }
+    ],
+    "inode": 3376572,
+    "mtime_ns": 1790676458179378374,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L5-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L6-d0/layer6_rom.json",
+        "manifest_sha256": "f8f28e1c676a2bea1235a0e363dd89d1732c9b098b7c0e0685c06ad23490a26e",
+        "recorded_image_sha256": "6f7925d093e483e636441a94480f2da5fe78fc889538baaeb2d95a46ad5a9b7f"
+      }
+    ],
+    "inode": 3376578,
+    "mtime_ns": 1790676555587373957,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L6-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L6-d1/layer6_rom.json",
+        "manifest_sha256": "a09ba1bd338c2a685ff1056f2265690f63e7c99e8fd16fbce9d4698983dc5fb6",
+        "recorded_image_sha256": "5b944d369c7fbc3c45d3865f9f7979c321f7cc3e0c162cd212e0fa41d8f062c3"
+      }
+    ],
+    "inode": 3376584,
+    "mtime_ns": 1790676557921421445,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L6-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L7-d0/layer7_rom.json",
+        "manifest_sha256": "49c93135e49044cf45cc5a0e36a48eaf67a375f92e160c626df45dbad86c4720",
+        "recorded_image_sha256": "0679fe11f3f30332baecc0fbdb01c8fd1821aec53ff0898c60b7e6554bfe75a1"
+      }
+    ],
+    "inode": 3376590,
+    "mtime_ns": 1790676561812500579,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L7-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L7-d1/layer7_rom.json",
+        "manifest_sha256": "0af9d2937dca148e33135fd54b16e59784cb197a173ca50e2dc69908d3fe832f",
+        "recorded_image_sha256": "ccd37a451323ad603081bdc88dae03381822e79a95d57dd459821502091b978b"
+      }
+    ],
+    "inode": 3376596,
+    "mtime_ns": 1790676559883461353,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L7-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L8-d0/layer8_rom.json",
+        "manifest_sha256": "026642a7dab4daf74e68e8e2383d2aa74f03b6ec93f97d0f82ae28b77c0e0651",
+        "recorded_image_sha256": "bab8069ab59c00e13e1196fe5d7b5b3bb8d83534e14ac8bfbcbd241606afc313"
+      }
+    ],
+    "inode": 3376602,
+    "mtime_ns": 1790676561836501067,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L8-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L8-d1/layer8_rom.json",
+        "manifest_sha256": "c193635d4d210a9a86d596a7d354934acc95fb60b7a70e150e21e62942114826",
+        "recorded_image_sha256": "60a3d26e89375dd561bb77d33d8d721c94efad11b16c3095cee130d8092fc125"
+      }
+    ],
+    "inode": 3376608,
+    "mtime_ns": 1790676563963544309,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L8-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292556800,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L9-d0/layer9_rom.json",
+        "manifest_sha256": "66c45b2f2cc0ffd4db87ade03621e68f8561f04c645d8bb7857667b5cb75ab5e",
+        "recorded_image_sha256": "cac0508c290c4bd7f2e1a59fa226e9ad75c9897eec75317749918473a3f19759"
+      }
+    ],
+    "inode": 3376614,
+    "mtime_ns": 1790676651651317204,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L9-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 292560896,
+    "bytes": 292554192,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/L9-d1/layer9_rom.json",
+        "manifest_sha256": "4d7e62ffc0d93d7d0faee1a3fbaa1e98b5cdb95f9698bea169964d554bea832a",
+        "recorded_image_sha256": "cd15861b5523fce7ff3695225d18fd209e0b49322ffbd5e4e98c5b9bc39c27c4"
+      }
+    ],
+    "inode": 3376620,
+    "mtime_ns": 1790676653360351579,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/L9-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 622862336,
+    "bytes": 622857312,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/head-d0/head_rom.json",
+        "manifest_sha256": "f8ca2ac17bb5388b530fa3045c3c74d0231d47df6d1d22c2d46b4cded7c7bbad",
+        "recorded_image_sha256": "6e154664cdf3b5a184eed522544308a981c2a678cafb378abb2d571940f74eda"
+      }
+    ],
+    "inode": 3376625,
+    "mtime_ns": 1790677856030708789,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/head-d0/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  },
+  {
+    "active_PIDs": [],
+    "allocated_bytes": 622862336,
+    "bytes": 622857312,
+    "device": 2049,
+    "historical_manifest_consumers": [
+      {
+        "manifest": "/home/ubuntu/w6/img2/head-d1/head_rom.json",
+        "manifest_sha256": "0e5befcb6966ff9d6f7bcd31ca8acf05b349204799c1928da4d14fbcf2ed4a0d",
+        "recorded_image_sha256": "8c70bdc045f0df58c6942db26bbdcd1cacce25f5837be801086095301376ff3e"
+      }
+    ],
+    "inode": 3376628,
+    "mtime_ns": 1790677856006708331,
+    "nlink": 1,
+    "owner_current_target_retired": true,
+    "path": "/home/ubuntu/w6/img2/head-d1/matrix_int8.hex",
+    "weight_bytes_archived_elsewhere": false,
+    "weight_content_freshly_hashed": false
+  }
+]
