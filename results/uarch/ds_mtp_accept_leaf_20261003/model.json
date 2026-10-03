@@ -1,0 +1,656 @@
+{
+  "MACs_per_cycle": 0,
+  "admission": {
+    "RTL_or_P_and_R_authorized_by_this_receipt": false,
+    "TOKX_source_legal_branch": "X_SEL full selector IW20 may zeroextend toNW21 only after sel_first/core wire widening; X_SEL0 legacy scalarIW16 remains unsupported/unpriced for fullvocab",
+    "missing_whole_drafter_blocks_separate_leaf": false,
+    "physical_G0": "PENDING_NAMED_SLOT_CHANNEL_CLOCK_AND_STAGE_ENROLLMENT",
+    "prospective_finite_functional_model": "READY_FOR_PARENT_LEAF_ENROLLMENT_REVIEW",
+    "rate": null,
+    "source_connected": "FAIL_CURRENT_TOKX16_AND_PULSE_ONLY_CALLER_NEEDS_ADAPTER",
+    "whole_MTP": "UNQUALIFIED"
+  },
+  "area_scope": "constructive allowed-cell unmapped screen, exact stated gate construction incl no-CSE conservative bounds/controls; actual synth may differ",
+  "caller_layout": {
+    "amax_origin_and_held_v": 26,
+    "select": 21,
+    "tokx_origin_and_held_v": 26
+  },
+  "candidate": "NSLOT8_NW21_GREEDY_PREFIX_BONUS_ONE_COHORT",
+  "cell_counts_by_section": {
+    "clock_reset_and_eight_input_fanout": {
+      "BUFx4_ASAP7_75t_R": 1473
+    },
+    "exact_W6_codec_encode_decode_and_padding_refusal": {
+      "INVx1_ASAP7_75t_R": 22600,
+      "NAND2x1_ASAP7_75t_R": 79826
+    },
+    "identity_bounds_freshness_and_slotwrite_decode": {
+      "INVx1_ASAP7_75t_R": 2762,
+      "NAND2x1_ASAP7_75t_R": 2495
+    },
+    "prefix_count_bonus_selection": {
+      "INVx1_ASAP7_75t_R": 51,
+      "NAND2x1_ASAP7_75t_R": 562
+    },
+    "protected_storage_QN_restore_hold_feedback": {
+      "BUFx4_ASAP7_75t_R": 3888,
+      "DFFASRHQNx1_ASAP7_75t_R": 1944,
+      "INVx1_ASAP7_75t_R": 3888,
+      "NAND2x1_ASAP7_75t_R": 5832
+    },
+    "raw_record_update_selectors_max8_sources_each": {
+      "INVx1_ASAP7_75t_R": 189,
+      "NAND2x1_ASAP7_75t_R": 14427
+    },
+    "seven_fullwidth_prefix_comparisons": {
+      "INVx1_ASAP7_75t_R": 287,
+      "NAND2x1_ASAP7_75t_R": 728
+    },
+    "state_stop_reset_fence_heldoutput_and_source_adapter": {
+      "INVx1_ASAP7_75t_R": 201,
+      "NAND2x1_ASAP7_75t_R": 173
+    }
+  },
+  "cell_counts_total": {
+    "BUFx4_ASAP7_75t_R": 5361,
+    "DFFASRHQNx1_ASAP7_75t_R": 1944,
+    "INVx1_ASAP7_75t_R": 29978,
+    "NAND2x1_ASAP7_75t_R": 104043
+  },
+  "class_A": "Current source greedy only; no stochastic sampling or KV rollback implementation",
+  "clock": {
+    "L1_protected_cones_proven": false,
+    "SS_FF_loaded_closure": false,
+    "accept_to_acc_done_min_edges": 3,
+    "added_min_serial_ns": 2.2222222222222223,
+    "added_vs_leaf_min_edges": 2,
+    "fence_and_result_backpressure_edges": null,
+    "functional_enrollment": "one clock, synchronous valid/ready endpoints, no false/multicycle bypass",
+    "hold_uncertainty_ps": 25,
+    "old_source_accept_min_edges": 1,
+    "period_ps": 1111.111111111111,
+    "service_domain": "serial-chain prospective0.9GHz",
+    "setup_uncertainty_ps": 60,
+    "stage_change_rule": "Any added protection/prefix stage must add72-bit record/codecs/cuts and its edges before RTL change; no unpricedL2/L3 fallback",
+    "stage_plan": "querycapture -> checkedfreshness+protectedmatch -> prefix/bonus encodedresult -> protectedresultguard;3addedleafedges after accept handshake"
+  },
+  "clock_load": {
+    "FF_unbuffered_clock_fF": 978.1274880000001,
+    "SS_unbuffered_clock_fF": 843.6610079999999,
+    "actual_arrival_slew_load_skew": null,
+    "clock_plus_reset_buffers": 558,
+    "eight_leaf_broadcast_bits": 436,
+    "fanout_branch": 8,
+    "feedback_twoBUF_perbit": true,
+    "global_hold_release_buffer_count": 329,
+    "header_and_gamma_fault_broadcast_bits": 29,
+    "header_fanout_sinks_budget": 32,
+    "protected_FF_sinks": 1944
+  },
+  "controller_conjunction_arities": {
+    "accept_capture": 7,
+    "amax_capture": 8,
+    "consume_matching_held": 4,
+    "fence_capture": 5,
+    "fence_commit": 5,
+    "fresh_match_snapshot": 8,
+    "idle_rearm": 5,
+    "match_to_result": 4,
+    "result_done_clear": 2,
+    "result_guard": 4,
+    "sq_publish": 7,
+    "start_capture": 6,
+    "stop_latch": 2,
+    "tokx_capture": 8,
+    "tq_publish": 7
+  },
+  "controller_fault_term_arities": {
+    "accept_semantics": 5,
+    "amax_semantics": 5,
+    "aq_bad": 3,
+    "header_bad": 2,
+    "match_bad": 2,
+    "rearm_bad": 2,
+    "result_bad": 3,
+    "sq_bad": 2,
+    "start_bounds": 4,
+    "tokx_semantics": 5,
+    "tq_bad": 2,
+    "wrong_fence": 3,
+    "wrong_result_ack": 3
+  },
+  "global_PHY_capacity_credit": 0,
+  "gross_at_50pct_util_mm2": 0.0235640502,
+  "gross_cell_body_um2": 11782.025099999999,
+  "matched_baseline_debit": {
+    "actual_cell_overlap_and_net_area": null,
+    "old_XU_select_bits": 16,
+    "raw_accept_state_bits": 366,
+    "rule": "gross new leaf/caller state replaces exact matched old controller/select only after source union; do not blindly add366 or subtract shared VM/provider"
+  },
+  "opt_in_default": false,
+  "physical_slot": {
+    "PG_clock_via_exclusions": null,
+    "ROM_and_HBM_replica_count": "caller/source selection pending; no free fullfleet replication",
+    "actual_legal_channel_tracks": null,
+    "actual_reserved_rectangle": null,
+    "component_rectangle_request": "ceil(cell_area_at50pct/128um) height rounded to0.27um rows, minimum width128um; unreserved request only",
+    "fit_qualified": false,
+    "minimum_50pct_cell_area_mm2": 0.0235640502,
+    "minimum_signal_corridor_um_at_48nm_pitch": 30.528000000000002,
+    "replicas_per_enrolled_core": 1,
+    "requested_height_um": 184.14000000000001,
+    "requested_owner_slot": "MTP_ACCEPT_SERIAL_SPINE_PER_ACTUAL_CORE",
+    "requested_width_um": 128
+  },
+  "port_bytes_per_edge": {
+    "accept": 3.5,
+    "amax": 6.125,
+    "clock_reset_stop_fault_corrected": 0.0,
+    "fence": 4.0,
+    "result": 27.625,
+    "source_stok": 21.0,
+    "start": 5.625,
+    "tokx": 6.125
+  },
+  "ports": {
+    "accept": {
+      "max_occupied": 1,
+      "payload_bits": 28,
+      "signal_bits": 30
+    },
+    "amax": {
+      "nominal_II_edges": 2,
+      "payload_bits": 49,
+      "signal_bits": 51
+    },
+    "clock_reset_stop_fault_corrected": {
+      "payload_bits": 0,
+      "signal_bits": 5
+    },
+    "fence": {
+      "mask_bits": 6,
+      "payload_bits": 32,
+      "positive_receipts_required": 63,
+      "signal_bits": 34
+    },
+    "result": {
+      "definition": "ttok168,a3,n4,bonus21,sharedlease25; out_v/acc_done/acc_any3 plus acklease25+ready1",
+      "held_until_matching_ready": true,
+      "max_occupied": 1,
+      "payload_bits": 221,
+      "signal_bits": 250
+    },
+    "source_stok": {
+      "payload_bits": 168,
+      "signal_bits": 168,
+      "slots": 8,
+      "ttok_alias": "result ttok168 is same physical bus, counted once",
+      "value_bits_per_slot": 21
+    },
+    "start": {
+      "max_accept_per_edge": 1,
+      "payload_bits": 45,
+      "signal_bits": 47
+    },
+    "tokx": {
+      "nominal_II_edges": 2,
+      "payload_bits": 49,
+      "signal_bits": 51
+    }
+  },
+  "protected_caller_words": 3,
+  "protected_leaf_words": 24,
+  "protected_total_bits": 1944,
+  "protection": {
+    "codec": "source W6 interleaved Hamming64/72,7syndrome+overall; decoded padding/bounds checked",
+    "codec_is_installed": false,
+    "codeword_bits_per_decoder": 72,
+    "corrected_data_bits_per_decoder": 64,
+    "decoded_control_error_gating": "all27 codewords+padding+semanticbounds; positive fences cannot clear owned fault debt",
+    "double_or_invalid_syndrome": "joint-oldstate quarantine, no normal grant/output/debt release",
+    "encoder_and_decoder_replicas": 27,
+    "independent_codewords": 27,
+    "planned_768_gate_shortcut_used": false,
+    "single_error": "correct before any use; correction flag; no mandatory background scrub"
+  },
+  "raw_caller_select_and_stamp_bits": 73,
+  "raw_leaf_state_bits": 614,
+  "raw_total_bits": 687,
+  "schema": "DS_MTP_ACCEPT_FULLWIDTH_MODEL_R1",
+  "service_boundary_signal_tracks_required": 636,
+  "slot_identity": {
+    "core_instance_context": "implicit only inside actual selected core; shared multi-client fabric not supported",
+    "fields": {
+      "leaf_owned_generation": 4,
+      "pending_base_position": 21,
+      "slot": 3
+    },
+    "generation_allocated": "increment modulo16 only after previous matched six-receipt fence, exported25-bit lease echoed by every producer/result/fence",
+    "no_width_truncation": true,
+    "wrap_reset_proof": "positive old copies absent including core/XU/ME/readers/pipelines and forward/return/reverse; local empty never sufficient",
+    "wrap_stall_bound_edges": null
+  },
+  "source_baseline_raw_FF": 366,
+  "source_kernel_join": {
+    "ACCEPT": "core d_ctl4 freeze g/lease and hold until accept_ready; acc_done only afterprotectedresultguard",
+    "AMAX": "core d_ctl2 am_idx_v[d_clane*NW+:NW] already21bits, captured origin lease required",
+    "RESULT": "core S_ACC consumes acc_a for Engram rst_slot; resultmuststaystable through consumer handshake; receipt only local result taken, notKVrollback/free",
+    "TOKX": "core d_ctl1 c_slot_r -> XU fullX_SEL20b index ->21b selectedtoken holder; current sel_first16 truncation must be removed, no zeroextension of truncated16 permitted",
+    "core_input_rank_SM_context": "one concrete core instance is namespace, no multi-client/context sharing assumed",
+    "drain_receipts": [
+      "allproducers/stamp pipelines empty",
+      "allresult consumers done",
+      "forward copies drained",
+      "return copies drained",
+      "reverse copies drained",
+      "reset endpoints fenced"
+    ],
+    "input_clock_conversion": "single serviceclock kernel only; if actual producer clocks differ, priced CDC queue is mandatory and absenthere",
+    "runtime_reset": "coldrst_n requiresallcopiesfence; runtime rearm idle/stopped only afterpositive matched receipts, acceptedfaultdebtcannoterase",
+    "source_adapter": "pulseTOKX/AMAX/ACCEPT become held requests and core S_ISSUE stalls untilmatching accepted handshake; two origin records charged, actual implementation uninstalled"
+  },
+  "source_pins": [
+    {
+      "archive": "inputs/AGENTS.md",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "AGENTS.md",
+      "sha256": "3d3ae9c50d1714fc0b326f0b02fea702c21181d85a5a22b2a40da8eb62177b10"
+    },
+    {
+      "archive": "inputs/compiler/models/deepseek-v4.1-flash/inference_config.json",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+      "sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+    },
+    {
+      "archive": "inputs/rtl/hdc/ot_hdc_accept.sv",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "rtl/hdc/ot_hdc_accept.sv",
+      "sha256": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e"
+    },
+    {
+      "archive": "inputs/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+    },
+    {
+      "archive": "inputs/rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv",
+      "sha256": "c5e1b8c9ff458bc0995f58b299e8930bb192c4761434fb1c7eb8fe0f803b6a30"
+    },
+    {
+      "archive": "inputs/rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+      "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+    },
+    {
+      "archive": "inputs/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+      "sha256": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0"
+    },
+    {
+      "archive": "inputs/rtl/hdc/v41/ot_hdc_v41_xu.sv",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "rtl/hdc/v41/ot_hdc_v41_xu.sv",
+      "sha256": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566"
+    },
+    {
+      "archive": "inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json",
+      "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+    },
+    {
+      "archive": "inputs/tools/w2_pc_exact_completion_model.py",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "tools/w2_pc_exact_completion_model.py",
+      "sha256": "c2d29154aafa7f0673c34f19151b9280294b7310760e0cf60f1995bad723d2b9"
+    },
+    {
+      "archive": "inputs/results/uarch/dsrom_I66_capture_cells_20261002/model.json",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "results/uarch/dsrom_I66_capture_cells_20261002/model.json",
+      "sha256": "373f405ed8807e92d75dc4d903bb5ac3619e14ac50c467cc15fdaf74fddc3d19"
+    },
+    {
+      "archive": "inputs/results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/MTP_source_contract_audit.json",
+      "commit": "bf99ccc864cb02579ae6637b629bef660a386722",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/MTP_source_contract_audit.json",
+      "sha256": "1cc24d118fa487398552d7bcc2e8fe9df85837f13d8d06a3a3d84d212adf15ad"
+    },
+    {
+      "archive": "inputs/results/uarch/ds_mtp_coverage_independent_review_20261003/findings.json",
+      "commit": "70ee620dcb85cdd209f1590e8db5fd893b177483",
+      "path": "results/uarch/ds_mtp_coverage_independent_review_20261003/findings.json",
+      "sha256": "5d6ed50aeb631fd1e5063f16c079d2ac3f35f119678d4f94971c3e0641accdc1"
+    }
+  ],
+  "state_layout": {
+    "aq": [
+      [
+        "pos",
+        21
+      ],
+      [
+        "gen",
+        4
+      ],
+      [
+        "g",
+        3
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "fault": [
+      [
+        "bad",
+        1
+      ]
+    ],
+    "fq": [
+      [
+        "pos",
+        21
+      ],
+      [
+        "gen",
+        4
+      ],
+      [
+        "receipts",
+        6
+      ],
+      [
+        "valid",
+        1
+      ],
+      [
+        "rearm",
+        1
+      ]
+    ],
+    "header": [
+      [
+        "pos",
+        21
+      ],
+      [
+        "gen",
+        4
+      ],
+      [
+        "g",
+        3
+      ],
+      [
+        "phase",
+        3
+      ],
+      [
+        "stop",
+        1
+      ],
+      [
+        "corrected",
+        1
+      ]
+    ],
+    "match": [
+      [
+        "pos",
+        21
+      ],
+      [
+        "gen",
+        4
+      ],
+      [
+        "g",
+        3
+      ],
+      [
+        "valid",
+        1
+      ],
+      [
+        "bits",
+        7
+      ]
+    ],
+    "result": [
+      [
+        "a",
+        3
+      ],
+      [
+        "done",
+        1
+      ],
+      [
+        "any",
+        1
+      ],
+      [
+        "n",
+        4
+      ],
+      [
+        "bonus",
+        21
+      ]
+    ],
+    "s0": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "s1": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "s2": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "s3": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "s4": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "s5": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "s6": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "s7": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "sq": [
+      [
+        "pos",
+        21
+      ],
+      [
+        "gen",
+        4
+      ],
+      [
+        "slot",
+        3
+      ],
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "t0": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "t1": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "t2": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "t3": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "t4": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "t5": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "t6": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "t7": [
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ],
+    "tq": [
+      [
+        "pos",
+        21
+      ],
+      [
+        "gen",
+        4
+      ],
+      [
+        "slot",
+        3
+      ],
+      [
+        "token",
+        21
+      ],
+      [
+        "valid",
+        1
+      ]
+    ]
+  }
+}
