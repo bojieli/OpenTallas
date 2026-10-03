@@ -38,7 +38,7 @@ def price():
             'scheduler_completion': {'bits_per_cycle': 44, 'fanout': 1}},
         'table': {'identity_bits': 55, 'protected_word_bits': 72, 'read_ports': 2,
                   'write_ports': 1, 'read_muxes': 2, 'read_mux_fanin': slots,
-                  'comparators_bits': 2 * (55 + 43), 'counters': 3, 'counter_bits': 6,
+                  'comparators_bits': 2 * (55 + 43), 'manifest_uniqueness_comparators_bits': slots * 55, 'counters': 3, 'counter_bits': 6,
                   'seen_masks_bits': 64, 'codec_instances': 2 * slots + 6},
         'routing_tracks': 'ESTIMATE: local event buses 208 + completion44; channel capacity unmeasured',
         'area_and_slot_fit': 'ESTIMATE: storage only; mux, SECDED, counters, clock and routing unmeasured',
