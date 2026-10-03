@@ -68,5 +68,7 @@
   "--source",
   "results/uarch/hbm_W6_W4_loaded_context_20261003/r2/context_inputs/ot_gpu_pc40_physical_ack_source.sv",
   "--source",
-  "physical/abi3/ot_gpu_rf_w6_physical_context.sv"
+  "physical/abi3/ot_gpu_rf_w6_physical_context.sv",
+  "--orfs-var",
+  "SYNTH_HDL_FRONTEND=slang"
 ]
