@@ -1,0 +1,64 @@
+{
+  "BF": {
+    "checked_hosts": [
+      "local",
+      "ot-epyc1tb",
+      "ot-agidock128",
+      "ot-pve1"
+    ],
+    "historical_abstract_available": false,
+    "historical_failure": "DRT-0255 maze route cannot find paths for ROM g_mac[0].g_pp.rd1[254] and rd1[171]",
+    "historical_failure_is_current_S82_verdict": false,
+    "historical_host": "155.103.253.39",
+    "historical_latest_retained_job": "W10 c8",
+    "new_pipelined_BF_gate_or_route_launched": false,
+    "verified_live_launcher": null
+  },
+  "R_cap0": {
+    "DRC": 0,
+    "FF_hold_WNS_ps": -214.9819775240552,
+    "ORFS_reported_hold_WNS_ps": -11.176700000000002,
+    "S82_ROM_geometry_matches": true,
+    "SS_setup_WNS_ps": -236.37392138146438,
+    "actual_adoption_performance_gate": false,
+    "actual_macro_alignment_pass": true,
+    "added_cycles": 2,
+    "cell_area_um2": 24080.5,
+    "cell_count": 179810,
+    "flow_completed": true,
+    "independent_full_arithmetic_oracle_gate": false,
+    "integrity_violations": {
+      "max_cap_violations": 1,
+      "max_fanout_violations": 16,
+      "max_slew_violations": 4
+    },
+    "launcher_exit": 0,
+    "launcher_pid": 292344,
+    "native_closed": false,
+    "qualified_abstract_delivered": false,
+    "separate_FF_check_is_authoritative_for_FF": true,
+    "source_commit": "281bde911d78081d9e21939351416696ea1594a6",
+    "source_corrected_config_decoder": false,
+    "terminal_utc": "2026-10-03T13:49:04.175988+00:00",
+    "verdict": "REJECTED_NO_RESCUE"
+  },
+  "R_cap1": {
+    "added_cycles": 3,
+    "launcher_pid": 292373,
+    "observed_stage": "5_2_route detailed routing, iteration18,870 DRC in live snapshot",
+    "qualified_abstract_delivered": false,
+    "receipt_status": "RUNNING",
+    "source_commit": "281bde911d78081d9e21939351416696ea1594a6",
+    "terminal_verdict": null
+  },
+  "S82_source_commit": "8c6d5bd7521a1a7788cd6babda624d0b5bceac36",
+  "adoption": false,
+  "fewest_qualified_added_cycles": null,
+  "live_Rcap1_untouched": true,
+  "new_route_or_rescue_jobs": 0,
+  "reason": "no candidate presently passes full functional/performance/physical hierarchy",
+  "schema": "dsrom-qpipe-selection-terminal-v1",
+  "selected_BF_abstract": null,
+  "selected_q_abstract": null,
+  "stage_die_rate_rows_regenerated": false
+}
