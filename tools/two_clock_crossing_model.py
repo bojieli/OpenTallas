@@ -124,11 +124,8 @@ def price(f2s_slow_cycles: float, s2f_fast_cycles: float) -> dict:
 
 
 def _w10_rows(w10):
-    rows = {}
-    for k, v in w10.items():
-        if isinstance(v, dict) and "ar_tokens_s" in v:
-            rows[k] = v["ar_tokens_s"]
-    return rows
+    c = w10["composition"]
+    return {k: c[k]["ar_tokens_s"] for k in ("product_unchanged_lat7", "checked_in_lat8_audit")}
 
 
 def _sha(p):
