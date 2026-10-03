@@ -1,0 +1,102 @@
+{
+  "RF_source": {
+    "archive": "results/uarch/c0_pc40_payload_lease_20261003/inputs/ot_gpu_rf_service.sv",
+    "origin_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+    "origin_path": "rtl/gpu/ot_gpu_rf_service.sv",
+    "scope": "source interface/control; no installed connector or timing claim",
+    "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+  },
+  "alias_fence": "RF read response consumed before write; constant slot18 reused only after XOR producer consumer/reverse",
+  "bank_payload_bytes": 32,
+  "banks": 16,
+  "clock_cost_scope": "existing provisional V1 ticks; exact CDC/route/corner service must be owner-priced before build",
+  "default_enabled": false,
+  "domain_policy_GHz": {
+    "RF": 1.2,
+    "serial_chain": 0.9
+  },
+  "finite_resources": {
+    "native_owners": 1,
+    "pending_RF_transactions": 1,
+    "read_ports": 2,
+    "workspace_vectors": 3,
+    "write_ports": 1
+  },
+  "installed_call_admitted": false,
+  "mirrors": 2,
+  "missing_physical_inputs": [
+    "installed rank0/SM0 RF connector and source-owned dispatch/commonACK mux",
+    "actual preparation/CDC service delays, routing cuts, control protection and PG pricing",
+    "SS setup/FF hold in component context under unchanged uncertainty"
+  ],
+  "new_RF_macros": 0,
+  "pages": 4,
+  "parent55": null,
+  "physical_admitted": false,
+  "preparation": "source gate read/copy; exact NEG BITCAST_U/XOR/BITCAST_F; explicit mask and -87 broadcast; all full vector writes require common mirrored ACK",
+  "release": "FMAX output19 held to exp.step1 FMIN consumer and validated reverse; source gate38 lease remains until whole PC40 consumer done",
+  "schema": "C0_PC40_WORKSPACE_PORT_LEASE_MODEL_R1",
+  "selected_slots": [
+    17,
+    18,
+    19
+  ],
+  "source_frame_bytes": 512,
+  "source_native_service": {
+    "RF_read_pair_transactions": 1,
+    "RF_read_vectors": 2,
+    "RF_response_bus_bytes": 1024,
+    "RF_write_physical_mirror_bytes": 1024,
+    "RF_write_vectors": 1,
+    "RMW_codec_cost_recharged": false,
+    "components": {
+      "RF_read": 3,
+      "RF_write_visible": 2,
+      "accept": 1,
+      "complete": 1,
+      "native_only": 6,
+      "reverse_retire": 1
+    },
+    "elements": 128,
+    "folded_lane_groups": 4,
+    "input_bits": [
+      32,
+      32
+    ],
+    "lane_group_II_provisional": 1,
+    "lanes": 32,
+    "measured_cost": null,
+    "native_only_replacement_ticks": 6,
+    "opcode": "FMAX",
+    "ordered_phases": [
+      "accepted",
+      "read_pair/capture/return",
+      "native_exact_leaf",
+      "write_vector/both_mirror_ACK",
+      "complete",
+      "reverse_grant",
+      "retire"
+    ],
+    "output_bits": 32,
+    "owner_credit": 1,
+    "owner_held_through": "all mirrored ACK + consumer acceptance + reverse retirement",
+    "provisional": true,
+    "serialized_service_ticks": 14,
+    "third_operand_extra_read_pairs": 0
+  },
+  "source_ports": {
+    "ACK_tag_bits": 0,
+    "common_ACK_valid_ready": true,
+    "rd_a_bits": 9,
+    "rd_b_bits": 9,
+    "rd_valid_ready": true,
+    "rsp_a_bits": 4096,
+    "rsp_b_bits": 4096,
+    "rsp_valid_ready": true,
+    "wr_addr_bits": 9,
+    "wr_data_bits": 4096,
+    "wr_valid_ready": true
+  },
+  "workspace_bytes": 1536,
+  "workspace_mirror_bytes": 3072
+}
