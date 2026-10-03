@@ -1,0 +1,8 @@
+{
+  "command": "python3 -m unittest discover -s tests -p test_model_dsrom_ckv_receive_credit.py -v",
+  "exit": 1,
+  "results": "8 new CKV tests PASS; unrelated tests/abi3 package collection ERROR",
+  "exception": "ModuleNotFoundError: No module named 'runtime.abi3'",
+  "diagnosis": "sparse owner checkout lacks unrelated runtime dependency; direct source-bound test-file invocation succeeds, no enforcement changed",
+  "HDL_executed": false
+}
