@@ -13,4 +13,22 @@ class Join(unittest.TestCase):
  def test_no_transfer(self):self.assertFalse(self.m['admission']['physical_build']);self.assertFalse(self.m['admission']['protected_parent_integration']);self.assertFalse(self.m['reset']['empty_is_retirement'])
  def test_charge(self):
   for p in self.m['planes']:self.assertEqual(p['no_stall_crossing_cycles'],2)
+ def test_credit_II(self):
+  for p in self.m['planes']:
+   self.assertEqual(p['transaction_credit_seats'],1)
+   self.assertEqual(p['FIFO_storage_depth'],4)
+   self.assertFalse(p['initiation_interval']['finite_upper_bound'])
+   self.assertGreater(p['initiation_interval']['no_stall_zero_caller_service_bound_ps'],4000)
+ def test_real_caller_not_promoted(self):
+  self.assertFalse(self.m['issuer_binding']['actual_enrollment'])
+  self.assertFalse(self.m['issuer_binding']['admission'])
+ def test_retained_arithmetic_source(self):
+  old=(D/'inputs/spine.sv').read_text()
+  new=(ROOT/'rtl/model_ready_ds_seven_class_20261003/ot_v41_spine_related_vm.sv').read_text()
+  # Capture mux may change the input binding; arithmetic itself must be literal retained source.
+  self.assertEqual(old[old.index('    // buffers'):],new[new.index('    // buffers'):].replace('checked_x_q','x_q'))
+  a="            x_re <= 1'b0; rq_v <= x_re;"
+  b='            // loaded counts:'
+  retained=old[old.index(a):old.index(b)]
+  self.assertIn(retained,new)
 if __name__=='__main__':unittest.main()

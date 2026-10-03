@@ -16,6 +16,21 @@
     "MACs_per_cycle": 0,
     "arithmetic_changed": false
   },
+  "field_x_caller_successor": {
+    "FF_cell_floor_um2": 597.4884000000001,
+    "added_ports": "x_req_ready,x_reply_v,x_reply_ready,x_cookie17,x_reply_cookie17",
+    "added_state_bits": 2049,
+    "admission": "source preparation and isolated loader functional gate only; no complete parent or SSFF credit",
+    "capture_latency": "one fast edge from accepted reply to retained arithmetic input; represented explicitly, not a token gain",
+    "completion": "phase cannot retire while request, pending response or rq_v exists",
+    "contract": "one outstanding read; cookie is {position3,K14}; parent FIFO owner228 must include full context and bind cookie before release",
+    "parameter": "VM_RESPONSE_WAIT=0 default",
+    "protection": "new capture/pending state raw diagnostic; source control protection uninstalled",
+    "queue": "read request held until acceptance; position/K advance only on accepted request; reply captured once then unchanged quantizer/BF16 path consumes",
+    "replicas_per_spine": 1,
+    "reset": "rst_n remains cold/allcopies-fenced engine reset; transport reset must quarantine owner and HOLD engine rst_n high until reconciled",
+    "source": "rtl/model_ready_ds_seven_class_20261003/ot_v41_spine_related_vm.sv"
+  },
   "integration": {
     "SUN256": "explicit enrolled full-goal profile; core/tile default SUN16 remains unchanged",
     "caller_enrollment": "not installed: original core/tile retain clk; facade exposes named source-sized bundles for selected successor",
@@ -31,8 +46,28 @@
     "retained_fixed_latency_reads": "must freeze caller until tagged reply; no direct combinational read replacement",
     "selector": "current XU remains fast; this inventory records actual memory edge, not new serial scalar enrollment"
   },
+  "issuer_binding": {
+    "actual_enrollment": false,
+    "admission": false,
+    "diagnostic_receipts": "bench supplied; not actual parent retirement producers",
+    "owner_layout": {
+      "batch": 16,
+      "context": 169,
+      "epoch": 32,
+      "request_ID": 11
+    },
+    "reset_fence": "real issuer/controller must freeze ingress, reconcile all copies/visible writes and explicit owner identity; current bench fence is directed fixture",
+    "source": {
+      "ME_and_field_writes": "retain ordered offered write until provider accept; receipt only source-owned visible ACK, not grant",
+      "SU_staging": "retained xs_kv_we is an unstalled pulse; actual source output retention required",
+      "collective": "retained VM_ALWAYS_READY and vm_ready4=1 require source-selected wait adapter",
+      "field_x": "retained spine is_pos3/is_k14 -> cookie17; full phase/context/epoch owned by selected parent issue journal, not present on original x port",
+      "index_selector_reads": "replace retained fixed-latency response assumption, hold issue cookie; no implicit replay"
+    }
+  },
   "latency": {
     "fast_to_slow_ps": 2222.222222,
+    "reuse_formula": "per-plane II includes forward delivery + real caller retirement + reverse crossing + next source admission; each plane has one owned transaction",
     "slow_to_fast_ps": 1666.666666,
     "stall_bound": "no finite maximum without producer/consumer service guarantee; one owned request bounds occupancy, not completion time",
     "token_formula": "sum(actual causal crossing event count_i *2*T_destination_i)+actual service queue waits+consumer work; reverse receipts constrain reuse",
@@ -40,12 +75,19 @@
   },
   "planes": [
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 2016.0,
       "class_id": 0,
       "destination_period_ps": 833.333333,
       "direction": "S2F",
       "fifo_state_bits": 132724,
       "forward_fifo_bits": 16356,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4999.999999,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "su_kv_staging",
       "no_stall_crossing_cycles": 2,
@@ -57,15 +99,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 16584
+      "tracks_signal_floor": 16584,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 279.5,
       "class_id": 1,
       "destination_period_ps": 1111.111111,
       "direction": "F2S",
       "fifo_state_bits": 21588,
       "forward_fifo_bits": 2464,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4722.222221,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "me_result_write",
       "no_stall_crossing_cycles": 2,
@@ -77,15 +127,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 2692
+      "tracks_signal_floor": 2692,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 3.875,
       "class_id": 2,
       "destination_period_ps": 1111.111111,
       "direction": "F2S",
       "fifo_state_bits": 3948,
       "forward_fifo_bits": 259,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4722.222221,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "field_x_request",
       "no_stall_crossing_cycles": 2,
@@ -97,15 +155,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 487
+      "tracks_signal_floor": 487,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 256.0,
       "class_id": 2,
       "destination_period_ps": 833.333333,
       "direction": "S2F",
       "fifo_state_bits": 20084,
       "forward_fifo_bits": 2276,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4999.999999,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "field_x_reply",
       "no_stall_crossing_cycles": 2,
@@ -117,15 +183,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 2504
+      "tracks_signal_floor": 2504,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 3.875,
       "class_id": 2,
       "destination_period_ps": 1111.111111,
       "direction": "F2S",
       "fifo_state_bits": 3948,
       "forward_fifo_bits": 259,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4722.222221,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "field_id_request",
       "no_stall_crossing_cycles": 2,
@@ -137,15 +211,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 487
+      "tracks_signal_floor": 487,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 4.0,
       "class_id": 2,
       "destination_period_ps": 833.333333,
       "direction": "S2F",
       "fifo_state_bits": 3956,
       "forward_fifo_bits": 260,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4999.999999,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "field_id_reply",
       "no_stall_crossing_cycles": 2,
@@ -157,15 +239,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 488
+      "tracks_signal_floor": 488,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 1008.0,
       "class_id": 3,
       "destination_period_ps": 1111.111111,
       "direction": "F2S",
       "fifo_state_bits": 68212,
       "forward_fifo_bits": 8292,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4722.222221,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "field_row_write",
       "no_stall_crossing_cycles": 2,
@@ -177,15 +267,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 8520
+      "tracks_signal_floor": 8520,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 2.0,
       "class_id": 4,
       "destination_period_ps": 1111.111111,
       "direction": "F2S",
       "fifo_state_bits": 3828,
       "forward_fifo_bits": 244,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4722.222221,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "collective_read_request",
       "no_stall_crossing_cycles": 2,
@@ -197,15 +295,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 472
+      "tracks_signal_floor": 472,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 64.0,
       "class_id": 4,
       "destination_period_ps": 833.333333,
       "direction": "S2F",
       "fifo_state_bits": 7796,
       "forward_fifo_bits": 740,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4999.999999,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "collective_read_reply",
       "no_stall_crossing_cycles": 2,
@@ -217,15 +323,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 968
+      "tracks_signal_floor": 968,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 264.0,
       "class_id": 4,
       "destination_period_ps": 1111.111111,
       "direction": "F2S",
       "fifo_state_bits": 20596,
       "forward_fifo_bits": 2340,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4722.222221,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "collective_write",
       "no_stall_crossing_cycles": 2,
@@ -237,15 +351,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 2568
+      "tracks_signal_floor": 2568,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 15.5,
       "class_id": 5,
       "destination_period_ps": 1111.111111,
       "direction": "F2S",
       "fifo_state_bits": 4692,
       "forward_fifo_bits": 352,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4722.222221,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "index_query_request",
       "no_stall_crossing_cycles": 2,
@@ -257,15 +379,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 580
+      "tracks_signal_floor": 580,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 16.0,
       "class_id": 5,
       "destination_period_ps": 833.333333,
       "direction": "S2F",
       "fifo_state_bits": 4724,
       "forward_fifo_bits": 356,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4999.999999,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "index_query_reply",
       "no_stall_crossing_cycles": 2,
@@ -277,15 +407,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 584
+      "tracks_signal_floor": 584,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 15.5,
       "class_id": 6,
       "destination_period_ps": 1111.111111,
       "direction": "F2S",
       "fifo_state_bits": 4692,
       "forward_fifo_bits": 352,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4722.222221,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "selector_read_request",
       "no_stall_crossing_cycles": 2,
@@ -297,15 +435,23 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 580
+      "tracks_signal_floor": 580,
+      "transaction_credit_seats": 1
     },
     {
+      "FIFO_storage_depth": 4,
       "bytes_per_destination_cycle": 256.0,
       "class_id": 6,
       "destination_period_ps": 833.333333,
       "direction": "S2F",
       "fifo_state_bits": 20084,
       "forward_fifo_bits": 2276,
+      "initiation_interval": {
+        "finite_upper_bound": false,
+        "formula": "2*T_destination + caller_retirement_time + 3*T_source + actual stalls; conservative edge-alignment bound, not service guarantee",
+        "no_stall_zero_caller_service_bound_ps": 4999.999999,
+        "why": "matching reverse receipt clears pending on source edge; next source edge admits next owner; D4 slots do not multiply owner credits"
+      },
       "mux": "two depth4 read muxes, forward W and reverse228",
       "name": "selector_read_reply",
       "no_stall_crossing_cycles": 2,
@@ -317,7 +463,8 @@
       "receipt_fifo_bits": 228,
       "replicas_per_enrolled_core": 1,
       "service": "one outstanding owner; credit returns only matching explicit consumer retirement, never FIFO delivery",
-      "tracks_signal_floor": 2504
+      "tracks_signal_floor": 2504,
+      "transaction_credit_seats": 1
     }
   ],
   "profiles": {
@@ -356,6 +503,11 @@
       "commit": "54f82299e",
       "path": "rtl/common/ot_ratio_cdc_fifo.sv",
       "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+    },
+    "spine.sv": {
+      "commit": "54f82299e",
+      "path": "rtl/w17_runtime/v41die/ot_v41_spine.sv",
+      "sha256": "a55235b091ceaa0c2b84c2a6097800426e3fc5476a245523f8f5b385ddf119a3"
     },
     "tile.sv": {
       "commit": "54f82299e",

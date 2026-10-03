@@ -1,0 +1,40 @@
+{
+  "compile": {
+    "command": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb",
+      "-o",
+      "/tmp/ds-seven-class-841abc218-run/gate.vvp",
+      "/tmp/ds-seven-class-841abc218-source/results/uarch/dsrom_seven_class_swap_20261003/inputs/ratio_fifo.sv",
+      "/tmp/ds-seven-class-841abc218-source/rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv",
+      "/tmp/ds-seven-class-841abc218-source/rtl/model_ready_ds_seven_class_20261003/ot_ds_seven_class_boundary_bank.sv",
+      "/tmp/ds-seven-class-841abc218-source/rtl/model_ready_ds_seven_class_20261003/ot_ds_seven_class_port_swap.sv",
+      "/tmp/ds-seven-class-841abc218-source/tests/rtl/dsrom_seven_class/tb.sv"
+    ],
+    "elapsed_s": 0.17372989654541016,
+    "exit_code": 0
+  },
+  "host": "ubuntu",
+  "pid": 3720866,
+  "scope": "raw seven-class boundary bank, not full parent/protected/physical",
+  "simulation": {
+    "command": [
+      "vvp",
+      "/tmp/ds-seven-class-841abc218-run/gate.vvp"
+    ],
+    "elapsed_s": 2.599951982498169,
+    "exit_code": 0
+  },
+  "source_commit": "841abc21847cfbb3628bc14cf0bfb54eb4710b9b",
+  "sources": {
+    "results/uarch/dsrom_seven_class_swap_20261003/inputs/ratio_fifo.sv": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6",
+    "rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv": "9a567e896e7fe2b203938c091ebc1b0714cd3cc8fe25c5242141d46786c0a3f8",
+    "rtl/model_ready_ds_seven_class_20261003/ot_ds_seven_class_boundary_bank.sv": "fd95f2787cf1aa0739614ae7b6cc4186b3ad84fa7a301e7583d62ffcea86d2bb",
+    "rtl/model_ready_ds_seven_class_20261003/ot_ds_seven_class_port_swap.sv": "e906c14f4feb45a0003b3375c308f49f16b7b7c4ad930fa567f87963c07ac383",
+    "tests/rtl/dsrom_seven_class/tb.sv": "dd12967e6e074eff59c7c2a43510821deef4b09d14b0613c340ea748d467c240"
+  },
+  "status": "PASS_RAW_BOUNDARY_ONLY",
+  "terminal": "PASS DS_SEVEN_CLASS_RAW_COMPOSED classes=7 planes=14 cases=72 reset_debt_preserved=1\n"
+}
