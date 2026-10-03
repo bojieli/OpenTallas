@@ -1,0 +1,44 @@
+{
+  "Nash_Hubble_next": "typedforward/feedback causalvisibility credit/drain and actualdeadline, no sameedge credit reuse/no4096timeout",
+  "actual_common_owner_site_PG_allocation_delta": null,
+  "actual_timing_PASS": false,
+  "all_hardware_sources_unchanged": true,
+  "authoritative_model": "model_r2.json",
+  "authoritative_parent": "e49a0651476619c1ac7780541177c74975eded6a",
+  "clock_constraints": {
+    "FFhold_uncertainty_ps": 25,
+    "SSsetup_uncertainty_ps": 60,
+    "matched_skew_budget_ps": 25,
+    "period_ps": 833
+  },
+  "component_next_execution": "sourcebound05d99ed89officialprimitive gate review/GO/PASS; then a4088dbfb fullshape literalcut functional gate under own model/freshGO. No primitive-as-fullshape credit.",
+  "critical_causal_source_cones": [
+    "kmem/imem load/read and hist256bin decode",
+    "existing6hist+8up+8down registered integer stages",
+    "pk16/17 sum/predicate+7winner layers+pk25root capture/pk26commit",
+    "six ordered equal-prefix edges then14bit eq_left saturated feedback",
+    "21stable bitonic levels and aligned take_total_20",
+    "retained variable append/stn drain ->99return ->28formedwrite -> actual VM writer/ownerrelease"
+  ],
+  "critical_control_cone": "S_PICK && pk16 ->3840choose_lower_sum register/hold-mux receivers; actual mapped pin cap/drive tree/loaded setup and hold absent. Clock relay budgets are not control-path credit.",
+  "current_job": null,
+  "existing_first_relay_branch_demands_by_shard": [
+    102,
+    66
+  ],
+  "existing_relay_pad_graph_count": 68614,
+  "hardware_frontend_sim_STA_PR_admitted": false,
+  "largest_Pick_stage_raw_control_receiver_bits": 3840,
+  "moved_body_um2": 17.14608,
+  "new_PVE2_PVE3_tasks": false,
+  "new_clock_bank_or_graph_count": 0,
+  "outside_raw_50pct_body_space_screen_mm2": 3.429216e-05,
+  "physical_owner_next": "Arch/Maxwell assign168firstrelays near literalupperparents outside raw and redistribute unchangedfull68614 acrosssource+sink; one-to-one branch/site allocation with nativeM1/M8/M9 access PG/OBS contacts and loadedSSFF. Core70406bank andtransport48007 remain separate.",
+  "recipient_ACK_received": false,
+  "relocation_demands": "existing_first_relay_relocation_168.jsonl",
+  "remote_existing_jobs_touched": false,
+  "selected_negative_source": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+  "selector_stages": "selector_causal_stages_60.jsonl",
+  "status": "SOURCE_BOUND_FIXED_GRAPH_RELOCATION_AND_SELECTOR_TIMING_DEMAND_READY",
+  "tests": 7
+}

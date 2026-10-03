@@ -1,0 +1,38 @@
+{
+  "bd872_handoff.json": {
+    "bytes": 2330,
+    "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+    "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/validation_and_handoff.json",
+    "sha256": "c0ac7b077f518f94638ed709ddb66d68878975562fb1b60fa15fcce27aef1e70"
+  },
+  "bd872_model.json": {
+    "bytes": 55376,
+    "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+    "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/model.json",
+    "sha256": "b65134a6f5e1e1a4b12dc078336ebabef7866046eea762a28c03fc3f89da1d22"
+  },
+  "shard0_branches.json.gz": {
+    "bytes": 323195,
+    "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+    "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/shard0_clock_branches.json.gz",
+    "sha256": "7b7830eaf0d4cdac251759533ea60e89544daad3145be8c44984f4c93e9ed09a"
+  },
+  "shard0_deficits.json.gz": {
+    "bytes": 127187,
+    "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+    "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/shard0_first_hop_deficits.json.gz",
+    "sha256": "0d22e43191cfc7c0835055bccb30f4459fd39a2de5c7291d1bd802c3eedb836a"
+  },
+  "shard1_branches.json.gz": {
+    "bytes": 256742,
+    "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+    "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/shard1_clock_branches.json.gz",
+    "sha256": "7512943b5cedee9fd934313331764155f15eb62544127357aedf34d9983d8f81"
+  },
+  "shard1_deficits.json.gz": {
+    "bytes": 100389,
+    "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+    "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/shard1_first_hop_deficits.json.gz",
+    "sha256": "27c86f97e1ff9a8e175b475c3553140fbffdcaf00ad9fbe3e8f5f8258facb775"
+  }
+}

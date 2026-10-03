@@ -1,0 +1,5318 @@
+{
+  "SSFF": false,
+  "accepted_delivery_or_consumer_deadline": null,
+  "actual_owner_space_or_total_reticle_delta_mm2": null,
+  "additional_body_area_um2": 0,
+  "current_job": null,
+  "drain_contract": "All existing fpipe tokens, stn and out_valid drain before core retire; actual formed-write done travels same28-edge packet, no invented ACK/credit.",
+  "frontend_sim_STA_PR_launched": false,
+  "full_token_credit": false,
+  "geometry": "N4 NMAX2048 LDW4 P64 PF64 DIG8 CB14",
+  "hardware_source_modified": false,
+  "largest_pick_stage_raw_control_receiver_bits": 3840,
+  "moved_existing_cell_body_um2": 17.14608,
+  "outside_raw_50pct_space_for_moved_bodies_screen_mm2": 3.429216e-05,
+  "owner_actions": {
+    "Arch_Maxwell": "Assign existing168firstrelays near literal upper parents outside raw, redistribute all68614againstsource+sink; price common site/PG ownership and loadedSSFF without graph count change.",
+    "Epicurus": "Use this source receiver/control ledger for full mapped-cut gate; primitive PASS and distinct fullcomponent GO still required, actual captures not inferred from fixture.",
+    "Nash_Hubble": "Causal typed-forward/feedback and returned-credit/home-visible/drain contract; no same-edge credit reuse, no4096timeout."
+  },
+  "physical_admitted": false,
+  "relocation_by_shard": [
+    102,
+    66
+  ],
+  "relocation_count": 168,
+  "relocation_requirements": [
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r0_clock_bank0",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r0_clock_bank1",
+      "existing_branch_relay_count": 2,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r1_clock_bank0",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r1_clock_bank1",
+      "existing_branch_relay_count": 2,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r2_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r2_clock_bank1",
+      "existing_branch_relay_count": 2,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r3_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r3_clock_bank1",
+      "existing_branch_relay_count": 2,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r4_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r4_clock_bank1",
+      "existing_branch_relay_count": 2,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r5_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r5_clock_bank1",
+      "existing_branch_relay_count": 3,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r6_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r6_clock_bank1",
+      "existing_branch_relay_count": 3,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r7_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r7_clock_bank1",
+      "existing_branch_relay_count": 3,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r8_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r8_clock_bank1",
+      "existing_branch_relay_count": 3,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r9_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r9_clock_bank1",
+      "existing_branch_relay_count": 3,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r10_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r10_clock_bank1",
+      "existing_branch_relay_count": 3,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r11_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r11_clock_bank1",
+      "existing_branch_relay_count": 3,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r12_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r12_clock_bank1",
+      "existing_branch_relay_count": 3,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r13_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r13_clock_bank1",
+      "existing_branch_relay_count": 3,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r14_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r14_clock_bank1",
+      "existing_branch_relay_count": 4,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r15_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r15_clock_bank1",
+      "existing_branch_relay_count": 4,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r16_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r16_clock_bank1",
+      "existing_branch_relay_count": 4,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r17_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r17_clock_bank1",
+      "existing_branch_relay_count": 4,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r18_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r18_clock_bank1",
+      "existing_branch_relay_count": 4,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r19_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r19_clock_bank1",
+      "existing_branch_relay_count": 4,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r20_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r20_clock_bank1",
+      "existing_branch_relay_count": 4,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r21_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r21_clock_bank1",
+      "existing_branch_relay_count": 4,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r22_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r22_clock_bank1",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r23_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r23_clock_bank1",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r24_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r24_clock_bank1",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r25_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r25_clock_bank1",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r26_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r26_clock_bank1",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r27_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r27_clock_bank1",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r28_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r28_clock_bank1",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r29_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r29_clock_bank1",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r30_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r30_clock_bank1",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r31_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r31_clock_bank1",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r32_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_8_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_8",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r33_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_8_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_8",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r34_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_8_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_8",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r35_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_8_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_8",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r36_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_8_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_8",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r37_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_8_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_8",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r38_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_8_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_8",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r39_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_8_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_8",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r40_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_9_Y",
+      "optimistic_C_to_any_raw_fF": 0.868394586,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_9",
+      "source_Y_literal_rect_DBU": [
+        11192509,
+        15567345,
+        11192721,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r41_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_9_Y",
+      "optimistic_C_to_any_raw_fF": 0.868394586,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_9",
+      "source_Y_literal_rect_DBU": [
+        11192509,
+        15567345,
+        11192721,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r42_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_9_Y",
+      "optimistic_C_to_any_raw_fF": 0.868394586,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_9",
+      "source_Y_literal_rect_DBU": [
+        11192509,
+        15567345,
+        11192721,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r43_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_9_Y",
+      "optimistic_C_to_any_raw_fF": 0.868394586,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_9",
+      "source_Y_literal_rect_DBU": [
+        11192509,
+        15567345,
+        11192721,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r44_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_9_Y",
+      "optimistic_C_to_any_raw_fF": 0.868394586,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_9",
+      "source_Y_literal_rect_DBU": [
+        11192509,
+        15567345,
+        11192721,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r45_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_9_Y",
+      "optimistic_C_to_any_raw_fF": 0.868394586,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_9",
+      "source_Y_literal_rect_DBU": [
+        11192509,
+        15567345,
+        11192721,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r46_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_9_Y",
+      "optimistic_C_to_any_raw_fF": 0.868394586,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_9",
+      "source_Y_literal_rect_DBU": [
+        11192509,
+        15567345,
+        11192721,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r47_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_9_Y",
+      "optimistic_C_to_any_raw_fF": 0.868394586,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_9",
+      "source_Y_literal_rect_DBU": [
+        11192509,
+        15567345,
+        11192721,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r48_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_10_Y",
+      "optimistic_C_to_any_raw_fF": 0.9133061699999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_10",
+      "source_Y_literal_rect_DBU": [
+        11192941,
+        15567345,
+        11193153,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r49_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_10_Y",
+      "optimistic_C_to_any_raw_fF": 0.9133061699999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_10",
+      "source_Y_literal_rect_DBU": [
+        11192941,
+        15567345,
+        11193153,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r50_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_10_Y",
+      "optimistic_C_to_any_raw_fF": 0.9133061699999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_10",
+      "source_Y_literal_rect_DBU": [
+        11192941,
+        15567345,
+        11193153,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r51_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_10_Y",
+      "optimistic_C_to_any_raw_fF": 0.9133061699999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_10",
+      "source_Y_literal_rect_DBU": [
+        11192941,
+        15567345,
+        11193153,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r52_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_10_Y",
+      "optimistic_C_to_any_raw_fF": 0.9133061699999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_10",
+      "source_Y_literal_rect_DBU": [
+        11192941,
+        15567345,
+        11193153,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r53_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_10_Y",
+      "optimistic_C_to_any_raw_fF": 0.9133061699999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_10",
+      "source_Y_literal_rect_DBU": [
+        11192941,
+        15567345,
+        11193153,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r54_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_10_Y",
+      "optimistic_C_to_any_raw_fF": 0.9133061699999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_10",
+      "source_Y_literal_rect_DBU": [
+        11192941,
+        15567345,
+        11193153,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r55_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_10_Y",
+      "optimistic_C_to_any_raw_fF": 0.9133061699999999,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_10",
+      "source_Y_literal_rect_DBU": [
+        11192941,
+        15567345,
+        11193153,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r56_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_11_Y",
+      "optimistic_C_to_any_raw_fF": 0.958217754,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_11",
+      "source_Y_literal_rect_DBU": [
+        11193373,
+        15567345,
+        11193585,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r57_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_11_Y",
+      "optimistic_C_to_any_raw_fF": 0.958217754,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_11",
+      "source_Y_literal_rect_DBU": [
+        11193373,
+        15567345,
+        11193585,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r58_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_11_Y",
+      "optimistic_C_to_any_raw_fF": 0.958217754,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_11",
+      "source_Y_literal_rect_DBU": [
+        11193373,
+        15567345,
+        11193585,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r59_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_11_Y",
+      "optimistic_C_to_any_raw_fF": 0.958217754,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_11",
+      "source_Y_literal_rect_DBU": [
+        11193373,
+        15567345,
+        11193585,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r60_clock_bank0",
+      "existing_branch_relay_count": 11,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_11_Y",
+      "optimistic_C_to_any_raw_fF": 0.958217754,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_11",
+      "source_Y_literal_rect_DBU": [
+        11193373,
+        15567345,
+        11193585,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r61_clock_bank0",
+      "existing_branch_relay_count": 12,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_11_Y",
+      "optimistic_C_to_any_raw_fF": 0.958217754,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_11",
+      "source_Y_literal_rect_DBU": [
+        11193373,
+        15567345,
+        11193585,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r62_clock_bank0",
+      "existing_branch_relay_count": 12,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_11_Y",
+      "optimistic_C_to_any_raw_fF": 0.958217754,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_11",
+      "source_Y_literal_rect_DBU": [
+        11193373,
+        15567345,
+        11193585,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_r63_clock_bank0",
+      "existing_branch_relay_count": 12,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L3_11_Y",
+      "optimistic_C_to_any_raw_fF": 0.958217754,
+      "shard": 0,
+      "source": "s0_clock_upper_L3_11",
+      "source_Y_literal_rect_DBU": [
+        11193373,
+        15567345,
+        11193585,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_clock_upper_L3_0",
+      "existing_branch_relay_count": 1,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L4_0_Y",
+      "optimistic_C_to_any_raw_fF": 1.003129338,
+      "shard": 0,
+      "source": "s0_clock_upper_L4_0",
+      "source_Y_literal_rect_DBU": [
+        11193805,
+        15567345,
+        11194017,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_clock_upper_L3_1",
+      "existing_branch_relay_count": 1,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L4_0_Y",
+      "optimistic_C_to_any_raw_fF": 1.003129338,
+      "shard": 0,
+      "source": "s0_clock_upper_L4_0",
+      "source_Y_literal_rect_DBU": [
+        11193805,
+        15567345,
+        11194017,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_clock_upper_L3_2",
+      "existing_branch_relay_count": 1,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L4_0_Y",
+      "optimistic_C_to_any_raw_fF": 1.003129338,
+      "shard": 0,
+      "source": "s0_clock_upper_L4_0",
+      "source_Y_literal_rect_DBU": [
+        11193805,
+        15567345,
+        11194017,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_clock_upper_L3_3",
+      "existing_branch_relay_count": 1,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L4_0_Y",
+      "optimistic_C_to_any_raw_fF": 1.003129338,
+      "shard": 0,
+      "source": "s0_clock_upper_L4_0",
+      "source_Y_literal_rect_DBU": [
+        11193805,
+        15567345,
+        11194017,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_clock_upper_L3_4",
+      "existing_branch_relay_count": 1,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L4_0_Y",
+      "optimistic_C_to_any_raw_fF": 1.003129338,
+      "shard": 0,
+      "source": "s0_clock_upper_L4_0",
+      "source_Y_literal_rect_DBU": [
+        11193805,
+        15567345,
+        11194017,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s0_clock_upper_L3_5",
+      "existing_branch_relay_count": 1,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s0_clock_upper_L4_0_Y",
+      "optimistic_C_to_any_raw_fF": 1.003129338,
+      "shard": 0,
+      "source": "s0_clock_upper_L4_0",
+      "source_Y_literal_rect_DBU": [
+        11193805,
+        15567345,
+        11194017,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r0_clock_bank0",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r1_clock_bank0",
+      "existing_branch_relay_count": 5,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r2_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r3_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r4_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r5_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r6_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r7_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.46419033000000004,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_0",
+      "source_Y_literal_rect_DBU": [
+        11188621,
+        15567345,
+        11188833,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r8_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r9_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r10_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r11_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r12_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r13_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r14_clock_bank0",
+      "existing_branch_relay_count": 6,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r15_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_1_Y",
+      "optimistic_C_to_any_raw_fF": 0.509101914,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_1",
+      "source_Y_literal_rect_DBU": [
+        11189053,
+        15567345,
+        11189265,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r16_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r17_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r18_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r19_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r20_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r21_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r22_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r23_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_2_Y",
+      "optimistic_C_to_any_raw_fF": 0.554013498,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_2",
+      "source_Y_literal_rect_DBU": [
+        11189485,
+        15567345,
+        11189697,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r24_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r25_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r26_clock_bank0",
+      "existing_branch_relay_count": 7,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r27_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r28_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r29_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r30_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r31_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_3_Y",
+      "optimistic_C_to_any_raw_fF": 0.5989250819999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_3",
+      "source_Y_literal_rect_DBU": [
+        11189917,
+        15567345,
+        11190129,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r32_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r33_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r34_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r35_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r36_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r37_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r38_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r39_clock_bank0",
+      "existing_branch_relay_count": 8,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_4_Y",
+      "optimistic_C_to_any_raw_fF": 0.643836666,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_4",
+      "source_Y_literal_rect_DBU": [
+        11190349,
+        15567345,
+        11190561,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r40_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r41_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r42_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r43_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r44_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r45_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r46_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r47_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_5_Y",
+      "optimistic_C_to_any_raw_fF": 0.68874825,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_5",
+      "source_Y_literal_rect_DBU": [
+        11190781,
+        15567345,
+        11190993,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r48_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r49_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r50_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r51_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r52_clock_bank0",
+      "existing_branch_relay_count": 9,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r53_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r54_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r55_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_6_Y",
+      "optimistic_C_to_any_raw_fF": 0.733659834,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_6",
+      "source_Y_literal_rect_DBU": [
+        11191213,
+        15567345,
+        11191425,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r56_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r57_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r58_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r59_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r60_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r61_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r62_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_r63_clock_bank0",
+      "existing_branch_relay_count": 10,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L3_7_Y",
+      "optimistic_C_to_any_raw_fF": 0.778571418,
+      "shard": 1,
+      "source": "s1_clock_upper_L3_7",
+      "source_Y_literal_rect_DBU": [
+        11191645,
+        15567345,
+        11191857,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_clock_upper_L3_0",
+      "existing_branch_relay_count": 1,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L4_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L4_0",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    },
+    {
+      "M1_to_M8_M9_access_route_or_PG_site_proven": false,
+      "added_graph_cells": 0,
+      "destination": "s1_clock_upper_L3_1",
+      "existing_branch_relay_count": 1,
+      "existing_relay_site_assignment": null,
+      "first_branch_metal_budget_fF": 0.32762649999999993,
+      "first_driver_contact_stub_budget_fF": 2.6210119999999995,
+      "first_driver_pin_load_SS_FF_fF": {
+        "FF": 4.655728,
+        "SS": 4.09108
+      },
+      "first_relay_ordinal": 0,
+      "needed_new_site": null,
+      "net": "s1_clock_upper_L4_0_Y",
+      "optimistic_C_to_any_raw_fF": 0.8234830019999999,
+      "shard": 1,
+      "source": "s1_clock_upper_L4_0",
+      "source_Y_literal_rect_DBU": [
+        11192077,
+        15567345,
+        11192289,
+        15567363
+      ],
+      "source_declared_first_branch_reach_um": 3.1514062830649654,
+      "source_fanout": 8
+    }
+  ],
+  "schema": "DS_SELECTOR_CAUSAL_SOURCE_TIMING_AND_FIXED_GRAPH_RELOCATION_V1",
+  "selected_cut": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+  "selector_source_stages": [
+    {
+      "data_adder_bits": 2,
+      "destination": "hist_pc_1",
+      "edge_rule": "unconditional posedge",
+      "family": "hist",
+      "loaded_timing": null,
+      "register_receiver_bits": 16384,
+      "source": "h1_hot",
+      "stage": 1,
+      "valid": "h1_v -> hist_valid six-edge shift; h2_v=hist_valid[5]"
+    },
+    {
+      "data_adder_bits": 3,
+      "destination": "hist_pc_2",
+      "edge_rule": "unconditional posedge",
+      "family": "hist",
+      "loaded_timing": null,
+      "register_receiver_bits": 12288,
+      "source": "hist_pc_1",
+      "stage": 2,
+      "valid": "h1_v -> hist_valid six-edge shift; h2_v=hist_valid[5]"
+    },
+    {
+      "data_adder_bits": 4,
+      "destination": "hist_pc_3",
+      "edge_rule": "unconditional posedge",
+      "family": "hist",
+      "loaded_timing": null,
+      "register_receiver_bits": 8192,
+      "source": "hist_pc_2",
+      "stage": 3,
+      "valid": "h1_v -> hist_valid six-edge shift; h2_v=hist_valid[5]"
+    },
+    {
+      "data_adder_bits": 5,
+      "destination": "hist_pc_4",
+      "edge_rule": "unconditional posedge",
+      "family": "hist",
+      "loaded_timing": null,
+      "register_receiver_bits": 5120,
+      "source": "hist_pc_3",
+      "stage": 4,
+      "valid": "h1_v -> hist_valid six-edge shift; h2_v=hist_valid[5]"
+    },
+    {
+      "data_adder_bits": 6,
+      "destination": "hist_pc_5",
+      "edge_rule": "unconditional posedge",
+      "family": "hist",
+      "loaded_timing": null,
+      "register_receiver_bits": 3072,
+      "source": "hist_pc_4",
+      "stage": 5,
+      "valid": "h1_v -> hist_valid six-edge shift; h2_v=hist_valid[5]"
+    },
+    {
+      "data_adder_bits": 7,
+      "destination": "h2_pc",
+      "edge_rule": "unconditional posedge",
+      "family": "hist",
+      "loaded_timing": null,
+      "register_receiver_bits": 1792,
+      "source": "hist_pc_5",
+      "stage": 6,
+      "valid": "h1_v -> hist_valid six-edge shift; h2_v=hist_valid[5]"
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_up_0",
+      "edge_rule": "st==S_PICK && pk==0",
+      "family": "suffix_up",
+      "loaded_timing": null,
+      "register_receiver_bits": 1792,
+      "source": "cnt",
+      "source_control_FF_or_holdmux_receiver_bits": 1792,
+      "stage": 0
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_up_1",
+      "edge_rule": "st==S_PICK && pk==1",
+      "family": "suffix_up",
+      "loaded_timing": null,
+      "register_receiver_bits": 896,
+      "source": "suffix_up_0",
+      "source_control_FF_or_holdmux_receiver_bits": 896,
+      "stage": 1
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_up_2",
+      "edge_rule": "st==S_PICK && pk==2",
+      "family": "suffix_up",
+      "loaded_timing": null,
+      "register_receiver_bits": 448,
+      "source": "suffix_up_1",
+      "source_control_FF_or_holdmux_receiver_bits": 448,
+      "stage": 2
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_up_3",
+      "edge_rule": "st==S_PICK && pk==3",
+      "family": "suffix_up",
+      "loaded_timing": null,
+      "register_receiver_bits": 224,
+      "source": "suffix_up_2",
+      "source_control_FF_or_holdmux_receiver_bits": 224,
+      "stage": 3
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_up_4",
+      "edge_rule": "st==S_PICK && pk==4",
+      "family": "suffix_up",
+      "loaded_timing": null,
+      "register_receiver_bits": 112,
+      "source": "suffix_up_3",
+      "source_control_FF_or_holdmux_receiver_bits": 112,
+      "stage": 4
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_up_5",
+      "edge_rule": "st==S_PICK && pk==5",
+      "family": "suffix_up",
+      "loaded_timing": null,
+      "register_receiver_bits": 56,
+      "source": "suffix_up_4",
+      "source_control_FF_or_holdmux_receiver_bits": 56,
+      "stage": 5
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_up_6",
+      "edge_rule": "st==S_PICK && pk==6",
+      "family": "suffix_up",
+      "loaded_timing": null,
+      "register_receiver_bits": 28,
+      "source": "suffix_up_5",
+      "source_control_FF_or_holdmux_receiver_bits": 28,
+      "stage": 6
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_up_7",
+      "edge_rule": "st==S_PICK && pk==7",
+      "family": "suffix_up",
+      "loaded_timing": null,
+      "register_receiver_bits": 14,
+      "source": "suffix_up_6",
+      "source_control_FF_or_holdmux_receiver_bits": 14,
+      "stage": 7
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_down_0",
+      "edge_rule": "st==S_PICK && pk==8",
+      "family": "suffix_down",
+      "loaded_timing": null,
+      "register_receiver_bits": 28,
+      "source": "zero plus right-subtree count",
+      "source_control_FF_or_holdmux_receiver_bits": 28,
+      "stage": 0
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_down_1",
+      "edge_rule": "st==S_PICK && pk==9",
+      "family": "suffix_down",
+      "loaded_timing": null,
+      "register_receiver_bits": 56,
+      "source": "suffix_down_0 plus right-subtree count",
+      "source_control_FF_or_holdmux_receiver_bits": 56,
+      "stage": 1
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_down_2",
+      "edge_rule": "st==S_PICK && pk==10",
+      "family": "suffix_down",
+      "loaded_timing": null,
+      "register_receiver_bits": 112,
+      "source": "suffix_down_1 plus right-subtree count",
+      "source_control_FF_or_holdmux_receiver_bits": 112,
+      "stage": 2
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_down_3",
+      "edge_rule": "st==S_PICK && pk==11",
+      "family": "suffix_down",
+      "loaded_timing": null,
+      "register_receiver_bits": 224,
+      "source": "suffix_down_2 plus right-subtree count",
+      "source_control_FF_or_holdmux_receiver_bits": 224,
+      "stage": 3
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_down_4",
+      "edge_rule": "st==S_PICK && pk==12",
+      "family": "suffix_down",
+      "loaded_timing": null,
+      "register_receiver_bits": 448,
+      "source": "suffix_down_3 plus right-subtree count",
+      "source_control_FF_or_holdmux_receiver_bits": 448,
+      "stage": 4
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_down_5",
+      "edge_rule": "st==S_PICK && pk==13",
+      "family": "suffix_down",
+      "loaded_timing": null,
+      "register_receiver_bits": 896,
+      "source": "suffix_down_4 plus right-subtree count",
+      "source_control_FF_or_holdmux_receiver_bits": 896,
+      "stage": 5
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suffix_down_6",
+      "edge_rule": "st==S_PICK && pk==14",
+      "family": "suffix_down",
+      "loaded_timing": null,
+      "register_receiver_bits": 1792,
+      "source": "suffix_down_5 plus right-subtree count",
+      "source_control_FF_or_holdmux_receiver_bits": 1792,
+      "stage": 6
+    },
+    {
+      "data_adder_bits": 14,
+      "destination": "suf",
+      "edge_rule": "st==S_PICK && pk==15",
+      "family": "suffix_down",
+      "loaded_timing": null,
+      "register_receiver_bits": 3584,
+      "source": "suffix_down_6 plus right-subtree count",
+      "source_control_FF_or_holdmux_receiver_bits": 3584,
+      "stage": 7
+    },
+    {
+      "destination": "choose_lower_sum",
+      "edge_rule": "st==S_PICK && pk==16",
+      "family": "choose",
+      "loaded_timing": null,
+      "register_receiver_bits": 3840,
+      "source": "suf/cnt/rr",
+      "source_control_FF_or_holdmux_receiver_bits": 3840,
+      "stage": 16
+    },
+    {
+      "destination": "choose_pred",
+      "edge_rule": "st==S_PICK && pk==17",
+      "family": "choose",
+      "loaded_timing": null,
+      "register_receiver_bits": 256,
+      "source": "choose_lower_sum/rr",
+      "source_control_FF_or_holdmux_receiver_bits": 256,
+      "stage": 17
+    },
+    {
+      "destination": "choose_node_0",
+      "edge_rule": "st==S_PICK && pk==18",
+      "family": "winner",
+      "loaded_timing": null,
+      "register_receiver_bits": 2944,
+      "source": "choose_pred+suf",
+      "source_control_FF_or_holdmux_receiver_bits": 2944,
+      "stage": 0
+    },
+    {
+      "destination": "choose_node_1",
+      "edge_rule": "st==S_PICK && pk==19",
+      "family": "winner",
+      "loaded_timing": null,
+      "register_receiver_bits": 1472,
+      "source": "choose_node_0",
+      "source_control_FF_or_holdmux_receiver_bits": 1472,
+      "stage": 1
+    },
+    {
+      "destination": "choose_node_2",
+      "edge_rule": "st==S_PICK && pk==20",
+      "family": "winner",
+      "loaded_timing": null,
+      "register_receiver_bits": 736,
+      "source": "choose_node_1",
+      "source_control_FF_or_holdmux_receiver_bits": 736,
+      "stage": 2
+    },
+    {
+      "destination": "choose_node_3",
+      "edge_rule": "st==S_PICK && pk==21",
+      "family": "winner",
+      "loaded_timing": null,
+      "register_receiver_bits": 368,
+      "source": "choose_node_2",
+      "source_control_FF_or_holdmux_receiver_bits": 368,
+      "stage": 3
+    },
+    {
+      "destination": "choose_node_4",
+      "edge_rule": "st==S_PICK && pk==22",
+      "family": "winner",
+      "loaded_timing": null,
+      "register_receiver_bits": 184,
+      "source": "choose_node_3",
+      "source_control_FF_or_holdmux_receiver_bits": 184,
+      "stage": 4
+    },
+    {
+      "destination": "choose_node_5",
+      "edge_rule": "st==S_PICK && pk==23",
+      "family": "winner",
+      "loaded_timing": null,
+      "register_receiver_bits": 92,
+      "source": "choose_node_4",
+      "source_control_FF_or_holdmux_receiver_bits": 92,
+      "stage": 5
+    },
+    {
+      "destination": "choose_node_6",
+      "edge_rule": "st==S_PICK && pk==24",
+      "family": "winner",
+      "loaded_timing": null,
+      "register_receiver_bits": 46,
+      "source": "choose_node_5",
+      "source_control_FF_or_holdmux_receiver_bits": 46,
+      "stage": 6
+    },
+    {
+      "destination": "pvalid/pbin/pgt",
+      "edge_rule": "pk25 capture; pbin/pgt conditional on root valid; pk26 commits prefix",
+      "extra_pipeline_stages_proposed": 0,
+      "family": "winner_root",
+      "loaded_timing": null,
+      "register_receiver_bits": 23,
+      "source": "choose_node_6 pair",
+      "stage": 7
+    },
+    {
+      "data_adder_bits": 2,
+      "destination": "eq_count/id/gt/mask/v_0",
+      "edge_rule": "unconditional posedge payload; asynchronous reset valid",
+      "family": "equal_prefix",
+      "loaded_timing": null,
+      "register_receiver_bits": 2305,
+      "source": "f1_eq/id/gt",
+      "stage": 0
+    },
+    {
+      "data_adder_bits": 3,
+      "destination": "eq_count/id/gt/mask/v_1",
+      "edge_rule": "unconditional posedge payload; asynchronous reset valid",
+      "family": "equal_prefix",
+      "loaded_timing": null,
+      "register_receiver_bits": 2369,
+      "source": "eq_count/id/gt/mask/v_0",
+      "stage": 1
+    },
+    {
+      "data_adder_bits": 4,
+      "destination": "eq_count/id/gt/mask/v_2",
+      "edge_rule": "unconditional posedge payload; asynchronous reset valid",
+      "family": "equal_prefix",
+      "loaded_timing": null,
+      "register_receiver_bits": 2433,
+      "source": "eq_count/id/gt/mask/v_1",
+      "stage": 2
+    },
+    {
+      "data_adder_bits": 5,
+      "destination": "eq_count/id/gt/mask/v_3",
+      "edge_rule": "unconditional posedge payload; asynchronous reset valid",
+      "family": "equal_prefix",
+      "loaded_timing": null,
+      "register_receiver_bits": 2497,
+      "source": "eq_count/id/gt/mask/v_2",
+      "stage": 3
+    },
+    {
+      "data_adder_bits": 6,
+      "destination": "eq_count/id/gt/mask/v_4",
+      "edge_rule": "unconditional posedge payload; asynchronous reset valid",
+      "family": "equal_prefix",
+      "loaded_timing": null,
+      "register_receiver_bits": 2561,
+      "source": "eq_count/id/gt/mask/v_3",
+      "stage": 4
+    },
+    {
+      "data_adder_bits": 7,
+      "destination": "eq_count/id/gt/mask/v_5",
+      "edge_rule": "unconditional posedge payload; asynchronous reset valid",
+      "family": "equal_prefix",
+      "loaded_timing": null,
+      "register_receiver_bits": 2625,
+      "source": "eq_count/id/gt/mask/v_4",
+      "stage": 5
+    },
+    {
+      "added_state_or_stage_proposed": 0,
+      "destination": "eq_left/f2_take/f2_id",
+      "edge_rule": "eq_v_5 ordered row, one-edge saturating subtract; strict exclusive prefix",
+      "family": "quota_feedback",
+      "feedback_width_bits": 14,
+      "loaded_timing": null,
+      "returned_credit_or_ACK": false,
+      "source": "eq_left and last ordered prefix row",
+      "stage": 0
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_1",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "f3_tp/id",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 1
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_2",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_1",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 2
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_3",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_2",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 3
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_4",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_3",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 4
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_5",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_4",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 5
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_6",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_5",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 6
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_7",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_6",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 7
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_8",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_7",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 8
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_9",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_8",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 9
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_10",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_9",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 10
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_11",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_10",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 11
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_12",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_11",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 12
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_13",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_12",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 13
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_14",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_13",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 14
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_15",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_14",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 15
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_16",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_15",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 16
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_17",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_16",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 17
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_18",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_17",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 18
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_19",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_18",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 19
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "sort_record_20",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": false,
+      "loaded_timing": null,
+      "register_receiver_bits": 2496,
+      "source": "sort_record_19",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 20
+    },
+    {
+      "comparator_key_bits": 7,
+      "destination": "f4_c",
+      "edge_rule": "unconditional posedge; sort_valid aligns21levels and take_total_20",
+      "family": "stable_compaction",
+      "final_invalid_zero_mask": true,
+      "loaded_timing": null,
+      "register_receiver_bits": 2048,
+      "source": "sort_record_20",
+      "source_receiver_record_fanout": 2,
+      "source_record_bits": 39,
+      "stage": 21
+    }
+  ],
+  "source_origins": {
+    "bd872_handoff.json": {
+      "bytes": 2330,
+      "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/validation_and_handoff.json",
+      "sha256": "c0ac7b077f518f94638ed709ddb66d68878975562fb1b60fa15fcce27aef1e70"
+    },
+    "bd872_model.json": {
+      "bytes": 55376,
+      "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/model.json",
+      "sha256": "b65134a6f5e1e1a4b12dc078336ebabef7866046eea762a28c03fc3f89da1d22"
+    },
+    "shard0_branches.json.gz": {
+      "bytes": 323195,
+      "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/shard0_clock_branches.json.gz",
+      "sha256": "7b7830eaf0d4cdac251759533ea60e89544daad3145be8c44984f4c93e9ed09a"
+    },
+    "shard0_deficits.json.gz": {
+      "bytes": 127187,
+      "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/shard0_first_hop_deficits.json.gz",
+      "sha256": "0d22e43191cfc7c0835055bccb30f4459fd39a2de5c7291d1bd802c3eedb836a"
+    },
+    "shard1_branches.json.gz": {
+      "bytes": 256742,
+      "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/shard1_clock_branches.json.gz",
+      "sha256": "7512943b5cedee9fd934313331764155f15eb62544127357aedf34d9983d8f81"
+    },
+    "shard1_deficits.json.gz": {
+      "bytes": 100389,
+      "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/shard1_first_hop_deficits.json.gz",
+      "sha256": "27c86f97e1ff9a8e175b475c3553140fbffdcaf00ad9fbe3e8f5f8258facb775"
+    }
+  },
+  "source_pins": {
+    "results/rtl/dsrom_balanced_selector_candidate_prepare_20261002/gate_r4/candidate/ot_coll_topk_merge_staged_impl_prepare.sv": "875f2621e2520524f38cead749db1aabd164e52d10a082b93b2170fa5fbb98ea",
+    "results/rtl/dsrom_full_selector_allowed_cut_gate_prepare_20261003/component_model.json": "5c927adabff39e79f8b2b9bae2b01cf19f54eb9b489401aaf041f58ff71987c5",
+    "results/rtl/dsrom_selector_allowed_cut_prepare_20261002/package_r2/candidate/ot_w15_coll_dma_balanced_allowed_cut_prepare.sv": "86c3447a48558bca6d9572ac9e79551e2245990fd80cd8fef7fabce0c5a6b7a8",
+    "results/uarch/dsrom_selector_join_admissibility_20261002/model_r2.json": "36e4e1346a8ec184b3ea995c3b42067a56f24578eebde05179304a2e5b36ff6f"
+  },
+  "timing_contract": {
+    "FF_earliest_path_and_hold": null,
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "decoded_control_fanout_tree_actual_pin_load": null,
+    "loaded_clock_to_QN_INV_wire_logic_setup": null,
+    "matched_skew_budget_ps": 25,
+    "period_ps": 833,
+    "reset_recovery_removal": null,
+    "via_contact_OBS_and_PG_extracted_RC": null
+  },
+  "unchanged_graph": {
+    "added_BUF": 0,
+    "core_clock_BUF": 70406,
+    "existing_relay_pad_BUF": 68614,
+    "removed_BUF": 0,
+    "timeout4096_adopted": false,
+    "transport_clock_BUF": 48007
+  },
+  "verdict": "REVIEWABLE_REQUIREMENT_DELTA_NO_TIMING_OR_BUILD_ADMISSION"
+}
