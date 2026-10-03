@@ -637,6 +637,8 @@ def parse_logs(work: Path):
     out['drt_final_violations'] = viol[-1] if viol else None
     out['drt_errors'] = re.findall(r'\[ERROR DRT-\d+\].*', drt)[:3]
     out['drt_completed'] = 'Complete detail routing' in drt or bool(re.search(r'Total wire length = ', drt))
+    out['flow_errors'] = [f'{k}: {e}' for k, v in sorted(logs.items()) for e in re.findall(r'\[ERROR [^\]]+\].*', v)][:5]
+    out['last_stage_log'] = max(logs, key=lambda k: (k[:1].isdigit(), k)) if logs else None
     return out
 
 
@@ -705,6 +707,10 @@ def record(v, jobroot: Path, src_root: Path):
     phys = json.loads((job / 'physical.json').read_text()) if (job / 'physical.json').is_file() else None
     receipt = json.loads((job / 'receipt.json').read_text()) if (job / 'receipt.json').is_file() else None
     nick = f'opentallas_{t["top"]}_asap7_qcg_{v.lower()}'
+    args = (receipt or {}).get('driver_args') or []
+    run_root = Path(args[args.index('--source-root') + 1]) if '--source-root' in args else src_root
+    run_commit = subprocess.run(['git', '-C', str(run_root), 'rev-parse', 'HEAD'], capture_output=True,
+                                text=True).stdout.strip() or None
     logs = parse_logs(work)
     dpath = next(iter(sorted(work.rglob('qcg_route.def'))), work / 'qcg_route.def')
     audit = parse_def_layers(dpath, var, t) if dpath.is_file() else dict(status='no routed DEF')
@@ -743,6 +749,7 @@ def record(v, jobroot: Path, src_root: Path):
                  per_layer=logs.get('grt_final_per_layer'), errors=logs.get('grt_errors')),
         drt=dict(final_violations=drt, by_iteration=logs.get('drt_violations_by_iteration'),
                  errors=logs.get('drt_errors')),
+        flow_errors=logs.get('flow_errors'), last_stage_log=logs.get('last_stage_log'),
         timing=dict(**timing, corner_sta=sta,
                     orfs_finish=dict(setup_wns_ns=m.get('setup_wns_ns'), hold_wns_ns=m.get('hold_wns_ns'),
                                      setup_violations=m.get('setup_violations'),
@@ -754,11 +761,12 @@ def record(v, jobroot: Path, src_root: Path):
         layer_audit=audit,
         launch=dict(receipt_status=(receipt or {}).get('status'), driver_args=(receipt or {}).get('driver_args'),
                     git=(phys or {}).get('git'), elapsed_seconds=(phys or {}).get('elapsed_seconds')),
-        sources_sha256={rel: sha(ROOT / rel) for rel in [R2_REC, 'tools/qwen_corridor_gate.py',
-                                                          f'{RTL_DIR}/{t["top"]}.v'] +
-                        [f'{HOOK_DIR}/{n}' for n in (f'{t["name"].lower()}_place.tcl', f'{t["name"].lower()}_pins.tcl',
-                                                     f'{t["name"].lower()}_grt.tcl', 'dont_touch.tcl', 'write_def.tcl',
-                                                     f'pdn_{var["pg"]}.tcl')]},
+        run_sources=dict(root=str(run_root), commit=run_commit, sha256={
+            rel: sha(run_root / rel) for rel in [R2_REC, 'tools/qwen_corridor_gate.py', f'{RTL_DIR}/{t["top"]}.v'] +
+            [f'{HOOK_DIR}/{n}' for n in (f'{t["name"].lower()}_place.tcl', f'{t["name"].lower()}_pins.tcl',
+                                         f'{t["name"].lower()}_grt.tcl', 'dont_touch.tcl', 'write_def.tcl',
+                                         f'pdn_{var["pg"]}.tcl')] if (run_root / rel).is_file()}),
+        recorder_sha256=sha(Path(__file__)),
         claim_boundary='ASAP7 block-level strip of one corridor at its r2 width: the router sees only the tracks inside '
                        'the corridor width; neighbouring tiles, crossing corridors and the die-level clock are absent. '
                        'GRT capacity of the non-assigned same-direction layers is zeroed between slabs to enforce the '
