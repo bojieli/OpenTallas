@@ -48,3 +48,22 @@ def test_empty_inventory_is_incomplete_and_immutable(tmp_path):
     assert len(json.loads(original)["missing_parts"]) == 10
     assert subprocess.run(cmd, capture_output=True).returncode != 0
     assert target.read_bytes() == original
+
+
+def test_summary_rejects_stale_pass_after_simulator_crash(tmp_path):
+    record_spec = importlib.util.spec_from_file_location("record", ROOT / "tools/dsrom_dspark_rtl_record.py")
+    record = importlib.util.module_from_spec(record_spec)
+    record_spec.loader.exec_module(record)
+    parts = tmp_path / "parts"
+    parts.mkdir()
+    run = {"prompt": "gold4", "drafter": "forced", "pass": True,
+           "isa": {"equal_golden_tokens": True, "committed_logits_bit_exact_with_golden": True},
+           "rtl": {"returncode": -9, "iters": 1, "per_iter": [],
+                   **{k: 0 for k in cached.MISMATCHES}}}
+    for name in record.EXPECTED_PARTS:
+        (parts / (name + ".json")).write_text(json.dumps({"pass": True, "runs": [run]}))
+    cmd = [sys.executable, str(ROOT / "tools/dsrom_dspark_rtl_record.py"), "--dir", str(tmp_path)]
+    assert subprocess.run(cmd, capture_output=True).returncode == 1
+    summary = json.loads((tmp_path / "summary.json").read_text())
+    assert summary["status"] == "fail" and not summary["missing_parts"]
+    assert not any(p["pass"] for p in summary["parts"].values())

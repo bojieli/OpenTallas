@@ -44,6 +44,9 @@ def checks(run):
          "rtl_final_vm_equal_isa": r.get("vm_mismatches") == 0,
          "rtl_final_kv_equal_isa_incl_dead_rows": r.get("kv_mismatches") == 0}
     c["rtl_exited_successfully"] = r.get("returncode") == 0
+    it = r.get("per_iter", [])
+    c["rtl_iteration_log_complete"] = bool(it) and len(it) == r.get("iters")
+    c["rtl_iterations_fault_free"] = bool(it) and all(x.get("fault") == 0 for x in it)
     if "activation" in r:
         c["respecified_units_fired"] = r["activation"].get("pass")
     return c
@@ -78,7 +81,9 @@ def main():
         for r in p["runs"]:
             rt = r["rtl"]
             it = rt.get("per_iter", [])
-            row = {"prompt": r["prompt"], "drafter": r["drafter"], "pass": r["pass"], "checks": checks(r),
+            c = checks(r)
+            row = {"prompt": r["prompt"], "drafter": r["drafter"],
+                   "pass": bool(r["pass"] and all(v is True for v in c.values())), "checks": c,
                    "accepted_per_step": [x["accepted"] for x in it] or r["isa"].get("accepted"),
                    "steps": len(it), "generated": rt.get("generated")}
             if it:
@@ -95,12 +100,14 @@ def main():
                                                      "verify_accept_over_ar": round((st - dr) / ar, 3)}
             rows.append(row)
         mut = p.get("mutation_rtl_restore_slot_plus_1")
-        out["parts"][name] = {"pass": p["pass"], "core": p.get("core", "ot_hdc_core_v41 (as built)"),
+        detected = None if mut is None else bool(mut["detected"] and "iters" in mut and mut.get("returncode") == 0)
+        passed = bool(p["pass"] and rows and all(r["pass"] for r in rows) and detected is not False)
+        out["parts"][name] = {"pass": passed, "core": p.get("core", "ot_hdc_core_v41 (as built)"),
                               "units": p.get("respecified_units"), "accept_unit": p.get("accept_unit", "ot_hdc_accept"),
                               "gamma": p.get("gamma"), "fp": p.get("fp"), "runs": rows,
-                              "mutation_engram_restore_slot_plus_1_detected": None if mut is None else mut["detected"],
+                              "mutation_engram_restore_slot_plus_1_detected": detected,
                               "isa_checks": p.get("isa_checks")}
-        allpass &= p["pass"]
+        allpass &= passed
     out["status"] = "incomplete" if missing else "pass" if allpass else "fail"
     target = a.output or a.dir / "summary.json"
     with target.open("x") as f:
