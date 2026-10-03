@@ -1,0 +1,223 @@
+{
+  "FF_hold_uncertainty_ps": 25,
+  "KV_version_width": null,
+  "RTL_gate": "exact F0 pins + positive per-boundary cycles/ports/bits/tracks/replicas/fanout/area/slot/token model; then default-off additive source and actual source handshake bench",
+  "SS_setup_uncertainty_ps": 60,
+  "actual_bench_required": [
+    "source request latch; both write-copy ports; common tagged ACK",
+    "consumer actual valid/ready; retained payload before/after stalls",
+    "real reverse CDC sender/receiver reset epochs and source domains",
+    "stale/duplicate/foreign generation and reset during every held phase",
+    "C0 full128-lane RF readback and then versioned KV sector read with positive old origin"
+  ],
+  "boundary_model_requests": [
+    {
+      "CDC": "common domain in fixture only; F0 bind actual domains/epochs and positive crossing costs",
+      "candidate_peak_payload_bytes_per_cycle": 512,
+      "channel_capacity": null,
+      "control_bits_per_cycle": null,
+      "control_formula": "identity + addr + mode + optional KV_version(F0) + valid/ready",
+      "fixture_control_bits_excluding_unfrozen_KV_version": 79,
+      "name": "owner_source_to_latch",
+      "owner": "W2",
+      "payload_bits_per_cycle_candidate": 4096,
+      "positive_cycles_required": true,
+      "production_cycles": null,
+      "routing_tracks": null,
+      "total_bits_per_cycle": null
+    },
+    {
+      "CDC": "common domain in fixture only; F0 bind actual domains/epochs and positive crossing costs",
+      "candidate_peak_payload_bytes_per_cycle": 0,
+      "channel_capacity": null,
+      "control_bits_per_cycle": null,
+      "control_formula": "identity + vector_addr + valid/ready",
+      "fixture_control_bits_excluding_unfrozen_KV_version": 53,
+      "name": "both_mirrors_to_common_ACK",
+      "owner": "W4",
+      "payload_bits_per_cycle_candidate": 0,
+      "positive_cycles_required": true,
+      "production_cycles": null,
+      "routing_tracks": null,
+      "total_bits_per_cycle": null
+    },
+    {
+      "CDC": "common domain in fixture only; F0 bind actual domains/epochs and positive crossing costs",
+      "candidate_peak_payload_bytes_per_cycle": 512,
+      "channel_capacity": null,
+      "control_bits_per_cycle": null,
+      "control_formula": "identity + vector_or_sector_addr + optional KV_version(F0) + valid/ready",
+      "fixture_control_bits_excluding_unfrozen_KV_version": 78,
+      "name": "completion_to_visibility",
+      "owner": "W6",
+      "payload_bits_per_cycle_candidate": 4096,
+      "positive_cycles_required": true,
+      "production_cycles": null,
+      "routing_tracks": null,
+      "total_bits_per_cycle": null
+    },
+    {
+      "CDC": "common domain in fixture only; F0 bind actual domains/epochs and positive crossing costs",
+      "candidate_peak_payload_bytes_per_cycle": 512,
+      "channel_capacity": null,
+      "control_bits_per_cycle": null,
+      "control_formula": "identity + address + optional KV_version(F0) + valid/ready",
+      "fixture_control_bits_excluding_unfrozen_KV_version": 78,
+      "name": "visibility_to_consumer_accept",
+      "owner": "W6",
+      "payload_bits_per_cycle_candidate": 4096,
+      "positive_cycles_required": true,
+      "production_cycles": null,
+      "routing_tracks": null,
+      "total_bits_per_cycle": null
+    },
+    {
+      "CDC": "common domain in fixture only; F0 bind actual domains/epochs and positive crossing costs",
+      "candidate_peak_payload_bytes_per_cycle": 0,
+      "channel_capacity": null,
+      "control_bits_per_cycle": null,
+      "control_formula": "identity + CDC source/destination epochs/domains + valid/ready",
+      "fixture_control_bits_excluding_unfrozen_KV_version": 66,
+      "name": "consumer_to_reverse_send",
+      "owner": "W6",
+      "payload_bits_per_cycle_candidate": 0,
+      "positive_cycles_required": true,
+      "production_cycles": null,
+      "routing_tracks": null,
+      "total_bits_per_cycle": null
+    },
+    {
+      "CDC": "common domain in fixture only; F0 bind actual domains/epochs and positive crossing costs",
+      "candidate_peak_payload_bytes_per_cycle": 0,
+      "channel_capacity": null,
+      "control_bits_per_cycle": null,
+      "control_formula": "identity + valid/ready",
+      "fixture_control_bits_excluding_unfrozen_KV_version": 44,
+      "name": "reverse_receive_to_retire",
+      "owner": "W6",
+      "payload_bits_per_cycle_candidate": 0,
+      "positive_cycles_required": true,
+      "production_cycles": null,
+      "routing_tracks": null,
+      "total_bits_per_cycle": null
+    }
+  ],
+  "default_enabled": false,
+  "engine_RTL_ready": false,
+  "engine_RTL_written": false,
+  "fixture_fields_are_F0": false,
+  "fixture_identity_bits": 42,
+  "geometry": {
+    "KV_sector_bytes": 32,
+    "RF_pages": 4,
+    "RF_vector_bytes": 512,
+    "RF_vectors": 512,
+    "SIMD_lanes": 128,
+    "banks_per_page_per_copy": 16,
+    "lane_bits": 32,
+    "mirrored_write_bytes": 1024,
+    "operand_copies": 2,
+    "physical_RF_macros": 128
+  },
+  "golden_fixture_fields": {
+    "domain": 3,
+    "generation": 8,
+    "owner_tag": 16,
+    "rank": 2,
+    "reset_epoch": 8,
+    "sm": 5
+  },
+  "golden_times_are_physical_ticks": false,
+  "macro_write_CLKtoQ_SS": "UNKNOWN; behavioral mirror edge insufficient",
+  "no_R3_owner_ledger_modification": true,
+  "original_432_production_events": "UNKNOWN",
+  "original_source_pins": {
+    "rtl/gpu/ot_gpu_full_sm_service.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+    "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "rtl/gpu/ot_gpu_rf_visibility_fence.sv": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "owner_identity_origin": "must be latched at actual service request handshake and echoed by actual completion source; no inferred tag from bare host_ack_valid",
+  "physical_qualified": false,
+  "prerequisite_owners": {
+    "F0": "Russell field freeze",
+    "W2": "Nash exact service completion",
+    "W4": "Euclid common mirrored ACK",
+    "unified_full_model": "Popper"
+  },
+  "prerequisite_pins": {
+    "F0_fields": null,
+    "W2_service_completion": null,
+    "W4_common_ACK": null,
+    "priced_unified_model": null
+  },
+  "production_field_widths": null,
+  "queue": {
+    "backpressure": "stable tagged payload; keep owner/table credit until matching reverse then retirement",
+    "consumer_debt": 1,
+    "outstanding_completion": 1,
+    "owner_slots": 1,
+    "reuse": "strictly increasing generation for this single slot in each reset epoch; no generation/epoch wrap without separately qualified drain/rekey",
+    "reverse_debt": 1,
+    "visibility_lease": 1
+  },
+  "read_version_rule": "KV source completion echoes exact latched published version in addition to request generation; consumer packet retains that version; F0 freezes width",
+  "schema": "opentallas.hbm.W6.fence-prospective-contract.v1",
+  "scope": "one complete C0 transaction then one versioned KV-read transaction; golden reference only",
+  "source_base": "103d3ec89373119898c5662d490676f6ff8ab570",
+  "state_transition_table": [
+    [
+      "IDLE",
+      "source_accept",
+      "COMPLETION"
+    ],
+    [
+      "COMPLETION",
+      "both_actual_mirror_writes_then_common_ACK_OR_versioned_read_capture",
+      "VISIBILITY"
+    ],
+    [
+      "VISIBILITY",
+      "visible_valid_and_ready",
+      "CONSUMER"
+    ],
+    [
+      "CONSUMER",
+      "consumer_valid_and_ready",
+      "REVERSE"
+    ],
+    [
+      "REVERSE",
+      "qualified_matching_return_valid_and_ready",
+      "RETIRE"
+    ],
+    [
+      "RETIRE",
+      "retire_valid_and_ready",
+      "IDLE"
+    ],
+    [
+      "any",
+      "common_reset_assert",
+      "reset_cancel_debt_block_until_source_drain"
+    ]
+  ],
+  "status": "CONTRACT_GOLDEN_READY_F0_MODEL_AND_W4_W2_BINDINGS_PENDING",
+  "storage_model_request": {
+    "MACs_per_cycle": 0,
+    "area_policy": "no numerical area estimate without F0 widths and unified-model cell/replica/context mapping",
+    "area_um2": null,
+    "fanout": "identity comparators at completion/visibility/consumer/reverse/retire plus32 selected bank controls; price buffers/muxes",
+    "identity_latch_bits": "sum(F0 identity widths)",
+    "latency_token_cycles": null,
+    "payload": "prefer retained source lease; if source cannot hold, charge full512B RF or32B KV landing explicitly",
+    "payload_mux": "if shared C0/KV landing, include full-width select and256bit-to4096bit slice enables; never price as free",
+    "per_entry": "generation high-water + identity + address + KV_version + phase + copy_done[2] + validity/lease/reverse flags + CDC debt",
+    "port_budget": "one owner request/edge; C0 logical512B write,1024B mirrored writes,2x512B operand read; KV32B sector response; all metadata widths priced on every transfer",
+    "replica_count": "bind full Qwen/DS SM inventory in unified model, no undersized physical scope",
+    "routing_tracks": null,
+    "slot_um": null,
+    "table_entries": 1
+  },
+  "whole_program_qualified": false
+}

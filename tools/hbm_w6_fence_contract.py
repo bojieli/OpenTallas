@@ -97,6 +97,7 @@ class FenceGolden:
         require(self.enabled and not self.resetting and not self.exhausted, 'disabled/reset/exhausted')
         identity.validate(self.layout)
         require(self.phase == 'IDLE' and self.active is None, 'one outstanding owner credit')
+        require(self.edge > self.last_edge, 'positive release-to-source edge')
         require(identity.reset_epoch == self.epoch and identity.generation > self.highest_generation, 'stale/reused generation')
         require(path in ('C0', 'KV_READ'), 'supported initial path')
         size = 512 if path == 'C0' else 32

@@ -183,6 +183,9 @@ class W6ContractTests(unittest.TestCase):
             with self.assertRaises(ValueError): self.g.reset_release(common_reset_drained=False)
             self.g.reset_release(common_reset_drained=True)
             new=replace(self.ident, reset_epoch=1)
+            with self.assertRaisesRegex(ValueError, 'positive release'):
+                self.g.issue(new, path='C0', address=3, data=self.data)
+            self.g.tick()
             self.g.issue(new, path='C0', address=3, data=self.data)
             self.g.tick()
             with self.assertRaisesRegex(ValueError, 'stale/foreign'):

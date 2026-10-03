@@ -1,0 +1,234 @@
+{
+  "engine_RTL_executed": false,
+  "expected_transactions": 2,
+  "hardware_qualification": false,
+  "status": "PASS_FINITE_GOLDEN_C0_THEN_KV_READ_ONLY",
+  "trace": [
+    {
+      "address": 511,
+      "edge": 0,
+      "event": "source_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      },
+      "path": "C0",
+      "payload_sha256": "110009dcee21620b166f3abfecb5eff7a873be729d1c2d53822e7acc5f34eb9b"
+    },
+    {
+      "copy": 0,
+      "edge": 1,
+      "event": "mirror_write",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "copy": 1,
+      "edge": 1,
+      "event": "mirror_write",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 2,
+      "event": "completion_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      },
+      "kind": "W4_COMMON_MIRROR_ACK"
+    },
+    {
+      "edge": 3,
+      "event": "visibility_stall",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 5,
+      "event": "visibility_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 6,
+      "event": "consumer_stall",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 8,
+      "event": "consumer_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 10,
+      "event": "reverse_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 11,
+      "event": "retire_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 1,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "address": 17179869183,
+      "edge": 12,
+      "event": "source_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 2,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      },
+      "path": "KV_READ",
+      "payload_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"
+    },
+    {
+      "edge": 13,
+      "event": "completion_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 2,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      },
+      "kind": "W2_VERSIONED_READ_CAPTURE"
+    },
+    {
+      "edge": 14,
+      "event": "visibility_stall",
+      "identity": {
+        "domain": 1,
+        "generation": 2,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 16,
+      "event": "visibility_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 2,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 17,
+      "event": "consumer_stall",
+      "identity": {
+        "domain": 1,
+        "generation": 2,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 19,
+      "event": "consumer_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 2,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 21,
+      "event": "reverse_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 2,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    },
+    {
+      "edge": 22,
+      "event": "retire_accept",
+      "identity": {
+        "domain": 1,
+        "generation": 2,
+        "owner_tag": 7,
+        "rank": 0,
+        "reset_epoch": 0,
+        "sm": 0
+      }
+    }
+  ]
+}

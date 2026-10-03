@@ -1,0 +1,20 @@
+test_KV_read_requires_positive_origin_and_exact_payload_version (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_bareACK_cannot_be_promoted_to_tagged_completion (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_complete_C0_then_KV_read_finite_fullwidth (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_completion_backpressure_holds_owner (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_disabled_no_acceptance (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_duplicate_copy_and_missing_second_copy (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_foreign_owner_generation_rank_sm_epoch (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_fullwidth_geometry_address_and_F0_blocked (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_no_epoch_wrap_or_generation_wrap (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_no_zero_cycle_write_ACK_visibility_consumer (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_reset_during_every_pending_phase_rejects_oldACK (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_retirement_cannot_release_before_consumer_reverse (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_reverse_domain_epoch_token_and_time_mutants (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_reverse_held_and_stale_duplicate_after_retire (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+test_visibility_consumer_payload_stalls_and_duplicate (test_hbm_w6_fence_contract.W6ContractTests) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.018s
+
+OK
