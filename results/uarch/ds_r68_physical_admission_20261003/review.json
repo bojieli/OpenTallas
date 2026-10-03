@@ -1,0 +1,88 @@
+{
+  "COW_overlap": {
+    "baseline_to_actual_allocations_proved": false,
+    "chain_bound": "min(complete cumulative distinct touched host-granule upper, initial shared+absent RAM ceiling) + host nonRAM and protected peer growth",
+    "guest_and_host_sum": false,
+    "process_exit_is_host_release": false,
+    "process_max_RSS_is_chain_upper": false,
+    "readonly_and_checkpoint_pagecache_credit": 0,
+    "source_component_is_page_bound": false,
+    "whole_shared_exposure_added": false
+  },
+  "R68_component_model_SHA256": "ae5e031ebbf51413095a5ae6aeee02958ea653ecedcd26ffe38860f12dafcfda",
+  "actual_flow": [
+    "dual full constructors in one preflight process",
+    "PC0 execute/seal/exit",
+    "fresh PC1 restore/execute/seal/exit",
+    "third process cold restore and actual-state compare"
+  ],
+  "actual_numeric_or_constructor_launches": 0,
+  "additional_constructor_journals": 2,
+  "checkpoints": 2,
+  "full_homes": 290730,
+  "full_native_PCs": 2213,
+  "missing_certificate_fields": {
+    "actual_guest_to_physical_parent_membership": null,
+    "allocator_rounding_retention_upper": null,
+    "fresh_peer_growth_reservation": null,
+    "host_COW_THP_granule_policy": null,
+    "page_tables_kernel_growth_upper": null,
+    "source_checkpoint_journal_filecache_union_upper": null
+  },
+  "mutable_worktree_snapshotted_without_changes": true,
+  "next_dependency": "Kepler frozen source successor + Chandra fresh physical capacity/membership/peer lease. At this snapshot runtime needs at least11314636048 more physical bytes BEFORE any extra costs, or separately reviewed source-preserving reduction. No invented page certificate.",
+  "old_R64_R67_guards_unchanged": true,
+  "physical_snapshot": {
+    "RAM_only_shared_and_absent_ceiling": 74466877440,
+    "available_bytes": 59949887488,
+    "historical_not_launch_lease": true,
+    "source": "3c58e9b271c6c54b7485c8ab639c4658d5ed62cb",
+    "time_utc": "2026-10-03T05:06:08.799437+00:00"
+  },
+  "resource_admission": false,
+  "runtime_journals": 3,
+  "schema": "DS_R68_ACTUAL_SOURCE_PHYSICAL_ADMISSION_REVIEW_V1",
+  "source_component_RAM": {
+    "constructor": 40910816974,
+    "runtime": 71264523536
+  },
+  "source_disk": {
+    "PC0journal": 1452627604,
+    "PC1journal": 935648680,
+    "diagnostics": 15553845900,
+    "graph_metadata": 2616893880,
+    "total": 27751073586,
+    "two_checkpoint_payloads": 3439081900,
+    "verifier_and_constructor_bootstraps": 22281240
+  },
+  "source_guard_derivation": [
+    "R68 requires allocator_page_upper >= stage required_RAM_bytes.",
+    "R68 requires physical_new_page_union_upper >= allocator_page_upper + additional filecache upper + kernel upper.",
+    "R68 requires physical MemAvailable - protected reserve >= physical_new_page_union_upper.",
+    "Therefore physical capacity must be at least the component RAM even with all additional costs zero. Runtime floor exceeds this historical capacity: no certificate can satisfy these unchanged source inequalities.",
+    "R68 enroll calls page_proof for both constructor and runtime; constructor-only headroom does not enroll runtime."
+  ],
+  "source_page_proof_function_sha256": "e8ede1d2be9aa0089a4328c7020c970f00092b9c99728db2d78cafe26f8390a2",
+  "source_snapshot_sha256": {
+    "results/uarch/ds_hbm_pc01_r68_20261003/model.json": "ae5e031ebbf51413095a5ae6aeee02958ea653ecedcd26ffe38860f12dafcfda",
+    "results/uarch/ds_hbm_pc01_r68_20261003/page_admission_contract.json": "42d4e72590e1d937c7ad5da1cf4dc6e790cb585c80971ef82d55f18559696b64",
+    "tools/ds_hbm_pc01_child_r68.py": "1880f9271bfff2359115cd2d80aec8053925226f9f312d2dfa722bf104c01759",
+    "tools/ds_hbm_pc01_controller_r68.py": "b875148e4d8ec36bad88dc768ce0881680aa6577106b58d2014078dd3fe9a305",
+    "tools/ds_hbm_pc01_price_r68.py": "f18322e2b47a3337b9841a63b7a4f7ada35d1e7a12ee436b17c401a4236de806"
+  },
+  "stage_results": {
+    "constructor": {
+      "additional_cost_allowance_bytes": 19039070514,
+      "admission": false,
+      "component_floor_bytes": 40910816974,
+      "status": "SOURCE_PAGE_CLOSURE_AND_FRESH_PHYSICAL_LEASE_REQUIRED"
+    },
+    "runtime": {
+      "additional_cost_allowance_bytes": -11314636048,
+      "admission": false,
+      "component_floor_bytes": 71264523536,
+      "status": "PROVED_CAPACITY_REFUSAL_AT_ENROLLED_SNAPSHOT"
+    }
+  },
+  "status": "NO_POSITIVE_PAGE_CERTIFICATE"
+}

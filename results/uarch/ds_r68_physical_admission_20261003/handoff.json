@@ -1,0 +1,39 @@
+{
+  "R68_component_model_SHA256": "ae5e031ebbf51413095a5ae6aeee02958ea653ecedcd26ffe38860f12dafcfda",
+  "R68_snapshot_uncommitted_at_capture": true,
+  "absolute_actual_upper_page_certificate_ready": false,
+  "artifacts": {
+    "results/uarch/ds_r68_physical_admission_20261003/inputs/ds_hbm_pc01_child_r68.py": "1880f9271bfff2359115cd2d80aec8053925226f9f312d2dfa722bf104c01759",
+    "results/uarch/ds_r68_physical_admission_20261003/inputs/ds_hbm_pc01_controller_r68.py": "b875148e4d8ec36bad88dc768ce0881680aa6577106b58d2014078dd3fe9a305",
+    "results/uarch/ds_r68_physical_admission_20261003/inputs/ds_hbm_pc01_price_r68.py": "f18322e2b47a3337b9841a63b7a4f7ada35d1e7a12ee436b17c401a4236de806",
+    "results/uarch/ds_r68_physical_admission_20261003/inputs/model.json": "ae5e031ebbf51413095a5ae6aeee02958ea653ecedcd26ffe38860f12dafcfda",
+    "results/uarch/ds_r68_physical_admission_20261003/inputs/page_admission_contract.json": "42d4e72590e1d937c7ad5da1cf4dc6e790cb585c80971ef82d55f18559696b64",
+    "results/uarch/ds_r68_physical_admission_20261003/inputs/physical_backing.json": "ea9b10dc40ec25158346f1ae63df27131ae41a35205463ffda644d2d1da9726e",
+    "results/uarch/ds_r68_physical_admission_20261003/inputs/snapshot_receipt.json": "a5f975de4f730e7570cf84513c0b4446d31244750623d272bfc143a320be6b29",
+    "results/uarch/ds_r68_physical_admission_20261003/pytest.log": "0c42ab8123fcb13fb141f85fe1c2ccfba497885db9741e077f51097581cc42ee",
+    "results/uarch/ds_r68_physical_admission_20261003/replay.log": "4a2ac3b55c08959b1f1e553f4a1ef2b29b37733ff19022269f69fdd2a680632c",
+    "results/uarch/ds_r68_physical_admission_20261003/review.json": "e601cc1fef50fd7579f7c0e891cfc5b7afbaa413cc4d622b3ca0a9db9c8083e9",
+    "tests/test_ds_r68_physical_admission_review.py": "40461a332601ff49156998c94489e98ac1c00e2749ccec91680bb94309ffaf34",
+    "tools/ds_r68_physical_admission_review.py": "027c37933598aef42ce726c2bf27d3ea587392da27074153688d66dccf54e974"
+  },
+  "commands": [
+    "python3 -m pytest -q tests/test_ds_r68_physical_admission_review.py",
+    "python3 tools/ds_r68_physical_admission_review.py --verify results/uarch/ds_r68_physical_admission_20261003/review.json"
+  ],
+  "constructor_nominal_all_extra_cost_allowance_bytes": 19039070514,
+  "needs": [
+    "Kepler immutable R68 source/model publication",
+    "Chandra fresh physical parent membership/capacity/peer growth lease",
+    "reviewed allocator/filecache/kernel cumulative-touch phase upper inventory"
+  ],
+  "no_original_changes": true,
+  "numeric_or_constructor_launches": 0,
+  "physical_stage_blocker": "Runtime component floor71264523536 exceeds retained actual host59949887488 by11314636048 BEFORE extra allocator rounding/filecache/kernel/peer costs. Complete positive certificate impossible at that snapshot under unchanged source predicates.",
+  "resource_admission": false,
+  "review": "review.json",
+  "schema": "DS_R68_SOURCE_PHYSICAL_FLOOR_HANDOFF_V1",
+  "source_before_after_snapshot_equal": true,
+  "source_worktree": "/tmp/kepler-ds-pc01-r68-mainbase-20261003",
+  "test_count": 11,
+  "test_method": "Archived actual page_proof function isolated with metadata IO stubs; no provider constructor/native execution. Runtime floor refusal and missing-cost/discount/peer-reservation controls."
+}
