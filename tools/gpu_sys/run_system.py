@@ -27,7 +27,8 @@ sys.path.insert(0, str(HERE))
 import mem_image  # noqa: E402
 
 VERILATOR = Path(os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")) / "verilator-5.050/bin/verilator"
-NS, MEM_WORDS = 2, 65536
+NS = 2
+MODEL_PARAMS = {"qwen": dict(MEM_WORDS=65536, HAS_DIV=0, HAS_BD=0), "v41": dict(MEM_WORDS=1 << 21, HAS_DIV=1, HAS_BD=1)}
 SYS_SRC = sorted(str(p.relative_to(ROOT)) for p in (ROOT / "rtl/gpu_sys").glob("*.sv"))
 DEP_SRC = ["rtl/gpu/ot_gpu_sm.sv", "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/gpu/ot_gpu_barrier_node.sv",
            "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fastfp.sv",
@@ -35,6 +36,8 @@ DEP_SRC = ["rtl/gpu/ot_gpu_sm.sv", "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gp
            "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
            "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_prefix.sv",
            "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv", "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+           "rtl/gpu/ot_gpu_sm_bd.sv", "rtl/gpu/ot_gpu_bd_col.sv", "rtl/hdc/v41/ot_hdc_blockdot.sv",
+           "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_bterm2.sv",
            "rtl/link/ot_link_afifo.sv", "rtl/link/ot_link_nvls_switch.sv", "rtl/hdc/kv/ot_hdc_hbm_model.sv",
            "rtl/host/ot_host_if.sv", "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv"]
 TB = "rtl/test/gpu_sys/tb_gpu_hbm_system.sv"
@@ -44,31 +47,33 @@ def sha(p):
     return hashlib.sha256((ROOT / p).read_bytes()).hexdigest()
 
 
-def build(work):
-    obj = Path(work) / "obj_sys"
+def build(work, model="qwen"):
+    obj = Path(work) / (("obj_sys_w2" if os.environ.get("GPU_SYS_USE_W2") == "1" else "obj_sys") + "_" + model)
     exe = obj / "Vtb_gpu_hbm_system"
     if exe.exists():
         return exe
     cmd = [str(VERILATOR), "--binary", "--timing", "-O2", "-j", os.environ.get("GPU_SYS_JOBS", "4"), "-Wno-fatal",
            "-Wno-lint", "-Wno-style", "-Wno-WIDTH", "--x-assign", "0", "--x-initial", "0",
-           "--top-module", "tb_gpu_hbm_system", "--Mdir", str(obj)] + [str(ROOT / s) for s in SYS_SRC + DEP_SRC + [TB]]
+           "--top-module", "tb_gpu_hbm_system", "--Mdir", str(obj)] + \
+          [f"-G{k}={v}" for k, v in MODEL_PARAMS[model].items()] + \
+          (["-DGPU_SYS_USE_W2"] if os.environ.get("GPU_SYS_USE_W2") == "1" else []) + [str(ROOT / s) for s in SYS_SRC + DEP_SRC + [TB]]
     t0 = time.time()
     subprocess.run(cmd, check=True, cwd=ROOT, stdout=subprocess.DEVNULL)
     print(f"build {time.time() - t0:.0f} s", flush=True)
     return exe
 
 
-def prepare(model, case, ngen):
+def prepare(model, case, ngen, nprompt=None):
     case = Path(case)
     if model == "qwen":
         import qwen_hbm
         meta = qwen_hbm.emit(case, ngen)
     else:
         import v41_hbm
-        meta = v41_hbm.emit(case, ngen)
+        meta = v41_hbm.emit(case, ngen, nprompt)
     for d in range(meta["tp"]):
         blob = np.fromfile(case / f"die{d}.bin", dtype=np.uint8)
-        mem_image.write_images({0: blob}, NS, MEM_WORDS, case, prefix=f"die{d}")
+        mem_image.write_images({0: blob}, NS, MODEL_PARAMS[model]["MEM_WORDS"], case, prefix=f"die{d}")
     steps = meta["steps"]
     lines = [f"{len(steps)} {len(meta['prompt'])} {ngen} {meta['imem_words']} {len(meta['entries']) + 1}"]
     lines += [f"{s['input']} {s['next']}" for s in steps]
@@ -82,14 +87,16 @@ def main():
     ap.add_argument("--model", default="qwen", choices=["qwen", "v41"])
     ap.add_argument("--work", default=None)
     ap.add_argument("--ngen", type=int, default=3)
+    ap.add_argument("--nprompt", type=int, default=None, help="v41: teacher-forced prompt prefix length")
     ap.add_argument("--maxcyc", type=int, default=60_000_000)
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
     work = Path(a.work or f"/tmp/gpu_sys_{a.model}")
     work.mkdir(parents=True, exist_ok=True)
     case = work / "case"
-    meta = prepare(a.model, case, a.ngen)
-    exe = build(work)
+    hashes = {p: sha(p) for p in SYS_SRC + DEP_SRC + [TB] + [str(p.relative_to(ROOT)) for p in sorted(HERE.glob("*.py"))]}
+    meta = prepare(a.model, case, a.ngen, a.nprompt)
+    exe = build(work, a.model)
     t0 = time.time()
     log = case / "sim.log"
     with log.open("w") as f:
@@ -109,9 +116,10 @@ def main():
                steps=steps, completions=cq, clk_sm_cycles=int(final.group(4)) if final else None,
                wall_seconds=round(wall, 1), status="pass" if ok else "fail",
                shape=dict(dies=meta["tp"], sms_per_die=meta["nsm"], simt_lanes=meta["nl"], tc_lanes=16,
-                          l2_slices_per_die=NS, hbm_partitions_per_die=NS, pseudo_channels_per_partition=2,
+                          l2_slices_per_die=NS, hbm_partitions_per_die=NS, rtl_params=MODEL_PARAMS[a.model],
+                          use_w2=os.environ.get("GPU_SYS_USE_W2") == "1", pseudo_channels_per_partition=2,
                           clocks_ps=dict(host=4000, sm=833, mem=1000, link=900)),
-               source_sha256={p: sha(p) for p in SYS_SRC + DEP_SRC + [TB] + [str(p.relative_to(ROOT)) for p in sorted(HERE.glob("*.py"))]})
+               source_sha256=hashes)
     if a.out:
         Path(a.out).write_text(json.dumps(rec, indent=1) + "\n")
     print(text[-3000:])

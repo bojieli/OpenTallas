@@ -39,7 +39,9 @@ module ot_gpu_simt_sm #(
     parameter integer BC_MAXOUT  = 32,
     parameter integer FPW        = 32,          // physical FP32 lanes: an NL-lane op issues over NL/FPW cycles
     parameter integer FLAT       = 5,           // FP pipe depth (5: qualified pipes; 7: W11 SS re-pipelined copies)
-    parameter integer HAS_DIV    = 0            // 1: div.rn / sqrt.rn unit (rtl/abi3 correctly-rounded divider and square root per lane)
+    parameter integer HAS_DIV    = 0,           // 1: div.rn / sqrt.rn unit (rtl/abi3 correctly-rounded divider and square root per lane)
+    parameter integer HAS_BD     = 0,           // 1: block-scaled (MX FP8/FP4) tensor core rtl/gpu/ot_gpu_sm_bd.sv
+    parameter integer BD_XDEPTH  = 64
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -126,7 +128,9 @@ end else begin : g_on
         O_UMOVI=8'h28, O_UADDI=8'h29, O_UMULI=8'h2A, O_UFROMV=8'h2B, O_UADD=8'h2C,
         O_BRA=8'h30, O_BNZ=8'h31, O_EXIT=8'h32, O_BAR=8'h33, O_MEMBAR=8'h34, O_RESULT=8'h35,
         O_LDG=8'h38, O_STG=8'h39, O_LDS=8'h3A, O_STS=8'h3B, O_LDSX=8'h3C, O_STSX=8'h3D,
-        O_TCX=8'h40, O_TCMMA=8'h41, O_TCWAIT=8'h42, O_COLL=8'h48;
+        O_TCX=8'h40, O_TCMMA=8'h41, O_TCWAIT=8'h42, O_COLL=8'h48,
+        O_FMAX=8'h13, O_FMIN=8'h14, O_IMULHI=8'h15, O_CVTE2M1=8'h16, O_CVTE4M3B=8'h17,
+        O_TCXB=8'h43, O_TCBMMA=8'h44, O_TCXE=8'h45;
 
     // ------------------------------------------------------------------ element encode/decode (LSU)
     function automatic [7:0] f_e4m3_enc(input [31:0] a);   // on-grid E4M3 value -> byte
@@ -172,13 +176,15 @@ end else begin : g_on
     wire [VW-1:0] va = vr[ra], vb = vr[rbx], vd = vr[rd];
 
     // operand classes
-    wire c_bin   = (op >= O_FADD && op <= O_ULT) || op == O_FCMPGT || op == O_FDIV || op == O_IMUL;
-    wire c_un    = op == O_F2I || op == O_CVTBF16 || op == O_CVTE4M3 || op == O_FSQRT;
+    wire c_bin   = (op >= O_FADD && op <= O_ULT) || op == O_FCMPGT || op == O_FDIV || op == O_IMUL ||
+                   op == O_FMAX || op == O_FMIN || op == O_IMULHI;
+    wire c_un    = op == O_F2I || op == O_CVTBF16 || op == O_CVTE4M3 || op == O_FSQRT || op == O_CVTE2M1 || op == O_CVTE4M3B;
     wire c_alu   = (c_bin && op != O_FADD && op != O_FMUL && op != O_FDIV) || (c_un && op != O_FSQRT) || op == O_MOVI || op == O_LANEID ||
                    op == O_MOVU || op == O_SHFL || op == O_LDS || op == O_LDSX;
     wire use_a   = c_bin || c_un || op == O_SHFL || op == O_LDSX || op == O_STSX || op == O_TCX || op == O_COLL ||
+                   op == O_TCXB || op == O_TCXE ||
                    op == O_UFROMV;
-    wire use_b   = c_bin || op == O_SHFL;
+    wire use_b   = c_bin || op == O_SHFL || op == O_TCXB;
     wire use_ds  = op == O_STG || op == O_STS || op == O_STSX;            // d is a source
     wire wr_d    = c_bin || c_un || op == O_MOVI || op == O_LANEID || op == O_MOVU || op == O_SHFL ||
                    op == O_LDG || op == O_LDS || op == O_LDSX || op == O_COLL;
@@ -282,17 +288,51 @@ end else begin : g_on
         .req_v(treq_v), .req_ready(treq_rdy), .req_addr(bc_req_addr), .req_tag(bc_req_tag),
         .rsp_v(trsp_v && trsp_rdy), .rsp_tag(trsp_tag[$clog2(BC_DEPTH)-1:0]), .rsp_data(trsp_data),
         .s_valid(bc_sv), .s_ready(bc_sready), .s_data(bc_sd), .outstanding(bc_out), .idle(bc_idle));
+    // the sector stream goes to the BF16 tensor core, or (block-scaled op) through the line assembler to the
+    // block-dot tensor core
+    reg  bd_mode;
+    wire tcq_wready, bdl_sready;
+    assign bc_sready = bd_mode ? bdl_sready : tcq_wready;
     assign treq_addr = {bc_req_addr, 5'd0};
     assign treq_tag = {{(16-$clog2(BC_DEPTH)){1'b0}}, bc_req_tag};
     // the staging slot of every read is reserved at issue, so a response is always accepted
     assign trsp_rdy = running || !bc_idle;
     ot_gpu_sm #(.SUB(TC_SUB), .LS(TC_LS), .NC(1), .IL(8), .XDEPTH(TC_XDEPTH), .RMAX(TC_RMAX), .LEV(TC_LEV), .INT8(0)) u_tc (
         .clk(clk), .rst_n(rst_n), .start(tc_start), .op_rows(tc_rows), .op_c(tc_c), .op_g(tc_g), .op_gs(1'b0),
-        .op_scale(1'b0), .busy(tc_busy), .w_valid(bc_sv), .w_ready(bc_sready), .w_data(bc_sd),
+        .op_scale(1'b0), .busy(tcq_busy), .w_valid(bc_sv && !bd_mode), .w_ready(tcq_wready), .w_data(bc_sd),
         .xw_en(tc_xw), .xw_addr(tc_xa), .xw_data(tc_xd), .sw_en(1'b0), .sw_addr({$clog2(TC_RMAX){1'b0}}),
-        .sw_data(16'd0), .rv(tc_rv), .rrow(tc_rrow), .rdata(tc_rdata), .fault(tc_fault),
+        .sw_data(16'd0), .rv(tcq_rv), .rrow(tcq_rrow), .rdata(tcq_rdata), .fault(tcq_fault),
         .arrive(tc_arrive), .release_in(tc_arrive), .released(tc_released));
-    wire tc_done = tc_active && !tc_busy && !tc_start && (tc_got == tc_rows) && bc_idle;
+    wire tcq_busy, tcq_rv, tcq_fault;
+    wire [$clog2(TC_RMAX)-1:0] tcq_rrow;
+    wire [31:0] tcq_rdata;
+    wire bd_busy, bd_rv, bd_fault;
+    wire [$clog2(TC_RMAX)-1:0] bd_rrow;
+    wire [31:0] bd_rdata;
+    reg  bd_start, bd_fp4, bd_xw;
+    reg  [$clog2(BD_XDEPTH)-1:0] bd_xa;
+    reg  [8*266-1:0] bd_xmirror [0:BD_XDEPTH-1];
+    reg  [8*266-1:0] bd_xd;
+    if (HAS_BD != 0) begin : g_bd
+        wire bdl_wv, bdl_wr, bd_arr, bd_rel;
+        wire [8*266-1:0] bdl_wd;
+        ot_gpu_bd_line #(.ENABLE(1), .LB(8)) u_line (.clk(clk), .rst_n(rst_n), .s_valid(bc_sv && bd_mode),
+            .s_ready(bdl_sready), .s_data(bc_sd), .w_valid(bdl_wv), .w_ready(bdl_wr), .w_data(bdl_wd));
+        ot_gpu_sm_bd #(.SUB(4), .LBS(2), .NC(1), .IL(8), .XDEPTH(BD_XDEPTH), .RMAX(TC_RMAX), .LEV(TC_LEV)) u_bdtc (
+            .clk(clk), .rst_n(rst_n), .start(bd_start), .op_rows(tc_rows), .op_c(tc_c), .op_g(tc_g), .op_gs(1'b0),
+            .op_fp4(bd_fp4), .busy(bd_busy), .w_valid(bdl_wv), .w_ready(bdl_wr), .w_data(bdl_wd),
+            .xw_en(bd_xw), .xw_addr(bd_xa), .xw_data(bd_xd), .rv(bd_rv), .rrow(bd_rrow), .rdata(bd_rdata),
+            .fault(bd_fault), .arrive(bd_arr), .release_in(bd_arr), .released(bd_rel));
+    end else begin : g_nobd
+        assign bdl_sready = 1'b0; assign bd_busy = 1'b0; assign bd_rv = 1'b0; assign bd_fault = 1'b0;
+        assign bd_rrow = {$clog2(TC_RMAX){1'b0}}; assign bd_rdata = 32'd0;
+    end
+    assign tc_busy = tcq_busy | bd_busy;
+    assign tc_rv = tcq_rv | bd_rv;
+    assign tc_rrow = bd_rv ? bd_rrow : tcq_rrow;
+    assign tc_rdata = bd_rv ? bd_rdata : tcq_rdata;
+    assign tc_fault = tcq_fault | bd_fault;
+    wire tc_done = tc_active && !tc_busy && !tc_start && !bd_start && (tc_got == tc_rows) && bc_idle;
 
     // ------------------------------------------------------------------ FP pipes
     // FPW physical lanes of the qualified add and multiply pipes; an NL-lane FADD/FMUL is fed one FPW-lane
@@ -367,11 +407,12 @@ end else begin : g_on
     // ------------------------------------------------------------------ issue
     wire bad_op = !(op == O_NOP || c_bin || c_un || op == O_MOVI || op == O_LANEID || op == O_MOVU || op == O_SHFL ||
                     (op >= O_UMOVI && op <= O_UADD) || (op >= O_BRA && op <= O_RESULT) ||
-                    (op >= O_LDG && op <= O_STSX) || (op >= O_TCX && op <= O_TCWAIT) || op == O_COLL) ||
+                    (op >= O_LDG && op <= O_STSX) || (op >= O_TCX && op <= O_TCWAIT) || op == O_COLL ||
+                    ((op == O_TCXB || op == O_TCXE || op == O_TCBMMA) && HAS_BD != 0)) ||
                   ((op == O_FDIV || op == O_FSQRT) && HAS_DIV == 0);   // no divide/sqrt unit in this build
-    wire tc_needs_idle = (op == O_TCX || op == O_TCMMA);
+    wire tc_needs_idle = (op == O_TCX || op == O_TCMMA || op == O_TCXB || op == O_TCXE || op == O_TCBMMA);
     wire fp_op = (op == O_FADD || op == O_FMUL);
-    wire can_issue = running && !faulted && (bst == B_IDLE) && !hazard && !tc_start && !bc_dv && !(fp_op && fq_left > 1) &&
+    wire can_issue = running && !faulted && (bst == B_IDLE) && !hazard && !tc_start && !bd_start && !bc_dv && !(fp_op && fq_left > 1) &&
                      !(tc_needs_idle && tc_active);
     assign busy = running;
     assign coll_req_v = (bst == B_COLL_REQ);
@@ -380,7 +421,7 @@ end else begin : g_on
     assign coll_data = c_data;
     assign coll_rsp_rdy = (bst == B_COLL_RSP);
 
-    wire drained = (pend == {NV{1'b0}}) && (fq_left == 0) && !alu_wv && !tc_active && !tc_start && !bc_dv;
+    wire drained = (pend == {NV{1'b0}}) && (fq_left == 0) && !alu_wv && !tc_active && !tc_start && !bd_start && !bc_dv;
     integer i, q;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -389,6 +430,7 @@ end else begin : g_on
             addq_v <= 0; mulq_v <= 0; alu_wv <= 1'b0; fq_left <= 0; fq_q <= 0; tc_start <= 1'b0; bc_dv <= 1'b0; tc_xw <= 1'b0;
             tc_active <= 1'b0; tc_got <= 0; l_out <= 0; l_next <= 0; l_issue_done <= 1'b0; l_tagp <= 0;
             dv_go <= 1'b0; dv_sqrt <= 1'b0; dv_done <= {NL{1'b0}}; dv_err <= 1'b0;
+            bd_mode <= 1'b0; bd_start <= 1'b0; bd_xw <= 1'b0; bd_fp4 <= 1'b0;
             st_instr <= 0; st_cycles <= 0; st_stall_mem <= 0; st_tc_rows <= 0;
             for (i = 0; i < 16; i = i + 1) ur[i] <= 32'd0;
         end else begin
@@ -397,6 +439,7 @@ end else begin : g_on
             add_v <= 1'b0;
             mul_v <= 1'b0;
             tc_xw <= 1'b0;
+            bd_xw <= 1'b0;
             alu_wv <= 1'b0;
             if (running) st_cycles <= st_cycles + 1;
             if (bst == B_LSU) st_stall_mem <= st_stall_mem + 1;
@@ -424,6 +467,7 @@ end else begin : g_on
             if (alu_wv) begin vr[alu_wd] <= alu_wy; pend[alu_wd] <= 1'b0; end
             // ---- tensor core result rows -> shared memory
             if (tc_start) begin tc_start <= 1'b0; end
+            if (bd_start) begin bd_start <= 1'b0; end
             if (bc_dv && bc_dv_ready) bc_dv <= 1'b0;
             if (tc_rv) begin
                 smem[(tc_sbase >> 2) + tc_rrow] <= tc_rdata;
@@ -537,7 +581,25 @@ end else begin : g_on
                         tc_xw <= 1'b1; tc_xa <= imm[$clog2(TC_XDEPTH)-1:0];
                         for (li = 0; li < TCL; li = li + 1) tc_xd[li*16 +: 16] <= va[li*32+16 +: 16];
                     end
+                    O_TCXB, O_TCXE: if (HAS_BD != 0) begin
+                        bd_xw <= 1'b1; bd_xa <= imm[$clog2(BD_XDEPTH)-1:0];
+                        bd_xd = bd_xmirror[imm[$clog2(BD_XDEPTH)-1:0]];
+                        for (li = 0; li < 8; li = li + 1) begin
+                            if (op == O_TCXB) for (jj = 0; jj < 32; jj = jj + 1)
+                                bd_xd[li*266 + jj*8 +: 8] = (li < 4) ? va[(li*32 + jj)*32 +: 8] : vb[((li-4)*32 + jj)*32 +: 8];
+                            else bd_xd[li*266 + 256 +: 10] = va[li*32 +: 10];
+                        end
+                        bd_xmirror[imm[$clog2(BD_XDEPTH)-1:0]] <= bd_xd;
+                    end
+                    O_TCBMMA: if (HAS_BD != 0) begin
+                        tc_rows <= {1'b0, imm[9:0]}; tc_c <= {8'd0, imm[23:16]}; tc_g <= fb; bd_fp4 <= imm[12];
+                        tc_sbase <= ur[fa[3:0]];
+                        bc_dbase <= ur[fd[3:0]][31:5];
+                        bc_dlines <= imm[11:0] * fb * imm[23:16] * 9;
+                        bc_dv <= 1'b1; bd_start <= 1'b1; bd_mode <= 1'b1; tc_active <= 1'b1; tc_got <= 0;
+                    end
                     O_TCMMA: begin
+                        bd_mode <= 1'b0;
                         tc_rows <= imm[10:0]; tc_c <= imm[31:16]; tc_g <= fb;
                         tc_sbase <= ur[fa[3:0]];
                         bc_dbase <= ur[fd[3:0]][31:5];

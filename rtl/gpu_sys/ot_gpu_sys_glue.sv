@@ -14,7 +14,8 @@ module ot_gpu_memsys_adapter #(
     parameter integer NS        = 2,
     parameter integer NPC       = 2,
     parameter integer MEM_WORDS = 65536,
-    parameter integer DIE       = 0
+    parameter integer DIE       = 0,
+    parameter integer USE_W2    = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -34,7 +35,7 @@ module ot_gpu_memsys_adapter #(
 );
     localparam string PFX = (DIE == 0) ? "die0" : (DIE == 1) ? "die1" : (DIE == 2) ? "die2" : "die3";
     ot_gpu_memsys #(.ENABLE(ENABLE), .NC(NC), .NS(NS), .NPC(NPC), .MEM_WORDS(MEM_WORDS), .CLK_PS(1000),
-                    .IMAGE_PREFIX(PFX)) u_ms (
+                    .USE_W2(USE_W2), .IMAGE_PREFIX(PFX)) u_ms (
         .clk(clk), .rst_n(rst_n), .req_v(c_req_v), .req_rdy(c_req_rdy), .req_we(c_req_we), .req_addr(c_req_addr),
         .req_wdata(c_req_wdata), .req_wstrb(c_req_wstrb), .req_tag(c_req_tag), .rsp_v(c_rsp_v), .rsp_rdy(c_rsp_rdy),
         .rsp_tag(c_rsp_tag), .rsp_we(c_rsp_we), .rsp_data(c_rsp_data), .fault(fault));

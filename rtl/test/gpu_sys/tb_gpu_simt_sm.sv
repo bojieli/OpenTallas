@@ -37,7 +37,7 @@ module tb_gpu_simt_sm;
     reg [NL*32-1:0] coll_rsp_data;
     wire [31:0] st_instr, st_cycles, st_stall_mem, st_tc_rows;
 
-    ot_gpu_simt_sm #(.ENABLE(1), .NL(NL), .NV(NV)) dut (
+    ot_gpu_simt_sm #(.ENABLE(1), .NL(NL), .NV(NV), .HAS_DIV(1), .HAS_BD(1)) dut (
         .clk(clk), .rst_n(rst_n), .sm_id(8'd0), .die_id(8'd0),
         .im_we(im_we), .im_addr(im_addr), .im_data(im_data),
         .launch_v(launch_v), .launch_pc(32'd0), .launch_token(cfg[0][15:0]), .launch_pos(cfg[1][15:0]),

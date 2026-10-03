@@ -28,7 +28,10 @@ module ot_gpu_hbm_system #(
     parameter integer NS        = 2,
     parameter integer NPC       = 2,
     parameter integer MEM_WORDS = 65536,
-    parameter integer SW_PIPE   = 8
+    parameter integer SW_PIPE   = 8,
+    parameter integer USE_W2    = 0,     // 1: Nash's W2 exact tag/generation completion in every HBM partition
+    parameter integer HAS_DIV   = 0,     // SM div.rn/sqrt.rn lanes (DeepSeek-V4.1)
+    parameter integer HAS_BD    = 0      // SM block-scaled tensor core (DeepSeek-V4.1)
 ) (
     input  wire        por_n,              // power-on reset (asynchronous); ot_gpu_reset_ctrl releases each domain
     input  wire        clk_host,
@@ -201,7 +204,7 @@ end else begin : g_on
             wire [31:0] st_instr, st_cycles, st_stall_mem, st_tc_rows;
             wire [31:0] rd;
             assign res_data[s*32 +: 32] = rd;
-            ot_gpu_simt_sm #(.ENABLE(1), .NL(NL), .IMW(IMW)) u_sm (
+            ot_gpu_simt_sm #(.ENABLE(1), .NL(NL), .IMW(IMW), .HAS_DIV(HAS_DIV), .HAS_BD(HAS_BD)) u_sm (
                 .clk(clk_sm), .rst_n(rst_sm_n), .sm_id(s[7:0]), .die_id(d[7:0]),
                 .im_we(im_we[d*NSM + s]), .im_addr(im_addr), .im_data(im_data),
                 .launch_v(launch_v[s]), .launch_pc(launch_pc), .launch_token(launch_token), .launch_pos(launch_pos),
@@ -238,7 +241,7 @@ end else begin : g_on
                 .m_rsp_data(x_rsp_data[c*256 +: 256]), .fault(cdc_f[c]));
         end
         wire mem_fault;
-        ot_gpu_memsys_adapter #(.ENABLE(1), .NC(NCL), .NS(NS), .NPC(NPC), .MEM_WORDS(MEM_WORDS), .DIE(d)) u_mem (
+        ot_gpu_memsys_adapter #(.ENABLE(1), .NC(NCL), .NS(NS), .NPC(NPC), .MEM_WORDS(MEM_WORDS), .DIE(d), .USE_W2(USE_W2)) u_mem (
             .clk(clk_mem), .rst_n(rst_mem_n),
             .c_req_v(x_req_v), .c_req_rdy(x_req_rdy), .c_req_we(x_req_we), .c_req_addr(x_req_addr),
             .c_req_wdata(x_req_wdata), .c_req_wstrb(x_req_wstrb), .c_req_tag(x_req_tag),

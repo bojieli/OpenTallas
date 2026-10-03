@@ -5,7 +5,8 @@
 // SHL IADD ISUB IMUL UGT ULT, FCMPGT (IEEE >, NaN false, +0 == -0), F2I
 // (truncate), CVTBF16 (cvt.rn.bf16.f32 as FP32 bits), CVTE4M3 (FP32 -> E4M3
 // grid, RNE, saturating at 448, canonical +0: hdc_golden.to_fp8), MOVI,
-// LANEID, MOVU.  Combinational; the SM registers the result.  Kept as its
+// LANEID, MOVU; FMAX/FMIN (FMNMX), IMULHI (mul.hi.u32), CVTE2M1
+// (cvt.rn.satfinite.e2m1 as FP32 bits), CVTE4M3B (the E4M3 byte code).  Combinational; the SM registers the result.  Kept as its
 // own (non-inlined) module so a simulator builds one lane, not NL copies.
 // ---------------------------------------------------------------------------
 module ot_gpu_simt_lane (
@@ -76,7 +77,36 @@ module ot_gpu_simt_lane (
             end
         end
     endfunction
+    function automatic [7:0] f_e4m3_enc(input [31:0] a);   // on-grid E4M3 value -> byte
+        integer e; reg [23:0] sig;
+        begin
+            e = a[30:23] - 127;
+            sig = {1'b1, a[22:0]};
+            if (a[30:0] == 0) f_e4m3_enc = 8'd0;
+            else if (e >= -6) f_e4m3_enc = {a[31], 4'(e + 7), a[22:20]};
+            else f_e4m3_enc = {a[31], 4'd0, 3'(sig >> (14 - e))};
+        end
+    endfunction
+    // E2M1: |x| (saturated at 6) to the nearest of {0,.5,1,1.5,2,3,4,6}, ties to the even code
+    function automatic [31:0] f_e2m1(input [31:0] a);
+        reg [30:0] m; reg [2:0] code; integer k;
+        reg [30:0] th [0:6];
+        reg [31:0] val [0:7];
+        begin
+            th[0] = 31'h3E800000; th[1] = 31'h3F400000; th[2] = 31'h3FA00000; th[3] = 31'h3FE00000;
+            th[4] = 31'h40200000; th[5] = 31'h40600000; th[6] = 31'h40A00000;
+            val[0] = 32'h00000000; val[1] = 32'h3F000000; val[2] = 32'h3F800000; val[3] = 32'h3FC00000;
+            val[4] = 32'h40000000; val[5] = 32'h40400000; val[6] = 32'h40800000; val[7] = 32'h40C00000;
+            m = (a[30:0] > 31'h40C00000) ? 31'h40C00000 : a[30:0];
+            code = 3'd0;
+            for (k = 0; k < 7; k = k + 1)
+                if (m > th[k] || (m == th[k] && k[0] == 1'b1)) code = 3'(k + 1);
+            f_e2m1 = (code == 0) ? 32'd0 : {a[31], val[code][30:0]};
+        end
+    endfunction
+    reg [63:0] prod;
     always @* begin
+        prod = {32'd0, x} * {32'd0, y};
         case (op)
             8'h03: z = x ^ y;
             8'h04: z = x & y;
@@ -95,6 +125,11 @@ module ot_gpu_simt_lane (
             8'h20: z = imm;
             8'h21: z = {24'd0, lane};
             8'h22: z = uval;
+            8'h13: z = f_cmpgt(x, y) ? x : y;
+            8'h14: z = f_cmpgt(y, x) ? x : y;
+            8'h15: z = prod[63:32];
+            8'h16: z = f_e2m1(x);
+            8'h17: z = {24'd0, f_e4m3_enc(f_e4m3(x))};
             default: z = 32'd0;
         endcase
     end

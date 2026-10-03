@@ -1699,13 +1699,15 @@ def link(code):
     return images, entries
 
 
-def emit(out, ngen=3):
+def emit(out, ngen=3, nprompt=None):
     """prog_d{d}_s{s}.hex, cmd_d{d}.hex (LAUNCH embed, 40 x LAUNCH layer, LAUNCH head, END), die{d}.bin,
     expected.json -- the file set of qwen_hbm.emit."""
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     model, prog, graph, code = build()
     prompt, oracle = V.prompt_and_expected()
+    if nprompt:
+        prompt = prompt[:nprompt]                 # a shorter teacher-forced prefix (RTL simulation time)
     images, entries = link(code)
     for (d, s), words in images.items():
         (out / f"prog_d{d}_s{s}.hex").write_text("\n".join(f"{w:016x}" for w in words) + "\n")

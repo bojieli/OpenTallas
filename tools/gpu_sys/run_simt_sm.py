@@ -29,12 +29,14 @@ from isa import enc  # noqa: E402
 from machine import Machine  # noqa: E402
 
 VERILATOR = Path(os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")) / "verilator-5.050/bin/verilator"
-SM_SRC = ["rtl/gpu_sys/ot_gpu_simt_sm.sv", "rtl/gpu_sys/ot_gpu_simt_lane.sv", "rtl/gpu_sys/ot_gpu_simt_divlane.sv", "rtl/gpu/ot_gpu_sm.sv", "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_fadd.sv",
+SM_SRC = ["rtl/gpu_sys/ot_gpu_simt_sm.sv", "rtl/gpu_sys/ot_gpu_bd_line.sv", "rtl/gpu_sys/ot_gpu_simt_lane.sv", "rtl/gpu_sys/ot_gpu_simt_divlane.sv", "rtl/gpu/ot_gpu_sm.sv", "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_fadd.sv",
           "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/gpu/ot_gpu_tree.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv",
           "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
           "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_prefix.sv",
-           "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv", "rtl/abi3/ot_a3_fp32_sqrt_rne.sv"]
+           "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv", "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+           "rtl/gpu/ot_gpu_sm_bd.sv", "rtl/gpu/ot_gpu_bd_col.sv", "rtl/hdc/v41/ot_hdc_blockdot.sv",
+           "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_bterm2.sv"]
 TB = "rtl/test/gpu_sys/tb_gpu_simt_sm.sv"
 MEMB = 131072
 NL = 128
@@ -227,6 +229,63 @@ def gen_case(rng, kind):
         P("TCWAIT")
         for opn in range(4):
             P("LDS", 240 + opn, 8, 127, 0x4000 + opn * 0x400)
+    elif kind == "ds":
+        # DeepSeek-V4.1 additions: FMNMX, IMULHI, E2M1 / E4M3-code conversions, div.rn / sqrt.rn, block-scaled MMA
+        for _ in range(150):
+            d = int(rng.integers(41, 180))
+            a_, b_ = (int(x) for x in rng.integers(0, 40, 2))
+            P(["FMAX", "FMIN", "IMULHI", "CVTE2M1", "CVTE4M3B"][int(rng.integers(0, 5))], d, a_, b_)
+        mem[16384:16384 + 2048] = np.abs(rng.standard_normal(512) * 4 + 0.1).astype(np.float32).view(np.uint8)
+        for r in range(3):
+            P("LDG", 180 + r, 6, 127, 16384 + r * 512)
+        P("FDIV", 185, 0, 180)
+        P("FDIV", 186, 181, 182)
+        P("FSQRT", 187, 181)
+        P("FADD", 188, 186, 187)
+        P("FSQRT", 189, 183)            # zero lanes beyond the load
+        # block-scaled MMA: random E4M3 / E2M1 code lines (no NaN codes) with block exponents
+        P("UMOVI", 8, 0, 0, 0)
+        wcur = 40960
+        for opn, fp4 in enumerate((0, 1, 0)):
+            rows = int(rng.integers(1, 20))
+            g = int(rng.integers(1, 3))
+            c = int(rng.integers(1, 5))
+            n = 0
+            blob = []
+            for rb in range(0, rows, 8):
+                for gg in range(g):
+                    for t in range(c):
+                        for s_ in range(8):
+                            if rb + s_ >= rows:
+                                continue
+                            codes = rng.integers(0, 16 if fp4 else 0x7F, (8, 32)).astype(np.uint8)
+                            if not fp4:
+                                codes |= (rng.integers(0, 2, (8, 32)).astype(np.uint8) << 7)
+                            ex = rng.integers(-12, 2, 8).astype(np.int16)
+                            line = np.zeros(288, dtype=np.uint8)
+                            line[:256] = codes.reshape(-1)
+                            line[256:272] = ex.view(np.uint8)
+                            blob.append(line)
+            blob = np.concatenate(blob)
+            assert wcur + len(blob) < MEMB
+            mem[wcur:wcur + len(blob)] = blob
+            for w_ in range(g * c):
+                for r_, base in ((200, 0), (201, 0)):
+                    P("MOVI", 202, 0, 0, int(rng.integers(0, 1 << 30)))
+                    P("IMULHI", r_, 40, 202)
+                    P("IMUL", r_, r_, 202)
+                    P("MOVI", 203, 0, 0, 0x7E)
+                    P("AND", r_, r_, 203)          # codes 0..0x7E (no NaN), positive
+                P("TCXB", 0, 200, 201, w_)
+                P("MOVI", 204, 0, 0, int(rng.integers(0, 6)))
+                P("ISUB", 205, 204, 40)            # exponent 0..5 - lane: small negative values
+                P("TCXE", 0, 205, 0, w_)
+            P("UMOVI", 4, 0, 0, wcur)
+            P("UMOVI", 5, 0, 0, 0x5000 + opn * 0x200)
+            P("TCBMMA", 4, 5, g, rows | (fp4 << 12) | (c << 16))
+            P("TCWAIT")
+            P("LDS", 210 + opn, 8, 127, 0x5000 + opn * 0x200)
+            wcur = (wcur + len(blob) + 127) // 128 * 128
     P("EXIT")
     return P.w, mem, int(rng.integers(0, 4096)), int(rng.integers(0, 32))
 
@@ -300,8 +359,8 @@ def main():
     work = a.work or tempfile.mkdtemp(prefix="simt_sm_")
     exe = build(work)
     rng = np.random.default_rng(20261003)
-    kinds = ["alu", "lsu", "tc"]
-    res = [run_case(exe, work, i, kinds[i % 3], rng, a.maxlat) for i in range(a.cases)]
+    kinds = ["alu", "lsu", "tc", "ds"]
+    res = [run_case(exe, work, i, kinds[i % len(kinds)], rng, a.maxlat) for i in range(a.cases)]
     for r in res:
         print(("PASS" if r["pass_"] else "FAIL"), r["kind"], "case", r["case"], "instr", r["instructions"], "cycles",
               r["rtl_cycles"], *r["diffs"][:4])

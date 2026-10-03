@@ -18,7 +18,7 @@
 // Plusargs: +DIR=<emit dir>  +MAXCYC=<clk_sm cycles>
 // ---------------------------------------------------------------------------
 module tb_gpu_hbm_system;
-    parameter integer ND = 2, NSM = 2, NL = 128, IMW = 13, CB = 8;
+    parameter integer ND = 2, NSM = 2, NL = 128, IMW = 13, CB = 8, MEM_WORDS = 65536, HAS_DIV = 0, HAS_BD = 0;
     reg clk_host = 0, clk_sm = 0, clk_mem = 0, clk_link = 0;
     always #2.0    clk_host = ~clk_host;      // 250 MHz host/PCIe side
     always #0.4165 clk_sm   = ~clk_sm;        // 1.2 GHz SM domain
@@ -46,7 +46,13 @@ module tb_gpu_hbm_system;
     wire        sys_fault;
     wire [31:0] st_steps;
 
-    ot_gpu_hbm_system #(.ENABLE(1), .ND(ND), .NSM(NSM), .NL(NL), .IMW(IMW), .CB(CB)) dut (
+`ifdef GPU_SYS_USE_W2
+    localparam integer USE_W2 = 1;
+`else
+    localparam integer USE_W2 = 0;
+`endif
+    ot_gpu_hbm_system #(.ENABLE(1), .ND(ND), .NSM(NSM), .NL(NL), .IMW(IMW), .CB(CB), .USE_W2(USE_W2), .MEM_WORDS(MEM_WORDS), .HAS_DIV(HAS_DIV),
+                        .HAS_BD(HAS_BD)) dut (
         .por_n(por_n), .clk_host(clk_host), .clk_sm(clk_sm), .clk_mem(clk_mem), .clk_link(clk_link),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr), .s_wvalid(s_wvalid), .s_wready(s_wready),
         .s_wdata(s_wdata), .s_wstrb(4'hF), .s_bvalid(s_bvalid), .s_bready(s_bready), .s_arvalid(s_arvalid), .s_arready(s_arready),
