@@ -76,3 +76,15 @@ def test_raw_complete_macros_reset_and_failure_scopes():
  assert 'commitx' in d['ds-transpose-first-word-trace']['terminal']
  assert 'TRANSPOSE_PASS words=266 writes=1064 stalls=132 holds=103' in d['ds-related-transpose-epyc-r2']['terminal']
  assert not json.loads((ROOT/'results/uarch/dsrom_shared_native_vm_20261003/implementation.json').read_text())['whole_parent_swapped']
+def test_full_retained_collective_reservation_and_visible_contract():
+ c=M.model()['collective_implementation']
+ assert c['parameters']['TK_NMAX']==2048 and c['topk_queue_records']==128
+ assert c['queue_bits']==270336 and c['record_bits']==2112
+ assert [r['service_slow_edges_max'] for r in M.model()['write_endpoints']]==[26,770,26]
+ p=(ROOT/'rtl/model_ready_ds_shared_native_20261003/ot_w15_coll_dma_related_vm.sv').read_text()
+ assert 'VM_RESPONSE_WAIT=0, VISIBLE_COMPLETION=0, TOPK_OUTPUT_QUEUE=0' in p
+ assert 'vm_reply_cookie == reply_cookie_r' in p
+ assert 'if (read_accept) rd_k <=' in p
+ assert '!write_debt && !vm_write_pending' in p and 'tq_count==0' in p
+ assert 'N*TK_NMAX + TKW*LANES-1' in p
+ assert 'ELASTIC_PIPE(VISIBLE_COMPLETION)' in p
