@@ -1,0 +1,8 @@
+{
+  "command": "python3 -m pytest -o addopts='' -q tests/test_dsrom_I66_native_observer.py tests/test_dsrom_I66_effective_idle_contract.py tests/test_dsrom_I66_existing_ready_fences.py tests/test_dsrom_I66_bank_VM_deadline_join.py tests/test_dsrom_I66_source_interlock.py tests/test_dsrom_I66_consumer_deadline.py tests/test_dsrom_I66_phase_protocol_join.py tests/test_dsrom_I66_slot0_phase_lease.py",
+  "exit_code": 0,
+  "kind": "pure source/schema tests; no compiler, native runtime or actual trace calibration",
+  "log_sha256": "0438cbf12dcebbbfcf88c12c34c728806c403cd5f6df255ac4bd0095df7a9761",
+  "new_tests": 43,
+  "passed": 243
+}

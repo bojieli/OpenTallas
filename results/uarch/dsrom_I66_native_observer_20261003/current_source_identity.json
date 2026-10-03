@@ -1,0 +1,31 @@
+{
+  "named_live_source_identity": {
+    "SU_adapter": {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
+      "sha256": "420723862866ec2e7687dfdaf30ee35fd2631409a466163ee46b03831b412a62"
+    },
+    "core": {
+      "path": "rtl/w17_runtime/hdc/v41x/ckvsel/ot_hdc_core_v41x.sv",
+      "sha256": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6"
+    },
+    "die": {
+      "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+      "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054"
+    },
+    "spine": {
+      "path": "rtl/w17_runtime/v41die/ot_v41_spine.sv",
+      "sha256": "a55235b091ceaa0c2b84c2a6097800426e3fc5476a245523f8f5b385ddf119a3"
+    },
+    "tile": {
+      "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+      "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+    },
+    "wrapper": {
+      "path": "rtl/test/v41_runtime/ot_v41_rt_die.sv",
+      "sha256": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65"
+    }
+  },
+  "parent_head": "7baca4be1dd86295bd8ccb3b5a6e935e6dbd8865",
+  "run_admitted": false,
+  "source_reads_only": true
+}

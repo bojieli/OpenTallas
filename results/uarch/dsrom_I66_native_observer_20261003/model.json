@@ -1,0 +1,101 @@
+{
+  "C": null,
+  "absolute_service_deadline": null,
+  "default_off": true,
+  "earliest_run": {
+    "actual_journal": null,
+    "binary": null,
+    "kind": "CURRENT_PHW10_NATIVE_BASELINE_OBSERVATION_AFTER_ENROLLMENT_AND_BUILD_REVIEW",
+    "launch_ready": false,
+    "required": [
+      "source-matched complete PHW10 full configuration binary/closure (not PHW6)",
+      "four exact +DIR/prog.hex and separate +OT_ROM_DIR field bundle identities",
+      "actual wrapper hierarchy/elaboration and regenerated/native object ABI review",
+      "measured frontend/output inventory and fresh host capacity, preserve incremental outputs",
+      "selected provider callbacks and completion hook implementation for candidate calibration"
+    ]
+  },
+  "edge_contract": "pre $display reads source before NBA; post $strobe reads VM after NBA; edge counts include reset, actual rank source clock only.",
+  "elaboration_pass": false,
+  "engine_edits": 0,
+  "frontend_required_for_new_SV_copy": true,
+  "fulltoken": false,
+  "generated_sha256": "5f5b5352d644d4eaeb5ba5a5da10ad3dd29532b55e6144a698de8016f62d4099",
+  "hardware_admission": false,
+  "historical_origin_transferred": false,
+  "inverse_sha256": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+  "jobs_launched": 0,
+  "logging_cost": "No measured runtime/compile cost. Packed writer records have source $bits, no bit or address truncation except VM19 indexing disclosed with full AW30 address.",
+  "native_events": [
+    "everyedge reset/PC/gates/allwriter presence",
+    "issue sample (not admission)",
+    "registered ROM accept",
+    "adapter EID VM read/key/phase",
+    "SU front/vector accept",
+    "all12 active writer families",
+    "ROM postNBA VM value",
+    "actual operand read",
+    "raw Xtag controlword"
+  ],
+  "no_identity_fabrication": "Wrapper user10 is raw source input, never promoted to full169 user32. No generation inferred from PC or busy.",
+  "observer_state_bits": 12096,
+  "observer_state_bytes": 1512,
+  "per_native_edge_max_records": 1171,
+  "physical_review": {
+    "existing_gross_hook_with_local_clock_reset_body_um2": 2.42028,
+    "hook_cost_readded": false,
+    "loaded_routes_SSFF_qualified": false,
+    "source_RTL_hook_implemented": false,
+    "stage0_rank0_shard0_only": true,
+    "target": "2ae90a0116f20654005e479fec2f1b951a014b8f",
+    "tests": [
+      {
+        "cmd": "python3 -m pytest -q tests/test_dsrom_capture_completion_hook_slot.py tests/test_dsrom_capture_clock_branch_reallocation.py",
+        "log": "maxwell_tests_handoff.log",
+        "rc": 0,
+        "summary": "27 passed (matches handoff tests=27)"
+      },
+      {
+        "cmd": "python3 -m pytest -q (named_pg_escape, consumer_admission, existing_fences, completion_hook_slot, clock_branch_reallocation, selected_bank_escape, identity_slot_join, publication_credit)",
+        "log": "maxwell_tests_all.log",
+        "rc": 0,
+        "summary": "73 passed"
+      }
+    ],
+    "verdict": "INTAKE_OK"
+  },
+  "physical_stations": null,
+  "provider_retirement_emulated": false,
+  "relative_consumer_contract": {
+    "F": "preedge effective idle1, adapter WAIT, s_go0: old phase can retire",
+    "Fplus1": "earliest later QE core issue",
+    "Fplus2": "earliest registered ROM adapter acceptance",
+    "Fplus7": "earliest adjacent SU core admission; user front bound is conservative for registered latch",
+    "Fplus8": "earliest SU adapter go&&!pend front latch",
+    "Fplus9": "earliest v_acc when vector-ready; SU ready alone does not imply vector pipeline idle"
+  },
+  "reuse_policy": "Source-matched disabled original objects can be retained as baseline only; enabling new wrapper hooks requires regenerated affected frontend and dependency/ABI verification. No hand-paired native translation credit.",
+  "scope": "PASSIVE_CURRENT_SOURCE_HOOK_COPY_AND_RETIREMENT_JOIN_MODEL_ONLY",
+  "selected_candidate_run_ready": false,
+  "source_pins": {
+    "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/vec.sv.txt": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13",
+    "results/uarch/dsrom_I66_native_observer_20261003/inputs/Maxwell_authority.json": "c1161cc5f743a4094bf94dc0824ab4331943fd17b8adc47c6323d83708e3af14",
+    "results/uarch/dsrom_I66_native_observer_20261003/inputs/Maxwell_parent_review.json": "18d7c1b0c97e8d47ef10fadf446ec3109498f4fb33f44d37585638e01ddb0053",
+    "results/uarch/dsrom_I66_native_observer_20261003/inputs/su_adapt.sv.txt": "420723862866ec2e7687dfdaf30ee35fd2631409a466163ee46b03831b412a62",
+    "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/core.sv.txt": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+    "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/die.sv.txt": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+    "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/runtime_spine.sv.txt": "a55235b091ceaa0c2b84c2a6097800426e3fc5476a245523f8f5b385ddf119a3",
+    "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/runtime_wrapper.sv.txt": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+    "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/tile.sv.txt": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+    "results/uarch/dsrom_I66_source_interlock_20261003/inputs/rom_adapt.sv.txt": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f",
+    "tools/dsrom_I66_actual_service_join.py": "09ada9551ca5806bb2334abff16d03f992ced261f101849f2ad5f3dbc6c113ac",
+    "tools/dsrom_I66_effective_idle_contract.py": "10017b9539a12678f6fe0f7ba4fa9e5f425ded70741e28fcb58bef66823b0529"
+  },
+  "unavailable_native_fields": [
+    "capture generation/user32/Xversion/physical shard association",
+    "selected bank row credit capture",
+    "wire packet ACK/outstanding debt",
+    "effective-idle hook active/qualified retirement",
+    "selected c9 physical root/CDC phase"
+  ]
+}
