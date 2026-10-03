@@ -61,7 +61,7 @@ module ot_meso_fifo #(
         assign w_fault=wf; assign r_fault=rf;
         wire pop=r_v && r_rdy;
         wire [PW-1:0] rp_next=rp+{{(PW-1){1'b0}},pop};
-        
+
         always @(posedge wclk) begin
             if (!wrst_n) begin
                 for(integer j=0;j<SYNC_STAGES;j=j+1) begin rg_w[j]<=0;rcg_w[j]<=0;rs_w[j]<=DOWN;rf_w[j]<=0;end
