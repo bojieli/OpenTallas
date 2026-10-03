@@ -42,6 +42,29 @@ def choose_jobs(available,requested=None):
     return jobs
 
 
+
+class ObservedPayloadHook:
+    """One existing payload clock hook with read-only receipt observation."""
+    def __init__(self, payload, observer):
+        self.payload, self.observer = payload, observer
+
+    def before_edge(self):
+        self.payload.before_edge()
+        self.observer.before_edge()  # Snapshot AFTER actual payload drives.
+
+    def after_edge(self):
+        self.payload.after_edge()
+        self.observer.after_edge()
+
+
+def observe_registered_payload(pins, payload, observer):
+    # Current enclosing source intentionally admits ONE payload hook only.
+    # Wrap that exact registration; no second owner, boot, edge or grant.
+    if pins.edge_open or pins.stopped or pins.hooks != [payload]:
+        raise ValueError('connected observer requires the sole actual payload hook')
+    pins.hooks[0] = ObservedPayloadHook(payload, observer)
+
+
 def connected_runtime(binary, bindings, socket_path, out):
     """Existing fixture attached to the actual enclosing driver's two pipes.
 
@@ -85,7 +108,7 @@ def connected_runtime(binary, bindings, socket_path, out):
             bound=factory(pins)
             runtime=build(pins,bound['authority'],bound['native_handlers'],bound['w2_ports'],enabled=True)
             observer=ConnectedReceiptObserver(pins)
-            pins.add_edge_hook(observer)  # AFTER payload, before first edge.
+            observe_registered_payload(pins,runtime['payload'],observer)
             server=UnixDeliveryServer(socket_path,runtime['handlers'],require_kv=True)
             record['status']='CONNECTED_READY';save()
             print('CONNECTED_READY',process.pid,socket_path,flush=True)
