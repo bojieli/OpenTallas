@@ -1,0 +1,356 @@
+#!/usr/bin/env python3
+"""Instruction set of the DeepSeek-V4.1 configuration of the hardwired decode core.
+
+The adopted V4.1 core is rtl/hdc/v41x/ot_hdc_core_v41x.sv. It decodes this
+ISA and dispatches its operations to the dedicated weight, attention, index,
+stream, selection, Engram and hyper-connection engines. Shared ISA fields also
+support the reduced reference implementation. The instruction fields include:
+
+* The matrix engine's KV-sourced ops may take HEAD GROUPS (`me_hg`, H = 2^hg,
+  ot_hdc_v41_matvec): the G lane groups form H head groups of G/H groups; head
+  group h reads x at + h*xcs and writes at + h*ogs (words), and a round covers
+  G/H tiles of 16 rows instead of G.  With hg = 0 it is ot_hdc_matvec.
+* HE, the hyper-connection projection engine (ot_hdc_v41_hcproj): the FP32-
+  weight mixes matvec(fn, flat, HC_SPLIT), HC_SPLIT x NL lanes x IL
+  interleaved outputs of the qualified binary32 multiplier and adder; K is cut
+  into HC_SPLIT chunks of he_k, each sequential in its lane, the chunk sums a
+  pairwise tree; word wbase + k*IL + j holds, in lane c*NL + l, row j*NL + l at
+  column c*he_k + k.  It runs beside the matrix engine.
+
+* SU, the V4.1 stream unit (ot_hdc_v41_stream): a 2-D element loop (outer o,
+  inner i) over SU_LANES lanes.  `su_vec` picks what a cycle issues: SCALAR
+  (one element, lane 0), VEC_I (lanes take i .. i+SU_LANES-1 of one o) or
+  VEC_O (lanes take o .. o+SU_LANES-1 at one i: each lane owns whole
+  segments, so per-segment reductions keep the scalar order).  Lane 0 has every
+  SFU function; the other lanes lack rsqrt, sqrt, sqrt(softplus) and the Engram
+  gate (those ops are SCALAR).  Four operand streams A, B, C, D (vector
+  memory, constant ROM lo/hi word, or -- A only -- the BF16 weight ROM), and a
+  fixed pipeline every element passes:
+
+      A' = min(relu(rnd?(A)), imm3)          C' = clip(C, -imm3, imm3)
+      P  = A' | A'*B | A'*A' | A'*imm1 | A'/B | A'/imm1 | max(A', B)
+      P2 = P | P*C' | P*imm1                 Q = C'*(+-D)   (sign per mode / parity)
+      R  = P2 | P2+Q | P2+C' | P2-B | P2+imm2 | P2+D
+      S  = sfu(R): R | exp | rsqrt | sqrt | sigmoid | silu | sqrt(softplus) | engram gate
+      T  = S | S*C' | S+C' | S*imm2 | S+imm2
+      U  = T | T*B | T*imm1
+      out = rnd?(U)  -> vector memory / KV SRAM (linear or transposed-KV address)
+
+  sigmoid(R) = 1/(exp(-R)+1) and silu(R) = R/(exp(-R)+1) divide (IEEE), as the
+  golden does.  The reducer takes out (or out*out) per outer segment, or over
+  the whole op (`red_whole`, SCALAR only); SUM (P=8 interleaved partials, pairwise tree),
+  MAX, or SEQ (one sequential partial: the unit issues one element every 8
+  cycles); `red_tree` sums each segment (<= 16) and adds the segment sums by a
+  pairwise tree padded with +0 (hdc_golden_v41.split_sum); `red_rnd` rounds
+  the result to BF16.  A may be GATHERED: its i- or
+  o-offset is an integer index read from the vector memory (`a_ind`).
+  Pair mode (`c_pair`) reads C at A's address XOR 1 and B at i >> 1
+  (`b_half`): the interleaved-pair RoPE in one pass.
+* QE, the quantised engine (ot_hdc_v41_qe): the activation quantiser
+  (ot_hdc_actquant) and BL block-dot lanes (ot_hdc_blockdot).  LINQ is the
+  golden's linear_q: the op quantises nb 32-element blocks of x, then streams
+  rows (round, block, slot) exactly as the matrix engine streams (round, k,
+  slot); the weight base may add an expert id read from the vector memory.
+  QDQ8 / QDQ4 / QDQ4E write the quantise-dequantise of nb blocks.
+* XU, the auxiliary unit (ot_hdc_v41_xu): SEL (streaming top-k, ascending
+  index order, ot_hdc_select), SINK (the 40 Sinkhorn normalisations of a
+  4 x 4 mix; ot_hdc_sinkhorn's port list), EHASH (the Engram hash of the new
+  token, ot_hdc_engram_hash) and EGATHER (24 Engram rows, dequantised).
+
+Sequencing.  An instruction names the units whose in-flight work it must see
+drained (`wait`, a mask; bit u-1 for unit u, u = ME, SU, QE, XU, HE); the program generator computes
+it from region hazards, so independent units overlap.  A stream op that reads the
+previous stream op's element writes may instead CHASE it (`su_chase` = D > 0,
+same class): it is accepted behind that op and emits a vector only while fewer
+than D vectors are in flight, D derived from the two ops' write and read orders
+so no read overtakes its write.  `pred` skips an
+instruction by position parity (group-completing compressor steps) or at
+position 0 (an empty index set).  A count that evaluates to zero skips.
+
+MULTI-TOKEN PREDICTION (DSpark drafting, one multi-position verify pass;
+tools/hdc_program_v41.py `--mtp`).  The sequencer holds NSLOT position SLOTS:
+slot j sits at position pos + j and has its own token register stok[j] and its
+own DYN bank (dyn_values(stok[j], pos + j)); an instruction's `dslot` picks the
+bank its DYN selects, its predicate position and (EHASH) its token.  A weight
+op (ME from the weight ROM, QE LINQ, HE) may serve `mx_m` consecutive slots
+with ONE weight read: slot p (0 <= p < mx_m) reads its x at + p*mx_xps
+(elements) and writes at + p*mx_ops (ME: words; QE, HE: elements) -- the
+lane multiplier; mx_m = 0 or 1 is the one-position op.  Unit 0 is CONTROL:
+`ctl` END (the token is the ME argmax), TOKX (stok[ctl_slot] <= the first index
+the last XU SELECT wrote: a draft token), AMAX (ttok[ctl_slot] <= the ME argmax
+of lane ctl_lane: a verify target), DYN (recompute every slot's DYN bank from
+stok), ACCEPT (a = the longest prefix with stok[i+1] == ttok[i], i < nslot-1;
+emit ttok[0 .. a]; restore the Engram hash history to its state after slot
+a's EHASH) -- the one data-dependent step of the static program: nothing else
+is predicated on a, because every position-indexed write of a rejected slot
+lands in a row no later read reaches before the next pass rewrites it (window
+KV rows, compressed rows, index keys, compressor slot ring of POS_RING
+entries >= nslot + 1, DSpark window rows).
+
+`python3 tools/hdc_isa_v41.py` regenerates rtl/hdc/v41/ot_hdc_isa_v41.svh.
+"""
+import os
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+PKG = ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh"
+
+W_LANES = 16          # lanes per ME group; vector/KV word width
+GROUPS = 4            # ME lane groups
+INTERLEAVE = 8        # ME / QE outputs in flight per lane
+BL = 16               # QE block-dot lanes
+HE_LANES = 3          # HE lanes (x INTERLEAVE outputs)
+SU_LANES = int(os.environ.get("HDC_SW", 8))    # SU lanes: elements per cycle (a power of two, >= 4)
+T_MAX = 144           # attention rows per layer: window 128 + 16 selected
+POS_MAX = 128         # positions provisioned (max_seq_len of the reduced model)
+VM_ELEMS = 65536
+VM_ELEMS_MTP = 131072  # vector memory of the MTP configuration (NSLOT position slots)
+NSLOT = 8             # position slots (verify pass gamma + 1 <= NSLOT)
+POS_RING = 8          # compressor slot ring (MTP): positions p and p+8 never share an entry
+ROPE_POS = POS_MAX + 16   # RoPE table rows (MTP: DSpark block rows reach anchor + 5)
+KV_WORDS = 32768
+INSTR_BITS = 1536
+FULL_INSTR_BITS = 2048
+FULL_A = 30             # full-shape KV/index and per-die ROM address space
+FULL_N = 21             # 1,048,576 context rows and per-die scans
+FULL_XU_K = 12          # 2,048 router candidates
+FULL_D = 6              # 28 reduced DYN values + shipped-shape selectors
+
+# Software-only full-shape collective contract. Die request/response wiring is
+# defined separately with the die owner before these fields drive RTL.
+UNIT_COLL = 6
+COLL_ALL_REDUCE_SUM, COLL_ALL_GATHER, COLL_TOPK_MERGE, COLL_ARGMAX_MERGE = range(4)
+FULL_EXTRA_FIELDS = [
+    ("coll_op", 2), ("coll_src", FULL_A), ("coll_dst", FULL_A),
+    ("coll_n", FULL_N), ("coll_k", FULL_XU_K), ("coll_ibase", FULL_A),
+    ("coll_seq", 8), ("coll_rnd", 1),
+    ("qe_unrounded", 1),  # send a LINQ FP32 partial to a later TP all-reduce
+]
+# Full-profile fields at FIXED offsets from the top of the 2048-bit word, so fields appended after the extra
+# fields (W11's operator-fusion fields) never move them.  COLL_TOPK_MERGE: rank r's local ids at coll_ibase become
+# global ids r * dyn[coll_d_stride] + id (tools/v41_fullshape_isa.py collective(); results/rtl/
+# w17_l20_fullshape_isa.json contract).
+FULL_FIXED_FIELDS = {"coll_d_stride": (FULL_INSTR_BITS - FULL_D, FULL_D)}
+
+A = 24   # address / stride width
+N = 16   # count width
+D = 5    # DYN select width
+
+UNIT_END, UNIT_ME, UNIT_SU, UNIT_QE, UNIT_XU, UNIT_HE = range(6)
+UNIT_CTL = UNIT_END
+CTL_END, CTL_TOKX, CTL_AMAX, CTL_DYN, CTL_ACCEPT = range(5)
+UNITS = (UNIT_ME, UNIT_SU, UNIT_QE, UNIT_XU, UNIT_HE)
+PRED_ALWAYS, PRED_ODD, PRED_NZ = range(3)
+
+# DYN values, derived by the sequencer from (token, pos) at the start of a token.
+DYN_NAMES = [
+    "ZERO", "EMBED", "ROPE", "ROPE_G2", "POS", "POS1", "N2", "N2M1",
+    "NSEL1", "NSEL2", "T1", "T2", "RND_POS1", "RND_N2", "RND_T1", "RND_T2",
+    "ROW", "ROW1", "SLOTW", "SLOTE", "CKV2", "RND16_POS1", "RND16_N2", "RND16_T1", "RND16_T2",
+    "SLOTW8", "SLOTP8", "TOK32",
+]
+DYN = {n: i for i, n in enumerate(DYN_NAMES)}
+FULL_DYN_KEYS = (
+    "WIN", "NC1", "NC2", "NS1", "NS2", "T0", "T1", "T2", "SC1", "SC2", "SCR",
+    "NSL1", "NSL2", "NSLR",
+    ("ceil", "SC1", 16), ("ceil", "SC1", 8), ("ceil", "SC2", 16),
+    ("ceil", "SCR", 16), ("ceil", "T0", 32), ("ceil", "T1", 32), ("ceil", "T2", 32),
+    "WINM1", "WIN_ROW", "WINM1_ROW",
+    # RANK-AWARE (the core's RANK parameter): the local candidate block holding the newest position on its
+    # owner rank, else the pad block one past the rank's last (layer-20 candidate pin)
+    "NEWBLK",
+)
+# Existing numeric DYN selectors retain their reduced meanings. Symbolic
+# selectors from the shipped-shape emitter occupy additional full-mode slots.
+FULL_DYN = {key: len(DYN_NAMES) + i for i, key in enumerate(FULL_DYN_KEYS)}
+TOPK, RH, HDIM, DIM = 16, 2, 32, 160
+
+
+def dyn_values(token, pos):
+    n2 = (pos + 1) >> 1
+    ns1, ns2 = min(TOPK, pos + 1), min(TOPK, n2)
+    rnd = lambda x: (x - 1) // (W_LANES * GROUPS) + 1 if x > 0 else 0
+    rnd16 = lambda x: (x - 1) // W_LANES + 1 if x > 0 else 0          # 16-row tiles (head-group KV ops)
+    v = [0, token * DIM, pos * RH, (pos - 1) * RH if pos else 0, pos, pos + 1, n2, n2 - 1 if n2 else 0,
+         ns1, ns2, pos + 1 + ns1, pos + 1 + ns2, rnd(pos + 1), rnd(n2), rnd(pos + 1 + ns1), rnd(pos + 1 + ns2),
+         pos * HDIM, (pos + 1) * HDIM, (pos & 1) * 4, (pos & 1) * 64, (n2 - 1) * HDIM if n2 else 0,
+         rnd16(pos + 1), rnd16(n2), rnd16(pos + 1 + ns1), rnd16(pos + 1 + ns2),
+         (pos % POS_RING) * 64 // W_LANES, ((pos >> 1) % (POS_RING // 2)) * 128, token * 32]
+    return v + [0] * (32 - len(v))
+
+
+# stream-unit encodings
+SRC_VM, SRC_CLO, SRC_CHI, SRC_WROM = range(4)
+IND_NONE, IND_I, IND_O = range(3)
+M1_BYP, M1_AB, M1_AA, M1_AIMM, M1_DIVB, M1_DIVIMM, M1_MAXB = range(7)
+M2_BYP, M2_C, M2_IMM = range(3)
+QM_OFF, QM_POS, QM_NEG, QM_ALT_NP, QM_ALT_PN = range(5)     # ALT_NP: even -D, odd +D
+AD_BYP, AD_Q, AD_C, AD_NEGB, AD_IMM, AD_D = range(6)
+SFU_NONE, SFU_EXP, SFU_RSQRT, SFU_SQRT, SFU_SIGM, SFU_SILU, SFU_SPSQRT, SFU_EGATE = range(8)
+E1_BYP, E1_MULC, E1_ADDC, E1_MULIMM, E1_ADDIMM = range(5)
+E2_BYP, E2_MULB, E2_MULIMM = range(3)
+DST_NONE, DST_VM, DST_KV, DST_KVT = range(4)
+RED_NONE, RED_SUM, RED_MAX, RED_SEQ = range(4)
+VEC_SCALAR, VEC_I, VEC_O = range(3)
+# QE / XU
+QE_LINQ, QE_QDQ8, QE_QDQ4, QE_QDQ4E = range(4)
+XU_SEL, XU_SINK, XU_EHASH, XU_EGATHER = range(4)
+
+FIELDS = [
+    ("unit", 3), ("wait", 5), ("pred", 2),
+    # ME (tools/hdc_isa.py semantics)
+    ("me_nout", N), ("me_tiles", N), ("me_k", N), ("me_wsrc", 1),
+    ("me_wbase", A), ("me_ts", A), ("me_ks", A), ("me_js", A),
+    ("me_xbase", A), ("me_round", 1), ("me_obase", A), ("me_oen", 1), ("me_amax", 1),
+    ("me_d_wbase", D), ("me_d_xbase", D), ("me_d_obase", D),
+    ("me_d_nout", D), ("me_d_tiles", D), ("me_d_k", D),
+    ("me_xks", A), ("me_xjs", A), ("me_jsh", 3), ("me_ots", A), ("me_ojs", A), ("me_mmode", 1),
+    ("me_split", 2), ("me_xcs", A), ("me_hg", 2), ("me_ogs", A),
+    # SU
+    ("su_nout", N), ("su_nin", N), ("su_d_nout", D), ("su_d_nin", D),
+    ("a_src", 2), ("a_base", A), ("a_so", A), ("a_si", A), ("a_d", D), ("a_ind", 2), ("a_ibase", A),
+    ("b_src", 2), ("b_base", A), ("b_so", A), ("b_si", A), ("b_d", D), ("b_half", 1),
+    ("c_src", 2), ("c_base", A), ("c_so", A), ("c_si", A), ("c_d", D), ("c_pair", 1),
+    ("d_src", 2), ("d_base", A), ("d_so", A), ("d_si", A), ("d_d", D),
+    ("a_rnd", 1), ("a_relu", 1), ("a_min", 1), ("c_clip", 1),
+    ("m1", 3), ("m2", 2), ("qm", 3), ("ad", 3), ("sfu", 3), ("e1", 3), ("e2", 2), ("rnd", 1),
+    ("dst", 2), ("o_base", A), ("o_so", A), ("o_si", A), ("o_d", D),
+    ("red", 2), ("red_sq", 1), ("red_whole", 1), ("red_rnd", 1), ("r_base", A), ("r_so", A),
+    ("imm1", 32), ("imm2", 32), ("imm3", 32),
+    # QE
+    ("qe_mode", 2), ("qe_fp4", 1), ("qe_xbase", A), ("qe_nb", 8), ("qe_nout", N), ("qe_tiles", N),
+    ("qe_wbase", A), ("qe_ind", 1), ("qe_ibase", A), ("qe_istride", A), ("qe_obase", A), ("qe_d_obase", D),
+    # XU
+    ("xu_op", 2), ("xu_src", A), ("xu_dst", A), ("xu_n", N), ("xu_d_n", D), ("xu_k", 5), ("xu_d_k", D),
+    ("xu_layer", 1),
+    # HE
+    ("he_nout", N), ("he_k", N), ("he_wbase", A), ("he_xbase", A), ("he_obase", A),
+    # SU lane axis (SCALAR, VI, VO) and the segmented-tree reduction
+    ("su_vec", 2), ("red_tree", 1), ("su_chase", N),
+    # HBM weights (rtl/hdc/hbm/ot_hdc_qstream.sv): the issue of an instruction
+    # with wrel set releases the next group of expert-indexed QE fetches -- the
+    # program generator sets it on an instruction that waited for the XU op
+    # writing the expert ids, so they are in the vector memory by then
+    ("wrel", 1),
+    # multi-token prediction: the DYN bank / position slot, the lane multiplier
+    # of a weight op (ME, QE LINQ, HE), and the control step
+    ("dslot", 3), ("mx_m", 3), ("mx_xps", A), ("mx_ops", A),
+    ("ctl", 3), ("ctl_slot", 3), ("ctl_lane", 3),
+    # FUSED INDEXER (re-specified core, tools/hdc_program_v41.py Builder(idx_fused=True)): a KV-sourced ME
+    # op on the index keys with me_fuse set computes, per key row r < n, the index score
+    #   IS[r] = to_bf16(sum over heads hh of to_bf16(relu(to_bf16(dot(q[hh], key[r]))) * wts[hh]))
+    # (the head sum under the "idx" class: csum, or the legacy P = 8 interleaved sum), with wts[hh] the
+    # vector-memory element me_wts + hh, and writes it as element me_obase*16 + r -- the per-head scores
+    # and the stream unit's ReLU / weight / head-sum op are gone
+    ("me_fuse", 1), ("me_wts", A),
+]
+
+
+def fields_for(*, full_shape=False):
+    if not full_shape:
+        return FIELDS
+    # Preserve the reduced instruction contract. The full-shape image is a
+    # separate, wider profile so existing RTL images keep their exact offsets.
+    widened = [(name, FULL_XU_K if name == "xu_k" else
+             FULL_A if width == A else FULL_N if width == N else
+             FULL_D if width == D else width)
+            for name, width in FIELDS]
+    return widened + FULL_EXTRA_FIELDS
+
+
+def layout_for(*, full_shape=False):
+    off, out = 0, {}
+    for name, width in fields_for(full_shape=full_shape):
+        out[name] = (off, width)
+        off += width
+    assert off <= (FULL_INSTR_BITS if full_shape else INSTR_BITS), off
+    if full_shape:
+        for name, (foff, width) in FULL_FIXED_FIELDS.items():
+            assert off <= foff and foff + width <= FULL_INSTR_BITS, (name, off, foff)
+            out[name] = (foff, width)
+    return out
+
+
+def layout():
+    return layout_for()
+
+
+LAYOUT = layout_for()
+FULL_LAYOUT = layout_for(full_shape=True)
+
+
+def encode(*, full_shape=False, **kw):
+    field_layout = FULL_LAYOUT if full_shape else LAYOUT
+    word = 0
+    for name, value in kw.items():
+        if name.startswith("_"):
+            continue
+        off, width = field_layout[name]
+        if full_shape and isinstance(value, (str, tuple)):
+            value = FULL_DYN[value]
+        value = int(value)
+        assert 0 <= value < (1 << width), (name, value)
+        word |= value << off
+    return word
+
+
+def decode(word, *, full_shape=False):
+    field_layout = FULL_LAYOUT if full_shape else LAYOUT
+    return {name: (word >> off) & ((1 << width) - 1) for name, (off, width) in field_layout.items()}
+
+
+def emit_package(*, full_shape=False):
+    field_layout = FULL_LAYOUT if full_shape else LAYOUT
+    instruction_bits = FULL_INSTR_BITS if full_shape else INSTR_BITS
+    path = PKG.with_name("ot_hdc_isa_v41_full.svh") if full_shape else PKG
+    lines = [
+        "// GENERATED by tools/hdc_isa_v41.py -- do not edit.",
+        "// Field offsets of one V4.1 HDC instruction word; see the tool for semantics.",
+        "// Included inside a module body.",
+        f"localparam integer ISA_INSTR_BITS = {instruction_bits};",
+    ]
+    for name, (off, width) in field_layout.items():
+        lines.append(f"localparam integer O_{name.upper()} = {off};")
+        lines.append(f"localparam integer W_{name.upper()} = {width};")
+    path.write_text("\n".join(lines) + "\n")
+    return path
+
+
+def emit_core_profiles():
+    """Core-only offsets selected by its FULL_SHAPE elaboration parameter."""
+    path = PKG.with_name("ot_hdc_isa_v41_profiles.svh")
+    lines = ["// GENERATED by tools/hdc_isa_v41.py --core-profiles -- do not edit.",
+             "// Included in ot_hdc_core_v41x; FULL_SHAPE is an elaboration parameter.",
+             f"localparam integer ISA_INSTR_BITS = FULL_SHAPE ? {FULL_INSTR_BITS} : {INSTR_BITS};"]
+    for name, (off, width) in LAYOUT.items():
+        full_off, full_width = FULL_LAYOUT[name]
+        lines.append(f"localparam integer O_{name.upper()} = FULL_SHAPE ? {full_off} : {off};")
+        lines.append(f"localparam integer W_{name.upper()} = FULL_SHAPE ? {full_width} : {width};")
+    for name in [n for n, _ in FULL_EXTRA_FIELDS] + list(FULL_FIXED_FIELDS):
+        full_off, full_width = FULL_LAYOUT[name]
+        lines.append(f"localparam integer O_{name.upper()} = {full_off};")
+        lines.append(f"localparam integer W_{name.upper()} = {full_width};")
+    for key, slot in FULL_DYN.items():
+        if isinstance(key, str):
+            label = key
+        else:
+            label = f"CEIL_{key[1]}_{key[2]}"
+        lines.append(f"localparam integer FDYN_{label} = {slot};")
+    path.write_text("\n".join(lines) + "\n")
+    return path
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--full-shape", action="store_true")
+    parser.add_argument("--core-profiles", action="store_true")
+    args = parser.parse_args()
+    if args.core_profiles:
+        path = emit_core_profiles()
+        print(path.relative_to(ROOT))
+        raise SystemExit(0)
+    path = emit_package(full_shape=args.full_shape)
+    fields = fields_for(full_shape=args.full_shape)
+    bits = FULL_INSTR_BITS if args.full_shape else INSTR_BITS
+    print(f"{path.relative_to(ROOT)}: {sum(w for _, w in fields)} bits used of {bits}")
