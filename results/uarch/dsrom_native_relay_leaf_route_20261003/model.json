@@ -1,7 +1,16 @@
 {
   "PG": "native alternating M1 rails plus ORFS physical PG; actual DRC/PG result required",
+  "PG_M3_extra_metal_exclusion_um2": 0.34992,
+  "PG_M3_legal_widths_um": [
+    0.018,
+    0.09,
+    0.162,
+    0.234,
+    0.306,
+    0.378
+  ],
   "PG_M3_reserved_lanes_per_5p4um": 2,
-  "PG_M3_width_um": 0.054,
+  "PG_M3_width_um": 0.09,
   "SSFF_qualified": false,
   "arithmetic_MACs": 0,
   "branches": [
@@ -387,6 +396,7 @@
   "source_reset_pins": 0,
   "source_sha256": "49330eacd658918b8f7bfae78c2c938f7190d99d686152571bd8f653ac11727e",
   "standard_cell_body_um2": 3.2513400000000003,
+  "tech_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
   "translated_origin_DBU": [
     10977066,
     15564960

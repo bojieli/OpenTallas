@@ -4,7 +4,7 @@
 All eight priced relay/pad cells are matched simultaneously to enclosed-contact
 sites and checked against BOTH endpoint budgets. No global solver mutation.
 """
-import gzip, hashlib, json
+import gzip, hashlib, json, re
 from pathlib import Path
 import numpy as np
 from scipy.spatial import cKDTree
@@ -13,6 +13,12 @@ from scipy.sparse.csgraph import maximum_bipartite_matching
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / 'results/uarch/dsrom_native_relay_leaf_route_20261003'
+
+def legal_PG_width():
+    text=(BASE/'inputs/actual_tech.lef').read_text()
+    layer=re.search(r'^LAYER M3\s*\n(.*?)^END M3\s*$',text,re.M|re.S)[1]
+    widths=[float(v) for v in re.search(r'WIDTHTABLE\s+([0-9.\s]+);',layer)[1].split()]
+    return min(v for v in widths if v>=.054), widths
 
 def construct(p):
     ts = p['tasks']
@@ -61,12 +67,16 @@ def construct(p):
     end=[max(c['bbox_DBU'][k] for c in cells) for k in (2,3)]
     die=[0,0,((end[0]-origin[0]+2159)//54+1)*54/1000,
          ((end[1]-origin[1]+2159)//540+1)*540/1000]
+    width,widths=legal_PG_width()
     return dict(candidate=p['candidate'], scope=p['scope'], cells=cells,
                 branches=branches, translated_origin_DBU=origin, die_um=die,
                 fixed_native_cells=9, fixed_priced_relay_pad_cells=8,
                 standard_cell_body_um2=8*1.08*.27+9*.378*.27,
                 original_driver_fanout=8, relay_fanout=1,
-                PG_M3_reserved_lanes_per_5p4um=2, PG_M3_width_um=.054,
+                PG_M3_reserved_lanes_per_5p4um=2, PG_M3_width_um=width,
+                PG_M3_legal_widths_um=widths,
+                PG_M3_extra_metal_exclusion_um2=2*(width-.054)*die[3],
+                tech_sha256=hashlib.sha256((BASE/'inputs/actual_tech.lef').read_bytes()).hexdigest(),
                 clocks_per_cycle=1, arithmetic_MACs=0, memory_bytes_per_cycle=0,
                 unchanged_global_buffer_count=68614, extra_architectural_cycles=0,
                 source_parent_clock_waveform_qualified=False,
@@ -133,12 +143,14 @@ puts "DS_NATIVE_RELAY_ROUTED_CENSUS_17"
     (ROOT/'physical/dsrom_native_relay_20261003/clock.sdc').write_text(
         'set_clock_transition 20 [get_clocks core_clk]\n')
     (ROOT/'physical/dsrom_native_relay_20261003/pdn.tcl').write_text('''
+foreach inst [[ord::get_db_block] getInsts] {$inst setDoNotTouch false}
 add_global_connection -net VDD -inst_pattern .* -pin_pattern ^VDD$ -power
 add_global_connection -net VSS -inst_pattern .* -pin_pattern ^VSS$ -ground
+global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name native_relay -voltage_domains CORE
 add_pdn_stripe -grid native_relay -layer M1 -width 0.018 -followpins
-add_pdn_stripe -grid native_relay -layer M3 -width 0.054 -pitch 5.4 -spacing 2.7 -offset 0.54
+add_pdn_stripe -grid native_relay -layer M3 -width 0.090 -pitch 5.4 -spacing 2.7 -offset 0.54
 add_pdn_connect -grid native_relay -layers {M1 M3}
 '''.lstrip())
     (BASE/'model.json').write_text(json.dumps(m,indent=2,sort_keys=True)+'\n')

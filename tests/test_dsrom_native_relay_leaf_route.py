@@ -39,5 +39,10 @@ class NativeLeaf(unittest.TestCase):
         parsed=driver.build_parser().parse_args(cleaned)
         self.assertEqual(parsed.orfs_corner,'WC')
         self.assertEqual(parsed.clock_uncertainty_hold_ns,.025)
+    def test_source_legal_PG_width_and_positive_delta(self):
+        width,widths=R.legal_PG_width()
+        self.assertEqual(width,.09)
+        self.assertNotIn(.054,widths)
+        self.assertGreater(self.m['PG_M3_extra_metal_exclusion_um2'],0)
 
 if __name__=='__main__':unittest.main()

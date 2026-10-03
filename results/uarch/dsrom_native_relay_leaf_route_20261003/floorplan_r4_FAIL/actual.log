@@ -1,0 +1,45 @@
+MACRO_TRACK_GATE PASS macros=0 hooks=3 warnings=0 record=/srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r4/receipt.json.macro_gate.json
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+ do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_4 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_5 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_6 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_7 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_0 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_2 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_3 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_4 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_5 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_6 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_7 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] source_buf is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_0 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_2 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_3 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_4 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_5 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_6 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] relay_7 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_0 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_2 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_3 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_4 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_5 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_6 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] sink_7 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] source_buf is marked do not touch and will be skipped in global connections.
+[ERROR PDN-0114] Width (0.0540 um) specified for layer M3 in not a valid width, must be 0.0180, 0.0900, 0.1620, 0.2340, 0.3060, 0.3780.
+Error: pdn.tcl, 6 PDN-0114
+
+Elapsed time: 0:01.61[h:]min:sec. CPU time: user 1.55 sys 0.06 (99%). Peak memory: 297628KB.
+Elapsed time: 0:01.64[h:]min:sec. CPU time: user 1.56 sys 0.07 (100%). Peak memory: 317284KB.
+Elapsed time: 0:01.59[h:]min:sec. CPU time: user 1.55 sys 0.04 (99%). Peak memory: 295976KB.
+Elapsed time: 0:01.59[h:]min:sec. CPU time: user 1.53 sys 0.05 (99%). Peak memory: 296388KB.
+Elapsed time: 0:01.58[h:]min:sec. CPU time: user 1.53 sys 0.05 (99%). Peak memory: 296604KB.
+make[1]: *** [Makefile:464: do-2_4_floorplan_pdn] Error 1
+make: *** [Makefile:464: /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r4/base/2_4_floorplan_pdn.odb] Error 2
+
+partial record written to /srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r4/physical.json
