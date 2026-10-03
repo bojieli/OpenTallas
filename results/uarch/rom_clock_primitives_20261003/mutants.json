@@ -1,0 +1,29 @@
+{
+  "status": "PASS_NEGATIVE_GATES",
+  "runs": [
+    {
+      "name": "wrong_slot",
+      "mutant_sha256": "51f12a2bee1db10c8f361e0a4c1cde381d7f1aab3521bdf858480a92c0e3a6c0",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "FAIL payload/order mismatch phase=5000 mode=stall t=325000 accepted=4 taken=0\n",
+      "detected": true
+    },
+    {
+      "name": "early_credit",
+      "mutant_sha256": "183fcb6a604f16a395ecd8878a784ee4d68298b2ed51c3155556c941e33fee14",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "FAIL spurious drift/protocol fault phase=5000 mode=stall t=275000 accepted=1 taken=0\n",
+      "detected": true
+    },
+    {
+      "name": "monitor_removed",
+      "mutant_sha256": "b354ff6003969491c32e867b307a211d80240ad8d1374492cfe7933e6ab858e6",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "FAIL drift/clock loss not detected phase=5000 mode=drift t=38857000 accepted=2000 taken=2000\n",
+      "detected": true
+    }
+  ]
+}

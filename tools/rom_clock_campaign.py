@@ -19,7 +19,7 @@ def main():
       bench_sha256=hashlib.sha256(a.bench.read_bytes()).hexdigest(),runs=rows,
       accepted_words=sum(r['accepted'] for r in rows),
       steady_sparse_latency_cycles=dict(min=min(r['min_cycles'] for r in rows if r['mode']=='sparse'),max=max(r['max_cycles'] for r in rows if r['mode']=='sparse')),
-      wander_sparse_not_measured=False,
+      wander_sparse_not_measured=True,
       stream_words_per_cycle=dict(min=min(r['words_per_cycle'] for r in rows if r['mode']=='stream'),max=max(r['words_per_cycle'] for r in rows if r['mode']=='stream')),
       clock_stop_scope='Only the running port must deassert acceptance; stopped port can retain valid level, no acceptance edge. Restart requires reset before traffic.',
       reset_scope='Explicit flushed words tracked, both ports quiesced during reset handshake; no atomic cross-clock reset guarantee')

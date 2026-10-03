@@ -1,0 +1,115 @@
+Option C clock primitives: measured implementation handoff,2026-10-03
+Qwen owner Goodall; DS owner Arch. Architecture decision f954ad1ea,main d99237f66.
+Only the primitive task was implemented. No mesh, per-element GALS, die edits,
+HBM study, storage resizing, Qwen27B or CPU inference. Main and physical-owner
+files unchanged. Region bound5.25mm retained; no new die geometry.
+
+Implementation
+rtl/common/ot_meso_fifo.sv: ENABLE=0 by default, DEPTH4, W512 test, three-FF
+steady Gray pointer/state/clock-counter/fault synchronization. No raw-pointer
+bypass. Real credit returns only at r_v && r_rdy; output prefetch adds no fifth
+credit. Logical pointer/reset alignment DOWN/HOLD8->WAIT->RUN, synchronous local
+resets. Sticky coarse count-drift monitor inhibits local acceptance; it does not
+measure analog phase. Arbitrary phase is handled by the3FF fallback, not by
+claiming the monitor prevents metastability. Counter error beyond +/-2 edges
+from RUN anchor faults. Clock-stop port can retain valid level but cannot accept
+without an edge; reset both ports before restart. Traffic is quiesced during
+reset recovery; no atomic cross-domain reset promise.
+
+rtl/common/ot_fwd_link_stage.sv: ENABLE=0 by default; real falling-edge data/valid
+capture, inverted forwarded clock. SPAN_NM guard <=430560. No ready signal:
+parent must reserve response capacity before issuing fixed-latency producers.
+Generated-clock SDC uses edges{2,3,4}, with true source clock and opposite-edge
+consumer. In a parent, use the real mapped forwarded-clock output and parent
+clock; do not create an independent clock at every stage.
+
+Use ot_ratio_cdc_fifo unchanged ONLY inside a related one-PLL3.6GHz /3,/4 hub.
+27d86 measured2 destination cycles each direction, W64 both directions and
+W512 fast->slow. No arbitrary-phase or wide slow->fast closure extrapolation.
+HBM/die-to-die truly different-frequency ports remain separate async interfaces;
+this equal-frequency monitor intentionally rejects long-term frequency mismatch.
+
+Functional evidence
+112 actual dual-clock RTL runs,16 phases0..T, wander +/-192ps equivalent,
+sparse/stream/random stalls, unilateral resets, drift and clock loss.
+104,161,143 accepted words; full512-bit payload/order/conservation and D4 credit
+checks.192 unilateral reset tests flush48 words per phase where in flight.
+All3 mutants caught: wrong slot, early credit, drift monitor removed.
+Forwarded two-stage data ordering, clock polarity and both default-off modules
+pass an Icarus four-state test. Simulation is explicitly DIGITAL_ONLY, not MTBF
+or a metastability/analog phase-window proof. MTBF/tau and synchronizer physical
+placement still need contextual qualification. No unsynchronized-pointer fast
+path was built on the strength of simulation.
+
+Measured model update
+Sparse latency4.0625--5 destination cycles, not the study's central1 extra cycle.
+Nominal extra4 cycles => f954 Qwen2024 cycles(~1.687us), DS2644 cycles(~2.203us;
+rounded study bound2642 uses its unrounded probes). Wander reserve5.5 total
+cycles =>4.5 extra, Qwen2277 cycles and DS2974.5 using rounded central counts.
+Measured queued wander maximum is in measured_model.json. D4 steady rate
+0.444445--0.5 word/cycle,34.13--38.4 GB/s at W512 and1.2GHz. It does NOT preserve
+one word/cycle; source-matched streaming/issue stalls are not priced by a latency
+term. No full-token or MTP rate claim. FIFO4 storage entries plus shadow output
+register physically stores2560 data bits but advertises only4 credits.
+Macro/clock power and mutable FIFO/control protection are not waived by the ROM
+no-ECC policy; integrators must bind and price those contracts before adoption.
+
+Physical verdict at unchanged1.2GHz,60ps setup/25ps hold
+W512D4 FIFO: SS setup-401.62ps, FF hold+8.82ps, DRC0. REJECTED clock candidate.
+Local Gray clock-count decode/drift comparison/live-enable fanout is the failed
+path: synchronized wcg_r[2][6] -> output register enable / r_v. Worst register
+setup-321.99ps. The actual cross-domain payload path is timed under773.333ps
+max delay and reports+475.43ps; it was not hidden by an async clock group.
+No tuning after the failed measurement; no clock or uncertainty relaxation.
+Do NOT integrate this FIFO as a clock-qualified optionC primitive.
+
+Forwarded W512 compact standalone: SS setup+45.38ps, FF hold+24.34ps, DRC0.
+Standard-cell area420.312um2, raw flow power2.262mW. This is a compact fixture
+with166.666ps IO delay, no explicit external output cap; NOT a shielded430.56um
+span, filtered rail, real consumer load or die-context qualification.
+FIFO standard-cell area2364.16um2, raw flow power11.183mW; rejected source.
+These raw flow power rows are not actual workload/ICG measurements.
+
+Constraints and ownership gate
+Both SDCs retain60/25 and833.333ps. No clock groups or false paths. FIFO all
+cross-clock paths have max773.333/min0 with OpenSTA -ignore_clock_latency;
+three-FF publication and consumer credit hold data; registered Gray sources
+and a bound below one source period constrain bit skew. Local synchronization
+stages and monitor fanout remain ordinarily timed and are where rejection arose.
+Any approved replacement needs its own model/source/phase/drift/SS-FF gates.
+Owner integration additionally needs actual Qwen logits/VM/KV and DS L0/L20,
+transaction/epoch identities, in-flight completion credits, protected mutable
+state, hub routing/layer audit, macro SS clk-q and true clock/link geometry.
+Forwarded-clock common wire latency must be measured against data; a full-cycle
+430.56um reach result alone cannot certify opposite-edge timing.
+
+Artifacts/replay
+prebuild.json was committed before RTL measurement; do not overwrite it.
+measured_model.json, campaign.json, mutants.json, interfaces.json, verdict.json
+and physical/* contain separate measured/failed evidence and source/SDC/SPEF pins.
+Implementation source a45323071; initial bench source42d353bf7 differs only by
+whitespace cleanup. Remote clean export862807d4f02ff724c777a4815612ca33fda4ccbd
+contains the exact RTL/SDC bytes pinned in launch_manifest.json and verdict.json.
+Physical host ot-agidock128, completed pinned worktree/runs at
+/home/ubuntu/rom-clock-primitives-20261003; never removed.16 threads, admission
+reservation12GB against measured66GB available/650GB disk, no runtime caps.
+Forwarded run was sequential after FIFO route/corner report, no duplicate runs.
+
+verilator --cc --exe --build -j2 -O3 -Wno-fatal --top-module ot_meso_fifo \
+ -GENABLE=1 -GW=512 -GDEPTH=4 rtl/common/ot_meso_fifo.sv \
+ ABSOLUTE/rtl/test/rom_clock/tb_meso.cpp -Mdir FRESH_DIR -o bench
+python3 tools/rom_clock_campaign.py --bench FRESH_DIR/bench --out FRESH.json
+python3 tools/rom_clock_mutants.py --work FRESH_MUTANT_DIR --out FRESH_MUTANTS.json
+iverilog -g2012 -s tb_fwd -o FRESH.vvp rtl/common/ot_meso_fifo.sv \
+ rtl/common/ot_fwd_link_stage.sv rtl/test/rom_clock/tb_fwd.sv
+vvp FRESH.vvp
+python3 tools/rom_clock_primitive_model.py --measurement campaign.json --out FRESH_MODEL.json
+Physical replay requires a fresh pinned source worktree and fresh results root;
+use tools/rom_clock_run_physical.sh, persistent uncapped wrapper and recorded
+PDK/runner hashes. Preserve this rejected verdict and its checkpoint.
+
+Shared handoff: /tmp/claude-review-20261003/ROM_CLOCK_PRIMITIVES_HANDOFF.txt.
+Goodall/Arch acknowledgement is not claimed; no agent messaging tool is exposed
+and the historical local mailbox binary is absent. This handoff explicitly
+blocks optionC FIFO adoption while permitting review of the compact forwarded
+stage. Architecture C itself is not replaced by a new study.

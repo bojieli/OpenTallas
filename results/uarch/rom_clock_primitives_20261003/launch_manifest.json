@@ -1,0 +1,25 @@
+{
+  "upstream_commit": "a4532307199e5f1dc6d7be2e5025cf6ed75c2108",
+  "decision_commit": "f954ad1ea67f77e8f1a5e86cf48856a96ca650bf",
+  "host": "ot-agidock128",
+  "remote_pinned_export_commit": "862807d",
+  "source_files_sha256": {
+    "rtl/common/ot_meso_fifo.sv": "53f6cfa854ed7c1b921e615bb8115ee4d0ae0ba93c0c5f3466bcb276fcfcb5c3",
+    "rtl/common/ot_fwd_link_stage.sv": "822bfdbd8a6666a7d6949875e834f67e43879698689ba97a0a616c223fd8ed16",
+    "physical/rom_clock/meso_w512_d4.sdc": "81d9f522b529ae05d05682689830adaa6c783ee44aad15facf169f7c2e8856bb",
+    "physical/rom_clock/fwd_w512.sdc": "9d7308e15b151e15392212669029cb1b98b259ef186759453fdb684e9b965883",
+    "tools/rom_clock_run_physical.sh": "5464edf134e66eb77baf2b1fda0082315410f6158c80cba29bd83e06cf7f3d69"
+  },
+  "resource_admission": {
+    "measured_before_launch_available_GB": 66,
+    "free_disk_GB": 650,
+    "load_average_1m": 6.16,
+    "threads": 16,
+    "guard_admission_estimate_GB": 12,
+    "admission_basis": "W512 D4 inventory has fewer payload flops than pinned related-W512 gate; headroom66GB. Reservation only, no process limit.",
+    "cpu_time_limit": null,
+    "wall_time_limit": null
+  },
+  "default_off": true,
+  "physical_gate": "RUNNING_NO_PASS"
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.rom.clock.primitive.verdict.v1",
+  "status": "FIFO_REJECTED_FORWARD_STAGE_STANDALONE_PASS",
+  "physical_complete": true,
+  "adoption": false,
+  "integration_enabled": false,
+  "unsafe_pointer_bypass": false,
+  "implementation_source_commit": "a45323071",
+  "remote_export_commit": "862807d4f02ff724c777a4815612ca33fda4ccbd",
+  "cases": {
+    "meso_w512_d4": {
+      "setup_ss_ps": -401.62,
+      "hold_ff_ps": 8.82,
+      "closes_signoff": false,
+      "drc_errors": 0,
+      "standard_cell_area_um2": 2364.16,
+      "core_area_um2": 6799.31,
+      "flow_power_w": 0.0111831,
+      "clock_uncertainty_setup_ps": 60,
+      "clock_uncertainty_hold_ps": 25,
+      "period_ps": 833.333,
+      "source_pin_sha256": "1e56134d037042f7134a46fc0deb855da54727ec0065d4e5d2bc6830b0b16086",
+      "spef_sha256": "888780326499604e3f4fc94bf53f9b6955b4b5209551678d012fb97690cb2399",
+      "sdc_sha256": "bc152855a615db2847adc3936509873761a9425d8d51a3c1f622252f7152f717",
+      "scope": "Predictive ASAP7 standalone probe; IO delay166.666ps, no explicit external output cap in customSDC. Real parent loads/geometry not qualified.",
+      "verdict": "REJECTED_SS_SETUP"
+    },
+    "fwd_w512": {
+      "setup_ss_ps": 45.38,
+      "hold_ff_ps": 24.34,
+      "closes_signoff": true,
+      "drc_errors": 0,
+      "standard_cell_area_um2": 420.312,
+      "core_area_um2": 901.438,
+      "flow_power_w": 0.00226212,
+      "clock_uncertainty_setup_ps": 60,
+      "clock_uncertainty_hold_ps": 25,
+      "period_ps": 833.333,
+      "source_pin_sha256": "e993a59ea1774f32ffddb03819e1aace1250d83ca1aa6a6f1c4811cc1a1343a1",
+      "spef_sha256": "a2d83b8033f7d71972bd2dcb4f0a1974362da5430113f92e31a2e0510299e260",
+      "sdc_sha256": "0f19061c359a2c33f9defdaff207bfe981cefb343830a055162e07f17596c8cd",
+      "scope": "Predictive ASAP7 standalone probe; IO delay166.666ps, no explicit external output cap in customSDC. Real parent loads/geometry not qualified.",
+      "verdict": "PASS_STANDALONE_ONLY"
+    }
+  },
+  "fifo_failure": {
+    "endpoint": "active.od[342] and output r_v",
+    "source": "active.wcg_r[2][6] synchronized peer clock counter",
+    "cause": "Gray clock-counter decode/drift comparator plus live/enable fanout; local read-domain path fails, not an untimed raw-pointer CDC.",
+    "worst_register_setup_ps": -321.989166,
+    "payload_datapath_check_slack_ps": 475.43,
+    "action": "Reject this source at1.2GHz; no period/uncertainty relaxation, no post-failure tuning."
+  },
+  "source_sha256": {
+    "rtl/common/ot_meso_fifo.sv": "53f6cfa854ed7c1b921e615bb8115ee4d0ae0ba93c0c5f3466bcb276fcfcb5c3",
+    "rtl/common/ot_fwd_link_stage.sv": "822bfdbd8a6666a7d6949875e834f67e43879698689ba97a0a616c223fd8ed16",
+    "physical/rom_clock/meso_w512_d4.sdc": "81d9f522b529ae05d05682689830adaa6c783ee44aad15facf169f7c2e8856bb",
+    "physical/rom_clock/fwd_w512.sdc": "9d7308e15b151e15392212669029cb1b98b259ef186759453fdb684e9b965883"
+  },
+  "guards": [
+    "No async-groups or false-path exceptions in either constraint file. Cross-clock payload and Gray arcs have max/min delay bounds.",
+    "Three-FF safety is a protocol/MTBF contract, not proved by the digital phase sweep. No raw steady-state pointer option exists.",
+    "The forwarded stage is not a430.56um shielded long-link qualification or die clock closure."
+  ],
+  "coordination": {
+    "qwen_owner": "Goodall",
+    "ds_owner": "Arch",
+    "shared_handoff": "/tmp/claude-review-20261003/ROM_CLOCK_PRIMITIVES_HANDOFF.txt",
+    "acknowledged": false
+  }
+}

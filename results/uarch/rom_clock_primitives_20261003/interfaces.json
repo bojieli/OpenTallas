@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.rom.clock.primitive.interfaces.v1",
+  "decision": "f954ad1ea / main d99237f66 option C",
+  "regions_max_mm": 5.25,
+  "mesh": false,
+  "per_element_gals": false,
+  "integration_owners": {
+    "qwen": "Goodall",
+    "ds": "Arch"
+  },
+  "ot_meso_fifo": {
+    "path": "rtl/common/ot_meso_fifo.sv",
+    "ENABLE_default": 0,
+    "DEPTH_default": 4,
+    "SYNC_STAGES_required": 3,
+    "clock_relation": "Equal nominal 1.2GHz, arbitrary phase; safe synchronized pointer fallback. Not a 3:4-ratio or 976.6MHz HBM FIFO.",
+    "phase_window_bypass": false,
+    "ports": {
+      "write": "wclk, wrst_n, w_v, w_rdy, w_d[W-1:0], w_live, w_fault",
+      "read": "rclk, rrst_n, r_v, r_rdy, r_d[W-1:0], r_live, r_fault"
+    },
+    "credit": "Only r_v && r_rdy advances rp and returns Gray read pointer through 3FF; registered output does not create a fifth credit.",
+    "reset": "Synchronous per-domain reset. DOWN/HOLD8 -> WAIT -> RUN, logical zero-pointer alignment; synchronized peer state. Both ports quiesce during flush; not atomic across independent clocks.",
+    "drift": "3FF synchronized Gray clock counters; signed modulo count error beyond +/-2 from RUN anchor is sticky and locally inhibits transfers. No analog phase/TDC or raw-pointer safety claim.",
+    "clock_stop": "Only running port can progress to fault. Stopped port may retain valid level but has no accept edge. Reset both ports before restart.",
+    "protection": "Current candidate flops unqualified for mutable-state protection; integrate protected storage/control contract and reprice before adoption.",
+    "physical_gate": "REJECTED_SS_SETUP_AT_1P2_GHZ; DO_NOT_INTEGRATE_AS_QUALIFIED"
+  },
+  "ot_fwd_link_stage": {
+    "path": "rtl/common/ot_fwd_link_stage.sv",
+    "ENABLE_default": 0,
+    "W_default": 512,
+    "SPAN_NM_max": 430560,
+    "ports": "fclk_i, rst_n, i_v, i_d, fclk_o, o_v, o_d",
+    "capture": "incoming falling edge",
+    "forward": "inverted incoming clock, generated edges {2,3,4}",
+    "flow": "Fixed-latency valid/data stage; no ready signal or credits. Parent launch schedule must reserve downstream FIFO capacity before any in-flight completion.",
+    "physical_scope": "Standalone compact route probe only; cannot certify 430.56um channel or filtered-clock rail. Parent must time true source->sink geometry/loads and generated clocks."
+  },
+  "related_ratio": {
+    "rtl": "rtl/common/ot_ratio_cdc_fifo.sv",
+    "source": "27d86cfe4",
+    "latency_cycles": {
+      "fast_to_slow": 2,
+      "slow_to_fast": 2
+    },
+    "scope": "Local same-PLL 3.6GHz /3 and /4 only; W64 both directions and W512 fast->slow measured. No arbitrary-phase reuse."
+  },
+  "constraints": {
+    "generator": "tools/rom_clock_sdc.py",
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "async_groups": false,
+    "false_paths": false,
+    "cdc_max_delay_ps": 773.333,
+    "cdc_min_delay_ps": 0,
+    "spelling": "OpenSTA -ignore_clock_latency; all cross-clock arcs bounded, data included. Gray skew <= source period via per-bit max bound; payload held to synchronized publication/real credit.",
+    "unknown_phase_signoff": "Synchronizer/metastability MTBF requires characterization; a phase-sweep simulation is not proof.",
+    "parent_forwarded_clock": "Replace standalone incoming create_clock with real parent clock; create generated clock at each real mapped forwarded output, retain opposite-edge capture; no fake independent roots."
+  },
+  "required_parent_gates": [
+    "Primitive clock rejection resolved by separately authorized replacement, not by relaxing clock/uncertainty or hiding paths.",
+    "Actual Qwen logits/VM/KV and DS L0/L20/root identities bit-identical with all finite stalls.",
+    "Source-matched issue/rate price for D4 measured0.444..0.5 word/cycle; latency-only token term is insufficient.",
+    "Real pin/PG/layer/clock rail and span in context; SS setup and FF hold at60/25ps.",
+    "Protected mutable FIFO state/control and epoch/address/transaction contracts."
+  ]
+}

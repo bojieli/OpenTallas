@@ -1,0 +1,110 @@
+{
+  "schema": "opentallas.rom.clock_primitives.model.v1",
+  "decision_commit": "f954ad1ea67f77e8f1a5e86cf48856a96ca650bf",
+  "decision_main": "d99237f667bd526b787f993f009113ba3444c080",
+  "default_off": true,
+  "adoption": false,
+  "clocks": {
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "region_max_mm": 5.25
+  },
+  "fifo": {
+    "W": 512,
+    "depth": 4,
+    "sync_stages": 3,
+    "steady_pointer_sync": true,
+    "phase_window_bypass": false,
+    "latency_cycles_min": 4,
+    "latency_cycles_max": 5,
+    "increment_vs_registered_cycles": 4,
+    "anticipated_saturated_words_per_cycle": 0.44377751100440177,
+    "data_storage_bits": 2048,
+    "output_register_bits": 512,
+    "read_mux_2to1": 1536,
+    "pointer_bits": 3,
+    "sync_control_and_monitor_positive_reserve_bits": 160,
+    "logical_flops_floor": 2720,
+    "logical_flop_area_floor_um2": 793.152,
+    "area_floor_not_placement_fit": true,
+    "macs_per_cycle": 0,
+    "bytes_per_cycle": 64,
+    "bits_per_cycle": 512,
+    "credit": "read pointer advances only at consumer accept; output preload does not return credit",
+    "finite_flow": "producer must honor w_rdy or reserve all pipeline completions before launch",
+    "drift": "sticky coarse frequency/clock-loss monitor on 3FF synchronized Gray clock counters, +/-2 edges from RUN anchor; not phase/metastability qualification",
+    "protection": "candidate flops; mutable-state protection inherited contract must be priced by integration owner"
+  },
+  "forwarded": {
+    "max_span_um": 430.56,
+    "capture_edge": "falling",
+    "generated_clock_edges": [
+      2,
+      3,
+      4
+    ],
+    "half_cycle_setup_budget_before_cell_delay_ps": 356.6666666666667,
+    "predicted_wire_ps_at_max_span": 488.6856,
+    "status": "MAX_SPAN_NOT_QUALIFIED_FOR_HALF_CYCLE; reject a failing measured span, no period relaxation"
+  },
+  "priced_cycles": {
+    "qwen": 2024,
+    "ds": 2642,
+    "scope": "latency-only four-extra-cycle fallback; depth4 throughput/issue stalls require measured separate pricing"
+  },
+  "price_to_model_reference": {
+    "qwen": {
+      "term": "+2 x DELTA cycles on every ME op (tap + tree top) and +2 x DELTA on each near-HBM attention round trip; DELTA = 1 central, 4 bound",
+      "central_cycles": 506,
+      "central_us": 0.422,
+      "bound_cycles": 2024,
+      "if_tree_top_banded_extra_cycles": 217,
+      "if_link_fifos_not_merged_extra_cycles": 144,
+      "rate_change_pct": {
+        "calibrated": -0.118,
+        "near_hbm": -0.22
+      }
+    },
+    "deepseek": {
+      "term": "+2 x DELTA cycles on every field matvec and every streamed attention/index op",
+      "central_cycles": 661,
+      "central_us": 0.551,
+      "bound_cycles": 2642,
+      "unmerged_cycles": 967,
+      "rate_change_pct": -0.137
+    }
+  },
+  "status": "MEASURED_DIGITAL_PRICED_FALLBACK_NO_ADOPTION",
+  "measurement": {
+    "source_sha256": "689ad461e009ae903d81713fc04e6990932451fcd8591c3960a2354c99aee080",
+    "accepted_words": 104161143,
+    "nominal_latency": {
+      "min": 4.0625,
+      "max": 5
+    },
+    "queued_wander_max_cycles": 5.0246,
+    "phase_sync_fallback": true,
+    "saturated_words_per_cycle": {
+      "min": 0.444445,
+      "max": 0.5
+    },
+    "payload_GB_s_range": [
+      34.133376,
+      38.4
+    ],
+    "nominal_added_cycles": {
+      "qwen": 2024,
+      "ds": 2644
+    },
+    "conservative_wander_added_cycles": {
+      "qwen": 2277.0,
+      "ds": 2974.5
+    },
+    "same_clock_stream_rate_preserved": false,
+    "issue_stall_token_cost_priced": false,
+    "verdict": "CANDIDATE_ONLY_NOT_LATENCY_CENTRAL_OR_FULL_RATE_GATE",
+    "scope": "Latency terms use f954 model probes, not a new DS stage/die selection; integrators must price source-matched stalls."
+  },
+  "tool_sha256": "e0572551e024f41f82206aacbdd3e56c0bc0213e168c965798cebe3c7fb99bed"
+}
