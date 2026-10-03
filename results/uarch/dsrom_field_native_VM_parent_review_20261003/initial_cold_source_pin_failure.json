@@ -1,0 +1,39 @@
+{
+  "commit": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+  "tests_passed": 129,
+  "cold_model_byte_exact": true,
+  "pin_checks": {
+    "source_pins.json": {
+      "checked": 67,
+      "failed": [
+        {
+          "path": "results/uarch/dsrom_field_native_VM_join_20261003/inputs/__pycache__/native_calendar.cpython-310.pyc",
+          "expected": "c9576577e33ac659856a9e89b82a26106a249328227a5941fe81e82979f76ee9",
+          "actual": "23d99f78950d565776aad820aae35947e197668e49912c8c3b93663a3b8e2a8d"
+        },
+        {
+          "path": "results/uarch/dsrom_field_native_VM_join_20261003/inputs/native_provider/inputs/__pycache__/4_dsrom_split_vm_order_model.cpython-310.pyc",
+          "expected": "871a924dcf22dbc685ad0bcc81c4adbd96ce54fb043735683c3f01f7c52c7dcd",
+          "actual": "adce3414d855c6fc1169da179ac0f41eff9b9ed0c01ca0aade5d729d416a98c2"
+        }
+      ]
+    },
+    "manifest.json": {
+      "checked": 25,
+      "failed": [
+        {
+          "path": "results/uarch/dsrom_field_native_VM_join_20261003/inputs/__pycache__/native_calendar.cpython-310.pyc",
+          "expected": "c9576577e33ac659856a9e89b82a26106a249328227a5941fe81e82979f76ee9",
+          "actual": "23d99f78950d565776aad820aae35947e197668e49912c8c3b93663a3b8e2a8d"
+        },
+        {
+          "path": "results/uarch/dsrom_field_native_VM_join_20261003/inputs/native_provider/inputs/__pycache__/4_dsrom_split_vm_order_model.cpython-310.pyc",
+          "expected": "871a924dcf22dbc685ad0bcc81c4adbd96ce54fb043735683c3f01f7c52c7dcd",
+          "actual": "adce3414d855c6fc1169da179ac0f41eff9b9ed0c01ca0aade5d729d416a98c2"
+        }
+      ]
+    }
+  },
+  "verdict": "INTAKE_HOLD_GENERATED_BYTECODE_PIN",
+  "physics_or_rtl_admitted": false
+}
