@@ -149,5 +149,13 @@
     "results/physical_abi3/asap7/nearhbm/row_engine_hd128_r6_r5/physical.json"
    ]
   }
+ },
+ "verdict": {
+  "status": "STOPPED EARLY (hub in host synthesis, engine in ORFS canonicalize) on the coordinator's EPYC thread-cap audit; relaunched unchanged except OT_ORFS_NUM_CORES=20 as hub_r7 / row_engine_r6 (nicknames *_n20, outputs hub_hd128_r7 / row_engine_hd128_r6_r6)"
+ },
+ "relaunch": {
+  "hub": "hub_r7",
+  "row_engine": "row_engine_r6",
+  "env": "OT_ORFS_NUM_CORES=20"
  }
 }
