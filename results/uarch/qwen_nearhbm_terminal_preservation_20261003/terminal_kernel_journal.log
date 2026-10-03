@@ -1,0 +1,1096 @@
+2026-10-03T05:38:00-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth6c53c76: Gained IPv6LL
+2026-10-03T05:38:00-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:38:01-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11866.
+2026-10-03T05:38:01-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:38:01-07:00 vm-xry57mhfyn agetty[269851]: could not get terminal name: -22
+2026-10-03T05:38:01-07:00 vm-xry57mhfyn agetty[269851]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn sshd-session[269928]: Accepted publickey for ubuntu from 155.103.252.95 port 50122 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn sshd-session[269928]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9363' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn systemd[1]: Started session-9363.scope - Session 9363 of User ubuntu.
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn sshd-session[270040]: Received disconnect from 155.103.252.95 port 50122:11: disconnected by user
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn sshd-session[270040]: Disconnected from user ubuntu 155.103.252.95 port 50122
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn sshd-session[269928]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn systemd[1]: session-9363.scope: Deactivated successfully.
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9363 logged out. Waiting for processes to exit.
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9363.
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn sshd-session[270049]: Accepted publickey for ubuntu from 155.103.252.95 port 50132 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn sshd-session[270049]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9364' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:03-07:00 vm-xry57mhfyn systemd[1]: Started session-9364.scope - Session 9364 of User ubuntu.
+2026-10-03T05:38:04-07:00 vm-xry57mhfyn sshd-session[270241]: Received disconnect from 155.103.252.95 port 50132:11: disconnected by user
+2026-10-03T05:38:04-07:00 vm-xry57mhfyn sshd-session[270241]: Disconnected from user ubuntu 155.103.252.95 port 50132
+2026-10-03T05:38:04-07:00 vm-xry57mhfyn sshd-session[270049]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:04-07:00 vm-xry57mhfyn systemd[1]: session-9364.scope: Deactivated successfully.
+2026-10-03T05:38:04-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9364 logged out. Waiting for processes to exit.
+2026-10-03T05:38:04-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9364.
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn sshd-session[270508]: Accepted publickey for ubuntu from 155.103.252.95 port 39888 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn sshd-session[270508]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9365' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn systemd[1]: Started session-9365.scope - Session 9365 of User ubuntu.
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn sshd-session[270872]: Received disconnect from 155.103.252.95 port 39888:11: disconnected by user
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn sshd-session[270872]: Disconnected from user ubuntu 155.103.252.95 port 39888
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn sshd-session[270508]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn systemd[1]: session-9365.scope: Deactivated successfully.
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9365 logged out. Waiting for processes to exit.
+2026-10-03T05:38:09-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9365.
+2026-10-03T05:38:11-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:38:11-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11867.
+2026-10-03T05:38:11-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:38:11-07:00 vm-xry57mhfyn agetty[271318]: could not get terminal name: -22
+2026-10-03T05:38:11-07:00 vm-xry57mhfyn agetty[271318]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn systemd[1]: docker-5a6e1365afa08dd3ffbfa7fcc8e0199cf118d4af5d86362774c5d661a089000f.scope: Deactivated successfully.
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn systemd[1]: docker-5a6e1365afa08dd3ffbfa7fcc8e0199cf118d4af5d86362774c5d661a089000f.scope: Consumed 1min 5.049s CPU time over 1min 5.189s wall clock time, 313M memory peak, 53.1M read from disk.
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:38:12.850706362Z" level=info msg="ignoring event" container=5a6e1365afa08dd3ffbfa7fcc8e0199cf118d4af5d86362774c5d661a089000f module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:38:12.850920594Z" level=info msg="shim disconnected" id=5a6e1365afa08dd3ffbfa7fcc8e0199cf118d4af5d86362774c5d661a089000f namespace=moby
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:38:12.850956145Z" level=info msg="cleaning up after shim disconnected" id=5a6e1365afa08dd3ffbfa7fcc8e0199cf118d4af5d86362774c5d661a089000f namespace=moby
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:38:12.850966514Z" level=info msg="cleaning up dead shim" id=5a6e1365afa08dd3ffbfa7fcc8e0199cf118d4af5d86362774c5d661a089000f namespace=moby
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn kernel: docker0: port 13(veth5bfaba3) entered disabled state
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn kernel: veth8222164: renamed from eth0
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth5bfaba3: Lost carrier
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 497 seen, reloading interface list
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth5bfaba3: Link DOWN
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn kernel: docker0: port 13(veth5bfaba3) entered disabled state
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn kernel: veth5bfaba3 (unregistering): left allmulticast mode
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn kernel: veth5bfaba3 (unregistering): left promiscuous mode
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn kernel: docker0: port 13(veth5bfaba3) entered disabled state
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn networkctl[271398]: Failed to query link bit rates: Unknown object '/org/freedesktop/network1/link/_3497'.
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn networkctl[271398]: Failed to issue io.systemd.Network.GetLLDPNeighbors() varlink call: Invalid argument
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: ERROR:Failed to get interface "veth8222164" status: Command '['/usr/bin/networkctl', 'status', '--no-pager', '--no-legend', '--lines=0', '--', 'veth8222164']' returned non-zero exit status 1.
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn networkctl[271405]: Interface "veth5bfaba3" not found.
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: ERROR:Failed to get interface "veth5bfaba3" status: Command '['/usr/bin/networkctl', 'status', '--no-pager', '--no-legend', '--lines=0', '--', 'veth5bfaba3']' returned non-zero exit status 1.
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn systemd[1]: run-docker-netns-4170084b6a57.mount: Deactivated successfully.
+2026-10-03T05:38:12-07:00 vm-xry57mhfyn systemd[1]: var-lib-docker-rootfs-overlayfs-5a6e1365afa08dd3ffbfa7fcc8e0199cf118d4af5d86362774c5d661a089000f.mount: Deactivated successfully.
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn systemd[1]: docker-25f46d1cb3314e19ab0ecb39a094e410380fbc255c755bbba5a738d7860735df.scope: Deactivated successfully.
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn systemd[1]: docker-25f46d1cb3314e19ab0ecb39a094e410380fbc255c755bbba5a738d7860735df.scope: Consumed 1min 8.672s CPU time over 1min 8.809s wall clock time, 273M memory peak, 79.7M read from disk.
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:38:14.143516527Z" level=info msg="shim disconnected" id=25f46d1cb3314e19ab0ecb39a094e410380fbc255c755bbba5a738d7860735df namespace=moby
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:38:14.143552539Z" level=info msg="cleaning up after shim disconnected" id=25f46d1cb3314e19ab0ecb39a094e410380fbc255c755bbba5a738d7860735df namespace=moby
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:38:14.143564888Z" level=info msg="cleaning up dead shim" id=25f46d1cb3314e19ab0ecb39a094e410380fbc255c755bbba5a738d7860735df namespace=moby
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:38:14.143763800Z" level=info msg="ignoring event" container=25f46d1cb3314e19ab0ecb39a094e410380fbc255c755bbba5a738d7860735df module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth6de1cb0: Lost carrier
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn kernel: docker0: port 8(veth6de1cb0) entered disabled state
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn kernel: veth32d02bf: renamed from eth0
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 498 seen, reloading interface list
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth6de1cb0: Link DOWN
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn kernel: docker0: port 8(veth6de1cb0) entered disabled state
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn kernel: veth6de1cb0 (unregistering): left allmulticast mode
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn kernel: veth6de1cb0 (unregistering): left promiscuous mode
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn kernel: docker0: port 8(veth6de1cb0) entered disabled state
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn networkctl[271492]: Interface "veth6de1cb0" not found.
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: ERROR:Failed to get interface "veth6de1cb0" status: Command '['/usr/bin/networkctl', 'status', '--no-pager', '--no-legend', '--lines=0', '--', 'veth6de1cb0']' returned non-zero exit status 1.
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn systemd[1]: run-docker-netns-1b58e1c4e4d4.mount: Deactivated successfully.
+2026-10-03T05:38:14-07:00 vm-xry57mhfyn systemd[1]: var-lib-docker-rootfs-overlayfs-25f46d1cb3314e19ab0ecb39a094e410380fbc255c755bbba5a738d7860735df.mount: Deactivated successfully.
+2026-10-03T05:38:16-07:00 vm-xry57mhfyn sshd-session[271498]: Connection closed by authenticating user ubuntu 5.172.178.253 port 47455 [preauth]
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271563]: Accepted publickey for ubuntu from 155.103.252.95 port 47070 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271563]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9366' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd[1]: Started session-9366.scope - Session 9366 of User ubuntu.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271581]: Accepted publickey for ubuntu from 155.103.252.95 port 47080 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271581]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9367' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd[1]: Started session-9367.scope - Session 9367 of User ubuntu.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271682]: Received disconnect from 155.103.252.95 port 47070:11: disconnected by user
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271682]: Disconnected from user ubuntu 155.103.252.95 port 47070
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271563]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd[1]: session-9366.scope: Deactivated successfully.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9366 logged out. Waiting for processes to exit.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9366.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271804]: Received disconnect from 155.103.252.95 port 47080:11: disconnected by user
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271804]: Disconnected from user ubuntu 155.103.252.95 port 47080
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271581]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd[1]: session-9367.scope: Deactivated successfully.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9367 logged out. Waiting for processes to exit.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9367.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271808]: Accepted publickey for ubuntu from 155.103.252.95 port 47088 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271808]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9368' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd[1]: Started session-9368.scope - Session 9368 of User ubuntu.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271920]: Received disconnect from 155.103.252.95 port 47088:11: disconnected by user
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271920]: Disconnected from user ubuntu 155.103.252.95 port 47088
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn sshd-session[271808]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd[1]: session-9368.scope: Deactivated successfully.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9368 logged out. Waiting for processes to exit.
+2026-10-03T05:38:17-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9368.
+2026-10-03T05:38:21-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:38:21-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11868.
+2026-10-03T05:38:21-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:38:21-07:00 vm-xry57mhfyn agetty[271995]: could not get terminal name: -22
+2026-10-03T05:38:21-07:00 vm-xry57mhfyn agetty[271995]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn sshd-session[272138]: Accepted publickey for ubuntu from 155.103.252.95 port 47090 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn sshd-session[272138]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9369' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn systemd[1]: Started session-9369.scope - Session 9369 of User ubuntu.
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn sshd-session[272306]: Received disconnect from 155.103.252.95 port 47090:11: disconnected by user
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn sshd-session[272306]: Disconnected from user ubuntu 155.103.252.95 port 47090
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn sshd-session[272138]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn systemd[1]: session-9369.scope: Deactivated successfully.
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9369 logged out. Waiting for processes to exit.
+2026-10-03T05:38:24-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9369.
+2026-10-03T05:38:31-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:38:31-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11869.
+2026-10-03T05:38:31-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:38:31-07:00 vm-xry57mhfyn agetty[273028]: could not get terminal name: -22
+2026-10-03T05:38:31-07:00 vm-xry57mhfyn agetty[273028]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:38:39-07:00 vm-xry57mhfyn sshd-session[273638]: Accepted publickey for ubuntu from 155.103.252.95 port 60964 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:39-07:00 vm-xry57mhfyn sshd-session[273638]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:39-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9370' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:39-07:00 vm-xry57mhfyn systemd[1]: Started session-9370.scope - Session 9370 of User ubuntu.
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn sshd-session[273813]: Received disconnect from 155.103.252.95 port 60964:11: disconnected by user
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn sshd-session[273813]: Disconnected from user ubuntu 155.103.252.95 port 60964
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn sshd-session[273638]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn systemd[1]: session-9370.scope: Deactivated successfully.
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9370 logged out. Waiting for processes to exit.
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9370.
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn sshd-session[274272]: Accepted publickey for ubuntu from 155.103.252.95 port 60978 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn sshd-session[274272]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9371' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:40-07:00 vm-xry57mhfyn systemd[1]: Started session-9371.scope - Session 9371 of User ubuntu.
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn sshd-session[274413]: Received disconnect from 155.103.252.95 port 60978:11: disconnected by user
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn sshd-session[274413]: Disconnected from user ubuntu 155.103.252.95 port 60978
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn sshd-session[274272]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn systemd[1]: session-9371.scope: Deactivated successfully.
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9371 logged out. Waiting for processes to exit.
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9371.
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn sshd-session[274416]: Accepted publickey for ubuntu from 155.103.252.95 port 60982 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn sshd-session[274416]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9372' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn systemd[1]: Started session-9372.scope - Session 9372 of User ubuntu.
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn sshd-session[274528]: Received disconnect from 155.103.252.95 port 60982:11: disconnected by user
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn sshd-session[274528]: Disconnected from user ubuntu 155.103.252.95 port 60982
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn sshd-session[274416]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn systemd[1]: session-9372.scope: Deactivated successfully.
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9372 logged out. Waiting for processes to exit.
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9372.
+2026-10-03T05:38:41-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11870.
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn agetty[274701]: could not get terminal name: -22
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn agetty[274701]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:38:42.660428529Z" level=info msg="connecting to shim 972495aa45c82203ea414979a9dd9dfd56501414e5b081fc7161165cae6740b9" address="unix:///run/containerd/s/9ce5d9215e62e4a1faa6c16f8e7edac2cb404ce86ca89e27bc4dddcdf0777fb8" namespace=moby protocol=ttrpc version=3
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn systemd[1]: Started docker-972495aa45c82203ea414979a9dd9dfd56501414e5b081fc7161165cae6740b9.scope - libcontainer container 972495aa45c82203ea414979a9dd9dfd56501414e5b081fc7161165cae6740b9.
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 499 seen, reloading interface list
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn kernel: docker0: port 8(vethb509aa4) entered blocking state
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn kernel: docker0: port 8(vethb509aa4) entered disabled state
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn kernel: vethb509aa4: entered allmulticast mode
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn kernel: vethb509aa4: entered promiscuous mode
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn systemd-networkd[9539]: vethb509aa4: Link UP
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn kernel: eth0: renamed from veth967b647
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn systemd-networkd[9539]: Foreign process 'dockerd[27706]' changed sysctl '/proc/sys/net/ipv6/conf/eth0/disable_ipv6' from '0' to '1', conflicting with our setting to '0'.
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn systemd-networkd[9539]: vethb509aa4: Gained carrier
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn kernel: docker0: port 8(vethb509aa4) entered blocking state
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn kernel: docker0: port 8(vethb509aa4) entered forwarding state
+2026-10-03T05:38:42-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:38:42.767520316Z" level=info msg="sbJoin: gwep4 ''->'09952fbba3f9', gwep6 ''->''" eid=09952fbba3f9 ep=hungry_babbage net=bridge nid=8ee07705e254
+2026-10-03T05:38:44-07:00 vm-xry57mhfyn systemd-networkd[9539]: vethb509aa4: Gained IPv6LL
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn sshd-session[275445]: Accepted publickey for ubuntu from 155.103.252.95 port 50648 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn sshd-session[275445]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9373' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn systemd[1]: Started session-9373.scope - Session 9373 of User ubuntu.
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn sshd-session[275448]: Accepted publickey for ubuntu from 155.103.252.95 port 50662 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn sshd-session[275448]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9374' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn systemd[1]: Started session-9374.scope - Session 9374 of User ubuntu.
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: kauditd_printk_skb: 58 callbacks suppressed
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9522): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9523): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9524): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9525): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9526): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9527): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9528): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9529): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9530): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031127.806:9531): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=275489 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn sshd-session[275490]: Accepted publickey for ubuntu from 155.103.252.95 port 50664 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn sshd-session[275490]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9375' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:47-07:00 vm-xry57mhfyn systemd[1]: Started session-9375.scope - Session 9375 of User ubuntu.
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn sshd-session[275642]: Received disconnect from 155.103.252.95 port 50648:11: disconnected by user
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn sshd-session[275642]: Disconnected from user ubuntu 155.103.252.95 port 50648
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn sshd-session[275445]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn systemd[1]: session-9373.scope: Deactivated successfully.
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9373 logged out. Waiting for processes to exit.
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9373.
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn sshd-session[275821]: Received disconnect from 155.103.252.95 port 50664:11: disconnected by user
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn sshd-session[275821]: Disconnected from user ubuntu 155.103.252.95 port 50664
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn sshd-session[275820]: Received disconnect from 155.103.252.95 port 50662:11: disconnected by user
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn sshd-session[275820]: Disconnected from user ubuntu 155.103.252.95 port 50662
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn sshd-session[275490]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn sshd-session[275448]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn systemd[1]: session-9374.scope: Deactivated successfully.
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn systemd[1]: session-9375.scope: Deactivated successfully.
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9375 logged out. Waiting for processes to exit.
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9375.
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9374 logged out. Waiting for processes to exit.
+2026-10-03T05:38:48-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9374.
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn sshd-session[275858]: Accepted publickey for ubuntu from 155.103.252.95 port 50678 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn sshd-session[275858]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9376' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn systemd[1]: Started session-9376.scope - Session 9376 of User ubuntu.
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn sshd-session[275970]: Received disconnect from 155.103.252.95 port 50678:11: disconnected by user
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn sshd-session[275970]: Disconnected from user ubuntu 155.103.252.95 port 50678
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn sshd-session[275858]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn systemd[1]: session-9376.scope: Deactivated successfully.
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9376 logged out. Waiting for processes to exit.
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9376.
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn sshd-session[275973]: Accepted publickey for ubuntu from 155.103.252.95 port 50682 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn sshd-session[275973]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9377' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:50-07:00 vm-xry57mhfyn systemd[1]: Started session-9377.scope - Session 9377 of User ubuntu.
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:38:51.470715065Z" level=info msg="connecting to shim 9e1b53438b35111c9f3528d6a88a28dfa70c28143479854425fbf4fa67a55dc9" address="unix:///run/containerd/s/2717a45fc37bc6c9f8545ab97ee14406cbf9520595f84f0668a9f2f4ec69bf4a" namespace=moby protocol=ttrpc version=3
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn systemd[1]: Started docker-9e1b53438b35111c9f3528d6a88a28dfa70c28143479854425fbf4fa67a55dc9.scope - libcontainer container 9e1b53438b35111c9f3528d6a88a28dfa70c28143479854425fbf4fa67a55dc9.
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 500 seen, reloading interface list
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn kernel: docker0: port 13(veth7971142) entered blocking state
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn kernel: docker0: port 13(veth7971142) entered disabled state
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn kernel: veth7971142: entered allmulticast mode
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn kernel: veth7971142: entered promiscuous mode
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth7971142: Link UP
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn kernel: eth0: renamed from veth62b614d
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn systemd-networkd[9539]: Foreign process 'dockerd[27706]' changed sysctl '/proc/sys/net/ipv6/conf/eth0/disable_ipv6' from '0' to '1', conflicting with our setting to '0'.
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth7971142: Gained carrier
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn kernel: docker0: port 13(veth7971142) entered blocking state
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn kernel: docker0: port 13(veth7971142) entered forwarding state
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:38:51.568157814Z" level=info msg="sbJoin: gwep4 ''->'fe6934e4d70d', gwep6 ''->''" eid=fe6934e4d70d ep=vigorous_roentgen net=bridge nid=8ee07705e254
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn sshd-session[276130]: Received disconnect from 155.103.252.95 port 50682:11: disconnected by user
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn sshd-session[276130]: Disconnected from user ubuntu 155.103.252.95 port 50682
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn sshd-session[275973]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:51-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9377 logged out. Waiting for processes to exit.
+2026-10-03T05:38:52-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:38:52-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11871.
+2026-10-03T05:38:52-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:38:52-07:00 vm-xry57mhfyn agetty[276443]: could not get terminal name: -22
+2026-10-03T05:38:52-07:00 vm-xry57mhfyn agetty[276443]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:38:52-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth7971142: Gained IPv6LL
+2026-10-03T05:38:54-07:00 vm-xry57mhfyn sshd-session[276503]: Accepted publickey for ubuntu from 155.103.252.95 port 50688 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:54-07:00 vm-xry57mhfyn sshd-session[276503]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:54-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9378' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:54-07:00 vm-xry57mhfyn systemd[1]: Started session-9378.scope - Session 9378 of User ubuntu.
+2026-10-03T05:38:55-07:00 vm-xry57mhfyn sshd-session[276615]: Received disconnect from 155.103.252.95 port 50688:11: disconnected by user
+2026-10-03T05:38:55-07:00 vm-xry57mhfyn sshd-session[276615]: Disconnected from user ubuntu 155.103.252.95 port 50688
+2026-10-03T05:38:55-07:00 vm-xry57mhfyn sshd-session[276503]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:55-07:00 vm-xry57mhfyn systemd[1]: session-9378.scope: Deactivated successfully.
+2026-10-03T05:38:55-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9378 logged out. Waiting for processes to exit.
+2026-10-03T05:38:55-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9378.
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn sshd-session[276726]: Accepted publickey for ubuntu from 155.103.252.95 port 50698 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn sshd-session[276726]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9379' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn systemd[1]: Started session-9379.scope - Session 9379 of User ubuntu.
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn sshd-session[276851]: Received disconnect from 155.103.252.95 port 50698:11: disconnected by user
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn sshd-session[276851]: Disconnected from user ubuntu 155.103.252.95 port 50698
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn sshd-session[276726]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn systemd[1]: session-9379.scope: Deactivated successfully.
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9379 logged out. Waiting for processes to exit.
+2026-10-03T05:38:56-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9379.
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn sshd-session[277257]: Accepted publickey for ubuntu from 155.103.252.95 port 34072 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn sshd-session[277257]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9380' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn systemd[1]: Started session-9380.scope - Session 9380 of User ubuntu.
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn sshd-session[277451]: Received disconnect from 155.103.252.95 port 34072:11: disconnected by user
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn sshd-session[277451]: Disconnected from user ubuntu 155.103.252.95 port 34072
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn sshd-session[277257]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn systemd[1]: session-9380.scope: Deactivated successfully.
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9380 logged out. Waiting for processes to exit.
+2026-10-03T05:38:57-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9380.
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn sshd-session[277928]: Accepted publickey for ubuntu from 155.103.252.95 port 34080 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn sshd-session[277928]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9381' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn systemd[1]: Started session-9381.scope - Session 9381 of User ubuntu.
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn sshd-session[278040]: Received disconnect from 155.103.252.95 port 34080:11: disconnected by user
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn sshd-session[278040]: Disconnected from user ubuntu 155.103.252.95 port 34080
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn sshd-session[277928]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn systemd[1]: session-9381.scope: Deactivated successfully.
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9381 logged out. Waiting for processes to exit.
+2026-10-03T05:39:01-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9381.
+2026-10-03T05:39:02-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:39:02-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11872.
+2026-10-03T05:39:02-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:39:02-07:00 vm-xry57mhfyn agetty[278156]: could not get terminal name: -22
+2026-10-03T05:39:02-07:00 vm-xry57mhfyn agetty[278156]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:39:08-07:00 vm-xry57mhfyn sshd-session[278728]: Accepted publickey for ubuntu from 155.103.252.95 port 50036 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:08-07:00 vm-xry57mhfyn sshd-session[278728]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:08-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9382' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:08-07:00 vm-xry57mhfyn systemd[1]: Started session-9382.scope - Session 9382 of User ubuntu.
+2026-10-03T05:39:08-07:00 vm-xry57mhfyn sshd-session[278846]: Received disconnect from 155.103.252.95 port 50036:11: disconnected by user
+2026-10-03T05:39:08-07:00 vm-xry57mhfyn sshd-session[278846]: Disconnected from user ubuntu 155.103.252.95 port 50036
+2026-10-03T05:39:08-07:00 vm-xry57mhfyn sshd-session[278728]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:08-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9382 logged out. Waiting for processes to exit.
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn sshd-session[279507]: Accepted publickey for ubuntu from 155.103.252.95 port 50048 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn sshd-session[279507]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9383' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn systemd[1]: Started session-9383.scope - Session 9383 of User ubuntu.
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn sshd-session[279626]: Received disconnect from 155.103.252.95 port 50048:11: disconnected by user
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn sshd-session[279626]: Disconnected from user ubuntu 155.103.252.95 port 50048
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn sshd-session[279507]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn systemd[1]: session-9383.scope: Deactivated successfully.
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9383 logged out. Waiting for processes to exit.
+2026-10-03T05:39:10-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9383.
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:39:11.410448971Z" level=info msg="connecting to shim 38fd6fe911296fcd2097813acf5c619e40ffde70c640fbc973df6b5f957ed5d4" address="unix:///run/containerd/s/a36378d92c49a5042a13123f365b9d6fe4e80114242f356f04c98b15fbcf3d3d" namespace=moby protocol=ttrpc version=3
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn systemd[1]: Started docker-38fd6fe911296fcd2097813acf5c619e40ffde70c640fbc973df6b5f957ed5d4.scope - libcontainer container 38fd6fe911296fcd2097813acf5c619e40ffde70c640fbc973df6b5f957ed5d4.
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 501 seen, reloading interface list
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn kernel: docker0: port 18(veth04adb17) entered blocking state
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn kernel: docker0: port 18(veth04adb17) entered disabled state
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn kernel: veth04adb17: entered allmulticast mode
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn kernel: veth04adb17: entered promiscuous mode
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth04adb17: Link UP
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn kernel: eth0: renamed from vethb71d8e5
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn systemd-networkd[9539]: Foreign process 'dockerd[27706]' changed sysctl '/proc/sys/net/ipv6/conf/eth0/disable_ipv6' from '0' to '1', conflicting with our setting to '0'.
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth04adb17: Gained carrier
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn kernel: docker0: port 18(veth04adb17) entered blocking state
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn kernel: docker0: port 18(veth04adb17) entered forwarding state
+2026-10-03T05:39:11-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:39:11.509900897Z" level=info msg="sbJoin: gwep4 ''->'530abadf29da', gwep6 ''->''" eid=530abadf29da ep=nice_einstein net=bridge nid=8ee07705e254
+2026-10-03T05:39:12-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:39:12-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11873.
+2026-10-03T05:39:12-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:39:12-07:00 vm-xry57mhfyn agetty[280015]: could not get terminal name: -22
+2026-10-03T05:39:12-07:00 vm-xry57mhfyn agetty[280015]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn sshd-session[280016]: Accepted publickey for ubuntu from 155.103.252.95 port 50054 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn sshd-session[280016]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9384' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth04adb17: Gained IPv6LL
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn systemd[1]: Started session-9384.scope - Session 9384 of User ubuntu.
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn sshd-session[280128]: Received disconnect from 155.103.252.95 port 50054:11: disconnected by user
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn sshd-session[280128]: Disconnected from user ubuntu 155.103.252.95 port 50054
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn sshd-session[280016]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn systemd[1]: session-9384.scope: Deactivated successfully.
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9384 logged out. Waiting for processes to exit.
+2026-10-03T05:39:13-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9384.
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:39:14.063374543Z" level=info msg="connecting to shim da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc" address="unix:///run/containerd/s/72e6cdbec86a5c73149aac6e43cde47868d3323e597e229aa7fb4562eb612eef" namespace=moby protocol=ttrpc version=3
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn systemd[1]: Started docker-da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc.scope - libcontainer container da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc.
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn kernel: docker0: port 19(vetheea49b6) entered blocking state
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn kernel: docker0: port 19(vetheea49b6) entered disabled state
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 502 seen, reloading interface list
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn kernel: vetheea49b6: entered allmulticast mode
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn kernel: vetheea49b6: entered promiscuous mode
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn systemd-networkd[9539]: vetheea49b6: Link UP
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn kernel: eth0: renamed from vethf9aa62c
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn systemd-networkd[9539]: Foreign process 'dockerd[27706]' changed sysctl '/proc/sys/net/ipv6/conf/eth0/disable_ipv6' from '0' to '1', conflicting with our setting to '0'.
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn systemd-networkd[9539]: Foreign process 'dockerd[27706]' changed sysctl '/proc/sys/net/ipv6/conf/eth0/disable_ipv6' from '0' to '1', conflicting with our setting to '0'.
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn systemd-networkd[9539]: Foreign process 'dockerd[27706]' changed sysctl '/proc/sys/net/ipv6/conf/eth0/disable_ipv6' from '0' to '1', conflicting with our setting to '0'.
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn systemd-networkd[9539]: Foreign process 'dockerd[27706]' changed sysctl '/proc/sys/net/ipv6/conf/eth0/disable_ipv6' from '0' to '1', conflicting with our setting to '0'.
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn systemd-networkd[9539]: vetheea49b6: Gained carrier
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn kernel: docker0: port 19(vetheea49b6) entered blocking state
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn kernel: docker0: port 19(vetheea49b6) entered forwarding state
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:39:14.165526131Z" level=info msg="sbJoin: gwep4 ''->'e5f1049771e0', gwep6 ''->''" eid=e5f1049771e0 ep=stupefied_curie net=bridge nid=8ee07705e254
+2026-10-03T05:39:14-07:00 vm-xry57mhfyn sshd-session[280133]: Connection closed by authenticating user ubuntu 5.172.178.253 port 49359 [preauth]
+2026-10-03T05:39:15-07:00 vm-xry57mhfyn systemd-networkd[9539]: vetheea49b6: Gained IPv6LL
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280215]: Accepted publickey for ubuntu from 155.103.252.95 port 33928 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280215]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9385' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd[1]: Started session-9385.scope - Session 9385 of User ubuntu.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280217]: Accepted publickey for ubuntu from 155.103.252.95 port 33938 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280217]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9386' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280219]: Accepted publickey for ubuntu from 155.103.252.95 port 33942 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd[1]: Started session-9386.scope - Session 9386 of User ubuntu.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280219]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9387' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd[1]: Started session-9387.scope - Session 9387 of User ubuntu.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280539]: Received disconnect from 155.103.252.95 port 33928:11: disconnected by user
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280539]: Disconnected from user ubuntu 155.103.252.95 port 33928
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280215]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd[1]: session-9385.scope: Deactivated successfully.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280563]: Received disconnect from 155.103.252.95 port 33942:11: disconnected by user
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280563]: Disconnected from user ubuntu 155.103.252.95 port 33942
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9385 logged out. Waiting for processes to exit.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280219]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9385.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280564]: Received disconnect from 155.103.252.95 port 33938:11: disconnected by user
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280564]: Disconnected from user ubuntu 155.103.252.95 port 33938
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280217]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd[1]: session-9387.scope: Deactivated successfully.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9387 logged out. Waiting for processes to exit.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9387.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd[1]: session-9386.scope: Deactivated successfully.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9386 logged out. Waiting for processes to exit.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9386.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280580]: Accepted publickey for ubuntu from 155.103.252.95 port 33946 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280580]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9388' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd[1]: Started session-9388.scope - Session 9388 of User ubuntu.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280701]: Received disconnect from 155.103.252.95 port 33946:11: disconnected by user
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280701]: Disconnected from user ubuntu 155.103.252.95 port 33946
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280580]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd[1]: session-9388.scope: Deactivated successfully.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9388 logged out. Waiting for processes to exit.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9388.
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280705]: Accepted publickey for ubuntu from 155.103.252.95 port 33960 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:18-07:00 vm-xry57mhfyn sshd-session[280705]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:19-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9389' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:19-07:00 vm-xry57mhfyn systemd[1]: Started session-9389.scope - Session 9389 of User ubuntu.
+2026-10-03T05:39:19-07:00 vm-xry57mhfyn sshd-session[280817]: Received disconnect from 155.103.252.95 port 33960:11: disconnected by user
+2026-10-03T05:39:19-07:00 vm-xry57mhfyn sshd-session[280817]: Disconnected from user ubuntu 155.103.252.95 port 33960
+2026-10-03T05:39:19-07:00 vm-xry57mhfyn sshd-session[280705]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:19-07:00 vm-xry57mhfyn systemd[1]: session-9389.scope: Deactivated successfully.
+2026-10-03T05:39:19-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9389 logged out. Waiting for processes to exit.
+2026-10-03T05:39:19-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9389.
+2026-10-03T05:39:22-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:39:23-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11874.
+2026-10-03T05:39:23-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:39:23-07:00 vm-xry57mhfyn agetty[280952]: could not get terminal name: -22
+2026-10-03T05:39:23-07:00 vm-xry57mhfyn agetty[280952]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn sshd-session[281057]: Accepted publickey for ubuntu from 155.103.252.95 port 33966 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn sshd-session[281057]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9390' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn systemd[1]: Started session-9390.scope - Session 9390 of User ubuntu.
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn sshd-session[281170]: Received disconnect from 155.103.252.95 port 33966:11: disconnected by user
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn sshd-session[281170]: Disconnected from user ubuntu 155.103.252.95 port 33966
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn sshd-session[281057]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn systemd[1]: session-9390.scope: Deactivated successfully.
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9390 logged out. Waiting for processes to exit.
+2026-10-03T05:39:25-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9390.
+2026-10-03T05:39:26-07:00 vm-xry57mhfyn sshd-session[281181]: Connection closed by authenticating user root 80.94.92.234 port 60252 [preauth]
+2026-10-03T05:39:33-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:39:33-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11875.
+2026-10-03T05:39:33-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:39:33-07:00 vm-xry57mhfyn agetty[281228]: could not get terminal name: -22
+2026-10-03T05:39:33-07:00 vm-xry57mhfyn agetty[281228]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:39:36-07:00 vm-xry57mhfyn sshd-session[281418]: Connection reset by authenticating user root 62.60.130.242 port 47944 [preauth]
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn sshd-session[281760]: Accepted publickey for ubuntu from 155.103.252.95 port 41342 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn sshd-session[281760]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9391' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn systemd[1]: Started session-9391.scope - Session 9391 of User ubuntu.
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn sshd-session[281872]: Received disconnect from 155.103.252.95 port 41342:11: disconnected by user
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn sshd-session[281872]: Disconnected from user ubuntu 155.103.252.95 port 41342
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn sshd-session[281760]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn systemd[1]: session-9391.scope: Deactivated successfully.
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9391 logged out. Waiting for processes to exit.
+2026-10-03T05:39:40-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9391.
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn sshd-session[282198]: Accepted publickey for ubuntu from 155.103.252.95 port 41358 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn sshd-session[282198]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9392' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn systemd[1]: Started session-9392.scope - Session 9392 of User ubuntu.
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11876.
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn sshd-session[282331]: Received disconnect from 155.103.252.95 port 41358:11: disconnected by user
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn sshd-session[282331]: Disconnected from user ubuntu 155.103.252.95 port 41358
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn sshd-session[282198]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn systemd[1]: session-9392.scope: Deactivated successfully.
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn agetty[282330]: could not get terminal name: -22
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn agetty[282330]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9392 logged out. Waiting for processes to exit.
+2026-10-03T05:39:43-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9392.
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:39:45.676423110Z" level=info msg="connecting to shim 2c4919124abae9041083cd44fdfc95aec5ccb41a33af975819dfe57fd298e775" address="unix:///run/containerd/s/9cd5b918731b2149145add219d6940bbe24763da8e9d8e4a3787744ef8c8b41f" namespace=moby protocol=ttrpc version=3
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn systemd[1]: Started docker-2c4919124abae9041083cd44fdfc95aec5ccb41a33af975819dfe57fd298e775.scope - libcontainer container 2c4919124abae9041083cd44fdfc95aec5ccb41a33af975819dfe57fd298e775.
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 503 seen, reloading interface list
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn kernel: docker0: port 20(veth7d71b6d) entered blocking state
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn kernel: docker0: port 20(veth7d71b6d) entered disabled state
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn kernel: veth7d71b6d: entered allmulticast mode
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn kernel: veth7d71b6d: entered promiscuous mode
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth7d71b6d: Link UP
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn kernel: eth0: renamed from vethbe73f09
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn systemd-networkd[9539]: Foreign process 'dockerd[27706]' changed sysctl '/proc/sys/net/ipv6/conf/eth0/disable_ipv6' from '0' to '1', conflicting with our setting to '0'.
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth7d71b6d: Gained carrier
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn kernel: docker0: port 20(veth7d71b6d) entered blocking state
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn kernel: docker0: port 20(veth7d71b6d) entered forwarding state
+2026-10-03T05:39:45-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:39:45.775698614Z" level=info msg="sbJoin: gwep4 ''->'60c1a2c62bf6', gwep6 ''->''" eid=60c1a2c62bf6 ep=happy_shtern net=bridge nid=8ee07705e254
+2026-10-03T05:39:46-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth7d71b6d: Gained IPv6LL
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn sshd-session[283225]: Accepted publickey for ubuntu from 155.103.252.95 port 43368 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn sshd-session[283225]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn sshd-session[283223]: Accepted publickey for ubuntu from 155.103.252.95 port 43364 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9393' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn sshd-session[283223]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn systemd[1]: Started session-9393.scope - Session 9393 of User ubuntu.
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9394' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn systemd[1]: Started session-9394.scope - Session 9394 of User ubuntu.
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn sshd-session[283227]: Accepted publickey for ubuntu from 155.103.252.95 port 43382 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn sshd-session[283227]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9395' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn systemd[1]: Started session-9395.scope - Session 9395 of User ubuntu.
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: kauditd_printk_skb: 58 callbacks suppressed
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9590): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9591): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9592): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9593): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9594): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9595): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9596): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9597): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9598): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:48-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031188.798:9599): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=283283 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn sshd-session[283588]: Received disconnect from 155.103.252.95 port 43368:11: disconnected by user
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn sshd-session[283588]: Disconnected from user ubuntu 155.103.252.95 port 43368
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn sshd-session[283225]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn systemd[1]: session-9393.scope: Deactivated successfully.
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9393 logged out. Waiting for processes to exit.
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9393.
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn sshd-session[283587]: Received disconnect from 155.103.252.95 port 43364:11: disconnected by user
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn sshd-session[283587]: Disconnected from user ubuntu 155.103.252.95 port 43364
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn sshd-session[283223]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn systemd[1]: session-9394.scope: Deactivated successfully.
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9394 logged out. Waiting for processes to exit.
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn sshd-session[283585]: Received disconnect from 155.103.252.95 port 43382:11: disconnected by user
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn sshd-session[283585]: Disconnected from user ubuntu 155.103.252.95 port 43382
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9394.
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn sshd-session[283227]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn systemd[1]: session-9395.scope: Deactivated successfully.
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9395 logged out. Waiting for processes to exit.
+2026-10-03T05:39:49-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9395.
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:39:53.004358626Z" level=info msg="connecting to shim 2c14f38a7705d0885aa4beb347b392536e541f011e39e8e625bdea473a531ad0" address="unix:///run/containerd/s/5cfea1994a6507bea4a058826b8c396b4d15703b67f9eaf47f22a329a680263a" namespace=moby protocol=ttrpc version=3
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn systemd[1]: Started docker-2c14f38a7705d0885aa4beb347b392536e541f011e39e8e625bdea473a531ad0.scope - libcontainer container 2c14f38a7705d0885aa4beb347b392536e541f011e39e8e625bdea473a531ad0.
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn kernel: docker0: port 21(vethf6f923d) entered blocking state
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn kernel: docker0: port 21(vethf6f923d) entered disabled state
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 504 seen, reloading interface list
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn kernel: vethf6f923d: entered allmulticast mode
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn kernel: vethf6f923d: entered promiscuous mode
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn systemd-networkd[9539]: vethf6f923d: Link UP
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn kernel: eth0: renamed from veth6dc94ed
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn systemd-networkd[9539]: Foreign process 'dockerd[27706]' changed sysctl '/proc/sys/net/ipv6/conf/eth0/disable_ipv6' from '0' to '1', conflicting with our setting to '0'.
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn kernel: docker0: port 21(vethf6f923d) entered blocking state
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn systemd-networkd[9539]: vethf6f923d: Gained carrier
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn kernel: docker0: port 21(vethf6f923d) entered forwarding state
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:39:53.111062031Z" level=info msg="sbJoin: gwep4 ''->'df70c3ff272a', gwep6 ''->''" eid=df70c3ff272a ep=practical_goldberg net=bridge nid=8ee07705e254
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11877.
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn agetty[284785]: could not get terminal name: -22
+2026-10-03T05:39:53-07:00 vm-xry57mhfyn agetty[284785]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn systemd-networkd[9539]: vethf6f923d: Gained IPv6LL
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn sshd-session[284786]: Accepted publickey for ubuntu from 155.103.252.95 port 43390 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn sshd-session[284786]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9396' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn systemd[1]: Started session-9396.scope - Session 9396 of User ubuntu.
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn sshd-session[284898]: Received disconnect from 155.103.252.95 port 43390:11: disconnected by user
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn sshd-session[284898]: Disconnected from user ubuntu 155.103.252.95 port 43390
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn sshd-session[284786]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn systemd[1]: session-9396.scope: Deactivated successfully.
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9396 logged out. Waiting for processes to exit.
+2026-10-03T05:39:55-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9396.
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn sshd-session[284966]: Accepted publickey for ubuntu from 155.103.252.95 port 43394 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn sshd-session[284966]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9397' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn systemd[1]: Started session-9397.scope - Session 9397 of User ubuntu.
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn sshd-session[285078]: Received disconnect from 155.103.252.95 port 43394:11: disconnected by user
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn sshd-session[285078]: Disconnected from user ubuntu 155.103.252.95 port 43394
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn sshd-session[284966]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn systemd[1]: session-9397.scope: Deactivated successfully.
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9397 logged out. Waiting for processes to exit.
+2026-10-03T05:39:56-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9397.
+2026-10-03T05:40:03-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:40:03-07:00 vm-xry57mhfyn systemd[1]: Starting sysstat-collect.service - system activity accounting tool...
+2026-10-03T05:40:03-07:00 vm-xry57mhfyn systemd[1]: sysstat-collect.service: Deactivated successfully.
+2026-10-03T05:40:03-07:00 vm-xry57mhfyn systemd[1]: Finished sysstat-collect.service - system activity accounting tool.
+2026-10-03T05:40:04-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11878.
+2026-10-03T05:40:04-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:40:04-07:00 vm-xry57mhfyn agetty[285556]: could not get terminal name: -22
+2026-10-03T05:40:04-07:00 vm-xry57mhfyn agetty[285556]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:40:10-07:00 vm-xry57mhfyn sshd-session[286041]: Accepted publickey for ubuntu from 155.103.252.95 port 47338 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:10-07:00 vm-xry57mhfyn sshd-session[286041]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:10-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9398' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:10-07:00 vm-xry57mhfyn systemd[1]: Started session-9398.scope - Session 9398 of User ubuntu.
+2026-10-03T05:40:11-07:00 vm-xry57mhfyn sshd-session[286220]: Received disconnect from 155.103.252.95 port 47338:11: disconnected by user
+2026-10-03T05:40:11-07:00 vm-xry57mhfyn sshd-session[286220]: Disconnected from user ubuntu 155.103.252.95 port 47338
+2026-10-03T05:40:11-07:00 vm-xry57mhfyn sshd-session[286041]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:11-07:00 vm-xry57mhfyn systemd[1]: session-9398.scope: Deactivated successfully.
+2026-10-03T05:40:11-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9398 logged out. Waiting for processes to exit.
+2026-10-03T05:40:11-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9398.
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn sshd-session[286288]: Connection closed by authenticating user ubuntu 5.172.178.253 port 39155 [preauth]
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn sshd-session[286468]: Accepted publickey for ubuntu from 155.103.252.95 port 47344 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn sshd-session[286468]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9399' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn systemd[1]: Started session-9399.scope - Session 9399 of User ubuntu.
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn sshd-session[286580]: Received disconnect from 155.103.252.95 port 47344:11: disconnected by user
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn sshd-session[286580]: Disconnected from user ubuntu 155.103.252.95 port 47344
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn sshd-session[286468]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn systemd[1]: session-9399.scope: Deactivated successfully.
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9399 logged out. Waiting for processes to exit.
+2026-10-03T05:40:13-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9399.
+2026-10-03T05:40:14-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:40:14-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11879.
+2026-10-03T05:40:14-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:40:14-07:00 vm-xry57mhfyn agetty[286774]: could not get terminal name: -22
+2026-10-03T05:40:14-07:00 vm-xry57mhfyn agetty[286774]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn systemd[1]: docker-da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc.scope: Deactivated successfully.
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn systemd[1]: docker-da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc.scope: Consumed 1min 1.012s CPU time over 1min 1.073s wall clock time, 182.9M memory peak.
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:40:15.192463280Z" level=info msg="ignoring event" container=da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:40:15.192522380Z" level=info msg="shim disconnected" id=da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc namespace=moby
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:40:15.192571531Z" level=info msg="cleaning up after shim disconnected" id=da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc namespace=moby
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:40:15.192590751Z" level=info msg="cleaning up dead shim" id=da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc namespace=moby
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn systemd-networkd[9539]: vetheea49b6: Lost carrier
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn kernel: docker0: port 19(vetheea49b6) entered disabled state
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn kernel: vethf9aa62c: renamed from eth0
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 505 seen, reloading interface list
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn kernel: docker0: port 19(vetheea49b6) entered disabled state
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn kernel: vetheea49b6 (unregistering): left allmulticast mode
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn kernel: vetheea49b6 (unregistering): left promiscuous mode
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn kernel: docker0: port 19(vetheea49b6) entered disabled state
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn systemd-networkd[9539]: vetheea49b6: Link DOWN
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn networkctl[287067]: Interface "vetheea49b6" not found.
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: ERROR:Failed to get interface "vetheea49b6" status: Command '['/usr/bin/networkctl', 'status', '--no-pager', '--no-legend', '--lines=0', '--', 'vetheea49b6']' returned non-zero exit status 1.
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn systemd[1]: run-docker-netns-a0463de72f08.mount: Deactivated successfully.
+2026-10-03T05:40:15-07:00 vm-xry57mhfyn systemd[1]: var-lib-docker-rootfs-overlayfs-da9d7cdaa8c418702d9cd28ec1111fe7d60a8a70968d5af3bdb509439e8ab9bc.mount: Deactivated successfully.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287459]: Accepted publickey for ubuntu from 155.103.252.95 port 50608 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287459]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9400' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287461]: Accepted publickey for ubuntu from 155.103.252.95 port 50616 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd[1]: Started session-9400.scope - Session 9400 of User ubuntu.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287461]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9401' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd[1]: Started session-9401.scope - Session 9401 of User ubuntu.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287463]: Accepted publickey for ubuntu from 155.103.252.95 port 50618 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287463]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9402' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd[1]: Started session-9402.scope - Session 9402 of User ubuntu.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287713]: Received disconnect from 155.103.252.95 port 50608:11: disconnected by user
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287713]: Disconnected from user ubuntu 155.103.252.95 port 50608
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287459]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd[1]: session-9400.scope: Deactivated successfully.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9400 logged out. Waiting for processes to exit.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9400.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287718]: Received disconnect from 155.103.252.95 port 50616:11: disconnected by user
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287718]: Disconnected from user ubuntu 155.103.252.95 port 50616
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287461]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd[1]: session-9401.scope: Deactivated successfully.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9401 logged out. Waiting for processes to exit.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9401.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287830]: Received disconnect from 155.103.252.95 port 50618:11: disconnected by user
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287830]: Disconnected from user ubuntu 155.103.252.95 port 50618
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn sshd-session[287463]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd[1]: session-9402.scope: Deactivated successfully.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9402 logged out. Waiting for processes to exit.
+2026-10-03T05:40:19-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9402.
+2026-10-03T05:40:24-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:40:24-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11880.
+2026-10-03T05:40:24-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:40:24-07:00 vm-xry57mhfyn agetty[288176]: could not get terminal name: -22
+2026-10-03T05:40:24-07:00 vm-xry57mhfyn agetty[288176]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288177]: Accepted publickey for ubuntu from 155.103.252.95 port 50630 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288177]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9403' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd[1]: Started session-9403.scope - Session 9403 of User ubuntu.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288290]: Received disconnect from 155.103.252.95 port 50630:11: disconnected by user
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288290]: Disconnected from user ubuntu 155.103.252.95 port 50630
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288177]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd[1]: session-9403.scope: Deactivated successfully.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9403 logged out. Waiting for processes to exit.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9403.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288293]: Accepted publickey for ubuntu from 155.103.252.95 port 50632 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288293]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288294]: Accepted publickey for ubuntu from 155.103.252.95 port 50646 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9404' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd[1]: Started session-9404.scope - Session 9404 of User ubuntu.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288294]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9405' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd[1]: Started session-9405.scope - Session 9405 of User ubuntu.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288519]: Received disconnect from 155.103.252.95 port 50632:11: disconnected by user
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288519]: Disconnected from user ubuntu 155.103.252.95 port 50632
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288293]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd[1]: session-9404.scope: Deactivated successfully.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9404 logged out. Waiting for processes to exit.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9404.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288520]: Received disconnect from 155.103.252.95 port 50646:11: disconnected by user
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288520]: Disconnected from user ubuntu 155.103.252.95 port 50646
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288294]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288334]: Accepted publickey for ubuntu from 155.103.252.95 port 50648 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd[1]: session-9405.scope: Deactivated successfully.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9405 logged out. Waiting for processes to exit.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn sshd-session[288334]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9405.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9406' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:25-07:00 vm-xry57mhfyn systemd[1]: Started session-9406.scope - Session 9406 of User ubuntu.
+2026-10-03T05:40:26-07:00 vm-xry57mhfyn sshd-session[288661]: Received disconnect from 155.103.252.95 port 50648:11: disconnected by user
+2026-10-03T05:40:26-07:00 vm-xry57mhfyn sshd-session[288661]: Disconnected from user ubuntu 155.103.252.95 port 50648
+2026-10-03T05:40:26-07:00 vm-xry57mhfyn sshd-session[288334]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:26-07:00 vm-xry57mhfyn systemd[1]: session-9406.scope: Deactivated successfully.
+2026-10-03T05:40:26-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9406 logged out. Waiting for processes to exit.
+2026-10-03T05:40:26-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9406.
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn sshd-session[289077]: Accepted publickey for ubuntu from 155.103.252.95 port 35638 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn sshd-session[289077]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9407' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn systemd[1]: Started session-9407.scope - Session 9407 of User ubuntu.
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn sshd-session[289189]: Received disconnect from 155.103.252.95 port 35638:11: disconnected by user
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn sshd-session[289189]: Disconnected from user ubuntu 155.103.252.95 port 35638
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn sshd-session[289077]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn systemd[1]: session-9407.scope: Deactivated successfully.
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9407 logged out. Waiting for processes to exit.
+2026-10-03T05:40:33-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9407.
+2026-10-03T05:40:34-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:40:34-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11881.
+2026-10-03T05:40:34-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:40:34-07:00 vm-xry57mhfyn agetty[289344]: could not get terminal name: -22
+2026-10-03T05:40:34-07:00 vm-xry57mhfyn agetty[289344]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: yosys invoked oom-killer: gfp_mask=0x102dc2(GFP_HIGHUSER|__GFP_ZERO|__GFP_NOWARN), order=0, oom_score_adj=0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: CPU: 32 UID: 1000 PID: 278865 Comm: yosys Not tainted 7.0.0-28-generic #28-Ubuntu PREEMPT(lazy) 
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn systemd[1]: docker-0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df.scope: The kernel OOM killer killed some processes in this unit.
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 4.2025.05-3 08/03/2026
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Call Trace:
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  <TASK>
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  show_stack+0x49/0x60
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  dump_stack_lvl+0x5f/0x90
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  dump_stack+0x10/0x18
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  dump_header+0x48/0x1c7
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  oom_kill_process.cold+0x8/0xac
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  out_of_memory+0xff/0x2b0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  __alloc_pages_may_oom+0x10a/0x1d0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  __alloc_pages_slowpath.constprop.0+0x3e0/0x9b0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  __alloc_frozen_pages_noprof+0x327/0x360
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  alloc_pages_bulk_noprof+0x386/0x6f0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  alloc_pages_bulk_mempolicy_noprof+0xb6/0x280
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  vm_area_alloc_pages+0x1d5/0x3c0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  __vmalloc_area_node+0xd1/0x350
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  __vmalloc_node_range_noprof+0xd9/0x210
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  __vmalloc_node_noprof+0x4b/0x70
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? copy_process+0x1ef/0x1760
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  alloc_thread_stack_node+0x99/0x180
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  copy_process+0x1ef/0x1760
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  kernel_clone+0xb6/0x4c0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  __do_sys_clone3+0xf7/0x140
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  __x64_sys_clone3+0x16/0x20
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  x64_sys_call+0x1d99/0x2390
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  do_syscall_64+0x105/0x5a0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? handle_pte_fault+0x1cb/0x1f0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? __handle_mm_fault+0x493/0x720
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? _raw_spin_unlock_irq+0xe/0x50
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? __x64_sys_rt_sigprocmask+0xf6/0x160
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? arch_exit_to_user_mode_prepare.isra.0+0xd/0xe0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? do_syscall_64+0x140/0x5a0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? handle_mm_fault+0x1be/0x2e0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? arch_exit_to_user_mode_prepare.isra.0+0xd/0x100
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? irqentry_exit+0x97/0x6f0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? exc_page_fault+0x94/0x1e0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: RIP: 0033:0x77202973f54d
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Code: c0 89 15 06 fc 0d 00 c3 0f 1f 44 00 00 f3 0f 1e fa b8 ea ff ff ff 48 85 ff 74 28 48 85 d2 74 23 49 89 c8 b8 b3 01 00 00 0f 05 <48> 85 c0 7c 14 74 01 c3 31 ed 4c 89 c7 ff d2 48 89 c7 b8 3c 00 00
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: RSP: 002b:00007ffdad648858 EFLAGS: 00000202 ORIG_RAX: 00000000000001b3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: RAX: ffffffffffffffda RBX: 00007720296abb70 RCX: 000077202973f54d
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: RDX: 00007720296abb70 RSI: 0000000000000058 RDI: 00007ffdad6488a0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: RBP: 00007ffdad648880 R08: 0000772001fe36c0 R09: 00007ffdad6489a7
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: R10: 0000000000000008 R11: 0000000000000202 R12: 0000772001fe36c0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: R13: 00007ffdad6488a0 R14: 0000000000000000 R15: 00007ffdad6489a7
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel:  </TASK>
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Mem-Info:
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: active_anon:16447410 inactive_anon:16065520 isolated_anon:0
+                                                 active_file:0 inactive_file:951 isolated_file:0
+                                                 unevictable:2807 dirty:0 writeback:0
+                                                 slab_reclaimable:58513 slab_unreclaimable:121836
+                                                 mapped:1714 shmem:5205075 pagetables:61851
+                                                 sec_pagetables:0 bounce:0
+                                                 kernel_misc_reclaimable:0
+                                                 free:150624 free_pcp:137 free_cma:63400
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Node 0 active_anon:72477556kB inactive_anon:57574164kB active_file:488kB inactive_file:3804kB unevictable:11228kB isolated(anon):0kB isolated(file):0kB mapped:6856kB dirty:0kB writeback:0kB shmem:20820300kB shmem_thp:0kB shmem_pmdmapped:0kB anon_thp:0kB kernel_stack:27904kB pagetables:247404kB sec_pagetables:0kB all_unreclaimable? no Balloon:0kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Node 0 DMA free:11264kB boost:0kB min:8kB low:20kB high:32kB reserved_highatomic:0KB free_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB zspages:0kB present:15864kB managed:15360kB mlocked:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: lowmem_reserve[]: 0 1900 128706 128706 128706
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Node 0 DMA32 free:508100kB boost:0kB min:888kB low:2496kB high:4104kB reserved_highatomic:0KB free_highatomic:0KB active_anon:592620kB inactive_anon:832756kB active_file:28kB inactive_file:600kB unevictable:0kB writepending:0kB zspages:0kB present:2012064kB managed:1946180kB mlocked:0kB bounce:0kB free_pcp:360kB local_pcp:0kB free_cma:253848kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: lowmem_reserve[]: 0 0 126806 126806 126806
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Node 0 Normal free:83132kB boost:18432kB min:85116kB low:205896kB high:326676kB reserved_highatomic:0KB free_highatomic:0KB active_anon:80790984kB inactive_anon:47835360kB active_file:780kB inactive_file:2168kB unevictable:11228kB writepending:0kB zspages:0kB present:132120576kB managed:129849392kB mlocked:7228kB bounce:0kB free_pcp:196kB local_pcp:0kB free_cma:0kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: lowmem_reserve[]: 0 0 0 0 0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Node 0 DMA: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB 0*256kB 0*512kB 1*1024kB (U) 1*2048kB (M) 2*4096kB (M) = 11264kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Node 0 DMA32: 60*4kB (UMEC) 47*8kB (UME) 60*16kB (UME) 159*32kB (UME) 146*64kB (UMEC) 121*128kB (UMEC) 75*256kB (UMEC) 51*512kB (UMEC) 31*1024kB (UE) 9*2048kB (UEC) 93*4096kB (UMEC) = 507912kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Node 0 Normal: 273*4kB (UMEC) 3606*8kB (UMEC) 1853*16kB (UME) 586*32kB (UE) 53*64kB (U) 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB = 81732kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=1048576kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: 5207653 total pagecache pages
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: 0 pages in swap cache
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Free swap  = 0kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Total swap = 0kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: 33537126 pages RAM
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: 0 pages HighMem/MovableOnly
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: 584393 pages reserved
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: 0 pages cma reserved
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: 0 pages hwpoisoned
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Memory cgroup min protection 0kB -- low protection 0kB
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Tasks state (memory values in pages):
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [   2404]   995  2404     2272      402      336       66         0    57344        0          -900 dbus-daemon
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [   2414]     0  2414    11744     3917     3849       68         0   135168        0             0 networkd-dispat
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [   2426]     0  2426     4635      510      453       57         0    81920        0             0 systemd-logind
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [   2537]     0  2537     2059       49       47        2         0    57344        0             0 agetty
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [   2538]     0  2538    31555     3726     3654       72         0   159744        0             0 unattended-upgr
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [   7289]   100  7289    55076     1118      698      420         0    81920        0             0 rsyslogd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [   9539]   998  9539     6208     1020      448      572         0    90112        0             0 systemd-network
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [   9541]     0  9541    49589      949      534      413         2   405504        0          -250 systemd-journal
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [   9657]     0  9657     9726     1489     1047      442         0   106496        0         -1000 systemd-udevd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  10662]   989 10662     5604     1070      657      413         0    90112        0             0 systemd-resolve
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  11339]     0 11339   135829     1245      654      591         0   163840        0             0 udisksd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  12244]     0 12244     2680      645      294      351         0    73728        0         -1000 sshd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  13126]   983 13126    76554      784      207      577         0   102400        0             0 polkitd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  13141]     0 13141    97847     1105      565      540         0   131072        0             0 ModemManager
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  24371]     0 24371      727      318       31      287         0    45056        0             0 chronyd-starter
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  24372]     0 24372     1872      450       62      388         0    53248        0             0 cron
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  24378]     0 24378    69875     1887      589     1298         0    77824        0         -1000 multipathd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  24397]   988 24397     5066      584      204      380         0    73728        0             0 chronyd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  24398]   988 24398     2984      317      160      157         0    65536        0             0 chronyd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  27303]     0 27303  1170367    12366    12055      306         5   782336        0          -999 containerd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  27706]     0 27706  1378297    14348    13945      403         0   974848        0          -500 dockerd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  36927]     0 36927   125063     2535     1968      567         0   290816        0             0 fwupd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  76497]     0 76497     4539      870      480      390         0    73728        0             0 sshd-session
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  76610]  1000 76610     4574      806      545      261         0    73728        0             0 sshd-session
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  76611]  1000 76611     4350      703      316      387         0    77824        0             0 sleep
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [3939005]  1000 3939005     2015      431       80      351         0    61440        0             0 qcg_autorecord.
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [3944927]  1000 3944927     5536     1175      714      461         0    86016        0           100 systemd
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [3944935]  1000 3944935     5688      710      503      207         0    81920        0           100 (sd-pam)
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [4056488]  1000 4056488      727      361       26      335         0    45056        0             0 sh
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [4056490]  1000 4056490   817723   815767   815394      373         0  6602752        0             0 ivl
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [4076815]  1000 4076815     1990      426       75      351         0    53248        0             0 launch4.sh
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [4076819]  1000 4076819    20871    15645    15233      412         0   204800        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  18780]  1000 18780   813101     2849     2546      303         0   430080        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  18799]     0 18799   308404      861      859        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  18821]     0 18821     1093       75       73        2         0    53248        0             0 bash
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  18893]     0 18893      891      174      172        2         0    45056        0             0 make
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  84208]     0 84208      898      170      168        2         0    49152        0             0 make
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  84226]     0 84226     1136      118      116        2         0    53248        0             0 bash
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  84228]     0 84228     1136      119      119        0         0    53248        0             0 bash
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  84295]     0 84295     4243     1355     1353        2         0    81920        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [  84296]     0 84296  7198022  5260249  5260243        6         0 43585536        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 118427]  1000 118427     1990      428       78      350         0    61440        0             0 qwen_jobs_r2.sh
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 118444]  1000 118444     8377     2984     2610      374         0   106496        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 118446]  1000 118446     8386     3002     2626      376         0   102400        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 118453]  1000 118453  3808035  1880126  1879722      404         0 15642624        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 132222]  1000 132222   776235     2869     2566      303         0   401408        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 132239]     0 132239   308468      872      870        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 132262]     0 132262   986263   920444   920441        3         0  7831552        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 148590]  1000 148590     8379     2985     2608      377         0   106496        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 148591]  1000 148591     8379     2983     2608      375         0   106496        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 148599]  1000 148599     8379     3008     2645      363         0   102400        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 148601]  1000 148601     8378     2986     2610      376         0   106496        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 148607]  1000 148607     8380     2991     2613      378         0   106496        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 148688]  1000 148688  1749056   948386   947949      437         0  8052736        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 148702]  1000 148702  2739497  1494573  1494201      372         0 12464128        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 175623]  1000 175623   720744     2800     2482      318         0   376832        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 175642]     0 175642   308404      886      884        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 175665]     0 175665   337793   274823   274821        2         0  2633728        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 203670]  1000 203670    10184     4778     4400      378         0   122880        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 209819]  1000 209819   665445     2744     2441      303         0   360448        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 209837]     0 209837   308484      881      879        2         0   114688        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 209861]     0 209861   746394   680550   680547        3         0  5894144        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 210953]  1000 210953   628387     2692     2389      303         0   335872        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 211002]     0 211002   308404      873      871        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 211026]     0 211026   245495   184026   184023        3         0  1875968        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 213282]     0 213282     4539      947      480      467         0    73728        0             0 sshd-session
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 213647]  1000 213647     4573      828      543      285         0    73728        0             0 sshd-session
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 213648]  1000 213648     1990      421       70      351         0    57344        0             0 bash
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 230859]  1000 230859     2023      435       85      350         0    57344        0             0 bash
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 231967]  1000 231967    10942     5549     5171      378         0   126976        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 236428]  1000 236428   591521     2680     2377      303         0   311296        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 236445]     0 236445   308404      868      866        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 236470]     0 236470   407713   332783   332733       50         0  3063808        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 237751]  1000 237751   628515     2759     2456      303         0   335872        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 237773]     0 237773   308356      875      873        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 237799]     0 237799  1681046  1590277  1590270        7         0 13197312        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 238488]  1000 238488     1990      427       76      351         0    53248        0             0 qwen_jobs_r3.sh
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 238491]  1000 238491     8399     3029     2651      378         0    98304        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 238493]  1000 238493     8399     3022     2652      370         0   102400        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 239970]  1000 239970    13932     8528     8150      378         0   147456        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 242219]  1000 242219    11165     5732     5356      376         0   126976        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 243304]  1000 243304    20008    14642    14264      378         0   200704        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 243305]  1000 243305    19999    14626    14256      370         0   200704        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 243306]  1000 243306     8264     2849     2471      378         0   102400        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 243307]  1000 243307     8275     2861     2478      383         0   102400        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 243309]  1000 243309    14051     8662     8284      378         0   147456        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 243310]  1000 243310    31879    26509    26139      370         0   299008        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 243312]  1000 243312    21949    16537    16159      378         0   212992        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 243316]  1000 243316  2208164  1114640  1114200      440         0  9535488        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 243321]  1000 243321  5047282  3242492  3242072      420         0 26341376        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 245402]  1000 245402   591521     2754     2451      303         0   319488        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 245427]     0 245427   308468      850      848        2         0   114688        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 245460]     0 245460   213346   153011   153007        4         0  1601536        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 246086]  1000 246086   610082     2761     2458      303         0   335872        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 246096]  1000 246096   591521     2722     2419      303         0   319488        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 246229]     0 246229   308404      859      857        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 246234]     0 246234   308468      889      887        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 246276]     0 246276  1598804  1537930  1537926        4         0 12713984        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 246284]     0 246284  1598807  1537931  1537928        3         0 12713984        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 254756]  1000 254756    10558     5153     4775      378         0   122880        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 254757]  1000 254757    10187     4782     4404      378         0   122880        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 256287]  1000 256287   591521     2751     2448      303         0   315392        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 256399]     0 256399   308404      875      873        2         0   114688        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 256422]     0 256422   483739   415144   415111       34         0  3743744        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 258296]     0 258296     4540      947      481      466         0    81920        0             0 sshd-session
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 258686]  1000 258686     4574      829      544      285         0    86016        0             0 sshd-session
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 258698]  1000 258698     1990      420       69      351         0    57344        0             0 bash
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 260159]  1000 260159   573088     2706     2403      303         0   307200        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 260253]     0 260253   308404      861      859        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 260276]     0 260276   438464   378144   378140        4         0  3403776        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 260560]  1000 260560   573024     2757     2454      303         0   315392        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 260579]     0 260579   308468      857      855        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 260602]     0 260602   438300   377957   377954        3         0  3395584        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 263325]     0 263325     4538      953      479      474         0    81920        0             0 sshd-session
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 263437]  1000 263437     4572      823      542      281         0    81920        0             0 sshd-session
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 263438]  1000 263438     1990      419       69      350         0    53248        0             0 bash
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 266044]  1000 266044     8382     2944     2566      378         0   110592        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 266046]  1000 266046   120206   109869   109508      361         0  1007616        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 267394]  1000 267394   609954     2824     2521      303         0   331776        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 267417]     0 267417   308404      851      849        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 267441]     0 267441   232987   171626   171611       15         0  1769472        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 269444]  1000 269444     8382     2950     2567      383         0   106496        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 269446]  1000 269446   120206   109871   109503      368         0   999424        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 269447]  1000 269447   591521     2712     2409      303         0   319488        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 269475]     0 269475   308404      881      879        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 269499]     0 269499   550207   489971   489968        3         0  4292608        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 273370]  1000 273370     8999     3598     3228      370         0   114688        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 274702]  1000 274702   499084     2545     2242      303         0   274432        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 274721]     0 274721   308404      866      864        2         0   114688        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 274745]     0 274745   378859   317523   317507       16         0  2949120        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 276138]  1000 276138     2023      432       82      350         0    57344        0             0 bash
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 276238]  1000 276238   573024     2732     2429      303         0   319488        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 276256]     0 276256   308468      879      877        2         0   118784        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 276282]     0 276282   170370   104813   104790       23         0  1245184        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 277584]  1000 277584     9026     3637     3254      383         0   114688        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 278857]  1000 278857     8380     2937     2559      378         0   106496        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 278865]  1000 278865  1691923   289316   288874      442         0  2998272        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 279747]  1000 279747     8381     2930     2560      370         0   106496        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 279749]  1000 279749    35138    25114    24690      424         0   323584        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 279798]  1000 279798   554591     2725     2422      303         0   311296        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 279819]     0 279819   308404      881      879        2         0   114688        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 279843]     0 279843   174074   109680   109637       43         0  1290240        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 280585]  1000 280585     8383     2948     2570      378         0   106496        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 280588]  1000 280588   994874   222917   222497      420         0  2154496        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 281213]  1000 281213     8382     2938     2562      376         0   102400        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 281215]  1000 281215  1332844   114869   114504      365         0  1368064        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 281756]  1000 281756     8380     2946     2563      383         0   102400        0             0 python3
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 281758]  1000 281758  1213195  1201380  1200989      391         0  9764864        0             0 yosys
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 282974]  1000 282974   480651     2521     2218      303         0   253952        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 283003]     0 283003   308404      860      858        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 283026]     0 283026   241311   177695   177688        7         0  1835008        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 284589]  1000 284589   480651     2537     2232      305         0   266240        0             0 docker
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 284607]     0 284607   308404      836      834        2         0   110592        0          -998 containerd-shim
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 284632]     0 284632   283164   219672   219660       12         0  2166784        0             0 openroad
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 285423]  1000 285423     4350      774      316      458         0    77824        0             0 sleep
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 285424]  1000 285424    31048    22078    21656      422         0   286720        0             0 yosys-abc
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 288179]  1000 288179   201095   192297   191931      366         0  1650688        0             0 yosys-abc
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 288729]  1000 288729     4350      768      316      452         0    77824        0             0 sleep
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 288804]  1000 288804     4350      774      316      458         0    77824        0             0 sleep
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 288891]  1000 288891     4350      779      316      463         0    81920        0             0 sleep
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 288962]  1000 288962     4350      764      316      448         0    77824        0             0 sleep
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 289344]     0 289344     2070      454       44      410         0    61440        0             0 agetty
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: [ 289490]  1000 289490     4350      765      315      450         0    77824        0             0 sleep
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=user.slice,mems_allowed=0,global_oom,task_memcg=/system.slice/docker-0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df.scope,task=openroad,pid=84296,uid=0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn kernel: Out of memory: Killed process 84296 (openroad) total-vm:28792088kB, anon-rss:21040972kB, file-rss:12kB, shmem-rss:0kB, UID:0 pgtables:42564kB oom_score_adj:0
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn sshd-session[289657]: Accepted publickey for ubuntu from 155.103.252.95 port 39416 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn sshd-session[289657]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9408' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn systemd[1]: Started session-9408.scope - Session 9408 of User ubuntu.
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn sshd-session[289790]: Received disconnect from 155.103.252.95 port 39416:11: disconnected by user
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn sshd-session[289790]: Disconnected from user ubuntu 155.103.252.95 port 39416
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn systemd[1]: session-9408.scope: Deactivated successfully.
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn sshd-session[289657]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9408 logged out. Waiting for processes to exit.
+2026-10-03T05:40:41-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9408.
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn kernel: oom_reaper: reaped process 84296 (openroad), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn systemd[1]: docker-0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df.scope: Deactivated successfully.
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn systemd[1]: docker-0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df.scope: Consumed 19h 40min 22.844s CPU time over 3h 59min 6.911s wall clock time, 30.9G memory peak, 17.7M read from disk, 10.2G written to disk.
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn sshd-session[289878]: Accepted publickey for ubuntu from 155.103.252.95 port 39418 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn sshd-session[289878]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9409' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn systemd[1]: Started session-9409.scope - Session 9409 of User ubuntu.
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn dockerd[27706]: time="2026-10-03T12:40:43.975895706Z" level=info msg="ignoring event" container=0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:40:43.976223358Z" level=info msg="shim disconnected" id=0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df namespace=moby
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:40:43.976407430Z" level=info msg="cleaning up after shim disconnected" id=0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df namespace=moby
+2026-10-03T05:40:43-07:00 vm-xry57mhfyn containerd[27303]: time="2026-10-03T12:40:43.976420790Z" level=info msg="cleaning up dead shim" id=0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df namespace=moby
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn kernel: docker0: port 2(veth9b222b4) entered disabled state
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn kernel: veth18d8a41: renamed from eth0
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth9b222b4: Lost carrier
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: WARNING:Unknown index 506 seen, reloading interface list
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd-networkd[9539]: veth9b222b4: Link DOWN
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn kernel: docker0: port 2(veth9b222b4) entered disabled state
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn kernel: veth9b222b4 (unregistering): left allmulticast mode
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn kernel: veth9b222b4 (unregistering): left promiscuous mode
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn kernel: docker0: port 2(veth9b222b4) entered disabled state
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn networkctl[290010]: Interface "veth18d8a41" not found.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: ERROR:Failed to get interface "veth18d8a41" status: Command '['/usr/bin/networkctl', 'status', '--no-pager', '--no-legend', '--lines=0', '--', 'veth18d8a41']' returned non-zero exit status 1.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn networkctl[290021]: Interface "veth9b222b4" not found.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd[1]: run-docker-netns-400d9d8e4896.mount: Deactivated successfully.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn networkd-dispatcher[2414]: ERROR:Failed to get interface "veth9b222b4" status: Command '['/usr/bin/networkctl', 'status', '--no-pager', '--no-legend', '--lines=0', '--', 'veth9b222b4']' returned non-zero exit status 1.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd[1]: var-lib-docker-rootfs-overlayfs-0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df.mount: Deactivated successfully.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn sshd-session[290029]: Received disconnect from 155.103.252.95 port 39418:11: disconnected by user
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn sshd-session[290029]: Disconnected from user ubuntu 155.103.252.95 port 39418
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn sshd-session[289878]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd[1]: session-9409.scope: Deactivated successfully.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9409 logged out. Waiting for processes to exit.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9409.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd[1]: session-8290.scope: Deactivated successfully.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd[1]: session-8290.scope: Consumed 28min 29.513s CPU time over 4h 40min 4.623s wall clock time, 2.1G memory peak.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 8290.
+2026-10-03T05:40:44-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:40:45-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11882.
+2026-10-03T05:40:45-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:40:45-07:00 vm-xry57mhfyn agetty[290096]: could not get terminal name: -22
+2026-10-03T05:40:45-07:00 vm-xry57mhfyn agetty[290096]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn sshd-session[290163]: Accepted publickey for ubuntu from 155.103.252.95 port 39432 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn sshd-session[290163]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9410' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn systemd[1]: Started session-9410.scope - Session 9410 of User ubuntu.
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn sshd-session[290279]: Received disconnect from 155.103.252.95 port 39432:11: disconnected by user
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn sshd-session[290279]: Disconnected from user ubuntu 155.103.252.95 port 39432
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn sshd-session[290163]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn systemd[1]: session-9410.scope: Deactivated successfully.
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9410 logged out. Waiting for processes to exit.
+2026-10-03T05:40:46-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9410.
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn sshd-session[290421]: Accepted publickey for ubuntu from 155.103.252.95 port 35738 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn sshd-session[290421]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9411' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn systemd[1]: Started session-9411.scope - Session 9411 of User ubuntu.
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn sshd-session[290423]: Accepted publickey for ubuntu from 155.103.252.95 port 35748 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn sshd-session[290423]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9412' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn sshd-session[290425]: Accepted publickey for ubuntu from 155.103.252.95 port 35756 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn systemd[1]: Started session-9412.scope - Session 9412 of User ubuntu.
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn sshd-session[290425]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9413' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn systemd[1]: Started session-9413.scope - Session 9413 of User ubuntu.
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: kauditd_printk_skb: 110 callbacks suppressed
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9710): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=290546 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9711): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=290546 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9712): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=290544 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9713): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=290545 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9715): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=290544 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9714): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=290545 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9716): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=290546 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9717): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=290546 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9718): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=290545 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:49-07:00 vm-xry57mhfyn kernel: audit: type=1400 audit(1791031249.925:9719): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=290544 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn sshd-session[290840]: Received disconnect from 155.103.252.95 port 35756:11: disconnected by user
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn sshd-session[290840]: Disconnected from user ubuntu 155.103.252.95 port 35756
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn systemd[1]: session-9413.scope: Deactivated successfully.
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn sshd-session[290425]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9413 logged out. Waiting for processes to exit.
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9413.
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn sshd-session[290842]: Received disconnect from 155.103.252.95 port 35748:11: disconnected by user
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn sshd-session[290842]: Disconnected from user ubuntu 155.103.252.95 port 35748
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn sshd-session[290423]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn sshd-session[290864]: Received disconnect from 155.103.252.95 port 35738:11: disconnected by user
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn sshd-session[290864]: Disconnected from user ubuntu 155.103.252.95 port 35738
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn sshd-session[290421]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn systemd[1]: session-9412.scope: Deactivated successfully.
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn systemd[1]: session-9411.scope: Deactivated successfully.
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9412 logged out. Waiting for processes to exit.
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9412.
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9411 logged out. Waiting for processes to exit.
+2026-10-03T05:40:50-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9411.
+2026-10-03T05:40:55-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Deactivated successfully.
+2026-10-03T05:40:55-07:00 vm-xry57mhfyn systemd[1]: serial-getty@ttyS0.service: Scheduled restart job, restart counter is at 11883.
+2026-10-03T05:40:55-07:00 vm-xry57mhfyn systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+2026-10-03T05:40:55-07:00 vm-xry57mhfyn agetty[291194]: could not get terminal name: -22
+2026-10-03T05:40:55-07:00 vm-xry57mhfyn agetty[291194]: -: failed to get terminal attributes: Input/output error
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn sshd-session[291259]: Accepted publickey for ubuntu from 155.103.252.95 port 35768 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn sshd-session[291259]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9414' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn systemd[1]: Started session-9414.scope - Session 9414 of User ubuntu.
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn sshd-session[291371]: Received disconnect from 155.103.252.95 port 35768:11: disconnected by user
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn sshd-session[291371]: Disconnected from user ubuntu 155.103.252.95 port 35768
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn sshd-session[291259]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn systemd[1]: session-9414.scope: Deactivated successfully.
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9414 logged out. Waiting for processes to exit.
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9414.
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn sshd-session[291392]: Accepted publickey for ubuntu from 155.103.252.95 port 35778 ssh2: ED25519 SHA256:BP3ip0PXpZyrdNhY5UvQh+gUgeBV55Z8U9aLsBmDNic
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn sshd-session[291392]: pam_unix(sshd:session): session opened for user ubuntu(uid=1000) by ubuntu(uid=0)
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn systemd-logind[2426]: New session '9415' of user 'ubuntu' with class 'user' and type 'tty'.
+2026-10-03T05:40:56-07:00 vm-xry57mhfyn systemd[1]: Started session-9415.scope - Session 9415 of User ubuntu.
+2026-10-03T05:40:57-07:00 vm-xry57mhfyn sshd-session[291504]: Received disconnect from 155.103.252.95 port 35778:11: disconnected by user
+2026-10-03T05:40:57-07:00 vm-xry57mhfyn sshd-session[291504]: Disconnected from user ubuntu 155.103.252.95 port 35778
+2026-10-03T05:40:57-07:00 vm-xry57mhfyn sshd-session[291392]: pam_unix(sshd:session): session closed for user ubuntu
+2026-10-03T05:40:57-07:00 vm-xry57mhfyn systemd[1]: session-9415.scope: Deactivated successfully.
+2026-10-03T05:40:57-07:00 vm-xry57mhfyn systemd-logind[2426]: Session 9415 logged out. Waiting for processes to exit.
+2026-10-03T05:40:57-07:00 vm-xry57mhfyn systemd-logind[2426]: Removed session 9415.

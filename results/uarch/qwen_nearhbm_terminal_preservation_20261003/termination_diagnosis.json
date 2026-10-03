@@ -1,0 +1,40 @@
+{
+  "schema": "nearhbm-r4-termination-diagnosis-v1",
+  "initial_preservation_commit": "4f84e95b691f2bc65df4843de34e6c8ea3d07d59",
+  "initial_record_unchanged": true,
+  "classification": "FAIL_RESOURCE_GLOBAL_OOM_BEFORE_ROUTED_SSFF",
+  "source_commit": "58144881b6088347006298a4eb684a2e648b11ee",
+  "binding": {
+    "container_short_id": "0829d47a1302",
+    "container_cgroup": "/system.slice/docker-0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df.scope",
+    "openroad_pid": 84296,
+    "binding_observed_utc": "2026-10-03T12:01:59.494523+00:00",
+    "kernel_kill_utc": "2026-10-03T12:40:41Z",
+    "launcher_terminal_utc": "2026-10-03T12:40:44.196590+00:00"
+  },
+  "cause": "kernel global_oom (CONSTRAINT_NONE); OpenROAD process killed by host memory pressure",
+  "hardware_or_timing_failure_proven": false,
+  "rerun_authorized": false,
+  "mapped_floorplan": {
+    "floorplan__design__instance__count": 2596101,
+    "floorplan__design__instance__area": 327347,
+    "floorplan__design__instance__count__macros": 0,
+    "floorplan__design__core__area": 645952,
+    "floorplan__design__instance__utilization": 0.506767
+  },
+  "next_gate": "fresh measured aggregate fleet memory admission and owner-approved resumption plan using preserved objects; no source repair inferred",
+  "artifacts": {
+    "terminal_kernel_journal.log": {
+      "bytes": 146801,
+      "sha256": "14f35087cb9ce2149021ea400016cc9527cdb6ec93acdfc8d1c2d51cd812197a"
+    },
+    "mapped_floorplan.json": {
+      "bytes": 2241,
+      "sha256": "c9413b78767ad8105270e514d327c15868aa70552dc18b30556ed52b36b755e7"
+    },
+    "prior_worker_binding.json": {
+      "bytes": 5377,
+      "sha256": "02b5f1a529a995e4ec1244fbf58094b8cc7a290eca7fc680d0e16a15c6b9515e"
+    }
+  }
+}
