@@ -1,0 +1,1 @@
+REFUSE source artifact changed during fit: initial checker compared complete stat_result, including access time changed by its own reads. No source/payload mutation occurred and no source-fit PASS was emitted. Successor stable_stamp uses dev/inode/size/mtime/ctime, matching the original locked-reader/V3 policy; atime is not a payload identity.
