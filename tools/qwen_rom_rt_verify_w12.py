@@ -233,8 +233,14 @@ def main() -> None:
     m = re.search(r"QWEN_ROM_TOKEN_TP2 PASS stages=(\d+) token=(\d+) val=([0-9a-f]+) die1_token=(\d+) cycles=(\d+)", text)
     full = any(n == "head" for n, *_ in stages)
     token = int(m.group(2)) if m else None
-    token_ok = (not full) or (bool(m) and token == oracle.get("next_token") and int(m.group(4)) == token
-                              and m.group(3) == oracle.get("next_logit_bits"))
+    if full and "argmax_tokens" in oracle:
+        # p-position head: every die's per-position records must equal the block's AR argmax {token, logit}
+        want = [f"t{j}={h['argmax_token']}/{h['logit_bits']}" for j, h in enumerate(oracle["heads"][:args.positions])]
+        got = {int(mm.group(1)): mm.group(2).split() for mm in re.finditer(r"VERIFY_TOKENS die=(\d+) n=\d+(.*)", text)}
+        token_ok = bool(m) and len(got) == args.tp and all(v == want for v in got.values())
+    else:
+        token_ok = (not full) or (bool(m) and token == oracle.get("next_token") and int(m.group(4)) == token
+                                  and m.group(3) == oracle.get("next_logit_bits"))
     end_pins = {str(q.relative_to(ROOT)): sha(q) for q in SOURCES}
     stable = end_pins == start_pins
     good = p.returncode == 0 and bool(m) and token_ok and stable and all(c["mismatches"] == 0 for c in checks.values())
