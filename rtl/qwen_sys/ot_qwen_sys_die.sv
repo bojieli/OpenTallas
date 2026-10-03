@@ -43,6 +43,9 @@ module ot_qwen_sys_die #(
     // links on clk (0.9 GHz).  The core is ot_hdc_core_2clk (tools/qwen_rom_sys_core2clk_emit.py).
     parameter integer ME_CDC = 0,
     parameter integer KV_PREFETCH = 0,
+    // SEQ_ASYNC = 1: the asynchronous-collective sequencer (ot_qwen_tp_seq_async_sys, ASYNC_COLL = 1): an all-reduce
+    // whose descriptor carries bit 20 (tools/qwen_rom_sys_async_images.py) is sent while the matrix engine writes it.
+    parameter integer SEQ_ASYNC = 0,
     parameter integer LFW        = 32 + 1 + 1 + 8 + 1 + 8 + 1 + 1 + 3 + (512 + 2 + TAGW)
 ) (
     input  wire               clk,
@@ -187,19 +190,36 @@ module ot_qwen_sys_die #(
     wire [RB-1:0] rr;
     wire s_fault, coll_busy;
     wire [2:0] s_fcode;
-    ot_qwen_tp_seq_sys #(.TAG_FULL(TAG_FULL), .STRAY_FAULT(1), .WDOG(SEQ_WDOG),
-                         .N(N), .NW(NW), .PAW(PAW), .VWA(8), .DAW(DAW), .FW(FLIT), .TAGW(TAGW)) seq (
-        .clk(clk), .rst_n(rst_n),
-        .start(start), .token(token), .pos(pos),
-        .done(done), .next_token(next_token), .next_val(next_val),
-        .fault(s_fault), .coll_busy(coll_busy),
-        .core_start(core_start), .core_token(core_tok), .core_pos(core_pos), .core_done(core_done),
-        .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault),
-        .prog_base(prog_base), .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q),
-        .vm_re(s_vre), .vm_raddr(s_vraddr), .vm_rq(s_vrq),
-        .vm_we(s_vwe), .vm_waddr(s_vwaddr), .vm_wdata(s_vwdata),
-        .c_valid(cv), .c_ready(crd), .c_data(cd), .c_last(cl), .c_mode(cm), .c_tag(ct),
-        .r_valid(rv), .r_data(rd), .r_last(rl), .r_rank(rr), .r_err(re_), .fault_code(s_fcode));
+    generate if (SEQ_ASYNC != 0) begin : g_seq_async
+        ot_qwen_tp_seq_async_sys #(.ASYNC_COLL(1), .NP(G), .MAW(AW), .TAG_FULL(TAG_FULL), .STRAY_FAULT(1), .WDOG(SEQ_WDOG),
+                             .N(N), .NW(NW), .PAW(PAW), .VWA(8), .DAW(DAW), .FW(FLIT), .TAGW(TAGW)) seq (
+            .clk(clk), .rst_n(rst_n),
+            .start(start), .token(token), .pos(pos),
+            .done(done), .next_token(next_token), .next_val(next_val),
+            .fault(s_fault), .coll_busy(coll_busy),
+            .core_start(core_start), .core_token(core_tok), .core_pos(core_pos), .core_done(core_done),
+            .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault),
+            .prog_base(prog_base), .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q),
+            .vm_re(s_vre), .vm_raddr(s_vraddr), .vm_rq(s_vrq),
+            .vm_we(s_vwe), .vm_waddr(s_vwaddr), .vm_wdata(s_vwdata),
+            .c_valid(cv), .c_ready(crd), .c_data(cd), .c_last(cl), .c_mode(cm), .c_tag(ct),
+            .r_valid(rv), .r_data(rd), .r_last(rl), .r_rank(rr), .r_err(re_),
+            .me_we(vw_me_we), .me_addr(vw_me_addr), .me_mask(vw_me_mask), .fault_code(s_fcode));
+    end else begin : g_seq
+        ot_qwen_tp_seq_sys #(.TAG_FULL(TAG_FULL), .STRAY_FAULT(1), .WDOG(SEQ_WDOG),
+                             .N(N), .NW(NW), .PAW(PAW), .VWA(8), .DAW(DAW), .FW(FLIT), .TAGW(TAGW)) seq (
+            .clk(clk), .rst_n(rst_n),
+            .start(start), .token(token), .pos(pos),
+            .done(done), .next_token(next_token), .next_val(next_val),
+            .fault(s_fault), .coll_busy(coll_busy),
+            .core_start(core_start), .core_token(core_tok), .core_pos(core_pos), .core_done(core_done),
+            .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault),
+            .prog_base(prog_base), .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q),
+            .vm_re(s_vre), .vm_raddr(s_vraddr), .vm_rq(s_vrq),
+            .vm_we(s_vwe), .vm_waddr(s_vwaddr), .vm_wdata(s_vwdata),
+            .c_valid(cv), .c_ready(crd), .c_data(cd), .c_last(cl), .c_mode(cm), .c_tag(ct),
+            .r_valid(rv), .r_data(rd), .r_last(rl), .r_rank(rr), .r_err(re_), .fault_code(s_fcode));
+    end endgenerate
 
     // ---------------------------------------------------------------- collective engine + links
     wire          e_txv;
