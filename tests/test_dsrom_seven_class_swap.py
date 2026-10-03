@@ -26,7 +26,7 @@ class Join(unittest.TestCase):
   old=(D/'inputs/spine.sv').read_text()
   new=(ROOT/'rtl/model_ready_ds_seven_class_20261003/ot_v41_spine_related_vm.sv').read_text()
   # Capture mux may change the input binding; arithmetic itself must be literal retained source.
-  self.assertEqual(old[old.index('    // buffers'):],new[new.index('    // buffers'):].replace('checked_x_q','x_q'))
+  self.assertEqual(old[old.rindex('    // buffers'):],new[new.rindex('    // buffers'):].replace('checked_x_q','x_q'))
   a="            x_re <= 1'b0; rq_v <= x_re;"
   b='            // loaded counts:'
   retained=old[old.index(a):old.index(b)]

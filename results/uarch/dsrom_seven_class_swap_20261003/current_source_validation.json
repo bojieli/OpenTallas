@@ -1,0 +1,21 @@
+{
+  "actual_gate_source": "841abc21847cfbb3628bc14cf0bfb54eb4710b9b",
+  "actual_gate_terminal": "PASS DS_SEVEN_CLASS_RAW_COMPOSED classes=7 planes=14 cases=72 reset_debt_preserved=1",
+  "artifacts": {
+    "results/uarch/dsrom_seven_class_swap_20261003/current_source_tests.log": "7c758af7411e05fc2e6c4fb89045f7a03d9a5957d5305092903a23a66373d034",
+    "results/uarch/dsrom_seven_class_swap_20261003/model.json": "3f855f81681ce3219f3e1b5506992f3d6a228711ee41f2ccc99036cd0e78f440",
+    "rtl/model_ready_ds_seven_class_20261003/ot_v41_spine_related_vm.sv": "eb7d6a6f3be713bb5ebe256575c4b84faca34254a7086effaea1558d809683dd",
+    "tests/test_dsrom_seven_class_swap.py": "6e05141d8d3e3b264301ca3afef3b48c8c7f0ce29cb5f7ddf427d4fe6778a327"
+  },
+  "exit_code": 0,
+  "new_spine_successor_executed": false,
+  "physical_admission": false,
+  "prior_static_test_failure": {
+    "preserved_source_commit": "e87e7ec13",
+    "reason": "source-proof test used first buffers comment, capturing control logic as arithmetic; corrected to last buffers comment",
+    "scope": "test range selection, not RTL terminal or timing failure"
+  },
+  "protected_parent_admission": false,
+  "tested_source_base": "e87e7ec13",
+  "tests": 9
+}
