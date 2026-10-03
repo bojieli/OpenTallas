@@ -1,0 +1,47 @@
+{
+  "assignments": [
+    "DS ROM die-level feasibility",
+    "qframe run-verdict collection only"
+  ],
+  "base_commit": "d20e7cf6e2dafaabbf7b8ac844d05be1e76e079c",
+  "full_die_admitted": false,
+  "live_job_changes": 0,
+  "live_sources_unchanged": true,
+  "new_PVE2_PVE3_jobs": 0,
+  "new_hardware_jobs": 0,
+  "next_die_source_implementation": [
+    "Keep live C local/band GRT unchanged; harvest final congestion and wirelength",
+    "Bind minimum routed qframe abstract after existing C/D verdicts, retaining timing FAIL",
+    "Replace inherited cfg PHW6 connectivity with selected PHW10 actual field/control ports; add named clock/reset endpoint graph without changing live cases",
+    "Join actual R49/c9 capture/selector homes, finite PHY provider homes and native macro track/OBS gate",
+    "Construct real M8/M9 PDN source/contact census and PSM204W; complete native relay/reset routes before context admission"
+  ],
+  "owner": "Maxwell",
+  "pipeline_owner": "Epicurus",
+  "prerequisite_commits": [
+    "fbb69bffd5b2924b2aec99e0cc93a173e66e7315",
+    "d20e7cf6e2dafaabbf7b8ac844d05be1e76e079c"
+  ],
+  "primary_necessary_dependency": "full legal relay/global clock-reset construction; retained native leaf route6d10eb075 is component geometry/PG evidence only",
+  "read_only_watch_command": "python3 tools/dsrom_physical_handover_collect.py --watch-root /tmp/dsrom-handover-watch-20261003/snapshots",
+  "schema": "opentallas.dsrom.handover_ownership.v1",
+  "shared_candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "snapshot_replay_byteidentical": true,
+  "source_and_artifact_sha256": {
+    "results/rtl/dsrom_physical_handover_20261003/r1/inputs/FLEET_AND_FLOW.md": "a79aff2d784fc9c48c7964cc780d3badd892861cfda40c97a70239301637a753",
+    "results/rtl/dsrom_physical_handover_20261003/r1/inputs/HANDOVER_TO_CODEX.md": "0258e7455afa56c753abb92426867fd22bd1f67f92536913f63a0f931ea7309b",
+    "results/rtl/dsrom_physical_handover_20261003/r1/inputs/verdict_A_r3_mig.json": "c58c0c031e405fb07e7a5ba10382563ecc12cda32837b6e2d75cfb3dbd8fa614",
+    "results/rtl/dsrom_physical_handover_20261003/r1/inputs/verdict_B_r3_mig.json": "b9f6d25e3941e0d1fa7dba214e16ddeac5d5904fa75a9131844249af686c64dc",
+    "results/rtl/dsrom_physical_handover_20261003/r1/model.json": "b439c9a29f8426bf11911874ed0c55ff34516ea5c3e0fe206edd6058dfaa2855",
+    "results/rtl/dsrom_physical_handover_20261003/r1/snapshot.json.gz": "66de76555f40e433077ce55c45e407e09cd8278a76f7cf6f26ded3244782457b",
+    "results/rtl/dsrom_physical_handover_20261003/r1/source_binding_audit.json": "b5dc15966d312d8ac3aee82aa38b122f9b9d85848b1fcdea3f9fd6af6a6500ef",
+    "tests/test_dsrom_physical_handover_collect.py": "03098300befce8cf42ee1a1ecb1d77e5e18f81a0ca5197158551a57d80c7aff8",
+    "tools/chip_assembly/v41_die.py": "c2e45b6502db022904dd1db0e270f1da72ca56cd5ec1f3acca945d538a34339b",
+    "tools/dsrom_die_feasibility.py": "6ad9fbbf557d89219b20747cefdf31423170758a4269544c42610956613f5e64",
+    "tools/dsrom_physical_handover_collect.py": "71caa4961c5610d01445f6f7bf9176bab354106e388f2222ab2866c7164f17a5"
+  },
+  "source_audit_replay_byteidentical": true,
+  "terminal_replay_command": "python3 tools/dsrom_physical_handover_collect.py --snapshot results/rtl/dsrom_physical_handover_20261003/r1/snapshot.json.gz --out /tmp/dsrom-handover-replay.json",
+  "tests_passed": 15,
+  "token_rate_admitted": false
+}

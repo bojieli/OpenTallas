@@ -1,0 +1,26 @@
+{
+  "PDN_204W_implemented": false,
+  "assumed_PHY_home_names": [
+    "PAR2_UCIE_PHY",
+    "COLL_PHY0",
+    "COLL_PHY1",
+    "COLL_PHY2"
+  ],
+  "capture_home_current_R49_c9_bound": false,
+  "capture_home_input": "results/uarch/dsrom_capture_home_20261002/handoff.json",
+  "cfg_macros": 14336,
+  "cfg_phase_bits_in_inherited_ctl_expression": 6,
+  "clock_declared_in_real_element_ports": true,
+  "clock_endpoints_in_bundled_connectivity": 0,
+  "clock_latency_edges": null,
+  "die_area_mm2": 858.0,
+  "die_um": [
+    33000.0,
+    26000.0
+  ],
+  "field_elements": 2048,
+  "local_case_instances": 22615,
+  "power_W_for_requested_PDN": 204.0,
+  "real_tech_job_implementations": false,
+  "selected_cfg_phase_bits_required": 10
+}
