@@ -1,0 +1,17 @@
+MACRO_TRACK_GATE PASS macros=0 hooks=3 warnings=0 record=/srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r9/receipt.json.macro_gate.json
+view=asap7 corner=TT block=ot_ds_native_relay_leaf top=ot_ds_native_relay_leaf purpose=characterization
+  synth: cells=17 area=3.252 um2 seq_area=2.333 um2 macros=0
+Traceback (most recent call last):
+  File "/srv/opentallas/repos/dsrom-native-relay-leaf-a8da17983/tools/run_abi3_physical_aligned_guarded.py", line 87, in <module>
+    sys.exit(main())
+  File "/srv/opentallas/repos/dsrom-native-relay-leaf-a8da17983/tools/run_abi3_physical_aligned_guarded.py", line 81, in main
+    return base.main(argv)
+  File "/srv/opentallas/repos/dsrom-native-relay-leaf-a8da17983/tools/run_abi3_physical_aligned.py", line 141, in main
+    return persistent.main(["--persistent-workdir", str(a.persistent_workdir),
+  File "/srv/opentallas/repos/dsrom-native-relay-leaf-a8da17983/tools/run_abi3_physical_persistent.py", line 88, in main
+    return launch(driver, forwarded, workdir=args.persistent_workdir, receipt=args.launch_receipt)
+  File "/srv/opentallas/repos/dsrom-native-relay-leaf-a8da17983/tools/run_abi3_physical_persistent.py", line 68, in launch
+    code = driver.main([*driver_args, '--keep-workdir', str(workdir)])
+  File "/srv/opentallas/repos/dsrom-native-relay-leaf-a8da17983/tools/run_abi3_physical.py", line 3707, in main
+    f"Fmax={float(m.get('fmax_hz', 0)) / 1e6:.2f} MHz"
+TypeError: float() argument must be a string or a real number, not 'NoneType'

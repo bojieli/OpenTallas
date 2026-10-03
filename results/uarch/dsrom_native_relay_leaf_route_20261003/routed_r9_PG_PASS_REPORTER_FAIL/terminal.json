@@ -1,0 +1,42 @@
+{
+  "BUF_count": 9,
+  "DFF_count": 8,
+  "Fmax_qualified": null,
+  "SS_setup_FF_hold_qualified": false,
+  "VDD_connected": true,
+  "VSS_connected": true,
+  "all_sink_clock_skew_qualified": null,
+  "artifact_sha256": {
+    "5_2_route.log": "41acbb022138a4c65a24c12f14a0ab5946038af5ebe3656b206e7d03281d5476",
+    "6_report.log": "2c074fd12bd47dd241e9d43c43c2212833c23abf694b1767db9ae8ca76877028",
+    "actual.log": "363606122c956252a7c301fe50f6deb9c19ae5efccbfda95f8327f6320869a26",
+    "physical.json": "842302d9390b800d3a3554e82354106d829d9c7cd525819314c37db20246e2e6",
+    "receipt.json": "eab5a62f8a5bbc1ba7fe50cfd536591652ba01176631110462bae0a3cca4176f"
+  },
+  "core_height_um": 4.86,
+  "current_scope": "one exact actual eight-sink clock leaf; co-resident full parent route/OBS and reset not transferred",
+  "detail_route_DRC": 0,
+  "extra_architectural_cycles": 0,
+  "flow_completed": true,
+  "footprint_um": [
+    26.19,
+    5.4
+  ],
+  "full_parent_build_admitted": false,
+  "full_parent_clock_reset_qualified": false,
+  "full_source_leaf_fanout": 8,
+  "hardware_source_commit": {
+    "commit": "a8da17983b5147fd16fe0b8b7162918140349352",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "live_PID": null,
+  "named_geometry_and_clock_route_source": "physical/dsrom_native_relay_20261003/",
+  "native_required_cells": 17,
+  "remote_job": "ot-epyc1tb:/srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r9",
+  "reporter_failure_preserved": true,
+  "timed_data_paths": 0,
+  "verdict": "NATIVE_CLOCK_LEAF_ROUTE_AND_PG_PASS_REPORTER_FAIL"
+}
