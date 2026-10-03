@@ -8,6 +8,7 @@ def model():
     spec=importlib.util.spec_from_file_location('w6_admitted_base',path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
     old=m.price();new=json.loads(json.dumps(old))
     g=new['gate_proxy'];g['identity_XNOR']=7*55;g['identity_reduce']=7*54;g['state_control']=256;g['drain_scope_compare']=2
+    new['fanout']['identity_comparison_loads_per_bit']=7
     logic=144*.2916+sum(g.values())*.2
     new['area'].update(prospective_logic_um2_per_SM=logic,full32SM_logic_um2=logic*32,
         reserved_slot_um2_per_SM=logic/.5,full32SM_slot_mm2=logic*32/.5/1e6)
