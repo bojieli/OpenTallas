@@ -1,0 +1,7 @@
+{
+  "source_sha256": "ed25c049e7304713a8863db102b729785a7517019625225d031f0471ae5861f9",
+  "actual_returncode": 1,
+  "scope": "helper interface combinational sensitivity only; deliberately isolates decoded-payload input changes",
+  "cause": "always @* does not include globals referenced only within a function; payload argument now explicit",
+  "no_state_or_port_change": true
+}

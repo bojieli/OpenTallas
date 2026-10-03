@@ -1,0 +1,7 @@
+{
+  "source_sha256": "cca55c65fdcbdb339134ce824267dec7eccc1c09487dd3e9018da0cda31da1e8",
+  "scope": "helper only",
+  "actual_returncode": 1,
+  "cause": "malformed restored peer validated only after retire_ready; offer/error could depend on readiness, unsafe with parent error-qualified readiness",
+  "required": "peer decoded legal state check before any offer independent of retire_ready"
+}

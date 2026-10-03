@@ -1,0 +1,8 @@
+{
+  "source_sha256": "e3f78f3839d49543e464831c84b0c824fadb55406c93981947c35e37cd8b90db",
+  "classification": "DEVELOPMENT_HELPER_NEGATIVE_CONTROL_FAIL",
+  "case": "missing_current_status",
+  "observed": "error=1, mutation inhibited, busy=0",
+  "required": "busy=1 for fail-closed normal I/O quarantine",
+  "scope": "helper only; not full controller or token"
+}
