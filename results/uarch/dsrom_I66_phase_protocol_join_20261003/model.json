@@ -1,0 +1,298 @@
+{
+  "C": null,
+  "Nash_source": "6f2c3b8f143fb6cecc5534b6cb9abbbd29166efb",
+  "RTL_GO": false,
+  "actual_consumer_deadline": null,
+  "actual_deadline_entry": "dsrom_I66_consumer_deadline.enrolled_join with current PHW10 compiled ingress/callback/source inverse, exact programs/field, actual consumer journal and reviewed shared service slots",
+  "actual_decoder_implemented": false,
+  "actual_journal_available": false,
+  "codec_source": "6f2c3b8f: capture_visibility_successor.encode/decode, exact LSB-first pinned field order",
+  "compiled_ingress_or_callback_available": false,
+  "distinction": "Nash consumer_accept is downstream writer delivery; SU VM read requires separate source-aligned context/tag callback",
+  "header144_fields_LSB": [
+    {
+      "LSB": 0,
+      "name": "generation",
+      "width": 32
+    },
+    {
+      "LSB": 32,
+      "name": "operation_sequence",
+      "width": 32
+    },
+    {
+      "LSB": 64,
+      "name": "owner_stage",
+      "width": 6
+    },
+    {
+      "LSB": 70,
+      "name": "packet_kind",
+      "width": 3
+    },
+    {
+      "LSB": 73,
+      "name": "packet_ordinal",
+      "width": 3
+    },
+    {
+      "LSB": 76,
+      "name": "payload_bits",
+      "width": 18
+    },
+    {
+      "LSB": 94,
+      "name": "rank",
+      "width": 2
+    },
+    {
+      "LSB": 96,
+      "name": "reserved",
+      "width": 16
+    },
+    {
+      "LSB": 112,
+      "name": "user",
+      "width": 32
+    }
+  ],
+  "identical_association": [
+    "169bit context",
+    "physical shard at source issue",
+    "row",
+    "home_visible edge",
+    "captured credit-return edge",
+    "qualified native clock epoch"
+  ],
+  "lease_is_not_unit_busy": "holding producer idle false until consumer read would circularly block wait2 consumer; commit and address-lease fences must be distinct",
+  "necessary_admission_samples": [
+    "actualS_ISSUE/PC/d_unit/d_wait/idles/waited/unit_ready/sourceSUcommand accept",
+    "latched vector owner/sequence and source-aligned X tags",
+    "owned source producer completion/visibility fence, not original cone idle421"
+  ],
+  "new_jobs": false,
+  "phase_model": {
+    "C": null,
+    "Nash_successor": "6f2c3b8f143fb6cecc5534b6cb9abbbd29166efb",
+    "RTL_GO": false,
+    "actual_consumer_deadline": null,
+    "consumer": "actual source xs_rd_re/src0/address/old data -> observed vx/cwx Xtag atR+2; accepted consumer owner, not current PC",
+    "consumer_source_nodes": [
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I70",
+            "consumer_template_word_sha256": "baaa22bd143df024f0ace0115169314634e66e2f7968f4d36d3536768e5313d1",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 2
+          }
+        ],
+        "producer": "L0.I66"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I70",
+            "consumer_template_word_sha256": "baaa22bd143df024f0ace0115169314634e66e2f7968f4d36d3536768e5313d1",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 2
+          }
+        ],
+        "producer": "L0.I67"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I80",
+            "consumer_template_word_sha256": "48889746e2262e0507f170b89794709af45abd78a7fe05fd6ad50b7bff967a2a",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I68"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I80",
+            "consumer_template_word_sha256": "48889746e2262e0507f170b89794709af45abd78a7fe05fd6ad50b7bff967a2a",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I69"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I85",
+            "consumer_template_word_sha256": "c5c8411fd0683b8a78f8fa66ea11987540e7ae94dab5483b11accf10b8492079",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I72"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I85",
+            "consumer_template_word_sha256": "c5c8411fd0683b8a78f8fa66ea11987540e7ae94dab5483b11accf10b8492079",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I73"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I90",
+            "consumer_template_word_sha256": "273703be0d968eecf73bcb77181d546c4b7ee34260e82de4586c17c63df9013c",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I82"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I90",
+            "consumer_template_word_sha256": "273703be0d968eecf73bcb77181d546c4b7ee34260e82de4586c17c63df9013c",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I83"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I95",
+            "consumer_template_word_sha256": "784ff0c88fab7999a87aa125408a76278fa4f719319cd46cd35564a7dcf4b9d7",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I87"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I95",
+            "consumer_template_word_sha256": "784ff0c88fab7999a87aa125408a76278fa4f719319cd46cd35564a7dcf4b9d7",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I88"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I98",
+            "consumer_template_word_sha256": "9e57ff42bb75fbc825e3e085de1b3da27613354af2aa50f89250fbcf7018f6af",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I92"
+      },
+      {
+        "consumers": [
+          {
+            "consumer_node": "L0.I98",
+            "consumer_template_word_sha256": "9e57ff42bb75fbc825e3e085de1b3da27613354af2aa50f89250fbcf7018f6af",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I93"
+      }
+    ],
+    "current_enrollment": "current PHW10 binary/source/program/field + compiled intercepted-ingress callback closure and accepted journal must qualify separately",
+    "exclusion": "every source edge from phase lease through last associated consumer read/Xtag; any other writer to a leased address rejected, including equal bits",
+    "generation_rearm": "separate source/route/packetACK owner fences still required; not proved by this address-lease checker",
+    "implemented_copied_ingress": false,
+    "ingress_default_off": true,
+    "lease_origin": "actual acquired owner epoch, not borrowed cone retirement422",
+    "mux_owner_and_exclusion_cost": null,
+    "necessary_native_ROM_exclusion": "slot0 substitution does not silence native slots1..127; prove no writes into the lease or explicitly price suppression/interception",
+    "new_jobs": false,
+    "phase_address_lease": "held until all576 associated consumers observed and tags matched; no timed release or promise",
+    "port0_is_intercepted_ingress_not_native_root_id": true,
+    "proposed_write": "dut.u_tile.rom_we[0], rom_waddr[0+:AW30], rom_wdata[0+:32]",
+    "scalar_source_credit": "actual visible then positive captured feedback; does not free phase address lease",
+    "scope": "PROPOSED_SLOT0_PHASE_EXCLUSION_CHECK_NOT_ACTUAL_ADMISSION",
+    "scope_clock": "native_core_clk only; no inferred physical3:4CDC conversion",
+    "source_sha256": {
+      "core.sv.txt": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+      "runtime_spine.sv.txt": "a55235b091ceaa0c2b84c2a6097800426e3fc5476a245523f8f5b385ddf119a3",
+      "tile.sv.txt": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+    },
+    "stations": null,
+    "unchanged_formatter": "row + pos*ops + obase; source fmt/pw62/pw63/rsplit, supplied BF16, error0 and VM19 bounds",
+    "writer_families": [
+      "ww_h",
+      "rom",
+      "vw_me",
+      "vw_su",
+      "vw_rd",
+      "xs_vm",
+      "xs_res",
+      "vw_xe",
+      "ww_q",
+      "ww_x",
+      "xa",
+      "xb"
+    ]
+  },
+  "producer_completion_fence": "all576 owned VM-visible before producer-complete permits waiting SU; keep address/version lease separately through consumer reads",
+  "publication_is_actual_only_after_compiled_callback_enrollment": true,
+  "scalar_publication_lower_bound": "one accepted scalar word/edge: first-to-last visibility span at least575edges plus actual reply/formatter/credit/CDC; not actual consumer deadline",
+  "scope": "ONE_TWO_JOURNAL_PROTOCOL_AND_SLOT0_PHASE_JOIN",
+  "selected_Arch_bank": {
+    "complete_selector_reserved_with_core_rectangle_headroom_mm2": 2.3226645088799995,
+    "core_clock70406": 70406,
+    "named_bank_bbox_DBU": [
+      3129786,
+      8953200,
+      3147930,
+      9745920
+    ],
+    "reserved_bank_mm2": 0.01438311168,
+    "source_cells_hash": "ab576968dddf57dacdd632b3e561dd2dca101c37b1e94239711cc802404c7b04",
+    "source_commit": "d4a3deb550aa71afec39e0549adb0e0a7f4c2894",
+    "spare_sites": 58,
+    "transport_clock48007_not_readded": true
+  },
+  "selected_clock_phase_reset_release": null,
+  "selected_clock_physical_fit_proven": false,
+  "selected_clock_qualified": false,
+  "selected_clock_source": {
+    "selected_clock_handoff": {
+      "sha256": "4b860fb6be70318cea30ca27c5c196fd6678975fa51524e26b7fce2b801a9462",
+      "source_commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+      "source_path": "results/uarch/dsrom_capture_clock_selected_union_20261002/handoff.json"
+    },
+    "selected_clock_model": {
+      "sha256": "5fc207fa190513f8394e26b9177c1a032fd148dd0ddd6cf3abbe231753715ae0",
+      "source_commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+      "source_path": "results/uarch/dsrom_capture_clock_selected_union_20261002/model.json"
+    }
+  },
+  "stations": null
+}
