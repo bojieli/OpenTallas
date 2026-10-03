@@ -72,7 +72,7 @@
   "--orfs-var",
   "SYNTH_HDL_FRONTEND=slang",
   "--orfs-var",
-  "SYNTH_SLANG_ARGS=--unroll-limit=0",
+  "SYNTH_SLANG_ARGS=--unroll-limit=149761",
   "--source",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
 ]
