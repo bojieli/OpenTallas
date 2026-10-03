@@ -59,16 +59,23 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def tcl(top: str, period_ps: float, clock_port: str, false_from: list[str], max_fanout: int, util: int) -> str:
+def tcl(top: str, period_ps: float, clock_port: str, false_from: list[str], max_fanout: int, util: int,
+        focus: list[str] | None = None) -> str:
     libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{lib}" for lib in SS_LIBS)
     io = 0.2 * period_ps
+    pairs = []
+    for f in focus or []:
+        name, rx = f.split("=", 1)
+        pairs.append(f"{name} {{{rx}}}")
+    focus_tcl = "set ::ot_focus [list " + " ".join(pairs) + "]"
+    linkopt = ""
     ff = " ".join(false_from)
     return f"""
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 {libs}
 read_verilog /w/mapped.v
-link_design {top}
+link_design {top}{linkopt}
 create_clock -name clk -period {period_ps} [get_ports {clock_port}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
@@ -78,6 +85,7 @@ set_output_delay {io} -clock clk [all_outputs]
 foreach p {{{ff}}} {{ if {{[llength [get_ports -quiet $p]]}} {{ set_false_path -from [get_ports $p] }} }}
 set_max_transition 320 [current_design]
 set_max_fanout {max_fanout} [current_design]
+{focus_tcl}
 proc ot_phase {{tag}} {{
   set r2r [find_timing_paths -from [all_registers -clock_pins] -to [all_registers -data_pins] -path_delay max -group_path_count 1]
   if {{[llength $r2r]}} {{ puts "OT_${{tag}}_R2R_WS [get_property [lindex $r2r 0] slack]" }} else {{ puts "OT_${{tag}}_R2R_WS NONE" }}
@@ -87,6 +95,18 @@ proc ot_phase {{tag}} {{
   puts "OT_${{tag}}_PATH_BEGIN"
   report_checks -path_delay max -from [all_registers -clock_pins] -to [all_registers -data_pins] -group_path_count 1 -fields {{fanout cap slew}} -digits 1
   puts "OT_${{tag}}_PATH_END"
+  foreach {{fname fre}} $::ot_focus {{
+    set pins {{}}
+    foreach c [concat [all_registers -cells] [get_cells -quiet -filter "ref_name=~ICG*" *]] {{ if {{[regexp -- $fre [get_full_name $c]]}} {{ foreach pn [get_pins -of_objects $c -filter "direction==input"] {{ set nm [get_property $pn lib_pin_name]; if {{$nm eq "D" || $nm eq "ENA" || $nm eq "SE"}} {{ lappend pins $pn }} }} }} }}
+    puts "OT_${{tag}}_FOCUS_N_${{fname}} [llength $pins]"
+    if {{[llength $pins]}} {{
+      set fp [find_timing_paths -to $pins -path_delay max -group_path_count 1]
+      if {{[llength $fp]}} {{ puts "OT_${{tag}}_FOCUS_WS_${{fname}} [get_property [lindex $fp 0] slack]" }}
+      puts "OT_${{tag}}_FPATH_${{fname}}_BEGIN"
+      report_checks -to $pins -path_delay max -group_path_count 1 -fields {{fanout cap slew}} -digits 1
+      puts "OT_${{tag}}_FPATH_${{fname}}_END"
+    }}
+  }}
   puts "OT_${{tag}}_IOPATH_BEGIN"
   report_checks -path_delay max -group_path_count 1 -fields {{fanout}} -digits 1
   puts "OT_${{tag}}_IOPATH_END"
@@ -127,12 +147,14 @@ def resolve(top: str, extra: list[str], listfile: str, incs: list[str], blackbox
     need, todo, seen = [], [top], set()
     while todo:
         mod = todo.pop()
-        if mod in seen or mod not in defs or mod in blackboxes:
+        if mod in seen or mod not in defs:
             continue
         seen.add(mod)
         f = defs[mod]
         if f not in need:
             need.append(f)
+        if mod in blackboxes:          # its definition is read (for its ports), its body is not descended
+            continue
         text = (ROOT / f).read_text(errors="replace")
         text = re.sub(r"//.*", "", text)
         for m in INST.finditer(text):
@@ -143,6 +165,26 @@ def resolve(top: str, extra: list[str], listfile: str, incs: list[str], blackbox
         if f not in need:
             need.append(f)
     return need
+
+
+def strip_blackbox_params(netlist: Path, blackboxes: list[str]) -> None:
+    """Drop ``#(...)`` overrides on black-box instances (OpenSTA's Verilog reader takes none); the black
+    box links as an undefined cell, so its pins are timing endpoints/startpoints of nothing."""
+    text = netlist.read_text()
+    out, i = [], 0
+    pat = re.compile(r"\b(" + "|".join(map(re.escape, blackboxes)) + r")\s*#\(")
+    while True:
+        m = pat.search(text, i)
+        if not m:
+            out.append(text[i:])
+            break
+        out.append(text[i:m.start()] + m.group(1) + " ")
+        depth, j = 1, m.end()
+        while depth:
+            depth += {"(": 1, ")": -1}.get(text[j], 0)
+            j += 1
+        i = j
+    netlist.write_text("".join(out))
 
 
 def parse_path(text: str) -> dict:
@@ -185,7 +227,7 @@ def num(text: str, key: str):
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--top", required=True)
-    ap.add_argument("--source", action="append", required=True)
+    ap.add_argument("--source", action="append", default=[])
     ap.add_argument("--param", action="append", default=[])
     ap.add_argument("--clock-port", default="clk")
     ap.add_argument("--false-path-from", action="append", default=["rst_n", "rst", "reset", "rstn"])
@@ -200,6 +242,8 @@ def main() -> int:
     ap.add_argument("--resolve-from", default=None, help="runtime source list; add the closure of --top from it")
     ap.add_argument("--blackbox", action="append", default=[], help="module to leave as a black box")
     ap.add_argument("--domain", default=None, help="intended clock domain of the block (label only)")
+    ap.add_argument("--focus", action="append", default=[], metavar="NAME=REGEX",
+                    help="also report the worst path into registers whose full name matches REGEX (the loop state)")
     args = ap.parse_args()
 
     work = Path(args.work).resolve()
@@ -219,6 +263,9 @@ def main() -> int:
           *(f"blackbox {b}" for b in args.blackbox),
           f"hierarchy -check -top {args.top}{chparam}",
           f"synth -top {args.top} -flatten",
+          # a black box's instance becomes ports of the top (expose -evert), so its pins are I/O with the
+          # 20 %-of-period budget rather than an unlinkable cell
+          *([f"expose -evert " + " ".join(f"t:{b} t:$paramod*{b}*" for b in args.blackbox)] if args.blackbox else []),
           # cells named after the wire they drive, so the timed path reads in RTL names
           "rename -wire",
           f"dfflibmap -liberty {seq}",
@@ -234,11 +281,14 @@ def main() -> int:
     if not (work / "named/mapped.v").is_file():
         print(proc.stdout[-2000:], proc.stderr[-3000:], file=sys.stderr)
         return 2
+    if args.blackbox:
+        strip_blackbox_params(work / "named/mapped.v", args.blackbox)
     stat = (work / "named/stat.txt").read_text()
     m = re.search(r"Chip area for (?:top )?module .*?:\s*([\d.]+)", stat)
     mc = re.findall(r"^\s+(\d+)\s+(?:[\d.E+\-]+\s+)?cells\s*$", stat, re.M) or re.findall(r"Number of cells:\s+(\d+)", stat)
     synth = {"design": {"area_um2": float(m.group(1)) if m else None, "cells": int(mc[-1]) if mc else None}}
-    script = tcl(args.top, args.period_ns * 1000.0, args.clock_port, args.false_path_from, args.max_fanout, args.utilization)
+    script = tcl(args.top, args.period_ns * 1000.0, args.clock_port, args.false_path_from, args.max_fanout, args.utilization,
+                 args.focus)
     (work / "screen.tcl").write_text(script)
     dock = ["docker", "run", "--rm", "-v", f"{work / 'named'}:/w:ro", "-v", f"{work}:/o", IMAGE, "bash", "-lc",
             "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -no_init -exit /o/screen.tcl"]
@@ -260,7 +310,16 @@ def main() -> int:
             "cells": num(log, f"{tag}_CELLS"),
             "r2r_path": parse_path(block(log, f"{tag}_PATH")),
             "io_path": {k: v for k, v in parse_path(block(log, f"{tag}_IOPATH")).items() if k != "cells"},
+            "focus": {},
         }
+        for f in args.focus:
+            name = f.split("=", 1)[0]
+            ws = num(log, f"{tag}_FOCUS_WS_{name}")
+            phases[tag.lower()]["focus"][name] = {
+                "regex": f.split("=", 1)[1], "endpoints": num(log, f"{tag}_FOCUS_N_{name}"),
+                "setup_wns_ps": ws, "fmax_mhz": None if ws is None else 1e6 / (period_ps - ws),
+                "path": parse_path(block(log, f"{tag}_FPATH_{name}")),
+            }
     src_commit = None
     for cand in (ROOT / "SOURCE_COMMIT",):
         if cand.is_file():
@@ -293,6 +352,9 @@ def main() -> int:
     }
     Path(args.output).write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
     rp = phases["rep"]
+    for name, fo in rp["focus"].items():
+        print(f"  focus {name}: repaired wns {fo['setup_wns_ps']} ps, fmax {fo['fmax_mhz']} MHz, "
+              f"{fo['path']['startpoint']} -> {fo['path']['endpoint']}")
     print(f"{rec['label']}: raw r2r {phases['raw']['r2r_fmax_mhz']} MHz, repaired r2r {rp['r2r_fmax_mhz']} MHz "
           f"(wns {rp['r2r_setup_wns_ps']} ps), all {rp['all_fmax_mhz']} MHz")
     return 0 if proc.returncode == 0 else 3
