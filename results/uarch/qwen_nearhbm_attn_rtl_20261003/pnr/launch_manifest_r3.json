@@ -110,7 +110,7 @@
    ]
   },
   "hub": {
-   "min_mem_avail_gb": 20,
+   "min_mem_avail_gb": 12,
    "argv": [
     "--top",
     "ot_qwen_nearhbm_attn_hub",
@@ -173,10 +173,8 @@
     "signoff_target",
     "--output",
     "results/physical_abi3/asap7/nearhbm/hub_hd128/physical.json"
-   ]
+   ],
+   "note": "admission threshold lowered 20 -> 12 GB before admission (small block)"
   }
- },
- "verdict": {
-  "status": "hub: FAILED before synthesis (pinned host tool yosys-0.68 absent on ot-agidock128); row engine: stopped while waiting for memory. Tools copied (yosys-0.68, opensta-be771a0); superseded by launch_manifest_r3.json, same argv."
  }
 }
