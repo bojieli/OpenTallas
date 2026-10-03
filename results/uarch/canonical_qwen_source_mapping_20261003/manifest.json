@@ -1,0 +1,63 @@
+{
+  "RTL_built": false,
+  "base_commit": "cf177c9a2b88e6fb67cb1d4a1fb4c81d27a86dab",
+  "cold_replay_scope": "placement gzip and current r4 allocator compared byteexact; previous r1-r3 independent generator tests PASS",
+  "factory_ready": false,
+  "initial_development_test_failure": {
+    "actual_extents": 806,
+    "category": "test fixture census",
+    "cause": "test assumed12 rather than11 per-layer extents; source/prediction unchanged",
+    "expected_extents": 874
+  },
+  "inputs_and_artifacts": [
+    {
+      "path": "results/uarch/canonical_qwen_source_mapping_20261003/HANDOFF.txt",
+      "sha256": "1d9722dbb50e1b3269c797c1f2a87a0ca15a1eae88c38754cc6d636f76ec6a03"
+    },
+    {
+      "path": "results/uarch/canonical_qwen_source_mapping_20261003/r1/allocator_generator.py",
+      "sha256": "2dda470f629dbaf972c28860a8a4907bc021025776884e23436b682e36d2be9a"
+    },
+    {
+      "path": "results/uarch/canonical_qwen_source_mapping_20261003/r1/allocator_model.json",
+      "sha256": "d5b398549985ac86a5cab5d6e13bffe0f51fa1085c45050db9de4620c11c19ef"
+    },
+    {
+      "path": "results/uarch/canonical_qwen_source_mapping_20261003/r1/placement.json.gz",
+      "sha256": "7bd090436d2a685956518dbff2cbf5fc9379b03b859f6bc9ceaf8c1fae978b1d"
+    },
+    {
+      "path": "results/uarch/canonical_qwen_source_mapping_20261003/r2/allocator_generator.py",
+      "sha256": "4e2ea4a2146bfcb8205379dc93e39da62686638468b20adf669d1c5208d29dd3"
+    },
+    {
+      "path": "results/uarch/canonical_qwen_source_mapping_20261003/r2/allocator_model.json",
+      "sha256": "e8e4175f79d1a7a9590a61c421754ae8d8151ceef920483449dfe02d773c423a"
+    },
+    {
+      "path": "results/uarch/canonical_qwen_source_mapping_20261003/r3/allocator_generator.py",
+      "sha256": "e9363897e68041abc23997a0a3ce685e22ec326b96bb0c1caec6d9c18b133254"
+    },
+    {
+      "path": "results/uarch/canonical_qwen_source_mapping_20261003/r3/allocator_model.json",
+      "sha256": "e871d4e96ed6dd002bfd9c349d223b8a27759c95eb69a1692a82597ba2a0d1a3"
+    },
+    {
+      "path": "results/uarch/canonical_qwen_source_mapping_20261003/r4/allocator_model.json",
+      "sha256": "cd70d1f83ee1fc8a58034c165f7740267baa74d6b9090e3184f63fd01be83774"
+    },
+    {
+      "path": "tests/test_canonical_qwen_source_mapping.py",
+      "sha256": "4efda1dddf09be164ef41281cf80cb3b68ab29b65de008f64df5d6e232d826c9"
+    },
+    {
+      "path": "tools/gpu_sys/canonical_qwen_source_allocator_model.py",
+      "sha256": "da2fe008e8dbf4f1e159a89db08a94ffc2f3ff866d7aa18649856195dbd2a175"
+    },
+    {
+      "path": "tools/gpu_sys/canonical_qwen_source_mapping.py",
+      "sha256": "e59feacd3e5219e00d0d3ded78c9e92e76404c2690805b092a858b9989980493"
+    }
+  ],
+  "tests": "28 PASS"
+}
