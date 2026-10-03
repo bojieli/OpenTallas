@@ -102,6 +102,112 @@ class Oracle:
         self.epoch+=1
 
 
+
+class ConnectedReceiptObserver:
+    """Read-only fixture hook on EnclosingPins, registered AFTER payload hooks.
+
+    References actual source caller offers independently of backend outputs.
+    Local reset marks accepted external identities orphaned; it never disposes
+    them. This observer has no clock, memory, grants, readiness or fence driver.
+    Register after build() and before its first edge via add_edge_hook(observer).
+    """
+    def __init__(self, pins):
+        self.pins = pins
+        self.held = {}
+        self.receipts = {}
+        self.orphans = set()
+        self.issued = set()
+        self.events = None
+        self.backend_accepts = self.client_terminals = 0
+
+    def before_edge(self):
+        if self.events is not None:
+            raise ProtocolError('connected observer duplicate edge')
+        self.events = []
+        reset = self.pins.get('w2_rst_n')
+        cv = self.pins.get('w2_c_req_v')
+        pv = self.pins.get('w2_p_req_v')
+        rv = self.pins.get('w2_c_rsp_v')
+        wv = self.pins.get('w2_c_wr_done_v')
+        for pc in range(128):
+            if not (reset >> pc) & 1:
+                self.orphans.update(k for k in self.receipts if k[0] == pc)
+                # Unaccepted offers can be cancelled only at stopped/reset
+                # ingress. Accepted identities and their original data survive.
+                for k in list(self.held):
+                    if k[0] == pc: del self.held[k]
+                continue
+            mask = 63 << (pc * 6)
+            if not ((cv | rv | wv) & mask or (pv >> pc) & 1 or
+                    any(k[0] == pc for k in self.held)):
+                continue
+            p = self.pins.component('w2', pc)
+            reqv = (cv >> (pc * 6)) & 63
+            reqr = p.get('c_req_rdy') if reqv else 0
+            stop = p.get('admission_stop')
+            for c in range(6):
+                caller = (pc, c)
+                if reqv >> c & 1:
+                    original = Request(Identity(c,
+                        (p.get('c_req_tag') >> (c*32)) & 0xffffffff,
+                        (p.get('c_req_gen') >> (c*4)) & 15,
+                        bool(p.get('c_req_we') >> c & 1)),
+                        (p.get('c_req_addr') >> (c*34)) & ((1<<34)-1),
+                        (p.get('c_req_data') >> (c*256)) & ((1<<256)-1))
+                    if caller in self.held and self.held[caller] != original:
+                        raise ProtocolError('connected held caller original changed')
+                    self.held.setdefault(caller, original)
+                    if reqr >> c & 1:
+                        self.events.append(('caller', pc, self.held[caller]))
+                elif caller in self.held:
+                    if not stop:
+                        raise ProtocolError('connected held caller withdrawn without stop')
+                    del self.held[caller]
+            if (pv >> pc) & 1 and p.get('p_req_rdy'):
+                self.events.append(('backend', pc, (
+                    p.get('p_req_we'), p.get('p_req_addr'), p.get('p_req_tag'),
+                    p.get('p_req_gen'), p.get('p_req_data'))))
+            for stem, write in (('c_rsp', False), ('c_wr_done', True)):
+                takes = p.get(stem+'_v') & p.get(stem+'_rdy')
+                for c in range(6):
+                    if takes >> c & 1:
+                        identity = Identity(c,
+                            (p.get(stem+'_tag') >> (c*32)) & 0xffffffff,
+                            (p.get(stem+'_gen') >> (c*4)) & 15, write)
+                        self.events.append(('terminal', pc, identity))
+
+    def after_edge(self):
+        if self.events is None:
+            raise ProtocolError('connected observer missing before edge')
+        events, self.events = self.events, None
+        # Old issued identities alone can retire. Newly accepted requests
+        # cannot turn a stale same-edge terminal into a valid receipt.
+        old_issued = set(self.issued)
+        for kind, pc, value in events:
+            if kind == 'caller':
+                key = (pc, value.identity)
+                if key in self.receipts:
+                    raise ProtocolError('connected duplicate/ABA accepted identity')
+                self.receipts[key] = value
+                del self.held[pc, value.identity.client]
+            elif kind == 'backend':
+                we, address, tag, gen, data = value
+                identity = Identity(tag >> 32, tag & 0xffffffff, gen, bool(we))
+                key = (pc, identity)
+                if key not in self.receipts or key in self.orphans or key in self.issued:
+                    raise ProtocolError('connected backend without unique live original')
+                check_accepted_request(self.receipts[key], value)
+                self.issued.add(key)
+                self.backend_accepts += 1
+            else:
+                key = (pc, value)
+                if key not in old_issued or key in self.orphans:
+                    raise ProtocolError('connected terminal without nonorphan old receipt')
+                del self.receipts[key]
+                self.issued.remove(key)
+                self.client_terminals += 1
+
+
 def case_mapping(text):
     section=text[text.index('function automatic integer global_index'):]
     section=section[:section.index('endfunction')]
