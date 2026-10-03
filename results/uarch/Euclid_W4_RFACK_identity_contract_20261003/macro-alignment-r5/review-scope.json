@@ -1,0 +1,12 @@
+{
+  "source_tool": "9b7b12038",
+  "scope": "independent cheap source-selected two actual W4 SRAM abstracts + pinned ORFS tracks; not P&R/installed placement/pinaccess",
+  "tests": 7,
+  "selected_RF_macro_MX_R180_Y_origin_nm_mod48": 24,
+  "selected_scratch_macro_MX_R180_Y_origin_nm_mod48": 18,
+  "zero_origin_MX_R180_offtrack": true,
+  "audit_rc0_does_not_signoff_placement": true,
+  "required_next": "actual placed orientation/origin transformed LEF pins must satisfy real track/site/via/OBS rules; keep clock/reset/PG/route fullcontext mandatory",
+  "actual_routed_pin_access": null,
+  "actual_PG_fit": null
+}
