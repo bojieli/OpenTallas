@@ -13,8 +13,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 import os
-# The model runs against the unified model the isopower study pinned (e634046fe, uarch_model sha256 2da5b6d9...),
-# checked out read-only at $DSROM_MODEL_ROOT; HEAD's model (32d865831 wire-latency correction) does not reproduce it.
+# The model runs against the unified model at $DSROM_MODEL_ROOT (default: this checkout). The first record
+# (ad04a76d3) pinned e634046fe (2,563.7 / 2,680.6); the 2026-10-03 re-run is on the merged origin/main HEAD
+# (32d865831 hub-edge wire correction): 2,535.5 / 2,649.7.  compose() takes the PAIR1 (M0) baseline from raw.json.
 MODEL_ROOT = Path(os.environ.get("DSROM_MODEL_ROOT", ROOT))
 sys.path.insert(0, str(MODEL_ROOT / "tools"))
 OUT = ROOT / "results/uarch/dsrom_return_storage_hbm_20261003"
@@ -90,6 +91,7 @@ def next_pow2(x):
 # Roots keep ROOTD 128 (the held-sibling buffer has no timeout and is the only place a row's out-of-order
 # siblings meet).  The source pair keeps a second 8-row x 65-bit partial buffer so a stalled pair can start
 # its next round (uarch_model strip: 8 rows x FP32 chunk partial per element).
+HUB_EDGE_SERDES_US = 2 * 45 / 1.2e9 * 1e6   # 32d865831 hub_edge_hop_wire_s: board hop pays 2 x 45 SerDes endpoint stages (DIE_SHRUNK_INTERIM) at 1.2 GHz
 CREDIT = dict(RD=4, ROOTD=128, pair_buf=8)
 ROUND_ROWS = 8                # partials one element emits per stream round (uarch_model.py strip pricing)
 CHAIN_FLOOR = 40              # uarch_model.CHAIN_FLOOR: no stream round is shorter (cycles)
@@ -247,9 +249,9 @@ def compose():
     refr_pair1 = 2 * 26.79
     var_site = (tot - fixed - pair1["return_"] + refr_pair1) / 4096          # per compiled site, increments fixed
     var_site_hi = var_site + 2 * 64.55 / 4096                               # increments scale with pairs
-    def fit(trim, ret, hi):
+    def fit(trim, ret, hi, fixed_delta=0.0):
         vs = var_site_hi if hi else var_site
-        lim = 858 - fixed - (0 if hi else 64.55)
+        lim = 858 - (fixed + fixed_delta) - (0 if hi else 64.55)
         for S in range(40, 200):
             P = math.ceil(PS / S)
             NP = P if trim else next_pow2(P)
@@ -318,7 +320,19 @@ def compose():
         ("ref: no RTL change, PAIR1 at NP2048 + A", dict(S=pw["stages"], par2=False, kv="A", die=pw["die_mm2"])),
         ("ref: C1 PAR2 re-staged to full shards (S48) + A", dict(S=48, par2=True, kv="A", die=786.23)),
     ]
-    hop = C1["hop_us"]
+    hop = C1["hop_us"] + HUB_EDGE_SERDES_US
+    m0_ar = {c: rr[f"{c}/4_stacks"]["ar_tokens_s"] for c in ("1048576", "200000")}
+    m0_mtp = {c: rr[f"{c}/4_stacks"]["mtp_tokens_s"] for c in ("1048576", "200000")}
+    # PAR2 (C1) at this model = M0 + the recorded PAR2 crossing deltas (abd77c4e1: 35.94 us AR; MTP step from C1 constants)
+    par2_mtp_step_us = {c: TAU_MODEL * 1e6 / C1["mtp"][c] - TAU_MODEL * 1e6 / C1["m0_mtp"][c] for c in m0_ar}
+    c1_ar = {c: 1e6 / (1e6 / m0_ar[c] + C1["par2_delta_us"]["ar"]) for c in m0_ar}
+    c1_mtp = {c: TAU_MODEL * 1e6 / (TAU_MODEL * 1e6 / m0_mtp[c] + par2_mtp_step_us[c]) for c in m0_ar}
+    # verify: the recorded m=1 verify plus this model's AR shift (the hub-edge wires land on verify as on AR)
+    ver_shift = {c: 1e6 / m0_ar[c] - 1e6 / C1["m0_ar"][c] for c in m0_ar}
+    out["baseline_at_model"] = dict(m0_ar=m0_ar, m0_mtp=m0_mtp, c1_ar=c1_ar, c1_mtp=c1_mtp, ver_shift_us=ver_shift,
+                                    hop_us=hop, record_m0_ar=C1["m0_ar"],
+                                    hop_check="57 stage hops x %.4f us hub-edge SerDes wire = %.2f us vs measured AR shift %.2f us at 1M"
+                                    % (HUB_EDGE_SERDES_US, 57 * HUB_EDGE_SERDES_US, ver_shift["1048576"]))
     scen = []
     for name, d in scen_defs:
         S, par2 = d["S"], d["par2"]
@@ -334,9 +348,9 @@ def compose():
                    dram_share=round(dram / (logic + dram), 3), static_w_icg=round(static), stack_idle_w=round(stacks * STACK_IDLE_W),
                    ctx={})
         for ctx in ("1048576", "200000"):
-            ar_us = (1e6 / C1["ar"][ctx] if par2 else 1e6 / C1["m0_ar"][ctx]) + (S - 58) * hop
-            step_model = (TAU_MODEL / C1["mtp"][ctx] if par2 else TAU_MODEL / C1["m0_mtp"][ctx]) * 1e6 + (S - 58) * hop
-            ver = C1["verify_m1_us"][ctx] + (C1["par2_delta_us"]["verify"] if par2 else 0) + (S - 58) * hop
+            ar_us = (1e6 / c1_ar[ctx] if par2 else 1e6 / m0_ar[ctx]) + (S - 58) * hop
+            step_model = (TAU_MODEL / c1_mtp[ctx] if par2 else TAU_MODEL / m0_mtp[ctx]) * 1e6 + (S - 58) * hop
+            ver = C1["verify_m1_us"][ctx] + ver_shift[ctx] + (C1["par2_delta_us"]["verify"] if par2 else 0) + (S - 58) * hop
             tau4 = 4e6 / (ver + DRAFT_OVER_AR * ar_us)
             ar, mtp = 1e6 / ar_us, TAU_MODEL * 1e6 / step_model
             best = C1["ar_sat"]
@@ -366,12 +380,149 @@ def compose():
               "102.3 mJ a token (AR, 1M / 200K).",
         silicon="logic = layer dies x layer-die screen + 44 head/table dies x 786.23 (isopower convention); DRAM 1,089 mm2 a stack.",
         hbm_comparator={k: v for k, v in HBM.items()})
+    out["scenario_c"] = scenario_c(out, fit, staging, scen, rr)
     out["pins"] = PINS
     out["raw_uarch_model_sha256"] = raw["uarch_model_sha256"]
     (OUT / "model.json").write_text(json.dumps(out, indent=1))
     print(json.dumps(dict(hist=hist, staging=staging, scen=[(r["scenario"], r["stages"], r["dies"], r["stacks"], r["total_mm2"],
                                                              r["static_w_icg"], r["ctx"]["1048576"]["ar"], r["ctx"]["1048576"]["mtp_tau4"],
                                                              r["ctx"]["1048576"]["best_tok_s_per_kw"], r["ctx"]["1048576"]["vs_hbm"]) for r in scen]), indent=1))
+
+
+# ------------------------------------------------------------------------------------------------ scenario C (owner-approved 2026-10-03)
+HBM_ACCEL = dict(  # claude/hbm-accelerator-study-20261003 @ a3ed9c36d ladder.json compare.ds[1] (firm rungs, 1M; 200K within 0.2%)
+    src="a3ed9c36d:results/uarch/hbm_accelerator_study_20261003/ladder.json compare.ds[1]",
+    ar=3015.2, mtp_tau3649=6001.1, mtp_tau4=6579.0, logic_mm2=32688, stacks=384, dram_mm2=384000, total_mm2=416688,
+    system_w_ar_b1=9774.0, static_w_gated=5367.7, dyn_J=1.4614, dies=96)
+LAYER_SERDES_W = 30.6          # of the 50.196 W layer-die always-on (isopower history 8bb540cd1)
+PG_RESIDUAL = 0.10             # ASSUMED: a power-gated die region keeps 10% of its leakage (header leakage, retention-free:
+                               # ROM is mask-programmed, KV is in HBM, only the live token's activations move with the token)
+LINK_PG_RESIDUAL = 0.10        # ASSUMED: a lane-gated SerDes keeps 10% (CDR/PLL standby) and re-locks inside the pre-wake window
+PHY_MM2 = dict(central=10.0, low=8.0, high=15.0)   # technology.json hbm.hbm3e phy_area_mm2_per_stack (assumed, 8-15)
+PHY_EDGE_MM = 8.5              # consolidation.json shoreline.phy_edge_mm (GH100 long edge / 3)
+
+
+def scenario_c(out, fit, staging, scen, rr):
+    C = next(r for r in scen if r["scenario"] == "C: A + B")
+    C1r = next(r for r in scen if r["scenario"] == "C1 (today)")
+    S = C["stages"]
+    ranks = 4 * S
+    scan_dies = 4 * len(SCAN_LAYERS)
+    one_stack = ranks - scan_dies
+    res = dict(stages=S, layer_dies=C["layer_dies"], dies=C["dies"], packages=C["packages"], stacks=C["stacks"])
+
+    # ---- item 2: S69 vs S73
+    res["stage_decision"] = dict(
+        decision="S73 (conservative) is the baseline; S69 is not adopted",
+        evidence=[
+            "The 64.55 mm2 is the r4->C1 screen step 694.88 (r4 single_parallel_successor.conservative_priced_per_shard_mm2) "
+            "-> 759.44 (dsrom_capture_clock_selected_union whole_selector_replacement_screen_mm2).",
+            "Traced terms are per-die services: two-port PAR2 corridor 4.32 (capture_home inputs/budget.json "
+            "composed_whole_area.new_two_port_corridor_reservation_mm2; PAR2-only, vanishes in PAIR1), selector station 0.60 "
+            "and 1.68 once, capture enclosure 0.14 ('same_envelope_reserved_per_shard_die'), clock reserve 0.014 "
+            "(dsrom_selected_parent_caller r7 whole_reticle_join; dsrom_capture_home model.json).",
+            "Terms that DO scale with elements: shared broadcast BUF 0.76 ('3,726,496 BUF/shard'), finite spatial element "
+            "clock increment 0.46 ('901/2724 BUF' per element) -- about 1.2 mm2 per 2,048-pair shard.",
+            "The bulk, ~58 mm2 between 694.88 and the 753.03 'latest_owner_screen_already_including_corridor' "
+            "(topk_finite_track_turn_model r2), has no per-term source ledger in the records read; its scaling is unproven.",
+        ],
+        reading="Of the 64.55 mm2 only ~6.5 mm2 is traced: ~5.3 per-die and ~1.2 per-element. Fixed-per-die (S69) needs the "
+                "untraced ~58 mm2 to be shown per-die; until then the owner-approved S73 stands. S69 is an upside of "
+                "4 stages / 16 dies / -1.9 us AR (+1.2% per-user), assigned to workstream W2 as a ledger task.",
+        S69_upside=dict(stages=staging["trim_credit"]["lower"]["stages"], dies=4 * staging["trim_credit"]["lower"]["stages"] + 44))
+
+    # ---- item 3: stage power gating
+    layer_logic_w = C1["die_static_excl_hbm_w"] - LAYER_SERDES_W
+    pg = {}
+    for ctx in ("1048576", "200000"):
+        ar = C["ctx"][ctx]["ar"]; dyn = C1["dyn_mJ_ar"][ctx] * 1e-3
+        rows = {}
+        for B in (1, 8, 32, 64):
+            rate = min(B * ar, C1["ar_sat"])
+            # a stage is busy for t_token/S per token it carries; one neighbour is pre-woken per token in flight
+            f = min(1.0, (min(B, rate / ar) + 1) / S) if rate < C1["ar_sat"] else min(1.0, rate / ar / S + 1 / S)
+            base = C["static_w_icg"]
+            logic_pg = C["layer_dies"] * layer_logic_w * (1 - f) * (1 - PG_RESIDUAL)
+            link_pg = C["layer_dies"] * LAYER_SERDES_W * (1 - f) * (1 - LINK_PG_RESIDUAL)
+            st_icg, st_pg, st_pgl = base, base - logic_pg, base - logic_pg - link_pg
+            rows[str(B)] = dict(tok_s=round(rate), active_stage_fraction=round(f, 3),
+                                static_kw=dict(icg=round(st_icg / 1e3, 2), pg_logic=round(st_pg / 1e3, 2), pg_logic_links=round(st_pgl / 1e3, 2)),
+                                tok_s_per_kw=dict(icg=round(rate / (st_icg + dyn * rate) * 1e3, 1),
+                                                  pg_logic=round(rate / (st_pg + dyn * rate) * 1e3, 1),
+                                                  pg_logic_links=round(rate / (st_pgl + dyn * rate) * 1e3, 1)))
+        mtp = C["ctx"][ctx]["mtp_model_tau"]; dyn_m = C1["dyn_mJ_mtp"][ctx] * 1e-3
+        b1 = rows["1"]["static_kw"]
+        pg[ctx] = dict(by_batch=rows,
+                       b1_mtp_tau3649=dict(tok_s=mtp, **{k: round(mtp / (v * 1e3 + dyn_m * mtp) * 1e3, 1) for k, v in b1.items()}))
+    ha = HBM_ACCEL
+    pg["hbm_accelerator"] = dict(ar_tok_s_per_kw_b1=round(ha["ar"] / ha["system_w_ar_b1"] * 1e3, 1),
+                                 mtp_tok_s_per_kw_b1=round(ha["mtp_tau3649"] / (ha["static_w_gated"] + ha["dyn_J"] * ha["mtp_tau3649"]) * 1e3, 1),
+                                 mtp_power_basis="static 5,367.7 W + 1.4614 J per emitted token (AR energy, so MTP per-kW is an upper bound)",
+                                 best_batch="not modelled in a3ed9c36d; the HBM comparator's best is 25,293 tok/s at 22.6 kW (1,117 tok/s per kW)")
+    pg["basis"] = ("Layer-die always-on 50.196 W = 30.6 W SerDes + 19.6 W logic. A stage is gated except while it carries a token "
+                   "plus one pre-woken neighbour: active fraction (min(B, rate/AR) + 1)/S. Gated logic keeps %.0f%%, gated "
+                   "links keep %.0f%% (both ASSUMED). Head (738.5 W), Engram table (3,324.4 W) and HBM stack idle (2.8 W, KV "
+                   "retained) are not gated. Dynamic AR energy unchanged (118.6 / 102.3 mJ a token). Pre-wake hides the "
+                   "wake latency inside one stage time (~5.5 us at S73), an RTL/PDN requirement for W5."
+                   % (PG_RESIDUAL * 100, LINK_PG_RESIDUAL * 100))
+    pg["reading"] = ("Gating matters only at low batch: at batch 1 it cuts static %.1f -> %.1f kW (logic+links); by batch 32 the "
+                     "pipeline is ~45%% busy and saturated rate is head-bound, so best-batch tok/s per kW moves little. "
+                     "The un-gated Engram table dies (3.3 kW) become the largest always-on term."
+                     % (pg["1048576"]["by_batch"]["1"]["static_kw"]["icg"], pg["1048576"]["by_batch"]["1"]["static_kw"]["pg_logic_links"]))
+    res["power_gating"] = pg
+
+    # ---- item 4: HBM PHY / shoreline saved
+    phy = {k: dict(per_die_mm2=3 * v, array_mm2=round(3 * v * one_stack, 1)) for k, v in PHY_MM2.items()}
+    phy_fit = {k: fit(True, "credit", True, fixed_delta=-3 * v) for k, v in PHY_MM2.items()}
+    res["hbm_phy_credit"] = dict(
+        one_stack_rank_dies=one_stack, scan_rank_dies=scan_dies, phy_mm2_per_stack=PHY_MM2,
+        saved=phy, shoreline_freed_mm_per_die=3 * PHY_EDGE_MM,
+        ledger_status="The HBM PHY is not a named term in the r4/C1 ledger: it is part of E (IO/PHY exclusions, "
+                      "'actual_E_and_H_received': false) inside the uniform 418.27 mm2 inherited debit. The credit is real "
+                      "only once that debit is replaced by explicit per-die rectangles (workstream W4).",
+        if_taken_on_every_rank_die=dict(conservative_stages={k: v["stages"] for k, v in phy_fit.items()}),
+        caveat="Scan-layer dies keep 4 PHYs, so a uniform-pairs partition gains the credit only if scan stages carry fewer "
+               "pairs or the 32 scan dies keep the larger outline; stated as the bound, not adopted.",
+        shoreline_reading="25.5 mm of the die edge freed per one-stack die: room for the TP-4 board SerDes and the stage "
+                          "links without the 60% beachfront ceiling (technology.json max_beachfront_utilization).")
+    # complement-removal sensitivity (287 mm2 unmapped legacy complement replaced by an explicit E)
+    comp = {}
+    for E in (287.02, 150.0, 75.0):
+        r = fit(True, "credit", True, fixed_delta=E - 287.02)
+        comp[f"E_{E:g}"] = dict(stages=r["stages"], dies=4 * r["stages"] + 44)
+    res["complement_removal_sensitivity"] = dict(
+        rule="fixed debit 465.48 = 287.02 unmapped complement + the rest; replace the complement by an explicit E (IO/PHY, "
+             "halos, clock/PG) of the stated size", rows=comp,
+        reading="The owner-approved C keeps S73, which still charges the 287 mm2. Every 100 mm2 of the complement that W4 "
+                "proves unnecessary is worth several stages; adopt only from the regenerated area ledger.")
+
+    # ---- item 5: restated numbers
+    def row(r, label):
+        x = dict(design=label, dies=r["dies"], packages=r["packages"], stacks=r["stacks"], logic_mm2=r["logic_mm2"],
+                 dram_mm2=r["dram_mm2"], total_mm2=r["total_mm2"], static_kw_icg=round(r["static_w_icg"] / 1e3, 2))
+        for ctx in ("1048576", "200000"):
+            c = r["ctx"][ctx]
+            x[ctx] = dict(ar=c["ar"], mtp_tau3649=c["mtp_model_tau"], mtp_tau4=c["mtp_tau4"],
+                          best_tok_s=c["best_batch_tok_s"], best_w=c["best_batch_w"],
+                          dynamic_kw_at_best=round((c["best_batch_w"] - r["static_w_icg"]) / 1e3, 2),
+                          best_tok_s_per_kw=c["best_tok_s_per_kw"], best_tok_s_per_Mmm2_total=c["best_tok_s_per_Mmm2"],
+                          best_tok_s_per_Mmm2_logic=round(c["best_batch_tok_s"] / r["logic_mm2"] * 1e6),
+                          b1_ar_tok_s_per_kw=c["by_batch"]["1"]["tok_s_per_kw"])
+        return x
+    cr = row(C, "Scenario C (S73 PAIR1, credit return, trimmed padding, KV sized)")
+    for ctx in ("1048576", "200000"):
+        b = pg[ctx]["by_batch"]
+        cr[ctx]["b1_ar_tok_s_per_kw_pg"] = b["1"]["tok_s_per_kw"]["pg_logic_links"]
+        cr[ctx]["static_kw_b1_pg"] = b["1"]["static_kw"]["pg_logic_links"]
+        cr[ctx]["b1_mtp_tok_s_per_kw_pg"] = pg[ctx]["b1_mtp_tau3649"]["pg_logic_links"]
+    hb = dict(design="HBM accelerator (a3ed9c36d, firm rungs)", dies=ha["dies"], stacks=ha["stacks"], logic_mm2=ha["logic_mm2"],
+              dram_mm2=ha["dram_mm2"], total_mm2=ha["total_mm2"], static_kw=ha["static_w_gated"] / 1e3,
+              ar=ha["ar"], mtp_tau3649=ha["mtp_tau3649"], mtp_tau4=ha["mtp_tau4"],
+              b1_ar_tok_s_per_kw=pg["hbm_accelerator"]["ar_tok_s_per_kw_b1"],
+              b1_mtp_tok_s_per_kw=pg["hbm_accelerator"]["mtp_tok_s_per_kw_b1"],
+              note="DRAM at 1,000 mm2 a stack in a3ed9c36d vs 1,089 here; per-mm2 compares use each record's own basis")
+    res["restated"] = dict(C=cr, C1=row(C1r, "C1 today (S58 PAR2) at this model"), hbm_accelerator=hb)
+    return res
 
 
 if __name__ == "__main__":

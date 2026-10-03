@@ -3,9 +3,9 @@
 Model only. It needs no GPU and runs no model inference.
 
 ```bash
-git -C /home/ubuntu/OpenTallas worktree add --detach /tmp/pin-e634 e634046fe   # model the isopower study pinned
-DSROM_MODEL_ROOT=/tmp/pin-e634 python3 tools/dsrom_return_storage_hbm.py run      # ~2 min: raw.json
-python3 tools/dsrom_return_storage_hbm.py compose                                 # seconds: model.json
+python3 tools/dsrom_return_storage_hbm.py run       # ~2 min: raw.json on this checkout's unified model (merged origin/main, 32d865831+)
+python3 tools/dsrom_return_storage_hbm.py compose   # seconds: model.json incl. scenario_c
+# the first record (ad04a76d3) ran DSROM_MODEL_ROOT=<worktree at e634046fe>; that baseline was 2,563.7 / 2,680.6
 ```
 
 ## What `run` does
@@ -14,7 +14,7 @@ It runs `cons_v41_rom(58, 8, 36, …)` with the isopower history study's setting
 
 ## Checks
 
-- **Baseline:** 4 stacks must reproduce 2,563.7 tok/s at 1M and 2,680.6 at 200K.
+- **Baseline (2026-10-03 re-run, HEAD model):** 4 stacks give 2,535.5 tok/s at 1M and 2,649.7 at 200K. The 28.2 tok/s (4.34 µs) drop from e634046fe is the 32d865831 hub-edge wire: 57 stage hops × 75 ns = 4.27 µs (`model.json` `baseline_at_model.hop_check`). Scenario C then gives 2,489.9 at 1M.
 - **Asserted in `compose`:**
   - the 138,469,120-bit formula, against the return audit;
   - the NP 4096 figure, against the r4 budget;

@@ -297,63 +297,91 @@
   },
   "model_check": {
    "1048576/4_stacks": {
-    "ar": 2563.7,
-    "mtp": 3809.4,
+    "ar": 2535.5,
+    "mtp": 3791.0,
     "ar_sat": 80833.5,
     "busiest": "head",
     "busiest_us": 12.37
    },
    "1048576/3_stacks": {
-    "ar": 2536.2,
-    "mtp": 3808.2,
+    "ar": 2508.6,
+    "mtp": 3789.7,
     "ar_sat": 75640.2,
     "busiest": 29,
     "busiest_us": 13.22
    },
    "1048576/2_stacks": {
-    "ar": 2482.9,
-    "mtp": 3805.7,
+    "ar": 2456.4,
+    "mtp": 3787.2,
     "ar_sat": 60527.0,
     "busiest": 29,
     "busiest_us": 16.52
    },
    "1048576/1_stack": {
-    "ar": 2335.7,
-    "mtp": 3798.1,
+    "ar": 2312.3,
+    "mtp": 3779.8,
     "ar_sat": 37843.3,
     "busiest": 29,
     "busiest_us": 26.42
    },
    "200000/4_stacks": {
-    "ar": 2680.6,
-    "mtp": 4176.7,
+    "ar": 2649.7,
+    "mtp": 4154.5,
     "ar_sat": 80833.5,
     "busiest": "head",
     "busiest_us": 12.37
    },
    "200000/3_stacks": {
-    "ar": 2674.2,
-    "mtp": 4176.3,
+    "ar": 2643.5,
+    "mtp": 4154.2,
     "ar_sat": 80833.5,
     "busiest": "head",
     "busiest_us": 12.37
    },
    "200000/2_stacks": {
-    "ar": 2661.5,
-    "mtp": 4175.7,
+    "ar": 2631.1,
+    "mtp": 4153.5,
     "ar_sat": 80833.5,
     "busiest": "head",
     "busiest_us": 12.37
    },
    "200000/1_stack": {
-    "ar": 2624.2,
-    "mtp": 4173.8,
+    "ar": 2594.7,
+    "mtp": 4151.6,
     "ar_sat": 80833.5,
     "busiest": "head",
     "busiest_us": 12.37
    }
   },
   "binding": "Bandwidth, not capacity: one stack holds 216 users at 1M and 1,129 at 200K on the busiest die, while best batch needs ~35 users (AR) and ~10 (MTP). Capacity first adds stacks above 216 users (1M) on 1-stack dies."
+ },
+ "baseline_at_model": {
+  "m0_ar": {
+   "1048576": 2535.5,
+   "200000": 2649.7
+  },
+  "m0_mtp": {
+   "1048576": 3791.0,
+   "200000": 4154.5
+  },
+  "c1_ar": {
+   "1048576": 2323.7465719697398,
+   "200000": 2419.3087046471537
+  },
+  "c1_mtp": {
+   "1048576": 3523.4113067376925,
+   "200000": 3835.288186402479
+  },
+  "ver_shift_us": {
+   "1048576": 4.338287105948439,
+   "200000": 4.350405711656379
+  },
+  "hop_us": 0.4820175438596491,
+  "record_m0_ar": {
+   "1048576": 2563.7,
+   "200000": 2680.6
+  },
+  "hop_check": "57 stage hops x 0.0750 us hub-edge SerDes wire = 4.27 us vs measured AR shift 4.34 us at 1M"
  },
  "scenarios": [
   {
@@ -373,31 +401,31 @@
    "stack_idle_w": 2688,
    "ctx": {
     "1048576": {
-     "ar": 2347.4,
-     "mtp_model_tau": 3539.3,
-     "mtp_tau4": 3813.1,
+     "ar": 2323.7,
+     "mtp_model_tau": 3523.4,
+     "mtp_tau4": 3795.5,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 40478,
      "best_tok_s_per_kw": 1997.0,
      "best_tok_s_per_Mmm2": 55946.1,
      "vs_hbm": {
-      "ar": 1.038,
-      "tau4": 0.718,
+      "ar": 1.027,
+      "tau4": 0.714,
       "per_kw": 1.79,
       "per_mm2": 1.0
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2347,
-       "tok_s_per_kw": 75.3
+       "ar_tok_s": 2324,
+       "tok_s_per_kw": 74.6
       },
       "8": {
-       "ar_tok_s": 18779,
-       "tok_s_per_kw": 567.0
+       "ar_tok_s": 18590,
+       "tok_s_per_kw": 561.7
       },
       "32": {
-       "ar_tok_s": 75117,
-       "tok_s_per_kw": 1887.4
+       "ar_tok_s": 74360,
+       "tok_s_per_kw": 1872.6
       },
       "64": {
        "ar_tok_s": 80834,
@@ -406,31 +434,31 @@
      }
     },
     "200000": {
-     "ar": 2445.0,
-     "mtp_model_tau": 3854.2,
-     "mtp_tau4": 4149.1,
+     "ar": 2419.3,
+     "mtp_model_tau": 3835.3,
+     "mtp_tau4": 4128.3,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 39160,
      "best_tok_s_per_kw": 2064.2,
      "best_tok_s_per_Mmm2": 55946.1,
      "vs_hbm": {
-      "ar": 1.079,
-      "tau4": 0.779,
+      "ar": 1.068,
+      "tau4": 0.775,
       "per_kw": 1.63,
       "per_mm2": 0.61
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2445,
-       "tok_s_per_kw": 78.5
+       "ar_tok_s": 2419,
+       "tok_s_per_kw": 77.7
       },
       "8": {
-       "ar_tok_s": 19560,
-       "tok_s_per_kw": 594.7
+       "ar_tok_s": 19354,
+       "tok_s_per_kw": 588.8
       },
       "32": {
-       "ar_tok_s": 78240,
-       "tok_s_per_kw": 2011.6
+       "ar_tok_s": 77418,
+       "tok_s_per_kw": 1994.8
       },
       "64": {
        "ar_tok_s": 80834,
@@ -457,31 +485,31 @@
    "stack_idle_w": 1008,
    "ctx": {
     "1048576": {
-     "ar": 2347.4,
-     "mtp_model_tau": 3539.3,
-     "mtp_tau4": 3813.1,
+     "ar": 2323.7,
+     "mtp_model_tau": 3523.4,
+     "mtp_tau4": 3795.5,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 38798,
      "best_tok_s_per_kw": 2083.5,
      "best_tok_s_per_Mmm2": 102134.1,
      "vs_hbm": {
-      "ar": 1.038,
-      "tau4": 0.718,
+      "ar": 1.027,
+      "tau4": 0.714,
       "per_kw": 1.86,
       "per_mm2": 1.82
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2347,
-       "tok_s_per_kw": 79.6
+       "ar_tok_s": 2324,
+       "tok_s_per_kw": 78.8
       },
       "8": {
-       "ar_tok_s": 18779,
-       "tok_s_per_kw": 597.3
+       "ar_tok_s": 18590,
+       "tok_s_per_kw": 591.7
       },
       "32": {
-       "ar_tok_s": 75117,
-       "tok_s_per_kw": 1970.6
+       "ar_tok_s": 74360,
+       "tok_s_per_kw": 1955.3
       },
       "64": {
        "ar_tok_s": 80834,
@@ -490,31 +518,31 @@
      }
     },
     "200000": {
-     "ar": 2445.0,
-     "mtp_model_tau": 3854.2,
-     "mtp_tau4": 4149.1,
+     "ar": 2419.3,
+     "mtp_model_tau": 3835.3,
+     "mtp_tau4": 4128.3,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 37480,
      "best_tok_s_per_kw": 2156.7,
      "best_tok_s_per_Mmm2": 102134.1,
      "vs_hbm": {
-      "ar": 1.079,
-      "tau4": 0.779,
+      "ar": 1.068,
+      "tau4": 0.775,
       "per_kw": 1.71,
       "per_mm2": 1.11
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2445,
-       "tok_s_per_kw": 83.0
+       "ar_tok_s": 2419,
+       "tok_s_per_kw": 82.1
       },
       "8": {
-       "ar_tok_s": 19560,
-       "tok_s_per_kw": 626.7
+       "ar_tok_s": 19354,
+       "tok_s_per_kw": 620.5
       },
       "32": {
-       "ar_tok_s": 78240,
-       "tok_s_per_kw": 2102.4
+       "ar_tok_s": 77418,
+       "tok_s_per_kw": 2085.0
       },
       "64": {
        "ar_tok_s": 80834,
@@ -541,31 +569,31 @@
    "stack_idle_w": 2688,
    "ctx": {
     "1048576": {
-     "ar": 2347.4,
-     "mtp_model_tau": 3539.3,
-     "mtp_tau4": 3813.1,
+     "ar": 2323.7,
+     "mtp_model_tau": 3523.4,
+     "mtp_tau4": 3795.5,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 40478,
      "best_tok_s_per_kw": 1997.0,
      "best_tok_s_per_Mmm2": 56363.2,
      "vs_hbm": {
-      "ar": 1.038,
-      "tau4": 0.718,
+      "ar": 1.027,
+      "tau4": 0.714,
       "per_kw": 1.79,
       "per_mm2": 1.0
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2347,
-       "tok_s_per_kw": 75.3
+       "ar_tok_s": 2324,
+       "tok_s_per_kw": 74.6
       },
       "8": {
-       "ar_tok_s": 18779,
-       "tok_s_per_kw": 567.0
+       "ar_tok_s": 18590,
+       "tok_s_per_kw": 561.7
       },
       "32": {
-       "ar_tok_s": 75117,
-       "tok_s_per_kw": 1887.4
+       "ar_tok_s": 74360,
+       "tok_s_per_kw": 1872.6
       },
       "64": {
        "ar_tok_s": 80834,
@@ -574,31 +602,31 @@
      }
     },
     "200000": {
-     "ar": 2445.0,
-     "mtp_model_tau": 3854.2,
-     "mtp_tau4": 4149.1,
+     "ar": 2419.3,
+     "mtp_model_tau": 3835.3,
+     "mtp_tau4": 4128.3,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 39160,
      "best_tok_s_per_kw": 2064.2,
      "best_tok_s_per_Mmm2": 56363.2,
      "vs_hbm": {
-      "ar": 1.079,
-      "tau4": 0.779,
+      "ar": 1.068,
+      "tau4": 0.775,
       "per_kw": 1.63,
       "per_mm2": 0.61
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2445,
-       "tok_s_per_kw": 78.5
+       "ar_tok_s": 2419,
+       "tok_s_per_kw": 77.7
       },
       "8": {
-       "ar_tok_s": 19560,
-       "tok_s_per_kw": 594.7
+       "ar_tok_s": 19354,
+       "tok_s_per_kw": 588.8
       },
       "32": {
-       "ar_tok_s": 78240,
-       "tok_s_per_kw": 2011.6
+       "ar_tok_s": 77418,
+       "tok_s_per_kw": 1994.8
       },
       "64": {
        "ar_tok_s": 80834,
@@ -625,31 +653,31 @@
    "stack_idle_w": 3360,
    "ctx": {
     "1048576": {
-     "ar": 2524.2,
-     "mtp_model_tau": 3785.3,
-     "mtp_tau4": 4076.6,
+     "ar": 2489.9,
+     "mtp_model_tau": 3762.7,
+     "mtp_tau4": 4051.4,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 31667,
      "best_tok_s_per_kw": 2552.6,
      "best_tok_s_per_Mmm2": 50796.6,
      "vs_hbm": {
-      "ar": 1.116,
-      "tau4": 0.767,
+      "ar": 1.101,
+      "tau4": 0.762,
       "per_kw": 2.28,
       "per_mm2": 0.91
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2524,
-       "tok_s_per_kw": 112.8
+       "ar_tok_s": 2490,
+       "tok_s_per_kw": 111.3
       },
       "8": {
-       "ar_tok_s": 20194,
-       "tok_s_per_kw": 825.1
+       "ar_tok_s": 19919,
+       "tok_s_per_kw": 814.9
       },
       "32": {
-       "ar_tok_s": 80774,
-       "tok_s_per_kw": 2551.3
+       "ar_tok_s": 79675,
+       "tok_s_per_kw": 2527.0
       },
       "64": {
        "ar_tok_s": 80834,
@@ -658,27 +686,27 @@
      }
     },
     "200000": {
-     "ar": 2637.4,
-     "mtp_model_tau": 4147.7,
-     "mtp_tau4": 4463.0,
+     "ar": 2599.9,
+     "mtp_model_tau": 4120.6,
+     "mtp_tau4": 4432.7,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 30349,
      "best_tok_s_per_kw": 2663.4,
      "best_tok_s_per_Mmm2": 50796.6,
      "vs_hbm": {
-      "ar": 1.164,
-      "tau4": 0.838,
+      "ar": 1.147,
+      "tau4": 0.832,
       "per_kw": 2.11,
       "per_mm2": 0.55
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2637,
-       "tok_s_per_kw": 118.0
+       "ar_tok_s": 2600,
+       "tok_s_per_kw": 116.3
       },
       "8": {
-       "ar_tok_s": 21099,
-       "tok_s_per_kw": 870.5
+       "ar_tok_s": 20799,
+       "tok_s_per_kw": 859.2
       },
       "32": {
        "ar_tok_s": 80834,
@@ -709,31 +737,31 @@
    "stack_idle_w": 1176,
    "ctx": {
     "1048576": {
-     "ar": 2524.2,
-     "mtp_model_tau": 3785.3,
-     "mtp_tau4": 4076.6,
+     "ar": 2489.9,
+     "mtp_model_tau": 3762.7,
+     "mtp_tau4": 4051.4,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 29483,
      "best_tok_s_per_kw": 2741.7,
      "best_tok_s_per_Mmm2": 108955.2,
      "vs_hbm": {
-      "ar": 1.116,
-      "tau4": 0.767,
+      "ar": 1.101,
+      "tau4": 0.762,
       "per_kw": 2.45,
       "per_mm2": 1.94
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2524,
-       "tok_s_per_kw": 125.0
+       "ar_tok_s": 2490,
+       "tok_s_per_kw": 123.3
       },
       "8": {
-       "ar_tok_s": 20194,
-       "tok_s_per_kw": 905.9
+       "ar_tok_s": 19919,
+       "tok_s_per_kw": 894.9
       },
       "32": {
-       "ar_tok_s": 80774,
-       "tok_s_per_kw": 2740.3
+       "ar_tok_s": 79675,
+       "tok_s_per_kw": 2715.1
       },
       "64": {
        "ar_tok_s": 80834,
@@ -742,27 +770,27 @@
      }
     },
     "200000": {
-     "ar": 2637.4,
-     "mtp_model_tau": 4147.7,
-     "mtp_tau4": 4463.0,
+     "ar": 2599.9,
+     "mtp_model_tau": 4120.6,
+     "mtp_tau4": 4432.7,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 28165,
      "best_tok_s_per_kw": 2870.0,
      "best_tok_s_per_Mmm2": 108955.2,
      "vs_hbm": {
-      "ar": 1.164,
-      "tau4": 0.838,
+      "ar": 1.147,
+      "tau4": 0.832,
       "per_kw": 2.27,
       "per_mm2": 1.18
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2637,
-       "tok_s_per_kw": 130.8
+       "ar_tok_s": 2600,
+       "tok_s_per_kw": 128.9
       },
       "8": {
-       "ar_tok_s": 21099,
-       "tok_s_per_kw": 956.7
+       "ar_tok_s": 20799,
+       "tok_s_per_kw": 944.4
       },
       "32": {
        "ar_tok_s": 80834,
@@ -793,31 +821,31 @@
    "stack_idle_w": 3629,
    "ctx": {
     "1048576": {
-     "ar": 2508.7,
-     "mtp_model_tau": 3775.7,
-     "mtp_tau4": 4065.3,
+     "ar": 2472.1,
+     "mtp_model_tau": 3751.5,
+     "mtp_tau4": 4038.2,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 33140,
      "best_tok_s_per_kw": 2439.1,
      "best_tok_s_per_Mmm2": 47112.1,
      "vs_hbm": {
-      "ar": 1.109,
-      "tau4": 0.765,
+      "ar": 1.093,
+      "tau4": 0.76,
       "per_kw": 2.18,
       "per_mm2": 0.84
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2509,
-       "tok_s_per_kw": 105.2
+       "ar_tok_s": 2472,
+       "tok_s_per_kw": 103.7
       },
       "8": {
-       "ar_tok_s": 20070,
-       "tok_s_per_kw": 773.9
+       "ar_tok_s": 19776,
+       "tok_s_per_kw": 763.6
       },
       "32": {
-       "ar_tok_s": 80279,
-       "tok_s_per_kw": 2427.2
+       "ar_tok_s": 79106,
+       "tok_s_per_kw": 2401.8
       },
       "64": {
        "ar_tok_s": 80834,
@@ -826,27 +854,27 @@
      }
     },
     "200000": {
-     "ar": 2620.6,
-     "mtp_model_tau": 4136.2,
-     "mtp_tau4": 4449.4,
+     "ar": 2580.5,
+     "mtp_model_tau": 4107.2,
+     "mtp_tau4": 4416.9,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 31823,
      "best_tok_s_per_kw": 2540.1,
      "best_tok_s_per_Mmm2": 47112.1,
      "vs_hbm": {
-      "ar": 1.156,
-      "tau4": 0.835,
+      "ar": 1.139,
+      "tau4": 0.829,
       "per_kw": 2.01,
       "per_mm2": 0.51
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2621,
-       "tok_s_per_kw": 110.0
+       "ar_tok_s": 2580,
+       "tok_s_per_kw": 108.3
       },
       "8": {
-       "ar_tok_s": 20964,
-       "tok_s_per_kw": 815.8
+       "ar_tok_s": 20644,
+       "tok_s_per_kw": 804.3
       },
       "32": {
        "ar_tok_s": 80834,
@@ -877,31 +905,31 @@
    "stack_idle_w": 4390,
    "ctx": {
     "1048576": {
-     "ar": 2465.9,
-     "mtp_model_tau": 3748.9,
-     "mtp_tau4": 4033.6,
+     "ar": 2423.0,
+     "mtp_model_tau": 3720.2,
+     "mtp_tau4": 4001.2,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 37315,
      "best_tok_s_per_kw": 2166.2,
      "best_tok_s_per_Mmm2": 39542.8,
      "vs_hbm": {
-      "ar": 1.09,
-      "tau4": 0.759,
+      "ar": 1.071,
+      "tau4": 0.753,
       "per_kw": 1.94,
       "per_mm2": 0.7
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2466,
-       "tok_s_per_kw": 88.0
+       "ar_tok_s": 2423,
+       "tok_s_per_kw": 86.5
       },
       "8": {
-       "ar_tok_s": 19727,
-       "tok_s_per_kw": 656.1
+       "ar_tok_s": 19384,
+       "tok_s_per_kw": 645.5
       },
       "32": {
-       "ar_tok_s": 78909,
-       "tok_s_per_kw": 2127.7
+       "ar_tok_s": 77535,
+       "tok_s_per_kw": 2099.8
       },
       "64": {
        "ar_tok_s": 80834,
@@ -910,27 +938,27 @@
      }
     },
     "200000": {
-     "ar": 2573.9,
-     "mtp_model_tau": 4104.0,
-     "mtp_tau4": 4411.5,
+     "ar": 2527.1,
+     "mtp_model_tau": 4069.6,
+     "mtp_tau4": 4372.7,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 35998,
      "best_tok_s_per_kw": 2245.5,
      "best_tok_s_per_Mmm2": 39542.8,
      "vs_hbm": {
-      "ar": 1.136,
-      "tau4": 0.828,
+      "ar": 1.115,
+      "tau4": 0.821,
       "per_kw": 1.78,
       "per_mm2": 0.43
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2574,
-       "tok_s_per_kw": 92.0
+       "ar_tok_s": 2527,
+       "tok_s_per_kw": 90.3
       },
       "8": {
-       "ar_tok_s": 20591,
-       "tok_s_per_kw": 690.2
+       "ar_tok_s": 20216,
+       "tok_s_per_kw": 678.5
       },
       "32": {
        "ar_tok_s": 80834,
@@ -961,31 +989,31 @@
    "stack_idle_w": 1434,
    "ctx": {
     "1048576": {
-     "ar": 2465.9,
-     "mtp_model_tau": 3748.9,
-     "mtp_tau4": 4033.6,
+     "ar": 2423.0,
+     "mtp_model_tau": 3720.2,
+     "mtp_tau4": 4001.2,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 34359,
      "best_tok_s_per_kw": 2352.6,
      "best_tok_s_per_Mmm2": 90395.9,
      "vs_hbm": {
-      "ar": 1.09,
-      "tau4": 0.759,
+      "ar": 1.071,
+      "tau4": 0.753,
       "per_kw": 2.11,
       "per_mm2": 1.61
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2466,
-       "tok_s_per_kw": 98.4
+       "ar_tok_s": 2423,
+       "tok_s_per_kw": 96.7
       },
       "8": {
-       "ar_tok_s": 19727,
-       "tok_s_per_kw": 727.6
+       "ar_tok_s": 19384,
+       "tok_s_per_kw": 716.0
       },
       "32": {
-       "ar_tok_s": 78909,
-       "tok_s_per_kw": 2312.0
+       "ar_tok_s": 77535,
+       "tok_s_per_kw": 2282.6
       },
       "64": {
        "ar_tok_s": 80834,
@@ -994,27 +1022,27 @@
      }
     },
     "200000": {
-     "ar": 2573.9,
-     "mtp_model_tau": 4104.0,
-     "mtp_tau4": 4411.5,
+     "ar": 2527.1,
+     "mtp_model_tau": 4069.6,
+     "mtp_tau4": 4372.7,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 33041,
      "best_tok_s_per_kw": 2446.5,
      "best_tok_s_per_Mmm2": 90395.9,
      "vs_hbm": {
-      "ar": 1.136,
-      "tau4": 0.828,
+      "ar": 1.115,
+      "tau4": 0.821,
       "per_kw": 1.94,
       "per_mm2": 0.98
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2574,
-       "tok_s_per_kw": 102.8
+       "ar_tok_s": 2527,
+       "tok_s_per_kw": 101.0
       },
       "8": {
-       "ar_tok_s": 20591,
-       "tok_s_per_kw": 766.1
+       "ar_tok_s": 20216,
+       "tok_s_per_kw": 753.2
       },
       "32": {
        "ar_tok_s": 80834,
@@ -1045,31 +1073,31 @@
    "stack_idle_w": 896,
    "ctx": {
     "1048576": {
-     "ar": 2370.0,
-     "mtp_model_tau": 3553.3,
-     "mtp_tau4": 3829.7,
+     "ar": 2350.1,
+     "mtp_model_tau": 3539.9,
+     "mtp_tau4": 3815.0,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 34524,
      "best_tok_s_per_kw": 2341.4,
      "best_tok_s_per_Mmm2": 118007.4,
      "vs_hbm": {
-      "ar": 1.048,
-      "tau4": 0.721,
+      "ar": 1.039,
+      "tau4": 0.718,
       "per_kw": 2.1,
       "per_mm2": 2.1
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2370,
-       "tok_s_per_kw": 94.0
+       "ar_tok_s": 2350,
+       "tok_s_per_kw": 93.2
       },
       "8": {
-       "ar_tok_s": 18960,
-       "tok_s_per_kw": 697.4
+       "ar_tok_s": 18801,
+       "tok_s_per_kw": 692.0
       },
       "32": {
-       "ar_tok_s": 75841,
-       "tok_s_per_kw": 2235.1
+       "ar_tok_s": 75202,
+       "tok_s_per_kw": 2221.3
       },
       "64": {
        "ar_tok_s": 80834,
@@ -1078,31 +1106,31 @@
      }
     },
     "200000": {
-     "ar": 2469.6,
-     "mtp_model_tau": 3870.8,
-     "mtp_tau4": 4168.8,
+     "ar": 2447.9,
+     "mtp_model_tau": 3854.8,
+     "mtp_tau4": 4151.4,
      "best_batch_tok_s": 80833.5,
      "best_batch_w": 33206,
      "best_tok_s_per_kw": 2434.3,
      "best_tok_s_per_Mmm2": 118007.4,
      "vs_hbm": {
-      "ar": 1.09,
-      "tau4": 0.783,
+      "ar": 1.08,
+      "tau4": 0.78,
       "per_kw": 1.93,
       "per_mm2": 1.28
      },
      "by_batch": {
       "1": {
-       "ar_tok_s": 2470,
-       "tok_s_per_kw": 98.0
+       "ar_tok_s": 2448,
+       "tok_s_per_kw": 97.2
       },
       "8": {
-       "ar_tok_s": 19757,
-       "tok_s_per_kw": 732.9
+       "ar_tok_s": 19583,
+       "tok_s_per_kw": 726.9
       },
       "32": {
-       "ar_tok_s": 79026,
-       "tok_s_per_kw": 2393.2
+       "ar_tok_s": 78331,
+       "tok_s_per_kw": 2377.3
       },
       "64": {
        "ar_tok_s": 80834,
@@ -1139,13 +1167,319 @@
    }
   }
  },
+ "scenario_c": {
+  "stages": 73,
+  "layer_dies": 292,
+  "dies": 336,
+  "packages": 168,
+  "stacks": 420,
+  "stage_decision": {
+   "decision": "S73 (conservative) is the baseline; S69 is not adopted",
+   "evidence": [
+    "The 64.55 mm2 is the r4->C1 screen step 694.88 (r4 single_parallel_successor.conservative_priced_per_shard_mm2) -> 759.44 (dsrom_capture_clock_selected_union whole_selector_replacement_screen_mm2).",
+    "Traced terms are per-die services: two-port PAR2 corridor 4.32 (capture_home inputs/budget.json composed_whole_area.new_two_port_corridor_reservation_mm2; PAR2-only, vanishes in PAIR1), selector station 0.60 and 1.68 once, capture enclosure 0.14 ('same_envelope_reserved_per_shard_die'), clock reserve 0.014 (dsrom_selected_parent_caller r7 whole_reticle_join; dsrom_capture_home model.json).",
+    "Terms that DO scale with elements: shared broadcast BUF 0.76 ('3,726,496 BUF/shard'), finite spatial element clock increment 0.46 ('901/2724 BUF' per element) -- about 1.2 mm2 per 2,048-pair shard.",
+    "The bulk, ~58 mm2 between 694.88 and the 753.03 'latest_owner_screen_already_including_corridor' (topk_finite_track_turn_model r2), has no per-term source ledger in the records read; its scaling is unproven."
+   ],
+   "reading": "Of the 64.55 mm2 only ~6.5 mm2 is traced: ~5.3 per-die and ~1.2 per-element. Fixed-per-die (S69) needs the untraced ~58 mm2 to be shown per-die; until then the owner-approved S73 stands. S69 is an upside of 4 stages / 16 dies / -1.9 us AR (+1.2% per-user), assigned to workstream W2 as a ledger task.",
+   "S69_upside": {
+    "stages": 69,
+    "dies": 320
+   }
+  },
+  "power_gating": {
+   "1048576": {
+    "by_batch": {
+     "1": {
+      "tok_s": 2490,
+      "active_stage_fraction": 0.027,
+      "static_kw": {
+       "icg": 19.9,
+       "pg_logic": 14.89,
+       "pg_logic_links": 7.07
+      },
+      "tok_s_per_kw": {
+       "icg": 123.3,
+       "pg_logic": 164.0,
+       "pg_logic_links": 338.2
+      }
+     },
+     "8": {
+      "tok_s": 19919,
+      "active_stage_fraction": 0.123,
+      "static_kw": {
+       "icg": 19.9,
+       "pg_logic": 15.38,
+       "pg_logic_links": 8.33
+      },
+      "tok_s_per_kw": {
+       "icg": 894.9,
+       "pg_logic": 1122.6,
+       "pg_logic_links": 1862.8
+      }
+     },
+     "32": {
+      "tok_s": 79677,
+      "active_stage_fraction": 0.452,
+      "static_kw": {
+       "icg": 19.9,
+       "pg_logic": 17.07,
+       "pg_logic_links": 12.67
+      },
+      "tok_s_per_kw": {
+       "icg": 2715.1,
+       "pg_logic": 3004.0,
+       "pg_logic_links": 3602.4
+      }
+     },
+     "64": {
+      "tok_s": 80834,
+      "active_stage_fraction": 0.458,
+      "static_kw": {
+       "icg": 19.9,
+       "pg_logic": 17.11,
+       "pg_logic_links": 12.75
+      },
+      "tok_s_per_kw": {
+       "icg": 2741.7,
+       "pg_logic": 3028.2,
+       "pg_logic_links": 3618.6
+      }
+     }
+    },
+    "b1_mtp_tau3649": {
+     "tok_s": 3762.7,
+     "icg": 183.2,
+     "pg_logic": 242.3,
+     "pg_logic_links": 488.0
+    }
+   },
+   "200000": {
+    "by_batch": {
+     "1": {
+      "tok_s": 2600,
+      "active_stage_fraction": 0.027,
+      "static_kw": {
+       "icg": 19.9,
+       "pg_logic": 14.89,
+       "pg_logic_links": 7.07
+      },
+      "tok_s_per_kw": {
+       "icg": 129.0,
+       "pg_logic": 171.6,
+       "pg_logic_links": 354.6
+      }
+     },
+     "8": {
+      "tok_s": 20799,
+      "active_stage_fraction": 0.123,
+      "static_kw": {
+       "icg": 19.9,
+       "pg_logic": 15.38,
+       "pg_logic_links": 8.33
+      },
+      "tok_s_per_kw": {
+       "icg": 944.4,
+       "pg_logic": 1187.9,
+       "pg_logic_links": 1988.7
+      }
+     },
+     "32": {
+      "tok_s": 80834,
+      "active_stage_fraction": 0.44,
+      "static_kw": {
+       "icg": 19.9,
+       "pg_logic": 17.01,
+       "pg_logic_links": 12.5
+      },
+      "tok_s_per_kw": {
+       "icg": 2870.0,
+       "pg_logic": 3197.6,
+       "pg_logic_links": 3891.3
+      }
+     },
+     "64": {
+      "tok_s": 80834,
+      "active_stage_fraction": 0.44,
+      "static_kw": {
+       "icg": 19.9,
+       "pg_logic": 17.01,
+       "pg_logic_links": 12.5
+      },
+      "tok_s_per_kw": {
+       "icg": 2870.0,
+       "pg_logic": 3197.6,
+       "pg_logic_links": 3891.3
+      }
+     }
+    },
+    "b1_mtp_tau3649": {
+     "tok_s": 4120.6,
+     "icg": 200.2,
+     "pg_logic": 264.7,
+     "pg_logic_links": 531.8
+    }
+   },
+   "hbm_accelerator": {
+    "ar_tok_s_per_kw_b1": 308.5,
+    "mtp_tok_s_per_kw_b1": 424.5,
+    "mtp_power_basis": "static 5,367.7 W + 1.4614 J per emitted token (AR energy, so MTP per-kW is an upper bound)",
+    "best_batch": "not modelled in a3ed9c36d; the HBM comparator's best is 25,293 tok/s at 22.6 kW (1,117 tok/s per kW)"
+   },
+   "basis": "Layer-die always-on 50.196 W = 30.6 W SerDes + 19.6 W logic. A stage is gated except while it carries a token plus one pre-woken neighbour: active fraction (min(B, rate/AR) + 1)/S. Gated logic keeps 10%, gated links keep 10% (both ASSUMED). Head (738.5 W), Engram table (3,324.4 W) and HBM stack idle (2.8 W, KV retained) are not gated. Dynamic AR energy unchanged (118.6 / 102.3 mJ a token). Pre-wake hides the wake latency inside one stage time (~5.5 us at S73), an RTL/PDN requirement for W5.",
+   "reading": "Gating matters only at low batch: at batch 1 it cuts static 19.9 -> 7.1 kW (logic+links); by batch 32 the pipeline is ~45% busy and saturated rate is head-bound, so best-batch tok/s per kW moves little. The un-gated Engram table dies (3.3 kW) become the largest always-on term."
+  },
+  "hbm_phy_credit": {
+   "one_stack_rank_dies": 260,
+   "scan_rank_dies": 32,
+   "phy_mm2_per_stack": {
+    "central": 10.0,
+    "low": 8.0,
+    "high": 15.0
+   },
+   "saved": {
+    "central": {
+     "per_die_mm2": 30.0,
+     "array_mm2": 7800.0
+    },
+    "low": {
+     "per_die_mm2": 24.0,
+     "array_mm2": 6240.0
+    },
+    "high": {
+     "per_die_mm2": 45.0,
+     "array_mm2": 11700.0
+    }
+   },
+   "shoreline_freed_mm_per_die": 25.5,
+   "ledger_status": "The HBM PHY is not a named term in the r4/C1 ledger: it is part of E (IO/PHY exclusions, 'actual_E_and_H_received': false) inside the uniform 418.27 mm2 inherited debit. The credit is real only once that debit is replaced by explicit per-die rectangles (workstream W4).",
+   "if_taken_on_every_rank_die": {
+    "conservative_stages": {
+     "central": 68,
+     "low": 69,
+     "high": 66
+    }
+   },
+   "caveat": "Scan-layer dies keep 4 PHYs, so a uniform-pairs partition gains the credit only if scan stages carry fewer pairs or the 32 scan dies keep the larger outline; stated as the bound, not adopted.",
+   "shoreline_reading": "25.5 mm of the die edge freed per one-stack die: room for the TP-4 board SerDes and the stage links without the 60% beachfront ceiling (technology.json max_beachfront_utilization)."
+  },
+  "complement_removal_sensitivity": {
+   "rule": "fixed debit 465.48 = 287.02 unmapped complement + the rest; replace the complement by an explicit E (IO/PHY, halos, clock/PG) of the stated size",
+   "rows": {
+    "E_287.02": {
+     "stages": 73,
+     "dies": 336
+    },
+    "E_150": {
+     "stages": 54,
+     "dies": 260
+    },
+    "E_75": {
+     "stages": 48,
+     "dies": 236
+    }
+   },
+   "reading": "The owner-approved C keeps S73, which still charges the 287 mm2. Every 100 mm2 of the complement that W4 proves unnecessary is worth several stages; adopt only from the regenerated area ledger."
+  },
+  "restated": {
+   "C": {
+    "design": "Scenario C (S73 PAIR1, credit return, trimmed padding, KV sized)",
+    "dies": 336,
+    "packages": 168,
+    "stacks": 420,
+    "logic_mm2": 284517,
+    "dram_mm2": 457380,
+    "total_mm2": 741897,
+    "static_kw_icg": 19.9,
+    "1048576": {
+     "ar": 2489.9,
+     "mtp_tau3649": 3762.7,
+     "mtp_tau4": 4051.4,
+     "best_tok_s": 80833.5,
+     "best_w": 29483,
+     "dynamic_kw_at_best": 9.59,
+     "best_tok_s_per_kw": 2741.7,
+     "best_tok_s_per_Mmm2_total": 108955.2,
+     "best_tok_s_per_Mmm2_logic": 284108,
+     "b1_ar_tok_s_per_kw": 123.3,
+     "b1_ar_tok_s_per_kw_pg": 338.2,
+     "static_kw_b1_pg": 7.07,
+     "b1_mtp_tok_s_per_kw_pg": 488.0
+    },
+    "200000": {
+     "ar": 2599.9,
+     "mtp_tau3649": 4120.6,
+     "mtp_tau4": 4432.7,
+     "best_tok_s": 80833.5,
+     "best_w": 28165,
+     "dynamic_kw_at_best": 8.27,
+     "best_tok_s_per_kw": 2870.0,
+     "best_tok_s_per_Mmm2_total": 108955.2,
+     "best_tok_s_per_Mmm2_logic": 284108,
+     "b1_ar_tok_s_per_kw": 128.9,
+     "b1_ar_tok_s_per_kw_pg": 354.6,
+     "static_kw_b1_pg": 7.07,
+     "b1_mtp_tok_s_per_kw_pg": 531.8
+    }
+   },
+   "C1": {
+    "design": "C1 today (S58 PAR2) at this model",
+    "dies": 508,
+    "packages": 254,
+    "stacks": 960,
+    "logic_mm2": 399405,
+    "dram_mm2": 1045440,
+    "total_mm2": 1444845,
+    "static_kw_icg": 30.89,
+    "1048576": {
+     "ar": 2323.7,
+     "mtp_tau3649": 3523.4,
+     "mtp_tau4": 3795.5,
+     "best_tok_s": 80833.5,
+     "best_w": 40478,
+     "dynamic_kw_at_best": 9.59,
+     "best_tok_s_per_kw": 1997.0,
+     "best_tok_s_per_Mmm2_total": 55946.1,
+     "best_tok_s_per_Mmm2_logic": 202385,
+     "b1_ar_tok_s_per_kw": 74.6
+    },
+    "200000": {
+     "ar": 2419.3,
+     "mtp_tau3649": 3835.3,
+     "mtp_tau4": 4128.3,
+     "best_tok_s": 80833.5,
+     "best_w": 39160,
+     "dynamic_kw_at_best": 8.27,
+     "best_tok_s_per_kw": 2064.2,
+     "best_tok_s_per_Mmm2_total": 55946.1,
+     "best_tok_s_per_Mmm2_logic": 202385,
+     "b1_ar_tok_s_per_kw": 77.7
+    }
+   },
+   "hbm_accelerator": {
+    "design": "HBM accelerator (a3ed9c36d, firm rungs)",
+    "dies": 96,
+    "stacks": 384,
+    "logic_mm2": 32688,
+    "dram_mm2": 384000,
+    "total_mm2": 416688,
+    "static_kw": 5.3677,
+    "ar": 3015.2,
+    "mtp_tau3649": 6001.1,
+    "mtp_tau4": 6579.0,
+    "b1_ar_tok_s_per_kw": 308.5,
+    "b1_mtp_tok_s_per_kw": 424.5,
+    "note": "DRAM at 1,000 mm2 a stack in a3ed9c36d vs 1,089 here; per-mm2 compares use each record's own basis"
+   }
+  }
+ },
  "pins": {
-  "79b3c5f84e9d9555f24e7bc943869f64edb74b72:results/uarch/dsrom_return_scaling_source_audit_20261002/model.json": "7ff6988499658d022f2bdbe85ef62657937f52a0331f0c8321dadad50c860f56",
+  "246b5da68fe1bd86e95be19db99cb80e42207a0d:results/uarch/dsrom_return_scaling_source_audit_20261002/model.json": "7ff6988499658d022f2bdbe85ef62657937f52a0331f0c8321dadad50c860f56",
   "93efabc2d9fd6f3402a6f586798b45fd97adbabc:results/rtl/dsrom_return_lifetime_audit_20261002/model.json": "9b01034e5282a97d14689b0a3ea0171c6b7f70191312fdcd67daa1040bec6d92",
-  "79b3c5f84e9d9555f24e7bc943869f64edb74b72:results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/model-r4.json": "0777a3dc8dd5fc3d128d7593907ecf0003ab4c9c1294bf8b8f9059585d91fd08",
-  "79b3c5f84e9d9555f24e7bc943869f64edb74b72:results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/inputs/compiled_budget.json": "821b5c4a8bb2f64c8ecdc4b0f508e8f0b8e704393aba7e6e2e2f5e0d91c14e0d",
-  "79b3c5f84e9d9555f24e7bc943869f64edb74b72:results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154",
+  "246b5da68fe1bd86e95be19db99cb80e42207a0d:results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/model-r4.json": "0777a3dc8dd5fc3d128d7593907ecf0003ab4c9c1294bf8b8f9059585d91fd08",
+  "246b5da68fe1bd86e95be19db99cb80e42207a0d:results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/inputs/compiled_budget.json": "821b5c4a8bb2f64c8ecdc4b0f508e8f0b8e704393aba7e6e2e2f5e0d91c14e0d",
+  "246b5da68fe1bd86e95be19db99cb80e42207a0d:results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154",
   "e697d6eaef01ef7b60bd9ff330a3adc99c2adabc:results/uarch/dsrom_4096_comparable_capacity_20261002/model.json": "f48a5866432fa45a6f70aa822cae7607b100919ef1a397ff6e7a72e2eda02087"
  },
- "raw_uarch_model_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+ "raw_uarch_model_sha256": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9"
 }
