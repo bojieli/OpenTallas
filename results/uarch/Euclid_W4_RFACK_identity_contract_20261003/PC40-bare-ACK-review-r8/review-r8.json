@@ -1,0 +1,115 @@
+{
+  "W4_integration_path": {
+    "W6_signal": "final FMAXACK forward physical {ack_owner,ack_slot} to W6, rather than independently retagging barebit",
+    "caller_bindings": "Goodall frozenFMINconsumer interface actual RF19; real parent/native64 to owner46 allocation still separate source admission",
+    "input_identity": "wire wr_owner from real retained acceptedreq_owner46 on each actual write_go; no fakeHBMtag or minted PC40physicalPC",
+    "latency": "W4+1localRFedge alreadycomponentpriced; joint PC40calendar must replace actual fivewrite ACKdebits and evaluate exposed stalls; installedclock/CDC unknown",
+    "mismatch_fault": "must be sticky and quarantine sourcecontext; exact implementation/added comparator/ports/control costs owned Popper/W6",
+    "outputs": [
+      "ack_owner46",
+      "ack_slot9",
+      "ack_identity_fault"
+    ],
+    "replacement": "select W4 rf_service ACK_ID1 once; same physical data ports",
+    "sink_ready": "gate actualRFack_ready on expectedtuple andfaultclear, stale/wrongvalidcode must hold ACK/no W6visibility/consumer/reverse/native_done/workspace_release",
+    "tuple_validation": "match actual ACKowner46 to retained acceptedowner and slot to sourceexpectedphase/retainedacceptedslot; require !ack_identity_fault"
+  },
+  "actual_W4_source": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f",
+  "actual_live_compile_preserved": true,
+  "bare_ACK_source_lemma": {
+    "consumption": "ack_valid&&ack_ready clears oldACK on RFedge",
+    "creation": "ack_valid set only on write_go; shared reset clears it",
+    "exclusion": "wr_ready derives idle=!read_pending&&!rsp_valid&&!ack_valid; no subsequent write while oldACK held",
+    "one_step_formal_or_connected_negative_proven": false,
+    "requirements": [
+      "sole physical writer selected by actual mux/exclusive workspace lease",
+      "oneoutstanding in same RFleaf",
+      "commonclk and shared RF/controller reset",
+      "no seed_mode bypass or alternatewriter while leased",
+      "actual primitive connection no extraCDC/stale pulse sources",
+      "allcopy reset/quiescence before identity reuse"
+    ],
+    "write_go": "wr_valid&&wr_ready"
+  },
+  "bridge_findings": {
+    "FMAX_sink": "req identity holds owner46+RF19; RF19 read/FMIN precedes W6consumer",
+    "event_log": "EVENT common_ACK logs visible_identity for all intermediate writes; not actual RFslot identity witness",
+    "remote_scope": "remote RF writes0, absentremote bypass; not remote hardware proof",
+    "req_excludes_oldACK": "req_ready excludes local/remoteACK and localrsp whileIDLE",
+    "retag_location": ".host_ack_identity(identity) at W6 actual fence, independent of physicalACK tuple",
+    "unexpected_ACK_check": "only excludes wrong phases; accepts barebit during expectedA_ACK/B_ACK/OUT_ACK/CONST_ACK/FMAX_ACK"
+  },
+  "existing_snapshot_gate": {
+    "covers": [
+      "FMIN numericalheldresult",
+      "publicationheld",
+      "native retirementheld",
+      "nonfiniteexception debt"
+    ],
+    "fixture_drain": "alldrain_live initialized allones plus request-echo responses; not installed allcopydebt",
+    "missing_snapshot_stimuli": [
+      "explicit ACKforce stale/duplicate/heldnegative",
+      "reset-after-launch or reset whileFMINheld negatives",
+      "physical55bit ACKinterface matching"
+    ]
+  },
+  "expected_ACK_slots": {
+    "A_ACK": 17,
+    "B_ACK": 18,
+    "CONST_ACK": 18,
+    "FMAX_ACK": 19,
+    "OUT_ACK": 17
+  },
+  "mandatory_adapter_warning": "local_wr_addr is defined by WRITE phases only; in ACK phases falls through to19. Do not use currentlocal_wr_addr as expectedACKslot for writes17/18. Price and source-bind retained acceptedslot or exact ACK-phase map.",
+  "model_before_repair": {
+    "W4_full_gate_terminal": false,
+    "component_model": "r3+r4 retained, zero reviewarea/cycles; actual adapter matcher and sourceclock/fanout jointcost remains owner requirement",
+    "no_new_hardware_this_review": true
+  },
+  "negative_requirements": [
+    {
+      "case": "oldACK held at IDLE/request",
+      "expected": "req_ready0, no sourceaccept, no newlease"
+    },
+    {
+      "case": "ACK held over consumption/backpressure",
+      "expected": "tuple/strobe stable, RFwr_ready0, oneaccept oneconsume no secondphasecredit"
+    },
+    {
+      "case": "stale/duplicate during expectedACKphase",
+      "expected": "test explicit causal leafsource contract; identityadapter must reject wrongowner/slot validcode. A barebit with same legalphase is indistinguishable without causal source premise"
+    },
+    {
+      "case": "reset RFACKpending or FMINheld",
+      "expected": "actual common RFreset clearsACK; old context quarantined/no consumer/reverse/native_done/workspace release; wrong/stale drain refused until sourcequiescence/rearm"
+    },
+    {
+      "case": "sameedge reset/oldACK/newrequest",
+      "expected": "no newaccept or oldvisibility from aborted debt"
+    },
+    {
+      "case": "FMIN result_ready0 and wrongconsumer identity",
+      "expected": "protected result+identity held, no W6consumer or reverse release"
+    }
+  ],
+  "no_build_or_RTL_change": true,
+  "same_source_RF_geometry": {
+    "FP32lanes": 128,
+    "banks_per_page_per_copy": 16,
+    "bits_per_frame": 4096,
+    "copies": 2,
+    "macro": "128x256 1R1W",
+    "pages": 4,
+    "vectors": 512
+  },
+  "schema": "W4_PC40_BARE_ACK_SOURCE_JOIN_REVIEW_R8",
+  "scope_excluded": [
+    "new fullsystem/MTP build",
+    "numerical token rerun",
+    "new W4compile",
+    "wholeprogram/CDC/SSFF/rate credit"
+  ],
+  "source": "Goodall9059 frozen snapshot of Popper bfbc+r2WIP; review snapshot is not launch admission",
+  "status": "CONDITIONAL_BARE_ACK_RETAGS_NOT_YET_NEGATIVE_QUALIFIED",
+  "unsafe_to_generalize": "onebit ACK cannot distinguish unsolicited stale/duplicate ACK arriving in an otherwise expected ACK phase. Timing retagging is conditional on causal primitive source invariant, not hardware identity matching. W4 actual55tuple must replace retag where caller adapter binds it."
+}
