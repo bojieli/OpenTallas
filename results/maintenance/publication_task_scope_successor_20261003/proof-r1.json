@@ -1,0 +1,120 @@
+{
+  "schema": "publication-task-scope-successor-r1",
+  "parent_commit": "164ac1b17cb3c8cff29a01ae178ada24ee6a9716",
+  "scope": "Bounded TASKS ownership plus DS three-composition publication authority correction; no model/artifact generation, engine/calendar/physical changes",
+  "final_document_sha256": {
+    "TASKS.md": "828d79b24a792d8a865a9ae4baa7ff1e7883e8dc9d717d396d977246b3a7eecb",
+    "results/abi3/prose_figure_coverage.json": "a41621e75a87da4905930499495309375c7fff881651adcfbab2401618c8e28b",
+    "docs/EVIDENCE_LEDGER.md": "9159e08dd876011146070215cf6c600d92bbfa2d35200b30b761032c08ac9508",
+    "docs/UNIFIED_EXECUTION_CHECKLIST.md": "33948eacb47f6a780210eefb4580adf7bd6fdb8dd6e1b3c6dc7226cc998b7f8d",
+    "docs/HEADLINE_BUNDLE_SCOPE.md": "9142d4347ca6d44eecd9821643567c28c1eef71c345dbb13bca9e861726818b3",
+    "docs/MICROARCH_MODEL.md": "4e545efe516260af7b31678235755120e7913e56baf086a331276cb1c37475df"
+  },
+  "unchanged_source_sha256": {
+    "results/uarch/hbm_gpu.json": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+    "results/uarch/fabric.json": "c15c3b0844d25b1dde99c96070f75d7943fc80d0e2e436fb0c81a20e7f9ffd38",
+    "results/uarch/economics.json": "4f584946473201c60fcf1ac2c0509b0816ae138f134629cf50f5ed8f081166db",
+    "results/uarch/economics_levers.json": "e0992d14d084a80c1cc1ef99cb3561a84b349f9c2c8285111e602b91f2b157df",
+    "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+    "results/arch/headline_bundle.json": "2eb21c31346c6b583c8d2c60881c63cd36fdff9519915bd61b48763f56600d1d",
+    "docs/HEADLINE_BUNDLE.md": "8bca06d8df8c9d10c61f540a6d52b1b09cd7fbacfc2005e1fc2a83fef3af9cce",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/verification_replay.json": "f8c846e2ee3812e3cfd0345172483fe499039c7f730d5d7814a2d329a54b046b",
+    "results/uarch/qwen_rom_kv_successor_20261002/model-r7.json": "b47d505ce39511508e815652a5ef5c69c8806dcffda9eb84a36450e356708c05",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/headline_bundle.py": "57e525d085f41f6a57b3cc9233051b101e3a3a648a577ee239b52824fa14c485",
+    "docs/INTEGRATED_PHYSICAL_PLAN.md": "6e54c30ae30cb20aeea5d9521dd53559d671b1011662a50dc174275a5097544c",
+    "results/uarch/w19_hbm_token_ar.json": "ab41e0ad471686a602162980e16d4e48d83764088049cbaf2419373fb6fd1ca2"
+  },
+  "coordination": {
+    "Claude": "sole Qwen calendar/fill model owner; model-only near-HBM unselected, one-segment AR, DS q-reframe/PAR2 preparation",
+    "Ampere_Euclid": "retained source/layout/capture evidence only; duplicate fill development stopped",
+    "Maxwell_Archimedes": "selected relay work unchanged",
+    "permission": "No launch, hardware build, session selection or adoption permission"
+  },
+  "census_untriaged": 4027,
+  "original_publication_commit": "164ac1b17cb3c8cff29a01ae178ada24ee6a9716",
+  "historical_evidence": "All prior source/failed model records and prior publication proof remain unchanged; replay the older proof at its own commit.",
+  "git_origin_records": [
+    {
+      "commit": "71b3ffc52af932f3e28d70842e879183526e9367",
+      "path": "results/uarch/w19_hbm_token_ar_fused_wsel256.json",
+      "sha256": "785b2a30a534e7cacad52d242c8019db6a0a42b0574a34ef39e69227117904bc",
+      "field_assertions": {
+        "result.total_us": 442.14,
+        "result.tokens_s": 2261.7,
+        "result.collectives_on_path": 265,
+        "result.parts_us": {
+          "sm": 70.58,
+          "barrier": 22.29,
+          "collective": 240.46,
+          "local": 103.48,
+          "fetch": 5.33
+        },
+        "result.flags": [
+          "SM shape bf16 K=5120 R=43 priced by line rate (not measured)",
+          "collective 96 x 512 index merge: fit + select MEASURED (series over positions)",
+          "collective o-group tree reduce (8 contributors) + multicast: extrapolated"
+        ],
+        "source_commit": "c350be7f02d9d04578d1de4935847e59dc015590"
+      }
+    },
+    {
+      "commit": "71b3ffc52af932f3e28d70842e879183526e9367",
+      "path": "results/uarch/w19_hbm_token_ar_wsel256.json",
+      "sha256": "8f35771f9421cee64d647c40ea78482f4b2d1bc7f9ec3716eac3ef79d422da23",
+      "field_assertions": {
+        "result.total_us": 458.46,
+        "result.tokens_s": 2181.2,
+        "result.collectives_on_path": 265,
+        "result.parts_us": {
+          "sm": 70.58,
+          "barrier": 22.29,
+          "collective": 240.46,
+          "local": 119.8,
+          "fetch": 5.33
+        },
+        "result.flags": [
+          "SM shape bf16 K=5120 R=43 priced by line rate (not measured)",
+          "collective 96 x 512 index merge: fit + select MEASURED (series over positions)",
+          "collective o-group tree reduce (8 contributors) + multicast: extrapolated"
+        ],
+        "source_commit": "c350be7f02d9d04578d1de4935847e59dc015590"
+      }
+    },
+    {
+      "commit": "71b3ffc52af932f3e28d70842e879183526e9367",
+      "path": "results/rtl/w15_topk_merge_hbm96_p1024f256.json",
+      "sha256": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+      "field_assertions": {
+        "all_exact": true,
+        "parameters.P": 1024,
+        "parameters.PF": 256,
+        "cases[case=l20_index_topk].cycles": 419
+      }
+    }
+  ],
+  "historical_W19_assertions": {
+    "result.total_us": 495.23,
+    "result.tokens_s": 2019.2,
+    "result.collectives_on_path": 265,
+    "result.parts_us.collective": 283.73,
+    "source_commit": "f99e466ca5295ecf9cb5603738e535d237692fa7"
+  },
+  "declared_HBM_W19_assertions": {
+    "ar_us": 442.14,
+    "ar_unfused_us": 458.46,
+    "collectives": 265,
+    "parts_us_fused": {
+      "sm": 70.58,
+      "barrier": 22.29,
+      "collective": 240.46,
+      "local": 103.48,
+      "fetch": 5.33
+    }
+  },
+  "RF_scope": "20.88 mm2 reported in parent instruction is unqualified; no source/calendar/physical admission inferred.",
+  "failed_evidence_preserved": [
+    "verification-r2-composed-final.log"
+  ],
+  "final_verdict": "PASS_DOCUMENT_SCOPE_AND_SOURCE_PINS_ONLY"
+}
