@@ -2,12 +2,21 @@
 """HA1 additive sizing extension of the unified microarchitecture model.
 No default architecture row is changed. Unknown physical constants block adoption.
 """
+import ast
+import math
 import json
 import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
-from uarch_model import DFF_UM2, wire_cycles
+# Load the exact unified-model constants/function without importing unrelated
+# physical-result dependencies in this sparse checkout.
+_tree = ast.parse((ROOT / 'tools/uarch_model.py').read_text())
+_names = {'DFF_UM2', 'WIRE_PS_PER_UM', 'UNCERTAINTY_PS', 'WIRE_OVERHEAD_PS'}
+_nodes = [n for n in _tree.body if
+          (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id in _names for t in n.targets))
+          or (isinstance(n, ast.FunctionDef) and n.name == 'wire_cycles')]
+exec(compile(ast.Module(body=_nodes, type_ignores=[]), 'uarch_model.py:HA1', 'exec'))
 
 def price():
     slots, sms = 32, 32
