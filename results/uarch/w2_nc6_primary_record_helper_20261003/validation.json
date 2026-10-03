@@ -1,0 +1,45 @@
+{
+  "schema": "w2.nc6.primary_record_helper.validation.v1",
+  "pytest": "12 passed in20.55s",
+  "actual_RTL_cases": {
+    "positive_samples": 660,
+    "default_off_all_samples": true,
+    "per_word_CURRENT_clean_CE_bad": 219,
+    "real_mutants_rejected": [
+      "wrong_journal_word",
+      "ignored_CE",
+      "missing_primary_scheduler"
+    ]
+  },
+  "generator_byteexact": true,
+  "model_byteexact": true,
+  "source_originals_byteidentical": true,
+  "helper_source_sha256": "8dc227291ef12293d0580afd7561799a0999d8f97e5901bfb25e96120e237f9c",
+  "iverilog_path": "/usr/bin/iverilog",
+  "iverilog_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+  "actual_log_source_hashes": {
+    "actual_tests/test_actual_rtl_held_records_c0/run.log": "f326563b88661a0b8657ff16397dab33200e6a4d6106f4ccb8aef67b5ae2fa63",
+    "actual_tests/test_actual_rtl_held_records_c0/build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_tests/test_actual_rtl_held_records_c0/helper.sv": "8dc227291ef12293d0580afd7561799a0999d8f97e5901bfb25e96120e237f9c",
+    "actual_tests/test_real_source_mutants_rejec0/run.log": "ef5d13a33e43f265d7f468ee930470451dda50a88e1b565732f4c2da29a386b2",
+    "actual_tests/test_real_source_mutants_rejec0/build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_tests/test_real_source_mutants_rejec0/helper.sv": "770b0260aabf9667c53822f63522d952cf40d10d67f15f28cf256ffdd43fd96d",
+    "actual_tests/test_real_source_mutants_rejec1/run.log": "dca8f25610fbcc86ff4552ce69b1192adaf05c0d1de8d872d3a4647aa845f942",
+    "actual_tests/test_real_source_mutants_rejec1/build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_tests/test_real_source_mutants_rejec1/helper.sv": "ab62aa5d89b681195128aa2fa6f8d2549127f0b41678f0c3ff744a8384eed5bb",
+    "actual_tests/test_real_source_mutants_rejec2/run.log": "f75d57aa34ff5fd08d6c5bcb098192ef5210ccc40732e1e3e585ee83a3e1b538",
+    "actual_tests/test_real_source_mutants_rejec2/build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_tests/test_real_source_mutants_rejec2/helper.sv": "d77222f57435ee78e971268fbd0a688645da916f1881ade9a024424a94f554e4"
+  },
+  "actual_test_source_hashes": {
+    "test_actual_rtl_held_records_c0": "8dc227291ef12293d0580afd7561799a0999d8f97e5901bfb25e96120e237f9c",
+    "test_real_source_mutants_rejec0": "770b0260aabf9667c53822f63522d952cf40d10d67f15f28cf256ffdd43fd96d",
+    "test_real_source_mutants_rejec1": "ab62aa5d89b681195128aa2fa6f8d2549127f0b41678f0c3ff744a8384eed5bb",
+    "test_real_source_mutants_rejec2": "d77222f57435ee78e971268fbd0a688645da916f1881ade9a024424a94f554e4"
+  },
+  "primary_integration": false,
+  "controller_terminal": false,
+  "mutable_protected_full_controller_qualification": false,
+  "fulltoken": false,
+  "physical": false
+}

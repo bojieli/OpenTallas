@@ -1,0 +1,262 @@
+{
+  "schema": "w2.nc6.primary_record_wire_helper.v1",
+  "source_commit": "297b7036e2aa77bba6ec8aeb79afb024c1c41063",
+  "canonical_source_sha256": {
+    "tools/w2_nc6_mutable_protection_model.py": "c0a3177276d92d9e8d168b310a003597ff5f979d6d5d3a2fee83ebd37e6f7243",
+    "tools/w2_nc6_count_utility_closure.py": "a4e4b9805860d01ca559f19b40f32e82ddf881c71b663235c38bb961bb0f3e8a",
+    "tools/w2_nc6_secondary_source.py": "d062b3cf9085a73005c6c1dfdb55e493d6c195d4cfbf2ef02bb3f4f98c963ca1"
+  },
+  "canonical_map_sha256": "17dc3160667893fd331a05565663accc9318127419749a1a346bee66f68201a2",
+  "default_off": true,
+  "scope": "combinational typed record reconstruction/current integrity reduction; no primary controller, normal/exceptional FSM or hardware adoption",
+  "total_words": 219,
+  "primary_words": 182,
+  "secondary_words": 37,
+  "coded_inventory_bits": 15768,
+  "new_state_bits": 0,
+  "new_memory_ports": 0,
+  "new_handshakes": 0,
+  "new_queued_debts": 0,
+  "added_pipeline_edges": 0,
+  "wire_records": [
+    {
+      "source": "request_holder",
+      "output": "held_request",
+      "width": 335,
+      "instances": 1,
+      "global_indices": [
+        [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103
+        ]
+      ]
+    },
+    {
+      "source": "read_query",
+      "output": "held_read_query",
+      "width": 297,
+      "instances": 1,
+      "global_indices": [
+        [
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ]
+      ]
+    },
+    {
+      "source": "write_query",
+      "output": "held_write_query",
+      "width": 41,
+      "instances": 1,
+      "global_indices": [
+        [
+          111
+        ]
+      ]
+    },
+    {
+      "source": "read_delivery",
+      "output": "held_read_delivery",
+      "width": 300,
+      "instances": 1,
+      "global_indices": [
+        [
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118
+        ]
+      ]
+    },
+    {
+      "source": "prepared_write",
+      "output": "journal",
+      "width": 87,
+      "instances": 9,
+      "global_indices": [
+        [
+          169,
+          170
+        ],
+        [
+          171,
+          172
+        ],
+        [
+          173,
+          174
+        ],
+        [
+          175,
+          176
+        ],
+        [
+          177,
+          178
+        ],
+        [
+          179,
+          180
+        ],
+        [
+          181,
+          182
+        ],
+        [
+          183,
+          184
+        ],
+        [
+          185,
+          186
+        ]
+      ]
+    },
+    {
+      "source": "correction_context",
+      "output": "correction",
+      "width": 96,
+      "instances": 8,
+      "global_indices": [
+        [
+          145,
+          146,
+          147
+        ],
+        [
+          148,
+          149,
+          150
+        ],
+        [
+          151,
+          152,
+          153
+        ],
+        [
+          154,
+          155,
+          156
+        ],
+        [
+          157,
+          158,
+          159
+        ],
+        [
+          160,
+          161,
+          162
+        ],
+        [
+          163,
+          164,
+          165
+        ],
+        [
+          166,
+          167,
+          168
+        ]
+      ]
+    },
+    {
+      "source": "query_pipeline",
+      "output": "query_pipeline",
+      "width": 65,
+      "instances": 6,
+      "global_indices": [
+        [
+          133,
+          134
+        ],
+        [
+          135,
+          136
+        ],
+        [
+          137,
+          138
+        ],
+        [
+          139,
+          140
+        ],
+        [
+          141,
+          142
+        ],
+        [
+          143,
+          144
+        ]
+      ]
+    },
+    {
+      "source": "write_selection",
+      "output": "write_selection",
+      "width": 5,
+      "instances": 6,
+      "global_indices": [
+        [
+          119
+        ],
+        [
+          120
+        ],
+        [
+          121
+        ],
+        [
+          122
+        ],
+        [
+          123
+        ],
+        [
+          124
+        ]
+      ]
+    },
+    {
+      "source": "protected_scheduler",
+      "output": "scheduler",
+      "width": 79,
+      "instances": 1,
+      "global_indices": [
+        [
+          187,
+          188
+        ]
+      ]
+    },
+    {
+      "source": "round_robin",
+      "output": "round_robin",
+      "width": 3,
+      "instances": 1,
+      "global_indices": [
+        [
+          131
+        ]
+      ]
+    }
+  ],
+  "status": "same decoder CURRENT release_clean plus no CE/bad; caller joins secondary37 before normal permit",
+  "cost": "Existing primary wire aliases/integrity reduction refactored. No free timing claim: physical loaded182-input clean/CE/bad and per-record fanout remain part of10cb current clean gate, not duplicate allocation. No added state or macro architecture. Contextual SSFF unqualified.",
+  "integration": "Nash sole primary owner; replace generic get_record reads by exact width views, wire current codec P/clean/CE/invalid. OPT_PROTECTION follows existing OPT_EXACT. Keep all state/writers/held-ready/utility repair FSM unchanged. No source install by Hubble."
+}
