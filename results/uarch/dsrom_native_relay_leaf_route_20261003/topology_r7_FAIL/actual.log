@@ -1,0 +1,67 @@
+MACRO_TRACK_GATE PASS macros=0 hooks=3 warnings=0 record=/srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r7/receipt.json.macro_gate.json
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+10300e+04, improvement is 4.66 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 1.977900e+04.
+[INFO DPL-0308] Pass   2 of vertical swaps; hpwl is 1.908900e+04.
+[INFO DPL-0308] Pass   3 of vertical swaps; hpwl is 1.908900e+04.
+[INFO DPL-0309] End of vertical swaps; objective is 1.908900e+04, improvement is 5.04 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 1.908900e+04.
+[INFO DPL-0305] End of reordering; objective is 1.908900e+04, improvement is 0.00 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 160 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 160, swaps 0, moves   111 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 1.908900e+04, Scratch cost 1.830900e+04, Incremental cost 1.830900e+04, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 1.830900e+04.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 4.09 percent.
+[INFO DPL-0332] End of pass, Generator random called 160 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 320, swaps 0, moves   214 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 1.830900e+04, Scratch cost 1.830900e+04, Incremental cost 1.830900e+04, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 1.830900e+04.
+[INFO DPL-0327] Pass   2 of random improver; improvement in cost is 0.00 percent.
+[INFO DPL-0328] End of random improver; improvement is 4.086123 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 0 cell flips.
+[INFO DPL-0384] End of flipping; objective is 1.830900e+04, improvement is 0.00 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL               21.3 u (       3.5,       17.8)
+Final HPWL                  18.5 u (       4.0,       14.5)
+Delta HPWL                 -13.1 % (      12.9,      -18.2)
+
+optimize_mirroring
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 4 um^2 3% utilization.
+source /work/hooks/post_detail_place_place.tcl
+Error: detail_place.tcl, 43 Ambiguous/missing native clock_driver
+
+Elapsed time: 0:01.61[h:]min:sec. CPU time: user 1.57 sys 0.04 (99%). Peak memory: 297180KB.
+Elapsed time: 0:01.64[h:]min:sec. CPU time: user 1.56 sys 0.07 (100%). Peak memory: 315676KB.
+Elapsed time: 0:01.59[h:]min:sec. CPU time: user 1.54 sys 0.05 (99%). Peak memory: 296036KB.
+Elapsed time: 0:01.58[h:]min:sec. CPU time: user 1.53 sys 0.05 (99%). Peak memory: 296076KB.
+Elapsed time: 0:01.59[h:]min:sec. CPU time: user 1.53 sys 0.06 (99%). Peak memory: 296264KB.
+Elapsed time: 0:01.61[h:]min:sec. CPU time: user 1.58 sys 0.05 (101%). Peak memory: 296988KB.
+Elapsed time: 0:01.58[h:]min:sec. CPU time: user 1.53 sys 0.05 (99%). Peak memory: 296484KB.
+Elapsed time: 0:01.67[h:]min:sec. CPU time: user 1.64 sys 0.07 (102%). Peak memory: 434352KB.
+Elapsed time: 0:01.62[h:]min:sec. CPU time: user 1.56 sys 0.06 (100%). Peak memory: 314604KB.
+Elapsed time: 0:01.60[h:]min:sec. CPU time: user 1.55 sys 0.05 (100%). Peak memory: 298124KB.
+make[1]: *** [Makefile:511: do-3_5_place_dp] Error 1
+make: *** [Makefile:511: /work/results/asap7/opentallas_ot_ds_native_relay_leaf_asap7_ds_native_relay_leaf_r7/base/3_5_place_dp.odb] Error 2
+
+partial record written to /srv/opentallas/jobs/dsrom-native-relay-leaf-20261003-r7/physical.json

@@ -51,5 +51,10 @@ class NativeLeaf(unittest.TestCase):
         self.assertGreaterEqual(pg['spacing_um'],2.7)
         self.assertAlmostEqual(pg['pitch_um'],2*(pg['spacing_um']+.09))
         self.assertAlmostEqual(pg['center_step_um']/pg['track_um'],78)
+    def test_PG_restores_protection_before_resizer(self):
+        script=(R.ROOT/'physical/dsrom_native_relay_20261003/pdn.tcl').read_text()
+        self.assertLess(script.index('setDoNotTouch false'),script.index('global_connect\n'))
+        self.assertLess(script.index('global_connect\n'),script.index('setDoNotTouch true'))
+        self.assertLess(script.index('setDoNotTouch true'),script.index('set_voltage_domain'))
 
 if __name__=='__main__':unittest.main()

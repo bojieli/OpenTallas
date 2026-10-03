@@ -1,4 +1,5 @@
 test_PG_pitch_contains_both_stripes_and_clear_gaps (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
+test_PG_restores_protection_before_resizer (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_both_native_contacts (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_full_fanout (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 test_missing_sites_not_admitted (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
@@ -9,6 +10,6 @@ test_truncated_not_admitted (test_dsrom_native_relay_leaf_route.NativeLeaf) ... 
 test_unique_sites (test_dsrom_native_relay_leaf_route.NativeLeaf) ... ok
 
 ----------------------------------------------------------------------
-Ran 9 tests in 1.439s
+Ran 10 tests in 2.989s
 
 OK
