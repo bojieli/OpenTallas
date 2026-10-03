@@ -51,6 +51,14 @@ def price():
         'wire_crosscheck_1p2GHz': {
             'qwen': [wire_cycles(4253.5, 1.2e9), wire_cycles(6489.3, 1.2e9)],
             'v41': [wire_cycles(3248.2, 1.2e9), wire_cycles(11033.7, 1.2e9)]},
+        'W6_successor': {
+            'status': 'ESTIMATE', 'original_clock_MHz': 429,
+            'original_protected_bits': 144, 'additional_live_replicated_bits': 213,
+            'additional_cell_um2': 213 * DFF_UM2,
+            'approach': 'triplicated live state, parallel original SECDED witness; decode removed from state-data feedback',
+            'positive_pipeline_cycles': 0, 'II_change_cycles': 0,
+            'quarantine': 'immediate UE or witness/live mismatch; no delayed release using unchecked state',
+            'limit': 'syndrome/quarantine remains in control-enable paths; clock gain unmeasured, not a 1.2GHz claim'},
         'adopt': False,
         'semantics': 'Counts scheduler visibility only. Does not release RF leases, consumer debt, issuer workspace, or W6 drain.'}
 if __name__ == '__main__':
