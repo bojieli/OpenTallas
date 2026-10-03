@@ -1,0 +1,112 @@
+{
+  "actual_current_PHW10": {
+    "accepted_journal": null,
+    "accepted_origin_user_generation": null,
+    "callback_implementation": null,
+    "compiled_BCAST_STAGES": null,
+    "consumer_deadline": null,
+    "program_source_binary_enrollment": null
+  },
+  "correction": "Prior wait2/QE circular-block statement is incorrect: wait2 is SU; QE is mask4. Historical record unchanged.",
+  "corrects_preserved_commit": "19acbd015ec9a5796868fb2ecf3807d6d672079e",
+  "fulltoken": false,
+  "hardware_admission": false,
+  "new_job": false,
+  "one_candidate_required_contract": {
+    "C": null,
+    "CDC": null,
+    "clock_commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+    "clock_main_intake": "cd054f1d1495095ff47b68842b573e59eb193467",
+    "credit_commit": "6f2c3b8f143fb6cecc5534b6cb9abbbd29166efb",
+    "identity": "169 global context with full user32 plus separate physical shard1; Nash LSB header144/command237, not a truncated user.",
+    "ordered_program_lease_lower_bound": "At I69 admission, I66/I67/I68 published address/version associations remain live because first consumers are I70/I70/I80. A fourth active phase identity starts at I69; source capture storage may be reused only after its own visibility/credit fences. Retained VM lease metadata is separately required and not priced here.",
+    "proposed_next_ROM_admission_fence": "Current adapter spine idle/ready alone does not include remote capture visibility. Proposed replacement must prove previous owned publication complete before allowing next command, or provide row-specific actual deadline proof. This fence is not implemented.",
+    "publication": "Intercept scalar slot0; suppress/intercept ALL original ROM roots1..127 during captured phase; veto all other native writer-family address competitors even equal data.",
+    "shared_calendar": "Join source issued/read reply, gather grant, writer delivery, postNBA visibility, positive credit return and actual SU read/tag in one enrolled clock/CDC map.",
+    "single_context_deadlock_control": "If next ROM admission waits for prior address lease retirement at future SU read, I67 cannot issue and I70 cannot be reached. This is program ordering, not a wait2/QE dependency.",
+    "source_credit": "Retain source row until same-identity actual VM visibility plus positive captured return; no downstream seat assumed and no same-edge reuse.",
+    "stations": null,
+    "version_lease": "Hold published addresses and owner/version through actual SU read R and observed aligned X tag R+2, separately from source-row credit."
+  },
+  "relative_read_contract": {
+    "conditions": [
+      "live0 in-range lane (source lin flag), with gather selector independently bound",
+      "no reset through tag",
+      "compiled actual BCAST_STAGES",
+      "source-consistent gather selector and read owner"
+    ],
+    "native_preedge_accepted_emit_E_gather": "R = E + BCAST_STAGES + 4",
+    "native_preedge_accepted_emit_E_linear": "R = E + BCAST_STAGES + 2",
+    "not_inferred": [
+      "ROM accepted origin to first emit upper bound",
+      "current accepted user/generation",
+      "physical CDC edge mapping"
+    ],
+    "observed_X_tag": "R + 2, same enrolled command/rank/generation/user/Xversion",
+    "required_visibility": "Owned postNBA VM visibility strictly before R; visibility on R misses preedge read."
+  },
+  "schema": "opentallas.I66.source-interlock.v1",
+  "scope": "SOURCE_ANALYTICAL_NATIVE_EDGE_RELATIONS_ONLY",
+  "source_dependencies": {
+    "I66_I69": "QE LINQ next admission requires adapter IDLE and spine_ready; previous S_WAIT exits only !s_go && spine_idle.",
+    "I70": "SU wait2 drains SU only; reads I66 A and I67 C. Prior I66/I67/I68 spine retirements precede I69 admission via ROM ready serialization. I70 can overlap I69.",
+    "next_issue_no_stall_minimum_edges": 6,
+    "next_issue_upper_bound": null,
+    "program_evidence": "Pinned demand-r5 template is static dependency evidence; not current four-rank compiled program enrollment.",
+    "upper_bound_gap": "S_DEC win_admit and S_ISSUE waited/ready/source gates can stall; emit additionally depends on setup, checkpoints and chain credits."
+  },
+  "source_pins": {
+    "consumer_extractor": {
+      "path": "tools/dsrom_I66_consumer_deadline.py",
+      "sha256": "12dc8c2a1436b7799e75e9c40fdb301f6c1475a0a3aac38be8eb9c22bf925936"
+    },
+    "core": {
+      "path": "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/core.sv.txt",
+      "sha256": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6"
+    },
+    "lane": {
+      "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/vec_lane.sv.txt",
+      "sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72"
+    },
+    "patched_I66_word": {
+      "path": "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/I66_current_patched_word.json",
+      "sha256": "00d82444607d0244bb1df75383f958459c129dbbb9724ccd9064dd24b5121d38"
+    },
+    "prior_record": {
+      "path": "results/uarch/dsrom_I66_phase_protocol_join_20261003/model.json",
+      "sha256": "b9b7609286b1c0d3949e183a31bc90073133444997b7297b2030c38eb68973d4"
+    },
+    "program_template": {
+      "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/demand-r5.json.gz",
+      "sha256": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f"
+    },
+    "rom_adapter": {
+      "path": "results/uarch/dsrom_I66_source_interlock_20261003/inputs/rom_adapt.sv.txt",
+      "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f"
+    },
+    "selected_calls": {
+      "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/selected_six_calls.json",
+      "sha256": "4a096afec0e2763176da456510285ab1ad10389592d410a3a88f6fd3704751b0"
+    },
+    "selected_clock": {
+      "path": "results/uarch/dsrom_I66_phase_protocol_join_20261003/inputs/selected_clock_model.json",
+      "sha256": "5fc207fa190513f8394e26b9177c1a032fd148dd0ddd6cf3abbe231753715ae0"
+    },
+    "tile": {
+      "path": "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/tile.sv.txt",
+      "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+    },
+    "vec": {
+      "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/vec.sv.txt",
+      "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13"
+    }
+  },
+  "status": "BOUND_MISSING",
+  "wait_masks": {
+    "HE": 16,
+    "ME": 1,
+    "QE_ROM": 4,
+    "SU": 2,
+    "XU": 8
+  }
+}

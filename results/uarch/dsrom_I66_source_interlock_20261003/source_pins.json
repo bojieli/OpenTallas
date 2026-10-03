@@ -1,0 +1,46 @@
+{
+  "consumer_extractor": {
+    "path": "tools/dsrom_I66_consumer_deadline.py",
+    "sha256": "12dc8c2a1436b7799e75e9c40fdb301f6c1475a0a3aac38be8eb9c22bf925936"
+  },
+  "core": {
+    "path": "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/core.sv.txt",
+    "sha256": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6"
+  },
+  "lane": {
+    "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/vec_lane.sv.txt",
+    "sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72"
+  },
+  "patched_I66_word": {
+    "path": "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/I66_current_patched_word.json",
+    "sha256": "00d82444607d0244bb1df75383f958459c129dbbb9724ccd9064dd24b5121d38"
+  },
+  "prior_record": {
+    "path": "results/uarch/dsrom_I66_phase_protocol_join_20261003/model.json",
+    "sha256": "b9b7609286b1c0d3949e183a31bc90073133444997b7297b2030c38eb68973d4"
+  },
+  "program_template": {
+    "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/demand-r5.json.gz",
+    "sha256": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f"
+  },
+  "rom_adapter": {
+    "path": "results/uarch/dsrom_I66_source_interlock_20261003/inputs/rom_adapt.sv.txt",
+    "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f"
+  },
+  "selected_calls": {
+    "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/selected_six_calls.json",
+    "sha256": "4a096afec0e2763176da456510285ab1ad10389592d410a3a88f6fd3704751b0"
+  },
+  "selected_clock": {
+    "path": "results/uarch/dsrom_I66_phase_protocol_join_20261003/inputs/selected_clock_model.json",
+    "sha256": "5fc207fa190513f8394e26b9177c1a032fd148dd0ddd6cf3abbe231753715ae0"
+  },
+  "tile": {
+    "path": "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/tile.sv.txt",
+    "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+  },
+  "vec": {
+    "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/vec.sv.txt",
+    "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13"
+  }
+}
