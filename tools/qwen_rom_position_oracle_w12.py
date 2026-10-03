@@ -196,7 +196,9 @@ def main():
     ap.add_argument('--layers', type=int, required=True, help='decoder layers 0 .. N-1')
     ap.add_argument('--tokens', type=Path, required=True, help='whitespace-separated prompt token ids')
     ap.add_argument('--positions', required=True, help='comma-separated decode positions to record (the last is run to)')
-    ap.add_argument('--snapshot', type=Path, required=True, help='pinned Qwen3-8B snapshot (embedding rows)')
+    ap.add_argument('--snapshot', type=Path, help='pinned Qwen3-8B snapshot (embedding rows)')
+    ap.add_argument('--embedding-npz', type=Path, help='rows exported by --export-embedding from the snapshot (hosts without torch)')
+    ap.add_argument('--export-embedding', type=Path, help='write the prompt rows (codes, scales) to this npz and exit')
     ap.add_argument('--check-token0-preload', type=Path, help='vm_x_fp32.hex of token 0: must equal our embedding')
     ap.add_argument('--reference-dense', action='store_true',
                     help='evaluate dense matrices with the unvectorised L0.DieMachine (equivalence check)')
@@ -212,7 +214,27 @@ def main():
     out = args.out
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
-    emb = embedding_x(args.snapshot, tokens[:last + 1] + ([0] if args.check_token0_preload else []))
+    need = tokens[:last + 1] + ([0] if args.check_token0_preload else [])
+    if args.embedding_npz:
+        z = np.load(args.embedding_npz)
+        emb = {}
+        for t, sc, cd in zip(z['tokens'], z['scales'], z['codes']):
+            x = (cd.view(np.int8).astype(np.float32) * np.float32(G.from_bits(np.uint32(sc) << np.uint32(16)))).astype(np.float32)
+            emb[int(t)] = (x, int(sc), cd.copy())
+        missing = set(need) - set(emb)
+        if missing:
+            raise SystemExit(f'embedding npz lacks tokens {sorted(missing)[:5]}')
+        record_emb = {'embedding_npz_sha256': sha(args.embedding_npz)}
+    else:
+        emb = embedding_x(args.snapshot, need)
+        record_emb = {}
+    if args.export_embedding:
+        ts = sorted(emb)
+        np.savez(args.export_embedding, tokens=np.array(ts, dtype=np.int64),
+                 scales=np.array([emb[t][1] for t in ts], dtype=np.uint16),
+                 codes=np.stack([emb[t][2] for t in ts]))
+        print('exported', len(ts), 'rows')
+        return
     record = {'schema': 'opentallas.qwen-rom-tp4-position-oracle.v1', 'status': 'ISA_golden_only',
               'layers': args.layers, 'tp': TP, 'groups': GROUPS, 'su_width_arith': G.SU_WIDTH,
               'kv_format': G.KV_FMT, 'tokens_sha256': sha(args.tokens), 'tokens_used': tokens[:last + 1],
@@ -225,6 +247,7 @@ def main():
                   'tools/hdc_qwen_int8_image.py')},
               'claim_boundary': 'ISA golden over a real prompt: positions < P are the golden prefill '
                                 '(sequential decode), position P the token under test. Not an RTL verdict.'}
+    record.update(record_emb)
     if args.check_token0_preload:
         x0 = L0._preload_x(args.check_token0_preload)
         ok = bool(np.array_equal(G.bits(x0), G.bits(emb[0][0])))

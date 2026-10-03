@@ -150,7 +150,11 @@ module ot_qwen_rom_rt_die_w12_rm #(
     ot_qwen_rom_core #(.W(W),.G(G),.AW(AW),.NW(NW),.PAW(PAW),
         .SU_VEC(1),.SW(SW),.LV(LV),.KV_FP8(1),
         .INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.INT8_EMBED(EMBED_ROM),.QWEN_FULLSHAPE(QWEN_FULLSHAPE),
-        .HID(EMBED_ROM ? 4096 : 128),.EMB_CODE_LANES(64),.EMB_ADDR_BASE(0),
+        //: the Qwen3-8B DYN constants (tools/hdc_program.py dyn_values: token*H, pos*half, K/V write offsets
+        //: with head_dim 128).  ot_qwen_rom_rt_die_w12 leaves the core defaults HID 128 / HALF 8 / HD 16 (the
+        //: reduced model's): every DYN offset is 0 at position 0, so the retained position-0 token is
+        //: unaffected, but at any other position the RoPE row and the K/V write addresses would be wrong.
+        .HID(4096),.HALF(64),.HD(128),.EMB_CODE_LANES(64),.EMB_ADDR_BASE(0),
         .KV_HBM(1),.KV_VEC_WRITE_BRIDGE(1),
         .ME_STALL(1),.ME_IDLE_GATE(ME_IDLE_GATE),
         .SMIN(SMIN),.SMAX(SMAX),.TCUT(TCUT),.BD(BD),.XVM(XVM),.NWS(NWS),.TWS(TWS),.ORD(ORD),.SCALE_LOCAL(SCALE_LOCAL),.MEM_EXTRA(MEM_EXTRA),
@@ -305,9 +309,17 @@ module ot_qwen_rom_rt_die_w12_rm #(
     wire [255:0] h_req_wdata; wire [NPC-1:0] h_rsp_v, h_rsp_rdy, h_rsp_wr, h_pc_room; wire [NPC*TGWK-1:0] h_rsp_tag;
     wire [NPC*4-1:0] h_rsp_beat; wire [NPC*256-1:0] h_rsp_data;
     wire kv_fault;
+    //: a LAYER starts at the stage's first core start (the sequencer starts the core once per program
+    //: segment, i.e. again after each collective, within the same layer)
+    reg kv_arm;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) kv_arm <= 1'b0;
+        else if (start | h_start) kv_arm <= 1'b1;
+        else if (core_start) kv_arm <= 1'b0;
+    wire kv_layer_start = core_start && kv_arm && rm_layer != 8'hff;
     ot_qwen_rt_kv_fill_service #(.G(G), .SW(SW), .AW(AW), .NW(NW), .NPC(NPC), .NRD(NRD), .LKA(LKA),
                                  .FILL_LAT(FILL_LAT), .KV_IDEAL(0)) u_kv (
-        .clk(clk), .rst_n(rst_n), .start(core_start && rm_layer != 8'hff), .ideal_in(rm_kv_ideal), .pos(core_pos[NW-1:0]), .layer(rm_layer),
+        .clk(clk), .rst_n(rst_n), .start(kv_layer_start), .ideal_in(rm_kv_ideal), .pos(core_pos[NW-1:0]), .layer(rm_layer),
         .kvd_v(kvd_v), .kvd_pos(kvd_pos), .kvd_kindk(kvd_kindk), .kv_ok(kv_ok),
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .kv_write_drained(kv_write_drained),
         .kvw_ce(kvw_ce), .kvw_addr(kvw_addr), .kvw_data(kvw_data), .kvw_mask(kvw_mask),
