@@ -71,6 +71,46 @@ def build(model=None):
     return model,prog,graph,code
 
 
+def emit_images(out):
+    """Source program/checkpoint bytes only: no golden inference or oracle trace.
+
+    The actual DSpark controller must produce commands from real head results.
+    This output supplies linked entries to ds_hbm_cmdproc_bridge.CmdprocBridge.
+    """
+    out=Path(out)
+    out.mkdir(parents=True,exist_ok=False)
+    model,prog,graph,code=build()
+    images,entries=D.H.link(code)
+    words=max(map(len,images.values()))
+    if words>1<<14:
+        raise ValueError('linked source exceeds actual IMW14')
+    paths=[]
+    for (die,sm),program in images.items():
+        path=out/f'prog_d{die}_s{sm}.hex'
+        path.write_text(''.join(f'{word:016x}\n' for word in program))
+        paths.append(path)
+    for die in range(D.TP):
+        image=np.zeros(prog.mem_bytes,dtype=np.uint8)
+        for addr,blob in prog.mem[die].items():
+            image[addr:addr+len(blob)]=blob
+        path=out/f'die{die}.bin'
+        path.write_bytes(image.tobytes());paths.append(path)
+    prompt=list(D.V.prompt_and_expected()[0])
+    if any(not 0<=token<65536 for token in prompt):
+        raise ValueError('actual cmdproc refuses prompt token narrowing')
+    record=dict(schema='opentallas.ds_hbm_dspark_connected_images.v1',
+        scope='reduced checkpoint source images; no inference or numerical verdict',
+        entries=entries,imw=14,imem_words=words,tp=D.TP,nsm=D.NSM,
+        mem_bytes=prog.mem_bytes,noise=model.noise_id,prompt=prompt,
+        column_layout=column_layout(),layout=prog.a,
+        expert_union_weight_reuse_qualified=False,
+        artifacts={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
+        sources={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in
+            (Path(__file__),Path(D.__file__),Path(D.H.__file__),D.V.CHECKPOINT)})
+    (out/'program.json').write_text(json.dumps(record,indent=2)+'\n')
+    return record
+
+
 def validate_command(cmd,*,noise):
     if cmd.get('op') not in ('VLAYER','VHEAD','SEED','DSTAGE','DHEAD','MARKOV'):
         raise ValueError('unsupported actual control command')
@@ -158,11 +198,14 @@ if __name__=='__main__':
     ap.add_argument('--enable-dspark-connected',action='store_true',required=True)
     ap.add_argument('--check',action='store_true')
     ap.add_argument('--layout',action='store_true')
+    ap.add_argument('--emit-images',type=Path,help='checkpoint lowering only; no golden/expected payload generation')
     ap.add_argument('--ngen',type=int,default=8)
     ap.add_argument('--gamma',type=int,default=5)
     ap.add_argument('--out',type=Path)
     a=ap.parse_args()
     if a.layout:
         print(json.dumps(column_layout()))
+    if a.emit_images:
+        print(json.dumps(emit_images(a.emit_images)))
     if a.check:
         raise SystemExit(0 if check(ngen=a.ngen,gamma=a.gamma,out=a.out) else 1)
