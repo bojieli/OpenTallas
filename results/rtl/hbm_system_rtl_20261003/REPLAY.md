@@ -42,4 +42,8 @@ python3 tools/gpu_sys/run_system.py --model qwen --out results/rtl/hbm_system_rt
 
 ## Results
 
-(filled in below by the run records)
+- Qwen3 HBM e2e: PASS. All 18 steps' next tokens match the golden, and the CQ tokens are 1073 382 93. It passes both without W2 (`qwen_e2e.json`, 1.76 M clk_sm cycles) and with W2 (`qwen_e2e_w2.json`, 2.29 M).
+- Qwen functional machine: 16/16 positions bit-exact (`qwen_functional.json`).
+- DS V4.1 functional machine: positions 0-3 bit-exact (`tools/gpu_sys/v41_hbm.py --check --npos 4`).
+- DS V4.1 RTL e2e: running on ot-epyc1tb (see STATUS.md).
+- Unit gates: `simt_sm.json` 12/12, `cdc_fifo.json`, `coll.json`, `memsys.json`, `host_bridge.json` and `unit_small.json` all PASS.
