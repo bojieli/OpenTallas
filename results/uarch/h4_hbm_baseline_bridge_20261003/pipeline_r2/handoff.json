@@ -1,0 +1,66 @@
+{
+  "RTL_or_PR_launched": false,
+  "base_dependency": "501a3babc57fd7bc7b7ddb117f31b370b6cc8aba (already parent main8047fb353)",
+  "cadence": {
+    "equalclock_ceiling_Bpc": 4096,
+    "first_delivery_model_edge": 38,
+    "installed_or_measured": false,
+    "lanes": 4,
+    "ratio3to4_ceiling_Bpc": 3072,
+    "source_held_route_II_lower_bound": 40,
+    "stages": 38,
+    "stalled_lane_finite_capacity": 76,
+    "steady_pipeline_II": 1
+  },
+  "clock_scope": "38FASTedge route lower component; FIFO pointer synchronizers two receiver edges each. No actual clock pair or finite hold bound; FAST-equivalent cost proposals are not qualified ns.",
+  "cold_exact_outputs": 2,
+  "composer_scope": "directed contract tests only; actual emitted event inventory and authoritative intervals must supply rows. Positive proposals do not prove eligibility, upper bounds or critical path.",
+  "deliverables": [
+    "kind-specific descriptor admission: persistent offchip state needs publication/generation/read lease and actual requester port, not home SM/RF retirement PC",
+    "38hop fourlane two-seat elastic cycle model, source-owned RF ACK and reverse-held parent lease model",
+    "10 positive kind-specific source cost bindings; no omitted/zero terms, 1edge CDC or wrong source hash; occurrence ID once-only deduplication",
+    "complete protected-control bit replacement and conservative unallocated area screen"
+  ],
+  "entrypoint": "tools/h4_hbm_bridge_pipeline_r2.py",
+  "exact_archived_git_inputs": 10,
+  "focused_tests_pass": 13,
+  "footprint": {
+    "area_logic_overlap_not_subtracted": true,
+    "area_upper_mm2_ASSUMED": 39.657388032,
+    "per_SM_per_direction_cut_bits": 1448,
+    "pipeline_bits": 7179264,
+    "protected_bits": 16519680,
+    "screen_only": true
+  },
+  "fundamental_risk": "Four coded lanes require1448bits/SM/direction/cut and complete control screen39.66mm2; no installed routing/clock capacity admission. Finite endpoint backpressure still unknown.",
+  "hardware_admitted": false,
+  "historical_files_unchanged": true,
+  "namespace_scope": "software generation/lease arguments identify caller receipts; not64bit wire fields. 16bit tags are namespace-specific and need actual PC/coalescer/SM maps. No generation wrap or timeout release credit.",
+  "next_admission_dependencies": [
+    "actual production requester/publication/lease receipts plus W19 rank/SM mapping",
+    "Dewey finite positive ACK/CDC/consumer/reverse contender intervals with once-only charged occurrence IDs",
+    "32SM complete coded4lane cuts, clock/PG/OBS/via reservation and control storage/ports in selected service allocation"
+  ],
+  "replay": [
+    "python3 -m unittest discover -s tests -p test_h4_hbm_bridge_pipeline_r2.py -v",
+    "python3 tools/h4_hbm_bridge_pipeline_r2.py --verify",
+    "python3 tools/h4_hbm_baseline_bridge.py --verify",
+    "make check-figures"
+  ],
+  "schema": "HBM_BRIDGE_PIPELINE_R2_HANDOFF",
+  "source_binding_scope": "archived actual wrapper/RF/fullSM/visibility fence/clock bridge/FIFO/route leaf references; successor owner/matcher/pipeline bodies are model proposals, not installed consumers",
+  "tests": "tests/test_h4_hbm_bridge_pipeline_r2.py",
+  "to_Dewey": [
+    "Use COSTS and source_bindings() exact kind-specific hashes; preserve same charged event ID when joining existing intervals",
+    "Duration proposals are FAST-equivalent only, must also carry actual domain pairing/receiver synchronization receipts and consumer/reverse holds in joined authority",
+    "Supply real requester source-port/rank/version/publication/generation lease and finite contender intervals; stage pops never retire parent",
+    "Do not charge route76edges twice against existing72wireedges; join shared event IDs and actual span receipts before applying delta"
+  ],
+  "to_Peirce_Sagan_Goodall": [
+    "Persistent HBM_NATIVE_STATE missing fixed home SM/static RF retire PC is no longer refused merely for those omissions",
+    "Actual requester is accepted wrapper port index, with source SHA, PC/rank/home/generation/read lease; production paired receipt still absent",
+    "Publication exact producerPC/generation/bytes/visibility/read lease must cover requested range; no arbitrary requester SM constant"
+  ],
+  "verdict": "FINITE_CADENCE_DESIGN_READY_FAIL_SOURCE_RECEIPTS_PHYSICAL_CUTS",
+  "wholeprogram_calendar_admitted": false
+}
