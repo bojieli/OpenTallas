@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.dsrom.c5hc_collective_gate.decision_rule.v1",
+ "recorded": "2026-10-03, before any RTL measurement of this gate was run",
+ "basis_commit": "claude/dsrom-parallelism-20261003 abd77c4e1 merged with origin/main f4f401337",
+ "user_decision": "2026-10-03: run the cheap gate (RTL-measured 8-die collective latency) for C5hc; adopt if the collectives come in near the model",
+ "candidates": {
+  "C5hc": "C5hc_hybrid_head8_chase (tools/dsrom_parallelism.py), 8 physical dies per stage = 4 packages x 2 dies, TP-8 symmetric peers",
+  "C1": "C1_PP58_TP4_PAR2rows, the current PAR2 mapping: TP-4 owner dies, one per package, 4 packages"
+ },
+ "measurement": "every collective of both candidates re-priced with the RTL-measured latency (issue to last VM commit on the slowest die, Verilator, physical link models, per-die clocks, credits, deterministic release) replacing the calibrated W15 TP-4 fixed latency + fabric term; the model's other collective terms (VM-H write) kept",
+ "rule": {
+  "ADOPT": "re-priced C5hc AR tok/s at 1M context >= 1.05 x re-priced C1 AR at 1M, AND re-priced C5hc AR at 200K >= 1.01 x re-priced C1 AR at 200K, AND every collective exactness check passes (all-reduce bit-exact vs tools/hdc_golden_v41.csum chunk8 order for the wo_b 8-way K split; all-gather bit-transparent, rank order; no link/engine fault; deterministic timing across seeds)",
+  "REJECT": "otherwise: keep C1, record the failed verdict (never overwritten), stop after phase 1"
+ },
+ "link_basis_for_the_verdict": "112G PAM4 board lanes with RS(272,257) light FEC (the W15 link layer), fc4 package budget of 90 lanes / 5 links = 18 lanes per package link; C5hc: 9 lanes per die counterpart plane; C1: the whole 18-lane link on the owner die; UCIe-A in package as W15. Sensitivity at the model's link_bw reported, not used for the verdict."
+}
