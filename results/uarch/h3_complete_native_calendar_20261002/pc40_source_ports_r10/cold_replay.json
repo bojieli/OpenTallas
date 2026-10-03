@@ -1,0 +1,33 @@
+{
+  "checkout": "/tmp/dewey-PC40-r10-cold-l3js4_8f",
+  "git_history_required": false,
+  "production_admitted": false,
+  "results": [
+    {
+      "argv": [
+        "python",
+        "tools/h3_complete_native_calendar_pc40_ports_r10.py",
+        "--verify"
+      ],
+      "elapsed_seconds": 0.258,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "PASS source3pairedreads/5mirroredwrites; actual lease/ACK/reset integration UNKNOWN\n"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-o",
+        "addopts=",
+        "tests/test_h3_complete_native_calendar_pc40_ports_r10.py"
+      ],
+      "elapsed_seconds": 3.005,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "...............                                                          [100%]\n15 passed in 0.27s\n"
+    }
+  ]
+}

@@ -1,0 +1,368 @@
+{
+  "NoC_and_CDC_max_edge_inputs": null,
+  "NoC_and_CDC_min_edge_inputs": null,
+  "NoC_scope": "one actual512B remote up page; no ideal overlap or zero transport price",
+  "additional_caller_RF_source_min_edges": 3,
+  "additional_caller_up_RF_read_pairs": 1,
+  "callee": {
+    "RF_physical_mirror_write_bits": 40960,
+    "RF_read_bits": 24576,
+    "RF_read_pairs": 3,
+    "RF_writes": 5,
+    "W2_HBM_commands": 0,
+    "W6_ACK_and_request_deduplicated": true,
+    "actual_RF_ACK_RESET_rearm_scope": "bare common ACK retained sole context, issuer/allcopy/reset integration UNKNOWN",
+    "entering_live_leases": null,
+    "events": [
+      {
+        "accepted_receipt": false,
+        "dependency": [],
+        "end_min_edge": 1,
+        "eventID": "PC40/callee/0",
+        "phase": "DISPATCH_W6_REQUEST",
+        "source": "actual accept=req_valid&&req_ready and W6 req_valid=accept",
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "source_owner": "external issuer supplied; not synthesized by calendar",
+        "start_min_edge": 0
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/0"
+        ],
+        "end_min_edge": 2,
+        "eventID": "PC40/callee/1",
+        "logical_unique_vectors": 1,
+        "phase": "HOME_RD",
+        "physical_read_copies": 2,
+        "read_a": 38,
+        "read_b": 38,
+        "read_bits": 8192,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 1
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/1"
+        ],
+        "end_min_edge": 4,
+        "eventID": "PC40/callee/2",
+        "held_until_actual_rsp_ready": true,
+        "phase": "HOME_RSP",
+        "response_capture_bits": 8192,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 2
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/2"
+        ],
+        "end_min_edge": 5,
+        "eventID": "PC40/callee/3",
+        "phase": "A_WR",
+        "physical_mirror_copies": 2,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 4,
+        "write_bits_per_copy": 4096,
+        "write_slot": 17
+      },
+      {
+        "accepted_receipt": false,
+        "ack_slot": 17,
+        "all_stale_copies_drained_proof": "UNKNOWN",
+        "bare_ACK": true,
+        "dependency": [
+          "PC40/callee/3"
+        ],
+        "end_min_edge": 6,
+        "eventID": "PC40/callee/4",
+        "phase": "A_ACK",
+        "physical_ACK_identity_fields": 0,
+        "retained_callee_identity": true,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 5
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/4"
+        ],
+        "end_min_edge": 7,
+        "eventID": "PC40/callee/5",
+        "phase": "B_WR",
+        "physical_mirror_copies": 2,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 6,
+        "write_bits_per_copy": 4096,
+        "write_slot": 18
+      },
+      {
+        "accepted_receipt": false,
+        "ack_slot": 18,
+        "all_stale_copies_drained_proof": "UNKNOWN",
+        "bare_ACK": true,
+        "dependency": [
+          "PC40/callee/5"
+        ],
+        "end_min_edge": 8,
+        "eventID": "PC40/callee/6",
+        "phase": "B_ACK",
+        "physical_ACK_identity_fields": 0,
+        "retained_callee_identity": true,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 7
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/6"
+        ],
+        "end_min_edge": 9,
+        "eventID": "PC40/callee/7",
+        "logical_unique_vectors": 2,
+        "phase": "WORK_RD",
+        "physical_read_copies": 2,
+        "read_a": 17,
+        "read_b": 18,
+        "read_bits": 8192,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 8
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/7"
+        ],
+        "end_min_edge": 11,
+        "eventID": "PC40/callee/8",
+        "held_until_actual_rsp_ready": true,
+        "phase": "WORK_RSP",
+        "response_capture_bits": 8192,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 9
+      },
+      {
+        "RF_roundtrip": false,
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/8"
+        ],
+        "end_min_edge": 14,
+        "eventID": "PC40/callee/9",
+        "lane_local": true,
+        "native_steps": [
+          "BITCAST_U",
+          "XOR",
+          "BITCAST_F"
+        ],
+        "phase": "ALU",
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 11
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/9"
+        ],
+        "end_min_edge": 15,
+        "eventID": "PC40/callee/10",
+        "phase": "OUT_WR",
+        "physical_mirror_copies": 2,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 14,
+        "write_bits_per_copy": 4096,
+        "write_slot": 17
+      },
+      {
+        "accepted_receipt": false,
+        "ack_slot": 17,
+        "all_stale_copies_drained_proof": "UNKNOWN",
+        "bare_ACK": true,
+        "dependency": [
+          "PC40/callee/10"
+        ],
+        "end_min_edge": 16,
+        "eventID": "PC40/callee/11",
+        "phase": "OUT_ACK",
+        "physical_ACK_identity_fields": 0,
+        "retained_callee_identity": true,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 15
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/11"
+        ],
+        "end_min_edge": 17,
+        "eventID": "PC40/callee/12",
+        "phase": "CONST_WR",
+        "physical_mirror_copies": 2,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 16,
+        "write_bits_per_copy": 4096,
+        "write_slot": 18
+      },
+      {
+        "accepted_receipt": false,
+        "ack_slot": 18,
+        "all_stale_copies_drained_proof": "UNKNOWN",
+        "bare_ACK": true,
+        "dependency": [
+          "PC40/callee/12"
+        ],
+        "end_min_edge": 18,
+        "eventID": "PC40/callee/13",
+        "phase": "CONST_ACK",
+        "physical_ACK_identity_fields": 0,
+        "retained_callee_identity": true,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 17
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/13"
+        ],
+        "end_min_edge": 19,
+        "eventID": "PC40/callee/14",
+        "logical_unique_vectors": 2,
+        "phase": "FMAX_RD",
+        "physical_read_copies": 2,
+        "read_a": 17,
+        "read_b": 18,
+        "read_bits": 8192,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 18
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/14"
+        ],
+        "end_min_edge": 21,
+        "eventID": "PC40/callee/15",
+        "held_until_actual_rsp_ready": true,
+        "phase": "FMAX_RSP",
+        "response_capture_bits": 8192,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 19
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/15"
+        ],
+        "end_min_edge": 22,
+        "eventID": "PC40/callee/16",
+        "leaf_pipeline_clock_edges": 1,
+        "phase": "FMAX_CAPTURE",
+        "source_arithmetic": "actual selected FMAX leaf; nonfinite fault retained",
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 21
+      },
+      {
+        "accepted_receipt": false,
+        "dependency": [
+          "PC40/callee/16"
+        ],
+        "end_min_edge": 23,
+        "eventID": "PC40/callee/17",
+        "phase": "FMAX_WRITE",
+        "physical_mirror_copies": 2,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 22,
+        "write_bits_per_copy": 4096,
+        "write_slot": 19
+      },
+      {
+        "accepted_receipt": false,
+        "ack_slot": 19,
+        "all_stale_copies_drained_proof": "UNKNOWN",
+        "bare_ACK": true,
+        "dependency": [
+          "PC40/callee/17"
+        ],
+        "end_min_edge": 24,
+        "eventID": "PC40/callee/18",
+        "phase": "FMAX_ACK",
+        "physical_ACK_identity_fields": 0,
+        "retained_callee_identity": true,
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 23
+      },
+      {
+        "W6_protocol_total_edges": 19,
+        "W6_release": "actual consumer/reverse/CDC/current allcopy handshake required",
+        "W6_request_paid_once": 1,
+        "W6_shared_host_ACK_paid_once": 1,
+        "accepted_receipt": false,
+        "actual_receipt": null,
+        "dependency": [
+          "PC40/callee/18"
+        ],
+        "end_min_edge": 41,
+        "eventID": "PC40/callee/19",
+        "owner_supplied_by": "issuer_binding_valid external producer UNKNOWN",
+        "phase": "FENCE",
+        "source_clock": "streaming_target_1.2GHz_UNQUALIFIED",
+        "start_min_edge": 24
+      }
+    ],
+    "external_service_wait_bound_assumed": null,
+    "external_service_wait_bound_installed": false,
+    "final_FMIN_source_consumer_payload_proof": "UNKNOWN; live r2 work not source-frozen/adopted",
+    "finite_production_upper": null,
+    "live_workspace_scope": "REFUSED_MISSING_ENTERING_LEASES",
+    "minimum_is_serial_reservation": true,
+    "mirrors": 2,
+    "parent55_fabricated": false,
+    "physical_RF_transaction_credits": 1,
+    "read_ports": 2,
+    "read_write_simultaneous": false,
+    "schema": "PC40_SOURCE_PORT_CALENDAR_R10",
+    "source_callee_workspace": [
+      17,
+      18,
+      19
+    ],
+    "source_clock_cost_scope": "positive prospective source edge reservations; not elapsed CPU time or measured clock",
+    "source_commit": "bfbcf472b",
+    "source_min_edge_obligations": 41,
+    "whole_token_ns": null,
+    "write_ports": 1
+  },
+  "callee_RF_read_pairs": 3,
+  "caller_retained_slot_admission": "REFUSED_UNBOUND",
+  "caller_retained_slot_binding": null,
+  "gate_and_up_release": "whole PC40 reciprocal and final ordered products; never leaf FMAX/FMIN release",
+  "gate_read_replacement": {
+    "RFslot9": 38,
+    "SM": 0,
+    "both_physical_copies_still_paid": true,
+    "lease": "value:Qwen.39.L0.d0.gu_post.49",
+    "logical_words128": 1,
+    "rank": 0,
+    "removed": "caller local gate RF read",
+    "retained_eventID": "PC40/callee/1",
+    "version": "Qwen.39.L0.d0.gu_post.49"
+  },
+  "next_consumer_RF19_read_extra": null,
+  "next_consumer_scope": "await frozen Popper r2 consumer; not charged from mutable WIP",
+  "production_admitted": false,
+  "schema": "PC40_CALLER_CALLEE_PORT_JOIN_R10",
+  "source_up_RF": {
+    "RF_read_payload_bits": 8192,
+    "SM": 24,
+    "lease": "value:Qwen.39.L0.d0.gu_post.49",
+    "publication": "PUBLISH:Qwen.39.L0.d0.gu_post.49:r0:s24",
+    "rank": 0,
+    "slot": 32,
+    "transport_payload_bits": 4096,
+    "word_start": 6144
+  },
+  "total_caller_callee_RF_read_pairs": 4,
+  "whole_token_ns": null
+}

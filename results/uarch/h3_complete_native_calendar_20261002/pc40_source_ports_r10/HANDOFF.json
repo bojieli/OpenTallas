@@ -1,0 +1,49 @@
+{
+  "W2_HBM_commands": 0,
+  "W2_protected_path": "NC6/13608bit/II8 remains R9 source selection; not charged to directRF sourcecallee",
+  "actual_ACK": "Frozen bfbc RF source commonACK has no physicalidentityfield. Callee retains solecontext. Actual issuer allocation, commonreset/allstale-copydrain proof UNKNOWN; calendar does not fabricate ACK tag or owner.",
+  "already_paid_R9": "Replace matched PC40 producer/callee event subtree after current source selection; do not add this3read/5write trace on top of R9 conservative7actionRF demand. Source R9 and priormodels unchanged.",
+  "base": "c901ab5c156881eb8ac5bad80f55d07df7b70723",
+  "caller_join": "Gate tuple rank0/SM0/RF38/version/lease matches actual HOME read, replaces duplicate caller gate read once. Additional up rank0/SM24/RF32/word6144 read and512BNoC/CDC transport required. Retain gate/up through reciprocal and final products.",
+  "caller_retained_slot_binding": "UNBOUND; REFUSED. No synthetic slots for gate/up.",
+  "commands": [
+    "python tools/h3_complete_native_calendar_pc40_ports_r10.py --verify",
+    "python -m pytest -q -o addopts= tests/test_h3_complete_native_calendar_event_adapter_r9.py tests/test_h3_complete_native_calendar_pc40_ports_r10.py"
+  ],
+  "conditional_service": "When positiveB supplied,25 source-eligible handshake terms add25*(B-1)edges to serial reservation; no installed max or rate credit. Sourceprofile absent =>conditionalcost UNKNOWN.",
+  "entering_runtime_workspace": "ABSENT; REFUSED. Explicit disjoint control snapshots remain prospective, not evidence of production empty leases.",
+  "historical_unselected": [
+    "calendar.json initialcallee",
+    "calendar_caller_join_r2.json initialcallerjoin"
+  ],
+  "new_RTL": false,
+  "new_numeric_jobs": false,
+  "new_physical_jobs": false,
+  "next_consumer": "Live Popperr2 FMIN source/functionalproof not yet frozen/adopted in this record; extraRF19read obligation remains UNKNOWN",
+  "parent_integration_scope": "Component calendar only; peer full-HBM integration owns whole-system assembly",
+  "remaining": [
+    "Source-pinned actual entering lease and provider publication snapshot",
+    "Actual W6 directRF issuer/consumer/reverse/reset receipt identities and allcopy proof",
+    "Frozen r2 numerical consumer/sourceevent trace",
+    "Positive matched NoC/CDC and finite service upper bounds",
+    "Loaded source opcode/RF clocks and once-only component-to-system substitution"
+  ],
+  "role": "Dewey35e2",
+  "schema": "PC40_SOURCE_RF_CALLER_CALLEE_CALENDAR_R10",
+  "scope": "source-resolved finite component port trace and caller event reconciliation; no system assembly or runtime receipt generation",
+  "selected_output": "calendar_caller_join_r3.json",
+  "source_callee": {
+    "mirrored_writes": 5,
+    "paired_reads": 3,
+    "physical_write_bits": 40960,
+    "read_bits": 24576,
+    "simultaneous_read_write": false,
+    "sole_RF_transaction_credit": 1
+  },
+  "source_cost_scope": "read service3edges,write+bare commonACK2edges,NEG3lane-localedges; source-clock reservations only. W6 request and sharedhostACK de-duplicated from19edgeprotocol total; remaining17 reserved. No loaded SS/FF or finite production service upper.",
+  "sources": [
+    "bfbcf472b Popper frozen callee",
+    "6bba619ee Ampere caller preparation"
+  ],
+  "whole_token_ns": null
+}
