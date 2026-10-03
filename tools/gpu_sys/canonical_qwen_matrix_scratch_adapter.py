@@ -21,10 +21,8 @@ FIELDS={'client_valid':('input',1),'client_write':('input',1),'client_addr':('in
 def fields_for_book(book):
     fields = dict(FIELDS)
     if 'manifest_contract' in book:
-        contract = book['manifest_contract']
-        C.need(contract.get('owner_module') == 'ot_gpu_qwen_manifest_range_owner'
-               and contract.get('issuer_module') == 'ot_gpu_qwen_full_issuer_r3',
-               'actual manifest owner/typed issuer namespace')
+        from tools.gpu_sys.canonical_qwen_manifest_simulator import validate_manifest_book
+        validate_manifest_book(book)
         for name, (_, width) in fields.items():
             if name.startswith('workspace_'):
                 fields[name] = ('output', width)
