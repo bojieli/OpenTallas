@@ -157,7 +157,11 @@ def main(argv=None):
                emitted_core_sha256=sha(emitted), model_sha256=sha(ROOT / "build/models/qwen3-reduced-v1/model-00001-of-00001.safetensors"),
                simulator=subprocess.run(["verilator", "--version"], capture_output=True, text=True).stdout.strip(),
                source_sha256={str(p.relative_to(ROOT)): sha(p) for p in srcs}, runs=res)
-    ok = all(r["passed"] for r in res.values())
+    # cdc0/*/split is a NEGATIVE CONTROL: the single-clock core against fast-clocked engine memories must FAIL
+    # (the bench sees a clock-domain mistake); every other run must PASS
+    neg = {k for k in res if k.startswith("cdc0/") and "/split" in k}
+    rec["negative_controls"] = {k: ("FAIL_AS_EXPECTED" if not res[k]["passed"] else "UNEXPECTED_PASS") for k in neg}
+    ok = all(r["passed"] for k, r in res.items() if k not in neg) and all(not res[k]["passed"] for k in neg)
     s = {k: res[k] for k in res}
     ident = all(s[f"cdc0/{k}/slow"].get(f) == s[f"pinned/{k}/slow"].get(f)
                 for k, f in (("single", "cycles"), ("multi", "total_cycles")))
