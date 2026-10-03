@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.hbm_accel.ha3.measured_composition.v1",
+  "rungs": [
+    {
+      "rung": "HA3 issue+bulk-copy clock successors",
+      "fixture_cases": 72,
+      "mismatches": 0,
+      "measured_fixture_cycle_delta": 0,
+      "measured_token_saved_us": null,
+      "measured_tokens_per_second": null,
+      "measured_composed_gain": null,
+      "ss_wns": null,
+      "ff_wns": null,
+      "area": null,
+      "route": "NOT_RUN",
+      "adopt": false,
+      "status": "EXCLUDED_PENDING_REAL_SM_GATES"
+    }
+  ],
+  "cutthrough": "EXCLUDED_UNMEASURED",
+  "tmem": "EXCLUDED_PRIOR_ARITHMETIC_FAILED"
+}
