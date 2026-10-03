@@ -13,7 +13,7 @@ OUT = Path(__file__).resolve().parent
 W4 = 'results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/'
 BLOCKS = (
  ('sector', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_w2_authority.sv', 'ot_gpu_qwen_payload_w2_authority', 1, '.ENABLE(ENABLE),.IDENTW(207)'),
- ('kv', 'rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv', 'ot_gpu_qwen_kv_lifecycle_controller', 1, '.ENABLE(ENABLE)'),
+ ('kv', 'rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_connected_ports.sv', 'ot_gpu_qwen_kv_connected_ports', 1, '.ENABLE(ENABLE)'),
  ('native', 'rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_connector_r5.sv', 'ot_gpu_pc40_native_connector_r5', 1, '.ENABLE(ENABLE)'),
  ('sm', W4+'ot_gpu_full_sm_service.sv', 'ot_gpu_full_sm_service', 64, '.ENABLE(ENABLE),.ACK_ID(1)'),
  ('w2', 'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv', 'ot_w2_nc6_protected_completion_reset_quarantine', 128, '.OPT_EXACT(ENABLE),.OPT_RESET_QUARANTINE(ENABLE),.PC_ID(7\'(i))'),
@@ -52,6 +52,7 @@ def main():
     pins = {'stream_clk': dict(direction='input', bits=1, count=1, leaf='clk'), 'assembly_enabled': dict(direction='output', bits=1, count=1, leaf='ENABLE')}
     instances = []
     internal = []
+    shared = dict(service_valid='scratch_valid', service_write='scratch_write', service_addr='scratch_addr', service_wdata='scratch_wdata', service_ready='scratch_ready', service_done='scratch_done', service_rdata='scratch_rdata', service_done_ready='scratch_done_ready')
     selected = dict(caller_req_v='c_req_v', caller_req_we='c_req_we', caller_req_addr='c_req_addr', caller_req_tag='c_req_tag', caller_req_gen='c_req_gen', caller_rsp_rdy='c_rsp_rdy', caller_wr_done_rdy='c_wr_done_rdy', raw_rsp_v='c_rsp_v', raw_wr_done_v='c_wr_done_v', raw_rsp_tag='c_rsp_tag', raw_wr_done_tag='c_wr_done_tag', raw_rsp_gen='c_rsp_gen', raw_wr_done_gen='c_wr_done_gen')
     for prefix, source, module, count, params in BLOCKS:
         ports = leaf_ports(ROOT/source, module)
@@ -64,6 +65,11 @@ def main():
                 target = prefix+'_'+name
                 pins[target] = dict(direction=p['direction'], bits=bits*count, count=count, leaf_bits=bits, leaf=name, block=prefix)
                 expression = target if count == 1 else (target+'[i]' if bits == 1 else target+f'[i*{bits} +: {bits}]')
+            if prefix=='kv' and name in shared:
+                pins.pop('kv_'+name)
+                expression='sm_'+shared[name]
+            if prefix=='sm' and name in shared.values() and p['direction']=='input':
+                pins[prefix+'_'+name]['direction']='output'
             if prefix=='sector' and name in selected:
                 target='sector_'+name
                 pins.pop(target)
@@ -102,6 +108,7 @@ end''', '\n'.join(instances), 'endmodule', ''])
     (OUT/'ot_gpu_qwen_hbm_integrated.sv').write_text('\n'.join(lines))
     deps = [W4+n for n in ('ot_gpu_rf_service.sv','ot_gpu_full_sm_service.sv','ot_gpu_scratch_service.sv','ot_gpu_fadd.sv','ot_hdc_fp32_add_lat.sv','ot_hdc_fp32_mul_lat.sv','ot_hdc_fastfp.sv','ot_hdc_prefix.sv','ot_sram_1r1w_128x256_m1_r2c2.v','ot_sram_1r1w_1024x256_m2_r2c2.v')]
     deps += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'rtl/experimental/hbm_c0_connected_20261003/r5').glob('*.sv'))]
+    deps += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'rtl/model/qwen_kv_connections_20261003').glob('*.sv'))]
     deps += ['rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv', 'rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv', 'rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv', 'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_w2_authority.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_sector_authority.sv',
              'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv',
              'rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv']
@@ -111,9 +118,9 @@ end''', '\n'.join(instances), 'endmodule', ''])
                     source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in deps},
                     inventory=dict(rank_count=2, SM_per_rank=32, W2_PC_count=128, native_connector_count=1, KV_controller_count=1),
                     scope='literal reuse; native r5 is PC40 FMIN, NOT complete canonical operator dispatch',
-                    unresolved=['native RF-to-selected SM arbitration/source ownership', 'shared-SM router',
-                                'physical source allocator/prior-sector+selected-client drain proof', 'packed-state visibility observer',
-                                'native accepted consumer and eight-cohort drain', 'real backend and request/reverse CDC',
+                    unresolved=['native RF-to-selected SM arbitration/source ownership', 'native shared contender source binding',
+                                'physical source allocator/prior-sector+selected-client drain proof', 'actual W2 state-write/capture/visibility/reverse observer enrollment',
+                                'source fulloperator accepted consumer and individual eight-cohort endpoints', 'real backend and request/reverse CDC',
                                 'source issuer allocation, reset/quiescence enrollment', 'complete1737 operator dispatcher'],
                     streaming_clock_period_ps='2500/3', setup_uncertainty_ps=60, hold_uncertainty_ps=25,
                     physical_qualified=False, token_qualified=False)
