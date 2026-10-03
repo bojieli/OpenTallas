@@ -1,0 +1,7086 @@
+{
+ "argv": [
+  "select",
+  "--jobs",
+  "16",
+  "--real-cache",
+  "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/edge/real_cache.pkl",
+  "--work",
+  "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/edge/full",
+  "--out",
+  "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/edge/select.json"
+ ],
+ "bench": "rtl/test/dsrom_sys/tb_dsrom_edge_select.sv",
+ "dirty": [],
+ "git_head": "722c2d26ce35d74bf6fda1f7e2d0d24703bfd14e",
+ "golden": "tools/hdc_golden_v41.py sorted(topk_lowest_index(s, min(512, n))) on the BF16 index scores",
+ "groups": {
+  "functional": {
+   "cases": 84,
+   "expected_positions": 34069,
+   "modes": {
+    "bubbles": {
+     "bubble_percent": 30,
+     "errors": 0,
+     "mismatch_lines": [],
+     "passed": true,
+     "per_case": [
+      {
+       "case": "edge_n0",
+       "errors": 0,
+       "folds": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 0.0,
+       "last_key_to_selection_out": 85,
+       "last_key_to_stack_lists": 6,
+       "n_keys": 0,
+       "passed": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 3,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n1",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 0.333,
+       "last_key_to_selection_out": 161,
+       "last_key_to_stack_lists": 82,
+       "n_keys": 1,
+       "passed": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 3,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 2.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 2,
+       "passed": [
+        2,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n15",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 5.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 15,
+       "passed": [
+        15,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 3,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n16",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 8.0,
+       "last_key_to_selection_out": 162,
+       "last_key_to_stack_lists": 83,
+       "n_keys": 16,
+       "passed": [
+        16,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n17",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 17.0,
+       "last_key_to_selection_out": 164,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 17,
+       "passed": [
+        16,
+        1,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n63",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 31.5,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 63,
+       "passed": [
+        16,
+        16,
+        16,
+        15
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n64",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 32.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 64,
+       "passed": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n65",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 32.5,
+       "last_key_to_selection_out": 169,
+       "last_key_to_stack_lists": 85,
+       "n_keys": 65,
+       "passed": [
+        17,
+        16,
+        16,
+        16
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n511",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 36.5,
+       "last_key_to_selection_out": 280,
+       "last_key_to_stack_lists": 171,
+       "n_keys": 511,
+       "passed": [
+        128,
+        128,
+        128,
+        127
+       ],
+       "scan_cycles": 14,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n512",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 36.571,
+       "last_key_to_selection_out": 279,
+       "last_key_to_stack_lists": 170,
+       "n_keys": 512,
+       "passed": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "scan_cycles": 14,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n513",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 32.062,
+       "last_key_to_selection_out": 286,
+       "last_key_to_stack_lists": 174,
+       "n_keys": 513,
+       "passed": [
+        129,
+        128,
+        128,
+        128
+       ],
+       "scan_cycles": 16,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n1000",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 35.714,
+       "last_key_to_selection_out": 317,
+       "last_key_to_stack_lists": 191,
+       "n_keys": 1000,
+       "passed": [
+        256,
+        256,
+        248,
+        240
+       ],
+       "scan_cycles": 28,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2047",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 37.907,
+       "last_key_to_selection_out": 400,
+       "last_key_to_stack_lists": 243,
+       "n_keys": 2047,
+       "passed": [
+        512,
+        512,
+        512,
+        511
+       ],
+       "scan_cycles": 54,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2048",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 38.642,
+       "last_key_to_selection_out": 401,
+       "last_key_to_stack_lists": 244,
+       "n_keys": 2048,
+       "passed": [
+        512,
+        512,
+        512,
+        512
+       ],
+       "scan_cycles": 53,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2049",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 39.404,
+       "last_key_to_selection_out": 406,
+       "last_key_to_stack_lists": 249,
+       "n_keys": 2049,
+       "passed": [
+        513,
+        512,
+        512,
+        512
+       ],
+       "scan_cycles": 52,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n4097",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 35.626,
+       "last_key_to_selection_out": 575,
+       "last_key_to_stack_lists": 399,
+       "n_keys": 4097,
+       "passed": [
+        1025,
+        1024,
+        1024,
+        1024
+       ],
+       "scan_cycles": 115,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_0_n261",
+       "errors": 0,
+       "folds": [
+        2,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 26.1,
+       "last_key_to_selection_out": 261,
+       "last_key_to_stack_lists": 164,
+       "n_keys": 261,
+       "passed": [
+        69,
+        64,
+        64,
+        64
+       ],
+       "scan_cycles": 10,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_1_n239",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 39.833,
+       "last_key_to_selection_out": 182,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 239,
+       "passed": [
+        64,
+        64,
+        63,
+        48
+       ],
+       "scan_cycles": 6,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_2_n3115",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        3
+       ],
+       "keys_per_cycle_die": 37.083,
+       "last_key_to_selection_out": 595,
+       "last_key_to_stack_lists": 417,
+       "n_keys": 3115,
+       "passed": [
+        784,
+        784,
+        779,
+        768
+       ],
+       "scan_cycles": 84,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_3_n4601",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 37.407,
+       "last_key_to_selection_out": 568,
+       "last_key_to_stack_lists": 395,
+       "n_keys": 4601,
+       "passed": [
+        1152,
+        1152,
+        1152,
+        1145
+       ],
+       "scan_cycles": 123,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_4_n17441",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 39.729,
+       "last_key_to_selection_out": 547,
+       "last_key_to_stack_lists": 373,
+       "n_keys": 17441,
+       "passed": [
+        3015,
+        3170,
+        3130,
+        2987
+       ],
+       "scan_cycles": 439,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_5_n212",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 26.5,
+       "last_key_to_selection_out": 181,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 212,
+       "passed": [
+        64,
+        52,
+        48,
+        48
+       ],
+       "scan_cycles": 8,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_6_n22470",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 39.911,
+       "last_key_to_selection_out": 534,
+       "last_key_to_stack_lists": 358,
+       "n_keys": 22470,
+       "passed": [
+        3342,
+        3314,
+        3454,
+        3241
+       ],
+       "scan_cycles": 563,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_7_n18301",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 39.698,
+       "last_key_to_selection_out": 523,
+       "last_key_to_stack_lists": 353,
+       "n_keys": 18301,
+       "passed": [
+        2970,
+        3130,
+        3093,
+        2974
+       ],
+       "scan_cycles": 461,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_8_n38303",
+       "errors": 0,
+       "folds": [
+        11,
+        10,
+        10,
+        10
+       ],
+       "keys_per_cycle_die": 38.768,
+       "last_key_to_selection_out": 569,
+       "last_key_to_stack_lists": 399,
+       "n_keys": 38303,
+       "passed": [
+        3147,
+        3146,
+        3155,
+        3126
+       ],
+       "scan_cycles": 988,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_9_n4694",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 39.78,
+       "last_key_to_selection_out": 574,
+       "last_key_to_stack_lists": 406,
+       "n_keys": 4694,
+       "passed": [
+        1184,
+        1174,
+        1168,
+        1168
+       ],
+       "scan_cycles": 118,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_10_n37953",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 38.807,
+       "last_key_to_selection_out": 482,
+       "last_key_to_stack_lists": 310,
+       "n_keys": 37953,
+       "passed": [
+        3206,
+        3161,
+        3205,
+        3207
+       ],
+       "scan_cycles": 978,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_11_n358",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 39.778,
+       "last_key_to_selection_out": 271,
+       "last_key_to_stack_lists": 169,
+       "n_keys": 358,
+       "passed": [
+        96,
+        96,
+        86,
+        80
+       ],
+       "scan_cycles": 9,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_12_n3629",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        2
+       ],
+       "keys_per_cycle_die": 39.022,
+       "last_key_to_selection_out": 584,
+       "last_key_to_stack_lists": 410,
+       "n_keys": 3629,
+       "passed": [
+        912,
+        912,
+        909,
+        896
+       ],
+       "scan_cycles": 93,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_13_n376",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 37.6,
+       "last_key_to_selection_out": 272,
+       "last_key_to_stack_lists": 169,
+       "n_keys": 376,
+       "passed": [
+        96,
+        96,
+        96,
+        88
+       ],
+       "scan_cycles": 10,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_14_n2043",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 38.547,
+       "last_key_to_selection_out": 403,
+       "last_key_to_stack_lists": 246,
+       "n_keys": 2043,
+       "passed": [
+        512,
+        512,
+        512,
+        507
+       ],
+       "scan_cycles": 53,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_15_n10892",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 39.464,
+       "last_key_to_selection_out": 580,
+       "last_key_to_stack_lists": 406,
+       "n_keys": 10892,
+       "passed": [
+        2445,
+        2390,
+        2474,
+        2433
+       ],
+       "scan_cycles": 276,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_16_n9444",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 38.235,
+       "last_key_to_selection_out": 592,
+       "last_key_to_stack_lists": 422,
+       "n_keys": 9444,
+       "passed": [
+        2193,
+        2175,
+        2212,
+        2189
+       ],
+       "scan_cycles": 247,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_17_n31760",
+       "errors": 0,
+       "folds": [
+        8,
+        8,
+        8,
+        8
+       ],
+       "keys_per_cycle_die": 39.95,
+       "last_key_to_selection_out": 497,
+       "last_key_to_stack_lists": 327,
+       "n_keys": 31760,
+       "passed": [
+        3620,
+        3708,
+        3743,
+        3622
+       ],
+       "scan_cycles": 795,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_18_n852",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 34.08,
+       "last_key_to_selection_out": 308,
+       "last_key_to_stack_lists": 187,
+       "n_keys": 852,
+       "passed": [
+        224,
+        212,
+        208,
+        208
+       ],
+       "scan_cycles": 25,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_19_n889",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 34.192,
+       "last_key_to_selection_out": 311,
+       "last_key_to_stack_lists": 190,
+       "n_keys": 889,
+       "passed": [
+        224,
+        224,
+        224,
+        217
+       ],
+       "scan_cycles": 26,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_20_n24",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 12.0,
+       "last_key_to_selection_out": 164,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 24,
+       "passed": [
+        16,
+        8,
+        0,
+        0
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_21_n4512",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 37.916,
+       "last_key_to_selection_out": 579,
+       "last_key_to_stack_lists": 403,
+       "n_keys": 4512,
+       "passed": [
+        1136,
+        1136,
+        1120,
+        1120
+       ],
+       "scan_cycles": 119,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_22_n10071",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 39.65,
+       "last_key_to_selection_out": 587,
+       "last_key_to_stack_lists": 413,
+       "n_keys": 10071,
+       "passed": [
+        2289,
+        2328,
+        2327,
+        2301
+       ],
+       "scan_cycles": 254,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_23_n2524",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 38.831,
+       "last_key_to_selection_out": 514,
+       "last_key_to_stack_lists": 343,
+       "n_keys": 2524,
+       "passed": [
+        640,
+        636,
+        624,
+        624
+       ],
+       "scan_cycles": 65,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_24_n439",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 27.438,
+       "last_key_to_selection_out": 271,
+       "last_key_to_stack_lists": 164,
+       "n_keys": 439,
+       "passed": [
+        112,
+        112,
+        112,
+        103
+       ],
+       "scan_cycles": 16,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_25_n2997",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 37.0,
+       "last_key_to_selection_out": 512,
+       "last_key_to_stack_lists": 336,
+       "n_keys": 2997,
+       "passed": [
+        752,
+        752,
+        752,
+        741
+       ],
+       "scan_cycles": 81,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_26_n119",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 39.667,
+       "last_key_to_selection_out": 172,
+       "last_key_to_stack_lists": 85,
+       "n_keys": 119,
+       "passed": [
+        32,
+        32,
+        32,
+        23
+       ],
+       "scan_cycles": 3,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_27_n238",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 34.0,
+       "last_key_to_selection_out": 182,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 238,
+       "passed": [
+        64,
+        64,
+        62,
+        48
+       ],
+       "scan_cycles": 7,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_28_n17068",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 39.327,
+       "last_key_to_selection_out": 534,
+       "last_key_to_stack_lists": 368,
+       "n_keys": 17068,
+       "passed": [
+        3218,
+        3078,
+        3047,
+        2915
+       ],
+       "scan_cycles": 434,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_29_n64",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 16.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 64,
+       "passed": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "scan_cycles": 4,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_30_n574",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 35.875,
+       "last_key_to_selection_out": 288,
+       "last_key_to_stack_lists": 177,
+       "n_keys": 574,
+       "passed": [
+        144,
+        144,
+        144,
+        142
+       ],
+       "scan_cycles": 16,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_31_n61",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 30.5,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 61,
+       "passed": [
+        16,
+        16,
+        16,
+        13
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_32_n4208",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 38.255,
+       "last_key_to_selection_out": 576,
+       "last_key_to_stack_lists": 400,
+       "n_keys": 4208,
+       "passed": [
+        1056,
+        1056,
+        1056,
+        1040
+       ],
+       "scan_cycles": 110,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_33_n199",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 19.9,
+       "last_key_to_selection_out": 181,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 199,
+       "passed": [
+        55,
+        48,
+        48,
+        48
+       ],
+       "scan_cycles": 10,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_34_n29971",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 39.178,
+       "last_key_to_selection_out": 485,
+       "last_key_to_stack_lists": 314,
+       "n_keys": 29971,
+       "passed": [
+        3114,
+        3185,
+        3225,
+        3182
+       ],
+       "scan_cycles": 765,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_35_n834",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 36.261,
+       "last_key_to_selection_out": 308,
+       "last_key_to_stack_lists": 186,
+       "n_keys": 834,
+       "passed": [
+        210,
+        208,
+        208,
+        208
+       ],
+       "scan_cycles": 23,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_36_n276",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 30.667,
+       "last_key_to_selection_out": 265,
+       "last_key_to_stack_lists": 168,
+       "n_keys": 276,
+       "passed": [
+        80,
+        68,
+        64,
+        64
+       ],
+       "scan_cycles": 9,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_37_n3987",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 37.971,
+       "last_key_to_selection_out": 592,
+       "last_key_to_stack_lists": 416,
+       "n_keys": 3987,
+       "passed": [
+        1008,
+        995,
+        992,
+        992
+       ],
+       "scan_cycles": 105,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_38_n103",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 34.333,
+       "last_key_to_selection_out": 171,
+       "last_key_to_stack_lists": 85,
+       "n_keys": 103,
+       "passed": [
+        32,
+        32,
+        23,
+        16
+       ],
+       "scan_cycles": 3,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_39_n138",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 34.5,
+       "last_key_to_selection_out": 175,
+       "last_key_to_stack_lists": 86,
+       "n_keys": 138,
+       "passed": [
+        42,
+        32,
+        32,
+        32
+       ],
+       "scan_cycles": 4,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_0_n16096",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 38.692,
+       "last_key_to_selection_out": 558,
+       "last_key_to_stack_lists": 384,
+       "n_keys": 16096,
+       "passed": [
+        3116,
+        3046,
+        3117,
+        3083
+       ],
+       "scan_cycles": 416,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_1_n9031",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 39.61,
+       "last_key_to_selection_out": 604,
+       "last_key_to_stack_lists": 434,
+       "n_keys": 9031,
+       "passed": [
+        2153,
+        2163,
+        2200,
+        2149
+       ],
+       "scan_cycles": 228,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_2_n7670",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 40.157,
+       "last_key_to_selection_out": 535,
+       "last_key_to_stack_lists": 361,
+       "n_keys": 7670,
+       "passed": [
+        1920,
+        1920,
+        1920,
+        1910
+       ],
+       "scan_cycles": 191,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_3_n1375",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 36.184,
+       "last_key_to_selection_out": 348,
+       "last_key_to_stack_lists": 211,
+       "n_keys": 1375,
+       "passed": [
+        352,
+        351,
+        336,
+        336
+       ],
+       "scan_cycles": 38,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_4_n3139",
+       "errors": 0,
+       "folds": [
+        2,
+        3,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 36.929,
+       "last_key_to_selection_out": 594,
+       "last_key_to_stack_lists": 420,
+       "n_keys": 3139,
+       "passed": [
+        787,
+        784,
+        784,
+        784
+       ],
+       "scan_cycles": 85,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_5_n12121",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 39.741,
+       "last_key_to_selection_out": 559,
+       "last_key_to_stack_lists": 387,
+       "n_keys": 12121,
+       "passed": [
+        2654,
+        2713,
+        2693,
+        2628
+       ],
+       "scan_cycles": 305,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_6_n7796",
+       "errors": 0,
+       "folds": [
+        4,
+        3,
+        3,
+        4
+       ],
+       "keys_per_cycle_die": 37.845,
+       "last_key_to_selection_out": 622,
+       "last_key_to_stack_lists": 450,
+       "n_keys": 7796,
+       "passed": [
+        1952,
+        1952,
+        1952,
+        1907
+       ],
+       "scan_cycles": 206,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_7_n17865",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 39.178,
+       "last_key_to_selection_out": 523,
+       "last_key_to_stack_lists": 349,
+       "n_keys": 17865,
+       "passed": [
+        3073,
+        3235,
+        3133,
+        3242
+       ],
+       "scan_cycles": 456,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_8_n13981",
+       "errors": 0,
+       "folds": [
+        4,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 39.383,
+       "last_key_to_selection_out": 624,
+       "last_key_to_stack_lists": 448,
+       "n_keys": 13981,
+       "passed": [
+        2909,
+        2980,
+        2893,
+        3030
+       ],
+       "scan_cycles": 355,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_9_n8797",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 38.925,
+       "last_key_to_selection_out": 611,
+       "last_key_to_stack_lists": 437,
+       "n_keys": 8797,
+       "passed": [
+        2114,
+        2118,
+        2085,
+        2101
+       ],
+       "scan_cycles": 226,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_10_n9757",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 39.028,
+       "last_key_to_selection_out": 586,
+       "last_key_to_stack_lists": 412,
+       "n_keys": 9757,
+       "passed": [
+        2249,
+        2274,
+        2253,
+        2258
+       ],
+       "scan_cycles": 250,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_11_n23608",
+       "errors": 0,
+       "folds": [
+        6,
+        7,
+        7,
+        6
+       ],
+       "keys_per_cycle_die": 38.512,
+       "last_key_to_selection_out": 576,
+       "last_key_to_stack_lists": 402,
+       "n_keys": 23608,
+       "passed": [
+        3492,
+        3453,
+        3230,
+        3534
+       ],
+       "scan_cycles": 613,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "all_equal_n20000",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 39.448,
+       "last_key_to_selection_out": 375,
+       "last_key_to_stack_lists": 218,
+       "n_keys": 20000,
+       "passed": [
+        2000,
+        2080,
+        1920,
+        1904
+       ],
+       "scan_cycles": 507,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "all_zero_signed_n20000",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        5
+       ],
+       "keys_per_cycle_die": 39.526,
+       "last_key_to_selection_out": 376,
+       "last_key_to_stack_lists": 219,
+       "n_keys": 20000,
+       "passed": [
+        2016,
+        1984,
+        2032,
+        1952
+       ],
+       "scan_cycles": 506,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ascending_n20000",
+       "errors": 0,
+       "folds": [
+        6,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 38.462,
+       "last_key_to_selection_out": 536,
+       "last_key_to_stack_lists": 379,
+       "n_keys": 20000,
+       "passed": [
+        5008,
+        5008,
+        4992,
+        4992
+       ],
+       "scan_cycles": 520,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "descending_n20000",
+       "errors": 0,
+       "folds": [
+        5,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 39.062,
+       "last_key_to_selection_out": 376,
+       "last_key_to_stack_lists": 219,
+       "n_keys": 20000,
+       "passed": [
+        2064,
+        1888,
+        1984,
+        1904
+       ],
+       "scan_cycles": 512,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "all_neg_inf_n3000",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 37.975,
+       "last_key_to_selection_out": 387,
+       "last_key_to_stack_lists": 230,
+       "n_keys": 3000,
+       "passed": [
+        752,
+        752,
+        752,
+        744
+       ],
+       "scan_cycles": 79,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "neg_inf_but_100_n5000",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 39.683,
+       "last_key_to_selection_out": 467,
+       "last_key_to_stack_lists": 307,
+       "n_keys": 5000,
+       "passed": [
+        1256,
+        1248,
+        1248,
+        1248
+       ],
+       "scan_cycles": 126,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_at_threshold_n9000",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 38.793,
+       "last_key_to_selection_out": 584,
+       "last_key_to_stack_lists": 416,
+       "n_keys": 9000,
+       "passed": [
+        2138,
+        2074,
+        2008,
+        2117
+       ],
+       "scan_cycles": 232,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_0_n14702",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 37.892,
+       "last_key_to_selection_out": 582,
+       "last_key_to_stack_lists": 410,
+       "n_keys": 14702,
+       "passed": [
+        3035,
+        3006,
+        2949,
+        3062
+       ],
+       "scan_cycles": 388,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_1_n22670",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 39.221,
+       "last_key_to_selection_out": 509,
+       "last_key_to_stack_lists": 337,
+       "n_keys": 22670,
+       "passed": [
+        3483,
+        3517,
+        3434,
+        3509
+       ],
+       "scan_cycles": 578,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_2_n23624",
+       "errors": 0,
+       "folds": [
+        7,
+        6,
+        7,
+        7
+       ],
+       "keys_per_cycle_die": 38.042,
+       "last_key_to_selection_out": 569,
+       "last_key_to_stack_lists": 395,
+       "n_keys": 23624,
+       "passed": [
+        3362,
+        3543,
+        3359,
+        3325
+       ],
+       "scan_cycles": 621,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_3_n46328",
+       "errors": 0,
+       "folds": [
+        12,
+        12,
+        12,
+        12
+       ],
+       "keys_per_cycle_die": 39.228,
+       "last_key_to_selection_out": 527,
+       "last_key_to_stack_lists": 355,
+       "n_keys": 46328,
+       "passed": [
+        3880,
+        3954,
+        3853,
+        3722
+       ],
+       "scan_cycles": 1181,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_4_n1256",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 33.946,
+       "last_key_to_selection_out": 336,
+       "last_key_to_stack_lists": 202,
+       "n_keys": 1256,
+       "passed": [
+        320,
+        320,
+        312,
+        304
+       ],
+       "scan_cycles": 37,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_5_n18749",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 40.234,
+       "last_key_to_selection_out": 515,
+       "last_key_to_stack_lists": 341,
+       "n_keys": 18749,
+       "passed": [
+        3255,
+        3132,
+        3221,
+        3256
+       ],
+       "scan_cycles": 466,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_6_n46402",
+       "errors": 0,
+       "folds": [
+        12,
+        11,
+        12,
+        12
+       ],
+       "keys_per_cycle_die": 40.105,
+       "last_key_to_selection_out": 540,
+       "last_key_to_stack_lists": 366,
+       "n_keys": 46402,
+       "passed": [
+        4027,
+        4089,
+        3972,
+        4070
+       ],
+       "scan_cycles": 1157,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_7_n54187",
+       "errors": 0,
+       "folds": [
+        14,
+        13,
+        14,
+        14
+       ],
+       "keys_per_cycle_die": 39.873,
+       "last_key_to_selection_out": 542,
+       "last_key_to_stack_lists": 370,
+       "n_keys": 54187,
+       "passed": [
+        4172,
+        3959,
+        3946,
+        4064
+       ],
+       "scan_cycles": 1359,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      }
+     ],
+     "queries": 84,
+     "rate_keys_per_cycle_per_stack": 11,
+     "seed": 7,
+     "wall_s": 46.8
+    },
+    "hbm_rate": {
+     "bubble_percent": 0,
+     "errors": 0,
+     "mismatch_lines": [],
+     "passed": true,
+     "per_case": [
+      {
+       "case": "edge_n0",
+       "errors": 0,
+       "folds": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 0.0,
+       "last_key_to_selection_out": 85,
+       "last_key_to_stack_lists": 6,
+       "n_keys": 0,
+       "passed": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n1",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 1.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 1,
+       "passed": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 2.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 2,
+       "passed": [
+        2,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n15",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 15.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 15,
+       "passed": [
+        15,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n16",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 16.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 16,
+       "passed": [
+        16,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n17",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 17.0,
+       "last_key_to_selection_out": 164,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 17,
+       "passed": [
+        16,
+        1,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n63",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 63.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 63,
+       "passed": [
+        16,
+        16,
+        16,
+        15
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n64",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 64.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 64,
+       "passed": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n65",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 32.5,
+       "last_key_to_selection_out": 169,
+       "last_key_to_stack_lists": 85,
+       "n_keys": 65,
+       "passed": [
+        17,
+        16,
+        16,
+        16
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n511",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 46.455,
+       "last_key_to_selection_out": 280,
+       "last_key_to_stack_lists": 171,
+       "n_keys": 511,
+       "passed": [
+        128,
+        128,
+        128,
+        127
+       ],
+       "scan_cycles": 11,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n512",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 46.545,
+       "last_key_to_selection_out": 280,
+       "last_key_to_stack_lists": 171,
+       "n_keys": 512,
+       "passed": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "scan_cycles": 11,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n513",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 39.462,
+       "last_key_to_selection_out": 284,
+       "last_key_to_stack_lists": 172,
+       "n_keys": 513,
+       "passed": [
+        129,
+        128,
+        128,
+        128
+       ],
+       "scan_cycles": 13,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n1000",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 43.478,
+       "last_key_to_selection_out": 321,
+       "last_key_to_stack_lists": 195,
+       "n_keys": 1000,
+       "passed": [
+        256,
+        256,
+        248,
+        240
+       ],
+       "scan_cycles": 23,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2047",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 44.5,
+       "last_key_to_selection_out": 407,
+       "last_key_to_stack_lists": 250,
+       "n_keys": 2047,
+       "passed": [
+        512,
+        512,
+        512,
+        511
+       ],
+       "scan_cycles": 46,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2048",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 44.522,
+       "last_key_to_selection_out": 407,
+       "last_key_to_stack_lists": 250,
+       "n_keys": 2048,
+       "passed": [
+        512,
+        512,
+        512,
+        512
+       ],
+       "scan_cycles": 46,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2049",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 43.596,
+       "last_key_to_selection_out": 409,
+       "last_key_to_stack_lists": 252,
+       "n_keys": 2049,
+       "passed": [
+        513,
+        512,
+        512,
+        512
+       ],
+       "scan_cycles": 47,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n4097",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 43.585,
+       "last_key_to_selection_out": 595,
+       "last_key_to_stack_lists": 419,
+       "n_keys": 4097,
+       "passed": [
+        1025,
+        1024,
+        1024,
+        1024
+       ],
+       "scan_cycles": 94,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_0_n261",
+       "errors": 0,
+       "folds": [
+        2,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 37.286,
+       "last_key_to_selection_out": 263,
+       "last_key_to_stack_lists": 166,
+       "n_keys": 261,
+       "passed": [
+        69,
+        64,
+        64,
+        64
+       ],
+       "scan_cycles": 7,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_1_n239",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 47.8,
+       "last_key_to_selection_out": 183,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 239,
+       "passed": [
+        64,
+        64,
+        63,
+        48
+       ],
+       "scan_cycles": 5,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_2_n3115",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 43.873,
+       "last_key_to_selection_out": 514,
+       "last_key_to_stack_lists": 336,
+       "n_keys": 3115,
+       "passed": [
+        784,
+        784,
+        779,
+        768
+       ],
+       "scan_cycles": 71,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_3_n4601",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 44.24,
+       "last_key_to_selection_out": 585,
+       "last_key_to_stack_lists": 412,
+       "n_keys": 4601,
+       "passed": [
+        1152,
+        1152,
+        1152,
+        1145
+       ],
+       "scan_cycles": 104,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_4_n17441",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 43.932,
+       "last_key_to_selection_out": 593,
+       "last_key_to_stack_lists": 419,
+       "n_keys": 17441,
+       "passed": [
+        3111,
+        3254,
+        3279,
+        3252
+       ],
+       "scan_cycles": 397,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_5_n212",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 42.4,
+       "last_key_to_selection_out": 182,
+       "last_key_to_stack_lists": 89,
+       "n_keys": 212,
+       "passed": [
+        64,
+        52,
+        48,
+        48
+       ],
+       "scan_cycles": 5,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_6_n22470",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 43.973,
+       "last_key_to_selection_out": 589,
+       "last_key_to_stack_lists": 413,
+       "n_keys": 22470,
+       "passed": [
+        3452,
+        3491,
+        3497,
+        3499
+       ],
+       "scan_cycles": 511,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_7_n18301",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 44.099,
+       "last_key_to_selection_out": 569,
+       "last_key_to_stack_lists": 399,
+       "n_keys": 18301,
+       "passed": [
+        3141,
+        3111,
+        3119,
+        3131
+       ],
+       "scan_cycles": 415,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_8_n38303",
+       "errors": 0,
+       "folds": [
+        9,
+        9,
+        9,
+        9
+       ],
+       "keys_per_cycle_die": 43.976,
+       "last_key_to_selection_out": 500,
+       "last_key_to_stack_lists": 330,
+       "n_keys": 38303,
+       "passed": [
+        3383,
+        3360,
+        3391,
+        3348
+       ],
+       "scan_cycles": 871,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_9_n4694",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 43.869,
+       "last_key_to_selection_out": 582,
+       "last_key_to_stack_lists": 414,
+       "n_keys": 4694,
+       "passed": [
+        1184,
+        1174,
+        1168,
+        1168
+       ],
+       "scan_cycles": 107,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_10_n37953",
+       "errors": 0,
+       "folds": [
+        7,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 43.978,
+       "last_key_to_selection_out": 482,
+       "last_key_to_stack_lists": 310,
+       "n_keys": 37953,
+       "passed": [
+        3201,
+        3182,
+        3182,
+        3192
+       ],
+       "scan_cycles": 863,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_11_n358",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 44.75,
+       "last_key_to_selection_out": 270,
+       "last_key_to_stack_lists": 168,
+       "n_keys": 358,
+       "passed": [
+        96,
+        96,
+        86,
+        80
+       ],
+       "scan_cycles": 8,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_12_n3629",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        2
+       ],
+       "keys_per_cycle_die": 44.256,
+       "last_key_to_selection_out": 595,
+       "last_key_to_stack_lists": 421,
+       "n_keys": 3629,
+       "passed": [
+        912,
+        912,
+        909,
+        896
+       ],
+       "scan_cycles": 82,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_13_n376",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 47.0,
+       "last_key_to_selection_out": 271,
+       "last_key_to_stack_lists": 168,
+       "n_keys": 376,
+       "passed": [
+        96,
+        96,
+        96,
+        88
+       ],
+       "scan_cycles": 8,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_14_n2043",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 44.413,
+       "last_key_to_selection_out": 407,
+       "last_key_to_stack_lists": 250,
+       "n_keys": 2043,
+       "passed": [
+        512,
+        512,
+        512,
+        507
+       ],
+       "scan_cycles": 46,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_15_n10892",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 43.919,
+       "last_key_to_selection_out": 601,
+       "last_key_to_stack_lists": 427,
+       "n_keys": 10892,
+       "passed": [
+        2432,
+        2422,
+        2407,
+        2415
+       ],
+       "scan_cycles": 248,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_16_n9444",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 43.926,
+       "last_key_to_selection_out": 624,
+       "last_key_to_stack_lists": 454,
+       "n_keys": 9444,
+       "passed": [
+        2290,
+        2283,
+        2284,
+        2283
+       ],
+       "scan_cycles": 215,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_17_n31760",
+       "errors": 0,
+       "folds": [
+        8,
+        8,
+        8,
+        8
+       ],
+       "keys_per_cycle_die": 43.989,
+       "last_key_to_selection_out": 573,
+       "last_key_to_stack_lists": 403,
+       "n_keys": 31760,
+       "passed": [
+        3759,
+        3826,
+        3659,
+        3760
+       ],
+       "scan_cycles": 722,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_18_n852",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 42.6,
+       "last_key_to_selection_out": 311,
+       "last_key_to_stack_lists": 190,
+       "n_keys": 852,
+       "passed": [
+        224,
+        212,
+        208,
+        208
+       ],
+       "scan_cycles": 20,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_19_n889",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 44.45,
+       "last_key_to_selection_out": 313,
+       "last_key_to_stack_lists": 192,
+       "n_keys": 889,
+       "passed": [
+        224,
+        224,
+        224,
+        217
+       ],
+       "scan_cycles": 20,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_20_n24",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 24.0,
+       "last_key_to_selection_out": 164,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 24,
+       "passed": [
+        16,
+        8,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_21_n4512",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 43.806,
+       "last_key_to_selection_out": 593,
+       "last_key_to_stack_lists": 417,
+       "n_keys": 4512,
+       "passed": [
+        1136,
+        1136,
+        1120,
+        1120
+       ],
+       "scan_cycles": 103,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_22_n10071",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 43.978,
+       "last_key_to_selection_out": 612,
+       "last_key_to_stack_lists": 438,
+       "n_keys": 10071,
+       "passed": [
+        2373,
+        2384,
+        2373,
+        2363
+       ],
+       "scan_cycles": 229,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_23_n2524",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 43.517,
+       "last_key_to_selection_out": 520,
+       "last_key_to_stack_lists": 349,
+       "n_keys": 2524,
+       "passed": [
+        640,
+        636,
+        624,
+        624
+       ],
+       "scan_cycles": 58,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_24_n439",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 43.9,
+       "last_key_to_selection_out": 275,
+       "last_key_to_stack_lists": 168,
+       "n_keys": 439,
+       "passed": [
+        112,
+        112,
+        112,
+        103
+       ],
+       "scan_cycles": 10,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_25_n2997",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 44.074,
+       "last_key_to_selection_out": 519,
+       "last_key_to_stack_lists": 343,
+       "n_keys": 2997,
+       "passed": [
+        752,
+        752,
+        752,
+        741
+       ],
+       "scan_cycles": 68,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_26_n119",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 59.5,
+       "last_key_to_selection_out": 172,
+       "last_key_to_stack_lists": 85,
+       "n_keys": 119,
+       "passed": [
+        32,
+        32,
+        32,
+        23
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_27_n238",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 47.6,
+       "last_key_to_selection_out": 183,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 238,
+       "passed": [
+        64,
+        64,
+        62,
+        48
+       ],
+       "scan_cycles": 5,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_28_n17068",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 43.99,
+       "last_key_to_selection_out": 574,
+       "last_key_to_stack_lists": 408,
+       "n_keys": 17068,
+       "passed": [
+        3145,
+        3157,
+        3116,
+        3113
+       ],
+       "scan_cycles": 388,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_29_n64",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 64.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 64,
+       "passed": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_30_n574",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 44.154,
+       "last_key_to_selection_out": 287,
+       "last_key_to_stack_lists": 176,
+       "n_keys": 574,
+       "passed": [
+        144,
+        144,
+        144,
+        142
+       ],
+       "scan_cycles": 13,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_31_n61",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 61.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 61,
+       "passed": [
+        16,
+        16,
+        16,
+        13
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_32_n4208",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 44.295,
+       "last_key_to_selection_out": 589,
+       "last_key_to_stack_lists": 413,
+       "n_keys": 4208,
+       "passed": [
+        1056,
+        1056,
+        1056,
+        1040
+       ],
+       "scan_cycles": 95,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_33_n199",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 39.8,
+       "last_key_to_selection_out": 181,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 199,
+       "passed": [
+        55,
+        48,
+        48,
+        48
+       ],
+       "scan_cycles": 5,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_34_n29971",
+       "errors": 0,
+       "folds": [
+        7,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 43.946,
+       "last_key_to_selection_out": 494,
+       "last_key_to_stack_lists": 323,
+       "n_keys": 29971,
+       "passed": [
+        3207,
+        3175,
+        3181,
+        3114
+       ],
+       "scan_cycles": 682,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_35_n834",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 41.7,
+       "last_key_to_selection_out": 310,
+       "last_key_to_stack_lists": 188,
+       "n_keys": 834,
+       "passed": [
+        210,
+        208,
+        208,
+        208
+       ],
+       "scan_cycles": 20,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_36_n276",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 39.429,
+       "last_key_to_selection_out": 264,
+       "last_key_to_stack_lists": 167,
+       "n_keys": 276,
+       "passed": [
+        80,
+        68,
+        64,
+        64
+       ],
+       "scan_cycles": 7,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_37_n3987",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 43.813,
+       "last_key_to_selection_out": 603,
+       "last_key_to_stack_lists": 427,
+       "n_keys": 3987,
+       "passed": [
+        1008,
+        995,
+        992,
+        992
+       ],
+       "scan_cycles": 91,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_38_n103",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 51.5,
+       "last_key_to_selection_out": 171,
+       "last_key_to_stack_lists": 85,
+       "n_keys": 103,
+       "passed": [
+        32,
+        32,
+        23,
+        16
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_39_n138",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 34.5,
+       "last_key_to_selection_out": 175,
+       "last_key_to_stack_lists": 86,
+       "n_keys": 138,
+       "passed": [
+        42,
+        32,
+        32,
+        32
+       ],
+       "scan_cycles": 4,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_0_n16096",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 43.978,
+       "last_key_to_selection_out": 611,
+       "last_key_to_stack_lists": 437,
+       "n_keys": 16096,
+       "passed": [
+        3221,
+        3210,
+        3222,
+        3227
+       ],
+       "scan_cycles": 366,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_1_n9031",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 43.84,
+       "last_key_to_selection_out": 626,
+       "last_key_to_stack_lists": 456,
+       "n_keys": 9031,
+       "passed": [
+        2236,
+        2228,
+        2236,
+        2225
+       ],
+       "scan_cycles": 206,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_2_n7670",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 44.08,
+       "last_key_to_selection_out": 550,
+       "last_key_to_stack_lists": 376,
+       "n_keys": 7670,
+       "passed": [
+        1920,
+        1920,
+        1920,
+        1910
+       ],
+       "scan_cycles": 174,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_3_n1375",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 44.355,
+       "last_key_to_selection_out": 354,
+       "last_key_to_stack_lists": 217,
+       "n_keys": 1375,
+       "passed": [
+        352,
+        351,
+        336,
+        336
+       ],
+       "scan_cycles": 31,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_4_n3139",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 43.597,
+       "last_key_to_selection_out": 510,
+       "last_key_to_stack_lists": 336,
+       "n_keys": 3139,
+       "passed": [
+        787,
+        784,
+        784,
+        784
+       ],
+       "scan_cycles": 72,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_5_n12121",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 43.917,
+       "last_key_to_selection_out": 586,
+       "last_key_to_stack_lists": 414,
+       "n_keys": 12121,
+       "passed": [
+        2566,
+        2689,
+        2559,
+        2684
+       ],
+       "scan_cycles": 276,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_6_n7796",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 44.045,
+       "last_key_to_selection_out": 554,
+       "last_key_to_stack_lists": 382,
+       "n_keys": 7796,
+       "passed": [
+        1952,
+        1952,
+        1952,
+        1940
+       ],
+       "scan_cycles": 177,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_7_n17865",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 43.894,
+       "last_key_to_selection_out": 571,
+       "last_key_to_stack_lists": 397,
+       "n_keys": 17865,
+       "passed": [
+        3013,
+        3295,
+        3047,
+        3080
+       ],
+       "scan_cycles": 407,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_8_n13981",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 43.965,
+       "last_key_to_selection_out": 556,
+       "last_key_to_stack_lists": 380,
+       "n_keys": 13981,
+       "passed": [
+        2731,
+        2966,
+        2777,
+        2978
+       ],
+       "scan_cycles": 318,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_9_n8797",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 43.985,
+       "last_key_to_selection_out": 638,
+       "last_key_to_stack_lists": 464,
+       "n_keys": 8797,
+       "passed": [
+        2208,
+        2205,
+        2192,
+        2192
+       ],
+       "scan_cycles": 200,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_10_n9757",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 43.95,
+       "last_key_to_selection_out": 612,
+       "last_key_to_stack_lists": 438,
+       "n_keys": 9757,
+       "passed": [
+        2303,
+        2349,
+        2310,
+        2346
+       ],
+       "scan_cycles": 222,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_11_n23608",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 44.045,
+       "last_key_to_selection_out": 564,
+       "last_key_to_stack_lists": 390,
+       "n_keys": 23608,
+       "passed": [
+        3355,
+        3617,
+        3324,
+        3363
+       ],
+       "scan_cycles": 536,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "all_equal_n20000",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 43.956,
+       "last_key_to_selection_out": 376,
+       "last_key_to_stack_lists": 219,
+       "n_keys": 20000,
+       "passed": [
+        2208,
+        2208,
+        2208,
+        2208
+       ],
+       "scan_cycles": 455,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "all_zero_signed_n20000",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 43.956,
+       "last_key_to_selection_out": 376,
+       "last_key_to_stack_lists": 219,
+       "n_keys": 20000,
+       "passed": [
+        2208,
+        2208,
+        2208,
+        2208
+       ],
+       "scan_cycles": 455,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ascending_n20000",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 43.956,
+       "last_key_to_selection_out": 503,
+       "last_key_to_stack_lists": 346,
+       "n_keys": 20000,
+       "passed": [
+        5008,
+        5008,
+        4992,
+        4992
+       ],
+       "scan_cycles": 455,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "descending_n20000",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 43.956,
+       "last_key_to_selection_out": 376,
+       "last_key_to_stack_lists": 219,
+       "n_keys": 20000,
+       "passed": [
+        2208,
+        2208,
+        2208,
+        2208
+       ],
+       "scan_cycles": 455,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "all_neg_inf_n3000",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 44.118,
+       "last_key_to_selection_out": 397,
+       "last_key_to_stack_lists": 240,
+       "n_keys": 3000,
+       "passed": [
+        752,
+        752,
+        752,
+        744
+       ],
+       "scan_cycles": 68,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "neg_inf_but_100_n5000",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 43.86,
+       "last_key_to_selection_out": 475,
+       "last_key_to_stack_lists": 315,
+       "n_keys": 5000,
+       "passed": [
+        1256,
+        1248,
+        1248,
+        1248
+       ],
+       "scan_cycles": 114,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_at_threshold_n9000",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 43.902,
+       "last_key_to_selection_out": 613,
+       "last_key_to_stack_lists": 445,
+       "n_keys": 9000,
+       "passed": [
+        2229,
+        2228,
+        2226,
+        2221
+       ],
+       "scan_cycles": 205,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_0_n14702",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 44.018,
+       "last_key_to_selection_out": 541,
+       "last_key_to_stack_lists": 369,
+       "n_keys": 14702,
+       "passed": [
+        3109,
+        3067,
+        3033,
+        3040
+       ],
+       "scan_cycles": 334,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_1_n22670",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 43.934,
+       "last_key_to_selection_out": 577,
+       "last_key_to_stack_lists": 405,
+       "n_keys": 22670,
+       "passed": [
+        3669,
+        3618,
+        3545,
+        3681
+       ],
+       "scan_cycles": 516,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_2_n23624",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 43.911,
+       "last_key_to_selection_out": 570,
+       "last_key_to_stack_lists": 396,
+       "n_keys": 23624,
+       "passed": [
+        3563,
+        3672,
+        3604,
+        3480
+       ],
+       "scan_cycles": 538,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_3_n46328",
+       "errors": 0,
+       "folds": [
+        11,
+        11,
+        11,
+        11
+       ],
+       "keys_per_cycle_die": 43.996,
+       "last_key_to_selection_out": 548,
+       "last_key_to_stack_lists": 376,
+       "n_keys": 46328,
+       "passed": [
+        4053,
+        4120,
+        3998,
+        3867
+       ],
+       "scan_cycles": 1053,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_4_n1256",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 43.31,
+       "last_key_to_selection_out": 342,
+       "last_key_to_stack_lists": 208,
+       "n_keys": 1256,
+       "passed": [
+        320,
+        320,
+        312,
+        304
+       ],
+       "scan_cycles": 29,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_5_n18749",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 44.012,
+       "last_key_to_selection_out": 555,
+       "last_key_to_stack_lists": 381,
+       "n_keys": 18749,
+       "passed": [
+        3350,
+        3281,
+        3370,
+        3273
+       ],
+       "scan_cycles": 426,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_6_n46402",
+       "errors": 0,
+       "folds": [
+        11,
+        11,
+        11,
+        11
+       ],
+       "keys_per_cycle_die": 43.983,
+       "last_key_to_selection_out": 554,
+       "last_key_to_stack_lists": 380,
+       "n_keys": 46402,
+       "passed": [
+        4186,
+        4212,
+        4243,
+        4234
+       ],
+       "scan_cycles": 1055,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_7_n54187",
+       "errors": 0,
+       "folds": [
+        12,
+        12,
+        13,
+        13
+       ],
+       "keys_per_cycle_die": 44.019,
+       "last_key_to_selection_out": 570,
+       "last_key_to_stack_lists": 398,
+       "n_keys": 54187,
+       "passed": [
+        4217,
+        4082,
+        4118,
+        4123
+       ],
+       "scan_cycles": 1231,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      }
+     ],
+     "queries": 84,
+     "rate_keys_per_cycle_per_stack": 11,
+     "seed": 1,
+     "wall_s": 96.4
+    },
+    "mac_rate": {
+     "bubble_percent": 0,
+     "errors": 0,
+     "mismatch_lines": [],
+     "passed": true,
+     "per_case": [
+      {
+       "case": "edge_n0",
+       "errors": 0,
+       "folds": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 0.0,
+       "last_key_to_selection_out": 85,
+       "last_key_to_stack_lists": 6,
+       "n_keys": 0,
+       "passed": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n1",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 1.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 1,
+       "passed": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 2.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 2,
+       "passed": [
+        2,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n15",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 15.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 15,
+       "passed": [
+        15,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n16",
+       "errors": 0,
+       "folds": [
+        1,
+        0,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 16.0,
+       "last_key_to_selection_out": 163,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 16,
+       "passed": [
+        16,
+        0,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n17",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 17.0,
+       "last_key_to_selection_out": 164,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 17,
+       "passed": [
+        16,
+        1,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n63",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 63.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 63,
+       "passed": [
+        16,
+        16,
+        16,
+        15
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n64",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 64.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 64,
+       "passed": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n65",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 32.5,
+       "last_key_to_selection_out": 169,
+       "last_key_to_stack_lists": 85,
+       "n_keys": 65,
+       "passed": [
+        17,
+        16,
+        16,
+        16
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n511",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.875,
+       "last_key_to_selection_out": 282,
+       "last_key_to_stack_lists": 173,
+       "n_keys": 511,
+       "passed": [
+        128,
+        128,
+        128,
+        127
+       ],
+       "scan_cycles": 8,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n512",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 64.0,
+       "last_key_to_selection_out": 282,
+       "last_key_to_stack_lists": 173,
+       "n_keys": 512,
+       "passed": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "scan_cycles": 8,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n513",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 57.0,
+       "last_key_to_selection_out": 287,
+       "last_key_to_stack_lists": 175,
+       "n_keys": 513,
+       "passed": [
+        129,
+        128,
+        128,
+        128
+       ],
+       "scan_cycles": 9,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n1000",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 62.5,
+       "last_key_to_selection_out": 327,
+       "last_key_to_stack_lists": 201,
+       "n_keys": 1000,
+       "passed": [
+        256,
+        256,
+        248,
+        240
+       ],
+       "scan_cycles": 16,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2047",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.969,
+       "last_key_to_selection_out": 420,
+       "last_key_to_stack_lists": 263,
+       "n_keys": 2047,
+       "passed": [
+        512,
+        512,
+        512,
+        511
+       ],
+       "scan_cycles": 32,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2048",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 64.0,
+       "last_key_to_selection_out": 420,
+       "last_key_to_stack_lists": 263,
+       "n_keys": 2048,
+       "passed": [
+        512,
+        512,
+        512,
+        512
+       ],
+       "scan_cycles": 32,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n2049",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 62.091,
+       "last_key_to_selection_out": 422,
+       "last_key_to_stack_lists": 265,
+       "n_keys": 2049,
+       "passed": [
+        513,
+        512,
+        512,
+        512
+       ],
+       "scan_cycles": 33,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "edge_n4097",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.031,
+       "last_key_to_selection_out": 526,
+       "last_key_to_stack_lists": 350,
+       "n_keys": 4097,
+       "passed": [
+        1025,
+        1024,
+        1024,
+        1024
+       ],
+       "scan_cycles": 65,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_0_n261",
+       "errors": 0,
+       "folds": [
+        2,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 52.2,
+       "last_key_to_selection_out": 264,
+       "last_key_to_stack_lists": 167,
+       "n_keys": 261,
+       "passed": [
+        69,
+        64,
+        64,
+        64
+       ],
+       "scan_cycles": 5,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_1_n239",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 59.75,
+       "last_key_to_selection_out": 183,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 239,
+       "passed": [
+        64,
+        64,
+        63,
+        48
+       ],
+       "scan_cycles": 4,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_2_n3115",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.571,
+       "last_key_to_selection_out": 535,
+       "last_key_to_stack_lists": 357,
+       "n_keys": 3115,
+       "passed": [
+        784,
+        784,
+        779,
+        768
+       ],
+       "scan_cycles": 49,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_3_n4601",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.903,
+       "last_key_to_selection_out": 519,
+       "last_key_to_stack_lists": 346,
+       "n_keys": 4601,
+       "passed": [
+        1152,
+        1152,
+        1152,
+        1145
+       ],
+       "scan_cycles": 72,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_4_n17441",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.886,
+       "last_key_to_selection_out": 643,
+       "last_key_to_stack_lists": 469,
+       "n_keys": 17441,
+       "passed": [
+        3753,
+        3795,
+        3799,
+        3787
+       ],
+       "scan_cycles": 273,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_5_n212",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 53.0,
+       "last_key_to_selection_out": 182,
+       "last_key_to_stack_lists": 89,
+       "n_keys": 212,
+       "passed": [
+        64,
+        52,
+        48,
+        48
+       ],
+       "scan_cycles": 4,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_6_n22470",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.835,
+       "last_key_to_selection_out": 592,
+       "last_key_to_stack_lists": 416,
+       "n_keys": 22470,
+       "passed": [
+        4172,
+        4309,
+        4307,
+        4250
+       ],
+       "scan_cycles": 352,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_7_n18301",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.99,
+       "last_key_to_selection_out": 633,
+       "last_key_to_stack_lists": 463,
+       "n_keys": 18301,
+       "passed": [
+        3890,
+        3888,
+        3875,
+        3898
+       ],
+       "scan_cycles": 286,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_8_n38303",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "keys_per_cycle_die": 63.945,
+       "last_key_to_selection_out": 549,
+       "last_key_to_stack_lists": 379,
+       "n_keys": 38303,
+       "passed": [
+        4854,
+        4830,
+        4857,
+        4804
+       ],
+       "scan_cycles": 599,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_9_n4694",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.432,
+       "last_key_to_selection_out": 517,
+       "last_key_to_stack_lists": 349,
+       "n_keys": 4694,
+       "passed": [
+        1184,
+        1174,
+        1168,
+        1168
+       ],
+       "scan_cycles": 74,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_10_n37953",
+       "errors": 0,
+       "folds": [
+        6,
+        6,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 63.894,
+       "last_key_to_selection_out": 550,
+       "last_key_to_stack_lists": 378,
+       "n_keys": 37953,
+       "passed": [
+        4687,
+        4689,
+        4715,
+        4658
+       ],
+       "scan_cycles": 594,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_11_n358",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 59.667,
+       "last_key_to_selection_out": 271,
+       "last_key_to_stack_lists": 169,
+       "n_keys": 358,
+       "passed": [
+        96,
+        96,
+        86,
+        80
+       ],
+       "scan_cycles": 6,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_12_n3629",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.667,
+       "last_key_to_selection_out": 522,
+       "last_key_to_stack_lists": 348,
+       "n_keys": 3629,
+       "passed": [
+        912,
+        912,
+        909,
+        896
+       ],
+       "scan_cycles": 57,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_13_n376",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 62.667,
+       "last_key_to_selection_out": 272,
+       "last_key_to_stack_lists": 169,
+       "n_keys": 376,
+       "passed": [
+        96,
+        96,
+        96,
+        88
+       ],
+       "scan_cycles": 6,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_14_n2043",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.844,
+       "last_key_to_selection_out": 420,
+       "last_key_to_stack_lists": 263,
+       "n_keys": 2043,
+       "passed": [
+        512,
+        512,
+        512,
+        507
+       ],
+       "scan_cycles": 32,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_15_n10892",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.696,
+       "last_key_to_selection_out": 595,
+       "last_key_to_stack_lists": 421,
+       "n_keys": 10892,
+       "passed": [
+        2732,
+        2720,
+        2720,
+        2720
+       ],
+       "scan_cycles": 171,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_16_n9444",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.811,
+       "last_key_to_selection_out": 596,
+       "last_key_to_stack_lists": 426,
+       "n_keys": 9444,
+       "passed": [
+        2368,
+        2368,
+        2356,
+        2352
+       ],
+       "scan_cycles": 148,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_17_n31760",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 63.903,
+       "last_key_to_selection_out": 560,
+       "last_key_to_stack_lists": 390,
+       "n_keys": 31760,
+       "passed": [
+        4845,
+        4960,
+        4845,
+        4894
+       ],
+       "scan_cycles": 497,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_18_n852",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 60.857,
+       "last_key_to_selection_out": 316,
+       "last_key_to_stack_lists": 195,
+       "n_keys": 852,
+       "passed": [
+        224,
+        212,
+        208,
+        208
+       ],
+       "scan_cycles": 14,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_19_n889",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.5,
+       "last_key_to_selection_out": 318,
+       "last_key_to_stack_lists": 197,
+       "n_keys": 889,
+       "passed": [
+        224,
+        224,
+        224,
+        217
+       ],
+       "scan_cycles": 14,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_20_n24",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        0,
+        0
+       ],
+       "keys_per_cycle_die": 24.0,
+       "last_key_to_selection_out": 164,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 24,
+       "passed": [
+        16,
+        8,
+        0,
+        0
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_21_n4512",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.549,
+       "last_key_to_selection_out": 527,
+       "last_key_to_stack_lists": 351,
+       "n_keys": 4512,
+       "passed": [
+        1136,
+        1136,
+        1120,
+        1120
+       ],
+       "scan_cycles": 71,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_22_n10071",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.741,
+       "last_key_to_selection_out": 591,
+       "last_key_to_stack_lists": 417,
+       "n_keys": 10071,
+       "passed": [
+        2528,
+        2519,
+        2512,
+        2512
+       ],
+       "scan_cycles": 158,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_23_n2524",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.1,
+       "last_key_to_selection_out": 537,
+       "last_key_to_stack_lists": 366,
+       "n_keys": 2524,
+       "passed": [
+        640,
+        636,
+        624,
+        624
+       ],
+       "scan_cycles": 40,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_24_n439",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 62.714,
+       "last_key_to_selection_out": 277,
+       "last_key_to_stack_lists": 170,
+       "n_keys": 439,
+       "passed": [
+        112,
+        112,
+        112,
+        103
+       ],
+       "scan_cycles": 7,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_25_n2997",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.766,
+       "last_key_to_selection_out": 539,
+       "last_key_to_stack_lists": 363,
+       "n_keys": 2997,
+       "passed": [
+        752,
+        752,
+        752,
+        741
+       ],
+       "scan_cycles": 47,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_26_n119",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 59.5,
+       "last_key_to_selection_out": 172,
+       "last_key_to_stack_lists": 85,
+       "n_keys": 119,
+       "passed": [
+        32,
+        32,
+        32,
+        23
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_27_n238",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 59.5,
+       "last_key_to_selection_out": 183,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 238,
+       "passed": [
+        64,
+        64,
+        62,
+        48
+       ],
+       "scan_cycles": 4,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_28_n17068",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.925,
+       "last_key_to_selection_out": 627,
+       "last_key_to_stack_lists": 461,
+       "n_keys": 17068,
+       "passed": [
+        3791,
+        3798,
+        3769,
+        3794
+       ],
+       "scan_cycles": 267,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_29_n64",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 64.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 64,
+       "passed": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_30_n574",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.778,
+       "last_key_to_selection_out": 290,
+       "last_key_to_stack_lists": 179,
+       "n_keys": 574,
+       "passed": [
+        144,
+        144,
+        144,
+        142
+       ],
+       "scan_cycles": 9,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_31_n61",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 61.0,
+       "last_key_to_selection_out": 166,
+       "last_key_to_stack_lists": 84,
+       "n_keys": 61,
+       "passed": [
+        16,
+        16,
+        16,
+        13
+       ],
+       "scan_cycles": 1,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_32_n4208",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.758,
+       "last_key_to_selection_out": 520,
+       "last_key_to_stack_lists": 344,
+       "n_keys": 4208,
+       "passed": [
+        1056,
+        1056,
+        1056,
+        1040
+       ],
+       "scan_cycles": 66,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_33_n199",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 49.75,
+       "last_key_to_selection_out": 181,
+       "last_key_to_stack_lists": 88,
+       "n_keys": 199,
+       "passed": [
+        55,
+        48,
+        48,
+        48
+       ],
+       "scan_cycles": 4,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_34_n29971",
+       "errors": 0,
+       "folds": [
+        5,
+        5,
+        5,
+        5
+       ],
+       "keys_per_cycle_die": 63.904,
+       "last_key_to_selection_out": 584,
+       "last_key_to_stack_lists": 413,
+       "n_keys": 29971,
+       "passed": [
+        4708,
+        4105,
+        4740,
+        4069
+       ],
+       "scan_cycles": 469,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_35_n834",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 59.571,
+       "last_key_to_selection_out": 315,
+       "last_key_to_stack_lists": 193,
+       "n_keys": 834,
+       "passed": [
+        210,
+        208,
+        208,
+        208
+       ],
+       "scan_cycles": 14,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_36_n276",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 55.2,
+       "last_key_to_selection_out": 265,
+       "last_key_to_stack_lists": 168,
+       "n_keys": 276,
+       "passed": [
+        80,
+        68,
+        64,
+        64
+       ],
+       "scan_cycles": 5,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_37_n3987",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.286,
+       "last_key_to_selection_out": 533,
+       "last_key_to_stack_lists": 357,
+       "n_keys": 3987,
+       "passed": [
+        1008,
+        995,
+        992,
+        992
+       ],
+       "scan_cycles": 63,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_38_n103",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 51.5,
+       "last_key_to_selection_out": 171,
+       "last_key_to_stack_lists": 85,
+       "n_keys": 103,
+       "passed": [
+        32,
+        32,
+        23,
+        16
+       ],
+       "scan_cycles": 2,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_39_n138",
+       "errors": 0,
+       "folds": [
+        1,
+        1,
+        1,
+        1
+       ],
+       "keys_per_cycle_die": 46.0,
+       "last_key_to_selection_out": 175,
+       "last_key_to_stack_lists": 86,
+       "n_keys": 138,
+       "passed": [
+        42,
+        32,
+        32,
+        32
+       ],
+       "scan_cycles": 3,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_0_n16096",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.873,
+       "last_key_to_selection_out": 648,
+       "last_key_to_stack_lists": 474,
+       "n_keys": 16096,
+       "passed": [
+        3700,
+        3680,
+        3681,
+        3689
+       ],
+       "scan_cycles": 252,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_1_n9031",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.599,
+       "last_key_to_selection_out": 595,
+       "last_key_to_stack_lists": 425,
+       "n_keys": 9031,
+       "passed": [
+        2263,
+        2256,
+        2256,
+        2256
+       ],
+       "scan_cycles": 142,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_2_n7670",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.917,
+       "last_key_to_selection_out": 603,
+       "last_key_to_stack_lists": 429,
+       "n_keys": 7670,
+       "passed": [
+        1920,
+        1920,
+        1920,
+        1910
+       ],
+       "scan_cycles": 120,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_3_n1375",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 62.5,
+       "last_key_to_selection_out": 362,
+       "last_key_to_stack_lists": 225,
+       "n_keys": 1375,
+       "passed": [
+        352,
+        351,
+        336,
+        336
+       ],
+       "scan_cycles": 22,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_4_n3139",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 62.78,
+       "last_key_to_selection_out": 531,
+       "last_key_to_stack_lists": 357,
+       "n_keys": 3139,
+       "passed": [
+        787,
+        784,
+        784,
+        784
+       ],
+       "scan_cycles": 50,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_5_n12121",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.795,
+       "last_key_to_selection_out": 589,
+       "last_key_to_stack_lists": 417,
+       "n_keys": 12121,
+       "passed": [
+        3040,
+        3033,
+        3024,
+        3024
+       ],
+       "scan_cycles": 190,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_6_n7796",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.902,
+       "last_key_to_selection_out": 608,
+       "last_key_to_stack_lists": 436,
+       "n_keys": 7796,
+       "passed": [
+        1952,
+        1952,
+        1952,
+        1940
+       ],
+       "scan_cycles": 122,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_7_n17865",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.804,
+       "last_key_to_selection_out": 627,
+       "last_key_to_stack_lists": 453,
+       "n_keys": 17865,
+       "passed": [
+        3867,
+        3859,
+        3865,
+        3880
+       ],
+       "scan_cycles": 280,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_8_n13981",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.84,
+       "last_key_to_selection_out": 678,
+       "last_key_to_stack_lists": 502,
+       "n_keys": 13981,
+       "passed": [
+        3483,
+        3485,
+        3476,
+        3480
+       ],
+       "scan_cycles": 219,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_9_n8797",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.746,
+       "last_key_to_selection_out": 602,
+       "last_key_to_stack_lists": 428,
+       "n_keys": 8797,
+       "passed": [
+        2208,
+        2205,
+        2192,
+        2192
+       ],
+       "scan_cycles": 138,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_10_n9757",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.771,
+       "last_key_to_selection_out": 589,
+       "last_key_to_stack_lists": 415,
+       "n_keys": 9757,
+       "passed": [
+        2448,
+        2445,
+        2432,
+        2432
+       ],
+       "scan_cycles": 153,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "random_11_n23608",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.978,
+       "last_key_to_selection_out": 578,
+       "last_key_to_stack_lists": 404,
+       "n_keys": 23608,
+       "passed": [
+        4420,
+        4493,
+        4461,
+        4470
+       ],
+       "scan_cycles": 369,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "all_equal_n20000",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.898,
+       "last_key_to_selection_out": 474,
+       "last_key_to_stack_lists": 317,
+       "n_keys": 20000,
+       "passed": [
+        3472,
+        3472,
+        3472,
+        3472
+       ],
+       "scan_cycles": 313,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "all_zero_signed_n20000",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.898,
+       "last_key_to_selection_out": 474,
+       "last_key_to_stack_lists": 317,
+       "n_keys": 20000,
+       "passed": [
+        3472,
+        3472,
+        3472,
+        3472
+       ],
+       "scan_cycles": 313,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ascending_n20000",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.898,
+       "last_key_to_selection_out": 547,
+       "last_key_to_stack_lists": 390,
+       "n_keys": 20000,
+       "passed": [
+        5008,
+        5008,
+        4992,
+        4992
+       ],
+       "scan_cycles": 313,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "descending_n20000",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.898,
+       "last_key_to_selection_out": 474,
+       "last_key_to_stack_lists": 317,
+       "n_keys": 20000,
+       "passed": [
+        3472,
+        3472,
+        3472,
+        3472
+       ],
+       "scan_cycles": 313,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "all_neg_inf_n3000",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.83,
+       "last_key_to_selection_out": 417,
+       "last_key_to_stack_lists": 260,
+       "n_keys": 3000,
+       "passed": [
+        752,
+        752,
+        752,
+        744
+       ],
+       "scan_cycles": 47,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "neg_inf_but_100_n5000",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 63.291,
+       "last_key_to_selection_out": 412,
+       "last_key_to_stack_lists": 252,
+       "n_keys": 5000,
+       "passed": [
+        1256,
+        1248,
+        1248,
+        1248
+       ],
+       "scan_cycles": 79,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ties_at_threshold_n9000",
+       "errors": 0,
+       "folds": [
+        3,
+        3,
+        3,
+        3
+       ],
+       "keys_per_cycle_die": 63.83,
+       "last_key_to_selection_out": 582,
+       "last_key_to_stack_lists": 414,
+       "n_keys": 9000,
+       "passed": [
+        2256,
+        2256,
+        2248,
+        2240
+       ],
+       "scan_cycles": 141,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_0_n14702",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.922,
+       "last_key_to_selection_out": 665,
+       "last_key_to_stack_lists": 493,
+       "n_keys": 14702,
+       "passed": [
+        3558,
+        3545,
+        3547,
+        3566
+       ],
+       "scan_cycles": 230,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_1_n22670",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.859,
+       "last_key_to_selection_out": 576,
+       "last_key_to_stack_lists": 404,
+       "n_keys": 22670,
+       "passed": [
+        4407,
+        4332,
+        4314,
+        4375
+       ],
+       "scan_cycles": 355,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_2_n23624",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.849,
+       "last_key_to_selection_out": 582,
+       "last_key_to_stack_lists": 408,
+       "n_keys": 23624,
+       "passed": [
+        4383,
+        4508,
+        4478,
+        4313
+       ],
+       "scan_cycles": 370,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_3_n46328",
+       "errors": 0,
+       "folds": [
+        7,
+        7,
+        7,
+        7
+       ],
+       "keys_per_cycle_die": 63.989,
+       "last_key_to_selection_out": 539,
+       "last_key_to_stack_lists": 367,
+       "n_keys": 46328,
+       "passed": [
+        5248,
+        5230,
+        5130,
+        5124
+       ],
+       "scan_cycles": 724,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_4_n1256",
+       "errors": 0,
+       "folds": [
+        2,
+        2,
+        2,
+        2
+       ],
+       "keys_per_cycle_die": 62.8,
+       "last_key_to_selection_out": 350,
+       "last_key_to_stack_lists": 216,
+       "n_keys": 1256,
+       "passed": [
+        320,
+        320,
+        312,
+        304
+       ],
+       "scan_cycles": 20,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_5_n18749",
+       "errors": 0,
+       "folds": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "keys_per_cycle_die": 63.99,
+       "last_key_to_selection_out": 620,
+       "last_key_to_stack_lists": 446,
+       "n_keys": 18749,
+       "passed": [
+        3972,
+        3919,
+        3977,
+        3992
+       ],
+       "scan_cycles": 293,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_6_n46402",
+       "errors": 0,
+       "folds": [
+        7,
+        7,
+        7,
+        7
+       ],
+       "keys_per_cycle_die": 63.915,
+       "last_key_to_selection_out": 551,
+       "last_key_to_stack_lists": 377,
+       "n_keys": 46402,
+       "passed": [
+        5389,
+        5386,
+        5478,
+        5479
+       ],
+       "scan_cycles": 726,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "real_scaled_7_n54187",
+       "errors": 0,
+       "folds": [
+        8,
+        8,
+        8,
+        8
+       ],
+       "keys_per_cycle_die": 63.975,
+       "last_key_to_selection_out": 531,
+       "last_key_to_stack_lists": 359,
+       "n_keys": 54187,
+       "passed": [
+        5455,
+        5282,
+        5260,
+        5347
+       ],
+       "scan_cycles": 847,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      }
+     ],
+     "queries": 84,
+     "rate_keys_per_cycle_per_stack": "every cycle (16)",
+     "seed": 3,
+     "wall_s": 32.0
+    }
+   }
+  },
+  "shipped": {
+   "cases": 7,
+   "expected_positions": 3584,
+   "modes": {
+    "hbm_rate": {
+     "bubble_percent": 0,
+     "errors": 0,
+     "mismatch_lines": [],
+     "passed": true,
+     "per_case": [
+      {
+       "case": "l20_full_scan_ctx200000_n50000",
+       "errors": 0,
+       "folds": [
+        12,
+        11,
+        11,
+        11
+       ],
+       "keys_per_cycle_die": 43.975,
+       "last_key_to_selection_out": 570,
+       "last_key_to_stack_lists": 400,
+       "n_keys": 50000,
+       "passed": [
+        4181,
+        4282,
+        4277,
+        4341
+       ],
+       "scan_cycles": 1137,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "l20_ties_ctx200000_n50000",
+       "errors": 0,
+       "folds": [
+        7,
+        7,
+        7,
+        7
+       ],
+       "keys_per_cycle_die": 43.975,
+       "last_key_to_selection_out": 484,
+       "last_key_to_stack_lists": 310,
+       "n_keys": 50000,
+       "passed": [
+        3610,
+        3663,
+        3609,
+        3657
+       ],
+       "scan_cycles": 1137,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "reuse_masked_ctx200000_n50000",
+       "errors": 0,
+       "folds": [
+        11,
+        12,
+        12,
+        12
+       ],
+       "keys_per_cycle_die": 43.975,
+       "last_key_to_selection_out": 546,
+       "last_key_to_stack_lists": 375,
+       "n_keys": 50000,
+       "passed": [
+        3647,
+        3666,
+        3748,
+        3685
+       ],
+       "scan_cycles": 1137,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "l20_full_scan_ctx1048576_n262144",
+       "errors": 0,
+       "folds": [
+        28,
+        28,
+        28,
+        27
+       ],
+       "keys_per_cycle_die": 44.006,
+       "last_key_to_selection_out": 490,
+       "last_key_to_stack_lists": 314,
+       "n_keys": 262144,
+       "passed": [
+        5083,
+        5211,
+        5238,
+        5039
+       ],
+       "scan_cycles": 5957,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "l20_ties_ctx1048576_n262144",
+       "errors": 0,
+       "folds": [
+        27,
+        28,
+        27,
+        27
+       ],
+       "keys_per_cycle_die": 44.006,
+       "last_key_to_selection_out": 490,
+       "last_key_to_stack_lists": 316,
+       "n_keys": 262144,
+       "passed": [
+        4789,
+        4773,
+        4699,
+        4690
+       ],
+       "scan_cycles": 5957,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "reuse_masked_ctx1048576_n262144",
+       "errors": 0,
+       "folds": [
+        27,
+        28,
+        27,
+        26
+       ],
+       "keys_per_cycle_die": 44.006,
+       "last_key_to_selection_out": 484,
+       "last_key_to_stack_lists": 314,
+       "n_keys": 262144,
+       "passed": [
+        3838,
+        3801,
+        3805,
+        3790
+       ],
+       "scan_cycles": 5957,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "case": "ascending_ctx1048576_n262144",
+       "errors": 0,
+       "folds": [
+        35,
+        35,
+        35,
+        35
+       ],
+       "keys_per_cycle_die": 44.006,
+       "last_key_to_selection_out": 745,
+       "last_key_to_stack_lists": 588,
+       "n_keys": 262144,
+       "passed": [
+        65536,
+        65536,
+        65536,
+        65536
+       ],
+       "scan_cycles": 5957,
+       "stall": [
+        0,
+        0,
+        0,
+        0
+       ]
+      }
+     ],
+     "queries": 7,
+     "rate_keys_per_cycle_per_stack": 11,
+     "seed": 1,
+     "wall_s": 9.0
+    }
+   }
+  }
+ },
+ "pass": true,
+ "schema": "opentallas.dsrom-edge-select.v1",
+ "source_sha256": {
+  "rtl/dsrom_sys/ot_dsrom_edge_hub.sv": "dac2d1262c1dd0d67976bee740c87714a322549bbfa78a5478f20e439bde4ef3",
+  "rtl/dsrom_sys/ot_dsrom_edge_lsel.sv": "693ad717feaf0f56ed903edab1e041954942c63e16bda9852676f17bbf10a3e6",
+  "rtl/dsrom_sys/ot_dsrom_edge_merge.sv": "a1dc58f7576f57c68e02a6adf389074b824c3b8360f57c326fd3652b1107ba21",
+  "rtl/hdc/v41/ot_hdc_tselect.sv": "85051117373f13200472ca4aac704914ade30d17644323cb81e469d7fbed7e4b",
+  "rtl/test/dsrom_sys/dsrom_edge_harness.cpp": "73b8b8fe1648e6fb13853f1bd21fcc78f45e7f39f74fa31c2ebc79e0ccb2311f",
+  "rtl/test/dsrom_sys/tb_dsrom_edge_select.sv": "bd56d40d430473589ef779c356aee45726084a39703d71631cdc1d0d2e373918",
+  "tools/dsrom_edge_scorer_campaign.py": "ccd0cb1531a5c95c98e6b4bc98fe4e59dfd891164f35d4e5090a5897cf022171",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+ },
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "wall_s": 387.0
+}
