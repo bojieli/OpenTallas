@@ -178,8 +178,35 @@ def model():
                     'SS setup/FF hold in component context under unchanged uncertainty'],
                 installed_call_admitted=False,physical_admitted=False,parent55=None)
 
+def caller_preparation_model():
+    """Additive complete caller preparation; preserve the leaf-only r1 row."""
+    adapter=V.verification_adapter()
+    op=adapter.native['operations'][40]
+    size=adapter.native['source_program']['config']['intermediate_size']//2
+    gate=adapter.view(op['reads'][0],0,128,0,'read',40)
+    up=adapter.view(op['reads'][0],size,128,0,'read',40)
+    require((gate['storage_SM'],gate['RFslot9'])==(0,38) and
+            (up['storage_SM'],up['RFslot9'])==(24,32),'actual source first SILU gate/up homes')
+    return dict(schema='C0_PC40_CALLER_PREPARATION_MODEL_R2',leaf_model=model(),
+                source_order=['read gate[0:128]','read up[6144:6272]','neg(gate)','exp.step0 FMAX'],
+                source_gate_home=gate,source_up_home=up,
+                source_RF_read_services=2,source_read_payload_bytes=1024,
+                NoC_up_payload_bits=4096,NoC_up_pages=1,
+                retained_caller_vectors=2,primitive_workspace_vectors=3,
+                caller_retained_slot_binding=None,
+                caller_retained_slot_scope='source VM retains gate/up arrays; concrete owner emitter calendar placement still required',
+                latency_expression='2*C_SOURCE_RF_READ + C_NoC_UP_PAGE + C_CDC_UP + C_NEG_CHAIN + 2*C_CONST_BROADCAST + C_FMAX_SOURCE_SERVICE',
+                latency_ns=None,source_FMAX_service_provisional_ticks=14,
+                clock_domains_GHz=dict(source_RF=1.2,native_serial=0.9),
+                source_order_included=True,NoC_idealized=False,installed_call_admitted=False,
+                physical_admitted=False,
+                missing_inputs=['exact gate/up retained placement in Dewey calendar',
+                                'source-sized SM24->SM0 NoC/CDC service and cuts',
+                                'actual direct-RF commonACK/owner binding and component SS/FF'])
+
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args()
-    a.out.write_bytes(canonical(model()))
+    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--caller-preparation',action='store_true');a=p.parse_args()
+    a.out.write_bytes(canonical(caller_preparation_model() if a.caller_preparation else model()))
 
 if __name__=='__main__':main()

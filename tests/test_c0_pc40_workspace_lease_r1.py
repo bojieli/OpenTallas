@@ -29,6 +29,14 @@ class PortLeaseTests(unittest.TestCase):
         self.assertEqual(m['source_ports']['rsp_b_bits'],4096)
         self.assertFalse(m['installed_call_admitted'])
         self.assertEqual(m['source_native_service']['serialized_service_ticks'],14)
+    def test_actual_caller_up_home_and_finite_NoC_debit(self):
+        m=W.caller_preparation_model()
+        self.assertEqual((m['source_up_home']['storage_SM'],m['source_up_home']['RFslot9']),(24,32))
+        self.assertEqual(m['source_up_home']['word_start'],6144)
+        self.assertEqual(m['NoC_up_payload_bits'],4096)
+        self.assertEqual(m['source_RF_read_services'],2)
+        self.assertFalse(m['NoC_idealized'])
+        self.assertIsNone(m['caller_retained_slot_binding'])
     def test_early_ACK_rejected(self):
         l=self.lease()
         with self.assertRaises(ValueError):l.common_ACK(l.owner,ack_valid=True,ack_ready=True)
