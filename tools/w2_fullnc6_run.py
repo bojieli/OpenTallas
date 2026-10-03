@@ -75,7 +75,7 @@ def connected_runtime(binary, bindings, socket_path, out):
     import importlib
     import sys
     if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
-    from tools.gpu_sys.canonical_qwen_simulator import EnclosingPins, build
+    from tools.gpu_sys.canonical_qwen_ranked_simulator import RankedEnclosingPins as EnclosingPins, build
     from tools.gpu_sys.canonical_qwen_transport import UnixDeliveryServer
     from w2_fullnc6_fixture import ConnectedReceiptObserver
     module, separator, name = bindings.partition(':')

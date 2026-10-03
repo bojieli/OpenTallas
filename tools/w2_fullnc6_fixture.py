@@ -150,7 +150,8 @@ class ConnectedReceiptObserver:
             if not ((cv | rv | wv) & mask or (pv >> pc) & 1 or
                     any(k[0] == pc for k in self.held)):
                 continue
-            p = self.pins.component('w2', pc)
+            p = (self.pins.component('w2', pc % 128, rank=pc // 128)
+                 if self.instances == 256 else self.pins.component('w2', pc))
             reqv = (cv >> (pc * 6)) & 63
             reqr = p.get('c_req_rdy') if reqv else 0
             stop = p.get('admission_stop')
