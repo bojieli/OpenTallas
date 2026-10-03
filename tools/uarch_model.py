@@ -1852,6 +1852,48 @@ TIER1 = [
 ]
 
 
+def v41_gpu_index_scan(ctx, *, candidate_gather=True, c=None):
+    """Per-token index reads using the SAME source modes as the ROM budget.
+
+    Only index-owner layers scan; other layers reuse their selections. Keys
+    reside at the preceding KV owner. Candidate gather on the last four scans
+    is the analytical budget's explicit software assumption, NOT an assertion
+    that the current full-score golden/native program performs that gather.
+    candidate_gather=False retains their literal full-score read sensitivity.
+    """
+    if type(ctx) is not int or ctx <= 0:
+        raise ValueError("positive integer decode context required")
+    c = c if c is not None else A._env()["c"]
+    golden = json.loads((ROOT / "compiler/models/deepseek-v4.1-flash/inference_config.json").read_text())
+    scans = [L for L in range(c["num_layers"]) if c["modes"][L].get("scans_index")]
+    if (scans != golden["index_source_layers"] or scans != c["index_source_layer_ids"]
+            or c["kv_source_layer_ids"] != golden["kv_source_layers"]
+            or c["candidate_source_layer_id"] != golden["candidate_source_layer"]
+            or c["index_head_dim"] != golden["index_head_dim"]
+            or A.IDX_KEY_B != golden["index_head_dim"] // 2 + golden["index_head_dim"] // 32
+            or c["compress_ratios"][:c["num_layers"]] != golden["compress_ratios"][:golden["n_layers"]]):
+        raise ValueError("analytical index modes differ from golden source/ratio/KV ownership")
+    rows = []
+    for L in scans:
+        ratio = c["compress_ratios"][L]
+        owner = max(s for s in c["kv_source_layer_ids"] if s <= L)
+        if ratio <= 0 or ratio != c["compress_ratios"][owner]:
+            raise ValueError("invalid shared index-key compression identity")
+        full = ctx // ratio
+        cap = c["modes"][L].get("index_scan_entries_cap") or 0
+        if cap and (L <= c["candidate_source_layer_id"] or
+                    cap != golden["candidate_topk_blocks"] * golden["candidate_block_size"]):
+            raise ValueError("candidate cap lacks preceding source selection")
+        count = min(full, cap) if cap and candidate_gather else full
+        rows.append(dict(layer=L, KV_source_layer=owner, compression_ratio=ratio,
+                         full_source_entries=full, candidate_cap=cap,
+                         entries=count, bytes=count * A.IDX_KEY_B))
+    return dict(context=ctx, scanning_layers=scans, per_layer=rows,
+                entries=sum(r["entries"] for r in rows), bytes=sum(r["bytes"] for r in rows),
+                key_bytes=A.IDX_KEY_B, candidate_gather=candidate_gather,
+                scope="tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim")
+
+
 def gpu_tier2():
     """GPU-calibrated projection, anchored on B200 measurements.
     Qwen3-8B: the per-token fixed cost keeps the H200 fit (1.464 ms: launches and syncs, 36 layers), and the per-byte
@@ -1870,7 +1912,8 @@ def gpu_tier2():
     loc = GPU_CAL["local_gpu_rtx_pro_6000"]["concurrency_1"]["fp8"]
     spec_lab = loc["dflash_tok_s"] / loc["ar_tok_s"]
     fixed_layer = fixed / 36
-    v_bytes = 13.03e9 / 8 + 262144 * A.IDX_KEY_B * 4 * 38 / 8   # weights + 1M index keys (38 scanning layers)
+    index_scan = v41_gpu_index_scan(1048576)
+    v_bytes = (13.03e9 + index_scan["bytes"]) / 8   # weights + source-owned index reads
     tv = 40 * fixed_layer + s_per_B * v_bytes + 40 * 5 * NCCL_ALLREDUCE_S
     return [dict(tier=2, design="Qwen3-8B on 1x B200, FP8 weights, 8K, calibrated", tokens_s=round(1 / tq, 1),
                  spec_tokens_s_reasoning_mix=round(spec_lab / tq, 1),
@@ -1881,6 +1924,7 @@ def gpu_tier2():
                  spec_tokens_s=round(1.94 / tv, 1),
                  terms_us=dict(fixed=round(40 * fixed_layer * 1e6), bytes=round(s_per_B * v_bytes * 1e6),
                                collectives=round(40 * 5 * NCCL_ALLREDUCE_S * 1e6)),
+                 index_scan=index_scan,
                  check="DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)")]
 
 
@@ -2527,7 +2571,8 @@ def gpu_economics():
     # index keys and KV, NCCL-class all-reduces
     tot, dense, routed, c = _v41_weight_split()
     fixed_layer = fixed / 36
-    idx_user = 262144 * A.IDX_KEY_B * 4 * 38                        # gpu_tier2's per-token index-key read
+    index_scan = v41_gpu_index_scan(1048576, c=c)
+    idx_user = index_scan["bytes"]
     state_user = 0.0
     for L in range(c["num_layers"]):
         r = c["compress_ratios"][L]
@@ -2570,6 +2615,7 @@ def gpu_economics():
                  rows=v, tokens_s_b1=v[0]["per_user_tokens_s"], saturated_tokens_s=max(x["aggregate_tokens_s"] for x in v),
                  sat_batch=_sat_batch(v)["batch"], mtp_b1=vs["spec_tokens_s"], capacity_users=capv,
                  per_user_state_bytes=state_user,
+                 index_scan=index_scan,
                  capacity_basis="8 x 180 GB x 0.90 less the 510.3 GB checkpoint over each user's CKV + index keys "
                                 "(KV-owner layers 2, 8, 14, 20) and 40 windows"),
         anchors=anchors, power=dict(decode_w=B200_W_DECODE, tdp_w=B200_W_TDP,
@@ -5463,13 +5509,13 @@ B300_OVER_B200 = dict(hbm_bw=8.0 / 8.0, note="B300 keeps 8 TB/s of HBM3E a GPU (
                                              "within the model (ASSUMED; no public min-latency B300 DeepSeek record)")
 
 
-def gpu_tier2_v41_ctx(ctx, positions=1):
+def gpu_tier2_v41_ctx(ctx, positions=1, *, candidate_gather=True):
     """Tier-2 8x B200 V4.1-Flash step at context ctx (gpu_economics' form: fixed per layer + weight + index/KV bytes
     at the fitted B200 byte rate + NCCL-class all-reduces), batch 1."""
     fixed = GPU_FIT["fixed_seconds_qwen"]
     s_per_B = (1 / 230.0 - fixed) / (2 * GPU_FIT["qwen_fp8_weight_bytes"])
     c = A._env()["c"]
-    idx_user = 262144 * A.IDX_KEY_B * 4 * 38 * ctx / 1048576     # gpu_economics' 1M index-key read, scaled to ctx
+    idx_user = v41_gpu_index_scan(ctx, candidate_gather=candidate_gather, c=c)["bytes"]
     t = (40 * fixed / 36 + s_per_B * (_v41_weight_bytes(positions) + idx_user) / 8 + 40 * 5 * NCCL_ALLREDUCE_S)
     return t
 

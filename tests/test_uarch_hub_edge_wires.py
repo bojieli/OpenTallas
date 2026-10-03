@@ -83,7 +83,16 @@ def test_composed_model_binds_current_sources_and_preserves_historical_record():
     root = Path(__file__).resolve().parents[1]
     record = json.loads((root / "results/uarch/dsrom_hub_edge_wires_20261003/model.json").read_text())
     for source, digest in record["source_sha256"].items():
-        assert hashlib.sha256((root / source).read_bytes()).hexdigest() == digest
+        actual = hashlib.sha256((root / source).read_bytes()).hexdigest()
+        if source == "tools/uarch_model.py" and actual != digest:
+            # A separately priced GPU-source correction follows this frozen
+            # wire record; it must bind current code and the unchanged record.
+            successor = json.loads((root / "results/uarch/dsrom_gpu_index_scan_correction_20261003/model.json").read_text())
+            assert successor["source_sha256"][source] == actual
+            assert successor["unchanged_wire_result_sha256"] == hashlib.sha256(
+                (root / "results/uarch/dsrom_hub_edge_wires_20261003/model.json").read_bytes()).hexdigest()
+        else:
+            assert actual == digest
     assert len(record["results"]) == 6
     assert record["endpoint_wires_in_all_mappings"]
     assert min(record["link"]["one_way_ns"].values()) >= 65.16
