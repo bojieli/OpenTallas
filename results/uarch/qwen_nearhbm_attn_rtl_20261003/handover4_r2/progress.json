@@ -1,0 +1,43 @@
+{
+  "observed_utc": "2026-10-03T13:05:49.387565+00:00",
+  "owner": "Goodall: inherited hub_r7 / row_engine_r6 / row_engine_r4; Epicurus confirms read-only status only",
+  "live_epyc": {
+    "hub_r7": {
+      "processes": [
+        " 287312  287308    01:46:44 90124 python3 tools/run_abi3_physical_persistent.py --persistent-workdir /srv/opentallas-scratch/claude/nearhbm/run/hub_r7.work --launch-receipt /srv/opentallas-scratch/claude/nearhbm/run/hub_r7.receipt.json --top ot_qwen_nearhbm_attn_hub --source rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub.sv --source rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_delay.sv --param HD=128 --view asap7 --clock-port clk --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --orfs-var ADDER_MAP_FILE= --force --purpose signoff_target --orfs-var SYNTH_MEMORY_MAX_BITS=262144 --die-area 0 0 451.44 451.44 --core-area 2.16 2.16 449.28 449.28 --place-density 0.76 --nickname-tag nhb_hub_hd128_84c4edbd_n20 --output results/physical_abi3/asap7/nearhbm/hub_hd128_r7/physical.json",
+        "1878903  287312       28:46 32392 docker run --rm -v /srv/opentallas-scratch/claude/nearhbm/wt:/src:ro -v /srv/opentallas-scratch/claude/nearhbm/run/hub_r7.work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=20 finish metadata-generate"
+      ],
+      "latest_log": "/srv/opentallas-scratch/claude/nearhbm/run/hub_r7.work/orfs/logs/asap7/opentallas_ot_qwen_nearhbm_attn_hub_asap7_nhb_hub_hd128_84c4edbd_n20/base/3_1_place_gp_skip_io.tmp.log",
+      "terminal": false
+    },
+    "row_engine_r6": {
+      "processes": [
+        " 287311  287309    01:46:44 26480 python3 tools/run_abi3_physical_persistent.py --persistent-workdir /srv/opentallas-scratch/claude/nearhbm/run/row_engine_r6.work --launch-receipt /srv/opentallas-scratch/claude/nearhbm/run/row_engine_r6.receipt.json --top ot_qwen_nearhbm_row_engine --source rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack.sv --source rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_delay.sv --param HD=128 --param S=0 --param R=6 --param E=0 --param DQ=32 --view asap7 --clock-port clk --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --orfs-var ADDER_MAP_FILE= --force --purpose signoff_target --die-area 0 0 328.32 1998 --core-area 2.16 2.16 326.16 1995.84 --place-density 0.65 --nickname-tag nhb_row_engine_hd128_r6_84c4edbd_n20 --output results/physical_abi3/asap7/nearhbm/row_engine_hd128_r6_r6/physical.json",
+        " 656996  287311    01:23:40 31992 docker run --rm -v /srv/opentallas-scratch/claude/nearhbm/wt:/src:ro -v /srv/opentallas-scratch/claude/nearhbm/run/row_engine_r6.work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=20 finish metadata-generate"
+      ],
+      "latest_log": "/srv/opentallas-scratch/claude/nearhbm/run/row_engine_r6.work/orfs/logs/asap7/opentallas_ot_qwen_nearhbm_row_engine_asap7_nhb_row_engine_hd128_r6_84c4edbd_n20/base/2_1_floorplan.tmp.log",
+      "terminal": false
+    }
+  },
+  "agidock_terminal": {
+    "status": "FAIL_INCOMPLETE_HOST_GLOBAL_OOM",
+    "driver_exit": 1,
+    "ORFS_exit": 2,
+    "make_stage_error": 247,
+    "killed_pid": 84296,
+    "kernel_time": "2026-10-03T12:40:41Z",
+    "actual_stage": "3_3_place_gp",
+    "source": "58144881b6088347006298a4eb684a2e648b11ee",
+    "completed_at": "2026-10-03T12:40:44.196590+00:00",
+    "SS_setup": "NOT MEASURED routed",
+    "FF_hold": "NOT MEASURED routed",
+    "DRC": "NOT MEASURED",
+    "actual_ORFS_synthesis_area_um2": 316793,
+    "actual_ORFS_synthesis_cells": 2354958,
+    "metadata_corner_note": "physical.json top-level TT describes host synthesis; requested ORFS WC/BC is not completed corner qualification"
+  },
+  "corridor_contribution": "corridor_model_contribution.json",
+  "new_jobs_launched": false,
+  "live_source_changed": false,
+  "retry_launched": false
+}

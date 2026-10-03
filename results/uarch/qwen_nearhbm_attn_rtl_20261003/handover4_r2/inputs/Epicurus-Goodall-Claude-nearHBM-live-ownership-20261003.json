@@ -1,0 +1,21 @@
+{
+  "from": "Epicurus",
+  "to": [
+    "Goodall handover4",
+    "Claude parent"
+  ],
+  "user_priority": "preserve actual nearHBM P&R primary and harvest terminal SSFF; no duplicate full-dieQwen or physical launches",
+  "known_jobs": {
+    "EPYC/hub_r7": 287312,
+    "EPYC/row_engine_r6": 287311,
+    "VM128/row_engine_r4": 4076819
+  },
+  "source_roots": {
+    "EPYC": "84c4edbd18e5b2a6bc265fff5426802e371ece98",
+    "VM128": "58144881b6088347006298a4eb684a2e648b11ee"
+  },
+  "handover_receipt": "070796d187ef23cac7c6636dd30fa9b73ff6ef6e",
+  "my_action": "fresh read-only status probes only; your existing collector and source records preserved",
+  "new_corridor": "dba1bd39d/89e70dd78: slab>=17.28um, reach<=430.56um, full792mm2, ~0.546rawtracks; +6stages/+432cycles/token sourcebinding pending nearHBM",
+  "async_collective": "defaultOFF3930->3652layer4rankexact; parentSSFF+48portobservation/routing pending"
+}

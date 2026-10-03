@@ -1,0 +1,119 @@
+{
+  "schema": "QWEN_NEARHBM_CORRIDOR_R2_PREITERATION_CONTRIBUTION_V1",
+  "pins": {
+    "corridor_verdict": {
+      "commit": "89e70dd784164f267f4679c108796f2f3148fac1",
+      "path": "results/rtl/qwen_corridor_gate_20261003/verdict.json",
+      "sha256": "5e8ce1ad4f02aa58bd0540c5628c9952592789c5a1f04bf1646b76b8e16502b5",
+      "bytes": 15606
+    },
+    "corridor_readme": {
+      "commit": "89e70dd784164f267f4679c108796f2f3148fac1",
+      "path": "results/rtl/qwen_corridor_gate_20261003/README.md",
+      "sha256": "b808e4408545bdb3eab6e0b4648b67369583266d3e5c2d305f1a96732ae3f981",
+      "bytes": 3586
+    },
+    "floorplan": {
+      "commit": "dba1bd39d7346588939e2d0ccede6f0de1fc1489",
+      "path": "results/rtl/qwen_rom_fulldie_20261003/floorplan.json",
+      "sha256": "3cdf1fa44c892b9e15364be093d2991dbeffce5996427428315e78b1c35cb0a9",
+      "bytes": 12221
+    },
+    "floorplan_tool": {
+      "commit": "dba1bd39d7346588939e2d0ccede6f0de1fc1489",
+      "path": "tools/qwen_rom_fulldie.py",
+      "sha256": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118",
+      "bytes": 91879
+    }
+  },
+  "constraints": {
+    "station_slab_min_um": 17.28,
+    "pin_row": "centered on station",
+    "longhaul_forbidden_layers": [
+      "M2",
+      "M3",
+      "M4",
+      "M5"
+    ],
+    "longhaul_horizontal_layers": [
+      "M6",
+      "M8"
+    ],
+    "longhaul_vertical_layers": [
+      "M7",
+      "M9"
+    ],
+    "max_registered_reach_um": 430.56,
+    "local_via_pin_access_on_M4_M5_allowed": true
+  },
+  "existing_full_die_model_contribution": {
+    "paths": [
+      {
+        "stack": "WS",
+        "trunk_um": 17204.6,
+        "fan_um": 5063.0,
+        "stages_504": 46,
+        "stages_450": 51,
+        "stages_430": 52
+      },
+      {
+        "stack": "WN",
+        "trunk_um": 17202.5,
+        "fan_um": 5063.0,
+        "stages_504": 46,
+        "stages_450": 51,
+        "stages_430": 52
+      },
+      {
+        "stack": "ES",
+        "trunk_um": 17204.6,
+        "fan_um": 5063.0,
+        "stages_504": 46,
+        "stages_450": 51,
+        "stages_430": 52
+      },
+      {
+        "stack": "EN",
+        "trunk_um": 17202.5,
+        "fan_um": 5063.0,
+        "stages_504": 46,
+        "stages_450": 51,
+        "stages_430": 52
+      }
+    ],
+    "worst": "WS",
+    "r2_model_total_stages": 46,
+    "delta_stages_at_430": 6,
+    "per_token_cycles_delta": 432,
+    "per_token_us_delta": 0.36,
+    "hub_to_io": {
+      "um": 15596.3,
+      "stages_504": 31,
+      "stages_430": 37
+    },
+    "note": "hub<->stack stations re-pitched to <= 430.56 um (corridor gate: 504 um spans miss SS setup by 29-79 ps); the tile-column corridor already runs 3 x 430.56 um per tile hop (closes). Report to the model: the selected entry prices 45-46 stages."
+  },
+  "token_delta_cycles": 432,
+  "token_delta_us_at_1p2GHz": 0.36,
+  "double_count_policy": "Already in dba full-die link_stages. Add once relative to 504um predecessor; do not add on top of a 52-stage calendar. Do not replace measured row-engine phases with this link cost.",
+  "scope": {
+    "floorplan_die": {
+      "w": 24156.144,
+      "h": 32801.76,
+      "mm2": 792.364,
+      "budget_mm2": 815.0,
+      "margin_mm2": 22.636
+    },
+    "die_area_narrowed": false,
+    "current_nearhbm_job_source": "84c4edbd18e5b2a6bc265fff5426802e371ece98",
+    "current_routed_coverage_of_new_constraints": "NOT QUALIFIED: standalone live jobs remain unchanged",
+    "current_hierarchy_latency": "UNKNOWN for current hub; historical HD128 DPI source mismatch retained",
+    "iteration_admitted": false
+  },
+  "before_iteration_required": [
+    "Source-matched hierarchy exactness and measured 8-engine latency; live R6 engine is R=6 reuse element only",
+    "Bind actual link station/repeater/capture inventory, b/cycle, tracks/PG and loaded ports to corridor source",
+    "Reconcile current full-die slot/model geometry and measured actual ORFS mapped area",
+    "Record added clocks in composed model once before changed RTL/P&R"
+  ]
+}
