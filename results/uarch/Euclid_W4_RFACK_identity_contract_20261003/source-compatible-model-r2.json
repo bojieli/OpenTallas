@@ -1,0 +1,247 @@
+{
+  "F0_git_pins": {
+    "W2-interface-contract-r1.json": {
+      "git_object": "8535c3010c7354734ececca8a8d9109ced2f50a7:results/uarch/h4_hbm_f0_field_freeze_review_20261003/W2-interface-contract-r1.json",
+      "sha256": "e3b21affdbe1e430311948a670f03e2a9f2f4b5d956c56e775744a12ca61707b"
+    },
+    "contract-r3.json": {
+      "git_object": "146bc89a5fe54958728833688dd6946635aa6d1d:results/uarch/h4_hbm_f0_field_freeze_review_20261003/contract-r3.json",
+      "sha256": "33cc4b195ace57bb28aa84c611a2f89bf219d17f35791af53cd9bf9cb5dc7a9e"
+    },
+    "contract-r4-continuous.json": {
+      "git_object": "1ac56cbbde27353d15297d8fe46eddc0af141095:results/uarch/h4_hbm_f0_field_freeze_review_20261003/contract-r4-continuous.json",
+      "sha256": "03a6f1973777cdf031986f605ceda9c74fa8f37d741757076ec59bd32efb7228"
+    }
+  },
+  "W2_boundary": {
+    "KV_client_index5_occupied": true,
+    "NC5_raw_bits_per_PC": 3040,
+    "NC5_rows_per_PC": 80,
+    "NC6_raw_bits_per_PC": 3648,
+    "NC6_rows_per_PC": 96,
+    "W2_retirement_not_RF_visibility": true,
+    "backend_generation_echo_installed": false,
+    "production_C0_KV_caller_map": null,
+    "row_min_bits": 38
+  },
+  "actual_leaf_contract": {
+    "candidate_inventory": {
+      "FF_clock_reset_load_delta": null,
+      "MACs_added": 0,
+      "NOTE": "leaf and internal SIMD retention are distinct; model owner must account mux/FF/reset/protection once",
+      "SRAM_data_ports_added": 0,
+      "SRAM_replicas_added": 0,
+      "full_SM_identity_mux_bits": null,
+      "identity_bits_per_SM": null,
+      "identity_bits_per_die": null,
+      "identity_input_bits_per_accepted_write": null,
+      "identity_output_bits_per_accepted_ACK": null,
+      "internal_SIMD_identity_latch_bits_per_SM": null,
+      "leaf_capture_enable_max_loads": null,
+      "register_read_ports": 1,
+      "register_write_ports": 1,
+      "tag_table_entries_per_SM": 1
+    },
+    "event_contract": {
+      "capture": "only actual write_go: source identity plus actual wr_addr RF_slot, on same RF clk edge as both physical copies",
+      "consume": "ack_valid && ack_ready is local sink acceptance, not owner credit retirement",
+      "hold": "identity stable for every ack_valid && !ack_ready; live slot prevents subsequent RF write",
+      "invalid": "ACK identity ignored while ack_valid=0; ACK_ID=0 extensions driven0",
+      "reset": "local rst_n aborts ACK; SRAM data retained; system reset/drain ownership still requires proof"
+    },
+    "hardware_admitted": false,
+    "model_blockers": [
+      "F0 final widths/layout/namespace + no reuse/wrap/reset drain contract",
+      "actual C0/KV source instance + return identity wiring",
+      "internal SIMD owner identity capture and lifetime",
+      "FF/mux/protection/buffer/clock/reset area and slot",
+      "identity producer/ACK output wires and track/channel capacity",
+      "source-bound composed clock and latency"
+    ],
+    "owners": {
+      "F0": "Russell",
+      "RF_ACK": "Euclid",
+      "calendar": "Dewey",
+      "completion": "Nash",
+      "fence": "Goodall",
+      "model": "Popper"
+    },
+    "ports": {
+      "ACK_generation_bits": null,
+      "ACK_owner_tag_bits": null,
+      "RF_slot_bits": 9,
+      "generation_in_tag": false,
+      "generation_port": "view of F0 parent_tag slice if embedded; never separately charge copied generation FFs",
+      "namespace": "physical PC7 must remain scoped/proven lossless before aggregation; equal numeric tags from different namespaces are unequal owners",
+      "source": "F0 owner/requester identity from actual installed C0/KV return path; no bench-created receipt tags",
+      "valid_ready": "one actual common ack_valid/ack_ready; no independently timed mirror ACKs",
+      "write_generation_bits": null,
+      "write_owner_tag_bits": null
+    },
+    "required_gates": [
+      "ACK_ID0 original body normalized byteidentity and legacy exact gate",
+      "ACK_ID1 actual write acceptance both copies and source identity capture",
+      "held ACK/change incoming tag/gen/no next write",
+      "common reset abort + stale ACK not accepted by owner",
+      "both physical RF copies exact readback",
+      "real host vs internal SIMD identity mux and retained owner",
+      "changed tag/gen/reset/one-copy mutants rejected",
+      "installed C0 then KVread emitted transaction witness",
+      "no fence-local epoch treated as ACK identity",
+      "no credit release at ACK sink alone"
+    ],
+    "schema": "EUCLID_W4_SOURCE_MODEL_INPUT_R1",
+    "source_inventory": {
+      "RF_copies": 2,
+      "RF_macros_per_SM": 128,
+      "SMs": 32,
+      "common_ACK_per_write": 1,
+      "existing_leaf_live_write_slots": 1,
+      "payload_write_bits_per_copy": 4096
+    },
+    "source_sha256": {
+      "rtl/gpu/ot_gpu_full_sm_service.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+      "rtl/gpu/ot_gpu_hbm_rf_shared_context.sv": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90",
+      "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+      "rtl/gpu/ot_gpu_rf_visibility_fence.sv": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3",
+      "rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv": "4734d48732ee80d9c04f622b6ce53c64f5744003a786e9c0cae947d2d351ce74",
+      "rtl/test/tb_h4_hbm_rf_shared_context.sv": "ac2928ab8e0bacabc1c67ce348e81b597c43a0342539f8b1c72ac2f64ca66e8a",
+      "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    "successor": {
+      "RTL_written": false,
+      "default": 0,
+      "namespace": "rtl/gpu_w4_euclid_20261003",
+      "original_branch_byteidentity_required": true,
+      "original_files_unchanged": true,
+      "parameter": "ACK_ID"
+    },
+    "unknown": {
+      "FF_hold": null,
+      "RF_ACK_transport_cycles": null,
+      "SS_setup": null,
+      "actual_clock_domain_pair": null,
+      "area_um2": null,
+      "composed_incremental_cycles": null,
+      "finite_ACK_wait_upper": null,
+      "reset_drain_cycles": null,
+      "slot_fit": null,
+      "token_latency_s": null,
+      "tracks_capacity": null,
+      "tracks_required": null
+    }
+  },
+  "allcopy_reuse": {
+    "actual_quiescence_transition": null,
+    "actual_quiescence_wait_cycles": null,
+    "generation_modulus": 16,
+    "includes": [
+      "PC exact reservations and held request",
+      "backend outstanding and response/write-completion holding",
+      "coalescer children/duplicate masks/gather buffers",
+      "SM ring/request/consumer ownership",
+      "both RF write-copy acceptances/common held ACK",
+      "metadata visibility fence/consumer debt",
+      "all matched child and parent reverse acceptances",
+      "CDC return acceptance and all forward/return queue seats",
+      "coordinated backend/endpoint reset epoch and synchronized release"
+    ],
+    "local_ACK_accept_not_lease_release": true,
+    "monotonic_ParentLeases_gt_not_continuous_semantics": true,
+    "no_arbitrary_token_or_generation_cap": true,
+    "release": "matched child/parent reverse, CDC receipt and every copied message drained before reuse",
+    "reset_local_clear_not_source_quiescence": true,
+    "source_allcopies_predicate": null
+  },
+  "hardware_admitted": false,
+  "leaf_incremental_inventory": {
+    "RF_copy_count": 2,
+    "RF_data_read_bits_per_copy": 4096,
+    "RF_data_write_bits_per_copy": 4096,
+    "SMs": 32,
+    "actual_common_ACK_valid_reused": true,
+    "additional_MACs": 0,
+    "additional_SRAM_macros": 0,
+    "additional_SRAM_ports": 0,
+    "captured_FF_async_reset_loads": 1760,
+    "captured_FF_clock_loads": 1760,
+    "captured_identity_bits_per_SM": 55,
+    "captured_identity_bits_per_die": 1760,
+    "distribution_buffers": null,
+    "independent_mirror_ACK_channels": 0,
+    "input_metadata_bits_per_accepted_write": 46,
+    "live_slots_per_SM": 1,
+    "local_capture_enable_loads": 55,
+    "metadata_output_distinct_bit_drivers": 55,
+    "mutable_control_protection_bits": null,
+    "output_metadata_bits_per_accepted_ACK": 55,
+    "register_read_ports": 1,
+    "register_write_ports": 1,
+    "wire_lengths": null,
+    "wrapper_identity_mux_bits_per_SM": 55,
+    "wrapper_internal_SIMD_owner_retention_bits_per_SM": 55,
+    "wrapper_retention_is_separate_not_free": true
+  },
+  "model_admission": {
+    "F0_owner": "Russell",
+    "FF_hold": null,
+    "SS_setup": null,
+    "W4_owner": "Euclid",
+    "area_um2": null,
+    "clock_domain_pair": null,
+    "composed_cycles": null,
+    "model_owner": "Popper",
+    "reset_and_quiescence_cost": null,
+    "slot_fit": null,
+    "token_latency_s": null,
+    "track_capacity": null,
+    "track_demand": null,
+    "whole_bridge_admitted": false
+  },
+  "new_RTL": false,
+  "next_gates": [
+    "Popper composed real C0/KV caller map and finite ports/rate/clock/reset cost",
+    "source all-copy quiescence transition with matched reverse CDC and continuous wrap",
+    "model register/mux/protection/distribution wire/reset clock loads and selected area/corridor fit",
+    "then defaultoff ACK_ID source successor with normalized original body byteidentity",
+    "actual write-go source tag/gen capture; held commonACK; both copies; reset/stale/consumer/reverse gates"
+  ],
+  "original_sources_unchanged": true,
+  "proposed_ports": {
+    "ACK_RF_slot_bits": 9,
+    "ACK_generation_bits": 4,
+    "ACK_owner_tag_bits": 35,
+    "ACK_physical_PC_bits": 7,
+    "RF_slot_capture": "actual existing wr_addr9, no synthetic receipt field",
+    "identity_producer": "source accepted C0/KV requester identity carried through backend echo and return assembler before actual RF write_go",
+    "wr_generation_bits": 4,
+    "wr_owner_tag_bits": 35,
+    "wr_physical_PC_bits": 7
+  },
+  "schema": "EUCLID_W4_FROZEN_F0_SOURCE_COMPATIBLE_MODEL_R2",
+  "source_identity": {
+    "CTAGW": 32,
+    "PTAGW": 35,
+    "RF_slot_bits": 9,
+    "SM_namespace": "actual static RF endpoint32SMs; accepted requester SM/home map must be proved",
+    "capture_with_explicit_PC7_and_client_context": 52,
+    "compact_parent_tag16": "optional only after reversible source adapter; PC and coalescer layouts unequal",
+    "generation_bits": 4,
+    "generation_is_explicit": true,
+    "local_handle": "physicalPC7 + source PTAG35 + generation4 + actual wr_addr9",
+    "minimum_capture_if_PC_client_scoped_in_real_context": 45,
+    "narrower_width_requires_real_context_ownership": true,
+    "optional_compact_adapter_blocks_baseline": false,
+    "original_tag_overwritten": false,
+    "physical_PC_bits": 7,
+    "selected_conservative_capture_including_client3": 55
+  },
+  "wholeprogram": {
+    "DS_PC_count": 2213,
+    "Qwen_PC_count": 1737,
+    "actual_ACK_receipt_count": null,
+    "actual_accepted_transaction_count": null,
+    "repeated_tokens": true,
+    "whole_stream_pass": false
+  }
+}
