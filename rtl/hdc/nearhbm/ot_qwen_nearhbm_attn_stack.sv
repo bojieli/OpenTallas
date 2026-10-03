@@ -467,8 +467,8 @@ module ot_qwen_nearhbm_exp_quad #(
     output reg          fault,
     output reg          ev_first
 );
-    localparam integer SFU_LA = 7, SFU_LM = 6;          // ot_qwen_nearhbm_exp_p: binary32 steps that close at SS 1.2 GHz
-    localparam integer XD = 7 * SFU_LM + 8 * SFU_LA + 4;  // its depth: 102 (ot_hdc_exp_q, LAT 3 / 3: 49)
+    localparam integer SFU_LA = 7, SFU_LM = 7;          // ot_qwen_nearhbm_exp_p: binary32 steps that close at SS 1.2 GHz
+    localparam integer XD = 7 * SFU_LM + 8 * SFU_LA + 4;  // its depth: 109 (ot_hdc_exp_q, LAT 3 / 3: 49)
     localparam integer D = 1 + ADD_LAT + XD;
     localparam integer PAD = 8 - ADD_LAT;
     localparam [1:0] SB = S;
