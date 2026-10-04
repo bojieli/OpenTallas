@@ -16,6 +16,14 @@ read, select, CKV gather + q.k, re-index candidate gather).  This tool then repl
           KV load, added as an explicit node per layer in front of attn.scores -- REQUIRES S81 BINDING OF THE WINDOW
           MODULE (Codex); the as-built S81 prefetch measures 124.5 us a layer and is reported alongside.
 
+Formerly modelled terms, now measured (Claude:dsrom-modelled-terms, each optional; absent -> the old model term):
+  engram     tools/dsrom_1m_engram.py     L1/L14 eng.hh/dot/gate/add on the SU, released-checkpoint operands   engram.json
+  embed      tools/dsrom_1m_embed.py      embedding row read + TP4 send + 4-copy expand                      embed.json
+  su_qdq     tools/dsrom_1m_su_cdcq.py    quantisers with the 22/15 hub stages as RTL stages             su_qdq_wired.json
+  su_cdc     tools/dsrom_1m_su_cdcq.py    the domain crossing (meso + 3:4 ratio FIFO) on every slow<->fast edge
+                                          (replaces the model's W18 4-slow / 5-fast cycles)                  su_cdc.json
+  draft      tools/dsrom_1m_draft_blocks.py  the three DSpark blocks at full shape                         draft_blocks.json
+
 Every critical-path node is classified measured / inside-a-measured-term / modelled; the modelled ones are listed
 with their time (never silently dropped).  MTP: wavefront verify (measured rule: a stage takes the next position 46
 cycles after it finishes the previous one, results/rtl/dsrom_wavefront_verify_20261004) with the stage busy times of
@@ -230,6 +238,76 @@ def apply_levers(P, info, lever_dir):
     return dict(applied=applied, not_applied=skipped)
 
 
+def apply_engram(P, eng):
+    """engram.json: the Engram nodes on the stream unit (wired variant), operands rebuilt from the released checkpoint."""
+    n = 0
+    for name, e in eng["nodes"].items():
+        if name in P.g.nodes and name not in P.rows:
+            P.put(name, e["us"] * 1e-6, f"Engram SU chain: {e['source']}", cls="measured" if e["exact"] else
+                  "measured_not_exact")
+            n += 1
+    return dict(nodes=n, exact=eng["exact"])
+
+
+def apply_embed(P, emb):
+    e = emb["nodes"]["embed"]
+    P.put("embed", e["us"] * 1e-6, f"embed: {e['source']}", cls="measured" if e["exact"] else "measured_not_exact")
+    return dict(us=e["us"], parts={k: round(v["us"], 4) for k, v in e["parts"].items()}, exact=e["exact"])
+
+
+def su_with_qdq(su, q):
+    """su.json with every quantiser's wired time replaced by the SIMULATED hub stages (su_qdq_wired.json); the
+    arithmetic +37 cycles of su.json are dropped.  Returns (su copy, replaced count)."""
+    su = copy.deepcopy(su)
+    n = 0
+    for key, r in q["nodes"].items():
+        L, suf = key.split(".", 1)
+        if r["part"] == "whole" and key in su["nodes"]:
+            su["nodes"][key]["wired_us"] = r["qdq_wired_us"]
+            su["nodes"][key]["qdq_wired_simulated"] = True
+            n += 1
+        lay = su.get("node_us_by_layer", {}).get(L, {})
+        if r["part"] != "whole" and suf in lay and "qdq" in lay[suf]:
+            lay[suf]["qdq"] = dict(lay[suf]["qdq"], wired_us=r["qdq_wired_us"], exact=r["exact"], simulated=True)
+            n += 1
+    return su, n
+
+
+def su_without_model_cdc(su):
+    su = copy.deepcopy(su)
+    for x in su["nodes"].values():
+        x["model_cdc_us"] = 0.0
+    return su
+
+
+def apply_cdc(P, cdc):
+    """Every non-hop node with a dependency in the other clock domain pays the MEASURED crossing once (f2s on a
+    0.9 GHz consumer, s2f on a 1.2 GHz consumer), as uarch_model charges CDC_W18: a patched node gets it added; an
+    unpatched node's model depth already holds CDC_W18, which is swapped for the measured value."""
+    import uarch_model as u
+    g = P.g
+    f2s, s2f = cdc["crossing"]["f2s"]["us"] * 1e-6, cdc["crossing"]["s2f"]["us"] * 1e-6
+    mf2s = u.CDC_W18["fast_to_slow_slow_cycles"] / SLOW
+    ms2f = u.CDC_W18["slow_to_fast_fast_cycles"] / CLK
+    added, swapped = {}, 0
+    for n, nd in g.nodes.items():
+        if nd.get("kind") in ("hop", "join"):
+            continue
+        sl = nd["kind"] in u.SLOW_KINDS
+        if not any((g.nodes[d]["kind"] in u.SLOW_KINDS) != sl for d in nd["deps"] if g.nodes[d]["kind"] != "join"):
+            continue
+        x = f2s if sl else s2f
+        if n in P.rows:
+            nd["issue"] += x
+            P.rows[n]["cdc_measured_us"] = round(x * 1e6, 5)
+        else:
+            nd["depth"] = max(0.0, nd["depth"] - (mf2s if sl else ms2f)) + x
+            swapped += 1
+        added[n] = x
+    return dict(edges=len(added), f2s_us=round(f2s * 1e6, 5), s2f_us=round(s2f * 1e6, 5),
+                model_f2s_us=round(mf2s * 1e6, 5), model_s2f_us=round(ms2f * 1e6, 5), unpatched_swapped=swapped), added
+
+
 def classify(g, P, base_patches):
     fin = g.solve(True)
     sink = [n for n in g.nodes if n.endswith("token.return")][0]
@@ -278,7 +356,8 @@ def main():
     a = ap.parse_args()
     if a.out is None:
         a.out = (a.rec if a.baseline == "asbuilt" else a.recovery) / "composition.json"
-    ins = {k: a.rec / f"{k}.json" for k in ("field", "su", "head", "links", "cand_select")}
+    ins = {k: a.rec / f"{k}.json" for k in ("field", "su", "head", "links", "cand_select", "engram", "embed",
+                                             "su_cdc", "su_qdq_wired", "draft_blocks")}
     recs = {k: json.loads(p.read_text()) for k, p in ins.items() if p.exists()}
     g0, g, base_patches = base_graph()
     P = Patcher(g)
@@ -295,11 +374,23 @@ def main():
     if "field" in recs:
         import dsrom_1m_allmeasured_adapters as AD
         apply_table(P, AD.field_rows(g, recs["field"]), "ROM field")
+    if "engram" in recs:
+        info["engram"] = apply_engram(P, recs["engram"])
+    if "embed" in recs:
+        info["embed"] = apply_embed(P, recs["embed"])
     if "su" in recs:
         import dsrom_1m_allmeasured_adapters as AD
-        apply_table(P, AD.su_rows(g, recs["su"]), "SU")
+        su = recs["su"]
+        if "su_qdq_wired" in recs:
+            su, info["qdq_wired_simulated_nodes"] = su_with_qdq(su, recs["su_qdq_wired"])
+        if "su_cdc" in recs:
+            su = su_without_model_cdc(su)
+        apply_table(P, AD.su_rows(g, su), "SU")
     if a.baseline == "recovery":
         info["levers"] = apply_levers(P, info, a.recovery)
+    cdc_nodes = {}
+    if "su_cdc" in recs:
+        info["cdc"], cdc_nodes = apply_cdc(P, recs["su_cdc"])
     t, path = classify(g, P, base_patches)
     hop_extra = info.get("hop_us", M.HOP_US)
     ar = t + EXTRA_HOPS * hop_extra
@@ -315,7 +406,9 @@ def main():
     verify = ar + M.WAVEFRONT["positions"] * ii
     dr = json.loads(DRAFT_REC.read_text())["result"]
     r_markov = dr["transfer_ratios"]["markov_over_head_macs_full"]
-    draft = 3 * dr["block5_us"] + 5 * head_occ * (1 + r_markov)
+    db = recs.get("draft_blocks")
+    blocks_us = db["blocks_total_us"] if db else 3 * dr["block5_us"]
+    draft = blocks_us + 5 * head_occ * (1 + r_markov)
     step = verify + draft + M.DRAFT["seed_commit_us"]
     mtp = M.DRAFT["tau"] * 1e6 / step
     modelled = [p for p in path if p["cls"] == "modelled"]
@@ -331,6 +424,49 @@ def main():
     sub = {n: r.get("modelled_part_us", 0.0) for n, r in P.rows.items() if n in onpath and r.get("modelled_part_us")}
     sub_us = round(sum(sub.values()), 3)
     meas = sum(v for k, v in by.items() if k not in ("modelled", "zero")) - sub_us
+    eng_us = round(sum(v for k, v in fam.items() if k.startswith("eng.")), 3)
+    still, done = [], []
+    if "engram" in recs:
+        done.append(dict(term="Engram eng.hh / eng.dot / eng.gate / eng.add (L1, L14)", record="engram.json",
+                         us_on_path=round(sum(p["us"] for p in path if ".eng." in p["node"]), 3), exact=recs["engram"]["exact"],
+                         was="modelled 1.316 us on path"))
+    else:
+        still.append(dict(term="Engram eng.dot / eng.gate / eng.add (L1, L14)", us=eng_us,
+                          why="golden shard holds only h_in and the Engram output, not hashed rows / key / value"))
+    if "embed" in recs:
+        done.append(dict(term="embed (owner-rank ROM row read + wire + TP4 send + 4-copy expand)", record="embed.json",
+                         us_on_path=round(sum(p["us"] for p in path if p["node"] == "embed"), 3),
+                         exact=recs["embed"]["exact"], was="modelled 0.032 us"))
+    else:
+        still.append(dict(term="embed (embedding ROM row read + 4-copy expand)", us=fam.get("embed", 0.0), why="no bench"))
+    if "su_cdc" in recs:
+        done.append(dict(term="domain crossings (meso FIFO + 3:4 ratio FIFO) on every slow<->fast edge", record="su_cdc.json",
+                         us_on_path=round(sum(cdc_nodes.get(p["node"], 0.0) for p in path) * 1e6, 3),
+                         exact=recs["su_cdc"]["exact"], was="model W18 4 slow cycles on SU nodes (1.773 us on path); "
+                                                            "the s2f charge was lost on patched fast nodes"))
+        still.append(dict(term="fast->fast mesochronous region crossings (field region <-> hub / IO regions)", us=None,
+                          why="no S81 clock-region map of every 1.2 GHz edge; the clocking decision prices them at "
+                              "+661 cycles (0.55 us) a token central (results/uarch/rom_die_clocking_decision_20261003)"))
+    else:
+        still.append(dict(term="CDC fast->slow crossings on SU nodes", us=sub_us, why="W18 ratio-FIFO latency, no CDC bench"))
+    still.append(dict(term="light-FEC PHY (130 ns a board hop) and UCIe PHY (10 ns)", us=None,
+                      why="VENDOR BUDGET (no PHY RTL); inside the measured+vendor_phy hop terms"))
+    if "su_qdq_wired" in recs:
+        done.append(dict(term="quantiser hub network stages (22 + 15 slow cycles) simulated as RTL stages",
+                         record="su_qdq_wired.json", nodes=info.get("qdq_wired_simulated_nodes"),
+                         exact=recs["su_qdq_wired"]["exact"], was="added arithmetically"))
+    else:
+        still.append(dict(term="quantiser hub network stages (22 + 15 slow cycles)", us=None,
+                          why="added arithmetically to the RTL quantiser (other SU nodes ran them in RTL)"))
+    if db:
+        done.append(dict(term="MTP draft: three DSpark blocks at full shape", record="draft_blocks.json",
+                         us=round(blocks_us, 3), exact=db["exact"], was=f"{3 * dr['block5_us']:.3f} us reduced-vehicle"))
+        still += [dict(term=f"draft blocks: {x['term']}", us=x.get("us"), why=x.get("why")) for x in db.get("still_modelled", [])]
+    else:
+        still.append(dict(term="MTP draft block5 (3 DSpark blocks)", us=round(3 * dr["block5_us"], 3),
+                          why="reduced-vehicle slice x transfer ratio (dsrom_dspark_step_slices_20261004), not full shape"))
+    still.append(dict(term=f"tau {M.DRAFT['tau']:g}", us=None,
+                      why="published third-party acceptance (tools/third_party_tau.py), not an RTL quantity"))
     rec = dict(
         schema="opentallas.dsrom-1m.allmeasured.composition.v1", context=M.CTX, position=M.POS,
         baseline=a.baseline,
@@ -339,30 +475,23 @@ def main():
         critical_path_us_by_class=by, measured_share=round(meas / ar, 4),
         modelled_on_path_us=round(sum(p["us"] for p in modelled), 3), modelled_on_path_by_family=fam,
         modelled_inside_measured_nodes_us=sub_us,
-        modelled_inside_measured_note="CDC fast->slow ratio-FIFO crossings (4 slow cycles a crossing edge, W18) charged "
-                                      "on SU nodes as the model does; no CDC bench",
+        modelled_inside_measured_note=("none: CDC measured (su_cdc.json)" if "su_cdc" in recs else
+                                       "CDC fast->slow ratio-FIFO crossings (4 slow cycles a crossing edge, W18) charged "
+                                       "on SU nodes as the model does; no CDC bench"),
+        cdc_on_path_us=round(sum(cdc_nodes.get(p["node"], 0.0) for p in path) * 1e6, 3),
         still_modelled_total_us=round(sum(p["us"] for p in modelled) + sub_us, 3),
         MTP=dict(rule="II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; "
-                      "draft = 3 x block5 + 5 x head occupancy x (1 + Markov/lm_head MACs); tau " + f"{M.DRAFT['tau']:g} (third-party published)",
+                      "draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau " + f"{M.DRAFT['tau']:g} (third-party published)",
                  stage_busy_top=sorted(segs, key=lambda s: -s["busy_us"])[:6], worst_stage=worst,
                  II_us=round(ii, 3), verify_us=round(verify, 3), draft_us=round(draft, 3),
-                 draft_terms=dict(block5_us=dr["block5_us"], block5_basis="reduced-vehicle slice x transfer ratio "
-                                  "(results/rtl/dsrom_dspark_step_slices_20261004) -- NOT full shape",
+                 draft_terms=dict(block5_us=db["block5_us"] if db else dr["block5_us"], blocks_us=round(blocks_us, 3),
+                                  block5_basis=(db["basis"] if db else "reduced-vehicle slice x transfer ratio "
+                                                "(results/rtl/dsrom_dspark_step_slices_20261004) -- NOT full shape"),
                                   head_occ_us=head_occ, r_markov=r_markov),
                  seed_commit_us=M.DRAFT["seed_commit_us"], step_us=round(step, 3), MTP_tok_s=round(mtp, 1),
                  tau=M.DRAFT["tau"], mtp_over_ar=round(mtp * ar / 1e6, 3)),
-        still_modelled=[
-            dict(term="Engram eng.dot / eng.gate / eng.add (L1, L14)", us=round(sum(v for k, v in fam.items() if k.startswith("eng.")), 3),
-                 why="golden shard holds only h_in and the Engram output, not hashed rows / key / value"),
-            dict(term="embed (embedding ROM row read + 4-copy expand)", us=fam.get("embed", 0.0), why="no bench"),
-            dict(term="CDC fast->slow crossings on SU nodes", us=sub_us, why="W18 ratio-FIFO latency, no CDC bench"),
-            dict(term="light-FEC PHY (130 ns a board hop) and UCIe PHY (10 ns)", us=None,
-                 why="VENDOR BUDGET (no PHY RTL); inside the measured+vendor_phy hop terms"),
-            dict(term="quantiser hub network stages (22 + 15 slow cycles)", us=None,
-                 why="added arithmetically to the RTL quantiser (other SU nodes ran them in RTL)"),
-            dict(term="MTP draft block5 (3 DSpark blocks)", us=round(3 * dr["block5_us"], 3),
-                 why="reduced-vehicle slice x transfer ratio (dsrom_dspark_step_slices_20261004), not full shape"),
-            dict(term=f"tau {M.DRAFT['tau']:g}", us=None, why="published third-party acceptance (tools/third_party_tau.py), not an RTL quantity")],
+        still_modelled=still,
+        measured_formerly_modelled=done,
         requires_binding=["WINDOW load: ot_dsrom_window_stream_la measured 93.9% of peak; the as-built S81 prefetch "
                           "measures 124.5 us a layer -- composition REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)"],
         info=info, patches=list(P.rows.values()), base_patches=base_patches, critical_path=path,
