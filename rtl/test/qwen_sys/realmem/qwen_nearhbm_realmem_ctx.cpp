@@ -124,10 +124,10 @@ int main(int argc,char** argv){
    bool good=nout==1024&&mismatch==0&&!mem.fault&&!near.fault&&!near.sys_fault&&drain_low&&wr_sec==136&&first_row_return>=ready_at;
    all_good&=good;
    char buf[2048];
-   snprintf(buf,sizeof buf,"%s{\"layer\":%d,\"status\":\"%s\",\"outputs\":%d,\"mismatches\":%d,\"scheduled_start\":%llu,\"waited_for_retire\":%s,"
+   snprintf(buf,sizeof buf,"%s{\"layer\":%d,\"status\":\"%s\",\"outputs\":%d,\"mismatches\":%d,\"scheduled_start\":%llu,\"start\":%llu,\"end\":%llu,\"waited_for_retire\":%s,"
      "\"rel\":{\"v_write\":%llu,\"v_write_done\":%llu,\"k1_write\":%llu,\"k1_write_done\":%llu,\"k2_write\":%llu,\"k2_write_done\":%llu,\"near_start\":%llu,\"first_row_return\":%llu,\"first_output\":%llu,\"last_output\":%llu,\"kv_ok\":%lld},"
      "\"attention_cycles\":%llu,\"write_sectors\":%u,\"fill_sectors\":%u,\"fill_cycles_hclk\":%u,\"max_write_ACK_latency_hclk\":%u,\"drain_low_observed\":%s}",
-     li?",":"",y.n,good?"pass":"fail",nout,mismatch,(unsigned long long)sched,waited?"true":"false",
+     li?",":"",y.n,good?"pass":"fail",nout,mismatch,(unsigned long long)sched,(unsigned long long)L0,(unsigned long long)end,waited?"true":"false",
      (unsigned long long)(v_at-L0),(unsigned long long)(v_done-L0),(unsigned long long)(k1_at-L0),(unsigned long long)(k1_done-L0),(unsigned long long)(k2_at-L0),(unsigned long long)(k2_done-L0),
      (unsigned long long)(begin-L0),(unsigned long long)(first_row_return?first_row_return-L0:0),(unsigned long long)(first_out-L0),(unsigned long long)(end-L0),
      fill_done_at?(long long)(fill_done_at-L0):-1LL,(unsigned long long)(end-begin),wr_sec,fill_sec,mem.st_fill_cycles,mem.st_wr_lat_max,drain_low?"true":"false");
