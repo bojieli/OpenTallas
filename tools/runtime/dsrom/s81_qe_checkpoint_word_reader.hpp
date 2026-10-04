@@ -6,6 +6,7 @@
 #include <mutex>
 #include <stdexcept>
 #include <string>
+#include <vector>
 #include <sys/socket.h>
 #include <sys/syscall.h>
 #include <limits.h>
@@ -32,8 +33,18 @@ public:
     // shared_ptr in the actual participant callback; retain it through drain.
     DsromS81QeCheckpointWordReader(const std::string& python,const std::string& script,
         const std::string& owner,const std::string& checkpoint,const std::string& node,
-        unsigned rank,unsigned fragment=0) {
+        unsigned rank,unsigned fragment=0,const std::vector<unsigned>& captured_eids={}) {
         if(rank>=4)throw std::runtime_error("QE TP4 rank");
+        std::string eids;
+        if(!captured_eids.empty()) {
+            if(captured_eids.size()!=6)throw std::runtime_error("six captured native EIDs required");
+            for(size_t i=0;i<captured_eids.size();++i){
+                if(captured_eids[i]>=384||(i&&captured_eids[i]<=captured_eids[i-1]))
+                    throw std::runtime_error("captured EID order/range");
+                if(i)eids+=",";
+                eids+=std::to_string(captured_eids[i]);
+            }
+        }
         int pair[2];if(::socketpair(AF_UNIX,SOCK_STREAM,0,pair))throw std::runtime_error("QE private transport");
         const std::string descriptor="3";
         auto r=std::to_string(rank),f=std::to_string(fragment);
@@ -50,7 +61,7 @@ public:
             if(!closed){long n=::sysconf(_SC_OPEN_MAX);for(int i=4;i<n;++i)::close(i);}
             ::execl(python.c_str(),python.c_str(),"-u",script.c_str(),"--fd",descriptor.c_str(),
                 "--owner",owner.c_str(),"--checkpoint",checkpoint.c_str(),"--node",node.c_str(),
-                "--rank",r.c_str(),"--fragment",f.c_str(),static_cast<char*>(nullptr));
+                "--rank",r.c_str(),"--fragment",f.c_str(),"--expert-ids",eids.c_str(),static_cast<char*>(nullptr));
             ::_exit(127);
         }
         ::close(pair[1]);fd_=pair[0];
