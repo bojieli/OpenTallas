@@ -89,11 +89,65 @@ def main():
     p.add_argument('--head-chain',action='store_true',help='carry produced L20 H/PF directly into released head')
     p.add_argument('--carry-input',type=Path,help='actual carry.npz retained by an earlier invocation; head-only debugging')
     p.add_argument('--native-i0',type=Path,help='actual native_L20_I0.tsv; replace only the measured rank I0')
+    p.add_argument('--capture-index-inputs',action='store_true',
+                   help='stop before I44 after saving produced I36 and I44 operands for the native join')
+    p.add_argument('--native-index-result',type=Path,
+                   help='completed native rank3 I36/I44 directory; consume its actual score output')
+    p.add_argument('--native-attention-result',type=Path,
+                   help='completed native QK/softmax/PV directory; import four actual I63 ACC outputs')
+    p.add_argument('--capture-attention-inputs',action='store_true',
+                   help='capture produced attention operands in this continuation, stopping before I63')
     a = p.parse_args()
+    native_pv=None
+    native_pv_bits={}
+    if a.native_attention_result:
+        if a.carry_input or a.capture_index_inputs or a.capture_attention_inputs:
+            p.error('--native-attention-result requires the L20 continuation through I63')
+        # Refuse incomplete native output before loading any model or creating
+        # this continuation's output. Only the native PV writer/readback files
+        # are inputs; captured I63.S and comparison payloads are never read.
+        try:
+            directory=a.native_attention_result
+            terminal_file=directory/'native_L20_ATT.tsv'
+            terminal_bytes=terminal_file.read_bytes()
+            reader=csv.DictReader(terminal_bytes.decode('utf-8').splitlines(),delimiter='\t')
+            if reader.fieldnames!=['scope','position','ranks','qk_accept','pv_accept','terminal']:
+                raise ValueError('native attention terminal is not the PV continuation record')
+            rows=list(reader)
+            if len(rows)!=1 or None in rows[0] or any(v is None for v in rows[0].values()):
+                raise ValueError('native attention requires one complete terminal row')
+            native_pv=rows[0]
+            if native_pv['scope']!='QK.I61.I62.PV.native.SIM_ONLY-source-KVT-descriptor-TP4':
+                raise ValueError('native attention source scope is not the selected QK/softmax/PV path')
+            for key in ('position','ranks','qk_accept','pv_accept','terminal'):
+                text=native_pv[key]
+                if not text.isascii() or not text.isdecimal():
+                    raise ValueError('native attention '+key+' must be an unsigned integer')
+                native_pv[key]=int(text)
+            if native_pv['position']!=1048575 or native_pv['ranks']!=4:
+                raise ValueError('native attention requires actual DS1M four-rank source output')
+            if not 0<=native_pv['qk_accept']<native_pv['pv_accept']<native_pv['terminal']:
+                raise ValueError('native attention accepted/terminal edges are not causal')
+            files={}
+            for rank in range(4):
+                path=directory/f'native_L20_I63_rank{rank}.u32'
+                payload=path.read_bytes()
+                if len(payload)!=8192*4:
+                    raise ValueError(f'native I63 rank{rank} requires exactly 8192 raw32 words')
+                native_pv_bits[rank]=np.frombuffer(payload,dtype='<u4').copy()
+                files[path.name]=hashlib.sha256(payload).hexdigest()
+            native_pv.update(source_terminal_sha256=hashlib.sha256(terminal_bytes).hexdigest(),
+                files=files,stage=37,producer=2534,address=74272,words_per_rank=8192,
+                template_sha256='6124df21d8de509ccbb8e0f114d2ed9776a4316dd810e92c35c0a07acfb9083a',
+                scope_note='actual native I63 PV readback only; remaining L20 arithmetic and fences SIM_ONLY')
+        except (OSError,UnicodeError,ValueError,KeyError) as exc:
+            p.error(str(exc))
     a.output.mkdir(exist_ok=False)
     result = dict(scope='S81.L20.position1048575', functional='SIM_ONLY',
                   headline_timing=False, completed=False, exact=None,
                   source_stage=37, simulation_ticks=0, native_cycles=None)
+    if native_pv is not None:
+        result['native_attention']=native_pv
     start = time.monotonic()
     try:
         print('SIM_ONLY canonical S81 L20 source loading; expected comparison only at END', flush=True)
@@ -103,6 +157,23 @@ def main():
         nodes = [n for n in source_nodes if n['kind'] == 'instruction']
         assert len(nodes) == 144
         native_i0=None
+        native_index=None
+        if a.native_index_result:
+            with (a.native_index_result/'native_L20_index.tsv').open() as stream:
+                rows=list(csv.DictReader(stream,delimiter='\t'))
+            assert len(rows)==1
+            native_index=rows[0]
+            assert int(native_index['rank'])==3 and int(native_index['position'])==1048575
+            cycles=[int(native_index[k]) for k in ('key_accept','key_visible','scan_accept','terminal')]
+            assert 0<=cycles[0]<=cycles[1]<=cycles[2]<=cycles[3]
+            score_file=a.native_index_result/'native_L20_I44.u32'
+            assert score_file.stat().st_size==262144*4
+            native_scores=np.fromfile(score_file,dtype='<u4')
+            assert not np.any(native_scores&0xffff)
+            result['native_index']=dict(native_index,source_sha256=M.sha(score_file),
+                scope_note='rank3 native writer/scorer; other ranks and operators SIM_ONLY')
+        if a.capture_attention_inputs:
+            assert not a.capture_index_inputs and not a.carry_input
         if a.native_i0:
             assert not a.carry_input
             with a.native_i0.open() as stream:
@@ -169,6 +240,49 @@ def main():
                 assert hashlib.sha256(word.to_bytes(256,'little')).hexdigest() == node['template_word_sha256']
                 f = M.I.decode(word, full_shape=True)
                 f['_tag'] = literal['_tag']
+                if pc==63 and native_pv is not None:
+                    fields={'unit':M.I.UNIT_ME,'me_mmode':1,'me_round':1,'me_hg':1,
+                            'me_nout':512,'me_tiles':16,'me_xbase':63936,'me_xcs':5120,
+                            'me_xks':1,'me_xjs':640,'me_obase':4642,'me_d_k':M.I.FULL_DYN['T1']}
+                    if (node['id']!='L20.I63' or node['template_word_sha256']!=native_pv['template_sha256'] or
+                        any(f[key]!=value for key,value in fields.items()) or
+                        9+list(execution.source.nodes).index(node['id'])!=native_pv['producer']):
+                        raise M.Defect('native PV output does not match the actual selected I63 literal/geometry')
+
+                if a.capture_attention_inputs and pc in (20,38,55,63):
+                    name,address,count={20:('I20.KVN',54720,512),38:('I38.LAT',93728,512),
+                        55:('I55.Q',55744,8192),63:('I63.S',63936,10240)}[pc]
+                    for rank in ranks:
+                        values=rank.read(address+np.arange(count),'native_'+name,pc)
+                        M.G.bits(values).astype('<u4').tofile(a.output/f'{name}_rank{rank.r}.u32')
+                    if pc==63:
+                        result.update(scope='S81.L20.produced_native_attention_inputs',
+                            disposition='PAUSED_BEFORE_NATIVE_I63',completed=False,exact=None,
+                            input_files={p.name:M.sha(p) for p in a.output.glob('*.u32')})
+                        return
+                if a.capture_index_inputs and pc in (36,44):
+                    spans=[('I36_input',94496,128)] if pc==36 else [
+                        ('I44_query',98720,4096),('I44_weights',102848,32)]
+                    for rank in ranks:
+                        for name,address,count in spans:
+                            values=rank.read(address+np.arange(count),'native_'+name,pc)
+                            M.G.bits(values).astype('<u4').tofile(a.output/f'{name}_rank{rank.r}.bin')
+                    if pc==44:
+                        manifest=dict(scope='produced source operands before native I36 writer/I44 scorer',
+                            position=1048575,token=16754,stage=37,seed=20260930,
+                            instructions_completed=44,expected_outputs_used=False,
+                            I36=dict(producer=2507,address=94496,count=128,
+                                template_sha256=nodes[36]['template_word_sha256']),
+                            I44=dict(producer=9+list(execution.source.nodes).index(node['id']),
+                                template_sha256=node['template_word_sha256'],
+                                query_address=98720,query_count=4096,weights_address=102848,weights_count=32,
+                                output_address=102880,output_count=262144),
+                            dynamics={str(r.r):[int(v) for v in r.dyn] for r in ranks},
+                            files={p.name:M.sha(p) for p in a.output.glob('*.bin')})
+                        (a.output/'native_index_inputs.json').write_text(json.dumps(manifest,indent=2)+'\n')
+                        result.update(scope='S81.L20.produced_native_index_inputs',
+                            disposition='PAUSED_BEFORE_NATIVE_I44',completed=False,exact=None)
+                        return
                 print('SIM_ONLY', node['id'], 'unit', f['unit'], 'tick', pc, flush=True)
                 for rank in ranks:
                     # Constants remain addressed by the literal template. The
@@ -236,6 +350,14 @@ def main():
                     pass
                 else:
                     for rank in ranks:
+                        if pc==63 and native_pv is not None:
+                            # Raw native output at the real literal boundary,
+                            # not expected PV or captured probability input.
+                            rank.write(native_pv['address'],native_pv_bits[rank.r].view(M.F))
+                            continue
+                        if pc==44 and native_index and rank.r==3:
+                            rank.write(102880,native_scores.view(M.F))
+                            continue
                         if pc==0 and native_i0 and rank.r==native_i0['rank']:
                             reference_rank=copy.copy(rank)
                             reference_rank.vm=rank.vm.copy()
@@ -255,9 +377,15 @@ def main():
                         if method=='ctl':rank.ctl(f,pc)
                         else:getattr(rank,method)(f,pc,rank.log)
                         if rank.unwritten:raise M.Defect(str(rank.unwritten[-1]))
+                if a.capture_attention_inputs and pc==47:
+                    for rank in ranks:
+                        values=rank.read(447360+np.arange(512),'native_I47_SELG',pc)
+                        M.G.bits(values).astype('<u4').tofile(a.output/f'I47.SELG_rank{rank.r}.u32')
                 result['simulation_ticks'] += 1
                 log.write(json.dumps(dict(node=node['id'], unit=f['unit'],
-                    arithmetic='NATIVE_RANK_I0_PLUS_SIM_ONLY_OTHER_RANKS' if pc==0 and native_i0 else 'SIM_ONLY_EXACT',
+                    arithmetic=('NATIVE_RANK_I0_PLUS_SIM_ONLY_OTHER_RANKS' if pc==0 and native_i0 else
+                                'NATIVE_RANK3_I44_PLUS_SIM_ONLY_OTHER_RANKS' if pc==44 and native_index else
+                                'NATIVE_TP4_I63_PV_READBACK' if pc==63 and native_pv is not None else 'SIM_ONLY_EXACT'),
                     simulation_tick=result['simulation_ticks']))+'\n')
                 log.flush()
         # Every functional operator and collective above returns only after
