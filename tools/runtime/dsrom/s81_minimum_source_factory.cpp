@@ -677,11 +677,29 @@ struct SourceL20I0 : std::enable_shared_from_this<SourceL20I0> {
     DsromS81PrefixNativeEngine su;
     DsromS81PrefixOperation operation=DsromS81PrefixOperation{2470,2,"0a8042d53254c972480a5c7c05cf676d0c5e3cbea44e456aa5537b16ce93e622",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x800004u,0x0u,0x280u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x4050140u,0xa02u,0x0u,0x0u,0x0u,0x0u,0x8d40000u,0x3c79ca1u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
     bool attached=false,started=false,accepted=false,go=false,finished=false;
+    bool mutable_h=false;
+    uint32_t output_address=40992;
+    std::vector<std::pair<uint32_t,uint32_t>> output_spans{{40992,1}};
     long first=-1,last=-1;
     std::optional<uint32_t> output;
     SourceL20I0(DsromS81MinimumRuntime& r,std::shared_ptr<Vnative_vm> vm)
-      :runtime(r),bank(r,ID,std::move(vm),dsrom_s81_bind_minimum_source_tags(r,ID)) {
-        bank.publication().enroll_literal(operation.index,{{40992,1}});
+      :runtime(r),bank(r,ID,std::move(vm),dsrom_s81_bind_minimum_source_tags(r,ID),
+        std::getenv("DSROM_S81_NATIVE_L20_SU_PC")&&
+        std::string(std::getenv("DSROM_S81_NATIVE_L20_SU_PC"))!="0") {
+        // Bounded nonfield source selection; ordinary I0 remains the default.
+        // These are the unchanged retained L20 H-producing SU literals, not
+        // field work, I55, HEAD, or software-computed activations.
+        const char* pc=std::getenv("DSROM_S81_NATIVE_L20_SU_PC");
+        if(pc&&std::string(pc)!="0") {
+            if(std::string(pc)=="76")
+                operation=DsromS81PrefixOperation{2546,2,"b697342bd2e9299a0cc2a141a25b26c011f4830af680c74cd7ec21357c5fd820",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x10u,0x8000000au,0x528u,0x400000u,0x0u,0x0u,0x4000a08u,0x0u,0x0u,0x2800u,0x8000280u,0x0u,0x0u,0x0u,0x0u,0x6008040u,0x0u,0x1000050u,0x50000000u,0x14000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0xa03u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
+            else if(std::string(pc)=="142")
+                operation=DsromS81PrefixOperation{2612,2,"8aa055e9953fb574d1c9505c6c0d3283c4db8e96c4d2f3d38ca9a778a7411c63",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x10u,0x8000000au,0x19f7u,0x400000u,0x0u,0x0u,0x4000a0eu,0x0u,0x0u,0x2800u,0x8000280u,0x0u,0x0u,0x0u,0x0u,0x6008040u,0x0u,0x1000050u,0x50000000u,0x14000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0xa03u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
+            else throw std::runtime_error("native L20 SU selector must be 0, 76 or 142");
+            mutable_h=true;output_address=0;
+            output_spans={{0,20480},{40960,1}}; // four H copies plus native SSX
+        }
+        if(!mutable_h)bank.publication().enroll_literal(operation.index,output_spans);
         su=dsrom_s81_bind_minimum_su256(r,ID,bank.publication(),bank.io(),bank.tags());
     }
     void attach() {
@@ -693,14 +711,23 @@ struct SourceL20I0 : std::enable_shared_from_this<SourceL20I0> {
         runtime.participants.push_back({"source-L20-I0-native-SU",
           [this](const auto& result) {
             go=false;
-            if(started&&!accepted)go=bank.inputs_visible()&&su.inputs_ready(operation)&&su.ready();
+            if(started&&!accepted)go=bank.inputs_visible()&&su.inputs_ready(operation)&&su.ready()&&
+                (!mutable_h||(su.idle()&&bank.native_target().mutable_write_drained()));
             su.drive(operation,go);su.participant.prepare(result);
           },
           [this](bool released) {
             if(!released)require(!started&&!accepted,"reset erases accepted L20 I0 work");
             else if(go) {
                 require(!accepted&&su.ready(),"L20 I0 lost actual native acceptance");
-                bank.publication().begin(ID,operation.index);accepted=true;first=runtime.cycle();
+                if(mutable_h) {
+                    // inputs_ready has captured every operand through SourceIo;
+                    // idle excludes native/staged SU output debt, and the same
+                    // target excludes outstanding reads and real ACK debt.
+                    const bool readers_drained=su.idle()&&bank.native_target().mutable_write_drained();
+                    bank.admit_mutable_h_writer(operation.index,output_spans,
+                        go&&su.ready(),readers_drained);
+                }else bank.publication().begin(ID,operation.index);
+                accepted=true;first=runtime.cycle();
             }
             su.participant.rising(released);
           },
@@ -721,16 +748,17 @@ struct SourceL20I0 : std::enable_shared_from_this<SourceL20I0> {
         if(!su.idle()||!bank.publication().complete(ID,operation.index))return;
         // Read back ONLY the published native result through the same held
         // bank request path. This is the operand for the following operation.
-        output=bank.io().read_word(ID,40992);
+        output=bank.io().read_word(ID,output_address);
         if(output){finished=true;last=runtime.cycle();}
     }
     void write(const std::string& directory) {
         require(finished&&output&&first>=0&&last>=first,"L20 I0 has no terminal native operand");
-        std::ofstream file(directory+"/native_L20_I0.tsv",std::ios::out|std::ios::app);
+        const auto pc=operation.index-2470;
+        std::ofstream file(directory+"/native_L20_I"+std::to_string(pc)+".tsv",std::ios::out|std::ios::app);
         require(bool(file),"L20 I0 measurement output unavailable");
         file<<"scope\tposition\trank\tproducer\taccepted_cycle\tvisible_read_cycle\taddress\traw32\n"
-            <<"L20.I0.native-component\t1048575\t"<<runtime.rank<<'\t'<<operation.index
-            <<'\t'<<first<<'\t'<<last<<"\t40992\t"<<*output<<'\n';
+            <<"L20.I"<<pc<<".native-component\t1048575\t"<<runtime.rank<<'\t'<<operation.index
+            <<'\t'<<first<<'\t'<<last<<'\t'<<output_address<<'\t'<<*output<<'\n';
         require(bool(file),"L20 I0 measurement write failed");
     }
     static void require(bool ok,const char* message){if(!ok)throw std::runtime_error(message);}
