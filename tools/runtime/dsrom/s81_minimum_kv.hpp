@@ -174,6 +174,28 @@ public:
         window.s_beat=mux.w_sbeat; window.s_data=mux.w_sdata;
         require(!mux.fault,"actual native WINDOW/RoPE backend mux fault");
     }
+    // The selected512 producer is the EXISTING native CKV die service, not
+    // WINDOW's compatibility merger (which binds selected_count to zero).
+    // It owns VM-selected IDs, ordered row staging, FP4 encoding and TP4
+    // all-gather. Its owner clocks it and supplies the native VM/AG callbacks.
+    // Preserve its independent C8 client beside the WINDOW w_* client above.
+    template<class NativeCkvService,class NativeKvRopeMux>
+    void wire_selected_backend(NativeCkvService& ckv,NativeKvRopeMux& mux) {
+        require(ckv.contextp()==runtime.context&&mux.contextp()==runtime.context,
+                "selected CKV service/mux must share canonical context");
+        static_assert(sizeof(ckv.c_addr)==sizeof(mux.c_addr),
+                      "selected CKV four-stack addresses must match native mux");
+        static_assert(sizeof(ckv.c_tag)==sizeof(mux.c_tag),
+                      "selected CKV tags must match native C8 client");
+        mux.c_v=ckv.c_v;mux.c_addr=ckv.c_addr;mux.c_len=ckv.c_len;
+        mux.c_tag=ckv.c_tag;mux.c_we=ckv.c_we;
+        mux.c_wdata=ckv.c_wdata;mux.c_wstrb=ckv.c_wstrb;
+        mux.c_srdy=ckv.c_srdy;
+        ckv.c_rdy=mux.c_rdy;ckv.c_wr_done=mux.c_wr_done;
+        ckv.c_sv=mux.c_sv;ckv.c_stag=mux.c_stag;
+        ckv.c_sbeat=mux.c_sbeat;ckv.c_sdata=mux.c_sdata;
+        require(!ckv.fault&&!mux.fault,"native selected CKV service/backend fault");
+    }
     // Exact selected ot_hdc_v41x_att_adapt PACKED_KV=1 external ports.
     // There is no host expansion, floating arithmetic or padding-history read.
     template<class Attention> void wire_attention(Attention& attention) {
