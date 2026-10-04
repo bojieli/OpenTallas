@@ -26,7 +26,7 @@ module tb_hdc_select_tree
     parameter integer W = 64;
     parameter integer NB = 8;
     parameter integer ORDER = 1;
-    localparam integer LAT = 1 + 6 + 4 * $clog2(W / 8) + 1 + 4 * $clog2(NB) + (ORDER != 0 ? 6 : 0) + 1;
+    localparam integer LAT = 1 + 6 + 4 * $clog2(W / 8) + 1 + 4 * $clog2(NB) + (ORDER != 0 ? 6 : 0);
     localparam integer MAXSEG = 1 << 16;
 
     reg              rst_n = 1'b0;

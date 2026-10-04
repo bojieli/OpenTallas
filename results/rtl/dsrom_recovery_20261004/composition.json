@@ -4,12 +4,12 @@
  "position": 1048575,
  "baseline": "recovery",
  "base": "candidate_gather.lat259 (results/rtl/dsrom_reindex_candidates_20261004/composition.json, 394.911 us)",
- "AR_us": 721.672,
- "AR_tok_s": 1385.7,
+ "AR_us": 709.706,
+ "AR_tok_s": 1409.0,
  "critical_path_us_by_class": {
   "zero": 0.0,
   "modelled": 1.348,
-  "measured": 657.765,
+  "measured": 645.804,
   "measured+vendor_phy": 45.096,
   "inside_measured": 0.0,
   "extra_S81_hops": 17.422
@@ -36,27 +36,27 @@
    {
     "first": "L19.ffn.hc_pre",
     "hop": "L20.substage_hop0",
-    "busy_us": 25.1313
+    "busy_us": 24.8322
    },
    {
     "first": "L13.ffn.hc_pre",
     "hop": "L14.substage_hop0",
-    "busy_us": 22.0822
+    "busy_us": 21.783
    },
    {
     "first": "L7.ffn.hc_pre",
     "hop": "L8.substage_hop0",
-    "busy_us": 21.4355
+    "busy_us": 21.1363
    },
    {
     "first": "L1.ffn.hc_pre",
     "hop": "L2.substage_hop0",
-    "busy_us": 19.3147
+    "busy_us": 19.0155
    },
    {
     "first": "L27.ffn.hc_pre",
     "hop": "L28.substage_hop0",
-    "busy_us": 14.9947
+    "busy_us": 14.6955
    }
   ],
   "worst_stage": {
@@ -65,7 +65,7 @@
    "busy_us": 74.3120888888889
   },
   "II_us": 75.373,
-  "verify_us": 1098.536,
+  "verify_us": 1086.57,
   "draft_us": 413.943,
   "draft_terms": {
    "block5_us": 14.405,
@@ -74,10 +74,10 @@
    "r_markov": 0.00781
   },
   "seed_commit_us": 3.217,
-  "step_us": 1515.696,
-  "MTP_tok_s": 2744.0,
+  "step_us": 1503.73,
+  "MTP_tok_s": 2765.8,
   "tau": 4.159,
-  "mtp_over_ar": 1.98
+  "mtp_over_ar": 1.963
  },
  "still_modelled": [
   {
@@ -138,7 +138,14 @@
   },
   "hop_tier": "light_fec",
   "levers": {
-   "applied": [],
+   "applied": [
+    {
+     "lever": "router",
+     "record": "results/rtl/dsrom_recovery_20261004/levers/router.json",
+     "sha256": "c2a6ecf004a79162b1c40a7039aacb072c247b86ef3adb537a7eb88f303d4748",
+     "verdict": "ADOPT"
+    }
+   ],
    "not_applied": []
   }
  },
@@ -5505,18 +5512,18 @@
   },
   {
    "node": "L0.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L0.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -5873,18 +5880,18 @@
   },
   {
    "node": "L1.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L1.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -6313,18 +6320,18 @@
   },
   {
    "node": "L2.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L2.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -6681,18 +6688,18 @@
   },
   {
    "node": "L3.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L3.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -7049,18 +7056,18 @@
   },
   {
    "node": "L4.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L4.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -7417,18 +7424,18 @@
   },
   {
    "node": "L5.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L5.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -7785,18 +7792,18 @@
   },
   {
    "node": "L6.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L6.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -8153,18 +8160,18 @@
   },
   {
    "node": "L7.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L7.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -8593,18 +8600,18 @@
   },
   {
    "node": "L8.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L8.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -8961,18 +8968,18 @@
   },
   {
    "node": "L9.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L9.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -9329,18 +9336,18 @@
   },
   {
    "node": "L10.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L10.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -9697,18 +9704,18 @@
   },
   {
    "node": "L11.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L11.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -10065,18 +10072,18 @@
   },
   {
    "node": "L12.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L12.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -10433,18 +10440,18 @@
   },
   {
    "node": "L13.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L13.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -10873,18 +10880,18 @@
   },
   {
    "node": "L14.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L14.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -11241,18 +11248,18 @@
   },
   {
    "node": "L15.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L15.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -11609,18 +11616,18 @@
   },
   {
    "node": "L16.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L16.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -11977,18 +11984,18 @@
   },
   {
    "node": "L17.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L17.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -12345,18 +12352,18 @@
   },
   {
    "node": "L18.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L18.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -12713,18 +12720,18 @@
   },
   {
    "node": "L19.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L19.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -13153,18 +13160,18 @@
   },
   {
    "node": "L20.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L20.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -13521,18 +13528,18 @@
   },
   {
    "node": "L21.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L21.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -13889,18 +13896,18 @@
   },
   {
    "node": "L22.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L22.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -14257,18 +14264,18 @@
   },
   {
    "node": "L23.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L23.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -14633,18 +14640,18 @@
   },
   {
    "node": "L24.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L24.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -15001,18 +15008,18 @@
   },
   {
    "node": "L25.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L25.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -15369,18 +15376,18 @@
   },
   {
    "node": "L26.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L26.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -15737,18 +15744,18 @@
   },
   {
    "node": "L27.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L27.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -16113,18 +16120,18 @@
   },
   {
    "node": "L28.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L28.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -16481,18 +16488,18 @@
   },
   {
    "node": "L29.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L29.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -16849,18 +16856,18 @@
   },
   {
    "node": "L30.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L30.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -17217,18 +17224,18 @@
   },
   {
    "node": "L31.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L31.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -17593,18 +17600,18 @@
   },
   {
    "node": "L32.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L32.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -17961,18 +17968,18 @@
   },
   {
    "node": "L33.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L33.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -18329,18 +18336,18 @@
   },
   {
    "node": "L34.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L34.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -18697,18 +18704,18 @@
   },
   {
    "node": "L35.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L35.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -19073,18 +19080,18 @@
   },
   {
    "node": "L36.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L36.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -19441,18 +19448,18 @@
   },
   {
    "node": "L37.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L37.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -19809,18 +19816,18 @@
   },
   {
    "node": "L38.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L38.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -20177,18 +20184,18 @@
   },
   {
    "node": "L39.ffn.top6",
-   "model_us": 0.0317,
+   "model_us": 0.0,
    "measured_us": 0.0,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
    "modelled_part_us": 0.0
   },
   {
    "node": "L39.ffn.top6_order",
-   "model_us": 0.0217,
-   "measured_us": 0.3358,
+   "model_us": 0.3358,
+   "measured_us": 0.0367,
    "cls": "measured",
-   "source": "SU: one ot_hdc_select unit, 384 router scores (the 64-unit + merge form the model prices is unbuilt)",
+   "source": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
    "modelled_part_us": 0.0
   },
   {
@@ -21235,7 +21242,7 @@
   },
   {
    "node": "L0.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -21460,7 +21467,7 @@
   },
   {
    "node": "L1.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -21705,7 +21712,7 @@
   },
   {
    "node": "L2.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -21915,7 +21922,7 @@
   },
   {
    "node": "L3.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -22130,7 +22137,7 @@
   },
   {
    "node": "L4.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -22340,7 +22347,7 @@
   },
   {
    "node": "L5.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -22555,7 +22562,7 @@
   },
   {
    "node": "L6.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -22765,7 +22772,7 @@
   },
   {
    "node": "L7.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -23010,7 +23017,7 @@
   },
   {
    "node": "L8.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -23220,7 +23227,7 @@
   },
   {
    "node": "L9.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -23430,7 +23437,7 @@
   },
   {
    "node": "L10.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -23645,7 +23652,7 @@
   },
   {
    "node": "L11.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -23855,7 +23862,7 @@
   },
   {
    "node": "L12.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -24070,7 +24077,7 @@
   },
   {
    "node": "L13.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -24325,7 +24332,7 @@
   },
   {
    "node": "L14.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -24540,7 +24547,7 @@
   },
   {
    "node": "L15.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -24750,7 +24757,7 @@
   },
   {
    "node": "L16.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -24965,7 +24972,7 @@
   },
   {
    "node": "L17.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -25175,7 +25182,7 @@
   },
   {
    "node": "L18.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -25390,7 +25397,7 @@
   },
   {
    "node": "L19.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -25630,7 +25637,7 @@
   },
   {
    "node": "L20.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -25840,7 +25847,7 @@
   },
   {
    "node": "L21.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -26055,7 +26062,7 @@
   },
   {
    "node": "L22.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -26265,7 +26272,7 @@
   },
   {
    "node": "L23.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -26510,7 +26517,7 @@
   },
   {
    "node": "L24.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -26720,7 +26727,7 @@
   },
   {
    "node": "L25.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -26935,7 +26942,7 @@
   },
   {
    "node": "L26.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -27145,7 +27152,7 @@
   },
   {
    "node": "L27.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -27390,7 +27397,7 @@
   },
   {
    "node": "L28.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -27600,7 +27607,7 @@
   },
   {
    "node": "L29.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -27810,7 +27817,7 @@
   },
   {
    "node": "L30.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -28025,7 +28032,7 @@
   },
   {
    "node": "L31.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -28265,7 +28272,7 @@
   },
   {
    "node": "L32.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -28480,7 +28487,7 @@
   },
   {
    "node": "L33.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -28690,7 +28697,7 @@
   },
   {
    "node": "L34.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -28905,7 +28912,7 @@
   },
   {
    "node": "L35.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -29145,7 +29152,7 @@
   },
   {
    "node": "L36.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -29360,7 +29367,7 @@
   },
   {
    "node": "L37.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -29570,7 +29577,7 @@
   },
   {
    "node": "L38.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -29780,7 +29787,7 @@
   },
   {
    "node": "L39.ffn.top6_order",
-   "us": 0.3358,
+   "us": 0.0367,
    "cls": "measured"
   },
   {
@@ -29870,6 +29877,7 @@
   "results/rtl/dsrom_1m_allmeasured_20261004/head.json": "404264a42c6e1faa0635d38e3f29b2e1cb34e028b0562c6d720dd91c8be15cce",
   "results/rtl/dsrom_1m_allmeasured_20261004/links.json": "13757346b2039c2794c00996871b98fbcd5747783a81f501a0eb140404824a4b",
   "results/rtl/dsrom_1m_allmeasured_20261004/cand_select.json": "76af1b31c74dab2438ef87564a14f0588ec258b880e6a5238458869f44534218",
+  "results/rtl/dsrom_recovery_20261004/levers/router.json": "c2a6ecf004a79162b1c40a7039aacb072c247b86ef3adb537a7eb88f303d4748",
   "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json": "47b6dbf89f1772c5bb83c712a2e4a637f6211d42bc17e0633f2b8baeafe5a18f",
   "results/rtl/dsrom_wavefront_verify_20261004/record.json": "4d7aeff663fb7e9c6264d9c5d184dd1e6dfdef5bfca18d1c615b14aff8f4aad1",
   "results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json": "aa7c78726595290552e17201782429a761ee51667de1ca3f73d72b7995a62051",

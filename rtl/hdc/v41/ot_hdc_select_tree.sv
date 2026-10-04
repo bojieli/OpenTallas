@@ -34,10 +34,12 @@
 //      last beat, launched together (empty slots are all-zero lists);
 //   5. a second merge tree over the NB lists, log2(NB) levels;
 //   6. the first K entries; ORDER = 1 sorts them by {valid, ~index} with one
-//      more bitonic sorter of 8 on (2+IW)-bit records; output register.
+//      more bitonic sorter of 8 on (2+IW)-bit records.  The last stage's
+//      register is the output register (no register-to-register copy: such a
+//      wire-only path fails FF hold at 25 ps uncertainty).
 // Latency (edges after the edge that accepts the last beat to the edge that
 // registers the result): LAT = 1 + 6 + 4 log2(W/8) + 1 + 4 log2(NB)
-// + (ORDER ? 6 : 0) + 1; for W 64, NB 8, ORDER 1: 39.
+// + (ORDER ? 6 : 0); for W 64, NB 8, ORDER 1: 38.
 // ---------------------------------------------------------------------------
 
 // one registered compare-exchange stage of a bitonic network over N records:
@@ -209,10 +211,10 @@ module ot_hdc_select_tree #(
     input  wire [W-1:0]      in_lv,
     input  wire [W*VW-1:0]   in_val,
     input  wire [W*IW-1:0]   in_idx,
-    output reg               out_valid,
-    output reg  [K-1:0]      out_v,
-    output reg  [K*IW-1:0]   out_idx,
-    output reg  [K-1:0]      out_ninf
+    output wire              out_valid,
+    output wire [K-1:0]      out_v,
+    output wire [K*IW-1:0]   out_idx,
+    output wire [K-1:0]      out_ninf
 );
     localparam integer EW = 1 + VW + IW + 1;       // {valid, key, ~index, ninf}
     localparam integer LW = 8 * EW;
@@ -318,28 +320,20 @@ module ot_hdc_select_tree #(
             end
             ot_hdc_seltree_sort8 #(.EW(XW)) u (.clk(clk), .rst_n(rst_n), .iv(f_v), .il(f_v),
                 .d(xd), .ov(x_v), .ol(x_l), .q(xq));
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) out_valid <= 1'b0;
-                else out_valid <= x_v;
-            end
+            // the sorter's last stage is the output register (a register-to-register copy
+            // with no logic between would only add a hold-critical path)
+            assign out_valid = x_v;
             for (j = 0; j < K; j = j + 1) begin : g_o
-                always @(posedge clk) begin
-                    out_v[j]              <= xq[XW*j + XW - 1];
-                    out_idx[IW*j +: IW]   <= ~xq[XW*j + 1 +: IW];
-                    out_ninf[j]           <= xq[XW*j];
-                end
+                assign out_v[j]            = xq[XW*j + XW - 1];
+                assign out_idx[IW*j +: IW] = ~xq[XW*j + 1 +: IW];
+                assign out_ninf[j]         = xq[XW*j];
             end
         end else begin : g_rank
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) out_valid <= 1'b0;
-                else out_valid <= f_v;
-            end
+            assign out_valid = f_v;
             for (j = 0; j < K; j = j + 1) begin : g_o
-                always @(posedge clk) begin
-                    out_v[j]              <= fl[EW*j + EW - 1];
-                    out_idx[IW*j +: IW]   <= ~fl[EW*j + 1 +: IW];
-                    out_ninf[j]           <= fl[EW*j];
-                end
+                assign out_v[j]            = fl[EW*j + EW - 1];
+                assign out_idx[IW*j +: IW] = ~fl[EW*j + 1 +: IW];
+                assign out_ninf[j]         = fl[EW*j];
             end
         end
     endgenerate
