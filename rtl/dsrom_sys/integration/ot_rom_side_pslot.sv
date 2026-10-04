@@ -18,9 +18,12 @@
 // re-issue (overwriting a squashed instance) or by p + 2^PSL after p has left every stage.  A generation bit
 // (position bit PSL) per slot makes any other reuse fail closed (`conflict`).
 //
-// Timing (1.2 GHz): the lookup for the pending HIDDEN job is REGISTERED and reads only registers: sel_* is the
-// controller's HELD header (hdr_user / hdr_pos); on the edge that captures a new header (sel_new = rx_hdr) ok_q is
-// forced low, so it is valid from the following cycle.  Increments (a SIDE message's last flit) and decrements (a
+// Timing (1.2 GHz): the lookup for the pending HIDDEN job is REGISTERED in two stages and reads only registers:
+// sel_* is the controller's HELD header (hdr_user / hdr_pos); stage 1 registers that user's slot slice, stage 2
+// the slot test.  ok_q is forced low for two edges after a new header (sel_new = rx_hdr) and whenever an update of
+// that user is in flight through the two stages.  The generation check (`conflict`) is likewise two-stage, one
+// edge later than the header (it can miss a conflicting header that immediately follows its slot's previous
+// message, before that message's increment is visible; it is a fail-closed detector, not the ordering itself).  Increments (a SIDE message's last flit) and decrements (a
 // job start) are registered here and applied one edge later; ok_q is computed for the state after the edge (the
 // registered increment / decrement applied).  Both delays only make ok_q later, never early: a decrement lags
 // its start by one edge while that job runs (no second start of the user's slot can follow within it), and an
@@ -70,18 +73,22 @@ module ot_rom_side_pslot #(
     wire [IW-1:0] i_sel = {sel_user[UB-1:0], sel_pos[PSL-1:0]};
     reg          chk_r, chk_g;               // the arriving header, registered (checked one edge later)
     reg [IW-1:0] i_chk;
-    // lookup of the state after this edge (the registered update applied)
-    wire [CW-1:0] c_sel = cnt[i_sel];
-    wire          g_sel = gen[i_sel];
-    wire [CW-1:0] c_nx = c_sel + ((inc_r && inc_i == i_sel) ? CW'(1) : CW'(0))
-                               - ((dec_r && dec_i == i_sel) ? CW'(SIDE_IN) : CW'(0));
-    wire          g_nx = (inc_r && inc_i == i_sel) ? inc_g : g_sel;
+    // two-stage lookup (MAXU up to 866): stage 1 registers the selected user's slot slice (a user-wide mux),
+    // stage 2 picks the slot.  ok_q is asserted only when neither stage saw an update of that user nor a new
+    // header (late, never early: the next cycle without one recomputes it).
+    reg [NSL*CW-1:0] sl_c;  reg [NSL-1:0] sl_g;  reg sl_dirty;  reg new1;
+    reg [NSL*CW-1:0] ck_c;  reg [NSL-1:0] ck_g;  reg ck_v;  reg ck_gen;  reg [PSL-1:0] ck_s;
+    wire [UB-1:0] u_sel = sel_user[UB-1:0];
+    wire touch_sel = (inc_r && inc_i[IW-1:PSL] == u_sel) || (dec_r && dec_i[IW-1:PSL] == u_sel);
+    integer j;
     integer k;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             for (k = 0; k < N; k = k + 1) begin cnt[k] <= {CW{1'b0}}; gen[k] <= 1'b0; end
             ok_q <= 1'b0; conflict <= 1'b0; inc_r <= 1'b0; dec_r <= 1'b0; inc_g <= 1'b0; inc_i <= 0; dec_i <= 0;
             chk_r <= 1'b0; chk_g <= 1'b0; i_chk <= 0;
+            sl_c <= 0; sl_g <= 0; sl_dirty <= 1'b1; new1 <= 1'b1; ck_c <= 0; ck_g <= 0; ck_v <= 1'b0;
+            ck_gen <= 1'b0; ck_s <= 0;
             inc_uh <= {MAXU{1'b0}}; dec_uh <= {MAXU{1'b0}}; inc_sh <= {NSL{1'b0}}; dec_sh <= {NSL{1'b0}};
         end else begin
             inc_r <= inc_v && inc_user < MAXU;
@@ -99,11 +106,19 @@ module ot_rom_side_pslot #(
                         - ((dec_uh[k / NSL] && dec_sh[k % NSL]) ? CW'(SIDE_IN) : CW'(0));
                 if (inc_uh[k / NSL] && inc_sh[k % NSL]) gen[IW'(k / NSL * (1 << PSL) + k % NSL)] <= inc_g;
             end
-            ok_q <= !sel_new && sel_user < MAXU && c_nx >= CW'(SIDE_IN) && g_nx == sel_pos[PSL];
+            for (j = 0; j < NSL; j = j + 1) begin
+                sl_c[j*CW +: CW] <= cnt[{u_sel, PSL'(j)}]; sl_g[j] <= gen[{u_sel, PSL'(j)}];
+                ck_c[j*CW +: CW] <= cnt[{i_chk[IW-1:PSL], PSL'(j)}]; ck_g[j] <= gen[{i_chk[IW-1:PSL], PSL'(j)}];
+            end
+            sl_dirty <= touch_sel;
+            new1 <= sel_new;
+            ok_q <= !sel_new && !new1 && !sl_dirty && !touch_sel && sel_user < MAXU &&
+                    sl_c[sel_pos[PSL-1:0]*CW +: CW] >= CW'(SIDE_IN) && sl_g[sel_pos[PSL-1:0]] == sel_pos[PSL];
             // a message for another generation of a slot that still holds unconsumed messages
             chk_r <= chk_v && chk_user < MAXU;
             i_chk <= {chk_user[UB-1:0], chk_pos[PSL-1:0]}; chk_g <= chk_pos[PSL];
-            conflict <= chk_r && cnt[i_chk] != {CW{1'b0}} && gen[i_chk] != chk_g;
+            ck_v <= chk_r; ck_gen <= chk_g; ck_s <= i_chk[PSL-1:0];
+            conflict <= ck_v && ck_c[ck_s*CW +: CW] != {CW{1'b0}} && ck_g[ck_s] != ck_gen;
         end
     end
 endmodule
