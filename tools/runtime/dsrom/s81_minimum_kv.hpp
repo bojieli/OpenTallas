@@ -1,6 +1,7 @@
 #pragma once
-#include "s81_minimum_runtime.hpp"
+#include "s81_minimum_prefix.hpp"
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -20,10 +21,20 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
     Window& window;
     // The existing descriptor owner retains the actual native generation.
     // We do not assign/increment it or grant consumer ownership in software.
+    // Zero is a legal captured value. Native descriptor inputs_ready/ready,
+    // not the numeric generation, authorize the consumer.
     std::function<uint16_t()> generation;
     std::function<void()> drive_native_ports;
     bool stopped=false;
     bool consumed=false;
+    bool staged_debt=false,stream_active=false;
+    uint16_t staged_generation=0;
+    bool target_engine=false;
+    bool old_kv_accept=false,old_staged=false,old_stream_go=false,old_done=false;
+    uint16_t old_generation=0;
+    std::optional<DsromS81PrefixOperation> held_consumer;
+    bool held_go=false;
+    bool mux_bound=false;
     long prepared_cycle=-1;
 
     static void require(bool ok,const char* why) {
@@ -42,14 +53,34 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
             blocks.eval();window.eval();
             wire_blocks();
             blocks.eval();window.eval();
+            // Rejoin settled low-edge producer/backend/consumer pins. The
+            // join is port wiring only; it must not advance descriptor state.
+            drive_native_ports();
+            wire_blocks();blocks.eval();window.eval();
             require(!blocks.fault&&!window.fault,"native packed KV producer/service fault");
             if(blocks.cap_v)
                 require(blocks.cap_ready,"actual QE packed output cannot be dropped");
             if(window.start_v)
                 require_packed_kv_window(generation(),window.start_user,
                                         window.start_first,window.start_count);
-            if(window.kv_v)
-                require(generation()!=0,"packed KV lacks actual descriptor generation");
+            // The composed S81 caller is target-context only. Standalone
+            // producer debug hooks above do not authorize a pos0 token build.
+            if(target_engine) {
+                if(window.start_v)
+                    require(window.start_first==1048448&&window.start_count==128,
+                            "S81 composed WINDOW must use real history at position 1048575");
+                if(blocks.issue)
+                    require(blocks.issue_abs_row==1048575,
+                            "S81 native current-row write is not at target position");
+                if(window.prime_v)
+                    require(window.prime_row>=1048448&&window.prime_row<=1048575,
+                            "S81 primed history is outside selected target WINDOW");
+            }
+            // Freeze actual pre-edge handshakes before Nash evaluates ME or
+            // any other shared participant takes its rising edge.
+            old_kv_accept=bool(window.kv_v&&window.kv_ready);
+            old_staged=window.staged_v;old_stream_go=window.stream_go;
+            old_done=window.done;old_generation=generation();
         }catch(...){stopped=true;throw;}
     }
     void rising(bool released) {
@@ -57,10 +88,30 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
             require(!stopped,"packed KV provider quarantined");
             // Only the canonical host's shared edge clocks these two models.
             // Attention, QE and HBM remain their existing owners' participants.
+            require(released || (!staged_debt&&!stream_active),
+                    "reset would erase admitted packed WINDOW debt");
             blocks.rst_n=released;window.rst_n=released;
             if(released) {
                 require(prepared_cycle==runtime.cycle(),"packed KV missing pre-edge prepare");
-                consumed=bool(window.kv_v&&window.kv_ready);
+                consumed=old_kv_accept;
+                if(old_staged) {
+                    require(!staged_debt&&!stream_active,
+                            "packed WINDOW staged over held generation");
+                    staged_generation=old_generation;staged_debt=true;
+                }
+                if(staged_debt||stream_active)
+                    require(old_generation==staged_generation,
+                            "packed WINDOW generation changed with retained debt");
+                if(old_stream_go) {
+                    require(staged_debt&&!stream_active&&(!target_engine||held_go),
+                            "packed WINDOW stream lacks staged native response");
+                    staged_debt=false;stream_active=true;
+                }
+                if(old_done) {
+                    require(stream_active,"packed WINDOW completion lacks accepted stream");
+                    stream_active=false;staged_generation=0;
+                    held_consumer.reset();held_go=false;
+                }
             }
             blocks.clk=1;window.clk=1;
             blocks.eval();window.eval();
@@ -124,19 +175,72 @@ public:
         window.s_beat=mux.w_sbeat; window.s_data=mux.w_sdata;
         require(!mux.fault,"actual native WINDOW/RoPE backend mux fault");
     }
-    // Raw 4*16*265 bits from native WINDOW merge to Nash PACKED_KV=1.
+    // Maxwell's NativeHbm clocks ONLY HBM. This is the single borrowed C8
+    // mux clock owner; its native journal samples the same prepared ports.
+    // Register once on the canonical runtime, independently of nested ME/KV.
+    // The caller's port-only join settles WINDOW/CKV/mux/HBM before snapshots;
+    // NativeHbm.prepare runs after those source inputs, before ANY rising.
+    template<class NativeKvRopeMux,class NativeBackend>
+    DsromS81MinimumParticipant mux_participant(NativeKvRopeMux& mux,NativeBackend& backend) {
+        require(!mux_bound&&mux.contextp()==runtime.context,
+                "C8 mux requires one canonical shared-edge owner");
+        require(backend.initialized(),"C8 mux requires actual native history initialization");
+        mux_bound=true;
+        auto self=this->shared_from_this();
+        return {"native-c8-kv-rope-mux",
+            [self,&mux,&backend](const auto&){
+                require(!self->fault()&&backend.initialized(),
+                        "C8 mux missing live initialized source");
+                mux.clk=0;mux.eval();
+                require(!mux.fault,"native C8 mux preparation fault");
+            },
+            [self,&mux,&backend](bool released){
+                // This minimum vehicle permits only initial shared cold reset,
+                // never a warm reset that can erase native mux/CKV ownership.
+                require(released||(!self->runtime.identity&&backend.drained()&&
+                                   !self->staged_debt&&!self->stream_active),
+                        "C8 mux reset would erase admitted context/debt");
+                mux.rst_n=released;mux.clk=1;mux.eval();
+                require(!mux.fault,"native C8 mux edge fault");
+            },
+            [&mux](bool released){mux.rst_n=released;mux.clk=0;mux.eval();},
+            [self,&mux](){return self->fault()||bool(mux.fault);}};
+    }
+    // The selected512 producer is the EXISTING native CKV die service, not
+    // WINDOW's compatibility merger (which binds selected_count to zero).
+    // It owns VM-selected IDs, ordered row staging, FP4 encoding and TP4
+    // all-gather. Its owner clocks it and supplies the native VM/AG callbacks.
+    // Preserve its independent C8 client beside the WINDOW w_* client above.
+    template<class NativeCkvService,class NativeKvRopeMux>
+    void wire_selected_backend(NativeCkvService& ckv,NativeKvRopeMux& mux) {
+        require(ckv.contextp()==runtime.context&&mux.contextp()==runtime.context,
+                "selected CKV service/mux must share canonical context");
+        static_assert(sizeof(ckv.c_addr)==sizeof(mux.c_addr),
+                      "selected CKV four-stack addresses must match native mux");
+        static_assert(sizeof(ckv.c_tag)==sizeof(mux.c_tag),
+                      "selected CKV tags must match native C8 client");
+        mux.c_v=ckv.c_v;mux.c_addr=ckv.c_addr;mux.c_len=ckv.c_len;
+        mux.c_tag=ckv.c_tag;mux.c_we=ckv.c_we;
+        mux.c_wdata=ckv.c_wdata;mux.c_wstrb=ckv.c_wstrb;
+        mux.c_srdy=ckv.c_srdy;
+        ckv.c_rdy=mux.c_rdy;ckv.c_wr_done=mux.c_wr_done;
+        ckv.c_sv=mux.c_sv;ckv.c_stag=mux.c_stag;
+        ckv.c_sbeat=mux.c_sbeat;ckv.c_sdata=mux.c_sdata;
+        require(!ckv.fault&&!mux.fault,"native selected CKV service/backend fault");
+    }
+    // Exact selected ot_hdc_v41x_att_adapt PACKED_KV=1 external ports.
     // There is no host expansion, floating arithmetic or padding-history read.
     template<class Attention> void wire_attention(Attention& attention) {
-        static_assert(sizeof(attention.kv_w)==530*sizeof(uint32_t),
+        static_assert(sizeof(attention.packed_kv_w)==530*sizeof(uint32_t),
                       "selected attention must expose full 16960-bit packed KV");
-        attention.kv_v=window.kv_v;attention.kv_m=window.kv_m;
-        for(unsigned i=0;i<530;i++)attention.kv_w[i]=window.kv_w[i];
-        window.kv_ready=attention.kv_ready;
-        if(window.kv_v)require(generation()!=0,"missing native packed KV generation");
+        attention.packed_kv_v=window.kv_v;attention.packed_kv_m=window.kv_m;
+        for(unsigned i=0;i<530;i++)attention.packed_kv_w[i]=window.kv_w[i];
+        attention.packed_kv_fault=fault();
+        window.kv_ready=attention.packed_kv_ready;
     }
     // Staging is asserted by the native schedule only after actual sector
     // read responses. Its row-valid bits require code AND scale m_wr_done.
-    bool staged()const{return !fault()&&window.staged_v;}
+    bool staged()const{return !fault()&&staged_debt&&generation()==staged_generation;}
     bool packed_valid()const{return !fault()&&window.kv_v;}
     bool packed_accepted_on_last_edge()const{return !fault()&&consumed;}
     uint16_t native_generation()const{return generation();}
@@ -148,6 +252,63 @@ public:
             [self](bool reset){self->rising(reset);},
             [self](bool reset){self->falling(reset);},
             [self](){return self->fault();}};
+    }
+    // Consume the EXISTING engine interface used by Nash's real_kv argument.
+    // The supplied owner binds actual selected-history descriptors, publication
+    // visibility and native lifecycle; this provider adds no address allocator
+    // or source ABI. Its participant owns neither the ME leaf nor the ATT cut.
+    // Enroll the returned engine ONLY nested inside Nash's ME participant,
+    // never also enroll participant() or the descriptor owner separately.
+    DsromS81PrefixNativeEngine engine(DsromS81PrefixNativeEngine owner) {
+        require(!owner.participant.name.empty()&&owner.participant.prepare&&
+                owner.participant.rising&&owner.participant.falling&&
+                owner.participant.fault&&owner.ready&&owner.idle&&
+                owner.inputs_ready&&owner.drive,
+                "packed WINDOW needs actual source descriptor/lifecycle callbacks");
+        require(!target_engine,"packed WINDOW engine bound twice");
+        target_engine=true;
+        auto self=this->shared_from_this();
+        auto source=std::make_shared<DsromS81PrefixNativeEngine>(std::move(owner));
+        return {{"actual-packed-window-kv",
+            [self,source](const auto& r){source->participant.prepare(r);self->prepare();},
+            [self,source](bool reset){self->rising(reset);source->participant.rising(reset);},
+            [self,source](bool reset){self->falling(reset);source->participant.falling(reset);},
+            [self,source](){return self->fault()||source->participant.fault();}},
+            // Keep pre-edge readiness asserted through the driven GO pulse;
+            // the shared rising edge moves staged ownership into active debt.
+            [self,source](){return self->held_consumer&&!self->stream_active&&self->staged()&&
+                                  source->ready()&&!source->participant.fault();},
+            // Terminal drain only. Staged rows retain native ownership and
+            // therefore cannot be presented as an idle source before ME GO.
+            [self,source](){return !self->stream_active&&!self->staged_debt&&
+                                  !self->held_consumer&&source->idle()&&
+                                  !self->fault()&&!source->participant.fault();},
+            [self,source](const auto& op){
+                require(!self->fault()&&!source->participant.fault(),
+                        "packed WINDOW source authority fault");
+                if(self->held_go||self->stream_active)return false;
+                if(self->held_consumer)
+                    require(self->held_consumer->index==op.index&&
+                            self->held_consumer->unit==op.unit&&
+                            self->held_consumer->instruction==op.instruction,
+                            "packed WINDOW held consumer changed before GO");
+                // This is actual descriptor authorization for THIS literal
+                // operation, not a lease derived from a generation number.
+                if(!source->inputs_ready(op)||!source->ready()||!self->staged())return false;
+                self->held_consumer=op;
+                return true;
+            },
+            [self,source](const auto& op,bool go){
+                if(go)require(self->held_consumer&&!self->held_go&&
+                              self->held_consumer->index==op.index&&
+                              self->held_consumer->unit==op.unit&&
+                              self->held_consumer->instruction==op.instruction&&
+                              self->staged()&&!self->stream_active&&source->ready()&&
+                              !source->participant.fault(),
+                              "ME GO lacks committed native WINDOW generation");
+                source->drive(op,go);self->window.stream_go=go;
+                if(go)self->held_go=true;
+            }};
     }
 };
 } // namespace dsrom_s81_minimum
