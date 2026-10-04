@@ -16,6 +16,7 @@ module tb_dsrom_collective_headreg;
     wire [3:0] valid[0:1], ready[0:1], last[0:1], mode[0:1], ov[0:1], ol[0:1], oe[0:1], fault[0:1];
     wire [127:0] data[0:1], tag[0:1];
     wire [4*GW*32-1:0] od[0:1];
+    wire [3:0] gather_output[0:1];
     wire [3:0] txv[0:1][0:3], rxv[0:1][0:3], rlv[0:1][0:3];
     wire [PW-1:0] txrec[0:1][0:3];
     wire [4*PW-1:0] rxrec[0:1][0:3], rlrec[0:1][0:3];
@@ -56,6 +57,7 @@ module tb_dsrom_collective_headreg;
                     .rl_tx_valid(rlv[b][dest]),.rl_tx_rec(rlrec[b][dest]),.rl_rx_valid(rlv[b][dest^1]),.rl_rx_rec(rlrec[b][dest^1]),
                     .out_valid(ov[b][dest]),.out_ready((cyc+dest)%7!=0),.out_data(od[b][dest*GW*32+:GW*32]),
                     .out_last(ol[b][dest]),.out_rank(rank[b][dest*2+:2]),.out_err(oe[b][dest]),.fault(fault[b][dest]),.fault_code(code[b][dest*3+:3]));
+            assign gather_output[b][dest]=dut.go_v;
             end else begin:g_cached
                 ot_w15_rom_oneshot_die_px_headreg #(.REGISTER_HEAD(1),.N(4),.RANK(dest),.LANES(1),.DEPTH(DEPTH),.RELAY(RELAY),.GW(GW),.PAIRWISE(PAIRWISE),.OUT_BP(GW==4)) dut(
                     .clk(clk),.rst_n(rst_n),.in_valid(valid[b][dest]),.in_ready(ready[b][dest]),
@@ -65,6 +67,7 @@ module tb_dsrom_collective_headreg;
                     .rl_tx_valid(rlv[b][dest]),.rl_tx_rec(rlrec[b][dest]),.rl_rx_valid(rlv[b][dest^1]),.rl_rx_rec(rlrec[b][dest^1]),
                     .out_valid(ov[b][dest]),.out_ready((cyc+dest)%7!=0),.out_data(od[b][dest*GW*32+:GW*32]),
                     .out_last(ol[b][dest]),.out_rank(rank[b][dest*2+:2]),.out_err(oe[b][dest]),.fault(fault[b][dest]),.fault_code(code[b][dest*3+:3]));
+                assign gather_output[b][dest]=dut.go_v;
             end
         end
     end endgenerate
@@ -80,7 +83,7 @@ module tb_dsrom_collective_headreg;
     // Arrival times vary by rank. Compare accepted output sequences, including
     // rank/last, independently at all four dies instead of comparing clocks.
     always @(posedge clk) if(rst_n) begin
-        for(i=0;i<2;i=i+1) for(j=0;j<4;j=j+1) if(ov[i][j] && (GW!=4 || (cyc+j)%7!=0)) begin
+        for(i=0;i<2;i=i+1) for(j=0;j<4;j=j+1) if(ov[i][j] && (GW!=4 || !gather_output[i][j] || (cyc+j)%7!=0)) begin
             if(received[i][j]>=MAXOUT || oe[i][j]!=0) $fatal(1,"output/error");
             captured[i][j][received[i][j]]={ol[i][j],rank[i][j*2+:2],od[i][j*GW*32+:GW*32]};
             received[i][j]=received[i][j]+1;
