@@ -1,5 +1,5 @@
 {
-  "parameter_authority": "owner relayed exact Sagan selected parameters 2026-10-04",
+  "parameter_authority": "owner relayed Sagan retained command correction 2026-10-04: HDC_SINKHORN_SEQ undefined; MC STEP_CYC7",
   "history_binding": {
     "runtime_owners": [
       "Epicurus",
@@ -74,9 +74,7 @@
       "SLAW": 8
     },
     "prefix": "VDsromS81IndexSelector",
-    "defines": [
-      "HDC_SINKHORN_SEQ"
-    ],
+    "defines": [],
     "sources": [
       "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
       "rtl/hdc/ot_hdc_delay.sv",
