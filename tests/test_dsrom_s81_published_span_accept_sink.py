@@ -87,6 +87,19 @@ struct AcceptRun {
     void tick(bool released=true){p.prepare({});p.rising(released);p.falling(released);}
 };
 int main() {
+    {AcceptRun r;
+     for(unsigned b=0;b<5;b++) {
+       auto o=batch(64+(b%4)*5120+(b/4)*16);
+       assert(!r.binder.source_span_lease(123,o.vm_address,16));
+       r.binder.offer(o);
+       for(unsigned i=0;i<19;i++)r.tick();
+       assert(r.binder.visible(o));
+       assert(r.binder.published_words()==(b+1)*16);
+       assert(r.binder.source_span_lease(123,o.vm_address,16));
+       assert(!r.binder.source_span_lease(123,96,16));
+       if(!b)assert(!r.binder.source_span_lease(123,80,16));
+     }
+    }
     {AcceptRun r;assert(!r.writes_seen&&!r.reads_seen);
      r.tick();assert(!r.writes_seen&&!r.reads_seen); // idle strobe=0
      auto o=batch(46464);assert(r.binder.offer_prefix(o,16));
