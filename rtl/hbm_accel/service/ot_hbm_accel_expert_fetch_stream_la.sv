@@ -37,6 +37,7 @@ module ot_hbm_accel_expert_fetch_stream_la #(
   parameter integer NSM = 8, NPC = 32, NSECT = 49, IW = 9, ROW_BASE = 0,
   parameter integer DEPTH = 512, LAND = 4, MAXL = 64,
   parameter integer TOPK = 6, NSETS = 7, LAW = 6, PICK = 2, REPICK = 1, RESERVE = 1, PULL = 0, TAILPULL = 12,
+  parameter integer PCPROT = 0, STEER = 0, NWIN = 0,
   parameter [7:0]   NOTICE_PROT = 8'h7F
 )(
   input  wire               clk, hclk, rst_n, hrst_n,
@@ -159,11 +160,23 @@ module ot_hbm_accel_expert_fetch_stream_la #(
     for (genvar p = 0; p < NPC; p = p + 1) begin : pc
       wire [2:0] dk = ord[ptr[p][2:0]];
       wire [IW-1:0] did = tab[dk];
+      // PCPROT (default 0): refresh protection per PC -- only the sets this PC still has to stream
+      // (picked but not yet accepted by it, plus arrived unpicked experts); a set whose experts this PC
+      // has finished stops being protected, so a due REFpb (or a REPICK) lands on it instead of on a
+      // set that is still needed (one such REFpb stalls the PC for tRFCpb, 196 cycles).
+      reg [7:0] prot_pc;
+      always @* begin
+        prot_pc = 8'b0;
+        for (integer i = 0; i < 8; i = i + 1)
+          if (4'(i) >= ptr[p] && 4'(i) < oc) prot_pc = prot_pc | (8'b1 << tset[ord[i]]);
+        for (integer r = 0; r < 8; r = r + 1)
+          if (r < cnt && !picked[r]) prot_pc = prot_pc | (8'b1 << tset[r]);
+      end
       ot_hbm_accel_expert_stream_pc_la #(.ENABLE(1), .REF_MODE(REF_MODE), .PC(p), .CRED(1 << LAW),
-        .REF_PHASE((PHASE + (p * PERIOD) / 32) % PERIOD), .NOTICE_PROT(NOTICE_PROT), .REPICK(REPICK), .RESERVE(RESERVE), .PULL(PULL), .TAILPULL(TAILPULL)) u (
+        .REF_PHASE((PHASE + (p * PERIOD) / 32) % PERIOD), .NOTICE_PROT(NOTICE_PROT), .REPICK(REPICK), .RESERVE(RESERVE), .PULL(PULL), .TAILPULL(TAILPULL), .STEER(STEER), .NWIN(NWIN)) u (
         .clk(hclk), .rst_n(hrst_n), .desc_v(dv[p]), .desc_r(pc_r[p]),
         .desc_row(row_of(did)), .desc_set(set_of(did)), .desc_bgx(did[0]), .desc_n(11'(NSECT)),
-        .go(1'b1), .next_posted(1'b0), .notice(notice), .prot(prot),
+        .go(1'b1), .next_posted(1'b0), .notice(notice), .prot(PCPROT != 0 ? prot_pc : prot),
         .row_v(row_v[p]), .row_prio(), .row_gnt(1'b1),
         .row_op(row_op[p*3 +: 3]), .row_bank(row_bank[p*5 +: 5]), .row_row(row_row[p*19 +: 19]),
         .col_v(col_v[p]), .col_bank(col_bank[p*5 +: 5]), .col_col(col_col[p*5 +: 5]),
