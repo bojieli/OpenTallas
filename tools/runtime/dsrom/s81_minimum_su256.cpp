@@ -1,5 +1,7 @@
 // Selected SUN256 native SU; host copies opaque payload bits only.
 #include "s81_minimum_prefix_io.hpp"
+#include "s81_minimum_su256_ports.hpp"
+#include "s81_minimum_su256_constants.hpp"
 #include "VDsromSu256.h"
 #include "verilated.h"
 #include <cstdlib>
@@ -16,6 +18,7 @@ uint32_t field(const DsromS81PrefixOperation&o,unsigned off,unsigned width){
 struct NativeSu {
  DsromS81MinimumRuntime& runtime;uint64_t id;dsrom_s81_minimum::PrefixPublication& publication;
  DsromS81MinimumSourceIo io;VDsromSu256 leaf;
+ DsromS81NativeSuPorts* hooks=nullptr;bool kv_pending=false;
  std::optional<DsromS81PrefixOperation> op;
  std::vector<uint32_t> addresses;std::map<uint32_t,uint32_t> staged;
  std::map<uint32_t,uint64_t> crom;bool crom_loaded=false;
@@ -34,7 +37,7 @@ struct NativeSu {
  void constants(){
   if(crom_loaded)return;
   const char* path=std::getenv("DSROM_S81_MINIMUM_CROM_HEX");
-  require(path&&*path,"SU I6 requires actual enrolled CROM file DSROM_S81_MINIMUM_CROM_HEX; no synthetic constants");
+  require(path&&*path,"SU requires actual layer-enrolled CROM file DSROM_S81_MINIMUM_CROM_HEX; no synthetic constants");
   std::ifstream f(path);require(bool(f),"actual CROM source unavailable");
   uint32_t a=0;std::string line,token;
   while(std::getline(f,line)){
@@ -45,14 +48,28 @@ struct NativeSu {
    }
   }crom_loaded=true;
  }
- uint32_t external(unsigned src,uint32_t a){
-  require(src==1||src==2,"prefix does not enroll WROM provider");constants();
+ uint32_t external(unsigned src,uint32_t a,unsigned operand){
+  require(src==1||src==2,"prefix does not enroll WROM provider");
+  require(bool(op),"SU constant read without held source operation");
+  a=dsrom_s81_su_constant_address(*op,operand,src,a);constants();
   auto p=crom.find(a);require(p!=crom.end(),"native source address missing from actual CROM");
   return src==1?uint32_t(p->second):uint32_t(p->second>>32);
  }
+ uint32_t dynamic(unsigned selector){
+  if(!selector)return 0;
+  require(hooks&&hooks->actual_dynamic,"SU requires captured source dynamic selector");
+  auto value=hooks->actual_dynamic(selector);require(bool(value),"SU dynamic value not yet captured");return *value;
+ }
+ uint32_t address(const DsromS81PrefixOperation&o,unsigned base,unsigned selector){
+  const uint64_t v=uint64_t(field(o,base,30))+dynamic(field(o,selector,6));
+  require(v<(1ull<<30),"SU effective native address30 overflow");return v;
+ }
  void decode(const DsromS81PrefixOperation&o){
-  leaf.i_nout=field(o,482,21);
-  leaf.i_nin=field(o,503,21);
+  const uint64_t no=uint64_t(field(o,482,21))+dynamic(field(o,524,6));
+  const uint64_t ni=uint64_t(field(o,503,21))+dynamic(field(o,530,6));
+  require(no<=65535&&ni<=65535,"retained native SU NW16 cannot truncate effective count");
+  leaf.i_nout=no;
+  leaf.i_nin=ni;
   leaf.i_chase=field(o,1698,21);
   leaf.i_m1=field(o,966,3);
   leaf.i_m2=field(o,969,2);
@@ -68,19 +85,19 @@ struct NativeSu {
   leaf.i_imm3=field(o,1213,32);
   leaf.i_red=field(o,1084,2);
   leaf.i_asrc=field(o,536,2);
-  leaf.i_abase=field(o,538,30);
+  leaf.i_abase=address(o,538,628);
   leaf.i_aso=field(o,568,30);
   leaf.i_asi=field(o,598,30);
   leaf.i_bsrc=field(o,666,2);
-  leaf.i_bbase=field(o,668,30);
+  leaf.i_bbase=address(o,668,758);
   leaf.i_bso=field(o,698,30);
   leaf.i_bsi=field(o,728,30);
   leaf.i_csrc=field(o,765,2);
-  leaf.i_cbase=field(o,767,30);
+  leaf.i_cbase=address(o,767,857);
   leaf.i_cso=field(o,797,30);
   leaf.i_csi=field(o,827,30);
   leaf.i_dsrc=field(o,864,2);
-  leaf.i_dbase=field(o,866,30);
+  leaf.i_dbase=address(o,866,956);
   leaf.i_dso=field(o,896,30);
   leaf.i_dsi=field(o,926,30);
   leaf.i_aind=field(o,634,2);
@@ -91,7 +108,7 @@ struct NativeSu {
   leaf.i_arelu=field(o,963,1);
   leaf.i_amin=field(o,964,1);
   leaf.i_cclip=field(o,965,1);
-  leaf.i_obase=field(o,988,30);
+  leaf.i_obase=leaf.i_dst==3?field(o,988,30):address(o,988,1078);
   leaf.i_oso=field(o,1018,30);
   leaf.i_osi=field(o,1048,30);
   leaf.i_redsq=field(o,1086,1);
@@ -103,7 +120,7 @@ struct NativeSu {
   leaf.i_m=field(o,1723,3);
   leaf.i_xps=field(o,1726,30);
   leaf.i_ops=field(o,1756,30);
-  leaf.i_orow=0; // source core O_D dynamic value; selected literals require zero below
+  leaf.i_orow=dynamic(field(o,1078,6)); // source core uses the same captured O_D
  }
  bool inputs(const DsromS81PrefixOperation&o){
   try {
@@ -114,14 +131,11 @@ struct NativeSu {
    if(!op||op->index!=o.index){
     require(leaf.idle&&outputs.empty(),"SU prefetch overlaps old native publication");
     require(o.index<(1u<<14)&&o.unit==2,"SU literal unit/index14");
-    require(field(o,524,6)==0,"selected SU unsupported dynamic/indirect su_d_nout");
-    require(field(o,530,6)==0,"selected SU unsupported dynamic/indirect su_d_nin");
-    require(field(o,628,6)==0,"selected SU unsupported dynamic/indirect a_d");
-    require(field(o,758,6)==0,"selected SU unsupported dynamic/indirect b_d");
-    require(field(o,857,6)==0,"selected SU unsupported dynamic/indirect c_d");
-    require(field(o,956,6)==0,"selected SU unsupported dynamic/indirect d_d");
-    require(field(o,1078,6)==0,"selected SU unsupported dynamic/indirect o_d");
     require(field(o,634,2)<3,"native SU indirect selector");
+    for(unsigned selector:{524u,530u,628u,758u,857u,956u,1078u})if(field(o,selector,6)){
+     require(hooks&&hooks->actual_dynamic,"SU dynamic source callback absent");
+     if(!hooks->actual_dynamic(field(o,selector,6)))return false;
+    }
     op=o;decode(o);staged.clear();addresses.clear();fetched=0;
     indirect_planned=false;index_addresses.clear();index_fetched=0;
     const unsigned count=leaf.i_aind==1?leaf.i_nin:leaf.i_aind==2?leaf.i_nout:0;
@@ -151,7 +165,7 @@ struct NativeSu {
        uint64_t(base[p])+uint64_t(out)*so[p]+uint64_t((p==1||p==3)&&leaf.i_bhalf?i/2:i)*si[p];
       require(address<(1u<<19),"actual SU source VM19 alias");
       if(src[p]==0){if(!staged.count(address))unique.insert(address);}
-      else (void)external(src[p],address);
+      else (void)external(src[p],address,p);
      }
     }
     // Snapshot is bounded by the actual selected VM's19-bit address space.
@@ -174,19 +188,21 @@ struct NativeSu {
  void drive(const DsromS81PrefixOperation&o,bool go){
   leaf.go=go;if(!go)return;
   require(op&&op->index==o.index&&op->instruction==o.instruction&&indirect_planned&&
-          index_fetched==index_addresses.size()&&fetched==addresses.size()&&!admitted,"SU GO before actual prefetch");decode(o);
+          index_fetched==index_addresses.size()&&fetched==addresses.size()&&!admitted,"SU GO before actual prefetch");
+  // Effective dynamic native ports stay fixed from the staged operand capture.
  }
  void prepare(const DsromS81PairResult&){
   if(!outputs.empty()){
    if(!offered)offered=io.offer(outputs.front(),1);
    if(offered&&io.visible(outputs.front(),1)){outputs.pop_front();offered=false;}
   }
-  if(admitted&&leaf.idle&&outputs.empty()){
+  if(admitted&&leaf.idle&&outputs.empty()&&(!kv_pending||(hooks&&hooks->kv_writes_visible&&hooks->kv_writes_visible()))){
+   kv_pending=false;
    admitted=false;op.reset(); // next generation must reread actual operand versions
   }
  }
- uint32_t memory(unsigned src,uint32_t a){
-  if(src)return external(src,a);
+ uint32_t memory(unsigned src,uint32_t a,unsigned operand=0){
+  if(src)return external(src,a,operand);
   auto v=staged.find(a);
   require(v!=staged.end(),"native fixed read outside actual staged scalars");return v->second;
  }
@@ -214,7 +230,7 @@ struct NativeSu {
    }
    for(unsigned j=0;j<1024;++j){
     q[j]=leaf.rd_q[j];if(released&&bits(leaf.rd_re,j,1))
-     q[j]=memory(bits(leaf.rd_src,j*2,2),bits(leaf.rd_addr,j*30,30));
+     q[j]=memory(bits(leaf.rd_src,j*2,2),bits(leaf.rd_addr,j*30,30),j%4);
    }
    if(acc)admitted=true;
    leaf.rst_n=released;leaf.clk=1;leaf.eval(); // OLD synchronous-memory Q at edge
@@ -222,8 +238,12 @@ struct NativeSu {
    for(unsigned j=0;j<256;++j)leaf.vi_q[j]=vi[j]; // same native one-register index RAM
    if(released){
     require(!leaf.fault,"actual native SU arithmetic/control fault");
+    bool any_kv=false;for(unsigned j=0;j<256;++j)any_kv|=bool(bits(leaf.kv_we,j,1));
+    if(any_kv){
+     require(hooks&&hooks->kv_write&&hooks->kv_writes_visible&&op&&admitted,"native KV writer has no bound sink/completion");
+     kv_pending=true;hooks->kv_write(leaf,*op); // actual registered outputs; no ACK implied
+    }
     for(unsigned j=0;j<256;++j){
-     require(!bits(leaf.kv_we,j,1),"prefix unexpected KV writer");
      if(bits(leaf.vm_we,j,1))capture(bits(leaf.vm_waddr,j*30,30),leaf.vm_wdata[j]);
     }
     for(unsigned j=0;j<32;++j)if(bits(leaf.res_we,j,1))capture(bits(leaf.res_addr,j*30,30),leaf.res_data[j]);
@@ -239,6 +259,22 @@ DsromS81PrefixNativeEngine dsrom_s81_bind_minimum_su256(
  const DsromS81MinimumSourceIo&io,const DsromS81MinimumSourceTags&tags){
  if(!tags.scalar_accept||!tags.read_accept)throw std::runtime_error("same-bank actual accepts required");
  auto p=std::make_shared<NativeSu>(r,id,pub,io);
+ return {{"native-SUN256-SU-only",[p](const auto&v){p->prepare(v);},
+  [p](bool rn){p->rising(rn);},[p](bool rn){p->falling(rn);},[p](){return p->fault();}},
+  [p](){return bool(p->leaf.ready)&&!p->admitted;},
+  [p](){return bool(p->leaf.idle)&&p->outputs.empty()&&!p->admitted;},
+  [p](const auto&o){return p->inputs(o);},[p](const auto&o,bool go){p->drive(o,go);}};
+}
+
+DsromS81PrefixNativeEngine dsrom_s81_bind_minimum_su256(
+ DsromS81MinimumRuntime&r,uint64_t id,dsrom_s81_minimum::PrefixPublication&pub,
+ const DsromS81MinimumSourceIo&io,const DsromS81MinimumSourceTags&tags,
+ DsromS81NativeSuPorts&hooks){
+ if(!tags.scalar_accept||!tags.read_accept)throw std::runtime_error("same-bank actual accepts required");
+ auto p=std::make_shared<NativeSu>(r,id,pub,io);p->hooks=&hooks;
+ hooks.native=[p]()->const VDsromSu256&{return p->leaf;};
+ hooks.held_operation=[p](){if(!p->op)throw std::runtime_error("SU has no held source operation");return *p->op;};
+ hooks.accepts_on_current_shared_edge=[p](){return bool(p->leaf.go&&p->leaf.ready);};
  return {{"native-SUN256-SU-only",[p](const auto&v){p->prepare(v);},
   [p](bool rn){p->rising(rn);},[p](bool rn){p->falling(rn);},[p](){return p->fault();}},
   [p](){return bool(p->leaf.ready)&&!p->admitted;},
