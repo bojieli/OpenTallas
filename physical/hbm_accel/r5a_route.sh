@@ -13,7 +13,7 @@ M=ot_sram_1r1w_512x128_m4_r2c2
   --source rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_sram.sv \
   --source physical/asap7_memory_macros_v2/$M/${M}_bb.v \
   --macro-view $M=physical/asap7_memory_macros_v2/$M --macro-place-halo 3 3 \
-  --step-tcl POST_MACRO_PLACE=physical/dsrom_edge_macro_snap.tcl \
+  --step-tcl POST_MACRO_PLACE=${MPL_HOOK:-physical/hbm_accel/r5a_macro_grid.tcl} \
   --param ENABLE=1 --clock-port clk --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --sdc-append physical/hbm_accel/r5a_fetch_two_clock.sdc --false-path-from rst_n \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages pnr \
