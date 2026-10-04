@@ -35,3 +35,39 @@ python3 tools/qwen_nearhbm_attn_ref.py vectors --ctx C --seed $((C*7+${#K})) --k
 rtl/test/nearhbm/hubp_swap.sh rtl/test/qwen_sys/build_nearhbm_sys_fenced.sh OUT 128 8 dpi -GLAYER_START_FENCE=1
 OUT/Vtb v/C_K 16 981 400000 FLIP
 ```
+
+## Row engine successor plus hub successor (stack_p, source c9b877ccd; stack shim cfcadb393)
+
+These runs use the parent's exact gate and the fenced subsystem with `NHB_SWAP=hub,stack`. The full context is 8,192.
+
+| bench | parent | hub_p + stack_p | added | result |
+|---|---|---|---|---|
+| gate R = 8 (`engine/gate_hd128_r8_hubp_stackp.json`) | 1,824 | 1,857 | +33 | 20/20 exact |
+| gate R = 6 (floorplan) | 2,022 | 2,037 | +15 | 20/20 exact |
+| gate R = 1 | 8,728 | 8,737 | +9 | 20/20 exact |
+| fence, ctx 128 / 129 / 512, R = 8 (`engine/fence/`) | 1,256 | 1,281 | +25 | 8/8 exact, flips 0 and 97 |
+| fence, ctx 1 | 942 | 957 | +15 | exact |
+
+**Phases at R = 8 (parent to successor):**
+
+| phase | parent | successor |
+|---|---|---|
+| K to V gap | 82 | 93 |
+| V stream | 801 | 806 |
+| drain | 102 | 114 |
+| return | 98 | 103 |
+
+The row engine adds these cycles:
+- the boundary: +1 start, +2 response;
+- the 4-stage lane distribution;
+- 2 score registers.
+
+The V loop keeps the parent's cadence, as described in the row engine comment.
+
+```
+NHB_SWAP=hub,stack rtl/test/nearhbm/hubp_swap.sh rtl/test/nearhbm/build_nearhbm_tb.sh OUT 128 R dpi
+python3 tools/qwen_nearhbm_attn_gate.py --bin OUT --hd 128 --r R --vectors v --out gate.json
+NHB_SWAP=hub,stack rtl/test/nearhbm/hubp_swap.sh rtl/test/qwen_sys/build_nearhbm_sys_fenced.sh OUT 128 8 dpi -GLAYER_START_FENCE=1
+```
+
+The VP successor stack (`_vp`) keeps the parent row engine. The same transform has not been applied to it.
