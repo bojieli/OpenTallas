@@ -12,7 +12,19 @@ The runner launches each case with `openroad -threads 20` (GRT) or `-threads 8` 
 
 ## Verdict
 
-@@VERDICT@@
+**Congestion is NOT closed under the owner's final criterion.**
+- The 5-iteration route meets the window rule. At b3r12 (k = 16, 5 iterations) every layer's worst 4 × 4 window is at or below 1.000, with 0 windows over.
+- The 50-iteration final GRT misses it. It regresses on every floorplan tried:
+  - b3r12_i50: 14,149 overflow, worst M8 window 1.112, 10 windows over.
+  - b3r13a–d_i50 (block-word pin spread and depth): 13,747–15,036 overflow, worst M8 window 1.107–1.268, 6–20 M8 windows over.
+- **The cause is systematic.**
+  - 6–12 of the over windows in each run sit in one gcell column: x = 11.4576 mm, the W spine slab face, next to the ends of the slabs.
+  - The slab abstracts block M1–M7, so M8 is the only layer a block word can use to enter a slab horizontally.
+  - FastRoute's extra iterations move the block-word entries onto that column, and on into the free spine space beside the slab ends.
+  - b2 showed the same i5 → i50 rise (36.4k → 37.2k).
+- **Rejected lever.** An empty routing gap between the array and the spine (b3r14, `--edge-gap` 37/74 µm) was tried and rejected. The router turns the gap into a vertical M9 highway, giving M9 windows of 1.22–1.51.
+- **Next lever (needs an owner decision).** Give the slab entry a second horizontal layer. This means a port/scale slab abstract whose top routing obstruction is M5 (M6/M7 left free over the slab), which is an implementation claim to validate on a slab P&R. The alternative is a dedicated M6 entry channel along the inside of the slab face.
+- Area, latency, legality and IR below are measured at the b3r12 floorplan. b3r13 changes only pin positions.
 
 ## What changed after b3r2b (54,584 overflow, worst window M8 1.31)
 
@@ -46,7 +58,12 @@ Overflow is the GRT final "Total Congestion" (gcell level). Use/cap is the worst
 | b3r10_k16_banded_i5 | 6,130 | 0 | 7 | 9 | 19 | 1,944 | 4,151 | 1.000 / 0.982 / 1.036 | 4 |
 | b3r11_k16_banded_i5 | 5,398 | 0 | 6 | 7 | 12 | 1,922 | 3,451 | 1.000 / 1.000 / 1.043 | 2 |
 | **b3r12_k16_banded_i5** | **6,178** | 1 | 7 | 7 | 12 | 1,751 | 4,400 | **1.000 / 0.983 / 1.000** | **0** |
-@@I50ROW@@
+| b3r12_k16_banded_i50 (final, 50 it) | 14,149 | 0 | 0 | 1 | 1 | 9,456 | 4,691 | 1.000 / 1.112 / 1.018 | 11 |
+| b3r13a (bw-sp 200) i5 / i50 | 4,982 / 13,747 | | | | | 1,677 / 9,410 | 3,281 / 4,332 | i5 1.000 / 0.973 / 0.991 (M6 1.014) ; i50 1.000 / 1.138 / 1.063 | 1 / 14 |
+| b3r13b (bw-sp 300) i5 / i50 | 5,635 / 15,036 | | | | | 1,429 / 9,793 | 4,181 / 5,240 | i5 1.007 / 1.000 / 1.069 ; i50 1.000 / 1.107 / 1.086 | 6 / 36 |
+| b3r13c (bw-sp 200, bw-x 80) i5 / i50 | 4,968 / 13,806 | | | | | 1,135 / 9,098 | 3,810 / 4,702 | i5 1.007 / 0.991 / 1.000 (M6 1.014) ; i50 1.000 / 1.268 / 1.060 (M5 1.005) | 2 / 23 |
+| b3r13d (bw-sp 300, bw-x 80) i5 / i50 | 5,930 / 14,345 | | | | | 1,059 / 9,465 | 4,848 / 4,880 | i5 1.000 / 1.000 / 1.233 ; i50 1.000 / 1.138 / 1.121 | 14 / 11 |
+| b3r14a–d (edge gap 37/74 µm, rejected) i5 | 8,718–11,196 | | | | | 1,530–2,294 | 6,935–9,078 | M9 1.22–1.51 | 88–157 |
 
 M2–M6 are at or below 1.000 in every b3r6+ run. Per-case records are in `grt/<case>/`:
 - `summary.json`: per-layer overflow and windows;
@@ -57,7 +74,8 @@ M2–M6 are at or below 1.000 in every b3r6+ run. Per-case records are in `grt/<
 
 b3r6_i50 and b3r11_i50 were stopped once a later floorplan superseded them (`SUPERSEDED.txt` in the local case directory).
 
-@@I50TEXT@@
+The i50 runs took 3.8–5.3 h at about 12 GB. b3r13a_i50 and b3r13c_i50 were rerun on ot-epyc1tb (`*_i50r`) after the owner's localhost purge killed the local copies at iteration 43/44. b3r11_i50r was OOM-killed on EPYC at iteration 40 and is not recorded.
+Legality at b3r13c (`real_b3r13c/`): 0 overlaps, track assert PASS (5,792,788 pins), macroNoAp 0.
 
 ## Area (`plan_b3r12/plan.json`)
 
