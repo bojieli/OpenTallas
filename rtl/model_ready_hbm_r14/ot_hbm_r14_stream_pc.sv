@@ -97,19 +97,21 @@ module ot_hbm_r14_stream_pc #(
     reg [31:0] wopen;                                 // banks opened by a write ACT (precharged after)
     reg c_w;                                          // the registered row command is a write ACT
     wire wq_ne = W && wq_n != 0;
-    wire [4:0] hb = wq_bank[wq_rp]; wire [4:0] hc = wq_col[wq_rp];
+    // the head write's bank/column are REGISTERED copies (hb_oh one-hot), kept off the queue index
+    reg [4:0] hb, hc; reg [31:0] hb_oh;
     wire [5*WQ-1:0] wq_bq;                            // queued write banks, oldest first
     wire [WQ-1:0] wq_in;                              // queue entry valid
     for (genvar i = 0; i < WQ; i = i + 1) begin : wqe
       assign wq_bq[i*5 +: 5] = wq_bank[WQW'(wq_rp + i)];
       assign wq_in[i] = W && i < wq_n;
     end
-    reg [31:0] hold;                                  // banks a queued write needs (never precharged)
-    integer hi;
+    reg [31:0] hold_n, hold;                          // banks a queued write needs (never precharged;
+    integer hi;                                       // registered: one cycle behind the queue)
     always @* begin
-      hold = 0;
-      for (hi = 0; hi < WQ; hi = hi + 1) if (wq_in[hi]) hold = hold | (32'b1 << wq_bq[hi*5 +: 5]);
+      hold_n = 0;
+      for (hi = 0; hi < WQ; hi = hi + 1) if (wq_in[hi]) hold_n = hold_n | (32'b1 << wq_bq[hi*5 +: 5]);
     end
+    always @(posedge clk or negedge rst_n) if (!rst_n) hold <= 0; else hold <= hold_n;
     wire wr_ok;
     // ---- refresh windows -------------------------------------------------------------
     wire ref_due = (ref_c == 0);
@@ -134,7 +136,7 @@ module ot_hbm_r14_stream_pc #(
     wire [223:0] keys;
     for (genvar b = 0; b < 32; b = b + 1) begin : bank
       reg [4:0] rcd, ras; reg [8:0] aok; reg [2:0] rtp; reg [4:0] wrr;
-      wire wr_e = W && wr_ok && hb == 5'(b);
+      wire wr_e = W && wr_ok && hb_oh[b];
       wire act_e = row_fire && c_op == ACT && c_oh[b];
       wire pre_e = row_fire && ((c_op == PRE && c_oh[b]) || c_op == PREALL);
       wire rfa_e = row_fire && c_op == REFAB;
@@ -224,7 +226,7 @@ module ot_hbm_r14_stream_pc #(
       end
     // ---- column: one RD per cycle ------------------------------------------------------
     // the head write is issuable but for tRTW / tCCD_L: RDs stop so it can go
-    wire wr_bank_rdy = wq_ne && open[hb] && !stale[hb] && rcdw_z[hb] && !blk[hb];
+    wire wr_bank_rdy = wq_ne && |(hb_oh & open & ~stale & rcdw_z & ~blk);
     assign wr_ok = wr_bank_rdy && ccdl_z[hb[1:0]] && rtw_c == 0 && !rd_block;
     assign rd_ok = running && streaming && !rd_block && open[rd_bank] && !stale[rd_bank] &&
                    rcd_z[rd_bank] && ccdl_z[rd_bg] && credit != 0 && !blk[rd_bank] &&
@@ -270,13 +272,22 @@ module ot_hbm_r14_stream_pc #(
       assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
                          !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
     end
-    reg wact_ok; reg [4:0] wab;
+    // The candidate (oldest queued write whose bank can open) is REGISTERED and re-validated at use
+    // against the current bank state with one-hot reductions, keeping the queue indexing and the
+    // bank-state muxes off the row-decision path.
+    reg wcand; reg [4:0] wab_n;
     integer ai;
     always @* begin
-      wact_ok = 1'b0; wab = 0;
-      for (ai = WQ - 1; ai >= 0; ai = ai - 1) if (wq_act[ai]) begin wact_ok = 1'b1; wab = wq_bq[ai*5 +: 5]; end
-      wact_ok = wact_ok && !act_block && noact_c == 0 && rrds_c == 0 && faw_ok;
+      wcand = 1'b0; wab_n = 0;
+      for (ai = WQ - 1; ai >= 0; ai = ai - 1) if (wq_act[ai]) begin wcand = 1'b1; wab_n = wq_bq[ai*5 +: 5]; end
     end
+    reg wcand_q; reg [4:0] wab; reg [31:0] wab_oh;
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) begin wcand_q <= 1'b0; wab <= 0; wab_oh <= 0; end
+      else begin wcand_q <= W && wcand; wab <= wab_n; wab_oh <= 32'b1 << wab_n; end
+    wire wact_ok = wcand_q && !(|(wab_oh & (open | blk))) && (|(wab_oh & aok_z)) && rrdl_z[wab[1:0]] &&
+                   !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wab == bsel) &&
+                   !act_block && noact_c == 0 && rrds_c == 0 && faw_ok;
     reg [31:0] r_oh;
     reg r_w;
     always @* begin
@@ -285,7 +296,7 @@ module ot_hbm_r14_stream_pc #(
       else if (!REF_MODE && ref_due_n) begin r_v = 1; r_prio = 1; r_op = REFAB; end
       else if (preall_ok) begin r_v = 1; r_prio = 1; r_op = PREALL; end
       else if (forced_pre) begin r_v = 1; r_prio = 1; r_op = PRE; r_bank = rb; r_oh = blk; end
-      else if (W && wact_ok) begin r_v = 1; r_op = ACT; r_bank = wab; r_oh = 32'b1 << wab; r_w = 1; end
+      else if (W && wact_ok) begin r_v = 1; r_op = ACT; r_bank = wab; r_oh = wab_oh; r_w = 1; end
       else if (act_ok_any) begin r_v = 1; r_op = ACT; r_bank = act_bank(act_sel, k); r_oh = act_oh; end
       else if (|pre_cand) begin r_v = 1; r_op = PRE; r_bank = pre_sel; r_oh = pre_oh; end
     end
@@ -303,7 +314,7 @@ module ot_hbm_r14_stream_pc #(
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0; credit <= 7'(CRED);
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
         c_v <= 0; c_prio <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0;
-        wq_n <= 0; wq_rp <= 0; rtw_c <= 0; wtr_c <= 0; wopen <= 0; c_w <= 0;
+        wq_n <= 0; wq_rp <= 0; rtw_c <= 0; wtr_c <= 0; wopen <= 0; c_w <= 0; hb <= 0; hc <= 0; hb_oh <= 0;
       end else begin
         if (W) begin
           if (rd_ok) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
@@ -313,6 +324,14 @@ module ot_hbm_r14_stream_pc #(
           end
           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
           if (wr_ok) wq_rp <= WQW'(wq_rp + 1'b1);
+          // next head: the entry after the popped one if it exists, else the entry pushed now
+          begin : headn
+            reg [WQW-1:0] rpn; reg [4:0] nb, nc;
+            rpn = wr_ok ? WQW'(wq_rp + 1'b1) : wq_rp;
+            if (wq_n - (wr_ok ? 1'b1 : 1'b0) != 0) begin nb = wq_bank[rpn]; nc = wq_col[rpn]; end
+            else begin nb = wr_bank; nc = wr_col; end
+            hb <= nb; hc <= nc; hb_oh <= 32'b1 << nb;
+          end
           // write-opened banks: set by a write ACT, cleared by PRE/PREALL or a stream RD (the stream owns it)
           wopen <= ((wopen | ((row_fire && c_op == ACT && c_w) ? c_oh : 32'b0))
                     & ~((row_fire && c_op == PRE) ? c_oh : 32'b0)
