@@ -52,46 +52,59 @@ module ot_hdc_v41x_sel_mdrop #(
     output reg               short
 );
     localparam [15:0] NINF = 16'hFF80;
-    localparam integer CW = 20;                // kept-key counter per quarter
+    localparam integer CW = 10;                // kept keys per quarter, saturating (k <= 1,023)
     assign in_ready = ~out_valid | out_ready;
+    // the fewer-than-k check, off the datapath: popcount -> saturating count -> sums -> compare
+    reg  [Q-1:0]  pv_r, pl_r;                  // beat accepted / its last flag (registered)
+    reg  [4:0]    pc_r [0:Q-1];                // kept lanes of the accepted beat
     reg  [CW-1:0] kept [0:Q-1];
-    reg  [Q-1:0]  qend;                        // quarter's last beat accepted this segment
+    reg  [Q-1:0]  qend;                        // quarter's last beat counted this segment
+    reg           chk_c, chk_d;
+    reg  [CW:0]   s01, s23;
+    reg  [CW+1:0] tot_d;
+    reg  [KW-1:0] k_c, k_d;
+    wire          snap = &qend;
     integer q, j;
     reg [W-1:0]   lv;
     reg [4:0]     pc;
-    reg [CW+1:0]  tot;
+    reg [CW:0]    nk;
     always @(posedge clk) begin
         if (!rst_n) begin
-            out_valid <= 0; short <= 1'b0; qend <= 0;
+            out_valid <= 0; short <= 1'b0; qend <= 0; pv_r <= 0; pl_r <= 0; chk_c <= 1'b0; chk_d <= 1'b0;
             for (q = 0; q < Q; q = q + 1) kept[q] <= 0;
         end else begin
-            // segment end (every quarter's last beat seen): check the kept count, restart
-            if (&qend) begin
-                tot = 0;
-                for (q = 0; q < Q; q = q + 1) tot = tot + {2'b00, kept[q]};
-                if ((MDROP != 0) && (tot < {{(CW+2-KW){1'b0}}, out_k})) short <= 1'b1;
-            end
             for (q = 0; q < Q; q = q + 1) begin
-                if (&qend) begin kept[q] <= 0; qend[q] <= 1'b0; end
                 if (out_valid[q] && out_ready[q]) out_valid[q] <= 1'b0;
-                if (in_valid[q] && in_ready[q]) begin
-                    lv = (MDROP != 0) ? (in_lv[W*q +: W] & in_keep[W*q +: W]) : in_lv[W*q +: W];
-                    pc = 0;
-                    for (j = 0; j < W; j = j + 1) pc = pc + {4'd0, lv[j]};
-                    kept[q] <= ((&qend) ? {CW{1'b0}} : kept[q]) + CW'(pc);
-                    if (in_last[q]) qend[q] <= 1'b1;
-                    if ((MDROP == 0) || (lv != 0) || in_last[q]) begin
-                        out_valid[q] <= 1'b1;
-                        out_last[q] <= in_last[q];
-                        out_lv[W*q +: W] <= lv;
-                        out_idx[W*IW*q +: W*IW] <= in_idx[W*IW*q +: W*IW];
-                        for (j = 0; j < W; j = j + 1)
-                            out_val[W*16*q + 16*j +: 16] <= ((MDROP == 0) && !in_keep[W*q + j])
-                                                            ? NINF : in_val[W*16*q + 16*j +: 16];
-                    end
+                lv = (MDROP != 0) ? (in_lv[W*q +: W] & in_keep[W*q +: W]) : in_lv[W*q +: W];
+                pc = 0;
+                for (j = 0; j < W; j = j + 1) pc = pc + {4'd0, lv[j]};
+                pv_r[q] <= in_valid[q] && in_ready[q];
+                pl_r[q] <= in_valid[q] && in_ready[q] && in_last[q];
+                pc_r[q] <= pc;
+                if (in_valid[q] && in_ready[q] && ((MDROP == 0) || (lv != 0) || in_last[q])) begin
+                    out_valid[q] <= 1'b1;
+                    out_last[q] <= in_last[q];
+                    out_lv[W*q +: W] <= lv;
+                    out_idx[W*IW*q +: W*IW] <= in_idx[W*IW*q +: W*IW];
+                    for (j = 0; j < W; j = j + 1)
+                        out_val[W*16*q + 16*j +: 16] <= ((MDROP == 0) && !in_keep[W*q + j])
+                                                        ? NINF : in_val[W*16*q + 16*j +: 16];
                 end
+                // saturating count; a segment's counts are snapped and restarted once every quarter ended
+                nk = {1'b0, snap ? {CW{1'b0}} : kept[q]} + {{(CW-4){1'b0}}, pv_r[q] ? pc_r[q] : 5'd0};
+                kept[q] <= nk[CW] ? {CW{1'b1}} : nk[CW-1:0];
+                qend[q] <= (snap ? 1'b0 : qend[q]) | pl_r[q];
             end
             out_k <= in_k;
+            chk_c <= snap;
+            if (snap) begin
+                s01 <= {1'b0, kept[0]} + {1'b0, kept[1]};
+                s23 <= {1'b0, kept[Q-2]} + {1'b0, kept[Q-1]};
+                k_c <= out_k;
+            end
+            chk_d <= chk_c;
+            if (chk_c) begin tot_d <= {1'b0, s01} + {1'b0, s23}; k_d <= k_c; end
+            if (chk_d && (MDROP != 0) && (tot_d < {{(CW+2-KW){1'b0}}, k_d})) short <= 1'b1;
         end
     end
 endmodule
