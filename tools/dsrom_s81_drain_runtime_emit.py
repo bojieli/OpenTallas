@@ -98,9 +98,9 @@ def one(source, old, new):
     return source.replace(old,new,1)
 
 
-def emit(owner, out):
+def emit(owner, out, *, wavefront=False):
     owner,out=Path(owner),Path(out)
-    path=emit_scheduler(owner,out)
+    path=emit_scheduler(owner,out,wavefront=wavefront)
     # Enroll only the retained 16-lane non-relay transport namespace. A different
     # physical packet layout needs its own source binding, never a guessed bit.
     top=(owner/'rtl/dsrom_sys/c8/ot_v41_rt_die_l20_c8.sv').read_text()
@@ -191,4 +191,5 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--owner',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
-    a=p.parse_args();print(emit(a.owner,a.out))
+    p.add_argument('--wavefront',action='store_true')
+    a=p.parse_args();print(emit(a.owner,a.out,wavefront=a.wavefront))
