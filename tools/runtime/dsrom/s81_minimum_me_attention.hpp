@@ -146,7 +146,7 @@ public:
         try {
             if(go)require(!fault()&&!accepted&&operation&&operation->index==op.index&&
                           operation->instruction==op.instruction&&fetched==addresses.size()&&
-                          runtime.identity&&*runtime.identity==identity&&kv.ready(),
+                          runtime.identity&&*runtime.identity==identity&&leaf->ready&&kv.ready(),
                           "ME GO lacks actual source and real KV admission");
             if(go) {
                 check_dynamic(op);
