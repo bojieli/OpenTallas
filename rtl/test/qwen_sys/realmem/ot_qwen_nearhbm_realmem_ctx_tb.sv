@@ -5,7 +5,8 @@
 // New memory component only. The passed nearHBM simulator is linked unchanged.
 // REAL_MEM service and actual four HBM timing/WR_ACK models, plus the exact
 // registered tile SRAM write path from ot_qwen_rom_tile_w12 (no tile arithmetic).
-module ot_qwen_nearhbm_realmem_ctx_tb #(parameter integer NEAR_TAIL=0,parameter integer MEM_WORDS=524288)(
+module ot_qwen_nearhbm_realmem_ctx_tb #(parameter integer NEAR_TAIL=0,parameter integer MEM_WORDS=524288,
+    parameter integer REFI_PS=3900000)(
     input wire clk,rst_n,start,input wire [17:0] pos,input wire [7:0] layer,
     input wire [63:0] kv_we,input wire [64*24-1:0] kv_waddr,input wire [64*32-1:0] kv_wdata,
     input wire [31:0] row_valid,row_v,row_g,input wire [32*13-1:0] row_t,
@@ -32,7 +33,7 @@ module ot_qwen_nearhbm_realmem_ctx_tb #(parameter integer NEAR_TAIL=0,parameter 
         .st_kvok_low_desc(),.st_drain_low(),.st_wr_lat_max(st_wr_lat_max));
     genvar s,t,h;
     for(s=0;s<4;s=s+1)begin:g_hbm
-        ot_qwen_hbm_model_ack #(.NPC(32),.AW(24),.DW(256),.MEM_WORDS(MEM_WORDS),.TAGW(13),.LENW(5),.BEATW(4),.CLK_PS(1024),.PC_RDY(1),.WR_ACK(1)) hbm(
+        ot_qwen_hbm_model_ack #(.NPC(32),.AW(24),.DW(256),.MEM_WORDS(MEM_WORDS),.TAGW(13),.LENW(5),.BEATW(4),.CLK_PS(1024),.PC_RDY(1),.WR_ACK(1),.REFI_PS(REFI_PS)) hbm(
             .clk(clk),.rst_n(rst_n),.req_v(mv[s]),.req_rdy(mr[s]),.pc_room(room[s*32 +: 32]),
             .req_we(mw[s]),.req_addr(ma[s*24 +: 24]),.req_len(ml[s*5 +: 5]),.req_tag(mt[s*13 +: 13]),.req_wdata(md[s*256 +: 256]),
             .rsp_v(pv[s*32 +: 32]),.rsp_rdy(pr[s*32 +: 32]),.rsp_wr(pw[s*32 +: 32]),.rsp_tag(pt[s*32*13 +: 32*13]),.rsp_beat(pb[s*32*4 +: 32*4]),.rsp_data(pd[s*32*256 +: 32*256]));

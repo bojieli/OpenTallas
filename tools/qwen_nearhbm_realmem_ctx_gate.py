@@ -64,21 +64,29 @@ def build(a):
     rec = {'schema': 'opentallas.qwen-nearhbm-realmem-ctx-build.v1', 'source_sha256': pins(), 'steps': {}}
     env = dict(os.environ, NHB_SWAP='hub,stack', VL=a.verilator, VJOBS=str(a.jobs))
     near = w / 'near'
-    rec['steps']['near'] = step(w, 'near', ['bash', 'rtl/test/nearhbm/hubp_swap.sh', 'rtl/test/qwen_sys/build_nearhbm_sys_replay.sh',
-                                            near, 128, 8, 'dpi', '-GLAYER_START_FENCE=1'], env, a.resume)
+    if a.near_from:
+        near = a.near_from.resolve() / 'near'
+        rec['near_from'] = {'work': str(a.near_from.resolve()), 'build_json_sha256': sha(a.near_from.resolve() / 'build.json')}
+        old = json.loads((a.near_from.resolve() / 'build.json').read_text())['source_sha256']
+        if any(old.get(f) != rec['source_sha256'][f] for f in NEAR_FILES):
+            raise SystemExit('--near-from build was made from different near-HBM sources')
+    else:
+        rec['steps']['near'] = step(w, 'near', ['bash', 'rtl/test/nearhbm/hubp_swap.sh', 'rtl/test/qwen_sys/build_nearhbm_sys_replay.sh',
+                                                near, 128, 8, 'dpi', '-GLAYER_START_FENCE=1'], env, a.resume)
     arch = near / 'Vot_qwen_nearhbm_sys_tb__ALL.a'
     dpi = [near / 'sim_nhb_fp_lat_dpi.o', near / 'sim_hdc_v41x_fastfp_dpi.o']
     for p in [arch, *dpi]:
         if not p.is_file():
             raise SystemExit(f'missing near build product {p}')
     vr = re.search(r'VERILATOR_ROOT\s*=\s*(\S+)', subprocess.check_output([a.verilator, '-V'], text=True)).group(1)
-    for tail in (0, 1):
+    rec['mem_generics'] = a.mem_g
+    for tail in a.tails:
         obj = w / f'obj_mem_t{tail}'
         obj.mkdir(exist_ok=True)
         pub = w / 'public.vlt'
         pub.write_text('`verilator_config\npublic_flat_rw -module "ot_qwen_hbm_model_ack" -var "mem"\n')
         rec['steps'][f'mem_t{tail}'] = step(w, f'mem_t{tail}', [a.verilator, '--cc', '--build', '-j', a.jobs, '-O2', '-Wno-fatal', '-Wno-lint',
-                                                                '-Wno-style', '-Wno-MULTIDRIVEN', '-Wno-TIMESCALEMOD', f'-GNEAR_TAIL={tail}',
+                                                                '-Wno-style', '-Wno-MULTIDRIVEN', '-Wno-TIMESCALEMOD', f'-GNEAR_TAIL={tail}', *(f'-G{g}' for g in a.mem_g),
                                                                 '--top-module', 'ot_qwen_nearhbm_realmem_ctx_tb', '--prefix', 'Vmem', '--Mdir', obj,
                                                                 pub, *(ROOT / p for p in MEM_FILES)], resume=a.resume)
         hdr = (obj / 'Vmem___024root.h').read_text()
@@ -135,6 +143,9 @@ def main():
     b.add_argument('--verilator', default=VL)
     b.add_argument('--jobs', type=int, default=16)
     b.add_argument('--resume', action='store_true', help='reuse completed near/mem compile steps (relink the driver)')
+    b.add_argument('--near-from', type=Path, help='reuse the near archive of a completed build (its NEAR_FILES pins must match)')
+    b.add_argument('--tails', type=int, nargs='+', default=[0, 1], choices=(0, 1))
+    b.add_argument('--mem-g', action='append', default=[], help='extra memory-bench generic NAME=VALUE (e.g. REFI_PS=2000000000)')
     r = sub.add_parser('run')
     r.add_argument('--work', type=Path, required=True)
     r.add_argument('--tail', type=int, choices=(0, 1), required=True)
