@@ -13,7 +13,11 @@ def test_default_off_and_exact_source_selection():
     on=S.select(sources,enable=True)
     assert on['sources']==[S.SUCCESSOR/n for n in S.NAMES]
     assert on['defines']==['+define+OT_MTP_SINK_HANDSHAKE=1']
-    assert not on['wave2_admitted']
+    assert on['wave2_admitted']
+    adapt=ROOT/'rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv'
+    both=S.select(sources+[adapt],enable=True)
+    assert both['sources'][-1]==S.SUCCESSOR/'ot_hdc_v41x_xu_adapt.sv'
+    with pytest.raises(ValueError):S.select(sources+[adapt,adapt],enable=True)
     with pytest.raises(ValueError):S.select([sources[0]],enable=True)
     with pytest.raises(ValueError):S.select(sources+[sources[0]],enable=True)
 
