@@ -16,9 +16,10 @@
 //     priority among the 8 PCs of the class (pairwise compare, no serial chain).
 //   * LOOK-AHEAD LOCATIONS.  The original computed (sm, slot) per PC combinationally from j_c, k_c
 //     through a 392-way lut select and a 16x16 multiply.  Here each PC holds the location of its
-//     next sector in registers (cur_*) and a look-ahead counter g_j with per-SM expert bases g_kb
-//     (k * lines[sm] mod DEPTH, by addition at each expert boundary), so the decision path starts
-//     at registers.  Same placement: slot = k*lines[sm] + line, mod DEPTH.
+//     next sector in registers (cur_*), fed by a two-deep look-ahead (lut entry + expert base, then
+//     base + line) from a counter g_j with per-SM expert bases g_kb (k * lines[sm] mod DEPTH, by
+//     addition at each expert boundary), so the decision path starts at registers.
+//     Same placement: slot = k*lines[sm] + line, mod DEPTH.
 //   * WRITE STAGE.  The granted sector is registered per bank and written one clk later; the mask
 //     bit is set on the same edge as the macro write.
 //   * RELEASE.  The macro read is synchronous with read-before-write: each SM reads the line it
@@ -118,14 +119,20 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
       end
       wire [15:0] ent = tbl[gj];
       wire [MW-1:0] n_sm = ent[8 +: MW];
-      wire [SW-1:0] n_slot = gkb[n_sm * SW +: SW] + SW'(ent[7:0]);
+      // two-deep look-ahead (no added latency: both stages advance together on adv):
+      //   stage A (av, a_*): lut entry of sector g_j and its expert base gkb[sm], registered;
+      //   stage B (cv, c*):  the slot = base + line, registered.  The lut select and the slot adder
+      //   are in different cycles, and neither depends on this cycle's grant except as an enable.
+      reg av; reg [MW-1:0] a_sm; reg [7:0] a_ln; reg [SW-1:0] a_kb;
       wire adv = grant[p] || !cv;
       reg [NSM*SW-1:0] gkb_n;
       always @* for (integer m = 0; m < NSM; m = m + 1) gkb_n[m*SW +: SW] = gkb[m*SW +: SW] + cfg_lines[m*16 +: SW];
       always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cv <= 1'b0; csm <= 0; cslot <= 0; gj <= 0; gkb <= '0; end
-        else if (adv) begin
-          cv <= 1'b1; csm <= n_sm; cslot <= n_slot;
+        if (!rst_n) begin
+          cv <= 1'b0; csm <= 0; cslot <= 0; gj <= 0; gkb <= '0; av <= 1'b0; a_sm <= 0; a_ln <= 0; a_kb <= 0;
+        end else if (adv) begin
+          cv <= av; csm <= a_sm; cslot <= a_kb + SW'(a_ln);
+          av <= 1'b1; a_sm <= n_sm; a_ln <= ent[7:0]; a_kb <= gkb[n_sm * SW +: SW];
           if (gj == JW'(NSECT - 1)) begin gj <= 0; gkb <= gkb_n; end
           else gj <= gj + 1'b1;
         end
