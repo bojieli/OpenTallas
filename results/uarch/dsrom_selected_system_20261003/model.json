@@ -143,5 +143,26 @@
     "pipeline_credit": 0,
     "reserved_new_state_bits": 0,
     "historical_sources_preserved": true
-  }
+  },
+  "host_workspace_interface": {
+    "parameter": "S81_HOST_WORKSPACE=0 default-off",
+    "identity_bits": 47,
+    "address_bits": 19,
+    "word_bits": 32,
+    "maximum_capture_words": 524288,
+    "maximum_capture_bytes": 2097152,
+    "producer": "actual source.vm_word under native identity/range visibility callback; no golden/evaluator",
+    "consumer": "selected top context-matched simulation workspace loader",
+    "holds_capture_across_partial_destination_rejection": true,
+    "native_context_restored_driven": false,
+    "native_retirement_driven": false,
+    "native_VM_service_ack_emulated": false,
+    "hardware_cells_added": 0,
+    "synthesis_excluded": true,
+    "memory_bytes_per_hardware_cycle_credit": null,
+    "track_or_clock_capacity_credit": 0,
+    "single_user_latency_credit": 0,
+    "native_capture_reset_and_VM_visibility_provider_still_required": true
+  },
+  "native_VM_source_order_correction": "ROM loop precedes later ME/SU/vector/collective writers; source last-write-wins must be preserved or explicitly excluded/arbited; no128physicalSRAMport assumption"
 }

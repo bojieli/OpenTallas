@@ -92,6 +92,7 @@ extern "C" long long v41rt_cfg_read(int addr) {
     return (size_t(addr) < c.size()) ? (long long)c[addr] : 0;
 }
 extern "C" int v41rt_vm_word(int a);
+extern "C" int v41rt_c8_workspace_write(uint64_t identity, int address, int raw_bits);
 static svScope g_diescope[4] = {nullptr, nullptr, nullptr, nullptr};
 extern "C" void v41rt_die_register(int rank) { g_diescope[rank & 3] = svGetScope(); }
 
@@ -353,6 +354,7 @@ struct DieBase {
     virtual bool c8_context(uint64_t&,uint32_t&,uint16_t&)=0;
     virtual bool c8_retired(uint64_t&)=0;
     virtual void c8_observe(long)=0;
+    virtual bool c8_workspace_write(uint64_t identity, uint32_t address, uint32_t raw_bits)=0;
 #endif
     // collective ports
     virtual uint8_t ucie_tx_v() = 0; virtual void ucie_tx(std::vector<uint32_t>& rec) = 0;
@@ -455,6 +457,17 @@ template <class DIE> struct Die : DieBase {
         identity=d->c8_context_identity;token=d->c8_context_token;entry=d->c8_context_entry;return d->c8_context_v;
     }
     bool c8_retired(uint64_t& identity) override {identity=d->c8_retire_identity;return d->c8_retire_v;}
+    bool c8_workspace_write(uint64_t identity,uint32_t address,uint32_t raw_bits) override {
+        if(identity>=(uint64_t(1)<<47) || address>=(1u<<19))
+            throw std::runtime_error("actual C8 workspace identity/address bounds");
+        uint64_t live_identity;uint32_t live_token;uint16_t live_entry;
+        if(!c8_context(live_identity,live_token,live_entry) || live_identity!=identity)
+            return false;
+        svSetScope(g_diescope[id]);
+        // Source input loading only. This cannot grant context restoration or
+        // fabricate a native write/drain ACK; the caller still owes both.
+        return v41rt_c8_workspace_write(identity,int(address),int(raw_bits))==0;
+    }
     long c8_observed_cycle=-1;
     void c8_observe(long cycle) override {
         if(c8_observed_cycle==cycle)return;c8_observed_cycle=cycle;
