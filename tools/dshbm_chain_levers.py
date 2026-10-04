@@ -53,6 +53,38 @@ def il_q_norm_kv_row(ops):
 IL = {"q_norm_kv_row": il_q_norm_kv_row}
 
 
+def dr_hc_post(ops):
+    """Drop the sum of squares hc_post's last op chains onto the new residual: no stream-unit consumer reads it --
+    the mixes' projection engine (rtl/hdc/v41x/ot_hdc_v41x_hcp.sv, cmd_scale = 1) computes ss = csum(flat * flat)
+    itself, concurrently with its rows (Model.hc_mixes), so the reduction tail leaves hc_post's chain."""
+    ops = [dict(o) for o in ops]
+    last = ops[-1]
+    assert last["red"] and last["redsq"], last
+    last.update(red=0, redsq=0, redtree=0, rbase=0)
+    return ops
+
+
+def attend_tail_case(c, VC):
+    """The attention chain's part AFTER the tile's p.v (normalise by the denominator, inverse RoPE), as its own case:
+    p.v rows and the denominator (the reference's value of the full chain) preloaded.  The max / exp (+ the sum,
+    sink and denominator, which run under the tile's p.v phase) stay in the full chain's measurement."""
+    import numpy as np
+    vm = np.zeros(1 << VC.VMA, dtype=np.uint32)
+    for ad, v in c["init"]:
+        vm[ad:ad + len(v)] = np.asarray(v, dtype=DM.F).view(np.uint32)
+    mem0 = VC.Mem(vm, np.zeros(1 << VC.KVA, dtype=np.uint32), np.stack([c["cr_lo"], c["cr_hi"]], axis=1),
+                  np.zeros(1 << VC.WRA, dtype=np.uint16))
+    mref = VC.schedule(c["ops"], mem0, DM.SU_N, DM.SU_M)[0]
+    t = copy.deepcopy(c)
+    t["ops"] = per_position(c, lambda ops: [dict(o) for o in ops[-2:]])
+    dens = sorted({o["bbase"] for o in t["ops"] if o["m1"] == 4})          # M1_DIVB: the broadcast denominator
+    t["init"] = list(c["init"]) + [(d, mref.vm[d:d + 1].view(DM.F).copy()) for d in dens]
+    t["checks"] = [x for x in c["checks"] if x[0] == "o_own"]
+    t["name"] = c["name"] + "_tail"
+    t["meta"] = dict(c["meta"], fn="attend_tail")
+    return t
+
+
 def per_position(case, fn):
     """Apply fn to each position's op list (op-major cases de-interleaved, then re-interleaved)."""
     ops, reps, om = case["ops"], case["meta"].get("reps", 1), case["meta"].get("op_major", False)
@@ -87,7 +119,7 @@ def cmd_prep(a):
             g = K.op_defaults()
             g.update(o)
             ops.append(g)
-        fops, r = FU.fuse_bench(ops, DM.SU_N, DM.SU_M, a.kr)
+        fops, r = FU.fuse_bench(ops, a.n, a.m, a.kr)
         k["ops"] = fops
         k["meta"]["lever_kr"] = dict(depth=a.kr, **{x: r[x] for x in ("edges", "producers", "elided", "lw", "peak")})
         kr_cases.append(k)
@@ -95,8 +127,44 @@ def cmd_prep(a):
         print(f"{c['name']:24s} ops {len(cs['ops']):3d} -> il {len(c['ops']):3d}  kr {k['meta']['lever_kr']}")
     sha = blob.get("snapshots_sha256")
     (out / f"{stem}_il.pkl").write_bytes(pickle.dumps(dict(cases=il_cases, snapshots_sha256=sha)))
-    (out / f"{stem}_ilkr{a.kr}.pkl").write_bytes(pickle.dumps(dict(cases=kr_cases, snapshots_sha256=sha)))
+    (out / f"{stem}_ilkr{a.kr}{'' if a.n == DM.SU_N else f'_N{a.n}'}.pkl").write_bytes(pickle.dumps(dict(cases=kr_cases, snapshots_sha256=sha)))
     (out / f"{stem}_prep.json").write_text(json.dumps(rep, indent=1) + "\n")
+    return 0
+
+
+def cmd_prep2(a):
+    """il + dr (hc_post's dead reduction) + the attention tails, and the same with kr fusion."""
+    import rtl_hdc_v41x_vec_campaign as VC
+    import rtl_hdc_v41x_vec_kr_campaign as K
+    import w11_su_fuse as FU
+    blob = pickle.loads(Path(a.cases).read_bytes())          # the *_il.pkl set
+    stem = Path(a.cases).stem
+    out = Path(a.out)
+    dr, tails = [], []
+    for cs in blob["cases"]:
+        c = copy.deepcopy(cs)
+        if c["meta"]["fn"] == "hc_post":
+            c["ops"] = per_position(c, dr_hc_post)
+            c["meta"]["lever_dr"] = True
+        dr.append(c)
+        if c["meta"]["fn"] == "attend":
+            tails.append(attend_tail_case(c, VC))
+    dr += tails
+    kr = []
+    for c in dr:
+        k = copy.deepcopy(c)
+        ops = []
+        for o in k["ops"]:
+            g = K.op_defaults()
+            g.update(o)
+            ops.append(g)
+        k["ops"], r = FU.fuse_bench(ops, a.n, a.m, a.kr)
+        k["meta"]["lever_kr"] = dict(depth=a.kr, **{x: r[x] for x in ("edges", "producers", "elided", "lw", "peak")})
+        kr.append(k)
+        print(f"{c['name']:26s} ops {len(c['ops']):3d} kr {k['meta']['lever_kr']}")
+    sha = blob.get("snapshots_sha256")
+    (out / f"{stem}dr.pkl").write_bytes(pickle.dumps(dict(cases=dr, snapshots_sha256=sha)))
+    (out / f"{stem}drkr{a.kr}.pkl").write_bytes(pickle.dumps(dict(cases=kr, snapshots_sha256=sha)))
     return 0
 
 
@@ -131,10 +199,75 @@ def best_of(recs):
             if cur is None or c["cycles_end"] < cur["cycles_end"]:
                 rows[c["chain"]] = dict(c, variant=tag)
     base = recs[0][1]
-    return dict(base, chains=[rows[c["chain"]] for c in base["chains"] if c["chain"] in rows])
+    names = list(dict.fromkeys(c["chain"] for _, r in recs for c in r["chains"]))
+    return dict(base, chains=[rows[n] for n in names if n in rows])
 
 
-def compose(base_dir, su1, su6):
+PV_PHASE_FAST = 609 - 248     # the tile job's p.v phase (results/rtl/v41_full_attention_numeric mixed640: pv_first
+                               # 248 -> last_pv 609 fast cycles); the window-only T128 job: 225 - 120
+PV_PHASE = {640: 609 - 248, 128: 225 - 120}
+
+
+def attend_overlap(rec):
+    """The attention chain priced as a pipeline with the tile instead of after it: max + exp (P written) precede
+    the tile's p.v; the sum, sink exp and denominator run under the p.v phase; the normalisation + inverse RoPE
+    follow it.  SU critical cycles = P written (the exp ops' last write, measured in the full chain) + the measured
+    tail case (cycles_end - first emit).  Valid only when the denominator is written before p.v ends (checked)."""
+    full = {c["chain"]: c for c in rec["chains"] if c["fn"] == "attend" and DM.su_exact(c)}
+    out = {}
+    for c in rec["chains"]:
+        if c.get("fn") != "attend_tail" or not DM.su_exact(c):
+            continue
+        f = full.get(c["chain"][:-len("_tail")])
+        if f is None:
+            continue
+        P = f.get("reps", 1)
+        po = f["per_op"]
+        k = len(po) // P
+        idx = (lambda j: [j * P + r for r in range(P)]) if f.get("op_major") else (lambda j: [r * k + j for r in range(P)])
+        e_written = max(po[i]["last_write"] for i in idx(1))
+        den_written = max(po[i]["last_write"] for i in idx(3))
+        tail = c["cycles_end"] - min(p["first_emit"] for p in c["per_op"] if p["first_emit"] is not None)
+        T = f["T"]
+        pv_su = PV_PHASE[T] * DM.F_SER / DM.F_FAST
+        ok = den_written <= e_written + pv_su
+        key = f"attend.T{T}"
+        crit = e_written + tail
+        if ok and (key not in out or crit > out[key]["cycles"]):
+            out[key] = dict(cycles=crit, p_written=e_written, den_written=den_written, tail=tail,
+                            pv_phase_su_cycles=round(pv_su, 1), full_chain=f["cycles_end"])
+    return out
+
+
+_SU_TABLE = DM.su_table
+
+
+def su_table_overlap(rec, rec2=None, P=1):
+    t = _SU_TABLE(rec, rec2, P)
+    if rec2 is None and P == 1:
+        for k, v in attend_overlap(rec).items():
+            if k in t:
+                t[k] = min(t[k], v["cycles"])
+    return t
+
+
+ILV_T640_6POS = 2560    # results/rtl/dshbm_verify_tile_batch_20261004 (branch claude/dshbm-verify-tile-batch-20261004):
+                        # the W11 engine's position-interleaved verify mode, 6 positions at T 640, SU latency 218 in
+                        # the loop (conservative row; the SU chain is still charged in full on top)
+_PRICE_LOCAL = DM.price_local
+
+
+def price_local_ilv(op, su, f_ser, flags, WC, m, P=1):
+    us, how = _PRICE_LOCAL(op, su, f_ser, flags, WC, m, P)
+    if op["fn"] == "attend" and op.get("yarn") and P == 6:
+        us -= (6 * DM.ATT_TILE[640] - ILV_T640_6POS) / DM.F_FAST * 1e6
+        how += " + ILV tile (6 positions, measured)"
+    return us, how
+
+
+def compose(base_dir, su1, su6, overlap=False, ilv=False):
+    DM.su_table = su_table_overlap if overlap else _SU_TABLE
+    DM.price_local = price_local_ilv if ilv else _PRICE_LOCAL
     import w19_hbm_token_compose as WC
     out = Path(base_dir)
     prog = json.loads((out / "program.json").read_text())
@@ -146,7 +279,10 @@ def compose(base_dir, su1, su6):
     r = DM.mtp_and_accelerator(prog, base, su1, su6)
     sw = ("tomahawk_ultra_protocol", "board")
     ar = DM.compose_program(**base, f_sm=DM.F_FAST, switch=sw)
-    return dict(ar_us=r["measured"]["ar_us"], ar_tok_s=r["measured"]["ar_tok_s"], ar_parts_us=r["measured"]["ar_parts_us"],
+    DM.su_table = _SU_TABLE
+    DM.price_local = _PRICE_LOCAL
+    return dict(ilv_tile=ilv, attend_overlap=dict(p1=attend_overlap(su1), p6=attend_overlap(su6)) if overlap else None,
+                ar_us=r["measured"]["ar_us"], ar_tok_s=r["measured"]["ar_tok_s"], ar_parts_us=r["measured"]["ar_parts_us"],
                 mtp=r["measured"]["mtp"], mtp_tok_s=r["measured"]["mtp_tok_s"],
                 sensitivity_one_tile_job=r["measured"]["sensitivity_tile_one_job_for_6_positions"],
                 local_by_fn_us_ar=ar["local_by_fn_us"], su_chain_cycles_p1=DM.su_table(su1),
@@ -157,14 +293,16 @@ def cmd_compose(a):
     variants = []
     for v in a.variants:
         name, files = v.split("=")
+        ov = "+ov" in name
+        ilv = "+ilv" in name
         f1, f6 = files.split(",")
-        variants.append((name, json.loads(Path(f1).read_text()), json.loads(Path(f6).read_text())))
+        variants.append((name, json.loads(Path(f1).read_text()), json.loads(Path(f6).read_text()), ov, ilv))
     res, prev = {}, None
     acc1, acc6 = [], []
-    for name, r1, r6 in variants:                   # cumulative: each lever on top of the previous ones
+    for name, r1, r6, ov, ilv in variants:                   # cumulative: each lever on top of the previous ones
         acc1.append((name, r1))
         acc6.append((name, r6))
-        c = compose(a.base, best_of(acc1), best_of(acc6))
+        c = compose(a.base, best_of(acc1), best_of(acc6), overlap=ov, ilv=ilv)
         if prev is not None:
             c["gain_vs_previous"] = dict(
                 ar_pct=round(100 * (c["ar_tok_s"] / prev["ar_tok_s"] - 1), 2),
@@ -183,7 +321,7 @@ def cmd_compose(a):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=("prep", "check", "run", "compose"))
+    ap.add_argument("step", choices=("prep", "prep2", "check", "run", "compose"))
     ap.add_argument("--out", default=".")
     ap.add_argument("--cases", default="su_cases.pkl")
     ap.add_argument("--kr", type=int, default=0)
@@ -199,6 +337,6 @@ if __name__ == "__main__":
     ap.add_argument("--variants", nargs="*", default=[])
     ap.add_argument("--record", default=None)
     a = ap.parse_args()
-    if a.step == "prep" and not a.kr:
+    if a.step in ("prep", "prep2") and not a.kr:
         a.kr = KR_DEFAULT
-    raise SystemExit(dict(prep=cmd_prep, check=cmd_check, run=cmd_run, compose=cmd_compose)[a.step](a))
+    raise SystemExit(dict(prep=cmd_prep, prep2=cmd_prep2, check=cmd_check, run=cmd_run, compose=cmd_compose)[a.step](a))
