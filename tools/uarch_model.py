@@ -925,9 +925,12 @@ QWEN_WIRE_W12 = dict(
     bd=31,                    # instruction broadcast + x network, incl. the tile input register and XVM
     xvm=1,                    # registered VM conflict stage (inside bd)
     nws=4, tree_levels=4,     # four upper tree levels (3..6) inside a 16-tile block, 4 stages each
-    tws=30,                   # level-6 words -> spine top
+    tws=64,                   # level-6 words -> spine top: worst block word at the b3r12/b3r13 die floorplan, 430.56 um
+                              # link-stage pitch (results/rtl/qwen_rom_fulldie_20261003/b3r3/latency_b3r12.json; was 30)
     ord=4,                    # result write -> VM
-    me_lat_extra=31 + 4 * 4 + 30 + 4,   # 81 cycles on every ME op's result
+    me_lat_extra=31 + 4 * 4 + 64 + 4,   # 115 cycles on every ME op's result
+    hub_stack_stages=53,      # hub <-> stack link at the same floorplan (r2 entry priced 46): +2 x 36 x 7 cycles a token
+    two_beat_bound=1,         # F2 two-beat instruction: +1 cycle a ME op until RTL prefetch is measured (bound)
 )
 # Vector-memory x read (W12 gap): the engine's x chunk port reads S distinct elements at every K step (IL cycles,
 # x held across the slots) or every cycle (x varies with the slot, xjs != 0: the attention ops).  The W5 VM
