@@ -352,8 +352,13 @@ struct HeadRank {
             [this](auto id,auto a,auto n){return target->source_span_lease(id,a,n);},
             [this](const auto& out,unsigned n){return target->offer_prefix(out,n);},
             [this](const auto& out,unsigned n){return target->visible_prefix(out,n);}};
-        h=raw(dir+"/H_rank"+std::to_string(rank)+".u32",20480);
-        pf=raw(dir+"/PF_rank"+std::to_string(rank)+".u32",4);
+        // Optional actual L20 END operands; normalization instructions and
+        // CROM stay in the existing released input home. Files do not grant
+        // publication: load() still offers every word to the actual VM/ACK path.
+        const char* carry=std::getenv("DSROM_S81_NATIVE_HEAD_CARRY_DIR");
+        const std::string operand_dir=carry&&*carry?carry:dir;
+        h=raw(operand_dir+"/H_rank"+std::to_string(rank)+".u32",20480);
+        pf=raw(operand_dir+"/PF_rank"+std::to_string(rank)+".u32",4);
         std::ifstream literal(dir+"/normalization.words");
         const std::array<std::vector<std::pair<uint32_t,uint32_t>>,5> extents{{
             {{20480,5120}},{{20480,5120}},{{41344,5120},{51584,1}},{{51616,1}},{{46464,5120}}}};
