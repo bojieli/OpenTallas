@@ -35,7 +35,7 @@ import rtl_hdc_v41x_attn_campaign as C  # noqa: E402
 V, T = ROOT / "rtl/hdc/v41x", ROOT / "rtl/test"
 FPLIB = [ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv"]
 AS_BUILT = dict(RTL_TILE=C.RTL_TILE, RTL_ENG=C.RTL_ENG, TB_ENG=C.TB_ENG, lib=C.lib)
-VL_BASE = list(C.VL_EXTRA)
+VL_BASE = list(C.VL_EXTRA) + ["-MAKEFLAGS", "OPT_SLOW=-O0"]   # the root ctor/var-reset file is ~38 MB at FPL 7
 # --hier: Verilator hierarchical blocks (simulation compilation boundaries only), as the full-geometry benches
 HIER = {False: ROOT / "results/rtl/v41_attention_elaboration_archive/tools/v41_attention_hierarchy.vlt",
         True: ROOT / "results/rtl/hbm_accel_fmax_inventory_20261004/attn/attn_l_hierarchy.vlt"}
@@ -85,6 +85,8 @@ def gate_equiv(a):
     work = Path(a.work)
     rows, ok = [], True
     for jname, cfg, jobs in jobsets():
+        if a.only and jname not in a.only.split(","):
+            continue
         for cname, ex in CONFIGS.items():
             if ex.get("PWORDS", 1) == 2 and (cfg["H"] % 2):
                 continue

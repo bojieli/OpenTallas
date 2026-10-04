@@ -25,7 +25,8 @@ module ot_hdc_v41x_attn_hgrp_s #(
     parameter integer BW = 2,
     parameter integer PWORDS = 1,
     parameter integer FPL = 3,
-    parameter integer FML = 3
+    parameter integer FML = 3,
+    parameter integer F12 = 0          // 1: the f12 FP32 adds (LAT 4 / 5) in the chunk chains and trees
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -130,7 +131,7 @@ module ot_hdc_v41x_attn_hgrp_s #(
             end
             wire [31:0] y;
             wire f;
-            ot_hdc_v41x_attn_hdp_s #(.TD(TD), .NBANK(NBANK), .BW(BW), .FPL(FPL), .FML(FML)) u_hdp (
+            ot_hdc_v41x_attn_hdp_s #(.TD(TD), .NBANK(NBANK), .BW(BW), .FPL(FPL), .FML(FML), .F12(F12)) u_hdp (
                 .clk(clk), .rst_n(rst_n), .we(we), .wbank(r_ld_bank), .wd(wd), .sk_bank(sk_bank), .sk_b(sk_b),
                 .y(y), .f(f));
             always @(posedge clk) begin
@@ -157,7 +158,8 @@ module ot_hdc_v41x_attn_tile_s #(
     parameter integer PWORDS = 1,
     parameter integer FPL = 7,
     parameter integer FML = 6,           // 6 only (split product)
-    parameter integer HG = 4           // heads per hardened group (H % HG == 0)
+    parameter integer HG = 4,          // heads per hardened group (H % HG == 0)
+    parameter integer F12 = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -186,7 +188,7 @@ module ot_hdc_v41x_attn_tile_s #(
         end
         for (g = 0; g < NG; g = g + 1) begin : g_g
             ot_hdc_v41x_attn_hgrp_s #(.H(H), .HG(HG), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL),
-                                      .FML(FML)) u_g (
+                                      .FML(FML), .F12(F12)) u_g (
                 .clk(clk), .rst_n(rst_n), .gid(g[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
                 .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(gov[g]),
                 .oy(oy[g*HG*32 +: HG*32]), .oflt(oflt[g*HG +: HG]));
@@ -312,7 +314,8 @@ module ot_hdc_v41x_attn_hdp_s #(
     parameter integer NBANK = 3,
     parameter integer BW = 2,
     parameter integer FPL = 3,
-    parameter integer FML = 3
+    parameter integer FML = 3,
+    parameter integer F12 = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -348,13 +351,13 @@ module ot_hdc_v41x_attn_hdp_s #(
         wire [(2*NC-1)*32-1:0] tn;      // heap order: leaves (chunk sums) at NC-1 .. 2NC-2
         wire [2*NC-2:0]        tf;
         for (gn = 0; gn < NC; gn = gn + 1) begin : g_c
-            ot_hdc_v41x_attn_chunk_l #(.FPL(FPL)) u_c (.clk(clk), .rst_n(rst_n), .p(p[gn*256 +: 256]), .pf(pf[gn*8 +: 8]),
+            ot_hdc_v41x_attn_chunk_s #(.FPL(FPL), .F12(F12)) u_c (.clk(clk), .rst_n(rst_n), .p(p[gn*256 +: 256]), .pf(pf[gn*8 +: 8]),
                                         .y(tn[(NC-1+gn)*32 +: 32]), .f(tf[NC-1+gn]));
         end
         for (gn = 0; gn < NC - 1; gn = gn + 1) begin : g_node
             wire [31:0] s;
             wire sf;
-            ot_hdc_v41x_qaddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
+            ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
                              .b(tn[(2*gn+2)*32 +: 32]), .y(s), .fault(sf));
             wire fdq;
             ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(tf[2*gn+1] | tf[2*gn+2]), .q(fdq));
@@ -364,4 +367,71 @@ module ot_hdc_v41x_attn_hdp_s #(
     endgenerate
     assign y = tn[31:0];
     assign f = tf[0];
+endmodule
+
+// One chunk (8 products, sequential sum): ot_hdc_v41x_attn_chunk_l with the add unit ot_hdc_v41x_qaddf.
+module ot_hdc_v41x_attn_chunk_s #(
+    parameter integer FPL = 3,
+    parameter integer F12 = 0
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [8*32-1:0] p,
+    input  wire [7:0]    pf,
+    output wire [31:0]   y,
+    output wire          f
+);
+    wire [8*32-1:0] acc;
+    wire [7:0]      af;
+    assign acc[31:0] = p[31:0];
+    assign af[0] = pf[0];
+    genvar gi;
+    generate
+        for (gi = 1; gi < 8; gi = gi + 1) begin : g_a
+            wire [31:0] s;
+            wire sf;
+            ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(acc[(gi-1)*32 +: 32]),
+                             .b(p[gi*32 +: 32]), .y(s), .fault(sf));
+            wire fdq;
+            ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(af[gi-1] | pf[gi]), .q(fdq));
+            assign acc[gi*32 +: 32] = s;
+            assign af[gi] = fdq | sf;
+        end
+    endgenerate
+    assign y = acc[7*32 +: 32];
+    assign f = af[7];
+endmodule
+
+// Fault-reporting binary32 add: F12 = 0 is ot_hdc_v41x_qaddl #(LAT) (rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv);
+// F12 = 1 is the 1.2 GHz f12 unit of the same function (rtl/hdc/ot_hdc_fp32_f12.sv, which a F12 build lists):
+// LAT 4 ot_hdc_fp32_add_f12_l4 (registered operands), LAT 5 ot_hdc_fp32_add_f12_l5x (an operand mux in front).
+module ot_hdc_v41x_qaddf #(
+    parameter integer LAT = 3,
+    parameter integer F12 = 0
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire        fault
+);
+    generate
+        if (F12 != 0 && LAT == 4) begin : g_f4
+            wire [1:0] err;
+            wire vo;
+            ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                      .valid_out(vo));
+            assign fault = vo && (err != 2'd0);
+        end else if (F12 != 0 && LAT == 5) begin : g_f5
+            wire [1:0] err;
+            wire vo;
+            ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                       .valid_out(vo));
+            assign fault = vo && (err != 2'd0);
+        end else begin : g_l
+            ot_hdc_v41x_qaddl #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y), .fault(fault));
+        end
+    endgenerate
 endmodule

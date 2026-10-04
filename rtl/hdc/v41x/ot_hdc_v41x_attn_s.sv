@@ -92,7 +92,8 @@ module ot_hdc_v41x_attn_merge_x #(
     parameter integer H = 16,
     parameter integer DPT = 16,
     parameter integer MLEV = 4,
-    parameter integer FPL = 3
+    parameter integer FPL = 3,
+    parameter integer F12 = 0          // 1: FP32 adds are the 1.2 GHz f12 units (rtl/hdc/ot_hdc_fp32_f12.sv)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -161,7 +162,7 @@ module ot_hdc_v41x_attn_merge_x #(
                 wire [31:0] a = use_ ? head[31:0] : 32'd0;
                 wire [31:0] y;
                 wire af;
-                ot_hdc_v41x_qaddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(a),
+                ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(a),
                                  .b(lx[(gl*H+gh)*32 +: 32]), .y(y), .fault(af));
                 wire fdq;
                 ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(lf[gl*H+gh] | (use_ & head[32])), .q(fdq));
@@ -216,6 +217,9 @@ module ot_hdc_v41x_attn_s #(
                                        // at one beat per cycle (see the W11 stream record)
     parameter integer TILE_S = 0,      // 1: the head-group tile ot_hdc_v41x_attn_tile_s (same cycles; hardens
                                        //    hierarchically, rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv)
+    parameter integer FPLX = 0,        // >0: FP32 add latency of the lane trees and block merges (default FPL)
+    parameter integer F12 = 0,         // 1: every FP32 add is the 1.2 GHz f12 unit (LAT 4: ot_hdc_fp32_add_f12_l4,
+                                       //    registered operands; LAT 5: ot_hdc_fp32_add_f12_l5x, operand mux in front)
     parameter integer MFAN = 0,        // 1: the block merges with per-head control copies (ot_hdc_v41x_attn_merge_x;
                                        //    +1 cycle on p.v results only)
     parameter integer NARROW = 0       // 1: block counters (load / fill / issue / filled / count) BKW bits wide, not
@@ -277,6 +281,7 @@ module ot_hdc_v41x_attn_s #(
     localparam integer BD = (NBANK <= 4) ? 4 : (1 << $clog2(NBANK));   // block -> bank table entries
     localparam integer LA = (NBANKP == 0) ? 3 : NBANK - 1;           // p-load lookahead, blocks (3 as built)
     localparam integer LVT = $clog2(TD / 8);
+    localparam integer FX = (FPLX > 0) ? FPLX : FPL;         // lane-tree / merge add latency
     localparam integer TLAT = 3 + FML + FPL * (7 + LVT);   // tile: input -> ov (27 + 3 LVT as built)
     localparam integer LS = (S <= 1) ? 0 : $clog2(S);  // lane-tree levels
 
@@ -853,7 +858,7 @@ module ot_hdc_v41x_attn_s #(
             localparam integer SL = gk % S;
             wire [PWORDS*TD*16-1:0] ldw = e_ld_mode ? e_p_w : (PWORDS*TD*16)'(e_q_w[SL*TD*16 +: TD*16]);
             if (TILE_S != 0) begin : g_ts
-                ot_hdc_v41x_attn_tile_s #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML)) u_t (
+                ot_hdc_v41x_attn_tile_s #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML), .F12(F12)) u_t (
                     .clk(clk), .rst_n(rst_n), .ld_v(e_ld_v), .ld_mode(e_ld_mode), .ld_bank(e_ld_bank),
                     .ld_grp(e_ld_grp), .ld_w(ldw), .ld_w2v(e_ld_w2v), .iv(e_iv), .ibank(e_ibank), .ib(e_ib[gk*TD*18 +: TD*18]),
                     .ov(t_ov[gk]), .oy(t_y[gk*H*32 +: H*32]), .oflt(t_f[gk*H +: H]));
@@ -890,10 +895,10 @@ module ot_hdc_v41x_attn_s #(
                 for (gs = 0; gs < S - 1; gs = gs + 1) begin : g_node
                     wire [31:0] y;
                     wire f;
-                    ot_hdc_v41x_qaddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gs+1)*32 +: 32]),
+                    ot_hdc_v41x_qaddf #(.LAT(FX), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gs+1)*32 +: 32]),
                                      .b(tn[(2*gs+2)*32 +: 32]), .y(y), .fault(f));
                     wire fdq;
-                    ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(tf[2*gs+1] | tf[2*gs+2]), .q(fdq));
+                    ot_hdc_v41x_dly #(.W(1), .D(FX)) u_fd (.clk(clk), .d(tf[2*gs+1] | tf[2*gs+2]), .q(fdq));
                     assign tn[gs*32 +: 32] = y;
                     assign tf[gs] = fdq | f;
                 end
@@ -905,8 +910,8 @@ module ot_hdc_v41x_attn_s #(
     wire ln_v, ln_pv;
     wire [15:0] ln_row0;
     wire [NL-1:0] ln_mask;
-    ot_hdc_v41x_vdly #(.D(FPL * LS + 1)) u_lnv (.clk(clk), .rst_n(rst_n), .d(t_ov[0] && !t_pv), .q(ln_v));
-    ot_hdc_v41x_dly #(.W(16 + NL), .D(FPL * LS + 1)) u_lnt (.clk(clk), .d({t_row0, t_mask}), .q({ln_row0, ln_mask}));
+    ot_hdc_v41x_vdly #(.D(FX * LS + 1)) u_lnv (.clk(clk), .rst_n(rst_n), .d(t_ov[0] && !t_pv), .q(ln_v));
+    ot_hdc_v41x_dly #(.W(16 + NL), .D(FX * LS + 1)) u_lnt (.clk(clk), .d({t_row0, t_mask}), .q({ln_row0, ln_mask}));
     // (the +1 above aligns with the register below; ln_y is FPL*LS after t_y)
     reg [NL*H*32-1:0] ln_yr;
     reg [NL*H-1:0]    ln_fr;
@@ -927,12 +932,12 @@ module ot_hdc_v41x_attn_s #(
         for (gk = 0; gk < NT; gk = gk + 1) begin : g_m
             if (PHYS == 0) begin : g_real
             if (MFAN != 0) begin : g_x
-            ot_hdc_v41x_attn_merge_x #(.H(H), .DPT(DPT), .MLEV(MLEV), .FPL(FPL)) u_m (
+            ot_hdc_v41x_attn_merge_x #(.H(H), .DPT(DPT), .MLEV(MLEV), .FPL(FX), .F12(F12)) u_m (
                 .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
                 .iy(t_y[gk*H*32 +: H*32]), .if_(t_f[gk*H +: H]), .ov(m_ov[gk]), .oy(m_y[gk*H*32 +: H*32]),
                 .of_(m_f[gk*H +: H]));
             end else begin : g_s
-            ot_hdc_v41x_attn_merge_s #(.H(H), .DPT(DPT), .MLEV(MLEV), .FPL(FPL)) u_m (
+            ot_hdc_v41x_attn_merge_s #(.H(H), .DPT(DPT), .MLEV(MLEV), .FPL(FX)) u_m (
                 .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
                 .iy(t_y[gk*H*32 +: H*32]), .if_(t_f[gk*H +: H]), .ov(m_ov[gk]), .oy(m_y[gk*H*32 +: H*32]),
                 .of_(m_f[gk*H +: H]));
@@ -946,7 +951,7 @@ module ot_hdc_v41x_attn_s #(
         end
     endgenerate
     wire [7:0] m_c;
-    ot_hdc_v41x_dly #(.W(8), .D(FPL * MLEV + ((MFAN != 0) ? 1 : 0))) u_mc (.clk(clk), .d(t_c), .q(m_c));
+    ot_hdc_v41x_dly #(.W(8), .D(FX * MLEV + ((MFAN != 0) ? 1 : 0))) u_mc (.clk(clk), .d(t_c), .q(m_c));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) pv_v <= 1'b0;
         else pv_v <= m_ov[0];
