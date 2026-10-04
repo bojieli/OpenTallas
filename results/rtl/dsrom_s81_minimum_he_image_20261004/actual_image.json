@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.dsrom.s81.minimum-HE-image.r1",
+  "scope": "one L0I1 raw immutable HE tensor, no activations/field/allocator/numerical simulation",
+  "snapshot": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "tensor": "layers.0.hc_attn_fn",
+  "descriptor": {
+    "dtype": "F32",
+    "shape": [
+      24,
+      20480
+    ],
+    "data_offsets": [
+      3424,
+      1969504
+    ]
+  },
+  "source_byte_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+  "source_bytes": 1966080,
+  "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "shard": "model-00003-of-00048.safetensors",
+  "shard_header_data_base": 258144,
+  "shard_identity": {
+    "device": 66313,
+    "inode": 28991059,
+    "bytes": 7389759032,
+    "mtime_ns": 1789298934154178885
+  },
+  "geometry": {
+    "banks": 8,
+    "hhw": 8,
+    "words_per_row": 320,
+    "word_count": 7680,
+    "image_bytes": 1966080,
+    "base_word": 0,
+    "end_word_exclusive": 7680
+  },
+  "bank_lines": 61440,
+  "layout": "HHW8 bankline=(wbase+row*320+run)*8+term lane=chunk",
+  "literal_L0I1": {
+    "he_nout": 24,
+    "he_k": 2560,
+    "he_wbase": 0,
+    "source_sha256": "8e0be2b86167e0c32c76db46a292161838b79d646b6a69bce19519563928cf25",
+    "instruction_sha256": "b0e6f7c4c4dcb6229b36c29e46d9e1a0b9e898d60f34cf07117fef857b41c319"
+  },
+  "reused_image": {
+    "image": "/home/ubuntu/w17work/die/ctx1048576_r0/hbank.hex",
+    "image_sha256": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+    "manifest": "/home/ubuntu/w17work/die/ctx1048576_r0/manifest.json",
+    "manifest_sha256": "d3ca34d59dc4732a28d6080cdcd5328e06d47fee6ab3625bf4ab1f6ea73a41c6"
+  },
+  "exact_raw_values": 491520,
+  "independent_inverse_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+  "hbank_sha256": "90d4850851d6c5e9c92e6b1f5f38db6e6af33abdccfe194c2042e5de67ac1202",
+  "hbank_bytes": 3993603,
+  "hbank_source_sha256": "f406b7a8dc146b69096261d8f5c5b32bc7d1f79ffbed5a620251b9fa32715dd0",
+  "emitter_sha256": "d2cd5192a1dcd51efedb6a59c089978c208dbf1b14aa6940463e3a9d25aabe64",
+  "existing_code_sha256": {
+    "tools/dsrom_checkpoint.py": "1f0ba70f4102aa8fb60e27d4bf4ce0f587fb6c9b1e456b6b35cd7705ba256844",
+    "tools/v41_fullshape_weight_layout.py": "86e2f1fa103d1cf89ffeaaac755b81bce1d673afed9bf56651a287a0cc359dab",
+    "tools/v41_die_l0_images.py": "2304170d0e390816909cee5e9fc84984d4f39671101f90cbba5765fb44fa8127",
+    "tools/runtime/dsrom/s81_minimum_he_bootstrap_provider.cpp": "55396925b7cb2eebd4fb44e9e2423062a96ed5ff535ec88dad2a397337e26512"
+  },
+  "resource": {
+    "elapsed_seconds": 0.7160737230442464,
+    "peak_RSS_bytes": 109281280,
+    "source_read_bytes": 1966080,
+    "added_image_bytes": 3993603,
+    "no_execution_caps": true,
+    "hardware_model_delta": 0
+  },
+  "selected_directory": "/tmp/dsrom-s81-minimum-source-selected-cicero-r1",
+  "status": "PASS_RELEASED_HE_RAW_IMAGE_ONLY"
+}
