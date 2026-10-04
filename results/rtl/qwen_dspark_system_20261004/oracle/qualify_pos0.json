@@ -1,0 +1,46 @@
+{
+ "gpu": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+ "head": {
+  "argmax_token": 50994,
+  "logit_bits": "419c72b5",
+  "per_die": [
+   {
+    "argmax_local": 1096,
+    "logit_bits": "4173fc0a"
+   },
+   {
+    "argmax_local": 13010,
+    "logit_bits": "419c72b5"
+   },
+   {
+    "argmax_local": 13038,
+    "logit_bits": "413fa085"
+   },
+   {
+    "argmax_local": 14916,
+    "logit_bits": "4108b7fc"
+   }
+  ],
+  "top2_margin": 4.306976318359375
+ },
+ "head_equal": true,
+ "layer_x_checks": 144,
+ "layer_x_mismatches_total": 0,
+ "mode": "qualify0",
+ "schema": "opentallas.qwen-dspark-oracle-gpu.v1",
+ "selftest_cases": 12,
+ "source_sha256": {
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+  "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+  "tools/hdc_qwen_fullshape_isa_w12.py": "add181198a349f401629e39393e47aa20b969df38ec42afbdb8347921ea18707",
+  "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+  "tools/qwen_o4_layer0_oracle_w12.py": "8c91d7f5ae0639e0613d66783399a29a34ce6ce5e28a7fb8edeac2dc86f3842b",
+  "tools/qwen_o4_token_oracle_w12.py": "ee3793a8a6e4d067e86bb4544dbc82f6cbfbeece7e8961a612b8b5b627325526",
+  "tools/qwen_rom_dspark_drafter_golden.py": "f84a8c6104bbdbd24c72fef290889164d2d196149ede6f77cde4cacc6763a8ea",
+  "tools/qwen_rom_dspark_oracle_gpu_w12.py": "bc0f8ba28f345718eb6013996b21a519c03dc4cdba6aeeafe9a6bb50c7199bc2",
+  "tools/qwen_rom_position_oracle_w12.py": "73dc5b2907743c304678703bd8dacd6509bc264679a996c592cbdbd4f200670c"
+ },
+ "torch": "2.10.0+cu128",
+ "wall_seconds": 312.5
+}

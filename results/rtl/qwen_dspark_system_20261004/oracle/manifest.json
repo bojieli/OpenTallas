@@ -1,0 +1,157 @@
+{
+ "schema": "opentallas.qwen-dspark-oracle-manifest.v1",
+ "branch": "claude/qwen-dspark-oracle-20261004",
+ "run_dir": "/home/ubuntu/qwen-dspark-oracle-run/run_P255 (local host, not committed: kv bins 4.6 GB, per-position hex)",
+ "P": 255,
+ "block1": {
+  "tokens": [
+   6280,
+   1448,
+   14458,
+   3856
+  ],
+  "positions": [
+   255,
+   256,
+   257,
+   258
+  ],
+  "drafts": [
+   1448,
+   14458,
+   3856
+  ],
+  "argmax": [
+   98951,
+   484,
+   3856,
+   334
+  ],
+  "argmax_logit_bits": [
+   "42098785",
+   "41c85000",
+   "41c61ee2",
+   "41e1b572"
+  ],
+  "accepted": 0,
+  "emitted": [
+   98951
+  ]
+ },
+ "P2": 256,
+ "block2": {
+  "tokens": [
+   98951,
+   3856,
+   334,
+   320
+  ],
+  "positions": [
+   256,
+   257,
+   258,
+   259
+  ],
+  "drafts": [
+   3856,
+   334,
+   320
+  ],
+  "argmax": [
+   3856,
+   334,
+   320,
+   1958
+  ],
+  "argmax_logit_bits": [
+   "41dbd906",
+   "41e6d7c6",
+   "41f46c8d",
+   "41c1c9e3"
+  ],
+  "accepted": 3,
+  "emitted": [
+   3856,
+   334,
+   320,
+   1958
+  ]
+ },
+ "drafts_produced_by": {
+  "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--dspark_qwen3_8b_block7/snapshots/03326e5043815da1f81b109078b2889737c26017",
+  "features": "this golden: X after layers 1, 9, 17, 25, 33",
+  "golden": "tools/qwen_rom_dspark_drafter_golden.py golden_step (W8 contract, single-core order)",
+  "kv": "fp8",
+  "load_seconds": 262.6
+ },
+ "drafts_detail": {
+  "step1": {
+   "S": 3,
+   "anchor": 6280,
+   "draft_tokens": [
+    1448,
+    14458,
+    3856
+   ],
+   "kv": "fp8",
+   "logit_bits": [
+    "41d724aa",
+    "41d52a38",
+    "41bed5c1"
+   ],
+   "seconds": 35.0,
+   "start": 255
+  },
+  "step2": {
+   "S": 3,
+   "anchor": 98951,
+   "draft_tokens": [
+    3856,
+    334,
+    320
+   ],
+   "kv": "fp8",
+   "logit_bits": [
+    "41ed3681",
+    "41dbfde0",
+    "41c5eaba"
+   ],
+   "seconds": 37.3,
+   "start": 256
+  }
+ },
+ "kv_dirs": {
+  "P255": "/home/ubuntu/qwen-dspark-oracle-run/run_P255/kv_P255",
+  "P256_committed_only": "/home/ubuntu/qwen-dspark-oracle-run/run_P255/kv_P256"
+ },
+ "qualification": {
+  "gpu_matvec_selftest_cases": 12,
+  "retained_position0_oracle": "144/144 layer X (L0-L35 x 4 dies) bit-equal, head 50994/419c72b5 equal (qualify_pos0.json)",
+  "cpu_position_oracle_P255": "24 checks (X after L0-L2 x 4 dies at P255, kv_pre L0-L2 x 4 dies), 0 mismatches",
+  "embedding_snapshot_vs_npz": "tokens 6280, 98951, 3856 bit-equal"
+ },
+ "wall_seconds": {
+  "prefill_0_255_36_layers": 6177.7,
+  "block1_3_positions": 165.8,
+  "block2_4_positions": 244.9,
+  "total": 6939.1,
+  "drafter_load": 262.6
+ },
+ "torch": "2.10.0+cu128",
+ "gpu": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+ "source_sha256": {
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+  "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+  "tools/hdc_qwen_fullshape_isa_w12.py": "add181198a349f401629e39393e47aa20b969df38ec42afbdb8347921ea18707",
+  "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+  "tools/qwen_o4_layer0_oracle_w12.py": "8c91d7f5ae0639e0613d66783399a29a34ce6ce5e28a7fb8edeac2dc86f3842b",
+  "tools/qwen_o4_token_oracle_w12.py": "ee3793a8a6e4d067e86bb4544dbc82f6cbfbeece7e8961a612b8b5b627325526",
+  "tools/qwen_rom_dspark_drafter_golden.py": "f84a8c6104bbdbd24c72fef290889164d2d196149ede6f77cde4cacc6763a8ea",
+  "tools/qwen_rom_dspark_oracle_gpu_w12.py": "bc0f8ba28f345718eb6013996b21a519c03dc4cdba6aeeafe9a6bb50c7199bc2",
+  "tools/qwen_rom_position_oracle_w12.py": "73dc5b2907743c304678703bd8dacd6509bc264679a996c592cbdbd4f200670c"
+ },
+ "files": "oracle_P255.json file_sha256 (per-position X in/out, kv_at_P), kv_P255_sha256, kv_P256_sha256, layer_image_sha256",
+ "layout": "step<k>_P<P>/pos<p>/L<nn>_die<d>_xin.hex (layer input X), L<nn>_die<d>_x.hex (layer output X), x_embed.hex, kv_at_P/L<n>_die<d>.json; kv_P<P>/L<n>_die<d>.bin raw LE u32, 4,194,304 elements (the rm runtime --kv-dir format)",
+ "claim_boundary": "ISA golden (hdc_golden arithmetic, pinned TP4 images and programs; dense matvec on the GPU, bit-equal to G.matvec). Not an RTL verdict."
+}
