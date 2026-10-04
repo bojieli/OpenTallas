@@ -353,6 +353,24 @@ def iso(ref_name, ref_total, designs):
     return dict(reference=ref_name, reference_total_mm2=ref_total, rows=out)
 
 
+def ledger_fix():
+    """Part (2): the uarch_model ledger's clock-gated idle ROM pair, before (10% ASSUMED residual of the ungated pair
+    clock) and after (the measured residual clock, PAIR_CG_IDLE), at the ledger clock and at 1.2 GHz."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    import uarch_model as u
+    out = {}
+    for name, clk in (("ledger_clock", u.A._env()["clock"]), ("1.2GHz", 1.2e9)):
+        pp = u.pair_power(clk)
+        out[name] = dict(clock_hz=clk, before_w=round(u.PG["cg_residual"] * pp["clock"] + pp["leak"], 6),
+                         after_w=round(u.field_cg_residual(clk) * pp["clock"] + pp["leak"], 6),
+                         field_cg_residual_after=round(u.field_cg_residual(clk), 5))
+    out["measured_w"] = u.PAIR_CG_IDLE["total_w"]
+    out["src"] = u.PAIR_CG_IDLE["src"]
+    out["where"] = ("tools/uarch_model.py _die_energy (v41_static_power policies 1-3) and cons_v41_rom (the ICG die static "
+                    "keeps the measured residual clock of every idle pair instead of leakage only)")
+    return out
+
+
 def build():
     F, get = sb()
     reg = registry()
@@ -403,7 +421,7 @@ def build():
                 inputs=dict(scoreboard=SB_PATH, scoreboard_commit=load(SB_PATH).get("generated_from_commit"),
                             element_power=PG_PATH, spine=SPINE_PATH if (ROOT / SPINE_PATH).exists() else "pending",
                             registry=REG_PATH, integration=INTEG_PATH, recheck=RECHECK_PATH, economics=ECON_PATH),
-                status_rank=RANK, deepseek_1m=D, deepseek_compare=ds_cmp, qwen_8k=Q, qwen_compare=q_cmp)
+                status_rank=RANK, ledger_fix=ledger_fix(), deepseek_1m=D, deepseek_compare=ds_cmp, qwen_8k=Q, qwen_compare=q_cmp)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -483,6 +501,13 @@ def readme(d):
         L.append(f"| {k} | {v['rate_label']} | {fmt(v['per_user_tok_s'])} | {v['logic_dies']} | {fmt(v['total_mm2'], 0)} | "
                  f"{v['per_user_tok_s_per_1000mm2']:.3f} | {v['replicas_at_ref_silicon']:.2f} | "
                  f"{fmt(v['aggregate_b1_tok_s_integer_replicas'])} |")
+    lf = d["ledger_fix"]
+    L += ["", "## Ledger fix (tools/uarch_model.py)", "",
+          f"Clock-gated idle ROM pair: the ledger charged {lf['ledger_clock']['before_w'] * 1e3:.2f} mW (10% ASSUMED residual "
+          f"of the ungated pair clock + leakage) at {lf['ledger_clock']['clock_hz'] / 1e9:.3f} GHz; measured "
+          f"{lf['measured_w'] * 1e3:.3f} mW at 1.2 GHz ({lf['src']}). The ledger now charges "
+          f"{lf['ledger_clock']['after_w'] * 1e3:.2f} mW at its clock and {lf['1.2GHz']['after_w'] * 1e3:.2f} mW at 1.2 GHz "
+          f"(was {lf['1.2GHz']['before_w'] * 1e3:.2f}): {lf['where']}."]
     L += ["", "## Verdict (regenerated with the numbers above)", ""]
     L += verdict_lines(d)
     L += ["", "## Still modelled (why rows are not `measured`)", "",

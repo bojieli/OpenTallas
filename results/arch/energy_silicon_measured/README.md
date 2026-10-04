@@ -71,6 +71,10 @@ Per-user AR: ROM / HBM TP4 = 1.056; ROM / 1x H100 = 12.63; ROM / 8x H100 TP8 = 7
 | h100_tp8_ar | AR | 299.0 | 8 | 50,072 | 5.971 | 0.41 | 0.0 |
 | b200_dflash | DFlash (published) | 1,175.0 | 2 | 10,312 | 113.945 | 2.00 | 1,175.0 |
 
+## Ledger fix (tools/uarch_model.py)
+
+Clock-gated idle ROM pair: the ledger charged 8.14 mW (10% ASSUMED residual of the ungated pair clock + leakage) at 1.034 GHz; measured 3.005 mW at 1.2 GHz (results/rtl/rom_stage_power_gating_20261004/verdict.json power_w.cg_idle (route R3, TT)). The ledger now charges 2.60 mW at its clock and 2.98 mW at 1.2 GHz (was 9.41): tools/uarch_model.py _die_energy (v41_static_power policies 1-3) and cons_v41_rom (the ICG die static keeps the measured residual clock of every idle pair instead of leakage only).
+
 ## Verdict (regenerated with the numbers above)
 
 - **DS, per user:** the HBM accelerator is faster (AR): ROM/HBM 0.62x AR, 0.54x MTP.
