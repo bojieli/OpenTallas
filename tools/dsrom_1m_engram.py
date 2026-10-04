@@ -10,13 +10,14 @@ hashed rows, key and value are rebuilt here from the released weights: the token
 equal BOTH hdc_golden_v41.Model.engram_layer and the shard's L{L}.engram bit for bit before any RTL runs.
 
 The chain (the as-built ISA lowering of hdc_program_v41.Program.engram, at the released shape 4 x 5120):
-  op0  key sum of squares per copy  (E side: token-addressed, off the h path; E{L}.knorm.sumsq)
-  op1  h sum of squares per copy     (L{L}.eng.hh)
-  op2  (h * wgt) * key, summed per copy                     (L{L}.eng.dot)
-  op3  rsqrt(ss / 5120 + eps) of the 8 sums
-  op4  rstd_h * rstd_k * dot * dim^-0.5
-  op5  Engram gate SFU: sigmoid(signed sqrt)                (L{L}.eng.gate = op3..op5)
-  op6  h + gate * value, BF16                               (L{L}.eng.add)
+  op0  h sum of squares per copy     (L{L}.eng.hh)
+  op1  (h * wgt) * key, summed per copy                     (L{L}.eng.dot: h available -> dot result)
+  op2  rsqrt(ss / 5120 + eps) of the 8 sums
+  op3  rstd_h * rstd_k * dot * dim^-0.5
+  op4  Engram gate SFU: sigmoid(signed sqrt)                (L{L}.eng.gate = op2..op4)
+  op5  h + gate * value, BF16                               (L{L}.eng.add)
+The key's sums of squares are E side (token-addressed, prefetched): VM operands of the h chain, and their own
+chain E{L}.engram_key (E{L}.knorm.sumsq, off the h path).
 on rtl/hdc/v41x/ot_hdc_v41x_vec.sv N1024 / M256 (MLAT 5 / ALAT 4, the 0.9 GHz serial domain), variants unit
 (BCAST 0 / RET 0) and wired (BCAST 22 / RET 15: the plus-hub network stages as RTL register stages), exactly as
 tools/dsrom_1m_su.py runs the other SU nodes.
@@ -134,39 +135,50 @@ def f32u(x):
 
 
 def chain_engram(c, I, s):
-    """The ISA lowering of Program.engram at 4 x 5120 (see the module doc)."""
+    """The ISA lowering of Program.engram at 4 x 5120 (see the module doc), h side only: the key sums of squares
+    are token-addressed (E side, prefetched long before h arrives), so they are VM operands here and measured as
+    their own chain (chain_engram_key)."""
     hc, d = s["hc"], s["dim"]
     H = c.vm(s["h"])
     K = c.vm(s["key"])
     VAL = c.vm(s["value"])
     W = c.crom(s["wgt"])
     SS = c.buf(8)
-    c.op(nout=hc, nin=d, abase=K, aso=d, asi=1, red=I.RED_SUM, redsq=1, rbase=SS + 4, rso=1, dst=0)        # 0 kk
-    c.op(nout=hc, nin=d, abase=H, aso=d, asi=1, red=I.RED_SUM, redsq=1, rbase=SS, rso=1, dst=0)            # 1 hh
+    c.init.append((SS + 4, np.asarray(s["kk"], F)))                                                          # E side
+    c.op(nout=hc, nin=d, abase=H, aso=d, asi=1, red=I.RED_SUM, redsq=1, rbase=SS, rso=1, dst=0)            # 0 hh
     c.check("h sum of squares per copy", SS, s["hh"])
     ED = c.buf(8)
     c.op(nout=hc, nin=d, abase=H, aso=d, asi=1, bsrc=I.SRC_CLO, bbase=W, bso=d, bsi=1, m1=I.M1_AB,
-         cbase=K, cso=d, csi=1, m2=I.M2_C, red=I.RED_SUM, rbase=ED, rso=1, dst=0)                            # 2 dot
+         cbase=K, cso=d, csi=1, m2=I.M2_C, red=I.RED_SUM, rbase=ED, rso=1, dst=0)                            # 1 dot
     c.check("(h * wgt) . key per copy", ED, s["dd"])
-    c.check("key sum of squares per copy", SS + 4, s["kk"])
     RS = c.buf(8)
     c.op(nout=1, nin=2 * hc, abase=SS, aso=2 * hc, asi=1, m1=I.M1_DIVIMM, imm1=f32u(d), ad=I.AD_IMM,
-         imm2=f32u(s["eps"]), sfu=I.SFU_RSQRT, obase=RS, oso=2 * hc, osi=1)                                   # 3
+         imm2=f32u(s["eps"]), sfu=I.SFU_RSQRT, obase=RS, oso=2 * hc, osi=1)                                   # 2
     c.check("rstd h | rstd key", RS, s["rstd"])
     DOT = c.buf(8)
     c.op(nout=1, nin=hc, abase=RS, aso=hc, asi=1, bbase=RS + hc, bso=hc, bsi=1, m1=I.M1_AB, cbase=ED, cso=hc,
-         csi=1, m2=I.M2_C, e1=I.E1_MULIMM, imm2=f32u(s["scale"]), obase=DOT, oso=hc, osi=1)                  # 4
+         csi=1, m2=I.M2_C, e1=I.E1_MULIMM, imm2=f32u(s["scale"]), obase=DOT, oso=hc, osi=1)                  # 3
     c.check("scaled dot", DOT, s["dot"])
     G = c.buf(8)
-    c.op(nout=1, nin=hc, abase=DOT, aso=hc, asi=1, sfu=I.SFU_EGATE, obase=G, oso=hc, osi=1)                   # 5
+    c.op(nout=1, nin=hc, abase=DOT, aso=hc, asi=1, sfu=I.SFU_EGATE, obase=G, oso=hc, osi=1)                   # 4
     c.check("gate", G, s["gate"])
     O = c.buf(hc * d)
     c.op(nout=hc, nin=d, abase=VAL, aso=0, asi=1, bbase=G, bso=1, bsi=0, m1=I.M1_AB, cbase=H, cso=d, csi=1,
-         ad=I.AD_C, rnd=1, obase=O, oso=d, osi=1)                                                             # 6
+         ad=I.AD_C, rnd=1, obase=O, oso=d, osi=1)                                                             # 5
     c.check("h + gate * value (BF16): the Engram output", O, s["out"])
     L = s["layer"]
-    return [(f"E{L}.knorm.sumsq", 0, "result"), (f"L{L}.eng.hh", 1, "result"), (f"L{L}.eng.dot", 2, "result"),
-            (f"L{L}.eng.gate", 5, "write"), (f"L{L}.eng.add", 6, "write")]
+    return [(f"L{L}.eng.hh", 0, "result"), (f"L{L}.eng.dot", 1, "result"), (f"L{L}.eng.gate", 4, "write"),
+            (f"L{L}.eng.add", 5, "write")]
+
+
+def chain_engram_key(c, I, s):
+    """E side: the key's sum of squares per copy (token-addressed, off the h path)."""
+    hc, d = s["hc"], s["dim"]
+    K = c.vm(s["key"])
+    SS = c.buf(8)
+    c.op(nout=hc, nin=d, abase=K, aso=d, asi=1, red=I.RED_SUM, redsq=1, rbase=SS, rso=1, dst=0)
+    c.check("key sum of squares per copy", SS, s["kk"])
+    return [(f"E{s['layer']}.knorm.sumsq", 0, "result")]
 
 
 def cmd_prep(a):
@@ -181,12 +193,13 @@ def cmd_prep(a):
         h.update(p.read_bytes())
         s = pickle.loads(p.read_bytes())
         assert all(s["checks"].values()), s["checks"]
-        c = B.Chain(f"L{L}.engram", VC)
-        c.meta = dict(layer=f"L{L}", fn="engram")
-        nodes = chain_engram(c, I, s)
-        c.meta["nodes"] = [dict(node=n, op=k, event=ev) for n, k, ev in nodes]
-        cases.append(dict(name=c.name, meta=c.meta, init=c.init, cr_lo=c.cr_lo, cr_hi=c.cr_hi, ops=c.ops,
-                          checks=[(lab, ad, G.bits(w).astype(np.uint32), "golden") for lab, ad, w, _k in c.checks]))
+        for nm, fn in ((f"L{L}.engram", chain_engram), (f"E{L}.engram_key", chain_engram_key)):
+            c = B.Chain(nm, VC)
+            c.meta = dict(layer=f"L{L}", fn=fn.__name__)
+            nodes = fn(c, I, s)
+            c.meta["nodes"] = [dict(node=n, op=k, event=ev) for n, k, ev in nodes]
+            cases.append(dict(name=c.name, meta=c.meta, init=c.init, cr_lo=c.cr_lo, cr_hi=c.cr_hi, ops=c.ops,
+                              checks=[(lab, ad, G.bits(w).astype(np.uint32), "golden") for lab, ad, w, _k in c.checks]))
     (out / CASES).write_bytes(pickle.dumps(dict(cases=cases, snapshots_sha256=h.hexdigest())))
     print("cases", [c["name"] for c in cases])
     return 0
@@ -221,19 +234,16 @@ def cmd_record(a):
                        source_sha256=r["source_sha256"])
         for ch in r["chains"]:
             L = ch["layer"]
-            evs = [(nd["node"], _completion(ch["per_op"][nd["op"]], nd["event"])) for nd in ch["nodes"]]
-            t = dict(evs)
-            hh, dot = f"{L}.eng.hh", f"{L}.eng.dot"
-            Ln = L[1:]
-            start = t[f"E{Ln}.knorm.sumsq"]   # the key sums are E side (token-addressed); h-side from here
-            cyc = {f"E{Ln}.knorm.sumsq": t[f"E{Ln}.knorm.sumsq"],
-                   hh: t[hh] - start,
-                   # the graph has hh || dot; on one stream unit they are serial: dot carries h -> dot result
-                   dot: t[dot] - start,
-                   f"{L}.eng.gate": t[f"{L}.eng.gate"] - t[dot],
-                   f"{L}.eng.add": t[f"{L}.eng.add"] - t[f"{L}.eng.gate"]}
+            t = {nd["node"]: _completion(ch["per_op"][nd["op"]], nd["event"]) for nd in ch["nodes"]}
+            if ch.get("fn") == "chain_engram_key":
+                cyc = dict(t)
+            else:
+                hh, dot, gate, add = (f"{L}.eng.{k}" for k in ("hh", "dot", "gate", "add"))
+                # chain start = h available (the key sums are VM operands); hh and dot are serial on the unit, so
+                # eng.dot carries h -> dot result (pipeline fill included), eng.hh its own completion
+                cyc = {hh: t[hh], dot: t[dot], gate: t[gate] - t[dot], add: t[add] - t[gate]}
             chains.append(dict(variant=v, chain=ch["chain"], exact=ch["exact"], checks=ch["checks"],
-                               per_op=ch["per_op"], events=dict(evs), cycles_end=ch["cycles_end"]))
+                               per_op=ch["per_op"], events=t, cycles_end=ch["cycles_end"]))
             for n, c in cyc.items():
                 e = nodes.setdefault(n, dict(clock_hz=SLOW_HZ, exact=True))
                 e[f"{v}_cycles"] = int(c)
@@ -250,7 +260,7 @@ def cmd_record(a):
                context=CTX, position=CTX - 1, exact=exact,
                scope="Engram L1 / L14 at the 1M token, die 0's stream unit (one chain a layer), the ISA lowering of "
                      "Program.engram at the released shape 4 x 5120; node us = wired (BCAST 22 / RET 15) RTL cycles "
-                     "at 0.9 GHz.  eng.dot is h arrival -> dot result (hh and dot are serial on the unit); "
+                     "at 0.9 GHz.  eng.dot is h available -> dot result (hh and dot are serial on the unit; pipeline fill included); "
                      "E{L}.knorm.sumsq is the key side (token-addressed, prefetchable, off the h path).",
                golden_check=gold, nodes=nodes, runs=runs, chains=chains,
                tool_sha256={"tools/dsrom_1m_engram.py": sha(ROOT / "tools/dsrom_1m_engram.py")})
