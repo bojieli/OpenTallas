@@ -4,7 +4,7 @@
 No row copy, expected activation, numerical inference, program replay or full
 parent build. Missing source, identity, response, or commit is a hard error.
 """
-import argparse, ctypes as C, hashlib, json, struct, subprocess
+import argparse, ctypes as C, hashlib, json, re, struct, subprocess
 from pathlib import Path
 from dsrom_checkpoint import Checkpoint, DEFAULT_CHECKPOINT
 
@@ -51,15 +51,16 @@ def build(out):
         str(ROOT/'rtl/test/dsrom_s81_bootstrap/embedding_vm.sv')],check=True)
     # Discover the installed include root, not a different Verilator release.
     text=subprocess.check_output(['verilator','-V'],text=True)
-    include=next(line.split('=',1)[1].strip() for line in text.splitlines() if line.strip().startswith('VERILATOR_ROOT ='))
+    include=re.search(r'VERILATOR_ROOT\s*=\s*(\S+)',text).group(1)
     include=Path(include)/'include'
     lib=out/'libdsrom_s81_embedding.so'
     subprocess.run(['g++','-shared','-fPIC','-pthread','-std=c++17',
         '-I'+str(out),'-I'+str(include),'-I'+str(include/'vltstd'),
         '-I'+str(ROOT/'tools/runtime/dsrom'),
         str(ROOT/'tools/runtime/dsrom/s81_embedding_bridge.cpp'),
-        str(out/'Vembedding_vm__ALL.a'),str(include/'verilated.cpp'),
-        str(include/'verilated_threads.cpp'),'-o',str(lib)],check=True)
+        str(out/'Vembedding_vm__ALL.a'),str(include/'verilated.cpp')]+
+        ([str(include/'verilated_threads.cpp')] if (include/'verilated_threads.cpp').exists() else [])+
+        ['-o',str(lib)],check=True)
     return lib
 
 def run(lib,checkpoint,prompt,position,identity,out):
