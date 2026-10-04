@@ -6927,6 +6927,29 @@ def dsrom_s81_native_he_bootstrap():
         overlap_credit_us=0, actual_provider_deadlines_required=True)
 
 
+def dsrom_s81_native_he_bootstrap_source():
+    """Additive corrected source-factory contract; prior component stays history."""
+    row=copy.deepcopy(dsrom_s81_native_he_bootstrap())
+    row['schema']='opentallas.dsrom.S81.native-HE-bootstrap.source-factory.v2'
+    row['PF']['raw_FP32_words']=[1065353216,0,0,0]
+    row['adapter'].update(explicit_bootstrap_arming=True, per_operation_inputs_ready=True,
+        sole_edge_owner='bootstrap participant; HE participant only drives ports; zero prepare evals; one native eval per rising/falling edge',
+        runtime_reserved_tag_namespace_only=True, grouped_scalar_acceptance_inferred=False,
+        actual_same_VM_scalar_prefetch_words=20480,
+        raw_cached_H_bytes=81920, raw_H_cache_register_floor_mm2=20480*32*DFF_UM2/1e6,
+        source_VM_read_return_latency_edges=4, source_old_request_reuse_wait_required=True,
+        scalar_serial_read_service_edges_model=20480*6,
+        serial_read_edge_derivation='Request acceptedE; native target returnedatE+4postedge; bootstrap polls E+5prepare; next scalar starts E+6. One canonicalbank, no private grouped acceptance.',
+        source_VM_capture_identity_callbacks_required=True,
+        H_cache_reuse_for_HE='Only literalI1 under unchanged H lease; L0I0 writes RF40992, not H. No source-version substitution or host FP.',
+        raw_HE_image_bytes=24*20480*4,
+        actual_HE_image_required='hbank.hex plus hbank.source full revision/tensor/dtype/shape/HHW8 codec/SHA; no zero fallback',
+        software_immutable_image_mirror_not_free_new_hardware_storage=True)
+    row['corrected_source_factory_symbol']='dsrom_s81_bind_minimum_he_bootstrap'
+    row['cold_critical_path']='Actual embedding publication -> explicit arm -> serialized actual H read returns -> 80 native SSX vectors -> native SSX/PF reserved scalar commands -> actual scalar ACKs -> per-op native inputs_ready -> L0I0/I1/remainingSU. Routes/provider/clock costs remain additive; no ideal native-port overlap.'
+    return row
+
+
 def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
     """Cold token ROM lookup; retained dedicated storage, no field refit.
 
