@@ -3009,6 +3009,25 @@ PG = dict(
 )
 
 
+# MEASURED clock-gated idle of one ROM element pair (2026-10-04, results/rtl/rom_stage_power_gating_20261004,
+# route R3, OpenSTA TT on routed SPEF + gate-level SAIF at 1.2 GHz): 3.005 mW per pair (0.243 mW of it leakage).  The
+# ledger used to charge PG["cg_residual"] (10%, ASSUMED) of the ungated pair clock (79.2 mW at 1.034 GHz) + 0.22 mW
+# leakage = 8.14 mW per clock-gated idle pair.  The ROM field's idle clock now uses the measured residual clock
+# (scaled linearly with the clock, as pair_power does); the hub keeps the ASSUMED 10% (not measured).
+def _pair_cg_idle_measured():
+    v = json.loads((ROOT / "results/rtl/rom_stage_power_gating_20261004/verdict.json").read_text())["power_w"]["cg_idle"]
+    return dict(total_w=v["total"], leak_w=v["leakage"], clock_w=v["total"] - v["leakage"], clock_hz=1.2e9,
+                src="results/rtl/rom_stage_power_gating_20261004/verdict.json power_w.cg_idle (route R3, TT)")
+
+
+PAIR_CG_IDLE = _pair_cg_idle_measured()
+
+
+def field_cg_residual(clock):
+    """The ROM field's clock-gated idle clock as a fraction of the ungated pair clock at `clock` (MEASURED numerator)."""
+    return PAIR_CG_IDLE["clock_w"] * clock / PAIR_CG_IDLE["clock_hz"] / pair_power(clock)["clock"]
+
+
 def _stage_windows(g):
     """Per-stage time on the single-user critical path (the stage's active window at batch 1; the head stage
     carries the embed and argmax), and each stage's start time on the path."""
@@ -3056,6 +3075,7 @@ def v41_die_static_parts(d):
     return dict(
         # ROM field MEASURED per pair (PAIR_W); hub from its area, UNCALIBRATED
         field=dict(clock=N * pair_power(clock)["clock"], leak_logic=N * PAIR_W["leak_cell"], leak_rom=N * PAIR_W["leak_rom"]),
+        field_cg_residual=field_cg_residual(clock),     # MEASURED pair clock-gated idle (PAIR_CG_IDLE)
         hub=dict(clock=cl * (a["hub_logic_mm2"] + 0.15 * a["vm_ports"]),
                  leak_logic=a["hub_logic_mm2"] * LEAK["logic"], leak_sram=a["vm_ports"] * LEAK["sram_array"]),
         hbm_if=4 * HBM_IDLE_W_STACK, serdes=rack["serdes_always_on"], ucie=rack["ucie_idle"])
@@ -3067,18 +3087,19 @@ def _die_energy(p, period, window, busy, policy, wake_s, pg_ok):
     policies: 0 ungated; 1 stage clock gating; 2 + region clock gating inside the window; 3 + power gating of the
     idle stage (retention SRAM, gated logic and ROM, HBM PHY power-down, SerDes / UCIe low-power idle) when the
     idle gap fits the wake-up and the break-even time."""
-    r = PG["cg_residual"]
+    rk = dict(field=p.get("field_cg_residual", PG["cg_residual"]), hub=PG["cg_residual"])
     idle = max(0.0, period - window)
     clk = p["field"]["clock"] + p["hub"]["clock"]
+    clk_r = rk["field"] * p["field"]["clock"] + rk["hub"] * p["hub"]["clock"]     # clock left with the ICGs closed
     leak = p["field"]["leak_logic"] + p["field"]["leak_rom"] + p["hub"]["leak_logic"] + p["hub"]["leak_sram"]
     io = p["hbm_if"] + p["serdes"] + p["ucie"]
     if policy == 0:
         return (clk + leak + io) * period
     if policy == 1:
-        e_clk = clk * (window + r * idle)
+        e_clk = clk * window + clk_r * idle
     else:
-        e_clk = sum(p[k]["clock"] * (min(busy[k], window) + r * (window - min(busy[k], window))) for k in ("field", "hub")) \
-            + r * clk * idle
+        e_clk = sum(p[k]["clock"] * (min(busy[k], window) + rk[k] * (window - min(busy[k], window))) for k in ("field", "hub")) \
+            + clk_r * idle
     if policy < 3 or not pg_ok:
         return e_clk + (leak + io) * period
     on = window + wake_s                      # the wake-up runs with the stage leaking at its ON level
@@ -3089,7 +3110,7 @@ def _die_energy(p, period, window, busy, policy, wake_s, pg_ok):
     serdes_on = min(period, window + PG["serdes_wake_s"])
     e_io = p["hbm_if"] * on + p["hbm_if"] * PG["hbm_if_residual"] * off \
         + (p["serdes"] + p["ucie"]) * (serdes_on + PG["serdes_lpi_residual"] * (period - serdes_on))
-    e_clk -= r * clk * off                    # a power-gated stage has no clock at all
+    e_clk -= clk_r * off                      # a power-gated stage has no clock at all
     return e_clk + leak * on + leak_off * off + leak * PG["stage_bet_s"] + e_io
 
 
@@ -4417,9 +4438,12 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
     # ADOPTED per-pair ICG (W18 / power-cal): an idle pair keeps only its 0.22 mW leakage; a busy pair's clock is
     # dynamic (pair-seconds x its clock power).  The ungated form (every idle pair clocked, 0.092 W at 1.2 GHz) is
     # kept as `cooling_ungated` for the waterfall only.
+    # 2026-10-04: the idle pair's ICG does not stop its whole clock: the MEASURED clock-gated idle pair keeps
+    # PAIR_CG_IDLE clock_w (2.76 mW at 1.2 GHz) besides its leakage, so that residual stays static.
     field_clock_ungated = pw["field"]["clock_w"]
+    field_cg_w = PAIR_W["placed_pairs"] * field_cg_residual(r1["clock_hz"]) * pp["clock"]
     die_static_ungated = pw["clock_w"] + pw["leakage_w"] + pw["hbm_idle_w"] + link_die
-    die_static = die_static_ungated - field_clock_ungated
+    die_static = die_static_ungated - field_clock_ungated + field_cg_w
     head_w = rack["static"]["head_dies"] / V41_ROM_SYSTEM["head_dies"]
     tl = rack["per_die"]["table_leakage_w"] * V41_ROM_SYSTEM["table_dies"] * table_leak_scale
     to = (rack["per_die"]["table_static_w"] - rack["per_die"]["table_leakage_w"]) * n_table
@@ -4438,7 +4462,8 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
     dyn_m = (e_pass + V41_DRAFT_FRACTION * dyn) / V41_TAU
     # gated (the adopted stage power gating, 1 us wake): v41_static_power's rule on this plan's stages
     p = v41_die_static_parts(d)
-    p["field"]["clock"] = 0.0          # per-pair ICG: the field clock is in the dynamic energy (cats field_clock_busy)
+    p["field"]["clock"] = field_cg_w   # per-pair ICG: the busy clock is dynamic (cats field_clock_busy); the MEASURED
+    p["field_cg_residual"] = 1.0       # clock-gated idle clock stays (and goes with the stage when it is power gated)
     ungated_die = sum(p["field"].values()) + sum(p["hub"].values()) + p["hbm_if"] + p["serdes"] + p["ucie"]
     table_leak_die, table_other_die = tl / max(1, n_table), to / max(1, n_table)
     wake = PG["stage_wake_s"]
