@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "6a1d92ac1",
+ "generated_from_commit": "e25062f0d",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -259,8 +259,8 @@
    "note": "93.4% of 4.000 TB/s peak",
    "value": 3.734,
    "resolved": true,
-   "blob": "36520b91a69d45326c928bd9efa76ac798f4d105",
-   "last_commit": "c14759ef1 2026-10-04"
+   "blob": "24fafc6803682ba8ec1b944fc1404d31f4be79a2",
+   "last_commit": "aad67f56b 2026-10-04"
   },
   "qwen_rom.stream4_fill_pct_peak": {
    "target": "qwen_rom",
@@ -273,8 +273,8 @@
    "pointer": "regex:\\| STREAM4 \\(this\\) \\|[^\\n]*\\| ([\\d.]+ %) \\|",
    "value": "93.4 %",
    "resolved": true,
-   "blob": "36520b91a69d45326c928bd9efa76ac798f4d105",
-   "last_commit": "c14759ef1 2026-10-04"
+   "blob": "24fafc6803682ba8ec1b944fc1404d31f4be79a2",
+   "last_commit": "aad67f56b 2026-10-04"
   },
   "qwen_rom.stream4_bench_P8191_pct": {
    "target": "qwen_rom",
@@ -288,8 +288,8 @@
    "note": "15/15 PASS bench",
    "value": "93.0 %",
    "resolved": true,
-   "blob": "36520b91a69d45326c928bd9efa76ac798f4d105",
-   "last_commit": "c14759ef1 2026-10-04"
+   "blob": "24fafc6803682ba8ec1b944fc1404d31f4be79a2",
+   "last_commit": "aad67f56b 2026-10-04"
   },
   "qwen_rom.kv_ideal_L0_P8191": {
    "target": "qwen_rom",
@@ -303,8 +303,8 @@
    "note": "README only; no committed JSON for this job",
    "value": 5290,
    "resolved": true,
-   "blob": "36520b91a69d45326c928bd9efa76ac798f4d105",
-   "last_commit": "c14759ef1 2026-10-04"
+   "blob": "24fafc6803682ba8ec1b944fc1404d31f4be79a2",
+   "last_commit": "aad67f56b 2026-10-04"
   },
   "qwen_rom.realmem_L0_P8191": {
    "target": "qwen_rom",
@@ -1200,7 +1200,22 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "ar_tok_s_1m",
-   "label": "Per-user AR tok/s at 1M (adopted: candidate-block gather re-index, CKV lat 259)",
+   "label": "Per-user AR tok/s at 1M (all-measured composition, recovery baseline: as-built + adopted recovery levers)",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "AR_tok_s",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
+   "value": 1385.7,
+   "resolved": true,
+   "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
+   "last_commit": null
+  },
+  "ds_rom.ar_tok_s_1m_reindex_partial": {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "ar_tok_s_1m_reindex_partial",
+   "label": "Per-user AR tok/s at 1M (adopted: candidate-block gather re-index, CKV lat 259) [superseded by all-measured]",
    "unit": "tok/s",
    "status": "partial",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
@@ -1211,11 +1226,41 @@
    "blob": "4c6f7a273552818d2a6f456be9c5bbc2a41d2903",
    "last_commit": "9db526f58 2026-10-04"
   },
+  "ds_rom.ar_tok_s_1m_allmeasured_asbuilt": {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "ar_tok_s_1m_allmeasured_asbuilt",
+   "label": "Per-user AR tok/s at 1M (all-measured composition, as built)",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_tok_s",
+   "note": "as-built S81 microarchitecture, before the recovery levers",
+   "value": 1385.7,
+   "resolved": true,
+   "blob": "19fd4e01e7c93525fe1cc9908a9826460f03386e",
+   "last_commit": "f13f04304 2026-10-04"
+  },
   "ds_rom.mtp_tok_s_1m": {
    "target": "ds_rom",
    "section": "rate",
    "key": "mtp_tok_s_1m",
-   "label": "Per-user speculative (DSpark MTP, L1 fused draft head, tau 4.159) tok/s at 1M",
+   "label": "Per-user MTP tok/s at 1M (all-measured composition, recovery baseline; wavefront verify + DSpark draft, tau 4.159)",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.MTP_tok_s",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
+   "value": 2744.0,
+   "resolved": true,
+   "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
+   "last_commit": null
+  },
+  "ds_rom.mtp_tok_s_1m_reindex_partial": {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "mtp_tok_s_1m_reindex_partial",
+   "label": "Per-user speculative (DSpark MTP, L1 fused draft head, tau 4.159) tok/s at 1M [superseded by all-measured]",
    "unit": "tok/s",
    "status": "partial",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
@@ -1225,6 +1270,21 @@
    "resolved": true,
    "blob": "4c6f7a273552818d2a6f456be9c5bbc2a41d2903",
    "last_commit": "9db526f58 2026-10-04"
+  },
+  "ds_rom.mtp_tok_s_1m_allmeasured_asbuilt": {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "mtp_tok_s_1m_allmeasured_asbuilt",
+   "label": "Per-user MTP tok/s at 1M (all-measured composition, as built; wavefront verify + DSpark draft, tau 4.159)",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
+   "pointer": "MTP.MTP_tok_s",
+   "note": "as-built S81 microarchitecture, before the recovery levers",
+   "value": 2744.0,
+   "resolved": true,
+   "blob": "19fd4e01e7c93525fe1cc9908a9826460f03386e",
+   "last_commit": "f13f04304 2026-10-04"
   },
   "ds_rom.mtp_as_built_tok_s_1m": {
    "target": "ds_rom",
@@ -1260,7 +1320,22 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "ar_us_1m",
-   "label": "AR token latency at 1M",
+   "label": "AR token time at 1M (all-measured, recovery baseline)",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "AR_us",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
+   "value": 721.672,
+   "resolved": true,
+   "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
+   "last_commit": null
+  },
+  "ds_rom.ar_us_1m_reindex_partial": {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "ar_us_1m_reindex_partial",
+   "label": "AR token latency at 1M [superseded by all-measured]",
    "unit": "us",
    "status": "partial",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
@@ -1275,7 +1350,22 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "verify_us_1m",
-   "label": "MTP verify step at 1M",
+   "label": "MTP verify time at 1M (all-measured, recovery baseline)",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.verify_us",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
+   "value": 1098.536,
+   "resolved": true,
+   "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
+   "last_commit": null
+  },
+  "ds_rom.verify_us_1m_reindex_partial": {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "verify_us_1m_reindex_partial",
+   "label": "MTP verify step at 1M [superseded by all-measured]",
    "unit": "us",
    "status": "partial",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
@@ -1289,7 +1379,22 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "wavefront_ii_us",
-   "label": "Wavefront initiation interval",
+   "label": "Wavefront interval (slowest stage busy + hop), recovery baseline",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.II_us",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
+   "value": 75.373,
+   "resolved": true,
+   "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
+   "last_commit": null
+  },
+  "ds_rom.wavefront_ii_us_reindex_partial": {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "wavefront_ii_us_reindex_partial",
+   "label": "Wavefront initiation interval [superseded by all-measured]",
    "unit": "us",
    "status": "partial",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
@@ -4335,6 +4440,21 @@
    "blob": "4c6f7a273552818d2a6f456be9c5bbc2a41d2903",
    "last_commit": "9db526f58 2026-10-04"
   },
+  "ds_rom.measured_share_allmeasured": {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "measured_share_allmeasured",
+   "label": "Measured share of the DS ROM AR path (all-measured, recovery baseline)",
+   "unit": "fraction",
+   "status": "measured",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "measured_share",
+   "note": "rest listed in still_modelled",
+   "value": 0.9956,
+   "resolved": true,
+   "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
+   "last_commit": null
+  },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
    "section": "terms",
@@ -4342,15 +4462,14 @@
    "label": "Measured share of the DS ROM AR token time",
    "unit": "fraction",
    "inputs": [
-    "ds_rom.measured_patch_us",
-    "ds_rom.ar_us_1m"
+    "ds_rom.measured_share_allmeasured"
    ],
-   "expr": "x0/x1",
+   "expr": "x0",
    "derived": true,
-   "note": "rest is S81 model",
-   "value": 0.1298,
+   "note": "still-modelled terms listed in the composition record",
+   "value": 0.9956,
    "resolved": true,
-   "status": "partial"
+   "status": "measured"
   },
   "hbm_ds.collective_share_of_ar": {
    "target": "hbm_ds",
@@ -4467,7 +4586,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "HBM side is the measured GPU-organised baseline (no accelerator rung adopted); not iso-silicon",
-   "value": 1.1377,
+   "value": 0.6226,
    "resolved": true,
    "status": "partial"
   },
@@ -4484,7 +4603,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "as above",
-   "value": 1.429,
+   "value": 0.5357,
    "resolved": true,
    "status": "partial"
   },
@@ -4501,7 +4620,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side tier-2 MODEL: no DS-V4.1 decode measured on any GPU",
-   "value": 9.4874,
+   "value": 5.1918,
    "resolved": true,
    "status": "modelled"
   },
@@ -4518,7 +4637,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side modelled (1.94x MTP sensitivity)",
-   "value": 14.1311,
+   "value": 5.2973,
    "resolved": true,
    "status": "modelled"
   },
@@ -4534,7 +4653,7 @@
    ],
    "expr": "x0/x1",
    "derived": true,
-   "value": 1.0268,
+   "value": 0.5619,
    "resolved": true,
    "status": "modelled"
   },
@@ -5246,9 +5365,9 @@
    ],
    "path_exists": true,
    "figure_values": {
-    "ds_rom.ar_tok_s_1m": 2532.2,
+    "ds_rom.ar_tok_s_1m": 1385.7,
     "ds_rom.ar_tok_s_1m_as_built": 2211.3,
-    "ds_rom.mtp_tok_s_1m": 7319.9,
+    "ds_rom.mtp_tok_s_1m": 2744.0,
     "ds_rom.mtp_tok_s_1m_as_built": 6332.0
    }
   },

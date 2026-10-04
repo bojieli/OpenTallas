@@ -325,11 +325,15 @@ module ot_v41_rom_elem_nv_w10 #(
     reg        bn_run;
     reg [2:0]  bn_q;
     reg [2:0]  bn_b;
-    reg [9:0]  bn_cnt;
-    reg [6:0]  bn_tot;
-    // a batched round carries every position's slices: P x the round's per-position total
-    wire [9:0] bn_lim = bat ? {3'd0, bn_tot} * ({7'd0, plast} + 10'd1) : {3'd0, bn_tot};
+    reg [6:0]  bn_cnt, bn_tot;
+    // timing (L2 XS = 8 screen): the remaining slices of the round, bn_tot - bn_cnt, kept in a register so the
+    // round-complete test is the beat's slice count against it (no add on the bn_full -> b_lo/b_hi path)
+    reg [6:0]  bn_rem;
+    wire       bany;
+    // a batched round is complete when the LAST position's slices are: the stream sends each slice group's
+    // positions in ascending order, so position P-1's last beat is the round's last (no P x total multiply)
     wire       bn_full;
+    wire [3:0] bnum_l;
     reg [XS-1:0] bm;
     // per-class unit bounds [b_lo, b_hi) of the current sub-block, held in registers so the capture match is a
     // compare only; they (and the round's slice total bn_tot) advance with the sub-block
@@ -419,8 +423,8 @@ module ot_v41_rom_elem_nv_w10 #(
         ltot_r <= fam ? tot1_r : tot0_r;
     end
     // bound registers: sub-block 0 at go_e and at each new position, the next sub-block at a sub-block end
-    assign bn_full = bn_cnt + {6'd0, bnum} == bn_lim;
-    wire bn_adv = bnum != 0 && bn_full && bn_b == 3'd7;
+    assign bn_full = bn_rem[6:4] == 3'd0 && bnum_l == bn_rem[3:0];
+    wire bn_adv = bany && bn_full && bn_b == 3'd7;
     wire bn_newpos = bn_adv && bn_q == qlast;
     always @(posedge gclk) begin
         for (bc = 0; bc < NSEG; bc = bc + 1)
@@ -445,7 +449,21 @@ module ot_v41_rom_elem_nv_w10 #(
     wire [256*XS-1:0] xbd = (FAST != 0) ? xbd_r : xb_d_e;
     reg  [3:0] bnum;
     integer bq_;
-    always @* begin bnum = 4'd0; for (bq_ = 0; bq_ < XS; bq_ = bq_ + 1) bnum = bnum + {3'd0, bmu[bq_]}; end
+    // timing (L2 XS = 8 screen): the beat's slice count as a balanced tree (pairs, quads, octet; kept so synthesis
+    // does not re-ripple it into an 8-deep XOR chain on the bm_r -> bn_full -> b_lo/b_hi path)
+    wire [7:0] bm8 = 8'(bmu);
+    (* keep *) wire [1:0] pc2_0 = {1'b0, bm8[0]} + {1'b0, bm8[1]};
+    (* keep *) wire [1:0] pc2_1 = {1'b0, bm8[2]} + {1'b0, bm8[3]};
+    (* keep *) wire [1:0] pc2_2 = {1'b0, bm8[4]} + {1'b0, bm8[5]};
+    (* keep *) wire [1:0] pc2_3 = {1'b0, bm8[6]} + {1'b0, bm8[7]};
+    (* keep *) wire [2:0] pc4_0 = {1'b0, pc2_0} + {1'b0, pc2_1};
+    (* keep *) wire [2:0] pc4_1 = {1'b0, pc2_2} + {1'b0, pc2_3};
+    always @* bnum = {1'b0, pc4_0} + {1'b0, pc4_1};
+    // NV > 1: stage A also registers whether the beat is the last position's (plast is static over the phase)
+    reg lastp_r;
+    always @(posedge gclk) lastp_r <= xb_pos_e == plast;
+    assign bnum_l = (bat && !lastp_r) ? 4'd0 : bnum;
+    assign bany = (|bmu) && !(bat && !lastp_r);     // bnum_l != 0 without the count
     wire hit = hit_q;
 
     // ---------------- x FIFO (pair slices) ------------------------------------------------------------------
@@ -563,7 +581,7 @@ module ot_v41_rom_elem_nv_w10 #(
 `endif
                 n_q <= 3'd0; n_b <= 3'd0; n_c <= c_first; n_j <= 3'd0;
                 n_pos <= 3'd0; bn_pos <= 3'd0; w_pos <= 3'd0;
-                bn_q <= 3'd0; bn_b <= 3'd0; bn_cnt <= 10'd0; fam <= go_bf_e; bn_tot <= (FAST != 0) ? gtot_f : gtot; w_q <= 3'd0; w_b <= 3'd0; w_c <= c_first; w_j <= 3'd0;
+                bn_q <= 3'd0; bn_b <= 3'd0; bn_cnt <= 7'd0; fam <= go_bf_e; bn_tot <= (FAST != 0) ? gtot_f : gtot; bn_rem <= (FAST != 0) ? gtot_f : gtot; w_q <= 3'd0; w_b <= 3'd0; w_c <= c_first; w_j <= 3'd0;
                 w_s <= s0_first; w_h <= h_go; w_cnt <= 0;
                 f_cnt <= 0; f_wr <= 0; f_rd <= 0;
             end else begin
@@ -593,18 +611,25 @@ module ot_v41_rom_elem_nv_w10 #(
                 end
                 f_cnt <= f_cnt + npush - ((pop && !bat) ? 1'b1 : 1'b0);
                 f_wr <= f_wr + npush[XW-1:0];
-                if (bnum != 0) begin
+                if (bany) begin
                     if (bn_full) begin
-                        bn_cnt <= 10'd0;
+                        bn_cnt <= 7'd0;
+                        bn_rem <= bn_tot;
                         if (bn_b == 3'd7 && bn_q == qlast) begin
-                            if (bn_pos != plast && !bat) begin bn_b <= 3'd0; bn_q <= 3'd0; bn_pos <= bn_pos + 3'd1; bn_tot <= (FAST != 0) ? ltot_r : ltot; end
+                            if (bn_pos != plast && !bat) begin
+                                bn_b <= 3'd0; bn_q <= 3'd0; bn_pos <= bn_pos + 3'd1;
+                                bn_tot <= (FAST != 0) ? ltot_r : ltot; bn_rem <= (FAST != 0) ? ltot_r : ltot;
+                            end
                             else bn_run <= 1'b0;
                         end
                         else begin
                             bn_b <= bn_b + 3'd1;
-                            if (bn_b == 3'd7) begin bn_q <= bn_q + 3'd1; bn_tot <= (FAST != 0) ? ntot_r : ntot; end
+                            if (bn_b == 3'd7) begin
+                                bn_q <= bn_q + 3'd1;
+                                bn_tot <= (FAST != 0) ? ntot_r : ntot; bn_rem <= (FAST != 0) ? ntot_r : ntot;
+                            end
                         end
-                    end else bn_cnt <= bn_cnt + {6'd0, bnum};
+                    end else begin bn_cnt <= bn_cnt + {3'd0, bnum_l}; bn_rem <= bn_rem - {3'd0, bnum_l}; end
                 end
                 if (pop && !bat) f_rd <= f_rd + 1'b1;
                 if ({1'b0, f_cnt} + {2'b0, npush} > XF + ((pop && !bat) ? 1 : 0)) ffault <= 1'b1;
@@ -663,42 +688,76 @@ module ot_v41_rom_elem_nv_w10 #(
         reg [255:0]   fb [0:NV-1][0:XFB-1];
         reg [XBW-1:0] fb_wr [0:NV-1];
         reg [XBW-1:0] fb_rd;
-        reg [XBW:0]   fb_cnt [0:NV-1];
+        reg [XBW+1:0] fb_cnt [0:NV-1];
+        // stage C of the batched x FIFO write (below)
+        reg [XFB-1:0] we_c [0:NV-1];
+        reg [2:0]     sl_c [0:NV-1][0:XFB-1];
+        reg [3:0]     inc_c [0:NV-1];
+        reg [256*XS-1:0] xbd_c;
         reg ov_r;
         wire fpop = issue && w_cls_last && bat;
         integer p, kk;
-        reg okc, ovc;
-        reg [7:0] c8;
+        // timing (L2 screen, 2026-10-04): issue reads registered per-position non-empty flags and a registered
+        // live-position mask; the overflow check reads registered counts and latches its fault one cycle later
+        reg [NV-1:0] fb_ne, pmask;
+        reg okc, ovc, ov_q;
+        always @(posedge gclk) for (p = 0; p < NV; p = p + 1) pmask[p] <= p <= {29'd0, plast};
         always @* begin
             okc = 1'b1; ovc = 1'b0;
             for (p = 0; p < NV; p = p + 1) begin
-                if (p <= {29'd0, plast} && fb_cnt[p] == '0) okc = 1'b0;
-                c8 = 8'(fb_cnt[p]) + ((bat && xbp_r == 3'(p)) ? {4'd0, bnum} : 8'd0);
-                if (c8 > 8'(XFB) + (fpop ? 8'd1 : 8'd0)) ovc = 1'b1;
+                if (pmask[p] && !fb_ne[p]) okc = 1'b0;
+                if (fb_cnt[p] > (XBW+2)'(XFB)) ovc = 1'b1;
             end
         end
+        always @(posedge gclk or negedge rst_n) if (!rst_n) ov_q <= 1'b0; else ov_q <= ovc;
         assign fb_ok = okc;
-        assign fb_over = ovc;
+        assign fb_over = ov_q;
         always @(posedge gclk or negedge rst_n) begin
             if (!rst_n) begin
                 fb_rd <= '0;
-                for (p = 0; p < NV; p = p + 1) begin fb_wr[p] <= '0; fb_cnt[p] <= '0; end
+                for (p = 0; p < NV; p = p + 1) begin fb_wr[p] <= '0; fb_cnt[p] <= '0; fb_ne[p] <= 1'b0; end
             end else if (go_e) begin
                 fb_rd <= '0;
-                for (p = 0; p < NV; p = p + 1) begin fb_wr[p] <= '0; fb_cnt[p] <= '0; end
+                for (p = 0; p < NV; p = p + 1) begin fb_wr[p] <= '0; fb_cnt[p] <= '0; fb_ne[p] <= 1'b0; end
             end else begin
                 if (fpop) fb_rd <= fb_rd + 1'b1;
                 for (p = 0; p < NV; p = p + 1) begin
                     if (bat && xbp_r == 3'(p)) fb_wr[p] <= fb_wr[p] + XBW'(bnum);
-                    fb_cnt[p] <= fb_cnt[p] + ((bat && xbp_r == 3'(p)) ? (XBW+1)'(bnum) : '0)
-                                 - (fpop ? (XBW+1)'(1) : '0);
+                    // the count (and non-empty flag) advance in stage C, with the write itself
+                    fb_cnt[p] <= fb_cnt[p] + (XBW+2)'(inc_c[p]) - (fpop ? (XBW+2)'(1) : '0);
+                    fb_ne[p] <= (fb_cnt[p] + (XBW+2)'(inc_c[p]) - (fpop ? (XBW+2)'(1) : '0)) != '0;
                 end
             end
         end
+        // timing (L2 XS = 8 screen, 2026-10-04): stage B resolves each FIFO entry's write enable and source slice
+        // (from fb_wr and the slice prefix counts) into registers; stage C writes the registered beat.  The count
+        // that makes an entry visible to issue advances in stage C too, so a slice is never read before it lands.
+        integer ee;
+        always @(posedge gclk or negedge rst_n) begin
+            if (!rst_n) for (p = 0; p < NV; p = p + 1) begin we_c[p] <= '0; inc_c[p] <= 4'd0; end
+            else for (p = 0; p < NV; p = p + 1) begin
+                inc_c[p] <= (!go_e && bat && xbp_r == 3'(p)) ? bnum : 4'd0;
+                for (ee = 0; ee < XFB; ee = ee + 1) begin
+                    we_c[p][ee] <= 1'b0;
+                    for (kk = 0; kk < XS; kk = kk + 1)
+                        if (!go_e && bat && xbp_r == 3'(p) && bmu[kk] && fb_wr[p] + XBW'(bpre4[kk]) == XBW'(ee))
+                            we_c[p][ee] <= 1'b1;
+                end
+            end
+        end
+        always @(posedge gclk) begin
+            xbd_c <= xbd;
+            for (p = 0; p < NV; p = p + 1)
+                for (ee = 0; ee < XFB; ee = ee + 1) begin
+                    sl_c[p][ee] <= 3'd0;
+                    for (kk = 0; kk < XS; kk = kk + 1)
+                        if (bmu[kk] && fb_wr[p] + XBW'(bpre4[kk]) == XBW'(ee)) sl_c[p][ee] <= 3'(kk);
+                end
+        end
         always @(posedge gclk)
             for (p = 0; p < NV; p = p + 1)
-                for (kk = 0; kk < XS; kk = kk + 1)
-                    if (bat && xbp_r == 3'(p) && bmu[kk]) fb[p][fb_wr[p] + XBW'(bpre4[kk])] <= xbd[256*kk +: 256];
+                for (ee = 0; ee < XFB; ee = ee + 1)
+                    if (we_c[p][ee]) fb[p][ee] <= xbd_c[256*sl_c[p][ee] +: 256];
         for (genvar gp = 0; gp < NV; gp = gp + 1) begin : g_h
             assign fb_head[gp] = fb[gp][fb_rd];
         end
@@ -1082,17 +1141,33 @@ module ot_v41_rom_elem_nv_w10 #(
         assign cv_v[0] = t_v; assign cv_e[0] = t_err; assign cv_tree[0] = t_tree; assign cv_pos[0] = t_pos;
         assign cv_val[0] = t_val; assign cv_f[0] = 1'b0;
         for (genvar cv = 1; cv < NV; cv = cv + 1) begin : g_c
-            wire on = bat && (cv <= plast);
+            reg on;                                  // static over the phase: registered
+            always @(posedge gclk) on <= bat && (cv <= plast);
             wire [31:0] y0, y1;
             wire f0, f1;
+            // timing (L2 screen, 2026-10-04): the copy's own word hold register and hold counter (the w10 hold of
+            // copy 0 is cap_hold, read by its 2 multipliers; one shared register would drive 2 x NV lane selects).
+            // Loaded exactly as copy 0's: the captured word in the cycle its issue reaches i2, then 8 hold cycles.
+            reg [255:0] hwc;
+            reg [KW-1:0] hkc;
+            reg hvc, hvc_r;
+            always @(posedge gclk or negedge rst_n) begin
+                if (!rst_n) begin hvc <= 1'b0; hkc <= '0; hvc_r <= 1'b0; end
+                else begin
+                    hvc_r <= hvc;
+                    if (i2_v && i2_bf) begin hvc <= 1'b1; hkc <= '0; end
+                    else if (hvc) begin hkc <= hkc + 1'b1; if (hkc == KLAST) hvc <= 1'b0; end
+                end
+            end
+            always @(posedge gclk) if (i2_v && i2_bf) hwc <= cap[255:0];
             reg [15:0] wl0, wl1, xl0, xl1;
             always @(posedge gclk) begin
-                wl0 <= bp_hwv[16 * (2 * bp_hk) +: 16];     xl0 <= hx_shp[cv][16 * (2 * bp_hk) +: 16];
-                wl1 <= bp_hwv[16 * (2 * bp_hk + 1) +: 16]; xl1 <= hx_shp[cv][16 * (2 * bp_hk + 1) +: 16];
+                wl0 <= hwc[16 * (2 * hkc) +: 16];     xl0 <= hx_shp[cv][16 * (2 * hkc) +: 16];
+                wl1 <= hwc[16 * (2 * hkc + 1) +: 16]; xl1 <= hx_shp[cv][16 * (2 * hkc + 1) +: 16];
             end
-            ot_hdc_bmul u_m0 (.clk(gclk), .rst_n(rst_n), .v(bp_hvr && on), .a({wl0, 16'd0}), .b({xl0, 16'd0}),
+            ot_hdc_bmul u_m0 (.clk(gclk), .rst_n(rst_n), .v(hvc_r && on), .a({wl0, 16'd0}), .b({xl0, 16'd0}),
                               .y(y0), .fault(f0));
-            ot_hdc_bmul u_m1 (.clk(gclk), .rst_n(rst_n), .v(bp_hvr && on), .a({wl1, 16'd0}), .b({xl1, 16'd0}),
+            ot_hdc_bmul u_m1 (.clk(gclk), .rst_n(rst_n), .v(hvc_r && on), .a({wl1, 16'd0}), .b({xl1, 16'd0}),
                               .y(y1), .fault(f1));
             wire [TG:0] tg = {3'(cv), m_tag[TG-3:0]};
             wire d0_v, d1_v, d0_f, d1_f, d0_fault, d1_fault;
@@ -1145,38 +1220,45 @@ module ot_v41_rom_elem_nv_w10 #(
         reg [QW-1:0] oq_wr [0:NV-1];
         reg [QW-1:0] oq_rd [0:NV-1];
         reg [QW:0]   oq_n  [0:NV-1];
+        // timing (L2 screen, 2026-10-04): the select reads registered non-empty flags (oq_ne) and the selected head
+        // is registered (a_*) before the w10 o_* stage: one more cycle on the partial's way out, none on issue
         reg [NV-1:0] oq_ne;
+        reg [NV-1:0] take;
         reg          sel_ok, of_r;
         reg [2:0]    sel;
+        reg          ar_v;
+        reg [EW-1:0] ar_d;
         integer ai;
         always @* begin
             sel_ok = 1'b0; sel = 3'd0;
-            for (ai = NV - 1; ai >= 0; ai = ai - 1) begin
-                oq_ne[ai] = oq_n[ai] != '0;
+            for (ai = NV - 1; ai >= 0; ai = ai - 1)
                 if (oq_ne[ai]) begin sel_ok = 1'b1; sel = 3'(ai); end
-            end
+            for (ai = 0; ai < NV; ai = ai + 1) take[ai] = sel_ok && sel == 3'(ai);
         end
         always @(posedge gclk or negedge rst_n) begin
             if (!rst_n) begin
-                of_r <= 1'b0;
-                for (ai = 0; ai < NV; ai = ai + 1) begin oq_wr[ai] <= '0; oq_rd[ai] <= '0; oq_n[ai] <= '0; end
+                of_r <= 1'b0; ar_v <= 1'b0;
+                for (ai = 0; ai < NV; ai = ai + 1) begin oq_wr[ai] <= '0; oq_rd[ai] <= '0; oq_n[ai] <= '0; oq_ne[ai] <= 1'b0; end
             end else begin
+                ar_v <= sel_ok;
                 for (ai = 0; ai < NV; ai = ai + 1) begin
                     if (cv_v[ai]) oq_wr[ai] <= oq_wr[ai] + 1'b1;
-                    if (sel_ok && sel == 3'(ai)) oq_rd[ai] <= oq_rd[ai] + 1'b1;
-                    oq_n[ai] <= oq_n[ai] + (cv_v[ai] ? (QW+1)'(1) : '0) - ((sel_ok && sel == 3'(ai)) ? (QW+1)'(1) : '0);
-                    if (cv_v[ai] && oq_n[ai] == (QW+1)'(OQ) && !(sel_ok && sel == 3'(ai))) of_r <= 1'b1;
+                    if (take[ai]) oq_rd[ai] <= oq_rd[ai] + 1'b1;
+                    oq_n[ai] <= oq_n[ai] + (cv_v[ai] ? (QW+1)'(1) : '0) - (take[ai] ? (QW+1)'(1) : '0);
+                    oq_ne[ai] <= (oq_n[ai] + (cv_v[ai] ? (QW+1)'(1) : '0) - (take[ai] ? (QW+1)'(1) : '0)) != '0;
+                    if (cv_v[ai] && oq_n[ai] == (QW+1)'(OQ) && !take[ai]) of_r <= 1'b1;
                 end
             end
         end
-        always @(posedge gclk)
+        always @(posedge gclk) begin
             for (ai = 0; ai < NV; ai = ai + 1)
                 if (cv_v[ai]) oq[ai][oq_wr[ai]] <= {cv_tree[ai], cv_pos[ai], cv_val[ai], cv_e[ai]};
-        wire [EW-1:0] hd = oq[sel][oq_rd[sel]];
-        assign a_v = sel_ok;
-        assign {a_tree, a_pos, a_val, a_err} = hd;
+            ar_d <= oq[sel][oq_rd[sel]];
+        end
+        assign a_v = ar_v;
+        assign {a_tree, a_pos, a_val, a_err} = ar_d;
         assign nv_fault = of_r | (|cv_f);
-        assign oq_busy = |oq_ne;
+        assign oq_busy = (|oq_ne) | ar_v;
     end else begin : g_nonv
         assign a_v = t_v; assign a_err = t_err; assign a_tree = t_tree; assign a_pos = t_pos; assign a_val = t_val;
         assign nv_fault = 1'b0; assign oq_busy = 1'b0;

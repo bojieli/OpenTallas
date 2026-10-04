@@ -897,7 +897,18 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "ar_tok_s_1m",
-   "label": "Per-user AR tok/s at 1M (adopted: candidate-block gather re-index, CKV lat 259)",
+   "label": "Per-user AR tok/s at 1M (all-measured composition, recovery baseline: as-built + adopted recovery levers)",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "AR_tok_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "ar_tok_s_1m_reindex_partial",
+   "label": "Per-user AR tok/s at 1M (adopted: candidate-block gather re-index, CKV lat 259) [superseded by all-measured]",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
    "pointer": "headline.levers_measured.candidate_gather.AR_tok_s",
    "unit": "tok/s",
@@ -907,13 +918,46 @@
   {
    "target": "ds_rom",
    "section": "rate",
+   "key": "ar_tok_s_1m_allmeasured_asbuilt",
+   "label": "Per-user AR tok/s at 1M (all-measured composition, as built)",
+   "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_tok_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "as-built S81 microarchitecture, before the recovery levers"
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
    "key": "mtp_tok_s_1m",
-   "label": "Per-user speculative (DSpark MTP, L1 fused draft head, tau 4.159) tok/s at 1M",
+   "label": "Per-user MTP tok/s at 1M (all-measured composition, recovery baseline; wavefront verify + DSpark draft, tau 4.159)",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "mtp_tok_s_1m_reindex_partial",
+   "label": "Per-user speculative (DSpark MTP, L1 fused draft head, tau 4.159) tok/s at 1M [superseded by all-measured]",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
    "pointer": "headline.levers_measured.candidate_gather.MTP_fused_tok_s",
    "unit": "tok/s",
    "status": "partial",
    "note": "Draft 105.55 us measured on the reduced vehicle, scaled to full shape by l1_chain_ratio 1.0106."
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "mtp_tok_s_1m_allmeasured_asbuilt",
+   "label": "Per-user MTP tok/s at 1M (all-measured composition, as built; wavefront verify + DSpark draft, tau 4.159)",
+   "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
+   "pointer": "MTP.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "as-built S81 microarchitecture, before the recovery levers"
   },
   {
    "target": "ds_rom",
@@ -941,7 +985,18 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "ar_us_1m",
-   "label": "AR token latency at 1M",
+   "label": "AR token time at 1M (all-measured, recovery baseline)",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "AR_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "ar_us_1m_reindex_partial",
+   "label": "AR token latency at 1M [superseded by all-measured]",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
    "pointer": "variants[\"candidate_gather.lat259\"].AR_us",
    "unit": "us",
@@ -952,7 +1007,18 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "verify_us_1m",
-   "label": "MTP verify step at 1M",
+   "label": "MTP verify time at 1M (all-measured, recovery baseline)",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.verify_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "verify_us_1m_reindex_partial",
+   "label": "MTP verify step at 1M [superseded by all-measured]",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
    "pointer": "variants[\"candidate_gather.lat259\"].verify_us",
    "unit": "us",
@@ -963,7 +1029,18 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "wavefront_ii_us",
-   "label": "Wavefront initiation interval",
+   "label": "Wavefront interval (slowest stage busy + hop), recovery baseline",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.II_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "wavefront_ii_us_reindex_partial",
+   "label": "Wavefront initiation interval [superseded by all-measured]",
    "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
    "pointer": "headline.levers_measured.candidate_gather.II_us",
    "unit": "us",
@@ -3244,6 +3321,17 @@
    "pointer": "len:variants[\"candidate_gather.lat259\"].patches",
    "unit": "nodes",
    "status": "measured"
+  },
+  {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "measured_share_allmeasured",
+   "label": "Measured share of the DS ROM AR path (all-measured, recovery baseline)",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "measured_share",
+   "unit": "fraction",
+   "status": "measured",
+   "note": "rest listed in still_modelled"
   }
  ],
  "derived": [
@@ -3252,11 +3340,10 @@
    "key": "measured_share_of_ar",
    "label": "Measured share of the DS ROM AR token time",
    "inputs": [
-    "ds_rom.measured_patch_us",
-    "ds_rom.ar_us_1m"
+    "ds_rom.measured_share_allmeasured"
    ],
-   "expr": "x0/x1",
-   "note": "rest is S81 model",
+   "expr": "x0",
+   "note": "still-modelled terms listed in the composition record",
    "unit": "fraction",
    "section": "terms"
   },
