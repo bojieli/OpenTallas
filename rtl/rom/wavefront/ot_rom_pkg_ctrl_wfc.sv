@@ -14,7 +14,12 @@
 //   * the RESULT's ring slot is read on the header cycle (pre-read, with a
 //     same-cycle-write bypass); the in-flight test wnp > q + 1 is wnf >= 2;
 //   * RESULT_PARTS must be 1 (one chained-argmax RESULT per step).
-// WAVE = 0 and SOURCE = 0 are the reference's code, unchanged.
+// Common to SOURCE 0 / 1: registered mirrors of the RX / SIDE / TX word
+// addresses (no adder before the word-free compares or on vm_*addr), and a
+// HIDDEN header's position check + upos update one cycle after the header
+// (registered one-hot user): a position fault latches proto_fault ONE cycle
+// later than the reference, every other output is cycle-identical.
+// WAVE = 0 is not implemented here (use ot_rom_pkg_ctrl_wf).
 // ---------------------------------------------------------------------------
 // ot_rom_pkg_ctrl_wf: ot_rom_pkg_ctrl_x plus a default-off WAVEFRONT mode
 // (DS-ROM wavefront verify, claude/dsrom-wavefront-rtl-20261004).  With
@@ -237,6 +242,9 @@ module ot_rom_pkg_ctrl_wfc #(
 
     // -- per-user context --------------------------------------------------------------
     reg [NW-1:0] upos [0:MAXU-1];      // next expected position (SOURCE: in-flight step)
+    reg          uchk;                  // (closed) a HIDDEN header's position check is due
+    reg [MAXU-1:0] hdr_oh;              // its user, one-hot
+    reg [NW-1:0] upos_h;                // upos of that user (AND-OR read)
 
     // -- core -------------------------------------------------------------------------
     reg          running;              // from the start edge until the job is handed to TX
@@ -296,12 +304,16 @@ module ot_rom_pkg_ctrl_wfc #(
     reg [NW-1:0] hdr_pos, hdr_pa_idx, hdr_tok;
     reg [31:0]   hdr_pa_val;
     reg          pend;                   // a received job waits for the outbound reads
-    wire [VWA-1:0] rx_word = RXB + rx_j;
+    // (closed) registered mirrors of the word addresses: rxw = RXB + rx_j, sww = the SIDE staging word,
+    // txh = TXB + tx_k, txs = SIDE_TXB + tx_k -- updated with rx_j / tx_k, so no adder before a compare
+    reg [VWA-1:0] rxw, sww, txs;
+    reg [VWA:0]   txh;
+    wire [VWA-1:0] rx_word = rxw;
     // (closed: the job_done select after the two compares, not before one)
-    wire rx_word_free = !tx_reading || (job_done ? rx_word < TXB : rx_word < TXB + tx_k) || rx_word >= TXB + XWORDS;
+    wire rx_word_free = !tx_reading || (job_done ? rx_word < TXB : rx_word < txh) || rx_word >= TXB + XWORDS;
     // a core start needs !running, so job_done = 0 there: the start terms use these job_done-free forms
     wire tx_hold_i = tx_st == T_DATA || tx_st == T_SHDR || tx_st == T_SDATA;
-    wire rx_word_free_i = !(tx_st == T_DATA) || rx_word < TXB + tx_k || rx_word >= TXB + XWORDS;
+    wire rx_word_free_i = !(tx_st == T_DATA) || rx_word < txh || rx_word >= TXB + XWORDS;
     wire rx_last_word_i = (rx_st == R_DATA) && in_valid && rx_word_free_i && (rx_j == RXW - 1);
     wire core_free = !running || job_done;
     assign vm_wdata = in_data;
@@ -333,6 +345,7 @@ module ot_rom_pkg_ctrl_wfc #(
     // -- WAVE (SOURCE): per-user wavefront state (closed implementation) ----------------------
     localparam integer WQ = 8;                   // issued-token ring (> WIN - 1 live positions)
     localparam integer WF = WAVE && SOURCE;
+    initial if (!WAVE) $fatal(1, "ot_rom_pkg_ctrl_wfc: WAVE = 0 is ot_rom_pkg_ctrl_wf (unchanged)");
     initial if (WF && (WIN > 7 || WIN < 1 || RESULT_PARTS != 1))
         $fatal(1, "ot_rom_pkg_ctrl_wfc: WAVE SOURCE needs 1 <= WIN <= 7 and RESULT_PARTS == 1");
     wire [NW-1:0] w_steps = cfg_prompt_len + cfg_gen_len - 1'b1;
@@ -432,6 +445,16 @@ module ot_rom_pkg_ctrl_wfc #(
         fb_tok = ((res_p + 1'b1) < cfg_prompt_len) ? ptok[res_u[UB-1:0]] : fb_idx;
     end
 
+    // upos of the checked header's user
+    integer ub, uu;
+    reg [MAXU-1:0] uv;
+    always @(*) begin
+        for (ub = 0; ub < NW; ub = ub + 1) begin
+            for (uu = 0; uu < MAXU; uu = uu + 1) uv[uu] = hdr_oh[uu] && upos[uu][ub];
+            upos_h[ub] = |uv;
+        end
+    end
+
     // -- combinational port control -------------------------------------------------------
     reg rx_hdr, rx_res, rx_last_word, rx_side, rx_side_last;
     wire side_ok = (SIDE_IN == 0) ||
@@ -453,7 +476,7 @@ module ot_rom_pkg_ctrl_wfc #(
         end else if (rx_st == R_SIDE) begin
             in_ready = 1'b1;
             vm_we = in_valid && side_user < MAXU;
-            vm_waddr = VWA'(side_addr) + rx_j + (VWA'(side_user) << SIDE_USH);
+            vm_waddr = sww;
         end else begin
             in_ready = core_free && rx_word_free;
             vm_we = in_valid && in_ready;
@@ -461,7 +484,7 @@ module ot_rom_pkg_ctrl_wfc #(
         rx_last_word = (rx_st == R_DATA) && vm_we && (rx_j == RXW - 1);
         rx_side_last = side_payload && in_last && side_user < MAXU;
         vm_re = (job_done && SEND_HIDDEN) || ((tx_st == T_DATA || tx_st == T_SDATA) && tx_space);
-        vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? SIDE_TXB + tx_k : TXB + tx_k;
+        vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? txs : txh[VWA-1:0];
 
         // core start: at most one source per cycle; the core samples it on this edge
         st_rx = (rx_last_word_i || pend) && !running && !tx_hold_i && side_ok && hdr_user < MAXU;
@@ -494,6 +517,7 @@ module ot_rom_pkg_ctrl_wfc #(
             tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0;
             tx_k <= 0; tx_user <= 0; tx_pos <= 0; tx_idx <= 0; tx_val <= 0; tx_tok <= 0;
             rx_st <= R_IDLE; rx_j <= 0;
+            rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; hdr_oh <= 0;
             res_v <= 1'b0; res_u <= 0; res_p <= 0; res_i <= 0; res_val <= 0;
             next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0;
             pr_t0 <= 0; pr_t1 <= 0; pr_u0 <= 0; pr_u1 <= 0;
@@ -516,7 +540,7 @@ module ot_rom_pkg_ctrl_wfc #(
                 running <= 1'b0;
                 tx_user <= cur_user; tx_pos <= cur_pos; tx_idx <= rep_idx; tx_val <= rep_val; tx_tok <= cur_tok;
                 if (SEND_HIDDEN) begin
-                    tx_k <= 1;
+                    tx_k <= 1; txh <= TXB + 1; txs <= SIDE_TXB + 1;
                     tx_st <= (XWORDS > 1) ? T_DATA : T_AFTER_HID;
                 end else begin
                     tx_st <= T_IDLE;
@@ -540,26 +564,26 @@ module ot_rom_pkg_ctrl_wfc #(
                 hdr_pa_idx <= in_data[HDR_IDX +: NW]; hdr_pa_val <= in_data[HDR_VAL +: 32];
                 hdr_tok <= in_data[HDR_TOK +: NW];
                 if (in_last || in_user >= MAXU) proto_fault <= 1'b1;
-                else begin
-                    if (WAVE ? (in_pos > upos[in_user[UB-1:0]] || in_pos + WIN < upos[in_user[UB-1:0]])
-                             : (upos[in_user[UB-1:0]] != in_pos)) proto_fault <= 1'b1;
-                    upos[in_user[UB-1:0]] <= in_pos + 1'b1;
-                end
-                rx_j <= 0; rx_st <= R_DATA;
+                // (closed) the position check and the upos update run on the next cycle, from the
+                // registered header and its one-hot user (a header is followed by >= 1 payload flit)
+                uchk <= !(in_last || in_user >= MAXU);
+                hdr_oh <= in_dec;
+                rx_j <= 0; rxw <= RXB; rx_st <= R_DATA;
             end
             if (rx_st == R_DATA && vm_we) begin
                 if (in_last != (rx_j == RXW - 1)) proto_fault <= 1'b1;
-                rx_j <= rx_j + 1'b1;
+                rx_j <= rx_j + 1'b1; rxw <= rxw + 1'b1;
                 if (rx_last_word) rx_st <= R_IDLE;
             end
             // ---- SIDE: header, then the payload into the user's staging slot
             if (rx_side) begin
                 if (SIDE_IN == 0 || in_last || in_user >= MAXU) proto_fault <= 1'b1;
                 side_user <= in_user; side_addr <= in_data[HDR_ADDR +: 16];
-                rx_j <= 0; rx_st <= R_SIDE;
+                sww <= VWA'(in_data[HDR_ADDR +: 16]) + (VWA'(in_user) << SIDE_USH);
+                rx_j <= 0; rxw <= RXB; rx_st <= R_SIDE;
             end
             if (side_payload) begin
-                rx_j <= rx_j + 1'b1;
+                rx_j <= rx_j + 1'b1; rxw <= rxw + 1'b1; sww <= sww + 1'b1;
                 if (in_last) rx_st <= R_IDLE;
             end
             if (rx_side_last && st_rx && side_user == hdr_user) begin
@@ -567,6 +591,11 @@ module ot_rom_pkg_ctrl_wfc #(
             end else begin
                 if (rx_side_last) side_cnt[side_user] <= side_cnt[side_user] + 4'd1;
                 if (st_rx) side_cnt[hdr_user] <= side_cnt[hdr_user] - SIDE_IN[3:0];
+            end
+            if (uchk) begin
+                uchk <= 1'b0;
+                if (hdr_pos > upos_h || hdr_pos + WIN < upos_h) proto_fault <= 1'b1;
+                for (u = 0; u < MAXU; u = u + 1) if (hdr_oh[u]) upos[u] <= hdr_pos + 1'b1;
             end
             res_v <= 1'b0;
             if (rx_res) begin
@@ -647,12 +676,12 @@ module ot_rom_pkg_ctrl_wfc #(
 
             // ---- outbound framing
             if (vm_re && !job_done) begin
-                tx_k <= tx_k + 1'b1;
+                tx_k <= tx_k + 1'b1; txh <= txh + 1'b1; txs <= txs + 1'b1;
                 if (tx_st == T_DATA && tx_k == XWORDS - 1) tx_st <= T_AFTER_HID;
                 if (tx_st == T_SDATA && tx_k == SIDE_WORDS - 1) tx_st <= SEND_RESULT ? T_RHDR : T_IDLE;
             end
             if (q_hdr_r) tx_st <= T_IDLE;
-            if (q_hdr_s) begin tx_st <= T_SDATA; tx_k <= 0; end
+            if (q_hdr_s) begin tx_st <= T_SDATA; tx_k <= 0; txh <= TXB; txs <= SIDE_TXB; end
             rd_inflight <= vm_re;
             rd_last <= vm_re && (job_done ? (XWORDS == 1) :
                                  (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1));

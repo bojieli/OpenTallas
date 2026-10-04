@@ -46,6 +46,7 @@ module tb_wf_ctrl_equiv;
     parameter integer SEED     = 1;
     parameter integer MAXCYC   = 2000000;
     parameter integer NJOBS    = 3000;    // SOURCE = 0: HIDDEN messages to send
+    parameter integer FDLY     = 1;       // the DUT may latch a header-position fault this many cycles later
 
     reg clk = 1'b0, rst_n = 1'b0;
     always #0.5 clk = ~clk;
@@ -119,8 +120,8 @@ module tb_wf_ctrl_equiv;
                                vm_re ? vm_raddr : {VWA{1'b0}}, pr_re, pr_re ? pr_user : {USER_W{1'b0}},
                                pr_re ? pr_pos : {NW{1'b0}}, pr_re ? pr_blk : 4'd0, core_busy, tok_valid,
                                tok_valid ? tok_user : {USER_W{1'b0}}, tok_valid ? tok_pos : {NW{1'b0}},
-                               tok_valid ? tok_id : {NW{1'b0}}, users_done, proto_fault,
-                               wf_issue, wf_reject, wf_squash};
+                               tok_valid ? tok_id : {NW{1'b0}}, users_done, 1'b0,
+                               wf_issue, wf_reject, wf_squash};   // proto_fault: checked below (FDLY)
 
         // ---- core: level done, per-job latency
         integer cbusy = 0;
@@ -260,6 +261,8 @@ module tb_wf_ctrl_equiv;
         if (g[0].proto_fault && fault_cyc[0] == 0) fault_cyc[0] = cyc;
         if (g[1].proto_fault && fault_cyc[1] == 0) fault_cyc[1] = cyc;
     end
+    wire fault_ok = (fault_cyc[0] == 0 && fault_cyc[1] == 0) ||
+                    (fault_cyc[0] != 0 && fault_cyc[1] >= fault_cyc[0] && fault_cyc[1] <= fault_cyc[0] + FDLY);
 
     initial begin
         wait (rst_n);
@@ -271,7 +274,7 @@ module tb_wf_ctrl_equiv;
         $display("EQUIV STATS source=%0d lockstep=%0d maxu=%0d users=%0d cycles=%0d fin=%0d/%0d issues=%0d/%0d rejects=%0d/%0d squashed=%0d/%0d committed_ok=%0d/%0d err=%0d/%0d fault_cyc=%0d/%0d mism=%0d",
                  SOURCE, LOCKSTEP, MAXU, USERS, cyc, fin_cyc[0], fin_cyc[1], iss_n[0], iss_n[1], rej_n[0], rej_n[1],
                  sq_n[0], sq_n[1], ok_n[0], ok_n[1], err_n[0], err_n[1], fault_cyc[0], fault_cyc[1], mism);
-        if (mism != 0 || err_n[0] != 0 || err_n[1] != 0 || fault_cyc[0] != fault_cyc[1] ||
+        if (mism != 0 || err_n[0] != 0 || err_n[1] != 0 || !fault_ok ||
             (SOURCE && (fin_cyc[0] == 0 || fin_cyc[1] == 0 || fault_cyc[0] != 0 ||
                         ok_n[0] != USERS * (PLEN + GEN - 1) || ok_n[1] != USERS * (PLEN + GEN - 1))) ||
             (!SOURCE && iss_n[0] != iss_n[1]))
