@@ -64,3 +64,27 @@ strict REFpb schedule (forced REFpb of banks the stream needs). `ot_hbm_r14_stre
 identical to main on 3 x 200k cycles) refreshes up to N REFpb ahead while not reading and skips that many slots
 while reading. Phase sweep (pullin/phase_sweep.txt): worst B fill 2,064 -> 1,464 (N=8) -> 1,398 (N=16, 90.0 %),
 typical 1,307 (96.3 %); 0 DRAM violations; full regression with N=16 15/15 PASS (pullin/).
+
+## 8K token on STREAM4 (compose_P8191_token.json; runtime_P8191/*_p16; PULLIN 16)
+
+Exact vs the GPU golden (X of 4 dies, token K/V of every layer). L0 isolated 6,489; chained with early_go +
+posted write-back L0/L1/L2 = 6,044 / 5,282 / 5,282 (L1/L2 fill 1,311 cycles, exposed 0; KV_IDEAL 5,283).
+Token = 7 + E + (L0 - 1) + 35 x 5,282 + (head - 1) + 37 = 194,498 cycles = 162.1 us = 6,170 tok/s per user
+(REAL_MEM one stack, same formula: 580,968 = 2,066 tok/s; 2.99x). E (98) and head (2,999) from the P255 record.
+Note: the chained record says status=fail only because the run tree's ack/pc/stack sources were overwritten by the
+(default-off) AQ_RD successor after the binary was built; all numeric checks are 0 mismatches.
+
+## DSpark verify on STREAM4 (dspark_verify_P8187/, dspark_step_stream4.json)
+
+ot_qwen_rt_kv_stream4_mp_service + die ot_qwen_rom_rt_die_w12_vprm_stream4 + tools/qwen_rom_rt_vprm_stream4_w12.py,
+the record's plan: step 1 P8187..8190 (np 4), commit 1 (rollback 8188..8190), step 2 P8188..8191 over the HBM the
+RTL left: PASS exact (all X, kv blocks, tokens, accept). Verify layer 17,197 / 17,188 cycles (REAL_MEM 24,320 /
+25,252), fill 1,362 cycles. Composed step (draft 169,925 from the record, tau 3.0375): 801,075 cycles =
+4,550 tok/s per user = 0.737x AR-with-prefetch (6,170) on the same path; free-draft bound 0.936x.
+VERDICT: at 8K on the full-bandwidth path the verify layer is compute bound; DSpark does not beat AR there.
+
+## Physical (physical/)
+
+ot_hbm_r14_stream_stack NCH=1 slice, 1.024 ns, WC setup / WC+BC hold: PULLIN=16 PASS (setup +18.7 ps, hold +5.3 ps);
+PULLIN=16 + AQ_RD=1 (tagged reads) PASS (pc_aq3). The per-tile landing merge does not close yet (setup -0.75 ns
+grant path at 0.833 ns, CTS hold repair exhausts buffers): OPEN item; the landing network remains modelled.

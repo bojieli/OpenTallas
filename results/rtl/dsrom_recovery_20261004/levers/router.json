@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "router",
+ "verdict": "ADOPT",
+ "exact": true,
+ "ss_ff": {
+  "period_ps": 833.0,
+  "ss_setup_wns_ps": 65.6,
+  "ff_hold_wns_ps": 5.4,
+  "closes": true,
+  "cell_area_um2": 31944.44466,
+  "ss_fmax_prelayout_hz": 1303124708,
+  "worst_start": "g_t2.u.g_lvl[2].g_n[0].u.c[241]$_DFF_P_",
+  "worst_end": "g_t2.u.g_lvl[2].g_n[0].u.u0.q[57]$_DFF_P_",
+  "basis": "pre-layout: ORFS yosys/abc at CORNER=WC, OpenSTA SS RVT libs (setup, 60 ps) and FF RVT libs (hold, 25 ps), ideal clock",
+  "record": "results/rtl/dsrom_recovery_20261004/router/screen.json"
+ },
+ "nodes": {
+  "*.ffn.top6": {
+   "us": 0.0,
+   "source": "covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders)",
+   "cls": "measured"
+  },
+  "*.ffn.top6_order": {
+   "us": 0.03667,
+   "source": "ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)",
+   "cls": "measured"
+  }
+ },
+ "measurement": {
+  "old": {
+   "unit": "one ot_hdc_select (K 6, 1 score/cycle)",
+   "cycles": 403,
+   "us": 0.33583,
+   "record": "results/rtl/dsrom_1m_allmeasured_20261004/su_runs/select.json"
+  },
+  "new": {
+   "unit": "ot_hdc_select_tree K 6 W 64 NB 8 ORDER 1",
+   "cycles": 44,
+   "us": 0.03667,
+   "latency_after_last_beat": 38,
+   "beats": 6,
+   "record": "results/rtl/dsrom_recovery_20261004/router/select_tree.json"
+  },
+  "layers_exact": 40,
+  "layers": 40,
+  "random_segments": 4000,
+  "saving_us_per_layer": 0.29916
+ },
+ "default": "opt-in: applied only in the recovery baseline; the as-built ot_hdc_select is unchanged",
+ "note": "composed (recovery baseline, this lever alone, main 2026-10-04 after merge): AR 721.672 -> 709.706 us, 1,385.7 -> 1,409.0 tok/s (+1.68%); MTP 2,565.1 -> 2,585.5 tok/s (+0.80%, II bound by the head stage); r1 screen failed FF hold -3.3 ps on an output copy register (router/screen_r1_fail_hold.json), r2 removes it (-1 cycle)"
+}
