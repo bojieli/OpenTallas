@@ -1,3 +1,14 @@
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_qwen_nearhbm_attn_stack_vp: successor of ot_qwen_nearhbm_attn_stack.sv (that file and its records untouched; every
+// module here carries the _vp suffix) for the speculative VERIFY block.  NEW, DEFAULT-OFF.
+//   VMASK = 0 (default): identical to the parent, cycle for cycle (TM is ignored).
+//   VMASK = 1: causal in-block mask.  The stack iterates (fetches, schedules, trees) over T = the block's longest
+//     context, and position i of the block sees only rows t < TM (= pos0 + i + 1): a row t >= TM is excluded from the
+//     score max and its e is written as +0, so it adds +0 to its Z chunk and V x +0 = +0 to its P.V chunk -- exactly
+//     the golden's zero-padded trees at context TM (x + 0 = x; no sum is -0).  The iteration structure, and so the
+//     HBM request stream and every cycle, depend only on T: several copies of the stack (one per verify position,
+//     each with its own q and TM) run in lockstep on ONE streamed K/V (rtl/test/nearhbm/ot_qwen_nearhbm_attn_die_tb_vp.sv).
+// ---------------------------------------------------------------------------------------------------------------------
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
 // Near-HBM (shoreline) attention for the Qwen3-8B ROM die at TP4: ONE HBM STACK'S ENGINE.  NEW, DEFAULT-OFF: nothing
@@ -33,12 +44,12 @@
 // ---------------------------------------------------------------------------------------------------------------------
 
 // FP32 a > b for finite operands that are never -0 (every unit here canonicalises zeros to +0)
-module ot_nhb_fgt (input wire [31:0] a, input wire [31:0] b, output wire gt);
+module ot_nhb_fgt_vp (input wire [31:0] a, input wire [31:0] b, output wire gt);
     assign gt = (a[31] != b[31]) ? !a[31] : (!a[31] ? (a[30:0] > b[30:0]) : (a[30:0] < b[30:0]));
 endmodule
 
 // synchronous FIFO, registered output, no reset on data
-module ot_nhb_fifo #(parameter integer W = 32, parameter integer D = 16) (
+module ot_nhb_fifo_vp #(parameter integer W = 32, parameter integer D = 16) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire         push,
@@ -67,7 +78,7 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 // One row engine: 4 heads x HD lanes, one KV row per cycle.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_qwen_nearhbm_row_engine #(
+module ot_qwen_nearhbm_row_engine_vp #(
     parameter integer HD = 128,
     parameter integer S = 0,             // stack index 0..3
     parameter integer R = 1,             // row engines in the stack
@@ -75,12 +86,14 @@ module ot_qwen_nearhbm_row_engine #(
     parameter integer ADD_LAT = 7,
     parameter integer MUL_LAT = 6,
     parameter integer DQ = 32,           // row / e FIFO depth = outstanding-request credit
-    parameter [31:0]  SCALE = 32'h3DB504F3
+    parameter [31:0]  SCALE = 32'h3DB504F3,
+    parameter integer VMASK = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
     input  wire                 start,        // layer start (T stable from here)
     input  wire [13:0]          T,            // context length 1..8192 (positions 0..T-1)
+    input  wire [13:0]          TM,           // VMASK: this position's context (rows t >= TM masked)
     input  wire [2:0]           cyc8,         // global slot counter
     input  wire                 q_ready,      // q registers loaded
     input  wire [8*HD*16-1:0]   q_bf16,       // q[h][d] at [(h*HD+d)*16 +: 16]
@@ -210,10 +223,10 @@ module ot_qwen_nearhbm_row_engine #(
     wire [63:0]     e_word;
     wire            e_ne;
     always @(posedge clk or negedge rst_n) if (!rst_n) er_pend <= 1'b0; else er_pend <= er_valid;
-    ot_nhb_fifo #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rst_n), .push(rsp_valid), .din(rsp_data),
+    ot_nhb_fifo_vp #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rst_n), .push(rsp_valid), .din(rsp_data),
                                              .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
     wire pop_e;
-    ot_nhb_fifo #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rst_n), .push(er_pend), .din(er_data),
+    ot_nhb_fifo_vp #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rst_n), .push(er_pend), .din(er_data),
                                         .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
 
     // ---- consumption: K pass -----------------------------------------------------------------------------------------
@@ -411,18 +424,21 @@ module ot_qwen_nearhbm_row_engine #(
     wire [3:0] gtv;
     generate
         for (h = 0; h < 4; h = h + 1) begin : g_mx
-            ot_nhb_fgt u_gt (.a(sc_data[32*h +: 32]), .b(lmax[32*(4*tag_sc[11] + h) +: 32]), .gt(gtv[h]));
+            ot_nhb_fgt_vp u_gt (.a(sc_data[32*h +: 32]), .b(lmax[32*(4*tag_sc[11] + h) +: 32]), .gt(gtv[h]));
         end
     endgenerate
     // product refusals (K or V issues) and the lane adders' faults
     wire mac_fault = (|(p_f & p_vo)) || (|l_f);
     integer hh;
+    // VMASK: a score of a masked row (t >= TM) never enters the max
+    wire [13:0] t_sc = tpos(tag_sc[10:7], tag_sc[6:0]);
+    wire        sc_live = (VMASK == 0) || (t_sc < TM);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end
         else begin
             if (start) begin lmax_any <= 2'b00; fault <= 1'b0; end
             else begin
-                if (sc_valid) begin
+                if (sc_valid && sc_live) begin
                     for (hh = 0; hh < 4; hh = hh + 1)
                         if (!lmax_any[tag_sc[11]] || gtv[hh]) lmax[32*(4*tag_sc[11] + hh) +: 32] <= sc_data[32*hh +: 32];
                     lmax_any[tag_sc[11]] <= 1'b1;
@@ -439,16 +455,18 @@ endmodule
 // round k = 8 tau + n mod 8, residue j = n div 8, so chunk (k, gam) -- the 8 contiguous positions 512k + 128S + 8gam
 // + j -- receives its j-th element every 8 cycles and the 8-cycle adder loop (ADD_LAT + pad) sums it sequentially.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_qwen_nearhbm_exp_quad #(
+module ot_qwen_nearhbm_exp_quad_vp #(
     parameter integer S = 0,
     parameter integer R = 1,
     parameter integer Q = 0,
-    parameter integer ADD_LAT = 7
+    parameter integer ADD_LAT = 7,
+    parameter integer VMASK = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire         start,
     input  wire [13:0]  T,
+    input  wire [13:0]  TM,
     input  wire [1:0]   go,               // pass g may start: scores of g written and M of g received
     input  wire [255:0] M,                // [g][h]
     output reg          rd_valid,
@@ -497,6 +515,11 @@ module ot_qwen_nearhbm_exp_quad #(
     // tag: {valid_pos, first, last_elem, last_group, g, idx(11), k(4), gam(4)}
     localparam integer TW = 4 + 1 + 11 + 4 + 4;
     reg [TW-1:0] tag0;
+    // VMASK: valid_pos (tag top) = unmasked, t < TM; in_T (carried beside the tag) = fetched, t < T: its e is written,
+    // +0 when masked
+    wire [13:0] t_lim = (VMASK != 0) ? TM : T;
+    reg          in0, in1;
+    wire         inD_t;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             run <= 1'b0; sg <= 1'b0; active <= 1'b0; tau <= 1'b0; gam <= 0; n <= 0; rd_valid <= 1'b0;
@@ -522,7 +545,8 @@ module ot_qwen_nearhbm_exp_quad #(
                 end else begin
                     rd_valid <= 1'b1;
                     rd_addr <= {sg, k_now, gam[3:0], n[5:3]};
-                    tag0 <= {t_now < T, n[5:3] == 3'd0, n[5:3] == 3'd7, last_tile && n == 6'd63, sg,
+                    in0 <= (t_now < T);
+                    tag0 <= {t_now < t_lim, n[5:3] == 3'd0, n[5:3] == 3'd7, last_tile && n == 6'd63, sg,
                              k_now, gam[3:0], n[5:3], k_now, gam[3:0]};
                     n <= n + 6'd1;
                     if (n == 6'd63) begin
@@ -539,11 +563,16 @@ module ot_qwen_nearhbm_exp_quad #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) v1 <= 1'b0; else v1 <= rd_valid;
     end
-    always @(posedge clk) tag1 <= tag0;
+    always @(posedge clk) begin tag1 <= tag0; in1 <= in0; end
     wire pv1 = v1 && tag1[TW-1];                       // a position < T
     // subtract M, exp
     wire [TW:0] tagD;
     ot_hdc_delay #(.W(TW+1), .D(ADD_LAT + XD)) u_tag (.clk(clk), .rst_n(rst_n), .d({v1, tag1}), .q(tagD));
+    generate if (VMASK != 0) begin : g_in
+        ot_hdc_delay #(.W(1), .D(ADD_LAT + XD)) u_in (.clk(clk), .rst_n(rst_n), .d(in1), .q(inD_t));
+    end else begin : g_noin
+        assign inD_t = 1'b0;
+    end endgenerate
     wire [127:0] e;
     wire [3:0] sf, xf;
     genvar h;
@@ -568,9 +597,10 @@ module ot_qwen_nearhbm_exp_quad #(
     function automatic [15:0] bf16(input [31:0] x);
         bf16 = x[31:16] + ((x[15] && (x[14:0] != 15'd0 || x[16])) ? 16'd1 : 16'd0);
     endfunction
-    assign ew_valid = posD;
+    assign ew_valid = (VMASK != 0) ? (vD && inD_t) : posD;
     assign ew_addr = {tagD[TW-5], tagD[18:8]};
-    assign ew_data = {bf16(e[127:96]), bf16(e[95:64]), bf16(e[63:32]), bf16(e[31:0])};
+    // VMASK: a masked fetched row's e is +0 (bf16 0x0000)
+    assign ew_data = ((VMASK != 0) && !posD) ? 64'd0 : {bf16(e[127:96]), bf16(e[95:64]), bf16(e[63:32]), bf16(e[31:0])};
     // Z chains: chunk (k, gam) element j at its 8-cycle slot; element 0 starts from +0; positions >= T add +0
     wire [127:0] zy, zfb;
     wire [3:0] zf;
@@ -607,7 +637,7 @@ endmodule
 // Z tree: per 128-position block (k), the 16 chunk sums of residue groups gam = 0..15 (+0 for a chunk at or past T),
 // pairwise ((c0 + c1) + (c2 + c3)) ... = Z levels 1-4.  Level-synchronous over every block, ZW adders per head.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_qwen_nearhbm_ztree #(
+module ot_qwen_nearhbm_ztree_vp #(
     parameter integer S = 0,
     parameter integer R = 1,
     parameter integer ADD_LAT = 7,
@@ -758,7 +788,7 @@ endmodule
 // (stays in its engine's loop) when it would collide.  Past the last nonempty residue every leaf is +0, so the flush
 // carries each pending left node up unchanged (x + 0 = x) and adds it to the carry from below.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_qwen_nearhbm_pvtree #(
+module ot_qwen_nearhbm_pvtree_vp #(
     parameter integer HD = 128,
     parameter integer S = 0,
     parameter integer R = 1,
@@ -901,7 +931,7 @@ endmodule
 //   in : q beats (512 b: 32 BF16, h-major, 32 beats), M messages (hub -> stack sideband)
 //   out: P.V partial beats (512 b), sideband messages: lmax (type 0), Z block sum (type 1), Z done (type 2)
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_qwen_nearhbm_attn_stack #(
+module ot_qwen_nearhbm_attn_stack_vp #(
     parameter integer HD = 128,
     parameter integer S = 0,
     parameter integer R = 1,
@@ -909,12 +939,14 @@ module ot_qwen_nearhbm_attn_stack #(
     parameter integer MUL_LAT = 6,
     parameter integer DQ = 32,
     parameter integer ZW = 4,
-    parameter [31:0]  SCALE = 32'h3DB504F3
+    parameter [31:0]  SCALE = 32'h3DB504F3,
+    parameter integer VMASK = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              start,
     input  wire [13:0]       T,
+    input  wire [13:0]       TM,
     input  wire              q_valid,
     input  wire [5:0]        q_beat,
     input  wire [511:0]      q_data,
@@ -995,9 +1027,9 @@ module ot_qwen_nearhbm_attn_stack #(
     generate for (e = 0; e < R; e = e + 1) begin : g_e
         wire rv, rvv, rg;
         wire [12:0] rt;
-        ot_qwen_nearhbm_row_engine #(.HD(HD), .S(S), .R(R), .E(e), .ADD_LAT(ADD_LAT),
-                                     .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE)) u_eng (
-            .clk(clk), .rst_n(rst_n), .start(start), .T(T), .cyc8(cyc8), .q_ready(q_ready), .q_bf16(qr),
+        ot_qwen_nearhbm_row_engine_vp #(.HD(HD), .S(S), .R(R), .E(e), .ADD_LAT(ADD_LAT),
+                                     .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE), .VMASK(VMASK)) u_eng (
+            .clk(clk), .rst_n(rst_n), .start(start), .T(T), .TM(TM), .cyc8(cyc8), .q_ready(q_ready), .q_bf16(qr),
             .exp_done(exp_done), .req_valid(rv), .req_v(rvv), .req_g(rg), .req_t(rt), .rsp_valid(rsp_valid[e]),
             .rsp_data(rsp_data[HD*8*e +: HD*8]), .er_valid(er_valid[e]), .er_addr(er_addr[12*e +: 12]),
             .er_data(er_data[64*e +: 64]), .sc_valid(sc_valid[e]), .sc_addr(sc_addr[12*e +: 12]),
@@ -1068,8 +1100,8 @@ module ot_qwen_nearhbm_attn_stack #(
     wire [128*R-1:0] zw_data;
     wire [2*R-1:0] qdone;
     generate for (e = 0; e < R; e = e + 1) begin : g_q
-        ot_qwen_nearhbm_exp_quad #(.S(S), .R(R), .Q(e), .ADD_LAT(ADD_LAT)) u_q (
-            .clk(clk), .rst_n(rst_n), .start(start), .T(T), .go(qgo), .M(M), .rd_valid(rd_valid[e]),
+        ot_qwen_nearhbm_exp_quad_vp #(.S(S), .R(R), .Q(e), .ADD_LAT(ADD_LAT), .VMASK(VMASK)) u_q (
+            .clk(clk), .rst_n(rst_n), .start(start), .T(T), .TM(TM), .go(qgo), .M(M), .rd_valid(rd_valid[e]),
             .rd_addr(rd_addr[12*e +: 12]), .rd_data(rd_data[128*e +: 128]), .ew_valid(ew_valid[e]),
             .ew_addr(ew_addr[12*e +: 12]), .ew_data(ew_data[64*e +: 64]), .zw_valid(zw_valid[e]), .zw_g(zw_g[e]),
             .zw_k(zw_k[4*e +: 4]), .zw_gam(zw_gam[4*e +: 4]), .zw_data(zw_data[128*e +: 128]),
@@ -1097,14 +1129,14 @@ module ot_qwen_nearhbm_attn_stack #(
     wire [3:0] zm_k;
     wire [31:0] zm_data;
     reg zm_ready;
-    ot_qwen_nearhbm_ztree #(.S(S), .R(R), .ADD_LAT(ADD_LAT), .ZW(ZW)) u_zt (
+    ot_qwen_nearhbm_ztree_vp #(.S(S), .R(R), .ADD_LAT(ADD_LAT), .ZW(ZW)) u_zt (
         .clk(clk), .rst_n(rst_n), .start(start), .T(T), .zw_valid(zw_valid), .zw_g(zw_g), .zw_k(zw_k),
         .zw_gam(zw_gam), .zw_data(zw_data), .go(xdone), .mo_valid(zm_valid), .mo_done(zm_done), .mo_g(zm_g),
         .mo_hh(zm_hh), .mo_k(zm_k), .mo_data(zm_data), .mo_ready(zm_ready), .fault(z_fault));
 
     // P.V tree
     wire t_fault, ev_ll;
-    ot_qwen_nearhbm_pvtree #(.HD(HD), .S(S), .R(R), .ADD_LAT(ADD_LAT)) u_pv (
+    ot_qwen_nearhbm_pvtree_vp #(.HD(HD), .S(S), .R(R), .ADD_LAT(ADD_LAT)) u_pv (
         .clk(clk), .rst_n(rst_n), .start(start), .T(T), .cyc8(cyc8), .lf_valid(lf_valid), .lf_g(lf_g),
         .lf_gam(lf_gam), .lf_slot(lf_slot), .lf_data(lf_data), .take(take), .pv_valid(pv_valid), .pv_g(pv_g), .pv_beat(pv_beat),
         .pv_data(pv_data), .done(pv_done), .fault(t_fault), .ev_last_leaf(ev_ll));
