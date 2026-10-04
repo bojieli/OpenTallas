@@ -1,0 +1,127 @@
+{
+  "admission": {
+    "PnR": false,
+    "component_source_implementation": true,
+    "full_engine": false,
+    "headline": false,
+    "token": false
+  },
+  "area": {
+    "RF_W4_overlap_not_subtracted": true,
+    "body_um2_ASSUMED": 123063.10235999999,
+    "buffer_fanout8_budget": 4050,
+    "gross50pct_um2_ASSUMED": 246126.20471999998,
+    "logic_NAND2_budget": 1261632,
+    "physical_or_net_replacement_unknown": true,
+    "protected_clock_SS_fF": 14061.0168
+  },
+  "inventory": {
+    "SM_count": 64,
+    "added_SRAM": 0,
+    "coded_FF_bits": 32400,
+    "protected_record_words": 450,
+    "rank_count": 2,
+    "retained_whole_issues_per_SM": 1,
+    "rows_per_SM_external_allocator": 7
+  },
+  "latency": {
+    "GO_capture_edges": 1,
+    "cold_session_accept_edges": 1,
+    "hold_uncertainty_ps": 25,
+    "loaded_control_pipeline_extra_edge_sensitivity": [
+      0,
+      1,
+      2
+    ],
+    "release_after_last_actual_event_edges": 1,
+    "setup_uncertainty_ps": 60,
+    "streaming_period_ps": "2500/3",
+    "whole_native_latency": null,
+    "whole_token_latency": null
+  },
+  "owner_bits": 55,
+  "pending": [
+    "Nash actual seven-row barrier/source-lease hardware output",
+    "Claude real whole-engine producer/terminal/reverse outputs",
+    "actual all-copy cold session quiescence/COMMON reset source binding",
+    "actual RFowner55 allocator binding",
+    "composed nativecalendar physical timing",
+    "Nash actual publication_ready and retire_ready from retained seven-row allocator"
+  ],
+  "perSM_protected_bits": 504,
+  "perSM_raw_bits": 301,
+  "ports": {
+    "backend_go_owner_bits": 55,
+    "backend_go_tuple_bits_per_SM": 239,
+    "issue_tuple_bits_per_SM": 239,
+    "new_GO_prerequisites": [
+      "hardware allocator row_barrier_ready PC<=currentPC",
+      "accepted cold session",
+      "backend_go_ready actual engine",
+      "not busy/fault"
+    ],
+    "publication": "publish_valid/tuple239/owner55 only after both matching producer_result and actual RF commonACK; publication_ready actual allocator",
+    "retirement": "matching whole terminal+reverse plus publication accepted by actual allocator; RFACK and fullproducer both precede publication; retire_ready actual row sink",
+    "return_interfaces": [
+      "producer_result_valid/tuple239",
+      "rf_ack_valid/owner55",
+      "whole_terminal_valid/tuple239",
+      "whole_reverse_valid/tuple239"
+    ]
+  },
+  "routing": {
+    "SSFF": null,
+    "additional_sink_count": 64,
+    "capacity": null,
+    "global_session_fanout": 64,
+    "tuple_source_to_sink_tracks_min": 298,
+    "wire_RC": null
+  },
+  "schema": "qwen.canonical.full-issuer.prospective.v1",
+  "scope": "source acceptance/control boundary ONLY; no engine arithmetic/1737/physical credit",
+  "session_protected_bits": 144,
+  "session_raw_bits": 65,
+  "source_sha256": {
+    "results/uarch/w2_nc6_mutable_protection_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  },
+  "tuple_bits": 239,
+  "tuple_fields": [
+    [
+      "session",
+      64
+    ],
+    [
+      "source_PC",
+      11
+    ],
+    [
+      "native_tag",
+      64
+    ],
+    [
+      "native_gen",
+      64
+    ],
+    [
+      "rank",
+      1
+    ],
+    [
+      "SM",
+      5
+    ],
+    [
+      "output_version",
+      11
+    ],
+    [
+      "range_begin",
+      9
+    ],
+    [
+      "range_end",
+      10
+    ]
+  ]
+}

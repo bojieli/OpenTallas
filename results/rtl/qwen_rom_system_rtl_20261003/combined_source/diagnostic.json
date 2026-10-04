@@ -1,0 +1,10 @@
+{
+  "scope": "source only; no combined runtime/physical verdict",
+  "CDC_Icarus_enabled": "PASS",
+  "sequencer_Icarus": "PASS",
+  "top_Icarus": "blocked at unchanged pinned ROM macro parameter string syntax; Icarus language limitation, selected runtime uses Verilator",
+  "source_selection_emission": "PASS baseline actual fullshape geometry, emitted unchanged W12core/vectorstream",
+  "baseline": "NEAR_HBM=0, actual canonical REAL_MEM service and independent HBM CDC, TAGW44, ENABLE_AR256=1; no ideal strap",
+  "optional_NHB": "descriptor3 source hook, OFF pending combined exact/clock validation",
+  "old_pinned_files": "unchanged"
+}

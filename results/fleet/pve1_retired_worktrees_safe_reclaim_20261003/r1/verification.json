@@ -1,0 +1,93 @@
+{
+  "schema": "SOURCE_PRESERVING_RETIRED_PVE1_WORKTREE_REMOVAL",
+  "fresh_remote_verification_time": "2026-10-03T07:17:12.364276+00:00",
+  "five_paths_absent_and_source_refs_verified": true,
+  "source_repository": "ot-pve1:/home/ubuntu/repo.git",
+  "complete_source_object_closure_preserved": true,
+  "tracked_dirty_and_ignored_files": 0,
+  "unique_extra_files_independently_byte_hash_verified": 4,
+  "immediate_guards": [
+    {
+      "path": "/home/ubuntu/w11kc-wt",
+      "time": "2026-10-03T07:16:10.524411+00:00",
+      "processes_checked": 517,
+      "matching_refs": 0,
+      "read_errors": 0,
+      "container_mount_hits": 0,
+      "sha256": "8a44395860ef26de841bfe683aaae1b023f7933a4e94eca90ec22194d61225cd",
+      "external_preserved_path": "/home/ubuntu/pve1-retirement-receipt-20261003T0715Z/retired-source-worktrees-20261003T0715Z/w11kc-wt.immediate-guard.json"
+    },
+    {
+      "path": "/home/ubuntu/w11kc-wt2",
+      "time": "2026-10-03T07:16:16.333230+00:00",
+      "processes_checked": 516,
+      "matching_refs": 0,
+      "read_errors": 0,
+      "container_mount_hits": 0,
+      "sha256": "8c747efed280e6590186322cd4199409a32e65de2789a29b992cab697b30b225",
+      "external_preserved_path": "/home/ubuntu/pve1-retirement-receipt-20261003T0715Z/retired-source-worktrees-20261003T0715Z/w11kc-wt2.immediate-guard.json"
+    },
+    {
+      "path": "/tmp/opentallas-v41-four-stack-verilator",
+      "time": "2026-10-03T07:16:24.068249+00:00",
+      "processes_checked": 516,
+      "matching_refs": 0,
+      "read_errors": 0,
+      "container_mount_hits": 0,
+      "sha256": "bb90214b88d309403dbabdb3b426dd1c1660ae0408e05b392d35ce4d09622648",
+      "external_preserved_path": "/home/ubuntu/pve1-retirement-receipt-20261003T0715Z/retired-source-worktrees-20261003T0715Z/opentallas-v41-four-stack-verilator.immediate-guard.json"
+    },
+    {
+      "path": "/tmp/opentallas-v41-four-stack-aligned-gate",
+      "time": "2026-10-03T07:16:31.723148+00:00",
+      "processes_checked": 515,
+      "matching_refs": 0,
+      "read_errors": 0,
+      "container_mount_hits": 0,
+      "sha256": "0997cd2a67c58c928b868ae4556f84d9a16f7ab2c226ea8663696ee3af854a2c",
+      "external_preserved_path": "/home/ubuntu/pve1-retirement-receipt-20261003T0715Z/retired-source-worktrees-20261003T0715Z/opentallas-v41-four-stack-aligned-gate.immediate-guard.json"
+    },
+    {
+      "path": "/tmp/opentallas-v41-four-stack-pipeline-gate",
+      "time": "2026-10-03T07:16:38.437532+00:00",
+      "processes_checked": 516,
+      "matching_refs": 0,
+      "read_errors": 0,
+      "container_mount_hits": 0,
+      "sha256": "7c0cf1924d1529cfa045a92937e3105742cdf59800fea3807dcf7649e3b89c47",
+      "external_preserved_path": "/home/ubuntu/pve1-retirement-receipt-20261003T0715Z/retired-source-worktrees-20261003T0715Z/opentallas-v41-four-stack-pipeline-gate.immediate-guard.json"
+    }
+  ],
+  "postguard": {
+    "time": "2026-10-03T07:17:10.668292+00:00",
+    "roots": [
+      "/home/ubuntu/w11kc-wt",
+      "/home/ubuntu/w11kc-wt2",
+      "/tmp/opentallas-v41-four-stack-verilator",
+      "/tmp/opentallas-v41-four-stack-aligned-gate",
+      "/tmp/opentallas-v41-four-stack-pipeline-gate"
+    ],
+    "processes_checked": 512,
+    "hits": [],
+    "read_errors": [],
+    "container_mount_hits": [],
+    "exported_raw_environment": false
+  },
+  "raw_preservation_remote": "/home/ubuntu/otarchives/retired-source-worktrees-20261003T0715Z",
+  "raw_preservation_local": "/home/ubuntu/pve1-retirement-receipt-20261003T0715Z/retired-source-worktrees-20261003T0715Z",
+  "persistent_free_bytes": 46350778368,
+  "R69_known_rounded_staging_plus_output_bytes": 36566796082,
+  "remaining_bytes_before_metadata_peer_growth": 9783982286,
+  "allocated_removed_directory_bytes": 20350734336,
+  "preservation_file_allocation_bytes": 73728,
+  "allocated_removed_is_directory_accounting_not_exclusive_physical_release_proof": true,
+  "observed_free_space_delta_includes_concurrent_peer_writes": true,
+  "RAM_recovery_credit_bytes": 0,
+  "physical_admission": false,
+  "no_new_job_restart_cache_eviction_or_transfer": true,
+  "Ampere_PID918356_live_verified": true,
+  "R69_stage_root_still_absent": true,
+  "W6_W12_w11kc_wt5_retained_verified": true,
+  "PVE2_PVE3": "drain only; no new workload or retirement action",
+  "main_unchanged": true
+}

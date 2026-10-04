@@ -1,0 +1,72 @@
+{
+  "schema": "EXACT_LIVE_PID_FAIRSHARE_ADJUSTMENT",
+  "user_authorized_necessary_finishing_gate_fairshare": true,
+  "other_job_priority_changed": false,
+  "parent_or_affinity_changed": false,
+  "runtime_caps_added": false,
+  "records": [
+    {
+      "time": "2026-10-03T07:06:40.851310+00:00",
+      "pid": 918356,
+      "start_ticks": 59378072,
+      "old_nice": 19,
+      "affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "schedstat_before": "391096774865 3323161688347 53357",
+      "new_nice": 0,
+      "time_after": "2026-10-03T07:07:19.911417+00:00",
+      "schedstat_after": "406504337231 3346852656769 54914",
+      "nice_after": 0,
+      "RSS_bytes": 404680704,
+      "sample_elapsed_seconds": 39.060107,
+      "sample_CPU_seconds": 15.407562366,
+      "owner": "ampere"
+    },
+    {
+      "time": "2026-10-03T07:06:38.980833+00:00",
+      "pid": 3535148,
+      "start_ticks": 321549124,
+      "old_nice": 19,
+      "affinity": [
+        16
+      ],
+      "schedstat_before": "47351474048 507659306591 14934",
+      "new_nice": 0,
+      "time_after": "2026-10-03T07:07:28.200456+00:00",
+      "schedstat_after": "54586632419 549652139625 18221",
+      "nice_after": 0,
+      "RSS_bytes": 111673344,
+      "sample_elapsed_seconds": 49.219623,
+      "sample_CPU_seconds": 7.235158371,
+      "owner": "popper"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS_BANKED_OUTPUT_JOIN_FIXTURE",
+  "compile_rc": 0,
+  "run_rc": 0,
+  "elapsed_s": 0.9720856724306941,
+  "source_sha256": {
+    "rtl/model/qwen_banked_atomic_receiver_20261003/directed_r1/tb.sv": "c7f3ff9a76c42b03b909a5595a328a430fc59af9ab87c3a836ffcc3ae77aec7c",
+    "rtl/model/qwen_banked_atomic_receiver_20261003/ot_gpu_qwen_banked_output_join.sv": "ba0377d7f4274a152ebcaced004cc783efebd30719f83a432c9e8b34dce3acd2"
+  },
+  "post_sha256": {
+    "rtl/model/qwen_banked_atomic_receiver_20261003/directed_r1/tb.sv": "c7f3ff9a76c42b03b909a5595a328a430fc59af9ab87c3a836ffcc3ae77aec7c",
+    "rtl/model/qwen_banked_atomic_receiver_20261003/ot_gpu_qwen_banked_output_join.sv": "ba0377d7f4274a152ebcaced004cc783efebd30719f83a432c9e8b34dce3acd2"
+  },
+  "scope": "actual new output-join RTL with holder and profile fixtures; no Nash gate repetition/no payload/INITIAL/fulltoken/SSFF credit",
+  "limits": "CPU/AS/FSIZE unlimited; no wall cap"
+}

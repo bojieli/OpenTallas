@@ -15,7 +15,7 @@
 // step the chip runs (prompt positions teacher-forced, then generated tokens
 // fed back) is checked against the golden's next token, and the CQ token
 // stream against the golden generation.
-// Plusargs: +DIR=<emit dir>  +MAXCYC=<clk_sm cycles>
+// Plusargs: +DIR=<emit dir>  optional +MAXCYC=<diagnostic clk_sm cycles>
 // ---------------------------------------------------------------------------
 module tb_gpu_hbm_system;
     parameter integer ND = 2, NSM = 2, NL = 128, IMW = 13, CB = 8, MEM_WORDS = 65536, HAS_DIV = 0, HAS_BD = 0;
@@ -170,7 +170,7 @@ module tb_gpu_hbm_system;
     reg [15:0] cq_tok [0:63];
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
-        if (!$value$plusargs("MAXCYC=%d", maxcyc)) maxcyc = 50_000_000;
+        if (!$value$plusargs("MAXCYC=%d", maxcyc)) maxcyc = 0; // No default cycle limit; admitted builds run to completion.
         fd = $fopen({dir, "/tb_cfg.txt"}, "r");
         void'($fscanf(fd, "%d %d %d %d %d", exp_n, nprompt, ngen, nimem, ncmd));
         for (i = 0; i < exp_n; i++) void'($fscanf(fd, "%d %d", exp_in[i], exp_tok[i]));
@@ -209,7 +209,7 @@ module tb_gpu_hbm_system;
         bar_wr(12'h01C, 1);                       // SQ_TAIL doorbell
         // ---- poll the completion ring
         cq_head = 0; phase = 1; got_last = 0; ntok = 0;
-        while (!got_last && cyc_sm < maxcyc) begin
+        while (!got_last && (maxcyc == 0 || cyc_sm < maxcyc)) begin
             repeat (200) @(posedge clk_host);
             forever begin
                 w0 = hrd(64'h1000 + cq_head * 16);

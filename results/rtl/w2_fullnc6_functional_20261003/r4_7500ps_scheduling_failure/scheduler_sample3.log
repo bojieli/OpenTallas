@@ -1,0 +1,11 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/usr/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x000063e0424aebd0 in vvp_fun_arrayport_sa::check_word_change(unsigned long) ()
+$1 = 7500
+#0  0x000063e0424aebd0 in vvp_fun_arrayport_sa::check_word_change(unsigned long) ()
+#1  0x000063e0424b059d in __vpiArray::word_change(unsigned long) ()
+#2  0x000063e0424def69 in of_STORE_VEC4A(vthread_s*, vvp_code_s*) ()
+#3  0x000063e0424c9102 in vthread_run(vthread_s*) ()
+#4  0x000063e0424ee828 in schedule_simulate() ()
+#5  0x000063e04249cff4 in main ()
+[Inferior 1 (process 25109) detached]

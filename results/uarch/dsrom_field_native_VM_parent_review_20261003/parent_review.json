@@ -1,0 +1,48 @@
+{
+  "cache_repair": {
+    "artifact_census_original": 25,
+    "artifact_census_retained": 23,
+    "excluded": "Only the two original generated Python bytecode cache paths; fresh subprocess compiles original source bytes including nested loaders. Original failed records and numerical model are unchanged.",
+    "source_census_original": 67,
+    "source_census_retained": 65
+  },
+  "checks": {
+    "event_artifact_hashes_checked": 20,
+    "event_input_hashes_checked": 11,
+    "field_parent_and_MTP_containment_verifiers": "PASS",
+    "literal_event_adapter_cold_replay": "PASS_BYTE_IDENTICAL",
+    "native_VM_source_only_verifier": "PASS_BYTE_IDENTICAL_ORIGINAL_MODEL",
+    "predecessor_field_VM_containment_tests_passed": 129,
+    "successor_VM_and_event_tests_passed": 43
+  },
+  "owner_commits": [
+    "06f7c9590",
+    "94ac6b0ef",
+    "22b880b06",
+    "7e249bb22",
+    "c901ab5c1"
+  ],
+  "preserved_failure": "initial_cold_source_pin_failure.json",
+  "reviewed_tree": "ba93a69ad742c4111610672079067d6cd28033f9",
+  "schema": "DSROM_NATIVE_VM_AND_HBM_EVENT_PARENT_INTAKE_REVIEW_R1",
+  "scope": {
+    "MTP": "Selected parent is not contained/reserved; reset pin load exceeds selected ceiling before wire, minimum extra buffers priced but actual trees/sites/cuts remain open. Scalar K512 repair remains separate.",
+    "event_adapter": "Literal immutable Qwen1737PC/DeepSeek2213PC recipes only; actual PC40 RF demand refuses absent entering workspace leases. No invented endpoint receipts or finite service upper bounds. DS current-r33 source currency gap remains explicit.",
+    "field_parent": "Full-size prospective field/VM geometry and finite native publication model, not installed RTL. Affine write frames require actual extent lease, writer drain and backend visible ACK. Forward raw payload CDC priced separately from control mailbox.",
+    "fleet": "Historical measured capacity inventory refuses R68 numerical admission; PVE1 physical available below runtime floor and .226 physical parent not proved. No deletion, cap relaxation or new job authorized by this review.",
+    "hardware_admitted": false,
+    "headline_changed": false,
+    "numerical_token_completed": false,
+    "physical_closure": false
+  },
+  "source_sha256": {
+    "results/uarch/dsrom_field_native_VM_parent_review_20261003/initial_cold_source_pin_failure.json": "e33e808a681a2d01ef8f0323090f75dbd953bbb8a6573db6e3d4a7a8333ec3de",
+    "results/uarch/r68_fleet_capacity_20261003/capacity.receipt.json": "ec7185a85743b37c36c0ca6a423dc4df43ba4f33ed5d607ad4792bb5799a72a2",
+    "tools/dsrom_MTP_selected_parent_containment.py": "6134706cdfd59522177521610f83c9e6dc309477430c95465187f9ebe907b870",
+    "tools/dsrom_field_native_VM_join.py": "89db369c54eff72af0ea1a6b610d9ccaf97465a4bd16f3f622b498a1d529c6dc",
+    "tools/dsrom_field_native_VM_join_verify_r2.py": "9b290e78ad7e17de21d01b7637b782997292ae947989f94172c197b26962092f",
+    "tools/dsrom_field_parent_component.py": "3c1ce62502c221755de42931323eefcfc2808ae1d42e8dd6ca735eeb652645c0",
+    "tools/h3_complete_native_calendar_event_adapter_r9.py": "1f3ba9a5e2dc029bfb9037ff2d3d8c3c53440441ea3441dceed3f72c7221cd93"
+  },
+  "verdict": "PASS_MODEL_AND_SOURCE_REPRODUCTION_ONLY"
+}

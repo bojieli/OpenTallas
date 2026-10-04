@@ -1,0 +1,53 @@
+{
+ "schema": "risk_ds_context_capacity_verdict/1",
+ "question": "Can the DeepSeek-V4.1 ROM array and the DS HBM comparator serve one user at 1,048,576 (primary) and 200,000 (secondary) context within attached HBM capacity and bandwidth?",
+ "verdict": {
+  "rom_array_1M": "FEASIBLE-WITH-CONDITIONS",
+  "rom_array_200K": "FEASIBLE",
+  "hbm_comparator_1M": "FEASIBLE-WITH-CONDITIONS",
+  "hbm_comparator_200K": "FEASIBLE",
+  "conditions": [
+   "Decode needs no N x N tensor. The compiler artefact must be fixed before any compiled build is quoted above 512 to 8,192 positions: the [span, committed] score and candidate-mask declarations must be sized per decode row (or per prefill chunk, streamed). The capacity and bandwidth claims do not depend on this fix; only compiled-deployment evidence does.",
+   "Prefill must be chunked and must stream the score row into the top-k. At a 1M prompt, an 8,192-token chunk that materialises the layer-20 scores is 17.2 GB bf16 (4.3 GB per die). That fits, but it is a waste. Prefill (time to first token, TTFT) is not part of the decode headline and has no committed pricing record at 1M.",
+   "The index scan runs at the measured four-stack reader rate (1,920 B/cycle, 2.30 TB/s; tools/uarch_model.py:125), below the 3.6 TB/s HBM rate. It is already priced: 7.7 us on the layer-20 die and about 19.8 us for all eight scans in series at 1M."
+  ]
+ },
+ "model_facts_released_inference_model_py": {
+  "decode_score_shape": "Indexer.forward: index_score = einsum('bshd,btd->bsht', q, index_k) then sum over heads gives [bsz, seqlen, end_pos//ratio]. Decode has seqlen = 1, so the score is one row of N/ratio values (layer 20 at 1M: 1,048,576 fp32 = 4 MB). It goes straight into topk(512) and is never stored. The comment reads: 'One query per decode step, so there it is just a number'.",
+  "prefill_score_shape": "start_pos == 0 one-shot prefill: [S, S/ratio] with a causal mask. At S = 262,144 and ratio 1 (layers 20-39) this is exactly the [262144, 262144] the IR declares. It is a transient that exists only at the frontend's maximum span.",
+  "candidate_mask": "select_candidate_blocks returns a bool mask 'shaped like logits'. In decode that is 1 x N/ratio, held in shared_attn.candidates only from layer 20 to layers 24-36 inside one token, then overwritten. It is never kept across tokens, and its content is 2,048 block ids.",
+  "persistent_buffers": "window_kv_cache [B,128,512] (every attention layer); compress_kv_cache [B, max_seq/ratio, 512] and Indexer.k_cache [B, max_seq/ratio, 128] (kv_source layers 2, 8, 14, 20 only); Compressor kv_state/score_state [B, ratio, 512] fp32 (ratio-2 sources); NgramHashState.cache [B, max_seq] int64 (only the last 3 entries are ever read: shifts 0..3). There is no other per-user buffer.",
+  "scanners": "Only index_source_layers [2, 8, 14, 20, 24, 28, 32, 36] scan. The other compressed layers reuse shared_attn.topk_idxs. Layers 24-36 scan only the 2,048 x 8 = 16,384 candidate positions."
+ },
+ "numbers": {
+  "per_user_state_packed_B": {"200000": 180930712, "1048576": 936163352},
+  "per_user_state_bf16_upper_B": {"200000": 645660696, "1048576": 3361103896},
+  "rom_busiest_die_B": {"200000": 17935168, "1048576": 93458432, "matches": "results/arch/arch_budget_v41.json capacity[*].per_user_bytes_busiest_die"},
+  "rom_die_usable_B": 81000000000,
+  "rom_busiest_die_fraction_1M": 0.00115,
+  "rom_whole_user_state_on_one_die_fraction_1M": 0.0116,
+  "hbm_comparator_die_usable_after_weights_B": 75845595728,
+  "hbm_comparator_whole_user_on_one_die_fraction_1M": 0.0123,
+  "per_token_hbm_reads_B": {"200000": {"index_scan": 38456448, "kv_gather": 5603328}, "1048576": {"index_scan": 182714368, "kv_gather": 5603328}, "matches": "results/arch/arch_budget_v41.json workload[*].totals.bytes.idx / kv_hbm"},
+  "rom_l20_die_scan_1M": {"bytes": 17825792, "us_at_hbm_3p6TBps": 4.95, "us_at_measured_reader": 7.74},
+  "single_user_hbm_bandwidth_utilisation_1M_at_390us": "the layer-20 die streams 17.8 MB each 390 us, 46 GB/s, 1.3% of 3.6 TB/s",
+  "prefill_1M": {"macs": 2.45e16, "indexer_macs": 5.9e15, "rough_ttft_s_at_saturated_rom_mac_rate": "about 10 s (24.5 PMAC / (84,525 tok/s x 28.7 GMAC/token)); an estimate, not a record"},
+  "prefill_200K": {"macs": 3.8e15, "rough_ttft_s": "about 0.8 s"},
+  "ir_artefact_B": {"per_declared_score_bf16": 137438953472, "per_declared_mask_u8": 68719476736}
+ },
+ "defects": [
+  {"where": "compiler/frontends/v3/deepseek_v41.py:211,1956", "what": "DEFAULT_CONTEXT_TOKENS=262,144 and span = Symbolic('span_tokens', 1, context_tokens). The prefill span maximum equals the whole context, so every [span, committed] view is N x N at its maximum."},
+  {"where": "compiler/frontends/v3/deepseek_v41.py:3786", "what": "attention.indexer.score.scores is declared as act bf16 (span, committed): [262144, 262144] = 128 GiB on layers 20-39 (and [262144, 131072] on layers 2-19). Decode needs (1, committed). The fix is to declare it per row or per chunk and stream it into INDEX_TOPK."},
+  {"where": "compiler/frontends/v3/deepseek_v41.py:3835", "what": "attention.indexer.pool.block_scores is declared (span, 32,768 blocks): [262144, 32768] bf16 = 16 GiB. The same artefact divided by 8."},
+  {"where": "compiler/frontends/v3/deepseek_v41.py:3888,3906", "what": "The candidate admission mask is a u8 view of (span, committed), and it is also a STATE write (candidate_mask_state). The backends therefore allocate a persistent 64 GiB state object, although the reference keeps a 1 x N transient for one token. The fix is a 2,048-entry block-id list (8 KB) per decode row."},
+  {"where": "compiler/frontends/v3/deepseek_v41.py:3926", "what": "pool_read.admission (layers 24, 28, 32, 36) is a (span, committed) u8 view read from that state. It is a further 64 GiB each at the maximum shape."},
+  {"where": "compiler/backends/hbm_sram/plan.py:1022-1035 (symbol_maximum/_extent_value), 6222-6228, 6257", "what": "Arena, state and sram.vector_stream sizes are taken from each symbol's declared MAXIMUM. vector_stream = max tile_rows x min(width, 2048) x 4 B, so the span maximum sets it. This is the measured 'refuses at 8,192 on 64 MB vector_stream, 512 builds' ladder, and it is an artefact of the declaration, not a property of the hardware."},
+  {"where": "results/abi3/deepseek_v41_hbm_ninth_cell_builds.json:10-19", "what": "Records 1,052-1,082 GB per node of 'NODE-LOCAL quadratic-in-context' HBM demand and 'the lever is context length ... 512 BUILDS'. Both are artefact-derived. The true per-user state is 0.94 GB in total at 1M. This record is superseded, not overwritten: failed verdicts are kept."},
+  {"where": "results/abi3/deepseek_v41_ds41_p3_array_and_hbm.json:32,60-75,101,121", "what": "'the largest ... context the 64-node array admits is 131,072; ... 262,144 refused' and the 115 GB activation-arena binding term. Both are artefact-derived, so the compiled admission is not a capacity limit."},
+  {"where": "tools/build_rom_deployment.py:28-33", "what": "The docstring takes the V4-Pro refusal at 262,144 (259 GB of hbm_and_state against 180 GB) as precedent for 'context length is the lever'. This is the same max-span sizing class and must be re-checked once the declaration is per row."},
+  {"where": "tools/uarch_model.py:1873, 2530, 5431", "what": "The GPU tier-2 V4.1 index read is 262,144 x 68 x 4 x 38 = 2.71 GB/token ('38 scanning layers'). Only 8 layers scan, and 4 of those scan only 16,384 candidates, so the true figure is 0.183 GB, as the model's own workload[1048576].bytes.idx states. This overstates the B200 baseline's per-token bytes about 15x (the reference is penalised). It is not a capacity defect, but it biases the ROM/GPU ratios."}
+ ],
+ "not_defects": [
+  "tools/arch_budget_v41.py:1539-1555 capacity_limit and tools/uarch_model.py:4272-4279 _v41_state_user model the per-user state correctly: rows x (288 + 68) B on the kv sources plus window rings. They give 866 ROM users and 811 HBM-comparator users at 1M (results/arch/arch_budget_v41.json capacity)."
+ ]
+}

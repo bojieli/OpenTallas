@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--lint-only",
+    "--Wall",
+    "-Wno-fatal",
+    "--top-module",
+    "ot_w2_nc6_protected_completion",
+    "-GOPT_EXACT=1",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv",
+    "/tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv"
+  ],
+  "compiler_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "elapsed_s": 0.15826407307758927,
+  "exit_code": 1,
+  "live_job": false,
+  "scope": "composed219-word syntax only, no functional-runtime or loadedSSFF",
+  "source_after": {
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv": "0104529b091432015923bab400a532adbbaae0272d333aa341691a5a50159df1",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv": "d5ea2b62cdc8399a9fe1b60cda98a40d93779f6cafbd88f8676979ada19c9a71",
+    "/tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv": "cca55c65fdcbdb339134ce824267dec7eccc1c09487dd3e9018da0cda31da1e8"
+  },
+  "source_before": {
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv": "0104529b091432015923bab400a532adbbaae0272d333aa341691a5a50159df1",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv": "d5ea2b62cdc8399a9fe1b60cda98a40d93779f6cafbd88f8676979ada19c9a71",
+    "/tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv": "cca55c65fdcbdb339134ce824267dec7eccc1c09487dd3e9018da0cda31da1e8"
+  },
+  "source_unchanged": true
+}

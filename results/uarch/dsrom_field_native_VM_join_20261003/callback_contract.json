@@ -1,0 +1,28 @@
+{
+  "actual_journal": null,
+  "events": [
+    "reserve finite593-write frame, exclusive AW19 output extent and drained/vetoed12writers BEFORE phase GO",
+    "ordered source row pos0 address=base+row accepted with raw data69 held in full307bit dataCDC FIFO",
+    "actual masked native write grant N, macro-visible N+2, new registered winning ACK N+3 plus postNBA matchedvalue witness",
+    "source rowcredit captured strictly after actual visibility receipt, no sameedge reuse",
+    "preF only after packets/nativeACKs/sourcecredits zero and actual source engine/tree quiet",
+    "VM versionlease retained through actual sameowner SUread and R+2 tag/consumer drain separately from bank rearm"
+  ],
+  "identity": {
+    "fields": [
+      "stage6",
+      "rank2",
+      "EID9",
+      "phase10",
+      "key32",
+      "generation32",
+      "user32",
+      "Xversion32",
+      "PC14"
+    ],
+    "full_context_bits": 169,
+    "native_batch_nonce16": "full phase association required around native epoch/rid",
+    "reset_era32": "captured accepted reset relation, not eras erased while debt outstanding"
+  },
+  "scope": "Software source contract and synthetic transport oracle; no accepted engine/provider/CDC actualcallbacks or PHW10 wholeprogram binary inherited"
+}

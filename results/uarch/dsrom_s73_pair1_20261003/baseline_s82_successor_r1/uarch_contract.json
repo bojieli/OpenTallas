@@ -1,0 +1,57 @@
+{
+  "area": "area_ledger.json retains fixed/residual/halo/whitespace/cfg/RNE/WAKE/full return; only PAR2 corridor removed",
+  "floorplan_admission": false,
+  "label": "MODEL_UNVALIDATED",
+  "latency": {
+    "complete_token_rate_qualified": false,
+    "existing_stage_hop_us": 0.482,
+    "extra_hop_us_vs_C": 4.338,
+    "extra_stage_hops_vs_C": 9,
+    "indexer_multicast": "indexer_multicast_model.json: positive model bounds",
+    "matrix_issue_cycles": "Each matrix_map record retains native ordered-segment LAT8 issue count",
+    "return_storage_credit_cycles": 0,
+    "row_fragment_gather_and_auxiliary_access": "Not qualified; complete source calendar required before build"
+  },
+  "per_die": {
+    "BF_capable_pairs": 512,
+    "ROM_bytes_per_cycle_if_all_pairs_active": 163578.0,
+    "field_return_cut_bits_per_cycle": 300888,
+    "forward_BF_bus_bits": 1067,
+    "forward_q_bus_bits": 549,
+    "peak_BF_MACs_per_cycle": 16384,
+    "peak_fp4_MACs_per_cycle": 305664,
+    "q_compatible_pairs": 2388,
+    "retained_return_root_records_per_cycle": 128,
+    "source_descriptor_word_bits": 48,
+    "stream_broadcast_site_fanout": 2388
+  },
+  "per_pair": {
+    "MACs_per_cycle": {
+      "BF16": 32,
+      "fp4": 128,
+      "fp8": 64
+    },
+    "ROM_captured_bytes_per_active_cycle": 68.5,
+    "compute_intensity_MAC_per_ROM_byte": {
+      "BF16": 0.46715328467153283,
+      "fp4": 1.8686131386861313,
+      "fp8": 0.9343065693430657
+    },
+    "mode_exclusivity": "BF dual stores/computes q or BF; do not sum both modes",
+    "producer_partial_bits_per_cycle": 126
+  },
+  "replicas": {
+    "ROM_ECC_sidecars": 0,
+    "complete_pairs": 783264,
+    "main_weight_macros": 3133056,
+    "return_blocks": 328,
+    "stage_rank_dies": 328
+  },
+  "routing": {
+    "capacity_binding": null,
+    "local_BF_needed_tracks": 1067,
+    "local_q_needed_tracks": 549,
+    "route_layer_check": "NOT_RUN",
+    "unpriced_channel_growth_not_zero": true
+  }
+}

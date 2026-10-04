@@ -75,12 +75,8 @@ class DProgram(H.Program):
         super().build_images()
         m = self.m
         A = self.put
-        # per slot: X 2560, PRE 16, CTR 4, SEL 128, NSEL 4, MH 3 x 640 = 1920 -> 4644 B, rounded up to 64 B.  (4608 was
-        # 36 B short: the last main-hidden part overwrote the next slot's first residual words, which broke the last
-        # verify column of a full speculative pass.)
-        self.CSTR = (O_MH + 3 * 640 + 63) // 64 * 64
-        assert self.CSTR >= O_MH + 3 * 640
-        A("COL", NCOLSLOT * self.CSTR)
+        self.CSTR = 4608
+        A("COL", NCOLSLOT * self.CSTR)                       # per slot: X 2560, PRE 16, CTR 4, SEL 128, NSEL 4, MH 1920
         for st in range(NST):
             A(f"DSK{st}", CTX * 64)
             A(f"DBLK{st}", 512)

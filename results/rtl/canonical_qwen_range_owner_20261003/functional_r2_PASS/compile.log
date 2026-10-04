@@ -1,0 +1,554 @@
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29349:98: Instance has missing pin: 'encoded_word'
+29349 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) decoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:13:22: ... Location of port declaration
+   13 |  output logic [71:0] encoded_word,
+      |                      ^~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29349:98: Instance has missing pin: 'syndrome'
+29349 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) decoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:14:21: ... Location of port declaration
+   14 |  output logic [6:0] syndrome,
+      |                     ^~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29349:98: Instance has missing pin: 'overall_odd'
+29349 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) decoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:15: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |               ^~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29349:98: Instance has missing pin: 'clean'
+29349 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) decoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:27: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                           ^~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'syndrome'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:14:21: ... Location of port declaration
+   14 |  output logic [6:0] syndrome,
+      |                     ^~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'overall_odd'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:15: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |               ^~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'clean'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:27: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                           ^~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'correctable'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:33: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                                 ^~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'uncorrectable'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:45: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                                             ^~~~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'seal_ok'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:59: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                                                           ^~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'padding_ok'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:67: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                                                                   ^~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'release_clean'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:16:15: ... Location of port declaration
+   16 |  output logic release_clean,
+      |               ^~~~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'repaired_payload'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:17:22: ... Location of port declaration
+   17 |  output logic [43:0] repaired_payload,
+      |                      ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29352:98: Instance has missing pin: 'repaired_word'
+29352 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) encoder(
+      |                                                                                                  ^~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:18:22: ... Location of port declaration
+   18 |  output logic [71:0] repaired_word
+      |                      ^~~~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'syndrome'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:14:21: ... Location of port declaration
+   14 |  output logic [6:0] syndrome,
+      |                     ^~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'overall_odd'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:15: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |               ^~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'clean'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:27: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                           ^~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'correctable'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:33: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                                 ^~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'uncorrectable'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:45: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                                             ^~~~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'seal_ok'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:59: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                                                           ^~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'padding_ok'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:15:67: ... Location of port declaration
+   15 |  output logic overall_odd,clean,correctable,uncorrectable,seal_ok,padding_ok,
+      |                                                                   ^~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'release_clean'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:16:15: ... Location of port declaration
+   16 |  output logic release_clean,
+      |               ^~~~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'repaired_payload'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:17:22: ... Location of port declaration
+   17 |  output logic [43:0] repaired_payload,
+      |                      ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29354:98: Instance has missing pin: 'repaired_word'
+29354 |   ot_w2_sealed_secded72 #(.PC_ID(INDEX),.WORD_INDEX(BASE+w),.WORD_KIND(KIND),.PAYLOAD_BITS(PAY)) reset_encoder(
+      |                                                                                                  ^~~~~~~~~~~~~
+                     /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:18:22: ... Location of port declaration
+   18 |  output logic [71:0] repaired_word
+      |                      ^~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h0' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h1' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h2' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h3' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h4' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h5' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h6' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h7' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h8' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h9' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'ha' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'hb' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'hc' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'hd' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'he' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'hf' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h10' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h11' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h12' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h13' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h14' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h15' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h16' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h17' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h18' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h19' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h1a' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h1b' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h1c' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h1d' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h1e' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h1f' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h20' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h21' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h22' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h23' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h24' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h25' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h26' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h27' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h28' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h29' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h2a' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h2b' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h2c' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h2d' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h2e' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h2f' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h30' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h31' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h32' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h33' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h34' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h35' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h36' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h37' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h38' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h39' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h3a' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h3b' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h3c' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h3d' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h3e' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h3f' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h40' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h41' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h42' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h43' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h44' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h45' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h46' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h47' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h48' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h49' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h4a' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h4b' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h4c' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h4d' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h4e' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h4f' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h50' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h51' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h52' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h53' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h54' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h55' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h56' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h57' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h58' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h59' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h5a' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h5b' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h5c' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h5d' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h5e' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h5f' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h60' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h61' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h62' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h63' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h64' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h65' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h66' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h67' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h68' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h69' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h6a' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h6b' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h6c' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h6d' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h6e' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h6f' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv:7:24: Operator VAR 'WORD_INDEX' expects 10 bits on the Initial value, but Initial value's CONST '32'h70' generates 32 bits.
+    7 |  parameter logic [9:0] WORD_INDEX=10'd0,
+      |                        ^~~~~~~~~~
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29183:27: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                                                                                                                    : ... note: In instance 'tb.dut'
+29183 |   integer n;begin n=t[9:0]-{1'b0,t[18:10]};
+      |                           ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29183:27: Operator SUB expects 32 bits on the RHS, but RHS's REPLICATE generates 10 bits.
+                                                                                                                                                                    : ... note: In instance 'tb.dut'
+29183 |   integer n;begin n=t[9:0]-{1'b0,t[18:10]};
+      |                           ^
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29189:8: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 1 bits.
+                                                                                                                                                                   : ... note: In instance 'tb.dut'
+29189 |   t[35]==(SM_INDEX/32)&&t[34:30]==(SM_INDEX%32)&&page_mask(t)!=0;end
+      |        ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29189:33: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                                                                                                                    : ... note: In instance 'tb.dut'
+29189 |   t[35]==(SM_INDEX/32)&&t[34:30]==(SM_INDEX%32)&&page_mask(t)!=0;end
+      |                                 ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29225:44: Operator EQ expects 10 bits on the LHS, but LHS's SEL generates 7 bits.
+                                                                                                                                                                    : ... note: In instance 'tb.dut'
+29225 |    cm[46:38]==claim_tuple[18:10]&&cm[37:31]==(claim_tuple[9:0]-{1'b0,claim_tuple[18:10]})&&
+      |                                            ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29252:30: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '3'h0' generates 3 bits.
+                                                                                                                                                                    : ... note: In instance 'tb.dut'
+29252 |  assign claim_row=empty_row<0?3'd0:empty_row;
+      |                              ^
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29252:18: Operator ASSIGNW expects 3 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                                                                                   : ... note: In instance 'tb.dut'
+29252 |  assign claim_row=empty_row<0?3'd0:empty_row;
+      |                  ^
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29302:83: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 9 bits.
+                                                                                                                                                                    : ... note: In instance 'tb.dut'
+29302 |    if(page_ack_valid&&page_ack_ready)rn[ack_row][R_ACK_BITMAP+(page_ack_owner[8:0]-r[ack_row][R_PRODUCER_TUPLE+10 +:9])]=1;
+      |                                                                                   ^
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29302:83: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 9 bits.
+                                                                                                                                                                    : ... note: In instance 'tb.dut'
+29302 |    if(page_ack_valid&&page_ack_ready)rn[ack_row][R_ACK_BITMAP+(page_ack_owner[8:0]-r[ack_row][R_PRODUCER_TUPLE+10 +:9])]=1;
+      |                                                                                   ^
+%Warning-WIDTHTRUNC: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/experimental/canonical_qwen_range_owner_20261003/ot_gpu_qwen_native_range_owner.sv:29322:18: Operator ASSIGN expects 3 bits on the Assign RHS, but Assign RHS's VARREF 'query_row' generates 32 bits.
+                                                                                                                                                                   : ... note: In instance 'tb.dut'
+29322 |     qn[Q_ROW +:3]=query_row;qn[Q_SLOT +:9]=query_slot;
+      |                  ^
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/test/canonical_qwen_range_owner_20261003/tb_r2.sv:101:11: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                                                                                 : ... note: In instance 'tb'
+  101 |  n=id[9:0]-id[18:10];
+      |           ^
+%Warning-WIDTHEXPAND: /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/test/canonical_qwen_range_owner_20261003/tb_r2.sv:101:11: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 9 bits.
+                                                                                                                                 : ... note: In instance 'tb'
+  101 |  n=id[9:0]-id[18:10];
+      |           ^
+make: Entering directory '/home/ubuntu/nash-range-owner-9edb24d0d-runtime/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb_vm_classes_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb_vm_classes_Slow_0.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb_vm_classes_Slow_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/home/ubuntu/nash-range-owner-9edb24d0d-runtime/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.487 MB sources in 5 modules, into 32.112 MB in 36 C++ files needing 0.130 MB
+- Verilator: Walltime 44.817 s (elab=0.287, cvt=10.775, bld=33.146); cpu 12.161 s on 2 threads; allocated 275.180 MB

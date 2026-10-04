@@ -1,0 +1,12 @@
+test_actual_tile_wrapper_parameter_and_port_passthrough (test_qwen_rom_instruction_transport_r1.InstructionTests) ... ok
+test_default_off (test_qwen_rom_instruction_transport_r1.InstructionTests) ... ok
+test_existing_output_refused (test_qwen_rom_instruction_transport_r1.InstructionTests) ... ok
+test_literal_source_packing_and_state_matches_model (test_qwen_rom_instruction_transport_r1.InstructionTests) ... ok
+test_no_retire_or_drain_inference_from_ready (test_qwen_rom_instruction_transport_r1.InstructionTests) ... ok
+test_preparation_full_power_source_projection (test_qwen_rom_instruction_transport_r1.InstructionTests) ... ok
+test_private_variant_preserves_original_and_link_hotspot (test_qwen_rom_instruction_transport_r1.InstructionTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.566s
+
+OK

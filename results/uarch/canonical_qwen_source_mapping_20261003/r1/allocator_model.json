@@ -1,0 +1,511 @@
+{
+  "RF_homes": 26624,
+  "RF_slot_ranges_per_SM": [
+    [
+      32,
+      105
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      104
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      102
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ],
+    [
+      32,
+      96
+    ]
+  ],
+  "RTL_admitted": false,
+  "alternatives": [
+    {
+      "CLK_SS_cap_fF_floor": 536568.4010879999,
+      "FF_body_area_mm2_floor": 0.46868844671999993,
+      "SM_count": 64,
+      "capacity_stalls_may_extend": true,
+      "compare_input_bits": 75,
+      "data_output_bits": 46,
+      "final_consumer_and_reverse_to_retire_min_edges": 1,
+      "full_area_mm2": null,
+      "initiation_interval_edges": 3,
+      "maximum_local_rows": 73,
+      "missing": [
+        "held request/response and repair contexts",
+        "loaded codec, selection and feedback timing",
+        "positive whole-operator retirement/reverse callbacks",
+        "source namespace issuer and wrap fence"
+      ],
+      "name": "direct_physical_seats",
+      "payload_bits_per_row": 135,
+      "physical_admitted": false,
+      "positive_capture_or_mirror_ACK_to_publish_min_edges": 1,
+      "prospective_query_edges": 3,
+      "protected_row_bits": 1236384,
+      "query": "direct RFslot indexing",
+      "query_ports_per_SM": 1,
+      "row_fields": {
+        "consumer_remaining": 9,
+        "fault": 1,
+        "owner46": 46,
+        "producer_visible": 1,
+        "published": 1,
+        "reverse_pending": 1,
+        "session": 64,
+        "valid": 1,
+        "version": 11
+      },
+      "rows": 4293,
+      "sealed_words_per_row": 4
+    },
+    {
+      "CLK_SS_cap_fF_floor": 37402.304688,
+      "FF_body_area_mm2_floor": 0.032670630719999996,
+      "SM_count": 64,
+      "capacity_stalls_may_extend": true,
+      "compare_input_bits": 84,
+      "data_output_bits": 46,
+      "final_consumer_and_reverse_to_retire_min_edges": 1,
+      "full_area_mm2": null,
+      "initiation_interval_edges": 3,
+      "maximum_local_rows": 7,
+      "missing": [
+        "held request/response and repair contexts",
+        "loaded codec, selection and feedback timing",
+        "positive whole-operator retirement/reverse callbacks",
+        "source namespace issuer and wrap fence"
+      ],
+      "name": "extended_native_range_contexts",
+      "payload_bits_per_row": 282,
+      "physical_admitted": false,
+      "positive_capture_or_mirror_ACK_to_publish_min_edges": 1,
+      "prospective_query_edges": 3,
+      "protected_row_bits": 86184,
+      "query": "version/session equality and first<=slot<first+length CAM",
+      "query_ports_per_SM": 1,
+      "row_fields": {
+        "RF_first": 9,
+        "RF_length": 7,
+        "consumer_remaining": 9,
+        "existing_native_context_payload": 181,
+        "reverse_pending": 1,
+        "session": 64,
+        "version": 11
+      },
+      "rows": 171,
+      "sealed_words_per_row": 7
+    }
+  ],
+  "consumer_count_width": 9,
+  "exact_RF_seats": 4293,
+  "existing_native_context": {
+    "actual_instances": 1,
+    "additional_runtime_lease_state_credit": 0,
+    "general_source_owner": false,
+    "protected_context_bits": 216,
+    "protected_data_bits": 4608,
+    "reason": "PC40 retained context assumes external source_lease_reserved; not a full RF lease allocator",
+    "source_RF_slot": 38
+  },
+  "maximum_consumers_per_home": 288,
+  "peak_live_RF_pages_per_SM": [
+    69,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    68,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    66,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64,
+    64
+  ],
+  "peak_live_home_contexts_per_SM": [
+    7,
+    5,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    6,
+    5,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "per_token_latency": {
+    "actual_callback_census_unknown": true,
+    "formula": "sum of uncached owner queries *3 + positive publication/retirement edges + repair/credit stalls",
+    "native_lookup_reuse_requires": "actual retained source owner covering every queried slot/version/session; not caller reservation"
+  },
+  "provider_pin": {
+    "commit": "570536f48",
+    "path": "results/uarch/qwen_hbm_provider_bindings_r17_20261002/Qwen_provider_binding.json.gz",
+    "sha256": "01cb064303e809b2389dad4da6932bb1ffa9d7e40f93cd0918b1eba43ca56da1"
+  },
+  "rank_PC_translation_qualified": false,
+  "schema": "canonical-qwen-finite-source-allocator-r1",
+  "selected": null,
+  "source_pins": [
+    {
+      "path": "rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_ingress_r5.sv",
+      "sha256": "58c20c4a27304af4f31f2cbd3b7acf2f2d40817d733881900089bbad712f80f9"
+    },
+    {
+      "path": "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv",
+      "sha256": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+    },
+    {
+      "path": "results/uarch/w2_nc6_mutable_protection_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json",
+      "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "artifact_sha256": {
+    "initial_test_failure.log": "b213d42ac3aedfe378d6c93548aec4982b55ba2462fb50cc57a24a76e60c7f4c",
+    "initial_test_failure.py.txt": "0d45c43ecc876066239bba58f5cded254271e43d9def7897bab9a53f0d37067d",
+    "runtime.log": "528aa63929fc06538bd948477e37b3ec7027a01e0fc72b3f03a10060b72e07b3"
+  },
+  "command": "python3 -m unittest discover -s tests -p test_canonical_qwen_local_cohorts.py -v",
+  "host": "ot-agidock128",
+  "initial_failure": "Test incorrectly required both independent cohort responses to drop combinationally on a forbidden stage-only admission. Scoped assertion to stage response bit; metadata may legitimately remain offered until the stage fault registers and stops both. Initial failed test/log retained; RTL unchanged.",
+  "model": {
+    "added_raw_bits": 3823,
+    "admitted_children_blocked": false,
+    "area_and_slot_fit": null,
+    "equality_comparators": {
+      "metadata_count": 1,
+      "metadata_width": 64,
+      "stage_count": 64,
+      "stage_width": 55
+    },
+    "matched_old_storage_inclusion": null,
+    "metadata_RPC_root_credits": 1,
+    "metadata_raw_bits": 152,
+    "metadata_root_identity_bits": 64,
+    "new_CDC_bits": 0,
+    "new_SRAM_bytes": 0,
+    "new_roots_blocked": true,
+    "new_service_replicas": 0,
+    "physical_qualified": false,
+    "prospective_streaming_clock_GHz": 1.2,
+    "protected_area_mm2": null,
+    "protected_bits": null,
+    "query_accept_to_response_min_edges": 2,
+    "query_bits_per_cohort": 84,
+    "quiesce_fanout": {
+      "metadata": 1,
+      "stage": 64
+    },
+    "quiet_metadata_reduction_inputs": 6,
+    "quiet_stage_reduction_inputs": 194,
+    "rate_adopted": false,
+    "raw_FF_area_proxy_mm2": 0.0022295736,
+    "reset_policy": "cold POR only; local reset retains roots and held receipt",
+    "response_bits_per_cohort": 85,
+    "root_ports": {
+      "metadata_accept_bits": 65,
+      "metadata_retire_bits": 65,
+      "stage_accept_bits": 3584,
+      "stage_retire_bits": 3584
+    },
+    "routed_tracks": null,
+    "source_root_retirement_bounds": null,
+    "stage_owner_bits": 55,
+    "stage_raw_bits": 3671,
+    "stage_root_credits": 64,
+    "whole_token_upper_edges": null
+  },
+  "output_path": "/home/ubuntu/dewey-local-cohorts-new-check-20261003/check.log",
+  "remaining_enclosing_connections": [
+    "actual stage root accept and matched owner55 scratch execution retirement",
+    "actual WHOLE source state byte RPC accept/retire64 spanning all its sectors",
+    "apply root_admit only at NEW parent source commands; admitted children must continue",
+    "actual shared service/router/writer and tap/observer/metadata held receipt producers",
+    "actual reader endpoint0/3 and existing source clock reset/CDC enrollment"
+  ],
+  "scope": "NEW local cohort0/3 actual ledger responders; existing controller/W2/RF/payload gates not repeated",
+  "source_sha256": {
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_local_cohorts.sv": "f378ec13e11d760abc25c710e2936a1b2d8be43a7b322a6d4fe235cd14684a03",
+    "tests/test_canonical_qwen_local_cohorts.py": "8c91f6e57965675b01d140a96203d4bcd1619e76f6cb8e79fc3d20d74027ad92",
+    "tools/gpu_sys/canonical_qwen_local_cohorts.py": "c203ede841c7cebf803b40ca3acc9ed8bd4de3e01453307a13054c94b910d478",
+    "tools/gpu_sys/canonical_qwen_local_cohorts_model.py": "24887c40079520eace319476a35f52e6876d4016057145b987a2e48783ebe7c9"
+  },
+  "tests": 8,
+  "verdict": "PASS",
+  "whole_token_qualified": false
+}

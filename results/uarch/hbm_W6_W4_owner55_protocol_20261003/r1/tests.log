@@ -1,0 +1,19 @@
+test_complete (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_duplicate_ACK (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_each_debt_blocks (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_field_aliases (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_integer_debt_is_not_bool (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_late_mirror (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_missing_or_reversed_consumer (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_no_partial_PASS (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_normal_drain_cannot_release_reset (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_old_ACK_after_reset (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_one_copy_missing (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_reset_closes_without_retirement (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_same_edge_ACK (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+test_stale_reset_scope_tuple (test_hbm_w6_owner55_protocol.ProtocolTests) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.002s
+
+OK

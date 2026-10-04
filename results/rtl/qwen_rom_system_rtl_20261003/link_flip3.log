@@ -1,0 +1,3 @@
+LINK flip_period=3 cycles=29740 recs=2000/2000 credits=2000/2000 flipped=9846/9835 crc_err=9841/9830 replays=985/983 seq_drops=17593/17547 mismatches=0 faults=0/0
+PASS
+- rtl/test/qwen_sys/tb_qwen_d2d_link.sv:95: Verilog $finish

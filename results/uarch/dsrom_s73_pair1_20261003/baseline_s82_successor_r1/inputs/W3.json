@@ -1,0 +1,79 @@
+{
+  "PHY_savings_array_mm2_assumed_range": [
+    6240,
+    7800,
+    11700
+  ],
+  "W4_credit": "Held until explicit rectangle/debit replacement; never subtract from inherited debit here",
+  "adopted_420_stack_claim": false,
+  "delta_vs_C_adopted": {
+    "dies": 0,
+    "kW": 0,
+    "mm2": 0,
+    "tok_s": 0
+  },
+  "gates": {
+    "actual_map": false,
+    "batch216_capacity": null,
+    "busiest_stage": null,
+    "one_stack_latency_bound": null
+  },
+  "input_sha256": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "results/uarch/dsrom_c_w3_kv_shoreline_20261003/inputs/scenario_c.json": "8ca0294417dd8975b89861e8e5a01c1f4832bba11349db2fe1dc41d022d5eb42",
+    "results/uarch/dsrom_c_w3_kv_shoreline_20261003/inputs/scenario_c_producer.py.snapshot": "0c08f285b3898d0d499385cffeb1131c9cbfe6f48a265cf049692323a0d89d44"
+  },
+  "non_scan_shoreline": {
+    "PHY_area_mm2_assumed": 10.0,
+    "area_credit_applied": false,
+    "freed_vs_four_historical_PHY_mm": 25.5,
+    "freed_vs_four_package_keepout_mm": 36.0,
+    "historical_PHY_frontage_mm": 8.5,
+    "placement_qualified": false,
+    "saved_vs_four_PHY_mm2_assumed": 30.0,
+    "stacks": 1,
+    "technology_package_keepout_frontage_mm": 12.0
+  },
+  "physical_launch_allowed": false,
+  "producer_sha256": "17b9c5212032c423bc7dfebf24c4d3ee96ef4ac188b42eed9c43fdbb6de2f20b",
+  "provisional_allocation": {
+    "head_dies": 8,
+    "other_rank_dies": 260,
+    "scan_rank_dies": 32,
+    "stacks_model_only": 420
+  },
+  "provisional_capacity": [
+    {
+      "capacity": {
+        "batch": 216,
+        "fits": true,
+        "headroom_bytes": 62978688.0,
+        "required_bytes": 20187021312.0,
+        "reserve_bytes": 0,
+        "state_bytes_per_user": 93458432.0,
+        "usable_bytes": 20250000000.0
+      },
+      "context": 1048576,
+      "reserve_status": "UNKNOWN: zero is arithmetic lower bound only"
+    },
+    {
+      "capacity": {
+        "batch": 216,
+        "fits": true,
+        "headroom_bytes": 16376003712.0,
+        "required_bytes": 3873996288.0,
+        "reserve_bytes": 0,
+        "state_bytes_per_user": 17935168.0,
+        "usable_bytes": 20250000000.0
+      },
+      "context": 200000,
+      "reserve_status": "UNKNOWN: zero is arithmetic lower bound only"
+    }
+  ],
+  "scenario_source_commit": "3a0c114d853e86999d0b6df894afc64846f6aff7",
+  "schema": "DSROM_C_W3_KV_SHORELINE_V1",
+  "stages_provisional": 73,
+  "status": "PROVISIONAL_MODEL_GATES_HELD",
+  "usable_fraction_assumed": 0.9,
+  "usable_stack_bytes_model": 20250000000.0
+}

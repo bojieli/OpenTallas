@@ -1,0 +1,133 @@
+"""NEW connected caller -> real cohort3 producer checks; no old HDL gates."""
+import pathlib,re,shutil,subprocess,tempfile,unittest
+from tools.gpu_sys.canonical_qwen_state_rpc_join import TOP,source_files
+from tools.gpu_sys.canonical_qwen_state_rpc_model import model
+ROOT=pathlib.Path(__file__).resolve().parents[1]
+class StateRPCJoinTests(unittest.TestCase):
+    def rtl(self,body):
+        if not shutil.which('iverilog'):self.skipTest('iverilog missing')
+        path=source_files(ROOT)[0]
+        header=re.sub(r'//[^\n]*','',path.read_text().split(')(\n',1)[1].split('\n);',1)[0])
+        ports=[];direction=None;width=''
+        for token in header.split(','):
+            m=re.match(r'(input|output)\s+(?:wire|reg)\s*(\[[^]]+\])?\s*(\w+)$',token.strip())
+            if m:direction,width,name=m.groups();width=width or ''
+            else:name=token.strip()
+            ports.append((direction,width,name))
+        linked={'root_admit','root_retire_ready'}
+        decl='\n'.join(('reg ' if d=='input' and n not in linked else 'wire ')+w+' '+n+';' for d,w,n in ports)
+        init='\n'.join(n+'=0;' for d,w,n in ports if d=='input' and n!='clk' and n not in linked)
+        tb='''`timescale 1ns/1ps
+module tb;
+'''+decl+'\n'+TOP+' #(.ENABLE(1)) dut('+','.join('.'+n+'('+n+')' for d,w,n in ports)+''');
+reg drain_req,drain_rsp_ready;wire drain_ready,drain_rsp_valid,drain_quiet,cohort_fault,roots_empty,quiesce;
+wire [63:0] drain_identity;wire [19:0] drain_key;
+ot_gpu_qwen_kv_root_cohort_terminal_ready #(.ENABLE(1),.ROOTS(1),.OWNERW(64)) cohort(
+.clk(clk),.por_n(por_n),.run_enable(run_enable),.local_reset(local_reset),.source_bound(source_bound),
+.root_accept(root_accept),.root_retire(root_retire),.root_owner(root_identity),.root_retire_owner(root_retire_identity),
+.root_admit(root_admit),.root_retire_ready(root_retire_ready),
+.request_valid(drain_req),.request_ready(drain_ready),.request_identity(64'h1234),.request_key(20'h2000),
+.receipts_empty(quiescent),.response_valid(drain_rsp_valid),.response_ready(drain_rsp_ready),
+.response_identity(drain_identity),.response_key(drain_key),.response_quiet(drain_quiet),
+.quiesce(quiesce),.roots_empty(roots_empty),.fault(cohort_fault));
+initial clk=0;always #5 clk=~clk;
+task begin_rpc;
+begin rpc_valid=1;#1;if(!rpc_ready || !root_accept || root_identity!=rpc_identity)$fatal(1,"actual source admission");
+@(negedge clk);rpc_valid=0;end endtask
+task map_sector(input [33:0] source_addr,input [33:0] physical_addr,input [45:0] owner);
+begin
+map_source_addr=source_addr;map_physical_addr=physical_addr;map_owner=owner;map_valid=1;
+#1;if(!map_ready || !tap_command_valid || tap_command_identity!=rpc_identity)$fatal(1,"actual source map join");
+@(negedge clk);map_valid=0;
+end endtask
+task capture_sector;
+begin
+tap_reply_identity=rpc_identity;tap_reply_rank=rpc_rank;tap_reply_owner=map_owner;
+tap_reply_physical_addr=map_physical_addr;tap_reply_valid=1;sector_capture_ready=1;
+#1;if(!tap_reply_ready || !sector_capture_valid)$fatal(1,"physical source capture");
+@(negedge clk);tap_reply_valid=0;sector_capture_ready=0;
+end endtask
+initial begin
+'''+init+'''
+por_n=0;run_enable=1;drain_req=0;drain_rsp_ready=0;
+repeat(2) @(negedge clk);por_n=1;source_bound=1;
+state_base_rank0=34'h200000;state_base_rank1=34'h100000;
+rpc_rank=1;rpc_identity=64'h80000000feed0001;rpc_address=34'h10001e;
+rpc_bytes=3;rpc_write=1;rpc_payload=256'h434241;
+map_rank=1;map_sector_granted=1;tap_command_ready=1;
+'''+body+'''
+$display("PASS_STATE_RPC_JOIN");$finish;
+end
+initial begin #20000;$fatal(1,"directed test watchdog, not production service bound");end
+endmodule
+'''
+        with tempfile.TemporaryDirectory() as directory:
+            p=pathlib.Path(directory);(p/'tb.sv').write_text(tb)
+            successor=ROOT/'rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_local_cohorts_terminal_ready.sv'
+            result=subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(path),str(successor),str(p/'tb.sv')],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stderr)
+            result=subprocess.run(['vvp',str(p/'sim')],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            self.assertIn('PASS_STATE_RPC_JOIN',result.stdout)
+
+    def test_real_multisector_root_masks_and_parent_retirement_under_drain(self):
+        self.rtl('''
+begin_rpc();#1;if(roots_empty || !sector_offer_valid || sector_offer_source_addr!=34'h100000)$fatal(1,"whole source root absent");
+drain_req=1;@(negedge clk);drain_req=0;
+map_source_addr=34'h100000;map_valid=1;map_physical_addr=34'h300000000;map_owner={7'd127,3'd5,32'hf1234567,4'd15};
+#1;if(tap_command_byte_mask!=32'hc0000000 || tap_command_new_data[255:240]!=16'h4241)$fatal(1,"first source patch");
+map_sector(34'h100000,34'h300000000,map_owner);capture_sector();#1;
+if(roots_empty || drain_rsp_valid || !sector_offer_valid || sector_offer_source_addr!=34'h100020)$fatal(1,"first sector premature root retirement");
+map_source_addr=34'h100020;map_physical_addr=34'h300000020;map_valid=1;
+#1;if(tap_command_byte_mask!=1 || tap_command_new_data[7:0]!=8'h43)$fatal(1,"second source patch");
+map_sector(34'h100020,34'h300000020,map_owner);capture_sector();#1;
+if(!rpc_reply_valid || roots_empty || drain_rsp_valid)$fatal(1,"whole parent reply debt missing");
+repeat(4) @(negedge clk);if(roots_empty || drain_rsp_valid)$fatal(1,"unaccepted caller reply retired root");
+rpc_reply_ready=1;@(negedge clk);rpc_reply_ready=0;
+repeat(2) @(negedge clk);#1;
+if(!roots_empty || !drain_rsp_valid || !drain_quiet || drain_identity!=64'h1234 || drain_key!=20'h2000 || rpc_ready || fault || cohort_fault)$fatal(1,"joint whole RPC/cohort retirement");
+drain_rsp_ready=1;@(negedge clk);#1;if(!rpc_ready)$fatal(1,"new source admission still blocked");
+''')
+
+    def test_wrong_child_owner_retains_whole_RPC_debt(self):
+        self.rtl('''
+begin_rpc();map_sector(34'h100000,34'h300000000,{7'd127,3'd5,32'hf1234567,4'd15});
+tap_reply_identity=rpc_identity;tap_reply_rank=1;tap_reply_owner=map_owner^46'd1;
+tap_reply_physical_addr=map_physical_addr;tap_reply_valid=1;sector_capture_ready=1;
+#1;if(tap_reply_ready)$fatal(1,"wrong child accepted");
+@(negedge clk);#1;if(!fault || roots_empty || root_retire || rpc_reply_valid)$fatal(1,"wrong child lost root");
+''')
+
+    def test_ungranted_or_wrong_source_mapping_cannot_launch(self):
+        self.rtl('''
+begin_rpc();map_source_addr=34'h100000;map_physical_addr=34'h300000000;
+map_owner={7'd127,3'd5,32'hf1234567,4'd15};map_valid=1;map_sector_granted=0;
+#1;if(map_ready || tap_command_valid)$fatal(1,"static map became grant");
+@(negedge clk);map_sector_granted=1;map_source_addr=34'h100020;
+#1;if(map_ready || tap_command_valid)$fatal(1,"unordered source span accepted");
+@(negedge clk);#1;if(!fault || roots_empty || rpc_reply_valid)$fatal(1,"wrong source lost root");
+''')
+
+    def test_reset_holds_parent_child_and_return_until_source_resumes(self):
+        self.rtl('''
+begin_rpc();map_sector(34'h100000,34'h300000000,{7'd127,3'd5,32'hf1234567,4'd15});
+local_reset=1;tap_reply_identity=rpc_identity;tap_reply_rank=1;tap_reply_owner=map_owner;
+tap_reply_physical_addr=map_physical_addr;tap_reply_valid=1;sector_capture_ready=1;
+repeat(4) @(negedge clk);if(tap_reply_ready || roots_empty || root_retire || rpc_reply_valid)$fatal(1,"reset erased source root");
+local_reset=0;#1;if(!tap_reply_ready)$fatal(1,"held actual return lost");
+@(negedge clk);tap_reply_valid=0;#1;if(!sector_offer_valid || sector_offer_source_addr!=34'h100020 || fault)$fatal(1,"source continuation after pause");
+''')
+
+    def test_bad_aperture_or_oversize_write_refused_not_truncated(self):
+        self.rtl('''
+rpc_address=34'h100000+37503;rpc_bytes=2;begin_rpc();#1;
+if(!fault || roots_empty || sector_offer_valid || rpc_reply_valid)$fatal(1,"aperture accepted");
+''')
+        self.rtl('''
+rpc_bytes=33;begin_rpc();#1;
+if(!fault || roots_empty || sector_offer_valid || rpc_reply_valid)$fatal(1,"write truncated");
+''')
+        self.assertEqual(model()['raw_bits'],524)
+        self.assertIsNone(model()['whole_token_cycles'])
+
+if __name__=='__main__':unittest.main()

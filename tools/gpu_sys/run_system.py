@@ -92,10 +92,12 @@ def main():
     ap.add_argument("--work", default=None)
     ap.add_argument("--ngen", type=int, default=3)
     ap.add_argument("--nprompt", type=int, default=None, help="v41: teacher-forced prompt prefix length")
-    ap.add_argument("--maxcyc", type=int, default=60_000_000)
+    ap.add_argument("--maxcyc", type=int, default=None, help="optional diagnostic cycle bound; omitted means run until completion")
     ap.add_argument("--out", default=None)
     ap.add_argument("--prepared", action="store_true", help="reuse WORK/case written by an earlier prepare()")
     a = ap.parse_args()
+    if a.maxcyc is not None and a.maxcyc <= 0:
+        ap.error("--maxcyc must be positive when explicitly supplied")
     work = Path(a.work or f"/tmp/gpu_sys_{a.model}")
     work.mkdir(parents=True, exist_ok=True)
     case = work / "case"
@@ -108,7 +110,7 @@ def main():
     t0 = time.time()
     log = case / "sim.log"
     with log.open("w") as f:
-        r = subprocess.run([str(exe), "+DIR=.", f"+MAXCYC={a.maxcyc}"], cwd=case, stdout=f, stderr=subprocess.STDOUT)
+        r = subprocess.run([str(exe), "+DIR=."] + ([f"+MAXCYC={a.maxcyc}"] if a.maxcyc is not None else []), cwd=case, stdout=f, stderr=subprocess.STDOUT)
     wall = time.time() - t0
     text = log.read_text()
     steps = [dict(zip(("step", "pos", "input", "next"), map(int, m.groups()[:4])), status=m.group(5),

@@ -1,0 +1,7 @@
+BOOT ready after 89 cycles
+SOFT_RESET re-boot in 89 cycles
+TAG pos 5: full=40014001c0 w12=0000070500  pos 261: full=40414001c0 w12=0000070500
+WATCHDOG fired after 201 cycles
+CTRL mode=normal mismatches=0
+PASS
+- rtl/test/qwen_sys/tb_qwen_sys_ctrl.sv:194: Verilog $finish

@@ -1,0 +1,15 @@
+test_acquire_byte_reply_does_not_wait_for_later_acquire_command (test_canonical_qwen_state_tap.StateTapTests.test_acquire_byte_reply_does_not_wait_for_later_acquire_command) ... ok
+test_bitmap_actual_OLD_and_write_ACK_reverse_event_debt (test_canonical_qwen_state_tap.StateTapTests.test_bitmap_actual_OLD_and_write_ACK_reverse_event_debt) ... ok
+test_completion_before_request_and_lost_classifier_fail_closed (test_canonical_qwen_state_tap.StateTapTests.test_completion_before_request_and_lost_classifier_fail_closed) ... ok
+test_default_off_no_acceptance_or_success (test_canonical_qwen_state_tap.StateTapTests.test_default_off_no_acceptance_or_success) ... ok
+test_inventory_and_positive_serial_bounds (test_canonical_qwen_state_tap.StateTapTests.test_inventory_and_positive_serial_bounds) ... ok
+test_read_only_returns_actual_capture_after_matched_reverse (test_canonical_qwen_state_tap.StateTapTests.test_read_only_returns_actual_capture_after_matched_reverse) ... ok
+test_reset_pause_retains_actual_capture_and_owner (test_canonical_qwen_state_tap.StateTapTests.test_reset_pause_retains_actual_capture_and_owner) ... ok
+test_wrong_NEW_bytes_and_grant_absence_fail_closed (test_canonical_qwen_state_tap.StateTapTests.test_wrong_NEW_bytes_and_grant_absence_fail_closed) ... ok
+test_wrong_rank_reverse_refuses_and_retains (test_canonical_qwen_state_tap.StateTapTests.test_wrong_rank_reverse_refuses_and_retains) ... ok
+test_wrong_return_generation_refuses_capture_retains_debt (test_canonical_qwen_state_tap.StateTapTests.test_wrong_return_generation_refuses_capture_retains_debt) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.266s
+
+OK

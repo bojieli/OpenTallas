@@ -1,0 +1,14 @@
+{
+  "host": "vm-xry57mhfyn",
+  "PID": 485802,
+  "source_commit": "0455075096f39068260b9acdbd0f3d19ab55ce73",
+  "version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "compiler_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "source_sha256": {
+    "rtl/experimental/canonical_qwen_banked_manifest_owner_20261003/ot_gpu_qwen_banked_manifest_range_owner.sv": "eb8a74eb0386fdecf5b3c2b5dc904536e1a2f8d3f7da32a415d823ea5e927f58",
+    "rtl/test/canonical_qwen_banked_manifest_owner_20261003/tb.sv": "176519b5c9d113bef51cd87755a6d03ff0c0faaeae8014f85015affe82fc1f9d",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  },
+  "limits": "No memory/swap/time/file/CPU process caps; two build workers",
+  "headroom": " 08:46:20 up 1 day, 12:57,  8 users,  load average: 7.13, 7.18, 7.86\n               total        used        free      shared  buff/cache   available\nMem:          128721       64357       55158       25820       36687       64364\nSwap:              0           0           0\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sda1       993G  342G  651G  35% /\n"
+}

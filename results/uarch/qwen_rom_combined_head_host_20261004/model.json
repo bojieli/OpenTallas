@@ -1,0 +1,112 @@
+{
+  "schema": "opentallas.qwen-rom-combined-head-host.v1",
+  "scope": "Additive software enrollment of existing head RTL/program, not new hardware or qualification",
+  "source_sha256": {
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12_rm.cpp": "5da95b5764c7bf837e59ebcc1806853f16474b46dc3b85352d71fdf3c7086817",
+    "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+    "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+    "rtl/qwen_sys/combined/ot_qwen_rom_combined_die.sv": "c3de1b97561a261a65f5593589c2b76b5818390f72d2f93ff3d4bb49402f2dda",
+    "tools/runtime/qwen_combined/combined_driver.hpp": "698a69e7349874af3cec86af41440bf039f0e663cfcbf7deeddb9cba310821a2",
+    "tools/qwen_o4_token_oracle_w12.py": "ee3793a8a6e4d067e86bb4544dbc82f6cbfbeece7e8961a612b8b5b627325526",
+    "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+    "tools/qwen_rom_combined_runtime_emit.py": "8d3bddd9d3c781cbb8807fc1ed529c2fb0f5d42486872510b1415bc69f4e4de4",
+    "tools/qwen_rom_combined_head_runtime_emit.py": "b84f885f9eb75a71ad482c9fc9ec8f8003a7d75da069633b19317d45fa37febd",
+    "tools/qwen_rom_combined_head_launch.py": "f18e25e3014aaa9741797cc444875b0245b4ee8cfffd4cf09e58ce94925f78f5",
+    "tools/qwen_rom_combined_link_head.py": "707daca65bbdeff8ededd1d5c6da11a459ffa22106eafcf6f583c26b59691436"
+  },
+  "reused_existing_head_host": {
+    "path": "/srv/opentallas-scratch/claude/realmem-fulltoken/src-fddd78ca1/rtl/test/qwen_rom_runtime/qwen_rom_rt_w12_rm.cpp",
+    "sha256": "eb6bca44c2d253253f7940af69b5c384369d2e55991418276560552b6c4f449d"
+  },
+  "stage_contract": {
+    "names": [
+      "E",
+      "L0",
+      "L1",
+      "L2",
+      "L3",
+      "L4",
+      "L5",
+      "L6",
+      "L7",
+      "L8",
+      "L9",
+      "L10",
+      "L11",
+      "L12",
+      "L13",
+      "L14",
+      "L15",
+      "L16",
+      "L17",
+      "L18",
+      "L19",
+      "L20",
+      "L21",
+      "L22",
+      "L23",
+      "L24",
+      "L25",
+      "L26",
+      "L27",
+      "L28",
+      "L29",
+      "L30",
+      "L31",
+      "L32",
+      "L33",
+      "L34",
+      "L35",
+      "head"
+    ],
+    "head_layer_wire": 255,
+    "hbm_layers": 36,
+    "head_kv_requests": 0,
+    "head_kv_writes": 0,
+    "embedding_initialization_only_on_E": true,
+    "head_preserves_L35_X": true
+  },
+  "existing_hardware": {
+    "matrix": "existing ME/tile datapath and released head program/weight images",
+    "sequencer": "ot_qwen_tp_seq_w12 ARGMAX gather; raw512-bit records, 44-bit enclosing tags",
+    "rank_order": "checked r_rank == rx_k; strictly greater ordered FP32 key wins, tie retains earlier rank/lower row",
+    "result": "actual seq_ntok18 + seq_nval32 on each of four ranks; host requires all four agree",
+    "norm": "actual VM H region8192..12287"
+  },
+  "incremental_hardware": {
+    "new_mac_units": 0,
+    "new_flops": 0,
+    "new_memory_ports": 0,
+    "new_boundary_bits": 0,
+    "new_route_tracks": 0,
+    "new_replicas": 0,
+    "new_area_mm2": 0,
+    "new_hardware_stages": 0,
+    "reason": "Only host parser, source-selected emitter and file readbacks added; RTL/ports/source macro inventory unchanged"
+  },
+  "head_work": {
+    "vocabulary": 151936,
+    "rows_per_rank": 37984,
+    "input_columns": 4096,
+    "total_macs": 622329856,
+    "macs_per_rank": 155582464,
+    "readback_result_bits_per_rank": 50,
+    "readback_norm_words_per_rank": 4096,
+    "head_latency_cycles": null,
+    "head_physical_slot_fit": "Existing target obligation, not proven by this hook",
+    "clock": "Existing selected clocks retained; no new SS/FF claim"
+  },
+  "admission": {
+    "software_hook_ready": true,
+    "head_capable_runtime_compiled": false,
+    "head_runtime_pass": false,
+    "whole_fulltoken_qualified": false,
+    "new_hardware_admission": false,
+    "remaining": [
+      "Confucius exact full36 cache/source-input selection (do not fabricate PASSbaseline)",
+      "Dewey sole head-selected runtime source link and link-record/book pin",
+      "Actual head execution/readbacks plus all36 decoder numerical composition",
+      "Existing whole-target physical/clock/capacity qualification remains open"
+    ]
+  }
+}

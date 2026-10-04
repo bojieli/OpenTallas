@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/tools/dsrom_field_native_VM_join.py", line 189, in <module>
+    if hashlib.sha256((ROOT/f).read_bytes()).hexdigest()!=h:raise ValueError('source pin changed '+f)
+  File "/usr/lib/python3.10/pathlib.py", line 1126, in read_bytes
+    with self.open(mode='rb') as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/opentallas-nativeVM-verify-r2-cold-20261003/results/uarch/dsrom_field_native_VM_join_20261003/inputs/__pycache__/native_calendar.cpython-310.pyc'

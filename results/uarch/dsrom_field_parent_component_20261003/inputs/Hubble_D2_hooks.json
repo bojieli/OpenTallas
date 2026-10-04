@@ -1,0 +1,65 @@
+{
+  "CDC_reset_relation": null,
+  "CKV": "Epic immutable lease/caller integration remains separate. RXoffers are not acceptance; generation/Xversion must come from implemented owner.",
+  "Maxwell_commit": "8842b42178f81e432bff929cf2cd7ba2e8059465",
+  "VM_visibility": "existing fullscope all12 writer offers and postNBA vm[AW19] witness; require AW30 bound, exclusive address/version and source payload match",
+  "actual_accepted_journal": null,
+  "actual_phase_bounds": null,
+  "actual_violation_set": "UNAVAILABLE",
+  "admission_blockers": [
+    "complete source-matched PHW10+FAST1+PP1+LAT8 generated ABI/library/binary/host enrollment",
+    "program/field metadata phase/key/EID owner with full169 identity",
+    "Epic implemented ready/gen512 immutable receive lease and visibility/drain callbacks",
+    "finite internal queue bounds and same-reset accepted trace",
+    "Maxwell field allocation/c9 captured credit/reset/qualified F"
+  ],
+  "cfg_and_pairs": "Copied actual FAST/PP pair emits cfg_go/cfg_ph/c_v/c_a/c_d/go_e/pv; actual FAST1 PP1/LAT8 enrollment still required.",
+  "completed_elaboration": false,
+  "credits": null,
+  "engine_arithmetic_or_eval_changes": false,
+  "field_fault_correction": "Host Field.propagate drives rom_ffault; monolithic ot_v41_field_w17w10 has separate undriven R-1 fault tail per Maxwell. Different bindings, no contradiction, no fix applied here.",
+  "finite_phase_bound": "BOUND_MISSING",
+  "hardware_state_added": 0,
+  "instances_per_rank": {
+    "NP": 4096,
+    "expected_names": "d{rank}n{level}_{group}, d{rank}r{root}; topology checked from enrolled field.txt",
+    "node_count": 8064,
+    "root_count": 128
+  },
+  "launch_allowed": false,
+  "native_PHW10_binary": null,
+  "native_host_safety": "Copy changes model instance names only, preserving every eval/argv/reset/watchdog; NOT admitted for uncapped current connected runtime without reviewed host policy successor.",
+  "node": "pre/post ac,bc, offered a_v/b_v, pop_a/pop_b/add/bypass/pipeline/fault",
+  "node_capacity": 64,
+  "observation_state_bits_per_rank": 524288,
+  "owner_live_jobs": [],
+  "postNBA_VM_value_is_wire_ACK": false,
+  "qualified_F": null,
+  "root": "pre/post qc/use_q and actual held bitmap, candidate/add/adder_valid/fault/raw result",
+  "root_held_capacity": 128,
+  "root_input_capacity": 128,
+  "root_return_is_VM_ACK": false,
+  "simulation_held_snapshot_bits_per_rank": 16384,
+  "source_pins": {
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": {
+      "archive": "results/uarch/dsrom_D2_field_tree_hooks_20261003/inputs/rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+    },
+    "rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "archive": "results/uarch/dsrom_D2_field_tree_hooks_20261003/inputs/rtl/v41die/ot_v41_pair_w17w10.sv",
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "rtl/v41die/ot_v41_retn_w17w10.sv": {
+      "archive": "results/uarch/dsrom_D2_field_tree_hooks_20261003/inputs/rtl/v41die/ot_v41_retn_w17w10.sv",
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+    },
+    "rtl/v41rom/ot_v41_ret.sv": {
+      "archive": "results/uarch/dsrom_D2_field_tree_hooks_20261003/inputs/rtl/v41rom/ot_v41_ret.sv",
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3"
+    }
+  }
+}
