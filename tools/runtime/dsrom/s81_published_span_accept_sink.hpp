@@ -216,8 +216,14 @@ private:
                         "prefix writer cannot overwrite immutable embedding input");
                 require(prefix_write_allowed(identity,out.vm_address,words),
                         "prefix batch not in actual native writer source span");
-            }else require(out.vm_address==base+published&&published<20480,
-                         "embedding target source order/extent mismatch");
+            }else {
+                const auto detail=std::string("embedding target source order/extent mismatch address=")+
+                    std::to_string(out.vm_address)+" base="+std::to_string(base)+
+                    " published="+std::to_string(published)+" active="+std::to_string(active)+
+                    " reported="+std::to_string(reported)+" native_committed_words="+
+                    std::to_string(out.committed_words);
+                require(out.vm_address==base+published&&published<20480,detail.c_str());
+            }
             // Validate every captured scalar before changing state or accepting any port.
             std::array<MacroWrite,16> next{};
             for(unsigned n=0;n<words;n++) {

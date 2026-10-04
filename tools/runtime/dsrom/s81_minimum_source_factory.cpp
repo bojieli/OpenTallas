@@ -8,6 +8,7 @@
 #include "Vroot.h"
 #include <fstream>
 #include <cstdlib>
+#include <cstdio>
 
 namespace {
 using namespace dsrom_s81_minimum;
@@ -194,6 +195,16 @@ DsromS81MinimumSourcePlan dsrom_s81_bind_minimum_source(
     plan.identity=ID;plan.embedding_library="/tmp/dsrom-s81-embedding-8f65ab021/libdsrom_s81_embedding.so";
     plan.embedding_socket="/tmp/dsrom-s81-embedding-cbe13bd57.sock";
     plan.embedding_sink=source->target->sink();
+    const auto offer=plan.embedding_sink.offer;
+    plan.embedding_sink.offer=[source,offer](const auto& out) {
+        try{return offer(out);}catch(...) {
+            fprintf(stderr,"EMBEDDING_NATIVE_OFFER_FAULT cycle=%ld address=%u committed_words=%u published=%u accepted=%u acknowledged=%u\n",
+                source->runtime.cycle(),out.vm_address,out.committed_words,
+                source->target->published_words(),source->target->accepted_words(),
+                source->target->acknowledged_words());
+            throw;
+        }
+    };
     plan.attach=[source](auto& embedding){source->attach(embedding);};
     plan.begin_prefix=[source](){source->begin();};
     plan.advance=[source](){source->advance();};
