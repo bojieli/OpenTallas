@@ -6,6 +6,7 @@
 #include "svdpi.h"
 #include "verilated.h"
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <dlfcn.h>
 #include <filesystem>
@@ -141,7 +142,7 @@ int main(int argc,char** argv) {
     try {
         bool bf=std::string(argv[1])=="pb";
         if(!bf&&std::string(argv[1])!="pq")throw std::runtime_error("actual PQ/PB model kind required");
-        PairMem memory{std::stoi(argv[2]),std::stoi(argv[3]),std::stoi(argv[4]),cfg_words(argv[5])};
+        PairMem memory{std::stoi(argv[2]),std::stoi(argv[3]),std::stoi(argv[4]),cfg_words(argv[5]),nullptr,{},{},{}};
         owner_bounds(memory.stage,memory.rank,memory.pair);
         if(setenv("DSROM_S81_ROM_SOCKET",argv[8],1))throw std::runtime_error("native ROM socket binding failed");
         VerilatedContext ctx;ctx.commandArgs(argc,argv);ctx.randReset(0);
@@ -235,8 +236,9 @@ int main(int argc,char** argv) {
             }
         };
         int rc=source_main(runtime,argv[6]);
-        // The opt-in native SU I0 plan retires its accepted operator through
-        // actual VM publication/readback; it does not issue a field-pair GO.
+        // The opted-in I0 path performs native SU work and no field GO. Its
+        // source plan requires actual SU acceptance, output publication ACK
+        // and readback before completion. Preserve every common drain check.
         const char* native_i0=std::getenv("DSROM_S81_NATIVE_L20_I0");
         const bool nonfield_i0=native_i0&&std::string(native_i0)=="1"&&runtime.stage==37;
         const char* native_index=std::getenv("DSROM_S81_NATIVE_L20_INDEX");

@@ -9,6 +9,8 @@ constexpr char I36_SHA[]="436e442bdf1b4743ac79abc55ab08892561afe7bfdf29803d631ed
 // IK-region-relative. The scorer separately maps I44 region0 to 0x1000000.
 // Preserve SU addresses and let the unchanged writer use relative cfg base0.
 constexpr uint32_t I36_IK_BASE=0;
+// 9 + ordered canonical source-node index; this is not literal PC36.
+constexpr unsigned I36_PRODUCER=2507;
 void need(bool b,const char*why){if(!b)throw std::runtime_error(why);}
 template<class Wide> uint32_t bits(const Wide&w,unsigned off,unsigned n) {
  uint32_t v=0;for(unsigned b=0;b<n;b++)v|=((w[(off+b)/32]>>((off+b)%32))&1u)<<b;return v;
@@ -28,7 +30,7 @@ struct L20IndexWriter::Impl:std::enable_shared_from_this<Impl> {
   need(r.context&&r.cycle&&id<(1ull<<47)&&r.rank==3&&backend&&
        backend->initialized()&&backend->capacity_words()==139520,
        "I36 writer requires actual shared runtime and selected ring history backend");
-  need(source.index==36&&source.unit==2&&source.template_sha256&&
+  need(source.index==I36_PRODUCER&&source.unit==2&&source.template_sha256&&
        !std::strcmp(source.template_sha256,I36_SHA),"I36 writer requires pinned actual SU literal");
   source.template_sha256=I36_SHA;
   need(h.native&&h.held_operation&&h.accepts_on_current_shared_edge&&h.actual_dynamic,
@@ -54,7 +56,7 @@ struct L20IndexWriter::Impl:std::enable_shared_from_this<Impl> {
   auto self=shared_from_this();
   auto previous_write=hooks.kv_write;auto previous_visible=hooks.kv_writes_visible;
   hooks.kv_write=[self,previous_write](const auto&su,const auto&o) {
-   if(o.index!=36){need(bool(previous_write),"unowned non-I36 native KV strobe");previous_write(su,o);return;}
+   if(o.index!=self->source.index){need(bool(previous_write),"unowned non-I36 native KV strobe");previous_write(su,o);return;}
    try {
     self->context();need(self->same(o)&&!su.fault&&(self->accepted||self->old_accept),
                          "I36 KV observation without actual accepted held SU owner");
@@ -65,7 +67,7 @@ struct L20IndexWriter::Impl:std::enable_shared_from_this<Impl> {
   };
   hooks.kv_writes_visible=[self,previous_visible]() {
    auto o=self->hooks.held_operation();
-   if(o.index!=36){need(bool(previous_visible),"unowned non-I36 KV completion");return previous_visible();}
+   if(o.index!=self->source.index){need(bool(previous_visible),"unowned non-I36 KV completion");return previous_visible();}
    self->context();need(self->same(o),"I36 completion changed held literal");
    return self->visible(); // never record READY or SU output observation alone
   };
@@ -79,7 +81,7 @@ struct L20IndexWriter::Impl:std::enable_shared_from_this<Impl> {
    if(accepted&&visible()&&su.idle)origin_idle_seen=true;
    if(hooks.accepts_on_current_shared_edge()) {
     auto o=hooks.held_operation();
-    if(o.index==36) {
+    if(o.index==source.index) {
      context();need(same(o)&&!accepted&&su.go&&su.ready,"I36 duplicate/non-native SU acceptance");
      auto dy=hooks.actual_dynamic(4);
      need(dy&&*dy==su.i_orow&&su.i_orow==1048575&&su.i_dst==3&&
