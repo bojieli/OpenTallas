@@ -41,6 +41,17 @@ def emit(root=ROOT):
     replace('for(int d=0;d<D;++d)all_done&=layer_fences[d].can_retire(sample(d));',
             'for(int d=0;d<D;++d)all_done&=layer_fences[d].can_retire(sample(d))&&qwen_combined::stream4_layer_terminal(*die[d]);')
     replace('hbm[d]->clocks(clock_event.service_high);','hbm[d]->clocks(clock_event.core_high);')
+    replace('    for(int d=0;d<D;++d)die[d]->eval();\n    coll.eval();', '''    // Expose actual asserted resets/LOW clocks to the native hook before
+    // any first eval. The hook forwards pins; it owns no model or edges.
+    for(int d=0;d<D;++d)hbm[d]->wire();
+    for(int d=0;d<D;++d)die[d]->eval();
+    coll.eval();''')
+    replace('        coll.clk=clock_event.core_high;\n        for(int d=0;d<D;++d)die[d]->eval();', '''        coll.clk=clock_event.core_high;
+        // All clocks/resets are now assigned. Forward the held pre-edge
+        // requests and actual hclk to the native hook BEFORE either side
+        // evaluates. Post-edge outputs are propagated by settle below.
+        for(int d=0;d<D;++d)hbm[d]->wire();
+        for(int d=0;d<D;++d)die[d]->eval();''')
     replace('QWEN_ROM_NEARBASELINE PASS stages=%zu','QWEN_ROM_STREAM4_COMBINED PASS stages=%zu')
     return '// STREAM4_RUNTIME_ABI '+ABI+'; actual selected top '+TOP+'\n'+src
 
