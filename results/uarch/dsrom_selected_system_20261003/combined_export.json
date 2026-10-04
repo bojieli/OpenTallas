@@ -1,11 +1,11 @@
 {
   "native_pin": "f6df84e14c2bc5908bdbf85b2bd95cd56b1f5520",
   "main_pin": "ddd5cd047",
-  "output": "/tmp/dsrom-s81-combined-export-20261004-r1",
-  "receipt_sha256": "1b896f10f630c9edefb0d38a546682cec21fddb09e4d4067c02ca848cb080c0d",
+  "output": "/tmp/dsrom-s81-combined-export-20261004-r2",
+  "receipt_sha256": "3bad26012e64060efdc90d2f0e77cf9fff11947875d4bb3e52732330c178fba4",
   "source_count": 137,
   "parameters": {
-    "COLL_HEADREG": 0,
+    "COLL_ACCEPTED_POP": 1,
     "IDX_DRAIN_LOOKAHEAD": 0,
     "S81_COMMAND_TRACE": 1,
     "S81_TRACE_STAGE": 37
@@ -16,5 +16,7 @@
     38
   ],
   "compiled": false,
-  "whole_token": false
+  "whole_token": false,
+  "accepted_pop_source_pin": "8a1d747d080303174826b2230213ac9e52c48e2a",
+  "abandoned_head_module_in_source_list": false
 }

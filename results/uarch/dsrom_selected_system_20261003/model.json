@@ -65,7 +65,7 @@
   "parent_source_selection_ready": true,
   "build_admission": {
     "selected_token": false,
-    "missing": "Nash preGO capture/VM commit debt interface; actual emitted programs/CFG from delegated Popper; actual native word provider; Erdos baseline admitted-pop inflight correctness fix",
+    "missing": "Nash preGO capture/VM commit debt interface; actual emitted programs/CFG from delegated Popper; actual native word provider and native context-input/restore receipts",
     "historical_HBM_weight_system_not_selected_ROM": true,
     "canonical_allocator_current_path": "results/uarch/dsrom_s81_released_binding_20261004/canonical",
     "canonical_live_files_not_read_as_frozen": true,
@@ -93,7 +93,9 @@
       "command_ordinal"
     ],
     "collective_cycle_price_without_executed_calendar": null,
-    "baseline_combination_headreg": 0
+    "baseline_combination_headreg": 0,
+    "current_baseline_tool": "tools/dsrom_collective_accepted_pop.py",
+    "baseline_correctness_source_pin": "8a1d747d080303174826b2230213ac9e52c48e2a"
   },
   "actual_runtime_source": {
     "host": "rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp",
@@ -123,5 +125,23 @@
     },
     "compiled": false,
     "numerical_measured": false
+  },
+  "baseline_acceptance_repair": {
+    "source_pin": "8a1d747d080303174826b2230213ac9e52c48e2a",
+    "parameter": "COLL_ACCEPTED_POP=1 optin",
+    "condition": "increment inflight only actual pop && pop_red; red_out retirement unchanged",
+    "added_pipeline_cycles": 0,
+    "added_state_bits": 0,
+    "extra_external_ports": 0,
+    "arithmetic_change": false,
+    "physical_clock_qualified": false,
+    "head_candidate_selected": false
+  },
+  "headreg_candidate": {
+    "rejected": true,
+    "selected": false,
+    "pipeline_credit": 0,
+    "reserved_new_state_bits": 0,
+    "historical_sources_preserved": true
   }
 }

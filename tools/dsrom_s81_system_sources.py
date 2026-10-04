@@ -5,7 +5,7 @@ FASTPP PC21 L20 core, not the historical regular-ckvsel patch target.
 """
 from pathlib import Path
 import hashlib
-import dsrom_collective_headreg as H
+import dsrom_collective_accepted_pop as A
 
 ROOT = Path(__file__).resolve().parents[1]
 CORE = 'rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv'
@@ -21,7 +21,7 @@ def _one(text, old, new):
 
 
 def install(binding, original_export, output, *, drain=False, head=False,
-            actual_collectives=None, trace=False, stage=None):
+            actual_collectives=None, trace=False, stage=None, accepted_pop=False):
     """Return actual elaborator sources/parameters, with every flag default off.
 
     trace is simulation-only and records commands admitted at dut.cmd_go,
@@ -29,12 +29,17 @@ def install(binding, original_export, output, *, drain=False, head=False,
     per-launch ordinal. Tag wrap is never used as a transaction identity.
     No synthetic execution calendar or physical load closure is manufactured.
     """
+    if head:
+        raise ValueError("headreg candidate rejected; selected baseline requires head=False")
     if trace and (type(stage) is not int or not 0 <= stage < 81):
         raise ValueError("actual trace stage owner required")
     output = Path(output).resolve()
     # The canonical installer checks selected allocation and uses native_sources.
-    result = H.install_s81_parent(binding, original_export, output/'collective',
-                                  enable=head, actual_collectives=actual_collectives)
+    result = A.install_s81_parent(binding, original_export, output/'collective',
+                                  enable=accepted_pop)
+    result['added_cycles']=0
+    result['collective_price']=None
+    result['head_candidate_selected']=False
     paths = result['sources']
     by_role = {}
     for role, suffix in [('core', CORE), ('tile', TILE),
@@ -136,12 +141,13 @@ def main():
     parser.add_argument('--stage',type=int)
     parser.add_argument('--drain',action='store_true')
     parser.add_argument('--head',action='store_true')
+    parser.add_argument('--accepted-pop',action='store_true')
     parser.add_argument('--trace',action='store_true')
     args=parser.parse_args()
     binding=ParentBinding(args.owner,args.selected,args.model_pin,args.interface_pin,
                           payload_interface=args.payload_interface, released_return_binding=args.released_return_binding)
     result=install(binding,args.original_export,args.output,drain=args.drain,
-                   head=args.head,trace=args.trace,stage=args.stage)
+                   head=args.head,trace=args.trace,stage=args.stage,accepted_pop=args.accepted_pop)
     result['allocation_receipts']=binding.receipts
     text=json.dumps(result,default=str,indent=2)+'\n'
     receipt=Path(args.output)/'sources.json'
