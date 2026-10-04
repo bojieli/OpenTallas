@@ -6,7 +6,8 @@
 //
 // What changed against the original (dispatch, the 32 stream sequencers and the CDC FIFOs are the
 // same modules with the same parameters):
-//   * notice is registered once at the element boundary (one hclk; the static lead is 300 ns).
+//   * notice is registered at the element boundary, one copy per sequencer (one hclk; the static
+//     lead is 300 ns).
 //   * STAGING.  ring[sm][quarter][slot] (8 x 4 x 512 x 256 b of flops) becomes one bank per
 //     (sm, quarter) of two ot_sram_1r1w_512x128_m4_r2c2 (64 macros).  A stack sector s = 32j + p
 //     always lands in quarter s mod 4 = p mod 4, so the PCs of quarter class c (p = 4i + c) are the
@@ -64,7 +65,7 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
     assign e_ready = !id_full;
     // ---------------- dispatch (hclk): one descriptor per (expert, PC), as the original ----------------
     reg [IW-1:0] tab [0:7]; reg [3:0] cnt; reg [3:0] ptr [0:NPC-1];
-    reg notice_r;
+    reg [NPC-1:0] notice_r;                                // one copy per sequencer (fan-out 32 x 32 keys)
     wire [NPC-1:0] pc_r, pc_busy, pc_fault, dv; wire [NPC-1:0] all_done_v;
     for (genvar p = 0; p < NPC; p = p + 1) begin : dsp
       assign dv[p] = (ptr[p] < cnt);
@@ -73,9 +74,9 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
     wire retire = (cnt != 0) && (&all_done_v) && id_empty;
     assign id_pop = !id_empty && cnt < 8 && !retire;
     always @(posedge hclk or negedge hrst_n)
-      if (!hrst_n) begin cnt <= 0; notice_r <= 0; for (integer p = 0; p < NPC; p = p + 1) ptr[p] <= 0; end
+      if (!hrst_n) begin cnt <= 0; notice_r <= '0; for (integer p = 0; p < NPC; p = p + 1) ptr[p] <= 0; end
       else begin
-        notice_r <= notice;
+        notice_r <= {NPC{notice}};
         if (retire) begin cnt <= 0; for (integer p = 0; p < NPC; p = p + 1) ptr[p] <= 0; end
         else begin
           if (id_pop) begin tab[cnt[2:0]] <= id_q; cnt <= cnt + 1'b1; end
@@ -92,7 +93,7 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
         .IDLE0(0), .IDLE1(3), .IDLE2(4), .IDLE3(2), .IDLE4(5), .IDLE5(1), .IDLE6(6), .IDLE7(7)) u (
         .clk(hclk), .rst_n(hrst_n), .desc_v(dv[p]), .desc_r(pc_r[p]),
         .desc_row(19'(ROW_BASE) + 19'(tab[ptr[p][2:0]])), .desc_n(11'(NSECT)),
-        .go(1'b1), .next_posted(1'b0), .notice(notice_r),
+        .go(1'b1), .next_posted(1'b0), .notice(notice_r[p]),
         .row_v(row_v[p]), .row_prio(), .row_gnt(1'b1),
         .row_op(row_op[p*3 +: 3]), .row_bank(row_bank[p*5 +: 5]), .row_row(row_row[p*19 +: 19]),
         .col_v(col_v[p]), .col_bank(col_bank[p*5 +: 5]), .col_col(col_col[p*5 +: 5]),
