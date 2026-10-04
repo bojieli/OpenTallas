@@ -7693,3 +7693,31 @@ def hbm_dspark_ctl_fast_prefix_candidate():
                 area_basis="assumed0.5um2/gate; mapped/routed area not measured",
                 required_leaf_area_growth_um2=210, physical_fit=False,
                 SS_FF_closed=False, measured_gain=False)
+
+
+def qwen_core_decode_pipeline_candidate(aw=24, nw=18, instruction_bits=1024, instructions=1, replicas=1):
+    """Held FIFO word -> position -> selectors/shift -> /ODD -> NEXT.
+
+    Upper additive latency: four edges per decoded instruction, including END.
+    Preparation overlaps existing unit execution, but no overlap credit is taken.
+    This is a clock-repair candidate, not an adopted performance lever.
+    """
+    state_bits = instruction_bits + 11*aw + 3*nw + 1 + 3
+    return dict(default_enabled=False, MACs_per_cycle=0, new_memory_ports=0,
+                new_boundary_bits=0, replicas=replicas,
+                added_register_bits_per_core=state_bits,
+                register_HQN_cell_area_um2=0.2916,
+                added_register_cell_area_floor_um2=state_bits*0.2916,
+                enable_mux_clock_reset_buffer_area_um2=None, mapped_area_um2=None,
+                routing_tracks=None, channel_capacity=None, floorplan_fit=False,
+                fifo_word_select_inputs=4, dynamic_selects=11,
+                dynamic_select_fanin_baseline=8, dynamic_select_fanin_VPOS=64,
+                additional_decode_edges=4, minimum_decode_initiation_interval=5,
+                token_latency_delta_upper_cycles=4*instructions,
+                token_latency_delta_upper_ns=4*instructions/1.2,
+                latency_overlap_credit_cycles=0, clock_hz=1200000000,
+                SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                clock_closed=False, adopted=False,
+                source='rtl/hdc/ot_hdc_core_vector_weight.sv',
+                area_obligation='All held word, 11 DYN operands, position, shifted position, rounds, invalid and phase flops; map before slot fit',
+                physical_obligation='Register /ODD alone still requires SS/FF measurement; no clock relaxation')
