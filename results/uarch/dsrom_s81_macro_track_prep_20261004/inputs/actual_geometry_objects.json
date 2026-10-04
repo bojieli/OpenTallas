@@ -1,0 +1,34 @@
+[
+  {
+    "grade": "REAL_RETAINED_ROUTED_OBJECT_FAIL_NOT_SELECTED_ABSTRACT",
+    "path": "/home/ubuntu/dsrom-c-w4-20261003/results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz",
+    "role": "retained_q_Rcap0",
+    "sha256": "3d904e3f5cda2c6a8cbf21d8109224254e295e3b9a23cb1185accc20ea88e512",
+    "source_commit": "281bde911d78081d9e21939351416696ea1594a6",
+    "local_path": "object_00_routed_element.lef.gz"
+  },
+  {
+    "grade": "RETAINED_MACRO_MODEL_REAL_FILES_REQUIRE_TRACK_GUARD_AND_SOURCE_MATCH",
+    "path": "/home/ubuntu/dsrom-c-w4-20261003/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef",
+    "role": "ROM_v1_ot_rom_4096x274_m8",
+    "sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+    "source_commit": null,
+    "local_path": "object_10_ot_rom_4096x274_m8.lef"
+  },
+  {
+    "grade": "RETAINED_MACRO_MODEL_REAL_FILES_REQUIRE_TRACK_GUARD_AND_SOURCE_MATCH",
+    "path": "/home/ubuntu/dsrom-c-w4-20261003/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+    "role": "ROM_v1_ot_rom_4096x72_m8",
+    "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c",
+    "source_commit": null,
+    "local_path": "object_15_ot_rom_4096x72_m8.lef"
+  },
+  {
+    "grade": "ASSUMED_LICENSED_IP_PROXY_NOT_QUALIFIED_PHY",
+    "path": "/home/ubuntu/dsrom-c-w4-20261003/physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef",
+    "role": "PHY_catalog",
+    "sha256": "f38a056344291b7fa949291563be9ba1bb3a19a2aa8f468f9ff1118f173bce14",
+    "source_commit": null,
+    "local_path": "object_20_ot_hbm3e_phy_v41x_aw30_e8p5.lef"
+  }
+]

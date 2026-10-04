@@ -1,0 +1,104 @@
+{
+  "PDN_GRT_preparation": "/tmp/claude-1000/queue/Maxwell-DSROM-selected-die-PDN-GRT-preparation-20261003.json",
+  "RD16_selected": false,
+  "ROM_ECC": false,
+  "S73_selected": false,
+  "S81": {
+    "BF_dual": 519,
+    "RD": 64,
+    "ROM_depth": 4096,
+    "TP": 4,
+    "compiled_pairs": 783108,
+    "layer_rank_dies": 324,
+    "pairs_per_rank_die": 2417,
+    "q_only": 1898,
+    "ragged_native_node_count_from_decision_formula": 4706,
+    "root_count": 128,
+    "screen_margin_mm2": 18.761,
+    "screen_mm2": 839.239,
+    "screen_not_placed_fit": true,
+    "stages": 81,
+    "total_dies": 368,
+    "weight_macros_per_rank_die": 9668,
+    "weight_macros_total": 3132432
+  },
+  "S82_selected": false,
+  "actual_selected_inputs": {
+    "S81_frame_LEFs_netlist_DEF": null,
+    "S81_full_inventory": null,
+    "S81_native_power_grid": null,
+    "S81_stage_rank_map": null,
+    "reason": "Selection73851317f has decision/model/directed credit bench only. Scoped owner/main source search found no regenerated S81 physical/map bundle. Do not use rescaled S82 placement."
+  },
+  "generated_utc": "2026-10-04T00:52:18.913275+00:00",
+  "indexer": {
+    "old_multicast_record_not_selected": true,
+    "required": "Actual allocator must expose each local replica/address/format/code+scale/config and charge ROM+adjacentcompute+service ports. No canonical-owner multicast or hidden zero-area copies.",
+    "wk": "replicated on all4ranks",
+    "wq_b": "replicated on all4ranks"
+  },
+  "jobs": {
+    "host": "5.199.165.104",
+    "live": [
+      {
+        "PID": 598120,
+        "owner": "Claude qelement/qframe",
+        "path": "/srv/opentallas-scratch/claude/qframe/C_r2_mig/orfs"
+      },
+      {
+        "PID": 2105746,
+        "owner": "Claude qelement SSFF, retained Epicurus pipeline source",
+        "path": "/home/ubuntu/otjobs/dsrom_qpipe_20261003/R_cap1/work/orfs"
+      },
+      {
+        "PID": 1596610,
+        "path": "/srv/opentallas-scratch/claude/dsrom-die-feas/runs/C_band_k16",
+        "scope": "old diagnostic"
+      },
+      {
+        "PID": 1596758,
+        "path": "/srv/opentallas-scratch/claude/dsrom-die-feas/runs/C_local_k16",
+        "scope": "old diagnostic"
+      }
+    ],
+    "native_return_mapping": "terminal exit0 /srv/opentallas-scratch/codex/s82-return-area-r1",
+    "new_job_launched": false,
+    "old_PDN": "terminal exit1 PSM0069 /srv/opentallas-scratch/codex/dsrom-current-die/jobs/pdn_D_shard0_r2",
+    "selected_S81_job": null
+  },
+  "native_node_mapping": {
+    "FF50_um2_per_node": 15999.5088,
+    "S81_ragged_node_FF50_projection_mm2": 75.2936884128,
+    "cells_per_node": 77952,
+    "containment_required": "Reconcile this actual complete-node construction with31.548mm2 storage-only S81 screen and fixed/native residual union; no blind extra debit or deletion.",
+    "full_native_cell_body_um2": 7999.7544,
+    "object_dir": "/home/ubuntu/dsrom-c-w4-20261003/results/uarch/dsrom_s82_native_return_20261003/r1",
+    "projection_not_fit_or_minimum_area_proof": true,
+    "root_logic_mapped": false,
+    "source": "fecb33b6dcfdecc79308c1c885ff458791803144",
+    "terminal": "exit0"
+  },
+  "owners": {
+    "Archimedes": "Current source/reduced-array system netlist and caller/runtime integration",
+    "Arendt": "Regenerate complete S81 owner/program/address/inventory map including indexer replicas; export actual source-compatible ragged topology",
+    "Bacon": "Read-only chosen macro/DEF native pin centers, orientation/track, channel and PDN access; no placement invention or P&R sweep",
+    "Chandra": "Selected per-die controller/PHY/stack/power/clock service map and physical homes",
+    "Claude": "S81 refit and qelement SSFF",
+    "Maxwell": "Selected S81 object placement composition, die native PDN/IR and GRT after map/source input admission; no refit lever"
+  },
+  "read_only_object_kit": "/tmp/claude-1000/queue/Maxwell-DSROM-real-object-inputs-for-chosen-count-20261003.json",
+  "required_generation": {
+    "command_parameters": "--stages 81 --pairs 2417 --bf 519",
+    "owner": "Arendt",
+    "source": "/home/ubuntu/dsrom-c-w2-20261003/tools/dsrom_s73_pair1.py",
+    "warning": "Current allocator/records also require explicit every-rank indexer policy and ragged return export; untouched S82 address API hardcodes9552/2388/512 and is not an S81 adapter."
+  },
+  "schema": "opentallas.dsrom.S81.physical_owner_retarget.v1",
+  "selection_commit": "73851317fd9b4fb86c56f6ff760e29981ec610f2",
+  "selection_owner": "Claude",
+  "source_sha256": {
+    "/home/ubuntu/wt-dsrom-c-recheck/results/uarch/dsrom_c_recheck_20261004/DECISION.md": "ff03a0d89b1e5cb2a2c7dc6791417ebf99d64532342aea93193b025b68ad96c6",
+    "/home/ubuntu/wt-dsrom-c-recheck/results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
+    "/home/ubuntu/wt-dsrom-c-recheck/tools/dsrom_c_recheck.py": "bdf9f4b6245d96be0c76822b5839912e090e1cad2db659765a183113704daa9b"
+  }
+}
