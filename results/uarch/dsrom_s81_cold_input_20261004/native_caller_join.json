@@ -1,0 +1,27 @@
+{
+  "Cicero_input_ABI_compile_PASS": true,
+  "Cicero_shared_object": "/tmp/dsrom-s81-embedding-cicero-abi/libdsrom_s81_embedding_inputs.so",
+  "actual_DUT_request": {
+    "cycle": 1,
+    "event": "ROM_REQUEST",
+    "identity": 0,
+    "macro": 0,
+    "row": 0,
+    "source_bytes": 32
+  },
+  "actual_raw_response_sha256": "9f546ee2e843fd0a252b7d23d4896455dcacfd3b818ee9c108e0cd1957290dda",
+  "caller_pin": "e1ed45582",
+  "checkpoint_service_DUT_address_response_PASS": true,
+  "full_parent_bootstrap_GO": false,
+  "live_checkpoint_socket": "/tmp/dsrom-s81-embedding-cbe13bd57.sock",
+  "native_parent_run_performed": false,
+  "native_path_source_pin": "cbe13bd5794a3d0ad97d972181de34ffccaa289b",
+  "native_reader_shared_object": "/tmp/dsrom-s81-embedding-8f65ab021/libdsrom_s81_embedding.so",
+  "provider_shared_library_link_PASS": true,
+  "remaining_gap": [
+    "Source plan must have real embedding producer entry/context; binding deliberately rejects field consumer L0.I7",
+    "Parent must connect native PF identity premix and golden-order SSX reduction before L0.I0",
+    "Mandatory source-bound +DIR images and actual Popper remote/allcopy receipts",
+    "Peirce/Nash actual TP4 VM commit arbitration/head-die delivery pricing and physical qualifications"
+  ]
+}

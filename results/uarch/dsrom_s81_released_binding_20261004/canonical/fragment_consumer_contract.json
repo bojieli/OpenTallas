@@ -1,0 +1,23 @@
+{
+  "API": "SourceExecution.resolve(node, rank, expert_ids=None)",
+  "auxiliary_hooks": "auxiliary_owner_hooks.json",
+  "calendar_qualified": false,
+  "command": "python3 tools/dsrom_s81_fragment_join.py --node L0.I7 --rank 0 --out /tmp/S81-L0-I7-rank0.json",
+  "config_stream_compilation_qualified": false,
+  "expert_ids": "Six actual distinct ascending EIDs in [0,383] required for selected expert operations; no synthetic/default expert selection",
+  "native_dispatch_qualified": false,
+  "output": "Actual S81 fragments with per-stage selected_phase (allocation journal ordinal), real die_id, physical ROM plans, ordered_K, rank source_slice and gather_local_rows; original VM input/output/predicate retained",
+  "required_mapping_inputs": [
+    "matrix_map.jsonl.gz",
+    "inventory.json"
+  ],
+  "return_source_binding_pin": "58168eb1d",
+  "sample": "fragment_L0_I7_rank0.json",
+  "sample_source_identity_PASS": true,
+  "selected_policy": "All four rank_slices physically retained; indexer wk/wq_b local each rank",
+  "source_inputs": [
+    "results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz",
+    "results/uarch/dsrom_native_weight_address_join_20261002/r3/node_bindings.jsonl.gz"
+  ],
+  "tool": "tools/dsrom_s81_fragment_join.py"
+}

@@ -77,16 +77,50 @@ def reset(blocks):
             m._buffers[parts[-1]] = torch.zeros(b.shape, dtype=b.dtype, device='cuda')
 
 
+def t1_rows(model, blocks, tr, ids, mh, L, n_rows):
+    """T=1 (opt-in, qualified run): for every row p, the DSpark draft distribution q_k at depth k = 1..5 evaluated at the
+    trajectory token x_k = tok[p+1+k], with the Markov head teacher-forced on tok[p+k] (the vendor forward_head feeds
+    its own previous sample; under the maximal coupling below depth k only matters when d_{k-1} == x_{k-1}).
+    Same vendor modules as forward_spec; only forward_head's sampling loop is replaced by a teacher-forced read."""
+    M.Transformer.forward_spec(model, ids[L:L + 1], mh[:L].unsqueeze(0), 0)
+    last = len(tr['tokens']) - 1
+    q_tok, d_greedy = {}, {}
+    m0, mL = blocks[0], blocks[-1]
+    for p in range(L, n_rows):
+        inp = ids[p + 1:p + 2]
+        h, main_x = m0.forward_embed(mh[p:p + 1].unsqueeze(0), inp)
+        pre_mix = M.make_identity_pre_mix(h, model.hc_mult)
+        for layer in blocks:
+            h, pre_mix = layer(h, p, pre_mix, main_x)
+        x = mL.hc_pre(h, pre_mix)
+        logits = mL.head(mL.norm(x), full_logits=True)          # [1, 5, V] fp32
+        K = min(mL.block_size, last - (p + 1))
+        if K <= 0:
+            continue
+        prev = ids[p + 1:p + 1 + K]                               # Markov inputs tok[p+1 .. p+K]
+        tgt = ids[p + 2:p + 2 + K]                                # trajectory tokens tok[p+2 .. p+1+K]
+        bias, _ = mL.markov_head(prev)                            # [K, V]
+        lg = logits[0, :K].float() + bias.float()
+        q = torch.softmax(lg, -1, dtype=torch.float32)
+        q_tok[p] = q.gather(1, tgt.view(-1, 1)).view(-1)
+        d_greedy[p] = lg.argmax(-1)
+    ps = list(q_tok)
+    qt = {p: v for p, v in zip(ps, [x.tolist() for x in q_tok.values()])}
+    dg = {p: v for p, v in zip(ps, [x.tolist() for x in d_greedy.values()])}
+    return dict(item=tr['item'], L=L, tokens=tr['tokens'], mode='t1', p_tok=tr['p_tok'], q_tok=qt, draft_argmax_tf=dg)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--gen', default='gen_out.pt')
     ap.add_argument('--out', default='drafts.json')
     ap.add_argument('--gpu-frac', type=float, default=0.15)
+    ap.add_argument('--max-seq-len', type=int, default=8192)
     a = ap.parse_args()
     torch.cuda.set_per_process_memory_fraction(a.gpu_frac)
     torch.set_default_dtype(torch.bfloat16)
     torch.set_grad_enabled(False)
-    args = G.load_args(8192)
+    args = G.load_args(a.max_seq_len)
     torch.set_default_device('cuda')
     M.world_size, M.rank, M.default_dtype = 1, 0, torch.float8_e4m3fn
     t0 = time.time()
@@ -99,9 +133,17 @@ def main():
         ts = time.time()
         reset(blocks)
         toks, L, mh = tr['tokens'], tr['L'], tr['main_hidden'].cuda()
+        off = tr.get('mh_offset') or 0
+        if off:                        # opt-in tail-trimmed prompt rows: rows before L-128 never reach the window ring
+            assert L - off >= args.window_size, (L, off)
+            mh = torch.cat([torch.zeros(off, mh.size(1), dtype=mh.dtype, device='cuda'), mh])
         n_rows = mh.size(0)            # positions 0 .. L+G-2
         assert n_rows == len(toks) - 1, (n_rows, len(toks))
         ids = torch.tensor(toks, device='cuda')
+        if tr.get('mode') == 't1':
+            out.append(t1_rows(model, blocks, tr, ids, mh, L, n_rows))
+            print(tr['item']['workload'], tr['item']['prompt_id'], 't1 rows', len(out[-1]['q_tok']), f'{time.time()-ts:.1f}s', flush=True)
+            continue
         M.Transformer.forward_spec(model, ids[L:L + 1], mh[:L].unsqueeze(0), 0)
         drafts, conf = {}, {}
         for p in range(L, n_rows):
@@ -113,7 +155,7 @@ def main():
             ps = list(drafts)
             dl = torch.stack([drafts[p] for p in ps]).tolist(); cl = torch.stack([conf[p] for p in ps]).tolist()
             drafts = dict(zip(ps, dl)); conf = dict(zip(ps, cl))
-        out.append(dict(item=tr['item'], L=L, tokens=toks, drafts=drafts, confidence_sigmoid=conf))
+        out.append(dict(item=tr['item'], L=L, tokens=toks, drafts=drafts, confidence_sigmoid=conf, mode=tr.get('mode', 'greedy')))
         print(tr['item']['workload'], tr['item']['prompt_id'], 'rows', len(drafts), f'{time.time()-ts:.1f}s', flush=True)
     json.dump(out, open(a.out, 'w'))
 

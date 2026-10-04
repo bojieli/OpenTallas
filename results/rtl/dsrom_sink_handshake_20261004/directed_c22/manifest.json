@@ -1,0 +1,26 @@
+{
+  "source_commit": "c22d0985146d40f6653b02765a8c4fb5e5091faa",
+  "sources": [
+    "rtl/test/tb_dsrom_sink_handshake.sv",
+    "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv",
+    "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_sinkhorn_mc.sv",
+    "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv",
+    "rtl/hdc/v41/ot_hdc_select.sv",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv"
+  ],
+  "source_sha256": {
+    "rtl/test/tb_dsrom_sink_handshake.sv": "84b19dbf2f44b96f7b5e1fa8ef4433cdb2c1b3f03386733114c36e6ca47c6e25",
+    "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv": "56894f16075b7c7c1ab79dd537272ee7161d235d07040b3b6a0481bc281200c8",
+    "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_sinkhorn_mc.sv": "c1652c48bf10117c36ca6ac5737cbe5bed91e1bb10b024c8a8ccb1db91559b78",
+    "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv": "d12ad14278510d75ace0b0c078320dd69e2e3bd0f0b0937e28cf59f41fee3c91",
+    "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90"
+  },
+  "scope": "Actual common XU/Sinkhorn accepted-request handshake only; arithmetic serial reference; no golden generation/model inference"
+}

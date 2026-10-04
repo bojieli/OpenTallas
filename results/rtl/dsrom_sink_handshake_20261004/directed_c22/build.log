@@ -1,0 +1,121 @@
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/ot_hdc_engram_hash.sv:169:22: Operator FUNCREF 'csub' expects 18 bits on the Function Argument, but Function Argument's REPLICATE generates 17 bits.
+                                                                                                       : ... note: In instance 'tb_dsrom_sink_handshake.g[1].dut.u_hash'
+  169 |                 t8 = csub(s4, {Q, 3'b000});
+      |                      ^~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/ot_hdc_engram_hash.sv:170:23: Operator FUNCREF 'csub' expects 18 bits on the Function Argument, but Function Argument's REPLICATE generates 17 bits.
+                                                                                                       : ... note: In instance 'tb_dsrom_sink_handshake.g[1].dut.u_hash'
+  170 |                 m1 <= csub(t8, {1'b0, Q, 2'b00});
+      |                       ^~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/ot_hdc_engram_hash.sv:170:20: Operator ASSIGNDLY expects 17 bits on the Assign RHS, but Assign RHS's FUNCREF 'csub' generates 18 bits.
+                                                                                                      : ... note: In instance 'tb_dsrom_sink_handshake.g[1].dut.u_hash'
+  170 |                 m1 <= csub(t8, {1'b0, Q, 2'b00});
+      |                    ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/ot_hdc_engram_hash.sv:171:22: Operator FUNCREF 'csub' expects 18 bits on the Function Argument, but Function Argument's REPLICATE generates 17 bits.
+                                                                                                       : ... note: In instance 'tb_dsrom_sink_handshake.g[1].dut.u_hash'
+  171 |                 t2 = csub({1'b0, m1}, {2'b0, Q, 1'b0});
+      |                      ^~~~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/ot_hdc_engram_hash.sv:172:23: Operator FUNCREF 'csub' expects 18 bits on the Function Argument, but Function Argument's REPLICATE generates 17 bits.
+                                                                                                       : ... note: In instance 'tb_dsrom_sink_handshake.g[1].dut.u_hash'
+  172 |                 m2 <= csub(t2, {3'b0, Q});
+      |                       ^~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/ot_hdc_engram_hash.sv:172:20: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's FUNCREF 'csub' generates 18 bits.
+                                                                                                      : ... note: In instance 'tb_dsrom_sink_handshake.g[1].dut.u_hash'
+  172 |                 m2 <= csub(t2, {3'b0, Q});
+      |                    ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_sinkhorn_mc.sv:38:25: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cnt' generates 3 bits.
+                                                                                                                            : ... note: In instance 'tb_dsrom_sink_handshake.g[1].dut.u_sk'
+   38 |             cnt <= (cnt == STEP_CYC - 1) ? {CW{1'b0}} : cnt + 1'b1;
+      |                         ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_sinkhorn_mc.sv:40:26: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cnt' generates 3 bits.
+                                                                                                                            : ... note: In instance 'tb_dsrom_sink_handshake.g[1].dut.u_sk'
+   40 |             sclk <= (cnt == STEP_CYC - 1);
+      |                          ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:108:27: Operator GT expects 16 bits on the LHS, but LHS's VARREF 'k' generates 5 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  108 |     wire [KW-1:0] kk = (k > n) ? KW'(n) : KW'(k);
+      |                           ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:154:23: Operator ADD expects 11 bits on the RHS, but RHS's VARREF 'sc' generates 8 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  154 |                 e = e + sc + 11'sd127;
+      |                       ^
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:170:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SK_ACCEPT_HANDSHAKE' generates 32 bits.
+                                                                                                                       : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  170 |             if (SK_ACCEPT_HANDSHAKE ? sk_accepted : sk_busy) sk_in <= 1'b0;
+      |                                     ^
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:171:37: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SK_ACCEPT_HANDSHAKE' generates 32 bits.
+                                                                                                                       : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  171 |             if (SK_ACCEPT_HANDSHAKE && sk_accepted) sk_started <= 1'b1;
+      |                                     ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:188:51: Operator ADD expects 24 bits on the RHS, but RHS's VARREF 'ni' generates 16 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  188 |                     vr_re <= 1'b1; vr_addr <= src + ni; ni <= ni + 1'b1;
+      |                                                   ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:192:39: Operator GT expects 16 bits on the LHS, but LHS's VARREF 'k' generates 5 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  192 |                 S_SELW: if (nw == ((k > n) ? n : k) && !sel_busy) st <= S_IDLE;
+      |                                       ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:192:44: Operator COND expects 16 bits on the Conditional False, but Conditional False's VARREF 'k' generates 5 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  192 |                 S_SELW: if (nw == ((k > n) ? n : k) && !sel_busy) st <= S_IDLE;
+      |                                            ^
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:195:38: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'SK_ACCEPT_HANDSHAKE' generates 32 bits.
+                                                                                                                       : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  195 |                 S_SKW: if (sk_ov && (!SK_ACCEPT_HANDSHAKE || sk_started)) begin
+      |                                      ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:200:60: Operator ADD expects 24 bits on the RHS, but RHS's VARREF 'tok_l' generates 16 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  200 |                 S_EH0: begin cr_re <= 1'b1; cr_addr <= src + tok_l; st <= S_EH1; end
+      |                                                            ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:204:84: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'eg_c' generates 5 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  204 |                     er_re <= 1'b1; er_addr <= src + rows[ENG_ROW_W*(layer*ENG_COLS + eg_c) +: ENG_ROW_W];
+      |                                                                                    ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:204:51: Operator ADD expects 24 bits on the RHS, but RHS's SEL generates 18 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  204 |                     er_re <= 1'b1; er_addr <= src + rows[ENG_ROW_W*(layer*ENG_COLS + eg_c) +: ENG_ROW_W];
+      |                                                   ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:205:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'eg_c' generates 5 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  205 |                     if (eg_c + 1 == ENG_COLS) st <= S_EGW;
+      |                              ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:211:47: Operator ADD expects 24 bits on the RHS, but RHS's VARREF 'nw' generates 16 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  211 |                 vw_we <= 1'b1; vw_addr <= dst + nw; vw_data <= {16'd0, so_idx}; nw <= nw + 1'b1;
+      |                                               ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:217:45: Operator ADD expects 24 bits on the RHS, but RHS's REPLICATE generates 10 bits.
+                                                                                                                        : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  217 |                 w_we <= 1'b1; w_addr <= dst + {eg_i1, 5'd0}; w_mask <= 32'hFFFFFFFF;
+      |                                             ^
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:219:40: Operator ASSIGNDLY expects 32 bits on the Assign RHS, but Assign RHS's FUNCREF 'deq' generates 33 bits.
+                                                                                                                       : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  219 |                     w_data[32*q +: 32] <= deq(er_q[8*q +: 8], er_q[263:256]);
+      |                                        ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-sink-c22d09851/rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv:220:21: Logical operator IF expects 1 bit on the If, but If's SHIFTR generates 33 bits.
+                                                                                                                       : ... note: In instance 'tb_dsrom_sink_handshake.g[0].dut'
+  220 |                     if (deq(er_q[8*q +: 8], er_q[263:256]) >> 32) flt <= 1'b1;
+      |                     ^~
+make: Entering directory '/home/ubuntu/otjobs/dsrom-sink-c22d09851/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dsrom_sink_handshake__pch.h -o Vtb_dsrom_sink_handshake__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dsrom_sink_handshake__pch.h -o Vtb_dsrom_sink_handshake__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_sink_handshake__pch.h.fast -c Vtb_dsrom_sink_handshake_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_sink_handshake__pch.h.fast -c Vtb_dsrom_sink_handshake_vm_classes_1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_sink_handshake__pch.h.fast -c Vtb_dsrom_sink_handshake_vm_classes_2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_sink_handshake__pch.h.fast -c Vtb_dsrom_sink_handshake_vm_classes_3.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_sink_handshake__pch.h.slow -c Vtb_dsrom_sink_handshake_vm_classes_Slow_0.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_sink_handshake__pch.h.slow -c Vtb_dsrom_sink_handshake_vm_classes_Slow_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_sink_handshake__pch.h.slow -c Vtb_dsrom_sink_handshake_vm_classes_Slow_2.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_sink_handshake__pch.h.slow -c Vtb_dsrom_sink_handshake_vm_classes_Slow_3.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_sink_handshake__pch.h.slow -c Vtb_dsrom_sink_handshake__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_dsrom_sink_handshake__ALL.a    -pthread -lpthread -latomic   -o Vtb_dsrom_sink_handshake
+rm Vtb_dsrom_sink_handshake__ALL.verilator_deplist.tmp
+make: Leaving directory '/home/ubuntu/otjobs/dsrom-sink-c22d09851/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.773 MB sources in 18 modules, into 126.990 MB in 125 C++ files needing 0.487 MB
+- Verilator: Walltime 89.080 s (elab=3.147, cvt=22.710, bld=61.892); cpu 28.811 s on 4 threads; allocated 1130.727 MB

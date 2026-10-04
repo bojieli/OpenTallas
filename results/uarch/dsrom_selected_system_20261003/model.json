@@ -1,0 +1,168 @@
+{
+  "schema": "dsrom.selected_system.s81.source_join.v1",
+  "decision_pin": "73851317fd9b4fb86c56f6ff760e29981ec610f2",
+  "decision_sha256": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
+  "selected": {
+    "stages": 81,
+    "rank_dies": 324,
+    "total_dies": 368,
+    "pairs_per_rank_die": 2417,
+    "BF_pairs": 519,
+    "q_only_pairs": 1898,
+    "physical_4096_macros_per_rank_die": 9668,
+    "return_RD": 64,
+    "return_topology": "active-pair ragged; no4096pair padded return embedding",
+    "indexer_projection_ownership": "wk and wq_b local on all4ranks; no rank0 multicast"
+  },
+  "native_original_pin": "f6df84e14c2bc5908bdbf85b2bd95cd56b1f5520",
+  "native_parent_pin": "124c889c364678c238a06cea1d63af88727d8060",
+  "controls": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt_drain.sv": {
+      "pin": "5d1e7cf841b9c69e78757a4d63a2bae40a9e08b0",
+      "sha256": "17726c8c4960ccb4d5f1abf7b497164d3aec6715ffa97fcc3ac51fd12e84ece6"
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring_drain.sv": {
+      "pin": "5d1e7cf841b9c69e78757a4d63a2bae40a9e08b0",
+      "sha256": "257b9cae2dab5d2dbef3dad357c0006efcc06ecedb24c0a7d5bc6518fa5fba4f"
+    },
+    "rtl/rom/ot_w15_rom_oneshot_px_headreg.sv": {
+      "pin": "ad681d7e03cca938ca9707a882069a7d153936e0",
+      "sha256": "94395dc350d2cecee72d5e921a8597bc9eb353ac208f89ed4a3ce13b12c16a51"
+    }
+  },
+  "flags_default_off": {
+    "IDX_DRAIN_LOOKAHEAD": 0,
+    "COLL_HEADREG": 0
+  },
+  "prices": {
+    "index_drain_RAW_state_per_full_die": 192,
+    "index_mutable_protection_floor_bits": 8,
+    "index_source_fixture_added_cycles": 0,
+    "index_fixture_is_full_token": false,
+    "collective_head_state_bits_per_die": 4384,
+    "collective_added_cycles_per_distinct_command": 1,
+    "root_identity_state_bits": 69,
+    "root_fence_added_cycles_after_last_receipt_registration": 1,
+    "routing_tracks_new_external_for_controls": 0,
+    "new_memory_data_ports_for_controls": 0,
+    "MACs_per_cycle_controls": 0,
+    "field_read_MACs_and_wire_service": "unchanged; actual perphase ownership fromcompiler required",
+    "all_control_cell_state_floor_mm2": 0.0013568148,
+    "physical_slew_clock_slot_join_qualified": false,
+    "area_adopted": false
+  },
+  "decision_screen_only": {
+    "die_mm2": 839.239,
+    "fixed": 465.477,
+    "increments": 71.072,
+    "margin_frac": 0.02187,
+    "margin_mm2": 18.761,
+    "pairs": 2417,
+    "return_mm2": 31.548,
+    "stages": 81,
+    "variable": 271.142
+  },
+  "parent_source_selection_ready": true,
+  "build_admission": {
+    "selected_token": false,
+    "missing": "Nash preGO capture/VM commit debt interface; actual emitted programs/CFG from delegated Popper; actual native word provider and native context-input/restore receipts",
+    "historical_HBM_weight_system_not_selected_ROM": true,
+    "canonical_allocator_current_path": "results/uarch/dsrom_s81_released_binding_20261004/canonical",
+    "canonical_live_files_not_read_as_frozen": true,
+    "canonical_allocator_terminal_consumed": true
+  },
+  "clock_C": {
+    "decision": "f954ad1ea",
+    "default_off": true,
+    "primitive_owner": "Claude",
+    "wiring": "only landed primitive; no WIPcopy/duplicate primitive measurement"
+  },
+  "cached_token_provider": "Arendt300/mainf12; actual previous accepted hardwarecompletion as input, expected comparison only",
+  "stage_count_sweep_performed": false,
+  "installer": {
+    "canonical_collective_pin": "5e00741d36d95840caddff57a49891a5556aec6f",
+    "canonical_collective_tool": "tools/dsrom_collective_headreg.py",
+    "native_kctl_join": "tools/dsrom_s81_system_sources.py",
+    "actual_core": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+    "observability_added_state_bits": 0,
+    "observability_synthesis_excluded": true,
+    "command_identity": [
+      "stage",
+      "native_position_identity47",
+      "launch_serial",
+      "command_ordinal"
+    ],
+    "collective_cycle_price_without_executed_calendar": null,
+    "baseline_combination_headreg": 0,
+    "current_baseline_tool": "tools/dsrom_collective_accepted_pop.py",
+    "baseline_correctness_source_pin": "8a1d747d080303174826b2230213ac9e52c48e2a"
+  },
+  "actual_runtime_source": {
+    "host": "rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp",
+    "client": "rtl/test/v41_runtime/s81_selected/dsrom_s81_rom_client.hpp",
+    "strict_return_pin": "58168eb1d",
+    "strict_return_path": "results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/return.sv",
+    "active_leaves": 4834,
+    "retained_nodes": 5090,
+    "retained_unary_nodes": 384,
+    "ROOTD": 128,
+    "QD": 128,
+    "RD": 64,
+    "retained_return_storage_bits": 44831044,
+    "strict_return_storage_proxy_mm2": 33.98910431904,
+    "additional_debit_vs_compact_owner_screen_mm2": 2.44144502784,
+    "latency_change_from_exact_dead_pruning_cycles": 0,
+    "ready_port_added": false,
+    "faults": "actual full return graph OR every active pair fault",
+    "pre_edge_order_preserved": true,
+    "old_padded_host_tree_removed": true,
+    "default_off_flag": "DSROM_C8_S81=0",
+    "inactive_selection_refuses": true,
+    "word_transport_only_no_arithmetic_change": true,
+    "source_sha256": {
+      "rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp": "5069bc2ca64b2eb9da5f62151ebfad91040ba1da8d8059cc3a681e074264d372",
+      "rtl/test/v41_runtime/s81_selected/dsrom_s81_rom_client.hpp": "5e18c2febfe75db9384f1b6e51e4676d215721fd62ea6b654b2a09f4319641c2"
+    },
+    "compiled": false,
+    "numerical_measured": false
+  },
+  "baseline_acceptance_repair": {
+    "source_pin": "8a1d747d080303174826b2230213ac9e52c48e2a",
+    "parameter": "COLL_ACCEPTED_POP=1 optin",
+    "condition": "increment inflight only actual pop && pop_red; red_out retirement unchanged",
+    "added_pipeline_cycles": 0,
+    "added_state_bits": 0,
+    "extra_external_ports": 0,
+    "arithmetic_change": false,
+    "physical_clock_qualified": false,
+    "head_candidate_selected": false
+  },
+  "headreg_candidate": {
+    "rejected": true,
+    "selected": false,
+    "pipeline_credit": 0,
+    "reserved_new_state_bits": 0,
+    "historical_sources_preserved": true
+  },
+  "host_workspace_interface": {
+    "parameter": "S81_HOST_WORKSPACE=0 default-off",
+    "identity_bits": 47,
+    "address_bits": 19,
+    "word_bits": 32,
+    "maximum_capture_words": 524288,
+    "maximum_capture_bytes": 2097152,
+    "producer": "actual source.vm_word under native identity/range visibility callback; no golden/evaluator",
+    "consumer": "selected top context-matched simulation workspace loader",
+    "holds_capture_across_partial_destination_rejection": true,
+    "native_context_restored_driven": false,
+    "native_retirement_driven": false,
+    "native_VM_service_ack_emulated": false,
+    "hardware_cells_added": 0,
+    "synthesis_excluded": true,
+    "memory_bytes_per_hardware_cycle_credit": null,
+    "track_or_clock_capacity_credit": 0,
+    "single_user_latency_credit": 0,
+    "native_capture_reset_and_VM_visibility_provider_still_required": true
+  },
+  "native_VM_source_order_correction": "ROM loop precedes later ME/SU/vector/collective writers; source last-write-wins must be preserved or explicitly excluded/arbited; no128physicalSRAMport assumption"
+}
