@@ -110,9 +110,17 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
             r.provider->wire_backend(*r.mux);
             r.provider->wire_selected_backend(*c,*r.mux);
             r.hbm->wire(*r.mux);
-            r.provider->wire_selected_attention(*b.adapter,*r.phase,*c);
+            // The cut feeds native endpoint credit back into the adapter.
+            // Settle that feedback with the phase before provider.prepare
+            // captures OLD accept; no clock edge or credit is generated here.
+            for(unsigned settle=0;settle<64;settle++){
+                r.provider->wire_selected_attention(*b.adapter,*r.phase,*c);
+                const bool ready=b.adapter->packed_kv_ready;
+                r.cut->join(); // LAST in each low-edge source/cut join.
+                if(bool(b.adapter->packed_kv_ready)==ready)return;
+            }
+            throw std::runtime_error("native packed phase/ATT ready feedback did not settle");
         },ckv[i]);
-        r.cut->join(); // LAST: no WINDOW-only port overwrite after ATT settle.
     }
     void join(){
         need(!stopped&&!joining,"L20 KV recursive/faulted join");joining=true;
