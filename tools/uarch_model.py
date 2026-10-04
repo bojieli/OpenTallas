@@ -6300,6 +6300,12 @@ def w10_pinaccess_contract_review(inputs):
         source_sha256=inputs["sources_sha256"])
 
 
+def dsrom_selected_rom_rows():
+    """Selected S81/RD64 ROM candidate; no measured headline credit."""
+    from dsrom_s81_selected_composition import build
+    return build(ROOT)
+
+
 def dsrom_s82_rows():
     """Opt-in retained-RD64 conditional composition; defaults are unchanged."""
     from dsrom_s82_token_pricing import build
@@ -6362,7 +6368,8 @@ def qwen_posted_kv_model(records):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
-    ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
+    ap.add_argument("--dsrom-s81", "--dsrom-selected-rom", dest="dsrom_s81", action="store_true", help="selected S81 RD64 ROM model-only composition, prune/contracted storage priced separately")
+    ap.add_argument("--dsrom-s82", action="store_true", help="historical S82 RD64 serial-path components; superseded selected build target")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
     ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
     ap.add_argument("--w10-baseline", action="store_true", help="audit existing FAST/PP/BP baseline only")
@@ -6382,8 +6389,10 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
-    if a.dsrom_s82 or a.qwen_posted_kv_baseline:
-        if a.dsrom_s82:
+    if a.dsrom_s81 or a.dsrom_s82 or a.qwen_posted_kv_baseline:
+        if a.dsrom_s81:
+            payload = json.dumps(dsrom_selected_rom_rows(), indent=2, sort_keys=True) + "\n"
+        elif a.dsrom_s82:
             payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"
         else:
             payload = json.dumps(qwen_posted_kv_model(a.qwen_posted_kv_baseline), indent=2) + "\n"

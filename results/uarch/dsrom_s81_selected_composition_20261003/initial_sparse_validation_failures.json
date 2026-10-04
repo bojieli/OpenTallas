@@ -1,0 +1,18 @@
+{
+  "status": "PRESERVED_STATIC_INPUT_HYDRATION_FAILURES_NO_BUILD",
+  "attempts": [
+    {
+      "result": "10_PASS_1_FAIL",
+      "cause": "Sparse checkout omitted src/opentallas"
+    },
+    {
+      "result": "10_PASS_1_FAIL",
+      "cause": "Sparse checkout omitted Sinkhorn physical.json"
+    },
+    {
+      "result": "10_PASS_1_FAIL",
+      "cause": "Sparse checkout omitted tselect campaign JSON"
+    }
+  ],
+  "resolution": "Hydrated byte-identical tracked import dependencies; no arithmetic or expectation change"
+}

@@ -1,0 +1,1946 @@
+{
+  "records": [
+    {
+      "K": 512,
+      "alias": "indexer.wk",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 2,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 128,
+      "tensor": "layers.2.attn.indexer.wk.weight"
+    },
+    {
+      "K": 1280,
+      "alias": "indexer.wq_b",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "fp8",
+      "layer": 2,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 4096,
+      "tensor": "layers.2.attn.indexer.wq_b.weight"
+    },
+    {
+      "K": 5120,
+      "alias": "indexer.weights_proj",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 2,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 32,
+      "tensor": "layers.2.attn.indexer.weights_proj.weight"
+    },
+    {
+      "K": 512,
+      "alias": "indexer.wk",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 8,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 128,
+      "tensor": "layers.8.attn.indexer.wk.weight"
+    },
+    {
+      "K": 1280,
+      "alias": "indexer.wq_b",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "fp8",
+      "layer": 8,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 4096,
+      "tensor": "layers.8.attn.indexer.wq_b.weight"
+    },
+    {
+      "K": 5120,
+      "alias": "indexer.weights_proj",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 8,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 32,
+      "tensor": "layers.8.attn.indexer.weights_proj.weight"
+    },
+    {
+      "K": 512,
+      "alias": "indexer.wk",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 14,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 128,
+      "tensor": "layers.14.attn.indexer.wk.weight"
+    },
+    {
+      "K": 1280,
+      "alias": "indexer.wq_b",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "fp8",
+      "layer": 14,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 4096,
+      "tensor": "layers.14.attn.indexer.wq_b.weight"
+    },
+    {
+      "K": 5120,
+      "alias": "indexer.weights_proj",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 14,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 32,
+      "tensor": "layers.14.attn.indexer.weights_proj.weight"
+    },
+    {
+      "K": 512,
+      "alias": "indexer.wk",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 20,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        },
+        {
+          "cols": [
+            0,
+            512
+          ],
+          "rows": [
+            0,
+            128
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 128,
+      "tensor": "layers.20.attn.indexer.wk.weight"
+    },
+    {
+      "K": 1280,
+      "alias": "indexer.wq_b",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "fp8",
+      "layer": 20,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 4096,
+      "tensor": "layers.20.attn.indexer.wq_b.weight"
+    },
+    {
+      "K": 5120,
+      "alias": "indexer.weights_proj",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 20,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 32,
+      "tensor": "layers.20.attn.indexer.weights_proj.weight"
+    },
+    {
+      "K": 1280,
+      "alias": "indexer.wq_b",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "fp8",
+      "layer": 24,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 4096,
+      "tensor": "layers.24.attn.indexer.wq_b.weight"
+    },
+    {
+      "K": 5120,
+      "alias": "indexer.weights_proj",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 24,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 32,
+      "tensor": "layers.24.attn.indexer.weights_proj.weight"
+    },
+    {
+      "K": 1280,
+      "alias": "indexer.wq_b",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "fp8",
+      "layer": 28,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 4096,
+      "tensor": "layers.28.attn.indexer.wq_b.weight"
+    },
+    {
+      "K": 5120,
+      "alias": "indexer.weights_proj",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 28,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 32,
+      "tensor": "layers.28.attn.indexer.weights_proj.weight"
+    },
+    {
+      "K": 1280,
+      "alias": "indexer.wq_b",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "fp8",
+      "layer": 32,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 4096,
+      "tensor": "layers.32.attn.indexer.wq_b.weight"
+    },
+    {
+      "K": 5120,
+      "alias": "indexer.weights_proj",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 32,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 32,
+      "tensor": "layers.32.attn.indexer.weights_proj.weight"
+    },
+    {
+      "K": 1280,
+      "alias": "indexer.wq_b",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "fp8",
+      "layer": 36,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        },
+        {
+          "cols": [
+            0,
+            1280
+          ],
+          "rows": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 4096,
+      "tensor": "layers.36.attn.indexer.wq_b.weight"
+    },
+    {
+      "K": 5120,
+      "alias": "indexer.weights_proj",
+      "duplicate_source_payload_storage_removed": 3,
+      "format": "bf16",
+      "layer": 36,
+      "physical_owner_ranks": [
+        0
+      ],
+      "rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reference_rank_slices": [
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        },
+        {
+          "cols": [
+            0,
+            5120
+          ],
+          "rows": [
+            0,
+            32
+          ]
+        }
+      ],
+      "reserved_frames_credit_mm2": 0,
+      "rows": 32,
+      "tensor": "layers.36.attn.indexer.weights_proj.weight"
+    }
+  ],
+  "source_path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/matrix_map.jsonl.gz",
+  "source_sha256": "de4840b55f5598d412f8fa6d7cd87e7859aadb4147e0120e8554b1c9a4f8dcad"
+}
