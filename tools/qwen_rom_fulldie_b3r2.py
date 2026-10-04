@@ -856,9 +856,24 @@ def _slab_entry(v, obs_top=7, strip=0.0):
                 continue
             b.obs_top = obs_top
             if strip:
-                xs = [spec[2] for p, spec in b.ports.items() if p.startswith('bw') and spec[0] == 'area']
-                west = (sum(xs) / len(xs) < b.w / 2) if xs else True
+                # the column decides the array-facing face (an edge-entry slab's bw pins sit across its width)
+                xv = model['geo']['x_vch']
+                west = next(it.x < xv for it in model['insts'] if it.master == name)
                 b.m6_strip = (0.0, strip) if west else (b.w - strip, b.w)
+                # edge-entry words (b3r10) share one y at the slab edge: stack them into the slab, 100 um apart
+                yy = {}
+                for p_, spec in b.ports.items():
+                    if p_.startswith('bw') and spec[0] == 'area':
+                        yy.setdefault(round(spec[3], 1), []).append(p_)
+                b.m6_y = {}
+                for y0, ps in yy.items():
+                    if len(ps) == 1:
+                        b.m6_y[ps[0]] = y0
+                        continue
+                    up = y0 < b.h / 2
+                    for q, p_ in enumerate(sorted(ps, key=lambda z: int(z[2:]))):
+                        d = 60.0 + 100.0 * q
+                        b.m6_y[p_] = (y0 - 70.0 + d) if up else (y0 + 70.0 - d)
         return out
 
     def pin_rects(mst, k, wmap):
@@ -878,7 +893,7 @@ def _slab_entry(v, obs_top=7, strip=0.0):
                 continue
             n = wmap.get(port, spec[1])
             i = int(nm.split('[')[1].rstrip(']'))
-            yc = spec[3]
+            yc = getattr(mst, 'm6_y', {}).get(port, spec[3])
             y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k + i * step
             x0 = sx[0] + 0.25 * (sx[1] - sx[0])
             out.append((nm, 'M6', (x0, y - hw, x0 + 0.4 * k, y + hw)))
