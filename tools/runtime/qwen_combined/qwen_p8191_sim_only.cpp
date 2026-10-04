@@ -715,6 +715,7 @@ int main(int argc, char** argv) {
                     struct rusage ru; getrusage(RUSAGE_SELF, &ru);
                     printf("SIM_ONLY_QWEN_LAYER_COMPLETED stages=%zu cycles=%u edges=%ld settle_max=%d wall_s=%.1f RSS_KiB=%ld threads=%d kv_ideal=%d\n",
                            stages.size(), cyc, edges, max_settle, sec, ru.ru_maxrss, threads, int(kv_ideal));
+                    fflush(stdout);
                     return 0;
                 }
                 next_stage = true;
