@@ -12,7 +12,7 @@
 // stats) and KGATHER_PASS with the rank's last output cycle.
 module tb_hdc_v41x_idx_kgather #(
     parameter integer MAX_CYCLES=200000,
-    parameter integer WB=128, DF=4, QD=64, RQD=32, RW=16, MAXSKIP=16, CLK_PS=833,
+    parameter integer WB=128, DF=8, QD=64, RQD=32, RW=16, MAXSKIP=16, CLK_PS=833,
     parameter integer BASE=0, BSTEP=1000, OSTEP=136,
     parameter longint REFI_PS=3900000
 ) (input wire clk);

@@ -26,18 +26,21 @@
 // select, ot_hdc_v41x_sel_cand, whose output port q is already quarter q's ascending
 // list); two banks (even / odd entries) so two blocks are read a cycle.
 //
-// CONTROL (ot_hdc_v41x_idx_kgctl), every per-cycle decision reads registers:
-//   list read (2 blocks) -> decode 1 (super-block, B0, code block) -> decode 2 (folds,
-//   addresses, pseudo-channel one-hots) -> dispatch: both blocks of the pair enter the
-//   per-pseudo-channel request FIFOs (one code FIFO and one scale FIFO a channel, two
-//   write ports each) when every targeted FIFO has room for two and the reorder buffer
-//   has two free slots; a pseudo-channel issues the older of its two FIFO heads.
+// CONTROL (ot_hdc_v41x_idx_kgctl), pipelined for 1.2 GHz (every decision reads registers):
+//   list read (2 blocks a cycle, while fewer than 8 pairs are undispatched) -> five
+//   never-stalling decode stages (local key, 17 x super-block, offsets, block addresses,
+//   folds / channel one-hots) -> an 8-pair FIFO with a registered head -> dispatch, decided
+//   when the reorder buffer has the pair's two slots and every targeted request FIFO has
+//   >= 4 free entries (2 in flight), and written one cycle later: slots, metadata, pending
+//   bits and the per-channel request FIFOs (one code FIFO and one scale FIFO a channel, two
+//   write ports each).  A channel issues its scale head first, else its code head.
 //   Slot = sequence mod WB.  Per slot and channel a pending bit (code / scale) is set at
-//   dispatch and cleared by the request's last beat (code beats counted: the HBM
-//   scheduler reorders bursts); a slot is complete when it is dispatched and no bit is
-//   pending (registered, so seen one cycle late, never early).  The drain takes the
-//   head slot and the next one when complete: up to 2 blocks = 16 keys a cycle, in list
-//   order (the select needs ascending positions).
+//   dispatch and cleared by the request's last beat (code beats counted: the HBM scheduler
+//   reorders bursts); a slot is complete when dispatched and nothing is pending (registered).
+//   The drain samples the completion of the head and the next three slots, decides on the
+//   sample a cycle later (stale, never early), takes up to 2 blocks = 16 keys a cycle in
+//   list order (the select needs ascending positions), and reads the slots' metadata in a
+//   second stage.
 // DATA (ot_hdc_v41x_idx_kgdata): per pseudo-channel bank WB x 4 code beats + WB scale
 // sectors (behavioural here; one 1W1R SRAM bank per channel on silicon, the
 // kstream_range ROB plus a WB x 256 b scale bank); the drain gathers each key's
@@ -55,12 +58,12 @@ module ot_hdc_v41x_idx_kgctl #(
     parameter integer BEATW = 4,
     parameter integer LBW  = 14,        // local block index bits
     parameter integer LMW  = 11,        // list entries = 2^LMW
-    parameter integer DF   = 4          // request FIFO depth per channel and kind
+    parameter integer DF   = 8          // request FIFO depth per channel and kind
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
     // candidate-list SRAM (two banks, even / odd entries), synchronous read: data of the
-    // address presented with lr_re appears on lr_e / lr_o after the edge and holds
+    // address presented with lr_re appears on lr_e / lr_o after the edge
     output wire                 lr_re,
     output wire [LMW-2:0]       lr_addr,
     input  wire [LBW-1:0]       lr_e,
@@ -86,11 +89,14 @@ module ot_hdc_v41x_idx_kgctl #(
     output reg  [2*5-1:0]       dr_fc,
     output reg  [2*5-1:0]       dr_f0,
     output reg  [2*LBW-1:0]     dr_blk,
-    input  wire                 dr_ready
+    input  wire                 dr_ready    // room for this drain and two in flight
 );
     localparam integer SW = $clog2(WB);
     localparam integer QW = LMW + 1;
     localparam integer FW = $clog2(DF);
+    localparam integer ND = 5;              // decode stages (fixed latency, never stall)
+    localparam integer PD = 8;              // decoded-pair FIFO depth
+    localparam integer PW = $clog2(PD);
 
     function automatic [4:0] fold(input [HW-1:0] b);
         fold = b[4:0] ^ b[9:5];
@@ -101,37 +107,62 @@ module ot_hdc_v41x_idx_kgctl #(
     reg [6:0]      skip8;
     reg [QW-1:0]   n;
     reg [QW-1:0]   rd_seq;                  // next pair to read
-    reg [QW-1:0]   a_seq;                   // next sequence to dispatch
     reg [QW-1:0]   d_seq;                   // drain head
+    reg [QW-1:0]   d_left;                  // n - d_seq
+    reg [4:0]      occ;                     // pairs read and not yet dispatched
 
-    // -- pipeline: S1 list data, D1, D2 ------------------------------------------------------------
-    reg            s1_v, d1_v, d2_v;
-    reg [QW-1:0]   s1_seq, d1_seq, d2_seq;
-    reg [1:0]      s1_m, d1_m, d2_m;        // lanes present (lane 0 = even sequence)
-    wire [LBW-1:0] s1_blk [0:1];
-    assign s1_blk[0] = lr_e;
-    assign s1_blk[1] = lr_o;
-    reg [LBW-1:0]  d1_blk [0:1];
-    reg [6:0]      d1_j   [0:1];
-    reg [HW-1:0]   d1_b0  [0:1];
-    reg [HW-1:0]   d1_bc  [0:1];
-    reg [LBW-1:0]  d2_blk [0:1];
-    reg [6:0]      d2_j   [0:1];
-    reg [4:0]      d2_fc  [0:1];
-    reg [4:0]      d2_f0  [0:1];
-    reg [HW-1:0]   d2_b0  [0:1];
-    reg [HW-1:0]   d2_bc  [0:1];
-    reg [NPC-1:0]  d2_cm  [0:1];            // code channels of the block
-    reg [NPC-1:0]  d2_sm  [0:1];            // scale channel of the block
+    // -- list read and the decode pipe -----------------------------------------------------------
+    wire           rd_go = run && (rd_seq < n) && (occ < PD);
+    assign lr_re = rd_go;
+    assign lr_addr = rd_seq[LMW-1:1];
+    reg            c0_v;   reg [QW-1:0] c0_seq; reg [1:0] c0_m;
+    reg            e1_v;   reg [QW-1:0] e1_seq; reg [1:0] e1_m;
+    reg            e2_v;   reg [QW-1:0] e2_seq; reg [1:0] e2_m;
+    reg            e3_v;   reg [QW-1:0] e3_seq; reg [1:0] e3_m;
+    reg            e4_v;   reg [QW-1:0] e4_seq; reg [1:0] e4_m;
+    reg            e5_v;   reg [QW-1:0] e5_seq; reg [1:0] e5_m;
+    reg [LBW+6:0]  e1_lk [0:1];             // local key / 8
+    reg [LBW-1:0]  e1_blk[0:1], e2_blk[0:1], e3_blk[0:1], e4_blk[0:1], e5_blk[0:1];
+    reg [LBW+4:0]  e2_m17[0:1];             // 17 x super-block
+    reg [6:0]      e2_j [0:1], e3_j [0:1], e4_j [0:1], e5_j [0:1];
+    reg [HW-1:0]   e3_o0[0:1], e3_oc[0:1];  // offsets of the scale / code block
+    reg [HW-1:0]   e4_b0[0:1], e4_bc[0:1], e5_b0[0:1], e5_bc[0:1];
+    reg [4:0]      e5_f0[0:1], e5_fc[0:1];
+    reg [NPC-1:0]  e5_cm[0:1], e5_sm[0:1];
 
-    // -- per-channel request FIFOs: kind 0 code, 1 scale -------------------------------------------
+    // -- decoded-pair FIFO, registered head ----------------------------------------------------------
+    reg [QW-1:0]   pf_seq [0:PD-1];
+    reg [1:0]      pf_m   [0:PD-1];
+    reg [LBW-1:0]  pf_blk [0:2*PD-1];
+    reg [6:0]      pf_j   [0:2*PD-1];
+    reg [4:0]      pf_f0  [0:2*PD-1], pf_fc [0:2*PD-1];
+    reg [HW-1:0]   pf_b0  [0:2*PD-1], pf_bc [0:2*PD-1];
+    reg [NPC-1:0]  pf_cm  [0:2*PD-1], pf_sm [0:2*PD-1];
+    reg [PW-1:0]   pf_wp, pf_rp;
+    reg [PW:0]     pf_n;
+    reg            hd_v;   reg [QW-1:0] hd_seq; reg [1:0] hd_m;
+    reg [LBW-1:0]  hd_blk[0:1]; reg [6:0] hd_j[0:1]; reg [4:0] hd_f0[0:1], hd_fc[0:1];
+    reg [HW-1:0]   hd_b0[0:1], hd_bc[0:1];
+    reg [NPC-1:0]  hd_cm[0:1], hd_sm[0:1], hd_tc, hd_ts;
+
+    // -- dispatch: decided on registers, written one cycle later -----------------------------------
+    reg [NPC-1:0]  room_c, room_s;          // registered: >= 4 free (2 in flight + 2)
+    wire           rob_ok = (QW'(hd_seq + 2 - d_seq) <= QW'(WB - 2));
+    wire           disp = run && hd_v && rob_ok && ~|(hd_tc & ~room_c) && ~|(hd_ts & ~room_s);
+    wire           hd_take = !hd_v || disp;
+    reg            w_v;    reg [QW-1:0] w_seq; reg [1:0] w_m;
+    reg [LBW-1:0]  w_blk[0:1]; reg [6:0] w_j[0:1]; reg [4:0] w_f0[0:1], w_fc[0:1];
+    reg [HW-1:0]   w_b0[0:1], w_bc[0:1];
+    reg [NPC-1:0]  w_cm[0:1], w_sm[0:1];
+
+    // -- per-channel request FIFOs: [0, NPC) code, [NPC, 2 NPC) scale ------------------------------
     reg [AW-1:0]   fq_addr [0:2*NPC*DF-1];
     reg [SW-1:0]   fq_slot [0:2*NPC*DF-1];
     reg [FW-1:0]   fq_rp   [0:2*NPC-1];
+    reg [FW-1:0]   fq_wp   [0:2*NPC-1];
     reg [FW:0]     fq_n    [0:2*NPC-1];
-    reg [2*NPC-1:0] room2;                  // registered: FIFO has >= 2 free entries
 
-    // -- slot state -----------------------------------------------------------------------------------
+    // -- slot state ------------------------------------------------------------------------------------
     reg [NPC-1:0]  pend_c [0:WB-1];
     reg [NPC-1:0]  pend_s [0:WB-1];
     reg [1:0]      cntc   [0:NPC*WB-1];
@@ -144,40 +175,31 @@ module ot_hdc_v41x_idx_kgctl #(
 
     assign rsp_rdy = {NPC{1'b1}};           // every beat has its slot (allocated at dispatch)
 
-    // -- dispatch decision -----------------------------------------------------------------------------
-    wire [NPC-1:0] t_c = (d2_m[0] ? d2_cm[0] : {NPC{1'b0}}) | (d2_m[1] ? d2_cm[1] : {NPC{1'b0}});
-    wire [NPC-1:0] t_s = (d2_m[0] ? d2_sm[0] : {NPC{1'b0}}) | (d2_m[1] ? d2_sm[1] : {NPC{1'b0}});
-    wire           rob_ok = (QW'(d2_seq + 2 - d_seq) <= QW'(WB));
-    wire           fifo_ok = ~|(t_c & ~room2[NPC-1:0]) && ~|(t_s & ~room2[2*NPC-1:NPC]);
-    wire           disp = run && d2_v && rob_ok && fifo_ok;
-    wire           d2_take = !d2_v || disp;
-    wire           d1_take = !d1_v || d2_take;
-    wire           s1_take = !s1_v || d1_take;
-    assign lr_re = run && s1_take && !(cmd_v && !busy);
-    assign lr_addr = rd_seq[LMW-1:1];
-
-    // -- drain decision -----------------------------------------------------------------------------------
+    // -- drain: completion of head .. head+3 sampled a cycle earlier; adv_r = the step taken then ----
+    reg [3:0]      rq;
+    reg [1:0]      adv_r;
     wire [SW-1:0]  h0 = d_seq[SW-1:0];
-    wire [SW-1:0]  h1 = h0 + 1'b1;
-    wire           can0 = run && (d_seq < n) && cmp[h0] && dr_ready;
-    wire           can1 = can0 && (QW'(d_seq + 1) < n) && cmp[h1];
+    wire           rq0 = (adv_r == 2'd0) ? rq[0] : (adv_r == 2'd1) ? rq[1] : rq[2];
+    wire           rq1 = (adv_r == 2'd0) ? rq[1] : (adv_r == 2'd1) ? rq[2] : rq[3];
+    wire           can0 = run && (d_left != 0) && rq0 && dr_ready;
+    wire           can1 = can0 && (d_left > 1) && rq1;
+    reg            dq_v; reg [1:0] dq_m; reg [SW-1:0] dq_slot;    // drain decided: read metadata next
 
-    integer p, k, l, e, c, q;
+    // per channel issue: the scale head first, else the code head
+    reg [NPC-1:0]  iss, use_s;
+    integer q;
+    always @* begin
+        for (q = 0; q < NPC; q = q + 1) begin
+            use_s[q] = (fq_n[NPC + q] != 0);
+            iss[q] = run && ((fq_n[q] != 0) || use_s[q]) && (!req_v[q] || req_rdy[q]);
+        end
+    end
+
+    integer p, l, e, c, k;
     reg [SW-1:0]   rs;
     reg [FW:0]     cnt;
     reg [FW-1:0]   wp;
-    reg [LBW+6:0]  lk8;
-
-    // per channel: which FIFO head issues (the older slot relative to the drain head)
-    reg [NPC-1:0]  use_s, iss;
-    always @* begin
-        for (q = 0; q < NPC; q = q + 1) begin
-            use_s[q] = (fq_n[NPC + q] != 0) &&
-                       ((fq_n[q] == 0) ||
-                        (SW'(fq_slot[(NPC + q) * DF + fq_rp[NPC + q]] - h0) < SW'(fq_slot[q * DF + fq_rp[q]] - h0)));
-            iss[q] = run && ((fq_n[q] != 0) || (fq_n[NPC + q] != 0)) && (!req_v[q] || req_rdy[q]);
-        end
-    end
+    reg [NPC-1:0]  t;
 
     // registered responses
     reg [NPC-1:0]  rr_v;
@@ -186,14 +208,15 @@ module ot_hdc_v41x_idx_kgctl #(
 
     always @(posedge clk) begin
         if (!rst_n) begin
-            run <= 1'b0; busy <= 1'b0; fault <= 1'b0; req_v <= 0; dr_v <= 0;
-            s1_v <= 1'b0; d1_v <= 1'b0; d2_v <= 1'b0; adm <= 0; cmp <= 0; rr_v <= 0;
-            room2 <= {2*NPC{1'b1}};
-            for (p = 0; p < 2 * NPC; p = p + 1) begin fq_rp[p] <= 0; fq_n[p] <= 0; end
+            run <= 1'b0; busy <= 1'b0; fault <= 1'b0; req_v <= 0; dr_v <= 0; dq_v <= 1'b0;
+            c0_v <= 1'b0; e1_v <= 1'b0; e2_v <= 1'b0; e3_v <= 1'b0; e4_v <= 1'b0; e5_v <= 1'b0;
+            hd_v <= 1'b0; w_v <= 1'b0; pf_n <= 0; pf_wp <= 0; pf_rp <= 0; occ <= 0;
+            adm <= 0; cmp <= 0; rr_v <= 0; rq <= 0; adv_r <= 0;
+            room_c <= {NPC{1'b1}}; room_s <= {NPC{1'b1}};
+            for (p = 0; p < 2 * NPC; p = p + 1) begin fq_rp[p] <= 0; fq_wp[p] <= 0; fq_n[p] <= 0; end
             for (p = 0; p < NPC * WB; p = p + 1) cntc[p] <= 2'd0;   // 4 beats wrap it back to 0
         end else begin
-            dr_v <= 2'b00;
-            // completion, one cycle late
+            // completion, one cycle late; head look-ahead, one more
             for (e = 0; e < WB; e = e + 1) cmp[e] <= adm[e] && ~|pend_c[e] && ~|pend_s[e];
             // responses: registered, then counted
             for (p = 0; p < NPC; p = p + 1) begin
@@ -208,57 +231,104 @@ module ot_hdc_v41x_idx_kgctl #(
                     end
                 end
             end
+            // dispatch write stage (decided last cycle): slots, metadata, pending bits
+            if (w_v) begin
+                for (l = 0; l < 2; l = l + 1) if (w_m[l]) begin
+                    rs = SW'(w_seq + l);
+                    adm[rs] <= 1'b1;
+                    pend_c[rs] <= w_cm[l];
+                    pend_s[rs] <= w_sm[l];
+                    m_j[rs] <= w_j[l]; m_fc[rs] <= w_fc[l]; m_f0[rs] <= w_f0[l]; m_blk[rs] <= w_blk[l];
+                end
+            end
+            // drain stage 2: retire the slots, read their metadata for the data path
+            dr_v <= 2'b00;
+            if (dq_v) begin
+                adm[dq_slot] <= 1'b0;
+                if (dq_m[1]) adm[SW'(dq_slot + 1)] <= 1'b0;
+                dr_v <= dq_m;
+                dr_slot <= dq_slot;
+                dr_j <= {m_j[SW'(dq_slot + 1)], m_j[dq_slot]};
+                dr_fc <= {m_fc[SW'(dq_slot + 1)], m_fc[dq_slot]};
+                dr_f0 <= {m_f0[SW'(dq_slot + 1)], m_f0[dq_slot]};
+                dr_blk <= {m_blk[SW'(dq_slot + 1)], m_blk[dq_slot]};
+            end
             if (cmd_v && !busy) begin
                 run <= 1'b1; busy <= 1'b1;
                 base <= cmd_base; skip8 <= cmd_skip[9:3]; n <= cmd_n;
                 fault <= (cmd_skip[2:0] != 3'd0);
-                rd_seq <= 0; a_seq <= 0; d_seq <= 0;
-                s1_v <= 1'b0; d1_v <= 1'b0; d2_v <= 1'b0;
+                rd_seq <= 0; d_seq <= 0; d_left <= cmd_n; occ <= 0;
+                c0_v <= 1'b0; e1_v <= 1'b0; e2_v <= 1'b0; e3_v <= 1'b0; e4_v <= 1'b0; e5_v <= 1'b0;
+                hd_v <= 1'b0; w_v <= 1'b0; pf_n <= 0; pf_wp <= 0; pf_rp <= 0; rq <= 0; adv_r <= 0; dq_v <= 1'b0;
             end else if (run) begin
-                // list read -> S1
-                if (s1_take) begin
-                    s1_v <= (rd_seq < n);
-                    s1_seq <= rd_seq;
-                    s1_m <= {(QW'(rd_seq + 1) < n), 1'b1};
-                    if (rd_seq < n) rd_seq <= rd_seq + 2;
+                // list read (SRAM output valid next cycle)
+                c0_v <= rd_go; c0_seq <= rd_seq; c0_m <= {(QW'(rd_seq + 1) < n), 1'b1};
+                if (rd_go) rd_seq <= rd_seq + 2;
+                occ <= occ + (rd_go ? 5'd1 : 5'd0) - (disp ? 5'd1 : 5'd0);
+                // decode pipe
+                e1_v <= c0_v; e1_seq <= c0_seq; e1_m <= c0_m;
+                e2_v <= e1_v; e2_seq <= e1_seq; e2_m <= e1_m;
+                e3_v <= e2_v; e3_seq <= e2_seq; e3_m <= e2_m;
+                e4_v <= e3_v; e4_seq <= e3_seq; e4_m <= e3_m;
+                e5_v <= e4_v; e5_seq <= e4_seq; e5_m <= e4_m;
+                for (l = 0; l < 2; l = l + 1) begin
+                    e1_blk[l] <= l ? lr_o : lr_e;
+                    e1_lk[l] <= {{LBW{1'b0}}, skip8} + {7'd0, l ? lr_o : lr_e};
+                    e2_blk[l] <= e1_blk[l]; e2_j[l] <= e1_lk[l][6:0];
+                    e2_m17[l] <= {e1_lk[l][LBW+6:7], 4'd0} + {4'd0, e1_lk[l][LBW+6:7]};
+                    e3_blk[l] <= e2_blk[l]; e3_j[l] <= e2_j[l];
+                    e3_o0[l] <= HW'(e2_m17[l]);
+                    e3_oc[l] <= HW'(e2_m17[l]) + HW'(1) + HW'(e2_j[l][6:3]);
+                    e4_blk[l] <= e3_blk[l]; e4_j[l] <= e3_j[l];
+                    e4_b0[l] <= base + e3_o0[l];
+                    e4_bc[l] <= base + e3_oc[l];
+                    e5_blk[l] <= e4_blk[l]; e5_j[l] <= e4_j[l]; e5_b0[l] <= e4_b0[l]; e5_bc[l] <= e4_bc[l];
+                    e5_f0[l] <= fold(e4_b0[l]); e5_fc[l] <= fold(e4_bc[l]);
+                    t = 0;
+                    for (c = 0; c < 4; c = c + 1) t[(5'({e4_j[l][2:0], 2'b00}) + 5'(c)) ^ fold(e4_bc[l])] = 1'b1;
+                    e5_cm[l] <= t;
+                    t = 0;
+                    t[e4_j[l][6:2] ^ fold(e4_b0[l])] = 1'b1;
+                    e5_sm[l] <= t;
                 end
-                // S1 -> D1: super-block, scale block, code block
-                if (d1_take) begin
-                    d1_v <= s1_v; d1_seq <= s1_seq; d1_m <= s1_m;
+                // pair FIFO: push from the pipe, pop into the head register
+                if (e5_v) begin
+                    pf_seq[pf_wp] <= e5_seq; pf_m[pf_wp] <= e5_m;
                     for (l = 0; l < 2; l = l + 1) begin
-                        lk8 = {{LBW{1'b0}}, skip8} + {7'd0, s1_blk[l]};
-                        d1_blk[l] <= s1_blk[l];
-                        d1_j[l] <= lk8[6:0];
-                        d1_b0[l] <= base + HW'(17 * (lk8 >> 7));
-                        d1_bc[l] <= base + HW'(17 * (lk8 >> 7)) + 1 + HW'(lk8[6:3]);
+                        pf_blk[2*pf_wp+l] <= e5_blk[l]; pf_j[2*pf_wp+l] <= e5_j[l];
+                        pf_f0[2*pf_wp+l] <= e5_f0[l]; pf_fc[2*pf_wp+l] <= e5_fc[l];
+                        pf_b0[2*pf_wp+l] <= e5_b0[l]; pf_bc[2*pf_wp+l] <= e5_bc[l];
+                        pf_cm[2*pf_wp+l] <= e5_m[l] ? e5_cm[l] : {NPC{1'b0}};
+                        pf_sm[2*pf_wp+l] <= e5_m[l] ? e5_sm[l] : {NPC{1'b0}};
+                    end
+                    pf_wp <= pf_wp + 1'b1;
+                end
+                if (hd_take) begin
+                    hd_v <= (pf_n != 0);
+                    if (pf_n != 0) begin
+                        hd_seq <= pf_seq[pf_rp]; hd_m <= pf_m[pf_rp];
+                        for (l = 0; l < 2; l = l + 1) begin
+                            hd_blk[l] <= pf_blk[2*pf_rp+l]; hd_j[l] <= pf_j[2*pf_rp+l];
+                            hd_f0[l] <= pf_f0[2*pf_rp+l]; hd_fc[l] <= pf_fc[2*pf_rp+l];
+                            hd_b0[l] <= pf_b0[2*pf_rp+l]; hd_bc[l] <= pf_bc[2*pf_rp+l];
+                            hd_cm[l] <= pf_cm[2*pf_rp+l]; hd_sm[l] <= pf_sm[2*pf_rp+l];
+                        end
+                        hd_tc <= pf_cm[2*pf_rp] | pf_cm[2*pf_rp+1];
+                        hd_ts <= pf_sm[2*pf_rp] | pf_sm[2*pf_rp+1];
+                        pf_rp <= pf_rp + 1'b1;
                     end
                 end
-                // D1 -> D2: folds, one-hots
-                if (d2_take) begin
-                    d2_v <= d1_v; d2_seq <= d1_seq; d2_m <= d1_m;
-                    for (l = 0; l < 2; l = l + 1) begin
-                        d2_blk[l] <= d1_blk[l]; d2_j[l] <= d1_j[l];
-                        d2_b0[l] <= d1_b0[l]; d2_bc[l] <= d1_bc[l];
-                        d2_fc[l] <= fold(d1_bc[l]);
-                        d2_f0[l] <= fold(d1_b0[l]);
-                        d2_cm[l] <= 0; d2_sm[l] <= 0;
-                        for (c = 0; c < 4; c = c + 1)
-                            d2_cm[l][(5'({d1_j[l][2:0], 2'b00}) + 5'(c)) ^ fold(d1_bc[l])] <= 1'b1;
-                        d2_sm[l][d1_j[l][6:2] ^ fold(d1_b0[l])] <= 1'b1;
-                    end
-                end
-                // dispatch: both blocks of the pair into the channel FIFOs
+                pf_n <= pf_n + (e5_v ? 1'b1 : 1'b0) - ((hd_take && pf_n != 0) ? 1'b1 : 1'b0);
+                // dispatch decision -> write stage
+                w_v <= disp;
                 if (disp) begin
-                    for (l = 0; l < 2; l = l + 1) if (d2_m[l]) begin
-                        rs = SW'(d2_seq + l);
-                        adm[rs] <= 1'b1;
-                        pend_c[rs] <= d2_cm[l];
-                        pend_s[rs] <= d2_sm[l];
-                        m_j[rs] <= d2_j[l]; m_fc[rs] <= d2_fc[l]; m_f0[rs] <= d2_f0[l]; m_blk[rs] <= d2_blk[l];
+                    w_seq <= hd_seq; w_m <= hd_m;
+                    for (l = 0; l < 2; l = l + 1) begin
+                        w_blk[l] <= hd_blk[l]; w_j[l] <= hd_j[l]; w_f0[l] <= hd_f0[l]; w_fc[l] <= hd_fc[l];
+                        w_b0[l] <= hd_b0[l]; w_bc[l] <= hd_bc[l]; w_cm[l] <= hd_cm[l]; w_sm[l] <= hd_sm[l];
                     end
-                    a_seq <= d2_seq + 2;
                 end
-                // per-channel issue: the older of the code / scale heads
+                // per-channel issue
                 for (p = 0; p < NPC; p = p + 1) begin
                     if (req_v[p] && req_rdy[p]) req_v[p] <= 1'b0;
                     if (iss[p]) begin
@@ -274,42 +344,42 @@ module ot_hdc_v41x_idx_kgctl #(
                         end
                     end
                 end
-                // FIFO pushes / pops, counts, room
+                // FIFO pushes (from the write stage) / pops, counts, room
                 for (p = 0; p < 2 * NPC; p = p + 1) begin
                     cnt = fq_n[p];
-                    wp = FW'(fq_rp[p] + cnt[FW-1:0]);
-                    if (disp) begin
+                    wp = fq_wp[p];
+                    if (w_v) begin
                         for (l = 0; l < 2; l = l + 1)
-                            if (d2_m[l] && (p < NPC ? d2_cm[l][p % NPC] : d2_sm[l][p % NPC])) begin
-                                fq_slot[p * DF + wp] <= SW'(d2_seq + l);
+                            if (p < NPC ? w_cm[l][p % NPC] : w_sm[l][p % NPC]) begin
+                                fq_slot[p * DF + wp] <= SW'(w_seq + l);
                                 // code: channel p serves column p ^ fold(Bc); scale: sector j of B0
-                                fq_addr[p * DF + wp] <= (p < NPC) ? AW'({d2_bc[l], 5'(p % NPC) ^ d2_fc[l], 2'b00})
-                                                                  : AW'({d2_b0[l], d2_j[l]});
+                                fq_addr[p * DF + wp] <= (p < NPC) ? AW'({w_bc[l], 5'(p % NPC) ^ w_fc[l], 2'b00})
+                                                                  : AW'({w_b0[l], w_j[l]});
                                 wp = wp + 1'b1;
                                 cnt = cnt + 1'b1;
                             end
                     end
+                    fq_wp[p] <= wp;
                     if (p < NPC ? (iss[p % NPC] && !use_s[p % NPC]) : (iss[p % NPC] && use_s[p % NPC])) begin
                         fq_rp[p] <= fq_rp[p] + 1'b1;
                         cnt = cnt - 1'b1;
                     end
                     fq_n[p] <= cnt;
-                    room2[p] <= (cnt + 2 <= DF);
+                    if (p < NPC) room_c[p % NPC] <= (cnt + 4 <= DF);
+                    else room_s[p % NPC] <= (cnt + 4 <= DF);
                 end
-                // drain: head and next, in order
+                // drain stage 1: head and next, in order
+                for (k = 0; k < 4; k = k + 1) rq[k] <= cmp[SW'(h0 + k)];
+                adv_r <= can1 ? 2'd2 : (can0 ? 2'd1 : 2'd0);
+                dq_v <= can0;
+                dq_m <= {can1, 1'b1};
+                dq_slot <= h0;
                 if (can0) begin
-                    dr_v <= {can1, 1'b1};
-                    dr_slot <= h0;
-                    dr_j <= {m_j[h1], m_j[h0]};
-                    dr_fc <= {m_fc[h1], m_fc[h0]};
-                    dr_f0 <= {m_f0[h1], m_f0[h0]};
-                    dr_blk <= {m_blk[h1], m_blk[h0]};
-                    adm[h0] <= 1'b0;
-                    if (can1) adm[h1] <= 1'b0;
                     d_seq <= d_seq + (can1 ? 2 : 1);
+                    d_left <= d_left - (can1 ? 2 : 1);
                 end
-                if (d_seq >= n && !can0) run <= 1'b0;
-            end else if (busy && dr_v == 2'b00) busy <= 1'b0;
+                if (d_left == 0 && !dq_v) run <= 1'b0;
+            end else if (busy && dr_v == 2'b00 && !dq_v) busy <= 1'b0;
         end
     end
 endmodule
@@ -354,12 +424,18 @@ module ot_hdc_v41x_idx_kgdata #(
                 else
                     code_mem[(p * WB + rsp_tag[p*TAGW +: SW]) * 4 + rsp_beat[p*BEATW +: 2]] <= rsp_data[p*DW +: DW];
             end
-    // output: register + one skid entry; the control may have a drain in flight
-    reg            sk_v;
-    reg [15:0]     sk_kv;
-    reg [16*544-1:0] sk_key;
-    reg [2*LBW-1:0] sk_blk;
-    assign dr_ready = !sk_v && !(o_valid && !o_ready && dr_v != 2'b00);
+    // output: a 4-entry FIFO; the control decides a drain two cycles before it lands here, so it
+    // drains only while at most one entry is held (this one + two in flight fit)
+    reg [15:0]       f_kv  [0:3];
+    reg [16*544-1:0] f_key [0:3];
+    reg [2*LBW-1:0]  f_blk [0:3];
+    reg [1:0]        f_wp, f_rp;
+    reg [2:0]        f_n;
+    assign dr_ready = (f_n <= 3'd1);
+    always @* begin
+        o_valid = (f_n != 0);
+        o_kv = f_kv[f_rp]; o_key = f_key[f_rp]; o_blk = f_blk[f_rp];
+    end
     reg [15:0]     g_kv;
     reg [16*544-1:0] g_key;
     reg [4:0]      col, bank, sb;
@@ -381,20 +457,13 @@ module ot_hdc_v41x_idx_kgdata #(
         end
     end
     always @(posedge clk) begin
-        if (!rst_n) begin o_valid <= 1'b0; sk_v <= 1'b0; end
+        if (!rst_n) begin f_wp <= 0; f_rp <= 0; f_n <= 0; end
         else begin
-            if (o_valid && o_ready) begin
-                if (sk_v) begin
-                    o_kv <= sk_kv; o_key <= sk_key; o_blk <= sk_blk; sk_v <= 1'b0;
-                end else o_valid <= 1'b0;
-            end
             if (dr_v != 2'b00) begin
-                if (!o_valid || (o_ready && !sk_v)) begin
-                    o_valid <= 1'b1; o_kv <= g_kv; o_key <= g_key; o_blk <= dr_blk;
-                end else begin
-                    sk_v <= 1'b1; sk_kv <= g_kv; sk_key <= g_key; sk_blk <= dr_blk;
-                end
+                f_kv[f_wp] <= g_kv; f_key[f_wp] <= g_key; f_blk[f_wp] <= dr_blk; f_wp <= f_wp + 1'b1;
             end
+            if (o_valid && o_ready) f_rp <= f_rp + 1'b1;
+            f_n <= f_n + ((dr_v != 2'b00) ? 3'd1 : 3'd0) - ((o_valid && o_ready) ? 3'd1 : 3'd0);
         end
     end
 endmodule
@@ -411,7 +480,7 @@ module ot_hdc_v41x_idx_kgather #(
     parameter integer DW   = 256,
     parameter integer LBW  = 14,
     parameter integer LMW  = 11,
-    parameter integer DF   = 4
+    parameter integer DF   = 8
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
