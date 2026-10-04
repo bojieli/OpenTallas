@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "32c416dd9",
+ "generated_from_commit": "08a762279",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -512,7 +512,7 @@
    "value": "STREAM4 (4 HBM3E stacks a die, ot_qwen_rt_kv_stream4_service + ot_qwen_hbm_stream4_ack)",
    "resolved": true,
    "blob": "1cff68fefa3ad1b47db22b74e8d2b5c538cc3a0f",
-   "last_commit": null
+   "last_commit": "4ea13f3b0 2026-10-04"
   },
   "qwen_rom.hbm_stream_verdict": {
    "target": "qwen_rom",
