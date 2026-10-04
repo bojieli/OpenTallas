@@ -114,13 +114,21 @@ public:
         try {
             require(!stopped_,"dynamic sessions quarantined");
             bool all=true;
+            std::array<bool,4> rank_read_pending{};
             for(auto& s:sessions_) {
                 if(s.bound)continue;
+                if(rank_read_pending[s.source.rank]){all=false;continue;}
                 if(!s.captured||!capture_visible(s)){all=false;continue;}
                 const auto& e=s.source;
                 while(s.read_index<6) {
                     auto bits=io_[e.rank].read_word(e.identity,e.capture_vm_base+s.read_index);
-                    if(!bits)break;
+                    if(!bits) {
+                        // Shared SourceIo retains this address until it replies.
+                        // No later session on this rank may change that held
+                        // request during this poll; other ranks can progress.
+                        rank_read_pending[e.rank]=true;
+                        break;
+                    }
                     require(*bits==s.raw[s.read_index],"native EID capture/publication readback mismatch");
                     ++s.read_index;
                 }
