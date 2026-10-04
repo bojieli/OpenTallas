@@ -15,11 +15,77 @@ os.environ.setdefault('HDC_V41_ARITH', 'chunk8')
 import numpy as np
 import v41_fullshape_isa as M
 from dsrom_s81_execution_binding import CanonicalS81Execution
+from dsrom_s81_head_source_binding import HeadSourceBinding
+
+
+def head_chain(ranks, model, output, result):
+    binding=HeadSourceBinding()
+    compiled=binding.compile(opt_in=True,entry14=0)
+    checkpoint=model.w.ck
+    buf,dtype,shape=checkpoint.raw('head.weight')
+    assert dtype=='BF16' and shape==[129280,5120]
+    weights=np.frombuffer(buf,dtype='<u2').reshape(shape)
+    gamma=checkpoint.get('norm.weight')
+    inputs=[(r.read(np.arange(20480),'head_actual_H',144).reshape(4,5120).copy(),
+             r.read(np.arange(41152,41156),'head_actual_PF',144).copy()) for r in ranks]
+    all_logits=[]
+    with (output/'head_operations.jsonl').open('x') as log:
+        for pc,entry in enumerate(compiled['instructions']):
+            f=M.I.decode(int(entry['word_hex'],16),full_shape=True)
+            print('SIM_ONLY',entry['source_node'],'tick',result['simulation_ticks'],flush=True)
+            for rank in ranks:
+                rank.fetch=rank.source_fetch
+                rank.crom[:5120,0]=gamma;rank.crom[:5120,1]=0;rank.crom_ok[:5120]=True
+                if f['unit']==M.I.UNIT_SU:
+                    rank.su(f,144+pc,rank.log)
+                elif f['unit']==M.I.UNIT_ME:
+                    assert pc==5 and f['me_k']==5120 and f['me_nout']==32320 and f['me_amax']
+                    # Capture the produced XN before any output writes. Storage
+                    # is released BF16; arithmetic is eight sequential FP32
+                    # products followed by the padded 1024-leaf tree.
+                    x=rank.read(f['me_xbase']+np.arange(5120),'head_XN',149).copy()
+                    logits=np.empty(32320,dtype=M.F)
+                    for begin in range(0,32320,128):
+                        end=min(begin+128,32320)
+                        w=M.G.from_bits(weights[rank.r*32320+begin:rank.r*32320+end].astype(np.uint32)<<16)
+                        logits[begin:end]=M.V.csum(M.G.mul(w,x[None,:]))
+                    rank.write(f['me_obase']*16,logits)
+                    all_logits.append(logits)
+                elif f['unit']!=M.I.UNIT_CTL:
+                    raise M.Defect('unsupported literal head operator')
+                if rank.unwritten:raise M.Defect(str(rank.unwritten[-1]))
+            result['simulation_ticks']+=1
+            log.write(json.dumps(dict(node=entry['source_node'],arithmetic='SIM_ONLY_EXACT',
+                simulation_tick=result['simulation_ticks']))+'\n');log.flush()
+    assert len(all_logits)==4 and not any(r.rope_held or r.unwritten for r in ranks)
+    # Golden comparison is at the chain's END, using its actual produced L20
+    # carry as the argument, never a 40-layer token's cached head activations.
+    errors=[]
+    for rank,(h,pf),got in zip(ranks,inputs,all_logits):
+        ref_x=M.V.rmsnorm_bf16(model.hc_pre(h,pf),gamma,model.eps)
+        reference=np.empty(32320,dtype=M.F)
+        for begin in range(0,32320,128):
+            end=min(begin+128,32320)
+            w=M.G.from_bits(weights[rank.r*32320+begin:rank.r*32320+end].astype(np.uint32)<<16)
+            reference[begin:end]=M.V.mv(w,ref_x)
+        errors.append(dict(rank=rank.r,logits_bit_mismatches=int(np.count_nonzero(M.G.bits(got)!=M.G.bits(reference)))))
+    joined=np.concatenate(all_logits)
+    assert np.isfinite(joined).all()
+    chosen=int(np.argmax(joined)) # SIM_ONLY exact lowest-ID global argmax service.
+    np.save(output/'head_logits.npy',joined)
+    result['head']=dict(component_chain='produced_L20_H_PF_to_released_head_NOT_full40layer_token',
+        instructions=7,arithmetic='SIM_ONLY_EXACT',storage_dies=binding.head_dies,
+        source_fence='SIM_ONLY_SYNCHRONOUS_CONSUMERS',global_argmax_service='SIM_ONLY',
+        selected_id=chosen,selected_value_bits=int(M.G.bits(joined[chosen])),errors=errors,
+        exact=not any(e['logits_bit_mismatches'] for e in errors))
+    result['exact']=bool(result['exact'] and result['head']['exact'])
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--head-chain',action='store_true',help='carry produced L20 H/PF directly into released head')
+    p.add_argument('--carry-input',type=Path,help='actual carry.npz retained by an earlier invocation; head-only debugging')
     a = p.parse_args()
     a.output.mkdir(exist_ok=False)
     result = dict(scope='S81.L20.position1048575', functional='SIM_ONLY',
@@ -62,6 +128,18 @@ def main():
             rank = M.Rank(r, lay, man, image, golden, win, rope, consts, 1048575, stores=stores)
             rank.source_fetch = rank.fetch
             ranks.append(rank)
+        if a.carry_input:
+            assert a.head_chain
+            carry=np.load(a.carry_input,allow_pickle=False)
+            for rank in ranks:
+                rank.vm[:]=0;rank.ok[:]=False
+                rank.write(0,carry['H'][rank.r].reshape(-1))
+                rank.write(41152,carry['PF'][rank.r])
+            result['carry_source_sha256']=M.sha(a.carry_input)
+            result['exact']=True
+            head_chain(ranks,model,a.output,result)
+            result['completed']=True
+            return
         trace = []
         with (a.output/'operations.jsonl').open('x') as log:
             for pc, node in enumerate(nodes):
@@ -162,6 +240,12 @@ def main():
                 mismatches.append(dict(rank=rank.r, region=region,
                     count=int(np.count_nonzero(M.G.bits(got)!=M.G.bits(want)))))
         result.update(completed=True, exact=not any(x['count'] for x in mismatches), mismatches=mismatches)
+        if a.head_chain:
+            np.savez(a.output/'carry.npz',H=np.stack([r.vm[:20480].reshape(4,5120) for r in ranks]),
+                PF=np.stack([r.vm[41152:41156] for r in ranks]))
+            result['completed']=False
+            head_chain(ranks,model,a.output,result)
+            result['completed']=True
     except BaseException as exc:
         result.update(failure=repr(exc))
         raise
