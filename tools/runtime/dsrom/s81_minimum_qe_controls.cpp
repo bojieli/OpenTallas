@@ -49,7 +49,7 @@ DsromS81QePhase dsrom_s81_qe_load_controls(const DsromS81PrefixOperation&op,
  const std::vector<dsrom_s81_minimum::ReturnPhaseBinding>&bindings,
  const std::vector<unsigned>&actual_bf_sites,const std::string&emitted_directory,
  uint32_t input_base,uint32_t cut_only_output_alias){
- if(bindings.empty()||op.unit!=3)throw std::runtime_error("QE source bindings/operation required");
+ if(bindings.empty()||(op.unit!=3&&op.unit!=1))throw std::runtime_error("QE source bindings/operation required");
  const auto ph=hex_words(emitted_directory+"/spine_phase.hex",64);
  if(ph.size()!=2)throw std::runtime_error("QE exact selected PHROM two-word extent");
  DsromS81QePhase out{};out.operation=op;out.xbase=input_base;out.cut_output_alias=cut_only_output_alias;

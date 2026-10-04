@@ -115,7 +115,7 @@ struct DsromS81NativeQe::Impl {
    id<(1ull<<47)&&io.read_word&&io.span_lease&&io.offer&&io.visible&&read&&r.cycle&&prior_drained,
    "QE actual common context/SourceIo/native source/prior publication required");
   rows=(phase.phrom[0]>>46)&65535;k=(phase.phrom[0]>>1)&8191;
-  require(phase.operation.unit==3&&phase.operation.index<(1u<<14)&&
+  require((phase.operation.unit==3||phase.operation.unit==1)&&phase.operation.index<(1u<<14)&&
    rows>0&&rows<=65535&&phase.ops==rows&&!phase.pairs.empty()&&phase.pairs.size()<=2417,
    "QE complete selected matrix phase geometry required");
   require(k>0&&k<=6144&&phase.phrom[1]<=65535&&
@@ -125,11 +125,24 @@ struct DsromS81NativeQe::Impl {
    uint64_t(phase.xbase)+k<=(1u<<19)&&uint64_t(phase.cut_input_alias)+k<=65536&&phase.cut_output_alias+rows<=65536&&
    !(phase.cut_output_alias<phase.cut_input_alias+k&&phase.cut_input_alias<phase.cut_output_alias+rows),
    "QE cut-only alias/input/stream aperture");
+  if(phase.operation.unit==1){
+   require(phase.actual_input_addresses.size()==k&&phase.actual_output_addresses.size()==rows,
+    "ME field execution needs exact original input/output source mapping, not QE relabeling");
+  }
+  if(!phase.actual_input_addresses.empty()){
+   require(phase.actual_input_addresses.size()==k,"field ordered-K input mapping extent");
+   for(auto a:phase.actual_input_addresses)require(a<(1u<<19),"field mapped input VM19");
+  }
+  if(!phase.actual_output_addresses.empty()){
+   require(phase.actual_output_addresses.size()==rows,"field source output mapping extent");
+   std::set<uint32_t> mapped;
+   for(auto a:phase.actual_output_addresses)require(a<(1u<<19)&&mapped.insert(a).second,"field mapped output VM19/alias");
+  }
   std::set<unsigned> row_set;bool first=true;
   for(const auto&x:phase.pairs){
    const auto&b=x.returned;
    if(first){phase_number=b.phase;first=false;}
-   require(b.stage==r.stage&&b.rank==r.rank&&b.identity==id&&b.phase==phase_number&&b.phase<1024&&
+   require(b.stage>=0&&b.stage<81&&b.rank==r.rank&&b.identity==id&&b.phase==phase_number&&b.phase<1024&&
     b.positions_minus_one==0&&b.format<3&&b.phrom0==phase.phrom[0]&&b.phrom1==phase.phrom[1]&&
     b.output_position_stride==rows&&b.output_base+rows<=(1u<<19)&&
     b.root<128&&b.pair>=0&&b.pair<2417&&!b.component_rows.empty()&&
@@ -139,7 +152,7 @@ struct DsromS81NativeQe::Impl {
     b.source_matrix_sha256.size()==64&&!b.emitted_key.empty()&&!b.cfg_path.empty(),
     "QE actual complete-K physical pair/phase/root ownership required");
    const auto&ref=phase.pairs.front().returned;
-   require(b.output_base==ref.output_base&&b.emitted_key==ref.emitted_key&&
+   require(b.stage==ref.stage&&b.output_base==ref.output_base&&b.emitted_key==ref.emitted_key&&
     b.source_matrix_sha256==ref.source_matrix_sha256,"QE phase identity alias");
    require(!(phase.phrom[0]&1)||x.physical_bf_site,"QE BF phase assigned to non-BF physical site");
    for(auto w:x.config)require(w<(1ull<<48),"QE CFG48");
@@ -149,7 +162,7 @@ struct DsromS81NativeQe::Impl {
    auto o=std::make_unique<Owned>();o->binding=x;o->word={b.stage,b.rank,b.pair,x.config,read};
    registering_qe=&o->word;
    try{
-    auto name="native_qe_phase_"+std::to_string(phase_number)+"_pair_"+std::to_string(b.pair);
+    auto name="native_qe_producer_"+std::to_string(phase.operation.index)+"_stage_"+std::to_string(b.stage)+"_phase_"+std::to_string(phase_number)+"_pair_"+std::to_string(b.pair);
     if(x.physical_bf_site)o->pair=std::make_unique<TypedPair<Vpb>>(r.context,name.c_str());
     else o->pair=std::make_unique<TypedPair<Vpq>>(r.context,name.c_str());
     o->pair->drive({});o->pair->edge(false,false);
@@ -180,7 +193,7 @@ struct DsromS81NativeQe::Impl {
     for(unsigned seat=0;seat<layer.size();seat+=2){
      int a=layer[seat],bb=layer[seat+1];
      if(a<0&&bb<0){next.push_back(-1);continue;}
-     auto name="native_qe_"+std::to_string(phase_number)+"_region_"+std::to_string(b.root)+
+     auto name="native_qe_producer_"+std::to_string(phase.operation.index)+"_stage_"+std::to_string(b.stage)+"_phase_"+std::to_string(phase_number)+"_region_"+std::to_string(b.root)+
       "_level_"+std::to_string(level)+"_node_"+std::to_string(seat/2);
      Node n{a,bb,std::make_unique<Vretn>(r.context,name.c_str())};
      n.model->clk=0;n.model->rst_n=0;n.model->a_v=0;n.model->b_v=0;
@@ -190,7 +203,7 @@ struct DsromS81NativeQe::Impl {
     layer=std::move(next);
    }
    require(layer.size()==1&&layer[0]>=4834,"QE retained region topology incomplete");rt.input=layer[0];
-   auto name="native_qe_"+std::to_string(phase_number)+"_root_"+std::to_string(b.root);
+   auto name="native_qe_producer_"+std::to_string(phase.operation.index)+"_stage_"+std::to_string(b.stage)+"_phase_"+std::to_string(phase_number)+"_root_"+std::to_string(b.root);
    rt.model=std::make_unique<Vroot>(r.context,name.c_str());
    rt.model->clk=0;rt.model->rst_n=0;rt.model->i_v=0;rt.model->i_e=0;
    rt.model->i_t=0;rt.model->i_d=0;rt.model->eval();
@@ -215,8 +228,16 @@ struct DsromS81NativeQe::Impl {
   return running&&records.size()==rows&&accepted_count==rows&&visible_count==rows&&offered_head==rows&&
    !cut.fault&&cut.idle&&!cut.obs_rows_left&&pub.complete(id,phase.operation.index)&&all_quiet();
  }
+ uint32_t input_address(unsigned i)const {
+  return phase.actual_input_addresses.empty()?phase.xbase+i:phase.actual_input_addresses.at(i);
+ }
+ bool input_owned()const {
+  if(phase.actual_input_addresses.empty())return io.span_lease(id,phase.xbase,k);
+  for(auto a:phase.actual_input_addresses)if(!io.span_lease(id,a,1))return false;
+  return true;
+ }
  bool inputs(const DsromS81PrefixOperation&op){
-  require(op.index==phase.operation.index&&op.unit==3&&op.instruction==phase.operation.instruction,"QE held source instruction changed");
+  require(op.index==phase.operation.index&&op.unit==phase.operation.unit&&op.instruction==phase.operation.instruction,"QE held source instruction changed");
   require(!stopped&&!finished,"QE source producer cannot be silently reused");
   if(running)return false;
   if(!configured){
@@ -228,10 +249,10 @@ struct DsromS81NativeQe::Impl {
    cut.i_ph=phase_number;cut.i_np=0;cut.i_xbase=phase.cut_input_alias;cut.i_xps=0;cut.i_obase=phase.cut_output_alias;cut.i_ops=phase.ops;cut.go=0;
    configured=true;
   }
-  if(!io.span_lease(id,phase.xbase,k))return false;
+  if(!input_owned())return false;
   if(loaded<k){
-   auto v=io.read_word(id,phase.xbase+loaded);if(!v)return false;
-   require(io.span_lease(id,phase.xbase,k),"QE actual XN version lost at read response");
+   auto v=io.read_word(id,input_address(loaded));if(!v)return false;
+   require(input_owned(),"QE actual XN version lost at read response");
    cut.rootp->dsrom_source_cut__DOT__dut__DOT__vm[phase.cut_input_alias+loaded]=*v;++loaded;
   }
   return loaded==k;
@@ -239,7 +260,7 @@ struct DsromS81NativeQe::Impl {
  void drive(const DsromS81PrefixOperation&op,bool go){
   if(!configured)return;
   if(go)require(!running&&op.index==phase.operation.index&&op.instruction==phase.operation.instruction&&
-   loaded==k&&cut.ready&&cut.idle&&io.span_lease(id,phase.xbase,k),"QE GO before actual input/version/ready");
+   loaded==k&&cut.ready&&cut.idle&&input_owned(),"QE GO before actual input/version/ready");
   cut.go=go;
  }
  void prepare(const DsromS81PairResult&){
@@ -276,7 +297,7 @@ struct DsromS81NativeQe::Impl {
   require(running&&!s.error&&s.position==0&&s.row<rows&&(s.row/2)%128==b.root&&
    std::find(b.component_rows.begin(),b.component_rows.end(),s.row)!=b.component_rows.end()&&
    captured_rows.insert(s.row).second,"QE unowned/duplicate/faulted native root pulse");
-  const uint32_t address=b.output_base+s.row;
+  const uint32_t address=phase.actual_output_addresses.empty()?b.output_base+s.row:phase.actual_output_addresses.at(s.row);
   const ReturnPhaseBinding* actual_pair=nullptr;
   for(const auto&pp:owners){const auto&candidate=pp.second->binding.returned;
    if(candidate.root==b.root&&std::find(candidate.component_rows.begin(),candidate.component_rows.end(),s.row)!=candidate.component_rows.end()){
@@ -374,7 +395,7 @@ DsromS81PrefixNativeEngine dsrom_s81_qe_dispatch(const std::vector<std::shared_p
   [d](){return d->selected&&d->engines.at(*d->selected).ready();},
   [d](){return !d->selected||d->engines.at(*d->selected).idle();},
   [d](const auto&op){
-   if(op.unit!=3||!d->engines.count(op.index))throw std::runtime_error("QE operation not actually enrolled");
+   if((op.unit!=3&&op.unit!=1)||!d->engines.count(op.index))throw std::runtime_error("QE operation not actually enrolled");
    if(d->selected&&*d->selected!=op.index&&!d->engines.at(*d->selected).idle())
     throw std::runtime_error("QE rearm before actual prior return/publication drain");
    d->selected=op.index;return d->engines.at(op.index).inputs_ready(op);
