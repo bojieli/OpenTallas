@@ -287,6 +287,7 @@ module ot_qwen_hbm_stream4_ack #(
                             if (now < b_act[q][bk] + RAS + RP) v("tRC (REFpb)", q, bk);
                             if (now < b_ref_end[q][bk]) v("REFpb during refresh", q, bk);
                             if (now < p_last_act[q] + RREFD) v("tRREFD (REFpb after ACT)", q, bk);
+                            if (now < p_last_refpb_any[q] + RREFD) v("tRREFD (REFpb after REFpb)", q, bk);
                             if (p_round[q][bk]) v("REFpb bank twice in one round", q, bk);
                             p_round[q][bk] = 1; if (&p_round[q]) p_round[q] = 0;
                             if (PULLIN == 0) begin

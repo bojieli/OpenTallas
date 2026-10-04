@@ -1,0 +1,400 @@
+{
+ "schema": "opentallas.hbm-refpb-fix.reader.v1",
+ "source_sha256": {
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "d667af4d98330b00758f43364d0a9ca7a8dfb33e1ed2bde12bb66e9046e7c1b7",
+  "rtl/test/ot_hdc_v41x_idx_hbm_trace.sv": "9cd677a6f61e0677a14b579994cb4fa37c826b574fc13f1c284627dcdc1cb5e1",
+  "tools/hbm_refpb_fix.py": "454bc1917b70e93e9003d722a9fb85974b4f1c62b1eacefc3d40076a1129348e",
+  "tools/w11_idx_reader_rate.py": "988baa57b59c095e0e9e913cd6b0e980fc421304cb147366374cb3286d637a19",
+  "tools/dsrom_1m_measure.py": "50effa723f6bf50b2ee6f33caa9c0c9c8c993106730c3a4f11d160fa0ce85818",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_range.sv": "6e47d8e09370a84244b3e69de9438a6cd57fddecac357fa9f537198b2f88603d",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "d3832452c0f1716756380a97df34582aa5acddc952c84453a1a23a05c6e8a77b",
+  "rtl/test/tb_w11_idx_quarter_stack.sv": "4c4adfc3cfd5c8cf88cb5911cc032f8a6bbf984b5f6ba2823b878171e0b30213",
+  "rtl/test/w11_idx_quarter_stack.cpp": "40bbaba5e627af9443f697fa93aad09d06a3efc9b49b5718fa3fae7001574fe5"
+ },
+ "before_record": "results/rtl/dsrom_1m_measured_20261004/reader.json",
+ "variants": {
+  "legacy": {
+   "csa1_full_L20_clk833": {
+    "cycles": 5821,
+    "sectors": 557056,
+    "checked_keys": 262144,
+    "keys": 262144,
+    "fraction_of_peak": 0.9191,
+    "before_cycles": 5821,
+    "before_fraction": 0.9191,
+    "delta_pct": 0.0,
+    "refreshes": 4697,
+    "dram_check": {
+     "instances": 4,
+     "pre": 14548,
+     "refpb": 4697,
+     "act": 17795,
+     "rd": 557056,
+     "wr": 0,
+     "violations": 1337,
+     "trrefd": 993,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 241.196,
+     "first_violations": [
+      "DRAMCHK_VIOLATION t=121875 ps pc=0 bank=8 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1478750 ps pc=0 bank=6 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1600625 ps pc=0 bank=10 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1603120 ps pc=0 bank=16 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1605620 ps pc=0 bank=19 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1608120 ps pc=0 bank=18 tRREFD (REFpb -> ACT)"
+     ]
+    }
+   },
+   "csa1_full_L20_clk967": {
+    "cycles": 5019,
+    "sectors": 557056,
+    "checked_keys": 262144,
+    "keys": 262144,
+    "fraction_of_peak": 0.9182,
+    "before_cycles": 5019,
+    "before_fraction": 0.9182,
+    "delta_pct": 0.0,
+    "refreshes": 4698,
+    "dram_check": {
+     "instances": 4,
+     "pre": 14546,
+     "refpb": 4698,
+     "act": 17793,
+     "rd": 557056,
+     "wr": 0,
+     "violations": 1370,
+     "trrefd": 1025,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 240.894,
+     "first_violations": [
+      "DRAMCHK_VIOLATION t=121875 ps pc=0 bank=8 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=122903 ps pc=0 bank=7 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1478750 ps pc=0 bank=6 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1600625 ps pc=0 bank=10 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1603026 ps pc=0 bank=16 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1605526 ps pc=0 bank=19 tRREFD (REFpb -> ACT)"
+     ]
+    }
+   },
+   "csa1_full_L20_clk833_placement2": {
+    "cycles": 5813,
+    "sectors": 557056,
+    "checked_keys": 262144,
+    "keys": 262144,
+    "fraction_of_peak": 0.9203,
+    "before_cycles": 5813,
+    "before_fraction": 0.9203,
+    "delta_pct": 0.0,
+    "refreshes": 4694,
+    "dram_check": {
+     "instances": 4,
+     "pre": 14740,
+     "refpb": 4694,
+     "act": 17970,
+     "rd": 557056,
+     "wr": 0,
+     "violations": 1366,
+     "trrefd": 1018,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 241.123,
+     "first_violations": [
+      "DRAMCHK_VIOLATION t=138125 ps pc=0 bank=15 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=139950 ps pc=0 bank=22 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=142450 ps pc=0 bank=23 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=265731 ps pc=0 bank=24 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1600625 ps pc=0 bank=26 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1723904 ps pc=0 bank=7 tRREFD (REFpb -> ACT)"
+     ]
+    }
+   },
+   "csa2_full_L2_clk833": {
+    "cycles": 2835,
+    "sectors": 278528,
+    "checked_keys": 131072,
+    "keys": 131072,
+    "fraction_of_peak": 0.9435,
+    "before_cycles": 2835,
+    "before_fraction": 0.9435,
+    "delta_pct": 0.0,
+    "refreshes": 2252,
+    "dram_check": {
+     "instances": 4,
+     "pre": 5881,
+     "refpb": 2252,
+     "act": 9053,
+     "rd": 278528,
+     "wr": 0,
+     "violations": 679,
+     "trrefd": 507,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 138.125,
+     "first_violations": [
+      "DRAMCHK_VIOLATION t=121875 ps pc=0 bank=8 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1478750 ps pc=0 bank=6 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1600625 ps pc=0 bank=10 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1603120 ps pc=0 bank=16 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1605620 ps pc=0 bank=19 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1608120 ps pc=0 bank=18 tRREFD (REFpb -> ACT)"
+     ]
+    }
+   },
+   "csa2_full_L2_clk967": {
+    "cycles": 2446,
+    "sectors": 278528,
+    "checked_keys": 131072,
+    "keys": 131072,
+    "fraction_of_peak": 0.9421,
+    "before_cycles": 2446,
+    "before_fraction": 0.9421,
+    "delta_pct": 0.0,
+    "refreshes": 2252,
+    "dram_check": {
+     "instances": 4,
+     "pre": 5879,
+     "refpb": 2252,
+     "act": 9053,
+     "rd": 278528,
+     "wr": 0,
+     "violations": 691,
+     "trrefd": 521,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 138.125,
+     "first_violations": [
+      "DRAMCHK_VIOLATION t=121875 ps pc=0 bank=8 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=122903 ps pc=0 bank=7 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1478750 ps pc=0 bank=6 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1600625 ps pc=0 bank=10 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1603026 ps pc=0 bank=16 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1605526 ps pc=0 bank=19 tRREFD (REFpb -> ACT)"
+     ]
+    }
+   },
+   "csa2_full_L2_clk833_placement2": {
+    "cycles": 2763,
+    "sectors": 278528,
+    "checked_keys": 131072,
+    "keys": 131072,
+    "fraction_of_peak": 0.9681,
+    "before_cycles": 2763,
+    "before_fraction": 0.9681,
+    "delta_pct": 0.0,
+    "refreshes": 2247,
+    "dram_check": {
+     "instances": 4,
+     "pre": 6019,
+     "refpb": 2247,
+     "act": 9216,
+     "rd": 278528,
+     "wr": 0,
+     "violations": 703,
+     "trrefd": 528,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 138.125,
+     "first_violations": [
+      "DRAMCHK_VIOLATION t=138125 ps pc=0 bank=15 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=139950 ps pc=0 bank=22 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=142450 ps pc=0 bank=23 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=265731 ps pc=0 bank=24 tRREFD (REFpb -> ACT)",
+      "DRAMCHK_VIOLATION t=1600625 ps pc=0 bank=26 tRRD (ACT -> REFpb)",
+      "DRAMCHK_VIOLATION t=1723904 ps pc=0 bank=7 tRREFD (REFpb -> ACT)"
+     ]
+    }
+   },
+   "window128_per_stack_clk833": {
+    "cycles": 183,
+    "sectors": 8704,
+    "checked_keys": 4096,
+    "keys": 4096,
+    "fraction_of_peak": 0.4568,
+    "before_cycles": 183,
+    "before_fraction": 0.4568,
+    "delta_pct": 0.0,
+    "refreshes": 0,
+    "dram_check": {
+     "instances": 4,
+     "pre": 0,
+     "refpb": 0,
+     "act": 733,
+     "rd": 8704,
+     "wr": 0,
+     "violations": 0,
+     "trrefd": 0,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 0.0,
+     "first_violations": []
+    }
+   }
+  },
+  "fixed": {
+   "csa1_full_L20_clk833": {
+    "cycles": 5801,
+    "sectors": 557056,
+    "checked_keys": 262144,
+    "keys": 262144,
+    "fraction_of_peak": 0.9222,
+    "before_cycles": 5821,
+    "before_fraction": 0.9191,
+    "delta_pct": 0.345,
+    "refreshes": 4683,
+    "dram_check": {
+     "instances": 4,
+     "pre": 14550,
+     "refpb": 4683,
+     "act": 17795,
+     "rd": 557056,
+     "wr": 0,
+     "violations": 0,
+     "trrefd": 0,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 145.113,
+     "first_violations": []
+    }
+   },
+   "csa1_full_L20_clk967": {
+    "cycles": 5002,
+    "sectors": 557056,
+    "checked_keys": 262144,
+    "keys": 262144,
+    "fraction_of_peak": 0.9213,
+    "before_cycles": 5019,
+    "before_fraction": 0.9182,
+    "delta_pct": 0.34,
+    "refreshes": 4684,
+    "dram_check": {
+     "instances": 4,
+     "pre": 14551,
+     "refpb": 4684,
+     "act": 17793,
+     "rd": 557056,
+     "wr": 0,
+     "violations": 0,
+     "trrefd": 0,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 145.004,
+     "first_violations": []
+    }
+   },
+   "csa1_full_L20_clk833_placement2": {
+    "cycles": 5794,
+    "sectors": 557056,
+    "checked_keys": 262144,
+    "keys": 262144,
+    "fraction_of_peak": 0.9233,
+    "before_cycles": 5813,
+    "before_fraction": 0.9203,
+    "delta_pct": 0.328,
+    "refreshes": 4694,
+    "dram_check": {
+     "instances": 4,
+     "pre": 14757,
+     "refpb": 4694,
+     "act": 17970,
+     "rd": 557056,
+     "wr": 0,
+     "violations": 0,
+     "trrefd": 0,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 145.185,
+     "first_violations": []
+    }
+   },
+   "csa2_full_L2_clk833": {
+    "cycles": 2835,
+    "sectors": 278528,
+    "checked_keys": 131072,
+    "keys": 131072,
+    "fraction_of_peak": 0.9435,
+    "before_cycles": 2835,
+    "before_fraction": 0.9435,
+    "delta_pct": 0.0,
+    "refreshes": 2252,
+    "dram_check": {
+     "instances": 4,
+     "pre": 5881,
+     "refpb": 2252,
+     "act": 9053,
+     "rd": 278528,
+     "wr": 0,
+     "violations": 0,
+     "trrefd": 0,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 144.017,
+     "first_violations": []
+    }
+   },
+   "csa2_full_L2_clk967": {
+    "cycles": 2446,
+    "sectors": 278528,
+    "checked_keys": 131072,
+    "keys": 131072,
+    "fraction_of_peak": 0.9421,
+    "before_cycles": 2446,
+    "before_fraction": 0.9421,
+    "delta_pct": 0.0,
+    "refreshes": 2252,
+    "dram_check": {
+     "instances": 4,
+     "pre": 5879,
+     "refpb": 2252,
+     "act": 9053,
+     "rd": 278528,
+     "wr": 0,
+     "violations": 0,
+     "trrefd": 0,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 144.553,
+     "first_violations": []
+    }
+   },
+   "csa2_full_L2_clk833_placement2": {
+    "cycles": 2763,
+    "sectors": 278528,
+    "checked_keys": 131072,
+    "keys": 131072,
+    "fraction_of_peak": 0.9681,
+    "before_cycles": 2763,
+    "before_fraction": 0.9681,
+    "delta_pct": 0.0,
+    "refreshes": 2247,
+    "dram_check": {
+     "instances": 4,
+     "pre": 6019,
+     "refpb": 2247,
+     "act": 9216,
+     "rd": 278528,
+     "wr": 0,
+     "violations": 0,
+     "trrefd": 0,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 144.017,
+     "first_violations": []
+    }
+   },
+   "window128_per_stack_clk833": {
+    "cycles": 183,
+    "sectors": 8704,
+    "checked_keys": 4096,
+    "keys": 4096,
+    "fraction_of_peak": 0.4568,
+    "before_cycles": 183,
+    "before_fraction": 0.4568,
+    "delta_pct": 0.0,
+    "refreshes": 0,
+    "dram_check": {
+     "instances": 4,
+     "pre": 0,
+     "refpb": 0,
+     "act": 733,
+     "rd": 8704,
+     "wr": 0,
+     "violations": 0,
+     "trrefd": 0,
+     "ref_round_bad": 0,
+     "ref_gap_max_ns": 0.0,
+     "first_violations": []
+    }
+   }
+  }
+ }
+}
