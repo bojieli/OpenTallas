@@ -1,0 +1,8 @@
+progress cycles=10000 committed=7184 actual_accept=7186 actual_ack=7184
+progress cycles=20000 committed=14368 actual_accept=14382 actual_ack=14379
+readback words=4096 cycles=48961
+readback words=8192 cycles=69441
+readback words=12288 cycles=89921
+readback words=16384 cycles=110401
+readback words=20480 cycles=130881
+NATIVE_EMBEDDING_DONE cycles=28481 readback_end=130881 accepts=20480 acks=20480
