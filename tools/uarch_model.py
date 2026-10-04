@@ -69,6 +69,62 @@ NODE_REGION = {
 }
 
 
+
+def dsrom_baseline_link_clock_repair(flit_bytes=64, credits=512, seqw=10,
+                                     channel_cycles=156, traversals=81):
+    """Default-off baseline reliability repair, not the rejected cut-through lever.
+
+    Source: ot_dsrom_link_rt.sv; screen_base_rt SS -417.3ps/FF +4.2ps,
+    rr_f[37] -> reverse CRC/ACK/rewind -> st_replays[27]. Retain the
+    baseline payload, lane/PHY budgets, cumulative credits and replay storage.
+    One registered launch payload cuts window/replay-select from forward CRC.
+    Receive CRC flags align with existing frame registers (zero added edges).
+    """
+    if min(flit_bytes, credits, seqw, channel_cycles, traversals) < 1:
+        raise ValueError("positive link dimensions required")
+    if credits > 2 ** (seqw - 1):
+        raise ValueError("ambiguous sequence window")
+    w = 8 * flit_bytes
+    cw = math.ceil(math.log2(credits + 1))
+    fpw = w + seqw + 1
+    baseline_loop = 2 * channel_cycles + 2 + 2 + 6
+    repaired_loop = baseline_loop + 1
+    # Payload+valid head and two aligned CRC flags. Status counters retain
+    # their cycle-visible values: bounded 8-bit parallel increment segments.
+    ff = fpw + 1 + 2
+    return dict(candidate="DSROM_BASELINE_LINK_RT_CLOCK1", default_enabled=False,
+        baseline_source_sha256=hashlib.sha256((ROOT / "rtl/dsrom_sys/ot_dsrom_link_rt.sv").read_bytes()).hexdigest(),
+        baseline_ss_setup_ps=-417.3, baseline_ff_hold_ps=4.2,
+        period_ps=1000/1.2, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+        macs_per_cycle=0, memory_bytes_per_port_edge=flit_bytes,
+        replay_write_ports=1, replay_read_ports=1, fifo_write_ports=1, fifo_read_ports=1,
+        forward_bits_per_edge=fpw+32, reverse_bits_per_edge=1+seqw+cw+32,
+        replicas=dict(launch_head=1, aligned_crc_flags=2, status_counters=9,
+                      status_counter_8bit_segments=36),
+        added_ff_bits=ff, added_ff_body_um2_proxy=ff*DFF_UM2,
+        added_ff_50pct_reservation_um2_proxy=2*ff*DFF_UM2,
+        added_comb_area_um2=None, actual_slot_fit=None,
+        added_packet_edges=1, added_ack_generation_edges=0,
+        added_ack_credit_roundtrip_edges=1,
+        diagnostic_observation_delay_edges=0,
+        baseline_credit_loop_edges=baseline_loop, repaired_credit_loop_edges=repaired_loop,
+        credits=credits, sequence_bits=seqw,
+        ideal_credit_bound_flits_per_edge=min(1, credits/repaired_loop),
+        bytes_per_edge_bound=flit_bytes*min(1, credits/repaired_loop),
+        selected_stage_hops=traversals,
+        added_single_user_stage_chain_us=traversals/1.2e3,
+        baseline_hop_cycles=909, candidate_hop_cycles_lower_bound=911,
+        hop_two_endpoint_added_edges=2,
+        # Board then package fanout: one extra launch edge in each endpoint.
+        added_single_user_two_endpoint_chain_us=2*traversals/1.2e3,
+        token_return_8_traversals_added_us=8/1.2e3,
+        token_latency_not_measured=True, error_replay_latency_not_measured=True,
+        routing_tracks_needed=fpw+32+1+seqw+cw+32,
+        channel_tracks_available=None, routing_fit=False,
+        ss_ff_qualified=False, physical_admitted=False,
+        limits="FF price is a source proxy; comb/CTS/PG/routes/loaded SSFF must be measured. No PHY or cut-through gain.")
+
+
 def node_key(name: str) -> str:
     tail = name.split(".", 1)[1] if "." in name else name
     for k in sorted(NODE_K, key=len, reverse=True):
