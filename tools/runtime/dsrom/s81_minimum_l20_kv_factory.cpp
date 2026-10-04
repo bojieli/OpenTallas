@@ -216,6 +216,10 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
             r.provider->wire_backend(*r.mux);
             r.provider->wire_selected_backend(*c,*r.mux);
             r.hbm->wire(*r.mux);
+            // Backend eval settles routed responses in the mux. Refresh the
+            // service pins before its OLD-edge snapshot; retaining the prior
+            // mux response would repeat/drop tagged DMA sectors.
+            r.provider->wire_selected_backend(*c,*r.mux);
             // The cut feeds native endpoint credit back into the adapter.
             // Settle that feedback with the phase before provider.prepare
             // captures OLD accept; no clock edge or credit is generated here.
@@ -340,7 +344,11 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
                 auto native=r.provider->selected_participant(*c);
                 // Native one-edge VM read timing, using only the positively
                 // published, leased actual VM response bits staged above.
-                r.service={"l20-native-ckv-rank"+std::to_string(i),native.prepare,
+                r.service={"l20-native-ckv-rank"+std::to_string(i),
+                    [weak,i,native](const auto& result){auto self=weak.lock();need(bool(self),"CKV owner expired");
+                        // This follows HBM.prepare in the participant order:
+                        // freeze the same settled response/ready pins HBM used.
+                        self->join_rank(i);native.prepare(result);},
                     [weak,i,native](bool released){auto self=weak.lock();need(bool(self),"CKV owner expired");
                         auto& rr=self->ranks[i];std::visit([&](auto& svc){
                             rr.response_pending=released&&svc->vm_re;
