@@ -38,7 +38,8 @@ module tb_hbm_stream_bw;
   ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(REF_MODE), .CRED(CRED), .PHASE(PHASE)) dut (
     .clk(clk), .rst_n(rst_n), .desc_v(desc_v), .desc_r(desc_r), .desc_row(desc_row), .desc_n(11'(NS)),
     .go(go), .next_posted(B2B != 0), .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
-    .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .cred_ret(cred_ret), .busy(busy), .fault(fault));
+    .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .cred_ret(cred_ret), .busy(busy), .fault(fault),
+    .wr_v(32'b0), .wr_bank(160'b0), .wr_col(160'b0), .wr_r(), .col_we());
 
   function automatic [255:0] src(input integer layer, input integer s);
     for (integer w = 0; w < 8; w++) src[32*w +: 32] = (32'(layer) * 32'h01000193 ^ 32'(s * 8 + w)) * 32'h9E3779B1 ^ 32'h5bd1e995;

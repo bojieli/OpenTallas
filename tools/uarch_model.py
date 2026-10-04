@@ -1105,14 +1105,25 @@ def qwen_rows():
 GPU = dict(barrier_cycles_hw=200,           # superseded: the pre-W13 ASSUMED hardware barrier (kept for the
                                              # labelled comparison row); W13 derives it from the floorplan
                                              # and measures it in RTL (hbm_gpu_design()["barrier"])
-           barrier_ns_grid=1430.0,           # measured: V100 cooperative-groups grid sync, 1 block/SM, 32 threads
+           barrier_ns_grid=1097.0,           # MEASURED H100 SXM5 cooperative grid.sync, 132 SMs x 256 threads
+                                             # (results/measured/h100_nvls_20261004; owner 2026-10-04 default)
+           barrier_ns_grid_v100_superseded=1430.0,   # V100 cooperative-groups grid sync, 1 block/SM, 32 threads
                                              # (L. Zhang et al., "A Study of Single and Multi-device
                                              # Synchronization Methods in Nvidia GPUs", IPDPS 2020, Fig. 5)
            barrier_ns_grid_sensitivity=dict(p100_1_block_per_sm=1770.0, v100_1024_threads=2210.0),
+           # MEASURED H100 SXM5 (results/measured/h100_nvls_20261004): back-to-back stream kernel launch, CUDA-graph
+           # kernel node (the grid sync above is the same campaign)
+           barrier_ns_grid_h100_measured=1097.0, kernel_launch_ns_h100_measured=2672.0,
+           graph_node_ns_h100_measured=1014.0,
            barrier_cycles_dsmem_ref=(181, 213),  # H800 SM-to-SM DSMEM latency, cluster 2..16 (Luo et al.,
                                              # arXiv 2501.12084 7.1): the reference for an on-die hardware barrier
            seq_gap_cycles=7,
            adapter_measured_Bpc=39.0, sustained_frac=1.0)
+
+
+def _grid_tag():
+    """Row-name suffix of the grid-sync rows: the measured H100 default, or the superseded V100 figure."""
+    return "v100" if GPU["barrier_ns_grid"] == GPU["barrier_ns_grid_v100_superseded"] else "h100"
 
 
 def qwen_hbm_rows():
@@ -1141,7 +1152,7 @@ def qwen_hbm_rows():
             ("qwen_hbm_adapter_as_built_no_prefetch", GPU["adapter_measured_Bpc"] / per_die_Bpc, GPU["seq_gap_cycles"] / clock),
             ("qwen_hbm_gpu_derived_barrier_no_prefetch", 1.0, bnd / clock),
             ("qwen_hbm_gpu_assumed200_no_prefetch", 1.0, GPU["barrier_cycles_hw"] / clock),
-            ("qwen_hbm_gpu_grid_sync_v100_no_prefetch", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
+            (f"qwen_hbm_gpu_grid_sync_{_grid_tag()}_no_prefetch", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
         T = t_hbm / supply + boundaries * barrier_s + tp
         rows.append(dict(design=tag, T_us=round(T * 1e6, 1), tokens_s=round(1 / T, 1), supply_frac=supply,
                          barrier_us_per_token=round(boundaries * barrier_s * 1e6, 1), boundaries=boundaries,
@@ -1150,9 +1161,10 @@ def qwen_hbm_rows():
     ops = qwen_hbm_ops(dq["element"], GPU["barrier_ns_grid"] * 1e-9 * clock, dq["drain_cycles"])
     tg, _ = stream_overlap(ops, dq["hbm_Bpc"], dq["sm_count"] * dq["element"]["ingest_Bpc"],
                            dq["staging_kb_per_sm"] * 1024 * dq["sm_count"])
-    rows.append(dict(design="qwen_hbm_gpu_grid_sync_v100", T_us=round(tg / clock * 1e6, 1),
+    rows.append(dict(design=f"qwen_hbm_gpu_grid_sync_{_grid_tag()}", T_us=round(tg / clock * 1e6, 1),
                      tokens_s=round(clock / tg, 1), supply_frac=1.0, boundaries=boundaries,
-                     form="prefetching bulk copy, V100 grid sync 1.43 us per boundary"))
+                     form=f"prefetching bulk copy, {_grid_tag().upper()} grid sync "
+                          f"{GPU['barrier_ns_grid'] * 1e-3:.2f} us per boundary"))
     return rows
 
 
@@ -1188,48 +1200,191 @@ def sm_op_cycles(rows_die: float, K: int, fmt: str, drain: int, group_slot: bool
 V41_HBM_FABRIC_US = dict(collective_latency=125.9, collective_bytes=1.5, pipeline_hops=0.9, control=2.0)
 V41_HBM_DIES = 96          # G = 96: every matrix 1/96 per die (W9 handoff 8)
 
-# Sourced HBM switch collective latency (owner decision 2026-10-04): the single quoted 250 ns switch core
-# (alpha = 2 x 209 + 250 = 668 ns, W15 measured fixed AR 823.6 / AG 777.0 ns) is replaced, OPT-IN, by a sourced
-# low / central / high hardware-path latency for one 32 KB all-reduce across 48 packages in one NVL72-class 18-chip
-# tier (results/uarch/hbm_switch_latency_range_20261004/switch_latency_research.md).  Default None: every existing
-# figure is unchanged.  Slope / bytes terms are kept.  FEC: the sourced range is the as-published (rack-cable KP4
-# class) path; "light" removes (209 - 130) ns on every SerDes leg the mechanism crosses (2 per switch traversal),
-# the same light-FEC 130 ns class as the ROM board links.  The 0.2-0.5 us LLR retry is a p99.9 tail, not a median.
+# HBM switch collective latency, AUTHORITATIVE (owner decision 2026-10-04, third revision).  Scenarios:
+#   nvls_measured   (alias central): MEASURED H100 HGX one-shot NVLS all-reduce / multimem.st all-gather with relaxed
+#                   hardware-path sync (results/measured/h100_nvls_20261004; NVLink4 / H100 generation).
+#                   DEFAULT for the GPU-organised ABLATION (v41_hbm_chain / v41_hbm_rows).
+#   gpu_fenced      (alias high): MEASURED one-shot NVLS AR with GPU-correct sys-scope release/acquire sync.
+#                   DEFAULT for the GPU-faithful rows.
+#   tomahawk_ultra_protocol: a stock Broadcom Tomahawk Ultra scale-up Ethernet tier (~8 chips, one tier, each 2-die
+#                   package striping over 8 x 800G ports) running OUR protocol (hardware-initiated register-to-register
+#                   sends, completion by arrival counting, link-level retry + CRC, credit flow control).  AR = reduce-
+#                   scatter to the slice owner (1 crossing, switch forwards only) + fixed golden-order owner reduction
+#                   (HA2 measured reducer) + cut-through switch multicast (2nd crossing); gather = 1 multicast crossing.
+#                   Priced PER OP at the W19 program's actual bytes.  DEFAULT for the HBM ACCELERATOR.
+#   tomahawk_ultra_inc: the same tier with in-switch reduction (1 crossing): SENSITIVITY only (the switch's reduction
+#                   order is unpublished, so bit-exact golden order is not guaranteed).
+#   push_optimistic (alias low): measured in-switch data path + one hardware notification (barrier nearly free).
+#   w15: the SUPERSEDED RTL-model term (2 x 209 + 250 = 668 ns; W15 fit AR 823.6 / AG 777.0 ns).
+# NVLS scenarios replace only the FIXED term (small-message value; W15 slopes carry the bytes; 32 KB = bracket) and add
+# a 48-package striping tail of 0.15 us (0.1-0.2), justified by NVLS being flat from 2 to 8 GPUs.  Reach: the measured
+# HGX path is board traces (~85 ns a leg incl. switch), at or below the ROM light-FEC 130 ns class: fec="board" is the
+# reach-matched default; fec="kp4" adds (209 - 130) ns per SerDes leg (rack-cable sensitivity).  The Tomahawk crossing
+# is the SUE rack budget (3 m twinax .. 10 m SMF), already rack reach: fec does not apply to it.
+_TAIL_US = 0.15
+_BAR_RLX_US = (0.704 + 0.731) / 2                 # measured relaxed multimem.red barrier, flat for 2/4/8 GPUs
+_BAR_SYS_US = (4.020 + 4.044) / 2                 # measured sys-scope release/acquire barrier
+_NOTIFY_US = _BAR_RLX_US / 2                       # one hardware notification: half the relaxed barrier (~0.36 us)
+# Tomahawk Ultra / SUE one-way crossing (Broadcom Scale-Up Ethernet Framework RM104, App. A, Fig. 22; VENDOR BUDGETS):
+# endpoint bridge NoC<->Ethernet 100 ns (Tx+Rx) + endpoint Ethernet link+PHY 100 ns (Tx+Rx) + switch Tx+Rx 250 ns
+# (includes its PHY/FEC) + 2 x cable (4.6 ns/m twinax, 4.96 ns/m SMF): 477.6 (3 m twinax) / 496 (5 m HCF) / 549.2 (10 m SMF)
+TU = dict(endpoint_bridge_ns=100.0, endpoint_phy_ns=100.0, switch_ns=250.0, cable_ns=dict(twinax_3m=2 * 3 * 4.6,
+          hcf_5m=2 * 5 * 4.6, smf_10m=2 * 10 * 4.96),
+          port_gbps=800.0, ports_per_package=8, payload_eff=0.9,       # ASSUMED framing/header efficiency
+          # HA2 measured endpoint reducer (results/rtl/hbm_accel_ha2_ar_20261004, main c7d138048/13b92e71e): golden
+          # pairwise tree over the o-group's 8 contributors, ot_hdc_fp32_add_lat #(7), LAT x log2(8) = 21 cycles +
+          # golden to_bf16 1 cycle, cut-through (a flit reduces as soon as its operands are slotted) at 1.2 GHz
+          reducer_cycles=7 * 3 + 1, reducer_hz=1.2e9, inc_reduce_ns=50.0,  # in-switch reduce pipeline (ASSUMED, research note)
+          src="results/uarch/hbm_switch_latency_range_20261004/switch_latency_research.md rows 21, 30 (RM104 App. A)")
+TU["bw_Bps"] = TU["port_gbps"] * 1e9 / 8 * TU["ports_per_package"] * TU["payload_eff"]   # 720 GB/s striped payload
+TU["reduce_ns"] = TU["reducer_cycles"] / TU["reducer_hz"] * 1e9
+
+
+def tu_crossing_ns(cable="twinax_3m"):
+    return TU["endpoint_bridge_ns"] + TU["endpoint_phy_ns"] + TU["switch_ns"] + TU["cable_ns"][cable]
+
+
+def tu_transport_us(kind, nbytes, scenario="tomahawk_ultra_protocol", cable="twinax_3m", tail_us=_TAIL_US):
+    """One W19 collective's transport time (us) on the Tomahawk Ultra tier at its actual bytes (P x op bytes)."""
+    x = tu_crossing_ns(cable)
+    ser = nbytes / TU["bw_Bps"] * 1e9
+    if kind == "all_reduce":
+        if scenario == "tomahawk_ultra_inc":       # push to the switch, reduce in-switch, multicast: 1 crossing
+            ns = x + TU["inc_reduce_ns"] + 2 * ser
+        else:                                      # RS (1 crossing) + owner reduce + cut-through multicast (crossing 2)
+            ns = 2 * x + TU["reduce_ns"] + 2 * ser
+    else:                                          # gather / kv gather / top-k merge: one multicast crossing
+        ns = x + ser
+    return ns * 1e-3 + tail_us
+
+
 HBM_SWITCH_LATENCY = dict(
-    low=dict(ar_us=0.65, ag_us=0.60, traversals_ar=1, traversals_ag=1,
-             mechanism="push-mode in-switch reduce, SUE/UALink-class endpoints (~0.5 us one-way, Broadcom RM104 "
-                       "App. A; UALink 1.0 RTT < 1 us) + 36 ns serialisation + ~50 ns reduce + ~0.1 us stripe tail"),
-    central=dict(ar_us=1.40, ag_us=1.20, traversals_ar=1, traversals_ag=1, ar_range_us=[1.3, 1.5],
-                 mechanism="push-mode in-switch reduce with measured GB200 endpoint constants: 0.792 us one-way + "
-                           "~0.3 us L2 (arXiv:2607.16100 Sec. VI) + serialisation + reduce + tail"),
-    high=dict(ar_us=3.25, ag_us=2.0, traversals_ar=4, traversals_ag=2, ar_range_us=[3.0, 3.5],
-              mechanism="NVLS as exposed today: readiness barrier + multimem.ld_reduce RTT + multicast store + tail "
-                        "(~3.3 us), or one-shot multicast store 1.4 us SoL + 1.7 us ingress (~3.1 us)"),
+    push_optimistic=dict(ar_us=dict(small=0.783 + _NOTIFY_US + _TAIL_US, kb32=1.136 + _NOTIFY_US + _TAIL_US),
+             ag_us=dict(small=0.762 + _NOTIFY_US + _TAIL_US, kb32=0.762 + 0.209 + _NOTIFY_US + _TAIL_US),
+             legs_ar=8, legs_ag=4, basis="MEASURED data path + DERIVED notification",
+             mechanism="in-switch data path only (multimem.ld_reduce slice + multimem.st, measured 783-1,136 ns = "
+                       "one-shot relaxed AR minus its 2 barriers) + ONE hardware notification (~0.36 us = half the "
+                       "measured relaxed barrier).  Gather: one multicast store (measured relaxed one-way store 762 ns; "
+                       "32 KB adds the measured AG size increment 0.209 us) + notification -- DERIVED"),
+    nvls_measured=dict(ar_us=dict(small=2.244 + _TAIL_US, kb32=2.597 + _TAIL_US),
+                 ag_us=dict(small=1.382 + _TAIL_US, kb32=1.590 + _TAIL_US),
+                 legs_ar=10, legs_ag=6, basis="MEASURED",
+                 mechanism="measured one-shot NVLS all-reduce with relaxed hardware-path sync (barrier + ld_reduce "
+                           "slice + multimem.st + barrier), 2,244 ns (128 B) - 2,597 ns (32 KB) at 8 GPUs, flat in "
+                           "group size; gathers: measured multimem.st all-gather 1,382 (128 B) / 1,590 ns (32 KB "
+                           "total).  Relaxed sync bounds the HARDWARE path (not memory-model-guaranteed)"),
+    gpu_fenced=dict(ar_us=dict(small=8.904 + _TAIL_US, kb32=9.144 + _TAIL_US),
+              ag_us=dict(small=1.382 + 2 * (_BAR_SYS_US - _BAR_RLX_US) + _TAIL_US,
+                         kb32=1.590 + 2 * (_BAR_SYS_US - _BAR_RLX_US) + _TAIL_US),
+              legs_ar=10, legs_ag=6, basis="MEASURED (AR); DERIVED (AG: measured relaxed AG + 2 x (sys - relaxed "
+                                           "barrier))",
+              mechanism="measured one-shot NVLS all-reduce with GPU-correct sys-scope release/acquire sync, "
+                        "8,904-9,144 ns: what GPU software pays without special hardware"),
+    tomahawk_ultra_protocol=dict(per_op=True, basis="VENDOR BUDGET (SUE RM104 crossing) + MEASURED (HA2 reducer) + "
+                                 "DERIVED (serialisation, tail)",
+                                 mechanism="stock Tomahawk Ultra tier + our protocol: AR = 2 crossings + golden-order "
+                                           "owner reduction + 2 x serialisation; gather = 1 crossing + serialisation; "
+                                           "+ 0.15 us striping tail over ~8 chips"),
+    tomahawk_ultra_inc=dict(per_op=True, basis="SENSITIVITY: in-switch reduction, reduction order unpublished",
+                            mechanism="AR = 1 crossing + in-switch reduce (~50 ns ASSUMED) + 2 x serialisation + tail"),
+    w15=dict(basis="SUPERSEDED RTL model: 2 x 209 + 250 = 668 ns switch (V41_HBM_FABRIC_US lump); W15 fit fixed "
+                   "AR 823.6 / AG 777.0 ns (the W19 parts embed it)"),
+    generation="NVLS anchors: NVLink4 / H100 SXM5 HGX (NVSwitch gen3), measured 2026-10-04; not NVLink5 / NVL72. "
+               "Tomahawk Ultra: vendor budget (RM104), not measured",
+    tail_us=_TAIL_US, tail_range_us=[0.1, 0.2], notify_us=_NOTIFY_US,
+    barrier_relaxed_us=_BAR_RLX_US, barrier_sys_us=_BAR_SYS_US, tomahawk=TU,
     retry_tail_us=[0.2, 0.5], kp4_leg_ns=209.0, light_leg_ns=130.0,
     w15_fixed_ns=dict(ar=988.74 / 1.20048019208, ag=932.8 / 1.20048019208),   # W19_COLL_FIT (hbm_p48_ss)
-    ag_basis="all-gather is latency-bound at these sizes: one traversal + tail, 0.6 (SUE-class) - 1.2 us (GB200-class) "
-             "(research note); high adds one readiness/flag traversal (0.8 us, [1]) -- DERIVED, labelled",
+    w19_mix=dict(all_reduce=40, gather_like=225),
+    src="results/measured/h100_nvls_20261004/README.md")
+HBM_SWITCH_ALIASES = dict(low="push_optimistic", central="nvls_measured", high="gpu_fenced")
+HBM_SWITCH_LATENCY_LITERATURE_SUPERSEDED = dict(
+    low=dict(ar_us=0.65, ag_us=0.60, traversals_ar=1, traversals_ag=1),
+    central=dict(ar_us=1.40, ag_us=1.20, traversals_ar=1, traversals_ag=1, ar_range_us=[1.3, 1.5]),
+    high=dict(ar_us=3.25, ag_us=2.0, traversals_ar=4, traversals_ag=2, ar_range_us=[3.0, 3.5]),
+    superseded_by="results/uarch/hbm_switch_latency_authoritative_20261004",
     src="results/uarch/hbm_switch_latency_range_20261004/switch_latency_research.md (sec. 2)")
-_HBM_SWITCH = None      # opt-in scenario name (low / central / high); None keeps every published figure
-_HBM_FEC = "kp4"
+# AUTHORITATIVE DEFAULTS (owner 2026-10-04): ablation = measured NVLS hardware path; accelerator = Tomahawk Ultra +
+# our protocol; GPU-faithful = GPU-correct fenced + measured H100 grid sync.  "w15" restores the superseded lump.
+HBM_SWITCH_DEFAULTS = dict(ablation="nvls_measured", accelerator="tomahawk_ultra_protocol", gpu_faithful="gpu_fenced")
+_HBM_SWITCH = HBM_SWITCH_DEFAULTS["ablation"]   # the scenario v41_hbm_chain (the GPU-organised ablation) prices
+_HBM_FEC = "board"        # as measured (HGX board reach, ROM-matched); "kp4" = rack-cable sensitivity
+W19_PROGRAM = "results/rtl/w19_hbm_tp96_program_oreduce.json"
+W19_COLL_RECORD = "results/uarch/w19_hbm_token_ar.json"
+_W19_OPS = None
 
 
-def hbm_switch_collective_us(scenario, kind="ar", fec="kp4", split=False):
-    """Fixed hardware-path latency of one TP-96 collective (us) under a sourced scenario.  split=False (the owner's
-    primary): every collective priced at the all-reduce range; split=True: gathers at the gather note's range."""
+def w19_collective_ops():
+    """The W19 program's on-path collectives (265: 40 o-group AR + 225 gather-like), as w19_hbm_token_compose walks them."""
+    global _W19_OPS
+    if _W19_OPS is None:
+        import w19_hbm_token_compose as W
+        prog = json.loads((ROOT / W19_PROGRAM).read_text())
+        coll = json.loads((ROOT / W19_COLL_RECORD).read_text())["result"]["collective_model"]
+        ops = [op for lay in prog["layers"] for op in lay["ops"]
+               if op["kind"] in ("all_gather", "all_reduce", "topk_merge", "kv_gather")
+               and not op["tag"].startswith(W.OFF_PATH_COLL)]
+        _W19_OPS = (ops, coll, W)
+    return _W19_OPS
+
+
+def w19_transport_us(P=1, scenario="w15", fec="board", cable="twinax_3m"):
+    """Sum of the W19 on-path collectives' TRANSPORT time (us) for a pass of P positions: the W15 product-port pricing
+    (fixed + slope) without the top-k merges' select term (compute, kept unchanged), or a scenario's.  NVLS-class
+    scenarios replace the fixed term only; Tomahawk Ultra prices every op at its P x bytes."""
+    ops, coll, W = w19_collective_ops()
+    hz = coll["hz"]
+    tot = 0.0
+    for op in ops:
+        us, _ = W.prod_us(op, coll, P)
+        if op["kind"] == "topk_merge" and op.get("what") in ("sel", "cand"):
+            us -= 9 * (W.TP * op["k"] / 64) * P / hz * 1e6
+        kind = "ar" if op["kind"] == "all_reduce" else "ag"
+        if scenario in ("tomahawk_ultra_protocol", "tomahawk_ultra_inc"):
+            us = tu_transport_us(op["kind"], P * op["bytes"], scenario, cable)
+        elif scenario != "w15" or fec != "kp4":
+            fixed = (coll["ar"]["fixed_cycles"] if kind == "ar" else coll["ag"]["fixed_cycles"]) / hz * 1e6
+            us += hbm_switch_collective_us(scenario, kind, fec) - fixed
+        tot += us
+    return tot
+
+
+def hbm_switch_collective_us(scenario, kind="ar", fec="board", msg="small"):
+    """Fixed latency (us) of one TP-96 collective, kind "ar" or "ag" (gather-like), msg "small" (<= 512 B, primary for
+    the NVLS scenarios: W15 slopes carry the bytes) or "32KB" (bracket).  Tomahawk Ultra: transport at msg bytes
+    (small = 512 B; 32KB = 32,768 B)."""
+    scenario = HBM_SWITCH_ALIASES.get(scenario, scenario)
+    if scenario == "w15":
+        f = HBM_SWITCH_LATENCY["w15_fixed_ns"]["ag" if kind == "ag" else "ar"] * 1e-3
+        return f - (0.0 if fec == "kp4" else 2 * (HBM_SWITCH_LATENCY["kp4_leg_ns"] - HBM_SWITCH_LATENCY["light_leg_ns"]) * 1e-3)
+    if scenario in ("tomahawk_ultra_protocol", "tomahawk_ultra_inc"):
+        return tu_transport_us("all_reduce" if kind == "ar" else "all_gather", 32768 if msg == "32KB" else 512, scenario)
     sc = HBM_SWITCH_LATENCY[scenario]
-    key = "ag" if (split and kind == "ag") else "ar"
-    legs = 2 * sc["traversals_" + key]
+    key = "ag" if kind == "ag" else "ar"
+    v = sc[key + "_us"]["kb32" if msg == "32KB" else "small"]
     d = HBM_SWITCH_LATENCY["kp4_leg_ns"] - HBM_SWITCH_LATENCY["light_leg_ns"]
-    return sc[key + "_us"] - (legs * d * 1e-3 if fec == "light" else 0.0)
+    return v + (sc["legs_" + key] * d * 1e-3 if fec == "kp4" else 0.0)
 
 
-def v41_hbm_fabric_us(switch=None, fec="kp4"):
-    """The legacy fabric lump (V41_HBM_FABRIC_US: ~188 collectives x 0.668 us); with a scenario, the per-collective
-    fixed latency is the sourced one.  Bytes, pipeline hops and control are kept."""
+def hbm_switch_mix_us(scenario, fec="board", msg="small"):
+    """Per-collective latency at the W19 mix (40 all-reduce + 225 gather-like); Tomahawk Ultra: the W19 on-path ops'
+    mean transport at their actual bytes."""
+    scenario = HBM_SWITCH_ALIASES.get(scenario, scenario)
+    if scenario in ("tomahawk_ultra_protocol", "tomahawk_ultra_inc"):
+        return w19_transport_us(1, scenario) / len(w19_collective_ops()[0])
+    mx = HBM_SWITCH_LATENCY["w19_mix"]
+    n = mx["all_reduce"] + mx["gather_like"]
+    return (mx["all_reduce"] * hbm_switch_collective_us(scenario, "ar", fec, msg)
+            + mx["gather_like"] * hbm_switch_collective_us(scenario, "ag", fec, msg)) / n
+
+
+def v41_hbm_fabric_us(switch=None, fec="board"):
+    """The legacy fabric lump (V41_HBM_FABRIC_US: ~188 collectives x 0.668 us).  switch=None or "w15" keeps it
+    exactly; a scenario prices each collective at its W19-mix per-collective latency.  Bytes, pipeline hops and
+    control are kept."""
     f = dict(V41_HBM_FABRIC_US)
-    if switch:
-        f["collective_latency"] = f["collective_latency"] / 0.668 * hbm_switch_collective_us(switch, "ar", fec)
+    if switch and switch != "w15":
+        f["collective_latency"] = f["collective_latency"] / 0.668 * hbm_switch_mix_us(switch, fec)
     return f
 
 
@@ -1243,7 +1398,7 @@ V41_HBM_SERVICE = dict(
 )
 
 
-def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None, service="off", switch=None, fec="kp4"):
+def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None, service="off", switch=None, fec=None):
     """V4.1 HBM token on the SM design, K-chain aware: the arch DAG's critical path at 1M with every matvec
     re-priced as an SM op on its 1/96 row slice (sm_op_cycles), the dedicated units' nodes (W11 spec widths)
     at their arch price, one barrier per global boundary, and the comparator's switched-fabric terms.  The
@@ -1276,7 +1431,7 @@ def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None, ser
     bc = d["barrier"]["boundary_cycles"] if barrier_cycles is None else barrier_cycles
     parts = dict(sm_matvec=mv * 1e6, x_broadcast_fill=xfill * 1e6, dedicated_and_su=other * 1e6,
                  verify_extra_issue=extra * 1e6, barrier=nb * bc / clock * 1e6,
-                 **v41_hbm_fabric_us(switch or _HBM_SWITCH, fec if switch else _HBM_FEC))
+                 **v41_hbm_fabric_us(switch or _HBM_SWITCH, fec or _HBM_FEC))
     parts["collective_bytes"] *= positions             # every position's activations cross the fabric
     sv = V41_HBM_SERVICE[service]  # named, source-priced profiles only
     if sv["boundary_cycles"] or sv["routed_fetch_ns"]:
@@ -1302,8 +1457,10 @@ def v41_hbm_rows():
     bnd = hbm_gpu_design("v41")["barrier"]["boundary_cycles"]
     rows = []
     for tag, gs, bc in (("v41_hbm_gpu_rowslot", False, None), ("v41_hbm_gpu_groupslot", True, None),
-                        ("v41_hbm_gpu_groupslot_grid_sync_v100", True, GPU["barrier_ns_grid"] * 1e-9 * clock)):
-        T, parts, nb = v41_hbm_chain(gs, 1, bc)
+                        (f"v41_hbm_gpu_groupslot_grid_sync_{_grid_tag()}", True, GPU["barrier_ns_grid"] * 1e-9 * clock)):
+        # the GPU-faithful (grid-sync) row prices its collectives at the GPU-correct fenced scenario
+        sw = HBM_SWITCH_DEFAULTS["gpu_faithful"] if (bc is not None and _HBM_SWITCH != "w15") else None
+        T, parts, nb = v41_hbm_chain(gs, 1, bc, switch=sw)
         rows.append(dict(design=tag, T_us=round(T, 1), tokens_s=round(1e6 / T, 1), supply_frac=1.0, boundaries=nb,
                          form="K-chain-aware SM chain, prefetching bulk copy",
                          breakdown_us={k: round(x, 1) for k, x in parts.items()}))
@@ -1920,10 +2077,30 @@ GPU_CAL = json.loads((ROOT / "results/arch/qwen_gpu_calibration.json").read_text
 GPU_FIT = GPU_CAL["fit"]              # t = fixed + seconds_per_weight_byte x bytes (H200 NIM fit, BF16/FP8 pair)
 H200_BW = 4.8e12
 B200_BW = 8.0e12                       # per GPU (NVIDIA B200 datasheet)
-NCCL_ALLREDUCE_S = 8e-6                # ASSUMED NCCL-class small-message all-reduce inside an 8-GPU NVLink node
+# GPU-baseline small all-reduce (owner 2026-10-04: GPU rows use MEASURED GPU software costs).  Default: the measured
+# GPU-correct (sys-scope release/acquire) one-shot NVLS all-reduce on H100 HGX, 8.904-9.144 us (mid 9.024 us), i.e.
+# what a graph-captured custom kernel pays.  NCCL all_reduce_perf WITHOUT a CUDA graph measured 32-36 us (launch-bound;
+# NCCL with graphs hung, not measured) and is the stock-software sensitivity.  Was 8 us ASSUMED.  NVLink4 / H100
+# generation; the tier-2 rows are 8x B200 (NVLink5 not measured).  results/measured/h100_nvls_20261004.
+NCCL_ALLREDUCE_S = (8.904e-6 + 9.144e-6) / 2
+NCCL_ALLREDUCE_ASSUMED_SUPERSEDED_S = 8e-6
+NCCL_ALLREDUCE_MEASURED_H100_S = dict(oneshot_nvls_sys_sync=(8.904e-6, 9.144e-6), nccl_no_graph=(32e-6, 36e-6))
 DFLASH_PAPER = ("Z. Chen, Liang, Liu, 'DFlash: Block Diffusion for Flash Speculative Decoding', arXiv 2602.06036, "
                 "Table 3 (SGLang, FA4 backend, single B200, thinking disabled, temperature 0)")
+# AUTHORITATIVE Qwen3-8B GPU baseline (owner 2026-10-04): MEASURED on the rented 8x H100 SXM5 HGX node, vLLM 0.11.0
+# (torch 2.8 cu128, CUDA graphs, V1 engine), batch-1 decode, 128 in / 512 out, 2 warmup + 5 iterations; tok/s = 512 /
+# mean end-to-end latency (prefill < 1%).  results/measured/h100_nvls_20261004/README.md.  The B200 rows stay as the
+# labelled model / published anchors.
+QWEN_GPU_H100_MEASURED = dict(
+    bf16={1: 138.1, 2: 195.5, 4: 259.7, 8: 293.4}, fp8={1: 194.1, 2: 242.1, 4: 275.4, 8: 305.7},
+    latency_s=dict(bf16={1: 3.708, 2: 2.619, 4: 1.972, 8: 1.745}, fp8={1: 2.637, 2: 2.115, 4: 1.859, 8: 1.675}),
+    workload="batch 1, 128 in / 512 out (short context); 8K-context and EAGLE-3 runs pending",
+    src="results/measured/h100_nvls_20261004/README.md")
 TIER1 = [
+    *[dict(tier=1, design=f"Qwen3-8B, {tp}x H100 SXM (TP{tp}), vLLM 0.11 {fmt.upper()}, AR, batch 1 (MEASURED)",
+           tokens_s=QWEN_GPU_H100_MEASURED[fmt][tp], authoritative_qwen_gpu_baseline=(tp == 1 and fmt == "fp8"),
+           source=QWEN_GPU_H100_MEASURED["src"])
+      for fmt in ("fp8", "bf16") for tp in (1, 2, 4, 8)],
     dict(tier=1, design="Qwen3-8B-class, H200, NIM FP8, AR", tokens_s=GPU_CAL["nim_h200"]["fp8_tok_s"],
          source=GPU_CAL["nim_h200"]["source"]),
     dict(tier=1, design="Qwen3-8B, RTX PRO 6000 (this lab), FP8 AR",
@@ -2116,9 +2293,10 @@ def fabric_sweep():
     # V4.1 HBM: its fabric term is 125.9 us at the 668 ns hop, i.e. ~188 collectives on the path
     base = [r for r in v41_hbm_rows() if r["design"] == "v41_hbm_gpu_groupslot"]
     ncoll = V41_HBM_FABRIC_US["collective_latency"] / 0.668
+    cur = v41_hbm_fabric_us(_HBM_SWITCH, _HBM_FEC)["collective_latency"] / ncoll    # the default per-collective term
     for b in base:
         for L in FABRIC_SWEEP_S:
-            T = b["T_us"] + ncoll * (L * 1e6 - 0.668)
+            T = b["T_us"] + ncoll * (L * 1e6 - cur)
             rows.append(dict(design=b["design"], collective_latency_us=L * 1e6, tokens_s=round(1e6 / T, 1)))
     # Qwen ROM and HBM: 73 serial UCIe exchanges per token on the TP-2 pair
     import arch_budget_qwen3 as Q
@@ -3168,7 +3346,8 @@ def v41_hbm_timeline(positions=1):
     path = g.path(b.sink)
     bc = dv["barrier"]["boundary_cycles"] / clock
     ncoll = sum(1 for x in path if g.nodes[x]["kind"] in ("collective", "hop"))
-    fab = sum(V41_HBM_FABRIC_US.values()) + V41_HBM_FABRIC_US["collective_bytes"] * (positions - 1)
+    fb = v41_hbm_fabric_us(_HBM_SWITCH, _HBM_FEC)
+    fab = sum(fb.values()) + fb["collective_bytes"] * (positions - 1)
     segs = []
     for x in path:
         nd = g.nodes[x]
@@ -4414,7 +4593,7 @@ _HBM_CHAIN_CACHE = {}
 
 def _hbm_chain_n(N, n_sm, positions=1):
     """v41_hbm_chain at TP-N with n_sm SMs a die (group-slot).  Equal to v41_hbm_chain at N = 96, n_sm = 32."""
-    key = (N, n_sm, positions, _CONS_CTX)
+    key = (N, n_sm, positions, _CONS_CTX, _HBM_SWITCH, _HBM_FEC)
     if key not in _HBM_CHAIN_CACHE:
         _HBM_CHAIN_CACHE[key] = _hbm_chain_n_uncached(N, n_sm, positions)
     return dict(_HBM_CHAIN_CACHE[key])
@@ -4444,7 +4623,7 @@ def _hbm_chain_n_uncached(N, n_sm, positions):
     nb = v41_boundaries(path, g.nodes)
     parts = dict(sm_matvec=mv * 1e6, x_broadcast_fill=xfill * 1e6, dedicated_and_su=other * 1e6,
                  verify_extra_issue=extra * 1e6, barrier=nb * d["barrier"]["boundary_cycles"] / clock * 1e6,
-                 **V41_HBM_FABRIC_US)
+                 **v41_hbm_fabric_us(_HBM_SWITCH, _HBM_FEC))
     parts["collective_bytes"] *= positions
     return parts
 
@@ -6467,8 +6646,11 @@ def qwen_posted_kv_model(records):
                                "measured gain >=1% after token composition", "contextual SS/FF and hub routing"])
 
 
-SWITCH_RANGE_DIR = "results/uarch/hbm_switch_latency_range_20261004"
+SWITCH_RANGE_DIR = "results/uarch/hbm_switch_latency_range_20261004"            # literature range (SUPERSEDED)
+SWITCH_AUTH_DIR = "results/uarch/hbm_switch_latency_authoritative_20261004"     # AUTHORITATIVE (owner 2026-10-04)
 DSROM_WAVEFRONT = "results/rtl/dsrom_wavefront_verify_20261004/record.json"   # S81 + wavefront (ROM, light FEC)
+DSROM_DRAFT_MEASURED = "results/rtl/dsrom_dspark_step_slices_20261004/composition.json"   # measured draft (9ea29b069)
+DSROM_DRAFT_L1L2 = "results/rtl/dsrom_dspark_l1l2_20261004/expected.json"     # L1 fused / L2 batched (EXPECTED, 2a235a9fe)
 def dsrom_wavefront_mtp_tok_s(rom, rk):
     """DS ROM S81 + wavefront MTP tok/s (occupancy rule): the measured-draft composition (V41_ROM_DRAFT_RECORD,
     variant V41_ROM_DRAFT) unless --v41-rom-draft assumed, which keeps the record's assumed 0.1173 x AR draft."""
@@ -6480,106 +6662,271 @@ def dsrom_wavefront_mtp_tok_s(rom, rk):
 
 TAU_OWNER6 = 4.159      # equal 6-class blend, gamma 5 (results/speculative/v41_mtp_acceptance_qualified_20261003/
                         # blend_owner6.json blends."owner 6-class equal".greedy.tau_blend_harmonic)
+NVLS_SCEN = ("push_optimistic", "nvls_measured", "gpu_fenced")
+TU_SCEN = ("tomahawk_ultra_protocol", "tomahawk_ultra_inc")
 
 
-def hbm_switch_latency_range():
-    """DS-V4.1 HBM per-user AR / MTP (tau 4.159, gamma 5) at 1M and 200K under the sourced switch-latency scenarios,
-    both FEC classes, for the W19 ablation, the accelerator (frozen HA firm ladder with R2 removed: the owner retains
-    the NVLink-class switch), the measured composition and the GPU-faithful R0 row; ROM:HBM ratios against the DS ROM
-    S81 + wavefront record.  Every collective's FIXED term is re-priced; slope / bytes terms are kept."""
+def hbm_switch_latency_authoritative():
+    """AUTHORITATIVE DS-V4.1 HBM per-user AR / MTP (tau 4.159, gamma 5) at 1M and 200K under every switch scenario, for
+    the W19 GPU-organised ablation, the accelerator (frozen HA firm ladder without R2 -- the switch tier is retained --
+    and, under a replaced transport, without R3a, whose endpoint cut-through the replacement already contains), the
+    measured composition and the GPU-faithful R0 row (every boundary a MEASURED H100 1.097 us grid sync); ROM:HBM
+    against DS ROM S81 + wavefront with the MEASURED draft.  Default rows: ablation @ nvls_measured, accelerator @
+    tomahawk_ultra_protocol, GPU-faithful @ gpu_fenced.  The collective TRANSPORT of each pass is re-priced per W19 op;
+    the top-k merges' select compute is unchanged."""
     from hbm_accelerator_model import _load_study, COMPOSITION
     m, _, ds, _ = _load_study(ROOT)
-    fit = HBM_SWITCH_LATENCY["w15_fixed_ns"]
     n = m.W19_COLL_COUNT
     n_draft = n["total"] * m.DRAFT_PARTS["collective"] / m.W19_AR["collective"]   # ASSUMED: same per-collective mix
     T = m.T
+    base = {P: w19_transport_us(P, "w15", "kp4") for P in (1, 6)}
+    sel = {P: m.VERIFY_PARTS[P]["collective"] - base[P] for P in (1, 6)}
 
-    def delta(scen, fec, split, scale=1.0):
-        """us added to a pass whose collective count is scale x W19's (40 AR + 225 gather-like)."""
-        if scen == "baseline":
-            if fec == "kp4":
-                return 0.0
-            return -scale * n["total"] * 2 * (HBM_SWITCH_LATENCY["kp4_leg_ns"] - HBM_SWITCH_LATENCY["light_leg_ns"]) * 1e-3
-        ar = hbm_switch_collective_us(scen, "ar", fec, split) - fit["ar"] * 1e-3
-        ag = hbm_switch_collective_us(scen, "ag", fec, split) - fit["ag"] * 1e-3
-        return scale * (n["all_reduce"] * ar + n["gather_like"] * ag)
+    def delta(scen, fec="board", gathers="measured_ag", msg="small", cable="twinax_3m", P=1):
+        """us added to a W19 pass of P positions (all 265 on-path collectives) by re-pricing their transport."""
+        if scen in TU_SCEN:
+            ops, _, _ = w19_collective_ops()
+            return sum(tu_transport_us(o["kind"], P * o["bytes"], scen, cable) for o in ops) - base[P] \
+                if cable != "twinax_3m" else w19_transport_us(P, scen) - base[P]
+        if scen == "w15":
+            return w19_transport_us(P, "w15", fec) - base[P] if fec == "kp4" else \
+                -n["total"] * 2 * (HBM_SWITCH_LATENCY["kp4_leg_ns"] - HBM_SWITCH_LATENCY["light_leg_ns"]) * 1e-3
+        fit = HBM_SWITCH_LATENCY["w15_fixed_ns"]
+        ar = hbm_switch_collective_us(scen, "ar", fec, msg) - fit["ar"] * 1e-3
+        ag = hbm_switch_collective_us(scen, "ag" if gathers == "measured_ag" else "ar", fec, msg) - fit["ag"] * 1e-3
+        return n["all_reduce"] * ar + n["gather_like"] * ag
 
     rungs = {r: s for r, s, _ in m.ds_rungs(1, include_conditional=False)}
     rungs6 = {r: s for r, s, _ in m.ds_rungs(6, include_conditional=False)}
-    keep = [r for r in rungs if r != "R2"]
-    d = dict(m.DRAFT_PARTS)
-    d["collective"] *= 1 - rungs["R3a"] / m.W19_AR["collective"]
-    d["barrier"] *= (m.W19_BOUNDARY_CYC - m.W19_BARRIER_RELEASE_CYC) / m.W19_BOUNDARY_CYC
     hw_b = m.W19_BOUNDARY_CYC / m.F_FAST * 1e6
-    grid = m.GPU_GRID_SYNC_NS * 1e-3
-    gpu_extra = lambda parts: parts["barrier"] / hw_b * (grid - hw_b)          # noqa: E731  every boundary a grid sync
+
+    def gpu_extra(parts, grid_ns):
+        return parts["barrier"] / hw_b * (grid_ns * 1e-3 - hw_b)       # every boundary a grid sync
+
+    def accel(replaced):
+        keep = [r for r in rungs if r != "R2" and not (replaced and r == "R3a")]
+        d = dict(m.DRAFT_PARTS)
+        if not replaced:
+            d["collective"] *= 1 - rungs["R3a"] / m.W19_AR["collective"]
+        d["barrier"] *= (m.W19_BOUNDARY_CYC - m.W19_BARRIER_RELEASE_CYC) / m.W19_BOUNDARY_CYC
+        return dict(ar=T(m.VERIFY_PARTS[1]) - sum(rungs[r] for r in keep),
+                    ver=T(m.VERIFY_PARTS[6]) - sum(rungs6[r] for r in keep), draft=T(d), rungs=keep)
+    g_new, g_old = GPU["barrier_ns_grid_h100_measured"], GPU["barrier_ns_grid_v100_superseded"]
     comp = json.loads((ROOT / COMPOSITION).read_text())["revisions"][-1]
     measured = sum(r["measured_gain_us"] for r in comp["rows"]
                    if r["measured_gain_us"] and not r["verdict"].startswith("REJECT"))
+    gf = lambda g: dict(ar=T(m.VERIFY_PARTS[1]) + gpu_extra(m.VERIFY_PARTS[1], g),          # noqa: E731
+                        ver=T(m.VERIFY_PARTS[6]) + gpu_extra(m.VERIFY_PARTS[6], g),
+                        draft=T(m.DRAFT_PARTS) + gpu_extra(m.DRAFT_PARTS, g))
     designs = dict(
         ablation_w19=dict(ar=T(m.VERIFY_PARTS[1]), ver=T(m.VERIFY_PARTS[6]), draft=T(m.DRAFT_PARTS),
+                          default=HBM_SWITCH_DEFAULTS["ablation"],
                           what="W19 composed GPU-organised HBM ablation (custom 62-cycle barrier; not GPU-real)"),
-        accelerator_firm_switch=dict(ar=T(m.VERIFY_PARTS[1]) - sum(rungs[r] for r in keep),
-                                     ver=T(m.VERIFY_PARTS[6]) - sum(rungs6[r] for r in keep), draft=T(d),
-                                     what="frozen HA firm ladder (R0c..R6a, no R7a) WITHOUT R2: the switch tier is "
-                                          "retained (direct mesh owner-rejected); UNVALIDATED hypothesis"),
+        accelerator_firm_switch=dict(default=HBM_SWITCH_DEFAULTS["accelerator"],
+                                     what="frozen HA firm ladder (R0c..R6a, no R7a) WITHOUT R2 (the switch tier is "
+                                          "retained; direct mesh owner-rejected) and, under a replaced transport, "
+                                          "WITHOUT R3a (already inside it); UNVALIDATED hypothesis"),
         accelerator_measured_composition=dict(ar=T(m.VERIFY_PARTS[1]) - measured, ver=T(m.VERIFY_PARTS[6]) - measured,
                                               draft=T(m.DRAFT_PARTS), measured_gain_us=measured,
+                                              default=HBM_SWITCH_DEFAULTS["accelerator"],
                                               what=f"W19 minus measured, non-rejected rung gains ({COMPOSITION} "
                                                    f"r{comp['revision']}: R5a 13.381 us, exact+measured, NOT adopted)"),
-        gpu_faithful_r0=dict(ar=T(m.VERIFY_PARTS[1]) + gpu_extra(m.VERIFY_PARTS[1]),
-                             ver=T(m.VERIFY_PARTS[6]) + gpu_extra(m.VERIFY_PARTS[6]),
-                             draft=T(m.DRAFT_PARTS) + gpu_extra(m.DRAFT_PARTS),
-                             what="W19 with every boundary a 1.43 us cooperative-grid sync (study R0, GPU-faithful)"))
+        gpu_faithful_r0=dict(**gf(g_new), default=HBM_SWITCH_DEFAULTS["gpu_faithful"],
+                             what="W19 with every boundary a MEASURED H100 cooperative grid.sync (1.097 us, 132 SMs), "
+                                  "study R0, GPU-faithful"),
+        gpu_faithful_r0_v100_superseded=dict(**gf(g_old), default=HBM_SWITCH_DEFAULTS["gpu_faithful"],
+                                             what="SUPERSEDED: the same row at the V100 1.43 us grid sync"))
     rom = json.loads((ROOT / DSROM_WAVEFRONT).read_text())["composition"]["ctx"]
+    dft = json.loads((ROOT / DSROM_DRAFT_MEASURED).read_text())["full_shape"]["ctx"]
+    l12 = json.loads((ROOT / DSROM_DRAFT_L1L2).read_text())["result"]["levers"]
     ctxs = {"1M": ("1048576", 1.0), "200K": ("200000", m.CTX_200K_RATIO)}
-    scen = ["baseline", "low", "central", "high"]
+    romv = {c: dict(ar_tok_s=rom[rk]["ar_tok_s"],
+                    mtp_as_built_tok_s=dft[rk]["as_built_chain"]["wavefront_occupancy"]["mtp_tok_s"],
+                    mtp_fused_head_tok_s=dft[rk]["fused_head"]["wavefront_occupancy"]["mtp_tok_s"],
+                    mtp_old_assumed_draft_tok_s=rom[rk]["wavefront_occupancy"]["mtp_tok_s"],
+                    mtp_l1l2_rom_read_k5_tok_s=l12["l1l2/rom_read/k5"]["ctx"][rk]["occupancy"]["mtp_tok_s"],
+                    mtp_l2_rom_read_k5_tok_s=l12["l2/rom_read/k5"]["ctx"][rk]["occupancy"]["mtp_tok_s"],
+                    mtp_l1l2_mac_bound_tok_s=l12["l1l2/mac/k5"]["ctx"][rk]["occupancy"]["mtp_tok_s"])
+            for c, (rk, _) in ctxs.items()}
+    variants = [("w15", dict(fec="kp4")), ("w15", dict(fec="board"))]
+    for sc in NVLS_SCEN:
+        for fec in ("board", "kp4"):
+            for gathers in ("measured_ag", "all_at_ar"):
+                for msg in ("small", "32KB"):
+                    variants.append((sc, dict(fec=fec, gathers=gathers, msg=msg)))
+    for sc in TU_SCEN:
+        for cable in ("twinax_3m", "smf_10m"):
+            variants.append((sc, dict(cable=cable)))
     rows = []
     for ctx, (rk, k) in ctxs.items():
-        rr = rom[rk]
-        rom_ar, rom_mtp = rr["ar_tok_s"], dsrom_wavefront_mtp_tok_s(rom, rk)
-        for name, dd in designs.items():
-            for split in (False, True):
-                for fec in ("kp4", "light"):
-                    for sc in scen:
-                        if split and sc == "baseline":
-                            continue
-                        ar = dd["ar"] * k + delta(sc, fec, split)
-                        step = (dd["ver"] + dd["draft"]) * k + delta(sc, fec, split, 1 + n_draft / n["total"])
-                        ar_r, mtp_r = 1e6 / ar, TAU_OWNER6 * 1e6 / step
-                        rows.append(dict(ctx=ctx, design=name, scenario=sc, fec=fec,
-                                         gathers="ar_range" if not split else "gather_note",
-                                         ar_us=round(ar, 2), ar_tok_s=round(ar_r, 1), mtp_step_us=round(step, 2),
-                                         mtp_tok_s=round(mtp_r, 1), rom_over_hbm_ar=round(rom_ar / ar_r, 3),
-                                         rom_over_hbm_mtp=round(rom_mtp / mtp_r, 3),
-                                         fec_matched_to_rom=fec == "light"))
-    per_coll = {sc: {fec: dict(ar_us=round(hbm_switch_collective_us(sc, "ar", fec), 3),
-                               ag_note_us=round(hbm_switch_collective_us(sc, "ag", fec, True), 3))
-                     for fec in ("kp4", "light")} for sc in ("low", "central", "high")}
-    per_coll["baseline_w15_measured"] = {"kp4": dict(ar_us=round(fit["ar"] * 1e-3, 4), ag_us=round(fit["ag"] * 1e-3, 4)),
-                                         "light": dict(ar_us=round(fit["ar"] * 1e-3 - 0.158, 4),
-                                                       ag_us=round(fit["ag"] * 1e-3 - 0.158, 4))}
-    legacy = {sc: {fec: round(v41_hbm_fabric_us(sc, fec)["collective_latency"], 1) for fec in ("kp4", "light")}
-              for sc in ("low", "central", "high")}
-    return dict(schema="opentallas.uarch.hbm_switch_latency_range.v1", evidence="MODEL_ONLY (sourced latency range)",
-                default_enabled=False, scenarios=HBM_SWITCH_LATENCY, per_collective_fixed_us=per_coll,
+        rv = romv[ctx]
+        for name, d0 in designs.items():
+            for sc, kw in variants:
+                dd = accel(sc != "w15") if name == "accelerator_firm_switch" else d0
+                d1, d6 = delta(sc, P=1, **kw), delta(sc, P=6, **kw)
+                ar = dd["ar"] * k + d1
+                step = (dd["ver"] + dd["draft"]) * k + d6 + d1 * n_draft / n["total"]
+                ar_r, mtp_r = 1e6 / ar, TAU_OWNER6 * 1e6 / step
+                primary = kw.get("fec", "board") == "board" and kw.get("gathers", "measured_ag") == "measured_ag" \
+                    and kw.get("msg", "small") == "small" and kw.get("cable", "twinax_3m") == "twinax_3m"
+                rows.append(dict(ctx=ctx, design=name, scenario=sc, **kw, primary=primary,
+                                 authoritative_default=primary and sc == d0["default"],
+                                 ar_us=round(ar, 2), ar_tok_s=round(ar_r, 1), mtp_step_us=round(step, 2),
+                                 mtp_tok_s=round(mtp_r, 1), rom_over_hbm_ar=round(rv["ar_tok_s"] / ar_r, 3),
+                                 rom_over_hbm_mtp_as_built=round(rv["mtp_as_built_tok_s"] / mtp_r, 3),
+                                 rom_over_hbm_mtp_fused_head=round(rv["mtp_fused_head_tok_s"] / mtp_r, 3),
+                                 rom_over_hbm_mtp_l1l2_k5=round(rv["mtp_l1l2_rom_read_k5_tok_s"] / mtp_r, 3)))
+    # ---- cross-checks: every transport figure computed a second way ----
+    ops, _, _ = w19_collective_ops()
+    import collections
+    grp = collections.Counter((o["kind"], o["bytes"]) for o in ops)
+    tu_grouped = {P: sum(c * tu_transport_us(kd, P * b) for (kd, b), c in grp.items()) for P in (1, 6)}
+    xa = HBM_SWITCH_LATENCY["w15_fixed_ns"]
+    checks = dict(
+        w19_transport_plus_select_equals_study_collective={
+            P: dict(transport=round(base[P], 3), select=round(sel[P], 3), study=m.VERIFY_PARTS[P]["collective"],
+                    select_wsel256_expected=round(8 * 419 * P / m.F_FAST * 1e6, 3)) for P in (1, 6)},
+        tomahawk_per_op_vs_grouped={P: [round(w19_transport_us(P, "tomahawk_ultra_protocol"), 6),
+                                        round(tu_grouped[P], 6)] for P in (1, 6)},
+        nvls_per_op_vs_count_formula={sc: [round(w19_transport_us(1, sc) - base[1], 6),
+                                           round(n["all_reduce"] * (hbm_switch_collective_us(sc, "ar") - xa["ar"] * 1e-3)
+                                                 + n["gather_like"] * (hbm_switch_collective_us(sc, "ag") - xa["ag"] * 1e-3), 6)]
+                                      for sc in NVLS_SCEN},
+        tomahawk_ar32k_by_hand_us=round((2 * 477.6 + 22 / 1.2 + 2 * 32768 / 720.0 + 150) * 1e-3, 6),
+        tomahawk_ar32k_model_us=round(tu_transport_us("all_reduce", 32768), 6),
+        collective_counts=dict(total=len(ops), all_reduce=sum(o["kind"] == "all_reduce" for o in ops)))
+    tu_op_table = sorted([dict(kind=kd, bytes=b, count=c, tomahawk_us_p1=round(tu_transport_us(kd, b), 4),
+                               tomahawk_us_p6=round(tu_transport_us(kd, 6 * b), 4),
+                               inc_us_p1=round(tu_transport_us(kd, b, "tomahawk_ultra_inc"), 4))
+                          for (kd, b), c in grp.items()], key=lambda r: (-r["count"], r["bytes"]))
+    # default movement and the Qwen / GPU-baseline checks (every published default against the superseded one)
+    global _HBM_SWITCH, NCCL_ALLREDUCE_S
+    saved, nsaved, gsave = _HBM_SWITCH, NCCL_ALLREDUCE_S, GPU["barrier_ns_grid"]
+    try:
+        _HBM_SWITCH, NCCL_ALLREDUCE_S, GPU["barrier_ns_grid"] = "w15", NCCL_ALLREDUCE_ASSUMED_SUPERSEDED_S, g_old
+        v_old, q_old, t_old = v41_hbm_rows(), qwen_hbm_rows(), gpu_tier2()
+    finally:
+        _HBM_SWITCH, NCCL_ALLREDUCE_S, GPU["barrier_ns_grid"] = saved, nsaved, gsave
+    v_new, q_new, t_new = v41_hbm_rows(), qwen_hbm_rows(), gpu_tier2()
+    pair = lambda o, w: [dict(design_superseded=a["design"], design=b["design"],          # noqa: E731
+                              tokens_s_superseded=a.get("tokens_s"), tokens_s=b.get("tokens_s"))
+                         for a, b in zip(o, w)]
+    gb = {}
+    for tag, val in (("superseded_assumed_8us", 8e-6), ("default_h100_fenced_oneshot_9p024us", NCCL_ALLREDUCE_S),
+                     ("sensitivity_h100_nccl_no_graph_32us", 32e-6), ("sensitivity_h100_nccl_no_graph_36us", 36e-6)):
+        NCCL_ALLREDUCE_S = val
+        try:
+            t2 = {x["design"]: x for x in gpu_tier2()}["DeepSeek-V4.1-Flash on 8x B200, calibrated"]
+            gb[tag] = dict(per_ar_us=round(val * 1e6, 3), tokens_s=t2["tokens_s"], spec_tokens_s=t2["spec_tokens_s"],
+                           collectives_us=t2["terms_us"]["collectives"],
+                           ctx_1M_tok_s=round(1 / gpu_tier2_v41_ctx(1048576), 1),
+                           ctx_200K_tok_s=round(1 / gpu_tier2_v41_ctx(200000), 1))
+        finally:
+            NCCL_ALLREDUCE_S = nsaved
+    per_coll = {}
+    for sc in ("w15",) + NVLS_SCEN + TU_SCEN:
+        per_coll[sc] = {fec: {msg: dict(ar_us=round(hbm_switch_collective_us(sc, "ar", fec, msg), 4),
+                                        ag_us=round(hbm_switch_collective_us(sc, "ag", fec, msg), 4))
+                              for msg in ("small", "32KB")} for fec in ("board", "kp4")}
+        per_coll[sc]["w19_mix_us_board_small"] = round(hbm_switch_mix_us(sc), 4)
+    return dict(schema="opentallas.uarch.hbm_switch_latency_authoritative.v1", status="AUTHORITATIVE (owner 2026-10-04)",
+                evidence="MODEL on MEASURED anchors (H100 NVLS) and VENDOR BUDGETS (Tomahawk Ultra / SUE RM104)",
+                defaults=HBM_SWITCH_DEFAULTS, default_fec=_HBM_FEC, generation=HBM_SWITCH_LATENCY["generation"],
+                measured_record="results/measured/h100_nvls_20261004/README.md",
+                scenarios=HBM_SWITCH_LATENCY, aliases=HBM_SWITCH_ALIASES,
+                superseded=dict(literature_range=HBM_SWITCH_LATENCY_LITERATURE_SUPERSEDED,
+                                w15_switch_us=0.668, grid_sync_v100_ns=g_old,
+                                nccl_assumed_us=NCCL_ALLREDUCE_ASSUMED_SUPERSEDED_S * 1e6),
+                per_collective_us=per_coll, tomahawk_ops_w19=tu_op_table,
+                tomahawk_derivation=dict(crossing_ns={c: tu_crossing_ns(c) for c in TU["cable_ns"]},
+                                         reduce_ns=round(TU["reduce_ns"], 3), bw_GBps=TU["bw_Bps"] / 1e9,
+                                         ar_32KB_us=round(tu_transport_us("all_reduce", 32768), 4),
+                                         ar_32KB_smf10m_us=round(tu_transport_us("all_reduce", 32768, cable="smf_10m"), 4),
+                                         gather_1536B_us=round(tu_transport_us("all_gather", 1536), 4),
+                                         gather_10240B_us=round(tu_transport_us("all_gather", 10240), 4),
+                                         gather_32256B_us=round(tu_transport_us("all_gather", 32256), 4),
+                                         inc_ar_32KB_us=round(tu_transport_us("all_reduce", 32768, "tomahawk_ultra_inc"), 4),
+                                         labels=dict(endpoint_bridge="VENDOR BUDGET", endpoint_phy="VENDOR BUDGET",
+                                                     switch="VENDOR BUDGET", cable="RM104 per-metre",
+                                                     reducer="MEASURED (HA2 RTL, LAT 7 x 3 + to_bf16)",
+                                                     payload_eff="ASSUMED 0.9", tail="ASSUMED 0.15 (0.1-0.2)")),
+                cross_checks=checks,
                 collective_counts=dict(w19_pass=n, draft_assumed=round(n_draft, 2),
-                                       draft_basis="W19 per-collective mix x DRAFT_PARTS.collective / W19 collective"),
-                legacy_fabric_collective_latency_us=dict(baseline_0p668=V41_HBM_FABRIC_US["collective_latency"], **legacy,
-                    basis="V41_HBM_FABRIC_US collective_latency 125.9 = ~188 collectives x 0.668 us"),
+                                       draft_basis="W19 per-collective mix at P = 1 bytes x DRAFT_PARTS.collective / "
+                                                   "W19 collective"),
                 tau=TAU_OWNER6, gamma=5, tau_src="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json",
-                rom_record=DSROM_WAVEFRONT, rom_fec="light (130 ns board link)",
-                rom_draft=dict(variant=V41_ROM_DRAFT, record=str(V41_ROM_DRAFT_RECORD.relative_to(ROOT))),
-                rom=dict({c: dict(ar_tok_s=rom[rk]["ar_tok_s"], mtp_tok_s=dsrom_wavefront_mtp_tok_s(rom, rk))
-                          for c, (rk, _) in ctxs.items()}),
-                designs={k: {x: (round(y, 3) if isinstance(y, float) else y) for x, y in v.items()} for k, v in designs.items()},
+                rom_records=dict(ar=DSROM_WAVEFRONT, mtp=DSROM_DRAFT_MEASURED, l1l2=DSROM_DRAFT_L1L2), rom_fec="light (130 ns board link)",
+                rom=romv, rom_projections_note="L1 fused head = the measured-draft record's fused_head (= L1, 7,186 at "
+                                               "1M); L2 batched head and L1+L2 = EXPECTED projections (no lever "
+                                               "measured) from " + DSROM_DRAFT_L1L2 + ": rom_read-bound k5 shown; "
+                                               "if the batched head is MAC-bound, L2 gains nothing",
+                hbm_draft_note="the HBM draft is still the W19-record DRAFT_PARTS (51.88 us, 26.3 collectives "
+                               "ASSUMED); the ROM draft is MEASURED (105.6 fused / 144.4 us as built at 1M)",
+                designs={k: {x: (round(y, 3) if isinstance(y, float) else y) for x, y in v.items()}
+                         for k, v in dict(designs, accelerator_firm_switch=dict(
+                             designs["accelerator_firm_switch"], replaced=accel(True), w15=accel(False))).items()},
+                grid_sync_ns=dict(h100_measured=g_new, v100_superseded=g_old),
+                published_default_movement=dict(
+                    v41_hbm_rows=pair(v_old, v_new), qwen_hbm_rows=pair(q_old, q_new), gpu_tier2=pair(t_old, t_new),
+                    qwen_headline_unchanged=q_old[1]["tokens_s"] == q_new[1]["tokens_s"],
+                    basis="superseded = w15 switch lump, NCCL 8 us assumed, V100 1.43 us grid sync"),
+                qwen_gpu_baseline=dict(QWEN_GPU_H100_MEASURED, authoritative="1x H100 SXM, vLLM FP8, batch 1: "
+                                       f"{QWEN_GPU_H100_MEASURED['fp8'][1]} tok/s (TP8 FP8 {QWEN_GPU_H100_MEASURED['fp8'][8]})",
+                                       qwen_hbm_headline_tok_s=q_new[1]["tokens_s"],
+                                       qwen_hbm_over_h100_fp8_tp1=round(q_new[1]["tokens_s"] / QWEN_GPU_H100_MEASURED["fp8"][1], 3),
+                                       qwen_hbm_over_h100_fp8_tp8=round(q_new[1]["tokens_s"] / QWEN_GPU_H100_MEASURED["fp8"][8], 3),
+                                       b200_model_row=[x for x in t_new if x["design"].startswith("Qwen3-8B")][0],
+                                       note="the Qwen HBM die is at 8K context; the H100 rows are short context "
+                                            "(128 in / 512 out) -- 8K runs pending"),
+                gpu_baseline_check=dict(rows=gb, kernel_launch_ns=GPU["kernel_launch_ns_h100_measured"],
+                                        graph_node_ns=GPU["graph_node_ns_h100_measured"],
+                                        basis="tier-2 8x B200 V4.1 row: 40 layers x 5 all-reduces x NCCL_ALLREDUCE_S. "
+                                              "Its fixed term is a fitted measurement (H200 NIM), so launch / graph "
+                                              "overheads are already inside it; not added again"),
                 retry_tail=dict(per_event_us=HBM_SWITCH_LATENCY["retry_tail_us"],
-                                one_event_per_token_pct_of_w19_ar=[round(100 * t / T(m.W19_AR), 3)
-                                                                   for t in HBM_SWITCH_LATENCY["retry_tail_us"]],
-                                rule="p99-p99.9 LLR term (any of ~864 stripe paths); not in the median rows"),
-                fec_rule="ROM board links are light-FEC 130 ns: fec=light rows are FEC-matched; fec=kp4 rows are the "
-                         "as-published (unequal) comparison, kept for reference",
+                                rule="p99-p99.9 LLR term; not in the median rows"),
+                fec_rule="NVLS scenarios: fec=board (default) is the measured HGX board-reach path (reach-matched to "
+                         "the ROM light-FEC board link); fec=kp4 adds (209-130) ns per SerDes leg.  Tomahawk Ultra: "
+                         "the SUE rack budget (3 m twinax primary, 10 m SMF bracket); fec does not apply",
                 rows=rows)
+
+
+def hbm_switch_latency_range():
+    """SUPERSEDED names: the switch-latency record is now the authoritative one."""
+    return hbm_switch_latency_authoritative()
+
+
+hbm_switch_latency_measured = hbm_switch_latency_range
+
+
+HBM_DRAFT_MEASURED = "results/rtl/dshbm_dspark_draft_20261004/composition.json"   # MEASURED DS HBM draft (successor)
+
+
+def hbm_mtp_both_drafts_measured():
+    """SUCCESSOR (owner 2026-10-04) to the authoritative record's MTP columns: the DS HBM DSpark draft is MEASURED the
+    way the ROM's is (tools/dshbm_dspark_draft_chain.py: closed-loop RTL chain bit-exact on the reduced vehicle,
+    full-shape SM / argmax cycles, every draft collective counted and priced with the authoritative transports) and
+    replaces DRAFT_PARTS (51.88 us, ASSUMED).  Step = verify(P=6) + draft + seed_commit on both sides (the ROM's
+    seed_commit term; HBM: main_proj, main_x gather, main_norm, the stages' window rows, ctl commit).  The AR rows,
+    the verify passes and hbm_switch_latency_authoritative() itself are unchanged."""
+    rec = json.loads((ROOT / HBM_DRAFT_MEASURED).read_text())
+    pick = lambda r, v: dict(draft_us=r[v]["draft_us"], step_us=r[v]["step_us"], mtp_tok_s=r[v]["mtp_tok_s"],  # noqa: E731
+                             rom_over_hbm_mtp=r[v]["rom_over_hbm_mtp"])
+    rows = [dict(ctx=r["ctx"], design=r["design"], scenario=r["scenario"], ar_tok_s=r["ar_tok_s"],
+                 rom_over_hbm_ar=r["rom_over_hbm_ar"], seed_commit_us=r["seed_commit_us"],
+                 model_draft_us=r["model_draft_us"], mtp_tok_s_model_draft=r["old_mtp_tok_s"],
+                 as_built=pick(r, "as_built"), per_step_head=pick(r, "per_step_head"))
+            for r in rec["rows"] if r["authoritative_default"]]
+    return dict(schema="opentallas.uarch.hbm_mtp_both_drafts_measured.v1",
+                status="AUTHORITATIVE successor for MTP (owner 2026-10-04); AR unchanged",
+                hbm_draft_record=HBM_DRAFT_MEASURED, rom_draft_record=DSROM_DRAFT_MEASURED, tau=rec["tau"],
+                hbm_variants=dict(as_built="the HBM design as built (ctl DHEAD = one 5-column head pass; bias + argmax "
+                                           "fused in the SM epilogue): HBM already has the ROM's L1 and L2",
+                                  per_step_head="the ROM as-built structure on HBM (one 1-column head pass a chain "
+                                                "step), the like-for-like structural row"),
+                rom_columns=dict(rom_as_built="ROM as built (measured)", rom_l1="ROM L1 fused head (measured record)",
+                                 rom_l1l2_expected="ROM L1+L2 k=5 (EXPECTED projection)"),
+                collective_count=rec["collective_count"], rows=rows)
 
 
 def hbm_accel_rows():
@@ -6609,11 +6956,19 @@ def main(argv=None):
     ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM ablation only")
     ap.add_argument("--hbm-accel", action="store_true",
                     help="default-off UNVALIDATED HBM accelerator ladder and fairness hypotheses")
-    ap.add_argument("--hbm-switch-latency-range", action="store_true",
-                    help="sourced low/central/high HBM switch collective latency: DS HBM AR/MTP, both FEC classes, ROM:HBM")
-    ap.add_argument("--hbm-switch-latency", choices=("low", "central", "high"),
-                    help="OPT-IN: price the V4.1 HBM fabric's per-collective latency at this sourced scenario")
-    ap.add_argument("--hbm-fec", choices=("kp4", "light"), default="kp4", help="with --hbm-switch-latency: SerDes FEC class")
+    ap.add_argument("--hbm-switch-latency-authoritative", "--hbm-switch-latency-range", "--hbm-switch-latency-measured",
+                    dest="hbm_switch_latency_range", action="store_true",
+                    help="AUTHORITATIVE HBM switch collective record: every scenario, DS HBM AR/MTP, ROM:HBM, "
+                         "GPU-faithful, GPU baseline and Qwen checks")
+    ap.add_argument("--hbm-mtp-drafts-measured", action="store_true",
+                    help="SUCCESSOR MTP rows: DS HBM and ROM drafts both MEASURED (results/rtl/dshbm_dspark_draft_20261004)")
+    ap.add_argument("--hbm-switch-latency", choices=("w15", "push_optimistic", "nvls_measured", "gpu_fenced",
+                                                     "tomahawk_ultra_protocol", "tomahawk_ultra_inc",
+                                                     "low", "central", "high"),
+                    help="the GPU-organised V4.1 HBM chain's switch scenario (default nvls_measured; with --hbm-accel "
+                         "the accelerator's, default tomahawk_ultra_protocol; w15 = superseded 0.668 us)")
+    ap.add_argument("--hbm-fec", choices=("board", "kp4"),
+                    help="with --hbm-switch-latency: reach class (default board = as measured; kp4 = rack cable)")
     ap.add_argument("--fec-fairness", action="store_true", help="same-FEC ROM board/NVLink-class switch model-only timing rows")
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
     ap.add_argument("--v41-hbm-dspark", action="store_true", help="OPT-IN: V4.1 HBM DSpark rows (priced draft, "
@@ -6629,7 +6984,15 @@ def main(argv=None):
     global V41_ROM_DRAFT
     V41_ROM_DRAFT = a.v41_rom_draft
     global _HBM_SWITCH, _HBM_FEC
-    _HBM_SWITCH, _HBM_FEC = a.hbm_switch_latency, a.hbm_fec
+    _HBM_SWITCH = HBM_SWITCH_ALIASES.get(a.hbm_switch_latency, a.hbm_switch_latency) or _HBM_SWITCH
+    _HBM_FEC = a.hbm_fec or _HBM_FEC
+    if a.hbm_mtp_drafts_measured:
+        payload = json.dumps(hbm_mtp_both_drafts_measured(), indent=1, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.hbm_switch_latency_range:
         payload = json.dumps(hbm_switch_latency_range(), indent=1, allow_nan=False) + "\n"
         if a.out:
@@ -6661,10 +7024,13 @@ def main(argv=None):
         return
     if a.hbm_accel:
         acc = hbm_accel_rows()
-        if a.hbm_switch_latency:     # opt-in: the sourced switch scenario's rows ride the accelerator record
-            rng = hbm_switch_latency_range()
-            acc["switch_latency_scenario"] = dict(scenario=a.hbm_switch_latency, fec=a.hbm_fec, src=SWITCH_RANGE_DIR,
-                rows=[r for r in rng["rows"] if r["scenario"] == a.hbm_switch_latency and r["fec"] == a.hbm_fec])
+        # AUTHORITATIVE (owner 2026-10-04): the accelerator's published rows ride Tomahawk Ultra + our protocol;
+        # --hbm-switch-latency selects another scenario's rows
+        sc = HBM_SWITCH_ALIASES.get(a.hbm_switch_latency, a.hbm_switch_latency) or HBM_SWITCH_DEFAULTS["accelerator"]
+        rng = hbm_switch_latency_authoritative()
+        acc["switch_latency_scenario"] = dict(scenario=sc, src=SWITCH_AUTH_DIR, default=HBM_SWITCH_DEFAULTS["accelerator"],
+            rows=[r for r in rng["rows"] if r["scenario"] == sc and r["primary"]
+                  and r["design"].startswith("accelerator")])
         payload = json.dumps(acc, indent=2, allow_nan=False) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
@@ -7037,5 +7403,143 @@ def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
         required_next_native_producer='SSX = golden-order sum of H squared; never host-computed here')
 
 
+def dsrom_s81_native_head_terminal():
+    """Additive ordered-root/argmax leaf; not an enrolled head-ROM producer."""
+    fifo=16; owner=47; rows=32320
+    bits=16*(32+17+1)+9*17+6*32+47+1+1+2+15+5+4+4+5+32+32+17+1+1
+    return dict(schema='opentallas.dsrom.S81.native-head-terminal.v1',
+        status='MODEL_UNVALIDATED_COMPONENT_ONLY', opt_in_default=False,
+        rows_global=129280, rows_per_rank=rows, ranks=4, K=5120,
+        retained_head_pairs=2525, retained_head_macros=10100,
+        retained_storage_increment_mm2=0, ROM_ECC=False,
+        golden_merge='root4096 + ((root1024 + +0) + +0)',
+        source_arithmetic='ot_hdc_fp32_add_fast unchanged; three LAT3 RNE adds; finite FP32 logits; +/-0 equal; lowest global ID on ties',
+        MACs_per_cycle=0, FP32_adds_per_row=3, add_replicas=3,
+        accepted_pair_II_cycles=1, pipeline_add_latency_cycles=9,
+        comparator_update_cycles_after_last_add=1,
+        reserved_logit_seats=fifo, owner_identity_bits=owner,
+        root_input_bytes_per_cycle_peak=8, logit_output_bytes_per_cycle_peak=4,
+        boundaries_bits=dict(root_pair=64, global_row=17, owner=owner,
+                            held_logit=32+17+1, terminal=32+17+owner+1),
+        tracks_required=dict(root_pair=64, root_owner=owner, global_row=17,
+                            logit=50, terminal=97),
+        state_FF_bits_lower_bound=bits,
+        state_scope='External leaf registers only; unchanged three FP32 adder internal storage/logic separately unpriced',
+        state_FF_cell_lower_bound_mm2=bits*DFF_UM2/1e6,
+        compute_intensity_FP32_adds_per_input_byte=3/8,
+        communication_intensity_output_bytes_per_input_byte=0.5,
+        composed_single_user_cycles_lower_bound=rows+10,
+        serial_clock_hz=0.9e9,
+        composed_single_user_us_lower_bound=(rows+10)/900,
+        latency_scope='From first accepted ordered root pair through local argmax; ROM/VM/subtree/link/CDC/held output ACK and four-rank gather additional, not zero',
+        floorplan_slot_fit=None, routing_channel_capacity=None,
+        new_adders_and_comparator_mapped_area_mm2=None,
+        mux_fanout='One root pair per native edge; bounded16-seat logit FIFO; one scalar compare; owner47 held once; no array replication credited',
+        actual_root_producer='Arch/Boole ordered K4096/K1024 native subtrees, still requires source-bound matched row/lease delivery',
+        compiler_and_ROM_address_owner='Popper',
+        core_connection='Current X_ROM1/X_ME0 e_am zeros and legacy EAM selection remain unchanged; explicit defaultoff successor connection required',
+        physical_SS_FF=False, trained_payload_qualified=False, adopted=False)
+
+
+def dsrom_s81_native_head_carried():
+    """Selected successor: unchanged native ROM carried argmax, full envelope."""
+    base=dsrom_s81_native_head_terminal()
+    # Declared storage of the existing LANES16/DEPTH8 reducer. Two512+last
+    # elastic registers in EACH of its input/output skids are counted.
+    native_bits=32*(32+4+1)+3*5+5*32+5*8+65+8*73+4*4+32+1+4*514
+    wrapper_bits=base['state_FF_bits_lower_bound']-82-2-1+64+1
+    return dict(base, schema='opentallas.dsrom.S81.native-head-carried.v1',
+        selected_comparator='rtl/rom/collectives/ot_rom_argmax_reduce.sv unchanged LANES16 DEPTH8',
+        predecessor_new_comparator='Isolated component reference only, not selected/adopted',
+        ranks=4, carried_chain_order=[0,1,2,3],
+        identity_envelope=dict(owner=47,request_sequence=64,flit=512,last=1),
+        packet_bits_with_envelope=624,
+        sequence_scope='64-bit host/native command envelope; actual provider mapping and no-wrap/closed-owner lease must be enrolled before source execution. No truncation into native tag8.',
+        local_tag8='constant0 internal only; full owner47+sequence64 checked at every accepted pair/upstream transfer and retained until actual downstream ACK',
+        root_input_bytes_per_cycle_peak=8,logit_output_bytes_per_cycle_peak=4,
+        accepted_frame_credits_per_rank=1,
+        native_depth8_not_eight_new_owner_credits=True,
+        native_declared_state_bits=native_bits,
+        wrapper_state_bits=wrapper_bits,
+        state_FF_bits_lower_bound=native_bits+wrapper_bits,
+        state_FF_cell_lower_bound_mm2=(native_bits+wrapper_bits)*DFF_UM2/1e6,
+        native_body_increment_if_already_charged_mm2=0,
+        body_charge_rule='Replace prior selector charge with existing native reducer inventory exactly once; state count is inventory, not additional full-body area',
+        global_flit_acceptance='Matching full owner/sequence only, rank-ascending source path, no second upstream frame. Native output held until local accepted logits all ACK and actual dn_ready.',
+        composed_single_user_cycles_lower_bound=32320+17,
+        composed_single_user_us_lower_bound=(32320+17)/900,
+        latency_scope='MODEL lower bound for one local merge+LANES16 reducer;4-rank skids/link/CDC/held ACK additive, actual chain measurement next',
+        fault_recovery='Sticky quarantine, drains accepted logit suffix; no restart or upstream-owner release on fault. Causal fault/recovery provider not invented.')
+
+
+def dsrom_s81_head_result_hook(roots=128):
+    """Selected actual ROM FP32 writer -> reused explicit-ID argmax hook."""
+    assert roots in (64,128)
+    levels=roots.bit_length()-1
+    native_declared_bits=2*roots*(32+32+1)+3*(levels+1)+(levels+1)*40+65+8*73+49+4*514
+    return dict(schema='opentallas.dsrom.S81.head-result-hook.v1',
+        opt_in_default=False, MACs_per_cycle=0, new_dot_arithmetic=False,
+        reused='ot_rom_argmax_reduce comparator, running best, FIFO and skid source; explicit actual row IDs replace inferred base+lane',
+        roots=roots, native_argmax_lanes=roots, native_argmax_depth=8,
+        source_input='Actual rom_we && capture_vm_accept, rom_wdata FP32, global ID=rank*32320+rom_waddr-head_obase*W',
+        head_admission='Contiguous m_k5120 split0 round0 amax1 mmode0, formatter mode1. Released BF16 head-normalizer input proof remains compiler/provider responsibility.',
+        native_tag8='Internal0; full capture_identity47 held/checked on carried input, never truncated',
+        comparison_rule='Actual global ID tie at leaf tree, running best and carried join; signed zeros equal; native NaN faults, return poison/nonfinite quarantines final token',
+        selected_storage_pairs=2525, selected_storage_macros=10100, retained_storage_increment_mm2=0,
+        replicas=4, source_return_bytes_per_cycle=roots*4,
+        source_return_boundary_bits=roots*(32+30+1),
+        carried_boundary_bits=512+1+47,
+        routing_tracks_required=dict(return_data=roots*32,return_mask=roots,carried_packet=513,carried_identity=47),
+        native_declared_state_bits_per_rank=native_declared_bits,
+        added_explicit_ID_state_bits_per_rank=2*roots*(32-levels),
+        adapter_state_bits_per_rank=178,
+        final_global_broadcast='Actual rank3 native record -> existing source multicast/collector, all4 core final_ready ACKs required; no local result accepted as global',
+        existing_body_charge='Reuse/reconcile prior head selector/collective charge once; explicit-ID delta and adapter separately, no storage charge duplication',
+        added_ID_FF_floor_mm2=2*roots*(32-levels)*DFF_UM2/1e6,
+        source_VM_logit_writes_per_rank=32320,
+        MACs_per_input_byte=0, comparator_intensity_per_input_byte=(roots-1)/(roots*4),
+        native_last_writer_to_local_slice_cycles_lower_bound=levels+3,
+        global_carried_edges='3rank boundaries plus actual native skids/link/CDC/ACK; no ideal overlap or physical0 assumption',
+        routing_channel_capacity=None, floorplan_slot_fit=None, SS_FF=False,
+        token_latency_in_model='Existing selected head dot/source delivery unchanged; native local slice tail levels+3 and carried transport/ACK additive; complete physical/token latency not qualified',
+        source_binding='One active actual capture command; hold native core idle until carried DN matched acceptance. Fault never publishes a token or clears owner.')
+
+
 if __name__ == "__main__":
     main()
+
+
+def dsrom_s81_native_bf_head_producer():
+    """Serialized native archive reuse vehicle, not a new parallel head engine."""
+    rows, k, ranks = 32320, 5120, 4
+    return {
+        'schema': 'dsrom.s81.native_bf_head_producer.v1',
+        'selected_storage': 'existing dedicated BF head2525pairs/10100macros; unchanged',
+        'ranks': ranks, 'rows_per_rank': rows, 'k': k,
+        'macs_per_rank': rows*k, 'macs_per_native_word_per_bank': 16,
+        'native_macro_read_bits': 274, 'native_pair_read_bits': 548,
+        'released_raw_bytes_per_native_word': 256,
+        'released_raw_useful_bytes_per_native_word': 32,
+        'released_provider_port_bytes_per_cycle': None,
+        'native_rom_words_per_rank_per_bank': (rows//2)*320,
+        'activation_snapshot_bytes_per_reused_vehicle': k*4,
+        'ordered_root_staging_bits_per_vehicle': 2*2*32,
+        'native_input_boundary_bits': 1024+32+4+3+3+1,
+        'native_return': 'retained RD64 branch + D128/QD128 root, nseg1; no host arithmetic',
+        'grain_issue_cycles_per_rowpair': [256,64],
+        'grain_issue_lower_bound_cycles_per_rank': (rows//2)*320,
+        'latency_terms': ['source XN acquisition5120 scalar words on actual ready',
+                          'two actual CFG/GO/native BF phases per rowpair',
+                          'PB lane recurrence LAT8, native EARLY tree',
+                          'actual retained return/capture/drain before rebind',
+                          'actual carried B+0+0 and A+B, finite in_ready',
+                          'actual global argmax chain/final broadcast and VM ACK'],
+        'replicas_in_reuse_vehicle': 1,
+        'replicas_if_four_rank_host_participants': 4,
+        'physical_parallel_head_replicas': None,
+        'new_engine_area_mm2': 0,
+        'simulation_snapshot_and_controls_are_not_hardware_free_area': True,
+        'source_provider_routing_tracks': None, 'physical_slot_fit': None,
+        'token_latency_ns': None, 'headline_or_rate_credit': False,
+        'default_enabled': False,
+    }
