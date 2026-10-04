@@ -57,6 +57,8 @@ inline DsromS81PrefixNativeEngine dsrom_s81_attach_native_l20_collective(
         for(const auto& p:publications)if(!p.get().complete(identity,*current))return false;
         return true;
     };
-    clock_owner.participants.push_back(engine.participant);
+    // Return the existing engine to Arch's dispatcher. If the dispatcher
+    // nests participant callbacks, do NOT also register them on the runtime.
+    // A standalone caller may register engine.participant exactly once.
     return engine;
 }

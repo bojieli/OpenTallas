@@ -60,6 +60,9 @@ struct Collective {
         return true;
     }
     void drive(const DsromS81PrefixOperation& op,bool go) {
+        // Existing sequencer clears every engine with the current OTHER unit's
+        // instruction. Deassertion must neither decode nor erase held debt.
+        if(!go){requested=false;leaf.go=0;return;}
         const auto& item=literal(op);
         require(held==&item && armed && !admitted,"collective drive without held literal");
         if(go)require(inputs_ready(op),"collective GO without four positive source leases");

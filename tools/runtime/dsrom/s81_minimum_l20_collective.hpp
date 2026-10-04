@@ -9,7 +9,8 @@ struct DsromS81L20CollectiveLiteral {
 const std::array<DsromS81L20CollectiveLiteral,13>& dsrom_s81_l20_collective_literals();
 // Caller supplies four distinct rank SourceIo owners, actual accepted-command
 // publication.begin and native captured-output tag reservation callbacks.
-// Register returned participant ONCE on the SAME shared 833ps caller clock.
+// Dispatch participant ONCE on the SAME shared 833ps caller clock: either
+// nested in the existing Prefix sequencer OR runtime.participants, never both.
 // idle includes all four rank positive VM visibility receipts, not leaf idle.
 DsromS81PrefixNativeEngine dsrom_s81_bind_native_l20_collective(
     DsromS81MinimumRuntime&,uint64_t identity,
