@@ -949,7 +949,7 @@ module ot_v41_rom_elem_qy_w10 #(
             if (!w_cl) w_cl_r <= s_next == c_s1[w_c];
             else if (w_restart) w_cl_r <= s0_live == c_s1[c_live];
 `ifdef QY_MUTANT_CL
-            else w_cl_r <= qy_ceq[w_c];                // negative control: the current class's table entry
+            else w_cl_r <= !qy_ceq[w_nx_c];            // negative control: the step decision inverted
 `else
             else w_cl_r <= qy_ceq[w_nx_c];
 `endif
