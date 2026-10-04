@@ -32,7 +32,8 @@ struct Provider {
   // Nonfield I0 consumes no CFG/PHROM. Its exact L20 literal is enrolled
   // by the selected factory; scalar reservations retain stage/rank/producer.
   const char* native_i0=std::getenv("DSROM_S81_NATIVE_L20_I0");
-  if(native_i0&&std::string(native_i0)=="1") {
+  const char* native_index=std::getenv("DSROM_S81_NATIVE_L20_INDEX");
+  if((native_i0&&std::string(native_i0)=="1")||(native_index&&std::string(native_index)=="1")) {
    if(r.stage!=37)throw std::runtime_error("native L20 I0 requires canonical stage37");
    phase=0;entry=0;return;
   }

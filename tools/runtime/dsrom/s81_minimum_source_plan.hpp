@@ -37,3 +37,20 @@ struct DsromS81MinimumSourcePlan {
 // No weak binder, default successful callbacks or dynamic missing-symbol path.
 DsromS81MinimumSourcePlan dsrom_s81_bind_minimum_source(
     DsromS81MinimumRuntime&,std::shared_ptr<Vnative_vm>);
+
+#ifdef DSROM_S81_L20_KV_ENCLOSING
+#include "s81_minimum_l20_kv_factory.hpp"
+// Called once before cold admission, using the real TP4 owner factory. These
+// engines replace the caller's existing SU/ME slots, not extra clock owners.
+void dsrom_s81_join_minimum_l20_kv_source(
+    std::shared_ptr<dsrom_s81_minimum::L20KvFactory>,
+    const std::array<DsromS81MinimumRuntime*,4>&,
+    std::array<DsromS81PrefixNativeEngine,4>& su,
+    std::array<DsromS81PrefixNativeEngine,4>& me);
+std::shared_ptr<dsrom_s81_minimum::L20KvFactory> dsrom_s81_join_minimum_l20_kv_source(
+    std::array<dsrom_s81_minimum::L20KvRankBinding,4>,
+    std::function<void(const std::array<dsrom_s81_minimum::L20NativeCkv,4>&)>,
+    std::array<DsromS81PrefixNativeEngine,4>& su,
+    std::array<DsromS81PrefixNativeEngine,4>& me);
+
+#endif

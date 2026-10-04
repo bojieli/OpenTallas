@@ -5,6 +5,8 @@ SIM_ONLY functional invocation, not native timing or an S81 hardware verdict.
 No output oracle is used by dispatch or arithmetic. Compare H/PF only at END.
 """
 import argparse
+import csv
+import copy
 import hashlib
 import json
 import os
@@ -86,6 +88,7 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--head-chain',action='store_true',help='carry produced L20 H/PF directly into released head')
     p.add_argument('--carry-input',type=Path,help='actual carry.npz retained by an earlier invocation; head-only debugging')
+    p.add_argument('--native-i0',type=Path,help='actual native_L20_I0.tsv; replace only the measured rank I0')
     a = p.parse_args()
     a.output.mkdir(exist_ok=False)
     result = dict(scope='S81.L20.position1048575', functional='SIM_ONLY',
@@ -99,6 +102,23 @@ def main():
             [20], position=1048575, include_head=False)]
         nodes = [n for n in source_nodes if n['kind'] == 'instruction']
         assert len(nodes) == 144
+        native_i0=None
+        if a.native_i0:
+            assert not a.carry_input
+            with a.native_i0.open() as stream:
+                rows=list(csv.DictReader(stream,delimiter='\t'))
+            assert len(rows)==1
+            native_i0=rows[0]
+            assert native_i0['scope']=='L20.I0.native-component'
+            for key,value in [('position',1048575),('producer',2470),('address',40992)]:
+                assert int(native_i0[key])==value
+            native_i0={k:int(v) if k!='scope' else v for k,v in native_i0.items()}
+            assert 0<=native_i0['rank']<4 and 0<=native_i0['raw32']<2**32
+            assert 0<=native_i0['accepted_cycle']<=native_i0['visible_read_cycle']
+            assert nodes[0]['template_word_sha256']=='0a8042d53254c972480a5c7c05cf676d0c5e3cbea44e456aa5537b16ce93e622'
+            result['native_i0']=dict(native_i0,source_sha256=M.sha(a.native_i0),
+                cycles_to_visible_read=native_i0['visible_read_cycle']-native_i0['accepted_cycle'],
+                scope_note='one measured rank I0; remaining ranks and operators SIM_ONLY')
         actions = [n for n in source_nodes if n['kind']=='runtime_action']
         fences = [n for n in source_nodes if n['kind']=='consumer_done_fence']
         assert len(fences)==1
@@ -216,13 +236,29 @@ def main():
                     pass
                 else:
                     for rank in ranks:
+                        if pc==0 and native_i0 and rank.r==native_i0['rank']:
+                            reference_rank=copy.copy(rank)
+                            reference_rank.vm=rank.vm.copy()
+                            reference_rank.ok=rank.ok.copy()
+                            reference_rank.su(f,pc,[])
+                            reference_bits=int(M.G.bits(reference_rank.read(
+                                np.array([native_i0['address']]),'I0_reference',pc))[0])
+                            result['native_i0']['reference_raw32']=reference_bits
+                            result['native_i0']['bit_mismatches']=int(reference_bits!=native_i0['raw32'])
+                            if reference_bits!=native_i0['raw32']:
+                                raise M.Defect('native I0 differs from exact source arithmetic')
+                            # This operand was produced and read back by the
+                            # native SU/VM path, never taken from the reference.
+                            rank.write(native_i0['address'],np.array([native_i0['raw32']],dtype=np.uint32).view(M.F))
+                            continue
                         method = {0:'ctl',1:'me',2:'su',3:'qe',4:'xu',5:'he'}[f['unit']]
                         if method=='ctl':rank.ctl(f,pc)
                         else:getattr(rank,method)(f,pc,rank.log)
                         if rank.unwritten:raise M.Defect(str(rank.unwritten[-1]))
                 result['simulation_ticks'] += 1
                 log.write(json.dumps(dict(node=node['id'], unit=f['unit'],
-                    arithmetic='SIM_ONLY_EXACT', simulation_tick=result['simulation_ticks']))+'\n')
+                    arithmetic='NATIVE_RANK_I0_PLUS_SIM_ONLY_OTHER_RANKS' if pc==0 and native_i0 else 'SIM_ONLY_EXACT',
+                    simulation_tick=result['simulation_ticks']))+'\n')
                 log.flush()
         # Every functional operator and collective above returns only after
         # all writes. Check the source fence explicitly; this is a synchronous

@@ -44,6 +44,10 @@ class L20KvFactory {
     struct Impl;
     std::shared_ptr<Impl> impl;
 public:
+    // DSROM_S81_SIM_ONLY_KV_SOURCE=1 permits explicitly labeled missing
+    // descriptor/prime and TP4 callbacks in this existing factory. Supplied
+    // callbacks remain authoritative. Fallback captures actual source literal
+    // index as a SIM_ONLY tag, not native desc_gen; payloads remain native.
     // TP4 callback binds existing native transport directly to these actual
     // service ports. It MUST supply real ag_tx_ready/peer inputs, never tied1.
     L20KvFactory(std::array<L20KvRankBinding,4>,

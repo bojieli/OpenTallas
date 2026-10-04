@@ -41,7 +41,19 @@ VARIANTS = {'sel': dict(PICK=2, REPICK=1, RESERVE=1, PULL=0, TAILPULL=12),
             'pred': dict(PICK=0, REPICK=0, RESERVE=0, PULL=16, TAILPULL=0),
             'pick1': dict(PICK=1, REPICK=1, RESERVE=1, PULL=0, TAILPULL=12),
             'pick0': dict(PICK=0, REPICK=1, RESERVE=1, PULL=0, TAILPULL=12),
-            'no_tailpull': dict(PICK=1, REPICK=1, RESERVE=1, PULL=0, TAILPULL=0)}
+            'no_tailpull': dict(PICK=1, REPICK=1, RESERVE=1, PULL=0, TAILPULL=0),
+            # 2026-10-04 expert-fetch >= 90% successors (all default-off parameters):
+            #   ORDER=1  rate-balanced line order (load-time cfg_lut; w1/w3 still first, per-SM order unchanged)
+            #   PCPROT=1 per-PC refresh protection (only the sets this PC still has to stream)
+            #   STEER=1  in-stream REFpb slot steering (pending REFpb issues early when no ACT is wanted)
+            #   NWIN=300 ramp-aware notice (a REFpb due in the window's first-ACT ramp issues before it)
+            'o1': dict(PICK=2, REPICK=1, RESERVE=1, PULL=0, TAILPULL=12, ORDER=1),
+            'o1_pcprot': dict(PICK=2, REPICK=1, RESERVE=1, PULL=0, TAILPULL=12, ORDER=1, PCPROT=1),
+            'o1_pcprot_steer': dict(PICK=2, REPICK=1, RESERVE=1, PULL=0, TAILPULL=12, ORDER=1, PCPROT=1, STEER=1),
+            'pcprot_steer_nwin': dict(PICK=2, REPICK=1, RESERVE=1, PULL=0, TAILPULL=12, PCPROT=1, STEER=1, NWIN=300),
+            'sel90': dict(PICK=2, REPICK=1, RESERVE=1, PULL=0, TAILPULL=12, ORDER=1, PCPROT=1, STEER=1, NWIN=300),
+            'sel90_law7': dict(PICK=2, REPICK=1, RESERVE=1, PULL=0, TAILPULL=12, ORDER=1, PCPROT=1, STEER=1, NWIN=300, LAW=7)}
+NEG_VARIANTS = ('sel', 'sel90')
 
 
 def build(work, name):
@@ -111,6 +123,7 @@ def main(argv=None):
         for name, exe in exes.items():
             jobs.append((f'{name}_notice', exe, t, NOTICE_LEAD_PS, ids))
         jobs.append(('sel_no_notice', exe1, t, 0, ids))
+        jobs.append(('sel90_no_notice', exes['sel90'], t, 0, ids))
     # adversarial: all six experts in one bank set (no set alternation possible)
     for i in range(8):
         base = rng.randrange(7)
@@ -118,14 +131,18 @@ def main(argv=None):
         while len(set(ids)) < 6:
             ids = [base + 7 * rng.randrange(36) for _ in range(6)]
         jobs.append(('sel_notice_same_set', exe1, t0 + i * pb_span // 8, NOTICE_LEAD_PS, ids))
+        jobs.append(('sel90_notice_same_set', exes['sel90'], t0 + i * pb_span // 8, NOTICE_LEAD_PS, ids))
     with ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(lambda j: dict(case=j[0], **run(j[1], j[2], j[3], j[4])), jobs))
-    neg = [dict(case='neg_corrupt_sector', **run(exe1, t0, NOTICE_LEAD_PS, [61, 69, 112, 170, 299, 357], 1)),
-           dict(case='neg_trcd_check_plus_1ns', **run(exe1, t0, NOTICE_LEAD_PS, [61, 69, 112, 170, 299, 357], 2))]
+    neg = []
+    for v in NEG_VARIANTS:
+        sfx = '' if v == 'sel' else f'_{v}'
+        neg += [dict(case=f'neg_corrupt_sector{sfx}', **run(exes[v], t0, NOTICE_LEAD_PS, [61, 69, 112, 170, 299, 357], 1)),
+                dict(case=f'neg_trcd_check_plus_1ns{sfx}', **run(exes[v], t0, NOTICE_LEAD_PS, [61, 69, 112, 170, 299, 357], 2))]
     names = sorted({r['case'] for r in res})
     st = {c: stats([r for r in res if r['case'] == c]) for c in names}
-    sel = [r for r in res if r['case'] == 'sel_notice']
-    exact = all(r['verdict'] == 'PASS' and r.get('bad', 1) == 0 and r.get('viol', 1) == 0 for r in sel)
+    sel = [r for r in res if r['case'] in ('sel_notice', 'sel90_notice')]
+    exact = all(r['verdict'] == 'PASS' and r.get('bad', 1) == 0 and r.get('viol', 1) == 0 for r in res)
     git = lambda *c: subprocess.run(['git', *c], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     rec = dict(schema='opentallas.hbm_accel.ha4.expert_fetch_la.v1',
                source_commit=git('rev-parse', 'HEAD'),
@@ -136,7 +153,8 @@ def main(argv=None):
                bytes_per_task_per_stack=BYTES, variants=VARIANTS, seed=a.seed, notice_lead_ps=NOTICE_LEAD_PS,
                baseline_r5a=dict(stream_tbs=0.395, record='results/rtl/hbm_accel_ha4_20261004/expert_first_access.json',
                                  note='R5a: every expert in bank set 0; 774 ns done for the same 301,056 B'),
-               stats=st, exact=dict(verdict='PASS' if exact else 'FAIL', cases=len(sel)),
+               stats=st, exact=dict(verdict='PASS' if exact else 'FAIL', cases=len(res),
+                                    scope='every case of every variant: every released line compared, 0 DRAM violations'),
                negative_controls=[dict(case=n['case'], verdict=n['verdict'], bad=n.get('bad'), viol=n.get('viol')) for n in neg],
                cases=res + neg)
     a.out.parent.mkdir(parents=True, exist_ok=True)
