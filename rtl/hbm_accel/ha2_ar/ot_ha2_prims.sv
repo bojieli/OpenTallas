@@ -82,21 +82,39 @@ module ot_ha2_fifo #(
     output wire         empty,
     output wire [W-1:0] dout,
     output reg          ovf,
-    output wire [AW:0]  count
+    output wire [AW:0]  count,
+    output wire [AW:0]  space
 );
+    // r2: registered head.  A push into an empty FIFO (or one whose head leaves with nothing behind it)
+    // lands in the head register directly, so the latency is still one cycle; otherwise it goes to the store
+    // and moves to the head on a pop.  The arbitration logic sees only the head register, so the store's depth
+    // (flops or an SRAM macro with a registered read) is off those paths.  Capacity is 2^AW entries.
     localparam integer D = 1 << AW;
     reg [W-1:0] mem [0:D-1];
     reg [AW:0] wp, rp;
-    assign empty = wp == rp;
-    assign dout  = mem[rp[AW-1:0]];
-    assign count = wp - rp;
-    wire full = count == D;
+    reg        hv;
+    reg [W-1:0] hd;
+    wire [AW:0] sc = wp - rp;                     // entries in the store
+    assign empty = !hv;
+    assign dout  = hd;
+    assign count = sc + (hv ? 1 : 0);
+    assign space = (D - count);
+    wire full = count >= D;
+    wire do_pop = pop && hv;
+    wire acc = push && !full;
+    wire to_head = acc && (!hv || (do_pop && sc == 0));
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wp <= 0; rp <= 0; ovf <= 1'b0; end
+        if (!rst_n) begin wp <= 0; rp <= 0; hv <= 1'b0; ovf <= 1'b0; end
         else begin
-            if (push && !full) wp <= wp + 1'b1;
             if (push && full) ovf <= 1'b1;
-            if (pop && !empty) rp <= rp + 1'b1;
+            if (acc && !to_head) wp <= wp + 1'b1;
+            if (do_pop && sc != 0) rp <= rp + 1'b1;
+            if (to_head) hv <= 1'b1;
+            else if (do_pop) hv <= (sc != 0);
         end
-    always @(posedge clk) if (push && !full) mem[wp[AW-1:0]] <= din;
+    always @(posedge clk) begin
+        if (acc && !to_head) mem[wp[AW-1:0]] <= din;
+        if (to_head) hd <= din;
+        else if (do_pop && sc != 0) hd <= mem[rp[AW-1:0]];
+    end
 endmodule

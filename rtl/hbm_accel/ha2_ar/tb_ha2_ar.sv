@@ -66,10 +66,16 @@
 `define HA2_DMAX 192
 `endif
 `ifndef HA2_RXAW
-`define HA2_RXAW 5
+`define HA2_RXAW 7
 `endif
 `ifndef HA2_QAW
-`define HA2_QAW 5
+`define HA2_QAW 4
+`endif
+`ifndef HA2_IQAW
+`define HA2_IQAW 5
+`endif
+`ifndef HA2_PACE_X100
+`define HA2_PACE_X100 17638
 `endif
 `ifndef HA2_LAT
 `define HA2_LAT 7
@@ -212,6 +218,12 @@ module tb_ha2_ar #(
         end
     end endgenerate
 
+    // credit round trip, die 0 port 0: first flit sent -> its credit back at the sender
+    real t_tx0 = -1.0, t_cr0 = -1.0;
+    always @(posedge clk[0]) begin
+        if (txv[0][0] && t_tx0 < 0) t_tx0 = $realtime;
+        if (crr[0][0] && t_cr0 < 0 && t_tx0 >= 0) t_cr0 = $realtime;
+    end
     initial begin : fin
         real tmin, tmax;
         integer worst;
@@ -225,6 +237,7 @@ module tb_ha2_ar #(
         for (integer i = 0; i < N; i = i + 1)
             $display("HA2DIE die=%0d issue_ns=%0.3f done_ns=%0.3f lat_ns=%0.3f", i, t_issue[i], t_done[i],
                      t_done[i] - tmin);
+        $display("HA2RTT die0_port0_ns=%0.3f", t_cr0 - t_tx0);
         $display("HA2DONE seed=%0d lat_ns=%0.3f lat_cyc_1p2=%0.1f worst_die=%0d mismatches=%0d faults=%0d credit_stall_cycles=%0d",
                  seed0, tmax - tmin, (tmax - tmin) * 1.2, worst, mism, (|dfault) || (|lfault), stalls);
         $finish;
@@ -247,7 +260,8 @@ module tb_ha2_ep (
     /*verilator hier_block*/
     ot_ha2_ar_endpoint #(.ENABLE(1), .GS(`HA2_GS), .NG(`HA2_NG), .NC(`HA2_NC), .NOG(`HA2_NOG), .E(`HA2_E),
         .LANES(`HA2_LANES), .ONESHOT(`HA2_ONESHOT), .BF16(`HA2_BF16), .INJ(`HA2_INJ), .DEL(`HA2_DEL),
-        .HUBW(`HA2_HUBW), .RXAW(`HA2_RXAW), .QAW(`HA2_QAW), .LAT(`HA2_LAT))
+        .HUBW(`HA2_HUBW), .RXAW(`HA2_RXAW), .QAW(`HA2_QAW), .IQAW(`HA2_IQAW), .LAT(`HA2_LAT),
+        .PACE_X100(`HA2_PACE_X100), .PWB(`HA2_PWB))
       u (.clk(clk), .rst_n(rst_n), .rank(rank), .go(go), .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_data(inj_data),
          .tx_valid(tx_valid), .tx_flit(tx_flit), .cr_ret(cr_ret), .rx_valid(rx_valid), .rx_flit(rx_flit),
          .rx_credit(rx_credit), .del_valid(del_valid), .del_flit(del_flit), .fault(fault),
@@ -263,7 +277,7 @@ module tb_ha2_lk (
 );
     /*verilator hier_block*/
     ot_ha2_link #(.W(32*`HA2_LANES+25), .PWB(`HA2_PWB), .WSTG(`HA2_WSTG), .BITS_X100(`HA2_BITS_X100),
-        .DMAX(`HA2_DMAX), .AW(`HA2_RXAW))
+        .DMAX(`HA2_DMAX), .AW(5))
       u (.s_clk(s_clk), .s_rst_n(s_rst_n), .s_pclk(s_pclk), .s_prst_n(s_prst_n), .r_clk(r_clk), .r_rst_n(r_rst_n),
          .r_pclk(r_pclk), .r_prst_n(r_prst_n), .dly(dly), .dly_r(dly_r), .in_valid(in_valid), .in_flit(in_flit),
          .cr_ret(cr_ret), .out_valid(out_valid), .out_flit(out_flit), .r_credit(r_credit), .fault(fault),

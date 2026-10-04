@@ -32,6 +32,13 @@ SHAPES = {
     "dsgather": dict(GS=16, NG=6, NC=1, NOG=96, E=64, LANES=16, ONESHOT=0, BF16=1),
     # the same gather at 4x the payload (256 BF16 = 512 B a rank), for the slope
     "dsgather512": dict(GS=16, NG=6, NC=1, NOG=96, E=256, LANES=16, ONESHOT=0, BF16=1),
+    # r2: the W19 program's on-path gather sizes, rounded up to whole 64-B result flits (bytes a rank / 96):
+    # 64 (argmax 8, router 16, x-projections 37-49), 128 (x-proj 81, indexer q 85, attn/ffn out 107),
+    # 384 (expert intermediate 336), 1536 (selected compressed-KV rows), 4096 (96 x 512 index merge)
+    "dsg64": dict(GS=16, NG=6, NC=1, NOG=96, E=32, LANES=16, ONESHOT=0, BF16=1),
+    "dsg384": dict(GS=16, NG=6, NC=1, NOG=96, E=192, LANES=16, ONESHOT=0, BF16=1),
+    "dsg1536": dict(GS=16, NG=6, NC=1, NOG=96, E=768, LANES=16, ONESHOT=0, BF16=1),
+    "dsg4096": dict(GS=16, NG=6, NC=1, NOG=96, E=2048, LANES=16, ONESHOT=0, BF16=1),
     # debug shape: 2 groups of 4, 2 reduction groups of 4 contributors
     "tiny": dict(GS=4, NG=2, NC=4, NOG=2, E=256, LANES=16, ONESHOT=0, BF16=1),
     "qwen": dict(GS=2, NG=1, NC=2, NOG=1, E=4096, LANES=256, ONESHOT=1, BF16=0),
