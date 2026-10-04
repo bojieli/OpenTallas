@@ -12,8 +12,9 @@
 // each input port fans out to the H/HG group R0 registers, each output is a group register.  The group's head
 // index base is the input port gid (tied off by the tile), so all groups are one macro.
 //
-// The stationary-load write enables are decoded from the R0 registers as in tile_l; the products, chunk chains
-// and trees are ot_hdc_v41x_attn_hdp_l unchanged.  Exactness: lockstep against tile_l (tools/hbm_fmax_attn_gate.py
+// The stationary-load write enables are decoded from the R0 registers as in tile_l; the chunk chains and trees
+// are hdp_l's; the product is ot_hdc_v41x_attn_bmul_s (the 8 x 8 multiply split across the FML = 6 operand
+// register, same value and cycle; FML must be 6).  Exactness: lockstep against tile_l (tools/hbm_fmax_attn_gate.py
 // tile), and the engine ot_hdc_v41x_attn_s with TILE_S = 1 on the full-geometry golden vectors.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_attn_hgrp_s #(
@@ -129,7 +130,7 @@ module ot_hdc_v41x_attn_hgrp_s #(
             end
             wire [31:0] y;
             wire f;
-            ot_hdc_v41x_attn_hdp_l #(.TD(TD), .NBANK(NBANK), .BW(BW), .FPL(FPL), .FML(FML)) u_hdp (
+            ot_hdc_v41x_attn_hdp_s #(.TD(TD), .NBANK(NBANK), .BW(BW), .FPL(FPL), .FML(FML)) u_hdp (
                 .clk(clk), .rst_n(rst_n), .we(we), .wbank(r_ld_bank), .wd(wd), .sk_bank(sk_bank), .sk_b(sk_b),
                 .y(y), .f(f));
             always @(posedge clk) begin
@@ -177,6 +178,9 @@ module ot_hdc_v41x_attn_tile_s #(
     wire [NG-1:0] gov;
     genvar g;
     generate
+        if (FML != 6) begin : g_bad_fml
+            initial $error("ot_hdc_v41x_attn_tile_s: the split product needs FML = 6");
+        end
         if (H % HG != 0) begin : g_bad
             initial $error("ot_hdc_v41x_attn_tile_s: H must be a multiple of HG");
         end
@@ -189,4 +193,185 @@ module ot_hdc_v41x_attn_tile_s #(
         end
     endgenerate
     assign ov = gov[0];
+endmodule
+
+// ---------------------------------------------------------------------------
+// Product with the 8 x 8 significand multiply split across the ML = 6 operand register (zero added cycles):
+// the text of ot_hdc_v41x_attn_bmul_l (rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv) with its operand register and
+// stage 1 replaced.  In the head-group context the routed bmul_l stage 1 (operand register -> 8 x 8 multiply ->
+// product register) missed SS by ~200 ps; here the multiply is two 8 x 4 partial products ahead of the register
+// (in the cycle that held only the bank-select mux) and a keep-prefix 16-bit add behind it.  Same value, same
+// cycle as bmul_l at ML = 6.  The zero test uses (exponent, fraction) == 0, equal to ma == 0.
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_attn_bmul_s #(
+    parameter integer ML = 6           // 6 only (the split needs the operand register)
+) (
+    input  wire        clk,
+    input  wire [15:0] a,
+    input  wire [15:0] b,
+    input  wire        pad,
+    output reg  [31:0] y,
+    output reg         flt
+);
+    // -- operand register (ML = 6) with the significand product SPLIT across it: before the register the two
+    //    8 x 4 partial products ma * mb[3:0] and ma * mb[7:4] (exact integers), after it their sum -- the same
+    //    16-bit product ma * mb one cycle later, as bmul_l's operand register + 8 x 8 multiply
+    wire [7:0] ea_i = a[14:7];
+    wire [7:0] eb_i = b[14:7];
+    wire [7:0] ma_i = {(ea_i != 8'd0), a[6:0]};
+    wire [7:0] mb_i = {(eb_i != 8'd0), b[6:0]};
+    reg [11:0] o_pl, o_ph;
+    reg [15:0] oa, ob;
+    reg        opad;
+    always @(posedge clk) begin
+        o_pl <= ma_i * mb_i[3:0];
+        o_ph <= ma_i * mb_i[7:4];
+        oa <= a; ob <= b; opad <= pad;
+    end
+    // -- stage 1: product sum (prefix adder), exponent sum, flags
+    wire [7:0] ea = oa[14:7];
+    wire [7:0] eb = ob[14:7];
+    wire ma_z = (ea == 8'd0) && (oa[6:0] == 7'd0);
+    wire mb_z = (eb == 8'd0) && (ob[6:0] == 7'd0);
+    wire [8:0] esum_c = {1'b0, (ea == 8'd0) ? 8'd1 : ea} + {1'b0, (eb == 8'd0) ? 8'd1 : eb};
+    wire nonfin_c = !opad && ((ea == 8'hff) || (eb == 8'hff));
+    wire zero_c = opad || ma_z || mb_z;
+    wire [15:0] psum;
+    wire        pco;
+    ot_hdc_ksadd_k #(.W(16)) u_ps (.a({4'd0, o_pl}), .b({o_ph, 4'd0}), .cin(1'b0), .s(psum), .cout(pco));
+    reg [15:0] s1_p;
+    reg [8:0]  s1_esum;
+    reg        s1_sign, s1_zero, s1_nonfin;
+    always @(posedge clk) begin
+        s1_p <= psum;
+        s1_esum <= esum_c;
+        s1_sign <= oa[15] ^ ob[15];
+        s1_zero <= zero_c;
+        s1_nonfin <= nonfin_c;
+    end
+
+    // -- stage 2: normalise; normal encoding; subnormal shift amounts
+    //: value = P * 2^(esum - 268); msb at 15 - lz; biased exponent
+    //: esum - 126 - lz; a subnormal result is P * 2^(esum - 119) in units of
+    //: 2^-149, i.e. P << (esum - 119) or P >> (119 - esum) rounded.
+    reg [3:0] lz0;
+    integer i;
+    always @* begin
+        lz0 = 4'd15;
+        for (i = 0; i < 16; i = i + 1)
+            if (s1_p[i]) lz0 = 4'd15 - i[3:0];
+    end
+    wire [3:0]  lz;
+    wire [15:0] c1_p;
+    wire [8:0]  c1_esum;
+    wire        c1_sign, c1_zero, c1_nonfin;
+    ot_hdc_v41x_dly #(.W(4 + 16 + 9 + 3), .D((ML >= 5) ? 1 : 0)) u_cut2 (.clk(clk),
+        .d({lz0, s1_p, s1_esum, s1_sign, s1_zero, s1_nonfin}), .q({lz, c1_p, c1_esum, c1_sign, c1_zero, c1_nonfin}));
+    wire [15:0] pn = c1_p << lz;
+    wire signed [10:0] biased = $signed({2'b00, c1_esum}) - 11'sd126 - $signed({7'd0, lz});
+    wire normal_c = biased >= 11'sd1;
+    wire over_c = biased >= 11'sd255;
+    wire signed [10:0] lsh = $signed({2'b00, c1_esum}) - 11'sd119;   // left shift if >= 0
+    reg [31:0] s2_code_n;
+    reg [15:0] s2_p;
+    reg [4:0]  s2_lsh;            // 0 .. 22 when used
+    reg [4:0]  s2_rsh;            // 1 .. 17 (clamped) when used
+    reg        s2_left, s2_normal, s2_over, s2_sign, s2_zero, s2_nonfin;
+    always @(posedge clk) begin
+        s2_code_n <= {c1_sign, biased[7:0], pn[14:0], 8'd0};
+        s2_p <= c1_p;
+        s2_left <= !lsh[10];
+        s2_lsh <= (lsh > 11'sd22) ? 5'd22 : lsh[4:0];
+        s2_rsh <= (lsh < -11'sd17) ? 5'd17 : (-lsh[4:0]);
+        s2_normal <= normal_c;
+        s2_over <= over_c;
+        s2_sign <= c1_sign;
+        s2_zero <= c1_zero;
+        s2_nonfin <= c1_nonfin;
+    end
+
+    // -- stage 3: subnormal alignment [cut, ML >= 4] and rounding, select, encode
+    wire [22:0] lft0 = {7'd0, s2_p} << s2_lsh;
+    wire [15:0] rgt0 = s2_p >> s2_rsh;
+    wire [31:0] below = {s2_p, 16'd0} >> s2_rsh;       // bits shifted out, MSB first at [15]
+    wire [22:0] lft;
+    wire [15:0] rgt;
+    wire [31:0] c3_code_n;
+    wire rb, st, c3_left, c3_normal, c3_over, c3_sign, c3_zero, c3_nonfin;
+    ot_hdc_v41x_dly #(.W(23 + 16 + 32 + 8), .D((ML >= 4) ? 1 : 0)) u_cut3 (.clk(clk),
+        .d({lft0, rgt0, s2_code_n, below[15], |below[14:0], s2_left, s2_normal, s2_over, s2_sign, s2_zero, s2_nonfin}),
+        .q({lft, rgt, c3_code_n, rb, st, c3_left, c3_normal, c3_over, c3_sign, c3_zero, c3_nonfin}));
+    wire [23:0] sub_f = c3_left ? {1'b0, lft} : ({8'd0, rgt} + {23'd0, rb && (st || rgt[0])});
+    wire [31:0] code_s = {c3_sign, 7'd0, sub_f};
+    always @(posedge clk) begin
+        if (c3_nonfin) begin
+            y <= 32'd0; flt <= 1'b1;
+        end else if (c3_zero) begin
+            y <= 32'd0; flt <= 1'b0;
+        end else if (c3_normal) begin
+            y <= c3_over ? 32'd0 : c3_code_n; flt <= c3_over;
+        end else begin
+            y <= (sub_f == 24'd0) ? 32'd0 : code_s; flt <= 1'b0;
+        end
+    end
+endmodule
+
+// Head datapath: ot_hdc_v41x_attn_hdp_l with the split product ot_hdc_v41x_attn_bmul_s (FML must be 6).
+module ot_hdc_v41x_attn_hdp_s #(
+    parameter integer TD = 64,
+    parameter integer NBANK = 3,
+    parameter integer BW = 2,
+    parameter integer FPL = 3,
+    parameter integer FML = 3
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [TD-1:0]     we,
+    input  wire [BW-1:0]     wbank,
+    input  wire [TD*16-1:0]  wd,
+    input  wire [8*BW-1:0]   sk_bank,
+    input  wire [TD*18-1:0]  sk_b,
+    output wire [31:0]       y,
+    output wire              f
+);
+    localparam integer NC = TD / 8;
+    wire [TD*32-1:0] p;
+    wire [TD-1:0]    pf;
+    genvar gk, gn;
+    generate
+        for (gk = 0; gk < TD; gk = gk + 1) begin : g_m
+            reg [NBANK*16-1:0] ab;
+            integer bb;
+            always @(posedge clk)
+                for (bb = 0; bb < NBANK; bb = bb + 1)
+                    if (we[gk] && (wbank == bb)) ab[bb*16 +: 16] <= wd[gk*16 +: 16];
+            wire [BW-1:0] bk = sk_bank[(gk % 8)*BW +: BW];
+            wire [15:0] av = ab[bk*16 +: 16];
+            wire [17:0] be = sk_b[gk*18 +: 18];
+            wire mf;
+            ot_hdc_v41x_attn_bmul_s #(.ML(FML)) u_m (.clk(clk), .a(av), .b(be[15:0]), .pad(be[17]), .y(p[gk*32 +: 32]), .flt(mf));
+            // dequant fault rides with the product
+            wire dfq;
+            ot_hdc_v41x_dly #(.W(1), .D(FML)) u_df (.clk(clk), .d(be[16] & ~be[17]), .q(dfq));
+            assign pf[gk] = mf | dfq;
+        end
+        wire [(2*NC-1)*32-1:0] tn;      // heap order: leaves (chunk sums) at NC-1 .. 2NC-2
+        wire [2*NC-2:0]        tf;
+        for (gn = 0; gn < NC; gn = gn + 1) begin : g_c
+            ot_hdc_v41x_attn_chunk_l #(.FPL(FPL)) u_c (.clk(clk), .rst_n(rst_n), .p(p[gn*256 +: 256]), .pf(pf[gn*8 +: 8]),
+                                        .y(tn[(NC-1+gn)*32 +: 32]), .f(tf[NC-1+gn]));
+        end
+        for (gn = 0; gn < NC - 1; gn = gn + 1) begin : g_node
+            wire [31:0] s;
+            wire sf;
+            ot_hdc_v41x_qaddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
+                             .b(tn[(2*gn+2)*32 +: 32]), .y(s), .fault(sf));
+            wire fdq;
+            ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(tf[2*gn+1] | tf[2*gn+2]), .q(fdq));
+            assign tn[gn*32 +: 32] = s;
+            assign tf[gn] = fdq | sf;
+        end
+    endgenerate
+    assign y = tn[31:0];
+    assign f = tf[0];
 endmodule
