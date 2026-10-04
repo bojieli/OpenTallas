@@ -277,6 +277,13 @@ def cmd_record(a):
                negative_controls=[dict(case=n['case'], verdict=n['verdict'], bad=n.get('bad'), viol=n.get('viol'))
                                   for n in runs['negative']],
                ckv_selection=prep, streams=streams, routed_expert_fetch=routed, sm_weight_stream=sm,
+               default_on_path=dict(
+                   notice=['scan_L20_notice', 'scan_L2_notice', 'window_notice'],
+                   as_built=['gather_*_as_built', 'embedding_row_post_at_go'],
+                   rule='owner >= 90 % bandwidth rule (2026-10-04): the index-key scans and the window rows are posted '
+                        'with the static-schedule notice (the descriptors are known before the query); token-dependent '
+                        'loads stay as built.  Composer: tools/dshbm_1m_allmeasured.py Hbm.MODE = "default"',
+                   pc_checker='rtl/test/ot_hbm_pc_dram_check.sv bound into every PC when the run used --chk'),
                below_90pct=dict(streams=below, note='random-row gathers and single-row reads are latency-bound '
                                 'by construction (a few sectors a PC): time, not bandwidth, is their measure'),
                run=dict(host=runs['host'], simulator=runs['simulator'], points=runs['points'],
