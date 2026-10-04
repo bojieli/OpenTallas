@@ -1,0 +1,20 @@
+images loaded in 3.7 s
+stream: total_words=1057 preroll=655 ctl_cycles; words_ready_at_start=24/24
+models constructed in 4.8 s (tiles/die=1536 nodes/die=1440)
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 wall=1s passes=3
+progress tick=4096 cyc=4097 pc_base=0/0 me_busy=979/979 wall=339s passes=9119
+progress tick=8192 cyc=8193 pc_base=0/0 me_busy=2929/2929 wall=896s passes=19261
+progress tick=12288 cyc=12289 pc_base=0/0 me_busy=3023/3023 wall=1013s passes=27547
+progress tick=16384 cyc=16385 pc_base=0/0 me_busy=6834/6834 wall=1995s passes=39725
+progress tick=20480 cyc=20481 pc_base=77/77 me_busy=7269/7269 wall=2195s passes=49660
+progress tick=24576 cyc=24577 pc_base=77/77 me_busy=8424/8424 wall=2565s passes=59007
+progress tick=28672 cyc=28673 pc_base=77/77 me_busy=9314/9314 wall=2872s passes=68089
+progress tick=32768 cyc=32769 pc_base=77/77 me_busy=10024/10024 wall=3127s passes=76991
+STAGE L0 done cycles=35283 start_cyc=7 end_cyc=35290 me_busy=10380/10380 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=40512 su_writes=700408 wall=3264s
+HBMSTAT L0 die0 hbm_wait=12483 kv_wait=1391 matmul=5139 attention=1512 collective=3096 stream_unit=11615 other=48 ctl_cycles=29373 rd=3247104 room_block=36496 desc_gap=3200 words_done=1057 last_wread_cyc=32969 hbm_fault=0 wst_fault=0
+HBMSTAT L0 die1 hbm_wait=12483 kv_wait=1391 matmul=5139 attention=1512 collective=3096 stream_unit=11615 other=48 ctl_cycles=29373 rd=3247104 room_block=36496 desc_gap=3200 words_done=1057 last_wread_cyc=32969 hbm_fault=0 wst_fault=0
+VPSTAT L0 die0 nuse=4 hbm_code_reads=3884 rel_fault=0
+VPSTAT L0 die1 nuse=4 hbm_code_reads=3884 rel_fault=0
+VERIFY_TOKENS die=0 n=0
+VERIFY_TOKENS die=1 n=0
+QWEN_HBMACC_TOKEN PASS stages=1 token=0 val=00000000 die1_token=0 cycles=35290 edges=35290 settle_max=2 wall_s=3264.4 RSS_KiB=992472 threads=4 ctl_cycles=29374 preroll=655

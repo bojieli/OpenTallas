@@ -92,7 +92,7 @@ def head_chain(ranks, model, output, result):
 
 
 
-def capture_h_chain_inputs(ranks, nodes, execution, output, result):
+def capture_h_chain_inputs(ranks, nodes, execution, output, result, *, pause=True):
     """Produced pre-I75 operands only. Files do not confer native VM leases."""
     if result['simulation_ticks'] != 75 or nodes[75]['id'] != 'L20.I75':
         raise M.Defect('H-chain export must precede the real I75 after I74')
@@ -142,9 +142,10 @@ def capture_h_chain_inputs(ranks, nodes, execution, output, result):
         native_loader='existing SourceIo offer/visible and source-owned publication tags; actual same-bank ACK required',
         initial_H='unchanged released initial TargetEntry H; no expected/final H imported')
     (output/'native_h_chain_inputs.json').write_text(json.dumps(manifest,indent=2)+'\n')
-    result.update(scope='S81.L20.produced_native_h_chain_inputs',
-        disposition='PAUSED_BEFORE_NATIVE_I75', completed=False, exact=None,
-        h_chain_inputs=manifest)
+    result['h_chain_inputs'] = manifest
+    if pause:
+        result.update(scope='S81.L20.produced_native_h_chain_inputs',
+            disposition='PAUSED_BEFORE_NATIVE_I75', completed=False, exact=None)
 
 
 def main():
@@ -331,6 +332,11 @@ def main():
                 if a.capture_h_chain_inputs and pc==75:
                     capture_h_chain_inputs(ranks,nodes,execution,a.output,result)
                     return # I75 T and I76 H remain real downstream native computations
+                if native_pv is not None and pc==75:
+                    # Export THIS actual PV continuation's produced suffix
+                    # operands once while continuing through the existing END
+                    # comparison. Files grant no native VM lease or ACK.
+                    capture_h_chain_inputs(ranks,nodes,execution,a.output,result,pause=False)
                 if a.capture_attention_inputs and pc in (20,38,55,63):
                     name,address,count={20:('I20.KVN',54720,512),38:('I38.LAT',93728,512),
                         55:('I55.Q',55744,8192),63:('I63.S',63936,10240)}[pc]
@@ -487,9 +493,18 @@ def main():
                 mismatches.append(dict(rank=rank.r, region=region,
                     count=int(np.count_nonzero(M.G.bits(got)!=M.G.bits(want)))))
         result.update(completed=True, exact=not any(x['count'] for x in mismatches), mismatches=mismatches)
-        if a.head_chain:
+        # Retain the produced END operands independently of the optional head
+        # arithmetic. Native HEAD loads these bits through its existing VM
+        # writer/ACK path; files alone confer no publication or lease credit.
+        if result['exact']:
+            for rank in ranks:
+                M.G.bits(rank.vm[:20480]).astype('<u4').tofile(a.output/f'H_rank{rank.r}.u32')
+                M.G.bits(rank.vm[41152:41156]).astype('<u4').tofile(a.output/f'PF_rank{rank.r}.u32')
+            result['head_input_scope']='PRODUCED_L20_END_H_PF_ONLY_NO_NATIVE_PUBLICATION_CREDIT'
+        if result['exact'] or a.head_chain:
             np.savez(a.output/'carry.npz',H=np.stack([r.vm[:20480].reshape(4,5120) for r in ranks]),
                 PF=np.stack([r.vm[41152:41156] for r in ranks]))
+        if a.head_chain:
             result['completed']=False
             head_chain(ranks,model,a.output,result)
             result['completed']=True

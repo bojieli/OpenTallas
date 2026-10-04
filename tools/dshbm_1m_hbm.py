@@ -139,6 +139,10 @@ def run(exe, args, t_go, mut=0):
         return dict(t_go_ps=t_go, mut=mut, verdict='FAIL', raw=out[-1500:])
     rec = {k: int(v) for k, v in re.findall(r'(\w+)=(-?\d+)', bw[0])}
     rec.update(mut=mut, verdict=bw[1].split('=')[1])
+    # --chk: the independent per-PC DRAM checker (rtl/test/ot_hbm_pc_dram_check.sv, bound into every PC)
+    pcl = re.findall(r'DRAMCHK_PC \S+ viol=(\d+) act=(\d+) pre=\d+ ref=(\d+) rd=(\d+)', out)
+    if pcl:
+        rec.update(pcchk_pcs=len(pcl), pcchk_viol=sum(int(m[0]) for m in pcl), pcchk_ref=sum(int(m[2]) for m in pcl))
     b = rec['bytes']
     rec['steady_tbps'] = round(b / ((rec['rd_last'] - rec['rd_first'] + 1024) * 1e-12) / 1e12, 4)
     rec['end_to_end_tbps'] = round(b / (rec['cons_last'] * 1e-12) / 1e12, 4) if rec['cons_last'] > 0 else None
@@ -148,12 +152,15 @@ def run(exe, args, t_go, mut=0):
 
 
 def cmd_run(a):
+    global SOURCES
+    if a.chk:
+        SOURCES = SOURCES + ['rtl/test/ot_hbm_pc_dram_check.sv']
     prep = json.loads(Path(a.prep).read_text())
     a.work.mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(2) as ex:
         exes = dict(zip((5, 6), ex.map(lambda law: build(a.work, law), (5, 6))))
     t0, span = 8_000_000, 118 * 32 * 1024                      # one 32-command REFpb round (64 phases across it)
-    C = cases(prep)
+    C = [c for c in cases(prep) if not a.only or any(c[0].startswith(o) for o in a.only.split(','))]
     jobs = [(c, law, args, t0 + i * span // a.points + 7013 * i % 1024) for c, law, args, _ in C
             for i in range(a.points)]
     with ThreadPoolExecutor(a.jobs) as ex:
@@ -166,7 +173,7 @@ def cmd_run(a):
     rec = dict(source_commit=head, host=os.uname().nodename,
                simulator=subprocess.run([VERILATOR, '--version'], capture_output=True, text=True).stdout.strip(),
                input_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in SOURCES + ['tools/dshbm_1m_hbm.py']},
-               points=a.points, cases=res, negative=neg)
+               points=a.points, cases=res, negative=neg, pc_checker=bool(a.chk))
     Path(a.out).write_text(json.dumps(rec) + '\n')
     print('done', sum(r['verdict'] == 'PASS' for r in res), '/', len(res), [n['verdict'] for n in neg])
 
@@ -193,6 +200,10 @@ def summ(rows):
                 fraction_of_peak_steady_mean=round(statistics.mean(r['steady_tbps'] for r in ok) / PEAK_STACK_TBPS, 4),
                 fraction_of_peak_end_to_end_min=round(min(r['end_to_end_tbps'] for r in ok) / PEAK_STACK_TBPS, 4),
                 dram_violations=sum(r.get('viol', 0) for r in rows), data_mismatches=sum(r.get('bad', 0) for r in rows),
+                **({} if not any('pcchk_pcs' in r for r in rows) else dict(
+                    pc_checker=dict(runs=sum('pcchk_pcs' in r for r in rows), pcs=sum(r.get('pcchk_pcs', 0) for r in rows),
+                                    violations=sum(r.get('pcchk_viol', 0) for r in rows),
+                                    refpb=sum(r.get('pcchk_ref', 0) for r in rows)))),
                 activates_max=max(r['act'] for r in ok), refreshes_max=max(r['ref'] for r in ok))
 
 
@@ -266,6 +277,13 @@ def cmd_record(a):
                negative_controls=[dict(case=n['case'], verdict=n['verdict'], bad=n.get('bad'), viol=n.get('viol'))
                                   for n in runs['negative']],
                ckv_selection=prep, streams=streams, routed_expert_fetch=routed, sm_weight_stream=sm,
+               default_on_path=dict(
+                   notice=['scan_L20_notice', 'scan_L2_notice', 'window_notice'],
+                   as_built=['gather_*_as_built', 'embedding_row_post_at_go'],
+                   rule='owner >= 90 % bandwidth rule (2026-10-04): the index-key scans and the window rows are posted '
+                        'with the static-schedule notice (the descriptors are known before the query); token-dependent '
+                        'loads stay as built.  Composer: tools/dshbm_1m_allmeasured.py Hbm.MODE = "default"',
+                   pc_checker='rtl/test/ot_hbm_pc_dram_check.sv bound into every PC when the run used --chk'),
                below_90pct=dict(streams=below, note='random-row gathers and single-row reads are latency-bound '
                                 'by construction (a few sectors a PC): time, not bandwidth, is their measure'),
                run=dict(host=runs['host'], simulator=runs['simulator'], points=runs['points'],
@@ -349,7 +367,7 @@ def weight_demand():
                                   '(cold_first_token_stall_us for a first token); routed experts are the fetch term (sel90)'))
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('step', choices=('prep', 'run', 'record'))
     ap.add_argument('--out', required=True)
@@ -358,7 +376,9 @@ def main():
     ap.add_argument('--runs')
     ap.add_argument('--jobs', type=int, default=32)
     ap.add_argument('--points', type=int, default=64)
-    a = ap.parse_args()
+    ap.add_argument('--chk', action='store_true', help='bind rtl/test/ot_hbm_pc_dram_check.sv into every PC')
+    ap.add_argument('--only', default='', help='run only cases with these name prefixes (comma list)')
+    a = ap.parse_args(argv)
     {'prep': cmd_prep, 'run': cmd_run, 'record': cmd_record}[a.step](a)
 
 

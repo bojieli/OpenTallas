@@ -17,6 +17,7 @@
 #include DSROM_S81_NATIVE_CONTINUATION_HEADER
 #endif
 #include <fstream>
+#include <cstdio>
 #include <cstdlib>
 #ifdef DSROM_S81_HEAD_WINNER_BINDING_HEADER
 #include "s81_native_bf_head_factory.hpp"
@@ -351,8 +352,13 @@ struct HeadRank {
             [this](auto id,auto a,auto n){return target->source_span_lease(id,a,n);},
             [this](const auto& out,unsigned n){return target->offer_prefix(out,n);},
             [this](const auto& out,unsigned n){return target->visible_prefix(out,n);}};
-        h=raw(dir+"/H_rank"+std::to_string(rank)+".u32",20480);
-        pf=raw(dir+"/PF_rank"+std::to_string(rank)+".u32",4);
+        // Optional actual L20 END operands; normalization instructions and
+        // CROM stay in the existing released input home. Files do not grant
+        // publication: load() still offers every word to the actual VM/ACK path.
+        const char* carry=std::getenv("DSROM_S81_NATIVE_HEAD_CARRY_DIR");
+        const std::string operand_dir=carry&&*carry?carry:dir;
+        h=raw(operand_dir+"/H_rank"+std::to_string(rank)+".u32",20480);
+        pf=raw(operand_dir+"/PF_rank"+std::to_string(rank)+".u32",4);
         std::ifstream literal(dir+"/normalization.words");
         const std::array<std::vector<std::pair<uint32_t,uint32_t>>,5> extents{{
             {{20480,5120}},{{20480,5120}},{{41344,5120},{51584,1}},{{51616,1}},{{46464,5120}}}};
@@ -561,6 +567,20 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
     void drive_tail(Vretn& node,uint32_t a,uint32_t b){const unsigned row=current*32320+held->local_row;
         node.a_v=node.b_v=1;node.a_t=(row<<13)|2;node.b_t=(row<<13)|258;node.a_d=a;node.b_d=b;}
     void prepare(const DsromS81PairResult& old) {
+        // Coarse diagnostics go to the caller's existing runtime journal.
+        // Reuse actual source counters; do not add polling or ownership state.
+        if(runtime.identity && runtime.cycle()%65536==0) {
+            bool all_published=true;
+            for(const auto& rank:ranks)all_published=all_published&&rank->published();
+            fprintf(stderr,"HEAD_NATIVE_PROGRESS cycle=%ld phase=%s rank=%u I5_accepted=%u "
+                "norm_ops=%u,%u,%u,%u published_rows=%u,%u,%u,%u "
+                "final_accepted=%u END_done=%u\n",
+                runtime.cycle(),!dot?"normalization":all_published?"collective-END":"native-DOT",
+                current,unsigned(dot),ranks[0]->norm,ranks[1]->norm,ranks[2]->norm,ranks[3]->norm,
+                ranks[0]->logits,ranks[1]->logits,ranks[2]->logits,ranks[3]->logits,
+                unsigned(winner_taken),unsigned(core->done));
+            fflush(stderr);
+        }
         for(auto& rank:ranks)rank->prepare();
         if(head){input.prepare(old);returned.prepare(old);}else runtime.drive({});
         if(replay&&dot&&current<4&&!replay_row&&ranks[current]->logits<32320) {
@@ -970,7 +990,7 @@ struct SourceL20Index : std::enable_shared_from_this<SourceL20Index> {
             return std::nullopt;
         };
         backend=std::make_shared<NativeIndexHbm>(r,"native_L20_rank3_index_backend");
-        backend->preload_ring("/tmp/opentallas-L20-RING-priorhistory-20261004-r1/r3");
+        backend->preload_ring(dir+"/ring_prior_r3");
         writer=std::make_shared<L20IndexWriter>(r,ID,su_ports,backend,key_operation);
         scorer=std::make_shared<VDsromS81IndexScorer>(r.context,"native_L20_rank3_fullscan");
         backend->bind_wiring([this](VDsromS81IndexHbm& m) {
