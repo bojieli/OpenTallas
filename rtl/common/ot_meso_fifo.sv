@@ -28,8 +28,8 @@
 //     so 2w + resolution must fit in (OFFSET - GUARD_LO - 1)*T below and (GUARD_HI - OFFSET - 1)*T above:
 //     DEPTH 4 / OFFSET 2 / guards 0,4 gives 1 T each side (w up to ~400 ps; central w = 192 ps).
 //   * Lap check.  The consumed slot's lap bit must equal rp[AW]; a mismatch is a gross slip and also faults.
-//   * Credits.  The reader holds a CREDITS-entry elastic buffer (fall-through: an arriving word goes straight to
-//     r_d when the buffer is empty).  Each word the consumer takes returns one credit through a second, 1-bit
+//   * Credits.  The reader holds a registered output word plus a CREDITS-entry elastic buffer (an arriving word
+//     is captured straight into the output register when the buffer is empty; writer credits = CREDITS + 1).  Each word the consumer takes returns one credit through a second, 1-bit
 //     ring of the same kind (rclk -> wclk) with its own placement and guards; the writer sends only on a credit.
 //     CREDITS >= the credit round trip (about 2*OFFSET + 4 cycles) sustains one word a cycle.
 //   * Reset handshake (as ot_ratio_cdc_fifo, plus an alignment step): each side publishes DOWN/ALIGN/READY/RUN
@@ -39,11 +39,11 @@
 //     READY or RUN (the writer then loads CREDITS).  Seeing the peer DOWN from READY/RUN returns to DOWN; words in
 //     flight across a reset are discarded by both sides.  The fault is sticky until the local reset.
 //
-// Latency, no backpressure: r_d is presented straight from the ring slot (no receive register), so a word
-// written at write edge n is taken by the consumer's register at lag OFFSET*T -+ T/2, against T for the
-// synchronous register stage it replaces: DELTA = (OFFSET - 1) T on average over phase, (OFFSET - 1 -+ 0.5) T
-// at the extremes.
-// The dual-clock bench rtl/test/meso/tb_meso_fifo.cpp measures it.
+// Latency, no backpressure: a word written at write edge n is captured into the output register at lag
+// OFFSET*T -+ T/2 and taken by the consumer one period later, against T for the synchronous register stage it
+// replaces: DELTA = OFFSET periods on average over phase (OFFSET -+ 0.5 at the extremes); a region round trip
+// (two crossings) costs 2*OFFSET whole periods.  (A combinational fall-through output saves one period per crossing
+// but missed SS by 85 ps at W = 512: run meso_d4_v2 of results/uarch/meso_fifo_20261004.)
 //
 // Default-off: ENABLE = 0 elaborates to tied-off outputs.
 module ot_meso_fifo #(
@@ -97,7 +97,7 @@ module ot_meso_fifo #(
         localparam logic [1:0] S_DOWN = 2'b00, S_ALIGN = 2'b01, S_READY = 2'b11, S_RUN = 2'b10;
         localparam int HW = $clog2(HOLD + 1);
         localparam int SW = $clog2(SETTLE + 1);
-        localparam int BW = $clog2(CREDITS + 1);
+        localparam int BW = $clog2(CREDITS + 2);
         localparam int IW = (CREDITS > 1) ? $clog2(CREDITS) : 1;
 
         logic [1:0] ws, rs;                    // own states
@@ -170,7 +170,7 @@ module ot_meso_fifo #(
                         if (rs_w == S_DOWN) begin
                             ws <= S_DOWN; w_cnt <= HW'(HOLD); w_ok <= 1'b1; w_cred <= '0;
                         end else if (ws == S_READY) begin
-                            if (rs_w == S_READY || rs_w == S_RUN) begin ws <= S_RUN; w_cred <= BW'(CREDITS); end
+                            if (rs_w == S_READY || rs_w == S_RUN) begin ws <= S_RUN; w_cred <= BW'(CREDITS + 1); end   // buffer + output register
                         end else begin
                             w_cred <= w_cred - BW'(w_send) + BW'(c_in);
                         end
@@ -193,23 +193,29 @@ module ot_meso_fifo #(
         assign r_fault  = r_flt;
         wire   d_in     = r_on && !r_flt && d_rv && d_lap_ok;   // a word arrives (crosses: d_rv, d_lap_ok)
         wire   empty    = (cnt == '0);
-        assign r_v      = rrst_n && !r_flt && (!empty || d_in);
-        assign r_d      = empty ? d_rd : buf_d[hd];
+        // registered output: o_d is the capture register of the crossing (the arriving word is muxed straight into
+        // it when the buffer is empty); its enable 'load' and the select are read-domain signals only.
+        logic [W-1:0] o_d; logic o_v;
+        assign r_v      = rrst_n && !r_flt && o_v;
+        assign r_d      = o_d;
         assign r_take   = r_v && r_rdy;
-        wire   push     = d_in && !(empty && r_rdy);
+        wire   load     = !o_v || r_rdy;
+        wire   take_in  = load && empty && d_in;
+        wire   push     = d_in && !take_in;
+        always_ff @(posedge rclk) if (load) o_d <= empty ? d_rd : buf_d[hd];
 `ifdef OT_MESO_MUTANT_EARLY_CREDIT
         assign c_pulse  = d_in;              // MUTANT: credit on arrival instead of consumption
 `else
         assign c_pulse  = r_take;            // one credit per word the consumer takes
 `endif
-        wire   pop      = !empty && r_rdy;
+        wire   pop      = load && !empty;
         // written every cycle unless full (read-domain condition only; no crossing signal in the enable); tl
         // advances only on push, so a non-push cycle just rewrites the free slot
         always_ff @(posedge rclk) if (cnt != BW'(CREDITS)) buf_d[tl] <= d_rd;
         always_ff @(posedge rclk) begin
             if (!rrst_n) begin
                 rs <= S_DOWN; r_cnt <= HW'(HOLD); r_ok <= 1'b0; r_set <= '0; r_flt <= 1'b0; r_arm <= '0;
-                hd <= '0; tl <= '0; cnt <= '0;
+                hd <= '0; tl <= '0; cnt <= '0; o_v <= 1'b0;
             end else begin
                 case (rs)
                     S_DOWN: begin
@@ -229,8 +235,9 @@ module ot_meso_fifo #(
                     end
                 endcase
                 if (!r_on) begin
-                    hd <= '0; tl <= '0; cnt <= '0;
+                    hd <= '0; tl <= '0; cnt <= '0; o_v <= 1'b0;
                 end else begin
+                    if (load) o_v <= !empty || d_in;
                     if (push) tl <= (tl == IW'(CREDITS - 1)) ? '0 : tl + 1'b1;
                     if (pop)  hd <= (hd == IW'(CREDITS - 1)) ? '0 : hd + 1'b1;
                     cnt <= cnt + BW'(push) - BW'(pop);
