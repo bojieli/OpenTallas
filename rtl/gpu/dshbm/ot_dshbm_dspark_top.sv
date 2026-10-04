@@ -43,7 +43,10 @@ module ot_dshbm_dspark_top #(
     parameter integer RP     = 4,
     parameter integer IW     = 9,
     parameter integer MUT    = 0,
-    parameter integer ACCEPT_LEAF = 0
+    parameter integer ACCEPT_LEAF = 0,
+    parameter integer FAST   = 0       // 1: the 1.2 GHz SS successors (hbm_accel_fmax_inventory_20261004/ctl):
+                                       //    ctl FAST, ot_dshbm_spec_state_f (answers +4 cycles), router top-K
+                                       //    ot_gpu_router_topk_f (+1 cycle a select), union FAST (same cycles)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -124,7 +127,7 @@ module ot_dshbm_dspark_top #(
     wire [31:0] n_val, tw_pos;
     wire [TW-1:0] tw_tok;
     wire        am_nan;
-    ot_dshbm_dspark_ctl #(.B(B), .PMAX(PMAX), .TW(TW), .NL(NL), .NST(NST), .MAXPOS(MAXPOS), .MUT(MUT), .ACCEPT_LEAF(ACCEPT_LEAF)) u_ctl (
+    ot_dshbm_dspark_ctl #(.B(B), .PMAX(PMAX), .TW(TW), .NL(NL), .NST(NST), .MAXPOS(MAXPOS), .MUT(MUT), .ACCEPT_LEAF(ACCEPT_LEAF), .FAST(FAST)) u_ctl (
         .clk(clk), .rst_n(rst_n), .start(start), .cfg_gamma(cfg_gamma), .cfg_force(cfg_force),
         .cfg_ngen(cfg_ngen), .cfg_plen(cfg_plen), .p_addr(p_addr), .p_tok(p_tok), .f_addr(f_addr), .f_tok(f_tok),
         .e_v(e_v), .e_tok(e_tok), .e_idx(e_idx), .done(done),
@@ -134,12 +137,21 @@ module ot_dshbm_dspark_top #(
         .tw_v(tw_v), .tw_pos(tw_pos), .tw_tok(tw_tok),
         .step_v(step_v), .step_a(step_a), .step_g(step_g), .steps(steps),
         .cyc_total(cyc_total), .cyc_engine(cyc_engine), .cyc_markov(cyc_markov));
+    generate if (FAST == 0) begin : g_state0
     ot_dshbm_spec_state #(.W(W), .PMAX(PMAX), .WR(WR), .SR(SR), .TR(TR), .NG(NG), .NL(NL), .NST(NST),
         .NSRC(NSRC), .RLOG(RLOG), .CKMAX(CKMAX), .TW(TW), .AW(AW)) u_state (
         .clk(clk), .rst_n(rst_n), .n_set(n_set), .n_val(n_val), .n(n_committed),
         .tw_v(tw_v), .tw_pos(tw_pos), .tw_tok(tw_tok),
         .req_v(sr_v), .req_ready(sr_ready), .req_kind(sr_kind), .req_idx(sr_idx), .req_pos(sr_pos),
         .a_v(sa_v), .a_addr(sa_addr), .a_tok(sa_tok), .a_pad(sa_pad), .a_last(sa_last), .a_err(sa_err));
+    end else begin : g_state1
+    ot_dshbm_spec_state_f #(.W(W), .PMAX(PMAX), .WR(WR), .SR(SR), .TR(TR), .NG(NG), .NL(NL), .NST(NST),
+        .NSRC(NSRC), .RLOG(RLOG), .CKMAX(CKMAX), .TW(TW), .AW(AW)) u_state (
+        .clk(clk), .rst_n(rst_n), .n_set(n_set), .n_val(n_val), .n(n_committed),
+        .tw_v(tw_v), .tw_pos(tw_pos), .tw_tok(tw_tok),
+        .req_v(sr_v), .req_ready(sr_ready), .req_kind(sr_kind), .req_idx(sr_idx), .req_pos(sr_pos),
+        .a_v(sa_v), .a_addr(sa_addr), .a_tok(sa_tok), .a_pad(sa_pad), .a_last(sa_last), .a_err(sa_err));
+    end endgenerate
     ot_dshbm_argmax #(.LP(LP), .IW(TW), .FLAT(FLAT)) u_am (
         .clk(clk), .rst_n(rst_n), .in_v(lg_v), .in_last(lg_last), .in_bias_en(lg_bias_en), .in_mask(lg_mask),
         .in_vals(lg_vals), .in_bias(lg_bias), .out_v(am_v), .out_idx(am_idx), .out_nan(am_nan), .fault(am_fault));
@@ -147,10 +159,17 @@ module ot_dshbm_dspark_top #(
     wire          tv_v, td_v;
     wire [KV*IW-1:0] tv_ids;
     wire [KD*IW-1:0] td_ids;
+    generate if (FAST == 0) begin : g_sel0
     ot_gpu_router_topk #(.N(NEXP), .P(RP), .K(KV), .IW(IW)) u_tv (.clk(clk), .rst_n(rst_n),
         .in_valid(rv_v & ~rv_draft), .in_vals(rv_vals), .in_last(rv_last), .out_valid(tv_v), .out_ids(tv_ids));
     ot_gpu_router_topk #(.N(NDEXP), .P(RP), .K(KD), .IW(IW)) u_td (.clk(clk), .rst_n(rst_n),
         .in_valid(rv_v & rv_draft), .in_vals(rv_vals), .in_last(rv_last), .out_valid(td_v), .out_ids(td_ids));
+    end else begin : g_sel1
+    ot_gpu_router_topk_f #(.N(NEXP), .P(RP), .K(KV), .IW(IW)) u_tv (.clk(clk), .rst_n(rst_n),
+        .in_valid(rv_v & ~rv_draft), .in_vals(rv_vals), .in_last(rv_last), .out_valid(tv_v), .out_ids(tv_ids));
+    ot_gpu_router_topk_f #(.N(NDEXP), .P(RP), .K(KD), .IW(IW)) u_td (.clk(clk), .rst_n(rst_n),
+        .in_valid(rv_v & rv_draft), .in_vals(rv_vals), .in_last(rv_last), .out_valid(td_v), .out_ids(td_ids));
+    end endgenerate
     // column numbers in flight (vectors leave each selector in order; one kind at a time)
     reg [2:0] cq [0:7];
     reg [3:0] cq_w, cq_r;
@@ -178,7 +197,7 @@ module ot_dshbm_dspark_top #(
         if (!rst_n) flush_pend <= 1'b0;
         else if (u_flush) flush_pend <= 1'b1;
         else if (flush_pend && !inflight) flush_pend <= 1'b0;
-    ot_dshbm_expert_union #(.NE(NEXP > NDEXP ? NEXP : NDEXP), .K(KV), .PM(PMAX), .IW(IW)) u_un (
+    ot_dshbm_expert_union #(.NE(NEXP > NDEXP ? NEXP : NDEXP), .K(KV), .PM(PMAX), .IW(IW), .FAST(FAST)) u_un (
         .clk(clk), .rst_n(rst_n), .clr(u_clr), .add_v(t_v), .add_col(t_col), .add_ids(t_ids), .add_en(t_en),
         .flush(flush_pend && !inflight), .out_v(u_v), .out_ready(u_ready), .out_id(u_id), .out_mask(u_mask),
         .out_last(u_last), .busy(), .count());
