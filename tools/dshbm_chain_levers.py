@@ -163,8 +163,9 @@ def cmd_prep2(a):
         kr.append(k)
         print(f"{c['name']:26s} ops {len(c['ops']):3d} kr {k['meta']['lever_kr']}")
     sha = blob.get("snapshots_sha256")
-    (out / f"{stem}dr.pkl").write_bytes(pickle.dumps(dict(cases=dr, snapshots_sha256=sha)))
-    (out / f"{stem}drkr{a.kr}.pkl").write_bytes(pickle.dumps(dict(cases=kr, snapshots_sha256=sha)))
+    if a.n == DM.SU_N:
+        (out / f"{stem}dr.pkl").write_bytes(pickle.dumps(dict(cases=dr, snapshots_sha256=sha)))
+    (out / f"{stem}drkr{a.kr}{'' if a.n == DM.SU_N else f'_N{a.n}'}.pkl").write_bytes(pickle.dumps(dict(cases=kr, snapshots_sha256=sha)))
     return 0
 
 
@@ -292,7 +293,7 @@ def compose(base_dir, su1, su6, overlap=False, ilv=False):
 def cmd_compose(a):
     variants = []
     for v in a.variants:
-        name, files = v.split("=")
+        name, files = v.rsplit("=", 1)
         ov = "+ov" in name
         ilv = "+ilv" in name
         f1, f6 = files.split(",")
@@ -300,6 +301,8 @@ def cmd_compose(a):
     res, prev = {}, None
     acc1, acc6 = [], []
     for name, r1, r6, ov, ilv in variants:                   # cumulative: each lever on top of the previous ones
+        if name.startswith("="):                             # a new hardware configuration: its own records only
+            name, acc1, acc6 = name[1:], [], []
         acc1.append((name, r1))
         acc6.append((name, r6))
         c = compose(a.base, best_of(acc1), best_of(acc6), overlap=ov, ilv=ilv)

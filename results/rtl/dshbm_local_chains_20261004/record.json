@@ -1,0 +1,233 @@
+{
+ "schema": "opentallas.rtl.dshbm_local_chains.v1",
+ "generated_utc": "2026-10-04T11:50:48Z",
+ "source_commit": "a519e8be924e704d041f2b41f99208bf58b53fd6",
+ "scope": "DS V4.1 HBM accelerator, 1M (position 1,048,575), local (stream-unit) chains of L0 / L2 / head, the measured baseline's vehicle (results/rtl/dshbm_baseline_measured_20261004: ot_hdc_v41x_vec N1024/M256, B4 R5 MLAT4 ALAT3, DPI FP stand-ins + behavioural prefix adders) and its captured real operands; AR (1 position) and MTP verify (6 positions op-major); Tomahawk-protocol collectives. Owner scope 2026-10-04 (relayed): MANDATORY baseline work, no >=1% gate; iterate to each chain's floor or a documented physical limit.",
+ "levers": {
+  "il": {
+   "what": "compiler scheduling (level 4): q_norm and kv_norm sub-chains interleaved; kv row copy designed out (scaling writes the output row, RoPE rotates its tail in place)",
+   "hardware": "none",
+   "chain": "q_norm_kv_row P1 450 -> 275, P6 525 -> 347",
+   "ar_gain_pct": 1.76,
+   "mtp_gain_pct": 0.98,
+   "verdict": "ADOPT (exact, no hardware)"
+  },
+  "dr": {
+   "what": "hc_post's chained sum of squares dropped: no SU consumer; the mixes' engine ot_hdc_v41x_hcp (cmd_scale 1) computes ss = csum(flat*flat) itself, concurrently with its rows (Model.hc_mixes)",
+   "hardware": "none",
+   "chain": "hc_post P1 230 -> 167, P6 597 -> 534",
+   "ar_gain_pct": 1.28,
+   "mtp_gain_pct": 0.7,
+   "verdict": "ADOPT (exact; hc_mixes stays the baseline's off-path model term)"
+  },
+  "ov": {
+   "what": "attention softmax pipelined with the tile: max + exp (P written) before p.v; sum, sink exp, denominator under the tile's p.v phase (361 fast cycles at T640, checked: den written 279 <= 191 + 271); normalise + inverse RoPE after p.v measured as its own case (91 cycles P1, 116 P6)",
+   "hardware": "none",
+   "chain": "attend T640 SU critical P1 367 -> 282, P6 392 -> 332 (T128 not eligible: p.v phase 105 fast cycles < denominator lag, kept at 347)",
+   "ar_gain_pct": 0.83,
+   "mtp_gain_pct": 0.32,
+   "verdict": "ADOPT (exact; composition of measured pieces)"
+  },
+  "kr": {
+   "what": "lane-local fusion, the ROM's W11 build ot_hdc_v41x_vec_kr / _vec_lane_kr KR_DEPTH 40 + tools/w11_su_fuse.fuse_bench: dependent element hops through lane registers",
+   "hardware": "KR 40 x 32 b per lane (+834 um2 light lane, +824 um2 SFU lane pre-layout)",
+   "chain": "per fused hop -7 cycles: hc_post P1 167 -> 146, hc_pre_norm 314 -> 305; P6 (op-major, throughput-bound) no gain, not used there",
+   "ar_gain_pct": 0.62,
+   "mtp_gain_pct": 0.0,
+   "verdict": "ADOPT for AR, conditional on the closure program's route (lane screen: KR adds no new critical path)"
+  },
+  "wide": {
+   "what": "wider light lanes: N 2048 (M 256 SFU lanes unchanged); same ops, same order",
+   "hardware": "+1,024 light lanes ~ +7.5 mm2 pre-layout cells per die (7,349 um2 / lane)",
+   "chain": "P6 hc_post 534 -> 342, hc_pre_norm 347 -> 339; P1 hc_post 167 -> 159",
+   "ar_gain_pct_vs_N1024_same_levers": 0.23,
+   "mtp_gain_pct_vs_N1024_same_levers": 2.28,
+   "verdict": "ADOPT-ELIGIBLE: gain measured; BCAST/RET kept at N1024's 4/5 (2x lane span: wire-stage term UNVALIDATED), area/route owned by the closure program"
+  },
+  "ilv": {
+   "what": "verify tile batching: W11 attention engine position-interleaved mode ILV=1 REPL=2 NSTAGE=2 PWORDS=2 (results/rtl/dshbm_verify_tile_batch_20261004)",
+   "mtp_gain_pct": 4.66,
+   "verdict": "exact + gain; NOT ADOPTED until the engine controller closes (WC 0.833 CTS WNS -1,204.62 ps)"
+  }
+ },
+ "compositions": {
+  "base": {
+   "ar_tok_s": 2225.7,
+   "ar_us": 449.3,
+   "mtp_tok_s": 5122.5,
+   "verify_p6_us": 763.06,
+   "local_ar_us": 149.64
+  },
+  "il": {
+   "ar_tok_s": 2264.9,
+   "ar_us": 441.52,
+   "mtp_tok_s": 5172.9,
+   "verify_p6_us": 755.15,
+   "local_ar_us": 141.86
+  },
+  "dr": {
+   "ar_tok_s": 2294.0,
+   "ar_us": 435.92,
+   "mtp_tok_s": 5209.2,
+   "verify_p6_us": 749.55,
+   "local_ar_us": 136.26
+  },
+  "dr+ov": {
+   "ar_tok_s": 2313.0,
+   "ar_us": 432.33,
+   "mtp_tok_s": 5225.8,
+   "verify_p6_us": 747.01,
+   "local_ar_us": 132.67
+  },
+  "kr+ov": {
+   "ar_tok_s": 2327.4,
+   "ar_us": 429.65,
+   "mtp_tok_s": 5225.8,
+   "verify_p6_us": 747.01,
+   "local_ar_us": 130.0
+  },
+  "kr+ov+ilv": {
+   "ar_tok_s": 2327.4,
+   "ar_us": 429.65,
+   "mtp_tok_s": 5463.6,
+   "verify_p6_us": 712.37,
+   "local_ar_us": 130.0
+  },
+  "w2048+ov": {
+   "ar_tok_s": 2318.3,
+   "ar_us": 431.35,
+   "mtp_tok_s": 5345.0,
+   "verify_p6_us": 729.27,
+   "local_ar_us": 131.69
+  },
+  "w2048kr+ov": {
+   "ar_tok_s": 2335.7,
+   "ar_us": 428.14,
+   "mtp_tok_s": 5345.0,
+   "verify_p6_us": 729.27,
+   "local_ar_us": 128.48
+  },
+  "w2048kr+ov+ilv": {
+   "ar_tok_s": 2335.7,
+   "ar_us": 428.14,
+   "mtp_tok_s": 5594.0,
+   "verify_p6_us": 694.63,
+   "local_ar_us": 128.48
+  }
+ },
+ "headline": {
+  "measured_adopted_no_new_hardware": {
+   "config": "N1024, il + dr + ov",
+   "ar_tok_s": 2313.0,
+   "ar_us": 432.33,
+   "mtp_tok_s": 5225.8,
+   "verify_p6_us": 747.01,
+   "local_ar_us": 132.67
+  },
+  "measured_best_su": {
+   "config": "N2048 + KR40, il + dr + ov",
+   "ar_tok_s": 2335.7,
+   "ar_us": 428.14,
+   "mtp_tok_s": 5345.0,
+   "verify_p6_us": 729.27,
+   "local_ar_us": 128.48
+  },
+  "measured_best_su_plus_ilv": {
+   "config": "N2048 + KR40, il + dr + ov, ILV verify tile",
+   "ar_tok_s": 2335.7,
+   "ar_us": 428.14,
+   "mtp_tok_s": 5594.0,
+   "verify_p6_us": 694.63,
+   "local_ar_us": 128.48
+  },
+  "baseline": {
+   "ar_tok_s": 2225.7,
+   "mtp_tok_s": 5122.5
+  }
+ },
+ "floors": {
+  "hc_post": "4 dependent passes are the golden order ((r0c0 + r1c1) + r2c2) + r3c3 + y*post (one op takes at most 2 products); P1 = 4 x hop (31, 24 with KR) + 20 vectors; P6 = throughput 480 vectors at N1024 (288 at N2048) + one depth: at floor for the lane width",
+  "hc_pre_norm / final_norm": "3 element hops + chunk8 reduction tail (57) + scalar div/add/rsqrt (95) + scale (34): every term mandatory; KR removes 9 cycles; floor",
+  "q_norm_kv_row": "two independent norms overlapped: ss reduction (86) + rsqrt (95) + scale (34) + pair RoPE (34); floor",
+  "attend": "max (82) -> exp (P written 191) -> [tile p.v] -> divide (49) + inverse RoPE (34); sum/sink/den hidden; floor",
+  "router_act / swiglu / route / moe_sum / argmax / q_rope": "one SFU or reduction op (or 2-4 dependent scalar ops), depth-bound by the function's pipeline; unchanged; floor",
+  "beyond the floor (not taken)": "every op crosses all lane stages (linear depth 25 at MLAT4/ALAT3) even when M2/E1/E2 are bypassed; a stage-skipping lane would cut ~10 cycles per dependent op, but it changes the SU shared with the ROM accelerator, so it belongs to both designs or neither (fairness)"
+ },
+ "exactness": {
+  "rule": "every chain's outputs equal the executor's golden-checked values word for word (checks in each su record); unit reference PASS; FP stand-in equivalence RTL vs DPI at N64",
+  "su_equiv": {
+   "su_equiv_su_cases_v2_ilkr40_N64": "pass",
+   "su_equiv_su_cases_v2_ildr": "pass",
+   "su_equiv_su_cases_v2_il": "pass"
+  },
+  "n_chain_runs_exact": "all rows exact=True in every su record"
+ },
+ "timing_screen": {
+  "tool": "tools/risk_clock_loops_screen.py, ASAP7 SS, 60 ps setup, 1.111 ns (0.9 GHz serial domain), pre-layout placed + repaired, one lane (minimum component)",
+  "lanes": {
+   "lane_k0_kr0": {
+    "area_um2": 7349.38434,
+    "r2r_fmax_mhz_repaired": 638.6,
+    "wns_ps": -454.9,
+    "worst": "g_m1l.u_t1.genblk1.g_line.line[418]$_DFF_P_ -> u_q.genblk1.g_l4.u.u.s1_rows[215]$_DFF_P_"
+   },
+   "lane_k0_kr40": {
+    "area_um2": 8183.4624,
+    "r2r_fmax_mhz_repaired": 635.7,
+    "wns_ps": -462.0,
+    "worst": "p_a[25]$_DFF_P_ -> u_m1.genblk1.g_l4.u.u.s1_rows[117]$_DFF_P_"
+   },
+   "lane_k1_kr0": {
+    "area_um2": 21820.85082,
+    "r2r_fmax_mhz_repaired": 520.9,
+    "wns_ps": -808.7,
+    "worst": "u_d3.genblk1.g_line.line[246]$_DFF_P_ -> u_e1a.genblk1.g_keep.u.u.s1_small[0]$_DFF_P_"
+   },
+   "lane_k1_kr40": {
+    "area_um2": 22644.59166,
+    "r2r_fmax_mhz_repaired": 532.8,
+    "wns_ps": -765.7,
+    "worst": "u_d3.genblk1.g_line.line[246]$_DFF_P_ -> u_e1m.genblk1.g_l4.u.u.s1_rows[128]$_DFF_P_"
+   }
+  },
+  "finding": "KR changes repaired r2r fmax by -0.4% (light) / +2.3% (SFU): no new critical path. The lane itself (base and KR) misses 0.9 GHz at SS in this screen on the MLAT4 multiplier first stage -- a baseline lane issue handed to the closure program (serial build MLAT5/ALAT4 exists for it)"
+ },
+ "unvalidated": [
+  "hc_mixes remains the baseline's off-path model term (now also carrying its own ss, which the HCP computes concurrently)",
+  "N2048 wire stages kept at B4/R5",
+  "ILV controller SS/FF",
+  "all other baseline unvalidated terms (results/rtl/dshbm_baseline_measured_20261004 mtp_and_accelerator)"
+ ],
+ "records": [
+  "results/rtl/dshbm_local_chains_20261004/su/prep_p1.json",
+  "results/rtl/dshbm_local_chains_20261004/su/prep_p6.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_p6om_il.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_p6om_ildr.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_p6om_ildrkr40.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_p6om_ilkr40.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_v2_il.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_v2_ildr.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_v2_ildrkr40.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_v2_ilkr40.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N2048_M256_b4r5m4a3_dpi_beh_su_cases_p6om_ildr.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N2048_M256_b4r5m4a3_dpi_beh_su_cases_p6om_ildrkr40_N2048.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N2048_M256_b4r5m4a3_dpi_beh_su_cases_v2_ildr.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N2048_M256_b4r5m4a3_dpi_beh_su_cases_v2_ildrkr40_N2048.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N64_M16_b4r5m4a3_dpi_beh_su_cases_v2_il.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N64_M16_b4r5m4a3_dpi_beh_su_cases_v2_ildr.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N64_M16_b4r5m4a3_dpi_beh_su_cases_v2_ilkr40_N64.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N64_M16_b4r5m4a3_rtl_su_cases_v2_il.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N64_M16_b4r5m4a3_rtl_su_cases_v2_ildr.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_N64_M16_b4r5m4a3_rtl_su_cases_v2_ilkr40_N64.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_equiv_su_cases_v2_il.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_equiv_su_cases_v2_ildr.json",
+  "results/rtl/dshbm_local_chains_20261004/su/su_equiv_su_cases_v2_ilkr40_N64.json"
+ ],
+ "tool_sha256": {
+  "tools/dshbm_chain_levers.py": "067c1fcd710af31bc8ff5b14229f87849ac065743bc1bdcfd6abc2be5122fa60",
+  "tools/dshbm_baseline_measure.py": "e0c365d758649bfaa5fa04311f06a8f1c90c8246f6b97a5e942130fdd689e800",
+  "tools/w11_su_fuse.py": "4157f3204609d7c7253ded305c48eb1e26741171c5232a3e240e8906d0355052",
+  "tools/rtl_hdc_v41x_vec_kr_campaign.py": "cb3fd0cc55b6999f5f1603458d31c1e4c7e7f0a8c6c15622fe75417618854003",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346"
+ }
+}
