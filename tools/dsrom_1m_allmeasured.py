@@ -21,7 +21,10 @@ with their time (never silently dropped).  MTP: wavefront verify (measured rule:
 cycles after it finishes the previous one, results/rtl/dsrom_wavefront_verify_20261004) with the stage busy times of
 THIS composition, and the DSpark draft recomposed with the measured head.
 
-    python3 tools/dsrom_1m_allmeasured.py --out results/rtl/dsrom_1m_allmeasured_20261004/composition.json
+    python3 tools/dsrom_1m_allmeasured.py --baseline asbuilt     (-> results/rtl/dsrom_1m_allmeasured_20261004/)
+    python3 tools/dsrom_1m_allmeasured.py                        (recovery baseline: + adopted lever records of
+                                                                  results/rtl/dsrom_recovery_20261004/levers/*.json,
+                                                                  -> results/rtl/dsrom_recovery_20261004/composition.json)
 """
 from __future__ import annotations
 
@@ -42,6 +45,7 @@ RC = ROOT / "results/rtl/dsrom_reindex_candidates_20261004"
 WINDOW = ROOT / "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json"
 WAVE = ROOT / "results/rtl/dsrom_wavefront_verify_20261004/record.json"
 DRAFT_REC = ROOT / "results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json"
+RECOVERY = ROOT / "results/rtl/dsrom_recovery_20261004"     # microarchitecture-recovery levers (baseline "recovery")
 CLK = 1.2e9
 SLOW = 0.9e9
 EXTRA_HOPS = M.S81_EXTRA_HOPS
@@ -191,6 +195,41 @@ def apply_table(P, rows, label):
             P.put(n, t, f"{label}: {src}", cls=cls, modelled_s=mod)
 
 
+def apply_levers(P, info, lever_dir):
+    """Recovery baseline: every ADOPTED lever record in `lever_dir`/levers/*.json replaces the measured terms it
+    re-measured on its successor RTL.  Record schema (opentallas.dsrom-recovery.lever.v1):
+      lever, verdict ("ADOPT" | "REJECT" | ...), exact (bool), ss_ff (signoff summary),
+      nodes  {"<node name>" | "*.<suffix>": {"us": float, "source": str, "cls": "measured"}}
+      info   {"hop_us": all stage hops + extra S81 hops, "head_stage_occupancy_us", "head_argmax_drain_us"}
+    Only verdict ADOPT with exact true is applied; the others are listed."""
+    applied, skipped = [], []
+    for f in sorted((lever_dir / "levers").glob("*.json")):
+        r = json.loads(f.read_text())
+        row = dict(lever=r["lever"], record=rel(f), sha256=sha(f), verdict=r.get("verdict"))
+        if r.get("verdict") != "ADOPT" or r.get("exact") is not True:
+            skipped.append(row)
+            continue
+        for key, v in r.get("nodes", {}).items():
+            names = suffix_nodes(P.g, key[2:]) if key.startswith("*.") else [key]
+            assert names and all(n in P.g.nodes for n in names), (f, key)
+            for n in names:
+                P.put(n, v["us"] * 1e-6, f"{r['lever']}: {v['source']}", cls=v.get("cls", "measured"))
+        li = r.get("info", {})
+        if "hop_us" in li:
+            for n, nd in P.g.nodes.items():
+                if nd.get("kind") == "hop" and nd.get("hop_kind") in ("substage", "head", "stage"):
+                    P.put(n, li["hop_us"] * 1e-6, f"{r['lever']}: {li.get('hop_source', 'stage hop')}",
+                          cls=li.get("hop_cls", "measured+vendor_phy"))
+            info["hop_us"] = li["hop_us"]
+        h = info.setdefault("head", {})
+        if "head_stage_occupancy_us" in li:
+            h["stage_occupancy_us"] = li["head_stage_occupancy_us"]
+        if "head_argmax_drain_us" in li:
+            h["argmax_drain_us"] = li["head_argmax_drain_us"]
+        applied.append(row)
+    return dict(applied=applied, not_applied=skipped)
+
+
 def classify(g, P, base_patches):
     fin = g.solve(True)
     sink = [n for n in g.nodes if n.endswith("token.return")][0]
@@ -229,10 +268,16 @@ def stage_busy(g):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--rec", type=Path, default=REC)
-    ap.add_argument("--out", type=Path, default=REC / "composition.json")
+    ap.add_argument("--out", type=Path, default=None,
+                    help="default: <rec>/composition.json (asbuilt) or <recovery>/composition.json (recovery)")
+    ap.add_argument("--baseline", default="recovery", choices=("asbuilt", "recovery"),
+                    help="recovery (default): apply the adopted lever records of --recovery on top of as-built")
+    ap.add_argument("--recovery", type=Path, default=RECOVERY)
     ap.add_argument("--window", default="stream_la", choices=("stream_la", "asbuilt_c1"))
     ap.add_argument("--hop-tier", default="light_fec", choices=("light_fec", "kp4_209ns"))
     a = ap.parse_args()
+    if a.out is None:
+        a.out = (a.rec if a.baseline == "asbuilt" else a.recovery) / "composition.json"
     ins = {k: a.rec / f"{k}.json" for k in ("field", "su", "head", "links", "cand_select")}
     recs = {k: json.loads(p.read_text()) for k, p in ins.items() if p.exists()}
     g0, g, base_patches = base_graph()
@@ -253,6 +298,8 @@ def main():
     if "su" in recs:
         import dsrom_1m_allmeasured_adapters as AD
         apply_table(P, AD.su_rows(g, recs["su"]), "SU")
+    if a.baseline == "recovery":
+        info["levers"] = apply_levers(P, info, a.recovery)
     t, path = classify(g, P, base_patches)
     hop_extra = info.get("hop_us", M.HOP_US)
     ar = t + EXTRA_HOPS * hop_extra
@@ -286,6 +333,7 @@ def main():
     meas = sum(v for k, v in by.items() if k not in ("modelled", "zero")) - sub_us
     rec = dict(
         schema="opentallas.dsrom-1m.allmeasured.composition.v1", context=M.CTX, position=M.POS,
+        baseline=a.baseline,
         base="candidate_gather.lat259 (results/rtl/dsrom_reindex_candidates_20261004/composition.json, 394.911 us)",
         AR_us=round(ar, 3), AR_tok_s=round(1e6 / ar, 1),
         critical_path_us_by_class=by, measured_share=round(meas / ar, 4),
@@ -318,7 +366,7 @@ def main():
         requires_binding=["WINDOW load: ot_dsrom_window_stream_la measured 93.9% of peak; the as-built S81 prefetch "
                           "measures 124.5 us a layer -- composition REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)"],
         info=info, patches=list(P.rows.values()), base_patches=base_patches, critical_path=path,
-        inputs={rel(p): sha(p) for p in list(ins.values()) + [WINDOW, WAVE, DRAFT_REC, BASE / "reader.json",
+        inputs={rel(p): sha(p) for p in list(ins.values()) + sorted((a.recovery / "levers").glob("*.json")) + [WINDOW, WAVE, DRAFT_REC, BASE / "reader.json",
                                                              BASE / "ckv_lat259.json", RC / "gather.json",
                                                              RC / "select.json"] if Path(p).exists()},
         tool_sha256={rel(ROOT / "tools/dsrom_1m_allmeasured.py"): sha(ROOT / "tools/dsrom_1m_allmeasured.py"),
