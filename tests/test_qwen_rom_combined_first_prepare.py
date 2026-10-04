@@ -44,3 +44,17 @@ def test_wrong_source_root_refuses_before_calling_head_owner(tmp_path, monkeypat
     with pytest.raises(ValueError,match='different selected source root'):
         m.prepare('book','inputs',tmp_path/'out',source)
     assert not (tmp_path/'out').exists()
+
+
+def test_initialized_head_selects_correct_owner_before_preparing(tmp_path, monkeypatch):
+    source=tmp_path/'source';(source/'tools').mkdir(parents=True)
+    names=[]
+    def imported(name):
+        names.append(name)
+        def prepare(*args, **kwargs):
+            raise ValueError('selected initialized owner reached')
+        return SimpleNamespace(__file__=str(source/'tools'/(name+'.py')),prepare_from_inputs=prepare)
+    monkeypatch.setattr(m.importlib,'import_module',imported)
+    with pytest.raises(ValueError,match='selected initialized owner reached'):
+        m.prepare('book','inputs',tmp_path/'out',source,initialized_head=True)
+    assert names==['qwen_rom_combined_head_launch_initialized']

@@ -12,11 +12,12 @@ from pathlib import Path
 import sys
 
 
-def prepare(selection, inputs, output, source_root):
+def prepare(selection, inputs, output, source_root, *, initialized_head=False):
     source_root = Path(source_root).resolve(strict=True)
     sys.path.insert(0, str(source_root/'tools'))
-    owner = importlib.import_module('qwen_rom_combined_head_launch')
-    if Path(owner.__file__).resolve() != source_root/'tools/qwen_rom_combined_head_launch.py':
+    module = 'qwen_rom_combined_head_launch_initialized' if initialized_head else 'qwen_rom_combined_head_launch'
+    owner = importlib.import_module(module)
+    if Path(owner.__file__).resolve() != source_root/'tools'/(module+'.py'):
         raise ValueError('head callable imported from a different selected source root')
     command, record = owner.prepare_from_inputs(selection, inputs, output, root=source_root)
     cache = json.loads(Path(inputs).read_text())
@@ -43,8 +44,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     for name in ('selection', 'inputs', 'output', 'source-root'):
         ap.add_argument('--'+name, type=Path, required=True)
+    ap.add_argument('--initialized-head', action='store_true',
+                    help='require the linked head host to initialize all models before preloads')
     a = ap.parse_args(argv)
-    result = prepare(a.selection, a.inputs, a.output, a.source_root)
+    result = prepare(a.selection, a.inputs, a.output, a.source_root,
+                     initialized_head=a.initialized_head)
     print(json.dumps(result))
     return 0
 
