@@ -9,6 +9,7 @@
 // executable caller. These functions inspect/drive actual producer state;
 // the caller alone advances the native destination clock.
 struct DsromS81SourceRank {
+    std::string source_node; // literal CanonicalS81Execution node, not inferred from entry
     DsromC8SourceOffer offer;
     std::vector<DsromS81SavedVmSpan> saved;
     DsromS81SourceCallerHooks::SourceLease retained_source_span;
