@@ -23,6 +23,14 @@
 #include "s81_native_head_argmax.hpp"
 #include "VDsromS81CoreEnd.h"
 #include "VDsromS81CoreEnd___024root.h"
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+#include "VDsromHeadStreamR1.h"
+#include "VDsromHeadStreamR2.h"
+#include "VDsromHeadStreamR3.h"
+#define DSROM_S81_RETAINED_HEAD_STREAM_BIND_ONLY
+#include "../../../rtl/test/s81_native_bf_head_producer/retained_smoke.cpp"
+#undef DSROM_S81_RETAINED_HEAD_STREAM_BIND_ONLY
+#endif
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -405,6 +413,35 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
     std::array<std::unique_ptr<HeadRank>,4> ranks;
     std::array<DsromS81MinimumSourceIo,4> ios;
     std::shared_ptr<DsromS81NativeHeadArgmax> argmax;
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+    std::unique_ptr<VDsromHeadStreamR1> stream1;
+    std::unique_ptr<VDsromHeadStreamR2> stream2;
+    std::unique_ptr<VDsromHeadStreamR3> stream3;
+    std::array<DsromS81MinimumParticipant,3> stream_participants;
+    std::array<bool,4> native_write_taken{};
+    std::shared_ptr<DsromS81NativeHeadCollective> stream_collective;
+    DsromS81MinimumParticipant stream_transport;
+    static uint64_t positive_delay(const char* name) {
+        const char* value=std::getenv(name);
+        Source::require(value&&*value,"native stream needs explicit selected positive transport cycles");
+        uint64_t result=0;
+        for(const char* c=value;*c;++c){
+            Source::require(*c>='0'&&*c<='9'&&result<=(UINT64_MAX-unsigned(*c-'0'))/10,
+                "native stream transport cycles invalid/overflow");
+            result=result*10+unsigned(*c-'0');
+        }
+        Source::require(result>0,"native stream cannot use zero transport cycles");return result;
+    }
+    template<class Native> void bind_stream(Native& native,unsigned rank) {
+        stream_participants[rank-1]=dsrom_s81_retained_head_stream_participant(runtime,native,*ranks[rank]->vm,
+            rank,ID,1,[this,rank](){return dot&&current==rank&&!ranks[rank]->publication_begun&&cut.go&&cut.ready;},
+            [this,rank]()->const NativeBfHeadRoots*{return current==rank&&held?&*held:nullptr;},
+            [this,rank]()->const uint32_t*{return current==rank&&held&&!taken&&tail_stage>=4?&join_bits:nullptr;},
+            [this,rank](){return ranks[rank]->publication_begun;},
+            [this,rank](){Source::require(current==rank&&held&&!native_write_taken[rank],
+                "native stream duplicate/foreign accepted logit");native_write_taken[rank]=true;});
+    }
+#endif
     Vcut cut;Vretn pad1,pad2,join;
     std::unique_ptr<DsromS81NativeHeadBinding> head;
     DsromS81MinimumParticipant input,returned,cold_return;
@@ -461,6 +498,9 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         const char* sim=std::getenv("DSROM_S81_SIM_ONLY_HEAD_RETURN");
         Source::require(!sim||std::string(sim)=="0"||std::string(sim)=="1","HEAD return selector must explicit 0/1");
         replay=sim&&std::string(sim)=="1";
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        Source::require(!replay,"native stream requires actual roots; SIM_ONLY return replay is not enrollment");
+#endif
         if(replay) {
             const char* archive=std::getenv("DSROM_S81_NATIVE_HEAD_RETURN_DIR");
             Source::require(archive&&*archive,"SIM_ONLY HEAD return requires explicit actual native archive");
@@ -486,14 +526,36 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
                 auto& rank=*ranks.at(current);
                 Source::require(roots.identity==ID&&roots.request_sequence==1&&roots.rank==current&&
                     roots.local_row==rank.logits-(taken?1u:0u),"native HEAD held root owner/order differs");
-                if(!held){held=roots;tail_stage=0;taken=false;root_sent=false;return false;}
+                if(!held){held=roots;tail_stage=0;taken=false;root_sent=false;
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+                    native_write_taken[current]=false;
+#endif
+                    return false;}
                 Source::require(held->root4096==roots.root4096&&held->root1024==roots.root1024,
                     "native HEAD changed root before positive VM ACK");
                 if(!taken)return false;
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+                Source::require(current==0||native_write_taken[current],"producer release without actual native stream take");
+#endif
                 held.reset();tail_stage=0;taken=false;root_sent=false;return true;});
         input=head->selected_input_participant();returned=head->selected_return_participant();cold_return=head->return_participant();
         }
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        stream1=std::make_unique<VDsromHeadStreamR1>(r.context,"head_stream_rank1");
+        stream2=std::make_unique<VDsromHeadStreamR2>(r.context,"head_stream_rank2");
+        stream3=std::make_unique<VDsromHeadStreamR3>(r.context,"head_stream_rank3");
+        bind_stream(*stream1,1);bind_stream(*stream2,2);bind_stream(*stream3,3);
+        const auto link=positive_delay("DSROM_S81_NATIVE_HEAD_LINK_CYCLES");
+        const auto final=positive_delay("DSROM_S81_NATIVE_HEAD_FINAL_CYCLES");
+        stream_collective=std::make_shared<DsromS81NativeHeadCollective>(
+            std::array<DsromS81NativeHeadPorts,4>{dsrom_s81_native_head_ports(*core),
+                dsrom_s81_retained_head_stream_ports(*stream1),dsrom_s81_retained_head_stream_ports(*stream2),
+                dsrom_s81_retained_head_stream_ports(*stream3)},ID,
+            std::array<uint64_t,3>{link,link,link},std::array<uint64_t,4>{final,final,final,final},true);
+        stream_transport=dsrom_s81_native_head_collective_participant(r,stream_collective,ID);
+#else
         argmax=std::make_shared<DsromS81NativeHeadArgmax>(r,ID,ios,486848);
+#endif
         for(auto* node:{&pad1,&pad2,&join}){node->clk=0;node->rst_n=0;node->a_v=node->b_v=0;node->a_e=node->b_e=0;}
     }
     void drive_tail(Vretn& node,uint32_t a,uint32_t b){const unsigned row=current*32320+held->local_row;
@@ -570,6 +632,28 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
             for(auto& rank:ranks)rank->prepare_bank();
             Source::require(get(core->rom_we,0,64)==0&&get(core->rom_we,64,64)==0,"core HEAD writer without native retained owner");
         }
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        // All banks have settled OLD acceptance. This gates their live wr_v
+        // before the SAME sole bank rising edge and drives the native tuple.
+        for(auto& participant:stream_participants)participant.prepare(old);
+        if(core->head_dn_valid&&core->head_dn_ready){
+            sampled_packet={};sampled_packet.identity=core->head_dn_identity;sampled_packet.last=core->head_dn_last;
+            for(unsigned i=0;i<16;++i)sampled_packet.data[i]=core->head_dn_data[i];
+            Source::require(!local_packet&&sampled_packet.identity==ID&&sampled_packet.last&&
+                get(sampled_packet.data,16,4)==6&&get(sampled_packet.data,160,1)&&
+                get(sampled_packet.data,128,32)<32320,"native core rank0 packet source differs");
+            sampled_packet_take=true;
+        }
+        if(stream3->downstream_valid&&stream3->downstream_ready){
+            Source::require(!winner&&stream3->downstream_identity==ID&&stream3->downstream_last&&
+                get(stream3->downstream_data,16,4)==6&&get(stream3->downstream_data,160,1)&&
+                get(stream3->downstream_data,128,32)<129280,
+                "native carried global winner source differs");
+            // A real native carried packet, not a host argmax or a VM scan.
+            winner=DsromS81HeadArgmaxResult{ID,1,uint32_t(get(stream3->downstream_data,128,32)),
+                uint32_t(get(stream3->downstream_data,96,32))};
+        }
+#else
         core->head_dn_ready=0;core->head_final_valid=0;
         auto actual=argmax->result();
         if(actual){
@@ -591,6 +675,7 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
             core->head_final_valid=!winner_taken;core->head_final_identity=frame.identity;
             for(unsigned i=0;i<16;++i)core->head_final_data[i]=frame.data[i];
         }
+#endif
     }
     void rising(bool released) {
         observed_head_go=released&&core->rootp->ot_dsrom_s81_actual_core_end__DOT__rom_m_go&&
@@ -598,6 +683,9 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
             core->rootp->ot_dsrom_s81_actual_core_end__DOT__me_nout==32320;
         const bool first=released&&head&&dot&&!ranks[current]->publication_begun&&cut.go&&cut.ready;
         for(auto& rank:ranks)rank->rising(released);
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        for(auto& participant:stream_participants)participant.rising(released);
+#endif
         if(released&&expected_accept)Source::require((ranks[0]->accepted_this_edge&expected_accept)==expected_accept,
             "native core capture acceptance did not occur on its same bank edge");
         if(head){input.rising(released);returned.rising(released);}
@@ -616,10 +704,20 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         xread_pipe[1]=xread_pipe[0];xread_pipe[0]=sampled_xread;
     }
     void falling(bool released){for(auto& rank:ranks)rank->falling(released);
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        for(auto& participant:stream_participants)participant.falling(released);
+#endif
         if(head){input.falling(released);returned.falling(released);}
         if(!released&&head){cut.clk=0;cut.eval();cold_return.falling(false);head->observe_shared_cold_reset();}
         for(auto* node:{&pad1,&pad2,&join}){node->clk=0;node->eval();}}
-    bool fault()const{if(core->fault||(head&&(input.fault()||returned.fault()))||pad1.fault||pad2.fault||join.fault||argmax->fault())return true;
+    bool fault()const{
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        if(core->fault||(head&&(input.fault()||returned.fault()))||pad1.fault||pad2.fault||join.fault||
+            stream_collective->fault())return true;
+        for(const auto& participant:stream_participants)if(participant.fault())return true;
+#else
+        if(core->fault||(head&&(input.fault()||returned.fault()))||pad1.fault||pad2.fault||join.fault||argmax->fault())return true;
+#endif
         for(const auto& rank:ranks)if(rank->fault())return true;
         return false;}
     bool publications_drained()const {if(!dot||pending()||(!replay&&!head->all_roots_accepted())||fault())return false;
@@ -648,7 +746,10 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
                 ++current;head->start(ID,1,current);}
         }
         bool all=true;for(const auto& rank:ranks)all=all&&rank->published();
-        if(all&&!argmax_started&&argmax->inputs_ready()){argmax->start(1);argmax_started=true;}}
+#ifndef DSROM_S81_NATIVE_HEAD_STREAM
+        if(all&&!argmax_started&&argmax->inputs_ready()){argmax->start(1);argmax_started=true;}
+#endif
+    }
     bool complete(){
         if(consumed)return true;
         // Invoked as the existing accepted result consumer ONLY after source.cpp
@@ -657,13 +758,24 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         Source::require(publications_drained()&&winner_taken&&winner&&local_packet&&
             core->next_token==winner->global_id&&core->next_val==winner->bits&&
             winner->identity==ID&&winner->sequence==1,"real END differs from held native winner/publication");
-        argmax->acknowledge(*winner);consumed=true;local_packet.reset();return true;
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        Source::require(stream_collective->complete()&&core->head_final_identity==ID,
+            "real END before all native carried final deliveries retired");
+#else
+        argmax->acknowledge(*winner);
+#endif
+        consumed=true;local_packet.reset();return true;
     }
     void attach(){Source::require(!attached,"HEAD source attached twice");auto self=shared_from_this();
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        runtime.participants.push_back(stream_transport); // sample OLD native ports before any leaf/core rises
+#endif
         runtime.participants.push_back({"native-HEAD-four-source-homes",
             [self](const auto& p){self->prepare(p);},[self](bool r){self->rising(r);},
             [self](bool r){self->falling(r);},[self](){return self->fault();}});
+#ifndef DSROM_S81_NATIVE_HEAD_STREAM
         runtime.participants.push_back(argmax->participant());
+#endif
         runtime.publication_ready=[self](auto id){return id==ID&&!self->fault();};
         runtime.publication_drained=[self](auto id){return id==ID&&self->publications_drained();};attached=true;
     }
