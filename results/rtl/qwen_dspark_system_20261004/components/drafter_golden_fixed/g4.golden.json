@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.qwen-dspark-drafter-layer-golden.v1",
+ "layer": 4,
+ "slots": 3,
+ "start": 49,
+ "images": {
+  "die0": {
+   "program.hex": "c2ba4ee9d09459591c151ea403387f3616b41bcfd60b264697f9aeff67cdf544",
+   "segments.hex": "794c05b6bb6f5c031c1eb082d21477c99a826a17e3cf661e711beabdadd70ec1",
+   "crom.hex": "4aaf9695cd90a261e7c7dfb5494675b91ad32d43aa9d5b17c3abdb9e0d254681",
+   "matrix_int8.hex": "de1c0af38ebc7da1d7735860201f00d2d0e8216ca248510ebb0ea37b6fdc6f0d",
+   "matrix_scale_bf16.hex": "6c434a5a6d71a7c86a94671637aa3a2dc866f0002fb7c688610e5eef0338eaa2"
+  },
+  "die1": {
+   "program.hex": "c2ba4ee9d09459591c151ea403387f3616b41bcfd60b264697f9aeff67cdf544",
+   "segments.hex": "794c05b6bb6f5c031c1eb082d21477c99a826a17e3cf661e711beabdadd70ec1",
+   "crom.hex": "4aaf9695cd90a261e7c7dfb5494675b91ad32d43aa9d5b17c3abdb9e0d254681",
+   "matrix_int8.hex": "25d05c17b1835fdfaf8901b494da3a8b83183becb74f5ef5465f73fb291996f7",
+   "matrix_scale_bf16.hex": "7c48e52e6e46e36bc0df577649f309ab264cf2565dae55f5f24091c103476e0e"
+  },
+  "die2": {
+   "program.hex": "c2ba4ee9d09459591c151ea403387f3616b41bcfd60b264697f9aeff67cdf544",
+   "segments.hex": "794c05b6bb6f5c031c1eb082d21477c99a826a17e3cf661e711beabdadd70ec1",
+   "crom.hex": "4aaf9695cd90a261e7c7dfb5494675b91ad32d43aa9d5b17c3abdb9e0d254681",
+   "matrix_int8.hex": "ac70c804d11cfd0158527163bba2180235f6c740f7592be34b99b17962f97cb2",
+   "matrix_scale_bf16.hex": "158cc59f3b2fea79c8b3a571114b2ddaf9b411790984ab9dab19d821a784424c"
+  },
+  "die3": {
+   "program.hex": "c2ba4ee9d09459591c151ea403387f3616b41bcfd60b264697f9aeff67cdf544",
+   "segments.hex": "794c05b6bb6f5c031c1eb082d21477c99a826a17e3cf661e711beabdadd70ec1",
+   "crom.hex": "4aaf9695cd90a261e7c7dfb5494675b91ad32d43aa9d5b17c3abdb9e0d254681",
+   "matrix_int8.hex": "f8aac852dc73fdf01c386dfcab14953859cd92596cf086c07895963cddb26f76",
+   "matrix_scale_bf16.hex": "6d65386e7fa5be7855ce37bffb721743039ab0e5870f385b9c8d1d10a903f538"
+  }
+ },
+ "x_inputs": {
+  "/home/ubuntu/qwen-dspark-oracle-run/ref/realmem_gold/prompt/P255/x_preload.hex": "473faa92e871c86444c0ffc55ace5a6a158503510c9f11e227d17130da740e87",
+  "/home/ubuntu/qwen-dspark-oracle-run/ref/realmem_gold/prompt/P255/L00_die0_x.hex": "e1bd04b6904f26db7185438afecfbe45fca14bf5e30a464d96e1e6536156ef2a",
+  "/home/ubuntu/qwen-dspark-oracle-run/ref/realmem_gold/prompt/P255/L01_die0_x.hex": "812fe627917a951c97ba3dd0f57949b3df3a296055b856283b05428835e18495"
+ },
+ "kv_seed": 20261004,
+ "x_bases": [
+  12288,
+  105328,
+  198368
+ ],
+ "files": {
+  "D4_p0_die0_x.hex": "1041d8eec9d8566878ac063d48857756c07d665411021892df4ecb4cd74f9d39",
+  "D4_p1_die0_x.hex": "e57f53c22ddc599ef9f0ca722c9c0a00f3e3fd7d4611fe25c9383f7be442567d",
+  "D4_p2_die0_x.hex": "5793fa0ba34e8c9e7f6c274a3eabfad7a116d9a6289295308d3ea26b196d2d11",
+  "D4_die0_kvblk.hex": "4728870f594bbc2ba731aafee627d937e15ed35e0f49434a47ff89e0cef6af55",
+  "D4_p0_die1_x.hex": "1041d8eec9d8566878ac063d48857756c07d665411021892df4ecb4cd74f9d39",
+  "D4_p1_die1_x.hex": "e57f53c22ddc599ef9f0ca722c9c0a00f3e3fd7d4611fe25c9383f7be442567d",
+  "D4_p2_die1_x.hex": "5793fa0ba34e8c9e7f6c274a3eabfad7a116d9a6289295308d3ea26b196d2d11",
+  "D4_die1_kvblk.hex": "1206e89968f4b8eb2a02f17b276d6aec3f8798d0ec776b2e4ffd7297c82c54a1",
+  "D4_p0_die2_x.hex": "1041d8eec9d8566878ac063d48857756c07d665411021892df4ecb4cd74f9d39",
+  "D4_p1_die2_x.hex": "e57f53c22ddc599ef9f0ca722c9c0a00f3e3fd7d4611fe25c9383f7be442567d",
+  "D4_p2_die2_x.hex": "5793fa0ba34e8c9e7f6c274a3eabfad7a116d9a6289295308d3ea26b196d2d11",
+  "D4_die2_kvblk.hex": "0688611ffdbb0e9dbbbe828d3b536a985f8f0f769f5be065c2a8f16854b568cb",
+  "D4_p0_die3_x.hex": "1041d8eec9d8566878ac063d48857756c07d665411021892df4ecb4cd74f9d39",
+  "D4_p1_die3_x.hex": "e57f53c22ddc599ef9f0ca722c9c0a00f3e3fd7d4611fe25c9383f7be442567d",
+  "D4_p2_die3_x.hex": "5793fa0ba34e8c9e7f6c274a3eabfad7a116d9a6289295308d3ea26b196d2d11",
+  "D4_die3_kvblk.hex": "cb6cdce1d5ee0dfdcd3fef5b85b631b13991a257cbf2c0f715af3a7c6bc0117c"
+ }
+}
