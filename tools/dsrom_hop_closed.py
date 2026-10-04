@@ -120,7 +120,7 @@ def cmd_route(a):
     args += ["--macro-view", f"ot_sram_1r1w_256x256_m2_r2c2={MACRO}", "--macro-place-halo", "5", "5",
              "--clock-period-ns", "0.833333", "--clock-uncertainty-ns", "0.06", "--clock-uncertainty-hold-ns", "0.025",
              "--orfs-corner", "WC", "--hold-corners", "WC,BC", "--io-delay-fraction", "0.2",
-             "--stages", "synth,pnr", "--core-utilization", str(a.util), "--place-density", str(a.density),
+             "--stages", "pnr", "--core-utilization", str(a.util), "--place-density", str(a.density),
              "--hold-margin-ns", "0.01", "--orfs-var", "ADDER_MAP_FILE=", "--orfs-var", "NUM_CORES=20",
              "--slew-margin-percent", "30", "--purpose", "signoff_target",
              "--nickname-tag", f"claude_hopcl_{a.tag}", "--keep-workdir", str(work / "work"), "--force",
