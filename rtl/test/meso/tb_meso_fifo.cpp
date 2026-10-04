@@ -38,6 +38,7 @@ static std::string arg(int argc, char** argv, const char* k, const char* d) {
     return d;
 }
 static double now = 0;
+double sc_time_stamp() { return now; }
 static long errors = 0, window_viol = 0;
 #define FAIL(...) do { if (errors < 10) { printf("ERROR t=%.1fps: ", now); printf(__VA_ARGS__); printf("\n"); } errors++; } while (0)
 

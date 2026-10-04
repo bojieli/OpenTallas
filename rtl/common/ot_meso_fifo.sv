@@ -9,24 +9,29 @@
 // Mechanism (no steady-state pointer synchroniser, no pointer comparison on the data path):
 //   * Data ring.  The writer's counter wc runs every wclk cycle, through local resets too (it is never reset),
 //     writing slot wc[AW-1:0] <= {lap = wc[AW], v, d}: one slot a cycle whether or not a word is presented.
-//   * Placement.  Once, at alignment, the reader takes a 3-FF-synchronised sample of the Gray copy of wc and sets
-//     its read pointer so that slot k is consumed at the read edge OFFSET..OFFSET+1 periods after it was written:
-//     rp <= sample + SYNC + 1 - OFFSET.  A metastable sample resolves to one of two adjacent values, and each of
-//     them yields a lag inside [OFFSET*T, (OFFSET+1)*T] for its own phase interpretation, so every static phase
-//     0..360 deg is placed with lag in that one-period window.  After that the pointer simply increments.
+//   * Placement (centred, half-period resolution).  Once, at alignment, the reader takes two 3-FF-synchronised
+//     samples of the Gray copy of wc: one on its rising edge t and one on the falling edge t - T/2.  They differ
+//     iff the last write before t landed in the last half period, which tells the half of the phase; the reader
+//     then sets its pointer so that every slot is consumed OFFSET*T - T/2 .. OFFSET*T + T/2 after it was written.
+//     A metastable sample resolves to one of two adjacent values; both interpretations land in the same window
+//     (at phase ~0 both give lag ~OFFSET*T, at phase ~T/2 the window edges), so every static phase 0..360 deg is
+//     placed in that one-period window.  After that the pointer simply increments.
 //   * Phase-window guards (fail closed).  Each cycle, on the OPPOSITE (falling) read edge, the reader samples the
 //     lap bit of two guard slots: slot rp+GUARD_LO half a period BEFORE its consuming edge (trips when the lag
 //     falls below (GUARD_LO+0.5)*T) and slot rp-1+GUARD_HI half a period AFTER (trips when the lag exceeds
-//     (GUARD_HI-0.5)*T).  The samples cross through 1 falling + 3 rising flops (they may be metastable exactly
-//     when a guard is reached), and a trip sets a sticky fault that stops delivery and credit.  The data path is
-//     STA-bounded (set_max_delay -ignore_clock_latency) to (GUARD_LO+0.5)*T - uncertainty, so the guard trips
-//     before any data arc can leave its window; the slot under consumption is rewritten DEPTH periods later.
-//     Static window: OFFSET*T-w .. (OFFSET+1)*T+w must lie inside the guards: w < 0.5 T at DEPTH 4 (central).
+//     (GUARD_HI-0.5)*T; GUARD_HI = DEPTH watches the consumed slot's own rewrite).  The samples cross through
+//     1 falling + 3 rising flops (they may be metastable exactly when a guard is reached), and a trip sets a sticky
+//     fault that stops delivery and credit.  The data path is STA-bounded (set_max_delay -ignore_clock_latency)
+//     to (GUARD_LO+0.5)*T - uncertainty, so the guard trips before any data arc can leave its window; the slot under
+//     consumption is rewritten DEPTH periods after its write, beyond the high guard.
+//     Wander budget: after placement the lag moves by up to 2w (placed at one wander extreme, run at the other),
+//     so 2w + resolution must fit in (OFFSET - GUARD_LO - 1)*T below and (GUARD_HI - OFFSET - 1)*T above:
+//     DEPTH 4 / OFFSET 2 / guards 0,4 gives 1 T each side (w up to ~400 ps; central w = 192 ps).
 //   * Lap check.  The consumed slot's lap bit must equal rp[AW]; a mismatch is a gross slip and also faults.
 //   * Credits.  The reader holds a CREDITS-entry elastic buffer (fall-through: an arriving word goes straight to
 //     r_d when the buffer is empty).  Each word the consumer takes returns one credit through a second, 1-bit
 //     ring of the same kind (rclk -> wclk) with its own placement and guards; the writer sends only on a credit.
-//     CREDITS >= the credit round trip (about 6 cycles at OFFSET 1) sustains one word a cycle.
+//     CREDITS >= the credit round trip (about 2*OFFSET + 4 cycles) sustains one word a cycle.
 //   * Reset handshake (as ot_ratio_cdc_fifo, plus an alignment step): each side publishes DOWN/ALIGN/READY/RUN
 //     (Gray-sequenced, crossing through 3 FFs plus a stable-compare flop).  DOWN -> ALIGN after HOLD own cycles and
 //     after the peer was seen not RUN; in ALIGN, once the peer has been seen out of DOWN for SETTLE cycles,
@@ -34,18 +39,19 @@
 //     READY or RUN (the writer then loads CREDITS).  Seeing the peer DOWN from READY/RUN returns to DOWN; words in
 //     flight across a reset are discarded by both sides.  The fault is sticky until the local reset.
 //
-// Latency, no backpressure: a word written at write edge n is presented on r_d from the read edge at lag
-// OFFSET*T - T .. OFFSET*T and is taken by a consumer register at lag OFFSET*T .. (OFFSET+1)*T, against T for the
-// synchronous register stage it replaces: DELTA = OFFSET*T + phase, i.e. at most OFFSET cycles (1 at DEPTH 4).
+// Latency, no backpressure: r_d is presented straight from the ring slot (no receive register), so a word
+// written at write edge n is taken by the consumer's register at lag OFFSET*T -+ T/2, against T for the
+// synchronous register stage it replaces: DELTA = (OFFSET - 1) T on average over phase, (OFFSET - 1 -+ 0.5) T
+// at the extremes.
 // The dual-clock bench rtl/test/meso/tb_meso_fifo.cpp measures it.
 //
 // Default-off: ENABLE = 0 elaborates to tied-off outputs.
 module ot_meso_fifo #(
     parameter int W        = 512,
     parameter int DEPTH    = 4,      // ring slots, power of two
-    parameter int OFFSET   = 1,      // placement lag in periods
+    parameter int OFFSET   = 2,      // placement lag window centre, periods (window OFFSET -+ 0.5)
     parameter int GUARD_LO = 0,      // low guard trips at lag < (GUARD_LO + 0.5) T
-    parameter int GUARD_HI = 3,      // high guard trips at lag > (GUARD_HI - 0.5) T
+    parameter int GUARD_HI = 4,      // high guard trips at lag > (GUARD_HI - 0.5) T; <= DEPTH
     parameter int CREDITS  = 8,      // receive buffer entries = writer credits
     parameter int HOLD     = 8,      // DOWN lasts >= HOLD + 1 own cycles (peer must see it)
     parameter int SETTLE   = 8,      // cycles the peer ring is seen running before placement (>= DEPTH)
@@ -73,8 +79,8 @@ module ot_meso_fifo #(
     localparam int AW = $clog2(DEPTH);
     initial begin
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $error("ot_meso_fifo: DEPTH must be a power of two >= 4");
-        if (GUARD_LO < 0 || GUARD_LO + 1 > OFFSET || GUARD_HI < OFFSET + 2 || GUARD_HI > DEPTH - 1)
-            $error("ot_meso_fifo: need GUARD_LO+1 <= OFFSET, OFFSET+2 <= GUARD_HI <= DEPTH-1");
+        if (GUARD_LO < 0 || GUARD_LO + 2 > OFFSET || GUARD_HI < OFFSET + 2 || GUARD_HI > DEPTH)
+            $error("ot_meso_fifo: need GUARD_LO+2 <= OFFSET, OFFSET+2 <= GUARD_HI <= DEPTH");
         if (SETTLE < DEPTH || HOLD < 6 || CREDITS < 1) $error("ot_meso_fifo: SETTLE >= DEPTH, HOLD >= 6, CREDITS >= 1");
     end
 
@@ -245,9 +251,9 @@ endmodule
 module ot_meso_ring #(
     parameter int W        = 1,
     parameter int DEPTH    = 4,
-    parameter int OFFSET   = 1,
+    parameter int OFFSET   = 2,
     parameter int GUARD_LO = 0,
-    parameter int GUARD_HI = 3
+    parameter int GUARD_HI = 4
 ) (
     input  logic         tclk,
     input  logic         t_v,
@@ -283,21 +289,31 @@ module ot_meso_ring #(
     always_ff @(posedge tclk) if (t_v) s_d[tc[AW-1:0]] <= t_d;
 
     // ---------------- receive (rclk) ----------------
+    // rising-edge sample (time t) and falling-edge sample (time t - T/2), both 3-FF synchronised and aligned
     (* async_reg = "true" *) logic [PW-1:0] g1, g2, g3;
+    (* async_reg = "true" *) logic [PW-1:0] n0, n1, n2;
+    logic [PW-1:0] n3;
     always_ff @(posedge rclk) begin g1 <= tg; g2 <= g1; g3 <= g2; end
+    always_ff @(negedge rclk) n0 <= tg;
+    always_ff @(posedge rclk) begin n1 <= n0; n2 <= n1; n3 <= n2; end
     logic [PW-1:0] gb;
     always_comb begin
         gb[PW-1] = g3[PW-1];
         for (int i = PW - 2; i >= 0; i--) gb[i] = gb[i+1] ^ g3[i];
     end
+    // n3 holds the falling sample taken T/2 before g3's rising sample: they differ iff the last write before the
+    // rising edge came within T/2 of it (phase in the first half): consume that slot one period later.
+    wire late = (g3 != n3);
     logic [PW-1:0] rp;
+    // rp is used from the edge after placement; the sample is SYNC periods old: slot (sample + SYNC + 1) is the
+    // newest slot at that edge, and it is consumed (OFFSET - 1 + late) periods after its write edge.
 `ifdef OT_MESO_MUTANT_OFFSET
-    localparam int PLACE = SYNC + 1 - OFFSET + 1;   // MUTANT: one period early (lag 0..T)
+    localparam int PLACE = SYNC + 1 - (OFFSET - 1) + 1;   // MUTANT: one period early
 `else
-    localparam int PLACE = SYNC + 1 - OFFSET;
+    localparam int PLACE = SYNC + 1 - (OFFSET - 1);
 `endif
     always_ff @(posedge rclk) begin
-        if (r_align) rp <= gb + PW'(PLACE);
+        if (r_align) rp <= gb + PW'(PLACE) - PW'(late);
         else if (r_on) rp <= rp + 1'b1;
     end
     wire [AW-1:0] ri = rp[AW-1:0];
