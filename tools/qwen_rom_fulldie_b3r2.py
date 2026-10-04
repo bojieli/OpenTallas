@@ -466,7 +466,17 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False):
                 east = it.x > xs
                 for i in range(16):
                     j = i % 8
-                    b.ports[f'bw{i}'] = ('area', v.TREE_BITS, (b.w - 40.0) if east else 20.0, b.h * (j + 0.5) / 8, 1)
+                    # 2-track pin pitch: a word's 32 bundled M8 pins span 82 um, two M8 tracks per wire
+                    b.ports[f'bw{i}'] = ('area', v.TREE_BITS, (b.w - 40.0) if east else 20.0, b.h * (j + 0.5) / 8, 2)
+            # corridor buses: pins at a 2-track pitch over the station / column-head N and S faces (37 um of the
+            # 52.7 um frame instead of 19 um), so the vertical corridor run spreads over the corridor's M7/M9
+            # tracks (b3r4 per-gcell dump: 62.7k M9 overflow, all in the corridor x range, 7-8 tracks a gcell)
+            for nm in ('qfd_cst', 'qfd_chead'):
+                mst = out[nm]
+                for pn in ('a', 'b', 'n', 's'):
+                    if pn in mst.ports and mst.ports[pn][0] == 'face' and mst.ports[pn][2] in 'NS':
+                        kind, w_, face, layer, centre, _ = mst.ports[pn]
+                        mst.ports[pn] = (kind, w_, face, layer, centre, 2)
         # spine slabs created by the band repack (fragments) need masters
         for it in model['insts']:
             if it.kind == 'spine_block' and it.master not in out:
@@ -768,10 +778,57 @@ def summarize(work):
                 peak_rss_gb=round(int(rss.group(1)) / 2**20, 1) if rss else None, layers=layers, windows=win)
 
 
+def write_pdn_r4(v, m, path, bump_um):
+    """Connected full-die PDN (r4).  r2 (one M8+M9 macro grid per instance) passed pdngen but failed
+    check_power_grid: each macro grid stops inside its instance, the frames abut with a 24 nm gap, so every
+    element is an M9 island (b3r2b_pdn run_pdn_r2.log PSM-0038/0039/0069; reproduced on four abutting elements).
+    r4: one die-level core grid of M8 + M9 stripes over everything at the tile-field bump-aligned pitch (the
+    abstracts obstruct only M1-M7), plus per-instance M8 macro grids over the boundary on the same die-aligned
+    lattice, connecting the elements' M7 rails to M8
+    and M8 to the core M9; the HBM PHY's M4 rails reach M8 through an M5 macro grid (PHY OBS is M1-M4).
+    Verified PASS on the four-element and PHY fixtures (check_power_grid VDD/VSS)."""
+    def aligned(coverage, vp=bump_um):
+        raw = v.dn(0.48 / coverage, 0.160)
+        n = math.ceil(vp / raw - 1e-9)
+        n += (n % 2 == 0)
+        return round(vp / n, 3)
+    cp = aligned(F.REGION_PG['tile_field'])
+    L = ['# r4 full-die PDN: die core grid M8/M9 + per-instance M8 macro grids over the boundary',
+         'add_global_connection -net VDD -inst_pattern {.*} -pin_pattern {^VDD$} -power',
+         'add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground',
+         'global_connect', 'set_voltage_domain -name CORE -power VDD -ground VSS',
+         'define_pdn_grid -name core -voltage_domains CORE -pins {M9} -starts_with GROUND',
+         f'add_pdn_stripe -grid core -layer M8 -width .48 -pitch {cp:.3f} -offset 0',
+         f'add_pdn_stripe -grid core -layer M9 -width .48 -pitch {cp:.3f} -offset 0',
+         'add_pdn_connect -grid core -layers {M8 M9}']
+    meta = []
+    insts = sorted(m['insts'], key=lambda it: -len(it.name))      # -instances is a pattern: longest name first
+    for i, it in enumerate(insts):
+        g = f'pg_{i}'
+        L.append(f'define_pdn_grid -macro -instances {{{it.name}}} -voltage_domains CORE -name {g} -starts_with GROUND '
+                 '-grid_over_boundary')
+        if it.master == 'ot_hbm3e_phy':
+            L += [f'add_pdn_stripe -grid {g} -layer M5 -width .504 -pitch {cp:.3f} -offset {(-it.x) % cp:.3f}',
+                  f'add_pdn_connect -grid {g} -layers {{M4 M5}}', f'add_pdn_connect -grid {g} -layers {{M5 M8}}']
+            meta.append(dict(instance=it.name, layer='M5', pitch=cp))
+            continue
+        region = v.region_at(m, it.cx, it.cy)
+        cov = F.REGION_PG.get(region) or F.REGION_PG['tile_field']
+        # one M8 lattice everywhere: a macro stripe at another pitch would overlap core stripes of the other net
+        # (shorts) and a core-less M9-only variant failed the fixture; region coverages are qualified by the PSM
+        # window cases, this run qualifies connectivity
+        p = cp
+        L += [f'add_pdn_stripe -grid {g} -layer M8 -width .48 -pitch {p:.3f} -offset {(-it.y) % p:.3f}',
+              f'add_pdn_connect -grid {g} -layers {{M7 M8}}', f'add_pdn_connect -grid {g} -layers {{M8 M9}}']
+        meta.append(dict(instance=it.name, region=region, layer='M8', pitch=p, coverage_request=cov))
+    Path(path).write_text('\n'.join(L) + '\n')
+    return dict(core_pitch_um=cp, grids=len(meta), meta=meta)
+
+
 def case_pdn(v, m, work, bump_um):
     """Real-technology die (legality, track assert, pin access) with power abstracts (VDD/VSS M7 + M8 rails on every
-    element, tools/qwen_rom_fulldie_pg_r3.powered_lef) and the full-die pdn.tcl with one bump-aligned macro grid per
-    instance (pg_r3.write_pdn at the bump pitch of the IR PASS case); run_pdn.tcl runs pdngen + check_power_grid."""
+    element, tools/qwen_rom_fulldie_pg_r3.powered_lef) and the connected r4 full-die pdn.tcl (write_pdn_r4);
+    run_pdn.tcl runs pdngen + check_power_grid."""
     man = v.case_real(m, work)
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)
@@ -781,35 +838,7 @@ def case_pdn(v, m, work, bump_um):
         parts.append(text)
     (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
                                        'END LIBRARY\n')
-    def aligned(coverage, vp=bump_um):
-        # case_ir(align=True) rule: largest pitch <= the coverage pitch with an odd count per per-net bump pitch,
-        # on the 1 nm grid (lattice drift over the die <= 380 bumps x 7 x 0.0005 um = 1.3 um, inside a 20 um bump)
-        raw = v.dn(0.48 / coverage, 0.160)
-        n = math.ceil(vp / raw - 1e-9)
-        n += (n % 2 == 0)
-        return round(vp / n, 3)
-    orig = PG.bump_pitch
-    PG.bump_pitch = aligned
-    try:
-        meta = PG.write_pdn(work / 'pdn.tcl', m, bump_um)
-    finally:
-        PG.bump_pitch = orig
-    # pdngen matches -instances as a pattern: the grid of t_0_1 claims t_0_10..t_0_19 (PDN-0182, then PDN-0217 on
-    # the emptied grid; b3r2b_pdn run_pdn.log).  Define the macro grids longest name first so every grid keeps its
-    # own instance.
-    txt = (work / 'pdn.tcl').read_text().split('\n')
-    head, blocks, cur = [], [], None
-    for ln in txt:
-        if ln.startswith('define_pdn_grid -macro'):
-            cur = [ln]
-            blocks.append(cur)
-        elif cur is not None and ln.startswith(('add_pdn_stripe', 'add_pdn_connect')):
-            cur.append(ln)
-        elif ln:
-            head.append(ln)
-    key = lambda b: -len(re.search(r'-instances \{(\S+)\}', b[0]).group(1))
-    blocks.sort(key=key)
-    (work / 'pdn.tcl').write_text('\n'.join(head + [ln for b in blocks for ln in b]) + '\n')
+    meta = write_pdn_r4(v, m, work / 'pdn.tcl', bump_um)['meta']
     (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
 proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {VmRSS:\\s+(\\d+)} $s -> r; puts "OTMEM $tag [expr {$r/1024}] MB [clock seconds]" }
