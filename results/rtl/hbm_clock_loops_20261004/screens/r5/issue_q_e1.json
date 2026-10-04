@@ -1,0 +1,594 @@
+{
+ "blackboxes": [],
+ "completed_at": "2026-10-04T01:16:56.005293+00:00",
+ "corner": "ASAP7 RVT SS (ORFS asap7 WC liberty: 0.63 V, 100 C)",
+ "defines": [],
+ "domain": "1.2GHz-SM",
+ "floorplan": {
+  "macro_area_um2": 0.0,
+  "port_bits": 81,
+  "requested": 30,
+  "used": 30
+ },
+ "image": "openroad/orfs:latest",
+ "includes": [],
+ "io_delay_fraction": 0.2,
+ "label": "issue_q_e1",
+ "macros": [],
+ "mapping": "Yosys 0.68 + ABC on the TT RVT liberty at the target period, the pinned driver's synth.ys (tools/run_abi3_physical.py run_synthesis) plus defines/includes, rename -wire before mapping and opt_clean without -purge so paths read in RTL names; timed on SS",
+ "openroad_rc": 0,
+ "parameters": {
+  "ENABLE": "1",
+  "IL": "8",
+  "RMAX": "4096",
+  "XDEPTH": "1024"
+ },
+ "period_ns": 0.833,
+ "phases": {
+  "raw": {
+   "all_fmax_mhz": 1200.4801920758018,
+   "all_setup_wns_ps": -7.140018576379248e-10,
+   "cells": 2773.0,
+   "focus": {
+    "issue": {
+     "endpoints": 254.0,
+     "fmax_mhz": 646.4116460376704,
+     "path": {
+      "arrival_ps": 1445.6,
+      "cells": [
+       {
+        "cell": "DFFASRHQNx1_ASAP7_75t_R",
+        "delay_ps": 0.0,
+        "pin": "busy$_DFFE_PN0P_/CLK",
+        "slew_ps": 0.0
+       },
+       {
+        "cell": "DFFASRHQNx1_ASAP7_75t_R",
+        "delay_ps": 173.0,
+        "fanout": 26,
+        "pin": "busy$_DFFE_PN0P_/QN",
+        "slew_ps": 171.5
+       },
+       {
+        "cell": "NAND2x1_ASAP7_75t_R",
+        "delay_ps": 269.9,
+        "fanout": 54,
+        "pin": "_3140_/Y",
+        "slew_ps": 453.5
+       },
+       {
+        "cell": "INVx1_ASAP7_75t_R",
+        "delay_ps": 405.8,
+        "fanout": 68,
+        "pin": "_3141_/Y",
+        "slew_ps": 510.0
+       },
+       {
+        "cell": "AO21x1_ASAP7_75t_R",
+        "delay_ps": 103.0,
+        "fanout": 5,
+        "pin": "_3854_/Y",
+        "slew_ps": 47.8
+       },
+       {
+        "cell": "AOI21x1_ASAP7_75t_R",
+        "delay_ps": 131.0,
+        "fanout": 17,
+        "pin": "_3855_/Y",
+        "slew_ps": 265.3
+       },
+       {
+        "cell": "AND2x2_ASAP7_75t_R",
+        "delay_ps": 143.3,
+        "fanout": 21,
+        "pin": "_4271_/Y",
+        "slew_ps": 168.9
+       },
+       {
+        "cell": "OAI21x1_ASAP7_75t_R",
+        "delay_ps": 135.2,
+        "fanout": 19,
+        "pin": "_4272_/Y",
+        "slew_ps": 178.2
+       },
+       {
+        "cell": "OR2x2_ASAP7_75t_R",
+        "delay_ps": 70.9,
+        "fanout": 2,
+        "pin": "_4283_/Y",
+        "slew_ps": 25.1
+       },
+       {
+        "cell": "OAI21x1_ASAP7_75t_R",
+        "delay_ps": 13.3,
+        "fanout": 1,
+        "pin": "_4327_/Y",
+        "slew_ps": 39.1
+       },
+       {
+        "cell": "DFFASRHQNx1_ASAP7_75t_R",
+        "delay_ps": 0.0,
+        "pin": "g_lookahead.xa_r[0]$_DFFE_PN0P_/D",
+        "slew_ps": 39.1
+       }
+      ],
+      "endpoint": "g_lookahead.xa_r[0]$_DFFE_PN0P_",
+      "logic_cells": 11,
+      "max_fanout_on_path": 68,
+      "startpoint": "busy$_DFFE_PN0P_",
+      "worst_cell": {
+       "cell": "INVx1_ASAP7_75t_R",
+       "delay_ps": 405.8,
+       "fanout": 68,
+       "pin": "_3141_/Y",
+       "slew_ps": 510.0
+      }
+     },
+     "regex": "(^|\\.)(ph|si|rb|gi|ti|issuing|rem|cr|cg|cxb|wb|items_q|rows_q|xa_r|valid_mask|next_mask|c_end|g_end|slot_glast|init_q|busy|turn_q|lt_q|lw_q|.*_n)(\\[|$)",
+     "setup_wns_ps": -714.001831
+    }
+   },
+   "io_path": {
+    "arrival_ps": 1445.6,
+    "endpoint": "g_lookahead.xa_r[0]$_DFFE_PN0P_",
+    "logic_cells": 9,
+    "max_fanout_on_path": 0,
+    "startpoint": "busy$_DFFE_PN0P_",
+    "worst_cell": {
+     "cell": "INVx1_ASAP7_75t_R",
+     "delay_ps": 405.8,
+     "pin": "_3141_/Y",
+     "slew_ps": 68.0
+    }
+   },
+   "r2r_fmax_mhz": 646.4116460376704,
+   "r2r_path": {
+    "arrival_ps": 1445.6,
+    "cells": [
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 0.0,
+      "pin": "busy$_DFFE_PN0P_/CLK",
+      "slew_ps": 0.0
+     },
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 173.0,
+      "fanout": 26,
+      "pin": "busy$_DFFE_PN0P_/QN",
+      "slew_ps": 171.5
+     },
+     {
+      "cell": "NAND2x1_ASAP7_75t_R",
+      "delay_ps": 269.9,
+      "fanout": 54,
+      "pin": "_3140_/Y",
+      "slew_ps": 453.5
+     },
+     {
+      "cell": "INVx1_ASAP7_75t_R",
+      "delay_ps": 405.8,
+      "fanout": 68,
+      "pin": "_3141_/Y",
+      "slew_ps": 510.0
+     },
+     {
+      "cell": "AO21x1_ASAP7_75t_R",
+      "delay_ps": 103.0,
+      "fanout": 5,
+      "pin": "_3854_/Y",
+      "slew_ps": 47.8
+     },
+     {
+      "cell": "AOI21x1_ASAP7_75t_R",
+      "delay_ps": 131.0,
+      "fanout": 17,
+      "pin": "_3855_/Y",
+      "slew_ps": 265.3
+     },
+     {
+      "cell": "AND2x2_ASAP7_75t_R",
+      "delay_ps": 143.3,
+      "fanout": 21,
+      "pin": "_4271_/Y",
+      "slew_ps": 168.9
+     },
+     {
+      "cell": "OAI21x1_ASAP7_75t_R",
+      "delay_ps": 135.2,
+      "fanout": 19,
+      "pin": "_4272_/Y",
+      "slew_ps": 178.2
+     },
+     {
+      "cell": "OR2x2_ASAP7_75t_R",
+      "delay_ps": 70.9,
+      "fanout": 2,
+      "pin": "_4283_/Y",
+      "slew_ps": 25.1
+     },
+     {
+      "cell": "OAI21x1_ASAP7_75t_R",
+      "delay_ps": 13.3,
+      "fanout": 1,
+      "pin": "_4327_/Y",
+      "slew_ps": 39.1
+     },
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 0.0,
+      "pin": "g_lookahead.xa_r[0]$_DFFE_PN0P_/D",
+      "slew_ps": 39.1
+     }
+    ],
+    "endpoint": "g_lookahead.xa_r[0]$_DFFE_PN0P_",
+    "logic_cells": 11,
+    "max_fanout_on_path": 68,
+    "startpoint": "busy$_DFFE_PN0P_",
+    "worst_cell": {
+     "cell": "INVx1_ASAP7_75t_R",
+     "delay_ps": 405.8,
+     "fanout": 68,
+     "pin": "_3141_/Y",
+     "slew_ps": 510.0
+    }
+   },
+   "r2r_required_period_ps": 1547.001831,
+   "r2r_setup_wns_ps": -714.001831,
+   "tns_ps": -1.83459931690777e-07
+  },
+  "rep": {
+   "all_fmax_mhz": 1200.4801920764908,
+   "all_setup_wns_ps": -2.359085704561892e-10,
+   "cells": 3028.0,
+   "focus": {
+    "issue": {
+     "endpoints": 254.0,
+     "fmax_mhz": 973.5764952526619,
+     "path": {
+      "arrival_ps": 938.7,
+      "cells": [
+       {
+        "cell": "DFFASRHQNx1_ASAP7_75t_R",
+        "delay_ps": 0.0,
+        "pin": "g_lookahead.pp0[6]$_DFFE_PN0P_/CLK",
+        "slew_ps": 0.0
+       },
+       {
+        "cell": "DFFASRHQNx1_ASAP7_75t_R",
+        "delay_ps": 98.5,
+        "fanout": 2,
+        "pin": "g_lookahead.pp0[6]$_DFFE_PN0P_/QN",
+        "slew_ps": 57.0
+       },
+       {
+        "cell": "XOR2x2_ASAP7_75t_R",
+        "delay_ps": 62.9,
+        "fanout": 1,
+        "pin": "_2792_/Y",
+        "slew_ps": 17.8
+       },
+       {
+        "cell": "XNOR2x2_ASAP7_75t_R",
+        "delay_ps": 56.5,
+        "fanout": 2,
+        "pin": "_2793_/Y",
+        "slew_ps": 21.0
+       },
+       {
+        "cell": "XOR2x2_ASAP7_75t_R",
+        "delay_ps": 50.9,
+        "fanout": 1,
+        "pin": "_2795_/Y",
+        "slew_ps": 16.3
+       },
+       {
+        "cell": "XNOR2x2_ASAP7_75t_R",
+        "delay_ps": 54.4,
+        "fanout": 2,
+        "pin": "_2803_/Y",
+        "slew_ps": 18.7
+       },
+       {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 44.2,
+        "fanout": 2,
+        "pin": "_2806_/Y",
+        "slew_ps": 20.8
+       },
+       {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 46.3,
+        "fanout": 2,
+        "pin": "_2808_/Y",
+        "slew_ps": 23.0
+       },
+       {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 46.0,
+        "fanout": 2,
+        "pin": "_2936_/Y",
+        "slew_ps": 18.0
+       },
+       {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 45.2,
+        "fanout": 2,
+        "pin": "_2938_/Y",
+        "slew_ps": 22.7
+       },
+       {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 45.8,
+        "fanout": 2,
+        "pin": "_2940_/Y",
+        "slew_ps": 21.3
+       },
+       {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 45.4,
+        "fanout": 2,
+        "pin": "_2942_/Y",
+        "slew_ps": 21.5
+       },
+       {
+        "cell": "OA211x2_ASAP7_75t_R",
+        "delay_ps": 54.4,
+        "fanout": 2,
+        "pin": "_2945_/Y",
+        "slew_ps": 25.7
+       },
+       {
+        "cell": "OA31x2_ASAP7_75t_R",
+        "delay_ps": 43.9,
+        "fanout": 2,
+        "pin": "_2947_/Y",
+        "slew_ps": 23.7
+       },
+       {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 46.0,
+        "fanout": 2,
+        "pin": "_2949_/Y",
+        "slew_ps": 21.2
+       },
+       {
+        "cell": "OA211x2_ASAP7_75t_R",
+        "delay_ps": 51.8,
+        "fanout": 2,
+        "pin": "_2952_/Y",
+        "slew_ps": 22.4
+       },
+       {
+        "cell": "OA33x2_ASAP7_75t_R",
+        "delay_ps": 61.4,
+        "fanout": 2,
+        "pin": "_2954_/Y",
+        "slew_ps": 26.8
+       },
+       {
+        "cell": "AO22x2_ASAP7_75t_R",
+        "delay_ps": 42.7,
+        "fanout": 1,
+        "pin": "_2955_/Y",
+        "slew_ps": 15.5
+       },
+       {
+        "cell": "XNOR2x2_ASAP7_75t_R",
+        "delay_ps": 42.5,
+        "fanout": 1,
+        "pin": "_2957_/Y",
+        "slew_ps": 13.8
+       },
+       {
+        "cell": "DFFHQNx1_ASAP7_75t_R",
+        "delay_ps": 0.0,
+        "pin": "g_lookahead.items_q[20]$_DFF_P_/D",
+        "slew_ps": 13.8
+       }
+      ],
+      "endpoint": "g_lookahead.items_q[20]$_DFF_P_",
+      "logic_cells": 20,
+      "max_fanout_on_path": 2,
+      "startpoint": "g_lookahead.pp0[6]$_DFFE_PN0P_",
+      "worst_cell": {
+       "cell": "DFFASRHQNx1_ASAP7_75t_R",
+       "delay_ps": 98.5,
+       "fanout": 2,
+       "pin": "g_lookahead.pp0[6]$_DFFE_PN0P_/QN",
+       "slew_ps": 57.0
+      }
+     },
+     "regex": "(^|\\.)(ph|si|rb|gi|ti|issuing|rem|cr|cg|cxb|wb|items_q|rows_q|xa_r|valid_mask|next_mask|c_end|g_end|slot_glast|init_q|busy|turn_q|lt_q|lw_q|.*_n)(\\[|$)",
+     "setup_wns_ps": -194.140656
+    }
+   },
+   "io_path": {
+    "arrival_ps": 842.3,
+    "endpoint": "xa[9]",
+    "logic_cells": 19,
+    "max_fanout_on_path": 0,
+    "startpoint": "g_lookahead.si[1]$_DFFE_PN0P_",
+    "worst_cell": {
+     "cell": "DFFASRHQNx1_ASAP7_75t_R",
+     "delay_ps": 121.4,
+     "pin": "g_lookahead.si[1]$_DFFE_PN0P_/QN",
+     "slew_ps": 5.0
+    }
+   },
+   "r2r_fmax_mhz": 973.5764952526619,
+   "r2r_path": {
+    "arrival_ps": 938.7,
+    "cells": [
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 0.0,
+      "pin": "g_lookahead.pp0[6]$_DFFE_PN0P_/CLK",
+      "slew_ps": 0.0
+     },
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 98.5,
+      "fanout": 2,
+      "pin": "g_lookahead.pp0[6]$_DFFE_PN0P_/QN",
+      "slew_ps": 57.0
+     },
+     {
+      "cell": "XOR2x2_ASAP7_75t_R",
+      "delay_ps": 62.9,
+      "fanout": 1,
+      "pin": "_2792_/Y",
+      "slew_ps": 17.8
+     },
+     {
+      "cell": "XNOR2x2_ASAP7_75t_R",
+      "delay_ps": 56.5,
+      "fanout": 2,
+      "pin": "_2793_/Y",
+      "slew_ps": 21.0
+     },
+     {
+      "cell": "XOR2x2_ASAP7_75t_R",
+      "delay_ps": 50.9,
+      "fanout": 1,
+      "pin": "_2795_/Y",
+      "slew_ps": 16.3
+     },
+     {
+      "cell": "XNOR2x2_ASAP7_75t_R",
+      "delay_ps": 54.4,
+      "fanout": 2,
+      "pin": "_2803_/Y",
+      "slew_ps": 18.7
+     },
+     {
+      "cell": "MAJx2_ASAP7_75t_R",
+      "delay_ps": 44.2,
+      "fanout": 2,
+      "pin": "_2806_/Y",
+      "slew_ps": 20.8
+     },
+     {
+      "cell": "MAJx2_ASAP7_75t_R",
+      "delay_ps": 46.3,
+      "fanout": 2,
+      "pin": "_2808_/Y",
+      "slew_ps": 23.0
+     },
+     {
+      "cell": "MAJx2_ASAP7_75t_R",
+      "delay_ps": 46.0,
+      "fanout": 2,
+      "pin": "_2936_/Y",
+      "slew_ps": 18.0
+     },
+     {
+      "cell": "MAJx2_ASAP7_75t_R",
+      "delay_ps": 45.2,
+      "fanout": 2,
+      "pin": "_2938_/Y",
+      "slew_ps": 22.7
+     },
+     {
+      "cell": "MAJx2_ASAP7_75t_R",
+      "delay_ps": 45.8,
+      "fanout": 2,
+      "pin": "_2940_/Y",
+      "slew_ps": 21.3
+     },
+     {
+      "cell": "MAJx2_ASAP7_75t_R",
+      "delay_ps": 45.4,
+      "fanout": 2,
+      "pin": "_2942_/Y",
+      "slew_ps": 21.5
+     },
+     {
+      "cell": "OA211x2_ASAP7_75t_R",
+      "delay_ps": 54.4,
+      "fanout": 2,
+      "pin": "_2945_/Y",
+      "slew_ps": 25.7
+     },
+     {
+      "cell": "OA31x2_ASAP7_75t_R",
+      "delay_ps": 43.9,
+      "fanout": 2,
+      "pin": "_2947_/Y",
+      "slew_ps": 23.7
+     },
+     {
+      "cell": "MAJx2_ASAP7_75t_R",
+      "delay_ps": 46.0,
+      "fanout": 2,
+      "pin": "_2949_/Y",
+      "slew_ps": 21.2
+     },
+     {
+      "cell": "OA211x2_ASAP7_75t_R",
+      "delay_ps": 51.8,
+      "fanout": 2,
+      "pin": "_2952_/Y",
+      "slew_ps": 22.4
+     },
+     {
+      "cell": "OA33x2_ASAP7_75t_R",
+      "delay_ps": 61.4,
+      "fanout": 2,
+      "pin": "_2954_/Y",
+      "slew_ps": 26.8
+     },
+     {
+      "cell": "AO22x2_ASAP7_75t_R",
+      "delay_ps": 42.7,
+      "fanout": 1,
+      "pin": "_2955_/Y",
+      "slew_ps": 15.5
+     },
+     {
+      "cell": "XNOR2x2_ASAP7_75t_R",
+      "delay_ps": 42.5,
+      "fanout": 1,
+      "pin": "_2957_/Y",
+      "slew_ps": 13.8
+     },
+     {
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "delay_ps": 0.0,
+      "pin": "g_lookahead.items_q[20]$_DFF_P_/D",
+      "slew_ps": 13.8
+     }
+    ],
+    "endpoint": "g_lookahead.items_q[20]$_DFF_P_",
+    "logic_cells": 20,
+    "max_fanout_on_path": 2,
+    "startpoint": "g_lookahead.pp0[6]$_DFFE_PN0P_",
+    "worst_cell": {
+     "cell": "DFFASRHQNx1_ASAP7_75t_R",
+     "delay_ps": 98.5,
+     "fanout": 2,
+     "pin": "g_lookahead.pp0[6]$_DFFE_PN0P_/QN",
+     "slew_ps": 57.0
+    }
+   },
+   "r2r_required_period_ps": 1027.140656,
+   "r2r_setup_wns_ps": -194.140656,
+   "tns_ps": -1.8558454772943378e-09
+  }
+ },
+ "repair": "global_placement, repair_design (max_transition 320 ps, max_fanout 24), repair_timing -setup, legalised; utilisation 30%",
+ "schema": "opentallas-risk-clock-loops-screen-v1",
+ "screen_tool": "jobs/risk_clock_loops_screen_hbm.py (copy of tools/risk_clock_loops_screen.py + --macro + IO-aware utilisation + non-macro black boxes cut to top inputs)",
+ "setup_uncertainty_ps": 60,
+ "source_commit": "3467bcd0831c29d3eeb1463b84f05f779cc0526e",
+ "sources": {
+  "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv": "172758bf9549d34287594365122398e5e3888c9a5996a30ebc70fcb0d610c68c"
+ },
+ "synth": {
+  "area_um2": 420.37056,
+  "cells": 2773
+ },
+ "top": "ot_hbm_accel_issue",
+ "wires": "raw: none (ideal clock, zero wire load); repaired: global+detailed placement, placement parasitics (asap7 setRC), ideal clock, no route"
+}

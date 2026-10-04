@@ -1,0 +1,297 @@
+{
+ "schema": "rom_model_sweep.profile.v1",
+ "slug": "glm-4.5-air",
+ "repo": "zai-org/GLM-4.5-Air",
+ "revision": "a24ceef6ce4f3536971efe9b778bdaa1bab18daa",
+ "original_repo": "zai-org/GLM-4.5-Air",
+ "license": "mit",
+ "mirror_note": null,
+ "config_sha256": "e59f21d7be4b4b917d80bb3a2d1211356d29cf3aeff93372523daf7d0ffb839d",
+ "index_sha256": "0c18a393dd882583f840b3306cb6f8104355a871680cfe88911ff78bd9ba530c",
+ "shards": 47,
+ "tensors": 18329,
+ "header_storage_bytes_by_dtype": {
+  "BF16": 220937637888,
+  "F32": 23552
+ },
+ "method": "config.json + safetensors JSON headers via opentallas.profiling range reads; no tensor payload fetched, no inference run",
+ "model_type": "glm4_moe",
+ "architectures": [
+  "Glm4MoeForCausalLM"
+ ],
+ "layers": 46,
+ "hidden": 4096,
+ "heads": 96,
+ "kv_heads": 8,
+ "head_dim": 128,
+ "vocab": 151552,
+ "tied_embeddings": false,
+ "max_context": 131072,
+ "intermediate": 10944,
+ "moe_intermediate": 1408,
+ "moe": {
+  "experts": 128,
+  "top_k": 8,
+  "shared": 1
+ },
+ "params": {
+  "dense_layers": 5954074240,
+  "routed": 99656663040,
+  "embed": 620756992,
+  "head": 620756992,
+  "mtp": 3616573568,
+  "vision": 0,
+  "total_text": 106852251264,
+  "total_all": 110468824832,
+  "active_per_token": 12803372672,
+  "active_routed": 6228541440,
+  "head_streamed": 620756992
+ },
+ "header_bytes": {
+  "embed": 1241513984,
+  "dense": 11908160000,
+  "mtp": 7233147392,
+  "routed": 199313326080,
+  "head": 1241513984
+ },
+ "layer_count_in_headers": 46,
+ "kv_layers": [
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  }
+ ],
+ "mtp": {
+  "native_modules": 1,
+  "weights_present": true,
+  "params": 3616573568
+ },
+ "drafters_published": {},
+ "quantization": null
+}

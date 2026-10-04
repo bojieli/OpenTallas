@@ -1,0 +1,58 @@
+{
+  "ROM_requests": 320,
+  "VM_accepted_beats": 1280,
+  "VM_commit_stream_sha256": "ce4a5adf625964265c0062b9e8fe00f626a5a9eab1e5776db5324a3330a47d69",
+  "actual_VM_committed_words": 20480,
+  "actual_vm_sha256": "833cabf2b55e7c3b366b4cba332627380b2316bdeedab54bd9feac5d9d794a63",
+  "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "cycles": 4161,
+  "embedding_descriptor": {
+    "data_offsets": [
+      0,
+      1323827200
+    ],
+    "dtype": "BF16",
+    "shape": [
+      129280,
+      5120
+    ]
+  },
+  "embedding_shard": "model-00002-of-00048.safetensors",
+  "first_token_native_path_GO": true,
+  "full_parent_bootstrap_GO": false,
+  "identity": 0,
+  "macro_capture_and_SS_FF_qualified": false,
+  "mandatory_parent_files": [
+    "prog.hex",
+    "crom.hex",
+    "hbank.hex",
+    "hrom.hex",
+    "erom.hex",
+    "vm_init.hex",
+    "hbm0.hex",
+    "hbm1.hex",
+    "hbm2.hex",
+    "hbm3.hex"
+  ],
+  "model": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s81_cold_input_20261004/model.json",
+  "no_CPU_inference": true,
+  "no_VM_preload": true,
+  "no_expected_activations": true,
+  "no_full_build": true,
+  "parent_blockers": [
+    "Cicero native C8 ABI hookup and mandatory +DIR source images",
+    "Native SSX producer before L0.I0; no host-computed norm/statistic",
+    "Per-head-die storage delivery/TP4 arbitration and exact input lease"
+  ],
+  "prompt": "/home/ubuntu/OpenTallas/build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P10.json",
+  "prompt_digest": "3b39338af6fb5e41eb271025d8ecfc1d32fa3fa5143136f0e63fa42e4ecad4c3",
+  "prompt_position": 0,
+  "prompt_sha256": "76839ff1c861e0ca2fdd0db0dcd72ec2434922799902ff60ebc6b3bfb661d6e5",
+  "schema": "opentallas.dsrom.S81.native-cold-embedding.v1",
+  "scope": "Small connected native ROM requester -> 16-lane VM commit SRAM endpoint; parent ABI hook supplied separately",
+  "snapshot": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "source_pin": "cbe13bd5794a3d0ad97d972181de34ffccaa289b",
+  "source_read_bytes": 10240,
+  "token": 0
+}
