@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+// TAGGED variant (same module name; compile ONE of the two files): the backend is
+// ot_qwen_hbm_stream4_tagged (the same 4-stack controllers and backing array plus the tagged
+// near-row read port, t_clk domain), driven by tb_qwen_rt_kv_stream4.cpp built with -DTAGGED.
 // Standalone bench top (Verilator, driven by tb_qwen_rt_kv_stream4.cpp): the 4-stack KV service
 // ot_qwen_rt_kv_stream4_service and ot_qwen_hbm_stream4_ack (NSTK stacks, 32 * NSTK PCs), with the
 // kv_free / early_go / posted_wb straps as inputs.  Derived from tb_qwen_rt_kv_stream.sv:
@@ -38,7 +41,19 @@ module tb_qwen_rt_kv_stream4 #(
     output wire              fault,
     output wire [15:0]       fault_code,
     output wire [31:0]       st_fill_cycles, st_fill_sectors, st_wr_sectors, st_rsp_stall,
-    output wire [31:0]       st_kvok_low_desc, st_drain_low, st_wr_lat_max, st_fill_exposed
+    output wire [31:0]       st_kvok_low_desc, st_drain_low, st_wr_lat_max, st_fill_exposed,
+    input  wire              t_clk, t_rst_n,
+    input  wire [3:0]        t_req_v, t_req_we,
+    output wire [3:0]        t_req_ready,
+    input  wire [95:0]       t_req_addr,
+    input  wire [19:0]       t_req_len,
+    input  wire [51:0]       t_req_tag,
+    output wire [127:0]      t_pc_room, t_rsp_v, t_rsp_wr,
+    input  wire [127:0]      t_rsp_ready,
+    output wire [1663:0]     t_rsp_tag,
+    output wire [511:0]      t_rsp_beat,
+    output wire [32767:0]    t_rsp_data,
+    output wire [31:0]       t_rd_sectors
 );
     localparam integer NT = 1536;
     wire [NT-1:0] kvw_ce; wire [NT*7-1:0] kvw_addr; wire [NT*512-1:0] kvw_data, kvw_mask;
@@ -60,11 +75,15 @@ module tb_qwen_rt_kv_stream4 #(
         .fault(svc_fault), .fault_code(svc_code), .st_fill_cycles(st_fill_cycles), .st_fill_sectors(st_fill_sectors),
         .st_wr_sectors(st_wr_sectors), .st_rsp_stall(st_rsp_stall), .st_kvok_low_desc(st_kvok_low_desc),
         .st_drain_low(st_drain_low), .st_wr_lat_max(st_wr_lat_max), .st_fill_exposed(st_fill_exposed));
-    ot_qwen_hbm_stream4_ack #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(LAYERS * 131072), .TAGW(9), .PHASE(PHASE), .PULLIN(PULLIN)) u_hbm (
+    ot_qwen_hbm_stream4_tagged #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(LAYERS * 131072), .TAGW(9), .PHASE(PHASE), .PULLIN(PULLIN)) u_hbm (
         .clk(clk), .rst_n(rst_n), .d_v(hd_v), .d_rdy(hd_rdy), .d_row(hd_row), .d_n(hd_n), .go(h_go),
         .l_v(hl_v), .l_sec(hl_sec), .l_row(hl_row), .l_data(hl_data), .l_pop(hl_pop),
         .w_v(hw_v), .w_sec(hw_sec), .w_data(hw_data), .w_tag(hw_tag), .w_room(hw_room), .wd_v(hwd_v), .wd_tag(hwd_tag),
-        .fault(hbm_fault), .fault_code(hbm_code));
+        .fault(hbm_fault), .fault_code(hbm_code),
+        .t_clk(t_clk), .t_rst_n(t_rst_n), .t_req_v(t_req_v), .t_req_ready(t_req_ready), .t_req_we(t_req_we),
+        .t_req_addr(t_req_addr), .t_req_len(t_req_len), .t_req_tag(t_req_tag), .t_req_wdata(1024'd0),
+        .t_pc_room(t_pc_room), .t_rsp_v(t_rsp_v), .t_rsp_ready(t_rsp_ready), .t_rsp_wr(t_rsp_wr), .t_rsp_tag(t_rsp_tag),
+        .t_rsp_beat(t_rsp_beat), .t_rsp_data(t_rsp_data), .t_rd_sectors(t_rd_sectors));
     assign fault = svc_fault | hbm_fault;
     assign fault_code = svc_code | (hbm_fault ? 16'h8000 : 16'h0);
     // tile slices: the hardened tile's registered kvw port, then the masked write

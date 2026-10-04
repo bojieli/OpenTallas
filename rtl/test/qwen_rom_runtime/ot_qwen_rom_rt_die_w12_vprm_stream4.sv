@@ -1,24 +1,28 @@
 `timescale 1ns/1ps
-// SIMULATION ONLY.  4-STACK full-bandwidth successor of ot_qwen_rom_rt_die_w12_stream.sv (left
-// byte-identical; this file is selected only by tools/qwen_rom_rt_token_stream4_w12.py).  The KV
-// memory is ot_qwen_rt_kv_stream4_service + ot_qwen_hbm_stream4_ack: NSTK = 4 HBM3E stacks a die
-// (128 pseudo-channels, 4 near-HBM stream controllers), the window striped across stacks/PCs/banks
-// in consumption order (P < 8192), with two run-time straps: rm_early_go (the next layer's stream
-// is released when this layer's next program segment starts, i.e. the core is done with the KV
-// slices) and rm_posted_wb (posted token write-back; kv_write_drained not on the HBM write-done;
-// kv_wb_busy reports outstanding write-backs).  Both 0: the predecessor's protocol on 4 stacks.
-// The retained description of the HBM_STREAM die follows.
+// SIMULATION ONLY.  DSpark verify on the 4-STACK FULL-BANDWIDTH KV path (default-off; selected only
+// by tools/qwen_rom_rt_vprm_stream4_w12.py): ot_qwen_rom_rt_die_w12_vprm (left byte-identical) with the
+// KV memory of ot_qwen_rom_rt_die_w12_stream4: the multi-position stream service
+// ot_qwen_rt_kv_stream4_mp_service + ot_qwen_hbm_stream4_ack (NSTK = 4 stacks, 128 PCs, the
+// window striped across stacks/PCs/banks, P + np <= 8192, stream-aware refresh pull-in HBM_PULLIN),
+// replacing ot_qwen_rt_kv_mp_service + ot_qwen_hbm_model_ack.  Straps EARLY_GO / POSTED_WB are
+// parameters (default 0: one-layer jobs), the notice is off (no next layer).  The port list is the
+// vprm die's, so its host runs unchanged.  Retained header of the vprm die:
+// DSpark verify on the REAL_MEM path (default-off; selected only by
+// tools/qwen_rom_rt_vprm_w12.py): ot_qwen_rom_rt_die_w12_rm (unchanged) with
+//   * the VPOS core (tools/qwen_rom_verify_core_emit_w12.py: per-position DYN tables) and the
+//     sequencer successor ot_qwen_tp_seq_w12_vp (ENABLE_ARP: wide all-reduce counts, per-position
+//     argmax records), program / descriptor ROMs of NPROG / NDESC words, the vector-memory word port
+//     VWA bits wide;
+//   * the multi-position KV service ot_qwen_rt_kv_mp_service (verify block of rm_npos positions,
+//     commit / rollback) in place of ot_qwen_rt_kv_fill_service;
+//   * the speculative accept unit ot_hdc_accept (greedy longest-prefix): the host writes the pending
+//     token and the drafts (as the drafter's argmax would); when a stage ends with per-position
+//     argmax records (the verify head) and acc_arm is set, an RTL sequencer loads them as the
+//     targets and pulses ACCEPT; n_emit = a + 1 commits the block in the KV service (ACCEPT_COMMIT)
+//     or the host commits with h_commit_* (layer-parallel jobs, which run no head).
+// With VPOS = 0, ENABLE_ARP = 0, VPMAX = 1, rm_npos = 1 and no commit it is the REAL_MEM die.
 //
-// SIMULATION ONLY.  HBM_STREAM successor of the REAL_MEM die ot_qwen_rom_rt_die_w12_rm.sv (left
-// byte-identical; this file is selected only by tools/qwen_rom_rt_token_stream_w12.py).  The only
-// difference is the KV memory: ot_qwen_rt_kv_stream_service + ot_qwen_hbm_stream_ack (the
-// near-HBM streaming controller ot_hbm_r14_stream_stack with stream-aware REFpb, a next-layer
-// notice, 32-sector landing and per-PC write queues, at HBM CK/2 behind a clock crossing)
-// replace ot_qwen_rt_kv_fill_service + ot_qwen_hbm_model_ack.  rm_next_layer is the layer that
-// runs after the current stage (the static decode schedule's notice); 255: none.
-// The retained description of the REAL_MEM die follows.
-//
-// REAL_MEM variant of the W12 runtime die (ot_qwen_rom_rt_die_w12.sv, which is
+// Original header (REAL_MEM variant of the W12 runtime die): (ot_qwen_rom_rt_die_w12.sv, which is
 // pinned and left byte-identical; this file is selected only by the default-off driver flag
 // --real-mem of tools/qwen_rom_rt_token_w12_rm.py).
 //
@@ -47,7 +51,14 @@
 //
 // rm_kv_ideal = 1 is the A/B reference: identical die, the KV service's HBM bypassed
 // (kv_ok = token writes landed, kv_write_drained = 1, slices preloaded by the host).
-module ot_qwen_rom_rt_die_w12_stream4 #(
+module ot_qwen_rom_rt_die_w12_vprm_stream4 #(
+    parameter integer VPOS = 1,
+    parameter integer ENABLE_ARP = 1,
+    parameter integer VWA = 16,
+    parameter integer VPMAX = 4,
+    parameter integer NPROG = 1024,
+    parameter integer NDESC = 64,
+    parameter integer ACCEPT_COMMIT = 1,
     parameter integer G = 6144,
     parameter integer NW = 18,
     parameter integer SNW = 18,
@@ -76,16 +87,18 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
     parameter integer REAL_MEM = 1,
     parameter integer SCALE_BANKS = 13,      // 4096-word macros per scale port (>= scale words / 4096)
     parameter integer CROM_WORDS = 1048576,
-    parameter integer VM_ELEMS = 177808,
+    parameter integer VM_ELEMS = 1048576,
     parameter integer NSTK = 4,                // HBM3E stacks a die
     parameter integer NPC = 32 * NSTK,
+    parameter integer WBW = 4,                 // token write-backs a cycle (distinct PCs)
+    parameter integer HBM_PHASE = 0,
+    parameter integer HBM_PULLIN = 16,         // stream-aware refresh pull-in
+    parameter integer EARLY_GO = 0,
+    parameter integer POSTED_WB = 0,
     parameter integer HBM_LAYERS = 3,
     parameter integer FILL_LAT = 8,
     parameter integer NRD = 256,
-    parameter integer LKA = 512,              // unused (fill-service parameter, kept for the driver)
-    parameter integer WBW = 1,                // token write-backs a cycle (distinct PCs)
-    parameter integer HBM_PHASE = 0,          // refresh phase of the stack's REFpb schedule
-    parameter integer HBM_PULLIN = 0,         // controller refresh pull-in (ot_hbm_r14_stream_pc PULLIN)
+    parameter integer LKA = 512,
     parameter integer EMBED_ROM = 1         // the token's X from the INT8 embedding ROM (stage E); 0: X preloaded
 ) (
     input  wire              clk,
@@ -96,10 +109,26 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
     input  wire [SNW-1:0]    tp_pos,
     input  wire              rm_kv_ideal,       // A/B reference: KV service HBM bypassed (run-time strap)
     input  wire [7:0]        rm_layer,          // the stage's layer (its HBM KV region); 255: no KV (embedding stage)
-    input  wire [7:0]        rm_next_layer,     // the layer of the next stage (notice); 255: none
-    input  wire              rm_early_go,       // strap: release the next layer's stream at this layer's kv_free
-    input  wire              rm_posted_wb,      // strap: posted token write-back
-    output wire              kv_wb_busy,        // write-backs outstanding (the host drains before reading HBM)
+    input  wire [3:0]        rm_npos,           // verify block positions of the step (1: AR)
+    input  wire              h_commit_v,        // host commit (layer-parallel jobs)
+    input  wire [3:0]        h_commit_n,
+    output wire [NW-1:0]     kv_committed_len,
+    output wire              kv_committed_v,
+    // speculative accept unit
+    input  wire              acc_start_v,       // pending token (slot 0)
+    input  wire [SNW-1:0]    acc_start_tok,
+    input  wire              acc_tokx_v,        // draft token of slot acc_tokx_slot (1 .. VPMAX-1)
+    input  wire [2:0]        acc_tokx_slot,
+    input  wire [SNW-1:0]    acc_tokx_tok,
+    input  wire              acc_arm,           // the next stage with argmax records is the verify head
+    input  wire              acc_commit_en,     // run-time strap: the accept unit commits the KV service (serial flow)
+    output wire              acc_done,
+    output wire [2:0]        acc_a,
+    output wire [3:0]        acc_n_emit,
+    output wire [SNW-1:0]    acc_bonus,
+    output wire [8*SNW-1:0]  seq_tok_vec,
+    output wire [8*32-1:0]   seq_val_vec,
+    output wire [3:0]        seq_n_tok,
     input  wire              h_start,
     output wire              me_clk_en,
     output wire              s_done,
@@ -137,8 +166,11 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
     output wire              kv_ok_o,
     output wire              kv_drained_o,
     output wire [31:0]       st_fill_cycles, st_fill_sectors, st_wr_sectors, st_rsp_stall,
-    output wire [31:0]       st_kvok_low_desc, st_drain_low, st_wr_lat_max, st_fill_exposed,
-    output reg  [31:0]       st_stall_kv, st_stall_drain, st_stall_bridge, st_stall_retire, st_stall_mem
+    output wire [31:0]       st_kvok_low_desc, st_drain_low, st_wr_lat_max,
+    output reg  [31:0]       st_stall_kv, st_stall_drain, st_stall_bridge, st_stall_retire, st_stall_mem,
+    // observation only: which source raised the core's fault, and the core's program address
+    output wire [15:0]       dbg_fault_src,
+    output wire [11:0]       dbg_prog_a
 );
     localparam integer W=16, AW=24, PAW=12, DAW=6, FW=512, NPORT = G >> SMIN, NXC = 1 << SMAX;
     initial begin rt_rst_n = 0; start = 0; cyc = 0; end
@@ -158,7 +190,7 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
     // core memory ports
     wire prog_re; wire [11:0] prog_addr; reg [1023:0] prog_q;
     wire desc_re; wire [5:0] desc_addr; reg [63:0] desc_q;
-    wire s_vre; wire [7:0] s_vraddr; reg [511:0] s_vrq; wire s_vwe; wire [7:0] s_vwaddr; wire [511:0] s_vwdata;
+    wire s_vre; wire [VWA-1:0] s_vraddr; reg [511:0] s_vrq; wire s_vwe; wire [VWA-1:0] s_vwaddr; wire [511:0] s_vwdata;
     wire wrom_re, int8_wrom_re; wire [23:0] int8_wrom_addr;
     wire scale_re; wire [NPORT-1:0] scale_gre; wire [NPORT*24-1:0] scale_addr; wire [NPORT*256-1:0] scale_q;
     wire [SW-1:0] crom_re; wire [SW*24-1:0] crom_addr; reg [SW*64-1:0] crom_q;
@@ -186,7 +218,7 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
         .ME_STALL(1),.ME_IDLE_GATE(ME_IDLE_GATE),
         .SMIN(SMIN),.SMAX(SMAX),.TCUT(TCUT),.BD(BD),.XVM(XVM),.NWS(NWS),.TWS(TWS),.ORD(ORD),.SCALE_LOCAL(SCALE_LOCAL),.MEM_EXTRA(MEM_EXTRA),
         .ACC_LAT(ACC_LAT),.TREE_LAT(TREE_LAT),.MUL_LAT(MUL_LAT),
-        .FAST_ISSUE(FAST_ISSUE),.KV_PREP(KV_PREP)) core (
+        .FAST_ISSUE(FAST_ISSUE),.KV_PREP(KV_PREP),.VPOS(VPOS)) core (
         .clk(clk),.rst_n(rst_n),.start(core_start),.token(core_tok[NW-1:0]),.pos(core_pos[NW-1:0]),
         .done(core_done),.next_token(core_ntok_c),.next_val(core_nval),
         .cycles(core_cycles),.fault(core_fault),
@@ -213,10 +245,12 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
         .vx_re(vx_re),.vx_addr(vx_addr),.vx_q(vx_q),
         .tgo(tgo),.tb(tb),.xl_d(xl_d),.t_lvl(t_lvl),.fab_fault(fab_fault),
         .w_ok(w_ok_svc),.emb_ok(emb_ok_svc),.me_mem_ok(me_mem_ok_svc),.me_clk_en(me_clk_en));
-    ot_qwen_tp_seq_w12 #(.N(D),.NW(SNW),.PAW(PAW),.VWA(8),.DAW(DAW),.FW(FW),.TAGW(32),
-                    .QWEN_FULLSHAPE(QWEN_FULLSHAPE), .ENABLE_AR256(ENABLE_AR256)) seq (
+    ot_qwen_tp_seq_w12_vp #(.N(D),.NW(SNW),.PAW(PAW),.VWA(VWA),.DAW(DAW),.FW(FW),.TAGW(32),
+                    .QWEN_FULLSHAPE(QWEN_FULLSHAPE), .ENABLE_AR256(ENABLE_AR256),
+                    .ENABLE_ARP(ENABLE_ARP), .NTOK(8)) seq (
         .clk(clk),.rst_n(rst_n),.start(start | h_start),.token(tp_token),.pos(tp_pos),
         .done(s_done),.next_token(seq_ntok),.next_val(seq_nval),
+        .tok_vec(seq_tok_vec),.val_vec(seq_val_vec),.n_tok(seq_n_tok),
         .fault(s_fault),.coll_busy(coll_busy),
         .core_start(core_start),.core_token(core_tok),.core_pos(core_pos),
         .core_done(core_done),.core_next_token(core_ntok),.core_next_val(core_nval),
@@ -230,16 +264,16 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
         .r_rank(r_rank),.r_err(r_err));
 
     // ---- program ROM, segment descriptors, constant ROM (host-preloaded arrays) -----------
-    reg [1023:0] prog_mem [0:63]      /*verilator public_flat_rw*/;
-    reg [63:0]   desc_mem [0:7]       /*verilator public_flat_rw*/;
+    reg [1023:0] prog_mem [0:NPROG-1] /*verilator public_flat_rw*/;
+    reg [63:0]   desc_mem [0:NDESC-1] /*verilator public_flat_rw*/;
     reg [63:0]   crom_mem [0:CROM_WORDS-1] /*verilator public_flat_rw*/;
     reg [31:0]   crom_words           /*verilator public_flat_rw*/;
     reg          rom_fault;
     wire [11:0]  prog_a = prog_base + prog_addr;
     integer li;
     always @(posedge clk) begin
-        if (prog_re) prog_q <= (prog_a < 64) ? prog_mem[prog_a[5:0]] : 1024'd0;
-        if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;
+        if (prog_re) prog_q <= (prog_a < NPROG) ? prog_mem[prog_a[$clog2(NPROG)-1:0]] : 1024'd0;
+        if (desc_re) desc_q <= (desc_addr < NDESC) ? desc_mem[desc_addr[$clog2(NDESC)-1:0]] : 64'd0;
         for (li = 0; li < SW; li = li + 1)
             if (crom_re[li]) crom_q[li*64 +: 64] <= crom_mem[crom_addr[li*24 +: 20]];
     end
@@ -329,13 +363,14 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
             end
     end
 
-    // ---- KV service and streaming HBM ---------------------------------------------------------
+    // ---- KV service and HBM -----------------------------------------------------------
+    // ---- KV service (multi-position, 4-stack stream) and streaming HBM ------------------------
     localparam integer TGWK = 3 + 6;           // NWR = 64
     wire hd_v, hd_rdy, h_go; wire [18:0] hd_row; wire [10:0] hd_n;
     wire [NPC-1:0] hl_v, hl_pop, hw_v, hw_room, hwd_v;
     wire [NPC*17-1:0] hl_sec; wire [NPC*8-1:0] hl_row; wire [NPC*256-1:0] hl_data, hw_data;
     wire [NPC*24-1:0] hw_sec; wire [NPC*TGWK-1:0] hw_tag, hwd_tag;
-    wire kv_fault, svc_fault, hbm_fault; wire [15:0] svc_code, hbm_code;
+    wire kv_fault, svc_fault, hbm_fault; wire [15:0] svc_code, hbm_code; wire [31:0] st_fill_exposed;
     //: a LAYER starts at the stage's first core start (the sequencer starts the core once per program
     //: segment, i.e. again after each collective, within the same layer)
     reg kv_arm;
@@ -344,22 +379,17 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
         else if (start | h_start) kv_arm <= 1'b1;
         else if (core_start) kv_arm <= 1'b0;
     wire kv_layer_start = core_start && kv_arm && rm_layer != 8'hff;
-    //: a later segment of the same layer starts: the previous segment (QK/PV, the O projection and its
-    //: all-reduce) is complete, so the core is done with this layer's KV slices
     wire kv_free = core_start && !kv_arm && rm_layer != 8'hff;
-    //: the notice names the layer that runs AFTER the current one: before the first KV layer of a run has
-    //: started, the next layer to run is that stage's own layer, so no notice is given then (a non-KV
-    //: stage, e.g. the embedding, may announce the first KV layer)
-    reg kv_started;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) kv_started <= 1'b0;
-        else if (kv_layer_start) kv_started <= 1'b1;
-    wire [7:0] kv_notice = (kv_started || rm_layer == 8'hff) ? rm_next_layer : 8'hff;
-    ot_qwen_rt_kv_stream4_service #(.G(G), .SW(SW), .AW(AW), .NW(NW), .NSTK(NSTK), .NPC(NPC), .FILL_LAT(FILL_LAT), .KV_IDEAL(0),
-                                   .WBW(WBW)) u_kv (
+    // step commit: the accept unit's n_emit (ACCEPT_COMMIT) or the host's
+    wire kv_commit_v = h_commit_v | ((ACCEPT_COMMIT != 0) && acc_commit_en && acc_done);
+    wire [3:0] kv_commit_n = h_commit_v ? h_commit_n : acc_n_emit;
+    ot_qwen_rt_kv_stream4_mp_service #(.G(G), .SW(SW), .AW(AW), .NW(NW), .NSTK(NSTK), .NPC(NPC), .FILL_LAT(FILL_LAT),
+                                       .KV_IDEAL(0), .WBW(WBW), .VPMAX(VPMAX)) u_kv (
         .clk(clk), .rst_n(rst_n), .start(kv_layer_start), .ideal_in(rm_kv_ideal), .pos(core_pos[NW-1:0]), .layer(rm_layer),
-        .nx_layer(kv_notice), .pos_hint(tp_pos[NW-1:0]),
-        .kv_free(kv_free), .early_go_in(rm_early_go), .posted_wb_in(rm_posted_wb), .wb_busy(kv_wb_busy),
+        .nx_layer(8'hff), .pos_hint(tp_pos[NW-1:0]),
+        .npos(rm_npos), .commit_v(kv_commit_v), .commit_n(kv_commit_n),
+        .committed_len(kv_committed_len), .committed_v(kv_committed_v),
+        .kv_free(kv_free), .early_go_in(EARLY_GO != 0), .posted_wb_in(POSTED_WB != 0), .wb_busy(),
         .kvd_v(kvd_v), .kvd_pos(kvd_pos), .kvd_kindk(kvd_kindk), .kv_ok(kv_ok),
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .kv_write_drained(kv_write_drained),
         .kvw_ce(kvw_ce), .kvw_addr(kvw_addr), .kvw_data(kvw_data), .kvw_mask(kvw_mask),
@@ -369,7 +399,8 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
         .fault(svc_fault), .fault_code(svc_code), .st_fill_cycles(st_fill_cycles), .st_fill_sectors(st_fill_sectors),
         .st_wr_sectors(st_wr_sectors), .st_rsp_stall(st_rsp_stall), .st_kvok_low_desc(st_kvok_low_desc),
         .st_drain_low(st_drain_low), .st_wr_lat_max(st_wr_lat_max), .st_fill_exposed(st_fill_exposed));
-    ot_qwen_hbm_stream4_ack #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(HBM_LAYERS * 131072), .TAGW(TGWK), .PHASE(HBM_PHASE), .PULLIN(HBM_PULLIN)) u_hbm (
+    ot_qwen_hbm_stream4_ack #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(HBM_LAYERS * 131072), .TAGW(TGWK), .PHASE(HBM_PHASE),
+                              .PULLIN(HBM_PULLIN)) u_hbm (
         .clk(clk), .rst_n(rst_n), .d_v(hd_v), .d_rdy(hd_rdy), .d_row(hd_row), .d_n(hd_n), .go(h_go),
         .l_v(hl_v), .l_sec(hl_sec), .l_row(hl_row), .l_data(hl_data), .l_pop(hl_pop),
         .w_v(hw_v), .w_sec(hw_sec), .w_data(hw_data), .w_tag(hw_tag), .w_room(hw_room), .wd_v(hwd_v), .wd_tag(hwd_tag),
@@ -377,9 +408,45 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
     assign kv_fault = svc_fault | hbm_fault;
     assign kv_fault_code = svc_code | (hbm_fault ? 16'h8000 : 16'h0);
 
+    // ---- speculative accept: targets from the verify head's per-position argmax records ------
+    reg        acc_armed, acc_load, acc_go;
+    reg [3:0]  acc_i, acc_n;
+    reg        s_done_q;
+    wire       amax_v = acc_load;
+    wire [2:0] amax_slot = acc_i[2:0];
+    wire [SNW-1:0] amax_tok = seq_tok_vec[acc_i[2:0]*SNW +: SNW];
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin acc_armed <= 1'b0; acc_load <= 1'b0; acc_go <= 1'b0; acc_i <= 0; acc_n <= 0; s_done_q <= 1'b0; end
+        else begin
+            s_done_q <= s_done;
+            acc_go <= 1'b0;
+            if (acc_arm) acc_armed <= 1'b1;
+            //: the head stage's done with n_tok records: load them as targets, one slot a cycle, then ACCEPT
+            if (acc_armed && s_done && !s_done_q && seq_n_tok != 0) begin
+                acc_armed <= 1'b0; acc_load <= 1'b1; acc_i <= 0; acc_n <= seq_n_tok;
+            end else if (acc_load) begin
+                if (acc_i + 1'b1 == acc_n) begin acc_load <= 1'b0; acc_go <= 1'b1; end
+                acc_i <= acc_i + 1'b1;
+            end
+        end
+    end
+    wire [2:0] acc_g = acc_n[2:0] - 3'd1;      // drafts verified: block positions - 1
+    ot_hdc_accept #(.NSLOT(8), .NW(SNW)) u_acc (
+        .clk(clk), .rst_n(rst_n), .start_v(acc_start_v), .start_tok(acc_start_tok),
+        .tokx_v(acc_tokx_v), .tokx_slot(acc_tokx_slot), .tokx_tok(acc_tokx_tok),
+        .amax_v(amax_v), .amax_slot(amax_slot), .amax_tok(amax_tok),
+        .acc_v(acc_go), .acc_g(acc_g), .stok(), .ttok(), .acc_done(acc_done), .acc_any(),
+        .acc_a(acc_a), .n_emit(acc_n_emit), .bonus(acc_bonus));
+
     assign mem_fault = kv_fault | rom_fault | (|sc_fault) | emb_fault;
     assign kv_ok_o = kv_ok;
     assign kv_drained_o = kv_write_drained;
+
+    // ---- fault-source observation (no effect on the datapath) ---------------------------
+    //: [0] me  [1] su  [2] embed  [3] dyn tiles  [4] su reducer  [5] any su lane (lanes are hier blocks: no deeper refs)
+    assign dbg_fault_src = {10'd0, |core.g_vsu.u_su.l_fault, core.g_vsu.u_su.f_red, core.dyn_tiles_bad_instruction,
+                            |core.embed_faults, core.su_fault, core.me_fault};
+    assign dbg_prog_a = prog_a;
 
     // ---- issue-stall attribution (cycles an op waited at NEXT while a memory gate was low) --
     wire run_nx = (core.st == 2'd2) && core.nx_v;
