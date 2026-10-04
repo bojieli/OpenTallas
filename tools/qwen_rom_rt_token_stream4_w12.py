@@ -121,6 +121,7 @@ def main() -> None:
     ap.add_argument("--x-preload", type=Path, help="X entry (@1000 format) instead of the oracle's x_preload.hex")
     ap.add_argument("--wbw", type=int, default=1, help="token write-backs a cycle (distinct PCs)")
     ap.add_argument("--hbm-phase", type=int, default=0, help="REFpb phase of the stack (controller cycles)")
+    ap.add_argument("--pullin", type=int, default=0, help="controller refresh pull-in (REFpb ahead of schedule while not reading)")
     ap.add_argument("--kv-ideal", action="store_true", help="A/B reference: KV service HBM bypassed, slices preloaded")
     ap.add_argument("--verilator", default=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"))
     ap.add_argument("--groups", type=int, default=6144)
@@ -197,7 +198,7 @@ def main() -> None:
           f"-GSW={args.su_width}", f"-GLV={args.lv}", "-GSCALE_LOCAL=0", f"-GMEM_EXTRA={args.mem_extra}", *spine,
           "-GREAL_MEM=1", f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GNSTK={args.nstk}", f"-GSCALE_BANKS={args.scale_banks}", f"-GCROM_WORDS={args.crom_words}",
           f"-GHBM_LAYERS={args.hbm_layers}", f"-GEMBED_ROM={int(not args.no_embed_rom)}", f"-GFILL_LAT={args.fill_lat}", f"-GNRD={args.nrd}", f"-GLKA={args.lka}",
-          f"-GWBW={args.wbw}", f"-GHBM_PHASE={args.hbm_phase}", *arithmetic]),
+          f"-GWBW={args.wbw}", f"-GHBM_PHASE={args.hbm_phase}", f"-GHBM_PULLIN={args.pullin}", *arithmetic]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_w12", [str(pub), *map(str, TILE_RTL)],
@@ -321,7 +322,7 @@ def main() -> None:
     result = {
         "schema": "opentallas.qwen-rom-rt-real-memory.v1", "status": "pass" if good else "fail",
         "configuration": "KV_IDEAL A/B reference (HBM bypassed, slices preloaded)" if args.kv_ideal else "REAL_MEM STREAM4",
-        "straps": {"early_go": bool(args.early_go), "posted_wb": bool(args.posted_wb)},
+        "straps": {"early_go": bool(args.early_go), "posted_wb": bool(args.posted_wb)}, "hbm_pullin": args.pullin,
         "ar256_enabled": bool(args.enable_ar256), "hbm_layers": args.hbm_layers,
         "x_entry": str(x_entry), "x_entry_sha256": sha(x_entry),
         "writeback_drain": (lambda mm: {"drained": mm.group(1) == "1", "cycles_after_last_stage": int(mm.group(2))} if mm else None)(
