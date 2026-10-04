@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "e25062f0d",
+ "generated_from_commit": "32c416dd9",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -148,12 +148,12 @@
    "target": "qwen_rom",
    "section": "rate",
    "key": "ar_tok_s_P255_hbm_stream",
-   "label": "AR rate at P255 with HBM_STREAM",
+   "label": "AR rate at P255 with HBM_STREAM (RETIRED)",
    "unit": "tok/s",
    "status": "off_target_context",
    "path": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/compose_P255_ar256.json",
    "pointer": "tok_per_s_1p2ghz.hbm_stream",
-   "note": "not target context (P255); HBM_STREAM faults at P>=2048",
+   "note": "RETIRED 2026-10-04 in favour of STREAM4 (results/rtl/qwen_rom_hbm_stream_realmem_20261004/RETIRED.json); not target context (P255); faults at P>=2048",
    "value": 7708.9,
    "resolved": true,
    "blob": "f9d0a7f380538a2871c550c084d26b51ed7fab60",
@@ -168,7 +168,7 @@
    "status": "off_target_context",
    "path": "results/rtl/qwen_rom_realmem_fulltoken_20261004/P255/summary.json",
    "pointer": "ar_tok_per_s_at_1p2GHz.headline_chained_mean",
-   "note": "superseded by HBM_STREAM 7,708.9 at P255; not target context",
+   "note": "superseded at P255 by HBM_STREAM (now retired for STREAM4); not target context",
    "value": 6957.1,
    "resolved": true,
    "blob": "dd317e67269c4daf59712e80a7b14a2e5a3235bb",
@@ -499,16 +499,31 @@
    "blob": "2a7de54bedaaaea9980e51db5cdb13567b5cd4f2",
    "last_commit": "71a049c36 2026-10-04"
   },
+  "qwen_rom.kv_path_selected": {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "kv_path_selected",
+   "label": "Qwen ROM KV path selected (HBM_STREAM retired)",
+   "unit": "verdict",
+   "status": "measured",
+   "path": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/RETIRED.json",
+   "pointer": "successor.name",
+   "note": "STREAM4 P8191 L0 6,468 cycles exact, 93.4% of 4-stack peak (c14759ef1)",
+   "value": "STREAM4 (4 HBM3E stacks a die, ot_qwen_rt_kv_stream4_service + ot_qwen_hbm_stream4_ack)",
+   "resolved": true,
+   "blob": "1cff68fefa3ad1b47db22b74e8d2b5c538cc3a0f",
+   "last_commit": null
+  },
   "qwen_rom.hbm_stream_verdict": {
    "target": "qwen_rom",
    "section": "levers",
    "key": "hbm_stream_verdict",
-   "label": "HBM_STREAM (one stack) verdict",
+   "label": "HBM_STREAM (one stack) verdict (RETIRED)",
    "unit": "verdict",
    "status": "composed_from_measured",
    "path": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/compose_P255_ar256.json",
    "pointer": "verdict",
-   "note": "ADOPT at P255; cannot serve P>=2048 so not usable at 8K",
+   "note": "ADOPT at P255 (history, not overwritten); RETIRED 2026-10-04: faults at P>=2048, 12.7% of 4-stack peak; KV path selected = STREAM4",
    "value": "ADOPT (>=1%): +10.81% per user at P255 (default-off HBM_STREAM, WBW=4)",
    "resolved": true,
    "blob": "f9d0a7f380538a2871c550c084d26b51ed7fab60",
@@ -518,9 +533,9 @@
    "target": "qwen_rom",
    "section": "levers",
    "key": "hbm_stream_gain_pct",
-   "label": "HBM_STREAM gain at P255",
+   "label": "HBM_STREAM gain at P255 (RETIRED)",
    "unit": "%",
-   "status": "composed_from_measured",
+   "status": "off_target_context",
    "path": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/compose_P255_ar256.json",
    "pointer": "token_rate_gain_pct",
    "value": 10.81,
@@ -1209,7 +1224,7 @@
    "value": 1385.7,
    "resolved": true,
    "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
-   "last_commit": null
+   "last_commit": "e1240e6c3 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1254,7 +1269,7 @@
    "value": 2744.0,
    "resolved": true,
    "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
-   "last_commit": null
+   "last_commit": "e1240e6c3 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1329,7 +1344,7 @@
    "value": 721.672,
    "resolved": true,
    "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
-   "last_commit": null
+   "last_commit": "e1240e6c3 2026-10-04"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1359,7 +1374,7 @@
    "value": 1098.536,
    "resolved": true,
    "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
-   "last_commit": null
+   "last_commit": "e1240e6c3 2026-10-04"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1388,7 +1403,7 @@
    "value": 75.373,
    "resolved": true,
    "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
-   "last_commit": null
+   "last_commit": "e1240e6c3 2026-10-04"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -4453,7 +4468,7 @@
    "value": 0.9956,
    "resolved": true,
    "blob": "8f7892dd5cb55bed8dbdd40554b8647645a070a0",
-   "last_commit": null
+   "last_commit": "e1240e6c3 2026-10-04"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
