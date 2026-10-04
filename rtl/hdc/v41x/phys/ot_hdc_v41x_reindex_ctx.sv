@@ -15,7 +15,8 @@
 // harness are false-pathed (--false-path-io); only harness <-> DUT and DUT-internal paths
 // are timed.  Paths combinational through the DUT boundary (mdrop in_ready from out_ready;
 // kgctl lr_re/lr_addr, req_rdy -> issue, dr_ready -> drain) are reported separately and
-// must keep the 20% neighbour budget (tools/dsrom_reindex_close.py).
+// must keep the 20% neighbour budget (tools/dsrom_reindex_close.py), except mdrop's out_ready, which is
+// generated here by the downstream select slice's own in_ready logic (the neighbour as built).
 // ---------------------------------------------------------------------------
 module ot_reindex_ctx_launch #(parameter integer N = 1) (
     input  wire         clk,
@@ -52,7 +53,10 @@ module ot_hdc_v41x_sel_mdrop_ctx #(
     input  wire [31:0] din,
     output wire [7:0]  so
 );
-    localparam integer NI = Q + Q + Q*W + Q*W + Q*W*16 + Q*W*IW + KW + Q;      // + out_ready
+    // out_ready is the select slice's in_ready (ot_hdc_v41x_sel_slice.sv:147) over launch flops of its
+    // state: (init == 0) && !last_seen && ((ph == P_ING && r_ing && !r_stop) || (sw_st == SW_RD && sw_rp))
+    localparam integer NS = 3 + 1 + 3 + 1 + 1 + 3 + 1;                          // per quarter
+    localparam integer NI = Q + Q + Q*W + Q*W + Q*W*16 + Q*W*IW + KW + Q*NS;
     localparam integer NO = Q + Q + Q + Q*W + Q*W*16 + Q*W*IW + KW + 1;
     reg rst_q;
     always @(posedge clk) rst_q <= rst_n;
@@ -65,7 +69,16 @@ module ot_hdc_v41x_sel_mdrop_ctx #(
     wire [Q*W*IW-1:0] in_idx, out_idx;
     wire [KW-1:0] in_k, out_k;
     wire short;
-    assign {in_valid, in_last, in_lv, in_keep, in_val, in_idx, in_k, out_ready} = i;
+    wire [Q*NS-1:0] sl;
+    assign {in_valid, in_last, in_lv, in_keep, in_val, in_idx, in_k, sl} = i;
+    genvar gq;
+    generate for (gq = 0; gq < Q; gq = gq + 1) begin : g_rdy
+        wire [NS-1:0] t = sl[gq*NS +: NS];
+        wire [2:0] init = t[2:0], ph = t[6:4], sw_st = t[11:9];
+        wire last_seen = t[3], r_ing = t[7], r_stop = t[8], sw_rp = t[12];
+        assign out_ready[gq] = (init == 3'd0) && !last_seen &&
+                               (((ph == 3'd0) && r_ing && !r_stop) || ((sw_st == 3'd1) && sw_rp));
+    end endgenerate
     ot_hdc_v41x_sel_mdrop #(.Q(Q), .W(W), .IW(IW), .KW(KW), .MDROP(MDROP)) u_dut (
         .clk(clk), .rst_n(rst_q), .in_valid(in_valid), .in_ready(in_ready), .in_last(in_last), .in_lv(in_lv),
         .in_keep(in_keep), .in_val(in_val), .in_idx(in_idx), .in_k(in_k),
