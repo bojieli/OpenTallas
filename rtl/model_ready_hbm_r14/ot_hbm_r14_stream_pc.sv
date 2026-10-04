@@ -98,10 +98,17 @@ module ot_hbm_r14_stream_pc #(
     reg c_w;                                          // the registered row command is a write ACT
     wire wq_ne = W && wq_n != 0;
     wire [4:0] hb = wq_bank[wq_rp]; wire [4:0] hc = wq_col[wq_rp];
+    wire [5*WQ-1:0] wq_bq;                            // queued write banks, oldest first
+    wire [WQ-1:0] wq_in;                              // queue entry valid
+    for (genvar i = 0; i < WQ; i = i + 1) begin : wqe
+      assign wq_bq[i*5 +: 5] = wq_bank[WQW'(wq_rp + i)];
+      assign wq_in[i] = W && i < wq_n;
+    end
     reg [31:0] hold;                                  // banks a queued write needs (never precharged)
+    integer hi;
     always @* begin
       hold = 0;
-      for (integer i = 0; i < WQ; i = i + 1) if (W && i < wq_n) hold = hold | (32'b1 << wq_bank[WQW'(wq_rp + i)]);
+      for (hi = 0; hi < WQ; hi = hi + 1) if (wq_in[hi]) hold = hold | (32'b1 << wq_bq[hi*5 +: 5]);
     end
     wire wr_ok;
     // ---- refresh windows -------------------------------------------------------------
@@ -257,16 +264,17 @@ module ot_hbm_r14_stream_pc #(
     wire forced_pre = REF_MODE && ref_pend && |(blk & open & ras_z & rtp_z);
     // write ACT: closed target bank, not chosen (or about to be chosen) for refresh
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
+    wire [WQ-1:0] wq_act;
+    for (genvar i = 0; i < WQ; i = i + 1) begin : wqa
+      wire [4:0] bq = wq_bq[i*5 +: 5];
+      assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
+                         !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
+    end
     reg wact_ok; reg [4:0] wab;
+    integer ai;
     always @* begin
       wact_ok = 1'b0; wab = 0;
-      for (integer i = WQ - 1; i >= 0; i = i - 1) begin
-        automatic logic [4:0] bq = wq_bank[WQW'(wq_rp + i)];
-        if (W && i < wq_n && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
-            !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel)) begin
-          wact_ok = 1'b1; wab = bq;
-        end
-      end
+      for (ai = WQ - 1; ai >= 0; ai = ai - 1) if (wq_act[ai]) begin wact_ok = 1'b1; wab = wq_bq[ai*5 +: 5]; end
       wact_ok = wact_ok && !act_block && noact_c == 0 && rrds_c == 0 && faw_ok;
     end
     reg [31:0] r_oh;
