@@ -41,7 +41,7 @@ def test_actual_complete_source_chain_and_defaults(tmp_path):
 def test_actual_identity_price_unknown_until_trace(tmp_path):
     r=S.install(binding(),'unused',tmp_path/'selected',drain=True,accepted_pop=True,trace=True,stage=20)
     assert r['added_cycles'] == 0
-    assert r['parameters']==dict(COLL_ACCEPTED_POP=1,IDX_DRAIN_LOOKAHEAD=1,S81_COMMAND_TRACE=1,S81_TRACE_STAGE=20,S81_HOST_WORKSPACE=0)
+    assert r['parameters']==dict(COLL_ACCEPTED_POP=1,IDX_DRAIN_LOOKAHEAD=1,S81_COMMAND_TRACE=1,S81_TRACE_STAGE=20,S81_HOST_WORKSPACE=0,X_IDX=2,IDX_RING=1)
     p=next(p for p in r['sources'] if p.name=='ot_v41_rt_die_l20_c8.sv')
     s=p.read_text()
     assert 'if(dut.cmd_go)' in s and 'trace_identity=c8_engine_identity' in s
