@@ -32,3 +32,9 @@ Next: after PC24 persists, `python3 tools/dsrom_l0_diag_record.py --run-dir l0d/
 ## Unit-level done (committed): link_rt, host CQ/stall export/stage guard, idx scorer location (hub vs per-stack),
 ckv AG_CREDIT, field FAULT_TIE + RET_CREDIT (issue gate never engaged on real phases), inventory.json.
 Not built (owned elsewhere): Nash lease/SU guard, HBM controller domain, 0.9 GHz split, MTP RTL, power/reset sequencing.
+
+## System gates 2026-10-03 (source 8f6459462, Verilator 5.050, ot-epyc1tb; collected 2026-10-04)
+All five PASS, rc=0, 0 token/logit/state mismatches, out.txt sha256 == gate log_sha256:
+sys_b5_r2 (config body=3 hp=2, 5 nodes in 3 pkgs, 1 user, p2g1) 870,176 cyc; sys_b5_u2_r2 (2 users) 1,025,811 cyc;
+sys_d5 (body=5 hp=0, 3 pkgs, 1 user, p2g1) 867,693 cyc; sys_d5_u2 (2 users) 964,523 cyc; sys_d5_p3g2 (positions up to 3, 2 generated) 1,747,617 cyc.
+sys_b5_p3g2_r2 was still running at collection (not recorded).
