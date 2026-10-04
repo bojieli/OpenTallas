@@ -3,7 +3,7 @@
  "scope": "DIGITAL_ONLY dual-clock RTL simulation with a physical lag-window checker; edges closer than 20 ps processed in random order; not an MTBF proof",
  "period_ps": 833.333,
  "sources": {
-  "rtl/common/ot_meso_fifo.sv": "35a81619b80fe8090ff7412a94125ae67d3e7602a13e9879e44acf0039c7c0fa",
+  "rtl/common/ot_meso_fifo.sv": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
   "rtl/test/meso/tb_meso_fifo.cpp": "feb9bde72c1f45ab440fb84089d020e72b5f7fefcdf8b68e79531a212dced9bf",
   "rtl/test/meso/build_tb.sh": "f632607d6f563885d2cd6fc3f706037065787ac9a88f57ce1f784efc3096102e",
   "tools/meso_fifo_campaign.py": "136e6277816397d1a01a7a815ed79fdbd259b2e7bee93da8da43b1e5a911960c"
@@ -367,7 +367,7 @@
   }
  },
  "git": {
-  "head": "a5db2e1dd63189c0d7859ff8c4fa563ca5b0718c",
+  "head": "aec121692cc6c16931d4972501cdceda65459dc7",
   "sources_dirty": false
  }
 }

@@ -16,16 +16,20 @@ import qwen_rom_combined_stream4_runtime_emit as emitter
 ROOT=Path(__file__).resolve().parents[1]
 
 
-def require_models(build,die,hbm):
+def require_models(build,die,hbm, *, dspark=False):
     d,c,h,t=(retained.resolved_parameters(build,k) for k in ('die','coll','hbm','tile'))
     retained.require(all(d.get(k)==v for k,v in dict(G=6144,SW=64,NW=18,SNW=18,D=4,REAL_MEM=1,
                          NEAR_HBM=1,HBM_STREAM4=1,NSTK=4,WBW=4).items()), 'actual STREAM4 near die geometry required')
-    retained.require(all(h.get(k)==v for k,v in dict(NSTK=4,NPC=128,TAGW=9).items()),
+    retained.require(all(h.get(k)==v for k,v in dict(NSTK=4,NPC=128,TAGW=9,TTAGW=13).items()),
                      'actual single four-stack STREAM4 model required; old ACK models refused')
     retained.require(h['MEM_WORDS']==d['HBM_LAYERS']*131072 and h['CORE_FS']>=2 and h['CTL_FS']>0,
                      'compiled STREAM4 memory extent/clocks')
     retained.require(c.get('N')==4 and c.get('TAGW')==44, 'actual TAG44 collective required')
-    for directory,top in ((die,emitter.TOP),(hbm,'ot_qwen_hbm_stream4_ack')):
+    top='ot_qwen_rom_combined_dspark_die' if dspark else emitter.TOP
+    if dspark:
+        retained.require(all(d.get(k)==v for k,v in dict(DSPARK=1,ACCEPT_COMMIT=1,VPMAX=4,VWA=16,
+                         VM_ELEMS=1048576,NPROG=1024,NDESC=64).items()), 'actual ACCEPT_COMMIT1 VPOS model required')
+    for directory,top in ((die,top),(hbm,'ot_qwen_hbm_stream4_tagged')):
         files=list(Path(directory).glob('*__verFiles.dat'))
         retained.require(any(top in p.read_text() for p in files), 'actual selected model top missing: '+top)
     # Preserve the generated hierarchy list checks with the new top explicitly.
@@ -46,10 +50,12 @@ def main():
     for name in ('die-build','hbm-build','coll-build','reuse-build','baseline','compiled-params','verilator-root','out','native-tagged-source'):
         p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--native-tagged-sha256',required=True)
+    p.add_argument('--dspark',action='store_true')
     a=p.parse_args();retained.require(not a.out.exists(),'immutable output exists')
     retained.require(retained.sha(a.native_tagged_source)==a.native_tagged_sha256,
                      'required Claude native tagged-row source changed')
-    build=json.loads(a.compiled_params.read_text());d,c,h,t=require_models(build,a.die_build,a.hbm_build)
+    build=json.loads(a.compiled_params.read_text());d,c,h,t=require_models(build,a.die_build,a.hbm_build,dspark=a.dspark)
+    top='ot_qwen_rom_combined_dspark_die' if a.dspark else emitter.TOP
     old=json.loads((a.reuse_build/'build_params.json').read_text())
     retained.require(retained.params(old['tile'])==t,'retained tile parameter identity differs')
     frozen=json.loads(a.baseline.read_text())
@@ -67,8 +73,8 @@ def main():
     a.out.mkdir()
     access.emit(a.die_build/'Vdie___024root.h',dirs[-1]/'Vtile___024root.h',a.hbm_build/'Vhbm___024root.h',a.out,
                 nport=d['G']>>d['SMIN'],scale_banks=d['SCALE_BANKS'],code_banks=t['CODE_BANKS'],
-                crom_words=d['CROM_WORDS'],hbm_layers=d['HBM_LAYERS'],embed_rom=d['EMBED_ROM'])
-    cpp=a.out/'qwen_rom_combined.cpp';cpp.write_text(emitter.emit(ROOT));exe=a.out/'qwen_rom_combined'
+                crom_words=d['CROM_WORDS'],hbm_layers=d['HBM_LAYERS'],embed_rom=d['EMBED_ROM'],top=top)
+    cpp=a.out/'qwen_rom_combined.cpp';cpp.write_text(emitter.emit(ROOT,dspark=a.dspark));exe=a.out/'qwen_rom_combined'
     macros=dict(GROUPS=d['G'],COUNTWIDTH=d['NW'],SWIDTH=d['SW'],SMAXB=d['SMAX'],TCUTL=d['TCUT'],
                 NWSD=d['NWS'],XVMD=d['XVM'],TPD=d['D'],CBANKS=t['CODE_BANKS'],SMINV=d['SMIN'],STREAM4_CORE_FS=h['CORE_FS'])
     command=['g++','-std=c++20','-O2','-pthread',*(f'-D{k}={v}' for k,v in macros.items()),
@@ -77,12 +83,12 @@ def main():
              *(str(a.verilator_root/'include'/name) for name in ('verilated.cpp','verilated_threads.cpp','verilated_dpi.cpp')),
              '-o',str(exe)]
     with (a.out/'link.log').open('x') as log:rc=subprocess.call(command,stdout=log,stderr=subprocess.STDOUT)
-    record=dict(returncode=rc,command=command,runtime_abi=emitter.ABI,top=emitter.TOP,
+    record=dict(returncode=rc,command=command,runtime_abi=emitter.ABI,top=top,dspark_enabled=a.dspark,
                 resolved_parameters=dict(die=d,coll=c,hbm=h,tile=t),compiled_cli={k:build[k] for k in ('die','coll','hbm','tile')},
                 source_defaults=build.get('source_defaults',{}),compiled_params_sha256=retained.sha(a.compiled_params),
                 native_tagged_source=str(a.native_tagged_source.resolve()),native_tagged_sha256=a.native_tagged_sha256,
                 archive_sha256=before,archives_stable=before=={str(p):retained.sha(p) for p in archives},
-                generated_runtime_sha256=retained.sha(cpp),maximum_stages=1,
+                generated_runtime_sha256=retained.sha(cpp),maximum_stages=2 if a.dspark else 1,
                 scope='Actual single-array STREAM4 host link; no numerical/physical/rate verdict')
     if exe.exists():record['executable_sha256']=retained.sha(exe)
     (a.out/'link.json').write_text(json.dumps(record,indent=2)+'\n')

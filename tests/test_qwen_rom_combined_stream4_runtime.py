@@ -33,6 +33,14 @@ class StreamRuntimeTests(unittest.TestCase):
         self.assertIn('bool qwen_stream4_wire_native_tagged_rows(Vdie&,Vhbm&);',header)
         self.assertNotIn('__attribute__((weak))',header)
         self.assertEqual(header.count('Vhbm model;'),1)
+        first_eval=s.index('    for(int d=0;d<D;++d)die[d]->eval();')
+        initial_wire=s.rfind('for(int d=0;d<D;++d)hbm[d]->wire();',0,first_eval)
+        self.assertGreater(initial_wire,s.index('tile->rst_n=0;'))
+        edge_start=s.index('coll.clk=clock_event.core_high;')
+        edge_wire=s.index('for(int d=0;d<D;++d)hbm[d]->wire();',edge_start)
+        edge_eval=s.index('for(int d=0;d<D;++d)die[d]->eval();',edge_start)
+        self.assertLess(edge_wire,edge_eval)
+        self.assertLess(s.index('die[d]->hclk=clock_event.service_high;',edge_start-500),edge_wire)
 
     def test_odd_clock_rising_period_exact(self):
         with tempfile.TemporaryDirectory() as temp:

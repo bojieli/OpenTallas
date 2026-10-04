@@ -1,0 +1,397 @@
+{
+ "schema": "opentallas.rtl.rom_stage_pg_verdict.v1",
+ "element": "S81 pair element core ot_v41_rom_elem_w10 (BF16 0, NB 2, MTP, EARLY, FAST, PP; 4 x ot_rom_4096x274_m8) as one power domain: ot_v41_rom_elem_q_pg_w10 PG = 1, routed in the q-frame C (510.84 x 126.9 um)",
+ "exactness": {
+  "pass_": true,
+  "mutants_detected": {
+   "no_restore": true,
+   "no_iso": true,
+   "short_lead": true
+  },
+  "tail": [
+   "TOKEN 10 mode=0 go_cycle=130437 dut_ready=1",
+   "TOKEN 11 mode=1 go_cycle=146437 dut_ready=1",
+   "WAKE min=90 max=92 cycles (req_on -> ready); restore max=27 cycles; lead=200",
+   "PASS cycles=148333 rows=192 nonzero=82 sleeps=13 wakes=13 restores=325 aborts=3 off_cycles=96937 on_cycles=51396"
+  ]
+ },
+ "power_w": {
+  "active": {
+   "internal": 0.09747176617383957,
+   "switching": 0.01826012134552002,
+   "leakage": 0.00023647971102036536,
+   "total": 0.11596836894750595
+  },
+  "cg_idle": {
+   "internal": 0.002237780252471566,
+   "switching": 0.0005248923553153872,
+   "leakage": 0.0002425469137961045,
+   "total": 0.003005219390615821
+  },
+  "pg_idle_route": {
+   "internal": 0.000871756172273308,
+   "switching": 0.00018583198834676296,
+   "leakage": 0.00024254462914541364,
+   "total": 0.0013001328334212303
+  },
+  "leakage_element_route": 0.0002425469137961045,
+  "leakage_ao_route": 7.184029868767539e-07,
+  "leakage_domain": 0.00024182851080922774,
+  "header_cells": 29930,
+  "header_area_um2": 3491.0,
+  "header_area_frac": 0.0539,
+  "header_off_leak_w": 5.86535217e-06,
+  "pg_idle": 0.0010641696747820026,
+  "cg_idle_total": 0.003005219390615821,
+  "residual": 0.35411,
+  "by_class": {
+   "active": {
+    "ao_element": {
+     "total_w": 1.2750525740224425e-05,
+     "instances": 754
+    },
+    "ao_sched_ctrl": {
+     "total_w": 0.00014600995950720948,
+     "instances": 188
+    },
+    "domain": {
+     "total_w": 0.10709931449882862,
+     "instances": 31099
+    },
+    "root_clock": {
+     "total_w": 0.0011375012991265976,
+     "instances": 77
+    },
+    "unnamed": {
+     "total_w": 0.007572674144560853,
+     "instances": 310014
+    }
+   },
+   "pg_idle": {
+    "ao_element": {
+     "total_w": 1.4338851362683284e-06,
+     "instances": 754
+    },
+    "ao_sched_ctrl": {
+     "total_w": 0.0001456884457404883,
+     "instances": 188
+    },
+    "domain": {
+     "total_w": 0.00021972380067529658,
+     "instances": 31099
+    },
+    "root_clock": {
+     "total_w": 0.0008891052789870013,
+     "instances": 77
+    },
+    "unnamed": {
+     "total_w": 4.4148509109172285e-05,
+     "instances": 310014
+    }
+   },
+   "cg_idle": {
+    "ao_element": {
+     "total_w": 1.238308222262566e-05,
+     "instances": 754
+    },
+    "ao_sched_ctrl": {
+     "total_w": 0.00014203783132350485,
+     "instances": 188
+    },
+    "domain": {
+     "total_w": 0.001727272848788668,
+     "instances": 31099
+    },
+    "root_clock": {
+     "total_w": 0.0010696964553272847,
+     "instances": 77
+    },
+    "unnamed": {
+     "total_w": 5.379264479920057e-05,
+     "instances": 310014
+    }
+   }
+  },
+  "sched_ctrl_pg_idle_w": 0.0001456884457404883,
+  "pg_idle_controller_shared": 0.0009185415056016055,
+  "residual_controller_shared": 0.30565,
+  "root_clock_pg_idle_w": 0.0008891052789870013,
+  "pg_idle_spine_gated": 2.9436226614604232e-05,
+  "residual_spine_gated": 0.0098
+ },
+ "wake": {
+  "rtl_req_to_ready_cycles_max": 92,
+  "rtl_restore_cycles_max": 27,
+  "domain_cap_pf": 1497.7,
+  "rush_limit_a": 0.328,
+  "charge_ns": 3.196,
+  "wake_cycles": 92,
+  "wake_ns": 76.64,
+  "wake_energy_nj": 0.7339,
+  "break_even_us": 0.3781
+ },
+ "windows": {
+  "1M": {
+   "ar_token_us": 405.48,
+   "stage_busy_us": 5.01,
+   "idle_window_us": 400.48,
+   "wake_us": 0.0766,
+   "break_even_us": 0.3781,
+   "wake_fits": true,
+   "gating_pays": true
+  },
+  "200K": {
+   "ar_token_us": 388.49,
+   "stage_busy_us": 4.8,
+   "idle_window_us": 383.69,
+   "wake_us": 0.0766,
+   "break_even_us": 0.3781,
+   "wake_fits": true,
+   "gating_pays": true
+  }
+ },
+ "ledger_cross_check": {
+  "ledger_pair_icg_idle_w": 0.008141,
+  "measured_pair_cg_idle_w": 0.003005219390615821,
+  "measured_pair_pg_idle_w": 0.0010641696747820026
+ },
+ "reprice": {
+  "logic_residual_measured": 0.35411,
+  "serdes_residual_assumed": 0.1,
+  "effective_PG_RES": 0.1992,
+  "effective_PG_RES_controller_shared": 0.18028,
+  "effective_PG_RES_spine_gated": 0.06478,
+  "rows": {
+   "1M": {
+    "ar_b1_icg": {
+     "assumed_10pct": {
+      "J_per_token": 8.8738,
+      "tok_s_per_kW": 112.7,
+      "static_w": 21592.0
+     },
+     "measured": {
+      "J_per_token": 8.8738,
+      "tok_s_per_kW": 112.7,
+      "static_w": 21592.0
+     },
+     "measured_controller_shared": {
+      "J_per_token": 8.8738,
+      "tok_s_per_kW": 112.7,
+      "static_w": 21592.0
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 8.8738,
+      "tok_s_per_kW": 112.7,
+      "static_w": 21592.0
+     }
+    },
+    "ar_b1_pg": {
+     "assumed_10pct": {
+      "J_per_token": 3.0852,
+      "tok_s_per_kW": 324.1,
+      "static_w": 7316.3
+     },
+     "measured": {
+      "J_per_token": 3.7232,
+      "tok_s_per_kW": 268.6,
+      "static_w": 8889.8
+     },
+     "measured_controller_shared": {
+      "J_per_token": 3.6016,
+      "tok_s_per_kW": 277.7,
+      "static_w": 8589.7
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 2.8587,
+      "tok_s_per_kW": 349.8,
+      "static_w": 6757.7
+     }
+    },
+    "mtp_as_built_b1_pg": {
+     "assumed_10pct": {
+      "J_per_token": 1.3702,
+      "tok_s_per_kW": 729.8,
+      "static_w": 8219.8
+     },
+     "measured": {
+      "J_per_token": 1.5891,
+      "tok_s_per_kW": 629.3,
+      "static_w": 9693.7
+     },
+     "measured_controller_shared": {
+      "J_per_token": 1.5473,
+      "tok_s_per_kW": 646.3,
+      "static_w": 9412.6
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 1.2925,
+      "tok_s_per_kW": 773.7,
+      "static_w": 7696.6
+     }
+    },
+    "mtp_l1_fused_b1_pg": {
+     "assumed_10pct": {
+      "J_per_token": 1.2933,
+      "tok_s_per_kW": 773.2,
+      "static_w": 8219.8
+     },
+     "measured": {
+      "J_per_token": 1.4984,
+      "tok_s_per_kW": 667.4,
+      "static_w": 9693.7
+     },
+     "measured_controller_shared": {
+      "J_per_token": 1.4593,
+      "tok_s_per_kW": 685.2,
+      "static_w": 9412.6
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 1.2205,
+      "tok_s_per_kW": 819.3,
+      "static_w": 7696.6
+     }
+    },
+    "ar_sat_pg": {
+     "assumed_10pct": {
+      "J_per_token": 0.2801,
+      "tok_s_per_kW": 3569.5,
+      "static_w": 13058.5
+     },
+     "measured": {
+      "J_per_token": 0.2918,
+      "tok_s_per_kW": 3427.2,
+      "static_w": 13999.1
+     },
+     "measured_controller_shared": {
+      "J_per_token": 0.2896,
+      "tok_s_per_kW": 3453.5,
+      "static_w": 13819.7
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 0.276,
+      "tok_s_per_kW": 3623.0,
+      "static_w": 12724.6
+     }
+    }
+   },
+   "200K": {
+    "ar_b1_icg": {
+     "assumed_10pct": {
+      "J_per_token": 8.4905,
+      "tok_s_per_kW": 117.8,
+      "static_w": 21592.0
+     },
+     "measured": {
+      "J_per_token": 8.4905,
+      "tok_s_per_kW": 117.8,
+      "static_w": 21592.0
+     },
+     "measured_controller_shared": {
+      "J_per_token": 8.4905,
+      "tok_s_per_kW": 117.8,
+      "static_w": 21592.0
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 8.4905,
+      "tok_s_per_kW": 117.8,
+      "static_w": 21592.0
+     }
+    },
+    "ar_b1_pg": {
+     "assumed_10pct": {
+      "J_per_token": 2.9446,
+      "tok_s_per_kW": 339.6,
+      "static_w": 7316.3
+     },
+     "measured": {
+      "J_per_token": 3.5558,
+      "tok_s_per_kW": 281.2,
+      "static_w": 8889.8
+     },
+     "measured_controller_shared": {
+      "J_per_token": 3.4393,
+      "tok_s_per_kW": 290.8,
+      "static_w": 8589.7
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 2.7276,
+      "tok_s_per_kW": 366.6,
+      "static_w": 6757.7
+     }
+    },
+    "mtp_as_built_b1_pg": {
+     "assumed_10pct": {
+      "J_per_token": 1.3309,
+      "tok_s_per_kW": 751.4,
+      "static_w": 8219.8
+     },
+     "measured": {
+      "J_per_token": 1.5436,
+      "tok_s_per_kW": 647.8,
+      "static_w": 9693.7
+     },
+     "measured_controller_shared": {
+      "J_per_token": 1.5031,
+      "tok_s_per_kW": 665.3,
+      "static_w": 9412.6
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 1.2553,
+      "tok_s_per_kW": 796.6,
+      "static_w": 7696.6
+     }
+    },
+    "mtp_l1_fused_b1_pg": {
+     "assumed_10pct": {
+      "J_per_token": 1.254,
+      "tok_s_per_kW": 797.4,
+      "static_w": 8219.8
+     },
+     "measured": {
+      "J_per_token": 1.453,
+      "tok_s_per_kW": 688.2,
+      "static_w": 9693.7
+     },
+     "measured_controller_shared": {
+      "J_per_token": 1.4151,
+      "tok_s_per_kW": 706.7,
+      "static_w": 9412.6
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 1.1834,
+      "tok_s_per_kW": 845.0,
+      "static_w": 7696.6
+     }
+    },
+    "ar_sat_pg": {
+     "assumed_10pct": {
+      "J_per_token": 0.2608,
+      "tok_s_per_kW": 3834.7,
+      "static_w": 12810.2
+     },
+     "measured": {
+      "J_per_token": 0.2728,
+      "tok_s_per_kW": 3666.3,
+      "static_w": 13778.1
+     },
+     "measured_controller_shared": {
+      "J_per_token": 0.2705,
+      "tok_s_per_kW": 3697.3,
+      "static_w": 13593.6
+     },
+     "spine_gated_assumed": {
+      "J_per_token": 0.2565,
+      "tok_s_per_kW": 3898.3,
+      "static_w": 12466.6
+     }
+    }
+   }
+  }
+ },
+ "assumptions": [
+  "header switch = ASAP7 INVx4 pull-up (W18 SWITCH_CELL, R_on 912.5 ohm; no characterised ASAP7 switch cell); off leakage = Liberty INVx4 (A=1) leakage; ring sized for 10 mV at the W18 busy-pair current",
+  "wake rush current limited to the busy current (wake di/dt within the normal-operation envelope); ring segment ack modelled in RTL as 8 cycles (cfg_step 16) and stretched to the charge time when longer",
+  "domain capacitance: cell-internal/diffusion = input-pin total (ASSUMED); ROM arrays from the compiler model",
+  "SerDes lane-gating residual 10% stays ASSUMED (not measured here)"
+ ]
+}
