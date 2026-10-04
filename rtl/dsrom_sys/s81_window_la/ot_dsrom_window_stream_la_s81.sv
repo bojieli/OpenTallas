@@ -17,7 +17,8 @@ module ot_dsrom_window_stream_la_s81 #(
     parameter integer TAGW   = 13,
     parameter integer LENW   = 4,
     parameter integer BEATW  = 4,
-    parameter integer IW     = 8
+    parameter integer IW     = 8,
+    parameter integer ISSUE_PC = 0       // 1: per-pseudo-channel issue (no all-or-nothing group)
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -79,7 +80,38 @@ module ot_dsrom_window_stream_la_s81 #(
         end
         if (!grp_ok) v_c = 0;
     end
-    assign req_v = v_c; assign req_addr = a_c; assign req_tag = t_c; assign req_len = l_c;
+    // ---- ISSUE_PC = 1: every pseudo-channel walks its own granules (one per aligned 32-granule group of the
+    // stack's address space: granule 32 G + (p ^ (G ^ G >> 5) mod 32) maps to pseudo-channel p), skipping those
+    // outside the window, and issues whenever ITS port is ready: no head-of-line blocking across channels ----
+    localparam integer GW = AW - 2;
+    wire [GW-1:0] a0 = b[AW-1:2];                         // first granule (absolute)
+    wire [GW-6:0] g0 = a0[GW-1:5], g1 = (a0 + NGRAN - 1) >> 5;
+    reg  [GW-6:0] cur [0:NPC-1];
+    reg  [NPC-1:0] pc_done;
+    reg  [NPC-1:0] v_p;
+    reg  [NPC*AW-1:0] a_p; reg [NPC*TAGW-1:0] t_p;
+    reg  [GW-1:0] ga [0:NPC-1];
+    reg  [NPC-1:0] in_win;
+    integer q;
+    always @* begin
+        v_p = 0; a_p = 0; t_p = 0;
+        for (q = 0; q < NPC; q = q + 1) begin
+            ga[q] = {cur[q], 5'(q) ^ (cur[q][4:0] ^ cur[q][9:5])};
+            in_win[q] = ga[q] >= a0 && ga[q] < a0 + NGRAN;
+            v_p[q] = run && !pc_done[q] && in_win[q];
+            a_p[q*AW +: AW] = {ga[q], 2'b00};
+            t_p[q*TAGW +: TAGW] = ga[q] - a0;
+        end
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pc_done <= '1; for (integer z = 0; z < NPC; z = z + 1) cur[z] <= 0; end
+        else if (start && !run) begin pc_done <= '0; for (integer z = 0; z < NPC; z = z + 1) cur[z] <= base[AW-1:7]; end
+        else for (integer z = 0; z < NPC; z = z + 1)
+            if (run && !pc_done[z] && (!in_win[z] || req_rdy[z])) begin
+                if (cur[z] == g1) pc_done[z] <= 1'b1; else cur[z] <= cur[z] + 1'b1;
+            end
+    assign req_v = ISSUE_PC ? v_p : v_c; assign req_addr = ISSUE_PC ? a_p : a_c;
+    assign req_tag = ISSUE_PC ? t_p : t_c; assign req_len = ISSUE_PC ? {NPC{LENW'(4)}} : l_c;
     assign busy = run;
     // ---- landed beats: count and checks ----
     reg [NPC-1:0] bad_beat;
