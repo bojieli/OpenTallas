@@ -59,8 +59,15 @@ class HeadEndCore {
         if(bit%32 && bit/32+1<words.size())v|=uint64_t(words[bit/32+1])<<32;
         return uint32_t(v>>(bit%32)) & (width==32?0xffffffffu:((1u<<width)-1));
     }
-    void healthy() {
-        if(stopped||core->fault||core->capture_fault) {
+    bool capture_sticky_fault() const {
+        return core->rootp->ot_dsrom_s81_actual_core_end__DOT__g_rom__DOT__u_spine__DOT__u_capture__DOT__sticky_fault;
+    }
+    void healthy(bool settled_preedge=true) {
+        // capture_fault includes combinational NEXT-edge invalid terms.
+        // After a push the newly valid head has no ACK until LOW preparation;
+        // only settled OLD inputs may be checked for edge admission. RTL
+        // sticky_fault retains EVERY invalid accepted edge for post-edge checks.
+        if(stopped||core->fault||capture_sticky_fault()||(settled_preedge&&core->capture_fault)) {
             const auto* r=core->rootp;
             std::ostringstream detail;
             detail << "actual HEAD core fault; accepted ownership retained"
@@ -69,6 +76,8 @@ class HeadEndCore {
                 << " state=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__st)
                 << " core_fault=" << unsigned(core->fault)
                 << " capture_fault=" << unsigned(core->capture_fault)
+                << " capture_sticky_fault=" << unsigned(capture_sticky_fault())
+                << " settled_preedge=" << unsigned(settled_preedge)
                 << " adapter_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_rom__DOT__a_fault)
                 << " spine_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_rom__DOT__sp_fault)
                 << " head_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__head_fault)
@@ -375,7 +384,7 @@ public:
                         for(unsigned j=0;j<64;++j)core->prog_q[j]=program.at(addr-first_pc)[j];
                     }
                     if(reset_n) {
-                        healthy();
+                        healthy(false);
                         if(core->done) {
                             require(end_seen&&final_taken&&core->next_token==field(final_frame,128,32)&&
                                     core->next_val==field(final_frame,96,32)&&core->capture_drained,
@@ -386,7 +395,7 @@ public:
                 }catch(...){stopped=true;throw;}
             },
             [this](bool reset_n) {core->rst_n=reset_n;core->start=0;core->clk=0;core->eval();},
-            [this] {return stopped||bool(core->fault)||bool(core->capture_fault);}};
+            [this] {return stopped||bool(core->fault)||capture_sticky_fault();}};
     }
     bool complete()const{return terminal;}
     uint32_t winner()const{return core->next_token;}
