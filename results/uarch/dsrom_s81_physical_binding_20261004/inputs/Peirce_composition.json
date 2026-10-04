@@ -1,0 +1,311 @@
+{
+  "BF_pairs": 519,
+  "L4": {
+    "added_copies_vs_canonical": 3,
+    "area_charge": "All four copies remain inside ceil(195750/81) field pairs and BF/q/cfg/halo reservations; no dedup frame credit ever applied.",
+    "copied_elements": 130547712,
+    "frame_credit_mm2": 0,
+    "incremental_double_charge_mm2": 0,
+    "projection_records": 20,
+    "rank_copies": 4,
+    "result_multicast_required": false,
+    "source_payload_bijection_and_rank_local_issue_qualified": false
+  },
+  "adopted": false,
+  "area": {
+    "all_rank_field_reservation_mm2": 271.14175893209796,
+    "complete_area_mm2": null,
+    "contextual_route_SS_FF_fit": false,
+    "contracted_Claude_screen_mm2": 839.2388133780036,
+    "fixed_mm2": 465.4771773187259,
+    "increment_terms": [
+      {
+        "factor": 1.18017578125,
+        "mm2": 19.038740092439074,
+        "name": "field macro clearance"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 18.58183721856,
+        "name": "cfg halo grid"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.21756259840000153,
+        "name": "reservation rounding"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.21664327974184788,
+        "name": "retained main request and mux proxy"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.061771960800000025,
+        "name": "selector state replacement"
+      },
+      {
+        "factor": 1.4337016574585635,
+        "mm2": 6.7456788336000395,
+        "name": "BF frame growth"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 13.627208282667157,
+        "name": "field row whitespace"
+      },
+      {
+        "factor": 1,
+        "mm2": 1.3155131592,
+        "name": "selector complete replacement"
+      },
+      {
+        "factor": 1.1257413997627521,
+        "mm2": 6.2828415936,
+        "name": "q frame growth"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.0022350468237890653,
+        "name": "root clock buffer"
+      },
+      {
+        "factor": 1,
+        "mm2": 2.6571105216,
+        "name": "selector escape corridor"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.5956084256399999,
+        "name": "selector_source_correct_station"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.8977034973768752,
+        "name": "shared_broadcast_BUF"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.002246541075,
+        "name": "same_BST_replica_register_floor"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.09571145975999999,
+        "name": "enable_source_repair"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.5466127642122658,
+        "name": "finite_spatial_element_clock_increment"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.0004933580400000001,
+        "name": "enable_clone_clock_leaf"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.0005555095899609376,
+        "name": "enable_clone_reset_tree"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.00014949409359375,
+        "name": "local_BF_CFG_large_leaf"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.027770817600000004,
+        "name": "terminal delta"
+      },
+      {
+        "factor": 1.18017578125,
+        "mm2": 0.0011276755200000028,
+        "name": "enable replacement delta"
+      },
+      {
+        "factor": 0,
+        "mm2": 0.0,
+        "name": "PAR2 two-port corridor REMOVED"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.0761399676,
+        "name": "initial capture proxy"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.06409047240000001,
+        "name": "capture enclosure replaces old proxy"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.01686526564003543,
+        "name": "selected clock island delta"
+      }
+    ],
+    "margin_with_adder_proxy_fraction": 0.016697292007841386,
+    "prune_only_debit_vs_contracted_mm2": 2.441445027839997,
+    "screen_margin_fraction": 0.01902067784866723,
+    "screen_mm2": 841.6802584058435,
+    "screen_plus_excluded_adder_proxy_mm2": 843.673723457272
+  },
+  "component_resources": {
+    "BF_MACs_per_cycle_per_pair": 32,
+    "ROM_read_bytes_per_cycle_per_pair": 68.5,
+    "complete_pairs": 783108,
+    "field_return_bits_per_cycle": 304542,
+    "forward_BF_bits": 1067,
+    "forward_q_bits": 549,
+    "mux_demux_fanout_contextual_cost": null,
+    "node_input_bits_per_cycle_per_node": 130,
+    "node_output_bits_per_cycle_per_node": 65,
+    "q_MACs_per_cycle_per_pair": 64,
+    "replica_payload_physical_addresses": null,
+    "root_output_bits_per_cycle": 8832,
+    "selected_channel_track_fit": null,
+    "stage_rank_replicas": 324,
+    "weight_macros": 3132432
+  },
+  "double_count_rule": "Copied field reservations once; each topology node FIFOs/output registers once; unchanged 128 root FIFOs/held buffers once; inherited 57 stage wires plus 23 new hops once.",
+  "draft_fraction_assumed": 0.1173,
+  "full_token_measured": false,
+  "headline_rate": null,
+  "input_sha256": {
+    "results/uarch/dsrom_return_storage_hbm_20261003/model.json": "620e7b8be078e4b90e5986340cb7c719351beba39029d4e66b7b193a9ea2b5d2",
+    "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/area_ledger.json": "59223967b1e9ec7dc5518ca2070e2265115d3e91dfdccdece620efd76a082423",
+    "results/uarch/dsrom_s81_selected_composition_20261003/inputs/W1_return_proxy.json": "e31b06063e9d87e6121910e1d15d1091deca933bd20dbaea2edcaa2d33cd95c2",
+    "results/uarch/dsrom_s81_selected_composition_20261003/inputs/claude_S81.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
+    "results/uarch/dsrom_s81_selected_composition_20261003/inputs/native_node_mapping.json": "6083a67de4bbc437afecc12f11ce1cbe60dbbb1a203458c8b23d5041941cdf63",
+    "results/uarch/dsrom_s81_selected_composition_20261003/inputs/projection_reservations.json": "77cd87abff1a3ceed8633ed679604396e9cd56ef119a5e6caf490f1f60221c1d"
+  },
+  "layer_dies": 324,
+  "missing_costs_not_zero": [
+    "W1 adder/tag/counter/flow logic and contextual CTS/routes excluded from historical FF return proxy",
+    "Actual per-stage PHW macro counts and source repair geometries must replace proportional proxies",
+    "W4 replacement rectangles and W3 PHY/controller/service map not complete",
+    "Actual emitted prune-only versus contracted storage inventory and FIFO/WAIT/RST/fault equivalence",
+    "S81 full directory/phase reshaping and copied-projection address/issue exactness",
+    "actual S81 full-program gather/provider/link/refresh calendar",
+    "position-specific verify/draft schedule and actual acceptance tau"
+  ],
+  "native_area_composition_rule": "Mapped complete-node construction includes its storage. Replace that storage slot and reconcile logic with fixed/residual homes; do not blindly add the full node projection or infer fit. Root logic is unmapped.",
+  "pairs_per_rank_die": 2417,
+  "price_scope": "Source model assumes no added return delay. Both prune-only and contraction require emitted storage and actual timing/WAIT/RST/fault comparison; changed serial-path debit is unknown, not a zero measured credit.",
+  "q_pairs": 1898,
+  "return_options": {
+    "contracted": {
+      "FF50_mm2": 31.5476592912,
+      "FIFO_WAIT_RST_fault_sites_changed": true,
+      "actual_source_removed_storage_inventory": null,
+      "adder_proxy_mm2": 1.843073974857143,
+      "complete_node_fixed_residual_union_reconciled": false,
+      "native_complete_node_FF50_projection_mm2": 75.2936884128,
+      "native_full_node_projection_is_incremental_debit": false,
+      "nodes": 4706,
+      "root_logic_area_mm2": null,
+      "roots": 128,
+      "screen_margin_fraction": 0.02186618487412173,
+      "screen_mm2": 839.2388133780036,
+      "source_latency_or_fault_equivalence_qualified": false,
+      "unary_stages_removed_vs_prune": 384
+    },
+    "original_retained": {
+      "FF50_mm2": 52.897587425279994,
+      "complete_node_fixed_residual_union_reconciled": false,
+      "native_complete_node_FF50_projection_mm2": 129.0200389632,
+      "native_full_node_projection_is_incremental_debit": false,
+      "nodes": 8064,
+      "root_logic_area_mm2": null,
+      "roots": 128,
+      "screen_mm2": 860.5887415120835,
+      "source_latency_or_fault_equivalence_qualified": false
+    },
+    "prune_only": {
+      "FF50_mm2": 33.989104319039996,
+      "actual_pruning_qualified": false,
+      "actual_source_removed_storage_inventory": null,
+      "adder_proxy_mm2": 1.9934650514285714,
+      "binding": "Existing 32-pair regions; first floor((r+1)*2417/128)-floor(r*2417/128) pairs active; preserve all live unary RD64/WAIT/RST stages.",
+      "complete_node_fixed_residual_union_reconciled": false,
+      "native_complete_node_FF50_projection_mm2": 81.437499792,
+      "native_full_node_projection_is_incremental_debit": false,
+      "nodes": 5090,
+      "removed_nodes_vs_original": 2974,
+      "retained_unary_nodes": 384,
+      "root_logic_area_mm2": null,
+      "roots": 128,
+      "screen_margin_fraction": 0.01902067784866723,
+      "screen_mm2": 841.6802584058435,
+      "source_latency_or_fault_equivalence_qualified": false
+    }
+  },
+  "scenarios": [
+    {
+      "base_AR_us": 394.39952672056796,
+      "base_verify_us": 916.2798001951815,
+      "conditional_AR_tokens_s": 2466.176815147217,
+      "conditional_AR_us": 405.4859302293399,
+      "conditional_MTP_step_us": 974.929703319855,
+      "conditional_MTP_tokens_s": 3742.8339577451934,
+      "conditional_draft_us": 47.56349961590157,
+      "conditional_verify_us": 927.3662037039534,
+      "context": "1048576",
+      "indexer_multicast_us": 0,
+      "stage_hop_delta_us": 11.08640350877193
+    },
+    {
+      "base_AR_us": 377.40121523191306,
+      "base_verify_us": 834.0555456010882,
+      "conditional_AR_tokens_s": 2574.0846085174694,
+      "conditional_AR_us": 388.487618740685,
+      "conditional_MTP_step_us": 890.7115467881424,
+      "conditional_MTP_tokens_s": 4096.724706396921,
+      "conditional_draft_us": 45.56959767828235,
+      "conditional_verify_us": 845.1419491098601,
+      "context": "200000",
+      "indexer_multicast_us": 0,
+      "stage_hop_delta_us": 11.08640350877193
+    }
+  ],
+  "schema": "opentallas.dsrom.selected-s81.v1",
+  "selected_return": {
+    "FF50_mm2": 33.989104319039996,
+    "RD": 64,
+    "ROOTD": 128,
+    "adder_proxy_scaled_by_nodes_mm2": 1.9934650514285714,
+    "contracted_model_nodes": 4706,
+    "credit_RD16_adopted": false,
+    "inventory_scope": "Source-shaped prune-only binding; 5090 selected by owner; emitted node identity confirmation remains required.",
+    "measured_latency_credit_cycles": null,
+    "nodes": 5090,
+    "roots": 128,
+    "state_bits": {
+      "node_output_register_bits": 335940,
+      "node_two_FIFO_bits": 42348800,
+      "root_held_sibling_bits": 1081344,
+      "root_input_FIFO_bits": 1064960
+    },
+    "topology_and_golden_order_qualified": false,
+    "total_state_bits": 44831044
+  },
+  "source_commits": {
+    "adder_proxy": "046bf5026d36cc4f31813db26045360da618e51f",
+    "selected": "73851317fd9b4fb86c56f6ff760e29981ec610f2"
+  },
+  "stage_hops": {
+    "added": 23,
+    "added_endpoint_wire_us": 1.7249999999999999,
+    "endpoint_wire_stages_per_side": 45,
+    "inherited": 57,
+    "per_hop_us": 0.4820175438596491,
+    "total": 80,
+    "total_endpoint_wire_us": 6.0
+  },
+  "stages": 81,
+  "status": "SELECTED_BUILD_TARGET_MODEL_ONLY",
+  "tau_assumed": 3.649,
+  "tool_sha256": "0fe6ff2e3dfdeb6fa4444240e11a30e7cb0340831cd68963d05582d7dd327711",
+  "total_dies": 368
+}

@@ -1,0 +1,45 @@
+{
+  "Claude_area_refit_owner_preserved": true,
+  "actual_next_inputs": [
+    "Selected native q/BF/root/unary placement and supply-contact union",
+    "Clock-C regional reset/clock/PG source construction",
+    "Native instance-matched DEF and boundary/PHY objects; no S82 rescaling"
+  ],
+  "area_budget": {
+    "Ampere_proposal": {
+      "area_mm2": 843.5278,
+      "implemented": false,
+      "increment_over_strict_baseline_mm2": 1.8475415941564,
+      "margin_mm2": 14.4722,
+      "margin_percent": 1.6867365967365968,
+      "physical_fit": false,
+      "provenance": "user-reported strict return plus proposed lookahead; native proposal not implemented"
+    },
+    "baseline_margin_mm2": 16.3197415941564,
+    "historical_contracted_screen_mm2": 839.2388133780036,
+    "max_height_mm": 33,
+    "max_width_mm": 26,
+    "native_logic_clock_PG_route_containment_resolved": false,
+    "original_2_19_percent_unspent": false,
+    "reticle_mm2": 858,
+    "source_inventory_baseline_screen_mm2": 841.6802584058436,
+    "strict_unary_storage_delta_mm2": 2.44144502784,
+    "unresolved_costs_not_zero": [
+      "native unary/control/root object containment",
+      "IO/PHY and supply hierarchy",
+      "clock/reset regional CTS and shield routes",
+      "native placement/halo/OBS and detailed route"
+    ]
+  },
+  "branch": "codex/dsrom-s81-physical-binding-20261004",
+  "canonical_matrix_external_metadata_sha256": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+  "model_sha256": "188e5c5279b16a9e38c3b4ed38c3e73e7f98c29d0c2ed458f6beffcbb3a9ed84",
+  "new_jobs": [],
+  "no_payload_reads": true,
+  "physical_admission": false,
+  "replay_command": "python3 tools/dsrom_s81_physical_binding.py --verify",
+  "schema": "opentallas.dsrom.S81.physical-binding.handoff.v1",
+  "source_inventory_baseline_first": true,
+  "test_command": "python3 -m pytest -q tests/test_dsrom_s81_physical_binding.py",
+  "tests": "15 PASS"
+}

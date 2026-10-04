@@ -1,0 +1,32 @@
+{
+  "allocator_rerun": false,
+  "local_sha256": {
+    "Bacon_preparation.json": "fc17917c468b3d56450e6c75ae353f95d179576e663c7373474398bb92a48227",
+    "Claude_selection.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
+    "Peirce_composition.json": "212ac0a78044cb5a29e07e82125e348c5a56dcd25ae438c4f2f9bb9bc56ac586",
+    "auxiliary_obligations.json": "a41f4b1d6166620e884e3b2ca48cb310a6be046d611509f163e44a8075f8e433",
+    "inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+    "mapping_verdict.json": "89ede66ef53199696f4b102ffb99993fe7203191f0c5b359412c09f8eac349ce",
+    "native_node_mapping.json": "6083a67de4bbc437afecc12f11ce1cbe60dbbb1a203458c8b23d5041941cdf63",
+    "providers.json": "91ad040342b25cd38fb69ef0eb7cb4966ff8e7e9c43cd4c3bd53a04ee30f792d",
+    "return_connectivity.json": "bf509ce248a9a9f5185e1515bee3fabbb018eedab7c820c3ace3e91445b8a43f",
+    "return_model.json": "a0570bec0f02a35d288ecc39a964bebf8318e9c36e4848295f2837777eb4dbae",
+    "stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815"
+  },
+  "matrix_metadata": {
+    "checkpoint_payload": false,
+    "path": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz",
+    "sha256": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "size_bytes": 44362858
+  },
+  "new_engine_RTL": false,
+  "owner_replay": false,
+  "owners": {
+    "Bacon_commit": "d55fded15efc4956716df2245e412e880d8b06d0",
+    "Claude_commit": "73851317fd9b4fb86c56f6ff760e29981ec610f2",
+    "Rawls_commit": "58168eb1d88f9c0893886a8ec5124d8a916af053",
+    "canonical_owner_HEAD": "5083b5390e191f11b8badc269da0c0f5a3fdaee3",
+    "canonical_owner_outputs_untracked_at_intake": true,
+    "canonical_source_worktree": "/home/ubuntu/dsrom-c-w2-20261003"
+  }
+}

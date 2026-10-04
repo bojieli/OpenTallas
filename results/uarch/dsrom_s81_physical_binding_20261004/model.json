@@ -1,0 +1,859 @@
+{
+  "PnR_admitted": false,
+  "SSFF_qualified": false,
+  "allocator_rerun": false,
+  "area_budget": {
+    "Ampere_proposal": {
+      "area_mm2": 843.5278,
+      "implemented": false,
+      "increment_over_strict_baseline_mm2": 1.8475415941564,
+      "margin_mm2": 14.4722,
+      "margin_percent": 1.6867365967365968,
+      "physical_fit": false,
+      "provenance": "user-reported strict return plus proposed lookahead; native proposal not implemented"
+    },
+    "baseline_margin_mm2": 16.3197415941564,
+    "historical_contracted_screen_mm2": 839.2388133780036,
+    "max_height_mm": 33,
+    "max_width_mm": 26,
+    "native_logic_clock_PG_route_containment_resolved": false,
+    "original_2_19_percent_unspent": false,
+    "reticle_mm2": 858,
+    "source_inventory_baseline_screen_mm2": 841.6802584058436,
+    "strict_unary_storage_delta_mm2": 2.44144502784,
+    "unresolved_costs_not_zero": [
+      "native unary/control/root object containment",
+      "IO/PHY and supply hierarchy",
+      "clock/reset regional CTS and shield routes",
+      "native placement/halo/OBS and detailed route"
+    ]
+  },
+  "auxiliary": {
+    "no_omission_credit": true,
+    "placement_qualified": false,
+    "storage_bytes": 8903411592,
+    "tensors": 2667
+  },
+  "canonical_metadata_census": {
+    "declarations": 46671,
+    "declarations_by_stage": {
+      "0": 626,
+      "1": 610,
+      "2": 642,
+      "3": 625,
+      "4": 642,
+      "5": 626,
+      "6": 642,
+      "7": 626,
+      "8": 642,
+      "9": 626,
+      "10": 642,
+      "11": 626,
+      "12": 604,
+      "13": 640,
+      "14": 625,
+      "15": 642,
+      "16": 626,
+      "17": 642,
+      "18": 626,
+      "19": 642,
+      "20": 626,
+      "21": 642,
+      "22": 626,
+      "23": 642,
+      "24": 626,
+      "25": 571,
+      "26": 626,
+      "27": 626,
+      "28": 642,
+      "29": 626,
+      "30": 642,
+      "31": 626,
+      "32": 642,
+      "33": 626,
+      "34": 642,
+      "35": 626,
+      "36": 642,
+      "37": 624,
+      "38": 626,
+      "39": 642,
+      "40": 626,
+      "41": 642,
+      "42": 626,
+      "43": 642,
+      "44": 625,
+      "45": 642,
+      "46": 626,
+      "47": 642,
+      "48": 626,
+      "49": 607,
+      "50": 640,
+      "51": 625,
+      "52": 642,
+      "53": 626,
+      "54": 642,
+      "55": 626,
+      "56": 642,
+      "57": 626,
+      "58": 642,
+      "59": 625,
+      "60": 642,
+      "61": 626,
+      "62": 626,
+      "63": 642,
+      "64": 626,
+      "65": 642,
+      "66": 625,
+      "67": 642,
+      "68": 626,
+      "69": 642,
+      "70": 626,
+      "71": 642,
+      "72": 626,
+      "73": 585
+    },
+    "indexer_replicated_declarations": [
+      {
+        "K": 512,
+        "format": "bf16",
+        "plan_count": 64,
+        "plans_sha256": "06bc9097294b4d12fe832df1cfc13d83707258d29a674dd0d1500da7267e891b",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 128,
+        "stage": 3,
+        "tensor": "layers.2.attn.indexer.wk.weight"
+      },
+      {
+        "K": 1280,
+        "format": "fp8",
+        "plan_count": 768,
+        "plans_sha256": "cf19374e854fd179e958d4c902bf9faf12315812729c43c65d61b9fca41ad26d",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 4096,
+        "stage": 3,
+        "tensor": "layers.2.attn.indexer.wq_b.weight"
+      },
+      {
+        "K": 512,
+        "format": "bf16",
+        "plan_count": 64,
+        "plans_sha256": "6b59e2e814c792f6f6285234700e74c39f009dc87e2fe0696ae949ca8da3ce68",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 128,
+        "stage": 14,
+        "tensor": "layers.8.attn.indexer.wk.weight"
+      },
+      {
+        "K": 1280,
+        "format": "fp8",
+        "plan_count": 768,
+        "plans_sha256": "f695b650141826aab8033df322e208973df4a827d6758881e1738c0c437e6cda",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 4096,
+        "stage": 14,
+        "tensor": "layers.8.attn.indexer.wq_b.weight"
+      },
+      {
+        "K": 512,
+        "format": "bf16",
+        "plan_count": 64,
+        "plans_sha256": "993b36c7a2f2b51bd64ef97d67fb35d3f24708e973edc392d2aa802d8b695c39",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 128,
+        "stage": 25,
+        "tensor": "layers.14.attn.indexer.wk.weight"
+      },
+      {
+        "K": 1280,
+        "format": "fp8",
+        "plan_count": 768,
+        "plans_sha256": "6c083e91c075bb563c537b1bfc9e6aa502eb1e7021d2162237d1c651dff9307e",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 4096,
+        "stage": 25,
+        "tensor": "layers.14.attn.indexer.wq_b.weight"
+      },
+      {
+        "K": 512,
+        "format": "bf16",
+        "plan_count": 64,
+        "plans_sha256": "bd98e0a6557a5d4627b2e84558fb0e6270925da11154da59fe05de8c9ee3c7e8",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          },
+          {
+            "cols": [
+              0,
+              512
+            ],
+            "rows": [
+              0,
+              128
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 128,
+        "stage": 37,
+        "tensor": "layers.20.attn.indexer.wk.weight"
+      },
+      {
+        "K": 1280,
+        "format": "fp8",
+        "plan_count": 768,
+        "plans_sha256": "de0f15cad4f40cacab1b2ad6878546589c369a25376d80156826f6482a966364",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 4096,
+        "stage": 37,
+        "tensor": "layers.20.attn.indexer.wq_b.weight"
+      },
+      {
+        "K": 1280,
+        "format": "fp8",
+        "plan_count": 768,
+        "plans_sha256": "870f93a07b0097fe3c2ac38e92d8cc99597d08c1900cef4957cd5df42f451e47",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 4096,
+        "stage": 44,
+        "tensor": "layers.24.attn.indexer.wq_b.weight"
+      },
+      {
+        "K": 1280,
+        "format": "fp8",
+        "plan_count": 768,
+        "plans_sha256": "0b67c291616b48465aa3eed31ea07a2a26c56e3a861b0f640b3061e879df3dbc",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 4096,
+        "stage": 51,
+        "tensor": "layers.28.attn.indexer.wq_b.weight"
+      },
+      {
+        "K": 1280,
+        "format": "fp8",
+        "plan_count": 768,
+        "plans_sha256": "a5c27140eb6847d5a5776058526587381d9f7f9ec7f6933997fe8fca52b092d5",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 4096,
+        "stage": 59,
+        "tensor": "layers.32.attn.indexer.wq_b.weight"
+      },
+      {
+        "K": 1280,
+        "format": "fp8",
+        "plan_count": 768,
+        "plans_sha256": "4a59051ca8d3fb88a9302df94cbc042d9afb5e50cee2597c9ce8e0a151e94a2f",
+        "rank_slices": [
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          },
+          {
+            "cols": [
+              0,
+              1280
+            ],
+            "rows": [
+              0,
+              4096
+            ]
+          }
+        ],
+        "reservation_scope": "inside existing compiled site ledger on each rank; no extra macro footprint debit",
+        "rows": 4096,
+        "stage": 66,
+        "tensor": "layers.36.attn.indexer.wq_b.weight"
+      }
+    ]
+  },
+  "configuration": {
+    "physical_macro_census": null,
+    "required_PHW_stage_histogram": {
+      "1": 7,
+      "10": 74
+    },
+    "source_72bit_provider_max_macros_per_pair": 7,
+    "uniform_template_selected": false
+  },
+  "historical_metadata_limits": {
+    "entire_shipped_checkpoint_exactonce_PASS": false,
+    "legacy_RD_label_not_selected_geometry": true,
+    "owner_schema": "opentallas.dsrom.S81.PAIR1.metadata-map.v1"
+  },
+  "new_RTL": false,
+  "next_construction": "Bind native q/BF and typed unary/root objects, actual supply upfeeds and Clock-C regional hierarchy to selected placement; native DEF/IO/cell union before selected PDN/GRT admission.",
+  "physical_fit": false,
+  "physical_instances": {
+    "identity_tables": "inputs/return_connectivity.json and inputs/stage_map.json; logical source identities, not fabricated placed DEF paths",
+    "native_placed_instance_census": null,
+    "return_nodes_per_die": 5090,
+    "roots_per_die": 128,
+    "unilateral_per_die": 384,
+    "weight_macro_leaves_layer_total": 3132432,
+    "weight_macro_leaves_per_die": 9668
+  },
+  "return_storage": {
+    "area_exclusions": "adder/control/alignment registers, muxes, CTS/PDN/route; no extra credit for these",
+    "canonical_matrix_map_pinned": true,
+    "channel_fit": null,
+    "compact_additional_debit_not_removed_by_dead_pruning_mm2": 2.44144502784,
+    "exact_removed_FF50_reservation_mm2": 18.90848310624,
+    "exact_removed_declared_storage_bits": 24939964,
+    "inventory_bound": true,
+    "label": "SOURCE_DECLARATION_COUNTS_AND_MODEL_RESERVATION_NOT_SYNTHESIS",
+    "latency_change_dead_prune_cycles": 0,
+    "latency_condition": "same pre-edge inputs and reset on retained legacy nodes; no unilateral contraction or remapping",
+    "new_MACs_per_cycle": 0,
+    "node_boundary_signal_tracks": 195,
+    "node_credited_storage_bits": 8386,
+    "node_ports_bytes_per_cycle": {
+      "two_read": 16.25,
+      "two_write": 16.25
+    },
+    "original_storage_bits": 69771008,
+    "physical_SS_FF": null,
+    "reference_nodes": 8064,
+    "removed_dead_nodes": 2974,
+    "removed_empty_side_storage_credit_bits": 0,
+    "removed_root_storage_bits": 0,
+    "removed_roots": 0,
+    "retained_FF50_reservation_mm2": 33.989104319039996,
+    "retained_nodes": 5090,
+    "retained_roots": 128,
+    "retained_storage_bits": 44831044,
+    "retained_unilateral_nodes": 384,
+    "root_public_bits_per_cycle": 8832,
+    "root_storage_bits": 16768,
+    "selected_compact_model_storage_bits": 41610820,
+    "source_sha256": {
+      "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+      "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+      "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+      "rtl/v41die/ot_v41_field_w17w10.sv": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811",
+      "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+      "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+      "tools/dsrom_return_storage_hbm.py": "c6ac731b0d7f8d2c0468fba31b1eb395a893e077d08e8e8a4a7073efe050f4e2",
+      "tools/dsrom_s81_rd64_connectivity.py": "a2d48a4cc3c42a9e0ec1df431f419f7f04122aef5905e5c5b290aeb9ce433107"
+    },
+    "whole_token_qualified": false
+  },
+  "schema": "opentallas.dsrom.S81.physical-binding.v1",
+  "selection": {
+    "BF": 519,
+    "Q": 1898,
+    "TP": 4,
+    "depth": 4096,
+    "layer_dies": 324,
+    "macros_per_pair": 4,
+    "pairs_per_rank_die": 2417,
+    "stages": 81,
+    "total_dies": 368
+  },
+  "source_binding": {
+    "allocator_rerun": false,
+    "local_sha256": {
+      "Bacon_preparation.json": "fc17917c468b3d56450e6c75ae353f95d179576e663c7373474398bb92a48227",
+      "Claude_selection.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
+      "Peirce_composition.json": "212ac0a78044cb5a29e07e82125e348c5a56dcd25ae438c4f2f9bb9bc56ac586",
+      "auxiliary_obligations.json": "a41f4b1d6166620e884e3b2ca48cb310a6be046d611509f163e44a8075f8e433",
+      "inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+      "mapping_verdict.json": "89ede66ef53199696f4b102ffb99993fe7203191f0c5b359412c09f8eac349ce",
+      "native_node_mapping.json": "6083a67de4bbc437afecc12f11ce1cbe60dbbb1a203458c8b23d5041941cdf63",
+      "providers.json": "91ad040342b25cd38fb69ef0eb7cb4966ff8e7e9c43cd4c3bd53a04ee30f792d",
+      "return_connectivity.json": "bf509ce248a9a9f5185e1515bee3fabbb018eedab7c820c3ace3e91445b8a43f",
+      "return_model.json": "a0570bec0f02a35d288ecc39a964bebf8318e9c36e4848295f2837777eb4dbae",
+      "stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815"
+    },
+    "matrix_metadata": {
+      "checkpoint_payload": false,
+      "path": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz",
+      "sha256": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+      "size_bytes": 44362858
+    },
+    "new_engine_RTL": false,
+    "owner_replay": false,
+    "owners": {
+      "Bacon_commit": "d55fded15efc4956716df2245e412e880d8b06d0",
+      "Claude_commit": "73851317fd9b4fb86c56f6ff760e29981ec610f2",
+      "Rawls_commit": "58168eb1d88f9c0893886a8ec5124d8a916af053",
+      "canonical_owner_HEAD": "5083b5390e191f11b8badc269da0c0f5a3fdaee3",
+      "canonical_owner_outputs_untracked_at_intake": true,
+      "canonical_source_worktree": "/home/ubuntu/dsrom-c-w2-20261003"
+    }
+  },
+  "source_only_no_payload_reads": true,
+  "token_rate_qualified": false
+}
