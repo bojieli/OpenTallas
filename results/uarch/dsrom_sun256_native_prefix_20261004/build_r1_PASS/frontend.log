@@ -1,0 +1,249 @@
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:279:23: Operator VAR 'H_A' expects 16 bits on the Initial value, but Initial value's VARREF 'ALAT' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  279 |     localparam [15:0] H_A = ALAT;
+      |                       ^~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:23: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                       ^~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:35: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                   ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:50: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:65: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:80: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                ^~~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:97: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                                 ^~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:281:23: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  281 |                       H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:145:23: Operator VAR 'H_DIV' expects 16 bits on the Initial value, but Initial value's VARREF 'D_DIV' generates 32 bits.
+                                                                                                                    : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  145 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                       ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:145:38: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                                                                                    : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  145 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                      ^~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:145:50: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                                                                                    : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  145 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:145:65: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                                                                                    : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  145 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:145:80: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                                                                                    : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  145 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:145:95: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                                                                                    : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  145 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                               ^~~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:146:23: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                                                                                    : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  146 |                       H_SP = D_SP, H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:146:36: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                                                                                    : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  146 |                       H_SP = D_SP, H_EG = D_EG;
+      |                                    ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:147:24: Operator VAR 'HAS_SFU' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                                                     : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  147 |     localparam integer HAS_SFU = (KIND != 0);
+      |                        ^~~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:148:24: Operator VAR 'FULL' expects 32 bits on the Initial value, but Initial value's EQ generates 1 bits.
+                                                                                                                     : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[0].u_lane'
+  148 |     localparam integer FULL = (KIND == 2);
+      |                        ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:736:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_cf'
+  736 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p) canbe = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:532:32: Operator VAR 'TWO' expects 32 bits on the Initial value, but Initial value's LTS generates 1 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_side.u_sp.u_div'
+  532 |             localparam integer TWO = (2 * j + 1 < QB);
+      |                                ^~~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41/ot_hdc_fsqrt.sv:122:38: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                                                                            : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_side.u_sp.u_sq'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                      ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41/ot_hdc_fsqrt.sv:122:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_side.u_sp.u_sq'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41/ot_hdc_fsqrt.sv:127:42: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                                                                            : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_side.u_sp.u_sq'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41/ot_hdc_fsqrt.sv:127:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                           : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_side.u_sp.u_sq'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:486:47: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_side.u_sp.u_div'
+  486 |             if (e != 8'd0) norm = {1'b1, f, e - 10'sd127};
+      |                                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:537:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_side.u_sp.u_div'
+  537 |                                 TWO ? {r_rem[j-1][24:0], 2'b0} : {1'b0, r_rem[j-1][24:0], 1'b0};
+      |                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:545:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_side.u_sp.u_div'
+  545 |                 r_q[j]    <= TWO ? {qin[QB-3:0], q} : {qin[QB-2:0], q[0]};
+      |                                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:383:79: Input port connection 'b' expects 32 bits on the pin connection, but pin connection's REPLICATE generates 46 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_side.u_sp.u_exp'
+  383 |     ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
+      |                                                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:729:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[63].u_lane.g_sfu.g_vec.u_l4'
+  729 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p && s[k]) has = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:226:86: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                                    : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.u_red'
+  226 |     always @(*) for (h = 0; h <= LC; h = h + 1) hit[h] = tv[h] && (tt[h][TAG-2 -: 4] == h);
+      |                                                                                      ^~
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:205:57: Extracting 30 bits from only 24 bit number
+                                                                                                                  : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[255].u_lane'
+  205 |     ot_hdc_kadd #(.W(AW), .K(K)) u_rwc (.a(krow), .b(d_o[AW-1:0]), .cin(1'b0), .s(row_c), .cout(unused_c0[2]));
+      |                                                         ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:205:57: Selection index out of range: 29:0 outside 23:0
+                                                                                                                  : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[255].u_lane'
+  205 |     ot_hdc_kadd #(.W(AW), .K(K)) u_rwc (.a(krow), .b(d_o[AW-1:0]), .cin(1'b0), .s(row_c), .cout(unused_c0[2]));
+      |                                                         ^
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:388:59: Extracting 26 bits from only 24 bit number
+                                                                                                                  : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[255].u_lane'
+  388 |     ot_hdc_kadd #(.W(AW), .K(K)) u_kv2 (.a(kvt1), .b({il_e[AW-5:0], row_e[3:0]}), .cin(1'b0), .s(kvt), .cout(unused_c1[1]));
+      |                                                           ^
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:388:59: Selection index out of range: 25:0 outside 23:0
+                                                                                                                  : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[255].u_lane'
+  388 |     ot_hdc_kadd #(.W(AW), .K(K)) u_kv2 (.a(kvt1), .b({il_e[AW-5:0], row_e[3:0]}), .cin(1'b0), .s(kvt), .cout(unused_c1[1]));
+      |                                                           ^
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:389:82: Extracting 30 bits from only 24 bit number
+                                                                                                                  : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[255].u_lane'
+  389 |     ot_hdc_kadd #(.W(AW), .K(K)) u_via (.a(aibase_e), .b((aind_e == IND_I) ? il_e[AW-1:0] : ol_e[AW-1:0]), .cin(1'b0),
+      |                                                                                  ^
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:389:82: Selection index out of range: 29:0 outside 23:0
+                                                                                                                  : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[255].u_lane'
+  389 |     ot_hdc_kadd #(.W(AW), .K(K)) u_via (.a(aibase_e), .b((aind_e == IND_I) ? il_e[AW-1:0] : ol_e[AW-1:0]), .cin(1'b0),
+      |                                                                                  ^
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:389:97: Extracting 30 bits from only 24 bit number
+                                                                                                                  : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[255].u_lane'
+  389 |     ot_hdc_kadd #(.W(AW), .K(K)) u_via (.a(aibase_e), .b((aind_e == IND_I) ? il_e[AW-1:0] : ol_e[AW-1:0]), .cin(1'b0),
+      |                                                                                                 ^
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:389:97: Selection index out of range: 29:0 outside 23:0
+                                                                                                                  : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec.g_lane[255].u_lane'
+  389 |     ot_hdc_kadd #(.W(AW), .K(K)) u_via (.a(aibase_e), .b((aind_e == IND_I) ? il_e[AW-1:0] : ol_e[AW-1:0]), .cin(1'b0),
+      |                                                                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:255:72: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  255 |             for (b = 0; b < 32; b = b + 1) if ((32'd1 << b) < x) log2c = b + 1;
+      |                                                                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:262:60: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  262 |             for (b = 0; b < 32; b = b + 1) if (x[b]) log2f = b;
+      |                                                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:269:65: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  269 |             for (b = CW - 1; b >= 0; b = b - 1) if (x[b]) tzero = b;
+      |                                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:284:28: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_EXP' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  284 |             SFU_EXP: sfu_d = D_EXP;
+      |                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:285:39: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SIG' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  285 |             SFU_SIGM, SFU_SILU: sfu_d = D_SIG;
+      |                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:286:30: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_RSQ' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  286 |             SFU_RSQRT: sfu_d = D_RSQ;
+      |                              ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:287:29: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SQRT' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  287 |             SFU_SQRT: sfu_d = D_SQRT;
+      |                             ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:288:31: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SP' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  288 |             SFU_SPSQRT: sfu_d = D_SP;
+      |                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:289:30: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_EG' generates 32 bits.
+                                                                                                               : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  289 |             SFU_EGATE: sfu_d = D_EG;
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:331:24: Operator ASSIGNW expects 30 bits on the Assign RHS, but Assign RHS's VARREF 'q_nin' generates 16 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  331 |     wire [AW-1:0] ni_a = q_nin;
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:332:32: Operator SHIFTR expects 30 bits on the LHS, but LHS's VARREF 'q_nin' generates 16 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  332 |     wire [AW-1:0] ni_h = q_nin >> 1;
+      |                                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:349:36: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'q_nin' generates 16 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  349 |         s_ni <= (s1_cand && s1_ok) ? q_nout * q_nin : q_nin;
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:350:36: Operator COND expects 32 or 24 bits on the Conditional False, but Conditional False's VARREF 'q_nout' generates 16 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  350 |         s_no <= (s1_cand && s1_ok) ? 1 : q_nout;
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:362:71: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 's_ni' generates 24 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  362 |     wire [4:0] c_lsz = s_wnf ? c_tz : log2c((s_ni > (red_on ? 8 : 1)) ? s_ni : (red_on ? 8 : 1));
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:363:30: Operator GT expects 5 bits on the RHS, but RHS's VARREF 'c_lvw' generates 4 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  363 |     wire [3:0] c_ls = (c_lsz > c_lvw) ? c_lvw : c_lsz[3:0];
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:368:22: Operator FUNCREF 'log2c' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_nvs' generates 24 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  368 |     wire [4:0] c_L = log2c(c_nvs);
+      |                      ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:380:70: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'c_L' generates 5 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  380 |     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
+      |                                                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:399:73: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'c_ls' generates 4 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  399 |                     else c_terms[(s*LN + kk)*AW +: AW] = so_s[s] << (kk - c_ls);
+      |                                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:423:18: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_gstr' generates 30 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  423 |         p_gsh <= log2f(c_gstr); p_rsh <= log2f(q_rso);
+      |                  ^~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:423:42: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'q_rso' generates 30 bits.
+                                                                                                                : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  423 |         p_gsh <= log2f(c_gstr); p_rsh <= log2f(q_rso);
+      |                                          ^~~~~
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:554:37: Extracting 30 bits from only 24 bit number
+                                                                                                             : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  554 |                 krow <= krow + nslot[AW-1:0];
+      |                                     ^
+%Warning-SELRANGE: /srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:554:37: Selection index out of range: 29:0 outside 23:0
+                                                                                                             : ... note: In instance 'ot_hdc_v41x_su_adapt.u_vec'
+  554 |                 krow <= krow + nslot[AW-1:0];
+      |                                     ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.946 MB sources in 59 modules, into 862.859 MB in 1366 C++ files needing 0.157 MB
+- Verilator: Walltime 298.746 s (elab=0.750, cvt=285.939, bld=0.000); cpu 294.772 s on 1 threads; allocated 30267.258 MB

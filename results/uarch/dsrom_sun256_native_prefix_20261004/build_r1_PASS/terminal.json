@@ -1,0 +1,119 @@
+{
+  "scope": "native SUN256 SU leaf archive only; no runtime/HE/corearray/provider or clock admission",
+  "source_commit": "9a1af78233dd6475b189da950fc0151d8e661b02",
+  "supervisor_pid": 2725902,
+  "verilator_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "verilator_version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "parameters": {
+    "ALAT": 3,
+    "AW": 30,
+    "BCAST_STAGES": 0,
+    "CLS_DRAIN": 0,
+    "KVT_SH": 9,
+    "LV": 7,
+    "M": 64,
+    "MLAT": 3,
+    "N": 256,
+    "NW": 16,
+    "RET_STAGES": 0
+  },
+  "limits": "no running time/memory/AS/file caps; EPYC atomic admission reservation32GiB/sharedreserve150GiB",
+  "commands": [
+    [
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "--cc",
+      "--top-module",
+      "ot_hdc_v41x_su_adapt",
+      "--prefix",
+      "VDsromSu256",
+      "--Mdir",
+      "/srv/opentallas-scratch/builds/hubble-dsrom-sun256-native-leaf-20261004-r1/obj",
+      "--output-split",
+      "20000",
+      "--output-split-cfuncs",
+      "200",
+      "-Wno-fatal",
+      "-CFLAGS",
+      "-O0",
+      "-GALAT=3",
+      "-GAW=30",
+      "-GBCAST_STAGES=0",
+      "-GCLS_DRAIN=0",
+      "-GKVT_SH=9",
+      "-GLV=7",
+      "-GM=64",
+      "-GMLAT=3",
+      "-GN=256",
+      "-GNW=16",
+      "-GRET_STAGES=0",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/ot_hdc_delay.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/ot_hdc_fpu.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/ot_hdc_sfu.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/ot_hdc_fastfp.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/ot_hdc_prefix.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "/srv/opentallas/repos/hubble-dsrom-sun256-9a1af7823/rtl/hdc/v41/ot_hdc_softplus.sv"
+    ],
+    [
+      "make",
+      "-C",
+      "/srv/opentallas-scratch/builds/hubble-dsrom-sun256-native-leaf-20261004-r1/obj",
+      "-f",
+      "VDsromSu256.mk",
+      "-j16",
+      "OPT_FAST=-O0",
+      "OPT_SLOW=-O0",
+      "VDsromSu256__ALL.a"
+    ]
+  ],
+  "stages": [
+    {
+      "name": "frontend",
+      "exit": 0,
+      "wall_seconds": 298.81947622000007
+    },
+    {
+      "name": "archive",
+      "exit": 0,
+      "wall_seconds": 44.203630856005475
+    }
+  ],
+  "frontend_pid": 2726312,
+  "compile_make_pid": 2785222,
+  "artifacts": {
+    "obj/VDsromSu256__ALL.a": {
+      "bytes": 205387736,
+      "sha256": "bd0d332b66c526fcdcc0c100185784101d1a11e55a00da14796fa72e8cdaaa2a"
+    },
+    "obj/VDsromSu256.h": {
+      "bytes": 116554,
+      "sha256": "c87d51e29a8e3e34148ea47455a56dbebd5c319c2959cb4be7125e5a29100f2b"
+    },
+    "obj/VDsromSu256__verFiles.dat": {
+      "bytes": 294192,
+      "sha256": "56be22efa55ef0fce54766a9c6869e0b5c764ed34024c295ec8d5b2f85057631"
+    },
+    "obj/VDsromSu256.mk": {
+      "bytes": 1938,
+      "sha256": "db55f35a2fbfca73c6b08691d3017d577cfa6d807fd4ea422d2edd74c0e8b59f"
+    },
+    "obj/VDsromSu256_classes.mk": {
+      "bytes": 67104,
+      "sha256": "fb2eb633d27a77d84744e96f17bdef6f90412cfe688e6c03246edfd095bb171c"
+    }
+  },
+  "verdict": "PASS_NATIVE_SU_ARCHIVE_ONLY",
+  "terminal_exit": 0
+}
