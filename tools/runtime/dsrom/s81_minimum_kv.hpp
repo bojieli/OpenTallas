@@ -72,6 +72,8 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
         blocks.clk=0;window.clk=0;blocks.eval();window.eval();
         // Do not update Nash's pre-edge data after his rising evaluation.
         // Its next prepare copies the now-settled native packed output.
+        // The canonical cold_start does not increment runtime.cycle().
+        if(!released) {prepared_cycle=-1;consumed=false;}
     }
 public:
     PackedKvProvider(DsromS81MinimumRuntime& r,Blocks& b,Window& w,
@@ -102,6 +104,25 @@ public:
         for(unsigned i=0;i<8;i++)window.blk_codes[i]=blocks.blk_codes[i];
         window.blk_scale=blocks.blk_scale;
         // blk_user comes from the actual descriptor/context owner, not zero.
+    }
+    // Existing ot_chip_v41x_kv_rope_reqmux[_c8] WINDOW client. Keep all four
+    // channels, native length/tag/beat and independent responses intact.
+    // The borrowed mux's existing C8 journal and backend remain clock owners;
+    // w_wr_done is routed committed visibility, NEVER w_rdy or acceptance.
+    // No per-load polling loop, new transaction queue, or credit=1 restriction.
+    template<class NativeKvRopeMux> void wire_backend(NativeKvRopeMux& mux) {
+        static_assert(sizeof(window.m_addr)==sizeof(mux.w_addr),
+                      "actual native four-stack address widths must match");
+        static_assert(sizeof(window.m_tag)==sizeof(mux.w_tag),
+                      "actual native tagged WINDOW client widths must match");
+        mux.w_v=window.m_v; mux.w_addr=window.m_addr; mux.w_len=window.m_len;
+        mux.w_tag=window.m_tag; mux.w_we=window.m_we;
+        mux.w_wdata=window.m_wdata; mux.w_wstrb=window.m_wstrb;
+        mux.w_srdy=window.s_rdy;
+        window.m_rdy=mux.w_rdy; window.m_wr_done=mux.w_wr_done;
+        window.s_v=mux.w_sv; window.s_tag=mux.w_stag;
+        window.s_beat=mux.w_sbeat; window.s_data=mux.w_sdata;
+        require(!mux.fault,"actual native WINDOW/RoPE backend mux fault");
     }
     // Raw 4*16*265 bits from native WINDOW merge to Nash PACKED_KV=1.
     // There is no host expansion, floating arithmetic or padding-history read.
