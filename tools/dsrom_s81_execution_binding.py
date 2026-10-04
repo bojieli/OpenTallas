@@ -56,6 +56,61 @@ class CanonicalS81Execution:
                                  for n,b in [('inputs/demand-r5.json.gz',demand_raw),
                                              ('r3/node_bindings.jsonl.gz',bindings_raw)]})
 
+    def target_source_nodes(self, layers, *, position, include_head=True):
+        """Complete source-order scopes for the DS1M native caller.
+
+        This selects no activations/history and executes no control branches.
+        Fences and control nodes remain in the sequence; the caller must use
+        their existing native completion paths, not discard them as non-math.
+        Dynamic expert dispatch still goes through dispatch at its real issue.
+        """
+        if type(position) is not int or position != 1048575:
+            raise ValueError('DS target caller requires position1048575')
+        if (not layers or any(type(x) is not int or not 0 <= x < 40 for x in layers)
+                or list(layers) != sorted(set(layers))):
+            raise ValueError('ordered distinct source layers0..39 required')
+        if type(include_head) is not bool:
+            raise ValueError('explicit head selection required')
+        scopes = list(layers) + (['head'] if include_head else [])
+        result = []
+        for scope in scopes:
+            selected = [n for n in self.source.nodes.values() if n['scope'] == scope]
+            instructions = [n for n in selected if n['kind'] == 'instruction']
+            if (not instructions or [n['instruction_index'] for n in instructions]
+                    != list(range(len(instructions)))):
+                raise ValueError('source scope has missing/reordered instruction')
+            result.extend(n['id'] for n in selected)
+        return tuple(result)
+
+    def target_native_operation(self, node, *, position, native_units, dynamic=None):
+        """One literal operation for the existing PrefixNativeEngine path.
+
+        Field nodes use dispatch instead; native dynamic selectors must be
+        actual captured values. No instruction is widened or re-encoded with
+        guessed runtime selectors. Control/fences require their real caller.
+        """
+        import hdc_isa_v41 as ISA
+        if type(position) is not int or position != 1048575:
+            raise ValueError('DS target caller requires position1048575')
+        source = self.source.nodes[node]
+        if source['kind'] != 'instruction' or self.source.bindings[node].get('address_bound'):
+            raise ValueError('use actual field dispatcher or fence consumer')
+        instruction = source['instruction']
+        if instruction['unit'] not in native_units:
+            raise ValueError('actual native operator provider absent')
+        word = ISA.encode(full_shape=True, **{k:tuple(v) if isinstance(v,list)
+                          and not k.startswith('_') else v for k,v in instruction.items()})
+        if hashlib.sha256(word.to_bytes(256,'little')).hexdigest() != source['template_word_sha256']:
+            raise ValueError('target literal source template changed')
+        producer = (int(node[4:]) if node in {f'L0.I{i}' for i in range(7)}
+                    else 9 + list(self.source.nodes).index(node))
+        if producer >= 1 << 14:
+            raise ValueError('publication producer entry14 exhausted')
+        return dict(index=producer, unit=instruction['unit'],
+                    template_sha256=source['template_word_sha256'],
+                    instruction=tuple((word >> (32*k)) & 0xffffffff for k in range(64)),
+                    output_extents=minimum_vm_extents(instruction,dynamic=dynamic))
+
     def dispatch(self, node, rank, *, expert_ids=None):
         return self.stage_join.compile_operation(self.source, node, rank, expert_ids=expert_ids)
 
