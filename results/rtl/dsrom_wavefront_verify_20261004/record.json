@@ -290,7 +290,7 @@
   "log_sha256": "54db3cc32eb37ebfbf57e45ca1fc71f492f8e620217dfe1ab3762f7af86e4d29"
  },
  "composition": {
-  "tau": 4.159,
+  "tau": 3.8879,
   "draft_over_ar": 0.1173,
   "measured_interval_overhead": 0.00408,
   "measured_visibility_over_occupancy": 0.02342,
@@ -307,14 +307,14 @@
     "ar_tok_s": 2466.2,
     "pass_m1": {
      "step_us": 974.94,
-     "mtp_tok_s": 4265.9
+     "mtp_tok_s": 3987.8
     },
     "wavefront_occupancy": {
      "ii_us": 12.9,
      "verify_us": 469.98,
      "verify_over_ar": 1.159,
      "step_us": 517.55,
-     "mtp_tok_s": 8036.0,
+     "mtp_tok_s": 7512.2,
      "gain_vs_pass": 0.8838
     },
     "wavefront_window": {
@@ -322,7 +322,7 @@
      "verify_us": 504.47,
      "verify_over_ar": 1.244,
      "step_us": 552.04,
-     "mtp_tok_s": 7533.9,
+     "mtp_tok_s": 7042.8,
      "gain_vs_pass": 0.7661
     }
    },
@@ -331,14 +331,14 @@
     "ar_tok_s": 2574.1,
     "pass_m1": {
      "step_us": 890.72,
-     "mtp_tok_s": 4669.3
+     "mtp_tok_s": 4364.9
     },
     "wavefront_occupancy": {
      "ii_us": 12.9,
      "verify_us": 452.99,
      "verify_over_ar": 1.166,
      "step_us": 498.56,
-     "mtp_tok_s": 8342.1,
+     "mtp_tok_s": 7798.3,
      "gain_vs_pass": 0.7866
     },
     "wavefront_window": {
@@ -346,11 +346,16 @@
      "verify_us": 468.3,
      "verify_over_ar": 1.205,
      "step_us": 513.87,
-     "mtp_tok_s": 8093.5,
+     "mtp_tok_s": 7565.9,
      "gain_vs_pass": 0.7334
     }
    }
-  }
+  },
+  "tau_superseded": {
+   "tau": 4.159,
+   "src": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (self-measured; owner rule 2026-10-04)"
+  },
+  "tau_src": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.by_draft_tokens.5 (published: vLLM PR #57432 TP4 (acc:VLLM_57432))"
  },
  "verdict": {
   "decision": "ADOPT (wavefront verify for DSpark m=1 on the DS-ROM array)",

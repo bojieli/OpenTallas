@@ -41,6 +41,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
+import third_party_tau as _TPT  # noqa: E402
 REC = ROOT / "results/rtl/dsrom_1m_measured_20261004"
 GOLD_DEFAULT = Path("/home/ubuntu/w17work/ref/ctx1048576_seed20260930")
 POS = 1048575
@@ -240,7 +241,7 @@ ATTN_JOB = dict(window128_qk_last=54, mixed640_qk_last=182, tail_after_last_row=
                 record="results/rtl/w11_attn_ploader.json (pwords2_psup2)")
 WAVEFRONT = dict(head_occ_us=12.37, l20_occ_us=11.62, overhead=0.00408, hop_us=0.48, positions=5,
                  record="results/rtl/dsrom_wavefront_verify_20261004/record.json")
-DRAFT = dict(fused_us=105.55, as_built_us=144.44, l1l2_nv5_us=56.07, seed_commit_us=3.217, tau=4.159,
+DRAFT = dict(fused_us=105.55, as_built_us=144.44, l1l2_nv5_us=56.07, seed_commit_us=3.217, tau=_TPT.tau_ds_v41(5),  # third-party tau (4.159 self-measured superseded)
              record="results/rtl/dsrom_dspark_step_slices_20261004/composition.json + "
                     "results/rtl/dsrom_fused_draft_head_20261004")
 MODEL_AR = {"1048576": 405.486}
