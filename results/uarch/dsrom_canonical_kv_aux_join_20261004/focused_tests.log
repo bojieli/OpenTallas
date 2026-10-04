@@ -1,0 +1,18 @@
+test_actual_census_and_all_rank_provider_copies (__main__.CanonicalJoinTests) ... ok
+test_auxiliary_omission_rejected (__main__.CanonicalJoinTests) ... ok
+test_compact_count_cannot_replace_actual (__main__.CanonicalJoinTests) ... ok
+test_historical_capture_is_not_replicated_to_array (__main__.CanonicalJoinTests) ... ok
+test_marker_encoding_change_rejected (__main__.CanonicalJoinTests) ... ok
+test_marker_ranges_share_existing_pair_without_overlap (__main__.CanonicalJoinTests) ... ok
+test_missing_rank_rejected (__main__.CanonicalJoinTests) ... ok
+test_no_qualification_or_zero_unknown_service_credit (__main__.CanonicalJoinTests) ... ok
+test_provider_overlap_rejected (__main__.CanonicalJoinTests) ... ok
+test_snapshot_change_rejected_before_composition (__main__.CanonicalJoinTests) ... ok
+test_storage_extent_overflow_rejected (__main__.CanonicalJoinTests) ... ok
+test_strict_other_inventory_rejected (__main__.CanonicalJoinTests) ... ok
+test_wrong_provider_home_rejected (__main__.CanonicalJoinTests) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 2.195s
+
+OK
