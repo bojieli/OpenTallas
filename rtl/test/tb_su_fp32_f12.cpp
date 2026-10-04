@@ -16,7 +16,7 @@ static uint32_t pick(std::mt19937_64& r){
 int main(int argc,char**argv){
   long n=argc>1?atol(argv[1]):2000000; uint64_t seed=argc>2?strtoull(argv[2],0,0):12345; std::mt19937_64 r(seed);
   Vtb_su_fp32_f12 t; t.clk=0; t.rst_n=0; t.v=0; t.a=0;t.b=0;
-  long bad[8]={0}, cmp=0;
+  long bad[10]={0}, cmp=0;
   for(long c=0;c<n+24;c++){
     t.rst_n = c>4;
     if(c>4 && c<n){ uint32_t a=pick(r), b;
@@ -27,9 +27,9 @@ int main(int argc,char**argv){
       else b=pick(r);
       t.v=r()%8!=0; t.a=a; t.b=b; } else t.v=0;
     t.clk=0; t.eval(); t.clk=1; t.eval();
-    if(c>20) for(int i=0;i<8;i++) if(t.mism&(1<<i)) bad[i]++;
+    if(c>20) for(int i=0;i<10;i++) if(t.mism&(1<<i)) bad[i]++;
     cmp++;
   }
-  printf("SU_FP32_F12_EQ cycles=%ld seed=%llu add_l4=%ld add_l5=%ld add_l5a=%ld add_l6=%ld mul_l5=%ld mul_l6b=%ld mul_l6=%ld mul_l7=%ld\n",
-         cmp,(unsigned long long)seed,bad[0],bad[1],bad[2],bad[3],bad[4],bad[5],bad[6],bad[7]);
-  long s=0; for(int i=0;i<8;i++) s|=bad[i]; return s?1:0;}
+  printf("SU_FP32_F12_EQ cycles=%ld seed=%llu add_l4=%ld add_l5=%ld add_l5a=%ld add_l6=%ld mul_l5=%ld mul_l6b=%ld mul_l6=%ld mul_l7=%ld add_l5i=%ld mul_l6i=%ld\n",
+         cmp,(unsigned long long)seed,bad[0],bad[1],bad[2],bad[3],bad[4],bad[5],bad[6],bad[7],bad[8],bad[9]);
+  long s=0; for(int i=0;i<10;i++) s|=bad[i]; return s?1:0;}

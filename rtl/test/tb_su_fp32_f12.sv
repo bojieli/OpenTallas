@@ -3,7 +3,7 @@
 // ot_hdc_fp32_add_fast / ot_hdc_fp32_mul_fast, cycle-aligned at each LAT, every output bit ({valid_out, err, y}).
 // Stimulus: rtl/test/tb_su_fp32_f12.cpp (random encodings biased to specials, subnormals, cancellation, ties).
 module tb_su_fp32_f12 (input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b,
-                       output wire [7:0] mism);
+                       output wire [9:0] mism);
     wire [31:0] ya, ym; wire [1:0] ea, em; wire va, vm;
     ot_hdc_fp32_add_fast u_ra (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(ya), .err(ea), .valid_out(va));
     ot_hdc_fp32_mul_fast u_rm (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(ym), .err(em), .valid_out(vm));
@@ -32,4 +32,10 @@ module tb_su_fp32_f12 (input wire clk, input wire rst_n, input wire v, input wir
         ot_hdc_fp32_mul_f12 #(.CUTS(C)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(e), .valid_out(vo));
         assign mism[4 + g] = rst_n && ({vo, e, y} != ((L == 3) ? {vm, em, ym} : dm[L - 3]));
     end endgenerate
+    // the lane builds' input-register units (ALAT 5 / MLAT 6)
+    wire [31:0] y5i, y6i; wire [1:0] e5i, e6i; wire v5i, v6i;
+    ot_hdc_fp32_add_f12_l5i u5i (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y5i), .err(e5i), .valid_out(v5i));
+    ot_hdc_fp32_mul_f12_l6i u6i (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y6i), .err(e6i), .valid_out(v6i));
+    assign mism[8] = rst_n && ({v5i, e5i, y5i} != da[2]);
+    assign mism[9] = rst_n && ({v6i, e6i, y6i} != dm[3]);
 endmodule

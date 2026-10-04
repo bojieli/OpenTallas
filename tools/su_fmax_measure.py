@@ -11,6 +11,10 @@ BCAST / RET alone, so they are the same for either source list.
         --fp dpi_beh --cases su_cases_v2.pkl
     python3 tools/su_fmax_measure.py su-run --f12 ... --n 64 --m 16 --fp rtl --cases su_cases_v2.pkl
     python3 tools/su_fmax_measure.py su-equiv --out O --su RTL.json,DPI.json --record EQ.json
+    python3 tools/su_fmax_measure.py local --su BASE.json@0.9e9 --su NEW.json@1.2e9 [--record R.json]
+        the local (serial-unit) term of the measured DS HBM baseline token (dshbm_baseline_measure.compose_program on
+        results/rtl/dshbm_baseline_measured_20261004 program / SM tables, TU-protocol board switch, SM at 1.2 GHz)
+        with each SU record priced at its serial clock (the model-priced quantiser / top-6 nodes scale with it)
 """
 from __future__ import annotations
 
@@ -20,7 +24,30 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-F12_SWAP = {"rtl/hdc/ot_hdc_fastfp_lat.sv": ["rtl/hdc/ot_hdc_fastfp_lat_f12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv"]}
+F12_SWAP = {"rtl/hdc/ot_hdc_fastfp_lat.sv": ["rtl/hdc/ot_hdc_fastfp_lat_f12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv"],
+            "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_lane_f12.sv"]}
+# the DPI benches: the f12 unit tops as latency stand-ins (rtl/test/sim_hdc_fp32_f12_dpi_tops.sv)
+F12_SWAP_DPI = {"rtl/hdc/ot_hdc_fastfp_lat.sv": ["rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+                                                 "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv"],
+                "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_lane_f12.sv"]}
+
+
+def set_mlat_f12(mlat, alat=3):
+    """rtl_hdc_v41x_vec_campaign.set_mlat's depths without its 3..5 / 3..4 range assert (the 1.2 GHz build runs MLAT 6 /
+    ALAT 5 on the f12 lane, whose own range check is ALAT 3..7 <= MLAT); the same formulas, unchanged."""
+    import rtl_hdc_v41x_vec_campaign as VC
+    I = VC.I
+    assert 3 <= alat <= mlat <= 8, (mlat, alat)
+    VC.MLAT, VC.ALAT = mlat, alat
+    VC.D_M1 = VC.D_STAGE = mlat
+    VC.D_AD = alat
+    VC.D_RSTEP = alat
+    VC.D_RED = 2 + mlat + 7 * alat
+    d_exp = 7 * mlat + 8 * alat + 4
+    d_sig = d_exp + alat + 19
+    VC.SFU_DEPTH = {I.SFU_NONE: 0, I.SFU_EXP: d_exp, I.SFU_SIGM: d_sig, I.SFU_SILU: d_sig,
+                    I.SFU_RSQRT: 1 + 9 * mlat + 3 * alat, I.SFU_SQRT: 31,
+                    I.SFU_SPSQRT: d_exp + 11 * mlat + 10 * alat + 50, I.SFU_EGATE: 1 + 31 + 1 + d_sig}
 
 
 def apply_swaps(swaps):
@@ -35,12 +62,57 @@ def apply_swaps(swaps):
         assert (ROOT / new).is_file(), new
 
 
+def cmd_local(argv):
+    import argparse
+    import json
+    import dshbm_baseline_measure as DM
+    import w19_hbm_token_compose as WC
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--su", action="append", required=True, help="SU record @ serial clock in Hz")
+    ap.add_argument("--base", default=str(ROOT / "results/rtl/dshbm_baseline_measured_20261004"))
+    ap.add_argument("--record", default=None)
+    a = ap.parse_args(argv)
+    base = Path(a.base)
+    prog = json.loads((base / "program.json").read_text())
+    sm = WC.SMTable([json.loads((ROOT / "results/rtl/w19_sm_real_ops.json").read_text()),
+                     json.loads((base / "sm_real_ops.json").read_text())], "ar")
+    coll = WC.w15_prod(json.loads((ROOT / "results/rtl/w15_hbm_nvls.json").read_text()), "hbm_p48_ss")
+    coll["select_cycles"] = 419
+    rows = []
+    for spec in a.su:
+        path, f = spec.rsplit("@", 1)
+        f = float(f)
+        rec = json.loads(Path(path).read_text())
+        su = DM.su_table(rec)
+        f_old = DM.F_SER
+        DM.F_SER = f                       # price_local scales the model-priced quantiser / top-6 by F_FAST / F_SER
+        try:
+            r = DM.compose_program(prog, sm, coll, su, WC, f_sm=DM.F_FAST, f_ser=f,
+                                   switch=("tomahawk_ultra_protocol", "board"))
+        finally:
+            DM.F_SER = f_old
+        rows.append(dict(su=path, su_sha256=DM.sha(Path(path)), config=rec["config"], serial_clock_hz=f,
+                         su_chain_cycles=su, local_us=r["parts_us"]["local"], parts_us=r["parts_us"],
+                         tokens_s=r["tokens_s"], local_by_fn_us=r["local_by_fn_us"], flags=r["flags"]))
+        print(f"{Path(path).name}  @{f / 1e9:.2f} GHz  local {r['parts_us']['local']:.2f} us  token {r['tokens_s']} tok/s "
+              f"parts {r['parts_us']}")
+    if a.record:
+        Path(a.record).write_text(json.dumps(dict(schema="opentallas.rtl.su_fmax_local_term.v1", rows=rows),
+                                             indent=1, default=float) + "\n")
+    return 0
+
+
 def main():
     argv = sys.argv[1:]
+    if argv and argv[0] == "local":
+        raise SystemExit(cmd_local(argv[1:]))
     swaps = {}
     if "--f12" in argv:
         argv.remove("--f12")
-        swaps.update(F12_SWAP)
+        fp = argv[argv.index("--fp") + 1] if "--fp" in argv else "rtl"
+        swaps.update(F12_SWAP if fp == "rtl" else F12_SWAP_DPI)
+        import rtl_hdc_v41x_vec_campaign as VC
+        VC.set_mlat = set_mlat_f12
     while "--swap" in argv:
         i = argv.index("--swap")
         old, new = argv[i + 1].split("=", 1)

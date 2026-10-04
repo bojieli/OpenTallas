@@ -429,3 +429,27 @@ module ot_hdc_fp32_mul_f12_l6 (input wire clk, rst_n, valid_in, input wire [31:0
                                output wire [1:0] err, output wire valid_out);
     ot_hdc_fp32_mul_f12 #(.CUTS(8'b01101011)) u (.*);
 endmodule
+// the lane builds (ot_hdc_v41x_vec MLAT 6 / ALAT 5): an INPUT register in front of the LAT-5 multiplier / LAT-4 adder,
+// so the lane's operand multiplexers (control decode + 3- to 5-way select, ~250 ps routed) own a whole stage
+// (measured: the LAT-4 adder behind the lane's AD multiplexer missed 0.833 ns by 364 ps at placement)
+module ot_hdc_f12_inreg (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output reg v, output reg [31:0] qa, qb);
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) v <= 1'b0;
+        else v <= valid_in;
+    end
+    always @(posedge clk) begin qa <= a; qb <= b; end
+endmodule
+module ot_hdc_fp32_add_f12_l5i (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+                                output wire [1:0] err, output wire valid_out);
+    wire v; wire [31:0] qa, qb;
+    ot_hdc_f12_inreg u_i (.clk(clk), .rst_n(rst_n), .valid_in(valid_in), .a(a), .b(b), .v(v), .qa(qa), .qb(qb));
+    ot_hdc_fp32_add_f12 #(.CUTS(6'b101010)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(qa), .b(qb), .y(y), .err(err),
+                                               .valid_out(valid_out));
+endmodule
+module ot_hdc_fp32_mul_f12_l6i (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+                                output wire [1:0] err, output wire valid_out);
+    wire v; wire [31:0] qa, qb;
+    ot_hdc_f12_inreg u_i (.clk(clk), .rst_n(rst_n), .valid_in(valid_in), .a(a), .b(b), .v(v), .qa(qa), .qb(qb));
+    ot_hdc_fp32_mul_f12 #(.CUTS(8'b01101010)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(qa), .b(qb), .y(y), .err(err),
+                                                 .valid_out(valid_out));
+endmodule
