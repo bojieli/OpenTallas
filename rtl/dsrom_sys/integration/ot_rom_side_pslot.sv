@@ -64,6 +64,9 @@ module ot_rom_side_pslot #(
     // registered update requests
     reg          inc_r, dec_r, inc_g;
     reg [IW-1:0] inc_i, dec_i;
+    // the same requests pre-decoded (user one-hot x slot one-hot): an entry's enable is one AND of two registers
+    reg [MAXU-1:0] inc_uh, dec_uh;
+    reg [NSL-1:0]  inc_sh, dec_sh;
     wire [IW-1:0] i_sel = {sel_user[UB-1:0], sel_pos[PSL-1:0]};
     reg          chk_r, chk_g;               // the arriving header, registered (checked one edge later)
     reg [IW-1:0] i_chk;
@@ -79,18 +82,23 @@ module ot_rom_side_pslot #(
             for (k = 0; k < N; k = k + 1) begin cnt[k] <= {CW{1'b0}}; gen[k] <= 1'b0; end
             ok_q <= 1'b0; conflict <= 1'b0; inc_r <= 1'b0; dec_r <= 1'b0; inc_g <= 1'b0; inc_i <= 0; dec_i <= 0;
             chk_r <= 1'b0; chk_g <= 1'b0; i_chk <= 0;
+            inc_uh <= {MAXU{1'b0}}; dec_uh <= {MAXU{1'b0}}; inc_sh <= {NSL{1'b0}}; dec_sh <= {NSL{1'b0}};
         end else begin
             inc_r <= inc_v && inc_user < MAXU;
             inc_i <= {inc_user[UB-1:0], inc_pos[PSL-1:0]}; inc_g <= inc_pos[PSL];
             dec_r <= dec_v && dec_user < MAXU;
             dec_i <= {dec_user[UB-1:0], dec_pos[PSL-1:0]};
-            if (inc_r && dec_r && inc_i == dec_i) begin
-                cnt[inc_i] <= cnt[inc_i] + CW'(1) - CW'(SIDE_IN);
-            end else begin
-                if (inc_r) cnt[inc_i] <= cnt[inc_i] + CW'(1);
-                if (dec_r) cnt[dec_i] <= cnt[dec_i] - CW'(SIDE_IN);
+            inc_uh <= (inc_v && inc_user < MAXU) ? (MAXU'(1) << inc_user) : {MAXU{1'b0}};
+            inc_sh <= NSL'(1) << inc_pos[PSL-1:0];
+            dec_uh <= (dec_v && dec_user < MAXU) ? (MAXU'(1) << dec_user) : {MAXU{1'b0}};
+            dec_sh <= NSL'(1) << dec_pos[PSL-1:0];
+            for (k = 0; k < MAXU * NSL; k = k + 1) begin
+                if ((inc_uh[k / NSL] && inc_sh[k % NSL]) || (dec_uh[k / NSL] && dec_sh[k % NSL]))
+                    cnt[IW'(k / NSL * (1 << PSL) + k % NSL)] <= cnt[IW'(k / NSL * (1 << PSL) + k % NSL)]
+                        + ((inc_uh[k / NSL] && inc_sh[k % NSL]) ? CW'(1) : CW'(0))
+                        - ((dec_uh[k / NSL] && dec_sh[k % NSL]) ? CW'(SIDE_IN) : CW'(0));
+                if (inc_uh[k / NSL] && inc_sh[k % NSL]) gen[IW'(k / NSL * (1 << PSL) + k % NSL)] <= inc_g;
             end
-            if (inc_r) gen[inc_i] <= inc_g;
             ok_q <= !sel_new && sel_user < MAXU && c_nx >= CW'(SIDE_IN) && g_nx == sel_pos[PSL];
             // a message for another generation of a slot that still holds unconsumed messages
             chk_r <= chk_v && chk_user < MAXU;
