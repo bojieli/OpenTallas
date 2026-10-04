@@ -26,6 +26,30 @@ def emit(root=ROOT):
     replace('static void load_images(DieMem& m, const std::string& p) {',
             'static void load_images(DieMem& m, const std::string& p, bool decoder) {')
     replace('struct DieMem {', 'struct DieMem {\n    std::vector<qwen_combined::NearPositionBases> near_slots;')
+    # The preparer already pins each slot's X address in the sparse preload.
+    # Observe those rows without assuming the single-position X_BASE layout.
+    replace('    auto x0 = QwenHex::load(preload, 1);', '''    auto x0 = QwenHex::load(preload, 1);
+    std::vector<size_t> readback_x_bases;
+    {
+        std::ifstream input(preload);std::string word;
+        while(input>>word)if(!word.empty() && word[0]=='@'){
+            size_t used=0;const auto base=std::stoull(word.substr(1),&used,16);
+            if(used!=word.size()-1 || base>VM_ELEMS-H)
+                fatal("actual slot X address outside VM");
+            readback_x_bases.push_back(size_t(base));
+        }
+    }
+    if(readback_x_bases.empty())readback_x_bases.push_back(X_BASE);
+    if(readback_x_bases.size()!=(accept_commit?acc_toks.size():1))
+        fatal("actual preload X slot count differs");''')
+    replace('                    fclose(fp);\n                    if (!kv_ideal && stages[cur].layer >= 0) {', '''                    fclose(fp);
+                    for(size_t slot=0;slot<readback_x_bases.size();++slot){
+                        fp=fopen((dir+"/"+stages[cur].name+"_die"+char('0'+d)+
+                            "_slot"+std::to_string(slot)+"_x.hex").c_str(),"w");
+                        for(int i=0;i<H;++i)fprintf(fp,"%08x\\n",rm_vm(v.rootp)[readback_x_bases[slot]+i]);
+                        fclose(fp);
+                    }
+                    if (!kv_ideal && stages[cur].layer >= 0) {''')
     replace('    m.prog = QwenHex::load(p + "/program.hex", 32);',
             '    if(decoder)m.near_slots=qwen_combined::load_near_position_bases(p+"/near_slot_bases.hex");\n    m.prog = QwenHex::load(p + "/program.hex", 32);')
     replace('if(m.desc.empty() || (m.desc[0]&3)!=3 || (m.desc[0]>>62)!=0)',
