@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // hbm-fmax-su (2026-10-04): FILE SWAP of rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv for the 1.2 GHz build (MLAT 6 / ALAT 5 with
-// rtl/hdc/ot_hdc_fastfp_lat_f12.sv): byte for byte the original except the ALAT range check (3..7, was 3..4).
+// rtl/hdc/ot_hdc_fastfp_lat_f12.sv): the original except the ALAT range check (3..7, was 3..4) and
+// A's BF16 round-up increment / decision registered at the capture (bit- and cycle-identical; PRE timing).
 // A source list names this file OR the original; the original (pinned by committed records) is unchanged.
 // ---------------------------------------------------------------------------
 // One lane of the V4.1 vector stream unit (ot_hdc_v41x_vec): the element
@@ -463,10 +464,18 @@ module ot_hdc_v41x_vec_lane #(
     // BF16, and truncated + one BF16 ulp) side by side and selected by the rounding decision, so no compare
     // waits for the rounding carry (bit-identical for all inputs: tools/w11_equiv_clip.ys; W11 timing fix)
     wire [31:0] a_t  = {x_a[31:16], 16'd0};
-    wire [15:0] a_hi1;
-    ot_hdc_kinc #(.W(16), .K(K)) u_au (.a(x_a[31:16]), .inc(1'b1), .y(a_hi1));
+    // hbm-fmax-su: A's BF16 round-up candidate and decision are formed at the capture from the word being captured
+    // and registered beside x_a (same values one stage earlier; the PRE stage was 45 ps over 0.833 ns with them in it)
+    wire [31:0] xa_in = rd_q[31:0];
+    wire [15:0] xa_hi1;
+    ot_hdc_kinc #(.W(16), .K(K)) u_au (.a(xa_in[31:16]), .inc(1'b1), .y(xa_hi1));
+    reg  [15:0] a_hi1;
+    reg         a_up;
+    always @(posedge clk) begin
+        a_hi1 <= xa_hi1;
+        a_up <= xa_in[15] & ((|xa_in[14:0]) | xa_in[16]);
+    end
     wire [31:0] a_u  = {a_hi1, 16'd0};
-    wire        a_up = x_a[15] & ((|x_a[14:0]) | x_a[16]);
     // pre_a's compares, as prefix compares: okey(v) <= okey(imm3) for the three candidates, and +0 <= imm3
     wire [31:0] k_imm3 = okey(cx_imm3);
     wire        le_x, le_t, le_u, le_0;

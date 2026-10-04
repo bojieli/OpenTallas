@@ -12,6 +12,9 @@
 //              bit 3  after the sentinel leading-zero count                               (= add_lat C_D)
 //              bit 4  after the cancellation shift and the exponent adjust                (= add_lat s2)
 //              bit 5  after the rounding increment                                        (= add_lat C_C)
+//              bit 6  after the decode and the exponent differences, BEFORE the magnitude compare (new; the lane's
+//                     LAT-5 adder 7'b1101010: lane operand mux + decode + differences | compare, alignments, swap |
+//                     add, LZC | shift, round | encode)
 //     add_lat LAT 3 is CUTS 6'b010010; the f12 LAT-4 adder is 6'b101010: decode..swap | add, LZC | shift,
 //     round | encode -- the rounding increment moves in front of s2 so the encode stage carries only the
 //     exponent carry and the refusals.
@@ -65,9 +68,9 @@ module ot_hdc_fp32_add_f12 #(
 );
     localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
     localparam integer K0 = CUTS % 2, K1 = (CUTS / 2) % 2, K2 = (CUTS / 4) % 2, K3 = (CUTS / 8) % 2,
-                       K4 = (CUTS / 16) % 2, K5 = (CUTS / 32) % 2;
+                       K4 = (CUTS / 16) % 2, K5 = (CUTS / 32) % 2, K6 = (CUTS / 64) % 2;
 
-    // ---- decode, magnitude compare, exponent differences ----------------------------------------------
+    // ---- decode, exponent differences (bit 6: cut here, the magnitude compare after it); magnitude compare ----------------------------------------------
     wire [7:0]  a_field = a[30:23];
     wire [7:0]  b_field = b[30:23];
     wire [7:0]  a_exp = (a_field == 8'd0) ? 8'd1 : a_field;
@@ -79,18 +82,23 @@ module ot_hdc_fp32_add_f12 #(
     wire b_zero = (b[30:0] == 31'd0);
     wire bypass = nonfinite || a_zero || b_zero;
     wire [31:0] bypass_code = nonfinite ? 32'd0 : (a_zero ? (b_zero ? 32'd0 : b) : a);
-    wire cmp_c;
-    wire [30:0] cmp_s;
-    ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
     wire [7:0] dab, dba;
     wire dab_c, dba_c;
     ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
     ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
+    localparam integer WA6 = 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8 + 31 + 31;
+    wire [WA6-1:0] q6;
+    ot_hdc_f12_cut #(.W(WA6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rst_n),
+        .d({valid_in, bypass, (nonfinite ? E_NONFINITE : E_NONE), bypass_code, a[31] ^ b[31], a[31], b[31],
+            a_exp, b_exp, a_man, b_man, dab, dba, a[30:0], b[30:0]}), .q(q6));
+    wire [30:0] c_a = q6[61:31], c_b = q6[30:0];
+    wire cmp_c;
+    wire [30:0] cmp_s;
+    ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(c_a), .b(~c_b), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
     localparam integer WA = 1 + 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8;
     wire [WA-1:0] qa;
     ot_hdc_f12_cut #(.W(WA), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rst_n),
-        .d({valid_in, !cmp_c, bypass, (nonfinite ? E_NONFINITE : E_NONE), bypass_code, a[31] ^ b[31], a[31], b[31],
-            a_exp, b_exp, a_man, b_man, dab, dba}), .q(qa));
+        .d({q6[WA6-1], !cmp_c, q6[WA6-2:62]}), .q(qa));
     wire        x_v, x_swap, x_byp, x_sub, x_as, x_bs;
     wire [1:0]  x_err;
     wire [31:0] x_code;
@@ -428,6 +436,10 @@ endmodule
 module ot_hdc_fp32_mul_f12_l6 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
                                output wire [1:0] err, output wire valid_out);
     ot_hdc_fp32_mul_f12 #(.CUTS(8'b01101011)) u (.*);
+endmodule
+module ot_hdc_fp32_add_f12_l5x (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+                                output wire [1:0] err, output wire valid_out);
+    ot_hdc_fp32_add_f12 #(.CUTS(7'b1101010)) u (.*);
 endmodule
 // the lane builds (ot_hdc_v41x_vec MLAT 6 / ALAT 5): an INPUT register in front of the LAT-5 multiplier / LAT-4 adder,
 // so the lane's operand multiplexers (control decode + 3- to 5-way select, ~250 ps routed) own a whole stage

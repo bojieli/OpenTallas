@@ -3,7 +3,7 @@
 // hbm-fmax-su (2026-10-04): the 1.2 GHz FILE SWAP of rtl/hdc/ot_hdc_fastfp_lat.sv -- the same modules (ot_hdc_qmul_lat,
 // ot_hdc_qadd_lat, ot_hdc_kadd / _kge / _kinc) with the serial-domain latencies mapped to the units that close
 // 0.833 ns at ASAP7 SS (rtl/hdc/ot_hdc_fp32_f12.sv): the multiplier at LAT 5 / 6 is ot_hdc_fp32_mul_f12_l5 / _l6i,
-// the keep-prefix adder at LAT 4 / 5 is ot_hdc_fp32_add_f12_l4 / _l5i (the i: an input register).  Same function, same latency, so a unit
+// the keep-prefix adder at LAT 4 / 5 is ot_hdc_fp32_add_f12_l4 / _l5x (cut after the decode / exponent differences).  Same function, same latency, so a unit
 // built from either file is cycle- and bit-identical (rtl/test/tb_su_fp32_f12.sv).  A source list names this
 // file OR the original, never both; the original (pinned by committed records) is unchanged.
 // Needs rtl/hdc/ot_hdc_fp32_f12.sv besides the original's dependencies.
@@ -68,8 +68,9 @@ module ot_hdc_qadd_lat #(
         // 1.2 GHz: decode..swap | add + LZC | shift + round | encode
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 5) begin : g_keep5
-        // 1.2 GHz lane build: an input register (the lane's operand multiplexer), then the LAT-4 unit
-        ot_hdc_fp32_add_f12_l5i u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        // 1.2 GHz lane build: the lane's operand multiplexer + decode + exponent differences | compare, alignments,
+        // swap | add, LZC | shift, round | encode (an input register in front of the LAT-4 unit missed by 21-50 ps)
+        ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 3) begin : g_keep
         ot_hdc_fp32_add_lat3 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else begin : g_keepn

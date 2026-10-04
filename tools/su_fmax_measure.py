@@ -25,17 +25,20 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 F12_SWAP = {"rtl/hdc/ot_hdc_fastfp_lat.sv": ["rtl/hdc/ot_hdc_fastfp_lat_f12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv"],
-            "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_lane_f12.sv"]}
+            "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_lane_f12.sv"],
+            "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": ["rtl/hdc/v41x/ot_hdc_v41x_sfu_f12.sv"]}
 # the DPI benches: the f12 unit tops as latency stand-ins (rtl/test/sim_hdc_fp32_f12_dpi_tops.sv)
 F12_SWAP_DPI = {"rtl/hdc/ot_hdc_fastfp_lat.sv": ["rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
                                                  "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv"],
-                "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_lane_f12.sv"]}
+                "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_lane_f12.sv"],
+                "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": ["rtl/hdc/v41x/ot_hdc_v41x_sfu_f12.sv"]}
 
 
-def set_mlat_f12(mlat, alat=3):
+def set_mlat_f12(mlat, alat=3, VC=None):
     """rtl_hdc_v41x_vec_campaign.set_mlat's depths without its 3..5 / 3..4 range assert (the 1.2 GHz build runs MLAT 6 /
     ALAT 5 on the f12 lane, whose own range check is ALAT 3..7 <= MLAT); the same formulas, unchanged."""
-    import rtl_hdc_v41x_vec_campaign as VC
+    if VC is None:
+        import rtl_hdc_v41x_vec_campaign as VC
     I = VC.I
     assert 3 <= alat <= mlat <= 8, (mlat, alat)
     VC.MLAT, VC.ALAT = mlat, alat
@@ -80,21 +83,22 @@ def cmd_local(argv):
     coll["select_cycles"] = 419
     rows = []
     for spec in a.su:
-        path, f = spec.rsplit("@", 1)
+        path, f, *P = spec.split("@")          # path@clock[@positions]: P > 1 prices the MTP verify pass
         f = float(f)
+        P = int(P[0]) if P else 1
         rec = json.loads(Path(path).read_text())
         su = DM.su_table(rec)
         f_old = DM.F_SER
         DM.F_SER = f                       # price_local scales the model-priced quantiser / top-6 by F_FAST / F_SER
         try:
             r = DM.compose_program(prog, sm, coll, su, WC, f_sm=DM.F_FAST, f_ser=f,
-                                   switch=("tomahawk_ultra_protocol", "board"))
+                                   switch=("tomahawk_ultra_protocol", "board"), P=P)
         finally:
             DM.F_SER = f_old
-        rows.append(dict(su=path, su_sha256=DM.sha(Path(path)), config=rec["config"], serial_clock_hz=f,
+        rows.append(dict(positions=P, su=path, su_sha256=DM.sha(Path(path)), config=rec["config"], serial_clock_hz=f,
                          su_chain_cycles=su, local_us=r["parts_us"]["local"], parts_us=r["parts_us"],
                          tokens_s=r["tokens_s"], local_by_fn_us=r["local_by_fn_us"], flags=r["flags"]))
-        print(f"{Path(path).name}  @{f / 1e9:.2f} GHz  local {r['parts_us']['local']:.2f} us  token {r['tokens_s']} tok/s "
+        print(f"{Path(path).name}  P{P} @{f / 1e9:.2f} GHz  local {r['parts_us']['local']:.2f} us  token {r['tokens_s']} tok/s "
               f"parts {r['parts_us']}")
     if a.record:
         Path(a.record).write_text(json.dumps(dict(schema="opentallas.rtl.su_fmax_local_term.v1", rows=rows),
@@ -107,6 +111,19 @@ def main():
     if argv and argv[0] == "local":
         raise SystemExit(cmd_local(argv[1:]))
     swaps = {}
+    if argv and argv[0] == "campaign-kr":
+        # the fusion build's campaign (tools/rtl_hdc_v41x_vec_kr_campaign.py) on the 1.2 GHz sources
+        import rtl_hdc_v41x_vec_kr_campaign as KC
+        sw = {"rtl/hdc/ot_hdc_fastfp_lat.sv": F12_SWAP["rtl/hdc/ot_hdc_fastfp_lat.sv"],
+              "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_f12.sv"],
+              "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": ["rtl/hdc/v41x/ot_hdc_v41x_sfu_f12.sv"]}
+        for lst in (KC.RTL, KC.LIB):
+            lst[:] = [ROOT / x for p in lst for x in (sw.get(str(Path(p).relative_to(ROOT)), [str(Path(p).relative_to(ROOT))]))]
+        KC.set_mlat = lambda m, a=3: set_mlat_f12(m, a, KC)
+        KC.TB_SFU = ROOT / "rtl/test/tb_hdc_v41x_vec_sfu_f12.sv"
+        print("source swaps:", sw, flush=True)
+        sys.argv = [str(ROOT / "tools/rtl_hdc_v41x_vec_kr_campaign.py")] + argv[1:]
+        raise SystemExit(KC.main())
     if "--f12" in argv:
         argv.remove("--f12")
         fp = argv[argv.index("--fp") + 1] if "--fp" in argv else "rtl"
@@ -121,8 +138,15 @@ def main():
     if swaps:
         apply_swaps(swaps)
         print("source swaps:", {k: v for k, v in swaps.items()}, flush=True)
-    sys.argv = [str(ROOT / "tools/dshbm_baseline_measure.py")] + argv
     import runpy
+    if argv and argv[0] == "campaign":
+        # the unit's own spec / op-type campaign (tools/rtl_hdc_v41x_vec_campaign.py, the ROM designs' bench) on the
+        # swapped sources: python3 tools/su_fmax_measure.py campaign --f12 --mlat 6 --alat 5 [--quick] --out R.json
+        import rtl_hdc_v41x_vec_campaign as VC
+        VC.TB_SFU = ROOT / "rtl/test/tb_hdc_v41x_vec_sfu_f12.sv"
+        sys.argv = [str(ROOT / "tools/rtl_hdc_v41x_vec_campaign.py")] + argv[1:]
+        raise SystemExit(VC.main())
+    sys.argv = [str(ROOT / "tools/dshbm_baseline_measure.py")] + argv
     runpy.run_path(str(ROOT / "tools/dshbm_baseline_measure.py"), run_name="__main__")
 
 
