@@ -130,6 +130,40 @@ module tb_gpu_hbm_system;
         $fflush();
     end
 
+`ifdef GPU_SYS_TRACE
+    // ---------------- determinism trace (+define+GPU_SYS_TRACE): per SM, a running hash of every global store
+    // (address, data, strobe) and collective payload, printed at each kernel completion with the cycle.  Sampled at
+    // negedge clk_sm, where every flop output is settled, so the trace itself is free of same-edge ordering.
+    // XWRACE counts negedges where a block-scaled X-tile write (bd_xw) is pending on the same edge a TCXB/TCXE issues
+    // (the case where the issuing instruction overwrites bd_xd before the X memory samples it).
+    for (genvar td = 0; td < ND; td++) begin : g_trd
+        for (genvar ts = 0; ts < NSM; ts++) begin : g_trs
+            longint unsigned h = 64'hcbf29ce484222325;
+            integer nk = 0, nxr = 0;
+            function automatic longint unsigned fold(input longint unsigned hh, input longint unsigned v);
+                fold = (hh ^ v) * 64'h100000001b3;
+            endfunction
+            always @(negedge clk_sm) begin
+                if (dut.g_on.g_die[td].g_sm[ts].u_sm.lreq_v && dut.g_on.g_die[td].g_sm[ts].u_sm.lreq_rdy &&
+                    dut.g_on.g_die[td].g_sm[ts].u_sm.lreq_we) begin
+                    h = fold(h, {32'd0, dut.g_on.g_die[td].g_sm[ts].u_sm.lreq_addr});
+                    h = fold(h, {32'd0, dut.g_on.g_die[td].g_sm[ts].u_sm.lreq_wstrb});
+                    for (int q = 0; q < 4; q++) h = fold(h, dut.g_on.g_die[td].g_sm[ts].u_sm.lreq_wdata[q*64 +: 64]);
+                end
+                if (dut.g_on.g_die[td].g_sm[ts].u_sm.coll_req_v && dut.g_on.g_die[td].g_sm[ts].u_sm.coll_req_rdy)
+                    for (int q = 0; q < NL / 2; q++) h = fold(h, dut.g_on.g_die[td].g_sm[ts].u_sm.coll_data[q*64 +: 64]);
+                if (HAS_BD != 0 && dut.g_on.g_die[td].g_sm[ts].u_sm.g_on.bd_xw && dut.g_on.g_die[td].g_sm[ts].u_sm.g_on.can_issue &&
+                    (dut.g_on.g_die[td].g_sm[ts].u_sm.g_on.op == 8'h43 || dut.g_on.g_die[td].g_sm[ts].u_sm.g_on.op == 8'h45))
+                    nxr = nxr + 1;
+                if (dut.g_on.g_die[td].g_sm[ts].u_sm.sm_done) begin
+                    $display("TRACE die %0d sm %0d kernel %0d cyc %0d hash %016h xwrace %0d", td, ts, nk, cyc_sm, h, nxr);
+                    nk = nk + 1;
+                end
+            end
+        end
+    end
+`endif
+
     reg [31:0] r32;
     reg [63:0] w0, w1;
     integer cq_head, phase, got_last, ntok;

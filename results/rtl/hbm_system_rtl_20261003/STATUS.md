@@ -27,9 +27,24 @@ Branch: claude/hbm-system-rtl-20261003 (pushed). Records: results/rtl/hbm_system
 - W4 (Euclid) RTL was not on any origin branch when checked; W6/W5/W10 not integrated into this system top.
 - HBM controller/PHY remains the behavioural ot_hdc_hbm_model; weight load into HBM is a load-time image (no host DMA path).
 
-## DSpark lowering WIP (tools/gpu_sys/v41_dspark.py, committed as unfinished)
-Prefill, verify columns 0-3 and the real drafter's 4 drafts match the golden; the LAST verify column (4) of the first
-speculative step is wrong (t_4 = 200 vs golden 1566 real drafter; 1002 vs 1374 forced). Unconfirmed suspect: per-column
-state slot stride 4608 B is 36 B short of the DSpark hidden-state area (overwrites the next slot's first residual words):
-grow O_MH/CSTR. --emit never run. Layer kernel 6,289 words, ~12.2k IMEM per SM -> needs IMW=14.
-v41_hbm.py was generalised for it; the committed AR program is byte-identical.
+## DSpark lowering (tools/gpu_sys/v41_dspark.py)
+FIXED 2026-10-04 (9a76465cf): the per-column state slot stride was 4608 B, 36 B short of its contents (X 2560 + PRE 16 +
+CTR 4 + SEL 128 + NSEL 4 + MH 3 x 640 = 4644 B): the last main-hidden part overwrote the next slot's first residual
+words and broke the last verify column.  CSTR is now 4672 (derived, asserted).  Functional-machine gate, ngen 8:
+--drafter forced: tokens OK, logits bit-exact, passes equal, accepts [0,1,2,3], 3,472 launches;
+--drafter dspark: tokens OK, logits bit-exact, passes equal, accepts [0]*7, 6,095 launches
+(v41_dspark_check_{forced,dspark}.log).  --emit and the RTL run are not done.  Layer kernel 6,289 words,
+~12.2k IMEM per SM -> needs IMW=14.
+
+## Multi-thread determinism (2026-10-04)
+The DS V4.1 system run was exact single-threaded (v41_e2e.json) and wrong under Verilator --threads 8 at every step.
+Cause (RTL race, not a Verilator bug): ot_gpu_simt_sm.sv wrote bd_xd (the block-scaled X-tile write data) with a
+BLOCKING assignment in its clocked block, and u_bdtc's xmem samples it in another clocked process on the edge after
+issue.  When an X write is pending on the edge a TCXB/TCXE issues (36 times per SM in every layer kernel, counted by
+the bench trace), the result depends on process order; single-thread Verilator orders it one way, --threads leaves it
+unordered.  Trace (+define+GPU_SYS_TRACE, per-SM hash of every global store and collective at each kernel end):
+original --threads 8 first differs at kernel 1 (layer 0) on all four SMs (cycles 361,379 vs 358,365), embed equal.
+Fix: bd_xd is a register (bd_xd <= the clocked block's own temporary bd_xn); the clocked block also no longer shares
+the comb LSU block's loop temporaries jj/lj/bi (harmless in Verilator, but a race in any event simulator).
+Fixed RTL: single-thread trace equal (cycles and hashes) to the original single-thread run; --threads 8 equal to both.
+Minimal repro: rtl/test/gpu_sys/repro_verilator_threads_blkseq.sv.  Runs: ot-epyc1tb .../hbm-system-rtl/det/.
