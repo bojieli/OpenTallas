@@ -7402,5 +7402,69 @@ def dsrom_s81_native_head_terminal():
         physical_SS_FF=False, trained_payload_qualified=False, adopted=False)
 
 
+def dsrom_s81_native_head_carried():
+    """Selected successor: unchanged native ROM carried argmax, full envelope."""
+    base=dsrom_s81_native_head_terminal()
+    # Declared storage of the existing LANES16/DEPTH8 reducer. Two512+last
+    # elastic registers in EACH of its input/output skids are counted.
+    native_bits=32*(32+4+1)+3*5+5*32+5*8+65+8*73+4*4+32+1+4*514
+    wrapper_bits=base['state_FF_bits_lower_bound']-82-2-1+64+1
+    return dict(base, schema='opentallas.dsrom.S81.native-head-carried.v1',
+        selected_comparator='rtl/rom/collectives/ot_rom_argmax_reduce.sv unchanged LANES16 DEPTH8',
+        predecessor_new_comparator='Isolated component reference only, not selected/adopted',
+        ranks=4, carried_chain_order=[0,1,2,3],
+        identity_envelope=dict(owner=47,request_sequence=64,flit=512,last=1),
+        packet_bits_with_envelope=624,
+        sequence_scope='64-bit host/native command envelope; actual provider mapping and no-wrap/closed-owner lease must be enrolled before source execution. No truncation into native tag8.',
+        local_tag8='constant0 internal only; full owner47+sequence64 checked at every accepted pair/upstream transfer and retained until actual downstream ACK',
+        root_input_bytes_per_cycle_peak=8,logit_output_bytes_per_cycle_peak=4,
+        accepted_frame_credits_per_rank=1,
+        native_depth8_not_eight_new_owner_credits=True,
+        native_declared_state_bits=native_bits,
+        wrapper_state_bits=wrapper_bits,
+        state_FF_bits_lower_bound=native_bits+wrapper_bits,
+        state_FF_cell_lower_bound_mm2=(native_bits+wrapper_bits)*DFF_UM2/1e6,
+        native_body_increment_if_already_charged_mm2=0,
+        body_charge_rule='Replace prior selector charge with existing native reducer inventory exactly once; state count is inventory, not additional full-body area',
+        global_flit_acceptance='Matching full owner/sequence only, rank-ascending source path, no second upstream frame. Native output held until local accepted logits all ACK and actual dn_ready.',
+        composed_single_user_cycles_lower_bound=32320+17,
+        composed_single_user_us_lower_bound=(32320+17)/900,
+        latency_scope='MODEL lower bound for one local merge+LANES16 reducer;4-rank skids/link/CDC/held ACK additive, actual chain measurement next',
+        fault_recovery='Sticky quarantine, drains accepted logit suffix; no restart or upstream-owner release on fault. Causal fault/recovery provider not invented.')
+
+
+def dsrom_s81_head_result_hook(roots=128):
+    """Selected actual ROM FP32 writer -> reused explicit-ID argmax hook."""
+    assert roots in (64,128)
+    levels=roots.bit_length()-1
+    native_declared_bits=2*roots*(32+32+1)+3*(levels+1)+(levels+1)*40+65+8*73+49+4*514
+    return dict(schema='opentallas.dsrom.S81.head-result-hook.v1',
+        opt_in_default=False, MACs_per_cycle=0, new_dot_arithmetic=False,
+        reused='ot_rom_argmax_reduce comparator, running best, FIFO and skid source; explicit actual row IDs replace inferred base+lane',
+        roots=roots, native_argmax_lanes=roots, native_argmax_depth=8,
+        source_input='Actual rom_we && capture_vm_accept, rom_wdata FP32, global ID=rank*32320+rom_waddr-head_obase*W',
+        head_admission='Contiguous m_k5120 split0 round0 amax1 mmode0, formatter mode1. Released BF16 head-normalizer input proof remains compiler/provider responsibility.',
+        native_tag8='Internal0; full capture_identity47 held/checked on carried input, never truncated',
+        comparison_rule='Actual global ID tie at leaf tree, running best and carried join; signed zeros equal; native NaN faults, return poison/nonfinite quarantines final token',
+        selected_storage_pairs=2525, selected_storage_macros=10100, retained_storage_increment_mm2=0,
+        replicas=4, source_return_bytes_per_cycle=roots*4,
+        source_return_boundary_bits=roots*(32+30+1),
+        carried_boundary_bits=512+1+47,
+        routing_tracks_required=dict(return_data=roots*32,return_mask=roots,carried_packet=513,carried_identity=47),
+        native_declared_state_bits_per_rank=native_declared_bits,
+        added_explicit_ID_state_bits_per_rank=2*roots*(32-levels),
+        adapter_state_bits_per_rank=178,
+        final_global_broadcast='Actual rank3 native record -> existing source multicast/collector, all4 core final_ready ACKs required; no local result accepted as global',
+        existing_body_charge='Reuse/reconcile prior head selector/collective charge once; explicit-ID delta and adapter separately, no storage charge duplication',
+        added_ID_FF_floor_mm2=2*roots*(32-levels)*DFF_UM2/1e6,
+        source_VM_logit_writes_per_rank=32320,
+        MACs_per_input_byte=0, comparator_intensity_per_input_byte=(roots-1)/(roots*4),
+        native_last_writer_to_local_slice_cycles_lower_bound=levels+3,
+        global_carried_edges='3rank boundaries plus actual native skids/link/CDC/ACK; no ideal overlap or physical0 assumption',
+        routing_channel_capacity=None, floorplan_slot_fit=None, SS_FF=False,
+        token_latency_in_model='Existing selected head dot/source delivery unchanged; native local slice tail levels+3 and carried transport/ACK additive; complete physical/token latency not qualified',
+        source_binding='One active actual capture command; hold native core idle until carried DN matched acceptance. Fault never publishes a token or clears owner.')
+
+
 if __name__ == "__main__":
     main()
