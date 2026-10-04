@@ -21,7 +21,8 @@
 // ot_v41_bmul2 (exact BF16 x BF16); any adder err or product fault is a sticky fault (fail closed).
 //
 // Timing: `go` at cycle G -> physical word a issued at G+2+a; the x pins must carry the (skewed) slice of physical
-// word a at cycle G+XLEAD+a.  Products of word a at G+11+a; chain stage s of logical word g at G+11+g+SK*s.
+// word a at cycle G+5+a (unchanged by the r3 transport stage: x is delayed with the word).  Products of word a
+// at G+13+a; chain stage s of logical word g at G+13+g+SK*s.
 // ---------------------------------------------------------------------------
 module ot_dsrom_head_elem #(
     parameter integer LV = 8,              // tree levels above the word node (row = 2^LV words)
@@ -107,15 +108,18 @@ module ot_dsrom_head_elem #(
             if (en0_q[bi * RP / 274]) cap0[bi] <= rd0[bi];
             if (en1_q[bi * RP / 274]) cap1[bi] <= rd1[bi];
         end
-    reg [255:0] w_r, x_r;
-    reg w_v, w_l;
+    // word transport: the bank capture flops sit at the macro pins, the word register at the lanes; one register
+    // stage between them (route r2: x1 capture flops driving the cross-element wire violated max slew)
+    reg [255:0] t_r, w_r, x_t, x_r;
+    reg t_v, t_l, w_v, w_l;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin w_v <= 1'b0; w_l <= 1'b0; end
-        else begin w_v <= iv[2]; w_l <= il[2]; end
+        if (!rst_n) begin t_v <= 1'b0; t_l <= 1'b0; w_v <= 1'b0; w_l <= 1'b0; end
+        else begin t_v <= iv[2]; t_l <= il[2]; w_v <= t_v; w_l <= t_l; end
     integer wi;
     always @(posedge clk) begin
-        for (wi = 0; wi < 256; wi = wi + 1) w_r[wi] <= sel_q[wi * RP / 256] ? cap1[wi] : cap0[wi];
-        x_r <= x;
+        for (wi = 0; wi < 256; wi = wi + 1) t_r[wi] <= sel_q[wi * RP / 256] ? cap1[wi] : cap0[wi];
+        w_r <= t_r;
+        x_t <= x; x_r <= x_t;
     end
 
     // ---------------- 16 multipliers, two systolic chunk chains --------------------------------------------------
@@ -123,18 +127,18 @@ module ot_dsrom_head_elem #(
     wire [15:0] pf;
     genvar l, s;
     generate for (l = 0; l < 16; l = l + 1) begin : g_m
-        ot_v41_bmul2 u_m (.clk(clk), .rst_n(rst_n), .v(w_v), .a({w_r[16*l +: 16], 16'd0}), .b({x_r[16*l +: 16], 16'd0}),
+        ot_dsrom_bmul3 u_m (.clk(clk), .rst_n(rst_n), .v(w_v), .a({w_r[16*l +: 16], 16'd0}), .b({x_r[16*l +: 16], 16'd0}),
                          .y(p[l]), .fault(pf[l]));
     end endgenerate
-    reg [4:0] pl;                          // lane-0 live, aligned with the products (bmul2 latency 5)
-    always @(posedge clk or negedge rst_n) if (!rst_n) pl <= 5'd0; else pl <= {pl[3:0], w_l};
+    reg [5:0] pl;                          // lane-0 live, aligned with the products (bmul3 latency 6)
+    always @(posedge clk or negedge rst_n) if (!rst_n) pl <= 6'd0; else pl <= {pl[4:0], w_l};
     wire [31:0] cs [0:1][0:8];
     wire        cv [0:1][0:8];
     wire [1:0]  ce [0:1][0:7];
     reg  [15:0] cerr;
     generate for (l = 0; l < 2; l = l + 1) begin : g_ch
         assign cs[l][0] = 32'd0;
-        assign cv[l][0] = pl[4];
+        assign cv[l][0] = pl[5];
         for (s = 0; s < 8; s = s + 1) begin : g_s
             ot_v41_fadd #(.CUT(CUT)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(cv[l][s]), .a(cs[l][s]), .b(p[8*l + s]),
                                           .y(cs[l][s+1]), .err(ce[l][s]), .valid_out(cv[l][s+1]));

@@ -306,7 +306,7 @@ def cmd_argmax(a):
 # ------------------------------------------------------------------------------------------------------------
 TB_BUNDLE = "rtl/test/dsrom_sys/tb_dsrom_1m_head_bundle.sv"
 BUNDLE_RTL = ["rtl/v41rom/ot_dsrom_head_bundle.sv", "rtl/v41rom/ot_dsrom_head_elem.sv", "rtl/v41rom/ot_v41_fadd.sv",
-              "rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_bmul2.sv", "rtl/hdc/ot_hdc_delay.sv",
+              "rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_bmul2.sv", "rtl/v41rom/ot_dsrom_bmul3.sv", "rtl/hdc/ot_hdc_delay.sv",
               "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v"]
 BUNDLE_ROWS, SK, NW = 128, gate.FAST_LAT, 8192
 BUNDLE0 = (GOLD_TOKEN // BUNDLE_ROWS) * BUNDLE_ROWS          # 21,888: the bundle holding the golden argmax row
