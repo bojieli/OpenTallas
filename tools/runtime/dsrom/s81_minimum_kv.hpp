@@ -34,6 +34,7 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
     uint16_t old_generation=0;
     std::optional<DsromS81PrefixOperation> held_consumer;
     bool held_go=false;
+    bool mux_bound=false;
     long prepared_cycle=-1;
 
     static void require(bool ok,const char* why) {
@@ -173,6 +174,37 @@ public:
         window.s_v=mux.w_sv; window.s_tag=mux.w_stag;
         window.s_beat=mux.w_sbeat; window.s_data=mux.w_sdata;
         require(!mux.fault,"actual native WINDOW/RoPE backend mux fault");
+    }
+    // Maxwell's NativeHbm clocks ONLY HBM. This is the single borrowed C8
+    // mux clock owner; its native journal samples the same prepared ports.
+    // Register once on the canonical runtime, independently of nested ME/KV.
+    // The caller's port-only join settles WINDOW/CKV/mux/HBM before snapshots;
+    // NativeHbm.prepare runs after those source inputs, before ANY rising.
+    template<class NativeKvRopeMux,class NativeBackend>
+    DsromS81MinimumParticipant mux_participant(NativeKvRopeMux& mux,NativeBackend& backend) {
+        require(!mux_bound&&mux.contextp()==runtime.context,
+                "C8 mux requires one canonical shared-edge owner");
+        require(backend.initialized(),"C8 mux requires actual native history initialization");
+        mux_bound=true;
+        auto self=this->shared_from_this();
+        return {"native-c8-kv-rope-mux",
+            [self,&mux,&backend](const auto&){
+                require(!self->fault()&&backend.initialized(),
+                        "C8 mux missing live initialized source");
+                mux.clk=0;mux.eval();
+                require(!mux.fault,"native C8 mux preparation fault");
+            },
+            [self,&mux,&backend](bool released){
+                // This minimum vehicle permits only initial shared cold reset,
+                // never a warm reset that can erase native mux/CKV ownership.
+                require(released||(!self->runtime.identity&&backend.drained()&&
+                                   !self->staged_debt&&!self->stream_active),
+                        "C8 mux reset would erase admitted context/debt");
+                mux.rst_n=released;mux.clk=1;mux.eval();
+                require(!mux.fault,"native C8 mux edge fault");
+            },
+            [&mux](bool released){mux.rst_n=released;mux.clk=0;mux.eval();},
+            [self,&mux](){return self->fault()||bool(mux.fault);}};
     }
     // The selected512 producer is the EXISTING native CKV die service, not
     // WINDOW's compatibility merger (which binds selected_count to zero).

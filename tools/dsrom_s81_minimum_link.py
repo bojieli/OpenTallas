@@ -16,6 +16,8 @@ def main():
                         help='completed minimum model archive; exported from host')
     parser.add_argument('--source', type=Path, action='append', default=[],
                         help='actual source factory/provider translation unit')
+    parser.add_argument('--link-library', action='append', default=[],
+                        help='required native host library, e.g. crypto for pinned target-entry SHA256')
     parser.add_argument('--linked-source', action='store_true',
                         help='link selected source factory/prefix/embedding directly; select caller "-"')
     parser.add_argument('--output', type=Path, required=True)
@@ -55,6 +57,7 @@ def main():
          str(args.pq / 'libVpq.a'), str(args.pb / 'libVpb.a'),
          *models,
          str(args.pq / 'libverilated.a'), '-ldl',
+         *[f'-l{name}' for name in args.link_library],
          '-o', str(args.output / 'minimum_element')],
     ]
     with (args.output / 'link.log').open('x') as log:

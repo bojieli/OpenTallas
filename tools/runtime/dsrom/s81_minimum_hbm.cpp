@@ -21,7 +21,7 @@ void NativeHbm::preload(const std::string& directory) {
         while(f>>token) {
             if(token[0]=='@'){address=std::stoull(token.substr(1),nullptr,16);positioned=true;}
             else {
-                if(!positioned||address>=4194304||token.size()!=64||
+                if(!positioned||address>=model.capacity_words||token.size()!=64||
                    token.find_first_not_of("0123456789abcdefABCDEF")!=std::string::npos)
                     throw std::runtime_error("invalid/out-of-bounds native HBM sparse sector");
                 ++address;any=true;
@@ -36,6 +36,29 @@ void NativeHbm::preload(const std::string& directory) {
     VDsromS81Hbm::s81_hbm_preload(directory.c_str());
     svSetScope(old);model.eval();
     if(!model.history_ready)throw std::runtime_error("native HBM preload did not finish");
+}
+void NativeHbm::preload_ckv(const std::string& directory) {
+    if(admitted||runtime.identity||!model.history_ready||model.ckv_history_ready||!drained())
+        throw std::runtime_error("CKV history init lacks cold backend/base history");
+    for(unsigned s=0;s<4;s++) {
+        std::ifstream f(std::filesystem::path(directory)/("ckv_s"+std::to_string(s)+".hex"));
+        if(!f)throw std::runtime_error("missing retained CKV stack source");
+        std::string a,word;bool any=false;
+        while(f>>a) {
+            if(!(f>>word))throw std::runtime_error("truncated retained CKV image");
+            uint64_t address=std::stoull(a,nullptr,16);
+            if(address<4194304||address>=model.capacity_words||word.size()!=64||
+               word.find_first_not_of("0123456789abcdefABCDEF")!=std::string::npos)
+                throw std::runtime_error("CKV source address/carrier invalid");
+            any=true;
+        }
+        if(!any)throw std::runtime_error("empty retained CKV stack source");
+    }
+    auto scope=svGetScopeFromName((std::string(model.name())+".DsromS81Hbm").c_str());
+    if(!scope)throw std::runtime_error("native CKV history init scope missing");
+    auto old=svSetScope(scope);
+    VDsromS81Hbm::s81_hbm_preload_ckv(directory.c_str());svSetScope(old);model.eval();
+    if(!model.ckv_history_ready)throw std::runtime_error("native CKV history load unfinished");
 }
 DsromS81MinimumParticipant NativeHbm::participant() {
     auto self=shared_from_this();
