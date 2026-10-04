@@ -22,7 +22,7 @@ def _one(text, old, new):
 
 def install(binding, original_export, output, *, drain=False, head=False,
             actual_collectives=None, trace=False, stage=None, accepted_pop=False,
-            workspace=False):
+            workspace=False, capture=False):
     """Return actual elaborator sources/parameters, with every flag default off.
 
     trace is simulation-only and records commands admitted at dut.cmd_go,
@@ -74,6 +74,9 @@ def install(binding, original_export, output, *, drain=False, head=False,
             s = _one(s, '    parameter integer C8_PUBLICATION=0,',
                      '    parameter integer S81_COMMAND_TRACE=0,\n    parameter integer S81_TRACE_STAGE=-1,\n    parameter integer S81_HOST_WORKSPACE=0,\n    parameter integer C8_PUBLICATION=0,')
             s = _one(s, '\nendmodule', DRAIN_SELECTION_GUARD + OBSERVER + WORKSPACE + '\nendmodule')
+        if capture:
+            from dsrom_s81_capture_parent import hook
+            s=hook(role,s)
         changed[p] = s
     dests = {p: output/'native'/p.name for p in changed}
     for p, dest in dests.items():
@@ -84,6 +87,9 @@ def install(binding, original_export, output, *, drain=False, head=False,
         if not dest.exists():
             dest.write_text(changed[p])
     sources = [dests.get(p, p) for p in paths]
+    if capture:
+        from dsrom_s81_capture_parent import dependencies
+        sources=dependencies(sources,output/'capture')
     for rel in DRAIN:
         p = ROOT/rel
         if not p.is_file():
@@ -102,6 +108,11 @@ def install(binding, original_export, output, *, drain=False, head=False,
                   verilator_args=result['verilator_args'] + drain_args + ['-GIDX_DRAIN_LOOKAHEAD='+str(int(drain)), '-GS81_COMMAND_TRACE='+str(int(trace)), '-GS81_TRACE_STAGE='+str(-1 if stage is None else stage), '-GS81_HOST_WORKSPACE='+str(int(workspace))],
                   capture_ready_not_inferred=True, parent_clock_loaded=False,
                   source_rebase='actual FASTPP PC21 L20; originals byte-identical')
+    if capture:
+        result['parameters']['S81_CAPTURE']=1
+        result['verilator_args'].extend(['-GS81_CAPTURE=1','-I'+str(ROOT/'rtl/hdc/v41')])
+        result['capture_added_idle_edges_per_executed_phase']=2
+        result['physical_admission']=False
     return result
 
 
@@ -181,12 +192,13 @@ def main():
     parser.add_argument('--accepted-pop',action='store_true')
     parser.add_argument('--workspace',action='store_true')
     parser.add_argument('--trace',action='store_true')
+    parser.add_argument('--capture',action='store_true')
     args=parser.parse_args()
     binding=ParentBinding(args.owner,args.selected,args.model_pin,args.interface_pin,
                           payload_interface=args.payload_interface, released_return_binding=args.released_return_binding)
     result=install(binding,args.original_export,args.output,drain=args.drain,
                    head=args.head,trace=args.trace,stage=args.stage,accepted_pop=args.accepted_pop,
-                   workspace=args.workspace)
+                   workspace=args.workspace,capture=args.capture)
     result['allocation_receipts']=binding.receipts
     text=json.dumps(result,default=str,indent=2)+'\n'
     receipt=Path(args.output)/'sources.json'

@@ -28,6 +28,9 @@
 #include "Vpq.h"
 #include "Vpb.h"
 #include "Vrd64.h"
+#ifndef DSROM_S81_CAPTURE
+#define DSROM_S81_CAPTURE 0
+#endif
 #include "Vattn.h"
 #include "svdpi.h"
 #include "qwen_rt_matvec.hpp"   // RtPool
@@ -354,6 +357,8 @@ struct DieBase {
     virtual bool c8_context(uint64_t&,uint32_t&,uint16_t&)=0;
     virtual bool c8_retired(uint64_t&)=0;
     virtual void c8_observe(long)=0;
+    virtual void capture_warm_reset(bool request)=0;
+    virtual bool capture_visible(uint64_t identity)=0;
     virtual bool c8_workspace_write(uint64_t identity, uint32_t address, uint32_t raw_bits)=0;
 #endif
     // collective ports
@@ -385,7 +390,11 @@ template <class DIE> struct Die : DieBase {
         // Verilator resolves $value$plusargs through the CALLING thread's context: run the die's initial blocks
         // (image loading) here, on this thread with the die's own context, before any pool thread evaluates it
         Verilated::threadContextp(&ctx);
-        d->clk = 0; d->rst_n = 0; d->eval();
+        d->clk = 0; d->rst_n = 0;
+#if DSROM_S81_CAPTURE
+        d->capture_reset_request=0; for(auto& word:d->capture_root_rows)word=0;
+#endif
+        d->eval();
         f.reset(new Field<DIE>(*d, pool, dir, id));
         if (const char* e = getenv("RT_SKIP")) f->skip_on = atoi(e) != 0;
     }
@@ -467,6 +476,25 @@ template <class DIE> struct Die : DieBase {
         // Source input loading only. This cannot grant context restoration or
         // fabricate a native write/drain ACK; the caller still owes both.
         return v41rt_c8_workspace_write(identity,int(address),int(raw_bits))==0;
+    }
+
+    void capture_warm_reset(bool request) override {
+#if DSROM_S81_CAPTURE
+        d->capture_reset_request=request;
+#else
+        if(request)throw std::runtime_error("capture reset requires selected S81 capture source");
+#endif
+    }
+    bool capture_visible(uint64_t identity) override {
+#if DSROM_S81_CAPTURE
+        if(identity>=(uint64_t(1)<<47))throw std::runtime_error("capture identity bounds");
+        // Real C8 quiet requires actual helper drained (cold empty or completed), alongside
+        // native KV publication. FIFO empty or host grant cannot satisfy it.
+        return d->capture_identity==identity && d->c8_write_quiet &&
+               !d->capture_live && !d->capture_fault && !d->c8_write_quarantine;
+#else
+        return false;
+#endif
     }
     long c8_observed_cycle=-1;
     void c8_observe(long cycle) override {
