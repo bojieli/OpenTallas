@@ -4,10 +4,10 @@
 #include <map>
 #include <memory>
 
-// Actual native XU port provider, not a software SELECT/Sinkhorn evaluator.
-// NativeLeaf is the existing ot_hdc_v41x_xu_adapt elaboration selected by the
-// full-shape core: AW30 NW21 K512 IKW12 SK_STEP7 X_SEL1 X_EG1 SQ4 SW16
-// SK2048 SLAW8. Reuse that exact model; do not substitute default AW24/NW16.
+// Actual native XU port provider, not a software Sinkhorn evaluator.
+// Arch's selected source is g_xu_a/ot_hdc_v41_xu: AW30 NW21 K512 IKW12
+// SK_STEP7, with the actual source's HDC_SINKHORN_SEQ definition retained.
+// Reuse that exact model; do not substitute default AW24/NW16 or g_xu_x.
 // The unified model already prices sinkhorn_select_engram and serial Sinkhorn
 // (tools/uarch_model.py). No engine, arithmetic, clock or geometry is changed.
 // The caller retains/registers this participant ONCE on its shared host clock.
@@ -33,11 +33,6 @@ template<class NativeLeaf> class DsromS81MinimumXu {
             result|=((op.instruction[(off+j)/32]>>((off+j)%32))&1u)<<j;
         return result;
     }
-    template<class Wide> static uint32_t packed(const Wide& w,unsigned off,unsigned n) {
-        uint32_t result=0;
-        for(unsigned j=0;j<n;++j)result|=((w[(off+j)/32]>>((off+j)%32))&1u)<<j;
-        return result;
-    }
     bool same_operation(const DsromS81PrefixOperation& op)const {
         return operation && operation->index==op.index &&
                operation->unit==op.unit && operation->instruction==op.instruction;
@@ -48,18 +43,11 @@ template<class NativeLeaf> class DsromS81MinimumXu {
         leaf->i_src=field(op,1457,30); leaf->i_dst=field(op,1487,30);
         leaf->i_n=field(op,1517,21); leaf->i_k=field(op,1544,12);
         leaf->i_layer=field(op,1562,1);
-        // Current enrolled literal SINK/FP32 SEL has no BF16 dynamic selector.
-        leaf->i_bf16=0;
     }
-    uint32_t read(uint32_t address,bool masked_padding=false)const {
+    uint32_t read(uint32_t address)const {
         require(io.span_lease(identity,source,count),"XU source version revoked during native execution");
         if(address>=source && uint64_t(address)-source<input.size())
             return input[address-source];
-        // Re-specified SELECT's final quarter beat masks lanes >=n in RTL.
-        // They carry no read owner or payload authority. No live lane gets zero.
-        const uint64_t padded=4ull*16*((count+63ull)/64);
-        if(masked_padding && address>=source+count &&
-           uint64_t(address)<uint64_t(source)+padded)return 0;
         throw std::runtime_error("XU native read outside actual leased operands");
     }
     void capture(uint32_t address,uint32_t bits) {
@@ -95,7 +83,6 @@ public:
         leaf->token=0;leaf->first=0;leaf->i_hslot=0;
         leaf->vr_q=0;leaf->cr_q=0;
         for(unsigned j=0;j<32;++j)leaf->xr_q[j]=0;
-        for(unsigned j=0;j<64;++j)leaf->vsl_q[j]=0;
         for(unsigned j=0;j<9;++j)leaf->er_q[j]=0;
     }
     bool inputs_ready(const DsromS81PrefixOperation& op) {
@@ -110,7 +97,7 @@ public:
                 require(field(op,1538,6)==0 && field(op,1556,6)==0,
                         "XU requires actual source-resolved dynamic count/k before binding");
                 opcode=field(op,1455,2);
-                require(opcode<=1,"EHASH/EGATHER requires real source CROM/Engram provider, not zero replies");
+                require(opcode==1,"only actual literal Sinkhorn enrolled; SEL/EHASH/EGATHER need their source providers");
                 source=field(op,1457,30);destination=field(op,1487,30);
                 count=opcode==1?16:field(op,1517,21);
                 require(count>0 && uint64_t(source)+count<=(1u<<19),"XU input extent/address19");
@@ -157,22 +144,17 @@ public:
             const bool accept=released&&leaf->go&&leaf->ready;
             auto scalar=leaf->vr_q;
             std::array<uint32_t,32> wide{};
-            std::array<uint32_t,64> select{};
             for(unsigned j=0;j<32;++j)wide[j]=leaf->xr_q[j];
-            for(unsigned j=0;j<64;++j)select[j]=leaf->vsl_q[j];
             if(released) {
                 if(leaf->vr_re)scalar=read(leaf->vr_addr);
                 if(leaf->xr_re)for(unsigned j=0;j<16;++j)wide[j]=read(leaf->xr_addr+j);
-                for(unsigned q=0;q<4;++q)if((leaf->vsl_re>>q)&1)
-                    for(unsigned j=0;j<16;++j)
-                        select[q*16+j]=read(packed(leaf->vsl_addr,q*30,30)+j,true);
                 require(!leaf->cr_re && !leaf->er_re,"unbound XU ROM request cannot return zero");
             }
             if(accept) {require(operation && fetched==input.size(),"unprepared actual XU accept");accepted=true;}
             leaf->rst_n=released;leaf->clk=1;leaf->eval(); // Native reads see OLD Q.
             leaf->vr_q=scalar;
             for(unsigned j=0;j<32;++j)leaf->xr_q[j]=wide[j];
-            for(unsigned j=0;j<64;++j)leaf->vsl_q[j]=select[j]; // synchronous NEW Q after edge
+            // Registered memory Q becomes visible only after the native edge.
             if(released) {
                 require(!leaf->fault,"actual XU arithmetic/control fault");
                 if(leaf->vw_we)capture(leaf->vw_addr,leaf->vw_data);
@@ -195,9 +177,15 @@ template<class NativeLeaf> DsromS81PrefixNativeEngine dsrom_s81_bind_minimum_xu(
         throw std::runtime_error("XU same-bank actual source accept callbacks required");
     auto p=std::make_shared<DsromS81MinimumXu<NativeLeaf>>(
         runtime,identity,publication,io,std::move(native));
-    return {{"native-XU-source-SEL-SINK",[p](const auto& r){p->prepare(r);},
+    return {{"native-XU-source-SINK",[p](const auto& r){p->prepare(r);},
         [p](bool released){p->rising(released);},[p](bool released){p->falling(released);},
         [p](){return p->fault();}},[p](){return p->ready();},[p](){return p->idle();},
         [p](const auto& op){return p->inputs_ready(op);},
         [p](const auto& op,bool go){p->drive(op,go);}};
 }
+
+// Concrete selected primitive instantiation in s81_minimum_xu.cpp. Link the
+// unchanged ot_hdc_v41_xu full-shape archive with generated prefix VDsromXu.
+DsromS81PrefixNativeEngine dsrom_s81_bind_minimum_xu(
+    DsromS81MinimumRuntime&,uint64_t,dsrom_s81_minimum::PrefixPublication&,
+    const DsromS81MinimumSourceIo&,const DsromS81MinimumSourceTags&);

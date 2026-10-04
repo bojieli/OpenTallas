@@ -6899,6 +6899,36 @@ def hbm_switch_latency_range():
 hbm_switch_latency_measured = hbm_switch_latency_range
 
 
+HBM_DRAFT_MEASURED = "results/rtl/dshbm_dspark_draft_20261004/composition.json"   # MEASURED DS HBM draft (successor)
+
+
+def hbm_mtp_both_drafts_measured():
+    """SUCCESSOR (owner 2026-10-04) to the authoritative record's MTP columns: the DS HBM DSpark draft is MEASURED the
+    way the ROM's is (tools/dshbm_dspark_draft_chain.py: closed-loop RTL chain bit-exact on the reduced vehicle,
+    full-shape SM / argmax cycles, every draft collective counted and priced with the authoritative transports) and
+    replaces DRAFT_PARTS (51.88 us, ASSUMED).  Step = verify(P=6) + draft + seed_commit on both sides (the ROM's
+    seed_commit term; HBM: main_proj, main_x gather, main_norm, the stages' window rows, ctl commit).  The AR rows,
+    the verify passes and hbm_switch_latency_authoritative() itself are unchanged."""
+    rec = json.loads((ROOT / HBM_DRAFT_MEASURED).read_text())
+    pick = lambda r, v: dict(draft_us=r[v]["draft_us"], step_us=r[v]["step_us"], mtp_tok_s=r[v]["mtp_tok_s"],  # noqa: E731
+                             rom_over_hbm_mtp=r[v]["rom_over_hbm_mtp"])
+    rows = [dict(ctx=r["ctx"], design=r["design"], scenario=r["scenario"], ar_tok_s=r["ar_tok_s"],
+                 rom_over_hbm_ar=r["rom_over_hbm_ar"], seed_commit_us=r["seed_commit_us"],
+                 model_draft_us=r["model_draft_us"], mtp_tok_s_model_draft=r["old_mtp_tok_s"],
+                 as_built=pick(r, "as_built"), per_step_head=pick(r, "per_step_head"))
+            for r in rec["rows"] if r["authoritative_default"]]
+    return dict(schema="opentallas.uarch.hbm_mtp_both_drafts_measured.v1",
+                status="AUTHORITATIVE successor for MTP (owner 2026-10-04); AR unchanged",
+                hbm_draft_record=HBM_DRAFT_MEASURED, rom_draft_record=DSROM_DRAFT_MEASURED, tau=rec["tau"],
+                hbm_variants=dict(as_built="the HBM design as built (ctl DHEAD = one 5-column head pass; bias + argmax "
+                                           "fused in the SM epilogue): HBM already has the ROM's L1 and L2",
+                                  per_step_head="the ROM as-built structure on HBM (one 1-column head pass a chain "
+                                                "step), the like-for-like structural row"),
+                rom_columns=dict(rom_as_built="ROM as built (measured)", rom_l1="ROM L1 fused head (measured record)",
+                                 rom_l1l2_expected="ROM L1+L2 k=5 (EXPECTED projection)"),
+                collective_count=rec["collective_count"], rows=rows)
+
+
 def hbm_accel_rows():
     """Default-off HA0/HA10 hypotheses; no measured/adopted accelerator rate."""
     from hbm_accelerator_model import build
@@ -6930,6 +6960,8 @@ def main(argv=None):
                     dest="hbm_switch_latency_range", action="store_true",
                     help="AUTHORITATIVE HBM switch collective record: every scenario, DS HBM AR/MTP, ROM:HBM, "
                          "GPU-faithful, GPU baseline and Qwen checks")
+    ap.add_argument("--hbm-mtp-drafts-measured", action="store_true",
+                    help="SUCCESSOR MTP rows: DS HBM and ROM drafts both MEASURED (results/rtl/dshbm_dspark_draft_20261004)")
     ap.add_argument("--hbm-switch-latency", choices=("w15", "push_optimistic", "nvls_measured", "gpu_fenced",
                                                      "tomahawk_ultra_protocol", "tomahawk_ultra_inc",
                                                      "low", "central", "high"),
@@ -6954,6 +6986,13 @@ def main(argv=None):
     global _HBM_SWITCH, _HBM_FEC
     _HBM_SWITCH = HBM_SWITCH_ALIASES.get(a.hbm_switch_latency, a.hbm_switch_latency) or _HBM_SWITCH
     _HBM_FEC = a.hbm_fec or _HBM_FEC
+    if a.hbm_mtp_drafts_measured:
+        payload = json.dumps(hbm_mtp_both_drafts_measured(), indent=1, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.hbm_switch_latency_range:
         payload = json.dumps(hbm_switch_latency_range(), indent=1, allow_nan=False) + "\n"
         if a.out:
@@ -7362,6 +7401,108 @@ def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
         floorplan_slot_fit=None, physical_SS_FF_qualified=False,
         numerical_work='Lossless BF16 bits <<16; no arithmetic, expected activation or CPU inference',
         required_next_native_producer='SSX = golden-order sum of H squared; never host-computed here')
+
+
+def dsrom_s81_native_head_terminal():
+    """Additive ordered-root/argmax leaf; not an enrolled head-ROM producer."""
+    fifo=16; owner=47; rows=32320
+    bits=16*(32+17+1)+9*17+6*32+47+1+1+2+15+5+4+4+5+32+32+17+1+1
+    return dict(schema='opentallas.dsrom.S81.native-head-terminal.v1',
+        status='MODEL_UNVALIDATED_COMPONENT_ONLY', opt_in_default=False,
+        rows_global=129280, rows_per_rank=rows, ranks=4, K=5120,
+        retained_head_pairs=2525, retained_head_macros=10100,
+        retained_storage_increment_mm2=0, ROM_ECC=False,
+        golden_merge='root4096 + ((root1024 + +0) + +0)',
+        source_arithmetic='ot_hdc_fp32_add_fast unchanged; three LAT3 RNE adds; finite FP32 logits; +/-0 equal; lowest global ID on ties',
+        MACs_per_cycle=0, FP32_adds_per_row=3, add_replicas=3,
+        accepted_pair_II_cycles=1, pipeline_add_latency_cycles=9,
+        comparator_update_cycles_after_last_add=1,
+        reserved_logit_seats=fifo, owner_identity_bits=owner,
+        root_input_bytes_per_cycle_peak=8, logit_output_bytes_per_cycle_peak=4,
+        boundaries_bits=dict(root_pair=64, global_row=17, owner=owner,
+                            held_logit=32+17+1, terminal=32+17+owner+1),
+        tracks_required=dict(root_pair=64, root_owner=owner, global_row=17,
+                            logit=50, terminal=97),
+        state_FF_bits_lower_bound=bits,
+        state_scope='External leaf registers only; unchanged three FP32 adder internal storage/logic separately unpriced',
+        state_FF_cell_lower_bound_mm2=bits*DFF_UM2/1e6,
+        compute_intensity_FP32_adds_per_input_byte=3/8,
+        communication_intensity_output_bytes_per_input_byte=0.5,
+        composed_single_user_cycles_lower_bound=rows+10,
+        serial_clock_hz=0.9e9,
+        composed_single_user_us_lower_bound=(rows+10)/900,
+        latency_scope='From first accepted ordered root pair through local argmax; ROM/VM/subtree/link/CDC/held output ACK and four-rank gather additional, not zero',
+        floorplan_slot_fit=None, routing_channel_capacity=None,
+        new_adders_and_comparator_mapped_area_mm2=None,
+        mux_fanout='One root pair per native edge; bounded16-seat logit FIFO; one scalar compare; owner47 held once; no array replication credited',
+        actual_root_producer='Arch/Boole ordered K4096/K1024 native subtrees, still requires source-bound matched row/lease delivery',
+        compiler_and_ROM_address_owner='Popper',
+        core_connection='Current X_ROM1/X_ME0 e_am zeros and legacy EAM selection remain unchanged; explicit defaultoff successor connection required',
+        physical_SS_FF=False, trained_payload_qualified=False, adopted=False)
+
+
+def dsrom_s81_native_head_carried():
+    """Selected successor: unchanged native ROM carried argmax, full envelope."""
+    base=dsrom_s81_native_head_terminal()
+    # Declared storage of the existing LANES16/DEPTH8 reducer. Two512+last
+    # elastic registers in EACH of its input/output skids are counted.
+    native_bits=32*(32+4+1)+3*5+5*32+5*8+65+8*73+4*4+32+1+4*514
+    wrapper_bits=base['state_FF_bits_lower_bound']-82-2-1+64+1
+    return dict(base, schema='opentallas.dsrom.S81.native-head-carried.v1',
+        selected_comparator='rtl/rom/collectives/ot_rom_argmax_reduce.sv unchanged LANES16 DEPTH8',
+        predecessor_new_comparator='Isolated component reference only, not selected/adopted',
+        ranks=4, carried_chain_order=[0,1,2,3],
+        identity_envelope=dict(owner=47,request_sequence=64,flit=512,last=1),
+        packet_bits_with_envelope=624,
+        sequence_scope='64-bit host/native command envelope; actual provider mapping and no-wrap/closed-owner lease must be enrolled before source execution. No truncation into native tag8.',
+        local_tag8='constant0 internal only; full owner47+sequence64 checked at every accepted pair/upstream transfer and retained until actual downstream ACK',
+        root_input_bytes_per_cycle_peak=8,logit_output_bytes_per_cycle_peak=4,
+        accepted_frame_credits_per_rank=1,
+        native_depth8_not_eight_new_owner_credits=True,
+        native_declared_state_bits=native_bits,
+        wrapper_state_bits=wrapper_bits,
+        state_FF_bits_lower_bound=native_bits+wrapper_bits,
+        state_FF_cell_lower_bound_mm2=(native_bits+wrapper_bits)*DFF_UM2/1e6,
+        native_body_increment_if_already_charged_mm2=0,
+        body_charge_rule='Replace prior selector charge with existing native reducer inventory exactly once; state count is inventory, not additional full-body area',
+        global_flit_acceptance='Matching full owner/sequence only, rank-ascending source path, no second upstream frame. Native output held until local accepted logits all ACK and actual dn_ready.',
+        composed_single_user_cycles_lower_bound=32320+17,
+        composed_single_user_us_lower_bound=(32320+17)/900,
+        latency_scope='MODEL lower bound for one local merge+LANES16 reducer;4-rank skids/link/CDC/held ACK additive, actual chain measurement next',
+        fault_recovery='Sticky quarantine, drains accepted logit suffix; no restart or upstream-owner release on fault. Causal fault/recovery provider not invented.')
+
+
+def dsrom_s81_head_result_hook(roots=128):
+    """Selected actual ROM FP32 writer -> reused explicit-ID argmax hook."""
+    assert roots in (64,128)
+    levels=roots.bit_length()-1
+    native_declared_bits=2*roots*(32+32+1)+3*(levels+1)+(levels+1)*40+65+8*73+49+4*514
+    return dict(schema='opentallas.dsrom.S81.head-result-hook.v1',
+        opt_in_default=False, MACs_per_cycle=0, new_dot_arithmetic=False,
+        reused='ot_rom_argmax_reduce comparator, running best, FIFO and skid source; explicit actual row IDs replace inferred base+lane',
+        roots=roots, native_argmax_lanes=roots, native_argmax_depth=8,
+        source_input='Actual rom_we && capture_vm_accept, rom_wdata FP32, global ID=rank*32320+rom_waddr-head_obase*W',
+        head_admission='Contiguous m_k5120 split0 round0 amax1 mmode0, formatter mode1. Released BF16 head-normalizer input proof remains compiler/provider responsibility.',
+        native_tag8='Internal0; full capture_identity47 held/checked on carried input, never truncated',
+        comparison_rule='Actual global ID tie at leaf tree, running best and carried join; signed zeros equal; native NaN faults, return poison/nonfinite quarantines final token',
+        selected_storage_pairs=2525, selected_storage_macros=10100, retained_storage_increment_mm2=0,
+        replicas=4, source_return_bytes_per_cycle=roots*4,
+        source_return_boundary_bits=roots*(32+30+1),
+        carried_boundary_bits=512+1+47,
+        routing_tracks_required=dict(return_data=roots*32,return_mask=roots,carried_packet=513,carried_identity=47),
+        native_declared_state_bits_per_rank=native_declared_bits,
+        added_explicit_ID_state_bits_per_rank=2*roots*(32-levels),
+        adapter_state_bits_per_rank=178,
+        final_global_broadcast='Actual rank3 native record -> existing source multicast/collector, all4 core final_ready ACKs required; no local result accepted as global',
+        existing_body_charge='Reuse/reconcile prior head selector/collective charge once; explicit-ID delta and adapter separately, no storage charge duplication',
+        added_ID_FF_floor_mm2=2*roots*(32-levels)*DFF_UM2/1e6,
+        source_VM_logit_writes_per_rank=32320,
+        MACs_per_input_byte=0, comparator_intensity_per_input_byte=(roots-1)/(roots*4),
+        native_last_writer_to_local_slice_cycles_lower_bound=levels+3,
+        global_carried_edges='3rank boundaries plus actual native skids/link/CDC/ACK; no ideal overlap or physical0 assumption',
+        routing_channel_capacity=None, floorplan_slot_fit=None, SS_FF=False,
+        token_latency_in_model='Existing selected head dot/source delivery unchanged; native local slice tail levels+3 and carried transport/ACK additive; complete physical/token latency not qualified',
+        source_binding='One active actual capture command; hold native core idle until carried DN matched acceptance. Fault never publishes a token or clears owner.')
 
 
 if __name__ == "__main__":

@@ -2,6 +2,8 @@
 #include "s81_minimum_prefix.hpp"
 #include "s81_published_span_macro_sink.hpp"
 #include <unordered_map>
+#include <unordered_set>
+#include <algorithm>
 
 namespace dsrom_s81_minimum {
 // Source-version and raw receipt witness for the minimum stage, NOT new RTL
@@ -15,14 +17,17 @@ private:
     struct Extent {uint32_t base,words;};
     struct Scalar {unsigned producer;MacroWrite command;bool ack=false;};
     uint64_t identity;
-    std::array<bool,9> begun{};
+    std::unordered_set<unsigned> begun;
+    std::unordered_map<unsigned,std::vector<Extent>> literal_extents;
     std::unordered_map<uint32_t,Scalar> scalars;
     std::unordered_map<uint32_t,unsigned> versions;
     bool stopped=false;
     static void require(bool ok,const char* why) {
         if(!ok)throw std::runtime_error(why);
     }
-    static std::vector<Extent> extents(unsigned p) {
+    std::vector<Extent> extents(unsigned p) const {
+        auto actual=literal_extents.find(p);
+        if(actual!=literal_extents.end())return actual->second;
         switch(p) {
         case 0:return {{40992,1}};
         case 1:return {{41024,24}};
@@ -35,7 +40,7 @@ private:
         default:throw std::runtime_error("unknown native prefix producer");
         }
     }
-    static bool owns(unsigned p,uint32_t address) {
+    bool owns(unsigned p,uint32_t address) const {
         for(auto e:extents(p))if(address>=e.base&&address-e.base<e.words)return true;
         return false;
     }
@@ -50,12 +55,29 @@ public:
     explicit PrefixPublication(uint64_t id):identity(id) {
         require(id<(1ull<<47),"prefix publication identity bounds");
     }
+    // Literal source-address descriptors only. No payload, acceptance, ACK or
+    // authority is created by enrollment; native_scalar still needs an actual
+    // admitted writer and complete still requires every matching scalar ACK.
+    void enroll_literal(unsigned producer,const std::vector<std::pair<uint32_t,uint32_t>>& ranges) {
+        require(!stopped&&producer>=9&&producer<(1u<<14)&&!begun.count(producer)&&
+                !literal_extents.count(producer),"duplicate/reserved literal producer index");
+        std::vector<Extent> selected;
+        for(auto r:ranges) {
+            require(r.second&&uint64_t(r.first)+r.second<=(1u<<19),"literal output Address19 extent");
+            selected.push_back({r.first,r.second});
+        }
+        std::sort(selected.begin(),selected.end(),[](auto a,auto b){return a.base<b.base;});
+        for(size_t i=1;i<selected.size();++i)
+            require(uint64_t(selected[i-1].base)+selected[i-1].words<=selected[i].base,
+                    "overlapping literal producer extents");
+        literal_extents.emplace(producer,std::move(selected));
+    }
     // Call ONLY on real native command acceptance. For I0..I6 the prefix
     // controller invokes this; Peirce invokes SSX/PF on native bootstrap GO.
     // Operand prefetch MUST finish before a rewrite version begins (I3/T).
     void begin(uint64_t id,unsigned producer) {
         try {
-            require(!stopped&&id==identity&&producer<9&&!begun[producer],
+            require(!stopped&&id==identity&&producer<(1u<<14)&&!begun.count(producer),
                     "duplicate/foreign prefix producer admission");
             if(producer<7) {
                 require(complete(SSX)&&complete(PF),"prefix lacks native bootstrap publication");
@@ -66,7 +88,7 @@ public:
                 require(old==scalars.end()||old->second.ack,"rewrite would erase unacknowledged scalar");
                 versions[a]=producer; // old published T version immediately revoked
             }
-            begun[producer]=true;
+            begun.insert(producer);
         }catch(...){stopped=true;throw;}
     }
     // The engine bridge samples actual native vm_we/res_we/o_we and supplies
@@ -74,7 +96,7 @@ public:
     void native_scalar(unsigned producer,const MacroWrite& c,bool actual_write) {
         try {
             const auto a=c.source.element_address;const unsigned lane=a&15;
-            require(!stopped&&actual_write&&producer<9&&begun[producer]&&
+            require(!stopped&&actual_write&&begun.count(producer)&&
                     c.source.identity==identity&&owns(producer,a)&&
                     c.word.address==(a>>4)&&c.word.mask==(uint16_t(1)<<lane)&&
                     !(c.word.owner[7]&~7u)&&c.source.phase<1024&&
@@ -129,7 +151,7 @@ public:
         return true;
     }
     bool complete(unsigned producer) const {
-        if(stopped||producer>=9||!begun[producer])return false;
+        if(stopped||!begun.count(producer))return false;
         for(auto e:extents(producer))for(uint32_t a=e.base;a<e.base+e.words;a++) {
             auto s=scalars.find(a);
             if(s==scalars.end()||s->second.producer!=producer||!s->second.ack)return false;
