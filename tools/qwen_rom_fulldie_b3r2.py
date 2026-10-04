@@ -64,7 +64,7 @@ def _isa_bits():
 
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
-             bw_edge_inner=False):
+             bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -116,6 +116,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
             break
         else:
             raise SystemExit('band repack does not pack')
+    if edge_gap:
+        _edge_gap(v, m, edge_gap)
     if east_mirror:
         _east_mirror(v, m)
     groups = _group_map(v, m)
@@ -137,7 +139,10 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                      strip_fifo_extra_h_um=sf_extra_h, bw_fifo_mm2=round(bw_mm2, 4), band=band or b3r3, b3r3=b3r3,
                      groups=groups)
     _wrap_masters(v, m, area_pins, ns_faces=b3r3, spread=spread or b3r6, channel=b3r6, bw_align=bw_align,
-                  bw_edge=bw_edge, bw_edge_inner=bw_edge_inner)
+                  bw_edge=bw_edge, bw_edge_inner=bw_edge_inner, bw_sp=bw_sp, bw_x=bw_x)
+    m['b3r2']['b3r14_edge_gap_um'] = m['geo'].get('edge_gap_um', 0.0)
+    m['b3r2']['b3r13_bw_sp_um'] = bw_sp
+    m['b3r2']['b3r13_bw_x_um'] = bw_x
     m['b3r2']['spread_pins'] = spread or b3r6
     m['b3r2']['b3r6_channel_pins'] = b3r6
     if tree_cols:
@@ -152,6 +157,31 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['b3r12_bw_edge_inner'] = bw_edge_inner
     m['b3r2']['area_pins'] = area_pins
     return v, m
+
+
+def _edge_gap(v, m, gap):
+    """b3r14: an empty routing gap of `gap` um (rounded up to 2 GX) between each tile array and the spine slab
+    column that faces it; the die grows by 2 gaps.  Everything from the W slab column eastward moves +gap, the E
+    array and everything east of it +2 gap (b3r12_i50: M8 1.04-1.11 windows in the one gcell column at the W slab
+    face, and M9 gcell overflow over the station column s_31_* next to it; the slab OBS M1-M7 leaves M8 the only
+    entry layer, so the face column had no room to fan the block words out)."""
+    g = m['geo']
+    gap = v.up(gap, 2 * v.GX)
+    xs, xe, eps = g['x_spine'], g['x_arr_e'], 1e-6
+    sh0 = lambda x: (2 * gap if x >= xe - eps else gap if x >= xs - eps else 0.0)       # a left edge / point
+    sh1 = lambda x: (2 * gap if x > xe + eps else gap if x > xs + eps else 0.0)        # a right edge
+    for it in m['insts']:
+        it.x = round(it.x + sh0(it.x), 3)
+    for r in m['regions']:
+        a, b, c, d = r['rect']
+        r['rect'] = [round(a + sh0(a), 3), b, round(c + sh1(c), 3), d]
+    for k in ('x_spine', 'x_vch', 'x_arr_e', 'x_eband'):
+        g[k] = round(g[k] + sh0(g[k]), 3)
+    old_col_x = m['col_x']
+    m['col_x'] = lambda c: old_col_x(c) + (2 * gap if c >= 32 else 0.0)
+    m['die']['w'] = round(m['die']['w'] + 2 * gap, 3)
+    m['die']['mm2'] = round(m['die']['w'] * m['die']['h'] / 1e6, 3)
+    g['edge_gap_um'] = gap
 
 
 def _split_south(v, m):
@@ -457,7 +487,7 @@ def _spine_buses(v, m, gm):
 
 
 def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=False, bw_align=False,
-                  bw_edge=False, bw_edge_inner=False):
+                  bw_edge=False, bw_edge_inner=False, bw_sp=100.0, bw_x=20.0):
     """Every endpoint port that the b3 masters do not define becomes a pin group on the face toward the far
     endpoint (M4 on W/E), stacked from the top of the face so no two groups overlap."""
     base = v.masters
@@ -526,7 +556,10 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
                             b.ports[f'bw{i}'] = ('area', v.TREE_BITS, xq, ye, 2)
                         continue
                     if ws:
-                        sp = 100.0
+                        # b3r13: bw_sp > 100 spreads the root-row words over more of the slab face (b3r12_i50: M8
+                        # 1.11 windows in the gcell column at the W slab face, x 11.4576 mm, inside the 800 um
+                        # band each slab's eight words entered)
+                        sp = bw_sp
                         cen = sum(ry[i] for i in ws) / len(ws) - it.y
                         cen = min(max(cen, sp * len(ws) / 2 + 20.0), b.h - sp * len(ws) / 2 - 20.0)
                         for q, i in enumerate(ws):
@@ -536,7 +569,7 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
                     # 2-track pin pitch: a word's 32 bundled M8 pins span 82 um, two M8 tracks per wire
                     if f'bw{i}' not in b.order:
                         b.order.append(f'bw{i}')        # pins are emitted in Master.order (b3r6 fix)
-                    b.ports[f'bw{i}'] = ('area', v.TREE_BITS, (b.w - 40.0) if east else 20.0, yj[i], 2)
+                    b.ports[f'bw{i}'] = ('area', v.TREE_BITS, (b.w - 20.0 - bw_x) if east else bw_x, yj[i], 2)
             # corridor buses: pins at a 2-track pitch over the station / column-head N and S faces (37 um of the
             # 52.7 um frame instead of 19 um), so the vertical corridor run spreads over the corridor's M7/M9
             # tracks (b3r4 per-gcell dump: 62.7k M9 overflow, all in the corridor x range, 7-8 tracks a gcell)
@@ -1151,6 +1184,10 @@ def main(argv=None):
                     'at the near edge, spread over the slab width')
     ap.add_argument('--bw-edge-inner', action='store_true', help='b3r12: edge-entry words climb inside the slab')
     ap.add_argument('--io-faces', action='store_true', help='b3r11: collective->SerDes word on the E/W faces')
+    ap.add_argument('--bw-sp', type=float, default=100.0, help='b3r13: root-row block-word pin spacing in a slab (um)')
+    ap.add_argument('--bw-x', type=float, default=20.0, help='b3r13: block-word pin column distance from the slab face (um)')
+    ap.add_argument('--edge-gap', type=float, default=0.0, help='b3r14: routing gap (um) between each tile array and '
+                    'its facing spine slab column; the die grows by two gaps')
     ap.add_argument('--east-mirror', action='store_true', help='b3r9: east-array block trees mirrored (root spine-side)')
     ap.add_argument('--work', type=Path)
     ap.add_argument('--out', type=Path)
@@ -1167,7 +1204,8 @@ def main(argv=None):
     v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
                     b3r6=a.b3r6, tree_cols=a.tree_cols,
                     bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
-                    io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner)
+                    io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
+                    edge_gap=a.edge_gap)
     if a.mode == 'plan':
         out = a.out
         out.mkdir(parents=True, exist_ok=True)
