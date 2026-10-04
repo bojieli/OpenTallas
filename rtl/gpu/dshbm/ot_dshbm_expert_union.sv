@@ -105,23 +105,31 @@ module ot_dshbm_expert_union #(
         end
     end
     end else begin : g_fast
-    // FAST = 1 (exact, cycle-identical): the scanner works on a REGISTERED copy of the current word, its
-    // column masks and a "a later word is non-empty" flag, loaded when the scan enters a word.  Every output
-    // then comes from a 32-bit lowest-set-bit pick on registers (no 384-wide mux / compare on the port).
+    // FAST = 1 (exact, cycle-identical; WB a power of two): the scanner keeps the current word as a REGISTERED
+    // one-hot head (hoh: its lowest set bit) plus the rest (word_r), the word's column masks (mw_r) and a
+    // "a later word is non-empty" flag.  The port is then an AND-OR of registers (id = {wp, encode(hoh)},
+    // mask = OR of mw_r under hoh); the lowest-bit pick of the NEXT head runs register to register.
     // Protocol (as the DSpark top drives it): no add or clr while a scan runs.
-    reg [WB-1:0]    word_r;
+    reg [WB-1:0]    hoh, word_r;
     reg [PM*WB-1:0] mw_r;
     reg             later_r;
-    wire [WB-1:0]   low = word_r & (~word_r + 1'b1);
+    function automatic [WB-1:0] lowest(input [WB-1:0] x);
+        integer q;
+        reg seen;
+        begin
+            seen = 1'b0;
+            for (q = 0; q < WB; q = q + 1) begin lowest[q] = x[q] && !seen; seen = seen || x[q]; end
+        end
+    endfunction
     reg  [BW-1:0]   ffs;
     reg  [PM-1:0]   om;
     always @(*) begin
         ffs = 0; om = 0;
         for (i = 0; i < WB; i = i + 1)
-            if (low[i]) begin ffs = ffs | i[BW-1:0]; om = om | mw_r[i*PM +: PM]; end
+            if (hoh[i]) begin ffs = ffs | i[BW-1:0]; om = om | mw_r[i*PM +: PM]; end
     end
-    wire hit  = |word_r;
-    wire more = (|(word_r & ~low)) || later_r;
+    wire hit  = |hoh;
+    wire more = (|word_r) || later_r;
     wire [IW-1:0] cur = wp * WB + ffs;
     reg [NW-1:0] wnz;
     always @(*) for (i = 0; i < NW; i = i + 1) wnz[i] = |sel[i*WB +: WB];
@@ -133,12 +141,14 @@ module ot_dshbm_expert_union #(
         end
     endfunction
     reg [PM*WB-1:0] mw_n;
-    reg [WB-1:0]    word_n;
+    reg [WB-1:0]    word_n, low_n, low_r;
     reg             later_n;
     reg [WW-1:0]    wl;                      // the word the scan loads this cycle
     always @(*) begin
         wl = (flush && !scan) ? {WW{1'b0}} : wp + 1'b1;
         word_n = sel[wl*WB +: WB];
+        low_n = lowest(word_n);
+        low_r = lowest(word_r);
         for (i = 0; i < WB; i = i + 1)
             mw_n[i*PM +: PM] = (wl * WB + i < NE) ? msk[wl * WB + i] : {PM{1'b0}};
         later_n = later_than(wnz, wl);
@@ -150,7 +160,7 @@ module ot_dshbm_expert_union #(
     assign busy     = scan;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            sel <= 0; scan <= 1'b0; wp <= 0; count <= 0; word_r <= 0; mw_r <= 0; later_r <= 1'b0;
+            sel <= 0; scan <= 1'b0; wp <= 0; count <= 0; hoh <= 0; word_r <= 0; mw_r <= 0; later_r <= 1'b0;
         end else begin
             if (clr) begin
                 sel <= 0;
@@ -164,17 +174,17 @@ module ot_dshbm_expert_union #(
             end
             if (flush && !scan) begin
                 scan <= 1'b1; wp <= 0; count <= 0;
-                word_r <= word_n; mw_r <= mw_n; later_r <= later_n;
+                hoh <= low_n; word_r <= word_n & ~low_n; mw_r <= mw_n; later_r <= later_n;
             end else if (scan) begin
                 if (!hit) begin
                     if (wp == NW - 1) scan <= 1'b0;
                     else begin
                         wp <= wp + 1;
-                        word_r <= word_n; mw_r <= mw_n; later_r <= later_n;
+                        hoh <= low_n; word_r <= word_n & ~low_n; mw_r <= mw_n; later_r <= later_n;
                     end
                 end else if (out_ready) begin
                     sel[cur] <= 1'b0;
-                    word_r <= word_r & ~low;
+                    hoh <= low_r; word_r <= word_r & ~low_r;
                     count <= count + 1;
                     if (!more) scan <= 1'b0;
                 end

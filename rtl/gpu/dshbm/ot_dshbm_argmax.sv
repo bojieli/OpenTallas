@@ -25,7 +25,10 @@
 module ot_dshbm_argmax #(
     parameter integer LP   = 8,       // lanes a beat (power of two)
     parameter integer IW   = 17,      // index width (vocabulary)
-    parameter integer FLAT = 7        // ot_gpu_fadd latency (the 1.2 GHz SS depth)
+    parameter integer FLAT = 7,       // ot_gpu_fadd latency (the 1.2 GHz SS depth)
+    parameter integer FAST = 0        // 1: 1.2 GHz SS successor: the beat's keys / mask / index / NaN flags are
+                                      //    registered before the lane update, and the fault flag is registered:
+                                      //    every output one cycle later, values unchanged
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -39,6 +42,7 @@ module ot_dshbm_argmax #(
     output reg  [IW-1:0]   out_idx,
     output reg             out_nan,     // the row held a NaN (numpy semantics kept; reported)
     output wire            fault        // an adder fault (overflow to infinity / invalid) on a biased row
+                                        // (FAST = 1: one cycle later, with the other outputs)
 );
     localparam integer LL = (LP > 1) ? $clog2(LP) : 1;
     // ---- stage A: the bias add (or the matching delay) ----
@@ -51,7 +55,13 @@ module ot_dshbm_argmax #(
                 .a(in_vals[32*g +: 32]), .b(in_bias[32*g +: 32]), .y(sum[32*g +: 32]), .fault(fl[g]));
         end
     endgenerate
-    assign fault = |fl;
+    generate if (FAST == 0) begin : g_f0
+        assign fault = |fl;
+    end else begin : g_f1
+        reg fault_r;
+        always @(posedge clk or negedge rst_n) if (!rst_n) fault_r <= 1'b0; else fault_r <= |fl;
+        assign fault = fault_r;
+    end endgenerate
     // delay line for the raw values, the control and the beat's base index
     reg [LP*32-1:0] dval [0:FLAT-1];
     reg [FLAT-1:0]  dv, dl, db;
@@ -89,30 +99,50 @@ module ot_dshbm_argmax #(
             end
         end
     endfunction
+    // the beat as the lane update sees it: combinational (FAST = 0) or registered (FAST = 1)
+    reg [32:0]   e_key [0:LP-1];
+    reg [LP-1:0] e_m, e_nan;
+    reg [IW-1:0] e_base;
+    reg          e_v, e_last;
+    integer q;
+    generate if (FAST == 0) begin : g_e0
+        always @(*) begin
+            e_v = a_v; e_last = a_last; e_m = dm[FLAT-1]; e_base = di[FLAT-1];
+            e_nan = nanbeat(a_val, dm[FLAT-1]);
+            for (q = 0; q < LP; q = q + 1) e_key[q] = okey(a_val[32*q +: 32]);
+        end
+    end else begin : g_e1
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin e_v <= 1'b0; e_last <= 1'b0; end
+            else begin e_v <= a_v; e_last <= a_last; end
+        always @(posedge clk) begin
+            e_m <= dm[FLAT-1]; e_base <= di[FLAT-1];
+            e_nan <= nanbeat(a_val, dm[FLAT-1]);
+            for (q = 0; q < LP; q = q + 1) e_key[q] <= okey(a_val[32*q +: 32]);
+        end
+    end endgenerate
     reg [32:0]   bk [0:LP-1];
     reg [IW-1:0] bi [0:LP-1];
     reg [LP-1:0] bvalid;
     reg          fin;
     reg          nan_row, nan_acc;
-    reg [32:0]   kk;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             bvalid <= 0; fin <= 1'b0; nan_acc <= 1'b0; nan_row <= 1'b0;
         end else begin
-            fin <= a_v & a_last;
-            if (a_v) begin
+            fin <= e_v & e_last;
+            if (e_v) begin
                 for (k = 0; k < LP; k = k + 1) begin
-                    kk = okey(a_val[32*k +: 32]);
-                    if (dm[FLAT-1][k] && (!bvalid[k] || kk > bk[k])) begin
-                        bk[k] <= kk; bi[k] <= di[FLAT-1] + k;
+                    if (e_m[k] && (!bvalid[k] || e_key[k] > bk[k])) begin
+                        bk[k] <= e_key[k]; bi[k] <= e_base + k;
                     end
                 end
                 // a new row starts on the beat after a last beat: lanes restart
                 for (k = 0; k < LP; k = k + 1)
-                    if (dm[FLAT-1][k]) bvalid[k] <= ~a_last;
-                    else if (a_last) bvalid[k] <= 1'b0;
-                nan_acc <= a_last ? 1'b0 : (nan_acc | (|nanbeat(a_val, dm[FLAT-1])));
-                nan_row <= nan_acc | (|nanbeat(a_val, dm[FLAT-1]));
+                    if (e_m[k]) bvalid[k] <= ~e_last;
+                    else if (e_last) bvalid[k] <= 1'b0;
+                nan_acc <= e_last ? 1'b0 : (nan_acc | (|e_nan));
+                nan_row <= nan_acc | (|e_nan);
             end
         end
     end
@@ -165,9 +195,9 @@ module ot_dshbm_argmax #(
     reg          fresh;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin seen <= 0; fresh <= 1'b1; end
-        else if (a_v) begin
-            seen  <= fresh ? dm[FLAT-1] : (seen | dm[FLAT-1]);
-            fresh <= a_last;
+        else if (e_v) begin
+            seen  <= fresh ? e_m : (seen | e_m);
+            fresh <= e_last;
         end
     end
 endmodule

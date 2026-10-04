@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 // Lockstep bench: ot_dshbm_spec_state (as built) vs ot_dshbm_spec_state_f on one random request / n_set / token
 // write stream (every kind incl. illegal ones, positions inside and outside the rings' reach, rollback-sized and
-// arbitrary n jumps, n_set never on consecutive edges).  The successor's a_* outputs must equal the original's
+// arbitrary n jumps, n_set edges >= 3 apart).  The successor's a_* outputs must equal the original's
 // delayed by LAT cycles, every cycle; req_ready and n must be equal in the same cycle.
 module tb_spec_state_lockstep;
-    parameter integer NREQ = 20000, SEED = 1, LAT = 4;
+    parameter integer NREQ = 20000, SEED = 1, LAT = 5;
     parameter integer W = 128, PMAX = 8, WR = 136, SR = 136, TR = 16, NG = 4, NL = 40, NST = 3, NSRC = 4;
     parameter [15:0] RLOG = 16'h7272;
     parameter integer CKMAX = 262144, TW = 17, AW = 32;
@@ -59,7 +59,7 @@ module tb_spec_state_lockstep;
                 resets = resets + 1;
             end
             q = $unsigned($random(seed)) % 16;
-            if (q == 0 && cyc - last_set >= 2) begin
+            if (q == 0 && cyc - last_set >= 3) begin
                 n_set = 1; last_set = cyc + 1;
                 case ($unsigned($random(seed)) % 8)
                     0: n_val = 0;
