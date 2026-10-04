@@ -22,6 +22,7 @@ def transform_host(source):
     source=source.replace('DSROM_C8_S82','DSROM_C8_S81').replace('DSROM_S82_STAGE','DSROM_S81_STAGE')
     source=source.replace('dsrom_s82','dsrom_s81').replace('S82','S81')
     one('#include "Vretn.h"\n#include "Vroot.h"','#include "Vrd64.h"')
+    one('#include "Vrd64.h"','#include "Vrd64.h"\n#ifndef DSROM_S81_CAPTURE\n#define DSROM_S81_CAPTURE 0\n#endif')
     one('extern "C" int v41rt_vm_word(int a);',
         'extern "C" int v41rt_vm_word(int a);\nextern "C" int v41rt_c8_workspace_write(uint64_t identity, int address, int raw_bits);')
     one('    virtual void c8_observe(long)=0;',
@@ -38,6 +39,11 @@ def transform_host(source):
         return v41rt_c8_workspace_write(identity,int(address),int(raw_bits))==0;
     }
     long c8_observed_cycle=-1;''')
+    one('    virtual void c8_observe(long)=0;',
+        '    virtual void c8_observe(long)=0;\n    virtual void capture_warm_reset(bool request)=0;\n    virtual bool capture_visible(uint64_t identity)=0;')
+    one('    long c8_observed_cycle=-1;', CAPTURE_RUNTIME+'    long c8_observed_cycle=-1;')
+    one('        d->clk = 0; d->rst_n = 0; d->eval();',
+        '        d->clk = 0; d->rst_n = 0;\n#if DSROM_S81_CAPTURE\n        d->capture_reset_request=0; for(auto& word:d->capture_root_rows)word=0;\n#endif\n        d->eval();')
     one('    int NL, L, LR, LS;','    int NL;')
     one('    std::vector<std::vector<std::unique_ptr<Vretn>>> nodes;\n    std::vector<std::unique_ptr<Vroot>> roots;\n    std::vector<int> return_owner;',
         '    std::unique_ptr<Vrd64> rd64; // actual strict-pruned 5090-node source, not a contracted tree')
@@ -109,3 +115,25 @@ def prepare(output):
         p=output/n
         if not p.exists():p.write_text(s)
     return [output/n for n in transformed]
+
+# No reset debt is erased here. Cold rst_n remains a coordinated all-copy fence.
+CAPTURE_RUNTIME=r'''
+    void capture_warm_reset(bool request) override {
+#if DSROM_S81_CAPTURE
+        d->capture_reset_request=request;
+#else
+        if(request)throw std::runtime_error("capture reset requires selected S81 capture source");
+#endif
+    }
+    bool capture_visible(uint64_t identity) override {
+#if DSROM_S81_CAPTURE
+        if(identity>=(uint64_t(1)<<47))throw std::runtime_error("capture identity bounds");
+        // Real C8 quiet requires actual helper drained (cold empty or completed), alongside
+        // native KV publication. FIFO empty or host grant cannot satisfy it.
+        return d->capture_identity==identity && d->c8_write_quiet &&
+               !d->capture_live && !d->capture_fault && !d->c8_write_quarantine;
+#else
+        return false;
+#endif
+    }
+'''
