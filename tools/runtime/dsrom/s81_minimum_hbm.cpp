@@ -60,6 +60,7 @@ void NativeHbm::preload_ckv(const std::string& directory) {
     VDsromS81Hbm::s81_hbm_preload_ckv(directory.c_str());svSetScope(old);model.eval();
     if(!model.ckv_history_ready)throw std::runtime_error("native CKV history load unfinished");
 }
+NativeHbmTrafficSnapshot NativeHbm::traffic()const {return traffic_counters.snapshot();}
 DsromS81MinimumParticipant NativeHbm::participant() {
     auto self=shared_from_this();
     return {"native-four-stack-HBM",
@@ -71,7 +72,12 @@ DsromS81MinimumParticipant NativeHbm::participant() {
         auto&m=self->model;
         self->accepted=m.m_v&m.m_rdy;self->write_mask=m.m_we;
         self->returned=m.s_v&m.s_rdy;self->committed=m.m_wr_done;
-        for(unsigned s=0;s<4;s++)self->lengths[s]=(m.m_len>>(4*s))&15;
+        for(unsigned s=0;s<4;s++) {
+            self->lengths[s]=(m.m_len>>(4*s))&15;
+            self->request_owner[s]=(m.m_tag>>(16*s+14))&3;
+            self->response_owner[s]=(m.s_tag>>(16*s+14))&3;
+            self->write_strobes[s]=m.m_wstrb[s];
+        }
         self->prepared=self->runtime.cycle();
       },
       [self](bool released) {
@@ -85,6 +91,10 @@ DsromS81MinimumParticipant NativeHbm::participant() {
             if(self->returned&bit){if(!self->reads[s])throw std::runtime_error("HBM response without accepted read");--self->reads[s];}
             if(self->committed&bit){if(!self->writes[s])throw std::runtime_error("HBM write completion without accepted write");--self->writes[s];}
           }
+          // Count ONCE on actual released rising edge, never in prepare/offer.
+          self->traffic_counters.sample(self->runtime.cycle(),self->accepted,
+              self->returned,self->committed,self->write_mask,self->lengths,
+              self->request_owner,self->response_owner,self->write_strobes);
         }
         self->model.rst_n=released;self->model.clk=1;self->model.eval();
       },
