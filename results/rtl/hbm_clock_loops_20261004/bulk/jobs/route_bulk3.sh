@@ -1,7 +1,7 @@
 #!/bin/bash
 # ORFS route of the bulk-copy successor (duplicated eligibility/take flags; RING_MACRO=1: even/odd 512x256 macro groups, two-cycle capture) at 1.2 GHz:
 # SS setup WC + 60 ps, hold WC,BC + 25 ps, ADDER_MAP off; then corner STA (SS setup / FF hold).
-# Usage: route_bulk2.sh <label> <LINE_BITS> [RING_MACRO=1]   env: UTIL (default 25), NEED (GB, default 24)
+# Usage: route_bulk3.sh <label> <LINE_BITS> [RING_MACRO=1]   env: UTIL (default 25), NEED (GB, default 24), HALO, PD, CAPM (repair_design cap margin %), SRC
 R=/srv/opentallas-scratch/claude/hbm-clock-loops
 lab=$1; LB=$2; RM=${3:-1}
 if [ "$RM" = 1 ]; then M=ot_sram_1r1w_512x256_m1_r2c2; MD=physical/hbm_accel_macros/$M; SDC="--sdc-append rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_mc2.sdc"
@@ -15,7 +15,7 @@ export OT_ORFS_NUM_CORES=${CORES:-16}
   --macro-view $M=$MD $SDC --macro-place-halo ${HALO:-5} ${HALO:-5} \
   --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --false-path-io --stages pnr \
-  --core-utilization ${UTIL:-25} --place-density ${PD:-0.5} --hold-margin-ns 0.01 --orfs-var ADDER_MAP_FILE= \
+  --core-utilization ${UTIL:-25} --place-density ${PD:-0.5} --hold-margin-ns 0.01 --orfs-var ADDER_MAP_FILE= ${CAPM:+--orfs-var CAP_MARGIN=$CAPM} \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag hcl_$lab \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
