@@ -1,0 +1,82 @@
+{
+  "schema": "QWEN_W12_TWO_BEAT_MODEL_R1",
+  "default_off": true,
+  "unified_model_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "source_width": {
+    "NW": 18,
+    "AW": 24,
+    "packed_instruction_bits": 379
+  },
+  "stations": 1536,
+  "MACs_per_cycle": 0,
+  "memory_ports": {
+    "sender_write_bits_per_accept": 432,
+    "sender_read_bits_per_beat": 216,
+    "receiver_write_bits_per_beat": 216,
+    "receiver_read_bits_per_cycle": 432,
+    "control_read_write_bits_per_cycle": 72
+  },
+  "boundary": {
+    "data_bits_per_cycle": 190,
+    "beat_valid": 1,
+    "beat_last": 1,
+    "beat_ready": 1,
+    "reset_bits": 64,
+    "clock_bits": 64,
+    "go_bits": 1,
+    "x_bits": 128,
+    "x_ready_bits": 1,
+    "corridor_bits_before": 637,
+    "corridor_bits_after": 451,
+    "tap_bits_before": 511,
+    "tap_bits_after": 325,
+    "k16_corridor_nets_before": 40,
+    "k16_corridor_nets_after": 29,
+    "link_spine_bits_before": 2112,
+    "link_spine_bits_after": 2112,
+    "link_spine_hotspot_relief_credited": 0
+  },
+  "state": {
+    "raw_payload_bits": 759,
+    "protected_bits_per_station": 936,
+    "protected_bits_total": 1437696,
+    "control_bits_physically_stored": 72,
+    "one_instruction_outstanding_per_station": true
+  },
+  "cost": {
+    "FF_body_mm2": 0.54500179968,
+    "logic_proxy_mm2": 0.27250089984,
+    "slot_mm2_at_50pct": 1.6350053990399998,
+    "slot_capacity_mm2": 5.59549513728,
+    "clock_pin_load_SS_fF": 623934.1854719999,
+    "muxes": "sender 2:1 x216; receiver SECDED decode 6x72 and encode 6x64; control decode/encode 1x72",
+    "fanout": "each ready/valid point-to-point; real tree branch/clock/reset buffer census required",
+    "old_state_debit": 0,
+    "logic_proxy_measured": false,
+    "codec_timing_qualified": false
+  },
+  "latency": {
+    "accept_to_first_beat_cycles": 1,
+    "accept_to_second_beat_cycles": 2,
+    "accept_to_consumer_earliest_cycles": 3,
+    "per_hop_extra_instruction_cycles_over_1beat": 1,
+    "data_return_and_x_network_cycles_changed": 0,
+    "token_delta": "sum selected instruction path hop counts + finite stall/consumer retirement; exact source program/map required",
+    "warm_fence": "wait accepted beats, actual consumer retirement and all_copy_drained; no timer or debt discard",
+    "cold_reset": "destructive power-on only; warm request never asserts cold reset"
+  },
+  "clocks": {
+    "stream_GHz": 1.2,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "physical": {
+    "hard_reticle_mm2": 858,
+    "full_die_IR_required": true,
+    "reserve_M9_from_actual_PDN_geometry": true,
+    "core_fixture_IR_is_not_die_PASS": true,
+    "after_route_demand_capacity": null,
+    "unchanged_link_spine_hotspot_remains": true
+  },
+  "admission": "component RTL authoring/static exact transport gate only; full system caller and changed route not yet admitted"
+}
