@@ -1,0 +1,80 @@
+{
+  "schema": "dsrom.s81.actual_parent_hooks.v1",
+  "original_source_pin": "f6df84e14c2bc5908bdbf85b2bd95cd56b1f5520",
+  "actual_top": "ot_v41_rt_die_l20_c8",
+  "command_trace": {
+    "selected_parameter": "S81_COMMAND_TRACE=1; S81_TRACE_STAGE=actual_stage",
+    "accepted_source": "dut.cmd_go = FULL_SHAPE ? (core_coll_go && !coll_issue_bad) : coll_go",
+    "root_identity": "c8_engine_identity[46:0] sampled only on c8_engine_start",
+    "fields": [
+      "dut.core_coll_op[1:0]",
+      "dut.core_coll_src[29:0]",
+      "dut.core_coll_dst[29:0]",
+      "dut.core_coll_n[20:0]",
+      "dut.core_coll_ibase[29:0]",
+      "dut.core_coll_k[11:0]",
+      "dut.core_coll_stride[31:0]",
+      "dut.core_coll_seq[7:0]",
+      "dut.core_coll_rnd",
+      "dbg_pc[13:0]"
+    ],
+    "rank_copy_count": 4,
+    "rate_credit": false
+  },
+  "rd64_join": {
+    "owner": "Nash admission / Rawls graph",
+    "producer": "rom_fr[69*region +:69] = {valid,row16,pos3,fp32,bf16,error}",
+    "region_count": 128,
+    "full_port_bits": 8832,
+    "ready_port_exists": false,
+    "consumer": "dut.u_tile.u_core.g_rom.u_spine",
+    "commit": "dut.u_tile.vm[rom_waddr[q*AW +:VM_AW]] <= rom_wdata[32*q +:32] on rom_we[q]",
+    "commit_mask_bits": 128,
+    "native_VM_address_bits": 19,
+    "requirement": "reserve full producer/capture/VM calendar before actual spine GO; preserve final post-NBA VM visibility, faults and reset debt",
+    "hook_available": true,
+    "admission_provider_received": false
+  },
+  "write_visibility_join": {
+    "owner": "Turing native publication",
+    "source_backend": "ot_chip_v41x_hbm3e_phy_c8",
+    "done_tuple": [
+      "wr_done",
+      "done_addr",
+      "done_tag"
+    ],
+    "wrong_substitution": "k_wr_done OR alone cannot count simultaneous PC completions",
+    "K_class_bit": 16,
+    "PC_per_stack": 32,
+    "stack_count": 4,
+    "maximum_completions_per_stack_per_edge": 32,
+    "count_bits_per_stack": 6,
+    "pending_bits_per_stack": 12,
+    "maximum_pending_per_stack": 2048,
+    "root": "actual c8_engine_start/identity; offered descriptor is not engine launch",
+    "context_retire": "c8_write_quiet plus positive RD64 capture/VM commit debt and all actual native completion obligations",
+    "publication_provider_received": false
+  },
+  "loaded_parent_IO": {
+    "stream_clock_hz": 1200000000,
+    "serial_clock_hz": 900000000,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "IO_driving_cells_and_loads_not_qualified": true,
+    "macro_CLKQ_not_free": true,
+    "Pauli_source": "actual selected FASTPP core -> g_pool.u_idx; DRAIN_LOOKAHEAD flags and accepted command init/counter feedback",
+    "Boole_source": "dut.u_coll -> actual native in/out records, ready and credit; trace has no signal drivers"
+  },
+  "physical_admission": false,
+  "whole_token_measured": false,
+  "historical_transport_not_selected_field": true,
+  "source_hashes": {
+    "tools/dsrom_s81_system_sources.py": "e18830ac00c51190ad1d725d82bd6315c188c69388b04f628925bb7673d75da3",
+    "tools/dsrom_collective_headreg.py": "88c10c1de7b13c73510d319eef9b88455fb91f981cee0b4e5ae33ba002c4eacc",
+    "tools/dsrom_c8_parent_binding.py": "f1ce5e39846795e9e4eed1feb079ddf568c26442c1480b10b50bb09dfebb5594",
+    "rtl/dsrom_sys/c8/ot_v41_rt_die_l20_c8.sv": "654420e1265f28e2c15d95a27d064f085804b591670241262e5c62964e53e007",
+    "rtl/dsrom_sys/c8/ot_chip_v41x_die_owner_safe_c8.sv": "f98410f8a72ba6b0361a5d1fddda7386de4a11d93f193adbb4e7eddea659c47f",
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+    "rtl/chip/ckvsel/ot_chip_v41x_tile.sv": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6"
+  }
+}

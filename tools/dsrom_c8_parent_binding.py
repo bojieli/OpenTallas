@@ -22,12 +22,17 @@ SOURCES = [
 
 
 class ParentBinding:
-    def __init__(self, owner, selected, model_pin, interface_pin):
+    def __init__(self, owner, selected, model_pin, interface_pin, *,
+                 payload_interface="tools/dsrom_s82_payload_interface.py"):
         self.owner = Path(owner).resolve()
         self.selected = Path(selected)
         if self.selected.is_absolute() or '..' in self.selected.parts:
             raise ValueError('selected allocation must be a relative owner path')
         self.model_pin, self.interface_pin = model_pin, interface_pin
+        self.payload_interface = Path(payload_interface)
+        if (self.payload_interface.is_absolute() or ".." in self.payload_interface.parts
+                or self.payload_interface.suffix != ".py"):
+            raise ValueError("payload interface must be a pinned relative Python source")
         self.receipts = {}
         self.inventory = self._json('inventory.json')
         self.stage_map = self._json('stage_map.json')
@@ -54,7 +59,7 @@ class ParentBinding:
             raise ValueError('native fixed4096 NB2 PP1 ownership mismatch')
         if self.contract['return_contract']['RD'] != 64:
             raise ValueError('rejected RD4 is not the selected return source')
-        self._pinned('tools/dsrom_s82_payload_interface.py', interface_pin)
+        self._pinned(str(self.payload_interface), interface_pin)
 
     def _pinned(self, relative, pin):
         data = subprocess.check_output(['git', 'show', f'{pin}:{relative}'], cwd=self.owner)
@@ -118,8 +123,8 @@ class ParentBinding:
     @property
     def payload_api_path(self):
         """The existing owner's native word/fragment API, without loading payloads."""
-        self._pinned('tools/dsrom_s82_payload_interface.py', self.interface_pin)
-        return self.owner / 'tools/dsrom_s82_payload_interface.py'
+        self._pinned(str(self.payload_interface), self.interface_pin)
+        return self.owner / self.payload_interface
 
     def native_sources(self, original_export):
         """Actual 125-source engine list plus selected native completion copies.
