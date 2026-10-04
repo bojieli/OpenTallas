@@ -8,6 +8,7 @@ from pathlib import Path
 import tempfile
 import qwen_rom_combined_access as predecessor
 
+BASE_EMIT = predecessor.emit
 TOP = 'ot_qwen_rom_combined_nearbaseline_die'
 BASE_TOP = 'ot_qwen_rom_combined_die'
 
@@ -19,7 +20,7 @@ def emit(die_header, tile_header, hbm_header, out, **parameters):
     with tempfile.TemporaryDirectory() as temporary:
         normalized = Path(temporary) / 'Vdie___024root.h'
         normalized.write_text(actual.replace(TOP, BASE_TOP))
-        predecessor.emit(normalized, tile_header, hbm_header, out, **parameters)
+        BASE_EMIT(normalized, tile_header, hbm_header, out, **parameters)
     target = Path(out) / 'combined_access.hpp'
     generated = target.read_text()
     if BASE_TOP + '__DOT__' not in generated:
