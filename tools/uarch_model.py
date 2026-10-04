@@ -1189,7 +1189,17 @@ V41_HBM_FABRIC_US = dict(collective_latency=125.9, collective_bytes=1.5, pipelin
 V41_HBM_DIES = 96          # G = 96: every matrix 1/96 per die (W9 handoff 8)
 
 
-def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
+# Opt-in owner/ACK/fence and refresh-live first-access hypothesis from the retained
+# v41_hbm_service_term_20261003 proposal. Existing callers retain the exact off path.
+V41_HBM_SERVICE = dict(
+    off=dict(boundary_cycles=0, routed_fetch_ns=0.0),
+    low=dict(boundary_cycles=2, routed_fetch_ns=133.2 + 5.4),
+    central=dict(boundary_cycles=4, routed_fetch_ns=469.5 + 6.4 + 0.1),
+    high=dict(boundary_cycles=6, routed_fetch_ns=526.4 + 7.4 + 18.3),
+)
+
+
+def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None, service="off"):
     """V4.1 HBM token on the SM design, K-chain aware: the arch DAG's critical path at 1M with every matvec
     re-priced as an SM op on its 1/96 row slice (sm_op_cycles), the dedicated units' nodes (W11 spec widths)
     at their arch price, one barrier per global boundary, and the comparator's switched-fabric terms.  The
@@ -1223,6 +1233,11 @@ def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
     parts = dict(sm_matvec=mv * 1e6, x_broadcast_fill=xfill * 1e6, dedicated_and_su=other * 1e6,
                  verify_extra_issue=extra * 1e6, barrier=nb * bc / clock * 1e6, **V41_HBM_FABRIC_US)
     parts["collective_bytes"] *= positions             # every position's activations cross the fabric
+    sv = V41_HBM_SERVICE[service]  # named, source-priced profiles only
+    if sv["boundary_cycles"] or sv["routed_fetch_ns"]:
+        n_routed = sum(1 for x in path if x.endswith(".ffn.experts_gu"))
+        parts["boundary_service"] = nb * sv["boundary_cycles"] / clock * 1e6
+        parts["routed_fetch"] = n_routed * sv["routed_fetch_ns"] * 1e-3
     chain = sum(parts.values())
     T = max(chain, 37.4)
     return T, parts, nb
@@ -6378,6 +6393,12 @@ def qwen_posted_kv_model(records):
                                "measured gain >=1% after token composition", "contextual SS/FF and hub routing"])
 
 
+def hbm_accel_rows():
+    """Default-off HA0/HA10 hypotheses; no measured/adopted accelerator rate."""
+    from hbm_accelerator_model import build
+    return build(sys.modules[__name__])
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
@@ -6391,7 +6412,9 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--qwen", action="store_true", help="the Qwen3-8B ROM die rows only")
     ap.add_argument("--qwen-posted-kv-baseline", action="append", help="REAL_MEM record for default-off posted-write sizing")
-    ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM comparators only")
+    ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM ablation only")
+    ap.add_argument("--hbm-accel", action="store_true",
+                    help="default-off UNVALIDATED HBM accelerator ladder and fairness hypotheses")
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
     ap.add_argument("--v41-hbm-dspark", action="store_true", help="OPT-IN: V4.1 HBM DSpark rows (priced draft, "
                     "measured expert union) from results/speculative/v41_hbm_speculation_methods_20261003")
@@ -6403,6 +6426,13 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.hbm_accel:
+        payload = json.dumps(hbm_accel_rows(), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.dsrom_s82 or a.qwen_posted_kv_baseline:
         if a.dsrom_s82:
             payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"

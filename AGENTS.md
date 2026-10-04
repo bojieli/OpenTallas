@@ -58,6 +58,16 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
 - The GPU-organised HBM ablation takes only what a real GPU generation or its software stack has (register and TMEM-style epilogues, fused all-reduce plus norm, in-switch reduction, collective overlap). The HBM accelerator may adopt any exact, priced improvement, including ones first developed for the ROM accelerator.
 - Stage files by explicit path, never `git add -A`.
 - Run long jobs in pinned clean worktrees, not in the main checkout.
+
+## Workflow habits (owner, 2026-10-03)
+
+- **Merge finished work at once.** When an agent finishes, its work is merged into main and pushed straight away. Use `~/OpenTallas` as the central merge point. Don't wait for another agent to merge it. When a merge conflicts with files main has since evolved, keep main's hunks (`-X ours`) and take the rest of the branch.
+- **Delete the worktree after the merge.** After merging, remove the finished worktree and its local scratch.
+- **Delete inactive worktrees and scratch.** A worktree is inactive when no live process uses it and it has been untouched for a day. Before removing one, keep its unique state as a `refs/preserve/*` ref plus a patch of any uncommitted changes. Write bulk run outputs to the large compute host, not the local disk.
+- **Bound concurrency by headroom, not by job count.** Keep the fleet saturated with independent work, and launch a large job only through the host's admission guard.
+- **Completion over ceremony.** Focus on finishing the task: build, integrate, measure. Don't add review, freeze or seal commits, proof re-runs, or test sweeps beyond what a change needs. One commit per real step.
+- **Proposers validate their own ideas.** Whoever proposes an optimisation measures it in RTL at full shape. An idea handed off without an owner is not validated. Before accepting a rejection, check that it was measured on the right vehicle (full shape, not a reduced model).
+- **Never run git in another agent's worktree.** Work only in your own worktree or the central checkout. Never `git stash` in a shared checkout.
 - Costly-build resource policy (user reaffirmed 2026-10-02): never impose arbitrary wall-time or CPU-time deadlines, individual-file size caps, or guessed per-process address-space limits on large builds or simulations. Schedule against measured CPU, RAM and disk headroom and the actual build inventory; use capacity reservations, free-space monitoring and incremental outputs. Any protective bound must be justified by actual host capacity, not copied from a small pilot. Preserve completed objects and immutable failure evidence. Do not restart a progressing pinned job solely to change its settings.
 - After editing any doc under `docs/`, regenerate the prose-figure census and sync its two untriaged-count annotations, then run `make check-figures`.
 
