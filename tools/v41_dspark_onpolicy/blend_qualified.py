@@ -31,6 +31,12 @@ WEIGHTS = {
     '3-class agent-heavy': dict(a_chat=0.25, f_agentic=0.5, g_assistant_fc=0.25),
     '3-class assistant-heavy': dict(a_chat=0.25, f_agentic=0.25, g_assistant_fc=0.5),
     'measured-only equal (c-g)': {c: 1 / 5 for c in OURS},
+    # Owner decision 2026-10-03: long-document and multilingual classes retired as dated workloads.
+    'owner 6-class equal': {c: 1 / 6 for c in CLASSES if c not in ('d_longdoc', 'e_multilingual')},
+    'owner 6-class chat-heavy': dict({c: 0.1 for c in CLASSES if c not in ('d_longdoc', 'e_multilingual')}, a_chat=0.5),
+    'owner 6-class agent-heavy': dict({c: 0.1 for c in CLASSES if c not in ('d_longdoc', 'e_multilingual')}, f_agentic=0.5),
+    'owner 6-class assistant-heavy': dict({c: 0.1 for c in CLASSES if c not in ('d_longdoc', 'e_multilingual')}, g_assistant_fc=0.5),
+    'owner measured-only equal (c,f,g)': dict(c_coding=1 / 3, f_agentic=1 / 3, g_assistant_fc=1 / 3),
 }
 # step times (us).  HBM: d2aff19ef v41_hbm_speculation_methods.json contexts.1048576 (measured union + composed draft 51.88).
 HBM_STEP = {1: 550.21, 2: 604.59, 3: 653.77, 4: 705.48, 5: 752.73}
