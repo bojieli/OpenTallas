@@ -1,14 +1,25 @@
 #!/usr/bin/env python3
-"""Qwen3-8B ROM TP4 runtime with REAL memory services and the asynchronous-collective sequencer.
+"""Qwen3-8B ROM TP4 runtime with REAL memory on FOUR HBM3E stacks a die (full-bandwidth KV path, STREAM4).
+Default-off successor of tools/qwen_rom_rt_token_stream_w12.py (left byte-identical): the same die, core, tiles,
+collective, stages, oracle and bit-exact checks, with the KV memory replaced by
+rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv + rtl/hdc/kv/ot_qwen_hbm_stream4_ack.sv (4 stacks x 32 PCs, 4 near-HBM
+stream controllers, window striped across stacks/PCs/banks, P < 8192), the die
+rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_stream4.sv and the host qwen_rom_rt_w12_stream4.cpp.  Run-time
+straps (one build serves all): --early-go (cross-layer prefetch: the next layer's stream is released when the core
+is done with this layer's KV slices) and --posted-wb (posted token write-back with the visibility fence).
+--enable-ar256 / --x-preload as tools/qwen_rom_rt_token_w12_rm.py (layer-parallel jobs entered from a golden X).
+The retained description follows.
 
-tools/qwen_rom_rt_token_w12_rm.py (byte-identical, still the REAL_MEM driver) with the die built
-from rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_rm_async.sv (sequencer
-ot_qwen_tp_seq_async_w12, tapped on the committed ME result writes), --enable-ar256 (one-stream
-256-word all-reduce, ENABLE_AR256 = 1) and --async-coll (ASYNC_COLL = 1: descriptor bit 20 =
-cut-through all-reduce; images without the bit run the legacy path, so one binary measures A/B).
-The host rtl/test/qwen_rom_runtime/qwen_rom_rt_w12_rm.cpp is unchanged.
+Qwen3-8B ROM TP4 runtime with REAL memory services on the near-HBM STREAMING controller (HBM_STREAM).
+Default-off successor of tools/qwen_rom_rt_token_w12_rm.py (left byte-identical): the same die, core,
+tiles, collective, stages, oracle and bit-exact checks, with the KV memory replaced by
+rtl/hdc/kv/ot_qwen_rt_kv_stream_service.sv + rtl/hdc/kv/ot_qwen_hbm_stream_ack.sv (the stream controller
+rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv with WR_EN = 1, stream-aware REFpb, next-layer notice,
+32-sector landing, at HBM CK/2 behind a clock crossing; picosecond DRAM checker).  The die is
+rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_stream.sv, the host qwen_rom_rt_w12_stream.cpp.
+The retained description follows.
 
-The REAL_MEM driver's description follows.
+Qwen3-8B ROM TP4 runtime with REAL memory services (default-off REAL_MEM configuration).
 
 Builds (Verilator) the REAL_MEM die (rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_rm.sv:
 sequencer + emitted core with KV_HBM = 1, KV_VEC_WRITE_BRIDGE = 1, ME_STALL = 1, RTL
@@ -51,10 +62,11 @@ DIE_RTL = [*HDC, *C.PIPES,
            *(ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_dyn_ttiles", "ot_hdc_qwen_int8_arith",
                                                "ot_hdc_qwen_int8_embed_decode", "ot_hdc_cg", "ot_qwen_me_array_w12", "ot_hdc_fp32_add_lat",
                                                "ot_hdc_prefix", "ot_qwen_w12_matvec", "ot_qwen_w12_arith", "ot_qwen_rt_rom_bank", "ot_qwen_rt_embed_rom")),
-           ROOT / "rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv", ROOT / "rtl/hdc/kv/ot_qwen_hbm_model_ack.sv",
+           ROOT / "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv", ROOT / "rtl/hdc/kv/ot_qwen_hbm_stream4_ack.sv",
+           ROOT / "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv", ROOT / "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv",
            MAC / "ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
-           *(ROOT / f"rtl/rom/{n}.sv" for n in ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_qwen_tp_seq_async_w12")),
-           RR / "ot_qwen_rom_rt_die_w12_rm_async.sv"]
+           *(ROOT / f"rtl/rom/{n}.sv" for n in ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_qwen_tp_seq_w12")),
+           RR / "ot_qwen_rom_rt_die_w12_stream4.sv"]
 TILE_RTL = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_fastfp", "ot_hdc_delay",
                                               "ot_hdc_sfu", "ot_hdc_matvec", "ot_qwen_me_array_w12", "ot_qwen_rom_tile_w12",
                                               "ot_hdc_fp32_add_lat", "ot_hdc_prefix", "ot_qwen_w12_matvec", "ot_qwen_w12_arith")] \
@@ -62,8 +74,8 @@ TILE_RTL = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pi
        MAC / "ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"]
 COLL_RTL = [ROOT / f"rtl/rom/{n}.sv" for n in ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_rom_oneshot_allreduce")]
 SOURCES = sorted(set([*DIE_RTL, *TILE_RTL, *COLL_RTL, C.ISA_SVH, ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv",
-                      RR / "qwen_rom_rt_w12_rm.cpp", RT / "qwen_rt_matvec.hpp", RT / "qwen_rt_memory.hpp",
-                      Path(__file__), ROOT / "tools/qwen_rom_rt_core_emit_w12.py", ROOT / "tools/qwen_rom_rt_rm_access.py",
+                      RR / "qwen_rom_rt_w12_stream4.cpp", RT / "qwen_rt_matvec.hpp", RT / "qwen_rt_memory.hpp",
+                      Path(__file__), ROOT / "tools/qwen_rom_rt_core_emit_w12.py", ROOT / "tools/qwen_rom_rt_rm_access.py", ROOT / "tools/qwen_rom_rt_stream_access.py", ROOT / "tools/qwen_rom_rt_stream4_access.py",
                       ROOT / "tools/qwen_rom_embed_stage_w12.py",
                       ROOT / "tools/qwen_rom_arithmetic_contract_w12.py"]))
 VLT = """`verilator_config
@@ -100,11 +112,15 @@ def main() -> None:
     ap.add_argument("--pos", type=int, required=True)
     ap.add_argument("--token", type=int, required=True)
     ap.add_argument("--real-mem", action="store_true", required=True, help="the REAL_MEM configuration (default-off)")
-    ap.add_argument("--enable-ar256", action="store_true", help="ENABLE_AR256=1: one-stream 256-word all-reduce descriptors")
-    ap.add_argument("--async-coll", action="store_true", help="ASYNC_COLL=1: decode descriptor bit 20 as a cut-through all-reduce")
-    ap.add_argument("--sb-pipe", type=int, nargs="?", const=1, default=0, choices=(0, 1, 2, 3),
-                    help="SB_PIPE of the asynchronous sequencer (bare flag = 1: pipelined scoreboard set; "
-                         "2/3: also the registered read, no wide lookup in the read loop)")
+    ap.add_argument("--stream4", action="store_true", required=True, help="the 4-stack STREAM4 KV memory (default-off)")
+    ap.add_argument("--nstk", type=int, default=4, help="HBM3E stacks a die")
+    ap.add_argument("--early-go", action="store_true", help="strap: cross-layer prefetch (release the next layer at kv_free)")
+    ap.add_argument("--posted-wb", action="store_true", help="strap: posted token write-back")
+    ap.add_argument("--enable-ar256", action="store_true",
+                    help="opt in to the one-stream 256-word all-reduce (sequencer ENABLE_AR256; use one-stream stage images)")
+    ap.add_argument("--x-preload", type=Path, help="X entry (@1000 format) instead of the oracle's x_preload.hex")
+    ap.add_argument("--wbw", type=int, default=1, help="token write-backs a cycle (distinct PCs)")
+    ap.add_argument("--hbm-phase", type=int, default=0, help="REFpb phase of the stack (controller cycles)")
     ap.add_argument("--kv-ideal", action="store_true", help="A/B reference: KV service HBM bypassed, slices preloaded")
     ap.add_argument("--verilator", default=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"))
     ap.add_argument("--groups", type=int, default=6144)
@@ -143,6 +159,11 @@ def main() -> None:
     bld = (args.build_dir or args.workdir).resolve()
     bld.mkdir(parents=True, exist_ok=True)
     start_pins = {str(p.relative_to(ROOT)): sha(p) for p in SOURCES}
+    source_receipt = bld / "stream4_source_sha256.json"
+    if source_receipt.exists() and json.loads(source_receipt.read_text()) != start_pins:
+        raise SystemExit("successor build source changed; preserve this build and use a new pinned build directory")
+    if not source_receipt.exists():
+        source_receipt.write_text(json.dumps(start_pins, indent=2, sort_keys=True) + "\n")
     vroot = re.search(r"VERILATOR_ROOT\s*=\s*(\S+)", subprocess.check_output([args.verilator, "-V"], text=True)).group(1)
     steps = []
 
@@ -171,11 +192,12 @@ def main() -> None:
              f"-GXVM={args.xvm}", f"-GNWS={args.nws}", f"-GTWS={args.tws}", f"-GORD={args.ord}"]
     kv_ideal = int(args.kv_ideal)
     models = [
-        ("die", "ot_qwen_rom_rt_die_w12_rm", [str(pub), str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
+        ("die", "ot_qwen_rom_rt_die_w12_stream4", [str(pub), str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
           f"-GSW={args.su_width}", f"-GLV={args.lv}", "-GSCALE_LOCAL=0", f"-GMEM_EXTRA={args.mem_extra}", *spine,
-          "-GREAL_MEM=1", f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GASYNC_COLL={int(args.async_coll)}", f"-GSB_PIPE={int(args.sb_pipe)}", f"-GSCALE_BANKS={args.scale_banks}", f"-GCROM_WORDS={args.crom_words}",
-          f"-GHBM_LAYERS={args.hbm_layers}", f"-GEMBED_ROM={int(not args.no_embed_rom)}", f"-GFILL_LAT={args.fill_lat}", f"-GNRD={args.nrd}", f"-GLKA={args.lka}", *arithmetic]),
+          "-GREAL_MEM=1", f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GNSTK={args.nstk}", f"-GSCALE_BANKS={args.scale_banks}", f"-GCROM_WORDS={args.crom_words}",
+          f"-GHBM_LAYERS={args.hbm_layers}", f"-GEMBED_ROM={int(not args.no_embed_rom)}", f"-GFILL_LAT={args.fill_lat}", f"-GNRD={args.nrd}", f"-GLKA={args.lka}",
+          f"-GWBW={args.wbw}", f"-GHBM_PHASE={args.hbm_phase}", *arithmetic]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_w12", [str(pub), *map(str, TILE_RTL)],
@@ -190,14 +212,14 @@ def main() -> None:
         if (mdir / f"V{prefix}__ALL.a").exists():
             if prior.get(prefix) == params:
                 continue
-            subprocess.run(["rm", "-rf", str(mdir)], check=True)
+            raise SystemExit(f"{prefix} build parameters changed; preserve objects and use a new build directory")
         run(f"verilate_{prefix}", [args.verilator, "--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH",
                                    "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-PINMISSING", "-Wno-LATCH", "-Wno-MULTIDRIVEN",
                                    f"-I{C.ISA_SVH.parent}", "--top-module", top, "--prefix", f"V{prefix}", "--Mdir", mdir,
                                    *params, *files, *(["--hierarchical", str(hier)] if prefix == "die" else [])])
         run(f"build_{prefix}", ["make", "-C", mdir, "-f", f"V{prefix}.mk", f"-j{args.jobs}", f"V{prefix}__ALL.a",
                                 "OPT_FAST=-O2", "OPT_SLOW=-O1"])
-    run("access", [sys.executable, ROOT / "tools/qwen_rom_rt_rm_access.py", "--die-header", bld / "die/Vdie___024root.h",
+    run("access", [sys.executable, ROOT / "tools/qwen_rom_rt_stream4_access.py", "--die-header", bld / "die/Vdie___024root.h",
                    "--tile-header", bld / "tile/Vtile___024root.h", "--nport", G >> args.smin, "--scale-banks", args.scale_banks,
                    "--code-banks", args.code_banks, "--crom-words", args.crom_words, "--hbm-layers", args.hbm_layers,
                    "--kv-ideal", 0, "--embed-rom", int(not args.no_embed_rom), "--out", gen / "rm_access.hpp"])
@@ -212,7 +234,7 @@ def main() -> None:
       run("link", ["g++", "-std=c++20", "-O2", "-pthread", f"-DGROUPS={G}", f"-DCOUNTWIDTH={NW}",
                  f"-DSWIDTH={args.su_width}", f"-DSMAXB={args.smax}", f"-DTCUTL={args.tcut}", f"-DNWSD={args.nws}",
                  f"-DXVMD={args.xvm}", f"-DTPD={args.tp}", f"-DCBANKS={args.code_banks}", f"-DSMINV={args.smin}",
-                 *sorted(includes), RR / "qwen_rom_rt_w12_rm.cpp", "-Wl,--start-group", *archives,
+                 *sorted(includes), RR / "qwen_rom_rt_w12_stream4.cpp", "-Wl,--start-group", *archives,
                  "-Wl,--end-group", f"{vroot}/include/verilated.cpp", f"{vroot}/include/verilated_threads.cpp",
                  f"{vroot}/include/verilated_dpi.cpp", "-o", binary])
     if args.build_only:
@@ -241,11 +263,13 @@ def main() -> None:
     embed_bin = out / "embedding_row.bin"
     embed_bin.write_bytes(int(args.token).to_bytes(4, "little") + int(emb["scale_bf16"], 16).to_bytes(2, "little")
                           + bytes.fromhex(emb["codes_hex"]))
+    x_entry = args.x_preload or (args.oracle / "x_preload.hex")
     env = dict(os.environ, RT_THREADS=str(args.threads))
     t0 = time.monotonic()
     with open(out / "token.log", "w") as log:
-        p = subprocess.run([str(binary), "--stages", str(args.stages), str(out), str(args.oracle / "x_preload.hex"),
-                            "--pos", str(args.pos), "--token", str(args.token), "--kv-dir", str(kvdir), "--embed-bin", str(embed_bin), "--kv-ideal", str(kv_ideal)], cwd=out,
+        p = subprocess.run([str(binary), "--stages", str(args.stages), str(out), str(x_entry),
+                            "--pos", str(args.pos), "--token", str(args.token), "--kv-dir", str(kvdir), "--embed-bin", str(embed_bin), "--kv-ideal", str(kv_ideal),
+                            "--early-go", str(int(args.early_go)), "--posted-wb", str(int(args.posted_wb))], cwd=out,
                            stdout=log, stderr=subprocess.STDOUT, env=env)
     wall = time.monotonic() - t0
     text = (out / "token.log").read_text()
@@ -295,16 +319,26 @@ def main() -> None:
     good = (p.returncode == 0 and bool(m) and stable and all(c["mismatches"] == 0 for c in checks.values())
             and all(c["k_mismatches"] == 0 and c["v_mismatches"] == 0 for c in kv_checks.values()))
     result = {
-        "schema": "opentallas.qwen-rom-rt-real-memory-async.v1", "status": "pass" if good else "fail",
-        "configuration": "KV_IDEAL A/B reference (HBM bypassed, slices preloaded)" if args.kv_ideal else "REAL_MEM",
+        "schema": "opentallas.qwen-rom-rt-real-memory.v1", "status": "pass" if good else "fail",
+        "configuration": "KV_IDEAL A/B reference (HBM bypassed, slices preloaded)" if args.kv_ideal else "REAL_MEM STREAM4",
+        "straps": {"early_go": bool(args.early_go), "posted_wb": bool(args.posted_wb)},
+        "ar256_enabled": bool(args.enable_ar256), "hbm_layers": args.hbm_layers,
+        "x_entry": str(x_entry), "x_entry_sha256": sha(x_entry),
+        "writeback_drain": (lambda mm: {"drained": mm.group(1) == "1", "cycles_after_last_stage": int(mm.group(2))} if mm else None)(
+            re.search(r"WRITEBACK drained=(\d) after (\d+) cycles", text)),
         "position": args.pos, "token": args.token, "returncode": p.returncode,
-        "design_point": {"ar256_enabled": bool(args.enable_ar256), "async_coll": bool(args.async_coll), "sb_pipe": args.sb_pipe, "tp": args.tp, "groups_per_die": G, "su_width": args.su_width, "su_reducer_time_levels": args.lv,
+        "design_point": {"tp": args.tp, "groups_per_die": G, "su_width": args.su_width, "su_reducer_time_levels": args.lv,
                          "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut, "collective_lat_cycles": args.coll_lat,
                          "collective_depth": args.coll_depth, "code_banks": args.code_banks, "mem_extra": args.mem_extra},
         "wire_stages": {"bd": args.bd, "xvm": args.xvm, "nws": args.nws, "tws": args.tws, "ord": args.ord},
-        "memory_services": {"hbm": "ot_qwen_hbm_model_ack NPC=32 one HBM3E stack/die, CLK_PS=833, PC_RDY=1, WR_ACK=1",
-                            "kv_fill": {"fill_lat": args.fill_lat, "outstanding_reads": args.nrd, "lookahead_units": args.lka,
-                                        "request_sectors": 16},
+        "memory_services": {"hbm": f"ot_qwen_hbm_stream4_ack: {args.nstk} x ot_hbm_r14_stream_stack ENABLE=1 REF_MODE=1 "
+                                   "(stream-aware REFpb) CRED=32 WR_EN=1 WQ=4, NSTK HBM3E stacks/die (32 PCs each), controller "
+                                   "CK/2 1.024 ns from the 1.2 GHz core (2-flop crossings), picosecond DRAM checker per PC",
+                            "kv_fill": {"service": "ot_qwen_rt_kv_stream4_service", "fill_lat": args.fill_lat, "stacks": args.nstk,
+                                        "map": "stack=r[1:0], PC=r[6:2], PC-local j={g, r[7]} (consumption order)",
+                                        "notice": "next layer posted after this layer retires (fence: no write-back outstanding)",
+                                        "early_go": bool(args.early_go), "posted_wb": bool(args.posted_wb),
+                                        "write_backs_per_cycle": args.wbw, "hbm_phase": args.hbm_phase, "window_limit_positions": 8192},
                             "scale_rom": f"{G >> args.smin} ports x {args.scale_banks} ot_rom_4096x266_m8",
                             "code_rom": f"per tile 2 x {args.code_banks} ot_rom_4096x266_m8 (hardened ot_qwen_rom_tile_w12)",
                             "kv_slices": "per tile 2 x ot_sram_1r1w_128x256_m1_r2c2 (KV_LOCAL=1)"},

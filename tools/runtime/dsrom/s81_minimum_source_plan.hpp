@@ -24,6 +24,9 @@ struct DsromS81MinimumSourcePlan {
     // Terminal for the selected minimum component and its actual accepted
     // outputs. This cannot certify unproduced rows/roots or whole C8/all-copy.
     std::function<bool()> complete;
+    // Factory snapshots the actual native counters around its L20 operation
+    // interval. Called only after real terminal drain; no rate inference here.
+    std::function<void(const std::string&)> write_measurements;
 };
 
 // Defined by the selected source factory, linked with the actual providers.
