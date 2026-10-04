@@ -67,7 +67,7 @@ def main():
     ap.add_argument("--units", default="he,me,att,sel,eg,su")
     ap.add_argument("--fp", choices=("rtl", "dpi"), default="rtl")
     ap.add_argument("--acc-guard", action="store_true")
-    ap.add_argument("--gamma", type=int, choices=(5,), default=5)
+    ap.add_argument("--gamma", type=int, choices=(1, 3, 5), default=5)
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--run-dir", type=Path, required=True)
     a = ap.parse_args()
@@ -86,7 +86,7 @@ def main():
     pins = {str(p.relative_to(ROOT)): digest(p) for p in sources}
     rec = {"schema": "opentallas.hdc-dspark-v41x-rtl-part.v1", "part": a.part,
            "status": "building", "core": "ot_hdc_core_v41x", "gamma": a.gamma,
-           "verify_positions": 6, "nslot": 8, "lane_multiplier_mp": 1,
+           "verify_positions": a.gamma + 1, "nslot": 8, "lane_multiplier_mp": 1,
            "respecified_units": list(campaign.UNITS), "fp": a.fp,
            "accept_unit": "ot_hdc_mtp_accept_guarded" if a.acc_guard else "ot_hdc_accept",
            "input_sha256": pins, "image_sha256": {str(p): h for p, _, _, h in images},
