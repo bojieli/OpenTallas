@@ -1,5 +1,7 @@
 # DS-V4.1 HBM accelerator: DSpark draft MEASURED (successor to the 51.88 us model draft)
 
+> **TAU SUPERSEDED (owner rule 2026-10-04).** `model.json`/the record is now composed at the third-party published tau (3.8879, `tools/third_party_tau.py`, `results/speculative/third_party_acceptance_20261004/`). Hand-written figures below that quote tau 4.159 are the superseded self-measured composition: scale MTP tok/s by 3.8879/4.159 = 0.9348 (and MTP J/token by its inverse); AR figures and ROM:HBM ratios are unchanged.
+
 Owner request (2026-10-04, fairness). Until now the HBM draft was a model estimate: 51.88 us at 1M, from
 d2aff19ef (`v41_hbm_speculation_methods`), as used in the authoritative record c246e929d. The ROM draft was
 MEASURED (main dae91947c). This record measures the HBM draft the same way, so that both sides of ROM:HBM MTP
