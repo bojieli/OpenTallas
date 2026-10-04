@@ -97,7 +97,7 @@ DsromS81MinimumSourceTags dsrom_s81_bind_minimum_source_tags(DsromS81MinimumRunt
 // publication.native_scalar. Actual accept remains Popper's later callback.
 MacroWrite dsrom_s81_reserve_native_scalar_tag(DsromS81MinimumRuntime&r,uint64_t id,
  unsigned producer,uint32_t address,uint32_t bits){
- auto p=registered[&r].lock();if(!p||id!=p->id||producer>8)throw std::runtime_error("native producer tag binding");
+ auto p=registered[&r].lock();if(!p||id!=p->id||producer>=(1u<<14))throw std::runtime_error("native producer tag binding");
  return p->scalar(address,bits,p->phase,producer);
 }
 

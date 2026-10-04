@@ -31,7 +31,7 @@ inline dsrom_s81_minimum::MacroWrite dsrom_s81_capture_minimum_prefix_scalar(
     const S81EmbeddingOutput& native_output,unsigned lane,bool actual_write) {
     if(!actual_write||!native_output.vm_valid||native_output.fault||lane>=16||
        native_output.vm_identity>=(1ull<<47)||
-       uint64_t(native_output.vm_address)+lane>=(1u<<19)||producer>8||
+       uint64_t(native_output.vm_address)+lane>=(1u<<19)||producer>=(1u<<14)||
        !runtime.identity||*runtime.identity!=native_output.vm_identity)
         throw std::runtime_error("prefix capture lacks actual native scalar and source tag reservation");
     const uint32_t address=native_output.vm_address+lane;
