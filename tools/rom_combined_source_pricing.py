@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 
 from dsrom_s81_selected_composition import ROOT, BASE, FF50_MM2_PER_BIT, build as s81_build
+from dsrom_s81_embedding_bootstrap_model import build as embedding_build
 
 INPUTS = BASE+'combined/'
 OUT = 'results/uarch/dsrom_s81_selected_composition_20261003/combined_model.json'
@@ -71,6 +72,7 @@ def build(root=ROOT):
     return dict(schema='opentallas.ROM.actual-combined-source-composition.v1',
         status='SOURCE_BOUND_MODEL_COSTS_NOT_MEASURED_RATE_OR_PHYSICAL_FIT',
         selected_DS=s81_build(root),
+        DS_cold_embedding=embedding_build(root),
         Qwen_baseline=dict(NEAR_HBM=0, REAL_MEM=1, clk_domain='core and actual KV service',
             hclk_domain='external HBM controllers', core_and_hclk_aliased=False,
             request_FIFO_replicas=4, request_depth=16, response_FIFO_replicas=128,

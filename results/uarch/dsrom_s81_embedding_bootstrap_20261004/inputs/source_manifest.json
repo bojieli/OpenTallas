@@ -1,0 +1,43 @@
+{
+  "S81_inventory.json": {
+    "origin": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json",
+    "sha256": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480"
+  },
+  "cell_LEF.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_I66_capture_cells_20261002/inputs/cell_LEF.json",
+    "sha256": "802969ef259feebb2c8c1cab7f8b2e2f367a832605cc59d1156342b6c9153130"
+  },
+  "cell_bodies.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_I66_capture_cells_20261002/inputs/cell_bodies.json",
+    "sha256": "018ffe0772ee34a3b054c1786638493b264d6d33b79010021258b132b634974e"
+  },
+  "config.mk.txt": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_I66_capture_cells_20261002/inputs/config.mk.txt",
+    "sha256": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c"
+  },
+  "dedicated_address.py": {
+    "origin": "/home/ubuntu/OpenTallas/tools/dsrom_full_owner_closure.py",
+    "sha256": "e655bdc7a0d863c4b3a2daa011d8b138f31554eedf8d0d6970329704e40c99ed"
+  },
+  "embedding_descriptor.json": {
+    "container_sha256": "f50af13ea93a402a6ab74c6f1302521aad99f922d8dc10fd1410978d2d62f960",
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_fixed4096_owner_compiler_20261002/inputs/tensor_headers.jsonl.gz",
+    "sha256": "e86594656111b763589e5cf4890aa483f046204fa3c33ddc2036a33de9ea06c8"
+  },
+  "header_capture.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_fixed4096_owner_compiler_20261002/inputs/header_capture.json",
+    "sha256": "a17d0676c38ec72c1b8c199f2c7ee28c2aaa4efb8f1f15a3084d70d6dac0f4d6"
+  },
+  "macro_depth.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/v41_rom_depth_study.json",
+    "sha256": "2486182dfd3bfd8f37db72ee59c254222d2586292efdead2697bd71ccf095c5b"
+  },
+  "native_stream.sv": {
+    "origin": "/home/ubuntu/OpenTallas/rtl/hdc/v41/ot_hdc_v41_stream.sv",
+    "sha256": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a"
+  },
+  "source_bootstrap.py": {
+    "origin": "/home/ubuntu/OpenTallas/tools/hdc_replay_v41.py",
+    "sha256": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b"
+  }
+}

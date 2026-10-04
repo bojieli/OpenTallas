@@ -1,0 +1,23 @@
+{
+  "RTL_or_numeric_job_launched": false,
+  "actual_payload_read": false,
+  "area_composition": "Existing 2525 pairs/10100 macros reused; zero new body charge. Mux and held-control positive floors are new reader costs, not routed/slot-qualified; no complete-node area/latency or rate claim.",
+  "component_verify": "python3 tools/dsrom_s81_embedding_bootstrap_model.py --verify",
+  "entrypoint": "python3 tools/uarch_model.py --rom-composed-source --out /tmp/ROM-with-embedding.json",
+  "implementation_owner": "Arendt",
+  "observed_tests": "32 PASS",
+  "required_implementation": [
+    "Defaultoff bootstrap owner; validate token and retained source/checkpoint revision, shape/layout/generation.",
+    "Use exact dedicated_address mapping; row may cross storage homes; contiguous BF16 word codec.",
+    "One accepted outstanding word/held response; four copies on each of four ranks; reserve before request, release only actual VM visibility for all copies/ranks. Reset/fault drains accepted intent; stale/duplicate response does not erase matching debt.",
+    "Bind actual VM commit width/port arbitration. Proposed16 lanes is a model parameter, not discovered port qualification.",
+    "Use actual ROM bytes, BF16 raw bit widening, existing ordered squared/tree SU SSX arithmetic; PC0 held until H and SSX visible. No expected activation restore.",
+    "Bind registered macro capture, mux pipeline, routes/CDC and source visibility/SU costs to serial_price, or separately qualify finite overlap.",
+    "Existing nonstallable SUN256/WR64 WROM port is not directly compatible with a serial raw256 reader."
+  ],
+  "scope": "S81 cold embedding sizing/address/port/finite service contract. Native reader and full cold bootstrap remain unimplemented/unqualified.",
+  "source_owner_snapshot_commit": "3c66e795f1060abfddfba12f5c0a22f6fcb84721",
+  "source_owner_worktree": "/home/ubuntu/dsrom-c-w2-20261003",
+  "source_release": "descriptor metadata only; no safetensors or model cache payload read",
+  "tests": "python3 -m pytest -q tests/test_dsrom_s81_embedding_bootstrap_model.py tests/test_dsrom_s81_selected_composition.py tests/test_rom_combined_source_pricing.py"
+}
