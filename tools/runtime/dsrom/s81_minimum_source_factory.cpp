@@ -819,6 +819,13 @@ struct SourceL20I0 : std::enable_shared_from_this<SourceL20I0> {
                 operation=DsromS81PrefixOperation{2611,2,"c60f0f4efd0f3401b2ecb779c588bc675143deb557a953395563fa563c3c05e5",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x10u,0xau,0xf0u,0x400000u,0x0u,0xc0000000u,0x4000a10u,0x0u,0x0u,0x2800u,0x8000280u,0x0u,0x0u,0x0u,0x0u,0x4008040u,0x500u,0x1000050u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x80000000u,0x2800u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
             output_spans={{20480,20480}}; // literal four-copy T output
         }
+        // Goodall: optional SIM_ONLY computed prefix uses THIS bank's actual
+        // tagged VM writes/ACKs; never admits a lease directly from files.
+        if(const char* input=std::getenv("DSROM_S81_NATIVE_L20_PRE_I75_INPUT")) {
+            require(pc&&std::string(pc)=="76"&&*input,
+                    "pre-I75 inputs require native PC76; PC142 needs its own actual boundary");
+            bank.entry().install_sim_only_pre_i75(input);
+        }
         if(!mutable_h)bank.publication().enroll_literal(operation.index,output_spans);
         su=dsrom_s81_bind_minimum_su256(r,ID,bank.publication(),bank.io(),bank.tags());
     }
