@@ -22,4 +22,10 @@ record `record.json`. Verdict **PASS**:
 | KV 2 rows + 2 cols | repaired; 3 rows: unrepairable (fail) as expected |
 | Mixed ROM + KV fault | ROM macro 1 fail, KV bank 0 repaired |
 
-Area / 1.2 GHz timing of the BIST logic alone (`ot_v41_mbist_shell.sv`): see `shell_route.json` when present.
+## 1.2 GHz timing of the BIST logic (`ot_v41_mbist_shell.sv`: controller + 4 ROM collars + 2 SRAM collars)
+
+- With the original `ot_mbist_rom_collar` (bit-serial CRC loop) the routed shell FAILS: SS setup -3,598.8 ps
+  (226 MHz), worst path `sig -> sig` through the 274-bit fold; 10,503 um2 (`shell_loopcrc_FAIL/`).
+- Successor `rtl/dft/ot_mbist_rom_collar_par.sv` writes the same CRC in matrix form (per-bit parity of constant
+  masks). The element campaign re-run with it gives the identical signatures and verdict (`record.json`;
+  the loop-form run is `record_loopcrc.json`). Its routed shell: see `shell_par/` and the stream report.
