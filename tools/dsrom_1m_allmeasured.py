@@ -208,7 +208,10 @@ def apply_levers(P, info, lever_dir):
     re-measured on its successor RTL.  Record schema (opentallas.dsrom-recovery.lever.v1):
       lever, verdict ("ADOPT" | "REJECT" | ...), exact (bool), ss_ff (signoff summary),
       nodes  {"<node name>" | "*.<suffix>": {"us": float, "source": str, "cls": "measured"}}
-      info   {"hop_us": all stage hops + extra S81 hops, "head_stage_occupancy_us", "head_argmax_drain_us"}
+      info   {"hop_us": all stage hops + extra S81 hops, "head_stage_occupancy_us", "head_argmax_drain_us",
+              "draft_blocks_total_us" + "draft_blocks_source": the three DSpark blocks re-measured with the recovery
+              levers (ONE lever record owns it, normally levers/draft.json; the 5 draft head sweeps follow
+              head_stage_occupancy_us)}
     Only verdict ADOPT with exact true is applied; the others are listed."""
     applied, skipped = [], []
     for f in sorted((lever_dir / "levers").glob("*.json")):
@@ -234,6 +237,10 @@ def apply_levers(P, info, lever_dir):
             h["stage_occupancy_us"] = li["head_stage_occupancy_us"]
         if "head_argmax_drain_us" in li:
             h["argmax_drain_us"] = li["head_argmax_drain_us"]
+        if "draft_blocks_total_us" in li:
+            assert "draft_blocks" not in info, f"two lever records set draft_blocks_total_us ({f})"
+            info["draft_blocks"] = dict(us=li["draft_blocks_total_us"], lever=r["lever"],
+                                        source=li.get("draft_blocks_source", rel(f)))
         applied.append(row)
     return dict(applied=applied, not_applied=skipped)
 
@@ -408,6 +415,8 @@ def main():
     r_markov = dr["transfer_ratios"]["markov_over_head_macs_full"]
     db = recs.get("draft_blocks")
     blocks_us = db["blocks_total_us"] if db else 3 * dr["block5_us"]
+    if "draft_blocks" in info:                  # recovery lever re-measured the three blocks
+        blocks_us = info["draft_blocks"]["us"]
     draft = blocks_us + 5 * head_occ * (1 + r_markov)
     step = verify + draft + M.DRAFT["seed_commit_us"]
     mtp = M.DRAFT["tau"] * 1e6 / step

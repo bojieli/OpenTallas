@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "61066f549",
+ "generated_from_commit": "0275efe6a",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -54,7 +54,7 @@
    "value": 2247.1,
    "resolved": true,
    "blob": "910c6e53bcb7115703d8e33e6f8a61bb7eb4fd88",
-   "last_commit": null
+   "last_commit": "0275efe6a 2026-10-04"
   },
   "qwen_rom.dspark_tok_s_8k_wirebound": {
    "target": "qwen_rom",
@@ -69,7 +69,7 @@
    "value": 3522.6,
    "resolved": true,
    "blob": "910c6e53bcb7115703d8e33e6f8a61bb7eb4fd88",
-   "last_commit": null
+   "last_commit": "0275efe6a 2026-10-04"
   },
   "qwen_rom.dspark_speedup_vs_ar_8k": {
    "target": "qwen_rom",
@@ -1253,7 +1253,7 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 1402.3,
    "resolved": true,
-   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
+   "blob": "72b424ce2421b501ec6cca58ee7759ccaa21a1fa",
    "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
@@ -1298,7 +1298,7 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 2462.1,
    "resolved": true,
-   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
+   "blob": "72b424ce2421b501ec6cca58ee7759ccaa21a1fa",
    "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
@@ -1373,7 +1373,7 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 713.09,
    "resolved": true,
-   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
+   "blob": "72b424ce2421b501ec6cca58ee7759ccaa21a1fa",
    "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
@@ -1403,7 +1403,7 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 1090.037,
    "resolved": true,
-   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
+   "blob": "72b424ce2421b501ec6cca58ee7759ccaa21a1fa",
    "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
@@ -1432,7 +1432,7 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 75.389,
    "resolved": true,
-   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
+   "blob": "72b424ce2421b501ec6cca58ee7759ccaa21a1fa",
    "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
@@ -4526,7 +4526,7 @@
    "note": "rest listed in still_modelled",
    "value": 1.0,
    "resolved": true,
-   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
+   "blob": "72b424ce2421b501ec6cca58ee7759ccaa21a1fa",
    "last_commit": "243809bdb 2026-10-04"
   },
   "qwen_rom.j_per_token_ar_8k": {
