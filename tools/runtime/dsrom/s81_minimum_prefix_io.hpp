@@ -42,19 +42,19 @@ public:
 };
 
 class DsromS81MinimumPrefixOutputBatch {
+    DsromS81MinimumRuntime& runtime;
     DsromS81MinimumSourceIo io;
-    DsromS81MinimumSourceTags tags;
     dsrom_s81_minimum::PrefixPublication& publication;
     uint64_t identity;
     S81EmbeddingOutput held{};
     unsigned count=0;
     bool active=false,offered=false,stopped=false;
 public:
-    DsromS81MinimumPrefixOutputBatch(uint64_t id,
+    DsromS81MinimumPrefixOutputBatch(DsromS81MinimumRuntime& r,uint64_t id,
         dsrom_s81_minimum::PrefixPublication& pub,
         const DsromS81MinimumSourceIo& source,const DsromS81MinimumSourceTags& source_tags)
-    :io(source),tags(source_tags),publication(pub),identity(id) {
-        if(id>=(1ull<<47)||!io.offer||!io.visible||!tags.record)
+    :runtime(r),io(source),publication(pub),identity(id) {
+        if(id>=(1ull<<47)||!io.offer||!io.visible||!source_tags.record)
             throw std::runtime_error("actual native publication IO and source reservation required");
     }
     // Once per actual native output. A provider's priced output stage retains
@@ -66,11 +66,11 @@ public:
                output.vm_identity!=identity||!output.vm_valid||output.fault||
                uint64_t(output.vm_address)+words>(1u<<19))
                 throw std::runtime_error("native output batch absent/overlapping/foreign");
-            // All tags come from the same actual reservation closure as H/root.
+            // Versioned tags come from the same registered provider as H/root.
             // A partial exception retains reservations and quarantines this adapter.
             for(unsigned n=0;n<words;n++)
                 dsrom_s81_capture_minimum_prefix_scalar(
-                    publication,tags,producer,output,n,true);
+                    runtime,publication,producer,output,n,true);
             held=output;count=words;active=true;offered=false;
         }catch(...){stopped=true;throw;}
     }
