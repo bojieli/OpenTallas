@@ -2,6 +2,8 @@
 # DSROM q-element route Z4k (2026-10-04): Z4 (below) with the edge-pin access keepout as the POST_DETAIL_PLACE hook
 # (physical/abi3/dsrom_q_pin_keepout.tcl, which sources the PG check unchanged): S81 die finding, xs_q1[151] of the
 # routed q abstract boxed in by the element's own route.  The abstract is written by tools/dsrom_q_abstract.tcl.
+# ROUTING_LAYER_ADJUSTMENT from RLA (default 0.22, as Z2/Z3, which passed GRT; Z3b at the platform default failed
+# GRT-0116 with 113 overflow gcells at the xs_q1 pin cluster, top edge x 246-276 um).  Runs Z5a (0.22), Z5b (0.20).
 # DSROM q-element route Z4 (2026-10-04): Z3b (below) with QX = 2 (registered case-A walker decision, decoded x-need
 # walker enables; zero added cycles), after Z3b's post-CTS SS -45.1 ps (w_j -> j + 1 < cur[k] -> select).
 # DSROM q-element QX route Z3b (2026-10-04): Z3 (below) on frame D, 510.84 x 151.2 um = the per_element_envelope q
@@ -56,6 +58,6 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 \
  --param MTP=1 --param EARLY=1 --param NB=2 --param FAST=1 --param PP=1 --param QTIMING_FIX=1 \
  --param QPIPE=1 --param QP_XS=1 --param QP_CAP=$CAP --param QP_P1=1 --param QP_CSAM=10 \
- --param QZ=1 --param QZ_NS=8 --param QZ_NE=4 --param QY=1 --param QX=2 --hold-corners WC,BC \
+ --param QZ=1 --param QZ_NS=8 --param QZ_NE=4 --param QY=1 --param QX=2 --orfs-var ROUTING_LAYER_ADJUSTMENT=${RLA:-0.22} --hold-corners WC,BC \
  --pnr-stop-after $STOP --orfs-corner WC --clock-uncertainty-hold-ns 0.025 \
  --core-input-delay-min-ns 0.36 --core-input-delay-max-ns 0.727 --output-delay-min-ns -0.322 --output-delay-max-ns -0.193 > $J/launch.log 2>&1
