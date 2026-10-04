@@ -22,6 +22,9 @@
 // QX = 4 (after route Z6: post-GRT SS -36.6 ps on the lane's P2 shift + CSA, behind ~107 ps of CTS skew): the lanes
 // are ot_v41_bterm4_w10 with P2S = 1 (two shifter levels moved into P1b, bit-identical).  ot_v41_bterm4_w10 with
 // P2S = 0 is ot_v41_bterm3_w10, so QX < 4 is unchanged.  Zero added cycles.
+// QX = 5 (after route Z7's post-CTS screen, SS -40.7 ps on w_cnt -> hazard compare -> issue -> walker enables): the
+// issue hazard is a register loaded with its next-cycle value (three register-only candidates selected by go / issue).
+// QP_CHECK asserts it equals the original every cycle.  Zero added cycles.
 //
 // ot_v41_rom_elem_qy_w10: ot_v41_rom_elem_qz_w10 (byte-identical body, renamed) plus the opt-in QY (default 0 = the qz
 // circuit).  QY = 1 (requires QZ = 1; DS-V4.1 ROM q-pair SS closure, 2026-10-04, after route Z1's post-CTS screen):
@@ -943,13 +946,22 @@ module ot_v41_rom_elem_qx_w10 #(
         hazard = 1'b0;
         for (k = 0; k < LAT - 1; k = k + 1) if (hz_v[k] && hz_s[k] == w_cnt) hazard = 1'b1;   // LAT-cycle recurrence
     end
+    // QX = 5: the hazard held in a register loaded with its next-cycle value.  hz_s[0] takes w_cnt and hz_v[0] takes
+    // issue every cycle, so next cycle's hazard is H(c') || (issue && w_cnt == c') with H(c) the match of c against
+    // entries 0 .. LAT-3 now and c' the next w_cnt (0 at go, w_cnt + 1 or 0 on an issue, else w_cnt): three
+    // register-only candidates, with issue only the final select.
+    function automatic qx_hz(input [HW-1:0] c);
+        qx_hz = 1'b0;
+        for (int j = 0; j < LAT - 2; j++) if (hz_v[j] && hz_s[j] == c) qx_hz = 1'b1;
+    endfunction
+    reg  hazard_r;
     // PP: word i is in bank i[0]; a bank is read at most every other cycle (only an MTP restart to an even base
     // right after an even word can collide: one stall)
     reg [13:0] a_ctr;
     reg        pp_last_v, pp_last_b;
     wire       pp_block = (PP != 0) && pp_last_v && pp_last_b == a_ctr[0];
     reg [2:0] bp_hold;                      // BF16_PAIR: cycles left of the word being multiplied
-    wire issue = w_run && f_cnt != 0 && !hazard && !pp_block && !(BP != 0 && bp_hold != 3'd0);
+    wire issue = w_run && f_cnt != 0 && !((QX >= 5) ? hazard_r : hazard) && !pp_block && !(BP != 0 && bp_hold != 3'd0);
     wire pop = issue && w_cls_last;
     reg ffault;
     wire [NB-1:0] bk_fault;
@@ -991,6 +1003,24 @@ module ot_v41_rom_elem_qx_w10 #(
     wire n_more = n_pos != plast;
     wire w_more = w_pos != plast;
     wire w_restart = issue && w_cls_last && ((QX != 0) ? !qx_same && qx_endq : !w_nx[UW-1]) && w_more;
+    // QX = 5: hazard_r's next value (above).  On an issue w_cnt restarts at 0 exactly when the class's last word
+    // ends the round (an MTP restart implies the round end: !qx_same), else it counts up.
+    wire qx_hz_zero = w_cls_last && w_round_end;
+    wire qx_hz_h0 = qx_hz({HW{1'b0}}), qx_hz_hp = qx_hz(w_cnt + 1'b1), qx_hz_hs = qx_hz(w_cnt);
+    wire qx_hz_is = qx_hz_zero ? (w_cnt == {HW{1'b0}}) || qx_hz_h0 : qx_hz_hp;
+`ifdef QX_MUTANT_HZ
+    wire qx_hz_nx = go_e ? (issue && w_cnt == {HW{1'b0}}) || qx_hz_h0 : issue ? qx_hz_hp : qx_hz_hs;   // negative control
+`else
+    wire qx_hz_nx = go_e ? (issue && w_cnt == {HW{1'b0}}) || qx_hz_h0 : issue ? qx_hz_is : qx_hz_hs;
+`endif
+    always @(posedge gclk or negedge rst_n)
+        if (!rst_n) hazard_r <= 1'b0;
+        else hazard_r <= qx_hz_nx;
+`ifdef QP_CHECK
+    always @(negedge clk) if (QX >= 5 && rst_n && hazard_r !== hazard) begin
+        $display("QX_CHECK FAIL: hazard register %b != %b at %t", hazard_r, hazard, $time); $fatal(1);
+    end
+`endif
     function automatic lu_f(input [6*NSEG-1:0] fa, input [SW-1:0] fc, input [2:0] fj);
         lu_f = fa[5*NSEG + fc] && ({1'b0, fj} + 4'd1 == fa[NSEG + 4*fc +: 4]);
     endfunction
