@@ -188,7 +188,7 @@ def cmd_real(a):
 ARGS = None
 
 
-def main():
+def main(argv=None):
     global ARGS
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("mode", choices=["synth", "real"])
@@ -201,7 +201,7 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--workdir", default=None)
     ap.add_argument("--jobs", type=int, default=8)
-    a = ap.parse_args()
+    a = ap.parse_args(argv)
     a.workdir = a.workdir or tempfile.mkdtemp(prefix="smv_gate_")
     os.makedirs(a.workdir, exist_ok=True)
     ARGS = a

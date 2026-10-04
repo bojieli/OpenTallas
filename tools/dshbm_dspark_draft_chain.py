@@ -31,7 +31,7 @@ boundary per dependent SM op, dedicated units at their W11 prices, the routed ex
 union), every collective of the draft COUNTED and priced per scenario with uarch_model's authoritative transports
 (Tomahawk Ultra protocol for the accelerator), the head pass bounded by the die's HBM stream of its 13.8 MB head
 share (4 stacks x 0.958 TB/s measured, minus the SMEM staging the idle window before it can prefill).  MTP is
-recomputed at tau 4.159 for both sides with both drafts measured, ROM:HBM ratios, and the L1 / L2 ideas on HBM.
+recomputed at the third-party tau (uarch_model.TAU_DS; 4.159 self-measured superseded) for both sides with both drafts measured, ROM:HBM ratios, and the L1 / L2 ideas on HBM.
 """
 from __future__ import annotations
 
@@ -461,7 +461,7 @@ def cmd_compose(a):
         for v in variants:
             dr, tr = draft_us(v, dsg, sc)
             step = ver + dr + seed_us
-            mtp = um.TAU_OWNER6 * 1e6 / step
+            mtp = um.TAU_DS * 1e6 / step
             out[v] = dict(draft_us=round(dr, 2), draft_transport_us=round(tr, 3), step_us=round(step, 2),
                           mtp_tok_s=round(mtp, 1), vs_model_draft=round(mtp / r["mtp_tok_s"] - 1, 4),
                           rom_over_hbm_mtp=dict(rom_as_built=round(romv["as_built"] / mtp, 3),
@@ -530,7 +530,7 @@ def cmd_compose(a):
                                        seed_commit=rom_dft[rk]["seed_commit_us"]) for c, rk in ctxk.items()},
                  l1l2_expected_k5={c: l12["l1l2/rom_read/k5"]["ctx"][rk]["occupancy"]["mtp_tok_s"] for c, rk in ctxk.items()},
                  values=rom),
-        tau=um.TAU_OWNER6)
+        tau=um.TAU_DS, tau_src=um.TAU_DS_SRC)
     return res
 
 

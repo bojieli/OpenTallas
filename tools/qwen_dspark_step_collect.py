@@ -27,8 +27,10 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--res', type=Path, required=True)
     ap.add_argument('--runs', type=Path, required=True, help='run dirs (token.log of the heads for accept timing)')
-    ap.add_argument('--tau', type=float, required=True)
-    ap.add_argument('--tau-source', required=True)
+    ap.add_argument('--tau', type=float, default=None,
+                    help='override; default = the published third-party Qwen3-8B tau at --slots draft tokens '
+                         '(tools/third_party_tau.py; OT_TAU_SOURCE=self_measured gives the superseded 3.0375)')
+    ap.add_argument('--tau-source', default=None)
     ap.add_argument('--priced', type=json.loads, required=True, help='{"ingest": c, "markov": c} with their source')
     ap.add_argument('--layers', type=int, default=36)
     ap.add_argument('--drafter-layers', type=int, default=5)
@@ -38,6 +40,16 @@ def main():
     ap.add_argument('--claim-boundary', help='replaces the default (P = 255) claim boundary')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
+    superseded = None
+    if a.tau is None:
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import third_party_tau as tpt
+        a.tau = tpt.tau_qwen3_8b(a.slots)
+        a.tau_source = a.tau_source or tpt.tau_src('qwen3_8b', a.slots)
+        superseded = tpt.SUPERSEDED['qwen3_8b'] if a.tau != tpt.SUPERSEDED['qwen3_8b']['tau'] else None
+    elif a.tau_source is None:
+        ap.error('--tau needs --tau-source')
     if a.drafter_job != 'c_D0':
         a.map.setdefault('c_D0', a.drafter_job)
     nm = lambda k: a.map.get(k, k)  # noqa: E731
@@ -90,7 +102,7 @@ def main():
             'verify_layer_cycles_for_1pct_gain': (a.tau * ar_tok / 1.01 - draft - h1 - commit) / a.layers,
             'drafter_su_serial_stall_cycles_per_layer': R['c_D0']['stages']['D0']['memory']['die0']['stall_bridge'],
         },
-        'tau': a.tau, 'tau_source': a.tau_source, 'clock_hz': F_HZ,
+        'tau': a.tau, 'tau_source': a.tau_source, **({'tau_superseded': superseded} if superseded else {}), 'clock_hz': F_HZ,
         'per_user_accepted_tok_s': a.tau * F_HZ / step, 'ar_tok_s': F_HZ / ar_tok, 'speedup_vs_ar': a.tau * ar_tok / step,
         'jobs': {k: nm(k) for k in R},
         'claim_boundary': a.claim_boundary or ('Layer, head and drafter-layer cycles measured on the VPRM REAL_MEM RTL at P=255 (in-tile KV slices, '
