@@ -16,11 +16,11 @@ struct Provider {
  struct Planned {T::Tag227 owner;std::uint32_t scalar;bool read,accepted=false;std::optional<std::uint32_t> expected_bits;};
  std::map<T::Tag227,Planned> plans;
  // Planned ordinal and ACTUAL accepted count are distinct; no ACK advances either.
- std::uint64_t planned_ordinal=0,actual_accepted=0;
+ std::uint64_t planned_ordinal=0,actual_accepted=0,actual_retired=0;
  std::map<std::tuple<std::uint64_t,std::uint32_t,std::uint32_t>,MacroWrite> held_records;
  std::vector<T::Tag227> actual_order;
  unsigned phase=0,entry=0;
- static constexpr std::size_t MAX_RECORDS=131072;
+ static constexpr std::size_t MAX_RECORDS=8192;
  Provider(DsromS81MinimumRuntime&r,std::uint64_t identity):runtime(r),id(identity),stage(r.stage),rank(r.rank),pair(r.pair){
   if(id!=(1ull<<31)||r.stage<0||r.stage>80||r.rank<0||r.rank>3||r.pair<0||r.pair>2416||!r.cycle)
    throw std::runtime_error("component source/runtime/identity range");
@@ -99,4 +99,30 @@ MacroWrite dsrom_s81_reserve_native_scalar_tag(DsromS81MinimumRuntime&r,uint64_t
  unsigned producer,uint32_t address,uint32_t bits){
  auto p=registered[&r].lock();if(!p||id!=p->id||producer>8)throw std::runtime_error("native producer tag binding");
  return p->scalar(address,bits,p->phase,producer);
+}
+
+// Called ONLY by the actual old-owner visibility/read-capture path. No ACK
+// advances the planned ID or actual accept counters. Positive retirement closes
+// accepted live records; source phase/VM leases remain separately owned.
+void dsrom_s81_retire_source_scalar_tag(DsromS81MinimumRuntime&r,unsigned bank,
+ const MacroWrite& c,const dsrom_s81_minimum::VmReceipt& actual_matched_receipt){
+ auto p=registered[&r].lock();if(!p)throw std::runtime_error("source tag provider absent");
+ auto it=p->plans.find(c.word.owner);auto a=c.source.element_address;
+ if(it==p->plans.end()||!it->second.accepted||it->second.read||it->second.scalar!=a||
+    bank>=4||bank!=((a>>4)&3)||actual_matched_receipt.owner!=c.word.owner||
+    actual_matched_receipt.address!=c.word.address||actual_matched_receipt.mask!=c.word.mask)
+  throw std::runtime_error("scalar retirement lacks actual accepted old tuple");
+ // Preserve no old active held-Record cache after its actual matching receipt.
+ for(auto h=p->held_records.begin();h!=p->held_records.end();){
+  if(h->second.word.owner==c.word.owner)h=p->held_records.erase(h);else ++h;
+ }
+ p->plans.erase(it);++p->actual_retired;
+}
+void dsrom_s81_retire_source_read_tag(DsromS81MinimumRuntime&r,uint32_t requested_scalar,
+ const std::array<uint32_t,8>& actual_captured_owner){
+ auto p=registered[&r].lock();if(!p)throw std::runtime_error("source tag provider absent");
+ auto it=p->plans.find(actual_captured_owner);
+ if(it==p->plans.end()||!it->second.accepted||!it->second.read||it->second.scalar!=requested_scalar)
+  throw std::runtime_error("read retirement lacks actual captured accepted owner");
+ p->plans.erase(it);++p->actual_retired;
 }
