@@ -1,0 +1,15 @@
+test_crossings_priced_once_and_no_parallel_sum_latency (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+test_default_off (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+test_exact_union_no_trim_or_missing_tile (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+test_missing_channel_mutant_rejected (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+test_nanorounding_cannot_hide_overlength (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+test_only_actual_overlength_regions_split (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+test_original_source_graph_and_regions_preserved (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+test_tree_cycle_mutant_rejected (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+test_two_cut_mutant_rejected (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+test_unknowns_and_physical_fail_closed (test_qwen_rom_clock_boundary_reconcile.Reconcile) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.671s
+
+OK

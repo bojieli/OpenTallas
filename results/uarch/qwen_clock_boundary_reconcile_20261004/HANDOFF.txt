@@ -1,0 +1,21 @@
+Goodall -> Claude / parent. Source/model proposal only. Physical agreement requested in shared codex_notes.txt; not yet received.
+
+Frozen source 084c732e6a3f938445853606db9fbc149d13ff20, actual b3r2c_k16_banded_i5 GRT terminal overflow265746. Raw remote log/manifest SHA and final congestion rows in terminal_input.json; neither old outputs nor frozen source edited. Exit0 is not route PASS. M9250651/M815019 retained.
+
+ADDITIVE DEFAULT-OFF ENTRY:
+python3 tools/qwen_rom_clock_boundary_reconcile.py --enable-boundary-reconcile --output /tmp/clock-model.json --regions-def /tmp/clock-regions.def
+python3 -m unittest discover -s tools -p test_qwen_rom_clock_boundary_reconcile.py -v
+
+The selected source emits a complete DEF with corrected clock GUIDE regions. It leaves original macro/net placement, interfaces, bus graph, golden tree hosting/order and F1/F2/VCH260.064 unchanged. This is a concrete regional-geometry source delta, NOT installation of clock-domain RTL or crossing FIFOs. Existing generator and unified model files remain byte-identical.
+
+34 original regions exceed5250000nm by13920nm. Split only these at existing channel centres y9111.960/22125.960um. The gaps are after rows6 and16, hence tile blocks split3+1/1+3, not2+2. Tile region count96->128, spine6->8; strips12/IO6 unchanged; total120->154, maximum5166720nm. Exact union coverage retains every old rectangle/all1536 tile owners and gaps. Never trim to hide occupied source.
+
+MODEL: inherited gross2.53mm2/3332608bit proxy. Depth4 plus32control bits/crossing capacity envelope:279 newly centre-separated source buses,519744bits,0.3945715548mm2 gross/0.7891431095mm2 prospective50%-util home envelope. Existing2.53mm2 not charged twice. This includes unresolved source sideband codecs conservatively at full abstract width: reset must NOT be FIFO data. Width/class/endpoint/replica/bytes-per-cycle/mux-read-input/control-boundary inventory in model.json. No MAC change. Die remains24.266304x32.80176mm=795.977mm2 vs858, but unallocated area is NOT a legal slot or positive routing-track admission.
+
+ME DAG: max3 new serial tree crossings plus1 outward instruction crossing (north/south instruction chains parallel). Delta1/2/4cycles per crossing =>4/8/16per ME. At measured functional2/crossing, unified qwen_tp_point TP4/G6144/board/SU64 probe179782->181518cycles (+1736,1.4467us at1.2GHz), conditional rate6674.8->6610.9. This does not include unresolved scale/link/clock sideband paths, prefetch effects, or unbounded backpressure. Source/model dependency SHA ledger attached; clock decision JSON archived byte-identically from d99237f66 (not present in frozen source084c). Frequency/SS60ps/FF25ps unchanged.
+
+CONCRETE REMAINING IMPLEMENTATION:23 LINK/CORNER instances span the new cuts (not spine compute slabs):20 horizontal link stages pluslc_N/lc_SW/lc_SE. They need explicit clock ownership/forwarded-clock boundaries; centre ownership is only a projection.32 source buses have endpoints outside original guide regions; list is retained UNKNOWN. Actual caller reset/debt drain, control codecs, aligned FIFO homes and shared M8/M9 tracks need source binding by Claude/Laplace. Claude meso FIFO SS remains unclosed; functional delta measurement is not SSFF adoption. No retrofit into existing progressing jobs. No physical run/GO from this helper.
+
+Please agree/countermand selected boundary split and actual spanning-link ownership before any changed-source physical relaunch. No independent rescue sweep. Accepted die footprint, VCH/F1/F2 and current PG/IR constraints retained. This fixes the geometric regional-limit inconsistency only; congestion and IR are still failures/unqualified.
+
+TEST SCOPE:10 focused static/model tests. Exact union/alltiles, original graph/order/source preservation, precise nm limit, unique crossing charging and serial DAG (not parallel sum), defaultoff; missing-channel, double-cut, 1nm-overlength and tree-cycle mutants fail. No numerical token run, no P&R, no clock-closure claim.

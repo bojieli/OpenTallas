@@ -1,0 +1,9 @@
+{
+  "case": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3r2c_k16_banded_i5",
+  "run_log_sha256": "a89091044e59270379dc861a17d6961482d1a761b730f0893dc6a20deb875e9d",
+  "run_log_exit": "0",
+  "final_congestion_excerpt": "Final congestion report:\nLayer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion\n---------------------------------------------------------------------------------------\nM1                   0             0            0.00%             0 /  0 /  0\nM2                   0             0            0.00%             0 /  0 /  0\nM3                   0             0            0.00%             0 /  0 /  0\nM4               14740          1130            7.67%             0 /  0 /  0\nM5               82237         14213           17.28%             0 /  2 / 17\nM6            15571419        305804            1.96%             3 /  0 / 20\nM7            15093815       4868822           32.26%             0 /  2 / 39\nM8            46485283       4568116            9.83%             8 /  0 / 15019\nM9            46354040       6619125           14.28%             0 /  8 / 250651\n---------------------------------------------------------------------------------------\nTotal        123601534       16377210           13.25%            11 / 12 / 265746\n\n",
+  "manifest_sha256": "ee44e614678884c4125674c4c7cce10141f43e087fc1aeaabd56a92124fed399",
+  "scope": "exit0 is flow termination only; overflow failure, no adoption"
+}
+
