@@ -1,0 +1,48 @@
+{
+ "ar_stream4": {
+  "chained_prefetch_token_cycles": 194498,
+  "isolated_layer_composition_cycles": 236603,
+  "tok_s": 6169.7,
+  "tok_s_isolated": 5071.8
+ },
+ "bound_if_draft_free": {
+  "speedup_vs_ar_chained": 0.936,
+  "tok_s": 5775.2
+ },
+ "commit_cycles": 65,
+ "draft_cycles_from_record": 169925.0,
+ "method": "the DSpark 8K record's composition (results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json: verify = 36 x verify layer L0 step 1 + verify head p4; step = verify + draft + commit; per-user = tau x clock / step) with the verify layer re-measured on the 4-stack full-bandwidth KV path",
+ "per_user_accepted_tok_s": 4550.1,
+ "realmem_record": {
+  "per_user": 3446.7987324858655,
+  "speedup_vs_ar": 1.5156234663164077
+ },
+ "schema": "opentallas.qwen-dspark-step-stream4.v1",
+ "speedup_vs_ar_stream4_chained": 0.737,
+ "speedup_vs_ar_stream4_isolated": 0.897,
+ "step_cycles": 801075.0,
+ "tau": 3.0375,
+ "unvalidated": [
+  "draft cycles (drafter layers measured on REAL_MEM tagged fill; drafter ingest/Markov priced, as in the record)",
+  "verify head and E/head from P255/record (position independent)",
+  "verify layer not prefetched (isolated); a chained verify with early_go would hide <= its 1,362-cycle fill"
+ ],
+ "verdict": "on the full-bandwidth KV path the 8K verify layer is compute bound (17,197 vs 6,489 plain): the DSpark step per user is below AR with prefetch even with a free draft",
+ "verify_cycles": 631085,
+ "verify_layer_realmem": {
+  "step1": 24320,
+  "step2": 25252
+ },
+ "verify_layer_stream4": {
+  "commit": [
+   "COMMIT 1 of block 8187..8190: committed_len=8188 (rollback 8188..8190)"
+  ],
+  "exact": true,
+  "fill_cycles_die0": {
+   "S1": 1362,
+   "S2": 1353
+  },
+  "step1_P8187_np4": 17197,
+  "step2_P8188_np4_after_rollback": 17188
+ }
+}
