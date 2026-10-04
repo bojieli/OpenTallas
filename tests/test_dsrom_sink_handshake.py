@@ -12,7 +12,7 @@ def test_default_off_and_exact_source_selection():
     assert off['sources']==sources and not off['defines']
     on=S.select(sources,enable=True)
     assert on['sources']==[S.SUCCESSOR/n for n in S.NAMES]
-    assert on['defines']==['+define+OT_MTP_SINK_HANDSHAKE=1']
+    assert on['defines']==['+define+OT_MTP_SINK_HANDSHAKE=1','+define+OT_MTP_HE_TAG=1']
     assert on['wave2_admitted']
     adapt=ROOT/'rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv'
     both=S.select(sources+[adapt],enable=True)
