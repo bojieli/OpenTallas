@@ -15,7 +15,7 @@ BASE_TOP = 'ot_qwen_rom_combined_die'
 
 def emit(die_header, tile_header, hbm_header, out, **parameters):
     hbm = Path(hbm_header).read_text()
-    if 'ot_qwen_hbm_stream4_ack' not in hbm:
+    if 'ot_qwen_hbm_stream4_tagged__DOT__' not in hbm:
         raise ValueError('actual Claude STREAM4 generated HBM root required')
     actual = Path(die_header).read_text()
     if TOP + '__DOT__' not in actual:

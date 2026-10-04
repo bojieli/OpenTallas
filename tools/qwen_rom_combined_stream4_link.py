@@ -20,12 +20,12 @@ def require_models(build,die,hbm):
     d,c,h,t=(retained.resolved_parameters(build,k) for k in ('die','coll','hbm','tile'))
     retained.require(all(d.get(k)==v for k,v in dict(G=6144,SW=64,NW=18,SNW=18,D=4,REAL_MEM=1,
                          NEAR_HBM=1,HBM_STREAM4=1,NSTK=4,WBW=4).items()), 'actual STREAM4 near die geometry required')
-    retained.require(all(h.get(k)==v for k,v in dict(NSTK=4,NPC=128,TAGW=9).items()),
+    retained.require(all(h.get(k)==v for k,v in dict(NSTK=4,NPC=128,TAGW=9,TTAGW=13).items()),
                      'actual single four-stack STREAM4 model required; old ACK models refused')
     retained.require(h['MEM_WORDS']==d['HBM_LAYERS']*131072 and h['CORE_FS']>=2 and h['CTL_FS']>0,
                      'compiled STREAM4 memory extent/clocks')
     retained.require(c.get('N')==4 and c.get('TAGW')==44, 'actual TAG44 collective required')
-    for directory,top in ((die,emitter.TOP),(hbm,'ot_qwen_hbm_stream4_ack')):
+    for directory,top in ((die,emitter.TOP),(hbm,'ot_qwen_hbm_stream4_tagged')):
         files=list(Path(directory).glob('*__verFiles.dat'))
         retained.require(any(top in p.read_text() for p in files), 'actual selected model top missing: '+top)
     # Preserve the generated hierarchy list checks with the new top explicitly.

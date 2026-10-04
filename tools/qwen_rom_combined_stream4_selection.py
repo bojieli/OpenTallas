@@ -16,7 +16,7 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
     root,compiled,model_sources,link_dir,output=map(Path,(source_root,compiled_source_root,model_sources,link_dir,output))
     require(not output.exists(),'immutable selection exists')
     model=json.loads(model_sources.read_text());link_path=link_dir/'link.json';link=json.loads(link_path.read_text())
-    require(model['top']==runtime.TOP and model['hbm_top']=='ot_qwen_hbm_stream4_ack'
+    require(model['top']==runtime.TOP and model['hbm_top']=='ot_qwen_hbm_stream4_tagged'
             and model['parameters']['HBM_STREAM4']==1 and model['parameters']['NEAR_HBM']==1,
             'actual STREAM4/near source book required; frozen near-only model refused')
     require(link['returncode']==0 and link['archives_stable'] is True and link['runtime_abi']==runtime.ABI,
@@ -25,6 +25,7 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
             'actual initialized STREAM4 runtime differs')
     params=link['resolved_parameters']
     require(params['hbm']['NSTK']==4 and params['hbm']['NPC']==128 and params['hbm']['TAGW']==9
+            and params['hbm']['TTAGW']==13
             and params['die']['HBM_STREAM4']==1 and params['die']['NEAR_HBM']==1,
             'actual single-store compiled STREAM4 models required')
     native=Path(link['native_tagged_source'])
@@ -36,10 +37,15 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
             relative=str(p.relative_to(compiled.resolve()))
             require(sha(root/relative)==h,'selected runtime/model source differs: '+relative);pins[relative]=h
         else:external[str(p)]=h
-    required=[TOP_SOURCE,'rtl/qwen_sys/combined/ot_qwen_combined_stream4_rows.sv',base.SUBSYSTEM]
+    required=[TOP_SOURCE,'rtl/qwen_sys/combined/ot_qwen_combined_stream4_rows.sv',base.SUBSYSTEM,
+              'rtl/hdc/kv/ot_qwen_hbm_stream4_tagged.sv']
     for pinfile in (base.PIN_SOURCE,'rtl/qwen_sys/combined/stream4_source_pin.json'):
         source=json.loads((root/pinfile).read_text())
         for path,h in source['sources'].items():
+            # The retained source book pins the original descriptor-only
+            # backend. Its history stays intact; the selected native successor
+            # is instead required in the actual model pins above.
+            if path=='rtl/hdc/kv/ot_qwen_hbm_stream4_ack.sv':continue
             require(pins.get(path)==h,'required native stream/near engine source absent/changed: '+path)
         pins[pinfile]=sha(root/pinfile)
     require(all(p in pins for p in required),'actual stream row/subsystem/top pins required')
