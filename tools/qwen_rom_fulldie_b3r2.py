@@ -63,7 +63,8 @@ def _isa_bits():
 
 
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
-             tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False):
+             tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
+             bw_edge_inner=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -136,7 +137,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                      strip_fifo_extra_h_um=sf_extra_h, bw_fifo_mm2=round(bw_mm2, 4), band=band or b3r3, b3r3=b3r3,
                      groups=groups)
     _wrap_masters(v, m, area_pins, ns_faces=b3r3, spread=spread or b3r6, channel=b3r6, bw_align=bw_align,
-                  bw_edge=bw_edge)
+                  bw_edge=bw_edge, bw_edge_inner=bw_edge_inner)
     m['b3r2']['spread_pins'] = spread or b3r6
     m['b3r2']['b3r6_channel_pins'] = b3r6
     if tree_cols:
@@ -148,6 +149,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if io_faces:
         _io_faces(v)
     m['b3r2']['b3r11_io_faces'] = io_faces
+    m['b3r2']['b3r12_bw_edge_inner'] = bw_edge_inner
     m['b3r2']['area_pins'] = area_pins
     return v, m
 
@@ -455,7 +457,7 @@ def _spine_buses(v, m, gm):
 
 
 def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=False, bw_align=False,
-                  bw_edge=False):
+                  bw_edge=False, bw_edge_inner=False):
     """Every endpoint port that the b3 masters do not define becomes a pin group on the face toward the far
     endpoint (M4 on W/E), stacked from the top of the face so no two groups overlap."""
     base = v.masters
@@ -510,8 +512,15 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
                         # edge (b3r8: M9 windows 1.30 at x 10.8-11.5 mm, y 18.85 mm, all eight band-3 W words)
                         ye = 70.0 if yr < 50.0 else b.h - 70.0
                         ordx = sorted(ws, key=lambda i: model['b3r8_root_x'][it.name][i], reverse=not east)
+                        x0, x1 = 20.0, b.w - 40.0
+                        if bw_edge_inner:
+                            # b3r12: the word from the block next to the spine climbs farthest into the slab
+                            # (b3r11: M9 1.04 at x 11.42 mm, y 18.85 mm, the spine-edge corridor under slab 3 W)
+                            # (ordx runs nearest-root first for an east slab already; reverse the west one)
+                            ordx = ordx if east else ordx[::-1]
+                            x0, x1 = (0.25 * b.w, b.w - 40.0) if not east else (20.0, 0.75 * b.w)
                         for q, i in enumerate(ordx):
-                            xq = 20.0 + (b.w - 60.0) * (q + 0.5) / len(ordx)
+                            xq = x0 + (x1 - x0 - 20.0) * (q + 0.5) / len(ordx)
                             if f'bw{i}' not in b.order:
                                 b.order.append(f'bw{i}')
                             b.ports[f'bw{i}'] = ('area', v.TREE_BITS, xq, ye, 2)
@@ -1140,6 +1149,7 @@ def main(argv=None):
     ap.add_argument('--bw-align', action='store_true', help='b3r8: slab block-word pins at their block-root height')
     ap.add_argument('--bw-edge', action='store_true', help='b3r10: words of a slab whose roots lie outside it enter '
                     'at the near edge, spread over the slab width')
+    ap.add_argument('--bw-edge-inner', action='store_true', help='b3r12: edge-entry words climb inside the slab')
     ap.add_argument('--io-faces', action='store_true', help='b3r11: collective->SerDes word on the E/W faces')
     ap.add_argument('--east-mirror', action='store_true', help='b3r9: east-array block trees mirrored (root spine-side)')
     ap.add_argument('--work', type=Path)
@@ -1157,7 +1167,7 @@ def main(argv=None):
     v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
                     b3r6=a.b3r6, tree_cols=a.tree_cols,
                     bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
-                    io_faces=a.io_faces)
+                    io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner)
     if a.mode == 'plan':
         out = a.out
         out.mkdir(parents=True, exist_ok=True)
