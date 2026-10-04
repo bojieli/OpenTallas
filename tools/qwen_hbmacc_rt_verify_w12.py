@@ -47,7 +47,8 @@ RR = ROOT / "rtl/test/qwen_rom_runtime"
 DIE_SV = RR / "ot_qwen_hbmacc_rt_die_w12_vp.sv"
 HOST = RR / "qwen_hbmacc_rt_w12_vp.cpp"
 SEQ_VP = ROOT / "rtl/rom/ot_qwen_tp_seq_w12_vp.sv"
-DIE_RTL = [p for p in BASE.DIE_RTL if p.name not in ("ot_qwen_rom_rt_die_w12.sv", "ot_qwen_tp_seq_w12.sv")] + [SEQ_VP, DIE_SV]
+USECOUNT = ROOT / "rtl/hbm_accel/qwen/ot_hbmacc_win_usecount.sv"
+DIE_RTL = [p for p in BASE.DIE_RTL if p.name not in ("ot_qwen_rom_rt_die_w12.sv", "ot_qwen_tp_seq_w12.sv")] + [SEQ_VP, USECOUNT, DIE_SV]
 SOURCES = sorted(set([*DIE_RTL, *BASE.TILE_RTL, *BASE.COLL_RTL, *HA.WST_RTL, C.ISA_SVH,
                       ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv", HOST, BASE.RT / "qwen_rt_matvec.hpp",
                       BASE.RT / "qwen_rt_memory.hpp", Path(__file__), ROOT / "tools/qwen_hbmacc_rt_token_w12.py",
@@ -87,7 +88,7 @@ def build(args, out: Path, steps: list):
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
           f"-GSW={args.su_width}", f"-GLV={args.lv}", "-GSCALE_LOCAL=0", f"-GMEM_EXTRA={args.mem_extra}",
           f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GLAGW={args.lagw}", f"-GVPOS={args.vpos}",
-          f"-GENABLE_ARP={args.enable_arp}", "-GVWA=12", *spine, *arithmetic]),
+          f"-GENABLE_ARP={args.enable_arp}", "-GVWA=12", f"-GUSE_HW_RELEASE={int(args.hw_release)}", *spine, *arithmetic]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, BASE.COLL_RTL), *map(str, C.PIPES), *map(str, BASE.TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_logic_w12", [*map(str, BASE.TILE_RTL)],
@@ -152,6 +153,8 @@ def main() -> None:
     ap.add_argument("--coll-depth", type=int, default=16)
     ap.add_argument("--enable-ar256", action="store_true")
     ap.add_argument("--vpos", type=int, choices=(0, 1), default=1)
+    ap.add_argument("--hw-release", action="store_true",
+                    help="window release by the synthesizable rtl/hbm_accel/qwen/ot_hbmacc_win_usecount.sv (+2 cycles)")
     ap.add_argument("--enable-arp", type=int, choices=(0, 1), default=1)
     # memory system (HA8)
     ap.add_argument("--stacks", type=int, default=4)
@@ -277,7 +280,7 @@ def main() -> None:
                          "smin": args.smin, "smax": args.smax, "tcut": args.tcut, "bd": args.bd, "xvm": args.xvm,
                          "nws": args.nws, "tws": args.tws, "ord": args.ord, "mem_extra": args.mem_extra,
                          "code_banks": args.code_banks, "coll_lat": args.coll_lat, "coll_depth": args.coll_depth,
-                         "ar256": bool(args.enable_ar256), "vpos": args.vpos, "enable_arp": args.enable_arp},
+                         "ar256": bool(args.enable_ar256), "hw_release": bool(args.hw_release), "vpos": args.vpos, "enable_arp": args.enable_arp},
         "memory_system": {"stacks_per_die": args.stacks, "ref_mode": args.ref_mode, "window_words": args.winw,
                           "window_mib": round(args.winw * WORD_BYTES / MIB, 2), "lag_words": args.lagw, "cred": args.cred,
                           "sram_mib_per_die": args.sram_mib, "sram_code_words_beyond_head": sram_words, "sram_spread": args.sram_spread,

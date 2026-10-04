@@ -39,6 +39,7 @@ module ot_qwen_hbmacc_rt_die_w12_vp #(
     parameter integer VPOS = 1,
     parameter integer ENABLE_ARP = 1,
     parameter integer VWA = 12,
+    parameter integer USE_HW_RELEASE = 0,   // 1: the release is the synthesizable rtl/hbm_accel/qwen/ot_hbmacc_win_usecount.sv
     parameter integer G = 5120,
     parameter integer NW = 18,
     parameter integer SNW = 18,
@@ -271,10 +272,20 @@ module ot_qwen_hbmacc_rt_die_w12_vp #(
     wire          last_use = (4'(u_now) + 4'd1 >= w_nuse);
     integer ui;
     assign st_nreads = n_reads;
+    reg  [CW-1:0] m_c_gray;                   // the zero-latency simulation model of the release
+    reg           m_rel_fault;
+    wire [CW-1:0] h_c_gray;                   // the synthesizable release (USE_HW_RELEASE = 1)
+    wire          h_rel_fault;
+    ot_hbmacc_win_usecount #(.ENABLE(USE_HW_RELEASE), .LAGW(LAGW), .CW(CW)) u_rel (
+        .clk(clk), .rst_n(rst_n), .rd_v(w_read), .rd_idx(idx), .nuse(w_nuse), .c_gray(h_c_gray), .rel_fault(h_rel_fault));
+    always @* begin
+        w_c_gray  = (USE_HW_RELEASE != 0) ? h_c_gray : m_c_gray;
+        rel_fault = (USE_HW_RELEASE != 0) ? h_rel_fault : m_rel_fault;
+    end
     wire [CW-1:0] c_bin = (cmax > CW'(LAGW)) ? cmax - CW'(LAGW) : 0;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            cmax <= 0; w_c_gray <= 0; hbm_fault <= 1'b0; n_reads <= 0; rel_fault <= 1'b0;
+            cmax <= 0; m_c_gray <= 0; hbm_fault <= 1'b0; n_reads <= 0; m_rel_fault <= 1'b0;
             for (ui = 0; ui < 4096; ui = ui + 1) uses[ui] <= 3'd0;
         end else begin
             if (w_read) begin
@@ -282,8 +293,8 @@ module ot_qwen_hbmacc_rt_die_w12_vp #(
                 uses[idx[11:0]] <= last_use ? 3'd0 : u_now + 3'd1;
             end
             if (w_read && last_use && idx + 1 > cmax) cmax <= idx + 1;
-            if (w_read && idx < c_bin) rel_fault <= 1'b1;
-            w_c_gray <= c_bin ^ (c_bin >> 1);
+            if (w_read && idx < c_bin) m_rel_fault <= 1'b1;
+            m_c_gray <= c_bin ^ (c_bin >> 1);
             if (int8_wrom_re && !hit) hbm_fault <= 1'b1;      // a code read outside the stage's segments
         end
     // ---- HA8: cycle attribution ---------------------------------------------------------------------
