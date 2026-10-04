@@ -63,9 +63,11 @@ int main(int argc,char** argv) {
     auto source_main=reinterpret_cast<DsromS81SourceMain>(dlsym(caller,"dsrom_s81_source_main"));
     if(!source_main){fprintf(stderr,"actual source caller entry missing: %s\n",dlerror());return 2;}
     try {
+        DsromS81Runtime runtime{};
+        const char* stage=getenv("DSROM_S81_STAGE");
+        if(!stage)throw std::runtime_error("actual native stage required");
+        runtime.stage=std::stoi(stage);
 '''+loop+r'''
-        DsromS81Runtime runtime;
-        runtime.stage=std::stoi(getenv("DSROM_S81_STAGE")); // required/checked by native Field
         for(auto& die:dies)runtime.dies.push_back(die.get());
         runtime.tick=[&](){
             tick();
@@ -84,10 +86,12 @@ int main(int argc,char** argv) {
         // Caller drives native C8/context/prime through the retained DieBase.
         int rc=source_main(runtime,out.c_str());
         printf("SOURCE_CALLER_EXIT rc=%d cycle=%ld\n",rc,cyc);
-        dlclose(caller);return rc;
+        // Runtime observers may retain source-SO closures. Keep that image
+        // loaded through their destruction, rather than unloading their code.
+        return rc;
     }catch(const std::exception& e){
         fprintf(stderr,"S81_SOURCE_RUNTIME_ERROR %s\n",e.what());
-        dlclose(caller);return 1;
+        return 1;
     }
 }
 '''
@@ -102,6 +106,12 @@ int main(int argc,char** argv) {
                      'rtl/test/v41_runtime/s81_selected/dsrom_s81_rom_client.hpp']:
         (out/Path(relative).name).write_bytes((owner/relative).read_bytes())
     (out/'dsrom_s81_source_scheduler.hpp').write_text(SOURCE_SCHEDULER)
+    # The actual executable caller and its VM-carry integration are support
+    # sources; they need not be present in the immutable native-model owner.
+    support = Path(__file__).resolve().parent/'runtime/dsrom'
+    for name in ['s81_source_caller.cpp', 's81_source_caller_plan.hpp',
+                 's81_source_caller_hooks.hpp']:
+        (out/name).write_bytes((support/name).read_bytes())
     return out/'s81_c8_scheduler.cpp'
 
 
