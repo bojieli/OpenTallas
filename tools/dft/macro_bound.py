@@ -329,6 +329,8 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--scan-netlist", required=True)
     a.add_argument("--scan", required=True, help="scan_chains.json with a macro_bound section")
     a.add_argument("--output", required=True)
+    a.add_argument("--scan-output", required=True,
+                   help="scan_chains.json for the ATPG netlist: chain clocks behind an ICG re-rooted at its CLK net")
     e = sub.add_parser("equivalence")
     e.add_argument("--prescan", required=True)
     e.add_argument("--scan-netlist", required=True)
@@ -344,8 +346,30 @@ def main(argv: list[str] | None = None) -> int:
     bb_cells = {m["cell"] for m in mb.get("macros", [])}
     icg_cells = {m["cell"] for m in mb.get("icgs", [])}
     if args.cmd == "atpg-netlist":
-        text, info = atpg_netlist(Path(args.scan_netlist).read_text(), scan["top"], bb_cells, icg_cells)
+        src = Path(args.scan_netlist).read_text()
+        text, info = atpg_netlist(src, scan["top"], bb_cells, icg_cells)
         Path(args.output).write_text(text)
+        # in test mode an ICG is a buffer: a chain cell clocked from its GCLK is clocked from its CLK
+        mod = _module(src, scan["top"])
+        reroot = {}
+        for inst in mod.instances:
+            if inst.cell in icg_cells:
+                reroot[nl.canonical_name(inst.pin_text["GCLK"].strip())] = nl.canonical_name(inst.pin_text["CLK"].strip())
+        for ch in scan["chains"]:
+            for c in ch["cells"]:
+                c["clock"] = reroot.get(c["clock"], c["clock"])
+        for d in scan.get("clock_domains", []):
+            d["clock"] = reroot.get(d["clock"], d["clock"])
+        roots = {}
+        for r, e in scan.get("clock_roots", {}).items():
+            nr = reroot.get(r, r)
+            ent = roots.setdefault(nr, {"is_primary_input": nr in mod.port_dirs, "flops": 0})
+            ent["flops"] += e["flops"]
+        scan["clock_roots"] = roots
+        scan["uncontrolled_clock_roots"] = sorted(r for r, e in roots.items() if not e["is_primary_input"])
+        scan["atpg_reroot"] = reroot
+        Path(args.scan_output).write_text(json.dumps(scan, indent=1, sort_keys=True) + "\n")
+        info["rerooted_clocks"] = reroot
         print(json.dumps(info))
         return 0
     from dft import check_scan_equivalence as ce  # noqa: PLC0415
