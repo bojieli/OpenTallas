@@ -9,7 +9,7 @@ NEAR_TAIL = 0 (the adapter as built: full-window tile fill) or NEAR_TAIL = 1 (op
 
     python3 tools/qwen_nearhbm_realmem_ctx_gate.py build --work W [--verilator V] [--jobs 16]
     python3 tools/qwen_nearhbm_realmem_ctx_gate.py run --work W --tail 0|1 --gate kvok|drained \
-        --schedule T_V,T_K1,GAP_K2,SUFFIX --out RESULT.json VECDIR...
+        --schedule T_V,GAP_K1,GAP_K2,SUFFIX --out RESULT.json VECDIR...
 """
 import argparse
 import hashlib
@@ -44,7 +44,9 @@ def pins():
     return {p: sha(ROOT / p) for p in MEM_FILES + NEAR_FILES + DRIVER + ['tools/qwen_nearhbm_realmem_ctx_gate.py']}
 
 
-def step(w, name, cmd, env=None):
+def step(w, name, cmd, env=None, resume=False):
+    if resume and (w / f'{name}.exit').is_file() and (w / f'{name}.exit').read_text().strip() == '0':
+        return 'reused'
     t = time.monotonic()
     with (w / f'{name}.log').open('w') as log:
         r = subprocess.run(list(map(str, cmd)), cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, env=env)
@@ -56,14 +58,14 @@ def step(w, name, cmd, env=None):
 
 def build(a):
     w = a.work.resolve()
-    if w.exists():
-        raise SystemExit('immutable work path already exists')
-    w.mkdir(parents=True)
+    if w.exists() and not a.resume:
+        raise SystemExit('immutable work path already exists (--resume reuses its completed near/mem steps)')
+    w.mkdir(parents=True, exist_ok=True)
     rec = {'schema': 'opentallas.qwen-nearhbm-realmem-ctx-build.v1', 'source_sha256': pins(), 'steps': {}}
     env = dict(os.environ, NHB_SWAP='hub,stack', VL=a.verilator, VJOBS=str(a.jobs))
     near = w / 'near'
     rec['steps']['near'] = step(w, 'near', ['bash', 'rtl/test/nearhbm/hubp_swap.sh', 'rtl/test/qwen_sys/build_nearhbm_sys_replay.sh',
-                                            near, 128, 8, 'dpi', '-GLAYER_START_FENCE=1'], env)
+                                            near, 128, 8, 'dpi', '-GLAYER_START_FENCE=1'], env, a.resume)
     arch = near / 'Vot_qwen_nearhbm_sys_tb__ALL.a'
     dpi = [near / 'sim_nhb_fp_lat_dpi.o', near / 'sim_hdc_v41x_fastfp_dpi.o']
     for p in [arch, *dpi]:
@@ -72,13 +74,13 @@ def build(a):
     vr = re.search(r'VERILATOR_ROOT\s*=\s*(\S+)', subprocess.check_output([a.verilator, '-V'], text=True)).group(1)
     for tail in (0, 1):
         obj = w / f'obj_mem_t{tail}'
-        obj.mkdir()
+        obj.mkdir(exist_ok=True)
         pub = w / 'public.vlt'
         pub.write_text('`verilator_config\npublic_flat_rw -module "ot_qwen_hbm_model_ack" -var "mem"\n')
         rec['steps'][f'mem_t{tail}'] = step(w, f'mem_t{tail}', [a.verilator, '--cc', '--build', '-j', a.jobs, '-O2', '-Wno-fatal', '-Wno-lint',
                                                                 '-Wno-style', '-Wno-MULTIDRIVEN', '-Wno-TIMESCALEMOD', f'-GNEAR_TAIL={tail}',
                                                                 '--top-module', 'ot_qwen_nearhbm_realmem_ctx_tb', '--prefix', 'Vmem', '--Mdir', obj,
-                                                                pub, *(ROOT / p for p in MEM_FILES)])
+                                                                pub, *(ROOT / p for p in MEM_FILES)], resume=a.resume)
         hdr = (obj / 'Vmem___024root.h').read_text()
         names = []
         for s in range(4):
@@ -132,6 +134,7 @@ def main():
     b.add_argument('--work', type=Path, required=True)
     b.add_argument('--verilator', default=VL)
     b.add_argument('--jobs', type=int, default=16)
+    b.add_argument('--resume', action='store_true', help='reuse completed near/mem compile steps (relink the driver)')
     r = sub.add_parser('run')
     r.add_argument('--work', type=Path, required=True)
     r.add_argument('--tail', type=int, choices=(0, 1), required=True)

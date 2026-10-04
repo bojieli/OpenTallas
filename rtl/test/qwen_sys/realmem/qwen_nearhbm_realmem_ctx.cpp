@@ -2,12 +2,13 @@
 // subsystem (hub_p + stack_p, R = 8, layer-start fence) on the REAL_MEM service + four actual HBM timing/WR_ACK
 // models, at any context, over a chain of layers, with the token K/V written at the layer program's own points.
 //
-//   usage: connected_ctx GATE T_V T_K1 GAP_K2 SUFFIX VECDIR...
+//   usage: connected_ctx GATE T_V GAP_K1 GAP_K2 SUFFIX VECDIR...
 //     GATE    kvok    near start waits for kv_ok && kv_write_drained (the adapter/combined-top gate as built)
 //             drained near start waits for kv_write_drained of the token only
 //     T_V     fast-clock cycles from layer start to the V write (img256 PC 3, measured in the REAL_MEM baseline)
-//     T_K1    ... to the first K-half write (PC 8, after q/k norm and RoPE)
-//     GAP_K2  cycles from the K-half-1 write-done to the K-half-2 write (PC 10; the baseline's drain barrier + PC 9)
+//     GAP_K1  cycles from the V write-done to the first K-half write (PC 8: drain barrier, then q/k norm + RoPE)
+//     GAP_K2  cycles from the K-half-1 write-done to the K-half-2 write (PC 10: drain barrier, then PC 9)
+//   (the REAL_MEM baseline traces give T_V = 284, GAP_K1 = 261, GAP_K2 = 51 at P255, P4095 and P8191 alike)
 //     SUFFIX  cycles from the attention output to the next layer's start (the measured O projection .. layer end)
 //     VECDIR  one per chained layer (tools/qwen_nearhbm_ctx_vectors_gpu.py; same context, layers in order)
 //
@@ -35,7 +36,7 @@ struct Layer{int n;std::vector<uint16_t> q;std::vector<std::vector<uint8_t>> kv[
 int main(int argc,char** argv){
  if(argc<7)return 2;Verilated::commandArgs(argc,argv);
  std::string gate=argv[1];const bool kvok_gate=gate=="kvok";if(!kvok_gate&&gate!="drained")return 2;
- const long tV=atol(argv[2]),tK1=atol(argv[3]),gapK2=atol(argv[4]),suffix=atol(argv[5]);
+ const long tV=atol(argv[2]),gapK1=atol(argv[3]),gapK2=atol(argv[4]),suffix=atol(argv[5]);
  std::vector<Layer> L;int T=-1;
  for(int i=6;i<argc;i++){
    std::string dir=argv[i];std::ifstream fm(dir+"/meta.json");std::string meta((std::istreambuf_iterator<char>(fm)),{});
@@ -97,8 +98,8 @@ int main(int argc,char** argv){
      if(!group_low){fprintf(stderr,"token write never became outstanding\n");exit(1);}
      while(!mem.kv_write_drained&&!mem.fault)hf();return cf;};
    while(cf<L0+tV)ff();uint64_t v_at=cf;write_group(1,{{0,0},{0,64},{1,0},{1,64}});
-   while(cf<L0+tK1)ff();uint64_t v_done_seen=0;
-   if(mem.kv_write_drained)v_done_seen=cf;
+   uint64_t v_done=wait_drained();
+   while(cf<v_done+gapK1)ff();
    uint64_t k1_at=cf;write_group(0,{{0,0},{1,0}});
    uint64_t k1_done=wait_drained();
    while(cf<k1_done+gapK2)ff();uint64_t k2_at=cf;write_group(0,{{0,64},{1,64}});uint64_t last_write_input=cf;
@@ -124,13 +125,13 @@ int main(int argc,char** argv){
    all_good&=good;
    char buf[2048];
    snprintf(buf,sizeof buf,"%s{\"layer\":%d,\"status\":\"%s\",\"outputs\":%d,\"mismatches\":%d,\"scheduled_start\":%llu,\"waited_for_retire\":%s,"
-     "\"rel\":{\"v_write\":%llu,\"k1_write\":%llu,\"k1_write_done\":%llu,\"k2_write\":%llu,\"k2_write_done\":%llu,\"near_start\":%llu,\"first_row_return\":%llu,\"first_output\":%llu,\"last_output\":%llu,\"kv_ok\":%lld},"
+     "\"rel\":{\"v_write\":%llu,\"v_write_done\":%llu,\"k1_write\":%llu,\"k1_write_done\":%llu,\"k2_write\":%llu,\"k2_write_done\":%llu,\"near_start\":%llu,\"first_row_return\":%llu,\"first_output\":%llu,\"last_output\":%llu,\"kv_ok\":%lld},"
      "\"attention_cycles\":%llu,\"write_sectors\":%u,\"fill_sectors\":%u,\"fill_cycles_hclk\":%u,\"max_write_ACK_latency_hclk\":%u,\"drain_low_observed\":%s}",
      li?",":"",y.n,good?"pass":"fail",nout,mismatch,(unsigned long long)sched,waited?"true":"false",
-     (unsigned long long)(v_at-L0),(unsigned long long)(k1_at-L0),(unsigned long long)(k1_done-L0),(unsigned long long)(k2_at-L0),(unsigned long long)(k2_done-L0),
+     (unsigned long long)(v_at-L0),(unsigned long long)(v_done-L0),(unsigned long long)(k1_at-L0),(unsigned long long)(k1_done-L0),(unsigned long long)(k2_at-L0),(unsigned long long)(k2_done-L0),
      (unsigned long long)(begin-L0),(unsigned long long)(first_row_return?first_row_return-L0:0),(unsigned long long)(first_out-L0),(unsigned long long)(end-L0),
      fill_done_at?(long long)(fill_done_at-L0):-1LL,(unsigned long long)(end-begin),wr_sec,fill_sec,mem.st_fill_cycles,mem.st_wr_lat_max,drain_low?"true":"false");
-   recs+=buf;(void)v_done_seen;(void)last_write_input;
+   recs+=buf;(void)last_write_input;
    fprintf(stderr,"layer %d %s attention=%llu last_output_rel=%llu\n",y.n,good?"pass":"fail",(unsigned long long)(end-begin),(unsigned long long)(end-L0));
    if(!good)break;
    next_start=end+suffix;
@@ -148,8 +149,8 @@ int main(int argc,char** argv){
    if(bits(mem.probe_data.data(),h.byte_in_slice*8,8)!=z.kv[v][2*P+g][d])slice_bad++;
  }mem.probe_re=0;
  all_good&=wb_bad==0&&slice_bad==0&&!mem.fault&&mem.row_drained&&mem.kv_ok&&mem.kv_write_drained;
- printf("{\"status\":\"%s\",\"gate\":\"%s\",\"context\":%d,\"position\":%d,\"schedule\":{\"t_v\":%ld,\"t_k1\":%ld,\"gap_k2\":%ld,\"suffix\":%ld},"
+ printf("{\"status\":\"%s\",\"gate\":\"%s\",\"context\":%d,\"position\":%d,\"schedule\":{\"t_v\":%ld,\"gap_k1\":%ld,\"gap_k2\":%ld,\"suffix\":%ld},"
         "\"layers\":[%s],\"HBM_bytes_mismatched\":%ld,\"token_slice_codes_mismatched\":%d,\"kv_fault\":%u,\"memory_fault\":%u,\"near_fault\":%u,\"sys_fault\":%u}\n",
-        all_good?"pass":"fail",gate.c_str(),T,P,tV,tK1,gapK2,suffix,recs.c_str(),wb_bad,slice_bad,mem.kv_fault_code,mem.fault,near.fault,near.sys_fault);
+        all_good?"pass":"fail",gate.c_str(),T,P,tV,gapK1,gapK2,suffix,recs.c_str(),wb_bad,slice_bad,mem.kv_fault_code,mem.fault,near.fault,near.sys_fault);
  return all_good?0:1;
 }
