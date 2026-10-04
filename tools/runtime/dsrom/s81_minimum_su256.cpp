@@ -20,6 +20,8 @@ struct NativeSu {
  std::vector<uint32_t> addresses;std::map<uint32_t,uint32_t> staged;
  std::map<uint32_t,uint64_t> crom;bool crom_loaded=false;
  size_t fetched=0;bool admitted=false,stopped=false,offered=false;
+ bool indirect_planned=false;std::vector<uint32_t> index_addresses;
+ size_t index_fetched=0;
  std::deque<S81EmbeddingOutput> outputs;
  NativeSu(DsromS81MinimumRuntime&r,uint64_t identity,dsrom_s81_minimum::PrefixPublication&p,
           const DsromS81MinimumSourceIo& source):runtime(r),id(identity),publication(p),io(source),leaf(r.context,"minimum_native_su256"){
@@ -107,9 +109,11 @@ struct NativeSu {
   try {
    require(!stopped,"SU quarantined");
    if(admitted)return false;
+   if(op&&op->index==o.index)require(op->unit==o.unit&&op->instruction==o.instruction,
+    "SU held literal changed during operand staging");
    if(!op||op->index!=o.index){
     require(leaf.idle&&outputs.empty(),"SU prefetch overlaps old native publication");
-    require(o.index<7&&o.unit==2,"SU literal unit/index");
+    require(o.index<(1u<<14)&&o.unit==2,"SU literal unit/index14");
     require(field(o,524,6)==0,"selected SU unsupported dynamic/indirect su_d_nout");
     require(field(o,530,6)==0,"selected SU unsupported dynamic/indirect su_d_nin");
     require(field(o,628,6)==0,"selected SU unsupported dynamic/indirect a_d");
@@ -117,20 +121,43 @@ struct NativeSu {
     require(field(o,857,6)==0,"selected SU unsupported dynamic/indirect c_d");
     require(field(o,956,6)==0,"selected SU unsupported dynamic/indirect d_d");
     require(field(o,1078,6)==0,"selected SU unsupported dynamic/indirect o_d");
-    require(field(o,634,2)==0,"selected SU unsupported dynamic/indirect a_ind");
-    require(field(o,764,1)==0,"selected SU unsupported dynamic/indirect b_half");
-    require(field(o,863,1)==0,"selected SU unsupported dynamic/indirect c_pair");
-    op=o;decode(o);staged.clear();addresses.clear();fetched=0;std::set<uint32_t> unique;
+    require(field(o,634,2)<3,"native SU indirect selector");
+    op=o;decode(o);staged.clear();addresses.clear();fetched=0;
+    indirect_planned=false;index_addresses.clear();index_fetched=0;
+    const unsigned count=leaf.i_aind==1?leaf.i_nin:leaf.i_aind==2?leaf.i_nout:0;
+    for(unsigned j=0;j<count;++j){
+     uint64_t a=uint64_t(leaf.i_aibase)+j;require(a<(1u<<19),"actual SU index VM19");
+     index_addresses.push_back(a);
+    }
+   }
+   if(index_fetched<index_addresses.size()){
+    auto a=index_addresses[index_fetched];if(!io.span_lease(id,a,1))return false;
+    auto v=io.read_word(id,a);if(!v)return false;
+    require(io.span_lease(id,a,1),"SU index version lost before native response");
+    staged.emplace(a,*v);++index_fetched;return false;
+   }
+   if(!indirect_planned){
+    std::set<uint32_t> unique;
     const uint32_t src[]={leaf.i_asrc,leaf.i_bsrc,leaf.i_csrc,leaf.i_dsrc};
     const uint32_t base[]={leaf.i_abase,leaf.i_bbase,leaf.i_cbase,leaf.i_dbase};
     const uint32_t so[]={leaf.i_aso,leaf.i_bso,leaf.i_cso,leaf.i_dso};
     const uint32_t si[]={leaf.i_asi,leaf.i_bsi,leaf.i_csi,leaf.i_dsi};
-    for(unsigned out=0;out<leaf.i_nout;++out)for(unsigned i=0;i<leaf.i_nin;++i)for(unsigned p=0;p<4;++p){
-     uint64_t a=uint64_t(base[p])+uint64_t(out)*so[p]+uint64_t(i)*si[p];
-     require(a<(1u<<19),"SU source address19 alias");
-     if(src[p]==0)unique.insert(a);else (void)external(src[p],a);
+    for(unsigned out=0;out<leaf.i_nout;++out)for(unsigned i=0;i<leaf.i_nin;++i){
+     const uint32_t index=leaf.i_aind?staged.at(leaf.i_aibase+(leaf.i_aind==1?i:out))&0x3fffffffu:0;
+     const uint64_t ao=leaf.i_aind==2?index:out,ai=leaf.i_aind==1?index:i;
+     const uint64_t a=uint64_t(base[0])+ao*so[0]+ai*si[0];
+     for(unsigned p=0;p<4;++p){
+      uint64_t address=p==0?a:p==2&&leaf.i_cpair?(a^1u):
+       uint64_t(base[p])+uint64_t(out)*so[p]+uint64_t((p==1||p==3)&&leaf.i_bhalf?i/2:i)*si[p];
+      require(address<(1u<<19),"actual SU source VM19 alias");
+      if(src[p]==0){if(!staged.count(address))unique.insert(address);}
+      else (void)external(src[p],address);
+     }
     }
-    require(unique.size()<=20480,"SU bounded scalar staging");addresses.assign(unique.begin(),unique.end());
+    // Snapshot is bounded by the actual selected VM's19-bit address space.
+    // Software-only staging, not an extra physical VM or free seat allocation.
+    require(unique.size()+staged.size()<=(1u<<19),"native SU scalar snapshot exceeds VM19");
+    addresses.assign(unique.begin(),unique.end());indirect_planned=true;
    }
    // ONE actual SourceIo request. No invented wide-read acceptance or credits.
    if(fetched<addresses.size()){
@@ -139,21 +166,24 @@ struct NativeSu {
     require(io.span_lease(id,a,1),"SU input version revoked before captured reply");
     staged.emplace(a,*v);++fetched;
    }
-   if(fetched==addresses.size())for(auto a:addresses)
-    require(io.span_lease(id,a,1),"SU prefetched input version lost before GO");
+   if(fetched==addresses.size())for(const auto& a:staged)
+    require(io.span_lease(id,a.first,1),"SU prefetched input version lost before GO");
    return fetched==addresses.size();
   }catch(...){stopped=true;throw;}
  }
  void drive(const DsromS81PrefixOperation&o,bool go){
   leaf.go=go;if(!go)return;
-  require(op&&op->index==o.index&&fetched==addresses.size()&&!admitted,"SU GO before actual prefetch");decode(o);
+  require(op&&op->index==o.index&&op->instruction==o.instruction&&indirect_planned&&
+          index_fetched==index_addresses.size()&&fetched==addresses.size()&&!admitted,"SU GO before actual prefetch");decode(o);
  }
  void prepare(const DsromS81PairResult&){
   if(!outputs.empty()){
    if(!offered)offered=io.offer(outputs.front(),1);
    if(offered&&io.visible(outputs.front(),1)){outputs.pop_front();offered=false;}
   }
-  if(admitted&&leaf.idle&&outputs.empty())admitted=false;
+  if(admitted&&leaf.idle&&outputs.empty()){
+   admitted=false;op.reset(); // next generation must reread actual operand versions
+  }
  }
  uint32_t memory(unsigned src,uint32_t a){
   if(src)return external(src,a);
@@ -167,7 +197,7 @@ struct NativeSu {
   uint32_t v=0;for(unsigned j=0;j<n;++j)v|=((w[(off+j)/32]>>((off+j)%32))&1u)<<j;return v;
  }
  void capture(uint32_t a,uint32_t payload){
-  require(op&&admitted&&outputs.size()<5376,"actual SU output lacks admitted bounded context");
+  require(op&&admitted&&outputs.size()<(1u<<19),"actual SU output lacks admitted bounded context");
   S81EmbeddingOutput o{};o.vm_valid=true;o.vm_identity=id;o.vm_address=a;o.vm_data[0]=payload;
   // This reserves once at native output capture, never on equal-value retry.
   dsrom_s81_capture_minimum_prefix_scalar(runtime,publication,op->index,o,0,true);
@@ -177,6 +207,11 @@ struct NativeSu {
   try {
    const bool acc=released&&leaf.go&&leaf.ready;
    std::array<uint32_t,1024> q{};
+   std::array<uint32_t,256> vi{};
+   for(unsigned j=0;j<256;++j){
+    vi[j]=leaf.vi_q[j];
+    if(released&&bits(leaf.vi_re,j,1))vi[j]=memory(0,bits(leaf.vi_addr,j*30,30));
+   }
    for(unsigned j=0;j<1024;++j){
     q[j]=leaf.rd_q[j];if(released&&bits(leaf.rd_re,j,1))
      q[j]=memory(bits(leaf.rd_src,j*2,2),bits(leaf.rd_addr,j*30,30));
@@ -184,6 +219,7 @@ struct NativeSu {
    if(acc)admitted=true;
    leaf.rst_n=released;leaf.clk=1;leaf.eval(); // OLD synchronous-memory Q at edge
    for(unsigned j=0;j<1024;++j)leaf.rd_q[j]=q[j]; // register memory Q after edge
+   for(unsigned j=0;j<256;++j)leaf.vi_q[j]=vi[j]; // same native one-register index RAM
    if(released){
     require(!leaf.fault,"actual native SU arithmetic/control fault");
     for(unsigned j=0;j<256;++j){
