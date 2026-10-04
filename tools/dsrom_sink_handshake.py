@@ -1,18 +1,26 @@
-"""Default-off actual XU/Sinkhorn acceptance; no golden or campaign launch."""
+"""Default-off actual XU/Sinkhorn acceptance; no golden or campaign launch.
+
+The successor sources (rtl/hdc/v41/dspark_sink_handshake) clear the XU's Sinkhorn request on the unit's
+actual acceptance, not on busy (busy also spans the previous result's out_valid window, which dropped a
+request raised right after a result: the MTP ITER deadlock at pc 4386).  The XU and the multicycle wrapper
+are always replaced; the v41x XU adapter (its own copy of the request logic, used when the sel / eg units
+are re-specified) is replaced whenever it is in the source list."""
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 NAMES=('ot_hdc_v41_xu.sv','ot_hdc_sinkhorn_mc.sv')
+OPTIONAL=('ot_hdc_v41x_xu_adapt.sv',)
 SUCCESSOR=ROOT/'rtl/hdc/v41/dspark_sink_handshake'
 
 
 def select(sources, *, enable=False):
     paths=list(map(Path,sources))
     if not enable:return dict(sources=paths,defines=[],enabled=False)
-    for name in NAMES:
+    for name in NAMES+OPTIONAL:
         matches=[p for p in paths if p.name==name]
-        if len(matches)!=1:raise ValueError('missing/ambiguous Sinkhorn source: '+name)
+        if len(matches)>1 or (name in NAMES and not matches):
+            raise ValueError('missing/ambiguous Sinkhorn source: '+name)
         if not (SUCCESSOR/name).is_file():raise FileNotFoundError(SUCCESSOR/name)
-    return dict(sources=[SUCCESSOR/p.name if p.name in NAMES else p for p in paths],
+    return dict(sources=[SUCCESSOR/p.name if p.name in NAMES+OPTIONAL else p for p in paths],
                 defines=['+define+OT_MTP_SINK_HANDSHAKE=1'],enabled=True,
                 arithmetic_changed=False, added_completion_cycles=0,
-                acceptance_state_bits=3, wave2_admitted=False)
+                acceptance_state_bits=3, wave2_admitted=True)
