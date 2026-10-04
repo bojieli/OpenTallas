@@ -13,9 +13,12 @@ struct DsromS81QePairBinding {
 };
 struct DsromS81QePhase {
     DsromS81PrefixOperation operation;
-    uint32_t xbase=0,ops=0,cut_output_alias=0;
+    uint32_t xbase=0,ops=0,cut_output_alias=0,cut_input_alias=0;
     std::array<uint64_t,2> phrom{};
     std::vector<uint64_t> stream;
+    // Mandatory for original ME weight frames: exact source ordered-K input
+    // and native output-address mappings. No inferred contiguous ME layout.
+    std::vector<uint32_t> actual_input_addresses,actual_output_addresses;
     std::vector<DsromS81QePairBinding> pairs;
 };
 // This observer shares Popper's actual callbacks. offer() is NOT acceptance.
@@ -46,6 +49,8 @@ DsromS81QePhase dsrom_s81_qe_load_controls(const DsromS81PrefixOperation&,
  const std::vector<unsigned>& actual_BF_site_IDs,const std::string& emitted_directory,
  uint32_t actual_input_base,uint32_t private_cut_only_output_alias);
 
-// Sole unit3 prefix dispatcher for full I7/I8 actors; no private cut evaluation.
+// Selected field-fragment dispatcher (QE0 / ME weight only). Parent chooses
+// ME weight versus actual KV/ATT engine; no automatic ME arithmetic relabeling.
+// Every fragment requires source-exact emitted PHROM/CFG/return ownership.
 DsromS81PrefixNativeEngine dsrom_s81_qe_dispatch(
  const std::vector<std::shared_ptr<DsromS81NativeQe>>&);

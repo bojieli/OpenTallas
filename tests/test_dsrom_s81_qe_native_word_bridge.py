@@ -21,7 +21,7 @@ class BridgeTests(unittest.TestCase):
         node=f'L0.I{index}'
         selected=dict(stage=m['stage'],rank=0,source_matrix_sha256=hashlib.sha256(json.dumps(m,sort_keys=True,separators=(',',':')).encode()).hexdigest())
         dispatch=dict(source_dispatch_bound=True,fragments=[selected])
-        e=SimpleNamespace(source=SimpleNamespace(resolve=lambda n,r:dict(fragments=[dict(matrix=m)]),nodes={node:dict(instruction=dict(unit=3,qe_mode=0,qe_nb=160,qe_nout=rows))}),dispatch=lambda n,r:dispatch)
+        e=SimpleNamespace(source=SimpleNamespace(resolve=lambda n,r:dict(fragments=[dict(matrix=m)]),bindings={node:dict(selector_slot=None)},nodes={node:dict(instruction=dict(unit=3,qe_mode=0,qe_nb=160,qe_nout=rows))}),dispatch=lambda n,r:dispatch)
         source=SimpleNamespace(root=Path(API.SNAPSHOT),descriptor=lambda name:(None,None,dict(dtype='F8_E8M0' if name.endswith('.scale') else 'F8_E4M3')))
         return ReleasedQeOperationWords(e,source,node,0),dispatch
 

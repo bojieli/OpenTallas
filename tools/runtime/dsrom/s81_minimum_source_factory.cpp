@@ -3,6 +3,8 @@
 #include "s81_minimum_input_participant.hpp"
 #include "s81_minimum_return_cut_join.hpp"
 #include "s81_minimum_xu.hpp"
+#include "s81_minimum_l20_bank.hpp"
+#include "s81_minimum_prefix_providers.hpp"
 #include "s81_published_span_accept_sink.hpp"
 #include "Vnative_vm.h"
 #include "Vretn.h"
@@ -41,6 +43,10 @@ struct Source : std::enable_shared_from_this<Source> {
     DsromS81MinimumSourceTags tags;
     PrefixPublication publication{ID};
     std::unique_ptr<Target> target;
+    // QE enrollment extends these observers AFTER target construction. The
+    // target forwards to their current value so actual acceptance/old-head
+    // visibility reaches every owning actor without a second retirement.
+    std::function<void(unsigned,const MacroWrite&,const VmReceipt&)> factory_visibility;
     std::unique_ptr<Vcut> cut;
     std::unique_ptr<NativeInputParticipant> input;
     std::unique_ptr<Return> returned;
@@ -73,6 +79,10 @@ struct Source : std::enable_shared_from_this<Source> {
         require(phases.size()==2&&phases[0]==22517998140008448ull&&phases[1]==0&&stream.size()==192,
                 "actual selected L0.I7 PHROM/STREAM binding differs");
         phrom={phases[0],phases[1]};
+        factory_visibility=[this](unsigned bank,const auto& c,const auto& receipt){
+            publication.on_prefix_scalar_ack(c,receipt);
+            dsrom_s81_retire_source_scalar_tag(runtime,bank,c,receipt);
+        };
         target=std::make_unique<Target>(*vm,ID,0,
             [this](const auto& out,unsigned lane) {
                 return out.vm_address<20480?tags.record(out,lane):publication.record(out,lane);
@@ -80,10 +90,11 @@ struct Source : std::enable_shared_from_this<Source> {
             [this](auto id,auto a,auto n){return publication.source_span_lease(id,a,n);},
             [this](auto id,auto a,auto n){return publication.write_allowed(id,a,n);},
             [this](const auto& c,const auto& receipt){
-                publication.on_prefix_scalar_ack(c,receipt);
-                dsrom_s81_retire_source_scalar_tag(runtime,c.word.address&3,c,receipt);
+                factory_visibility(c.word.address&3,c,receipt);
             },
-            Target::AcceptObservers{true,tags.scalar_accept,tags.read_accept});
+            Target::AcceptObservers{true,
+                [this](auto bank,const auto& c){tags.scalar_accept(bank,c);},
+                [this](auto address,const auto& owner){tags.read_accept(address,owner);}});
         prefix_bank=target->participant();
         publication.enroll_literal(FIELD_PRODUCER,{{OUTPUT_BASE,OUTPUT_ROWS}});
     }
@@ -226,10 +237,92 @@ struct Source : std::enable_shared_from_this<Source> {
             !engines.bootstrap.fault()&&!target->fault()&&!publication.fault()&&runtime.result().quiet;
     }
 };
+
+// First native replacement in the working SIM_ONLY L20 chain. This is one
+// source operation, not a claim that the remaining 143 operations are native.
+// The opt-in path uses the existing seeded entry, bank and publication owner.
+struct SourceL20I0 : std::enable_shared_from_this<SourceL20I0> {
+    DsromS81MinimumRuntime& runtime;
+    DsromS81MinimumL20Bank bank;
+    DsromS81PrefixNativeEngine su;
+    DsromS81PrefixOperation operation=DsromS81PrefixOperation{2470,2,"0a8042d53254c972480a5c7c05cf676d0c5e3cbea44e456aa5537b16ce93e622",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x800004u,0x0u,0x280u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x4050140u,0xa02u,0x0u,0x0u,0x0u,0x0u,0x8d40000u,0x3c79ca1u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
+    bool attached=false,started=false,accepted=false,go=false,finished=false;
+    long first=-1,last=-1;
+    std::optional<uint32_t> output;
+    SourceL20I0(DsromS81MinimumRuntime& r,std::shared_ptr<Vnative_vm> vm)
+      :runtime(r),bank(r,ID,std::move(vm),dsrom_s81_bind_minimum_source_tags(r,ID)) {
+        bank.publication().enroll_literal(operation.index,{{40992,1}});
+        su=dsrom_s81_bind_minimum_su256(r,ID,bank.publication(),bank.io(),bank.tags());
+    }
+    void attach() {
+        require(!attached,"L20 I0 factory attached twice");
+        runtime.participants.push_back(bank.bank_participant());
+        runtime.participants.push_back(bank.entry_participant());
+        // Control samples ready before the sole native SU rising evaluation.
+        // No private tick, simulator output injection or assumed write ACK.
+        runtime.participants.push_back({"source-L20-I0-native-SU",
+          [this](const auto& result) {
+            go=false;
+            if(started&&!accepted)go=bank.inputs_visible()&&su.inputs_ready(operation)&&su.ready();
+            su.drive(operation,go);su.participant.prepare(result);
+          },
+          [this](bool released) {
+            if(!released)require(!started&&!accepted,"reset erases accepted L20 I0 work");
+            else if(go) {
+                require(!accepted&&su.ready(),"L20 I0 lost actual native acceptance");
+                bank.publication().begin(ID,operation.index);accepted=true;first=runtime.cycle();
+            }
+            su.participant.rising(released);
+          },
+          [this](bool released){su.participant.falling(released);},
+          [this](){return bank.fault()||su.participant.fault();}});
+        auto self=shared_from_this();
+        runtime.publication_ready=[self](auto id){return id==ID&&!self->bank.fault()&&!self->su.participant.fault();};
+        runtime.publication_drained=[self](auto id){return id==ID&&self->finished;};
+        attached=true;
+    }
+    void start() {
+        require(attached&&!started&&bank.inputs_visible(),"L20 I0 start before actual seeded VM visibility");
+        started=true;
+    }
+    void advance() {
+        if(!accepted||finished)return;
+        require(!bank.fault()&&!su.participant.fault(),"L20 I0 native failure");
+        if(!su.idle()||!bank.publication().complete(ID,operation.index))return;
+        // Read back ONLY the published native result through the same held
+        // bank request path. This is the operand for the following operation.
+        output=bank.io().read_word(ID,40992);
+        if(output){finished=true;last=runtime.cycle();}
+    }
+    void write(const std::string& directory) {
+        require(finished&&output&&first>=0&&last>=first,"L20 I0 has no terminal native operand");
+        std::ofstream file(directory+"/native_L20_I0.tsv",std::ios::out|std::ios::app);
+        require(bool(file),"L20 I0 measurement output unavailable");
+        file<<"scope\tposition\trank\tproducer\taccepted_cycle\tvisible_read_cycle\taddress\traw32\n"
+            <<"L20.I0.native-component\t1048575\t"<<runtime.rank<<'\t'<<operation.index
+            <<'\t'<<first<<'\t'<<last<<"\t40992\t"<<*output<<'\n';
+        require(bool(file),"L20 I0 measurement write failed");
+    }
+    static void require(bool ok,const char* message){if(!ok)throw std::runtime_error(message);}
+};
 }
 
 DsromS81MinimumSourcePlan dsrom_s81_bind_minimum_source(
     DsromS81MinimumRuntime& runtime,std::shared_ptr<Vnative_vm> vm) {
+    const char* l20=std::getenv("DSROM_S81_NATIVE_L20_I0");
+    if(l20&&std::string(l20)=="1") {
+        auto source=std::make_shared<SourceL20I0>(runtime,std::move(vm));
+        DsromS81MinimumSourcePlan plan;
+        plan.identity=ID;plan.token=16754;plan.position=1048575;
+        plan.attach_seeded=[source](){source->attach();};
+        plan.initialize_seeded=[source](){source->bank.initialize();};
+        plan.seeded_inputs_visible=[source](){return source->bank.inputs_visible();};
+        plan.begin_prefix=[source](){source->start();};
+        plan.advance=[source](){source->advance();};
+        plan.complete=[source](){return source->finished;};
+        plan.write_measurements=[source](const auto& directory){source->write(directory);};
+        return plan;
+    }
     auto source=std::make_shared<Source>(runtime,std::move(vm));
     DsromS81MinimumSourcePlan plan;
     plan.identity=ID;plan.embedding_library="/tmp/dsrom-s81-embedding-8f65ab021/libdsrom_s81_embedding.so";
