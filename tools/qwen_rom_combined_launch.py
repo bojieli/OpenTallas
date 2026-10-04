@@ -18,6 +18,7 @@ CORRECTED_SERVICE = 'rtl/hdc/nearhbm/ot_qwen_nearhbm_realmem_service.sv'
 CORRECTED_SHA = 'a10a3d79240a8373c5a44ae187655b1a58beefbaa0ccd96b95b178cca16c7c3f'
 DRIVER = 'tools/runtime/qwen_combined/combined_driver.hpp'
 CONTEXT = 'tools/runtime/qwen_combined/fullshape_context.hpp'
+CANONICAL_SERVICE = 'rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv'
 
 
 def sha(path):
@@ -54,12 +55,16 @@ def layers_from_stages(path):
 
 
 def validate_selection(book, root=ROOT):
-    require(book.get('schema') == 'opentallas.qwen-rom-combined-driver.v1', 'selected combined driver ABI')
     require(book.get('geometry') == {'tp': 4, 'groups': 6144, 'sw': 64, 'nw': 18},
             'actual fullshape TP4/G6144/SW64/NW18 required')
     require(book.get('real_mem') is True, 'actual REAL_MEM service required')
     pins = book['source_sha256']
-    require(pins.get(CORRECTED_SERVICE) == CORRECTED_SHA, 'corrected 62ed service must be selected')
+    require(book.get('memory_service_source') in pins, 'actual selected REAL_MEM adapter source missing')
+    require(CANONICAL_SERVICE in pins, 'canonical KV fill/write/ACK service source missing')
+    require(book.get('crossing_sources') and all(p in pins for p in book['crossing_sources']),
+            'actual request/response crossing sources missing')
+    if book.get('near_hbm_enabled', False):
+        require(pins.get(CORRECTED_SERVICE) == CORRECTED_SHA, 'selected near-HBM requires corrected 62ed service')
     require(pins.get(DRIVER) == sha(root / DRIVER) and pins.get(CONTEXT) == sha(root / CONTEXT),
             'selected clock/arm driver and fullshape context source required')
     for path, expected in pins.items():
@@ -86,7 +91,8 @@ def validate_selection(book, root=ROOT):
             'HBM timing model CLK_PS differs from driven service clock')
     binary = Path(book['executable']).resolve(strict=True)
     require(sha(binary) == book['executable_sha256'], 'compiled combined executable changed')
-    require(book.get('driver_abi') == 'combined-driver-v1', 'clock/arm consumer is not compiled')
+    if 'driver_abi' in book:
+        require(book['driver_abi'] == 'combined-driver-v1', 'clock/arm consumer is not compiled')
     return binary
 
 

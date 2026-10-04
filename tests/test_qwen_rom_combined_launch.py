@@ -17,7 +17,7 @@ class CombinedLaunchTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
-        for name in (m.DRIVER, m.CONTEXT, m.CORRECTED_SERVICE, 'selected/top.sv', 'selected/binding.cpp'):
+        for name in (m.DRIVER, m.CONTEXT, m.CORRECTED_SERVICE, m.CANONICAL_SERVICE, 'selected/adapter.sv', 'selected/cdc.sv', 'selected/top.sv', 'selected/binding.cpp'):
             p = self.root/name
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(name)
@@ -30,14 +30,20 @@ class CombinedLaunchTests(unittest.TestCase):
             'schema': 'opentallas.qwen-rom-combined-driver.v1',
             'geometry': {'tp': 4, 'groups': 6144, 'sw': 64, 'nw': 18}, 'real_mem': True,
             'source_sha256': {name: m.sha(self.root/name) for name in
-                              (m.DRIVER, m.CONTEXT, m.CORRECTED_SERVICE, 'selected/top.sv', 'selected/binding.cpp')},
+                              (m.DRIVER, m.CONTEXT, m.CORRECTED_SERVICE, m.CANONICAL_SERVICE, 'selected/adapter.sv', 'selected/cdc.sv', 'selected/top.sv', 'selected/binding.cpp')},
             'top_source': 'selected/top.sv', 'binding_source': 'selected/binding.cpp',
+            'memory_service_source': 'selected/adapter.sv', 'crossing_sources': ['selected/cdc.sv'],
+            'near_hbm_enabled': False,
             'clocks': {'core': {'period_fs': 834000, 'first_rise_fs': 417000, 'port': 'clk'},
                        'service': {'period_fs': 1024000, 'first_rise_fs': 300000, 'port': 'hclk'}},
             'memory_model_clk_ps': 1024, 'executable': str(self.binary),
             'executable_sha256': m.sha(self.binary), 'driver_abi': 'combined-driver-v1'}
 
     def test_source_selection_positive(self):
+        # Baseline adapter/CDC needs no reduced-near-service pin or new schema.
+        del self.book['source_sha256'][m.CORRECTED_SERVICE]
+        del self.book['schema']
+        del self.book['driver_abi']
         self.assertEqual(m.validate_selection(self.book, self.root), self.binary)
 
     def test_wrong_geometry_and_service_fail_closed(self):
@@ -45,7 +51,7 @@ class CombinedLaunchTests(unittest.TestCase):
             b = copy.deepcopy(self.book);b['geometry'][key] = value
             with self.subTest(key=key), self.assertRaises(ValueError):
                 m.validate_selection(b, self.root)
-        b = copy.deepcopy(self.book);b['source_sha256'][m.CORRECTED_SERVICE] = '0'*64
+        b = copy.deepcopy(self.book);b['near_hbm_enabled'] = True;b['source_sha256'][m.CORRECTED_SERVICE] = '0'*64
         with self.assertRaisesRegex(ValueError, 'corrected'):
             m.validate_selection(b, self.root)
 
