@@ -10,7 +10,7 @@ from pathlib import Path
 HOST = 'rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp'
 
 
-def emit(owner, out):
+def emit(owner, out, *, wavefront=False):
     owner, out = Path(owner).resolve(), Path(out)
     source = (owner / HOST).read_text()
     # Retain the exact selected DieBase API for both the runtime and caller DSO.
@@ -45,10 +45,98 @@ using DsromS81SourceMain = int (*)(DsromS81Runtime&, const char* output);
 extern "C" int dsrom_s81_source_main(DsromS81Runtime&, const char* output);
 '''
     native = source[:start]+'#include "dsrom_s81_scheduler_api.hpp"\n'+source[end:]
+    if wavefront:
+        # Bind the existing typed join while DIE is still known. DieBase and
+        # the caller DSO ABI remain unchanged; there is no default provider.
+        anchor='    Die(RtPool& pool, const std::string& dir, int id_, int argc, const char** argv) : id(id_) {'
+        if native.count(anchor)!=1:
+            raise ValueError('typed selected Die constructor changed')
+        native=native.replace(anchor,r'''
+    std::function<void()> wave_prepare,wave_sample,wave_after,wave_quarantine;
+    bool wave_sampled=false,wave_armed=false;
+    template<class Join> void bind_native_wave(std::shared_ptr<Join> joined,
+        std::function<void()> before_edge,std::function<void()> sample_before_edge,
+        std::function<void()> after_edge) {
+        if(wave_prepare||!joined||!before_edge||!sample_before_edge||!after_edge||d->clk||d->rst_n)
+            throw std::runtime_error("WAVE needs actual cold typed join and stage callbacks");
+        // These are the existing poller composition callbacks: before owns
+        // Join.drive, and after owns Poller.after_edge then Join.after_edge.
+        // Calling Join again here would duplicate acceptance and retirement.
+        wave_prepare=[joined,before_edge](){before_edge();};
+        wave_sample=[joined,sample_before_edge](){sample_before_edge();};
+        wave_after=[joined,after_edge](){after_edge();};
+        wave_quarantine=[joined](){joined->warm_quarantine();};
+    }
+    void arm_native_wave() {wave_armed=bool(wave_prepare);}
+    void finish_native_wave_edge() {
+        if(wave_sampled) {
+            if(!d->clk||!d->rst_n)throw std::runtime_error("WAVE sampled edge lost");
+            wave_after();wave_sampled=false;
+        }
+    }
+'''+anchor)
+        edge='    void set_inputs(uint8_t clk, uint8_t rst) override {'
+        if native.count(edge)!=1:
+            raise ValueError('actual shared edge hook changed')
+        native=native.replace(edge,edge+r'''
+        if(wave_armed&&clk&&rst) {
+            if(d->clk||wave_sampled)throw std::runtime_error("WAVE edge sampled twice");
+            if(!d->rst_n){d->rst_n=1;d->eval();}
+            wave_prepare();d->eval(); // LOW settle; no new clock
+            wave_sample();wave_sampled=true;
+        } else if(wave_armed&&!rst&&d->rst_n) {
+            wave_quarantine();
+            throw std::runtime_error("WAVE warm reset retains accepted stage debt");
+        }
+''')
     # Include the selected host as a library. Its singleton main is excluded.
     first = source.index('    int threads = 16;', source.index('#ifndef DSROM_C8_LIBRARY'))
     last = source.index('    // window priming', first)
     loop = source[first:last]
+    if wavefront:
+        # The committed caller constructed directly into DieBase storage.
+        # Retain typed owners first rather than depending on another WIP host.
+        old='\n'.join('    dies.emplace_back(new Die<Vdie'+str(r)+
+            '>(pool, root + "/r'+str(r)+'", '+str(r)+', 3, av['+str(r)+'].data()));'
+            for r in range(4))
+        if old in loop:
+            typed='\n'.join('    auto native_rank'+str(r)+'=std::make_unique<Die<Vdie'+str(r)+
+                '>>(pool, root + "/r'+str(r)+'", '+str(r)+', 3, av['+str(r)+'].data());'
+                for r in range(4))
+            erased='\n'.join('    dies.emplace_back(std::move(native_rank'+str(r)+'));' for r in range(4))
+            loop=loop.replace(old,typed+'\n'+erased)
+        erase='    dies.emplace_back(std::move(native_rank0));'
+        if loop.count(erase)!=1:
+            raise ValueError('typed four-rank construction/erasure changed')
+        loop=loop.replace(erase,r'''
+#ifndef DSROM_S81_BIND_TYPED_WAVE_CALLER
+#error "selected WAVE requires actual source/poller/RESULT binder before Die erasure"
+#endif
+    // runtime exists in this scope. Borrow all four actual models and retain
+    // the source callbacks before moving their owners into DieBase storage.
+    const std::function<int(const char*)> wave_source_main=
+        DSROM_S81_BIND_TYPED_WAVE_CALLER(runtime,*native_rank0,*native_rank1,*native_rank2,*native_rank3);
+    if(!wave_source_main)
+        throw std::runtime_error("typed WAVE binder omitted whole-stage caller");
+    if(!native_rank0->wave_prepare)
+        throw std::runtime_error("typed WAVE binder omitted actual rank0 source join");
+    const std::array<std::function<void()>,4> wave_arm={
+        [p=native_rank0.get()](){p->arm_native_wave();},
+        [p=native_rank1.get()](){p->arm_native_wave();},
+        [p=native_rank2.get()](){p->arm_native_wave();},
+        [p=native_rank3.get()](){p->arm_native_wave();}};
+    const std::array<std::function<void()>,4> wave_finish={
+        [p=native_rank0.get()](){p->finish_native_wave_edge();},
+        [p=native_rank1.get()](){p->finish_native_wave_edge();},
+        [p=native_rank2.get()](){p->finish_native_wave_edge();},
+        [p=native_rank3.get()](){p->finish_native_wave_edge();}};
+'''+erase)
+        if loop.count('        link_step();')!=1:
+            raise ValueError('shared all-rank rising boundary changed')
+        loop=loop.replace('        link_step();',
+            '        // All native rising evaluations completed; still HIGH.\n'
+            '        for(const auto& finish:wave_finish)finish();\n'
+            '        link_step();')
     # maxc/wrong-edge/watchdog controls are outside this retained section.
     if 'maxc' in loop:
         raise ValueError('unexpected singleton deadline in selected clock loop')
@@ -95,6 +183,11 @@ int main(int argc,char** argv) {
     }
 }
 '''
+    if wavefront:
+        append=append.replace('        int rc=source_main(runtime,out.c_str());',
+            '        for(const auto& arm:wave_arm)arm();\n'
+            '        // WAVE owns admission; do not also issue blocking C8 groups.\n'
+            '        int rc=wave_source_main(out.c_str());')
     defines = '#define DSROM_C8_LIBRARY 1\n#define DSROM_C8_S81 1\n#define DSROM_S81_CAPTURE 1\n'
     out.mkdir(parents=True, exist_ok=False)
     (out/'dsrom_s81_scheduler_api.hpp').write_text(header)
@@ -184,7 +277,8 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--owner',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
-    a=p.parse_args();print(emit(a.owner,a.out))
+    p.add_argument('--wavefront',action='store_true',help='require typed WAVE/C8 source binder before erasure')
+    a=p.parse_args();print(emit(a.owner,a.out,wavefront=a.wavefront))
 
 
 if __name__ == '__main__':
