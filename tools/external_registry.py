@@ -248,6 +248,13 @@ NEW = [
          cls="UNRELIABLE - do not use", value=dict(b200_w_cm2="500-600 (claimed)"),
          quote="B200 500-600 W/cm2 ... 1,000 W TDP with an active die area of approximately 1.5-2 cm2",
          note="Rejected: assumes 1.5-2 cm2 for B200, whose two reticle-limited dies are ~16 cm2 (r-dgxb200); recorded so nobody re-adopts it."),
+    dict(id="new:tomahawk5_power", topic="switch",
+         title="Gazettabyte, Broadcom Tomahawk 5 (51.2 Tb/s, 5 nm) switch chip power",
+         url="https://www.gazettabyte.com/?p=145716", cls="trade press (vendor statement)", value=dict(power_w="<500"),
+         quote="consumes less than 500 W",
+         note="Harvested from the committed tools/ds_energy_silicon_authoritative.py ASSUMED.switch_chip_w (no re-research). "
+              "Tomahawk 5 class (51.2T, N5); Tomahawk Ultra / NVSwitch power is unpublished, so a 51.2T scale-up switch "
+              "chip is charged 500 W as an upper bound by analogy. Consumer: tools/energy_silicon_measured.py."),
 ]
 
 

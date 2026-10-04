@@ -1,0 +1,76 @@
+{
+  "scope": "TINY_HOST_NUMERICAL_FIXTURE_ONLY",
+  "cases": [
+    {
+      "kind": "normal",
+      "split": 8,
+      "k": 128,
+      "rows": 15,
+      "bit_exact": true,
+      "result_sha256": "b8c30b85c56be05ebf3b16d8a6d5b8b3b65d6fa7e43b3126898fc0541cc13926"
+    },
+    {
+      "kind": "subnormal",
+      "split": 4,
+      "k": 32,
+      "rows": 15,
+      "bit_exact": true,
+      "result_sha256": "6f32f0cfd8748b5a29c6be8c7dab8b86f824730aa511a5bda159260c2982810d"
+    },
+    {
+      "kind": "cancel",
+      "split": 8,
+      "k": 64,
+      "rows": 15,
+      "bit_exact": true,
+      "result_sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+    },
+    {
+      "kind": "signed_zero",
+      "split": 1,
+      "k": 8,
+      "rows": 15,
+      "bit_exact": true,
+      "result_sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+    },
+    {
+      "kind": "rounding",
+      "split": 1,
+      "k": 2,
+      "rows": 15,
+      "bit_exact": true,
+      "result_sha256": "1a236da4db6c8766a1761db9c9c6423b68f84f639690c1fc8f1194e819587690"
+    },
+    {
+      "kind": "tree_order",
+      "split": 4,
+      "k": 4,
+      "rows": 15,
+      "bit_exact": true,
+      "result_sha256": "08149ef5808740d2e0510367092c6fae56ed552fbed642529191f74475d33b61"
+    }
+  ],
+  "status": "PASS",
+  "source_sha256": "72958aaa03d6ccf78f55f2a8367bed0da2851d15afb57aceee7e3cf3d843f0c0",
+  "wrapper_sha256": "387dd3efeec5e18d7c04734306175cd77dc147e291f730cfe786a4be7f2cfc80",
+  "ptx_sha256": "c7de68313c993696ca994e6447e399fb978f16b45ca28474c472b1a6b6ac6d51",
+  "oracle_sha256": "bc0f8ba28f345718eb6013996b21a519c03dc4cdba6aeeafe9a6bb50c7199bc2",
+  "golden_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+  "torch_version": "2.10.0+cu128",
+  "max_weight_tensor_bytes": 9728,
+  "tiny_timing": {
+    "baseline_seconds_per_call": 0.0006806502739588419,
+    "leaf_seconds_per_call": 9.221769869327545e-05,
+    "includes_same_bf16_round_upload_download": true,
+    "shape": [
+      15,
+      128,
+      8
+    ],
+    "repetitions": 3,
+    "whole_producer_speedup": null
+  },
+  "tensor_working_set_upper_bytes": 65536,
+  "full_inference": false
+}

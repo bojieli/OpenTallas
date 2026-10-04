@@ -67,7 +67,84 @@ def git_head() -> str:
 # ======================================================================================================================
 # execute: the golden-checked TP-96 executor, all 40 layers + head, with rank 0's operands of the chosen layers
 # ======================================================================================================================
+EXT_FNS = {"index_scores", "topk_local", "cand_local", "cand_mask", "engram_fetch", "engram_mix"}
+
+
+def cmd_execute_ext(a):
+    """Default-off (--exec-layers L,L,...): each listed layer executed ALONE by the golden-checked TP-96 executor
+    (entering from the W17 golden shard of the layer before it, as w19_hbm_tp96_isa.run does for a first layer > 0),
+    snapshotting rank 0's operands of SNAP_FNS + EXT_FNS (the DU steps the model prices: index q / scores / local
+    top-k / candidates / Engram), plus rank 0's own index keys for index_scores.  Writes local_snaps_ext.pkl and
+    execute_ext.json; the default execute path is unchanged."""
+    import w19_hbm_tp96_isa as X
+    if os.environ.get("OT_ENGRAM_TOKEN_MAP"):       # default-off: a host without `tokenizers` loads the precomputed
+        import hdc_golden_v41 as Vg                  # compressed token map (hdc_golden_v41.compressed_token_map output)
+        z = np.load(os.environ["OT_ENGRAM_TOKEN_MAP"])
+        Vg.compressed_token_map = lambda path, size: (z["token_map"], int(z["cv"]))
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    layers = [int(x) for x in a.exec_layers.split(",")]
+    fns = SNAP_FNS | EXT_FNS
+    snaps, results = {}, []
+    orig_run = X.Executor.run
+
+    def run(self, ops):
+        for op in ops:
+            take = op["kind"] == "local" and op["fn"] in fns
+            if take:
+                r0 = self.ranks[0]
+                before = {k: v.copy() for k, v in r0.mem.items()}
+            orig_run(self, [op])
+            if take:
+                after = {k: v.copy() for k, v in r0.mem.items() if k not in before or
+                         before[k].shape != v.shape or not np.array_equal(before[k], v, equal_nan=True)}
+                L = op["layer"]
+                key = f"L{L}.op{op['id']}.{op['fn']}" + (f".{op['which']}" if "which" in op else "") + \
+                      (f".s{op['slot']}" if "slot" in op else "")
+                extra = {}
+                if op["fn"] == "index_scores":
+                    idx = self.owned(r0, op["n"])
+                    extra = dict(keys=np.asarray(self.st.ik[op["src"]][idx], dtype=F).copy(), key_idx=idx.copy())
+                if op["fn"] in ("cand_mask",) and r0.cand is not None:
+                    extra = dict(cand_keep={int(b): bool(v) for b, v in r0.cand.items()})
+                if op["fn"] == "engram_fetch":
+                    m = self.m
+                    li = m.engram.layer_ids.index(L)
+                    extra = dict(ids=np.asarray(m.engram.hashes(self.hist, li)).reshape(-1).copy())
+                if op["fn"] == "engram_mix":                 # the step's constants (no checkpoint needed to lower it)
+                    import hdc_golden as Gd
+                    m = self.m
+                    extra = dict(wgt=np.asarray(Gd.mul(m.lw(L, "engram.q_weight"), m.lw(L, "engram.k_weight")), F),
+                                 engram_scale=F(m.engram_scale), eps=F(m.eps), hc=int(m.hc), dim=int(m.dim))
+                if op["fn"] == "index_q":
+                    import hdc_golden_v41 as Vg
+                    m = self.m
+                    extra = dict(cs=Vg.rope_cs(m.freqs_yarn, self.pos), index_w_scale=F(m.index_w_scale),
+                                 ih=int(m.ih), ihd=int(m.ihd))
+                snaps[key] = dict(op=op, before=before, after=after, **extra)
+    X.Executor.run = run
+    try:
+        for L in layers:
+            t0 = time.time()
+            res = X.run([L], False, "oreduce")
+            lr = res["layers"][0]
+            results.append(dict(layer=L, kind=lr["kind"], verdict=lr["verdict"], defect=lr["defect"],
+                                regions=len(lr["regions"]), bit_exact_regions=sum(1 for x in lr["regions"]
+                                                                                  if x["bit_exact"]),
+                                region_names=[x["region"] for x in lr["regions"]], wall_s=round(time.time() - t0, 1)))
+            print("EXEC_EXT", results[-1], flush=True)
+            (out / "local_snaps_ext.pkl").write_bytes(pickle.dumps(snaps))
+    finally:
+        X.Executor.run = orig_run
+    summ = dict(status="pass" if results and all(r["verdict"] == "pass" for r in results) else "fail",
+                layers=results, snapshots=sorted(snaps), source_sha256={s: sha(ROOT / s) for s in X.SOURCES})
+    (out / "execute_ext.json").write_text(json.dumps(summ, indent=1, default=int) + "\n")
+    return 0 if summ["status"] == "pass" else 1
+
+
 def cmd_execute(a):
+    if getattr(a, "exec_layers", None):
+        return cmd_execute_ext(a)
     import w19_hbm_tp96_isa as X
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -1066,5 +1143,7 @@ if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] in ("execute", "
     ap.add_argument("--reps", type=int, default=1)
     ap.add_argument("--op-major", action="store_true", help="with --reps: interleave the positions op by op")
     ap.add_argument("--cases", default="su_cases.pkl")
+    ap.add_argument("--exec-layers", default=None, help="execute only: default-off; run these layers alone and "
+                    "snapshot the DU steps (cmd_execute_ext)")
     a = ap.parse_args()
     raise SystemExit({"execute": cmd_execute, "sm": cmd_sm, "su-prep": cmd_su_prep, "su-check": cmd_su_check, "su-run": cmd_su_run, "su-equiv": cmd_su_equiv, "compose": cmd_compose}[a.step](a))

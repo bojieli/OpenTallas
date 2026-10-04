@@ -60,8 +60,25 @@ class HeadEndCore {
         return uint32_t(v>>(bit%32)) & (width==32?0xffffffffu:((1u<<width)-1));
     }
     void healthy() {
-        require(!stopped&&!core->fault&&!core->capture_fault,
-                "actual HEAD core fault; accepted ownership retained");
+        if(stopped||core->fault||core->capture_fault) {
+            const auto* r=core->rootp;
+            std::ostringstream detail;
+            detail << "actual HEAD core fault; accepted ownership retained"
+                << " cycle=" << runtime.cycle()
+                << " pc=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__pc)
+                << " state=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__st)
+                << " core_fault=" << unsigned(core->fault)
+                << " capture_fault=" << unsigned(core->capture_fault)
+                << " adapter_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_rom__DOT__a_fault)
+                << " spine_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_rom__DOT__sp_fault)
+                << " head_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__head_fault)
+                << " native_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_native_head__DOT__u_head__DOT__native_fault)
+                << " range_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_native_head__DOT__u_head__DOT__range_fault)
+                << " nonfinite=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_native_head__DOT__u_head__DOT__nonfinite)
+                << " command_accepted=" << dot_accepted
+                << " final_accepted=" << final_taken;
+            throw std::runtime_error(detail.str());
+        }
     }
     void unsupported() {
         // These service endpoints have accepted NO commands. They are not an
@@ -269,6 +286,9 @@ public:
     void bind(DsromS81MinimumSourcePlan& plan) {
         require(plan.position==1048575&&plan.identity<(1ull<<47),"HEAD actual owner/position required");
         owner=plan.identity;begin_dot=plan.begin_prefix;
+        // The existing capture and native rank0 reducer latch this source owner
+        // at accepted I5; bind it before arming the real core command.
+        core->capture_identity=owner;
         require(bool(begin_dot),"HEAD native DOT acceptance callback absent");
         plan.begin_prefix=[this,token=plan.token,position=plan.position] {
             require(!armed&&!started&&!dot_accepted&&!terminal,"HEAD core start repeated");

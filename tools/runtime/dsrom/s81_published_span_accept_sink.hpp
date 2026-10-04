@@ -43,6 +43,8 @@ private:
     // Fixed64KiB software receipt witness, NOT a hardware scoreboard price.
     // A source callback alone can NEVER make an unwritten address eligible.
     std::bitset<(1u<<19)> prefix_acked;
+    // Software source-version witness; no additional native VM/RTL state.
+    std::bitset<20480> mutable_h_addresses;
     unsigned count=16;
     uint16_t required=65535;
     bool prefix_batch=false;
@@ -211,6 +213,7 @@ public:
             for(unsigned n=0;n<words;n++) {
                 if(!prefix_acked.test(address+n))return false;
                 if(mutable_h_address(address+n)&&!prefix_source_lease(id,address+n,1))return false;
+
             }
             return true;
         }
@@ -221,8 +224,14 @@ public:
     bool offer_prefix(const S81EmbeddingOutput& out,unsigned words) {
         return offer_batch(out,words,true);
     }
+    // Explicit current publisher route. Initial embedding/offer_prefix guards
+    // stay unchanged; this uses the SAME native commands, acceptance and ACK.
+    bool offer_mutable_h(const S81EmbeddingOutput& out,unsigned words,const Record& writer) {
+        return offer_batch(out,words,true,&writer);
+    }
 private:
-    bool offer_batch(const S81EmbeddingOutput& out,unsigned words,bool prefix) {
+    bool offer_batch(const S81EmbeddingOutput& out,unsigned words,bool prefix,
+                     const Record* mutable_record=nullptr) {
         try {
             require(!fault()&&out.vm_valid&&!out.fault&&out.vm_identity==identity,
                     "embedding target offered foreign/faulted source");
@@ -238,6 +247,7 @@ private:
                     require(address<base||address>=base+20480||mutable_h_address(address),
                             "prefix writer cannot overwrite unenrolled immutable embedding input");
                 }
+
                 require(prefix_write_allowed(identity,out.vm_address,words),
                         "prefix batch not in actual native writer source span");
             }else require(out.vm_address==next_embedding_address()&&published<20480,
@@ -245,7 +255,7 @@ private:
             // Validate every captured scalar before changing state or accepting any port.
             std::array<MacroWrite,16> next{};
             for(unsigned n=0;n<words;n++) {
-                next[n]=record(out,n);const auto& c=next[n];
+                next[n]=(mutable_record?(*mutable_record)(out,n):record(out,n));const auto& c=next[n];
                 const uint32_t address=out.vm_address+n;
                 const unsigned k=address&15;
                 require(c.source.identity==identity&&c.source.element_address==address&&
@@ -253,7 +263,10 @@ private:
                         c.word.data[k]==out.vm_data[n]&&!(c.word.owner[7]&~7u),
                         "embedding target record does not bind actual scalar payload/address/owner");
             }
-            if(prefix)for(unsigned n=0;n<words;n++)prefix_acked.reset(out.vm_address+n);
+            if(prefix)for(unsigned n=0;n<words;n++) {
+                prefix_acked.reset(out.vm_address+n);
+                if(mutable_record)mutable_h_addresses.set(out.vm_address+n-base);
+            }
             // Rewrites revoke cached target data before any acceptance. Producer
             // version/generation eligibility remains the source callback's job.
             read_done=false;

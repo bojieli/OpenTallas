@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "d348ddbbe",
+ "generated_from_commit": "a8d4ec0dc",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -24,7 +24,7 @@
    "value": 3568.2168277536803,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.ar_tok_s_8k_realmem": {
    "target": "qwen_rom",
@@ -39,7 +39,7 @@
    "value": 2274.1787845651484,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.dspark_speedup_vs_ar_8k": {
    "target": "qwen_rom",
@@ -54,7 +54,7 @@
    "value": 1.569013329985825,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.dspark_step_cycles_8k": {
    "target": "qwen_rom",
@@ -69,7 +69,7 @@
    "value": 1057503.0,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.ar_token_cycles_8k_realmem": {
    "target": "qwen_rom",
@@ -83,7 +83,7 @@
    "value": 527663,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.dspark_tau": {
    "target": "qwen_rom",
@@ -98,7 +98,7 @@
    "value": 3.1445,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.dspark_free_drafter_bound": {
    "target": "qwen_rom",
@@ -112,7 +112,7 @@
    "value": 1.8693977357482947,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.calendar_ar_tok_s_8k_model": {
    "target": "qwen_rom",
@@ -319,7 +319,7 @@
    "value": 14574,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.verify_layer_np4_8k": {
    "target": "qwen_rom",
@@ -334,7 +334,7 @@
    "value": 24320,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.verify_layer_np4_step2": {
    "target": "qwen_rom",
@@ -348,7 +348,7 @@
    "value": 25252,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.head_p1": {
    "target": "qwen_rom",
@@ -363,7 +363,7 @@
    "value": 2999,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.verify_head_p4": {
    "target": "qwen_rom",
@@ -378,7 +378,7 @@
    "value": 11993,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.drafter_layer": {
    "target": "qwen_rom",
@@ -393,7 +393,7 @@
    "value": 30611,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.drafter_ingest_priced": {
    "target": "qwen_rom",
@@ -408,7 +408,7 @@
    "value": 3024,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.drafter_markov_priced": {
    "target": "qwen_rom",
@@ -423,7 +423,7 @@
    "value": 4851,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.commit_cycles": {
    "target": "qwen_rom",
@@ -438,7 +438,7 @@
    "value": 65,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.kv_s4_time_per_token_model": {
    "target": "qwen_rom",
@@ -512,7 +512,7 @@
    "value": "STREAM4 (4 HBM3E stacks a die, ot_qwen_rt_kv_stream4_service + ot_qwen_hbm_stream4_ack)",
    "resolved": true,
    "blob": "1cff68fefa3ad1b47db22b74e8d2b5c538cc3a0f",
-   "last_commit": null
+   "last_commit": "4ea13f3b0 2026-10-04"
   },
   "qwen_rom.hbm_stream_verdict": {
    "target": "qwen_rom",
@@ -877,7 +877,7 @@
    "value": 41034.81398611111,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
-   "last_commit": "41a818eb4 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "qwen_rom.hbm_stream_ctl_setup_wns": {
    "target": "qwen_rom",
@@ -1224,7 +1224,7 @@
    "value": 1409.0,
    "resolved": true,
    "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
-   "last_commit": "d348ddbbe 2026-10-04"
+   "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1239,7 +1239,7 @@
    "value": 2532.2,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_allmeasured_asbuilt": {
    "target": "ds_rom",
@@ -1254,7 +1254,7 @@
    "value": 1385.7,
    "resolved": true,
    "blob": "7daf1e5e37c933706840628813aea2d866bfe132",
-   "last_commit": "f13f04304 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m": {
    "target": "ds_rom",
@@ -1269,7 +1269,7 @@
    "value": 2585.5,
    "resolved": true,
    "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
-   "last_commit": "d348ddbbe 2026-10-04"
+   "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1284,7 +1284,7 @@
    "value": 6842.8,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_allmeasured_asbuilt": {
    "target": "ds_rom",
@@ -1299,7 +1299,7 @@
    "value": 2565.1,
    "resolved": true,
    "blob": "7daf1e5e37c933706840628813aea2d866bfe132",
-   "last_commit": "f13f04304 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.mtp_as_built_tok_s_1m": {
    "target": "ds_rom",
@@ -1314,7 +1314,7 @@
    "value": 6404.3,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.mtp_l1l2_nv5_tok_s_1m": {
    "target": "ds_rom",
@@ -1329,7 +1329,7 @@
    "value": 7495.4,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.ar_us_1m": {
    "target": "ds_rom",
@@ -1344,7 +1344,7 @@
    "value": 709.706,
    "resolved": true,
    "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
-   "last_commit": "d348ddbbe 2026-10-04"
+   "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1359,7 +1359,7 @@
    "value": 394.911,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.verify_us_1m": {
    "target": "ds_rom",
@@ -1374,7 +1374,7 @@
    "value": 1086.57,
    "resolved": true,
    "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
-   "last_commit": "d348ddbbe 2026-10-04"
+   "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1388,7 +1388,7 @@
    "value": 459.413,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.wavefront_ii_us": {
    "target": "ds_rom",
@@ -1403,7 +1403,7 @@
    "value": 75.373,
    "resolved": true,
    "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
-   "last_commit": "d348ddbbe 2026-10-04"
+   "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -1418,7 +1418,7 @@
    "value": 12.9,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_as_built": {
    "target": "ds_rom",
@@ -1433,7 +1433,7 @@
    "value": 2211.3,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_as_built": {
    "target": "ds_rom",
@@ -1448,7 +1448,7 @@
    "value": 5919.3,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_model": {
    "target": "ds_rom",
@@ -1463,7 +1463,7 @@
    "value": 2466.1,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_maskdrop": {
    "target": "ds_rom",
@@ -1478,7 +1478,7 @@
    "value": 2427.6,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.reindex_layer_us": {
    "target": "ds_rom",
@@ -1493,7 +1493,7 @@
    "value": 10.586,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.reindex_layer_model_us": {
    "target": "ds_rom",
@@ -1507,7 +1507,7 @@
    "value": 10.842,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.csa1_full_l20_us": {
    "target": "ds_rom",
@@ -1522,7 +1522,7 @@
    "value": 17.694,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.csa2_full_us": {
    "target": "ds_rom",
@@ -1536,7 +1536,7 @@
    "value": 13.986,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.csa_reuse_us": {
    "target": "ds_rom",
@@ -1550,7 +1550,7 @@
    "value": 8.144,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.head_us": {
    "target": "ds_rom",
@@ -1565,7 +1565,7 @@
    "value": 13.634,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.reindex_occupancy_us": {
    "target": "ds_rom",
@@ -1579,7 +1579,7 @@
    "value": 4.259,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.stage_hop_us": {
    "target": "ds_rom",
@@ -1594,7 +1594,7 @@
    "value": 0.4820175438596491,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.draft_fused_us": {
    "target": "ds_rom",
@@ -1608,7 +1608,7 @@
    "value": 105.55,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.tau": {
    "target": "ds_rom",
@@ -1623,7 +1623,7 @@
    "value": 3.8879,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.idx_scan_l20_frac_peak": {
    "target": "ds_rom",
@@ -1637,7 +1637,7 @@
    "value": 0.9191,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.idx_scan_l2_frac_peak": {
    "target": "ds_rom",
@@ -1651,7 +1651,7 @@
    "value": 0.9435,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.window_rows_frac_peak": {
    "target": "ds_rom",
@@ -1666,7 +1666,7 @@
    "value": 0.4568,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.reindex_gather_worst_cycles": {
    "target": "ds_rom",
@@ -1996,13 +1996,13 @@
    "label": "HBM stacks (W3 rule)",
    "unit": "stacks",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.rom.stacks",
-   "note": "ASSUMED; scenario C had 420",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.silicon.stacks",
+   "note": "ASSUMED; scenario C had 420; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 452,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "ds_rom.total_silicon_mm2": {
    "target": "ds_rom",
@@ -2011,56 +2011,58 @@
    "label": "Total silicon (logic + DRAM)",
    "unit": "mm2",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.rom.total_mm2",
-   "value": 801068.3,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.silicon.total_mm2",
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 801068.0,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "ds_rom.j_per_token_ar_b1_pg": {
    "target": "ds_rom",
    "section": "energy",
    "key": "j_per_token_ar_b1_pg",
-   "label": "J/token AR b1, power gated",
+   "label": "AR b1 J/token, stage PG at the MEASURED 35.4% element residual",
    "unit": "J",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.ar_b1_pg.J_per_token",
-   "note": "Uses model AR 2,466.2, not 2,532.2; PG residual 10% ASSUMED",
-   "value": 3.0852,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token",
+   "note": "Uses model AR 2,466.2, not 2,532.2; PG residual 10% ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 6.7896,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "ds_rom.j_per_token_ar_b1_icg": {
    "target": "ds_rom",
    "section": "energy",
    "key": "j_per_token_ar_b1_icg",
-   "label": "J/token AR b1, ICG",
+   "label": "AR b1 J/token, per-pair ICG only (measured 3.0 mW idle pair)",
    "unit": "J",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.ar_b1_icg.J_per_token",
-   "value": 8.8738,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.ar_b1_icg.J_per_token",
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 16.7539,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "ds_rom.j_per_token_mtp_b1_pg": {
    "target": "ds_rom",
    "section": "energy",
    "key": "j_per_token_mtp_b1_pg",
-   "label": "J/token MTP as built b1, PG",
+   "label": "MTP b1 J/token, stage PG at the MEASURED residual",
    "unit": "J",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.mtp_as_built_b1_pg.J_per_token",
-   "note": "At 6,733.7 tok/s (older draft basis)",
-   "value": 1.4657,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.mtp_b1_pg_measured.J_per_token",
+   "note": "At 6,733.7 tok/s (older draft basis); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 4.202,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "ds_rom.tok_s_per_kw_ar_b1_pg": {
    "target": "ds_rom",
@@ -2069,12 +2071,13 @@
    "label": "AR tok/s per kW, b1 PG",
    "unit": "tok/s/kW",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.ar_b1_pg.tok_s_per_kW",
-   "value": 324.1,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.tok_s_per_kW",
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 147.29,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "ds_rom.static_w_icg": {
    "target": "ds_rom",
@@ -2083,12 +2086,13 @@
    "label": "Static power, ICG",
    "unit": "W",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.ar_b1_icg.static_w",
-   "value": 21592.0,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.ar_b1_icg.static_w",
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 23439.2,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "ds_rom.sat_ar_tok_s": {
    "target": "ds_rom",
@@ -2096,13 +2100,14 @@
    "key": "sat_ar_tok_s",
    "label": "Saturated AR aggregate (head-bound)",
    "unit": "tok/s",
-   "status": "modelled",
+   "status": "unvalidated",
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "power.1M.rom.ar_sat_icg.tok_s",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); ",
    "value": 80833.5,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.j_per_token_sat_icg": {
    "target": "ds_rom",
@@ -2110,13 +2115,14 @@
    "key": "j_per_token_sat_icg",
    "label": "J/token saturated AR, ICG",
    "unit": "J",
-   "status": "modelled",
+   "status": "unvalidated",
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "power.1M.rom.ar_sat_icg.J_per_token",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); ",
    "value": 0.3857,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.lever_idxkey_row_layout_ar_gain_pct": {
    "target": "ds_rom",
@@ -2188,13 +2194,13 @@
    "value": 7495.4,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
-  "hbm_ds.ar_tok_s": {
+  "hbm_ds.ar_tok_s_baseline_partial": {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "ar_tok_s",
-   "label": "DS HBM per-user AR at 1M, measured (TU collectives, 1.2 GHz)",
+   "key": "ar_tok_s_baseline_partial",
+   "label": "DS HBM per-user AR at 1M, measured (TU collectives, 1.2 GHz) (superseded by the fully-measured composition)",
    "unit": "tok/s",
    "status": "partial",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
@@ -2203,13 +2209,13 @@
    "value": 2225.7,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
-  "hbm_ds.ar_us": {
+  "hbm_ds.ar_us_baseline_partial": {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "ar_us",
-   "label": "DS HBM AR token latency at 1M",
+   "key": "ar_us_baseline_partial",
+   "label": "DS HBM AR token latency at 1M (superseded by the fully-measured composition)",
    "unit": "us",
    "status": "partial",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
@@ -2217,13 +2223,13 @@
    "value": 449.3,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
-  "hbm_ds.mtp_tok_s": {
+  "hbm_ds.mtp_tok_s_baseline_partial": {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "mtp_tok_s",
-   "label": "DS HBM speculative (DSpark MTP, third-party tau) at 1M, measured",
+   "key": "mtp_tok_s_baseline_partial",
+   "label": "DS HBM speculative (DSpark MTP, third-party tau) at 1M, measured (superseded by the fully-measured composition)",
    "unit": "tok/s",
    "status": "partial",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
@@ -2232,13 +2238,13 @@
    "value": 4788.6,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
-  "hbm_ds.mtp_step_us": {
+  "hbm_ds.mtp_step_us_baseline_partial": {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "mtp_step_us",
-   "label": "DS HBM MTP step (verify6+draft+seed)",
+   "key": "mtp_step_us_baseline_partial",
+   "label": "DS HBM MTP step (verify6+draft+seed) (superseded by the fully-measured composition)",
    "unit": "us",
    "status": "partial",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
@@ -2246,13 +2252,13 @@
    "value": 811.91,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
-  "hbm_ds.mtp_tau": {
+  "hbm_ds.mtp_tau_baseline_partial": {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "mtp_tau",
-   "label": "DSpark acceptance tau (third-party published, gamma 5)",
+   "key": "mtp_tau_baseline_partial",
+   "label": "DSpark acceptance tau (third-party published, gamma 5) (superseded by the fully-measured composition)",
    "unit": "tokens/step",
    "status": "published",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
@@ -2261,7 +2267,7 @@
    "value": 3.8879,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.draft_us": {
    "target": "hbm_ds",
@@ -2276,7 +2282,7 @@
    "value": 45.28,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.adopted_rungs": {
    "target": "hbm_ds",
@@ -2291,7 +2297,7 @@
    "value": [],
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ar_tok_s_w15_switch": {
    "target": "hbm_ds",
@@ -2306,7 +2312,7 @@
    "value": 2049.8,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ar_tok_s_honest_service": {
    "target": "hbm_ds",
@@ -2320,7 +2326,7 @@
    "value": 1989.3,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ar_tok_s_as_built_clock": {
    "target": "hbm_ds",
@@ -2335,7 +2341,7 @@
    "value": 1835.1,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.accel_firm_ar_model": {
    "target": "hbm_ds",
@@ -2350,7 +2356,7 @@
    "value": 2624.4,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.accel_firm_mtp_model": {
    "target": "hbm_ds",
@@ -2365,7 +2371,7 @@
    "value": 5931.2,
    "resolved": true,
    "blob": "9947bf7b47701d743c07037153aa491dcb281ead",
-   "last_commit": "3c6ee6035 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.accel_measured_comp_ar": {
    "target": "hbm_ds",
@@ -2379,7 +2385,7 @@
    "value": 2562.7,
    "resolved": true,
    "blob": "9947bf7b47701d743c07037153aa491dcb281ead",
-   "last_commit": "3c6ee6035 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.accel_measured_comp_mtp": {
    "target": "hbm_ds",
@@ -2393,7 +2399,7 @@
    "value": 5632.7,
    "resolved": true,
    "blob": "9947bf7b47701d743c07037153aa491dcb281ead",
-   "last_commit": "3c6ee6035 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.published_accel_rate": {
    "target": "hbm_ds",
@@ -2423,7 +2429,7 @@
    "value": 1481.9,
    "resolved": true,
    "blob": "9947bf7b47701d743c07037153aa491dcb281ead",
-   "last_commit": "3c6ee6035 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ablation_nvls_mtp": {
    "target": "hbm_ds",
@@ -2437,7 +2443,7 @@
    "value": 3857.4,
    "resolved": true,
    "blob": "9947bf7b47701d743c07037153aa491dcb281ead",
-   "last_commit": "3c6ee6035 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ablation_tu_ar_model": {
    "target": "hbm_ds",
@@ -2451,7 +2457,7 @@
    "value": 2477.7,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ar_sm_us": {
    "target": "hbm_ds",
@@ -2466,7 +2472,7 @@
    "value": 70.12,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ar_barrier_us": {
    "target": "hbm_ds",
@@ -2481,7 +2487,7 @@
    "value": 22.29,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ar_collective_us": {
    "target": "hbm_ds",
@@ -2496,7 +2502,7 @@
    "value": 201.92,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ar_local_us": {
    "target": "hbm_ds",
@@ -2511,7 +2517,7 @@
    "value": 149.64,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.ar_fetch_us": {
    "target": "hbm_ds",
@@ -2526,7 +2532,7 @@
    "value": 5.33,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.verify6_sm_us": {
    "target": "hbm_ds",
@@ -2540,7 +2546,7 @@
    "value": 117.86,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.verify6_collective_us": {
    "target": "hbm_ds",
@@ -2554,7 +2560,7 @@
    "value": 280.75,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.verify6_local_us": {
    "target": "hbm_ds",
@@ -2568,7 +2574,7 @@
    "value": 308.38,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.verify6_fetch_us": {
    "target": "hbm_ds",
@@ -2582,7 +2588,7 @@
    "value": 33.78,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.verify6_us": {
    "target": "hbm_ds",
@@ -2596,7 +2602,7 @@
    "value": 763.06,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.local_delta_vs_model": {
    "target": "hbm_ds",
@@ -2610,7 +2616,7 @@
    "value": 46.16,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.draft_chain_step_us": {
    "target": "hbm_ds",
@@ -2624,7 +2630,7 @@
    "value": 1.212,
    "resolved": true,
    "blob": "77f745714c7949d22ddf3f9cc9389fefa4ca21a2",
-   "last_commit": "3c6ee6035 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.tu_ar_small_us": {
    "target": "hbm_ds",
@@ -2639,7 +2645,7 @@
    "value": 1.125,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.nvls_ar_small_us": {
    "target": "hbm_ds",
@@ -2654,7 +2660,7 @@
    "value": 2.394,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.static_stream_fraction": {
    "target": "hbm_ds",
@@ -2728,7 +2734,7 @@
    "value": 0.0991,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.kv_writeback_token_delta": {
    "target": "hbm_ds",
@@ -2766,13 +2772,13 @@
    "label": "DS HBM accel AR J/token @1M (8 switch chips charged)",
    "unit": "J/token",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.hbm_accel.ar_b1.J_per_token",
-   "note": "uses model rate 2,624.4, not the measured 2,225.7",
-   "value": 5.0309,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.power.ar_b1.J_per_token",
+   "note": "uses model rate 2,624.4, not the measured 2,225.7; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 5.6703,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "hbm_ds.accel_ar_system_w": {
    "target": "hbm_ds",
@@ -2781,12 +2787,13 @@
    "label": "DS HBM accel AR system power @1M",
    "unit": "W",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.hbm_accel.ar_b1.system_w",
-   "value": 13203.0,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.power.ar_b1.system_w",
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 12620.3,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "hbm_ds.accel_mtp_J_per_token": {
    "target": "hbm_ds",
@@ -2795,13 +2802,13 @@
    "label": "DS HBM accel MTP J/token @1M",
    "unit": "J/token",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.hbm_accel.mtp_b1.J_per_token",
-   "note": "note says pending measured draft (6,351.9 rate)",
-   "value": 2.5298,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.power.mtp_b1.J_per_token",
+   "note": "note says pending measured draft (6,351.9 rate); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 2.9084,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "hbm_ds.ablation_ar_J_per_token": {
    "target": "hbm_ds",
@@ -2809,13 +2816,14 @@
    "key": "ablation_ar_J_per_token",
    "label": "DS ablation (NVLS) AR J/token @1M",
    "unit": "J/token",
-   "status": "modelled",
+   "status": "unvalidated",
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "power.1M.ablation_nvls.ar_b1.J_per_token",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); ",
    "value": 7.7828,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.accel_total_silicon_mm2": {
    "target": "hbm_ds",
@@ -2824,13 +2832,13 @@
    "label": "DS HBM accel total silicon (logic+DRAM+switch)",
    "unit": "mm2",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.hbm_accel.total_mm2",
-   "note": "96 x 340.5 mm2 + 384 stacks (Micron bound) + 8 switch chips ASSUMED",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.silicon.total_mm2",
+   "note": "96 x 340.5 mm2 + 384 stacks (Micron bound) + 8 switch chips ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 457264.0,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "hbm_ds.accel_logic_mm2": {
    "target": "hbm_ds",
@@ -2839,12 +2847,13 @@
    "label": "DS HBM accel logic silicon",
    "unit": "mm2",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.hbm_accel.logic_mm2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.silicon.logic_mm2",
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 32688.0,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "hbm_ds.bulk_copy_ss_slack_ps": {
    "target": "hbm_ds",
@@ -3124,7 +3133,7 @@
    "value": 0.8481,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.mtp_measured_over_accel_model": {
    "target": "hbm_ds",
@@ -3138,7 +3147,7 @@
    "value": 0.8074,
    "resolved": true,
    "blob": "17591b9eab9b37bd2f014dfb665c448ff3677716",
-   "last_commit": "7fb0d0174 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.rom_over_hbm_mtp_firm": {
    "target": "hbm_ds",
@@ -3153,7 +3162,7 @@
    "value": 1.061,
    "resolved": true,
    "blob": "9947bf7b47701d743c07037153aa491dcb281ead",
-   "last_commit": "3c6ee6035 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_ds.rom_over_hbm_ar_firm": {
    "target": "hbm_ds",
@@ -3167,7 +3176,7 @@
    "value": 0.94,
    "resolved": true,
    "blob": "9947bf7b47701d743c07037153aa491dcb281ead",
-   "last_commit": "3c6ee6035 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "hbm_qwen.ar_tok_s_p1023_tp2": {
    "target": "hbm_qwen",
@@ -3592,7 +3601,7 @@
    "value": 180,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_tp1_bf16_decode_8k": {
    "target": "gpu_qwen",
@@ -3607,7 +3616,7 @@
    "value": 131,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_tp8_fp8_decode_8k": {
    "target": "gpu_qwen",
@@ -3622,7 +3631,7 @@
    "value": 299,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_tp8_fp8_step_ms_8k": {
    "target": "gpu_qwen",
@@ -3637,7 +3646,7 @@
    "value": 3.35,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_tp1_fp8_step_ms_8k": {
    "target": "gpu_qwen",
@@ -3652,7 +3661,7 @@
    "value": 5.55,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_tp1_fp8_decode_128": {
    "target": "gpu_qwen",
@@ -3667,7 +3676,7 @@
    "value": 194,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_tp8_fp8_decode_128": {
    "target": "gpu_qwen",
@@ -3682,7 +3691,7 @@
    "value": 306,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_tp8_fp8_arfusion_decode_128": {
    "target": "gpu_qwen",
@@ -3697,7 +3706,7 @@
    "value": 304,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_tp1_fp8_e2e_128in512out": {
    "target": "gpu_qwen",
@@ -3712,7 +3721,7 @@
    "value": 194.1,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_qwen.h100_tp8_fp8_e2e_128in512out": {
    "target": "gpu_qwen",
@@ -3727,7 +3736,7 @@
    "value": 305.7,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_qwen.h100_tp1_fp8_8k_latency": {
    "target": "gpu_qwen",
@@ -3802,7 +3811,7 @@
    "value": 5.35,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.b200_sglang_bf16_ar_c1": {
    "target": "gpu_qwen",
@@ -3922,7 +3931,7 @@
    "value": 331.0,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_qwen.b200_tier2_fp8_8k_dflash_mix": {
    "target": "gpu_qwen",
@@ -3937,7 +3946,7 @@
    "value": 853.3,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_qwen.qwen_hbm_over_h100_fp8_tp1": {
    "target": "gpu_qwen",
@@ -3952,7 +3961,7 @@
    "value": 4.536,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_qwen.qwen_hbm_over_h100_fp8_tp8": {
    "target": "gpu_qwen",
@@ -3967,7 +3976,7 @@
    "value": 2.88,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_qwen.b200_decode_power_w": {
    "target": "gpu_qwen",
@@ -3997,7 +4006,7 @@
    "value": 2244,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_nvls_ar_relaxed_32KB": {
    "target": "gpu_qwen",
@@ -4012,7 +4021,7 @@
    "value": 2597,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_nvls_ar_sys_fenced": {
    "target": "gpu_qwen",
@@ -4027,7 +4036,7 @@
    "value": "8,904-9,144",
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_nccl_nograph_ar": {
    "target": "gpu_qwen",
@@ -4042,7 +4051,7 @@
    "value": "32-36",
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_grid_sync": {
    "target": "gpu_qwen",
@@ -4057,7 +4066,7 @@
    "value": 1097,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_qwen.h100_kernel_launch": {
    "target": "gpu_qwen",
@@ -4071,7 +4080,7 @@
    "value": 2672,
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_ds.nvls_ar_us_used": {
    "target": "gpu_ds",
@@ -4086,7 +4095,7 @@
    "value": 2.244,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.b200_tier2_per_ar_us": {
    "target": "gpu_ds",
@@ -4101,7 +4110,7 @@
    "value": 9.024,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.b200x8_tier2_ar_1m": {
    "target": "gpu_ds",
@@ -4116,7 +4125,7 @@
    "value": 266.9,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.b200x8_tier2_mtp_1m": {
    "target": "gpu_ds",
@@ -4131,7 +4140,7 @@
    "value": 518.0,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.b200x8_tier2_ar_200k": {
    "target": "gpu_ds",
@@ -4145,7 +4154,7 @@
    "value": 267.2,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.b200x8_nccl_nograph_1m": {
    "target": "gpu_ds",
@@ -4160,7 +4169,7 @@
    "value": 119.9,
    "resolved": true,
    "blob": "ea42eca297d51742d33b6edee5cd64708bfc283a",
-   "last_commit": "c246e929d 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.r1_b200x8_trtllm_mtp3": {
    "target": "gpu_ds",
@@ -4190,7 +4199,7 @@
    "value": 240,
    "resolved": true,
    "blob": "d5160c094ab9bf1b0bb3f27ffec0a3f8766a1837",
-   "last_commit": null
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_ds.v4pro_b200_tp8_900k": {
    "target": "gpu_ds",
@@ -4205,7 +4214,7 @@
    "value": 180,
    "resolved": true,
    "blob": "d5160c094ab9bf1b0bb3f27ffec0a3f8766a1837",
-   "last_commit": null
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_ds.v41flash_h100_user_report": {
    "target": "gpu_ds",
@@ -4220,7 +4229,7 @@
    "value": "40-50",
    "resolved": true,
    "blob": "38461c6e7b374ab2c9cc49a62b48e274b4647351",
-   "last_commit": "2a0dd830d 2026-10-03"
+   "last_commit": "eadf72563 2026-10-04"
   },
   "gpu_ds.gpu_faithful_r0_mtp_1m": {
    "target": "gpu_ds",
@@ -4235,7 +4244,7 @@
    "value": 1168.5,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.ablation_nvls_mtp_1m": {
    "target": "gpu_ds",
@@ -4250,7 +4259,7 @@
    "value": 3855.1,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.b200x8_total_mm2": {
    "target": "gpu_ds",
@@ -4259,13 +4268,13 @@
    "label": "8x B200 total silicon",
    "unit": "mm2",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.b200x8.total_mm2",
-   "note": "16x800 (ASSUMED) + 64 stacks x 1,089 + 2 switches (ASSUMED)",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.b200x8.silicon.total_mm2",
+   "note": "16x800 (ASSUMED) + 64 stacks x 1,089 + 2 switches (ASSUMED); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 84096.0,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "gpu_ds.b200x8_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4274,12 +4283,13 @@
    "label": "B200 MTP per-user per 1,000 mm2",
    "unit": "tok/s/1000mm2",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.b200x8.per_user_mtp_per_1000mm2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.b200x8_mtp.per_user_tok_s_per_1000mm2",
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 6.1596,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "gpu_ds.rom_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4288,12 +4298,13 @@
    "label": "ROM MTP per-user per 1,000 mm2",
    "unit": "tok/s/1000mm2",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.rom.per_user_mtp_per_1000mm2",
-   "value": 7.858,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.rom_mtp.per_user_tok_s_per_1000mm2",
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 3.2276,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "gpu_ds.hbm_accel_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4302,13 +4313,13 @@
    "label": "HBM accel MTP per-user per 1,000 mm2",
    "unit": "tok/s/1000mm2",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.hbm_accel.per_user_mtp_per_1000mm2",
-   "note": "MTP pending measured draft",
-   "value": 12.9855,
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.hbm_mtp.per_user_tok_s_per_1000mm2",
+   "note": "MTP pending measured draft; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
+   "value": 10.4723,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "gpu_ds.b200x8_iso_rom_replicas": {
    "target": "gpu_ds",
@@ -4317,13 +4328,13 @@
    "label": "B200x8 replicas at ROM silicon",
    "unit": "x",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.b200x8.iso_rom_silicon.replicas_fractional",
-   "note": "iso-total-silicon",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.b200x8_ar.replicas_at_ref_silicon",
+   "note": "iso-total-silicon; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 9.526,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "gpu_ds.b200x8_iso_rom_agg_b1_ar": {
    "target": "gpu_ds",
@@ -4332,13 +4343,13 @@
    "label": "B200 aggregate batch-1 AR at ROM silicon",
    "unit": "tok/s",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.b200x8.iso_rom_silicon.aggregate_b1_ar_tok_s",
-   "note": "vs ROM 2,466.2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.b200x8_ar.aggregate_b1_tok_s_integer_replicas",
+   "note": "vs ROM 2,466.2; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 2402.1,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "gpu_ds.b200x8_iso_power_sat_ar": {
    "target": "gpu_ds",
@@ -4346,14 +4357,14 @@
    "key": "b200x8_iso_power_sat_ar",
    "label": "B200 saturated AR at ROM power",
    "unit": "tok/s",
-   "status": "modelled",
+   "status": "unvalidated",
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "per_area_and_iso.1M.iso_power_at_rom_sat_icg.b200x8.aggregate_sat_ar_tok_s",
-   "note": "iso-power 31,178.9 W",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); iso-power 31,178.9 W",
    "value": 283634.1,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.rom_iso_power_sat_ar": {
    "target": "gpu_ds",
@@ -4361,13 +4372,14 @@
    "key": "rom_iso_power_sat_ar",
    "label": "ROM saturated AR (iso-power ref)",
    "unit": "tok/s",
-   "status": "modelled",
+   "status": "unvalidated",
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "per_area_and_iso.1M.iso_power_at_rom_sat_icg.rom.aggregate_sat_ar_tok_s",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); ",
    "value": 80833.5,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "gpu_ds.b200x8_ar_b1_J_per_token_1m": {
    "target": "gpu_ds",
@@ -4376,13 +4388,13 @@
    "label": "B200x8 AR batch-1 J/token @1M",
    "unit": "J/token",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.b200x8.ar_b1.J_per_token",
-   "note": "8x689 W measured draw / modelled rate",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.b200x8.power.ar_b1.J_per_token",
+   "note": "8x689 W measured draw / modelled rate; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 24.3987,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "gpu_ds.b200x8_mtp_b1_J_per_token_1m": {
    "target": "gpu_ds",
@@ -4391,12 +4403,13 @@
    "label": "B200x8 MTP batch-1 J/token @1M",
    "unit": "J/token",
    "status": "modelled",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.b200x8.mtp_b1.J_per_token",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.b200x8.power.mtp_b1.J_per_token",
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 12.5714,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "gpu_ds.b200x8_system_w": {
    "target": "gpu_ds",
@@ -4405,13 +4418,13 @@
    "label": "B200x8 system power",
    "unit": "W",
    "status": "measured",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.b200x8.ar_b1.system_w",
-   "note": "8x689 W measured decode draw + 2 NVSwitch (ASSUMED)",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.b200x8.power.ar_b1.system_w",
+   "note": "8x689 W measured decode draw + 2 NVSwitch (ASSUMED); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 6512.0,
    "resolved": true,
-   "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
   },
   "gpu_ds.b200x8_ar_b1_tdp_J_per_token_1m": {
    "target": "gpu_ds",
@@ -4419,14 +4432,14 @@
    "key": "b200x8_ar_b1_tdp_J_per_token_1m",
    "label": "B200x8 AR J/token at TDP",
    "unit": "J/token",
-   "status": "modelled",
+   "status": "unvalidated",
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "power.1M.b200x8.ar_b1_tdp.J_per_token",
-   "note": "1,200 W TDP sensitivity",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); 1,200 W TDP sensitivity",
    "value": 39.7152,
    "resolved": true,
    "blob": "b5a9c2bee0649bd1316298816f3f895e0be2cf6b",
-   "last_commit": "dee409665 2026-10-03"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.measured_patch_us": {
    "target": "ds_rom",
@@ -4441,7 +4454,7 @@
    "value": 51.2688,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.measured_patch_model_us": {
    "target": "ds_rom",
@@ -4455,7 +4468,7 @@
    "value": 72.6134,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.measured_patch_count": {
    "target": "ds_rom",
@@ -4469,7 +4482,7 @@
    "value": 110,
    "resolved": true,
    "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "9db526f58 2026-10-04"
+   "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.measured_share_allmeasured": {
    "target": "ds_rom",
@@ -4484,7 +4497,389 @@
    "value": 0.9956,
    "resolved": true,
    "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
-   "last_commit": "d348ddbbe 2026-10-04"
+   "last_commit": "973e1055f 2026-10-04"
+  },
+  "qwen_rom.j_per_token_ar_8k": {
+   "target": "qwen_rom",
+   "section": "energy",
+   "key": "j_per_token_ar_8k",
+   "label": "Energy per AR token at 8K, Qwen ROM TP4 (modelled power at the measured rate)",
+   "unit": "J/token",
+   "status": "modelled",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "qwen_8k.rom.power.ar.J_per_token",
+   "note": "tools/energy_silicon_measured.py; no Qwen tile gate-level power",
+   "value": 0.1645,
+   "resolved": true,
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
+  },
+  "hbm_qwen.j_per_token_ar_p8191_tp4": {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "j_per_token_ar_p8191_tp4",
+   "label": "Energy per AR token at P8191, Qwen HBM accel TP4 (modelled power at the measured rate)",
+   "unit": "J/token",
+   "status": "modelled",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "qwen_8k.hbm_accel.tp4_iso_silicon.power.ar.J_per_token",
+   "note": "tools/energy_silicon_measured.py",
+   "value": 0.7611,
+   "resolved": true,
+   "blob": "84ed4f5323f174ef0e02301affb9598f27f97fff",
+   "last_commit": "db52c6347 2026-10-04"
+  },
+  "hbm_ds.ar_tok_s": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s",
+   "label": "DS HBM accelerator per-user AR at 1M, fully measured (every critical-path term RTL; TU PHY/switch/cable labelled vendor budget)",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_tok_s",
+   "note": "measured share 91.4% incl. labelled TU budget / 66.6% excl.; striping tail 0.15 us a collective modelled",
+   "value": 2156.0,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_us": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_us",
+   "label": "DS HBM AR token latency at 1M, fully measured",
+   "unit": "us",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_us",
+   "value": 463.832,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.mtp_tok_s": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "mtp_tok_s",
+   "label": "DS HBM speculative (DSpark block 5, third-party tau) at 1M, fully-measured verify",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "MTP_tok_s",
+   "note": "verify union increments, draft record (TU-model collectives), seed commit unvalidated",
+   "value": 4359.3,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.mtp_step_us": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "mtp_step_us",
+   "label": "DS HBM MTP step (verify6 + draft + seed)",
+   "unit": "us",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "MTP.step_us",
+   "value": 891.856,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.mtp_tau": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "mtp_tau",
+   "label": "DSpark acceptance tau (third-party, block 5)",
+   "unit": "tokens/step",
+   "status": "published",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "MTP.tau",
+   "note": "results/speculative/third_party_acceptance_20261004",
+   "value": 3.8879,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_tok_s_closing_clocks": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s_closing_clocks",
+   "label": "DS HBM AR at the clocks the blocks close at today",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "at_closing_clocks.AR_tok_s",
+   "note": "SM 1,030.9 / SU 638.6 / attention 881 / collective endpoint 394.5 / router 621.5 MHz; whole SM element and new TU endpoint never routed",
+   "value": 1646.0,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.mtp_tok_s_closing_clocks": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "mtp_tok_s_closing_clocks",
+   "label": "DS HBM MTP at today's closing clocks",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "at_closing_clocks.MTP_tok_s",
+   "value": 3424.7,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_tok_s_base_reproduced": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s_base_reproduced",
+   "label": "Base (adopted local chains) reproduced by the fully-measured walk",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "base.ar_tok_s",
+   "note": "before any term is replaced",
+   "value": 2313.0,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.measured_share_of_ar": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "measured_share_of_ar",
+   "label": "Measured share of DS HBM AR token (incl. labelled TU budget)",
+   "unit": "fraction",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR.measured_share_incl_tu_budget",
+   "note": "DS-ROM convention",
+   "value": 0.9143,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.measured_share_excl_budget": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "measured_share_excl_budget",
+   "label": "Measured share of DS HBM AR token (excl. TU vendor budget)",
+   "unit": "fraction",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR.measured_share_excl_tu_budget",
+   "value": 0.666,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_tu_budget_us": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_tu_budget_us",
+   "label": "TU PHY + switch + cable vendor budget on the AR path",
+   "unit": "us",
+   "status": "modelled",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR.tu_budget_us",
+   "note": "VENDOR BUDGET (RM104)",
+   "value": 115.168,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_tail_us": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_tail_us",
+   "label": "TU striping tail on the AR path (0.15 us a collective)",
+   "unit": "us",
+   "status": "modelled",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR.modelled_us",
+   "note": "RTL ports equal-latency",
+   "value": 39.75,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_coll_measured_us": {
+   "target": "hbm_ds",
+   "section": "collective",
+   "key": "ar_coll_measured_us",
+   "label": "Collectives on the AR path: TU endpoint RTL + labelled budget (265)",
+   "unit": "us",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.coll",
+   "note": "ot_hbm_accel_tu_endpoint one-die bench, 184 exact runs",
+   "value": 167.257,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_quant_us": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_quant_us",
+   "label": "FP8/FP4 quantisers on the AR path (ot_hdc_actquant RTL)",
+   "unit": "us",
+   "status": "measured",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.quant",
+   "note": "model was 6.53 us",
+   "value": 19.192,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_du_us": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_du_us",
+   "label": "Dedicated-unit steps on the AR path (index, selects, candidates, Engram, top-6)",
+   "unit": "us",
+   "status": "measured",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.du",
+   "value": 9.577,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_hbm_us": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_hbm_us",
+   "label": "HBM loads on the AR path (corrected REFpb, as built, worst phase)",
+   "unit": "us",
+   "status": "measured",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.hbm",
+   "note": "window, index keys, CKV rows, embedding, routed fetch",
+   "value": 13.677,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_hcp_exposed_us": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_hcp_exposed_us",
+   "label": "hc_mixes exposed time (HCP RTL + SU Sinkhorn beside the sublayer body)",
+   "unit": "us",
+   "status": "measured",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.hcp",
+   "note": "0.97 us beside 4.39-11.53 us bodies",
+   "value": 0.0,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_tok_s_notice_sens": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s_notice_sens",
+   "label": "Sensitivity: HBM loads with stream-PC notice mode",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "sensitivities.hbm_loads_with_notice.AR_tok_s",
+   "value": 2183.8,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_ds.ar_tok_s_porthub_sens": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s_porthub_sens",
+   "label": "Sensitivity: port-matched TU endpoint hub (8/10 flits a cycle)",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "sensitivities.collective_hub_port_matched.AR_tok_s",
+   "value": 2206.9,
+   "resolved": true,
+   "blob": "6b5042c54833a097c30d66a712eed726d4a10ce5",
+   "last_commit": "a8d4ec0dc 2026-10-04"
+  },
+  "hbm_qwen.ar_tok_s_p8191_tp2": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2",
+   "label": "Qwen HBM accel AR, same silicon TP2, P8191 (exact, token 18)",
+   "unit": "tok/s",
+   "status": "measured",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.a_TP2_same_silicon.ar_tok_s",
+   "note": "all stages RTL; link LAT budget <= 0.07%",
+   "value": 1032.8,
+   "resolved": true,
+   "blob": "5dbdf56233af1161397ad9fe46f3fff6596ddbc9",
+   "last_commit": "d43eb275c 2026-10-04"
+  },
+  "hbm_qwen.ar_tok_s_p8191_tp4": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4",
+   "label": "Qwen HBM accel AR, iso-silicon TP4, P8191 (exact, token 18)",
+   "unit": "tok/s",
+   "status": "measured",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.b_TP4_iso_silicon.ar_tok_s",
+   "note": "board link LAT 339 cyc budget <= 4.4% of the token",
+   "value": 2154.2,
+   "resolved": true,
+   "blob": "5dbdf56233af1161397ad9fe46f3fff6596ddbc9",
+   "last_commit": "d43eb275c 2026-10-04"
+  },
+  "hbm_qwen.ar_tok_s_p8191_tp2_closing": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2_closing",
+   "label": "Qwen HBM TP2 P8191 at today's closing clocks (upper bound)",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.a_TP2_same_silicon.at_closing_clocks.ar_tok_s",
+   "note": "collective endpoint 490 MHz screen; ME/core/vstream/wstream never closed",
+   "value": 1031.7,
+   "resolved": true,
+   "blob": "5dbdf56233af1161397ad9fe46f3fff6596ddbc9",
+   "last_commit": "d43eb275c 2026-10-04"
+  },
+  "hbm_qwen.ar_tok_s_p8191_tp4_closing": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_closing",
+   "label": "Qwen HBM TP4 P8191 at today's closing clocks (upper bound)",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.b_TP4_iso_silicon.at_closing_clocks.ar_tok_s",
+   "note": "as above",
+   "value": 2119.2,
+   "resolved": true,
+   "blob": "5dbdf56233af1161397ad9fe46f3fff6596ddbc9",
+   "last_commit": "d43eb275c 2026-10-04"
+  },
+  "hbm_qwen.p8191_tp4_measured_share_lower": {
+   "target": "hbm_qwen",
+   "section": "terms",
+   "key": "p8191_tp4_measured_share_lower",
+   "label": "Qwen TP4 P8191 measured share excl. link budget (lower bound)",
+   "unit": "fraction",
+   "status": "composed_from_measured",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.b_TP4_iso_silicon.measured_share_excl_budget_lower",
+   "value": 0.9555,
+   "resolved": true,
+   "blob": "5dbdf56233af1161397ad9fe46f3fff6596ddbc9",
+   "last_commit": "d43eb275c 2026-10-04"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
@@ -4502,20 +4897,21 @@
    "resolved": true,
    "status": "measured"
   },
-  "hbm_ds.collective_share_of_ar": {
+  "hbm_ds.vendor_budget_share_of_ar": {
    "target": "hbm_ds",
    "section": "terms",
-   "key": "collective_share_of_ar",
-   "label": "Vendor-budget collective share of DS HBM AR token time",
+   "key": "vendor_budget_share_of_ar",
+   "label": "TU vendor budget + striping tail share of DS HBM AR token",
    "unit": "fraction",
    "inputs": [
-    "hbm_ds.ar_collective_us",
+    "hbm_ds.ar_tu_budget_us",
+    "hbm_ds.ar_tail_us",
     "hbm_ds.ar_us"
    ],
-   "expr": "x0/x1",
+   "expr": "(x0+x1)/x2",
    "derived": true,
-   "note": "unmeasured term",
-   "value": 0.4494,
+   "note": "the only non-RTL terms on the AR path",
+   "value": 0.334,
    "resolved": true,
    "status": "modelled"
   },
@@ -4616,8 +5012,8 @@
    ],
    "expr": "x0/x1",
    "derived": true,
-   "note": "HBM side is the measured GPU-organised baseline (no accelerator rung adopted); not iso-silicon",
-   "value": 0.6331,
+   "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
+   "value": 0.6535,
    "resolved": true,
    "status": "partial"
   },
@@ -4633,8 +5029,8 @@
    ],
    "expr": "x0/x1",
    "derived": true,
-   "note": "as above",
-   "value": 0.5399,
+   "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
+   "value": 0.5931,
    "resolved": true,
    "status": "partial"
   },
@@ -4701,7 +5097,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side modelled",
-   "value": 8.3391,
+   "value": 8.0779,
    "resolved": true,
    "status": "modelled"
   },
@@ -4718,7 +5114,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side modelled",
-   "value": 9.2444,
+   "value": 8.4156,
    "resolved": true,
    "status": "modelled"
   }
@@ -4816,24 +5212,6 @@
   },
   {
    "target": "hbm_ds",
-   "item": "Collectives (201.92 us AR, 280.75 us verify): Tomahawk-Ultra protocol vendor budget + HA2 reducer, not measured",
-   "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
-   "path_exists": true
-  },
-  {
-   "target": "hbm_ds",
-   "item": "Routed fetch 5.33 us is the model value (audit measured 5.446 mean; sel90 record 4.974)",
-   "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
-   "path_exists": true
-  },
-  {
-   "target": "hbm_ds",
-   "item": "~13.6 us of model-priced local steps (FP8 QDQ, index q/scores/topk, cand, engram, router top-6)",
-   "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
-   "path_exists": true
-  },
-  {
-   "target": "hbm_ds",
    "item": "Verify(P=6) routed-union SM/fetch increments from the W19 composer; seed commit from draft record",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
    "path_exists": true
@@ -4854,12 +5232,6 @@
    "target": "hbm_ds",
    "item": "Accelerator ladder (2,624.4 / 6,344.7) is UNVALIDATED_MODEL_HYPOTHESES; no rung adopted",
    "path": "results/uarch/hbm_accelerator_integration_20261004/model.json",
-   "path_exists": true
-  },
-  {
-   "target": "hbm_qwen",
-   "item": "NO measured record at P8191: AR rate and all terms are at P1023",
-   "path": "results/rtl/hbm_accel_ha8_20261004/measured_composition.json",
    "path_exists": true
   },
   {
@@ -4890,6 +5262,30 @@
    "target": "gpu_ds",
    "item": "All 8x B200 DS rows are tier-2 model (gpu_tier2()); MTP uses 1.94x sensitivity, not DSpark tau",
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
+   "path_exists": true
+  },
+  {
+   "target": "hbm_ds",
+   "item": "Tomahawk-Ultra PHY 100 + switch 250 + cable 27.6 ns per crossing (115.2 us AR): VENDOR BUDGET; striping tail 0.15 us a collective (39.75 us): model",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "path_exists": true
+  },
+  {
+   "target": "hbm_ds",
+   "item": "New TU endpoint (ot_hbm_accel_tu_endpoint): no area/route/STA; RX buffers 1.1 Mb not in an area ledger",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/collectives.json",
+   "path_exists": true
+  },
+  {
+   "target": "hbm_ds",
+   "item": "MTP verify: routed-union SM/fetch increments (+47.74/+28.45 us) from the W19 composer; draft record collectives are TU model",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "path_exists": true
+  },
+  {
+   "target": "hbm_qwen",
+   "item": "Collective link LAT (TP4 339 cyc board / TP2 11 cyc UCIe) budget inside ot_rom_oneshot_allreduce; embedding row ~60 cyc not simulated",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
    "path_exists": true
   }
  ],
@@ -5777,13 +6173,6 @@
    "path_exists": true
   },
   {
-   "target": "hbm_qwen",
-   "item": "Qwen HBM accelerator token at P8191 (run in progress, not on main)",
-   "owner": "Claude (HBM-accelerator closure)",
-   "path": "results/rtl/hbm_accel_ha8_20261004/measured_composition.json",
-   "path_exists": true
-  },
-  {
    "target": "hbm_ds",
    "item": "Routed-expert burst minimum 80.8% (<90% rule)",
    "owner": "Claude (HBM accelerator)",
@@ -5843,12 +6232,6 @@
    "target": "gpu_ds",
    "item": "No DeepSeek-V4.1 decode measured on any GPU (H100 TP8 vLLM NCCL failure); published references are weak (H200 TP4 266 tok/s at 30K, R1 on B200 368 tok/s)",
    "path": "results/measured/h100_nvls_20261004/README.md",
-   "path_exists": true
-  },
-  {
-   "target": "hbm_qwen",
-   "item": "No Qwen ROM:HBM ratio at matched context: HBM accelerator measured only at P1023",
-   "path": "results/rtl/hbm_accel_ha8_20261004/measured_composition.json",
    "path_exists": true
   }
  ],

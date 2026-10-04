@@ -22,14 +22,16 @@
   "ds_rom.ar_over_b200x8_1m",
   "hbm_ds.ar_tok_s",
   "hbm_ds.mtp_tok_s",
-  "hbm_ds.collective_share_of_ar",
+  "hbm_ds.vendor_budget_share_of_ar",
+  "hbm_ds.ar_tok_s_closing_clocks",
+  "hbm_ds.measured_share_of_ar",
   "hbm_ds.ar_over_b200x8_1m",
-  "hbm_qwen.ar_tok_s_p1023_tp4",
-  "hbm_qwen.ar_tok_s_p1023_tp2",
   "gpu_qwen.h100_tp1_fp8_decode_8k",
   "gpu_qwen.h100_tp8_fp8_decode_8k",
   "gpu_ds.b200x8_tier2_ar_1m",
-  "gpu_ds.b200x8_tier2_mtp_1m"
+  "gpu_ds.b200x8_tier2_mtp_1m",
+  "hbm_qwen.ar_tok_s_p8191_tp4",
+  "hbm_qwen.ar_tok_s_p8191_tp2"
  ],
  "figures": [
   {
@@ -1492,77 +1494,77 @@
    "section": "energy",
    "key": "stacks",
    "label": "HBM stacks (W3 rule)",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.rom.stacks",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.silicon.stacks",
    "unit": "stacks",
    "status": "modelled",
-   "note": "ASSUMED; scenario C had 420"
+   "note": "ASSUMED; scenario C had 420; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
    "section": "energy",
    "key": "total_silicon_mm2",
    "label": "Total silicon (logic + DRAM)",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.rom.total_mm2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.silicon.total_mm2",
    "unit": "mm2",
    "status": "modelled",
-   "note": ""
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
    "section": "energy",
    "key": "j_per_token_ar_b1_pg",
-   "label": "J/token AR b1, power gated",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.ar_b1_pg.J_per_token",
+   "label": "AR b1 J/token, stage PG at the MEASURED 35.4% element residual",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token",
    "unit": "J",
    "status": "modelled",
-   "note": "Uses model AR 2,466.2, not 2,532.2; PG residual 10% ASSUMED"
+   "note": "Uses model AR 2,466.2, not 2,532.2; PG residual 10% ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
    "section": "energy",
    "key": "j_per_token_ar_b1_icg",
-   "label": "J/token AR b1, ICG",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.ar_b1_icg.J_per_token",
+   "label": "AR b1 J/token, per-pair ICG only (measured 3.0 mW idle pair)",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.ar_b1_icg.J_per_token",
    "unit": "J",
    "status": "modelled",
-   "note": ""
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
    "section": "energy",
    "key": "j_per_token_mtp_b1_pg",
-   "label": "J/token MTP as built b1, PG",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.mtp_as_built_b1_pg.J_per_token",
+   "label": "MTP b1 J/token, stage PG at the MEASURED residual",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.mtp_b1_pg_measured.J_per_token",
    "unit": "J",
    "status": "modelled",
-   "note": "At 6,733.7 tok/s (older draft basis)"
+   "note": "At 6,733.7 tok/s (older draft basis); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
    "section": "energy",
    "key": "tok_s_per_kw_ar_b1_pg",
    "label": "AR tok/s per kW, b1 PG",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.ar_b1_pg.tok_s_per_kW",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.tok_s_per_kW",
    "unit": "tok/s/kW",
    "status": "modelled",
-   "note": ""
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
    "section": "energy",
    "key": "static_w_icg",
    "label": "Static power, ICG",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.rom.ar_b1_icg.static_w",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.power.ar_b1_icg.static_w",
    "unit": "W",
    "status": "modelled",
-   "note": ""
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
@@ -1572,8 +1574,8 @@
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "power.1M.rom.ar_sat_icg.tok_s",
    "unit": "tok/s",
-   "status": "modelled",
-   "note": ""
+   "status": "unvalidated",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); "
   },
   {
    "target": "ds_rom",
@@ -1583,8 +1585,8 @@
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "power.1M.rom.ar_sat_icg.J_per_token",
    "unit": "J",
-   "status": "modelled",
-   "note": ""
+   "status": "unvalidated",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); "
   },
   {
    "target": "ds_rom",
@@ -1644,8 +1646,8 @@
   {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "ar_tok_s",
-   "label": "DS HBM per-user AR at 1M, measured (TU collectives, 1.2 GHz)",
+   "key": "ar_tok_s_baseline_partial",
+   "label": "DS HBM per-user AR at 1M, measured (TU collectives, 1.2 GHz) (superseded by the fully-measured composition)",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
    "pointer": "mtp_and_accelerator.measured.ar_tok_s",
    "unit": "tok/s",
@@ -1655,8 +1657,8 @@
   {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "ar_us",
-   "label": "DS HBM AR token latency at 1M",
+   "key": "ar_us_baseline_partial",
+   "label": "DS HBM AR token latency at 1M (superseded by the fully-measured composition)",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
    "pointer": "mtp_and_accelerator.measured.ar_us",
    "unit": "us",
@@ -1666,8 +1668,8 @@
   {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "mtp_tok_s",
-   "label": "DS HBM speculative (DSpark MTP, third-party tau) at 1M, measured",
+   "key": "mtp_tok_s_baseline_partial",
+   "label": "DS HBM speculative (DSpark MTP, third-party tau) at 1M, measured (superseded by the fully-measured composition)",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
    "pointer": "mtp_and_accelerator.measured.mtp_tok_s",
    "unit": "tok/s",
@@ -1677,8 +1679,8 @@
   {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "mtp_step_us",
-   "label": "DS HBM MTP step (verify6+draft+seed)",
+   "key": "mtp_step_us_baseline_partial",
+   "label": "DS HBM MTP step (verify6+draft+seed) (superseded by the fully-measured composition)",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
    "pointer": "mtp_and_accelerator.measured.mtp.step_us",
    "unit": "us",
@@ -1688,8 +1690,8 @@
   {
    "target": "hbm_ds",
    "section": "rate",
-   "key": "mtp_tau",
-   "label": "DSpark acceptance tau (third-party published, gamma 5)",
+   "key": "mtp_tau_baseline_partial",
+   "label": "DSpark acceptance tau (third-party published, gamma 5) (superseded by the fully-measured composition)",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
    "pointer": "mtp_and_accelerator.measured.tau",
    "unit": "tokens/step",
@@ -2075,33 +2077,33 @@
    "section": "energy",
    "key": "accel_ar_J_per_token",
    "label": "DS HBM accel AR J/token @1M (8 switch chips charged)",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.hbm_accel.ar_b1.J_per_token",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.power.ar_b1.J_per_token",
    "unit": "J/token",
    "status": "modelled",
-   "note": "uses model rate 2,624.4, not the measured 2,225.7"
+   "note": "uses model rate 2,624.4, not the measured 2,225.7; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "hbm_ds",
    "section": "energy",
    "key": "accel_ar_system_w",
    "label": "DS HBM accel AR system power @1M",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.hbm_accel.ar_b1.system_w",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.power.ar_b1.system_w",
    "unit": "W",
    "status": "modelled",
-   "note": ""
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "hbm_ds",
    "section": "energy",
    "key": "accel_mtp_J_per_token",
    "label": "DS HBM accel MTP J/token @1M",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.hbm_accel.mtp_b1.J_per_token",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.power.mtp_b1.J_per_token",
    "unit": "J/token",
    "status": "modelled",
-   "note": "note says pending measured draft (6,351.9 rate)"
+   "note": "note says pending measured draft (6,351.9 rate); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "hbm_ds",
@@ -2111,30 +2113,30 @@
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "power.1M.ablation_nvls.ar_b1.J_per_token",
    "unit": "J/token",
-   "status": "modelled",
-   "note": ""
+   "status": "unvalidated",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); "
   },
   {
    "target": "hbm_ds",
    "section": "energy",
    "key": "accel_total_silicon_mm2",
    "label": "DS HBM accel total silicon (logic+DRAM+switch)",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.hbm_accel.total_mm2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.silicon.total_mm2",
    "unit": "mm2",
    "status": "modelled",
-   "note": "96 x 340.5 mm2 + 384 stacks (Micron bound) + 8 switch chips ASSUMED"
+   "note": "96 x 340.5 mm2 + 384 stacks (Micron bound) + 8 switch chips ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "hbm_ds",
    "section": "energy",
    "key": "accel_logic_mm2",
    "label": "DS HBM accel logic silicon",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.hbm_accel.logic_mm2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.hbm_accel.silicon.logic_mm2",
    "unit": "mm2",
    "status": "modelled",
-   "note": ""
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "hbm_ds",
@@ -3186,66 +3188,66 @@
    "section": "ratios",
    "key": "b200x8_total_mm2",
    "label": "8x B200 total silicon",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "silicon.b200x8.total_mm2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.b200x8.silicon.total_mm2",
    "unit": "mm2",
    "status": "modelled",
-   "note": "16x800 (ASSUMED) + 64 stacks x 1,089 + 2 switches (ASSUMED)"
+   "note": "16x800 (ASSUMED) + 64 stacks x 1,089 + 2 switches (ASSUMED); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "gpu_ds",
    "section": "ratios",
    "key": "b200x8_mtp_per_1000mm2",
    "label": "B200 MTP per-user per 1,000 mm2",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.b200x8.per_user_mtp_per_1000mm2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.b200x8_mtp.per_user_tok_s_per_1000mm2",
    "unit": "tok/s/1000mm2",
    "status": "modelled",
-   "note": ""
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "gpu_ds",
    "section": "ratios",
    "key": "rom_mtp_per_1000mm2",
    "label": "ROM MTP per-user per 1,000 mm2",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.rom.per_user_mtp_per_1000mm2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.rom_mtp.per_user_tok_s_per_1000mm2",
    "unit": "tok/s/1000mm2",
    "status": "modelled",
-   "note": ""
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "gpu_ds",
    "section": "ratios",
    "key": "hbm_accel_mtp_per_1000mm2",
    "label": "HBM accel MTP per-user per 1,000 mm2",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.hbm_accel.per_user_mtp_per_1000mm2",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.hbm_mtp.per_user_tok_s_per_1000mm2",
    "unit": "tok/s/1000mm2",
    "status": "modelled",
-   "note": "MTP pending measured draft"
+   "note": "MTP pending measured draft; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "gpu_ds",
    "section": "ratios",
    "key": "b200x8_iso_rom_replicas",
    "label": "B200x8 replicas at ROM silicon",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.b200x8.iso_rom_silicon.replicas_fractional",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.b200x8_ar.replicas_at_ref_silicon",
    "unit": "x",
    "status": "modelled",
-   "note": "iso-total-silicon"
+   "note": "iso-total-silicon; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "gpu_ds",
    "section": "ratios",
    "key": "b200x8_iso_rom_agg_b1_ar",
    "label": "B200 aggregate batch-1 AR at ROM silicon",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "per_area_and_iso.1M.per_area.b200x8.iso_rom_silicon.aggregate_b1_ar_tok_s",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_compare.iso_silicon.rows.b200x8_ar.aggregate_b1_tok_s_integer_replicas",
    "unit": "tok/s",
    "status": "modelled",
-   "note": "vs ROM 2,466.2"
+   "note": "vs ROM 2,466.2; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "gpu_ds",
@@ -3255,8 +3257,8 @@
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "per_area_and_iso.1M.iso_power_at_rom_sat_icg.b200x8.aggregate_sat_ar_tok_s",
    "unit": "tok/s",
-   "status": "modelled",
-   "note": "iso-power 31,178.9 W"
+   "status": "unvalidated",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); iso-power 31,178.9 W"
   },
   {
    "target": "gpu_ds",
@@ -3266,41 +3268,41 @@
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "per_area_and_iso.1M.iso_power_at_rom_sat_icg.rom.aggregate_sat_ar_tok_s",
    "unit": "tok/s",
-   "status": "modelled",
-   "note": ""
+   "status": "unvalidated",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); "
   },
   {
    "target": "gpu_ds",
    "section": "energy",
    "key": "b200x8_ar_b1_J_per_token_1m",
    "label": "B200x8 AR batch-1 J/token @1M",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.b200x8.ar_b1.J_per_token",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.b200x8.power.ar_b1.J_per_token",
    "unit": "J/token",
    "status": "modelled",
-   "note": "8x689 W measured draw / modelled rate"
+   "note": "8x689 W measured draw / modelled rate; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "gpu_ds",
    "section": "energy",
    "key": "b200x8_mtp_b1_J_per_token_1m",
    "label": "B200x8 MTP batch-1 J/token @1M",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.b200x8.mtp_b1.J_per_token",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.b200x8.power.mtp_b1.J_per_token",
    "unit": "J/token",
    "status": "modelled",
-   "note": ""
+   "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "gpu_ds",
    "section": "energy",
    "key": "b200x8_system_w",
    "label": "B200x8 system power",
-   "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
-   "pointer": "power.1M.b200x8.ar_b1.system_w",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.b200x8.power.ar_b1.system_w",
    "unit": "W",
    "status": "measured",
-   "note": "8x689 W measured decode draw + 2 NVSwitch (ASSUMED)"
+   "note": "8x689 W measured decode draw + 2 NVSwitch (ASSUMED); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "gpu_ds",
@@ -3310,8 +3312,8 @@
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
    "pointer": "power.1M.b200x8.ar_b1_tdp.J_per_token",
    "unit": "J/token",
-   "status": "modelled",
-   "note": "1,200 W TDP sensitivity"
+   "status": "unvalidated",
+   "note": "INVALID: from the superseded ds_energy_silicon_authoritative record (old ROM rate, ASSUMED 10% residual); 1,200 W TDP sensitivity"
   },
   {
    "target": "ds_rom",
@@ -3354,6 +3356,292 @@
    "unit": "fraction",
    "status": "measured",
    "note": "rest listed in still_modelled"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "energy",
+   "key": "j_per_token_ar_8k",
+   "label": "Energy per AR token at 8K, Qwen ROM TP4 (modelled power at the measured rate)",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "qwen_8k.rom.power.ar.J_per_token",
+   "unit": "J/token",
+   "status": "modelled",
+   "note": "tools/energy_silicon_measured.py; no Qwen tile gate-level power"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "j_per_token_ar_p8191_tp4",
+   "label": "Energy per AR token at P8191, Qwen HBM accel TP4 (modelled power at the measured rate)",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "qwen_8k.hbm_accel.tp4_iso_silicon.power.ar.J_per_token",
+   "unit": "J/token",
+   "status": "modelled",
+   "note": "tools/energy_silicon_measured.py"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s",
+   "label": "DS HBM accelerator per-user AR at 1M, fully measured (every critical-path term RTL; TU PHY/switch/cable labelled vendor budget)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "measured share 91.4% incl. labelled TU budget / 66.6% excl.; striping tail 0.15 us a collective modelled"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_us",
+   "label": "DS HBM AR token latency at 1M, fully measured",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_us",
+   "unit": "us",
+   "status": "partial",
+   "note": ""
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "mtp_tok_s",
+   "label": "DS HBM speculative (DSpark block 5, third-party tau) at 1M, fully-measured verify",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "MTP_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "verify union increments, draft record (TU-model collectives), seed commit unvalidated"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "mtp_step_us",
+   "label": "DS HBM MTP step (verify6 + draft + seed)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "MTP.step_us",
+   "unit": "us",
+   "status": "partial",
+   "note": ""
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "mtp_tau",
+   "label": "DSpark acceptance tau (third-party, block 5)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "MTP.tau",
+   "unit": "tokens/step",
+   "status": "published",
+   "note": "results/speculative/third_party_acceptance_20261004"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s_closing_clocks",
+   "label": "DS HBM AR at the clocks the blocks close at today",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "at_closing_clocks.AR_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "SM 1,030.9 / SU 638.6 / attention 881 / collective endpoint 394.5 / router 621.5 MHz; whole SM element and new TU endpoint never routed"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "mtp_tok_s_closing_clocks",
+   "label": "DS HBM MTP at today's closing clocks",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "at_closing_clocks.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": ""
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s_base_reproduced",
+   "label": "Base (adopted local chains) reproduced by the fully-measured walk",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "base.ar_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "before any term is replaced"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "measured_share_of_ar",
+   "label": "Measured share of DS HBM AR token (incl. labelled TU budget)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR.measured_share_incl_tu_budget",
+   "unit": "fraction",
+   "status": "composed_from_measured",
+   "note": "DS-ROM convention"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "measured_share_excl_budget",
+   "label": "Measured share of DS HBM AR token (excl. TU vendor budget)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR.measured_share_excl_tu_budget",
+   "unit": "fraction",
+   "status": "composed_from_measured",
+   "note": ""
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_tu_budget_us",
+   "label": "TU PHY + switch + cable vendor budget on the AR path",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR.tu_budget_us",
+   "unit": "us",
+   "status": "modelled",
+   "note": "VENDOR BUDGET (RM104)"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_tail_us",
+   "label": "TU striping tail on the AR path (0.15 us a collective)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR.modelled_us",
+   "unit": "us",
+   "status": "modelled",
+   "note": "RTL ports equal-latency"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "collective",
+   "key": "ar_coll_measured_us",
+   "label": "Collectives on the AR path: TU endpoint RTL + labelled budget (265)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.coll",
+   "unit": "us",
+   "status": "partial",
+   "note": "ot_hbm_accel_tu_endpoint one-die bench, 184 exact runs"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_quant_us",
+   "label": "FP8/FP4 quantisers on the AR path (ot_hdc_actquant RTL)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.quant",
+   "unit": "us",
+   "status": "measured",
+   "note": "model was 6.53 us"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_du_us",
+   "label": "Dedicated-unit steps on the AR path (index, selects, candidates, Engram, top-6)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.du",
+   "unit": "us",
+   "status": "measured",
+   "note": ""
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_hbm_us",
+   "label": "HBM loads on the AR path (corrected REFpb, as built, worst phase)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.hbm",
+   "unit": "us",
+   "status": "measured",
+   "note": "window, index keys, CKV rows, embedding, routed fetch"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "ar_hcp_exposed_us",
+   "label": "hc_mixes exposed time (HCP RTL + SU Sinkhorn beside the sublayer body)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "AR_by_term.hcp",
+   "unit": "us",
+   "status": "measured",
+   "note": "0.97 us beside 4.39-11.53 us bodies"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s_notice_sens",
+   "label": "Sensitivity: HBM loads with stream-PC notice mode",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "sensitivities.hbm_loads_with_notice.AR_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": ""
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "ar_tok_s_porthub_sens",
+   "label": "Sensitivity: port-matched TU endpoint hub (8/10 flits a cycle)",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "sensitivities.collective_hub_port_matched.AR_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": ""
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2",
+   "label": "Qwen HBM accel AR, same silicon TP2, P8191 (exact, token 18)",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.a_TP2_same_silicon.ar_tok_s",
+   "unit": "tok/s",
+   "status": "measured",
+   "note": "all stages RTL; link LAT budget <= 0.07%"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4",
+   "label": "Qwen HBM accel AR, iso-silicon TP4, P8191 (exact, token 18)",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.b_TP4_iso_silicon.ar_tok_s",
+   "unit": "tok/s",
+   "status": "measured",
+   "note": "board link LAT 339 cyc budget <= 4.4% of the token"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2_closing",
+   "label": "Qwen HBM TP2 P8191 at today's closing clocks (upper bound)",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.a_TP2_same_silicon.at_closing_clocks.ar_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "collective endpoint 490 MHz screen; ME/core/vstream/wstream never closed"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_closing",
+   "label": "Qwen HBM TP4 P8191 at today's closing clocks (upper bound)",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.b_TP4_iso_silicon.at_closing_clocks.ar_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "as above"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "terms",
+   "key": "p8191_tp4_measured_share_lower",
+   "label": "Qwen TP4 P8191 measured share excl. link budget (lower bound)",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "pointer": "designs.b_TP4_iso_silicon.measured_share_excl_budget_lower",
+   "unit": "fraction",
+   "status": "composed_from_measured",
+   "note": ""
   }
  ],
  "derived": [
@@ -3371,14 +3659,15 @@
   },
   {
    "target": "hbm_ds",
-   "key": "collective_share_of_ar",
-   "label": "Vendor-budget collective share of DS HBM AR token time",
+   "key": "vendor_budget_share_of_ar",
+   "label": "TU vendor budget + striping tail share of DS HBM AR token",
    "inputs": [
-    "hbm_ds.ar_collective_us",
+    "hbm_ds.ar_tu_budget_us",
+    "hbm_ds.ar_tail_us",
     "hbm_ds.ar_us"
    ],
-   "expr": "x0/x1",
-   "note": "unmeasured term",
+   "expr": "(x0+x1)/x2",
+   "note": "the only non-RTL terms on the AR path",
    "unit": "fraction",
    "section": "terms"
   },
@@ -3456,7 +3745,7 @@
     "hbm_ds.ar_tok_s"
    ],
    "expr": "x0/x1",
-   "note": "HBM side is the measured GPU-organised baseline (no accelerator rung adopted); not iso-silicon",
+   "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
    "unit": "x",
    "section": "ratios"
   },
@@ -3469,7 +3758,7 @@
     "hbm_ds.mtp_tok_s"
    ],
    "expr": "x0/x1",
-   "note": "as above",
+   "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
    "unit": "x",
    "section": "ratios"
   },
@@ -3617,21 +3906,6 @@
   },
   {
    "target": "hbm_ds",
-   "item": "Collectives (201.92 us AR, 280.75 us verify): Tomahawk-Ultra protocol vendor budget + HA2 reducer, not measured",
-   "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json"
-  },
-  {
-   "target": "hbm_ds",
-   "item": "Routed fetch 5.33 us is the model value (audit measured 5.446 mean; sel90 record 4.974)",
-   "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json"
-  },
-  {
-   "target": "hbm_ds",
-   "item": "~13.6 us of model-priced local steps (FP8 QDQ, index q/scores/topk, cand, engram, router top-6)",
-   "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json"
-  },
-  {
-   "target": "hbm_ds",
    "item": "Verify(P=6) routed-union SM/fetch increments from the W19 composer; seed commit from draft record",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json"
   },
@@ -3649,11 +3923,6 @@
    "target": "hbm_ds",
    "item": "Accelerator ladder (2,624.4 / 6,344.7) is UNVALIDATED_MODEL_HYPOTHESES; no rung adopted",
    "path": "results/uarch/hbm_accelerator_integration_20261004/model.json"
-  },
-  {
-   "target": "hbm_qwen",
-   "item": "NO measured record at P8191: AR rate and all terms are at P1023",
-   "path": "results/rtl/hbm_accel_ha8_20261004/measured_composition.json"
   },
   {
    "target": "hbm_qwen",
@@ -3679,6 +3948,26 @@
    "target": "gpu_ds",
    "item": "All 8x B200 DS rows are tier-2 model (gpu_tier2()); MTP uses 1.94x sensitivity, not DSpark tau",
    "path": "results/uarch/ds_energy_silicon_authoritative_20261004/model.json"
+  },
+  {
+   "target": "hbm_ds",
+   "item": "Tomahawk-Ultra PHY 100 + switch 250 + cable 27.6 ns per crossing (115.2 us AR): VENDOR BUDGET; striping tail 0.15 us a collective (39.75 us): model",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json"
+  },
+  {
+   "target": "hbm_ds",
+   "item": "New TU endpoint (ot_hbm_accel_tu_endpoint): no area/route/STA; RX buffers 1.1 Mb not in an area ledger",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/collectives.json"
+  },
+  {
+   "target": "hbm_ds",
+   "item": "MTP verify: routed-union SM/fetch increments (+47.74/+28.45 us) from the W19 composer; draft record collectives are TU model",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json"
+  },
+  {
+   "target": "hbm_qwen",
+   "item": "Collective link LAT (TP4 339 cyc board / TP2 11 cyc UCIe) budget inside ot_rom_oneshot_allreduce; embedding row ~60 cyc not simulated",
+   "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json"
   }
  ],
  "physical_blocks": [
@@ -4396,12 +4685,6 @@
    "path": "results/uarch/dsrom_l2_head_mac_20261004/model.json"
   },
   {
-   "target": "hbm_qwen",
-   "item": "Qwen HBM accelerator token at P8191 (run in progress, not on main)",
-   "owner": "Claude (HBM-accelerator closure)",
-   "path": "results/rtl/hbm_accel_ha8_20261004/measured_composition.json"
-  },
-  {
    "target": "hbm_ds",
    "item": "Routed-expert burst minimum 80.8% (<90% rule)",
    "owner": "Claude (HBM accelerator)",
@@ -4453,11 +4736,6 @@
    "target": "gpu_ds",
    "item": "No DeepSeek-V4.1 decode measured on any GPU (H100 TP8 vLLM NCCL failure); published references are weak (H200 TP4 266 tok/s at 30K, R1 on B200 368 tok/s)",
    "path": "results/measured/h100_nvls_20261004/README.md"
-  },
-  {
-   "target": "hbm_qwen",
-   "item": "No Qwen ROM:HBM ratio at matched context: HBM accelerator measured only at P1023",
-   "path": "results/rtl/hbm_accel_ha8_20261004/measured_composition.json"
   }
  ]
 }
