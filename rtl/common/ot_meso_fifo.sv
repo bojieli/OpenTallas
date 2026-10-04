@@ -333,24 +333,48 @@ module ot_meso_ring #(
 `else
     localparam int PLACE = SYNC + 1 - (OFFSET - 1);
 `endif
+    // Every read of the write-domain ring goes through a REGISTERED one-hot select (no pointer decode and no lap
+    // compare on a crossing arc): oh is the one-hot copy of the 2*DEPTH-position pointer rp (index = {lap, slot}),
+    // di the one-hot slot index; both are placed and advanced with rp, so they add no latency.  A crossing arc is
+    // then slot flop -> AND -> OR tree -> the reader's next-state select.
+    localparam int NS = 2 * DEPTH;
+    wire [PW-1:0] rp_place = gb + PW'(PLACE) - PW'(late);
+    logic [NS-1:0] oh;
+    logic [DEPTH-1:0] di;
     always_ff @(posedge rclk) begin
-        if (r_align) rp <= gb + PW'(PLACE) - PW'(late);
-        else if (r_on) rp <= rp + 1'b1;
+        if (r_align) begin
+            rp <= rp_place;
+            oh <= NS'(1) << rp_place;
+            di <= DEPTH'(1) << rp_place[AW-1:0];
+        end else if (r_on) begin
+            rp <= rp + 1'b1;
+            oh <= {oh[NS-2:0], oh[NS-1]};
+            di <= {di[DEPTH-2:0], di[DEPTH-1]};
+        end
     end
-    wire [AW-1:0] ri = rp[AW-1:0];
-    assign r_d      = s_d[ri];
-    assign r_v      = rp[PW-1] ? s_v1[ri] : s_v0[ri];   // valid AND written in the expected lap
-    assign r_lap_ok = (s_lap[ri] == rp[PW-1]);
+    // position j = {lap, slot}: valid in the expected lap, and lap bit as expected
+    wire [NS-1:0] pos_v   = {s_v1, s_v0};
+    wire [NS-1:0] pos_lap = {s_lap, ~s_lap};
+    // one-hot rotations: rot(oh, k)[j] = oh[j - k]  (the position k ahead of rp)
+    function automatic logic [NS-1:0] rot(input logic [NS-1:0] x, input int k);
+        for (int j = 0; j < NS; j++) rot[j] = x[(j - k + 2 * NS) % NS];
+    endfunction
+    always_comb begin
+        r_d = '0;
+        for (int i = 0; i < DEPTH; i++) r_d = r_d | (s_d[i] & {W{di[i]}});
+    end
+    assign r_v      = |(oh & pos_v);
+    assign r_lap_ok = |(oh & pos_lap);
 
     // guards on the falling read edge, then 3 rising flops
-    wire [PW-1:0] q_lo = rp + PW'(GUARD_LO);            // consumed at the next rising edge + GUARD_LO
-    wire [PW-1:0] q_hi = rp - 1'b1 + PW'(GUARD_HI);      // rp-1 was consumed at the last rising edge
+    wire [NS-1:0] oh_lo = rot(oh, GUARD_LO);            // rp + GUARD_LO: consumed at the next rising edge + GUARD_LO
+    wire [NS-1:0] oh_hi = rot(oh, GUARD_HI - 1);        // rp - 1 + GUARD_HI (rp-1 was consumed at the last rising edge)
     (* async_reg = "true" *) logic glo0, ghi0;
     (* async_reg = "true" *) logic glo1, glo2, ghi1, ghi2;
     logic glo3, ghi3;
     always_ff @(negedge rclk) begin
-        glo0 <= (s_lap[q_lo[AW-1:0]] == q_lo[PW-1]);   // written in this lap
-        ghi0 <= (s_lap[q_hi[AW-1:0]] != q_hi[PW-1]);   // not yet written in this lap
+        glo0 <= |(oh_lo & pos_lap);                    // written in this lap
+        ghi0 <= ~|(oh_hi & pos_lap);                   // not yet written in this lap
     end
     always_ff @(posedge rclk) begin
         glo1 <= glo0; glo2 <= glo1; glo3 <= glo2;
