@@ -18,7 +18,13 @@ HASHES = {
 
 
 class CanonicalS81Execution:
-    def __init__(self, owner, *, source_execution_factory, stage_join_factory):
+    def __init__(self, owner, *, source_execution_factory=None, stage_join_factory=None):
+        if source_execution_factory is None:
+            from dsrom_s82_payload_interface import SourceExecution
+            source_execution_factory = SourceExecution
+        if stage_join_factory is None:
+            from dsrom_stage_program_join import StageProgramJoin
+            stage_join_factory = StageProgramJoin
         self.owner = Path(owner).resolve()
         base = self.owner / CANONICAL
         raw = {}
@@ -67,3 +73,51 @@ class CanonicalS81Execution:
 
     def emit_stage(self, stage, rank, out):
         return self.stage_join.emit_stage(stage, rank, out)
+
+    def emit_nonfield_run(self, nodes, stage, rank, out):
+        """Emit one consecutive literal source run on the caller's actual die.
+
+        A run stays inside one core launch: no inserted END/reset between SU,
+        HE, collective or other dependent native instructions. The caller owns
+        the non-field service home and supplies that actual stage/rank.
+        """
+        import hdc_isa_v41 as ISA
+        self.stage_join.keys(stage, rank)  # actual selected die bounds
+        if not nodes or len(nodes) != len(set(nodes)):
+            raise ValueError('nonempty unique source run required')
+        words, records = [], []
+        scope, previous = None, None
+        for node in nodes:
+            source = self.source.nodes[node]
+            binding = self.source.bindings[node]
+            if source['kind'] != 'instruction' or binding.get('address_bound'):
+                raise ValueError('field/service node is not a dedicated native instruction')
+            index = source['instruction_index']
+            if previous is not None and (source['scope'] != scope or index != previous+1):
+                raise ValueError('non-field source order must be consecutive within one scope')
+            scope, previous = source['scope'], index
+            instruction = source['instruction']
+            if ((instruction.get('unit') == ISA.UNIT_QE and 'qe_wbase' in instruction)
+                    or (instruction.get('unit') == ISA.UNIT_ME and instruction.get('me_wsrc') == 0)):
+                raise ValueError('unbound field instruction needs the canonical field dispatcher')
+            word = ISA.encode(full_shape=True, **{k:tuple(v) if isinstance(v,list)
+                              and not k.startswith('_') else v for k,v in instruction.items()})
+            if hashlib.sha256(word.to_bytes(256,'little')).hexdigest() != source['template_word_sha256']:
+                raise ValueError('literal non-field source template changed')
+            words.append(word)
+            records.append(dict(node=node, pc=len(words)-1, instruction=instruction,
+                                template_word_sha256=source['template_word_sha256']))
+        if ISA.FULL_INSTR_BITS != 2048 or len(words)+1 > 1 << 14:
+            raise ValueError('actual native instruction/entry capacity mismatch')
+        words.append(ISA.encode(full_shape=True, unit=ISA.UNIT_END, wait=31))
+        out = Path(out); out.mkdir(parents=True,exist_ok=False)
+        raw = ''.join(f'{word:0512x}\n' for word in words).encode()
+        (out/'prog.hex').write_bytes(raw)
+        entry = dict(stage=stage, rank=rank, entry=0, nodes=records,
+                     instruction_bits=2048, program_sha256=hashlib.sha256(raw).hexdigest(),
+                     caller_owned_service_home=True, context_restore_required=True,
+                     source_input_and_output_lease_required=True,
+                     context_restore_and_remote_drain_required=True,
+                     native_execution_qualified=False)
+        (out/'dispatch.json').write_text(json.dumps(entry,indent=2)+'\n')
+        return entry
