@@ -37,6 +37,7 @@ CONFIGS = {
     "d8_tt_routed": dict(depth=8, offset=3, glo=0, ghi=6, credits=16, wander=774.0, phases=16, cycles=400_000),
     "d16_bound_ss": dict(depth=16, offset=5, glo=0, ghi=10, credits=16, wander=1452.5, phases=16, cycles=400_000),
 }
+OUT_REG_PERIODS = 1          # r_d is registered (the crossing's capture register)
 MUTANTS = {"OFFSET": "random", "NO_GUARD": "drift", "EARLY_CREDIT": "bp"}
 
 
@@ -111,7 +112,9 @@ def summarise(cfg: dict, recs: list) -> dict:
                     consumer_edges_histogram=edges,
                     delta_edges_mean=round(sum((int(k) - 1) * v for k, v in edges.items()) / tot, 4) if tot else None)
 
-    rt = [round((r["data_lag0_ps"] + r["credit_lag0_ps"]) / T - 2.0, 3) for r in s0]
+    # round trip A->B->A: the two ring lags plus one output (capture) register period on each side, against the two
+    # register stages it replaces; consistent with the measured crossing latency = ring lag + 1 period
+    rt = [round((r["data_lag0_ps"] + r["credit_lag0_ps"]) / T + 2 * OUT_REG_PERIODS - 2.0, 3) for r in s0]
     rt_int = {}
     for x in rt:
         k = str(round(x))
