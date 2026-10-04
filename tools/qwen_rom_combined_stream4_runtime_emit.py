@@ -25,6 +25,13 @@ def emit(root=ROOT, *, dspark=False):
         nonlocal src
         if src.count(old)!=1:raise ValueError('STREAM4 source anchor missing/ambiguous: '+old[:90])
         src=src.replace(old,new)
+    # Selected Vdie/Vtile/Vcoll/Vhbm each report threads()==1. Keep the
+    # independent RtPool workers; avoid a default internal pool per context.
+    replace('    RtPool pool(threads);', '''    RtPool pool(threads);
+    for(int w=0;w<pool.size();++w)pool.ctx(w)->threads(1);''')
+    replace('    VerilatedContext dctx[D], cctx;', '''    VerilatedContext dctx[D], cctx;
+    for(int d=0;d<D;++d)dctx[d].threads(1);
+    cctx.threads(1);''')
     replace('#include "combined_driver.hpp"','#include "stream4_clock_driver.hpp"')
     replace('#include "hbm_stack_binding.hpp"','#include "stream4_runtime_binding.hpp"')
     src=src.replace('CombinedHBM','CombinedStream4')
