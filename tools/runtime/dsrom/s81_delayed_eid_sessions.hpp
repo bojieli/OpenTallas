@@ -16,6 +16,7 @@ struct DsromS81DelayedEidEnrollment {
 
 class DsromS81DelayedEidSessions {
 public:
+    static constexpr uint32_t I93_EID_BASE=366688; // SELECT src366304/n384/k6, wait2.
     using Eids=std::array<unsigned,6>;
     using RawCapture=std::array<uint32_t,6>;
     // Must call the actual rank's matching native-output publisher, not a
@@ -59,7 +60,7 @@ public:
         require(!actual_nodes.empty(),"no actual dynamic nodes enrolled");
         for(const auto& e:actual_nodes) {
             require(e.rank<4&&e.identity<(1ull<<47)&&e.capture_producer<(1u<<14)&&
-                    uint64_t(e.capture_vm_base)+6<=(1u<<19)&&!e.node.empty()&&e.source_node_sha256.size()==64,
+                    e.capture_vm_base==I93_EID_BASE&&!e.node.empty()&&e.source_node_sha256.size()==64,
                     "invalid actual dynamic source enrollment");
             require(bool(io_[e.rank].read_word)&&bool(io_[e.rank].span_lease),"actual rank SourceIo required");
             for(const auto& s:sessions_)require(s.source.node!=e.node||s.source.rank!=e.rank||
@@ -72,9 +73,9 @@ public:
     }
     DsromS81DelayedEidSessions(const DsromS81DelayedEidSessions&)=delete;
     // Invoke from the actual producer's captured-output callback. IDs and raw
-    // VM payload MUST refer to the SAME accepted native result. If the native
-    // VM stores encoded indices, supply that native encoding separately; this
-    // helper performs no FP decode, sort or selection. Held identical callback
+    // VM payload MUST refer to the SAME accepted I93 result. The source XU
+    // writes {16'd0,so_idx} at dst+nw: six RAW unsigned IDs at366688, never FP32
+    // indices. This helper performs no decode, sort or selection. Held identical callback
     // repetition changes nothing; a changed capture quarantines the sessions.
     void captured(unsigned rank,uint64_t identity,unsigned producer,uint32_t vm_base,
                   const Eids& native_eids,const RawCapture& actual_stored_bits) {
@@ -82,6 +83,9 @@ public:
             require(!stopped_,"dynamic sessions quarantined");
             for(unsigned i=0;i<6;++i)require(native_eids[i]<384&&(!i||native_eids[i]>native_eids[i-1]),
                                              "six actual ascending native EIDs required");
+            require(vm_base==I93_EID_BASE,"EID capture is not actual I93 destination");
+            for(unsigned i=0;i<6;++i)require(actual_stored_bits[i]==native_eids[i],
+                                             "I93 stored bits differ from captured raw native ID");
             bool matched=false;
             for(auto& s:sessions_) {
                 const auto& e=s.source;
@@ -92,6 +96,15 @@ public:
             }
             require(matched,"native EID capture has no matching source session");
         } catch(...) {stopped_=true;throw;}
+    }
+    // Connect ONLY to the accepted native I93 SELECT output/capture callback,
+    // using the same context and mapped producer as its matching publisher.
+    // Capture observation alone is not binding: advance waits for publication
+    // and all six actual SourceIo reads at the precise destination.
+    void captured_i93(unsigned rank,uint64_t identity,unsigned actual_producer,const Eids& native_eids) {
+        RawCapture raw{};
+        for(unsigned i=0;i<6;++i)raw[i]=native_eids[i];
+        captured(rank,identity,actual_producer,I93_EID_BASE,native_eids,raw);
     }
     // Poll from the caller's existing participant edges/inputs_ready path.
     // Actual reads advance only via SourceIo's native participant; no private
