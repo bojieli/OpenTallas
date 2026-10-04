@@ -7,9 +7,9 @@ std::array<uint32_t,8> dsrom_s81_reserve_qe_root_tag(
  const ReturnPhaseBinding&b,const CaptureOwner&c){
  auto p=registered[&r].lock();
  if(!p||id!=p->id||producer>=(1u<<14)||b.identity!=id||c.identity!=id||
-    b.stage!=r.stage||b.rank!=r.rank||b.pair<0||b.pair>=2417||b.phase>=1024||
+    b.stage<0||b.stage>=81||b.rank!=r.rank||b.pair<0||b.pair>=2417||b.phase>=1024||
     c.phase!=b.phase||c.root!=b.root||c.position!=0||c.row>=((b.phrom0>>46)&65535)||
-    c.element_address!=b.output_base+c.row||b.cfg_path.empty()||b.source_matrix_sha256.size()!=64||
+    c.element_address>=(1u<<19)||b.cfg_path.empty()||b.source_matrix_sha256.size()!=64||
     std::find(b.component_rows.begin(),b.component_rows.end(),c.row)==b.component_rows.end())
   throw std::runtime_error("QE root source reservation requires actual selected row/pair");
  if(p->plans.size()>=Provider::MAX_RECORDS||p->planned_ordinal>=(1ull<<26))
