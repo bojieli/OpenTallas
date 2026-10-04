@@ -16,9 +16,11 @@
 //   * RESULT_PARTS must be 1 (one chained-argmax RESULT per step).
 // Common to SOURCE 0 / 1: registered mirrors of the RX / SIDE / TX word
 // addresses (no adder before the word-free compares or on vm_*addr), and a
-// HIDDEN header's position check + upos update one cycle after the header
-// (registered one-hot user): a position fault latches proto_fault ONE cycle
-// later than the reference, every other output is cycle-identical.
+// HIDDEN header's position check + upos update two cycles after the header
+// (registered one-hot user): a position fault latches proto_fault TWO cycles
+// later than the reference; and a registered reset root (release one cycle
+// after rst_n_in).  With the reference's reset released one cycle later,
+// every other output is cycle-identical.
 // WAVE = 0 is not implemented here (use ot_rom_pkg_ctrl_wf).
 // ---------------------------------------------------------------------------
 // ot_rom_pkg_ctrl_wf: ot_rom_pkg_ctrl_x plus a default-off WAVEFRONT mode
@@ -243,7 +245,12 @@ module ot_rom_pkg_ctrl_wfc #(
     // -- per-user context --------------------------------------------------------------
     reg [NW-1:0] upos [0:MAXU-1];      // next expected position (SOURCE: in-flight step)
     reg [MAXU-1:0] uval;                // (closed) upos[u] written (else 0): the only per-user reset
-    reg          uchk;                  // (closed) a HIDDEN header's position check is due
+    // (closed) internal reset: asserted asynchronously, released one cycle after rst_n on the clock
+    // (a registered root for the reset tree; every flop below sees release one cycle later)
+    (* keep *) reg rst_q;
+    always @(posedge clk or negedge rst_n) rst_q <= !rst_n ? 1'b0 : 1'b1;
+    reg          uchk, uchk2;           // (closed) a HIDDEN header's position check: read / compare+write
+    reg [NW-1:0] upos_hr, hdr_pos1;     // registered read and hdr_pos + 1
     reg [MAXU-1:0] hdr_oh;              // its user, one-hot
     reg [NW-1:0] upos_h;                // upos of that user (AND-OR read)
 
@@ -449,7 +456,7 @@ module ot_rom_pkg_ctrl_wfc #(
     // upos of the checked header's user
     integer ub, uu;
     reg [MAXU-1:0] uv;
-    always @(posedge clk) if (uchk) for (uu = 0; uu < MAXU; uu = uu + 1) if (hdr_oh[uu]) upos[uu] <= hdr_pos + 1'b1;
+    always @(posedge clk) if (uchk2) for (uu = 0; uu < MAXU; uu = uu + 1) if (hdr_oh[uu]) upos[uu] <= hdr_pos1;
     always @(*) begin
         for (ub = 0; ub < NW; ub = ub + 1) begin
             for (uu = 0; uu < MAXU; uu = uu + 1) uv[uu] = hdr_oh[uu] && uval[uu] && upos[uu][ub];
@@ -511,15 +518,15 @@ module ot_rom_pkg_ctrl_wfc #(
     wire q_hdr_s = !job_done && tx_st == T_SHDR && tx_space && !rd_inflight;   // SIDE after a HIDDEN
     wire q_push  = (job_done && (SEND_HIDDEN || SEND_RESULT)) || q_hdr_r || q_hdr_s || rd_inflight;
     integer u;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_q) begin
+        if (!rst_q) begin
             running <= 1'b0; cur_user <= 0; cur_pos <= 0; cur_pa_idx <= 0; cur_pa_val <= 0; kv_base <= 0;
             cur_tok <= 0; hdr_tok <= 0; side_user <= 0; side_addr <= 0;
             pend <= 1'b0; hdr_user <= 0; hdr_pos <= 0; hdr_pa_idx <= 0; hdr_pa_val <= 0;
             tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0;
             tx_k <= 0; tx_user <= 0; tx_pos <= 0; tx_idx <= 0; tx_val <= 0; tx_tok <= 0;
             rx_st <= R_IDLE; rx_j <= 0;
-            uval <= 0; rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; hdr_oh <= 0;
+            uval <= 0; rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0; hdr_oh <= 0;
             res_v <= 1'b0; res_u <= 0; res_p <= 0; res_i <= 0; res_val <= 0;
             next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0;
             pr_t0 <= 0; pr_t1 <= 0; pr_u0 <= 0; pr_u1 <= 0;
@@ -594,9 +601,15 @@ module ot_rom_pkg_ctrl_wfc #(
                 if (rx_side_last) side_cnt[side_user] <= side_cnt[side_user] + 4'd1;
                 if (st_rx) side_cnt[hdr_user] <= side_cnt[hdr_user] - SIDE_IN[3:0];
             end
+            // header at t: read at t+1 (registered), compare and write at t+2 (the next header of a
+            // user is >= 2 cycles later: it carries >= 1 payload flit; its read at >= t+3 sees the write)
+            uchk2 <= uchk;
             if (uchk) begin
                 uchk <= 1'b0;
-                if (hdr_pos > upos_h || hdr_pos + WIN < upos_h) proto_fault <= 1'b1;
+                upos_hr <= upos_h; hdr_pos1 <= hdr_pos + 1'b1;
+            end
+            if (uchk2) begin
+                if (hdr_pos > upos_hr || hdr_pos + WIN < upos_hr) proto_fault <= 1'b1;   // hdr_pos holds until the next header
                 uval <= uval | hdr_oh;
             end
             res_v <= 1'b0;
@@ -704,7 +717,7 @@ module ot_rom_pkg_ctrl_wfc #(
             wire [2:0]    wnf, k0;
             (* keep_hierarchy *)
             ot_rom_pkg_ctrl_wfc_user #(.NW(NW), .WIN(WIN), .WQ(WQ)) u (
-                .clk(clk), .rst_n(rst_n),
+                .clk(clk), .rst_n(rst_q),
                 .isn(st_new && nu_oh[gu]), .isw(st_wk && ohwk[gu]), .isr(rd_wf && ohwf[gu]),
                 .isp(pr_t1 == 3 && pr1_oh[gu]), .isr_res(res_v && res_oh[gu]),
                 .w_g1(w_g1), .w_steps_m1(w_steps_m1), .w_prok(w_prok), .pr_qk(pr_qk), .pr_q(pr_q),

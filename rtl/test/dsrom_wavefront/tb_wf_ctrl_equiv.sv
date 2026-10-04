@@ -46,7 +46,8 @@ module tb_wf_ctrl_equiv;
     parameter integer SEED     = 1;
     parameter integer MAXCYC   = 2000000;
     parameter integer NJOBS    = 3000;    // SOURCE = 0: HIDDEN messages to send
-    parameter integer FDLY     = 1;       // the DUT may latch a header-position fault this many cycles later
+    parameter integer FDLY     = 2;       // the DUT may latch a header-position fault this many cycles later
+    parameter integer RSTD     = 1;       // the DUT releases reset this many cycles after rst_n (the reference is fed it delayed)
 
     reg clk = 1'b0, rst_n = 1'b0;
     always #0.5 clk = ~clk;
@@ -105,10 +106,13 @@ module tb_wf_ctrl_equiv;
         reg [31:0] core_next_val = 0;
         wire [UCW-1:0] cfg_users = USERS;
         wire [NW-1:0] cfg_prompt_len = PLEN, cfg_gen_len = GEN;
+        reg [RSTD:0] rsh = 0;
+        always @(posedge clk) rsh <= {rsh[RSTD-1:0], rst_n};
+        wire rst_n_ref = rsh[RSTD-1];
         if (gi == 0) begin : r
             ot_rom_pkg_ctrl_wf #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
                 .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
-                .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1)) c (.*);
+                .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1)) c (.rst_n(rst_n_ref), .*);
         end else begin : d
             `WF_DUT #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
                 .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
