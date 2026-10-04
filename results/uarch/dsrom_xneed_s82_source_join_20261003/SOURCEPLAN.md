@@ -1,0 +1,18 @@
+Current reduced-system binding, one existing qpipe scope
+========================================================
+
+Frozen Archimedes source124c889c364678c238a06cea1d63af88727d8060 retains the external ROM-field boundary: ot_v41_rt_die_l20_c8 rom_fb/rom_fr, source field ot_v41_field_w17w10_sys -> ot_v41_pair_w17w10 -> ot_v41_rom_elem_w10. Qpipe modules are absent from that tree. This archive pins the actual baseline hierarchy, not an installed lookahead or a combined source-selected proof. Archimedes owns the caller/source join; Claude owns current S82 system measurements. Do not duplicate their jobs.
+
+The FAST walker computes next/first class using live/next-q priority loops feeding n_nx. Only actual hit advances n state. Offered xs_v does not establish acceptance. nA/nB/nQ2 already exist and are not charged again. The existing model dbdf proposes cached priority/current-successor facts with 252 new FF and zero added fill/recurrence cycles, retaining II1. No two-cycle walker or halved field rate is allowed. Source word-walker last-unit lookahead from281b is a separate path and is not proof that this x-need cone closes.
+
+The proposed additive default-off propagation is field q-only sites -> pair -> q element; BF512 retains its actual separate path. Preserve the same go/init/empty/reset/MTP restart, hit/stall behavior, ROM words, arithmetic CSA/reduction order, public partial values/flags/row/segment/position tags, and drain contract. Config remains25 words+2 loader cycles atNSEG8. No new external ports, MAC work, ROM bytes/cycle or external boundary bits/cycle are charged. Mandatory second-row decoder repair must be identical in reference/candidate; inherited same-bug differential is insufficient.
+
+S82 has1876q+512BF=2388 complete pairs/rankdie and328rankdies. This model prices only the x-need increment once:472752FF/rankdie, 0.91298507832mm2 cell reserve and1.82597015664mm2 placed reserve at50%. Prior conditional die margin1.464365841792528mm2 does not cover the uncredited increment: deficit0.361604314847472mm2. Source ledger reconciliation is required; no automatic area overlap credit, diecount change or target reduction. Slots, finite metadata tracks, fanout, clock/reset/PG and loaded timing are still OPEN, not zero-cost.
+
+Actual added cycles are unmeasured for this successor. The model prices zero additional cycles beyond whichever qpipe is eventually qualified (+2 or+3 inherited, currently neither selected). Token incremental-cycle charge is zero, but this is no measured rate gain or closure. Current absolute q-op/calendar count remains source-owner work. No timing qualification is inherited from placed ideal-clock634.7MHz screen, failedRcap0 or liveRcap1.
+
+Before writing this RTL: Archimedes/Maxwell reconcile finite area and select exact source dispatch/clock home. Then prepare one additive source-bound candidate and identical mandatory-correctness reference. Functional/performance gate must cover full q geometry, immutable ROM inputs, independent public numerical oracle, consecutive accepted beats/stalls/mismatches, cfg boundaries, class/unit/q/round/position transitions, go/reset/wake/drain and explicit stale-fact/restart/II2 mutants. Only the admitted functional/performance successor progresses to hierarchical physical closure under SS60/FF25 at833ps. Do not rescueRcap0, duplicate liveRcap1, sweep density, launch onPVE2/PVE3, or alter historical sources.
+
+Replay uses exact archived source bytes+SHA manifest; no historical git objects are needed:
+python3 tools/model_dsrom_xneed_s82_join.py --output /tmp/xneed-s82-model.json
+python3 -m unittest discover -s tests -p test_dsrom_xneed_s82_join.py -v
