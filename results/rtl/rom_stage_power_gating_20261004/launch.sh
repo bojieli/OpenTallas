@@ -3,7 +3,7 @@
 # core BF16 = 0, NB = 2, MTP, EARLY, FAST, PP) in the DSROM q-frame C (510.84 x 126.9 um) with the q-frame track-aligned
 # macro hook re-rooted (physical/abi3/rom_stage_pg_place.tcl), same SDC/multicycle/PDN/IO budget family as the
 # q-element routes, so the gated domain and its always-on side get routed parasitics for gate-level power.
-# usage: WT=<pinned worktree> RUN=<name> [STOP=finish] launch.sh
+# usage: WT=<pinned worktree> RUN=<name> [STOP=finish] [PGV=1] launch.sh   (PGV=0: the same top ungated, the timing reference)
 set -e
 : "${WT:?pinned worktree}" "${RUN:?run name}"
 J=/srv/opentallas-scratch/claude/rom-stage-pg/jobs/$RUN
@@ -30,7 +30,7 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --orfs-var PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl --nickname-tag rom_stage_pg_${RUN}_20261004 \
  --output $J/out --sdc-append physical/abi3/v41_w10_elem_pp_multicycle.sdc \
  --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 \
- --param MTP=1 --param EARLY=1 --param NB=2 --param FAST=1 --param PP=1 --param PG=1 \
+ --param MTP=1 --param EARLY=1 --param NB=2 --param FAST=1 --param PP=1 --param PG=${PGV:-1} \
  --orfs-var ROUTING_LAYER_ADJUSTMENT=0.22 --hold-corners WC,BC \
  --pnr-stop-after ${STOP:-finish} --orfs-corner WC --clock-uncertainty-hold-ns 0.025 \
  --core-input-delay-min-ns 0.36 --core-input-delay-max-ns 0.727 --output-delay-min-ns -0.322 --output-delay-max-ns -0.193 > $J/launch.log 2>&1
