@@ -126,9 +126,15 @@ extern "C" long long v41rt_cfg_read(int address) {
 }
 
 int main(int argc,char** argv) {
-    if(argc!=9) {
-        fprintf(stderr,"usage: minimum_element pq|pb STAGE RANK PAIR CFG_HEX OUTPUT SOURCE_CALLER.so|- ROM_SOCKET\n");
+    if(argc<9) {
+        fprintf(stderr,"usage: minimum_element pq|pb STAGE RANK PAIR CFG_HEX OUTPUT SOURCE_CALLER.so|- ROM_SOCKET [+OT_ROM_DIR=DIR]\n");
         return 2;
+    }
+    for(int i=9;i<argc;++i) {
+        if(i!=9||std::string(argv[i]).rfind("+OT_ROM_DIR=",0)!=0||!argv[i][12]) {
+            fprintf(stderr,"unsupported or empty actual native model plusarg\n");
+            return 2;
+        }
     }
     // Keep the source image loaded until every retained participant closure
     // has been destroyed. No unload before native model/observer destruction.
@@ -243,7 +249,17 @@ int main(int argc,char** argv) {
         const bool nonfield_i0=native_i0&&std::string(native_i0)=="1"&&runtime.stage==37;
         const char* native_index=std::getenv("DSROM_S81_NATIVE_L20_INDEX");
         const bool nonfield_index=native_index&&std::string(native_index)=="1"&&runtime.stage==37&&runtime.rank==3;
-        if(rc==0&&((!accepted_go&&!nonfield_i0&&!nonfield_index)||!runtime.identity||!runtime.publication_drained||
+        // The actual-core END entry clocks its own enrolled native core on
+        // this host's shared edges. It requires real END and publication
+        // completion in source_main; no field-pair GO is implied by END.
+        const char* native_end=std::getenv("DSROM_S81_NATIVE_HEAD_END");
+        const bool nonfield_end=native_end&&std::string(native_end)=="1"&&
+            runtime.stage==80&&runtime.rank==0&&runtime.pair==11&&runtime.bf16;
+        // The selected four-rank ATT caller uses native KV/attention services,
+        // not this host's field pair. Its own completion still owes all ACKs.
+        const char* native_att=std::getenv("DSROM_S81_NATIVE_L20_ATT");
+        const bool nonfield_att=native_att&&std::string(native_att)=="1"&&runtime.stage==37&&runtime.rank==0;
+        if(rc==0&&((!accepted_go&&!nonfield_i0&&!nonfield_index&&!nonfield_end&&!nonfield_att)||!runtime.identity||!runtime.publication_drained||
                    !runtime.publication_drained(*runtime.identity)||!native->result().quiet))
             throw std::runtime_error("source exit precedes actual native field/publication drain");
         printf("MINIMUM_SOURCE_EXIT rc=%d cycles=%ld field_go=%llu stage=%d rank=%d pair=%d\n",

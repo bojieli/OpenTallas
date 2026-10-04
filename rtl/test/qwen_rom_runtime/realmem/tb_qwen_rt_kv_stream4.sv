@@ -14,7 +14,8 @@ module tb_qwen_rt_kv_stream4 #(
     parameter integer KV_IDEAL = 0,
     parameter integer LAYERS = 2,
     parameter integer WBW = 1,
-    parameter integer PHASE = 0
+    parameter integer PHASE = 0,
+    parameter integer PULLIN = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -59,7 +60,7 @@ module tb_qwen_rt_kv_stream4 #(
         .fault(svc_fault), .fault_code(svc_code), .st_fill_cycles(st_fill_cycles), .st_fill_sectors(st_fill_sectors),
         .st_wr_sectors(st_wr_sectors), .st_rsp_stall(st_rsp_stall), .st_kvok_low_desc(st_kvok_low_desc),
         .st_drain_low(st_drain_low), .st_wr_lat_max(st_wr_lat_max), .st_fill_exposed(st_fill_exposed));
-    ot_qwen_hbm_stream4_ack #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(LAYERS * 131072), .TAGW(9), .PHASE(PHASE)) u_hbm (
+    ot_qwen_hbm_stream4_ack #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(LAYERS * 131072), .TAGW(9), .PHASE(PHASE), .PULLIN(PULLIN)) u_hbm (
         .clk(clk), .rst_n(rst_n), .d_v(hd_v), .d_rdy(hd_rdy), .d_row(hd_row), .d_n(hd_n), .go(h_go),
         .l_v(hl_v), .l_sec(hl_sec), .l_row(hl_row), .l_data(hl_data), .l_pop(hl_pop),
         .w_v(hw_v), .w_sec(hw_sec), .w_data(hw_data), .w_tag(hw_tag), .w_room(hw_room), .wd_v(hwd_v), .wd_tag(hwd_tag),

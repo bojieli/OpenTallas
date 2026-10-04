@@ -4,17 +4,24 @@
 // per-TILE LANDING MERGE, the hardened element of the widened landing path (one per tile,
 // 1,536 a die, at the landing side of the FILL_LAT network).  Under the 4-stack stream map a
 // tile's K/V slice words are written by at most NSRC = 12 beat halves (pseudo-channel ports);
-// the merge turns the requests presented this cycle into ONE registered slice write
-// (kvw_ce/addr/data/mask, the tile's write port) and grants the requests it took:
+// the merge grants the requests presented this cycle and turns them into ONE slice write
+// (kvw_ce/addr/data/mask, the tile's write port):
 //   * a token (stream-unit) write for this tile has priority: no beat is granted;
 //   * else the first valid request in rotating port order (rank = port - rr) claims the write
 //     (its slice word, loc, is the write's address);
-//   * a request is granted iff it is for that word and its lane quarters (q4) overlap no
+//   * a request is granted iff it is for that word and its lane quarters overlap no
 //     EARLIER valid request for that word (write combining on disjoint lanes).
 // The rule is ot_qwen_rt_kv_stream4_service's per-tile arbitration, bit for bit (the service is
-// the behavioural model of the 1,536 merges); the grants are flat (no chain: every term is a
-// pairwise rank compare), so the depth does not grow with NSRC beyond the reduction trees.
-// Source ports are inputs (strapped constants per tile in the die).
+// the behavioural model of the 1,536 merges).  Each source presents the landed beat as the
+// landing ring holds it (256 bits; a V half in the low 128) with its placement: K beat (s_isk):
+// 256 bits at quarter s_sel (0 or 2), lanes masked by the open tile's tail mask tail_lm when
+// s_ktail; V half: 128 bits at quarter s_sel.  Source ports are strapped constants per tile.
+//
+// Timing structure (r2): the rotating order is REGISTERED (rr_n is the next cycle's origin: the
+// order matrix E[j][i] = "j before i" is computed a cycle ahead), slice-word equality is pairwise
+// (no first -> loc -> compare chain), so the grant is ~4 flat AND-OR levels from s_v/s_loc; the
+// granted beats are registered with their placement and the slice word is formed and written in
+// the second stage (kvw_* two edges after the request: one of the FILL_LAT network stages).
 // ---------------------------------------------------------------------------
 module ot_qwen_kv_land_merge #(
     parameter integer NSRC = 12,
@@ -24,13 +31,15 @@ module ot_qwen_kv_land_merge #(
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
-    input  wire [PW-1:0]        rr,              // rotating priority origin (global)
+    input  wire [PW-1:0]        rr_n,            // rotating priority origin of the NEXT cycle
     input  wire [NSRC-1:0]      s_v,
     input  wire [NSRC*PW-1:0]   s_port,
     input  wire [NSRC*LW-1:0]   s_loc,
-    input  wire [NSRC*4-1:0]    s_q4,            // lane quarters the request writes
-    input  wire [NSRC*DW-1:0]   s_data,          // already placed in the slice word
-    input  wire [NSRC*DW-1:0]   s_mask,
+    input  wire [NSRC-1:0]      s_isk,           // K beat (else a V half)
+    input  wire [NSRC-1:0]      s_ktail,         // K beat of the open tile: lanes masked by tail_lm
+    input  wire [NSRC*2-1:0]    s_sel,           // quarter the beat is placed at
+    input  wire [NSRC*256-1:0]  s_beat,
+    input  wire [127:0]         tail_lm,         // lanes < P mod 16 of the open K tile
     output reg  [NSRC-1:0]      s_grant,
     input  wire                 tok_v,
     input  wire [LW-1:0]        tok_loc,
@@ -41,38 +50,71 @@ module ot_qwen_kv_land_merge #(
     output reg  [DW-1:0]        kvw_data,
     output reg  [DW-1:0]        kvw_mask
 );
-    reg [PW-1:0] rank [0:NSRC-1];
-    reg [NSRC-1:0] first, same;
-    reg [LW-1:0] loc_f;
-    reg [DW-1:0] m_data, m_mask;
     integer i, j;
+    // ---- order matrix, one cycle ahead ----------------------------------------------------
+    reg [NSRC-1:0] E [0:NSRC-1];                 // E[j][i]: source j precedes source i this cycle
+    always @(posedge clk) begin
+        for (j = 0; j < NSRC; j = j + 1)
+            for (i = 0; i < NSRC; i = i + 1)
+                E[j][i] <= (j != i) && (PW'(s_port[j*PW +: PW] - rr_n) < PW'(s_port[i*PW +: PW] - rr_n));
+    end
+    // ---- stage 1: grants ------------------------------------------------------------------
+    reg [3:0] q4 [0:NSRC-1];
+    reg [NSRC-1:0] first, same, L [0:NSRC-1];
+    reg [LW-1:0] loc_f;
     always @(*) begin
-        for (i = 0; i < NSRC; i = i + 1) rank[i] = s_port[i*PW +: PW] - rr;
+        for (i = 0; i < NSRC; i = i + 1) begin
+            // lane quarters: K = two quarters at sel (empty if the tail mask is empty), V = one
+            if (s_isk[i]) q4[i] = (s_ktail[i] && tail_lm == 128'd0) ? 4'd0 : (4'b0011 << s_sel[i*2 +: 2]);
+            else q4[i] = 4'b0001 << s_sel[i*2 +: 2];
+        end
+        for (i = 0; i < NSRC; i = i + 1)
+            for (j = 0; j < NSRC; j = j + 1) L[i][j] = s_loc[i*LW +: LW] == s_loc[j*LW +: LW];
         loc_f = 0;
         for (i = 0; i < NSRC; i = i + 1) begin
             first[i] = s_v[i];
-            for (j = 0; j < NSRC; j = j + 1)
-                if (j != i && s_v[j] && rank[j] < rank[i]) first[i] = 1'b0;
+            for (j = 0; j < NSRC; j = j + 1) if (s_v[j] && E[j][i]) first[i] = 1'b0;
             if (first[i]) loc_f = loc_f | s_loc[i*LW +: LW];
         end
-        for (i = 0; i < NSRC; i = i + 1) same[i] = s_v[i] && s_loc[i*LW +: LW] == loc_f;
-        m_data = 0; m_mask = 0;
+        for (i = 0; i < NSRC; i = i + 1) same[i] = s_v[i] && (|(first & L[i]));
         for (i = 0; i < NSRC; i = i + 1) begin
             s_grant[i] = !tok_v && same[i];
             for (j = 0; j < NSRC; j = j + 1)
-                if (j != i && same[j] && rank[j] < rank[i] && (s_q4[j*4 +: 4] & s_q4[i*4 +: 4]) != 4'd0) s_grant[i] = 1'b0;
-            if (s_grant[i]) begin
-                m_data = m_data | s_data[i*DW +: DW];
-                m_mask = m_mask | s_mask[i*DW +: DW];
+                // same[i] && same[j] <=> same[i] && v_j && loc_j == loc_i: no first -> same chain on this term
+                if (s_v[j] && L[i][j] && E[j][i] && (q4[j] & q4[i]) != 4'd0) s_grant[i] = 1'b0;
+        end
+    end
+    // ---- stage 2: the granted beats, registered, become one slice write ----------------------
+    reg [NSRC-1:0] g_q, isk_q, kt_q; reg [NSRC*2-1:0] sel_q; reg [NSRC*256-1:0] beat_q; reg [127:0] lm_q;
+    reg tok_q, ce_q; reg [LW-1:0] loc_q; reg [DW-1:0] tokd_q, tokm_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin ce_q <= 1'b0; kvw_ce <= 1'b0; end
+        else begin ce_q <= tok_v || (|s_v); kvw_ce <= ce_q; end
+    always @(posedge clk) begin
+        g_q <= s_grant; isk_q <= s_isk; kt_q <= s_ktail; sel_q <= s_sel; lm_q <= tail_lm;
+        for (i = 0; i < NSRC; i = i + 1) if (s_grant[i]) beat_q[i*256 +: 256] <= s_beat[i*256 +: 256];
+        tok_q <= tok_v; loc_q <= tok_v ? tok_loc : loc_f;
+        if (tok_v) begin tokd_q <= tok_data; tokm_q <= tok_mask; end
+    end
+    reg [DW-1:0] m_data, m_mask;
+    always @(*) begin
+        m_data = 0; m_mask = 0;
+        for (i = 0; i < NSRC; i = i + 1) if (g_q[i]) begin
+            reg [127:0] lm; reg [1:0] sl;
+            sl = sel_q[i*2 +: 2];
+            lm = kt_q[i] ? lm_q : {128{1'b1}};
+            if (isk_q[i]) begin
+                m_data = m_data | ({256'd0, beat_q[i*256 +: 256]} << (128 * sl));
+                m_mask = m_mask | ({256'd0, lm, lm} << (128 * sl));
+            end else begin
+                m_data = m_data | ({384'd0, beat_q[i*256 +: 128]} << (128 * sl));
+                m_mask = m_mask | ({384'd0, {128{1'b1}}} << (128 * sl));
             end
         end
     end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) kvw_ce <= 1'b0;
-        else kvw_ce <= tok_v || (|s_v);
     always @(posedge clk) begin
-        kvw_addr <= tok_v ? tok_loc : loc_f;
-        kvw_data <= tok_v ? tok_data : m_data;
-        kvw_mask <= tok_v ? tok_mask : m_mask;
+        kvw_addr <= loc_q;
+        kvw_data <= tok_q ? tokd_q : m_data;
+        kvw_mask <= tok_q ? tokm_q : m_mask;
     end
 endmodule
