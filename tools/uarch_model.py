@@ -6838,6 +6838,37 @@ def main(argv=None):
         Path(a.out).write_text(json.dumps(out, indent=1, default=str) + "\n")
 
 
+def dsrom_s81_native_su_prefix():
+    """Selected SUN256 leaf and its explicit minimum-component staging costs.
+
+    Functional operand staging is charged separately from the existing SU.
+    Unbound arbitration, routes and visibility prohibit product-rate credit.
+    """
+    path = Path(__file__).resolve().parents[1] / 'results/uarch/dsrom_sun256_native_prefix_20261004/model.json'
+    selected = json.loads(path.read_text())
+    staging = selected['extra_staging']
+    state_bits = (staging['payload_bits'] + staging['address_valid_metadata_floor_bits']
+                  + staging['output_collect_data_address_bits'] + staging['descriptor_hold_bits'])
+    return dict(schema='opentallas.dsrom.S81.native-SU-prefix.v1',
+        adopted=False, scope='Selected native leaf/component integration; no token-rate or physical admission',
+        selected_model=str(path.relative_to(path.parents[3])),
+        parameters=selected['parameters'], ports=selected['ports'],
+        MACs_per_cycle_peak=selected['parameters']['N'],
+        operand_bytes_per_edge_peak=selected['ports']['native_operand_bits'] // 8,
+        compute_intensity_MACs_per_operand_byte=selected['parameters']['N'] / (selected['ports']['native_operand_bits'] // 8),
+        native_write_bytes_per_edge_peak=4 * (selected['ports']['native_VM_write_lanes'] + selected['ports']['native_reducer_write_lanes']),
+        prefix_operations=selected['prefix_operations'],
+        adapter_calendar=selected['adapter_calendar'],
+        staging=staging, state_bits_floor=state_bits,
+        staging_DFF_floor_mm2=state_bits * DFF_UM2 / 1e6,
+        replicas_per_rank=1, TP=4,
+        routing_tracks_data_bundle_floor=selected['ports']['native_operand_bits'],
+        corridor_capacity=None, slot_fit=False, SS_FF_in_context=False,
+        mux_fanout_cost='Actual staged operand read ports and retained native writes; no additional unlimited VM port',
+        missing_costs=selected['missing_costs'],
+        combined_single_user_added_us=None, overlap_credit_us=0)
+
+
 def dsrom_s81_native_he_bootstrap():
     """Native prefix leaves, reusing selected HE and SUN256 reducer arithmetic.
 
