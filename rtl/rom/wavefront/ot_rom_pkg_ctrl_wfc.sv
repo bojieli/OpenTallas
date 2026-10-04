@@ -388,12 +388,12 @@ module ot_rom_pkg_ctrl_wfc #(
             end
         end
     endfunction
-    wire [MAXU-1:0] ohwk = lowest(ewk);
-    wire [MAXU-1:0] ohwf = lowest(ewf);
+    wire [MAXU-1:0] ohwk = WF ? lowest(ewk) : {MAXU{1'b0}};
+    wire [MAXU-1:0] ohwf = WF ? lowest(ewf) : {MAXU{1'b0}};
     wire st_wk_c = |ewk;
     wire wf_v = |ewf;
-    wire [USER_W-1:0] wk_u = enc(ohwk);
-    wire [USER_W-1:0] wf_u = enc(ohwf);
+    wire [USER_W-1:0] wk_u = WF ? enc(ohwk) : {USER_W{1'b0}};
+    wire [USER_W-1:0] wf_u = WF ? enc(ohwf) : {USER_W{1'b0}};
     // AND-OR reads by a one-hot
     reg [NW-1:0] tok_wk, pos_wk, pos_wf, r_er, r_prp;
     reg [3:0]    blk_wf, r_prb;
@@ -402,6 +402,9 @@ module ot_rom_pkg_ctrl_wfc #(
     integer bi, ui;
     reg [MAXU-1:0] tv;
     always @(*) begin
+        tok_wk = 0; pos_wk = 0; pos_wf = 0; r_er = 0; r_prp = 0; blk_wf = 0; r_prb = 0; r_k0 = 0; r_wnf = 0;
+        r_kv = 0; r_sq = 0; r_sq1 = 0; r_nf2 = 0; r_kteq = 0; r_prkv = 0;
+        if (WF) begin
         for (bi = 0; bi < NW; bi = bi + 1) begin
             for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = ohwk[ui] && wkt_q[ui][bi];  tok_wk[bi] = |tv;
             for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = ohwk[ui] && wnp_q[ui][bi];  pos_wk[bi] = |tv;
@@ -419,6 +422,7 @@ module ot_rom_pkg_ctrl_wfc #(
         end
         r_kv = |(res_oh & kv_v); r_sq = |(res_oh & sqnz_v); r_sq1 = |(res_oh & sq1_v);
         r_nf2 = |(res_oh & nf2_v); r_kteq = |(res_oh & kteq_v); r_prkv = |(pr1_oh & kv_v);
+        end
     end
 
     // reduction of the registered RESULT (combinational)
@@ -710,12 +714,18 @@ module ot_rom_pkg_ctrl_wfc #(
     wire [UB-1:0] in_ub = in_user[UB-1:0];
     wire [2:0]    in_slot = in_pos[2:0] + 3'd1;
     reg  [NW-1:0] w_pre_c;
+    reg  [MAXU-1:0] in_dec;
     integer pb, pu;
     reg [MAXU-1:0] pv;
     always @(*) begin
-        for (pb = 0; pb < NW; pb = pb + 1) begin
-            for (pu = 0; pu < MAXU; pu = pu + 1) pv[pu] = (in_ub == pu) && slot_tok[pu][pb];
-            w_pre_c[pb] = |pv;
+        in_dec = 0;
+        w_pre_c = 0;
+        if (WF) begin
+            in_dec[in_ub] = 1'b1;
+            for (pb = 0; pb < NW; pb = pb + 1) begin
+                for (pu = 0; pu < MAXU; pu = pu + 1) pv[pu] = in_dec[pu] && slot_tok[pu][pb];
+                w_pre_c[pb] = |pv;
+            end
         end
     end
 
