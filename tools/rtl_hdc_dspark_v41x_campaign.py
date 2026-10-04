@@ -83,6 +83,7 @@ V.set_arith(X.arith())                 # the decode campaign imported the golden
 assert V.ARITH == X.arith(), (V.ARITH, X.arith())
 TB = ROOT / "rtl/test/tb_hdc_core_v41x_mtp.sv"
 ACC_GUARD = bool(ARGS and ARGS.acc_guard)
+SINK_HANDSHAKE = False # opt-in only through the cached-image executor
 GUARD_SRC = [ROOT / "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
              ROOT / "rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv",
              ROOT / "rtl/hdc/ot_hdc_mtp_accept_caller.sv"]
@@ -95,15 +96,16 @@ def sources(build=True):
     # campaign and current main core remain byte-identical.
     rtl = [MTP_CORE if p == BASE_CORE else p for p in X.rtl_sources(build)]
     assert rtl.count(MTP_CORE) == 1 and BASE_CORE not in rtl
-    return (GUARD_SRC if ACC_GUARD else []) + rtl
+    from dsrom_sink_handshake import select
+    return select((GUARD_SRC if ACC_GUARD else []) + rtl, enable=SINK_HANDSHAKE)["sources"]
 
 
 def guard_defines():
-    return ["+define+HDC_ACC_GUARD=1", "+define+HDC_ACC_GUARD_ON"] if ACC_GUARD else []
+    return (["+define+HDC_ACC_GUARD=1", "+define+HDC_ACC_GUARD_ON"] if ACC_GUARD else []) + (["+define+OT_MTP_SINK_HANDSHAKE=1"] if SINK_HANDSHAKE else [])
 HARNESS = ROOT / "rtl/test/hdc_core_v41x_mtp_harness.cpp"
 TOOLS = [ROOT / f"tools/{n}.py" for n in ("hdc_golden", "hdc_golden_v41", "hdc_isa_v41", "hdc_program_v41",
                                           "hdc_images_v41x", "rtl_hdc_v41_mtp_campaign",
-                                          "rtl_hdc_v41x_decode_campaign")] + [Path(__file__).resolve()]
+                                          "rtl_hdc_v41x_decode_campaign", "dsrom_sink_handshake")] + [Path(__file__).resolve()]
 XCNT = re.compile(r"XCNT unit=(\w+) ops=(\d+) elems=(\d+)")
 HIST = re.compile(r"ACCEPT_HIST a0=(\d+) a1=(\d+) a2=(\d+) a3=(\d+) a4=(\d+) a5=(\d+)")
 

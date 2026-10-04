@@ -1,0 +1,60 @@
+{
+  "adoption": false,
+  "area_basis": "unified DFF_UM2 only; decrementers, compare, mux, protection handling, CTS and routing unmeasured",
+  "baseline_sha256": "829a1e1566c781466b20dc7c939026234ddbb30351a59601ce32e0c61f6a3ea3",
+  "clock": {
+    "SS_FF_qualified": false,
+    "hold_uncertainty_ps": 25,
+    "setup_uncertainty_ps": 60,
+    "target_GHz": 1.2
+  },
+  "default_enable": 0,
+  "fanout": "d_step updates two counters and two flags; d_more drives d_live; d_wrap_next selects existing head wrap update",
+  "history": {
+    "broad_successor_not_intaken": "a274edd41",
+    "registered_flags": "6694bcd18"
+  },
+  "integration": "Archimedes replaces only ring reader module with additive _drain wrapper, explicitly ENABLE=1 after gates; non-ring readers unchanged",
+  "latency": {
+    "added_cycles_per_block_expected": 0,
+    "added_cycles_per_scan_expected": 0,
+    "condition": "every accepted request/response, drain pulse, payload and busy edge remains cycle-identical",
+    "gain_claim": null,
+    "measurement": null,
+    "token_extra_ns_expected": 0
+  },
+  "local_muxes": "two HW-bit counter enable muxes + two flag enables per stack; no replicated data mux",
+  "macs_per_cycle": 0,
+  "method": "registered remaining-block and next-wrap flags, updated on actual d_step only",
+  "mutable_protection": {
+    "parity_lower_bound_bits_per_stack": 2,
+    "qualified": false,
+    "required": true
+  },
+  "new_control_register_bits_per_stack": 48,
+  "new_external_boundary_bits_per_cycle": 0,
+  "new_memory_bytes_per_cycle": 0,
+  "parameters": {
+    "AW": 30,
+    "GA": 24,
+    "HW": 23,
+    "NPC": 32,
+    "WB": 32,
+    "replicas": 4
+  },
+  "register_area_lower_bound_um2_all_four": 58.32000000000001,
+  "schema": "dsrom.kctl_drain.v1",
+  "scope": "DS ROM IDX_RING=1: four existing ring readers; singleton scan, no extra context",
+  "track_floor": {
+    "external_added": 0,
+    "legal_channel_capacity": null,
+    "local_state_bits_per_stack": 48,
+    "slot_fit_qualified": false
+  },
+  "unchanged_peak_response_bytes_per_cycle_per_stack": 1024,
+  "unchanged_ports_per_stack_bits": {
+    "keys": 8722,
+    "request": 1664,
+    "response": 8896
+  }
+}

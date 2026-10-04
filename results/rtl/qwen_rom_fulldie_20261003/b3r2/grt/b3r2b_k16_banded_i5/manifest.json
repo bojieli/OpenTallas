@@ -1,0 +1,2262 @@
+{
+ "case": "b",
+ "tag": "b3r2b_k16_banded_i5",
+ "bundle_k": 16,
+ "congestion_iterations": 5,
+ "instances": 3243,
+ "bundle_pins": 12379,
+ "bundle_nets": 146280,
+ "wires": 2320984,
+ "tree_mode": "banded",
+ "adjustment": {
+  "base_M4_M9": 0.14600000000000002,
+  "M2_M3": 0.25,
+  "regions": {
+   "tile_field": 0.14600000000000002,
+   "corridor": 0.14600000000000002,
+   "channel": 0.14600000000000002,
+   "hub": 0.10333333333333333,
+   "strip": 0.53,
+   "ctrl": 0.53,
+   "io": 0.10333333333333333,
+   "phy": 0.05
+  }
+ },
+ "b3r2": {
+  "schema": "opentallas.qwen-rom-fulldie.b3r2.v1",
+  "tool_sha256": "4f471bbc1cdeed49ef645eddeb069ea241c20a77017e18957a6c00a0579733be",
+  "b2_generator_sha256": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118",
+  "b3_selection_sha256": "943d8c94b1684e841d81526e6b3391a5c85669ffe713713fff5fd9b91ae30266",
+  "die": {
+   "w": 24266.304,
+   "h": 32801.76,
+   "mm2": 795.977,
+   "budget_mm2": 858,
+   "margin_mm2": 62.023
+  },
+  "vch_um": 260.064,
+  "corridor_bits": 388,
+  "tap_bits": 325,
+  "band_repack": true,
+  "instances": 3243,
+  "isa_bits": {
+   "total": 898,
+   "me": 408,
+   "su_and_control": 490
+  },
+  "group_map": {
+   "primary": {
+    "0": "sp_port_tiles_0",
+    "1": "sp_port_tiles_1",
+    "2": "sp_port_tiles_2",
+    "3": "sp_port_tiles_3",
+    "4": "sp_port_tiles_4",
+    "5": "sp_port_tiles_5"
+   }
+  },
+  "spine_parts": [
+   {
+    "name": "port_tiles_0",
+    "kind": "port",
+    "band": 0,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "y": 21.6,
+    "h": 1743.12,
+    "target_y": 2605.0,
+    "offset_um": -1711.8
+   },
+   {
+    "name": "port_tiles_0_f1",
+    "kind": "port",
+    "band": 0,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "y": 21.6,
+    "h": 1743.12,
+    "target_y": 2605.0,
+    "offset_um": -1711.8
+   },
+   {
+    "name": "scale_rom_0",
+    "kind": "scale",
+    "band": 0,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "y": 1764.72,
+    "h": 2229.12,
+    "target_y": 2605.0,
+    "offset_um": 274.3
+   },
+   {
+    "name": "scale_rom_0_f1",
+    "kind": "scale",
+    "band": 0,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "y": 1764.72,
+    "h": 2229.12,
+    "target_y": 2605.0,
+    "offset_um": 274.3
+   },
+   {
+    "name": "port_tiles_1",
+    "kind": "port",
+    "band": 1,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23
+    ],
+    "y": 3993.84,
+    "h": 1743.12,
+    "target_y": 7820.3,
+    "offset_um": -2954.9
+   },
+   {
+    "name": "port_tiles_1_f1",
+    "kind": "port",
+    "band": 1,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31
+    ],
+    "y": 3993.84,
+    "h": 1743.12,
+    "target_y": 7820.3,
+    "offset_um": -2954.9
+   },
+   {
+    "name": "scale_rom_1",
+    "kind": "scale",
+    "band": 1,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23
+    ],
+    "y": 5736.96,
+    "h": 2229.12,
+    "target_y": 7820.3,
+    "offset_um": -968.8
+   },
+   {
+    "name": "scale_rom_1_f1",
+    "kind": "scale",
+    "band": 1,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31
+    ],
+    "y": 5736.96,
+    "h": 2229.12,
+    "target_y": 7820.3,
+    "offset_um": -968.8
+   },
+   {
+    "name": "port_tiles_2",
+    "kind": "port",
+    "band": 2,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     32,
+     33,
+     34,
+     35,
+     36
+    ],
+    "y": 7966.08,
+    "h": 1090.8,
+    "target_y": 13035.6,
+    "offset_um": -4524.1
+   },
+   {
+    "name": "port_tiles_2_f1",
+    "kind": "port",
+    "band": 2,
+    "side": "W",
+    "col": "E",
+    "groups": [
+     37,
+     38,
+     39
+    ],
+    "y": 7966.08,
+    "h": 654.48,
+    "target_y": 13035.6,
+    "offset_um": -4742.3
+   },
+   {
+    "name": "port_tiles_2_f2",
+    "kind": "port",
+    "band": 2,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     40,
+     41
+    ],
+    "y": 8620.56,
+    "h": 436.32,
+    "target_y": 13035.6,
+    "offset_um": -4196.9
+   },
+   {
+    "name": "port_tiles_2_f3",
+    "kind": "port",
+    "band": 2,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     42,
+     43,
+     44,
+     45,
+     46,
+     47
+    ],
+    "y": 9160.56,
+    "h": 1308.96,
+    "target_y": 13035.6,
+    "offset_um": -3220.6
+   },
+   {
+    "name": "scale_rom_2",
+    "kind": "scale",
+    "band": 2,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     32,
+     33,
+     34,
+     35,
+     36,
+     37
+    ],
+    "y": 9160.56,
+    "h": 1671.84,
+    "target_y": 13035.6,
+    "offset_um": -3039.1
+   },
+   {
+    "name": "scale_rom_2_f1",
+    "kind": "scale",
+    "band": 2,
+    "side": "W",
+    "col": "E",
+    "groups": [
+     38,
+     39
+    ],
+    "y": 10469.52,
+    "h": 557.28,
+    "target_y": 13035.6,
+    "offset_um": -2287.4
+   },
+   {
+    "name": "scale_rom_2_f2",
+    "kind": "scale",
+    "band": 2,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47
+    ],
+    "y": 11026.8,
+    "h": 2229.12,
+    "target_y": 13035.6,
+    "offset_um": -894.2
+   },
+   {
+    "name": "port_tiles_3",
+    "kind": "port",
+    "band": 3,
+    "side": "W",
+    "col": "E",
+    "groups": [
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55
+    ],
+    "y": 13255.92,
+    "h": 1743.12,
+    "target_y": 18202.3,
+    "offset_um": -4074.8
+   },
+   {
+    "name": "port_tiles_3_f1",
+    "kind": "port",
+    "band": 3,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "y": 14999.04,
+    "h": 1743.12,
+    "target_y": 18202.3,
+    "offset_um": -2331.7
+   },
+   {
+    "name": "scale_rom_3",
+    "kind": "scale",
+    "band": 3,
+    "side": "W",
+    "col": "E",
+    "groups": [
+     48,
+     49,
+     50,
+     51
+    ],
+    "y": 16742.16,
+    "h": 1114.56,
+    "target_y": 18202.3,
+    "offset_um": -902.9
+   },
+   {
+    "name": "scale_rom_3_f1",
+    "kind": "scale",
+    "band": 3,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     52,
+     53,
+     54,
+     55
+    ],
+    "y": 20291.04,
+    "h": 1114.56,
+    "target_y": 18202.3,
+    "offset_um": 2646.0
+   },
+   {
+    "name": "scale_rom_3_f2",
+    "kind": "scale",
+    "band": 3,
+    "side": "E",
+    "col": "W",
+    "groups": [
+     56,
+     57
+    ],
+    "y": 21405.6,
+    "h": 557.28,
+    "target_y": 18202.3,
+    "offset_um": 3481.9
+   },
+   {
+    "name": "scale_rom_3_f3",
+    "kind": "scale",
+    "band": 3,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "y": 22174.56,
+    "h": 1671.84,
+    "target_y": 18202.3,
+    "offset_um": 4808.2
+   },
+   {
+    "name": "port_tiles_4",
+    "kind": "port",
+    "band": 4,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71
+    ],
+    "y": 22174.56,
+    "h": 1743.12,
+    "target_y": 23417.6,
+    "offset_um": -371.5
+   },
+   {
+    "name": "port_tiles_4_f1",
+    "kind": "port",
+    "band": 4,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79
+    ],
+    "y": 23846.4,
+    "h": 1743.12,
+    "target_y": 23417.6,
+    "offset_um": 1300.3
+   },
+   {
+    "name": "scale_rom_4",
+    "kind": "scale",
+    "band": 4,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71
+    ],
+    "y": 23917.68,
+    "h": 2229.12,
+    "target_y": 23417.6,
+    "offset_um": 1614.6
+   },
+   {
+    "name": "scale_rom_4_f1",
+    "kind": "scale",
+    "band": 4,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79
+    ],
+    "y": 25589.52,
+    "h": 2229.12,
+    "target_y": 23417.6,
+    "offset_um": 3286.4
+   },
+   {
+    "name": "port_tiles_5",
+    "kind": "port",
+    "band": 5,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87
+    ],
+    "y": 26146.8,
+    "h": 1743.12,
+    "target_y": 28633.0,
+    "offset_um": -1614.6
+   },
+   {
+    "name": "port_tiles_5_f1",
+    "kind": "port",
+    "band": 5,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     88,
+     89,
+     90,
+     91,
+     92,
+     93,
+     94,
+     95
+    ],
+    "y": 27818.64,
+    "h": 1743.12,
+    "target_y": 28633.0,
+    "offset_um": 57.2
+   },
+   {
+    "name": "scale_rom_5",
+    "kind": "scale",
+    "band": 5,
+    "side": "W",
+    "col": "W",
+    "groups": [
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87
+    ],
+    "y": 27889.92,
+    "h": 2229.12,
+    "target_y": 28633.0,
+    "offset_um": 371.5
+   },
+   {
+    "name": "scale_rom_5_f1",
+    "kind": "scale",
+    "band": 5,
+    "side": "E",
+    "col": "E",
+    "groups": [
+     88,
+     89,
+     90,
+     91,
+     92
+    ],
+    "y": 29561.76,
+    "h": 1393.2,
+    "target_y": 28633.0,
+    "offset_um": 1625.4
+   },
+   {
+    "name": "scale_rom_5_f2",
+    "kind": "scale",
+    "band": 5,
+    "side": "E",
+    "col": "W",
+    "groups": [
+     93,
+     94,
+     95
+    ],
+    "y": 30119.04,
+    "h": 835.92,
+    "target_y": 28633.0,
+    "offset_um": 1904.0
+   }
+  ],
+  "fifo": {
+   "source": "results/uarch/rom_die_clocking_decision_20261003.json @ d99237f66",
+   "mm2_per_bit": 7.591651943462896e-07,
+   "tile_tap": {
+    "count": 1536,
+    "bits_each": 2036,
+    "mm2": 2.3741,
+    "slot": "inside the station frame (station height + extra, with the F2 storage)"
+   },
+   "block_word": {
+    "count": 96,
+    "bits_each": 2048,
+    "mm2": 0.1493,
+    "slot": "port_tiles slab area"
+   },
+   "strip_return": {
+    "count": 4,
+    "bits_each": 2176,
+    "mm2": 0.0066,
+    "slot": "strip FIFO frame height"
+   },
+   "total_mm2": 2.53,
+   "f2_station_extra": {
+    "bits_each": 320,
+    "mm2": 0.3731
+   },
+   "station_frame_um": [
+    52.704,
+    103.68
+   ],
+   "station_frame_extra_h_um": 34.56,
+   "station_slot_mm2_added": 2.7977,
+   "head_frame_note": "column heads share the station frame (64 x the same extra height: the head-side 2-deep F2 column FIFO)"
+  },
+  "clock_regions_summary": {
+   "tile_block": {
+    "count": 96,
+    "max_extent_mm": 5.2639,
+    "over_5p25": [
+     "creg_t0_1",
+     "creg_t0_4",
+     "creg_t1_1",
+     "creg_t1_4",
+     "creg_t2_1",
+     "creg_t2_4",
+     "creg_t3_1",
+     "creg_t3_4",
+     "creg_t4_1",
+     "creg_t4_4",
+     "creg_t5_1",
+     "creg_t5_4",
+     "creg_t6_1",
+     "creg_t6_4",
+     "creg_t7_1",
+     "creg_t7_4",
+     "creg_t8_1",
+     "creg_t8_4",
+     "creg_t9_1",
+     "creg_t9_4",
+     "creg_t10_1",
+     "creg_t10_4",
+     "creg_t11_1",
+     "creg_t11_4",
+     "creg_t12_1",
+     "creg_t12_4",
+     "creg_t13_1",
+     "creg_t13_4",
+     "creg_t14_1",
+     "creg_t14_4",
+     "creg_t15_1",
+     "creg_t15_4"
+    ]
+   },
+   "spine_band": {
+    "count": 6,
+    "max_extent_mm": 5.2639,
+    "over_5p25": [
+     "creg_spine_1",
+     "creg_spine_4"
+    ]
+   },
+   "strip": {
+    "count": 12,
+    "max_extent_mm": 4.1493,
+    "over_5p25": []
+   },
+   "io": {
+    "count": 6,
+    "max_extent_mm": 3.5318,
+    "over_5p25": []
+   }
+  },
+  "clock_regions": [
+   {
+    "name": "creg_t0_0",
+    "kind": "tile_block",
+    "rect": [
+     1429.92,
+     21.6,
+     2684.448,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t0_1",
+    "kind": "tile_block",
+    "rect": [
+     1429.92,
+     5188.32,
+     2684.448,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t0_2",
+    "kind": "tile_block",
+    "rect": [
+     1429.92,
+     10452.24,
+     2684.448,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t0_3",
+    "kind": "tile_block",
+    "rect": [
+     1429.92,
+     15618.96,
+     2684.448,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t0_4",
+    "kind": "tile_block",
+    "rect": [
+     1429.92,
+     20785.68,
+     2684.448,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t0_5",
+    "kind": "tile_block",
+    "rect": [
+     1429.92,
+     26049.6,
+     2684.448,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t1_0",
+    "kind": "tile_block",
+    "rect": [
+     2684.448,
+     21.6,
+     3938.976,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t1_1",
+    "kind": "tile_block",
+    "rect": [
+     2684.448,
+     5188.32,
+     3938.976,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t1_2",
+    "kind": "tile_block",
+    "rect": [
+     2684.448,
+     10452.24,
+     3938.976,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t1_3",
+    "kind": "tile_block",
+    "rect": [
+     2684.448,
+     15618.96,
+     3938.976,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t1_4",
+    "kind": "tile_block",
+    "rect": [
+     2684.448,
+     20785.68,
+     3938.976,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t1_5",
+    "kind": "tile_block",
+    "rect": [
+     2684.448,
+     26049.6,
+     3938.976,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t2_0",
+    "kind": "tile_block",
+    "rect": [
+     3938.976,
+     21.6,
+     5193.504,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t2_1",
+    "kind": "tile_block",
+    "rect": [
+     3938.976,
+     5188.32,
+     5193.504,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t2_2",
+    "kind": "tile_block",
+    "rect": [
+     3938.976,
+     10452.24,
+     5193.504,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t2_3",
+    "kind": "tile_block",
+    "rect": [
+     3938.976,
+     15618.96,
+     5193.504,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t2_4",
+    "kind": "tile_block",
+    "rect": [
+     3938.976,
+     20785.68,
+     5193.504,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t2_5",
+    "kind": "tile_block",
+    "rect": [
+     3938.976,
+     26049.6,
+     5193.504,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t3_0",
+    "kind": "tile_block",
+    "rect": [
+     5193.504,
+     21.6,
+     6448.032,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t3_1",
+    "kind": "tile_block",
+    "rect": [
+     5193.504,
+     5188.32,
+     6448.032,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t3_2",
+    "kind": "tile_block",
+    "rect": [
+     5193.504,
+     10452.24,
+     6448.032,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t3_3",
+    "kind": "tile_block",
+    "rect": [
+     5193.504,
+     15618.96,
+     6448.032,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t3_4",
+    "kind": "tile_block",
+    "rect": [
+     5193.504,
+     20785.68,
+     6448.032,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t3_5",
+    "kind": "tile_block",
+    "rect": [
+     5193.504,
+     26049.6,
+     6448.032,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t4_0",
+    "kind": "tile_block",
+    "rect": [
+     6448.032,
+     21.6,
+     7702.56,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t4_1",
+    "kind": "tile_block",
+    "rect": [
+     6448.032,
+     5188.32,
+     7702.56,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t4_2",
+    "kind": "tile_block",
+    "rect": [
+     6448.032,
+     10452.24,
+     7702.56,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t4_3",
+    "kind": "tile_block",
+    "rect": [
+     6448.032,
+     15618.96,
+     7702.56,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t4_4",
+    "kind": "tile_block",
+    "rect": [
+     6448.032,
+     20785.68,
+     7702.56,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t4_5",
+    "kind": "tile_block",
+    "rect": [
+     6448.032,
+     26049.6,
+     7702.56,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t5_0",
+    "kind": "tile_block",
+    "rect": [
+     7702.56,
+     21.6,
+     8957.088,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t5_1",
+    "kind": "tile_block",
+    "rect": [
+     7702.56,
+     5188.32,
+     8957.088,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t5_2",
+    "kind": "tile_block",
+    "rect": [
+     7702.56,
+     10452.24,
+     8957.088,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t5_3",
+    "kind": "tile_block",
+    "rect": [
+     7702.56,
+     15618.96,
+     8957.088,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t5_4",
+    "kind": "tile_block",
+    "rect": [
+     7702.56,
+     20785.68,
+     8957.088,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t5_5",
+    "kind": "tile_block",
+    "rect": [
+     7702.56,
+     26049.6,
+     8957.088,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t6_0",
+    "kind": "tile_block",
+    "rect": [
+     8957.088,
+     21.6,
+     10211.616,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t6_1",
+    "kind": "tile_block",
+    "rect": [
+     8957.088,
+     5188.32,
+     10211.616,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t6_2",
+    "kind": "tile_block",
+    "rect": [
+     8957.088,
+     10452.24,
+     10211.616,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t6_3",
+    "kind": "tile_block",
+    "rect": [
+     8957.088,
+     15618.96,
+     10211.616,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t6_4",
+    "kind": "tile_block",
+    "rect": [
+     8957.088,
+     20785.68,
+     10211.616,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t6_5",
+    "kind": "tile_block",
+    "rect": [
+     8957.088,
+     26049.6,
+     10211.616,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t7_0",
+    "kind": "tile_block",
+    "rect": [
+     10211.616,
+     21.6,
+     11466.144,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t7_1",
+    "kind": "tile_block",
+    "rect": [
+     10211.616,
+     5188.32,
+     11466.144,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t7_2",
+    "kind": "tile_block",
+    "rect": [
+     10211.616,
+     10452.24,
+     11466.144,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t7_3",
+    "kind": "tile_block",
+    "rect": [
+     10211.616,
+     15618.96,
+     11466.144,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t7_4",
+    "kind": "tile_block",
+    "rect": [
+     10211.616,
+     20785.68,
+     11466.144,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t7_5",
+    "kind": "tile_block",
+    "rect": [
+     10211.616,
+     26049.6,
+     11466.144,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t8_0",
+    "kind": "tile_block",
+    "rect": [
+     12800.16,
+     21.6,
+     14054.688,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t8_1",
+    "kind": "tile_block",
+    "rect": [
+     12800.16,
+     5188.32,
+     14054.688,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t8_2",
+    "kind": "tile_block",
+    "rect": [
+     12800.16,
+     10452.24,
+     14054.688,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t8_3",
+    "kind": "tile_block",
+    "rect": [
+     12800.16,
+     15618.96,
+     14054.688,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t8_4",
+    "kind": "tile_block",
+    "rect": [
+     12800.16,
+     20785.68,
+     14054.688,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t8_5",
+    "kind": "tile_block",
+    "rect": [
+     12800.16,
+     26049.6,
+     14054.688,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t9_0",
+    "kind": "tile_block",
+    "rect": [
+     14054.688,
+     21.6,
+     15309.216,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t9_1",
+    "kind": "tile_block",
+    "rect": [
+     14054.688,
+     5188.32,
+     15309.216,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t9_2",
+    "kind": "tile_block",
+    "rect": [
+     14054.688,
+     10452.24,
+     15309.216,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t9_3",
+    "kind": "tile_block",
+    "rect": [
+     14054.688,
+     15618.96,
+     15309.216,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t9_4",
+    "kind": "tile_block",
+    "rect": [
+     14054.688,
+     20785.68,
+     15309.216,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t9_5",
+    "kind": "tile_block",
+    "rect": [
+     14054.688,
+     26049.6,
+     15309.216,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t10_0",
+    "kind": "tile_block",
+    "rect": [
+     15309.216,
+     21.6,
+     16563.744,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t10_1",
+    "kind": "tile_block",
+    "rect": [
+     15309.216,
+     5188.32,
+     16563.744,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t10_2",
+    "kind": "tile_block",
+    "rect": [
+     15309.216,
+     10452.24,
+     16563.744,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t10_3",
+    "kind": "tile_block",
+    "rect": [
+     15309.216,
+     15618.96,
+     16563.744,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t10_4",
+    "kind": "tile_block",
+    "rect": [
+     15309.216,
+     20785.68,
+     16563.744,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t10_5",
+    "kind": "tile_block",
+    "rect": [
+     15309.216,
+     26049.6,
+     16563.744,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t11_0",
+    "kind": "tile_block",
+    "rect": [
+     16563.744,
+     21.6,
+     17818.272,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t11_1",
+    "kind": "tile_block",
+    "rect": [
+     16563.744,
+     5188.32,
+     17818.272,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t11_2",
+    "kind": "tile_block",
+    "rect": [
+     16563.744,
+     10452.24,
+     17818.272,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t11_3",
+    "kind": "tile_block",
+    "rect": [
+     16563.744,
+     15618.96,
+     17818.272,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t11_4",
+    "kind": "tile_block",
+    "rect": [
+     16563.744,
+     20785.68,
+     17818.272,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t11_5",
+    "kind": "tile_block",
+    "rect": [
+     16563.744,
+     26049.6,
+     17818.272,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t12_0",
+    "kind": "tile_block",
+    "rect": [
+     17818.272,
+     21.6,
+     19072.8,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t12_1",
+    "kind": "tile_block",
+    "rect": [
+     17818.272,
+     5188.32,
+     19072.8,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t12_2",
+    "kind": "tile_block",
+    "rect": [
+     17818.272,
+     10452.24,
+     19072.8,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t12_3",
+    "kind": "tile_block",
+    "rect": [
+     17818.272,
+     15618.96,
+     19072.8,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t12_4",
+    "kind": "tile_block",
+    "rect": [
+     17818.272,
+     20785.68,
+     19072.8,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t12_5",
+    "kind": "tile_block",
+    "rect": [
+     17818.272,
+     26049.6,
+     19072.8,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t13_0",
+    "kind": "tile_block",
+    "rect": [
+     19072.8,
+     21.6,
+     20327.328,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t13_1",
+    "kind": "tile_block",
+    "rect": [
+     19072.8,
+     5188.32,
+     20327.328,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t13_2",
+    "kind": "tile_block",
+    "rect": [
+     19072.8,
+     10452.24,
+     20327.328,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t13_3",
+    "kind": "tile_block",
+    "rect": [
+     19072.8,
+     15618.96,
+     20327.328,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t13_4",
+    "kind": "tile_block",
+    "rect": [
+     19072.8,
+     20785.68,
+     20327.328,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t13_5",
+    "kind": "tile_block",
+    "rect": [
+     19072.8,
+     26049.6,
+     20327.328,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t14_0",
+    "kind": "tile_block",
+    "rect": [
+     20327.328,
+     21.6,
+     21581.856,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t14_1",
+    "kind": "tile_block",
+    "rect": [
+     20327.328,
+     5188.32,
+     21581.856,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t14_2",
+    "kind": "tile_block",
+    "rect": [
+     20327.328,
+     10452.24,
+     21581.856,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t14_3",
+    "kind": "tile_block",
+    "rect": [
+     20327.328,
+     15618.96,
+     21581.856,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t14_4",
+    "kind": "tile_block",
+    "rect": [
+     20327.328,
+     20785.68,
+     21581.856,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t14_5",
+    "kind": "tile_block",
+    "rect": [
+     20327.328,
+     26049.6,
+     21581.856,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t15_0",
+    "kind": "tile_block",
+    "rect": [
+     21581.856,
+     21.6,
+     22836.384,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t15_1",
+    "kind": "tile_block",
+    "rect": [
+     21581.856,
+     5188.32,
+     22836.384,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t15_2",
+    "kind": "tile_block",
+    "rect": [
+     21581.856,
+     10452.24,
+     22836.384,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t15_3",
+    "kind": "tile_block",
+    "rect": [
+     21581.856,
+     15618.96,
+     22836.384,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_t15_4",
+    "kind": "tile_block",
+    "rect": [
+     21581.856,
+     20785.68,
+     22836.384,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_t15_5",
+    "kind": "tile_block",
+    "rect": [
+     21581.856,
+     26049.6,
+     22836.384,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_spine_0",
+    "kind": "spine_band",
+    "rect": [
+     11466.144,
+     21.6,
+     12800.16,
+     5188.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_spine_1",
+    "kind": "spine_band",
+    "rect": [
+     11466.144,
+     5188.32,
+     12800.16,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_spine_2",
+    "kind": "spine_band",
+    "rect": [
+     11466.144,
+     10452.24,
+     12800.16,
+     15618.96
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_spine_3",
+    "kind": "spine_band",
+    "rect": [
+     11466.144,
+     15618.96,
+     12800.16,
+     20785.68
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_spine_4",
+    "kind": "spine_band",
+    "rect": [
+     11466.144,
+     20785.68,
+     12800.16,
+     26049.6
+    ],
+    "extent_mm": 5.2639,
+    "within_5p25": false
+   },
+   {
+    "name": "creg_spine_5",
+    "kind": "spine_band",
+    "rect": [
+     11466.144,
+     26049.6,
+     12800.16,
+     31216.32
+    ],
+    "extent_mm": 5.1667,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_WS_0",
+    "kind": "strip",
+    "rect": [
+     1101.6,
+     3041.28,
+     1429.896,
+     7037.256
+    ],
+    "extent_mm": 3.996,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_WS_1",
+    "kind": "strip",
+    "rect": [
+     1101.6,
+     7037.28,
+     1429.896,
+     11186.616
+    ],
+    "extent_mm": 4.1493,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_WS_2",
+    "kind": "strip",
+    "rect": [
+     1101.6,
+     11186.64,
+     1429.896,
+     15182.616
+    ],
+    "extent_mm": 3.996,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_WN_0",
+    "kind": "strip",
+    "rect": [
+     1101.6,
+     16055.28,
+     1429.896,
+     20051.256
+    ],
+    "extent_mm": 3.996,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_WN_1",
+    "kind": "strip",
+    "rect": [
+     1101.6,
+     20051.28,
+     1429.896,
+     24200.616
+    ],
+    "extent_mm": 4.1493,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_WN_2",
+    "kind": "strip",
+    "rect": [
+     1101.6,
+     24200.64,
+     1429.896,
+     28196.616
+    ],
+    "extent_mm": 3.996,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_ES_0",
+    "kind": "strip",
+    "rect": [
+     22836.384,
+     3041.28,
+     23164.68,
+     7037.256
+    ],
+    "extent_mm": 3.996,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_ES_1",
+    "kind": "strip",
+    "rect": [
+     22836.384,
+     7037.28,
+     23164.68,
+     11186.616
+    ],
+    "extent_mm": 4.1493,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_ES_2",
+    "kind": "strip",
+    "rect": [
+     22836.384,
+     11186.64,
+     23164.68,
+     15182.616
+    ],
+    "extent_mm": 3.996,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_EN_0",
+    "kind": "strip",
+    "rect": [
+     22836.384,
+     16055.28,
+     23164.68,
+     20051.256
+    ],
+    "extent_mm": 3.996,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_EN_1",
+    "kind": "strip",
+    "rect": [
+     22836.384,
+     20051.28,
+     23164.68,
+     24200.616
+    ],
+    "extent_mm": 4.1493,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_strip_EN_2",
+    "kind": "strip",
+    "rect": [
+     22836.384,
+     24200.64,
+     23164.68,
+     28196.616
+    ],
+    "extent_mm": 3.996,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_io_collective_0",
+    "kind": "io",
+    "rect": [
+     10982.304,
+     31216.32,
+     13284.408,
+     32780.136
+    ],
+    "extent_mm": 2.3021,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_io_embedding_rom_0",
+    "kind": "io",
+    "rect": [
+     3914.352,
+     31216.32,
+     7446.156,
+     32780.136
+    ],
+    "extent_mm": 3.5318,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_io_embedding_rom_1",
+    "kind": "io",
+    "rect": [
+     7446.156,
+     31216.32,
+     10977.96,
+     32780.136
+    ],
+    "extent_mm": 3.5318,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_io_ucie_0",
+    "kind": "io",
+    "rect": [
+     13288.752,
+     31216.32,
+     16486.188,
+     32780.136
+    ],
+    "extent_mm": 3.1974,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_io_ucie_1",
+    "kind": "io",
+    "rect": [
+     16486.188,
+     31216.32,
+     19683.624,
+     32780.136
+    ],
+    "extent_mm": 3.1974,
+    "within_5p25": true
+   },
+   {
+    "name": "creg_io_serdes_0",
+    "kind": "io",
+    "rect": [
+     19687.968,
+     31216.32,
+     22245.816,
+     32780.136
+    ],
+    "extent_mm": 2.5578,
+    "within_5p25": true
+   }
+  ],
+  "spine_vertical_cut_bits": {
+   "3000": {
+    "tree_spine": 512,
+    "total": 512
+   },
+   "8800": {
+    "scale": 2251,
+    "tree_spine": 6656,
+    "total": 8907
+   },
+   "12000": {
+    "clock_trunk": 6,
+    "link_spine": 2112,
+    "scale": 2250,
+    "tree_spine": 9728,
+    "total": 14096
+   },
+   "18000": {
+    "clock_trunk": 9,
+    "crom": 5696,
+    "io": 1536,
+    "link_spine": 2112,
+    "scale": 3375,
+    "sequencer": 876,
+    "tree_spine": 2048,
+    "total": 15652
+   },
+   "25000": {
+    "clock_trunk": 3,
+    "io": 1536,
+    "scale": 4498,
+    "sequencer": 66,
+    "tree_spine": 512,
+    "total": 6615
+   }
+  },
+  "link_stages": {
+   "paths": [
+    {
+     "stack": "WS",
+     "trunk_um": 17259.7,
+     "fan_um": 5071.7,
+     "stages_504": 46,
+     "stages_450": 51,
+     "stages_430": 53
+    },
+    {
+     "stack": "WN",
+     "trunk_um": 17257.6,
+     "fan_um": 5071.7,
+     "stages_504": 46,
+     "stages_450": 51,
+     "stages_430": 53
+    },
+    {
+     "stack": "ES",
+     "trunk_um": 17259.7,
+     "fan_um": 5071.7,
+     "stages_504": 46,
+     "stages_450": 51,
+     "stages_430": 53
+    },
+    {
+     "stack": "EN",
+     "trunk_um": 17257.5,
+     "fan_um": 5071.7,
+     "stages_504": 46,
+     "stages_450": 51,
+     "stages_430": 53
+    }
+   ],
+   "worst": "WS",
+   "r2_model_total_stages": 46,
+   "delta_stages_at_430": 7,
+   "per_token_cycles_delta": 504,
+   "per_token_us_delta": 0.42,
+   "hub_to_io": {
+    "um": 15596.3,
+    "stages_504": 31,
+    "stages_430": 37
+   },
+   "note": "hub<->stack stations re-pitched to <= 430.56 um (corridor gate: 504 um spans miss SS setup by 29-79 ps); the tile-column corridor already runs 3 x 430.56 um per tile hop (closes). Report to the model: the selected entry prices 45-46 stages."
+  }
+ },
+ "producer": "/home/ubuntu/qwen-rom-die-b3-20261004/tools/qwen_rom_fulldie_b3r2.py",
+ "source_commit": "71210016a69e4623750bfde3d5bc64362065b7fc",
+ "source_clean": true
+}
