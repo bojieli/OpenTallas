@@ -970,7 +970,7 @@ struct SourceL20Index : std::enable_shared_from_this<SourceL20Index> {
             return std::nullopt;
         };
         backend=std::make_shared<NativeIndexHbm>(r,"native_L20_rank3_index_backend");
-        backend->preload_ring("/tmp/opentallas-L20-RING-priorhistory-20261004-r1/r3");
+        backend->preload_ring(dir+"/ring_prior_r3");
         writer=std::make_shared<L20IndexWriter>(r,ID,su_ports,backend,key_operation);
         scorer=std::make_shared<VDsromS81IndexScorer>(r.context,"native_L20_rank3_fullscan");
         backend->bind_wiring([this](VDsromS81IndexHbm& m) {
