@@ -32,6 +32,10 @@
 module ot_qwen_tp_seq_async_w12 #(
     parameter integer ENABLE_AR256 = 0,
     parameter integer ASYNC_COLL = 0,      // 1: decode descriptor bit [20] as a cut-through all-reduce
+    // 1: pipelined scoreboard set (see below): tap register (the ME->sequencer hop), then offset /
+    // range / predecode, then AND-OR into lw.  A result write is visible to the send check 2 cycles
+    // later than with 0 (never earlier, so never an early send).  0: the original single-cycle set.
+    parameter integer SB_PIPE = 0,
     parameter integer NP   = 1,            // ME result-port groups observed (G >> SMIN)
     parameter integer MAW  = 24,           // ME result word-address width
     parameter integer N    = 4,
@@ -154,11 +158,11 @@ module ot_qwen_tp_seq_async_w12 #(
         vm_raddr = vw + rd_k;
     end
 
+    generate if (SB_PIPE == 0) begin : g_sb0
     // per port: the region word offset it writes whole this cycle (one-hot over 256 words)
     wire [255:0] hit_p [0:NP-1];
     wire [255:0] hit;
     genvar gp;
-    generate
         for (gp = 0; gp < NP; gp = gp + 1) begin : g_port
             wire [MAW-1:0] a   = me_addr[gp*MAW +: MAW];
             wire [MAW-1:0] off = a - {{(MAW - VWA){1'b0}}, vw};
@@ -166,7 +170,6 @@ module ot_qwen_tp_seq_async_w12 #(
                                  && off < {{(MAW - 9){1'b0}}, nw};
             assign hit_p[gp] = in ? (256'd1 << off[7:0]) : 256'd0;
         end
-    endgenerate
     integer pi;
     reg [255:0] hit_or;
     always @(*) begin
@@ -180,6 +183,49 @@ module ot_qwen_tp_seq_async_w12 #(
             else if (cut && (st == S_RUN || st == S_CWAIT)) lw <= lw | hit;
         end
     end
+    end else begin : g_sb1
+    // Pipelined scoreboard set (SB_PIPE = 1).  Every stage only DELAYS a mark, so a word is still
+    // sent only after the engine wrote it whole in this segment:
+    //   t0  tap register: we & full-mask, word address (the register on the ME -> sequencer hop)
+    //   t1  per port: offset = addr - vw and range check, registered as two 16-way one-hots
+    //       (offset[3:0], offset[7:4]) -- the subtract never meets the decode or the OR tree
+    //   t2  hit[w] = OR over ports of lo[w%16] & hi[w/16]; lw <= lw | hit
+    // Segment isolation: t1/t2 only capture while this segment's core runs (S_RUN/S_CWAIT; vw is
+    // stable there) and lw only updates then.  The previous segment's writes all land before its
+    // core_done, which leaves S_CWAIT, so none of them can reach lw after the S_DLAT clear.
+    wire run_seg = cut && (st == S_RUN || st == S_CWAIT);
+    reg  [NP-1:0]     s0_v;
+    reg  [NP*MAW-1:0] s0_a;
+    reg  [NP-1:0]     s1_v;
+    reg  [NP*16-1:0]  s1_lo, s1_hi;
+    genvar gp;
+    for (gp = 0; gp < NP; gp = gp + 1) begin : g_port
+        wire [MAW-1:0] a   = s0_a[gp*MAW +: MAW];
+        wire [MAW-1:0] off = a - {{(MAW - VWA){1'b0}}, vw};
+        wire           in  = s0_v[gp] && a >= {{(MAW - VWA){1'b0}}, vw} && off < {{(MAW - 9){1'b0}}, nw};
+        always @(posedge clk) begin
+            s0_v[gp] <= me_we[gp] && (&me_mask[gp*16 +: LN]);
+            s0_a[gp*MAW +: MAW] <= me_addr[gp*MAW +: MAW];
+            s1_v[gp] <= in && run_seg;
+            s1_lo[gp*16 +: 16] <= 16'd1 << off[3:0];
+            s1_hi[gp*16 +: 16] <= 16'd1 << off[7:4];
+        end
+    end
+    reg [255:0] hit_or;
+    integer pi, wi;
+    always @(*) begin
+        hit_or = 256'd0;
+        for (wi = 0; wi < 256; wi = wi + 1)
+            for (pi = 0; pi < NP; pi = pi + 1)
+                hit_or[wi] = hit_or[wi] | (s1_v[pi] & s1_lo[pi*16 + (wi % 16)] & s1_hi[pi*16 + (wi / 16)]);
+    end
+    always @(posedge clk) begin
+        if (ASYNC_COLL != 0) begin
+            if (st == S_DLAT) lw <= 256'd0;
+            else if (run_seg) lw <= lw | hit_or;
+        end
+    end
+    end endgenerate
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

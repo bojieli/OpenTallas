@@ -1,0 +1,15 @@
+....F                                                                    [100%]
+=================================== FAILURES ===================================
+__________________ test_model_default_and_positive_resources ___________________
+
+    def test_model_default_and_positive_resources():
+        spec=importlib.util.spec_from_file_location('uarch_model',ROOT/'tools/uarch_model.py')
+        m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+        a=m.dsrom_s81_native_head_terminal()
+        assert a['opt_in_default'] is False and a['retained_head_macros']==10100
+>       assert a['state_FF_bits_lower_bound']==1412
+E       assert 1312 == 1412
+
+tests/test_dsrom_s81_native_head_terminal.py:38: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dsrom_s81_native_head_terminal.py::test_model_default_and_positive_resources
