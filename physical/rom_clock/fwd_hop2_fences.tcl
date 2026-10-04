@@ -16,11 +16,10 @@ foreach inst [$block getInsts] {
   set n [$inst getName]
   if {[string match "u_a.*" $n]} { $west addInst $inst; incr nw } elseif {[string match "u_b.*" $n]} { $east addInst $inst; incr ne }
 }
-# the forwarding inverter: the non-sequential load of the fclk_i port net
+# stage A's forwarding inverter (u_a.active.u_fwd_inv, kept hierarchy) at the launching end
 set ni 0
-foreach it [[$block findNet fclk_i] getITerms] {
-  set inst [$it getInst]
-  if {![[$inst getMaster] isSequential]} { $west addInst $inst; incr ni }
+foreach inst [$block getInsts] {
+  if {[string match "u_a.*u_fwd_inv*" [$inst getName]]} { $west addInst $inst; incr ni }
 }
 puts "OT_FENCE tx_west sequential $nw inverter $ni; rx_east sequential $ne"
 if {$nw == 0 || $ne == 0 || $ni != 1} { error "ot_fwd_link_hop2 fence: unexpected instance names" }
