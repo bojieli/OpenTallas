@@ -45,6 +45,8 @@ struct DsromS81MinimumRuntime {
     std::function<void(const DsromS81PairDrive&)> drive;
     std::function<DsromS81PairResult()> result;
     std::function<void()> tick;
+    // One shared cold reset before context admission, never a debt-clearing reset.
+    std::function<void()> cold_start;
     std::function<long()> cycle;
     std::vector<DsromS81MinimumParticipant> participants;
     // Actual admission and matched VM publication/drain outputs from Popper's
