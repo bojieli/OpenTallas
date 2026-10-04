@@ -216,8 +216,15 @@
     "elaborated": "results/rtl/dsrom_integration_20261004/elaborate.json (die_c2_allon)",
     "not_in_this_die_yet": [
       "ot_hdc_v41x_idx_kgather + ot_hdc_v41x_sel_mdrop via ot_dsrom_reindex_chain (LSW 3)",
-      "ot_dsrom_window_stream_la (claude/dsrom-s81-window-bind-20261004)"
+      "ot_dsrom_window_stream_la (claude/dsrom-s81-window-bind-20261004)",
+      "ot_rom_pkg_ctrl_wf_ps SIDE_PSL=3 in place of ot_rom_pkg_ctrl_wf_s81 if any per-user state is staged by SIDE (multicast) under PKG_WAVE=1; the current die runs SIDE_IN=0 (relay), which needs no slots"
     ],
-    "head_die": "ot_dsrom_s81_head_amax_fh FH=1 replaces ot_dsrom_s81_head_amax"
+    "head_die": "ot_dsrom_s81_head_amax_fh FH=1 replaces ot_dsrom_s81_head_amax",
+    "correctness_20261004": {
+      "record": "results/rtl/dsrom_correctness_20261004",
+      "element_row_decode": "rtl/v41rom/ot_v41_rom_elem_w10.sv and every copy fixed in place: entry 2NSEG+1+s writes s_row[NSEG+s] (s=NSEG-1 had wrapped to s_row[NSEG-1]); field/pair selections must rebuild their element objects",
+      "side_position_slots": "rtl/dsrom_sys/integration/ot_rom_pkg_ctrl_wf_ps.sv + ot_rom_side_pslot.sv, SIDE_PSL=3 (DSROM_BL_SIDE_PSL)",
+      "reuse_selection_transport": "I7: reuse-layer selections (L2->L3..7/..19, L20->L21..23, L24->L25..27) must reach the consumer stage per position: hop relay (as built) or SIDE with SIDE_PSL>=3; a die-local single-slot per-user store is not allowed under PKG_WAVE=1"
+    }
   }
 }
