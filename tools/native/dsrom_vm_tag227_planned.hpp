@@ -7,7 +7,7 @@ namespace dsrom { namespace component_tag227 {
 // Not provider credits, not another bank callback, not actual accept counts.
 class PlannedTagReservations {
 public:
- enum class Kind {ScalarWrite, Read64};
+ enum class Kind {ScalarWrite, Read64, ReadElement};
  struct Plan {SourceOffer source;Kind kind;std::uint32_t scalar_address;};
  struct Actual {Tag227 owner;Kind kind;std::uint32_t scalar_address;std::uint64_t edge;};
 private:
@@ -30,7 +30,7 @@ public:
    throw std::out_of_range("bounded COMPONENT_TAG227 planned capacity/ID exhaustion");
   std::vector<Seat> fresh;std::vector<Tag227> tags;
   for(std::size_t i=0;i<plans.size();++i){auto& p=plans[i];
-   if((p.kind!=Kind::ScalarWrite&&p.kind!=Kind::Read64)||p.scalar_address>=(1u<<19)||(p.kind==Kind::Read64&&(p.scalar_address&63)))
+   if((p.kind!=Kind::ScalarWrite&&p.kind!=Kind::Read64&&p.kind!=Kind::ReadElement)||p.scalar_address>=(1u<<19)||(p.kind==Kind::Read64&&(p.scalar_address&63)))
     throw std::out_of_range("planned native VM19 / aligned Read64");
    auto tag=pack({context_from_source_offer(p.source),era_,batch_,next_planned_id_+i});
    fresh.push_back({p,tag,false,false});tags.push_back(tag);

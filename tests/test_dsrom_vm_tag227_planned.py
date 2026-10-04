@@ -2,10 +2,13 @@ from pathlib import Path
 import subprocess
 ROOT=Path(__file__).resolve().parents[1]
 CPP=r'''
-#include "dsrom_vm_tag227_planned.hpp"
+#include "dsrom_vm_tag227_accept_mapping.hpp"
 #include <cassert>
 using namespace dsrom::component_tag227;
 template<class F>void reject(F f){bool x=false;try{f();}catch(const std::exception&){x=true;}assert(x);}
+struct Word {unsigned address,mask;Tag227 owner;};
+struct Source {unsigned element_address;std::uint64_t identity;unsigned phase;};
+struct MacroWrite {Word word;Source source;};
 int main(){
  SourceOffer s{1ull<<31,0,80,3,2416,1023,16383};PlannedTagReservations p(1,0);
  std::vector<PlannedTagReservations::Plan> plans;
@@ -29,6 +32,16 @@ int main(){
  p.qualified_retire(read[0]);assert(p.batch_retired());
  p.next_batch();auto t=p.reserve({{s,PlannedTagReservations::Kind::ScalarWrite,0}})[0];assert(unpack(t).batch==1);
  reject([&]{p.actual_accept({tags[0],PlannedTagReservations::Kind::ScalarWrite,0,12},s,true);});
+ PlannedAcceptMapping map(1,0);auto sealed=map.reserve(plans);
+ for(unsigned i=0;i<16;++i){auto record=MacroWrite{{i>>4,1u<<(i&15),sealed[i]},{i,s.identity47,unsigned(s.accepted_phase)}};
+  auto wrong=record;wrong.word.mask=0;reject([&]{map.scalar((i>>4)&3,wrong,20);});
+  map.scalar((i>>4)&3,record,20);
+ }
+ auto rd=map.reserve({{s,PlannedTagReservations::Kind::Read64,64}})[0];
+ reject([&]{map.read(4,rd,21);});map.read(64,rd,21);assert(map.actual_accepted_count()==17);
+ PlannedAcceptMapping arbitrary(1,0);
+ auto unaligned=arbitrary.reserve({{s,PlannedTagReservations::Kind::ReadElement,65}})[0];
+ reject([&]{arbitrary.read(64,unaligned,1);});arbitrary.read(65,unaligned,1);
  // Invalid multi-command construction does not leave a partial reservation.
  PlannedTagReservations q(1,0);auto bad=s;bad.accepted_pair=2417;
  reject([&]{q.reserve({{s,PlannedTagReservations::Kind::ScalarWrite,0},{bad,PlannedTagReservations::Kind::ScalarWrite,1}});});
