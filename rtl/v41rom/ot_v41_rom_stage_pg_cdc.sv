@@ -146,7 +146,10 @@ module ot_v41_rom_pg_eao #(
     // synchronisers of the clamped domain flops
     reg cdc_bs1, bs2, cdc_rr1, rr2, cdc_ak1, ak2, cdc_ra1, ra2;
     reg pg_q, infl;
-    wire issue = pwr_good && rr2 && rhit && !infl;
+    // the priority select is registered (dirty -> 25:1 shadow mux -> replay register was -44 ps at SS in route A4);
+    // a stale selection is harmless: the next request waits for the previous ack (>= 6 cycles)
+    reg [AW-1:0] ridx_q; reg rhit_q, sel_v;
+    wire issue = pwr_good && rr2 && sel_v && rhit_q && rhit && !infl;
     // the element-side state runs while the domain is up (and on host writes / the power-loss edge); asleep, its
     // clock gate is closed and it costs leakage only
     wire ao_clk;
@@ -168,16 +171,20 @@ module ot_v41_rom_pg_eao #(
                 cdc_ra1 <= 1'b0; ra2 <= 1'b0;
             end else begin
                 if (infl && ak2 == rq) infl <= 1'b0;
-                if (issue) begin dirty[ridx] <= 1'b0; rq <= ~rq; infl <= 1'b1; end
+                if (issue) begin dirty[ridx_q] <= 1'b0; rq <= ~rq; infl <= 1'b1; end
                 if (host_wr) begin
                     valid[cfg_a] <= 1'b1;
                     // a write D may not apply directly (not yet ready there, or racing a replay) is replayed
                     if (!ra2 || infl || issue) dirty[cfg_a] <= 1'b1;
                 end
-                if (pwr_good && rr2 && !rhit && !infl && !issue && !host_wr) ready <= 1'b1;
+                if (pwr_good && rr2 && !rhit && !rhit_q && !infl && !issue && !host_wr) ready <= 1'b1;
             end
         end
-    always @(posedge ao_clk) if (issue) begin cdc_rp_a <= ridx; cdc_rp_d <= sh_q[ridx]; end
+    always @(posedge ao_clk or negedge rst_n)
+        if (!rst_n) begin ridx_q <= {AW{1'b0}}; rhit_q <= 1'b0; sel_v <= 1'b0; end
+        else if (issue || infl) sel_v <= 1'b0;                  // a fresh selection after every ack
+        else begin ridx_q <= ridx; rhit_q <= rhit; sel_v <= 1'b1; end
+    always @(posedge ao_clk) if (issue) begin cdc_rp_a <= ridx_q; cdc_rp_d <= sh_q[ridx_q]; end
     assign el_busy  = bs2 | (pwr_good & !ra2) | (pwr_good & rhit) | infl;
     assign el_ready = ra2;
     // output isolation (clamp to 0)
