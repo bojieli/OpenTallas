@@ -20,12 +20,12 @@ from dsrom_s81_execution_binding import CanonicalS81Execution
 from dsrom_s81_head_source_binding import HeadSourceBinding
 
 
-def attention_math_scope(scope):
+def attention_math_scope(scope, *, sim_only_endpoint=False):
     native = 'QK.I61.I62.PV.native.SIM_ONLY-source-KVT-descriptor-TP4'
     simulated = 'QK.I61.I62.PV.SIM_ONLY-att-endpoint.SIM_ONLY-source-KVT-descriptor-TP4'
     if scope not in (native, simulated):
         raise ValueError('attention source scope is not the selected QK/softmax/PV path')
-    return 'NATIVE' if scope == native else 'SIM_ONLY-att-endpoint'
+    return 'NATIVE' if scope == native and not sim_only_endpoint else 'SIM_ONLY-att-endpoint'
 
 
 def head_chain(ranks, model, output, result):
@@ -159,11 +159,15 @@ def main():
                    help='completed native rank3 I36/I44 directory; consume its actual score output')
     p.add_argument('--native-attention-result',type=Path,
                    help='completed native QK/softmax/PV directory; import four actual I63 ACC outputs')
+    p.add_argument('--sim-only-att-endpoint',action='store_true',
+                   help='label the selected CPU attention endpoint arithmetic SIM_ONLY, including older TSV emitters')
     p.add_argument('--capture-attention-inputs',action='store_true',
                    help='capture produced attention operands in this continuation, stopping before I63')
     p.add_argument('--capture-h-chain-inputs',action='store_true',
                    help='stop before I75; export produced T/I74, CA/I60, POA/I57 and Y/I72 for native I75->76')
     a = p.parse_args()
+    if a.sim_only_att_endpoint and not a.native_attention_result:
+        p.error('--sim-only-att-endpoint requires the actual completed adapter/VM attention result')
     if a.capture_h_chain_inputs and (a.carry_input or a.head_chain or
             a.capture_index_inputs or a.capture_attention_inputs):
         p.error('--capture-h-chain-inputs requires the L20 prefix through I74, without another capture stop/head path')
@@ -186,7 +190,11 @@ def main():
             if len(rows)!=1 or None in rows[0] or any(v is None for v in rows[0].values()):
                 raise ValueError('native attention requires one complete terminal row')
             native_pv=rows[0]
-            arithmetic_scope = attention_math_scope(native_pv['scope'])
+            arithmetic_scope = attention_math_scope(native_pv['scope'],
+                                                    sim_only_endpoint=a.sim_only_att_endpoint)
+            if a.sim_only_att_endpoint:
+                native_pv['raw_tsv_scope'] = native_pv['scope']
+                native_pv['scope'] = 'QK.I61.I62.PV.SIM_ONLY-att-endpoint.SIM_ONLY-source-KVT-descriptor-TP4'
             for key in ('position','ranks','qk_accept','pv_accept','terminal'):
                 text=native_pv[key]
                 if not text.isascii() or not text.isdecimal():
