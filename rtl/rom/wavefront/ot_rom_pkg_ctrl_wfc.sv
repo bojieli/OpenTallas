@@ -697,13 +697,22 @@ module ot_rom_pkg_ctrl_wfc #(
     wire       rd_wf = !(!st_new && !nu_ok && !nu_pend && next_u < cfg_users && next_u < MAXU) && wf_v;
     genvar gu;
     generate if (WF) begin : g_wf
+        wire [MAXU-1:0] nu_oh = {{(MAXU-1){1'b0}}, 1'b1} << next_u;
         for (gu = 0; gu < MAXU; gu = gu + 1) begin : g_wu
-            reg [NW-1:0] wnp, wkt, er;
-            reg [NW-1:0] ring [0:WQ-1];
-            reg [3:0]    wblk;
-            reg [2:0]    wnf, wsq, k0;
-            reg          wkv, wkp, wkm, stv, lt, e_wk, e_wf;
-            wire [NW-1:0] rs = ring[in_slot];
+            wire [NW-1:0] wnp, wkt, er, rs;
+            wire [3:0]    wblk;
+            wire [2:0]    wnf, k0;
+            (* keep_hierarchy *)
+            ot_rom_pkg_ctrl_wfc_user #(.NW(NW), .WIN(WIN), .WQ(WQ)) u (
+                .clk(clk), .rst_n(rst_n),
+                .isn(st_new && nu_oh[gu]), .isw(st_wk && ohwk[gu]), .isr(rd_wf && ohwf[gu]),
+                .isp(pr_t1 == 3 && pr1_oh[gu]), .isr_res(res_v && res_oh[gu]),
+                .w_g1(w_g1), .w_steps_m1(w_steps_m1), .w_prok(w_prok), .pr_qk(pr_qk), .pr_q(pr_q),
+                .w_er_new(w_er_new), .w_rewind(w_rewind), .w_q1(w_q1), .fb_idx(fb_idx), .w_blkb(w_blkb),
+                .w_rejb(w_rejb), .nu_tok(nu_tok), .in_slot(in_slot),
+                .wnp(wnp), .wkt(wkt), .er(er), .rs(rs), .wblk(wblk), .wnf(wnf), .k0(k0),
+                .e_wk(ewk[gu]), .e_wf(ewf[gu]), .wkv(kv_v[gu]), .sqnz(sqnz_v[gu]), .sq1(sq1_v[gu]),
+                .nf2(nf2_v[gu]), .kteq(kteq_v[gu]));
             for (gb = 0; gb < NW; gb = gb + 1) begin : t21
                 assign wkt_t[gb][gu] = wkt[gb]; assign wnp_t[gb][gu] = wnp[gb];
                 assign er_t[gb][gu] = er[gb]; assign slot_t[gb][gu] = rs[gb];
@@ -717,72 +726,90 @@ module ot_rom_pkg_ctrl_wfc #(
             for (gb = 0; gb < USER_W; gb = gb + 1) begin : tu
                 assign enc_m[gb][gu] = (gu >> gb) & 1;
             end
-            assign ewk[gu] = e_wk; assign ewf[gu] = e_wf; assign kv_v[gu] = wkv;
-            assign sqnz_v[gu] = wsq != 0; assign sq1_v[gu] = wsq == 3'd1; assign nf2_v[gu] = wnf >= 3'd2;
-            assign kteq_v[gu] = wkt == fb_idx;
-            wire isn = st_new && next_u == gu;
-            wire isw = st_wk && ohwk[gu];
-            wire isr = rd_wf && ohwf[gu];
-            wire isp = (pr_t1 == 3) && pr1_oh[gu];
-            wire isr_res = res_v && res_oh[gu];
-            reg [NW-1:0] n_wnp, n_wkt, n_er;
-            reg [3:0]    n_wblk;
-            reg [2:0]    n_wnf, n_wsq, n_k0;
-            reg          n_wkv, n_wkp, n_wkm, n_stv, n_lt;
-            always @(*) begin
-                n_wnp = wnp; n_wkt = wkt; n_er = er; n_wblk = wblk; n_wsq = wsq; n_k0 = k0;
-                n_wkv = wkv; n_wkp = wkp; n_wkm = wkm; n_stv = stv || isn; n_lt = lt;
-                n_wnf = wnf + ((isw || isn) ? 3'd1 : 3'd0) - (isr_res ? 3'd1 : 3'd0);
-                if (isn) begin
-                    n_wnf = 3'd1; n_wnp = 1; n_wblk = 0; n_wkv = 1'b0; n_wkp = 1'b0; n_wkm = 1'b0; n_wsq = 0; n_er = 0; n_lt = w_g1;
-                end
-                if (isw) begin
-                    n_wnp = wnp + 1'b1; n_wkv = 1'b0; n_wkm = 1'b0; n_lt = wnp != w_steps_m1;
-                end
-                if (isr) n_wkp = 1'b1;
-                if (isp) begin
-                    n_wkp = 1'b0;
-                    if (w_prok) begin
-                        if (pr_qk) begin n_wkv = 1'b1; n_wkt = pr_q; end
-                        else n_wkm = 1'b1;
-                    end
-                end
-                if (isr_res) begin
-                    n_er = w_er_new;
-                    if (wsq != 0) n_wsq = wsq - 1'b1;
-                    else if (w_rewind) begin
-                        n_wsq = wnf - 1'b1; n_k0 = wnf - 1'b1;
-                        n_wnp = w_q1; n_wblk = wblk + 1'b1; n_lt = 1'b1;
-                        n_wkv = 1'b1; n_wkt = fb_idx; n_wkm = 1'b0;
-                    end else if (w_blkb) begin
-                        if (w_rejb) n_wblk = wblk + 1'b1;
-                        n_wkv = 1'b1; n_wkt = fb_idx; n_wkm = 1'b0;
-                    end
-                end
-            end
-            // only the started flag and the two eligibility bits are reset: every other field is
-            // written when the user starts (isn) and read only while it is started
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) begin
-                    stv <= 1'b0; e_wk <= 1'b0; e_wf <= 1'b0;
-                end else begin
-                    stv <= n_stv;
-                    e_wk <= n_stv && n_wkv && (n_wnf < WIN) && n_lt;
-                    e_wf <= n_stv && !n_wkv && !n_wkp && !n_wkm && n_lt;
-                end
-            end
-            always @(posedge clk) begin
-                wnp <= n_wnp; wkt <= n_wkt; er <= n_er; wblk <= n_wblk; wnf <= n_wnf; wsq <= n_wsq; k0 <= n_k0;
-                wkv <= n_wkv; wkp <= n_wkp; wkm <= n_wkm; lt <= n_lt;
-            end
-            // ring: written on issue (slot wnp mod WQ) and on the user's first issue (slot 0)
-            always @(posedge clk) begin
-                if (isn) ring[0] <= nu_tok;
-                if (isw) ring[wnp[2:0]] <= wkt;
-            end
         end
     end else begin : g_nowf
         assign ewk = 0; assign ewf = 0; assign kv_v = 0; assign sqnz_v = 0; assign sq1_v = 0;
         assign nf2_v = 0; assign kteq_v = 0;
     end endgenerate
+endmodule
+
+// ---------------------------------------------------------------------------
+// One user's wavefront state (ot_rom_pkg_ctrl_wfc, SOURCE && WAVE): a module so
+// that synthesis maps it once (keep_hierarchy) instead of 866 flattened copies.
+// Only the started flag and the two eligibility bits are reset: every other
+// field is written when the user starts (isn) and read only while it is started.
+// ---------------------------------------------------------------------------
+module ot_rom_pkg_ctrl_wfc_user #(
+    parameter integer NW = 16, parameter integer WIN = 6, parameter integer WQ = 8
+) (
+    input  wire          clk, rst_n,
+    input  wire          isn, isw, isr, isp, isr_res,
+    input  wire          w_g1, w_prok, pr_qk, w_rewind, w_blkb, w_rejb,
+    input  wire [NW-1:0] w_steps_m1, pr_q, w_er_new, w_q1, fb_idx, nu_tok,
+    input  wire [2:0]    in_slot,
+    output reg  [NW-1:0] wnp, wkt, er,
+    output wire [NW-1:0] rs,
+    output reg  [3:0]    wblk,
+    output reg  [2:0]    wnf, k0,
+    output reg           e_wk, e_wf, wkv,
+    output wire          sqnz, sq1, nf2, kteq
+);
+    reg [NW-1:0] ring [0:WQ-1];
+    reg [2:0]    wsq;
+    reg          wkp, wkm, stv, lt;
+    assign rs = ring[in_slot];
+    assign sqnz = wsq != 0; assign sq1 = wsq == 3'd1; assign nf2 = wnf >= 3'd2; assign kteq = wkt == fb_idx;
+    reg [NW-1:0] n_wnp, n_wkt, n_er;
+    reg [3:0]    n_wblk;
+    reg [2:0]    n_wnf, n_wsq, n_k0;
+    reg          n_wkv, n_wkp, n_wkm, n_stv, n_lt;
+    always @(*) begin
+        n_wnp = wnp; n_wkt = wkt; n_er = er; n_wblk = wblk; n_wsq = wsq; n_k0 = k0;
+        n_wkv = wkv; n_wkp = wkp; n_wkm = wkm; n_stv = stv || isn; n_lt = lt;
+        n_wnf = wnf + ((isw || isn) ? 3'd1 : 3'd0) - (isr_res ? 3'd1 : 3'd0);
+        if (isn) begin
+            n_wnf = 3'd1; n_wnp = 1; n_wblk = 0; n_wkv = 1'b0; n_wkp = 1'b0; n_wkm = 1'b0; n_wsq = 0; n_er = 0; n_lt = w_g1;
+        end
+        if (isw) begin
+            n_wnp = wnp + 1'b1; n_wkv = 1'b0; n_wkm = 1'b0; n_lt = wnp != w_steps_m1;
+        end
+        if (isr) n_wkp = 1'b1;
+        if (isp) begin
+            n_wkp = 1'b0;
+            if (w_prok) begin
+                if (pr_qk) begin n_wkv = 1'b1; n_wkt = pr_q; end
+                else n_wkm = 1'b1;
+            end
+        end
+        if (isr_res) begin
+            n_er = w_er_new;
+            if (wsq != 0) n_wsq = wsq - 1'b1;
+            else if (w_rewind) begin
+                n_wsq = wnf - 1'b1; n_k0 = wnf - 1'b1;
+                n_wnp = w_q1; n_wblk = wblk + 1'b1; n_lt = 1'b1;
+                n_wkv = 1'b1; n_wkt = fb_idx; n_wkm = 1'b0;
+            end else if (w_blkb) begin
+                if (w_rejb) n_wblk = wblk + 1'b1;
+                n_wkv = 1'b1; n_wkt = fb_idx; n_wkm = 1'b0;
+            end
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            stv <= 1'b0; e_wk <= 1'b0; e_wf <= 1'b0;
+        end else begin
+            stv <= n_stv;
+            e_wk <= n_stv && n_wkv && (n_wnf < WIN) && n_lt;
+            e_wf <= n_stv && !n_wkv && !n_wkp && !n_wkm && n_lt;
+        end
+    end
+    always @(posedge clk) begin
+        wnp <= n_wnp; wkt <= n_wkt; er <= n_er; wblk <= n_wblk; wnf <= n_wnf; wsq <= n_wsq; k0 <= n_k0;
+        wkv <= n_wkv; wkp <= n_wkp; wkm <= n_wkm; lt <= n_lt;
+    end
+    // ring: written on issue (slot wnp mod WQ) and on the user's first issue (slot 0)
+    always @(posedge clk) begin
+        if (isn) ring[0] <= nu_tok;
+        if (isw) ring[wnp[2:0]] <= wkt;
+    end
 endmodule
