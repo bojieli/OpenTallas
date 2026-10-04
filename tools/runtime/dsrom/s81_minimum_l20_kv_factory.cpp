@@ -720,15 +720,22 @@ int run_minimum_l20_kv(DsromS81MinimumRuntime& runtime,const char* output){
         need(bool(f),source->pv?"I63 native PV output write failed":"I55 score output write failed");
     }
     std::ofstream f(std::string(output)+"/native_L20_ATT.tsv");
+#ifdef DSROM_S81_SIM_ONLY_ATT_ENDPOINT
+    const char* endpoint_math="SIM_ONLY-att-endpoint";
+    const char* qk_scope="I55.SIM_ONLY-att-endpoint-QK-KV";
+#else
+    const char* endpoint_math="native";
+    const char* qk_scope="I55.native-QK-KV";
+#endif
     if(source->h_pc)
         f<<"scope\tposition\tranks\tqk_accept\tpv_accept\th_accept\tterminal\n"
-         <<"QK.SU.PV.native-HC-post-I"<<source->h_pc<<".SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"
+         <<"QK.SU.PV."<<endpoint_math<<"-HC-post-I"<<source->h_pc<<".SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"
          <<source->first_qk<<'\t'<<source->first_pv<<'\t'<<source->first_h<<'\t'<<source->last<<'\n';
     else if(source->pv)
-        f<<"scope\tposition\tranks\tqk_accept\tpv_accept\tterminal\nQK.I61.I62.PV.native.SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"
+        f<<"scope\tposition\tranks\tqk_accept\tpv_accept\tterminal\nQK.I61.I62.PV."<<endpoint_math<<".SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"
          <<source->first_qk<<'\t'<<source->first_pv<<'\t'<<source->last<<'\n';
     else
-    f<<"scope\tposition\tranks\tqk_accept\tterminal\nI55.native-QK-KV.SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"<<source->first_qk<<'\t'<<source->last<<'\n';
+    f<<"scope\tposition\tranks\tqk_accept\tterminal\n"<<qk_scope<<".SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"<<source->first_qk<<'\t'<<source->last<<'\n';
     need(bool(f),"I55 terminal output unavailable");return 0;
 }
 

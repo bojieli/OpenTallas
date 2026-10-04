@@ -20,6 +20,14 @@ from dsrom_s81_execution_binding import CanonicalS81Execution
 from dsrom_s81_head_source_binding import HeadSourceBinding
 
 
+def attention_math_scope(scope):
+    native = 'QK.I61.I62.PV.native.SIM_ONLY-source-KVT-descriptor-TP4'
+    simulated = 'QK.I61.I62.PV.SIM_ONLY-att-endpoint.SIM_ONLY-source-KVT-descriptor-TP4'
+    if scope not in (native, simulated):
+        raise ValueError('attention source scope is not the selected QK/softmax/PV path')
+    return 'NATIVE' if scope == native else 'SIM_ONLY-att-endpoint'
+
+
 def head_chain(ranks, model, output, result):
     binding=HeadSourceBinding()
     compiled=binding.compile(opt_in=True,entry14=0)
@@ -178,8 +186,7 @@ def main():
             if len(rows)!=1 or None in rows[0] or any(v is None for v in rows[0].values()):
                 raise ValueError('native attention requires one complete terminal row')
             native_pv=rows[0]
-            if native_pv['scope']!='QK.I61.I62.PV.native.SIM_ONLY-source-KVT-descriptor-TP4':
-                raise ValueError('native attention source scope is not the selected QK/softmax/PV path')
+            arithmetic_scope = attention_math_scope(native_pv['scope'])
             for key in ('position','ranks','qk_accept','pv_accept','terminal'):
                 text=native_pv[key]
                 if not text.isascii() or not text.isdecimal():
@@ -200,7 +207,10 @@ def main():
             native_pv.update(source_terminal_sha256=hashlib.sha256(terminal_bytes).hexdigest(),
                 files=files,stage=37,producer=2534,address=74272,words_per_rank=8192,
                 template_sha256='6124df21d8de509ccbb8e0f114d2ed9776a4316dd810e92c35c0a07acfb9083a',
-                scope_note='actual native I63 PV readback only; remaining L20 arithmetic and fences SIM_ONLY')
+                attention_arithmetic=arithmetic_scope,
+                native_attention_math=arithmetic_scope == 'NATIVE',
+                scope_note=('actual adapter/VM I63 readback; attention arithmetic '+arithmetic_scope+
+                            '; remaining L20 arithmetic and fences SIM_ONLY; no physical timing credit'))
         except (OSError,UnicodeError,ValueError,KeyError) as exc:
             p.error(str(exc))
     a.output.mkdir(exist_ok=False)
@@ -449,7 +459,8 @@ def main():
                 log.write(json.dumps(dict(node=node['id'], unit=f['unit'],
                     arithmetic=('NATIVE_RANK_I0_PLUS_SIM_ONLY_OTHER_RANKS' if pc==0 and native_i0 else
                                 'NATIVE_RANK3_I44_PLUS_SIM_ONLY_OTHER_RANKS' if pc==44 and native_index else
-                                'NATIVE_TP4_I63_PV_READBACK' if pc==63 and native_pv is not None else 'SIM_ONLY_EXACT'),
+                                (native_pv['attention_arithmetic']+'_TP4_I63_PV_READBACK')
+                                if pc==63 and native_pv is not None else 'SIM_ONLY_EXACT'),
                     simulation_tick=result['simulation_ticks']))+'\n')
                 log.flush()
         # Every functional operator and collective above returns only after
