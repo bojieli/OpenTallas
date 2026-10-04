@@ -35,6 +35,7 @@ def emit(dispatch, groups, stage, out):
             raise ValueError('TP4 source context mismatch')
         selected.append([ranks[r] for r in range(4)])
     lines = ['#include "s81_source_caller_plan.hpp"',
+             '#include "s81_wavefront_stage_poller.hpp"',
              'DsromS81SourcePlan dsrom_s81_bind_source(DsromS81Runtime& runtime) {',
              f'  if(runtime.stage!={stage})throw std::runtime_error("selected source plan stage mismatch");',
              '  DsromS81SourcePlan plan;']
@@ -49,7 +50,16 @@ def emit(dispatch, groups, stage, out):
                       f'    dsrom_s81_bind_inputs(runtime,group.ranks[{rank}],{node});',
                       f'    dsrom_s81_bind_receipts(runtime,group.ranks[{rank}],{node});']
         lines += ['    plan.groups.push_back(std::move(group));', '  }']
-    lines += ['  return plan;', '}']
+    lines += ['  return plan;', '}',
+              'DsromS81WaveStagePoller::NodeOrder dsrom_s81_bind_source_nodes(DsromS81Runtime& runtime) {',
+              f'  if(runtime.stage!={stage})throw std::runtime_error("selected source node order stage mismatch");',
+              '  return {']
+    # The caller and poller MUST consume the same owner-selected order, not
+    # a second traversal of the canonical field map or sorted node IDs.
+    for group in selected:
+        nodes = ', '.join(json.dumps(o['node'], ensure_ascii=True) for o in group)
+        lines.append('    {' + nodes + '},')
+    lines += ['  };', '}']
     out = Path(out)
     with out.open('x') as f:
         f.write('\n'.join(lines)+'\n')
