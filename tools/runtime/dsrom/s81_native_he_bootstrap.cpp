@@ -12,8 +12,8 @@ static void apply(Leaf& l,const S81NativeHeBootstrapInput& i,S81NativeHeBootstra
  m.clk=clk;m.rst_n=i.reset_n;m.he_go=i.he_go;m.he_nout=i.he_nout;m.he_k=i.he_k;
  m.he_wbase=i.he_wbase;m.he_xbase=i.he_xbase;m.he_obase=i.he_obase;
  m.he_m=i.he_m;m.he_xps=i.he_xps;m.he_ops=i.he_ops;
- std::copy_n(i.he_w_data,64,m.he_w_data.begin());std::copy_n(i.he_x_q,8,m.he_x_q.begin());
- m.ssx_valid=i.ssx_valid;m.ssx_last=i.ssx_last;std::copy_n(i.ssx_x,256,m.ssx_x.begin());
+ std::copy_n(i.he_w_data,64,&m.he_w_data[0]);std::copy_n(i.he_x_q,8,&m.he_x_q[0]);
+ m.ssx_valid=i.ssx_valid;m.ssx_last=i.ssx_last;std::copy_n(i.ssx_x,256,&m.ssx_x[0]);
  m.eval();
  o.he_ready=m.he_ready;o.he_idle=m.he_idle;o.he_fault=m.he_fault;
  o.he_w_re=m.he_w_re;o.he_x_re=m.he_x_re;
@@ -25,7 +25,7 @@ static void apply(Leaf& l,const S81NativeHeBootstrapInput& i,S81NativeHeBootstra
   o.he_x_addr[b]=(q>>s)&0x3fffffff;
  }
  o.he_o_we=m.he_o_we;o.he_o_addr=m.he_o_addr;o.he_o_mask=m.he_o_mask;
- std::copy_n(m.he_o_data.begin(),32,o.he_o_data);
+ std::copy_n(&m.he_o_data[0],32,o.he_o_data);
  o.ssx_we=m.ssx_we;o.ssx_addr=m.ssx_addr;o.ssx_data=m.ssx_data;
  o.ssx_busy=m.ssx_busy;o.ssx_fault=m.ssx_fault;
 }
