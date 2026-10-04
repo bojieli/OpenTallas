@@ -1,6 +1,6 @@
 # External references registry
 
-Canonical list of every third-party figure the repository uses (120 entries, 12 added on 2026-10-04). Built by `tools/external_registry.py` (`--check` verifies the committed outputs). **Cite an entry id from `registry.json` instead of re-researching a source.** `used_by` lists the committed records and tools that cite each URL.
+Canonical list of every third-party figure the repository uses (121 entries, 13 added on 2026-10-04). Built by `tools/external_registry.py` (`--check` verifies the committed outputs). **Cite an entry id from `registry.json` instead of re-researching a source.** `used_by` lists the committed records and tools that cite each URL.
 
 > OWNER RULE 2026-10-04: speculative-decoding acceptance and the DeepSeek-V4.1 GPU decode baseline must come from PUBLISHED THIRD-PARTY sources (MLCommons, LMSys/SGLang, vLLM, model vendors, NVIDIA/AMD, ...), never from our own measurement. OWNER CORRECTION: cite this registry instead of re-researching.
 
@@ -128,3 +128,4 @@ Topical views: [acceptance](../speculative/third_party_acceptance_20261004/READM
 | `new:broadcom_tomahawk_ultra_pr` | yes | vendor claim (primary) | [Broadcom press release, Broadcom Ships Tomahawk Ultra (GlobeNewswire), 15 Jul 2025](https://www.globenewswire.com/news-release/2025/07/15/3115637/19933/en/Broadcom-Ships-Tomahawk-Ultra-Reimagining-the-Ethernet-Switch-for-HPC-and-AI-Scale-up.html) | 2 |
 | `new:coolit_4000w_coldplate` | yes | vendor claim (test vehicle) | [CoolIT Systems, 4000W breakthrough in single-phase DLC (news), 2 Dec 2025](https://www.coolitsystems.com/resources/news/coolit-systems-4000w-breakthrough-redefining-single-phase-dlc-for-ultra-high-wattage-ai-processors/) | 0 |
 | `new:alliancechem_gpu_flux` | yes | UNRELIABLE - do not use | [Alliance Chemical blog, GPU thermal density & coolant flow (B200/GB200/MI300), 27 Apr 2026](https://alliancechemical.com/blogs/articles/gpu-thermal-density-b200-gb200-coolant-flow-specs) | 0 |
+| `new:tomahawk5_power` | yes | trade press (vendor statement) | [Gazettabyte, Broadcom Tomahawk 5 (51.2 Tb/s, 5 nm) switch chip power](https://www.gazettabyte.com/?p=145716) | 2 |

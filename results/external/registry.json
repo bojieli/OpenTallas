@@ -4,8 +4,8 @@
  "owner_rule": "OWNER RULE 2026-10-04: speculative-decoding acceptance and the DeepSeek-V4.1 GPU decode baseline must come from PUBLISHED THIRD-PARTY sources (MLCommons, LMSys/SGLang, vLLM, model vendors, NVIDIA/AMD, ...), never from our own measurement. OWNER CORRECTION: cite this registry instead of re-researching.",
  "tool": "tools/external_registry.py",
  "counts": {
-  "total": 120,
-  "new": 12
+  "total": 121,
+  "new": 13
  },
  "entries": [
   {
@@ -2174,6 +2174,23 @@
    "note": "Rejected: assumes 1.5-2 cm2 for B200, whose two reticle-limited dies are ~16 cm2 (r-dgxb200); recorded so nobody re-adopts it.",
    "new": true,
    "used_by": []
+  },
+  {
+   "id": "new:tomahawk5_power",
+   "topic": "switch",
+   "title": "Gazettabyte, Broadcom Tomahawk 5 (51.2 Tb/s, 5 nm) switch chip power",
+   "url": "https://www.gazettabyte.com/?p=145716",
+   "cls": "trade press (vendor statement)",
+   "value": {
+    "power_w": "<500"
+   },
+   "quote": "consumes less than 500 W",
+   "note": "Harvested from the committed tools/ds_energy_silicon_authoritative.py ASSUMED.switch_chip_w (no re-research). Tomahawk 5 class (51.2T, N5); Tomahawk Ultra / NVSwitch power is unpublished, so a 51.2T scale-up switch chip is charged 500 W as an upper bound by analogy. Consumer: tools/energy_silicon_measured.py.",
+   "new": true,
+   "used_by": [
+    "results/uarch/ds_energy_silicon_authoritative_20261004/model.json",
+    "tools/ds_energy_silicon_authoritative.py"
+   ]
   }
  ]
 }
