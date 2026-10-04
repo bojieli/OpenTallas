@@ -7,13 +7,6 @@ if {[llength [info commands repair_clock_inverters]]} {
   rename repair_clock_inverters ot_orig_repair_clock_inverters
   proc repair_clock_inverters {args} { puts "OT_FWD: repair_clock_inverters skipped (forwarded-clock subtree kept)" }
 }
-# TritonCTS also balances the launching tree's latency against the forwarded subtree ("Balancing latency for clock
-# incoming: inserted N delay buffers"), which would delay the launch by the whole span and undo the forwarding.  The
-# receiving stage's latency is deliberately unbalanced here, so delay-buffer insertion is off for this fixture.
-if {[llength [info commands clock_tree_synthesis]] && ![llength [info commands ot_orig_clock_tree_synthesis]]} {
-  rename clock_tree_synthesis ot_orig_clock_tree_synthesis
-  proc clock_tree_synthesis {args} {
-    puts "OT_FWD: clock_tree_synthesis $args -delay_buffer_derate 0"
-    uplevel 1 [list ot_orig_clock_tree_synthesis {*}$args -delay_buffer_derate 0]
-  }
-}
+# (TritonCTS's per-clock latency balancing would also pad the launching tree to the forwarded subtree's latency;
+# fwd_hop2.sdc defines the forwarded clock as its own generated clock at the forwarding inverter, so it is a separate
+# clock root and nothing is balanced across the span.)

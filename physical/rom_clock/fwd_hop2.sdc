@@ -1,8 +1,11 @@
 # ot_fwd_link_hop2 fixture (physical/rom_clock/ot_fwd_link_hop2.sv): one clock at the west port; stage B is clocked
-# by stage A's forwarded (inverted) clock, propagated through A's inverter and its own CTS subtree, so the A -> B
-# hop is checked with the real forwarded-clock insertion.  B forwards fclk_o = ~~fclk_i (same polarity as fclk_i).
+# by stage A's forwarded (inverted) clock fwd_a with its own CTS subtree, so the A -> B hop is checked with the real
+# forwarded-clock insertion.  B forwards fclk_o = ~fwd_a (same polarity as fclk_i).
 create_clock -name incoming -period 833.333 [get_ports fclk_i]
-create_generated_clock -name forwarded -source [get_ports fclk_i] -edges {1 2 3} [get_ports fclk_o]
+# Stage A's forwarded clock: generated at its forwarding inverter (ot_fwd_clk_inv), the root of stage B's own subtree.
+# Its latency is propagated from fclk_i through A's tree leaf, the inverter, the span and B's subtree.
+create_generated_clock -name fwd_a -source [get_ports fclk_i] -invert [get_pins {u_a.active.u_fwd_inv/*/Y}]
+create_generated_clock -name forwarded -source [get_pins {u_a.active.u_fwd_inv/*/Y}] -master_clock fwd_a -invert [get_ports fclk_o]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay 166.666 -clock incoming [get_ports {rst_n i_v i_d*}]
