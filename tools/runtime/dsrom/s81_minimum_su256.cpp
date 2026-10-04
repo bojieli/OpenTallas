@@ -1,6 +1,7 @@
 // Selected SUN256 native SU; host copies opaque payload bits only.
 #include "s81_minimum_prefix_io.hpp"
 #include "s81_minimum_su256_ports.hpp"
+#include "s81_minimum_su256_constants.hpp"
 #include "VDsromSu256.h"
 #include "verilated.h"
 #include <cstdlib>
@@ -36,7 +37,7 @@ struct NativeSu {
  void constants(){
   if(crom_loaded)return;
   const char* path=std::getenv("DSROM_S81_MINIMUM_CROM_HEX");
-  require(path&&*path,"SU I6 requires actual enrolled CROM file DSROM_S81_MINIMUM_CROM_HEX; no synthetic constants");
+  require(path&&*path,"SU requires actual layer-enrolled CROM file DSROM_S81_MINIMUM_CROM_HEX; no synthetic constants");
   std::ifstream f(path);require(bool(f),"actual CROM source unavailable");
   uint32_t a=0;std::string line,token;
   while(std::getline(f,line)){
@@ -47,8 +48,10 @@ struct NativeSu {
    }
   }crom_loaded=true;
  }
- uint32_t external(unsigned src,uint32_t a){
-  require(src==1||src==2,"prefix does not enroll WROM provider");constants();
+ uint32_t external(unsigned src,uint32_t a,unsigned operand){
+  require(src==1||src==2,"prefix does not enroll WROM provider");
+  require(bool(op),"SU constant read without held source operation");
+  a=dsrom_s81_su_constant_address(*op,operand,src,a);constants();
   auto p=crom.find(a);require(p!=crom.end(),"native source address missing from actual CROM");
   return src==1?uint32_t(p->second):uint32_t(p->second>>32);
  }
@@ -162,7 +165,7 @@ struct NativeSu {
        uint64_t(base[p])+uint64_t(out)*so[p]+uint64_t((p==1||p==3)&&leaf.i_bhalf?i/2:i)*si[p];
       require(address<(1u<<19),"actual SU source VM19 alias");
       if(src[p]==0){if(!staged.count(address))unique.insert(address);}
-      else (void)external(src[p],address);
+      else (void)external(src[p],address,p);
      }
     }
     // Snapshot is bounded by the actual selected VM's19-bit address space.
@@ -198,8 +201,8 @@ struct NativeSu {
    admitted=false;op.reset(); // next generation must reread actual operand versions
   }
  }
- uint32_t memory(unsigned src,uint32_t a){
-  if(src)return external(src,a);
+ uint32_t memory(unsigned src,uint32_t a,unsigned operand=0){
+  if(src)return external(src,a,operand);
   auto v=staged.find(a);
   require(v!=staged.end(),"native fixed read outside actual staged scalars");return v->second;
  }
@@ -227,7 +230,7 @@ struct NativeSu {
    }
    for(unsigned j=0;j<1024;++j){
     q[j]=leaf.rd_q[j];if(released&&bits(leaf.rd_re,j,1))
-     q[j]=memory(bits(leaf.rd_src,j*2,2),bits(leaf.rd_addr,j*30,30));
+     q[j]=memory(bits(leaf.rd_src,j*2,2),bits(leaf.rd_addr,j*30,30),j%4);
    }
    if(acc)admitted=true;
    leaf.rst_n=released;leaf.clk=1;leaf.eval(); // OLD synchronous-memory Q at edge

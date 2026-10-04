@@ -22,7 +22,7 @@ def _one(text, old, new):
 
 def install(binding, original_export, output, *, drain=False, head=False,
             actual_collectives=None, trace=False, stage=None, accepted_pop=False,
-            workspace=False, capture=False):
+            workspace=False, capture=False, kvt_source_stride=False):
     """Return actual elaborator sources/parameters, with every flag default off.
 
     trace is simulation-only and records commands admitted at dut.cmd_go,
@@ -74,6 +74,16 @@ def install(binding, original_export, output, *, drain=False, head=False,
             s = _one(s, '    parameter integer C8_PUBLICATION=0,',
                      '    parameter integer S81_COMMAND_TRACE=0,\n    parameter integer S81_TRACE_STAGE=-1,\n    parameter integer S81_HOST_WORKSPACE=0,\n    parameter integer C8_PUBLICATION=0,')
             s = _one(s, '\nendmodule', DRAIN_SELECTION_GUARD + OBSERVER + WORKSPACE + '\nendmodule')
+        if kvt_source_stride:
+            s = _one(s, '    parameter integer IDX_DRAIN_LOOKAHEAD=0,',
+                     '    parameter integer SU_KVT_SOURCE_STRIDE=0,\n    parameter integer IDX_DRAIN_LOOKAHEAD=0,')
+            if role == 'core':
+                s = _one(s, 'ot_hdc_v41x_su_adapt #(',
+                         'ot_hdc_v41x_su_adapt #(.KVT_SOURCE_STRIDE(SU_KVT_SOURCE_STRIDE),')
+            else:
+                module = {'tile':'ot_hdc_core_v41x', 'die':'ot_chip_v41x_tile',
+                          'top':'ot_chip_v41x_die_owner_safe_c8'}[role]
+                s = _one(s, module+' #(', module+' #(.SU_KVT_SOURCE_STRIDE(SU_KVT_SOURCE_STRIDE),')
         if capture:
             from dsrom_s81_capture_parent import hook
             s=hook(role,s)
@@ -87,6 +97,8 @@ def install(binding, original_export, output, *, drain=False, head=False,
         if not dest.exists():
             dest.write_text(changed[p])
     sources = [dests.get(p, p) for p in paths]
+    if kvt_source_stride:
+        sources = _select_kvt_stride_sources(sources)
     if capture:
         from dsrom_s81_capture_parent import dependencies
         sources=dependencies(sources,output/'capture')
@@ -113,7 +125,27 @@ def install(binding, original_export, output, *, drain=False, head=False,
         result['verilator_args'].extend(['-GS81_CAPTURE=1','-I'+str(ROOT/'rtl/hdc/v41')])
         result['capture_added_idle_edges_per_executed_phase']=2
         result['physical_admission']=False
+    if kvt_source_stride:
+        result['parameters']['SU_KVT_SOURCE_STRIDE']=1
+        result['verilator_args'].append('-GSU_KVT_SOURCE_STRIDE=1')
+        result['kvt_source_stride']={'128':11,'512':13}
+        result['physical_admission']=False
     return result
+
+
+def _select_kvt_stride_sources(sources):
+    replacements={}
+    for name in ('ot_hdc_v41x_su_adapt.sv','ot_hdc_v41x_vec.sv','ot_hdc_v41x_vec_lane.sv'):
+        matches=[p for p in sources if p.name==name]
+        if len(matches)!=1:
+            raise ValueError('missing/duplicate actual KVT source: '+name)
+        original=ROOT/'rtl/hdc/v41x'/name
+        selected=ROOT/'rtl/hdc/v41x/s81_kvt_stride'/name
+        if matches[0].read_bytes()!=original.read_bytes():
+            raise ValueError('selected KVT original source mismatch: '+name)
+        if not selected.is_file():raise FileNotFoundError(selected)
+        replacements[matches[0]]=selected
+    return [replacements.get(p,p) for p in sources]
 
 
 DRAIN_SELECTION_GUARD = r'''
@@ -193,12 +225,13 @@ def main():
     parser.add_argument('--workspace',action='store_true')
     parser.add_argument('--trace',action='store_true')
     parser.add_argument('--capture',action='store_true')
+    parser.add_argument('--source-kvt-stride',action='store_true')
     args=parser.parse_args()
     binding=ParentBinding(args.owner,args.selected,args.model_pin,args.interface_pin,
                           payload_interface=args.payload_interface, released_return_binding=args.released_return_binding)
     result=install(binding,args.original_export,args.output,drain=args.drain,
                    head=args.head,trace=args.trace,stage=args.stage,accepted_pop=args.accepted_pop,
-                   workspace=args.workspace,capture=args.capture)
+                   workspace=args.workspace,capture=args.capture,kvt_source_stride=args.source_kvt_stride)
     result['allocation_receipts']=binding.receipts
     text=json.dumps(result,default=str,indent=2)+'\n'
     receipt=Path(args.output)/'sources.json'
