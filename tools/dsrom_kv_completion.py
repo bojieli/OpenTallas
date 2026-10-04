@@ -145,7 +145,7 @@ def system_source():
 
 def install(sources,output,*,enable=False):
     sources=[Path(p) for p in sources]
-    if not enable:return dict(sources=sources,top='tb_dsrom_system',parameters={})
+    if not enable:return dict(sources=sources,top='tb_dsrom_system',parameters={},verilator_args=[])
     tb=[p for p in sources if p.name=='tb_dsrom_system.sv']
     if len(tb)!=1 or tb[0].read_text()!=original('rtl/test/dsrom_sys/tb_dsrom_system.sv'):
         raise ValueError('actual pinned Arch system testbench required')
@@ -158,7 +158,7 @@ def install(sources,output,*,enable=False):
     deps=[ROOT/'rtl/dsrom_sys/c8'/n for n in ['ot_hdc_v41x_idx_hbm_c8.sv','ot_dsrom_c8_write_journal.sv']]
     result=[selected if p==tb[0] else p for p in sources]
     result=list(dict.fromkeys(result+[prefetch,mux]+deps))
-    return dict(sources=result,top='tb_dsrom_system',parameters={'KV_COMPLETION':1})
+    return dict(sources=result,top='tb_dsrom_system',parameters={'KV_COMPLETION':1},verilator_args=['-GKV_COMPLETION=1'])
 
 
 def install_credit_service(sources,output,*,caller,position_identity,own_pending='c8_own_pending',own_visible='c8_own_visible_v',own_visible_identity='c8_own_visible_identity',own_visible_gid='c8_own_visible_gid',enable=False):
@@ -168,7 +168,7 @@ def install_credit_service(sources,output,*,caller,position_identity,own_pending
     signal. This does not install a new stage/lifecycle/context engine.
     """
     sources=[Path(p) for p in sources];caller=Path(caller)
-    if not enable:return dict(sources=sources,parameters={})
+    if not enable:return dict(sources=sources,parameters={},verilator_args=[])
     s=caller.read_text()
     if caller not in sources:raise ValueError('selected actual caller absent from source inventory')
     if not position_identity.isidentifier():raise ValueError('actual captured identity signal name required')
@@ -185,7 +185,14 @@ def install_credit_service(sources,output,*,caller,position_identity,own_pending
     out=Path(output);out.mkdir(parents=True,exist_ok=True)
     selected=out/caller.name;selected.write_text(s)
     service=out/'ot_dsrom_ckv_credit_completion.sv';service.write_text(credit_source())
-    return dict(sources=[selected if p==caller else p for p in sources]+[service],parameters={'C8_PUBLICATION':1})
+    result=[selected if p==caller else p for p in sources]+[service]
+    # Include the original credit engine's real dependencies; reuse an owner's
+    # already selected copy by filename rather than introducing a second module.
+    for name in ('ot_chip_v41x_ckv_sel_ids.sv','ot_chip_v41x_ckv_sel_fetch.sv',
+                 'ot_chip_v41x_ckv_stream_merge.sv','ot_chip_v41x_ckv_selected_dma.sv',
+                 'ot_chip_v41x_ckv_fp4_decode.sv','ot_chip_v41x_ckv_row_encoder.sv'):
+        if not any(p.name==name for p in result): result.append(ROOT/'rtl/chip'/name)
+    return dict(sources=result,parameters={'C8_PUBLICATION':1},verilator_args=['-GC8_PUBLICATION=1'])
 
 # Strip inherited trailing whitespace only in generated successor copies.
 def _clean_generated(generator):
