@@ -1,0 +1,15 @@
+Euclid immediate source-only handoff. Original46 controller and r8 terminal unchanged.
+{
+  "source_valid": "native_aperture_source_cursor_valid",
+  "source_tuple": "native_aperture_authority_tuple",
+  "source_sequence": "native_aperture_authority_sequence",
+  "source_descriptor": "native_aperture_source_descriptor",
+  "source_types": "native_aperture_source_types",
+  "source_operands": "native_aperture_source_operands",
+  "source_signed_i8_mask": "native_aperture_source_signed_i8_mask",
+  "source_vector_mask": "native_aperture_source_vector_mask",
+  "source_counts": "native_aperture_source_counts"
+}
+ONE serialized source ROM service for64 existing sealed cursors; no copied numerical buffers, command-fed authority or new identity state. Literal types12 are derived from types8 plus signedmask4 explicitly. ROM independent source SHA is captured by existing collector, compared against separately protected command SHA.
+ENABLE defaults0 on both modules. Exact dependency Ampere 78cb40f8079c64a3fe5734f54da03678b4fe4c58 supplies stateless signed-I8 delegate. Compile sources.f after dependency intake; no new full/partial build or arithmetic gate has been launched. Unqualified physical/source-only artifact; no whole1737/token/exactness/latency/signoff claim.
+Use existing r6 source cursor/profile collector interfaces. No additional ABI or native_binding provider is introduced in this handoff.

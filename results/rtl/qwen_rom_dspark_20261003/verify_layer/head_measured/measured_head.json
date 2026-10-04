@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.qwen-rom-dspark-head-measured.v1",
+  "status": "PASS",
+  "collector_sha256": "8c6d2df3ee95908d93db314528c2b8a6fb49b08f798ebfb47c79d7fef357bf6d",
+  "jobs": {
+    "head1": {
+      "positions": 1,
+      "exit_code": 0,
+      "errors": [],
+      "cycles": 3006,
+      "oracle_sha256": "e5ac129baa0528756b264d9cf313128f2c2ad559b2362518631c39134f8a117f"
+    },
+    "head4": {
+      "positions": 4,
+      "exit_code": 0,
+      "errors": [],
+      "cycles": 12000,
+      "oracle_sha256": "dba9f04a1f04715f4dc39b46827927a5538deb6e2cc76318cec674a341b2281a"
+    }
+  },
+  "increment_per_extra_position": 2998.0,
+  "claim_boundary": "Head-only TP4 companion RTL with preloaded final X; no drafter, rollback, overlap, near-HBM or SS/FF qualification."
+}

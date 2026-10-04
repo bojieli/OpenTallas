@@ -1189,7 +1189,17 @@ V41_HBM_FABRIC_US = dict(collective_latency=125.9, collective_bytes=1.5, pipelin
 V41_HBM_DIES = 96          # G = 96: every matrix 1/96 per die (W9 handoff 8)
 
 
-def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
+# Opt-in owner/ACK/fence and refresh-live first-access hypothesis from the retained
+# v41_hbm_service_term_20261003 proposal. Existing callers retain the exact off path.
+V41_HBM_SERVICE = dict(
+    off=dict(boundary_cycles=0, routed_fetch_ns=0.0),
+    low=dict(boundary_cycles=2, routed_fetch_ns=133.2 + 5.4),
+    central=dict(boundary_cycles=4, routed_fetch_ns=469.5 + 6.4 + 0.1),
+    high=dict(boundary_cycles=6, routed_fetch_ns=526.4 + 7.4 + 18.3),
+)
+
+
+def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None, service="off"):
     """V4.1 HBM token on the SM design, K-chain aware: the arch DAG's critical path at 1M with every matvec
     re-priced as an SM op on its 1/96 row slice (sm_op_cycles), the dedicated units' nodes (W11 spec widths)
     at their arch price, one barrier per global boundary, and the comparator's switched-fabric terms.  The
@@ -1223,6 +1233,11 @@ def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
     parts = dict(sm_matvec=mv * 1e6, x_broadcast_fill=xfill * 1e6, dedicated_and_su=other * 1e6,
                  verify_extra_issue=extra * 1e6, barrier=nb * bc / clock * 1e6, **V41_HBM_FABRIC_US)
     parts["collective_bytes"] *= positions             # every position's activations cross the fabric
+    sv = V41_HBM_SERVICE[service]  # named, source-priced profiles only
+    if sv["boundary_cycles"] or sv["routed_fetch_ns"]:
+        n_routed = sum(1 for x in path if x.endswith(".ffn.experts_gu"))
+        parts["boundary_service"] = nb * sv["boundary_cycles"] / clock * 1e6
+        parts["routed_fetch"] = n_routed * sv["routed_fetch_ns"] * 1e-3
     chain = sum(parts.values())
     T = max(chain, 37.4)
     return T, parts, nb
@@ -1814,6 +1829,25 @@ def hbm_speculation_rows():
                      draft_us=round(Td, 1), tokens_s=round(V41_TAU * 1e6 / (T_v + Td), 1),
                      speedup=round(V41_TAU * T_ar / (T_v + Td), 3),
                      verify_breakdown_us={k: round(x, 1) for k, x in parts_v.items()}))
+    return rows
+
+
+V41_HBM_DSPARK_REC = ROOT / "results/speculative/v41_hbm_speculation_methods_20261003/v41_hbm_speculation_methods.json"
+
+
+def v41_hbm_dspark_rows(ctx=1048576):
+    """OPT-IN (--v41-hbm-dspark; never on a default path): the V4.1 HBM comparator's DSpark rows with the drafter
+    priced from its real structure (3 stages x 5 slots + LM head + 5 serial Markov argmaxes) and the verify pass's
+    MEASURED expert union, on W19's composer (tools/v41_hbm_speculation_methods.py).  V4.1's built-in 'MTP' is
+    DSpark: these rows re-price the existing headline's terms; HBM_W19 and V41_DRAFT_FRACTION are unchanged."""
+    rec = json.loads(V41_HBM_DSPARK_REC.read_text())
+    c = rec["contexts"][str(ctx)]
+    rows = [dict(design="v41_hbm_ar_w19", ctx=ctx, tokens_s=c["ar_tokens_s"], T_us=c["ar_us"])]
+    for k, v in c["headline_comparison_tau_3649_gamma5"].items():
+        rows.append(dict(design=f"v41_hbm_dspark_g5_tau3649_{k}", ctx=ctx, tokens_s=v["tokens_s"], step_us=v["step_us"]))
+    for ts, r in c["rates"].items():
+        for x in r["by_gamma"]:
+            rows.append(dict(design=f"v41_hbm_dspark_g{x['gamma']}", tau_set=ts, ctx=ctx, **x))
     return rows
 
 
@@ -6300,6 +6334,12 @@ def w10_pinaccess_contract_review(inputs):
         source_sha256=inputs["sources_sha256"])
 
 
+def dsrom_s81_components(ctx=1048576):
+    """Selected S81 component composition; unbound provider costs stay unknown."""
+    from dsrom_s81_unified_components import build
+    return build(ROOT, ctx=ctx)
+
+
 def dsrom_s82_rows():
     """Opt-in retained-RD64 conditional composition; defaults are unchanged."""
     from dsrom_s82_token_pricing import build
@@ -6359,9 +6399,16 @@ def qwen_posted_kv_model(records):
                                "measured gain >=1% after token composition", "contextual SS/FF and hub routing"])
 
 
+def hbm_accel_rows():
+    """Default-off HA0/HA10 hypotheses; no measured/adopted accelerator rate."""
+    from hbm_accelerator_model import build
+    return build(sys.modules[__name__])
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
     ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
     ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
@@ -6372,8 +6419,12 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--qwen", action="store_true", help="the Qwen3-8B ROM die rows only")
     ap.add_argument("--qwen-posted-kv-baseline", action="append", help="REAL_MEM record for default-off posted-write sizing")
-    ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM comparators only")
+    ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM ablation only")
+    ap.add_argument("--hbm-accel", action="store_true",
+                    help="default-off UNVALIDATED HBM accelerator ladder and fairness hypotheses")
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
+    ap.add_argument("--v41-hbm-dspark", action="store_true", help="OPT-IN: V4.1 HBM DSpark rows (priced draft, "
+                    "measured expert union) from results/speculative/v41_hbm_speculation_methods_20261003")
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
     ap.add_argument("--vm-waterfall", action="store_true", help="the VM waterfall and levers (root 2026-10-01)")
@@ -6382,6 +6433,20 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.dsrom_s81_components:
+        payload = json.dumps(dsrom_s81_components(a.ctx), indent=2, sort_keys=True, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.hbm_accel:
+        payload = json.dumps(hbm_accel_rows(), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.dsrom_s82 or a.qwen_posted_kv_baseline:
         if a.dsrom_s82:
             payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"
@@ -6593,6 +6658,47 @@ def main(argv=None):
     if a.out:
         Path(a.out).parent.mkdir(parents=True, exist_ok=True)
         Path(a.out).write_text(json.dumps(out, indent=1, default=str) + "\n")
+
+
+def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
+    """Cold token ROM lookup; retained dedicated storage, no field refit.
+
+    One outstanding 256-bit lookup, then four 16-lane FP32 VM commits.
+    Native backpressure adds cycles. Capture depth is an explicit unvalidated
+    parameter, not a macro SS/FF qualification or a new headline rate.
+    """
+    storage = inventory['dedicated_storage']['global_tensors'][0]
+    assert storage['tensor'] == 'embed.weight' and storage['shape'] == [129280, 5120]
+    assert inventory['stages'] == 81 and storage['word_data_bits'] == 256
+    words = 5120 // 16
+    # RTL state is one response register plus identity, token/address, counters.
+    state_bits = 256 + 47 + 26 + 19 + 9 + 2 + 2 + 2
+    return dict(schema='opentallas.dsrom.S81.embedding-bootstrap.model.v1',
+        all_numbers='MODEL_UNVALIDATED', adopted=False,
+        source_inventory='results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json',
+        retained_storage=storage, retained_storage_credit_mm2=0,
+        geometry_changed=False, ROM_ECC=False, replicas=1, MACs_per_cycle=0,
+        compute_intensity_MAC_per_byte=0, lookup_words_per_token=words,
+        one_outstanding_request=True, rom_response_bytes=32,
+        ROM_port_bytes_per_cycle_peak=32, VM_write_bytes_per_cycle_peak=64,
+        VM_commits_per_token=words*4, VM_FP32_words_per_token=20480,
+        clock_hz=1.2e9, rom_capture_cycles=rom_capture_cycles,
+        no_stall_latency_cycles=1 + words*(1+rom_capture_cycles+4),
+        no_stall_latency_us=(1 + words*(1+rom_capture_cycles+4))/1200,
+        composed_single_user_contribution='Cold embedding before native SSX reduction/L0.I0; stalls and transport are additive',
+        communication_intensity_FP32_output_bytes_per_source_byte=8,
+        boundary_bits_per_cycle=dict(ROM_response=256, VM_commit=512,
+            ROM_request=73, saved_context=47),
+        routing_tracks_required=dict(ROM_response_data=256, VM_commit_data=512,
+            VM_address=19, VM_identity=47, ROM_address=26),
+        routing_channel_capacity=None, routing_fit_qualified=False,
+        mux_demux_fanout='Single selected macro return mux retained in storage ledger; 16 BF16-to-FP32 wiring lanes, 4 sequential HC copies, one target VM endpoint at a time. TP4 fanout/delivery requires parent pricing.',
+        state_bits=state_bits, register_cell_lower_bound_mm2=state_bits*DFF_UM2/1e6,
+        unpriced_control_and_routes=['token/address decode and bounds', 'macro return mux/control',
+            'VM 16-lane arbitration/commit port', 'dedicated-store to TP4 transport', 'CTS/PDN/routes'],
+        floorplan_slot_fit=None, physical_SS_FF_qualified=False,
+        numerical_work='Lossless BF16 bits <<16; no arithmetic, expected activation or CPU inference',
+        required_next_native_producer='SSX = golden-order sum of H squared; never host-computed here')
 
 
 if __name__ == "__main__":

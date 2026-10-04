@@ -1,0 +1,317 @@
+{
+  "utc": "2026-10-04T01:31:22.977389+00:00",
+  "scope": "Exact original wave1 and cached waiter only; user-authorized stop after Claude observed PC4386 XU/Sinkhorn nonprogress",
+  "classification": "TERMINATED_UNQUALIFIED",
+  "owner_deadlock_report": "STATUS_before_stop.md",
+  "controllers": [
+    {
+      "pid": 222300,
+      "ppid": 1,
+      "start_ticks": 758594,
+      "cmd": "python3 tools/rtl_hdc_v41_mtp_campaign.py --part rom_m1_g5_gold4 --gamma 5 --ngen 12 --prompts gold4 --mutate --isa-checks --output /srv/opentallas-scratch/claude/dsrom-dspark/out/rom_m1_g5_gold4.json "
+    },
+    {
+      "pid": 222301,
+      "ppid": 1,
+      "start_ticks": 758594,
+      "cmd": "python3 tools/rtl_hdc_v41_mtp_campaign.py --part rom_m1_g5_o8s6 --gamma 5 --ngen 12 --prompts oracle8,spread6 --output /srv/opentallas-scratch/claude/dsrom-dspark/out/rom_m1_g5_o8s6.json "
+    },
+    {
+      "pid": 222302,
+      "ppid": 1,
+      "start_ticks": 758594,
+      "cmd": "python3 tools/rtl_hdc_dspark_v41x_campaign.py --part x_heme --units he,me --mutate --gamma 5 --ngen 12 --prompts gold4,oracle8,spread6 --jobs 16 --workdir /srv/opentallas-scratch/claude/dsrom-dspark/wd --output /srv/opentallas-scratch/claude/dsrom-dspark/out/x_heme.json "
+    },
+    {
+      "pid": 222303,
+      "ppid": 1,
+      "start_ticks": 758594,
+      "cmd": "python3 tools/rtl_hdc_dspark_v41x_campaign.py --part x_heme_guard --units he,me --acc-guard --mutate --gamma 5 --ngen 12 --prompts gold4,oracle8,spread6 --jobs 16 --workdir /srv/opentallas-scratch/claude/dsrom-dspark/wd/g --output /srv/opentallas-scratch/claude/dsrom-dspark/out/x_heme_guard.json "
+    },
+    {
+      "pid": 222304,
+      "ppid": 1,
+      "start_ticks": 758594,
+      "cmd": "python3 tools/rtl_hdc_dspark_v41x_campaign.py --part x_all6 --units he,me,att,sel,eg,su --gamma 5 --ngen 12 --prompts gold4 --jobs 16 --workdir /srv/opentallas-scratch/claude/dsrom-dspark/wd --output /srv/opentallas-scratch/claude/dsrom-dspark/out/x_all6.json "
+    }
+  ],
+  "simulators": [
+    {
+      "pid": 288709,
+      "ppid": 222301,
+      "start_ticks": 824748,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpkdv1suyi/obj_m1r/Vtb_hdc_core_v41_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpkdv1suyi/img_oracle8_dspark +NPROMPT=8 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 288712,
+      "ppid": 222301,
+      "start_ticks": 824760,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpkdv1suyi/obj_m1r/Vtb_hdc_core_v41_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpkdv1suyi/img_oracle8_forced +NPROMPT=8 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 288727,
+      "ppid": 222301,
+      "start_ticks": 824767,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpkdv1suyi/obj_m1r/Vtb_hdc_core_v41_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpkdv1suyi/img_spread6_dspark +NPROMPT=6 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 288728,
+      "ppid": 222301,
+      "start_ticks": 824767,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpkdv1suyi/obj_m1r/Vtb_hdc_core_v41_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpkdv1suyi/img_spread6_forced +NPROMPT=6 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 385121,
+      "ppid": 222302,
+      "start_ticks": 857388,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpf14zkgdn/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/i_gold4_dspark_g5_n12_heme +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 385132,
+      "ppid": 222302,
+      "start_ticks": 857393,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpf14zkgdn/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/i_gold4_forced_g5_n12_heme +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 385133,
+      "ppid": 222302,
+      "start_ticks": 857393,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpf14zkgdn/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/i_oracle8_dspark_g5_n12_heme +NPROMPT=8 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 385135,
+      "ppid": 222302,
+      "start_ticks": 857393,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpf14zkgdn/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/i_oracle8_forced_g5_n12_heme +NPROMPT=8 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 385185,
+      "ppid": 222302,
+      "start_ticks": 857403,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpf14zkgdn/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/i_spread6_dspark_g5_n12_heme +NPROMPT=6 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 385187,
+      "ppid": 222302,
+      "start_ticks": 857405,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpf14zkgdn/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/i_spread6_forced_g5_n12_heme +NPROMPT=6 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 385189,
+      "ppid": 222302,
+      "start_ticks": 857406,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpf14zkgdn/obj_xHDC/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/i_gold4_forced_g5_n12_heme +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 417003,
+      "ppid": 222303,
+      "start_ticks": 863817,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp_bcsz93e/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/g/i_gold4_dspark_g5_n12_heme +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 417139,
+      "ppid": 222303,
+      "start_ticks": 863820,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp_bcsz93e/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/g/i_gold4_forced_g5_n12_heme +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 417142,
+      "ppid": 222303,
+      "start_ticks": 863821,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp_bcsz93e/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/g/i_oracle8_dspark_g5_n12_heme +NPROMPT=8 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 417143,
+      "ppid": 222303,
+      "start_ticks": 863821,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp_bcsz93e/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/g/i_oracle8_forced_g5_n12_heme +NPROMPT=8 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 417147,
+      "ppid": 222303,
+      "start_ticks": 863822,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp_bcsz93e/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/g/i_spread6_dspark_g5_n12_heme +NPROMPT=6 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 417151,
+      "ppid": 222303,
+      "start_ticks": 863824,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp_bcsz93e/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/g/i_spread6_forced_g5_n12_heme +NPROMPT=6 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 417152,
+      "ppid": 222303,
+      "start_ticks": 863824,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp_bcsz93e/obj_xHDC/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/g/i_gold4_forced_g5_n12_heme +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 2094941,
+      "ppid": 222300,
+      "start_ticks": 795570,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp1qkqeuyz/obj_m1r/Vtb_hdc_core_v41_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp1qkqeuyz/img_gold4_dspark +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 2094944,
+      "ppid": 222300,
+      "start_ticks": 795570,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp1qkqeuyz/obj_m1r/Vtb_hdc_core_v41_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp1qkqeuyz/img_gold4_forced +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 2094945,
+      "ppid": 222300,
+      "start_ticks": 795570,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp1qkqeuyz/obj_m1rHDC/Vtb_hdc_core_v41_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmp1qkqeuyz/img_gold4_forced +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    },
+    {
+      "pid": 3054168,
+      "ppid": 222304,
+      "start_ticks": 933492,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpu238l8aa/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/i_gold4_dspark_g5_n12_attheidxmesu +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 "
+    },
+    {
+      "pid": 3054206,
+      "ppid": 222304,
+      "start_ticks": 933493,
+      "cmd": "/srv/opentallas-scratch/claude/dsrom-dspark/tmp/tmpu238l8aa/obj_x/Vtb_hdc_core_v41x_mtp +DIR=/srv/opentallas-scratch/claude/dsrom-dspark/wd/i_gold4_forced_g5_n12_attheidxmesu +NPROMPT=4 +NGEN=12 +GAMMA=5 +ENTRY=4029 +FORCE "
+    }
+  ],
+  "waiter": {
+    "pid": 2143826,
+    "ppid": 1,
+    "start_ticks": 1615263,
+    "cmd": "bash /srv/opentallas-scratch/claude/dsrom-dspark/wave2cached-1f94c92b8.sh "
+  },
+  "waiter_children": [
+    {
+      "pid": 1434618,
+      "ppid": 2143826,
+      "start_ticks": 5937323,
+      "cmd": "sleep 20 "
+    }
+  ],
+  "signals": [
+    {
+      "pid": 2143826,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 1434618,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 222300,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 222301,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 222302,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 222303,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 222304,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 288709,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 288712,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 288727,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 288728,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 385121,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 385132,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 385133,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 385135,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 385185,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 385187,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 385189,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 417003,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 417139,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 417142,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 417143,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 417147,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 417151,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 417152,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2094941,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2094944,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2094945,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3054168,
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 3054206,
+      "signal": "SIGTERM"
+    }
+  ],
+  "returncodes": "Not available from unrelated-process signal sender; no fabricated exit codes",
+  "wave2": "HELD; waiter stopped before controllers",
+  "simulator_count": 23
+}

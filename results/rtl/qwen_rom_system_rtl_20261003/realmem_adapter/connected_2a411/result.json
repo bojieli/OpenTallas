@@ -1,0 +1,43 @@
+{
+  "status": "fail",
+  "scope": "HD128 R8 context129/position128 actual memory-connected attention; not fullprogram token/physical adoption",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv": "4409d14f20b5015df7858c66edd102a856f25aa94adb63c526b634196189747a",
+    "rtl/hdc/kv/ot_qwen_hbm_model_ack.sv": "16aa903f03e848d843afd7354d3b580a3ed0c76531a16824124c745a06ba81bc",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_row_sectors.sv": "0e5f1619f5fbefd360dba81cf2a50252f84b02b9a70c685f0d163402edb39a55",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_realmem_service.sv": "b1ef3dd9799f029fd540fcf44392e6327d732b3199abf7b070188966e3c91bea",
+    "rtl/test/qwen_sys/realmem/ot_qwen_nearhbm_realmem_tb.sv": "a16ce9658f24ae45ac3e3f046fe8e9fb2f335255cc13a3fa7c3b05d662dc6872",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/test/qwen_sys/realmem/qwen_nearhbm_realmem.cpp": "c300c314bc37fd69f739168214c67162118340088f8190b904d1417874e8e41c",
+    "tools/qwen_nearhbm_realmem_gate.py": "aa4cdfb8807d41cfed98b2dae2125cb4f10e6d984456ccf5b54dbbe3935c60a0"
+  },
+  "reused_archive_sha256": "190cf6eeac268ff749313078e01e46bc5661dc812b7984ce7dbc827ac2f0396b",
+  "vector_sha256": {
+    "gold.hex": "fed3c9aa4242a68b0e3f429811ff071f7f3a504fb433919ba3302930e75e8b9e",
+    "meta.json": "a428a37aee60fd20e64e53eb70a5aadb21b7c5169c8f970f7ed08f6f42f2d2fa",
+    "q.hex": "275cf0ff35ee5e24f1a96e9d2601643252a1ee322d35db836938850c2d5dcd81",
+    "kv.hex": "40e8012baef872959216cae09d85357689a489791390c48a38ceef3dd5378cae",
+    "check.hex": "b0e984d3030b954fd6250b13128f3e5195700b86cd61c0fcac095a1702b14d05"
+  },
+  "steps": [
+    {
+      "name": "build",
+      "returncode": 0,
+      "seconds": 1578.5933603449957
+    },
+    {
+      "name": "link",
+      "returncode": 0,
+      "seconds": 28.937683639931493
+    },
+    {
+      "name": "context",
+      "returncode": 1,
+      "seconds": 3.5538869040319696
+    }
+  ],
+  "error": "context failed; original log retained",
+  "source_stable": true,
+  "reused_archive_stable": true
+}

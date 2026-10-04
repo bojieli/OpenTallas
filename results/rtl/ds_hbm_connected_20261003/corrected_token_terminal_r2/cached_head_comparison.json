@@ -1,0 +1,24 @@
+{
+  "verdict": "CACHED_FINAL_HEAD_AGREEMENT",
+  "actual_final_head": 3118,
+  "cached_golden_first_generated_token": 3118,
+  "equal": true,
+  "cached_receipt": "results/rtl/ds_hbm_connected_20261003/reduced_functional_six_columns_r2.json",
+  "cached_receipt_sha256": "d35d54983769a95ad22d72536f22847c87523afbf879eaedf345909d50fe2a2b",
+  "matching_source_pins": {
+    "v41_hbm.py": "69798a0034eaeaee91d30907fa4b34ac4848d757abfbe941398af2e80523b153",
+    "v41_dspark.py": "49cede655f035171558b93680a0ba38a8a6730d4338d22b1b6307ac1bfb4da5f",
+    "model-00001-of-00001.safetensors": "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d"
+  },
+  "scope": "One final prefill head agrees with cached independent reduced-checkpoint golden; not all eight heads or field qualification",
+  "cached_field_comparison_available": false,
+  "field_gap": "Old Simulator20 exposes no field readback and closes its RAM; no exported actual fields to compare",
+  "source_helper_pin_changed": {
+    "actual": "4b86ca8369964ba981da17cb6116fc8577230ed0b546cd939c4199c809e4eb20",
+    "cached": "262cc5ae1615d60c59d7663bfb88cc228c448a701822c2f05b704a65a1ec5c2b"
+  },
+  "numerical_qualified": false,
+  "full_shape_qualified": false,
+  "accelerator_adopted": false,
+  "rerun_performed": false
+}

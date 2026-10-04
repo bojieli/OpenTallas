@@ -1,0 +1,240 @@
+{
+ "0": {
+  "ops": 113,
+  "off_identical": true,
+  "ops_merged": 105,
+  "merges": [
+   {
+    "pc_first": 7,
+    "pc_second": 8,
+    "new_pc": 7,
+    "rows": [
+     320,
+     128
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L0.attn"
+   },
+   {
+    "pc_first": 53,
+    "pc_second": 54,
+    "new_pc": 52,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L0.shared"
+   },
+   {
+    "pc_first": 66,
+    "pc_second": 67,
+    "new_pc": 64,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L0.experts"
+   },
+   {
+    "pc_first": 68,
+    "pc_second": 69,
+    "new_pc": 65,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L0.experts"
+   },
+   {
+    "pc_first": 72,
+    "pc_second": 73,
+    "new_pc": 68,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L0.experts"
+   },
+   {
+    "pc_first": 82,
+    "pc_second": 83,
+    "new_pc": 77,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L0.experts"
+   },
+   {
+    "pc_first": 87,
+    "pc_second": 88,
+    "new_pc": 81,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L0.experts"
+   },
+   {
+    "pc_first": 92,
+    "pc_second": 93,
+    "new_pc": 85,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L0.experts"
+   }
+  ]
+ },
+ "20": {
+  "ops": 144,
+  "off_identical": true,
+  "ops_merged": 136,
+  "merges": [
+   {
+    "pc_first": 7,
+    "pc_second": 8,
+    "new_pc": 7,
+    "rows": [
+     320,
+     128
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L20.attn"
+   },
+   {
+    "pc_first": 84,
+    "pc_second": 85,
+    "new_pc": 83,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L20.shared"
+   },
+   {
+    "pc_first": 97,
+    "pc_second": 98,
+    "new_pc": 95,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L20.experts"
+   },
+   {
+    "pc_first": 99,
+    "pc_second": 100,
+    "new_pc": 96,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L20.experts"
+   },
+   {
+    "pc_first": 103,
+    "pc_second": 104,
+    "new_pc": 99,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L20.experts"
+   },
+   {
+    "pc_first": 113,
+    "pc_second": 114,
+    "new_pc": 108,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L20.experts"
+   },
+   {
+    "pc_first": 118,
+    "pc_second": 119,
+    "new_pc": 112,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L20.experts"
+   },
+   {
+    "pc_first": 123,
+    "pc_second": 124,
+    "new_pc": 116,
+    "rows": [
+     576,
+     576
+    ],
+    "wbase": [
+     0,
+     0
+    ],
+    "tag": "L20.experts"
+   }
+  ]
+ }
+}

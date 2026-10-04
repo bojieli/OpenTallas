@@ -1,0 +1,71 @@
+{
+  "S82_pin": "8c6d5bd7521a1a7788cd6babda624d0b5bceac36",
+  "admission": "MODEL_SOURCE_BOUND_NOT_RTL_OR_PHYSICAL_ADMITTED",
+  "adoption": false,
+  "boundaries": {
+    "FF_hold_ps": 25,
+    "SS_setup_ps": 60,
+    "added_MAC_per_cycle": 0,
+    "added_external_bits_per_cycle": 0,
+    "added_memory_bytes_per_cycle": 0,
+    "clock_reset_PG_slot_fit": "OPEN",
+    "internal_metadata_bits_per_qpair": 252,
+    "period_ps": 833,
+    "routing_tracks": "NOT_EXTRACTED; 252 metadata bits is not a track count"
+  },
+  "cycles": {
+    "absolute_qop_calendar_not_measured": true,
+    "inherited_Rcap0_total_extra": 2,
+    "inherited_Rcap1_total_extra": 3,
+    "lookahead_accepted_II_model": 1,
+    "lookahead_increment_model": 0,
+    "measured_added_cycles": null,
+    "not_two_cycle_walker": true,
+    "qualified_selected_total_extra": null,
+    "token_delta_increment_model_s": 0
+  },
+  "element": "ot_v41_rom_elem_w10",
+  "external_field_boundary": true,
+  "field_model": "ot_v41_field_w17w10_sys",
+  "lookahead_installed_in_parent": false,
+  "new_RTL": false,
+  "new_builds": 0,
+  "pair": "ot_v41_pair_w17w10",
+  "parent_source": "124c889c364678c238a06cea1d63af88727d8060",
+  "parent_top": "ot_v41_rt_die_l20_c8",
+  "rates_or_stage_die_rows_regenerated": false,
+  "recurrence": {
+    "accept": "hit; not offered xs_v alone",
+    "config_loader_cycles": 27,
+    "new_config_words": 0,
+    "public_ports_increment": 0,
+    "restart": "same n_more/c_live/fF0/fF1 source restart; empty go invalidates",
+    "source_priority_feedback_present": true,
+    "update": "accepted beat chooses exact successor; stalled beat holds state/facts"
+  },
+  "replication": {
+    "BF_pairs_unchanged": 512,
+    "FF_increment_all_rankdies": 155062656,
+    "FF_increment_per_qpair": 252,
+    "FF_increment_per_rankdie": 472752,
+    "S82_prior_screen_margin_mm2": 1.464365841792528,
+    "area_reconciliation_required": true,
+    "cell_reserve_increment_mm2_per_rankdie": 0.91298507832,
+    "clock_buffers_per_rankdie": 69412,
+    "control_buffers_per_rankdie": 225120,
+    "gross_margin_after_uncredited_increment_mm2": -0.361604314847472,
+    "overlap_credit": 0,
+    "placed_reserve_increment_mm2_per_rankdie": 1.82597015664,
+    "q_pairs_per_rankdie": 1876,
+    "rankdies": 328
+  },
+  "schema": "dsrom-xneed-s82-current-source-join-v1",
+  "source_hook_plan": {
+    "default_off": "QP_NEED_LOOKAHEAD=0, new additive modules only",
+    "no_BF_lookahead_credit": true,
+    "no_compiler_or_macro_word_order_change": true,
+    "owner_split": "Epicurus x-need element; Archimedes combined source/caller; Claude current S82 system measurements; Maxwell clock/physical homes",
+    "prerequisite": "mandatory second-row decoder correction in reference and candidate; immutable-ROM independent public arithmetic/tag/fault oracle",
+    "propagation": "field q-only sites -> pair -> q element; BF512 unchanged"
+  }
+}

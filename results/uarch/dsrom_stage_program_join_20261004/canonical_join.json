@@ -1,0 +1,38 @@
+{
+  "all_artifacts_initially_unchanged": false,
+  "authoritative_path": "results/uarch/dsrom_s81_released_binding_20261004/canonical",
+  "fragment_groups": 162,
+  "matrix_and_stage_map_unchanged": true,
+  "metadata_changed_during_initial_join": {
+    "mapping_verdict.json": {
+      "after": "89ede66ef53199696f4b102ffb99993fe7203191f0c5b359412c09f8eac349ce",
+      "before": "bf7aa85559b92c9a383a316ff7401e2e86dd752b36982352247e3a447c36cc35"
+    }
+  },
+  "native_execution_qualified": false,
+  "physical_qualified": false,
+  "sha256": {
+    "artifact_hashes.json": "6879e1a05974bd9cd66899f391977a6ac6595f3ad127cfc43d2d614309a906c7",
+    "auxiliary_obligations.json": "a41f4b1d6166620e884e3b2ca48cb310a6be046d611509f163e44a8075f8e433",
+    "binding.json": "4c723c2822a76f4cd26500f2d8e63daa3038a958b7e56e8e11a48889b6fb5325",
+    "inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+    "mapping_verdict.json": "89ede66ef53199696f4b102ffb99993fe7203191f0c5b359412c09f8eac349ce",
+    "matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "providers.json": "91ad040342b25cd38fb69ef0eb7cb4966ff8e7e9c43cd4c3bd53a04ee30f792d",
+    "stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815"
+  },
+  "source_commit": "cb7544617302b483433136ff4cb353d15944d266",
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_tile.sv": "c74505d599728bc0948994ddfe13da6d95eaff343ea2ee08c50fe13e5d8aa46b",
+    "rtl/v41die/ot_v41_rom_adapt.sv": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f",
+    "tests/test_dsrom_stage_program_join.py": "cd80b66e02cdf58ec795c5ebb8a0dbce3977191742ed2835418624941d8aa2ba",
+    "tools/dsrom_full_owner_compiler.py": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+    "tools/dsrom_s73_pair1.py": "6bde0e13fb3ef615705b6eff79726c736f3437701f24a3a625c2c7c04185e94d",
+    "tools/dsrom_stage_program_join.py": "8572e533fa494a5c5162b0fe27fc32890bbdd3d7251ae73944cc224543aecc19",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3"
+  },
+  "status": "ACTUAL_CANONICAL_MATRIX_STAGE_JOIN_PASS",
+  "validated_matrix_count": 46671,
+  "validation_record": "actual_join_r1.json",
+  "whole_program_qualified": false
+}
