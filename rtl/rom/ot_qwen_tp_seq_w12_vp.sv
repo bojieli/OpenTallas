@@ -25,7 +25,10 @@
 // compares keys with a log-depth tree (ot_qwen_seq_key_gt, levels kept), in two copies: one steers
 // the running best, one the gathered record (fin_tok / fin_val, kept as one bus).
 // The die's row offset (core_next_token + row0) and the receive counter's increment use the kept
-// log-depth adders of rtl/hdc/ot_hdc_prefix.sv.
+// log-depth adders of rtl/hdc/ot_hdc_prefix.sv.  The two output buses that were combinational are
+// registered without a cycle: vm_raddr is a running address register (vw + rd_k, valid with vm_re) and
+// c_data is a first-word-fall-through head register (q_d[q_r], valid with c_valid) updated from the
+// queue's next state.
 // Closes the per-position record path at 1.2 GHz SS (results/rtl/qwen_dspark_closure_20261004).
 //
 // In a 4-die package (docs/ARCHITECTURE_ATLAS.html 6.6) every die holds a
@@ -160,7 +163,9 @@ module ot_qwen_tp_seq_w12_vp #(
     reg [CW-1:0] nw_m1;                            // LA: nw - 1
     reg [NTOK-1:0] n_oh;                           // LA: one-hot record slot (n_tok), 0 when full
     assign c_valid = (st == S_COLL) && (q_n != 0);
-    assign c_data  = q_d[q_r];
+    reg  [FW-1:0]  c_head;                         // LA: q_d[q_r] as a register
+    reg  [VWA-1:0] rd_addr;                        // LA: vw + rd_k as a register
+    assign c_data  = (LA != 0) ? c_head : q_d[q_r];
     assign c_mode  = is_amax;
     assign c_last  = (tx_k == (is_amax ? {CW{1'b0}} : ((LA != 0) ? nw_m1 : nw - 1'b1)));
     wire   c_fire  = c_valid && c_ready;
@@ -200,8 +205,15 @@ module ot_qwen_tp_seq_w12_vp #(
 
     always @(*) begin
         vm_re = rd_go;
-        vm_raddr = vw + rd_k;
+        vm_raddr = (LA != 0) ? rd_addr : vw + rd_k;
     end
+    // LA head register: the queue's next head, from the writes and pop of this cycle
+    wire          hq_wr_a = (st == S_CWAIT) && core_done && kind != K_END && is_amax;
+    wire          hq_wr_b = (st == S_COLL) && rd_v;
+    wire [FW-1:0] hq_wd   = hq_wr_b ? vm_rq : {{(FW - 32 - NW){1'b0}}, tok_row, core_next_val};
+    wire [1:0]    hq_r_n  = q_r + (((st == S_COLL) && c_fire) ? 2'd1 : 2'd0);
+    always @(posedge clk)
+        if (LA != 0) c_head <= ((hq_wr_a || hq_wr_b) && q_w == hq_r_n) ? hq_wd : q_d[hq_r_n];
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -213,7 +225,7 @@ module ot_qwen_tp_seq_w12_vp #(
             best_i <= 0; best_v <= 0; best_k <= 32'h8000_0000; rx_first_r <= 1'b0;
             tok_vec <= 0; val_vec <= 0; n_tok <= 0;
             k_amax_r <= 1'b0; k_ar_r <= 1'b0; k_next_r <= 1'b0;
-            rx_last_r <= 1'b0; rd_more_r <= 1'b0; coll_ar_r <= 1'b0; rx_tm2 <= 0; nw_m1 <= 0; n_oh <= 0;
+            rx_last_r <= 1'b0; rd_more_r <= 1'b0; coll_ar_r <= 1'b0; rx_tm2 <= 0; nw_m1 <= 0; n_oh <= 0; rd_addr <= 0;
         end else begin
             desc_re <= 1'b0;
             vm_we <= 1'b0;
@@ -248,7 +260,7 @@ module ot_qwen_tp_seq_w12_vp #(
                 end
                 S_CWAIT: if (core_done) begin
                     if (core_fault) fault <= 1'b1;
-                    rd_k <= 0; tx_k <= 0; rx_k <= 0; rx_first_r <= 1'b1;
+                    rd_k <= 0; tx_k <= 0; rx_k <= 0; rx_first_r <= 1'b1; rd_addr <= vw;
                     rx_last_r <= (rx_tm2 == {CW{1'b1}});        // rx_total == 1
                     rd_more_r <= (nw_m1 != {CW{1'b1}});         // nw != 0
                     coll_ar_r <= (kind != K_END) && is_ar;
@@ -269,6 +281,7 @@ module ot_qwen_tp_seq_w12_vp #(
                     // queue: vector-memory words read one cycle earlier; pop on send
                     if (rd_go) begin
                         rd_k <= rd_k + 1'b1;
+                        rd_addr <= rd_addr + 1'b1;
                         rd_more_r <= (rd_k != nw_m1);           // rd_k + 1 < nw (rd_k < nw here)
                     end
                     if (rd_v) begin q_d[q_w] <= vm_rq; q_w <= q_w + 1'b1; end
