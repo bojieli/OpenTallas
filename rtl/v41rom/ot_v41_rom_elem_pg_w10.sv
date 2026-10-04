@@ -26,7 +26,8 @@ module ot_v41_rom_elem_pg_w10 #(
     parameter INSTANCE = "",
     parameter integer PG = 0,          // 1: power-gated domain (opt-in)
     parameter integer NSUB = 4,        // header-ring segments of this element's domain
-    parameter integer TW = 24
+    parameter integer TW = 24,
+    parameter integer DOM_CG = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -103,7 +104,7 @@ module ot_v41_rom_elem_pg_w10 #(
         assign sw_en = {NSUB{1'b1}}; assign pg_ready = 1'b1; assign pg_late = 1'b0; assign pg_fault = 1'b0;
     end else begin : g_pg
         // the always-on side is one module (ot_v41_rom_pg_ao) so it can be hardened and measured on its own
-        ot_v41_rom_pg_ao #(.NSEG(NSEG), .NB(NB), .NSUB(NSUB), .TW(TW)) u_ao (
+        ot_v41_rom_pg_ao #(.NSEG(NSEG), .NB(NB), .NSUB(NSUB), .TW(TW), .DOM_CG(DOM_CG)) u_ao (
             .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go),
             .e_clk(e_clk), .e_rst_n(e_rst_n), .e_cfg_v(e_cfg_v), .e_cfg_a(e_cfg_a), .e_cfg_d(e_cfg_d), .e_go(e_go),
             .e_pv(e_pv), .e_pval(e_pval), .e_prow(e_prow), .e_pseg(e_pseg), .e_pnseg(e_pnseg), .e_perr(e_perr),

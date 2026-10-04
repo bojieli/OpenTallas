@@ -10,7 +10,7 @@
 //     configuration writes through a write-enabled AO clock gate (no idle clock), and is replayed into the element,
 //     one entry a cycle, after every wake.  Host writes while the domain sleeps or restores update only the shadow
 //     and are replayed;
-//   * the domain clock gate (clk_en from the controller).
+//   * optionally (DOM_CG = 1) a domain clock gate driven by the controller's clk_en.
 // pg_ready rises when the domain is powered, reset, de-isolated and restored.  A `go` before pg_ready is a schedule
 // miss: it is not delivered and pg_late latches (fail closed; unreachable when the lead covers the wake).
 // ---------------------------------------------------------------------------
@@ -18,7 +18,8 @@ module ot_v41_rom_pg_ao #(
     parameter integer NSEG = 8,
     parameter integer NB = 2,
     parameter integer NSUB = 4,
-    parameter integer TW = 24
+    parameter integer TW = 24,
+    parameter integer DOM_CG = 0     // 1: a domain clock gate in series with the element's own (adds clock insertion delay)
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -139,7 +140,14 @@ module ot_v41_rom_pg_ao #(
     assign e_cfg_d = ready ? cfg_d : rp_d;
     assign e_go    = go && ready;
     assign e_rst_n = rst_n && dom_rst_n;
-    ot_hdc_cg u_dom_cg (.clk(clk), .en(clk_en | !rst_n), .gclk(e_clk));
+    // DOM_CG = 0 (default): the AO clock reaches the domain ungated.  An off domain's clock tree is unpowered, the
+    // stage clock spine gate stops the clock wire to an idle stage, and the element's own ICG (enable ORs !rst_n)
+    // runs its clock through the wake reset; a series gate only added ~200 ps of insertion delay (route R1).
+    if (DOM_CG != 0) begin : g_dcg
+        ot_hdc_cg u_dom_cg (.clk(clk), .en(clk_en | !rst_n), .gclk(e_clk));
+    end else begin : g_ndcg
+        assign e_clk = clk;
+    end
 
     // output isolation (clamp to 0)
     assign pv    = e_pv    & {NB{iso_n}};

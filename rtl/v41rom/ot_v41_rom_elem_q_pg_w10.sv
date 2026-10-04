@@ -12,6 +12,7 @@ module ot_v41_rom_elem_q_pg_w10 #(
     parameter integer PG = 1,
     parameter integer NSUB = 4,
     parameter integer TW = 24,
+    parameter integer DOM_CG = 0,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -54,7 +55,7 @@ module ot_v41_rom_elem_q_pg_w10 #(
     output wire         pg_fault
 );
     ot_v41_rom_elem_pg_w10 #(.BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .PG(PG), .NSUB(NSUB),
-        .TW(TW), .INSTANCE(INSTANCE)) u_pg (
+        .TW(TW), .DOM_CG(DOM_CG), .INSTANCE(INSTANCE)) u_pg (
         .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_bf(1'b0),
         .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1),
         .xs_e1(xs_e1), .xs_pos(xs_pos), .xb_pos(3'd0), .xb_v(1'b0), .xb_b(3'd0), .xb_sv(4'd0), .xb_u(32'd0),

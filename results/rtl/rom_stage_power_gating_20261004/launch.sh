@@ -30,7 +30,7 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --orfs-var PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl --nickname-tag rom_stage_pg_${RUN}_20261004 \
  --output $J/out --sdc-append physical/abi3/v41_w10_elem_pp_multicycle.sdc \
  --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 \
- --param MTP=1 --param EARLY=1 --param NB=2 --param FAST=1 --param PP=1 --param PG=${PGV:-1} \
+ --param MTP=1 --param EARLY=1 --param NB=2 --param FAST=1 --param PP=1 --param PG=${PGV:-1} --param DOM_CG=${DOMCG:-0} \
  --orfs-var ROUTING_LAYER_ADJUSTMENT=0.22 --hold-corners WC,BC \
  --pnr-stop-after ${STOP:-finish} --orfs-corner WC --clock-uncertainty-hold-ns 0.025 \
  --core-input-delay-min-ns 0.36 --core-input-delay-max-ns 0.727 --output-delay-min-ns -0.322 --output-delay-max-ns -0.193 > $J/launch.log 2>&1
