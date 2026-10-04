@@ -133,11 +133,19 @@ public:
                     old_readers_drained&&!read_pending&&target->mutable_write_drained()&&
                     runtime.identity&&*runtime.identity==identity&&!ranges.empty(),
                     "later H writer lacks opt-in/actual acceptance/drained old readers");
-            for(const auto& span:ranges)
-                require(span.second&&uint64_t(span.first)+span.second<=20480,
-                        "later H literal exceeds original H extent");
+            bool owns_h=false;
+            for(const auto& span:ranges) {
+                require(span.second&&uint64_t(span.first)+span.second<=(1u<<19)&&
+                        (span.first>=20480||uint64_t(span.first)+span.second<=20480),
+                        "later H literal exceeds VM19 or straddles the original H extent");
+                owns_h=owns_h||span.first<20480;
+            }
+            require(owns_h,"later H admission has no literal H output");
+            // A native H writer also publishes its source reducer (SSX).
+            // Enroll all outputs once, but revoke initial H witnesses only.
             pub.enroll_literal(producer,ranges); // descriptors alone create no visibility
-            for(const auto& span:ranges)target->admit_mutable_h_span(span.first,span.second);
+            for(const auto& span:ranges)if(span.first<20480)
+                target->admit_mutable_h_span(span.first,span.second);
             pub.begin(identity,producer); // old publication version revoked before native writes
         }catch(...){stopped=true;throw;}
     }

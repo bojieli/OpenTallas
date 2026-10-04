@@ -87,6 +87,8 @@ def main() -> None:
     ap.add_argument("--vm-elems", type=int, default=1 << 20)
     ap.add_argument("--vpmax", type=int, default=4)
     ap.add_argument("--enable-ar256", type=int, default=1)
+    ap.add_argument("--seq-la", type=int, choices=(0, 1), default=1,
+                    help="sequencer timing look-ahead (ot_qwen_tp_seq_w12_vp LA; results/rtl/qwen_dspark_closure_20261004)")
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--build-only", action="store_true")
@@ -133,7 +135,7 @@ def main() -> None:
           "-GREAL_MEM=1", f"-GSCALE_BANKS={args.scale_banks}", f"-GCROM_WORDS={args.crom_words}",
           f"-GHBM_LAYERS={args.hbm_layers}", "-GEMBED_ROM=0", f"-GFILL_LAT={args.fill_lat}", f"-GNRD={args.nrd}",
           f"-GLKA={args.lka}", f"-GVM_ELEMS={args.vm_elems}", "-GVPOS=1", "-GENABLE_ARP=1", f"-GVWA={vwa}",
-          f"-GVPMAX={args.vpmax}", f"-GENABLE_AR256={args.enable_ar256}", *arithmetic]),
+          f"-GVPMAX={args.vpmax}", f"-GENABLE_AR256={args.enable_ar256}", f"-GSEQ_LA={args.seq_la}", *arithmetic]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_w12", [str(pub), *map(str, TILE_RTL)],
@@ -245,7 +247,7 @@ def main() -> None:
         "design_point": {"tp": args.tp, "groups_per_die": G, "su_width": args.su_width, "su_reducer_time_levels": args.lv,
                          "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut, "collective_lat_cycles": args.coll_lat,
                          "collective_depth": args.coll_depth, "code_banks": args.code_banks, "mem_extra": args.mem_extra,
-                         "vpos": 1, "enable_arp": 1, "enable_ar256": args.enable_ar256, "vpmax": args.vpmax,
+                         "vpos": 1, "enable_arp": 1, "enable_ar256": args.enable_ar256, "vpmax": args.vpmax, "seq_la": args.seq_la,
                          "kv": "REAL_MEM: ot_qwen_rt_kv_mp_service + ot_qwen_hbm_model_ack NPC=32 CLK_PS=833 WR_ACK=1, KV_HBM=1, KV_VEC_WRITE_BRIDGE=1"},
         "wire_stages": {"bd": args.bd, "xvm": args.xvm, "nws": args.nws, "tws": args.tws, "ord": args.ord},
         "stages": per_stage, "verify_tokens": tokens, "accept": accepts, "commits": commits,
