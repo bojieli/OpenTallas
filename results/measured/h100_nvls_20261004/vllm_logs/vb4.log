@@ -1,0 +1,15 @@
+=== prefill-only tp=1 quant=auto in=128 out=1
+Avg latency: 0.009469593799985887 seconds
+=== prefill-only tp=1 quant=fp8 in=128 out=1
+Avg latency: 0.006996347599942965 seconds
+=== prefill-only tp=8 quant=auto in=128 out=1
+Avg latency: 0.007221505799952866 seconds
+=== prefill-only tp=8 quant=fp8 in=128 out=1
+Avg latency: 0.005531910400077322 seconds
+=== prefill-only tp=1 quant=auto in=8192 out=1
+Avg latency: 0.2226835088000371 seconds
+=== prefill-only tp=1 quant=fp8 in=8192 out=1
+Avg latency: 0.16263852140000382 seconds
+=== prefill-only tp=8 quant=fp8 in=8192 out=1
+Avg latency: 0.056107306800004156 seconds
+VB4DONE

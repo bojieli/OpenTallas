@@ -1,0 +1,79 @@
+{
+  "verdict": "PASS_NATIVE_GATHER_DIRECTED_FIXTURE_NOT_JOINED_FIRST_TOKEN",
+  "source_provider_commit": "531e84d8bf6417018a9722f09485e4774702aaf4",
+  "archive_hook_fix_commit": "efdfac1ff",
+  "source_pins": {
+    "rtl/test/dsrom_s81_native_gather/DsromTp4Gather.sv": "37e5b24cec592a2cdd93cc995a548758d0005806e19419b2d64a5485cefde18e",
+    "tools/runtime/dsrom/s81_minimum_tp4_gather.hpp": "780b3259d8d04599315a69539b842fff67e38fcc6e92f784669be7d5140f53af",
+    "tools/runtime/dsrom/s81_minimum_tp4_gather.cpp": "bb7a90763dabdba794ac743ce828fb9ba7522eef4a76aad43147f11ba3271a05",
+    "tools/dsrom_s81_native_gather_build.py": "5b5314c04fad63047ceca831a59831913c9de6bf7f16d1f8dca7ac20daacf8de",
+    "tests/native/dsrom_s81_tp4_gather.cpp": "607c9dbe4a177f9cd540ede0faa654d53a18f34061ac37d7b6dda495d4e05f4c",
+    "tools/runtime/dsrom/s81_minimum_runtime.hpp": "0f3bad0a3efd4dc3cda64d1d67ff23e053ff6a50df3393e72b287e78d08cba2c",
+    "tools/runtime/dsrom/s81_minimum_source_bindings.hpp": "9030b951870e45e5a5cec05a8480628337ace0c1a9e4b59af0ba2d61fd17ed4b",
+    "tools/runtime/dsrom/s81_embedding_abi.h": "d039327591a0bb1d8ca870b450054c53815784293542ae25493234e370e80fce"
+  },
+  "native_fixture": {
+    "stdout": "PASS_NATIVE_TP4_GATHER_FIXTURE words=7168 cycles=1677 refusals=4",
+    "binary": "/tmp/dsrom-s81-native-gather-20261004-r2/test/native_gather",
+    "binary_sha256": "cea1b7866b294a45c9540acc67dc9d5bae4e86193b157e3a49c68bfba5cca34e",
+    "cycles_scope": "directed fixture including source read stalls, publication refusals and delayed fixture visibility; not hardware service calibration",
+    "all_four_ranks_distinct": true,
+    "I9_I10_no_reset_between": true,
+    "no_host_gather_arithmetic": true
+  },
+  "archives": {
+    "generated_include": "/tmp/dsrom-s81-native-gather-20261004-r1/obj",
+    "native_archive": "/tmp/dsrom-s81-native-gather-20261004-r1/obj/VDsromTp4Gather__ALL.a",
+    "provider_object": "/tmp/dsrom-s81-native-gather-20261004-r2/s81_minimum_tp4_gather.o",
+    "verilator_include": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include"
+  },
+  "commands": [
+    {
+      "pc": 9,
+      "src": 419776,
+      "dst": 51648,
+      "n_per_rank": 320,
+      "wait": 31,
+      "seq": 0
+    },
+    {
+      "pc": 10,
+      "src": 420096,
+      "dst": 54208,
+      "n_per_rank": 128,
+      "wait": 31,
+      "seq": 1
+    }
+  ],
+  "native_parameters": {
+    "N": 4,
+    "FW": 512,
+    "WA": 15,
+    "GW": 4,
+    "DEPTH": 1024,
+    "OUT_BP": 1,
+    "OUT_PIPE": 0,
+    "RELAY": 1
+  },
+  "link_policy": "existing W15 test link module extracted exactly, 11/142 flights and historical source token buckets; no physical link qualification",
+  "API": "dsrom_s81_bind_native_tp4_gather(runtime,identity,array4_actual_SourceIo,accepted,captured); insert its participant ONCE into same runtime; call start(9/10) only after actual wait31 guards and respective published sources; complete() includes all matched publisher visibility",
+  "caller_owner": "Cicero integrates four actual rank SourceIo and accepted/native-output callbacks into SAME publisher/tag namespace; Arch supplies literal caller acceptance. Factory/ledger/source-tag files untouched by Maxwell.",
+  "callback_order": "accepted(rank,pc) at preedge GO acceptance; captured(rank,pc,actual16wordOutput) once per actual native write after rising evaluation and before SourceIo.offer. Reservation/capture does not imply target VM acceptance or ACK.",
+  "finite_adapter_bounds": {
+    "read_prefetch_scalar_capacity_per_rank": 320,
+    "native_write_snapshot_word512_capacity_per_rank": 4,
+    "output_ready_withdrawn_until_all_four_snapshots_matched_visible": true,
+    "software_adapter_buffers_not_physical_storage_credit": true
+  },
+  "remaining_join": "actual four-rank source VM input leases, same publisher native-output reservations/accepted/visibility callbacks and caller wait31; fixture does not provide these production joins",
+  "live_jobs": [],
+  "limits": {
+    "joined_first_token": false,
+    "payload_qualification": false,
+    "physical_qualification": false,
+    "rate_qualification": false,
+    "W11_work": false,
+    "die_physical_or_power_work": false
+  },
+  "original_provider_include_failure_preserved": "r1_terminal.json"
+}

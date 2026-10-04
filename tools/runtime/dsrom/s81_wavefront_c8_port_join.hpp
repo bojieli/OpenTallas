@@ -33,6 +33,7 @@ public:
     // its identity: a different request can issue on the very same edge.
     using ResultOrigin=std::function<std::optional<DsromS81WaveResultOrigin>()>;
     using Squash=std::function<void(const DsromS81WaveResultOrigin&,bool reject,bool squash)>;
+    using ResultConsumed=std::function<void(const DsromS81WaveResultOrigin&)>;
 private:
     Top& top;
     Resolve resolve;
@@ -41,6 +42,7 @@ private:
     Retire retire;
     ResultOrigin origin;
     Squash invalidate;
+    ResultConsumed consumed;
     bool enabled,stopped=false,prepared=false,request=false,accept=false;
     uint64_t sequence=0;
     uint32_t token=0,position=0;
@@ -53,11 +55,13 @@ private:
     }
 public:
     DsromS81WaveC8PortJoin(Top& t,Resolve r,Start s,Result p,Retire done,
-                         ResultOrigin o,Squash q,bool enable=false):
+                         ResultOrigin o,Squash q,bool enable=false,ResultConsumed received={}):
         top(t),resolve(std::move(r)),start(std::move(s)),result(std::move(p)),
-        retire(std::move(done)),origin(std::move(o)),invalidate(std::move(q)),enabled(enable) {
+        retire(std::move(done)),origin(std::move(o)),invalidate(std::move(q)),
+        consumed(std::move(received)),enabled(enable) {
         require(bool(resolve)&&bool(start)&&bool(result)&&bool(retire)&&bool(origin)&&bool(invalidate),
                 "WAVE requires source context, full-stage visibility and result-owner authorities");
+        require(!enabled||bool(consumed),"enabled WAVE requires actual final RESULT ledger consumption");
     }
     // Enclosing caller must settle the real native model AFTER this method,
     // then call sample_before_edge(), then clock once, then after_edge().
@@ -96,6 +100,9 @@ public:
                 require(bool(incoming),"WAVE squash lacks actual incoming RESULT owner");
                 invalidate(*incoming,bool(top.wf_reject),bool(top.wf_squash));
             }
+            // Provider returns ONLY old res_v with the actual final-part
+            // condition. Consume every such RESULT, not only reject/squash.
+            if(incoming)consumed(*incoming);
             if(request) {
                 require(!active,"WAVE issued over an unaccepted whole-stage result");
                 const uint32_t user=top.wf_user; // source cur_user updated on this edge

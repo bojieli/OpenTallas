@@ -1,0 +1,140 @@
+{
+  "results": {
+    "decode": {
+      "cell_counts": {
+        "BUFx4_ASAP7_75t_R": 450,
+        "DFFHQNx1_ASAP7_75t_R": 138,
+        "INVx1_ASAP7_75t_R": 451,
+        "NAND2x1_ASAP7_75t_R": 1730
+      },
+      "construction": {
+        "buffer_count": 318,
+        "capture_buffer_count": 66,
+        "clock_nets_unchanged": true,
+        "logic_and_register_connections_equal_after_buffer_contraction": true,
+        "max_signal_fanout": 8,
+        "rewired_input_pins": 542
+      },
+      "held_netlist_sha256": "60a7756b2b0120194fb80dc942b472569cb1f068c847468813d34bea50ff02f0",
+      "held_output_bits": 66,
+      "retained_map_sha256": "8e5714bbf5473822ab799363761e308c896691ddfb6207f97fb24f0f5cac8d8d",
+      "timing": {
+        "ff": {
+          "electrical_violations": [],
+          "hold_slack_ps": 69.411629,
+          "log_sha256": "62de118610b9a400861c8c1a7b2528ac0bbdeaba5b944b51bfb754e63e59df46",
+          "setup_slack_ps": 294.979553
+        },
+        "ss": {
+          "electrical_violations": [],
+          "hold_slack_ps": 175.789856,
+          "log_sha256": "46cc405e3d9ac0329cc2c8d5168e7edd2969d99c41f50cffdaf7fe53e4ccc9bf",
+          "setup_slack_ps": -522.216736
+        }
+      }
+    },
+    "encode": {
+      "cell_counts": {
+        "BUFx4_ASAP7_75t_R": 359,
+        "DFFHQNx1_ASAP7_75t_R": 136,
+        "INVx1_ASAP7_75t_R": 289,
+        "NAND2x1_ASAP7_75t_R": 1092
+      },
+      "construction": {
+        "buffer_count": 215,
+        "capture_buffer_count": 72,
+        "clock_nets_unchanged": true,
+        "logic_and_register_connections_equal_after_buffer_contraction": true,
+        "max_signal_fanout": 8,
+        "rewired_input_pins": 293
+      },
+      "held_netlist_sha256": "48d326f13124f5aa6ed3fc5b6526dd4a673de893481c457b91806326a2d1865e",
+      "held_output_bits": 72,
+      "retained_map_sha256": "f8913fd0b7bd09751494bc66af59b6cdea41148f010fafe11df93d0894f84948",
+      "timing": {
+        "ff": {
+          "electrical_violations": [],
+          "hold_slack_ps": 43.746067,
+          "log_sha256": "e30af4595d321edeef41827a5595ab2f0b76d55d089e3a8e4dcb8b084c1b8dda",
+          "setup_slack_ps": 645.688416
+        },
+        "ss": {
+          "electrical_violations": [],
+          "hold_slack_ps": 122.306053,
+          "log_sha256": "6df3e4d3d8b12bc8e19ff3abc6c23015454668c8e164ef508fa183ac6e2ab4b0",
+          "setup_slack_ps": 206.098083
+        }
+      }
+    },
+    "equal83": {
+      "cell_counts": {
+        "BUFx4_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 167,
+        "INVx1_ASAP7_75t_R": 287,
+        "NAND2x1_ASAP7_75t_R": 334
+      },
+      "construction": {
+        "buffer_count": 1,
+        "capture_buffer_count": 1,
+        "clock_nets_unchanged": true,
+        "logic_and_register_connections_equal_after_buffer_contraction": true,
+        "max_signal_fanout": 8,
+        "rewired_input_pins": 1
+      },
+      "held_netlist_sha256": "3745e47405d93f465beffc4d35f8726a31aa199d3a75e00b98c83755df0955b8",
+      "held_output_bits": 1,
+      "retained_map_sha256": "7f05563c08889de327dbb319e626466673a86285b70574aa6379a2ceba3c475f",
+      "timing": {
+        "ff": {
+          "electrical_violations": [],
+          "hold_slack_ps": 69.816711,
+          "log_sha256": "dcc7ef043798a4df94625c154f0ddfab8b503a4c4138c78b8161e6d93ff507c7",
+          "setup_slack_ps": 835.457947
+        },
+        "ss": {
+          "electrical_violations": [],
+          "hold_slack_ps": 182.994675,
+          "log_sha256": "de84942f441e740908b4cf5213fefeadd4f0f9086e0925bf8254746eaa715128",
+          "setup_slack_ps": 605.867004
+        }
+      }
+    },
+    "merge256": {
+      "cell_counts": {
+        "BUFx4_ASAP7_75t_R": 1042,
+        "DFFHQNx1_ASAP7_75t_R": 776,
+        "INVx1_ASAP7_75t_R": 1033,
+        "NAND2x1_ASAP7_75t_R": 1536
+      },
+      "construction": {
+        "buffer_count": 530,
+        "capture_buffer_count": 256,
+        "clock_nets_unchanged": true,
+        "logic_and_register_connections_equal_after_buffer_contraction": true,
+        "max_signal_fanout": 8,
+        "rewired_input_pins": 1289
+      },
+      "held_netlist_sha256": "0672f6cf44462c8c1fb5fb9cff431139a31598c447117258f7dd93cc0d37d47e",
+      "held_output_bits": 256,
+      "retained_map_sha256": "daac9414f1ceb47c91fc75f8ad2aad8a5b6153f0a41682a66f3a1095fc04a2b5",
+      "timing": {
+        "ff": {
+          "electrical_violations": [],
+          "hold_slack_ps": 48.654583,
+          "log_sha256": "f06ca08f262b0ef3ee74185894e519ec2b532e4216b8fd9c1e2c9338f885f548",
+          "setup_slack_ps": 861.544922
+        },
+        "ss": {
+          "electrical_violations": [],
+          "hold_slack_ps": 133.304535,
+          "log_sha256": "b5aafc158d99e115cf2261c43aee77c7c7da8704d1bb82eada535d4e5ee82015",
+          "setup_slack_ps": 659.631958
+        }
+      }
+    }
+  },
+  "runner_sha256": "e480d0edf25274ed0b6802e440aa32f287e11db9ec151794181dd508301d8a95",
+  "schema": "dsrom.s81.native_leaf.held_landing.v1",
+  "target_GHz": 0.9,
+  "wire_CTS_included": false
+}

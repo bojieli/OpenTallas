@@ -104,7 +104,7 @@ phase=6 gap=12 ok c1=294 c2=295
 phase=6 gap=13 ok c1=294 c2=294
 phase=6 gap=14 ok c1=294 c2=293
 PASS cases=105 fail=0 hang=0
-- /srv/opentallas-scratch/claude/dsrom-mtp-sk/src/rtl/test/tb_hdc_v41_xu_sink_b2b.sv:103: Verilog $finish
+- /srv/opentallas-scratch/claude/dsrom-mtp-sk/slice-src/rtl/test/tb_hdc_v41_xu_sink_b2b.sv:103: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 63us; walltime 0.830 s; speed 77.831 us/s
-- Verilator: cpu 0.815 s on 1 threads; alloced 1019 MB
+- Verilator: $finish at 63us; walltime 0.664 s; speed 96.901 us/s
+- Verilator: cpu 0.654 s on 1 threads; alloced 1019 MB
