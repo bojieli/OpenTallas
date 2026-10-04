@@ -19,6 +19,8 @@ const std::array<DsromS81PrefixOperation,7>& dsrom_s81_l0_prefix_operations();
 
 struct DsromS81PrefixNativeEngine {
     DsromS81MinimumParticipant participant;
+    // ready authorizes command admission, including held prefetched operands.
+    // idle means all accepted work and staged debt has drained for retirement.
     std::function<bool()> ready,idle;
     // Poll/admit this operation's real native operand prefetch. Returns true
     // only with the required source leases and fixed-latency endpoint ready.
@@ -89,7 +91,7 @@ class DsromS81MinimumPrefix {
                     go=!inflight&&embedding.complete()&&
                         vm.cold_inputs_visible(identity)&&
                         e.inputs_ready(operations.at(next))&&
-                        e.ready()&&e.idle();
+                        e.ready();
                     e.drive(operations.at(next),go);
                 }
             }
