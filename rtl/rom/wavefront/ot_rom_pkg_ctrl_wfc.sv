@@ -242,6 +242,7 @@ module ot_rom_pkg_ctrl_wfc #(
 
     // -- per-user context --------------------------------------------------------------
     reg [NW-1:0] upos [0:MAXU-1];      // next expected position (SOURCE: in-flight step)
+    reg [MAXU-1:0] uval;                // (closed) upos[u] written (else 0): the only per-user reset
     reg          uchk;                  // (closed) a HIDDEN header's position check is due
     reg [MAXU-1:0] hdr_oh;              // its user, one-hot
     reg [NW-1:0] upos_h;                // upos of that user (AND-OR read)
@@ -448,9 +449,10 @@ module ot_rom_pkg_ctrl_wfc #(
     // upos of the checked header's user
     integer ub, uu;
     reg [MAXU-1:0] uv;
+    always @(posedge clk) if (uchk) for (uu = 0; uu < MAXU; uu = uu + 1) if (hdr_oh[uu]) upos[uu] <= hdr_pos + 1'b1;
     always @(*) begin
         for (ub = 0; ub < NW; ub = ub + 1) begin
-            for (uu = 0; uu < MAXU; uu = uu + 1) uv[uu] = hdr_oh[uu] && upos[uu][ub];
+            for (uu = 0; uu < MAXU; uu = uu + 1) uv[uu] = hdr_oh[uu] && uval[uu] && upos[uu][ub];
             upos_h[ub] = |uv;
         end
     end
@@ -517,7 +519,7 @@ module ot_rom_pkg_ctrl_wfc #(
             tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0;
             tx_k <= 0; tx_user <= 0; tx_pos <= 0; tx_idx <= 0; tx_val <= 0; tx_tok <= 0;
             rx_st <= R_IDLE; rx_j <= 0;
-            rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; hdr_oh <= 0;
+            uval <= 0; rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; hdr_oh <= 0;
             res_v <= 1'b0; res_u <= 0; res_p <= 0; res_i <= 0; res_val <= 0;
             next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0;
             pr_t0 <= 0; pr_t1 <= 0; pr_u0 <= 0; pr_u1 <= 0;
@@ -526,7 +528,7 @@ module ot_rom_pkg_ctrl_wfc #(
             tok_valid <= 1'b0; tok_user <= 0; tok_pos <= 0; tok_id <= 0; users_done <= 0;
             proto_fault <= 1'b0;
             for (u = 0; u < MAXU; u = u + 1) begin
-                upos[u] <= 0; rcnt[u] <= 0; rbi[u] <= 0; rbv[u] <= 0; ptok[u] <= 0; side_cnt[u] <= 0;
+                rcnt[u] <= 0; rbi[u] <= 0; rbv[u] <= 0; ptok[u] <= 0; side_cnt[u] <= 0;
             end
             pr_blk <= 0; pr_pos0 <= 0; pr_pos1 <= 0; pr_blk0 <= 0; pr_blk1 <= 0;
             wf_issue <= 1'b0; wf_reject <= 1'b0; wf_squash <= 1'b0;
@@ -595,7 +597,7 @@ module ot_rom_pkg_ctrl_wfc #(
             if (uchk) begin
                 uchk <= 1'b0;
                 if (hdr_pos > upos_h || hdr_pos + WIN < upos_h) proto_fault <= 1'b1;
-                for (u = 0; u < MAXU; u = u + 1) if (hdr_oh[u]) upos[u] <= hdr_pos + 1'b1;
+                uval <= uval | hdr_oh;
             end
             res_v <= 1'b0;
             if (rx_res) begin
@@ -605,41 +607,7 @@ module ot_rom_pkg_ctrl_wfc #(
                 res_i <= in_data[HDR_IDX +: NW]; res_val <= in_data[HDR_VAL +: 32];
             end
 
-            // ---- SOURCE: reduction, token feedback, step scheduling
-            if (SOURCE && !WAVE) begin
-                if (res_v) begin
-                    if (res_p != upos[res_u[UB-1:0]]) proto_fault <= 1'b1;
-                    if (red_n == RESULT_PARTS) begin
-                        rcnt[res_u[UB-1:0]] <= 0;
-                        tok_valid <= 1'b1; tok_user <= res_u; tok_pos <= res_p; tok_id <= fb_idx;
-                        if (!fb_cont) users_done <= users_done + 1'b1;
-                    end else begin
-                        rcnt[res_u[UB-1:0]] <= red_n;
-                    end
-                    rbi[res_u[UB-1:0]] <= fb_idx; rbv[res_u[UB-1:0]] <= fb_val;
-                end
-                if (fb_v && fb_cont && !st_fb) begin
-                    jq_u[jq_w] <= res_u; jq_p[jq_w] <= res_p + 1'b1; jq_t[jq_w] <= fb_tok;
-                    jq_w <= (jq_w == MAXU - 1) ? {UB{1'b0}} : jq_w + 1'b1;
-                end
-                if (st_q) jq_r <= (jq_r == MAXU - 1) ? {UB{1'b0}} : jq_r + 1'b1;
-                jq_n <= jq_n + ((fb_v && fb_cont && !st_fb) ? 1'b1 : 1'b0) - (st_q ? 1'b1 : 1'b0);
-                if (st_new || st_q || st_fb) begin
-                    upos[st_user[UB-1:0]] <= core_pos;
-                    // prefetch the prompt token of the step after this one
-                    pr_re <= 1'b1; pr_user <= st_user; pr_pos <= core_pos + 1'b1; pr_t0 <= 2; pr_u0 <= st_user;
-                    if (st_new) begin next_u <= next_u + 1'b1; nu_ok <= 1'b0; end
-                end else if (!nu_ok && !nu_pend && next_u < cfg_users && next_u < MAXU) begin
-                    // fetch the next new user's first prompt token
-                    pr_re <= 1'b1; pr_user <= next_u; pr_pos <= 0; pr_t0 <= 1; nu_pend <= 1'b1;
-                end else begin
-                    pr_t0 <= 0;
-                end
-                // a read issued two cycles ago returns now
-                pr_t1 <= pr_t0; pr_u1 <= pr_u0;
-                if (pr_t1 == 1) begin nu_tok <= pr_q; nu_ok <= 1'b1; nu_pend <= 1'b0; end
-                if (pr_t1 == 2) ptok[pr_u1[UB-1:0]] <= pr_q;
-            end
+            // (SOURCE && !WAVE: not implemented here -- ot_rom_pkg_ctrl_wf)
             // ---- SOURCE, WAVE: wavefront issue, in-order results, verify / reject / squash
             //      (global part; the per-user state updates itself in g_wu below)
             if (SOURCE && WAVE) begin
@@ -766,7 +734,7 @@ module ot_rom_pkg_ctrl_wfc #(
                 n_wkv = wkv; n_wkp = wkp; n_wkm = wkm; n_stv = stv || isn; n_lt = lt;
                 n_wnf = wnf + ((isw || isn) ? 3'd1 : 3'd0) - (isr_res ? 3'd1 : 3'd0);
                 if (isn) begin
-                    n_wnp = 1; n_wblk = 0; n_wkv = 1'b0; n_wkp = 1'b0; n_wkm = 1'b0; n_wsq = 0; n_er = 0; n_lt = w_g1;
+                    n_wnf = 3'd1; n_wnp = 1; n_wblk = 0; n_wkv = 1'b0; n_wkp = 1'b0; n_wkm = 1'b0; n_wsq = 0; n_er = 0; n_lt = w_g1;
                 end
                 if (isw) begin
                     n_wnp = wnp + 1'b1; n_wkv = 1'b0; n_wkm = 1'b0; n_lt = wnp != w_steps_m1;
@@ -792,16 +760,20 @@ module ot_rom_pkg_ctrl_wfc #(
                     end
                 end
             end
+            // only the started flag and the two eligibility bits are reset: every other field is
+            // written when the user starts (isn) and read only while it is started
             always @(posedge clk or negedge rst_n) begin
                 if (!rst_n) begin
-                    wnp <= 0; wkt <= 0; er <= 0; wblk <= 0; wnf <= 0; wsq <= 0; k0 <= 0;
-                    wkv <= 1'b0; wkp <= 1'b0; wkm <= 1'b0; stv <= 1'b0; lt <= 1'b0; e_wk <= 1'b0; e_wf <= 1'b0;
+                    stv <= 1'b0; e_wk <= 1'b0; e_wf <= 1'b0;
                 end else begin
-                    wnp <= n_wnp; wkt <= n_wkt; er <= n_er; wblk <= n_wblk; wnf <= n_wnf; wsq <= n_wsq; k0 <= n_k0;
-                    wkv <= n_wkv; wkp <= n_wkp; wkm <= n_wkm; stv <= n_stv; lt <= n_lt;
+                    stv <= n_stv;
                     e_wk <= n_stv && n_wkv && (n_wnf < WIN) && n_lt;
                     e_wf <= n_stv && !n_wkv && !n_wkp && !n_wkm && n_lt;
                 end
+            end
+            always @(posedge clk) begin
+                wnp <= n_wnp; wkt <= n_wkt; er <= n_er; wblk <= n_wblk; wnf <= n_wnf; wsq <= n_wsq; k0 <= n_k0;
+                wkv <= n_wkv; wkp <= n_wkp; wkm <= n_wkm; lt <= n_lt;
             end
             // ring: written on issue (slot wnp mod WQ) and on the user's first issue (slot 0)
             always @(posedge clk) begin
