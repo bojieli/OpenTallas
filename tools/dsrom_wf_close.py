@@ -6,6 +6,11 @@
           without the driver's wall-clock ceilings; then per-corner signoff STA on 6_final.odb + RCX spef
           (SS RVT libs: setup; FF RVT libs: hold) with tools/qwen_async_seq_incontext_physical.py sta.
               python3 tools/dsrom_wf_close.py route --inst src|stg --run-dir D [--util 40]
+  stage   the wavefront stage bench (tools/dsrom_wavefront_rtl_campaign.py run-stage: package = layer 20, jobs
+          0,1,2,3(corrupted),3(re-issue),4 bit-exact vs ISA) with ot_rom_pkg_ctrl_wfc in place of
+          ot_rom_pkg_ctrl_wf (a module-renamed copy), from a prepared stage scratch (prepare_stage.json,
+          stage_cfg.svh, cfg_stage/, roms/); compares the bench output with the reference run's.
+              python3 tools/dsrom_wf_close.py stage --from PREPARED --scratch D [--wave 1|0]
   record  results/rtl/dsrom_wf_close_20261004/record.json from the route dirs, the equivalence logs and the
           screens.
               python3 tools/dsrom_wf_close.py record --dir D --out record.json
@@ -78,6 +83,33 @@ def cmd_route(a):
     (out / "done.json").write_text(json.dumps(dict(route_rc=rc, nickname=nick, sta_rc=sta)) + "\n")
 
 
+def cmd_stage(a):
+    import shutil
+    src, scr = a.src.resolve(), a.scratch.resolve()
+    scr.mkdir(parents=True, exist_ok=True)
+    for f in ("prepare_stage.json", "stage_cfg.svh"):
+        shutil.copy(src / f, scr / f)
+    if not (scr / "cfg_stage").exists():
+        shutil.copytree(src / "cfg_stage", scr / "cfg_stage")
+    if not (scr / "roms").exists():
+        (scr / "roms").symlink_to((src / "roms").resolve())
+    ctrl = scr / "ot_rom_pkg_ctrl_wfc_as_wf.sv"
+    ctrl.write_text((ROOT / SRC).read_text().replace("module ot_rom_pkg_ctrl_wfc #(", "module ot_rom_pkg_ctrl_wf #("))
+    sys.argv = [sys.argv[0]]
+    sys.path.insert(0, str(ROOT / "tools"))
+    W = importlib.import_module("dsrom_wavefront_rtl_campaign")
+    W.CTRL = ctrl
+    os.environ["OT_WF_STAGE_WAVE"] = str(a.wave)
+    rc = W.run_stage(scr)
+    out = (scr / f"out_stage_w{a.wave}.txt").read_text()
+    ref = (src / f"out_stage_w{a.wave}.txt").read_text() if (src / f"out_stage_w{a.wave}.txt").is_file() else None
+    res = dict(rc=rc, ctrl_sha256=sha(ROOT / SRC), bench_out_sha256=hashlib.sha256(out.encode()).hexdigest(),
+               ref_out_sha256=hashlib.sha256(ref.encode()).hexdigest() if ref else None,
+               identical_to_reference_run=(out == ref) if ref is not None else None)
+    (scr / f"stage_w{a.wave}.json").write_text(json.dumps(res, indent=1) + "\n")
+    print(json.dumps(res))
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -86,8 +118,12 @@ def main():
     r.add_argument("--run-dir", type=Path, required=True)
     r.add_argument("--util", type=float, default=40)
     r.add_argument("--orfs-var", action="append", default=[])
+    t = sub.add_parser("stage")
+    t.add_argument("--from", dest="src", type=Path, required=True)
+    t.add_argument("--scratch", type=Path, required=True)
+    t.add_argument("--wave", type=int, default=1)
     a = ap.parse_args()
-    {"route": cmd_route}[a.cmd](a)
+    {"route": cmd_route, "stage": cmd_stage}[a.cmd](a)
 
 
 if __name__ == "__main__":
