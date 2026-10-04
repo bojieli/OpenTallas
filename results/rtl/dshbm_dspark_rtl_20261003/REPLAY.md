@@ -95,5 +95,8 @@ The control loop's own cycles (outside engine commands) are 840–1,900 per run 
 
 Claim boundary: the engine side (SM matvecs, attention, hyper-connections and norms) is replayed from the golden. The SM matvecs are checked separately on `ot_gpu_sm_v` (below). No P&R and no SS/FF figure is claimed.
 
-SM_PLACEHOLDER
+SM element (`ot_gpu_sm_v`, Icarus 12.0, ot-epyc1tb, chain `jobs/chain.sh`, both rc=0; every `source_sha256` entry matches 0d70f912c; collected 2026-10-04):
+- `sm_reduced.json`: PASS, 2,159/2,159 SM passes of one DSpark step exact (2,595 simulations; phases D 84, DH 1, MK 5, SEED 4, V 2,064, VH 1), 0 accumulator/output mismatches, no fault or timeout; ops pickle sha256 3e427858....
+- `sm_fullshape.json`: PASS on released weights, 0 accumulator mismatches: Markov head (bf16, K 256, 43 rows, 1 col) 560 cycles; LM head 5 slots (bf16, K 5,120, 43 rows, 5 cols) 3,671 cycles; main_proj 6 positions (fp8, K 15,360, 2 rows, 6 cols) 449 cycles.
+- Not done: `tools/dshbm_dspark_model_compare.py` composition (no per-user rate is claimed from these records).
 
