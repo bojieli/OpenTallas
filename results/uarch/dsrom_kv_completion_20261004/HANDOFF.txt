@@ -5,7 +5,9 @@ Reduced shared-stack system join (pooled index HDC_X_IDX=2, HDC_KV_HBM=1):
   from tools.dsrom_kv_completion import install
   selected = install(actual_sources, separate_output_directory, enable=True)
   Compile selected["sources"] using Arch's existing include/config inventory;
-  retain top=selected["top"] (tb_dsrom_system), set KV_COMPLETION=1.
+  retain top=selected["top"] (tb_dsrom_system), pass selected["verilator_args"]
+  ([-GKV_COMPLETION=1]). Off selection returns the untouched original top,
+  empty overrides and no output. The static completion copy requires opt-in.
   enable=False returns original inventory and emits nothing.
   The installer refuses a changed/unpinned input tb_dsrom_system.sv.
   A ready-to-join identical copy is rtl/dsrom_sys/kv_completion/
@@ -36,7 +38,9 @@ Credit CKV caller join, only when Arch selects the actual AG_CREDIT caller:
       own_visible_gid="actual_visible_gid_wire", enable=True)
   The real enclosing C8 journal/rope-request-mux/PHY and declared identity,
   visibility and quiet bindings are mandatory. This installs the renamed
-  credit service with KV_COMPLETION tied to C8_PUBLICATION. The caller must
+  credit service with KV_COMPLETION tied to C8_PUBLICATION. Pass returned
+  verilator_args ([-GC8_PUBLICATION=1]); original credit engine dependencies
+  are included, reusing copies already present in the actual inventory. The caller must
   hold its owner identity, consume own_visible with that identity/gid, include
   own_pending in its fence, and keep journal quarantine in readiness.
   job_done holds merge completion until all nine own-row sectors receive
@@ -56,3 +60,29 @@ Dependencies/limits:
   physical composition and SS60/FF25 remain unqualified. No adoption claim.
   Source-only installer checks pass; prefetch standalone lint exited 0.
   No new full-system simulation, inference, synthesis, P&R or lifecycle engine.
+
+Port hooks (existing engine request/response ABI is retained):
+  prefetch_completion: output write_quiet, write_quarantine (one bit each).
+    quiet = actual WQ empty, no core we/xwe, no backend write valid, no fault,
+    and no reset quarantine. No host-provided ready/quiet input exists.
+  reqmux_completion: output write_quiet, write_quarantine (one bit each).
+    quiet = reset released, actual pending[3:0] empty, no W/C write request,
+    and no reset quarantine. m_wr_done[3:0] = actual K backend ACK route.
+  ckv_credit_completion: input position_identity[46:0] (saved owner context),
+    input c_wr_done[3:0] (existing actual C8 owner-routed ACK port),
+    output own_pending, own_visible (one bit each),
+    output own_visible_identity[46:0], own_visible_gid[POS_W-1:0].
+    Capture identity at owned row dispatch; own_visible is final-sector ACK
+    pulse, not a busy-derived or timer-derived event. The real enclosing mux
+    and journal provide the address/tag match. Parent must latch/consume this
+    pulse and identity, fence own_pending and journal debt/quarantine, then
+    perform/retain its actual readback qualification before advancing context.
+    job_done = retained merge completion AND no own pending AND no fault.
+
+Terminal composed syntax: PASS exit 0, Verilator 5.050. Selected actual reduced
+system inventory (KV_COMPLETION=1, two packages, pooled/shared stacks) plus
+credit successor (KV_COMPLETION=1, AG_CREDIT=1, K=16/NSLOT=16) elaborated in
+one composition. Existing warnings are nonfatal under the owner's baseline
+lint policy. Defaults-off installer preserves original sources/no overrides.
+See composed_syntax.json and log. This does not execute ACK/readback traffic,
+validate the actual S81 enclosing credit caller, or qualify clock/latency.
