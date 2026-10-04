@@ -286,6 +286,9 @@ public:
     void bind(DsromS81MinimumSourcePlan& plan) {
         require(plan.position==1048575&&plan.identity<(1ull<<47),"HEAD actual owner/position required");
         owner=plan.identity;begin_dot=plan.begin_prefix;
+        // The existing capture and native rank0 reducer latch this source owner
+        // at accepted I5; bind it before arming the real core command.
+        core->capture_identity=owner;
         require(bool(begin_dot),"HEAD native DOT acceptance callback absent");
         plan.begin_prefix=[this,token=plan.token,position=plan.position] {
             require(!armed&&!started&&!dot_accepted&&!terminal,"HEAD core start repeated");
