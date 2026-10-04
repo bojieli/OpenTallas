@@ -1,0 +1,32 @@
+{
+  "HA1.json": {
+    "source_commit": "e3258c0c6f2afaacaac3510483800f66703b7503",
+    "path": "results/rtl/hbm_accel_ha1_20261003/portbook_w6_successor.json",
+    "sha256": "82e26478a3412c4214de1c2412fea0398cd787ea52bacd3cd958aaf837167782"
+  },
+  "HA8.json": {
+    "source_commit": "e3258c0c6f2afaacaac3510483800f66703b7503",
+    "path": "results/rtl/hbm_accel_ha3_20261003/ha8_forwarded_sources_r3.json",
+    "sha256": "0e9db8acf0b8080e763871b34d3b40a82f404e0f7afcc8955f41103c27f8b6a1"
+  },
+  "HA6.json": {
+    "source_commit": "e3258c0c6f2afaacaac3510483800f66703b7503",
+    "path": "results/uarch/dsrom_ratio_fifo_gap_20261003/model.json",
+    "sha256": "099d3c64651960cc40714ca188cc7cf7c782f13bf18acb4cdcec0e4ca3fa5fd8"
+  },
+  "W2_stage_map.json": {
+    "source_commit": "e3258c0c6f2afaacaac3510483800f66703b7503",
+    "path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/stage_map.json",
+    "sha256": "57833f8087fe3126bd0aa2ebf55f25b6908d61498bc5f2d82530248794405089"
+  },
+  "W2_model.json": {
+    "source_commit": "e3258c0c6f2afaacaac3510483800f66703b7503",
+    "path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/model.json",
+    "sha256": "f96d4be043eac12d27c7ee55601c02cee5c8f0bb517411ffd59203b6a85bfd43"
+  },
+  "RF.sv": {
+    "source_commit": "e3258c0c6f2afaacaac3510483800f66703b7503",
+    "path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv",
+    "sha256": "0c78df13fc5f356a24b99e42fbf0b7477e0fe57ba6475d3c8f5b80eab966b7d9"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "Claude_needed": "Use MAPPED body to select controller home/bbox, resolve four L2 neighbor conflicts if still required, bind actual driver/capture endpoints and PG/clock/reset routing. No double debit RF/scratch/L2 or existing clock-reset analytical floor. Do not mark static reserve as installed bbox.",
+  "Hubble_immediate_instruction": "Do FULL protected219 source SS synthesis/15768-CW-bit unique mapped census now; do not wait for bbox/current token. Goodall is NOT launching duplicate W2 synthesis or P&R.",
+  "RF_current": {
+    "OpenROAD_pid_observed": 303137,
+    "container": "7bcca0115a1a7f34e4b500af0239cc5df96d197790328c1381bec6c310afc8c8",
+    "floorplan_setup_violations_current": true,
+    "host": "ot-epyc1tb",
+    "mapped_RF_macro_area_mm2": 0.498122,
+    "mapped_RF_macro_count": 128,
+    "mapped_stdcell_area_mm2": 0.0431682,
+    "mapped_stdcell_count": 370033,
+    "phase": "2_1_floorplan timing repair",
+    "physical_closure": null,
+    "supervisor": 105320,
+    "unchanged": true,
+    "unit": "hbm-rf-fullsize-ssff-20261003-r3.service"
+  },
+  "actual_raw_mapping_verification_owner": "Hubble; worksheet binding is not independent raw verification",
+  "analytical_candidate": {
+    "PG_reserved_site_fraction": 0.05015582990397805,
+    "PG_source": "configs/signoff/pdn_m7_m8_wide_upper_grid.tcl",
+    "additional_band_depth_um": 196.02,
+    "collisions_if_stretched": [
+      "l2_s0",
+      "l2_s1",
+      "l2_n0",
+      "l2_n1"
+    ],
+    "current_r11_bands_mm2": 66.4063488,
+    "gross_envelope_is_not_free": true,
+    "gross_service_envelope_mm2": 123.4944,
+    "height_um": 1241.46,
+    "old_W2_matched_replacement_debit": null,
+    "per128_required_mm2": 78.8436097827176,
+    "per_PC_footprint_mm2": 0.6160869396,
+    "row_pitch_um": 0.27,
+    "site_pitch_um": 0.054,
+    "width_um": 496.26
+  },
+  "commit": "797c8e704ac64c48fed027b2de3fbdd05947d91e",
+  "entrypoint": "python3 tools/hbm_w2_mapped_context.py --mapping FULL_SS_MAPPING.json",
+  "from": "Goodall",
+  "implementation": "Exact e859 full219 area/SS cell-price snapshots + current r11 service bands/neighbor homes + once-only service inventory; mapping-fed component home dimensions and real-library driver/capture load choices, no tool launches. No reduced proxy, no Hubble source edits.",
+  "mapping_input_contract": {
+    "CW_rows": "219 unique indices,72 unique mapped single-bit cell IDs each;15768 distinct total",
+    "SS_report_sha256": "actual full raw area/census report hash",
+    "corner": "SS",
+    "mapped_netlist_sha256": "actual raw netlist hash",
+    "parameters": "exact model OPT_EXACT/RESET_QUARANTINE NC6/MAX16/AW34/CTAG32/GEN4/PTAG35",
+    "source_sha256": "exact e859 four source hashes",
+    "stage": "synthesis",
+    "standard_cell_area_um2": "measured fullsource preCTS SS mapped body"
+  },
+  "no_mapping_fallback": "python3 tools/hbm_w2_mapped_context.py",
+  "no_new_jobs": true,
+  "port_context": {
+    "actual_PG_OBS_escape_capacity": null,
+    "capture_D_load_FF_fF": 0.623429,
+    "capture_D_load_SS_fF": 0.527811,
+    "capture_master": "DFFASRHQNx1_ASAP7_75t_R",
+    "controller_clock_SS_pin_load_fF": 6843.028176,
+    "controller_reset_SS_pin_load_range_fF": [
+      11723.26925,
+      12217.80784
+    ],
+    "driver_SS_master": "BUFx4_ASAP7_75t_R",
+    "driver_SS_max_load_fF": 184.32,
+    "input_arrival_and_loaded_arc_and_installed_source_identity": "must bind actual mapped/client/backend paths; not invented",
+    "registered_capture_QN_inverter": "INVx1_ASAP7_75t_R",
+    "total_signal_bits": 4645
+  },
+  "tests": "6PASS incl reduced/redistributedCW/stale-source/alreadyCTS doubledebit refusals",
+  "to": [
+    "Hubble",
+    "Claude",
+    "parent"
+  ],
+  "worktree": "/home/ubuntu/OpenTallas-hbm-w2-mapped-context"
+}
