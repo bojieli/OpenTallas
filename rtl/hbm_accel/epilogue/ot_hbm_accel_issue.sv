@@ -88,7 +88,9 @@ module ot_hbm_accel_issue #(
     reg [XW-1:0] s_xb  [0:IL-1];
     wire [RW:0] gs_row = (ti == 0) ? cr : s_row[si];
     wire [XW-1:0] gs_xb = (ti == 0) ? cxb : s_xb[si];
-    wire [RW:0] row_now = gs_q ? gs_row : rb + si;
+    reg  [RW:0] rsi_q;                // rb + si, carried as a register (row-slot mode)
+    (* keep *) wire [RW:0] rsi_inc; assign rsi_inc = rsi_q + 1'b1;
+    wire [RW:0] row_now = gs_q ? gs_row : rsi_q;
     reg [IL-1:0] valid_mask, next_mask;
     reg init_q;
     reg [15:0] c_end;
@@ -169,14 +171,16 @@ module ot_hbm_accel_issue #(
             rows_q <= 0; c_q <= 1; g_q <= 1; rem <= 0; arrive <= 1'b0; xa_r <= 0; gs_q <= 1'b0;
             wb <= 0; cr <= 0; cg <= 0; cxb <= 0; pp0 <= 0; pp1 <= 0; pp2 <= 0; pp3 <= 0;
             valid_mask <= 0; init_q <= 0; c_end <= 0; g_end <= 0; slot_glast <= 0;
-            turn_q <= 1'b1; lt_q <= 1'b0; lg_q <= 1'b0; row_ok_q <= 1'b0; ls_q <= (IL == 1);
+            turn_q <= 1'b1; lt_q <= 1'b0; lg_q <= 1'b0; row_ok_q <= 1'b0; ls_q <= (IL == 1); rsi_q <= 0;
         end else begin
             ph <= ph_nx;
             if (sw_q) slot_glast[sw_slot] <= sw_last;
             // row_ok / last-slot flags follow si (and valid_mask at a wave change) one step ahead
             if (init_q) begin
                 row_ok_q <= gs_q ? (init_items != 0) : (rows_q != 0); ls_q <= (IL == 1);
+                rsi_q <= 0;
             end else if (adv) begin
+                rsi_q <= !last_si ? rsi_inc : (wave_adv && !gs_q) ? rb_n : rb;
                 row_ok_q <= wave_adv ? next_mask[0] : valid_mask[si_nx];
                 ls_q <= (si_nx == IL - 1);
             end

@@ -94,6 +94,9 @@ module ot_hbm_accel_bulk_copy #(
     // +1 / -1 is a register recomputed every cycle (or loaded with the descriptor), used only on
     // a low-part wrap, which is >= 256 issues after the high part last changed
     reg [AW-9:0] addr_hi_inc; reg [15:0] left_hi_dec;
+    reg [AW-9:0] q_base_hinc [0:DQ-1]; reg [15:0] q_len_hdec [0:DQ-1];   // high-part +1/-1 made at enqueue
+    reg [DQ-1:0] q_nz;                                // length != 0, made at enqueue
+    (* keep *) reg [QW-1:0] q_rp_a, q_rp_b;          // fan-out copies of q_rp
     wire [AW-1:0] addr_inc = {(a_addr[7:0] == 8'hff) ? addr_hi_inc : a_addr[AW-1:8], a_addr[7:0] + 8'd1};
     wire [23:0] left_dec = {(a_left[7:0] == 8'h00) ? left_hi_dec : a_left[23:8], a_left[7:0] - 8'd1};
     localparam integer OW = $clog2(MAX_OUT+1);
@@ -152,7 +155,7 @@ module ot_hbm_accel_bulk_copy #(
                 2'b01: free_q <= free_dn;
                 default: free_q <= free_eq;
             endcase
-            case ({issue, rsp_v})
+            case ({issue, rsp_q})
                 2'b10: cred_q <= cred_up;
                 2'b01: cred_q <= cred_dn;
                 default: cred_q <= cred_eq;
@@ -177,28 +180,20 @@ module ot_hbm_accel_bulk_copy #(
         assign s_data = ring[cslot];
         assign take = s_valid && s_ready;
         always @(posedge clk) if (rsp_v) ring[rsp_tag] <= rsp_data;
-        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && (used == 0);
+        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && !rsp_q && (used == 0);
     end else begin : g_sram
-        // hard macros: a one-cycle read into a two-entry output queue keeps one line a cycle
+        // hard macros (SS clk->q ~0.7 ns): the read lands in an unconditional capture register
+        // (read latency 2), then in a three-entry queue, which keeps one line a cycle.
+        // +1 cycle from take to the stream output against the original.
         localparam integer NB = (LINE_BITS + 255) / 256;
         wire [NB*256-1:0] rd;
         wire [NB*256-1:0] wpad = {{(NB*256-LINE_BITS){1'b0}}, rsp_data};
-        reg [NB*256-1:0] oq0, oq1;
-        reg [1:0] oq_n;
-        reg rd_v;
+        reg [NB*256-1:0] rdq;
+        reg [NB*256-1:0] oq0, oq1, oq2;
+        reg [1:0] oq_n, res, oq_wp, oq_rp;            // res = oq_n + rd_v + rd_v2 (entries reserved)
+        reg rd_v, rd_v2;
         wire pop_o = s_valid && s_ready;
-        wire [1:0] after_pop = oq_n - (pop_o ? 1 : 0);
-        reg space_q;
-        wire [2:0] reserved = {1'b0,oq_n} + rd_v;
-        assign take = head_full && (space_q || pop_o);
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) space_q <= 1;
-            else case ({take,pop_o})
-                2'b10: space_q <= (reserved == 0);
-                2'b01: space_q <= 1;
-                default: space_q <= space_q;
-            endcase
-        end
+        assign take = head_full && (res != 2'd3 || pop_o);
         genvar mb;
         for (mb = 0; mb < NB; mb = mb + 1) begin : g_mb
             ot_sram_1r1w_1024x256_m2_r2c2 u_ring (
@@ -206,47 +201,54 @@ module ot_hbm_accel_bulk_copy #(
                 .w_ce_in(rsp_v), .w_addr_in(rsp_tag), .wd_in(wpad[256*mb +: 256]), .w_mask_in({256{1'b1}}),
                 .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
         end
-        // two-entry ping-pong queue: the landing line goes to the entry named by the write pointer,
-        // the output is the entry named by the read pointer. Per-bank write enables are registered
-        // copies (we0/we1 = rd_v of the next cycle AND the then-current write pointer).
-        reg oq_wp, oq_rp;
-        (* keep *) reg [NB-1:0] we0, we1;
+        // per-bank registered write-enable copies: we<k> = rd_v2 next cycle AND write pointer == k
+        (* keep *) reg [NB-1:0] we0, we1, we2;
+        wire [1:0] wp_inc = (oq_wp == 2'd2) ? 2'd0 : oq_wp + 1'b1;
+        wire [1:0] wp_nx = rd_v2 ? wp_inc : oq_wp;
         assign s_valid = oq_n != 0;
-        assign s_data = oq_rp ? oq1[LINE_BITS-1:0] : oq0[LINE_BITS-1:0];
+        assign s_data = (oq_rp == 2'd0) ? oq0[LINE_BITS-1:0] : (oq_rp == 2'd1) ? oq1[LINE_BITS-1:0] : oq2[LINE_BITS-1:0];
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin oq_n <= 0; rd_v <= 1'b0; oq_wp <= 0; oq_rp <= 0; we0 <= 0; we1 <= 0; end
-            else begin
-                rd_v <= take;
-                oq_n <= after_pop + (rd_v ? 1 : 0);
-                if (rd_v) oq_wp <= ~oq_wp;
-                if (pop_o) oq_rp <= ~oq_rp;
-                we0 <= {NB{take && !(oq_wp ^ rd_v)}};
-                we1 <= {NB{take &&  (oq_wp ^ rd_v)}};
+            if (!rst_n) begin
+                oq_n <= 0; res <= 0; rd_v <= 1'b0; rd_v2 <= 1'b0; oq_wp <= 0; oq_rp <= 0;
+                we0 <= 0; we1 <= 0; we2 <= 0;
+            end else begin
+                rd_v <= take; rd_v2 <= rd_v;
+                oq_n <= oq_n - (pop_o ? 2'd1 : 2'd0) + (rd_v2 ? 2'd1 : 2'd0);
+                res <= res + (take ? 2'd1 : 2'd0) - (pop_o ? 2'd1 : 2'd0);
+                oq_wp <= wp_nx;
+                if (pop_o) oq_rp <= (oq_rp == 2'd2) ? 2'd0 : oq_rp + 1'b1;
+                we0 <= {NB{rd_v && wp_nx == 2'd0}};
+                we1 <= {NB{rd_v && wp_nx == 2'd1}};
+                we2 <= {NB{rd_v && wp_nx == 2'd2}};
             end
         end
+        always @(posedge clk) rdq <= rd;
         for (mb = 0; mb < NB; mb = mb + 1) begin : g_oq
             always @(posedge clk) begin
-                if (we0[mb]) oq0[256*mb +: 256] <= rd[256*mb +: 256];
-                if (we1[mb]) oq1[256*mb +: 256] <= rd[256*mb +: 256];
+                if (we0[mb]) oq0[256*mb +: 256] <= rdq[256*mb +: 256];
+                if (we1[mb]) oq1[256*mb +: 256] <= rdq[256*mb +: 256];
+                if (we2[mb]) oq2[256*mb +: 256] <= rdq[256*mb +: 256];
             end
         end
-        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && (used == 0) && (oq_n == 0) && !rd_v;
+        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && !rsp_q && (used == 0) && (oq_n == 0) && !rd_v && !rd_v2;
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            q_cnt <= 0; q_wp <= 0; q_rp <= 0; act <= 1'b0; a_addr <= 0; a_left <= 0;
+            q_cnt <= 0; q_wp <= 0; q_rp <= 0; q_rp_a <= 0; q_rp_b <= 0; act <= 1'b0; a_addr <= 0; a_left <= 0;
             addr_hi_inc <= 1; left_hi_dec <= 16'hffff;
             alloc_p <= 0; cons_p <= 0; outstanding <= 0; full <= {DEPTH{1'b0}};
         end else begin
             q_cnt <= q_cnt + (d_valid && d_ready ? 1 : 0) - (load ? 1 : 0);
             if (d_valid && d_ready) q_wp <= (q_wp == DQ - 1) ? 0 : q_wp + 1'b1;
-            addr_hi_inc <= load ? q_base[q_rp][AW-1:8] + 1'b1 : a_addr[AW-1:8] + 1'b1;
-            left_hi_dec <= load ? q_len[q_rp][23:8] - 1'b1 : a_left[23:8] - 1'b1;
+            addr_hi_inc <= load ? q_base_hinc[q_rp_a] : a_addr[AW-1:8] + 1'b1;
+            left_hi_dec <= load ? q_len_hdec[q_rp_b] : a_left[23:8] - 1'b1;
             if (load) begin
-                act <= (q_len[q_rp] != 0);
-                a_addr <= q_base[q_rp];
-                a_left <= q_len[q_rp];
+                act <= q_nz[q_rp];
+                a_addr <= q_base[q_rp_a];
+                a_left <= q_len[q_rp_b];
                 q_rp <= (q_rp == DQ - 1) ? 0 : q_rp + 1'b1;
+                q_rp_a <= (q_rp == DQ - 1) ? 0 : q_rp + 1'b1;
+                q_rp_b <= (q_rp == DQ - 1) ? 0 : q_rp + 1'b1;
             end else if (issue) begin
                 a_addr <= addr_inc;
                 a_left <= left_dec;
@@ -254,7 +256,7 @@ module ot_hbm_accel_bulk_copy #(
             end
             if (issue) alloc_p <= alloc_inc;
             if (take) cons_p <= cons_inc;
-            case ({issue, rsp_v})
+            case ({issue, rsp_q})
                 2'b10: outstanding <= out_inc;
                 2'b01: outstanding <= out_dec;
                 default: ;
@@ -266,7 +268,9 @@ module ot_hbm_accel_bulk_copy #(
         end
     end
     always @(posedge clk) begin
-        if (d_valid && d_ready) begin q_base[q_wp] <= d_base; q_len[q_wp] <= d_lines; end
+        if (d_valid && d_ready) begin q_base[q_wp] <= d_base; q_len[q_wp] <= d_lines;
+            q_base_hinc[q_wp] <= d_base[AW-1:8] + 1'b1; q_len_hdec[q_wp] <= d_lines[23:8] - 1'b1;
+            q_nz[q_wp] <= (d_lines != 0); end
     end
     end endgenerate
 endmodule

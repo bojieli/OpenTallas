@@ -129,7 +129,7 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
  reg [63:0] reader_metadata_identity_q;
  reg [19:0] reader_metadata_key_q;
  reg reader_metadata_stage_q;
- reg drain_done_v_q;
+ reg drain_done_v_q, drain_bad_q;
  reg [63:0] drain_done_identity_q;
  reg [19:0] drain_done_key_q;
  reg [7:0] drain_done_allcopies_q;
@@ -161,7 +161,7 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
   hydrate_producer_q <= hydrate_producer;
  end
  always @(posedge clk or negedge por_n) begin
-  if(!por_n) begin payload_v_q<=0; payload_wide_bad_q<=0; metadata_v_q<=0; consumer_v_q<=0; reader_metadata_v_q<=0; drain_done_v_q<=0; hydrate_v_q<=0; end
+  if(!por_n) begin payload_v_q<=0; payload_wide_bad_q<=0; metadata_v_q<=0; consumer_v_q<=0; reader_metadata_v_q<=0; drain_done_v_q<=0; drain_bad_q<=0; hydrate_v_q<=0; end
   else begin
    payload_v_q <= payload_valid && payload_ready;
    payload_wide_bad_q <= payload_identity!=w_identity || payload_key!=w_key || payload_sector!=sector_cursor
@@ -170,6 +170,7 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
    consumer_v_q <= consumer_valid && consumer_ready;
    reader_metadata_v_q <= reader_metadata_valid && reader_metadata_ready;
    drain_done_v_q <= drain_done_valid && drain_done_ready;
+   drain_bad_q <= drain_done_identity!=ident || drain_done_key!=key || drain_done_allcopies!=8'hff;
    hydrate_v_q <= hydrate_valid && hydrate_ready;
   end
  end
@@ -188,6 +189,7 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
  reg [63:0] m2_tag, m2_ident; reg [12:0] m2_pos, m2_keypos; reg [1:0] m2_resp, m2_rmm;
  wire c_fwd = c2_v && c2_row == event_row;
  wire m_fwd = m2_v && m2_row == reader_metadata_row;
+ reg h2_v, h2_bad_row, h2_live, h2_pubv; reg [6:0] h2_row; reg [12:0] h2_pos; reg [63:0] h2_producer;
  always @(posedge clk) begin
   c2_row <= event_row; c2_bad_row <= event_row >= 72;
   c2_live <= reader_live[event_row]; c2_tag <= reader_tag[event_row]; c2_pos <= reader_pos[event_row];
@@ -201,13 +203,16 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
   m2_ident <= reader_metadata_identity_q; m2_keypos <= reader_metadata_key_q[12:0]; m2_stage <= reader_metadata_stage_q;
   m2_resp <= responded_mask[reader_metadata_row];
   m2_rmm <= reader_metadata_mask[reader_metadata_row] | (m_fwd ? (2'b01 << m2_stage) : 2'b00);
+  h2_row <= hydrate_row; h2_bad_row <= hydrate_row >= 72; h2_live <= reader_live[hydrate_row];
+  h2_pubv <= pub_valid[hydrate_row] | (h2_v && h2_row == hydrate_row);
+  h2_pos <= hydrate_key_q[12:0]; h2_producer <= hydrate_producer_q;
  end
  always @(posedge clk or negedge por_n) begin
-  if(!por_n) begin c2_v<=0; m2_v<=0; end
-  else begin c2_v <= consumer_v_q; m2_v <= reader_metadata_v_q; end
+  if(!por_n) begin c2_v<=0; m2_v<=0; h2_v<=0; end
+  else begin c2_v <= consumer_v_q; m2_v <= reader_metadata_v_q; h2_v <= hydrate_v_q; end
  end
  assign cmd_ready=active && (!quiesce || (cmd_op!=BEGIN && cmd_op!=ACQUIRE))
-    && state==IDLE && !rsp_valid && !hydrate_valid && !hydrate_v_q;
+    && state==IDLE && !rsp_valid && !hydrate_valid && !hydrate_v_q && !h2_v;
  assign writer_retained=writer_live;
  assign writer_identity=w_identity; assign writer_key=w_key;
  assign writer_stage_base=stage_base; assign writer_stage_SM=stage_SM;
@@ -268,10 +273,10 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
     consumer_mask[i]<=0; consumer_reverse_mask[i]<=0; responded_mask[i]<=0; reader_metadata_mask[i]<=0; end
   end else if(active) begin
    if(rsp_valid && rsp_ready) rsp_valid<=0;
-   if(hydrate_v_q) begin
-    if(hydrate_row>=72 || reader_live[hydrate_row] || pub_valid[hydrate_row]) refuse();
-    else begin pub_valid[hydrate_row]<=1; pub_pos[hydrate_row]<=hydrate_key_q[12:0];
-      pub_tag[hydrate_row]<=hydrate_producer_q; end
+   if(h2_v) begin
+    if(h2_bad_row || h2_live || h2_pubv) refuse();
+    else begin pub_valid[h2_row]<=1; pub_pos[h2_row]<=h2_pos;
+      pub_tag[h2_row]<=h2_producer; end
    end
    // Payload receipts keep the original edge (the per-sector REQ/ACK interval is unchanged):
    // the narrow receipt/state checks act on the accepting edge, the wide identity/key/sector/
@@ -415,7 +420,7 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
     WAIT_DRAIN: begin
      if(drain_valid && drain_ready) drain_sent<=1;
      if(drain_done_v_q) begin
-      if(drain_done_identity_q!=ident || drain_done_key_q!=key || drain_done_allcopies_q!=8'hff) refuse();
+      if(drain_bad_q) refuse();
       else begin reader_count<=reader_count-1'b1; reader_live[row]<=0; complete(); end
      end
     end
