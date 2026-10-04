@@ -6306,6 +6306,12 @@ def dsrom_selected_rom_rows():
     return build(ROOT)
 
 
+def rom_composed_source_rows():
+    """Actual selected ROM source costs, without measured headline credit."""
+    from rom_combined_source_pricing import build
+    return build(ROOT)
+
+
 def dsrom_s82_rows():
     """Opt-in retained-RD64 conditional composition; defaults are unchanged."""
     from dsrom_s82_token_pricing import build
@@ -6368,6 +6374,7 @@ def qwen_posted_kv_model(records):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--rom-composed-source", action="store_true", help="selected S81 prune-only cost and actual Qwen combined clk/hclk baseline CDC, NEAR_HBM off")
     ap.add_argument("--dsrom-s81", "--dsrom-selected-rom", dest="dsrom_s81", action="store_true", help="selected S81 RD64 ROM model-only composition, prune/contracted storage priced separately")
     ap.add_argument("--dsrom-s82", action="store_true", help="historical S82 RD64 serial-path components; superseded selected build target")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
@@ -6389,8 +6396,10 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
-    if a.dsrom_s81 or a.dsrom_s82 or a.qwen_posted_kv_baseline:
-        if a.dsrom_s81:
+    if a.rom_composed_source or a.dsrom_s81 or a.dsrom_s82 or a.qwen_posted_kv_baseline:
+        if a.rom_composed_source:
+            payload = json.dumps(rom_composed_source_rows(), indent=2, sort_keys=True) + "\n"
+        elif a.dsrom_s81:
             payload = json.dumps(dsrom_selected_rom_rows(), indent=2, sort_keys=True) + "\n"
         elif a.dsrom_s82:
             payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"

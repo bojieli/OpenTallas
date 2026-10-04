@@ -27,7 +27,8 @@ def test_selected_geometry_not_RD16_or_S82():
 
 def test_exact_node_root_storage_once_and_prune_distinction():
     d = s.build(); r = d['selected_return']; o = d['return_options']
-    assert r['total_state_bits'] == 4706*(2*64*65+66)+128*128*(65+66)
+    assert r['total_state_bits'] == 5090*(2*64*65+66)+128*128*(65+66)
+    assert r['nodes'] == 5090
     assert o['prune_only']['nodes'] == 5090
     assert o['prune_only']['retained_unary_nodes'] == 384
     assert o['contracted']['unary_stages_removed_vs_prune'] == 384
@@ -58,7 +59,9 @@ def test_copies_remain_in_charged_field_and_no_fictional_area_fit():
     assert d['L4']['rank_copies']==4
     assert d['L4']['copied_elements']==130547712
     assert d['L4']['frame_credit_mm2']==0
-    assert d['area']['screen_mm2']==pytest.approx(839.239,abs=.0005)
+    assert d['area']['contracted_Claude_screen_mm2']==pytest.approx(839.239,abs=.0005)
+    assert d['area']['screen_mm2']==pytest.approx(841.6802584058435)
+    assert d['area']['prune_only_debit_vs_contracted_mm2']==pytest.approx(2.44144502784)
     assert d['area']['screen_plus_excluded_adder_proxy_mm2']>d['area']['screen_mm2']
     assert d['area']['complete_area_mm2'] is None
     assert not d['area']['contextual_route_SS_FF_fit']

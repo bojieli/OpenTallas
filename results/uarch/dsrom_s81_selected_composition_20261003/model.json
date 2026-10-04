@@ -16,6 +16,7 @@
     "all_rank_field_reservation_mm2": 271.14175893209796,
     "complete_area_mm2": null,
     "contextual_route_SS_FF_fit": false,
+    "contracted_Claude_screen_mm2": 839.2388133780036,
     "fixed_mm2": 465.4771773187259,
     "increment_terms": [
       {
@@ -144,10 +145,11 @@
         "name": "selected clock island delta"
       }
     ],
-    "margin_with_adder_proxy_fraction": 0.019718080008320867,
-    "screen_margin_fraction": 0.02186618487412173,
-    "screen_mm2": 839.2388133780036,
-    "screen_plus_excluded_adder_proxy_mm2": 841.0818873528607
+    "margin_with_adder_proxy_fraction": 0.016697292007841386,
+    "prune_only_debit_vs_contracted_mm2": 2.441445027839997,
+    "screen_margin_fraction": 0.01902067784866723,
+    "screen_mm2": 841.6802584058435,
+    "screen_plus_excluded_adder_proxy_mm2": 843.673723457272
   },
   "component_resources": {
     "BF_MACs_per_cycle_per_pair": 32,
@@ -269,22 +271,24 @@
   ],
   "schema": "opentallas.dsrom.selected-s81.v1",
   "selected_return": {
-    "FF50_mm2": 31.5476592912,
+    "FF50_mm2": 33.989104319039996,
     "RD": 64,
     "ROOTD": 128,
-    "adder_proxy_scaled_by_nodes_mm2": 1.843073974857143,
+    "adder_proxy_scaled_by_nodes_mm2": 1.9934650514285714,
     "contracted_model_nodes": 4706,
     "credit_RD16_adopted": false,
+    "inventory_scope": "Source-shaped prune-only binding; 5090 selected by owner; emitted node identity confirmation remains required.",
     "measured_latency_credit_cycles": null,
+    "nodes": 5090,
     "roots": 128,
     "state_bits": {
-      "node_output_register_bits": 310596,
-      "node_two_FIFO_bits": 39153920,
+      "node_output_register_bits": 335940,
+      "node_two_FIFO_bits": 42348800,
       "root_held_sibling_bits": 1081344,
       "root_input_FIFO_bits": 1064960
     },
     "topology_and_golden_order_qualified": false,
-    "total_state_bits": 41610820
+    "total_state_bits": 44831044
   },
   "source_commits": {
     "adder_proxy": "046bf5026d36cc4f31813db26045360da618e51f",
@@ -302,6 +306,6 @@
   "stages": 81,
   "status": "SELECTED_BUILD_TARGET_MODEL_ONLY",
   "tau_assumed": 3.649,
-  "tool_sha256": "b8145226935f6186013082b8294df1b5a069e2e62a4a9015e89658ef3515fcdb",
+  "tool_sha256": "0fe6ff2e3dfdeb6fa4444240e11a30e7cb0340831cd68963d05582d7dd327711",
   "total_dies": 368
 }
