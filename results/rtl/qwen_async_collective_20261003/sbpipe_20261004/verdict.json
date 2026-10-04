@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.qwen-async-seq.sbpipe-verdict.v1",
+ "verdict": "REJECT",
+ "reason": "Does not close SS setup at 1.2 GHz in context: after full GRT repair WNS -87.9 ps, 164 failing endpoints in 13 register families. Owner rule: closure fails -> final REJECT, no rescue loop.",
+ "source_commit": "d4b597eabaf30b483673f47191dbec20dfa54055",
+ "design": "ot_qwen_tp_seq_async_w12 SB_PIPE=1: tap register on the ME->sequencer hop, then offset/range check registered as two 16-way one-hots, then AND-OR into lw. Default 0 keeps the original logic.",
+ "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-async-seqfix",
+ "exactness": {
+  "verilator_gate": "pass (async_coll_verilator_gate_sbpipe1.json)",
+  "full_token_ideal_memory_layer_parallel": {"composed_full_token_exact": true, "poison_check": "pass", "cycles": 134658},
+  "real_mem_E_L0_L2": {
+   "P0": {"status": "pass", "cycles": 12244, "sb_pipe0_cycles": 12240, "one_stream_cycles": 14273},
+   "P255": {"status": "pass", "cycles": 12701, "sb_pipe0_cycles": 12687, "one_stream_cycles": 13874}
+  }
+ },
+ "performance": {
+  "one_stream_token_cycles": 144522,
+  "sb_pipe0_token_cycles": 134514,
+  "sb_pipe1_token_cycles": 134658,
+  "added_cycles_vs_sb_pipe0": 144,
+  "added_cycles_per_layer": 4,
+  "per_user_gain_vs_one_stream_pct": 7.33,
+  "tok_s_at_1p2ghz": 8911
+ },
+ "physical": {
+  "flow": "run_abi3_physical.py asap7 synth,pnr, top ot_qwen_tp_seq_async_ctx_w12, ASYNC_COLL=1 SB_PIPE=1, 0.833333 ns, SS(WC) primary, repair WC+BC, 60/25 ps uncertainty, hold margin 10 ps, max-fanout 32, slew margin 30%, adder map off, die 130x130 um (same recipe as the closing baseline a0h)",
+  "cts_and_grt_repair": "GRT repair_timing stalled; final post-GRT WNS -87.870 ps, TNS -862.7 ps, 164 setup-violating endpoints; hold repaired to +10.0 ps",
+  "ss_setup_wns_ps_post_grt": -87.9,
+  "worst_path": "seq.rd_k -> lw[rd_k] 256:1 mux -> word_ok -> rd_go -> rd_k+1 -> seq.rd_k (745 ps logic + fanout buffers)",
+  "worst_slack_by_family_ps": {"seq.rd_k": -87.9, "seq.seg": -48.7, "seq.best_v": -43.0, "seq.next_val": -41.9, "seq.best_i": -41.7, "seq.next_token": -32.7, "seq.g_sb1.s1_v": -31.0, "vm_re": -26.9, "seq.rd_v": -19.6, "seq.done": -12.4, "seq.vm_wdata": -6.7, "seq.g_sb1.s1_hi": -4.7, "seq.q_d": -0.7},
+  "detailed_route": "stopped at DRT iteration 13 (1,215 DRC violations, about 15 min per iteration) once the GRT result decided the verdict; no 6_final, no FF hold signoff",
+  "baseline_for_comparison": "ASYNC_COLL=0 (a0h) closes: SS +17.1 ps, FF hold +6.2 ps; SB_PIPE=0 ASYNC_COLL=1 failed at -546 ps"
+ }
+}

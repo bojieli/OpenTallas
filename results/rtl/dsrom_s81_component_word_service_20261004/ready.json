@@ -1,0 +1,123 @@
+{
+  "status": "S81_NATIVE_PROVIDER_READY",
+  "pid": 2198968,
+  "process_start_ticks": 329254649,
+  "source_root": "/home/ubuntu/OpenTallas-dsrom-s81-word-service",
+  "source_head": "2b5e2ea595ae5c77daebac491489e219209d106e",
+  "model_pin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1",
+  "interface_pin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1",
+  "source_sha256": {
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/binding.json": "9b7ad90a9e78808634416dbce55dd4e29aebd664f45e5fadff080d439df48ff3",
+    "results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/binding_result.json": "153c45f379a126e48ada7f089f97420f0307b8ef11f69529c29add97dd2f7faa",
+    "results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/model.json": "a0570bec0f02a35d288ecc39a964bebf8318e9c36e4848295f2837777eb4dbae",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/auxiliary_obligations.json": "a41f4b1d6166620e884e3b2ca48cb310a6be046d611509f163e44a8075f8e433",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/mapping_verdict.json": "a72c7c3c15706b3f5a93e69625d98c59cd8297bdae5090bb21d752b8cc4630cd",
+    "results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/input_mapping_verdict.json": "bf7aa85559b92c9a383a316ff7401e2e86dd752b36982352247e3a447c36cc35",
+    "return_verdict_label_correction": {
+      "original_sha256": "bf7aa85559b92c9a383a316ff7401e2e86dd752b36982352247e3a447c36cc35",
+      "current_sha256": "a72c7c3c15706b3f5a93e69625d98c59cd8297bdae5090bb21d752b8cc4630cd",
+      "changed_annotations_only": [
+        "W1_RD",
+        "return_binding",
+        "schema",
+        "selected_binding"
+      ],
+      "timing_or_adoption_transfer": false
+    },
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/providers.json": "91ad040342b25cd38fb69ef0eb7cb4966ff8e7e9c43cd4c3bd53a04ee30f792d",
+    "tools/dsrom_s82_payload_interface.py": "10675dc114e4fa8731d56c09cb31fa767f6804428cf679b4cb44d33fed2a050a",
+    "tools/dsrom_c8_parent_binding.py": "24bc846ecd8ac4f8003ad0c2b3d5a06a3fccad2c6c7c8cf7436085ede6cf615a",
+    "tools/dsrom_s82_native_word_server.py": "69859e0a8c432123c67dee1ec49d251acef8a35b1310ab427579494a6316d66d",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+    "tools/hdc_timing_v41.py": "8298c22e3e1265bdd60e82f2e97dea4145d8c93f2627a74c80705588e892a127",
+    "tools/v41_program_constants.py": "3000d5e199f960ff7139eaf198ac60d1690454f907bfc90385c28ba88b6bb6e4",
+    "tools/hdc_replay_v41.py": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+    "tools/rtl_v41_fullshape_layer_campaign.py": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8",
+    "tools/v41_floorplan_stage_bankmap.py": "c5ff8a63019e9ea5a21d3a9c49cb176dc161ce8b76044b06638a137946a2de5a",
+    "tools/v41_floorplan_die_macromap.py": "c1b28d9191ab3bf7bbcb6ec6d38d26c10bd90acdaf009a39f44d171724f83ece",
+    "tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e",
+    "tools/dsrom_full_owner_compiler.py": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+    "tools/dsrom_full_owner_closure.py": "e655bdc7a0d863c4b3a2daa011d8b138f31554eedf8d0d6970329704e40c99ed",
+    "tools/dsrom_owner_provider_first.py": "4b28ee9c0e5060641c60010965150c404fbc035289c5b1c841ba90148c1e504d",
+    "tools/dsrom_s73_pair1.py": "6bde0e13fb3ef615705b6eff79726c736f3437701f24a3a625c2c7c04185e94d"
+  },
+  "server_sha256": "165f96395511be136ac5d3b4de9a034e520be3b0b2133cc7a77d70bee5f57d8c",
+  "selection_sha256": "6c3979d1d93c0c8f7e6368fb9c317e507918d203dc887773847a413755b1c070",
+  "socket": "/tmp/dsrom-s81-minimum-field-57e3.sock",
+  "protocol": "16-byte LE stage/rank/macro/row; status32+36-byte LE native word",
+  "scope": "stage0/rank0/pair0/phase0; BF physical model FP8 operation; no fullphase/token credit",
+  "field_parameters": {
+    "die_id": 0,
+    "RANK": 0,
+    "ROM_R": 128,
+    "ROM_PHW": 10,
+    "field_pairs": 2417,
+    "BF_pairs": 519,
+    "physical_macros": 9668,
+    "physical_rows": 4096,
+    "return_RD": 64,
+    "return_ROOTD": 128,
+    "C8_PUBLICATION": 1,
+    "C8_CONTEXT": 1,
+    "WINDOW_REFILL_OWNER_SAFE": 1,
+    "WINDOW_REFILL_CREDITS": 8
+  },
+  "matrix_count": 46671,
+  "matrix_sha256": "1d3f5077217e5627aa4f6c318bd97d2fa86f622790163d17fa7b7c8c624d7a8f",
+  "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "checkpoint_descriptors": {
+    "layers.0.attn.wq_a.weight": {
+      "shard": "model-00003-of-00048.safetensors",
+      "data_base": 258144,
+      "descriptor": {
+        "dtype": "F8_E4M3",
+        "shape": [
+          1280,
+          5120
+        ],
+        "data_offsets": [
+          510842328,
+          517395928
+        ]
+      },
+      "file_identity": {
+        "device": 66313,
+        "inode": 28991059,
+        "bytes": 7389759032,
+        "mtime_ns": 1789298934154178885
+      }
+    },
+    "layers.0.attn.wq_a.scale": {
+      "shard": "model-00003-of-00048.safetensors",
+      "data_base": 258144,
+      "descriptor": {
+        "dtype": "F8_E8M0",
+        "shape": [
+          40,
+          160
+        ],
+        "data_offsets": [
+          7968216,
+          7974616
+        ]
+      },
+      "file_identity": {
+        "device": 66313,
+        "inode": 28991059,
+        "bytes": 7389759032,
+        "mtime_ns": 1789298934154178885
+      }
+    }
+  },
+  "readiness_word_sha256": "064cd99204701fde846ba92b077723fbe1ec596259977a694137544991a9a696",
+  "readiness_checkpoint_bytes": 64,
+  "startup_peak_rss_bytes": 124551168,
+  "startup_seconds": 2.4230179130099714
+}

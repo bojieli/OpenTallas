@@ -1,0 +1,21 @@
+[
+  "g++",
+  "-std=c++17",
+  "-O2",
+  "-fPIC",
+  "-pthread",
+  "-Wall",
+  "-Wextra",
+  "-Werror",
+  "-I/srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/obj",
+  "-isystem",
+  "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+  "-isystem",
+  "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+  "-I/srv/opentallas-scratch/jobs/dsrom-s81-xu-c6cbe6177-wrapper-r3/source/tools/native",
+  "-I/srv/opentallas-scratch/jobs/dsrom-s81-xu-c6cbe6177-wrapper-r3/source/rtl/test/v41_runtime",
+  "-c",
+  "/srv/opentallas-scratch/jobs/dsrom-s81-xu-c6cbe6177-wrapper-r3/source/tools/runtime/dsrom/s81_minimum_xu.cpp",
+  "-o",
+  "/srv/opentallas-scratch/jobs/dsrom-s81-xu-c6cbe6177-wrapper-r3/s81_minimum_xu.o"
+]

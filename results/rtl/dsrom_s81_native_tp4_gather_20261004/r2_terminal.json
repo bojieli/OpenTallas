@@ -1,0 +1,59 @@
+{
+  "source_commit": "efdfac1fffde39e1960730c66e7d5a61cbd18c01",
+  "source_pins": {
+    "rtl/test/dsrom_s81_native_gather/DsromTp4Gather.sv": "37e5b24cec592a2cdd93cc995a548758d0005806e19419b2d64a5485cefde18e",
+    "rtl/chip/ot_w15_coll_dma.sv": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
+    "rtl/rom/ot_rom_oneshot_px.sv": "ae8fbfdf6a478e10d20325ebdbaac060bdf6fd9c970f293a80dd5bdedc17ca37",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/test/tb_v41_stage_collective_px.sv": "1ef5ea0c7e6df525eeca7c1f585605037ac5860c0315aaa61d9972c7eefc6bae"
+  },
+  "supervisor_pid": 2464131,
+  "commands": [
+    [
+      "g++",
+      "-std=c++17",
+      "-O0",
+      "-pthread",
+      "-I/home/ubuntu/dsrom-s81-native-gather-20261004/tools/runtime/dsrom",
+      "-I/tmp/dsrom-s81-native-gather-20261004-r1/obj",
+      "-I/home/ubuntu/dsrom-s81-native-gather-20261004/rtl/test/v41_runtime",
+      "-I/home/ubuntu/dsrom-s81-native-gather-20261004/rtl/test/v41_runtime/s81_selected",
+      "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+      "-c",
+      "/home/ubuntu/dsrom-s81-native-gather-20261004/tools/runtime/dsrom/s81_minimum_tp4_gather.cpp",
+      "-o",
+      "/tmp/dsrom-s81-native-gather-20261004-r2/s81_minimum_tp4_gather.o"
+    ]
+  ],
+  "stages": [
+    {
+      "name": "provider",
+      "exit": 0,
+      "wall_seconds": 1.2777313883416355
+    }
+  ],
+  "scope": "native TP4 gather archive/provider, not joined first-token or physical qualification",
+  "reused_archive": {
+    "path": "/tmp/dsrom-s81-native-gather-20261004-r1/obj/VDsromTp4Gather__ALL.a",
+    "sha256": "1005be7e473a4f34ceb6b25b8e38c775bd8522660def98a50ef573c1d873a39e"
+  },
+  "active_pid": 2464261,
+  "artifacts": {
+    "/tmp/dsrom-s81-native-gather-20261004-r1/obj/VDsromTp4Gather.h": {
+      "bytes": 39170,
+      "sha256": "35bd120bc8f1eb200a7fe86890e7b9bbd2933b14c7473d20c8a7a72b03462948"
+    },
+    "/tmp/dsrom-s81-native-gather-20261004-r1/obj/VDsromTp4Gather__ALL.a": {
+      "bytes": 13460522,
+      "sha256": "1005be7e473a4f34ceb6b25b8e38c775bd8522660def98a50ef573c1d873a39e"
+    },
+    "/tmp/dsrom-s81-native-gather-20261004-r2/s81_minimum_tp4_gather.o": {
+      "bytes": 208760,
+      "sha256": "3e5bb29b9d80ac15e9c9c6d0f3f66b5ccb79e9f0077941ec966826f4f16451da"
+    }
+  },
+  "exit": 0,
+  "verdict": "PASS_ARCHIVE_PROVIDER_ONLY"
+}

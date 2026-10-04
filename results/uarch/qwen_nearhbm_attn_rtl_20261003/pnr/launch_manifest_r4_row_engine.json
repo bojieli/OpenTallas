@@ -1,0 +1,115 @@
+{
+ "schema": "qwen-nearhbm-attn-pnr-launch.v1",
+ "source_commit": "58144881b6088347006298a4eb684a2e648b11ee",
+ "host": "ot-agidock128",
+ "worktree": "~/nhbp/wt4 (detached at the source commit)",
+ "orfs_image": "openroad/orfs:asap7lock (sha256:af971398..., the archived asap7 lock, copied from local)",
+ "launcher": "tools/run_abi3_physical_persistent.py (fresh persistent workdir + receipt), gated on MemAvailable",
+ "constraints": {
+  "setup": "SS (ORFS WC) 0.833 ns, 60 ps uncertainty",
+  "hold": "FF (ORFS BC) 25 ps uncertainty + 10 ps hold margin, repaired at WC and BC",
+  "relaxation": "none"
+ },
+ "macros": {
+  "row_engine": [],
+  "hub": [],
+  "note": "neither element instantiates a macro (the engine's row FIFO and the hub buffers are flops); the frame's score SRAM ot_sram_1r1w_1024x256_m2_r2c2 was audited anyway: R0/MY origin 0 mod 48 nm, MX/R180 18 nm (macro_track_alignment_sram1024x256.json)"
+ },
+ "frames": {
+  "row_engine": {
+   "frame_um": [
+    328.32,
+    1998.0
+   ],
+   "source": "results/uarch/qwen_rom_floorplan_nearhbm_20261003/model-r1.json @ b4593fb82 (branch claude/qwen-rom-floorplan-nearhbm-20261003)",
+   "element_contents_difference": "the model's element also holds 4 exp pipes, the s-max/Z adders and 1 score SRAM; this RTL keeps those at the stack (exp quads, score/e memories) -- the P&R element is the 512-lane engine, its score tree, control and a 32-row FIFO"
+  },
+  "hub": {
+   "frame_um": [
+    507.6,
+    507.6
+   ],
+   "requested_um": [
+    412.56,
+    412.56
+   ],
+   "reason": "the synthesised hub (168.7k um2 pre-fix screen, incl. the 128 kb P.V beat buffer in flops that the model's parts list lacks) is 0.99 of the 412.56 frame; 507.6 gives <= 0.70"
+  }
+ },
+ "runs": {
+  "row_engine": {
+   "min_mem_avail_gb": 30,
+   "argv": [
+    "--top",
+    "ot_qwen_nearhbm_row_engine",
+    "--source",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack.sv",
+    "--source",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv",
+    "--source",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "--source",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "--source",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "--source",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "--source",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "--param",
+    "HD=128",
+    "--param",
+    "S=0",
+    "--param",
+    "R=6",
+    "--param",
+    "E=0",
+    "--param",
+    "DQ=32",
+    "--view",
+    "asap7",
+    "--clock-port",
+    "clk",
+    "--clock-period-ns",
+    "0.833",
+    "--clock-uncertainty-ns",
+    "0.06",
+    "--clock-uncertainty-hold-ns",
+    "0.025",
+    "--orfs-corner",
+    "WC",
+    "--hold-corners",
+    "WC,BC",
+    "--io-delay-fraction",
+    "0.2",
+    "--stages",
+    "synth,pnr",
+    "--hold-margin-ns",
+    "0.01",
+    "--orfs-var",
+    "ADDER_MAP_FILE=",
+    "--force",
+    "--die-area",
+    "0",
+    "0",
+    "328.32",
+    "1998",
+    "--core-area",
+    "2.16",
+    "2.16",
+    "326.16",
+    "1995.84",
+    "--place-density",
+    "0.65",
+    "--nickname-tag",
+    "nhb_row_engine_hd128_r6_58144881",
+    "--purpose",
+    "signoff_target",
+    "--output",
+    "results/physical_abi3/asap7/nearhbm/row_engine_hd128_r6_r4/physical.json"
+   ],
+   "note": "keep_hierarchy on lane units"
+  },
+  "hub": "r5 (launch_manifest_r5_hub.json)"
+ }
+}
