@@ -4,7 +4,7 @@
 R=/srv/opentallas-scratch/claude/hbm-accel-r5a-gates
 lab=$1; shift
 W=$R/routes/$lab; mkdir -p $W
-cd $R/src
+cd ${SRC:-$R/src}
 export OT_ORFS_NUM_CORES=${CORES:-24}
 M=ot_sram_1r1w_512x128_m4_r2c2
 /srv/opentallas-scratch/admit.sh ${NEED:-120} -- python3 tools/run_abi3_physical_aligned.py --macro-track-gate \

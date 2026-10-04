@@ -3,7 +3,7 @@
 # Usage: r5a_screen.sh <label> <clock-port> <period-ns> [extra args]
 R=/srv/opentallas-scratch/claude/hbm-accel-r5a-gates
 lab=$1; cp=$2; p=$3; shift 3
-cd $R/src; export OT_SCREEN_ROOT=$R/src
+cd ${SRC:-$R/src}; export OT_SCREEN_ROOT=${SRC:-$R/src}
 M=ot_sram_1r1w_512x128_m4_r2c2
 /srv/opentallas-scratch/admit.sh ${NEED:-40} -- python3 jobs/screen.py --work $R/runs/$lab --output $R/runs/$lab.json --label $lab \
   --top ot_hbm_accel_expert_fetch_stream_sram \
