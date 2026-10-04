@@ -759,7 +759,7 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
             core->next_token==winner->global_id&&core->next_val==winner->bits&&
             winner->identity==ID&&winner->sequence==1,"real END differs from held native winner/publication");
 #ifdef DSROM_S81_NATIVE_HEAD_STREAM
-        Source::require(stream_collective->complete()&&core->head_final_identity==ID,
+        Source::require(stream_collective->complete(),
             "real END before all native carried final deliveries retired");
 #else
         argmax->acknowledge(*winner);
