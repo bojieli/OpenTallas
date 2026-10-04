@@ -9,10 +9,103 @@ import qwen_rom_combined_stream4_runtime_emit as runtime
 import qwen_rom_combined_stream4_selection as selected
 
 
+def _cached_slot_frames(oracle_root,oracle_sha256,slot_roots,slot_hashes,position,npos,layer):
+    """Bind each entering slot independently; never splice a draft receipt."""
+    selected.require(type(position) is int and type(npos) is int and
+                     1<=npos<=4 and 0<=position and position+npos<=8192,
+                     'actual slot block exceeds 8192-position storage')
+    selected.require(type(layer) is int and 0<=layer<36,'actual decoder layer required')
+    roots=list(slot_roots) if slot_roots is not None else [oracle_root]*npos
+    hashes=list(slot_hashes) if slot_hashes is not None else [oracle_sha256]*npos
+    selected.require(len(roots)==len(hashes)==npos and
+                     Path(roots[0]).resolve()==Path(oracle_root).resolve() and hashes[0]==oracle_sha256,
+                     'one pinned cache per slot; first slot owns entering history')
+    roots=[Path(p).resolve(strict=True) for p in roots];paths=[];frames=[]
+    for slot,(directory,digest) in enumerate(zip(roots,hashes)):
+        path=directory/'oracle.json'
+        selected.require(selected.sha(path)==digest,'actual cached slot producer changed')
+        record=json.loads(path.read_text())
+        selected.require(record.get('tp')==4 and record.get('groups')==6144 and
+                         layer<record.get('layers',0),'actual cached TP4 layer inputs required')
+        frame=record.get('per_position',{}).get(str(position+slot))
+        selected.require(isinstance(frame,dict) and type(frame.get('token')) is int and
+                         0<=frame['token']<(1<<18),'actual cached position/token input missing')
+        paths.append(path);frames.append(frame)
+    return roots,paths,frames
+
+
+def pack_cached_slots(*,oracle_root,oracle_sha256,slot_oracle_roots,slot_oracle_sha256,
+                      position,layer,head_manifest,head_manifest_sha256,output):
+    """Lossless entering-X/KV packing only. This does not authorize ACCEPT.
+
+    Different cached runs can supply embeddings of different draft tokens.
+    Only slot zero supplies entering history; later-run KV and current-layer
+    outputs are never copied. A separate real drafter output is still required.
+    """
+    import numpy as np
+    output=Path(output);head_manifest=Path(head_manifest)
+    selected.require(not output.exists(),'fresh cached-slot output required')
+    selected.require(selected.sha(head_manifest)==head_manifest_sha256,'actual HEAD manifest changed')
+    head=json.loads(head_manifest.read_text());npos=head.get('p')
+    roots,paths,frames=_cached_slot_frames(oracle_root,oracle_sha256,slot_oracle_roots,
+                                         slot_oracle_sha256,position,npos,layer)
+    entries=head.get('head',[])
+    selected.require(len(entries)==4 and sorted(h.get('die') for h in entries)==list(range(4)),
+                     'all four actual HEAD rank layouts required')
+    bases=entries[0].get('x_bases')
+    selected.require(isinstance(bases,list) and len(bases)==npos and
+                     all(type(b) is int and 0<=b and b+4096<=1048576 for b in bases) and
+                     all(h.get('x_bases')==bases for h in entries) and
+                     all(abs(a-b)>=4096 for i,a in enumerate(bases) for b in bases[i+1:]),
+                     'literal HEAD slot addresses overlap or differ across ranks')
+    pins={str(p.resolve()):selected.sha(p) for p in [head_manifest,*paths]}
+    slots=[]
+    for slot,(directory,frame) in enumerate(zip(roots,frames)):
+        variants=[]
+        for rank in range(4 if layer else 1):
+            incoming=directory/f'P{position+slot}'/('x_preload.hex' if layer==0 else f'L{layer-1:02d}_die{rank}_x.hex')
+            pin=frame['x_preload_sha256'] if layer==0 else frame['layer_x_sha256'][f'L{layer-1}_die{rank}']
+            selected.require(selected.sha(incoming)==pin,'actual entering producer changed')
+            words=[w for w in incoming.read_text().split() if not w.startswith('@')]
+            selected.require(len(words)==4096 and all(len(w)<=8 and 0<=int(w,16)<(1<<32) for w in words),
+                             'actual entering X must contain 4096 raw32 words')
+            variants.append([int(w,16) for w in words]);pins[str(incoming.resolve())]=pin
+        selected.require(all(v==variants[0] for v in variants),'rank entering-X differs')
+        slots.append(variants[0])
+    histories=[]
+    for rank in range(4):
+        source=roots[0]/f'P{position}'/'kv_pre'/f'L{layer}_die{rank}.npy'
+        pin=frames[0]['kv_pre_sha256'][f'L{layer}_die{rank}']
+        selected.require(selected.sha(source)==pin,'actual entering KV source changed')
+        array=np.load(source,mmap_mode='r',allow_pickle=False)
+        selected.require(array.dtype==np.dtype('<u4') and array.flags.c_contiguous and array.nbytes==16777216,
+                         'actual little-endian contiguous full KV extent required')
+        histories.append(array);pins[str(source.resolve())]=pin
+    # All source checks precede materialization. This is byte packing, not inference.
+    output.mkdir();history=output/'history';history.mkdir()
+    preload=output/'x_preload.hex'
+    preload.write_text(''.join(f'@{base:x}\n'+''.join(f'{w:08x}\n' for w in words)
+                               for base,words in zip(bases,slots)))
+    for rank,array in enumerate(histories):
+        path=history/f'L{layer}_die{rank}.bin'
+        with path.open('wb') as stream:stream.write(memoryview(array).cast('B'))
+        predecessor.raw_matches_npy(path,roots[0]/f'P{position}'/'kv_pre'/f'L{layer}_die{rank}.npy')
+    selected.require(all(selected.sha(p)==digest for p,digest in pins.items()),'cached source changed during packing')
+    result=dict(status='actual_cached_slots_ready',position=position,layer=layer,
+                tokens=[frame['token'] for frame in frames],npos=npos,
+                preload=str(preload.resolve()),preload_sha256=selected.sha(preload),
+                history=str(history.resolve()),oracle_roots=list(map(str,roots)),
+                oracle_sha256=[selected.sha(p) for p in paths],input_sha256=pins,
+                scope='Entering bytes only; released drafter output absent; no ACCEPT authorization or expected outputs')
+    (output/'inputs.json').write_text(json.dumps(result,indent=2)+'\n')
+    return result
+
+
 def prepare_accept_head(*, release, release_sha256, step, decoder_sources,
                         decoder_images, head_images, head_manifest,
                         head_manifest_sha256, preload, preload_sha256,
-                        history, layer, output, oracle_root, oracle_sha256, root=runtime.ROOT):
+                        history, layer, output, oracle_root, oracle_sha256, root=runtime.ROOT,
+                        slot_oracle_roots=None, slot_oracle_sha256=None):
     """Prepare actual VPOS inputs only; no model/run or numerical computation.
 
     Pending/drafts come from the retained released-drafter step receipt or a
@@ -53,19 +146,22 @@ def prepare_accept_head(*, release, release_sha256, step, decoder_sources,
         selected.require(isinstance(source,dict) and isinstance(draft,dict),
                          'released pending/draft step receipt absent; targets cannot supply drafts')
         tokens=source.get('block_tokens');actual_drafts=draft.get('draft_tokens')
+        selected.require(record.get('schema')=='opentallas.qwen-dspark-oracle-gpu.v1' and
+                         draft.get('start')==source.get('P') and isinstance(tokens,list) and tokens and
+                         draft.get('anchor')==tokens[0] and draft.get('kv')=='fp8' and
+                         draft.get('S')==len(tokens)-1,
+                         'actual drafter start/anchor/precision differs from verify inputs')
     selected.require(isinstance(tokens,list) and 1<=len(tokens)<=4 and
                      all(type(t) is int and 0<=t<(1<<18) for t in tokens) and
                      tokens[1:]==actual_drafts,'actual pending/draft identity or VPMAX4 extent differs')
     position=source.get('P')
     selected.require(type(position) is int and 0<=position and position+len(tokens)<=8192,
                      'released verify block exceeds actual 8192-position storage')
-    oracle_path=Path(oracle_root)/'oracle.json'
-    selected.require(selected.sha(oracle_path)==oracle_sha256,'actual cached input producer changed')
-    oracle=json.loads(oracle_path.read_text());frames=oracle.get('per_position',{})
-    selected.require(oracle.get('tp')==4 and oracle.get('groups')==6144 and
-                     layer<oracle.get('layers',0),'actual cached TP4 layer inputs required')
+    oracle_roots,oracle_paths,frames=_cached_slot_frames(
+        oracle_root,oracle_sha256,slot_oracle_roots,slot_oracle_sha256,
+        position,len(tokens),layer)
     for slot,token in enumerate(tokens):
-        selected.require(frames.get(str(position+slot),{}).get('token')==token,
+        selected.require(frames[slot].get('token')==token,
                          'released pending/draft has no matching cached position/token input')
     selected.require(selected.sha(head_manifest)==head_manifest_sha256 and
                      selected.sha(preload)==preload_sha256,'actual HEAD manifest/entering payload changed')
@@ -80,7 +176,7 @@ def prepare_accept_head(*, release, release_sha256, step, decoder_sources,
         from tools.runtime.qwen_combined import attention_descriptors_vp as descriptors
         from tools import hdc_isa as isa
     finally:sys.path[:]=old_path
-    pins={str(p.resolve()):selected.sha(p) for p in (release,head_manifest,preload,oracle_path)}
+    pins={str(p.resolve()):selected.sha(p) for p in (release,head_manifest,preload,*oracle_paths)}
     def hex_memory(path):
         words={};address=0
         for word in Path(path).read_text().split():
@@ -117,7 +213,7 @@ def prepare_accept_head(*, release, release_sha256, step, decoder_sources,
                          [head_x.get(i) for i in range(len(tokens))]==h['x_bases'],
                          'literal decoder/HEAD entering X layout differs')
         for slot,base in enumerate(h['x_bases']):
-            frame=frames[str(position+slot)];posdir=Path(oracle_root)/f'P{position+slot}'
+            frame=frames[slot];posdir=oracle_roots[slot]/f'P{position+slot}'
             incoming=posdir/('x_preload.hex' if layer==0 else f'L{layer-1:02d}_die{rank}_x.hex')
             expected_pin=frame['x_preload_sha256'] if layer==0 else frame['layer_x_sha256'][f'L{layer-1}_die{rank}']
             selected.require(selected.sha(incoming)==expected_pin,'actual entering slot producer changed')
@@ -135,8 +231,8 @@ def prepare_accept_head(*, release, release_sha256, step, decoder_sources,
         pins[str(near/'near_slot_bases.hex')]=selected.sha(near/'near_slot_bases.hex')
         raw=history/f'L{layer}_die{rank}.bin'
         selected.require(raw.stat().st_size==16777216,'actual full raw KV history required')
-        npy=Path(oracle_root)/f'P{position}'/'kv_pre'/f'L{layer}_die{rank}.npy'
-        selected.require(selected.sha(npy)==frames[str(position)]['kv_pre_sha256'][f'L{layer}_die{rank}'],
+        npy=oracle_roots[0]/f'P{position}'/'kv_pre'/f'L{layer}_die{rank}.npy'
+        selected.require(selected.sha(npy)==frames[0]['kv_pre_sha256'][f'L{layer}_die{rank}'],
                          'entering KV context source differs')
         predecessor.raw_matches_npy(raw,npy)
         pins[str(npy.resolve())]=selected.sha(npy)
@@ -168,25 +264,39 @@ def prepare(*args,**kwargs):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--accept-head',action='store_true')
-    for key in ('selection','oracle-root','history','output'):p.add_argument('--'+key,type=Path,required=key in ('history','output'))
+    p.add_argument('--pack-cached-slots',action='store_true')
+    p.add_argument('--position',type=int)
+    p.add_argument('--slot-oracle-roots',nargs='+',type=Path)
+    p.add_argument('--slot-oracle-sha256',nargs='+')
+    for key in ('selection','oracle-root','history','output'):p.add_argument('--'+key,type=Path,required=key=='output')
     p.add_argument('--oracle-sha256');p.add_argument('--layer',type=int,required=True)
-    p.add_argument('--images',nargs=4,type=Path,required=True)
+    p.add_argument('--images',nargs=4,type=Path)
     for key in ('release','head-manifest','preload'):p.add_argument('--'+key,type=Path)
     for key in ('release-sha256','head-manifest-sha256','preload-sha256'):p.add_argument('--'+key)
     p.add_argument('--step',choices=('step1','step2'),default='step1')
     p.add_argument('--decoder-sources',nargs=4,type=Path);p.add_argument('--head-images',nargs=4,type=Path)
     a=p.parse_args()
-    if a.accept_head:
-        for key in ('release','release_sha256','head_manifest','head_manifest_sha256','preload','preload_sha256',
-                    'decoder_sources','head_images','oracle_root','oracle_sha256'):
+    if a.pack_cached_slots:
+        if a.accept_head:p.error('pack entering bytes separately from ACCEPT authorization')
+        for key in ('position','head_manifest','head_manifest_sha256','oracle_root','oracle_sha256',
+                    'slot_oracle_roots','slot_oracle_sha256'):
+            if getattr(a,key) is None:p.error('actual --'+key.replace('_','-')+' required')
+        print(json.dumps(pack_cached_slots(oracle_root=a.oracle_root,oracle_sha256=a.oracle_sha256,
+            slot_oracle_roots=a.slot_oracle_roots,slot_oracle_sha256=a.slot_oracle_sha256,
+            position=a.position,layer=a.layer,head_manifest=a.head_manifest,
+            head_manifest_sha256=a.head_manifest_sha256,output=a.output)))
+    elif a.accept_head:
+        for key in ('release','release_sha256','head_manifest','head_manifest_sha256','preload','preload_sha256','history',
+                    'decoder_sources','head_images','oracle_root','oracle_sha256','images'):
             if getattr(a,key) is None:p.error('actual --'+key.replace('_','-')+' required')
         print(json.dumps(prepare_accept_head(release=a.release,release_sha256=a.release_sha256,step=a.step,
             decoder_sources=a.decoder_sources,decoder_images=a.images,head_images=a.head_images,
             head_manifest=a.head_manifest,head_manifest_sha256=a.head_manifest_sha256,
             preload=a.preload,preload_sha256=a.preload_sha256,history=a.history,layer=a.layer,output=a.output,
-            oracle_root=a.oracle_root,oracle_sha256=a.oracle_sha256)))
+            oracle_root=a.oracle_root,oracle_sha256=a.oracle_sha256,
+            slot_oracle_roots=a.slot_oracle_roots,slot_oracle_sha256=a.slot_oracle_sha256)))
     else:
-        if not(a.selection and a.oracle_root and a.oracle_sha256):p.error('actual selection/oracle pins required')
+        if not(a.selection and a.oracle_root and a.oracle_sha256 and a.images and a.history):p.error('actual selection/oracle pins required')
         command,_=prepare(selection=a.selection,oracle_root=a.oracle_root,oracle_sha256=a.oracle_sha256,
             history=a.history,output=a.output,layer=a.layer,images=a.images)
         print(json.dumps(dict(command=command,status='prepared')))

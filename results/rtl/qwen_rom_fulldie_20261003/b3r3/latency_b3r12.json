@@ -1,0 +1,130 @@
+{
+ "floorplan": "b3r12 (flags --enable-b3r2 --b3r3 --b3r6 --tree-cols 6 --bw-align --bw-edge --io-faces --bw-edge-inner)",
+ "die": {
+  "w": 24747.552,
+  "h": 32801.76,
+  "mm2": 811.763,
+  "budget_mm2": 858,
+  "margin_mm2": 46.237
+ },
+ "block_word_stages": {
+  "pitch_um": 430.56,
+  "words": 96,
+  "max": 64,
+  "mean": 37.62,
+  "min": 15,
+  "history": {
+   "b2": 101,
+   "b3r2": 117,
+   "b3r2b": 68,
+   "b3r3..b3r12": 64
+  }
+ },
+ "latency_worst_word": {
+  "model_term": "tools/uarch_model.py QWEN_WIRE_W12[\"tws\"]",
+  "model_tws": 30,
+  "floorplan_stages": 64,
+  "delta_stages_per_me_op": 34,
+  "base_cycles": 179782,
+  "new_cycles": 187160,
+  "delta_cycles_per_token": 7378,
+  "delta_us": 6.148,
+  "base_tok_s": 6674.8,
+  "new_tok_s": 6411.6,
+  "rate_delta_pct": -3.943,
+  "probe": "uarch_model.qwen_tp_point(4, 6144, \"board\", PRODUCT_CLOCK_HZ, me_lat_extra=167+delta, su_width=64)",
+  "unified_model_sha256": "f41e3c16a8d0e3615c9cbd22db3598230e7a38a37359f9b8cd01969f0fe3acf6",
+  "instruction_for_model_owner": "set QWEN_WIRE_W12[\"tws\"] = floorplan_stages (me_lat_extra follows) and re-run the Qwen ROM headline; bound until a routed path STA confirms the pitch"
+ },
+ "latency_mean_word_for_reference": {
+  "model_term": "tools/uarch_model.py QWEN_WIRE_W12[\"tws\"]",
+  "model_tws": 30,
+  "floorplan_stages": 38,
+  "delta_stages_per_me_op": 8,
+  "base_cycles": 179782,
+  "new_cycles": 181518,
+  "delta_cycles_per_token": 1736,
+  "delta_us": 1.447,
+  "base_tok_s": 6674.8,
+  "new_tok_s": 6610.9,
+  "rate_delta_pct": -0.957,
+  "probe": "uarch_model.qwen_tp_point(4, 6144, \"board\", PRODUCT_CLOCK_HZ, me_lat_extra=167+delta, su_width=64)",
+  "unified_model_sha256": "f41e3c16a8d0e3615c9cbd22db3598230e7a38a37359f9b8cd01969f0fe3acf6",
+  "instruction_for_model_owner": "set QWEN_WIRE_W12[\"tws\"] = floorplan_stages (me_lat_extra follows) and re-run the Qwen ROM headline; bound until a routed path STA confirms the pitch"
+ },
+ "hub_stack_link": {
+  "paths": [
+   {
+    "stack": "WS",
+    "trunk_um": 17500.3,
+    "fan_um": 5071.7,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 53
+   },
+   {
+    "stack": "WN",
+    "trunk_um": 17498.2,
+    "fan_um": 5071.7,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 53
+   },
+   {
+    "stack": "ES",
+    "trunk_um": 17500.3,
+    "fan_um": 5071.7,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 53
+   },
+   {
+    "stack": "EN",
+    "trunk_um": 17498.2,
+    "fan_um": 5071.7,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 53
+   }
+  ],
+  "worst": "WS",
+  "r2_model_total_stages": 46,
+  "delta_stages_at_430": 7,
+  "per_token_cycles_delta": 504,
+  "per_token_us_delta": 0.42,
+  "hub_to_io": {
+   "um": 15596.3,
+   "stages_504": 31,
+   "stages_430": 37
+  },
+  "note": "hub<->stack stations re-pitched to <= 430.56 um (corridor gate: 504 um spans miss SS setup by 29-79 ps); the tile-column corridor already runs 3 x 430.56 um per tile hop (closes). Report to the model: the selected entry prices 45-46 stages."
+ },
+ "f2": {
+  "probe": "uarch_model.qwen_tp_point(4, 6144, \"board\", PRODUCT_CLOCK_HZ, me_lat_extra=167(+1), su_width=64)",
+  "unified_model_sha256": "f41e3c16a8d0e3615c9cbd22db3598230e7a38a37359f9b8cd01969f0fe3acf6",
+  "base": {
+   "cycles": 179782,
+   "tok_s_b1": 6674.8
+  },
+  "plus_one": {
+   "cycles": 179999,
+   "tok_s_b1": 6666.7
+  },
+  "me_ops_on_token_path": 217,
+  "exposed_no_prefetch": {
+   "cycles_per_token": 217,
+   "us": 0.1808,
+   "rate_delta_pct": -0.1214
+  },
+  "exposed_static_prefetch": {
+   "cycles_per_token": 0,
+   "why": "instruction words are static program fields (go is a separate wire); the sequencer streams op i+1 into the 2-deep column FIFO while op i runs (every ME op occupies >= 2 cycles), so only beats issued after a pipeline drain are exposed"
+  },
+  "f1_reset": {
+   "cycles_per_token": 0,
+   "why": "reset is not on the token path; release takes <= 44 pipelined hops once at power-on"
+  },
+  "adopted_figure": "bound +217 cycles/token (0.121%) until the RTL prefetch is measured"
+ },
+ "note": "The ME-op reduction completes when the last block word reaches the tree top, so the worst word (max) is the term; the mean is shown only to size a re-pack that equalises word lengths. Pitch 430.56 um = corridor-gate SS link stage."
+}

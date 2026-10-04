@@ -46,6 +46,7 @@
 module ot_qwen_rom_rt_die_w12_vprm #(
     parameter integer VPOS = 1,
     parameter integer ENABLE_ARP = 1,
+    parameter integer SEQ_LA = 0,          // sequencer timing look-ahead (ot_qwen_tp_seq_w12_vp LA)
     parameter integer VWA = 16,
     parameter integer VPMAX = 4,
     parameter integer NPROG = 1024,
@@ -233,7 +234,7 @@ module ot_qwen_rom_rt_die_w12_vprm #(
         .w_ok(w_ok_svc),.emb_ok(emb_ok_svc),.me_mem_ok(me_mem_ok_svc),.me_clk_en(me_clk_en));
     ot_qwen_tp_seq_w12_vp #(.N(D),.NW(SNW),.PAW(PAW),.VWA(VWA),.DAW(DAW),.FW(FW),.TAGW(32),
                     .QWEN_FULLSHAPE(QWEN_FULLSHAPE), .ENABLE_AR256(ENABLE_AR256),
-                    .ENABLE_ARP(ENABLE_ARP), .NTOK(8)) seq (
+                    .ENABLE_ARP(ENABLE_ARP), .LA(SEQ_LA), .NTOK(8)) seq (
         .clk(clk),.rst_n(rst_n),.start(start | h_start),.token(tp_token),.pos(tp_pos),
         .done(s_done),.next_token(seq_ntok),.next_val(seq_nval),
         .tok_vec(seq_tok_vec),.val_vec(seq_val_vec),.n_tok(seq_n_tok),
