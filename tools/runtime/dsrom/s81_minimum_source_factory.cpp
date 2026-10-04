@@ -2,6 +2,7 @@
 #include "s81_minimum_source_bindings.hpp"
 #include "s81_minimum_input_participant.hpp"
 #include "s81_minimum_return_cut_join.hpp"
+#include "s81_minimum_xu.hpp"
 #include "s81_published_span_accept_sink.hpp"
 #include "Vnative_vm.h"
 #include "Vretn.h"
@@ -125,7 +126,10 @@ struct Source : std::enable_shared_from_this<Source> {
             span->active=false;return span->data;
         };
         prefix=std::make_unique<DsromS81MinimumPrefix>(runtime,embedding,ID,
-            engines.su,engines.he,std::move(hooks));
+            engines.su,engines.he,std::move(hooks),
+            std::vector<DsromS81PrefixOperation>{},
+            std::map<unsigned,DsromS81PrefixNativeEngine>{{4,
+                dsrom_s81_bind_minimum_xu(runtime,ID,publication,io(),tags)}});
         cut=std::make_unique<Vcut>(runtime.context,"selected_native_input_cut");
         input=std::make_unique<NativeInputParticipant>(runtime,*cut,
             [this](auto id,auto address){return read(id,address);},
