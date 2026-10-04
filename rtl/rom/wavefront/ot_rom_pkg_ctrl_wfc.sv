@@ -248,7 +248,7 @@ module ot_rom_pkg_ctrl_wfc #(
     // (closed) internal reset: asserted asynchronously, released one cycle after rst_n on the clock
     // (a registered root for the reset tree; every flop below sees release one cycle later)
     (* keep *) reg rst_q;
-    always @(posedge clk or negedge rst_n) rst_q <= !rst_n ? 1'b0 : 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
     reg          uchk, uchk2;           // (closed) a HIDDEN header's position check: read / compare+write
     reg [NW-1:0] upos_hr, hdr_pos1;     // registered read and hdr_pos + 1
     reg [MAXU-1:0] hdr_oh;              // its user, one-hot
