@@ -9,6 +9,87 @@ The vehicle is the VPRM die, `rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_v
 
 It is run by `tools/qwen_rom_rt_vprm_w12.py` on ot-epyc1tb at `/srv/opentallas-scratch/claude/qwen-dspark-system`. The sources are `src-aec77a75f`, which contains the host model-eval-before-preload fix (the VPRM twin of 15778679a). The job list is in `components/comp.sh`.
 
+## Target context (owner rule): P ~8,191 -- the headline record (`ctx8k/`)
+
+These components supersede the P = 255 numbers below for any rate claim. Records: `ctx8k/step_composed_ctx8k.json`,
+the per-job results `ctx8k/k_*.json`, `ctx8k/c_H*.json` and their `ctx8k/runs/*/token.log`.
+
+Vehicle and path:
+- The VPRM REAL_MEM die (`bld_dbg`: HEAD sources; the datapath is identical to `aec77a75f`, plus the fault
+  observation port). The host evaluates every model before the stage-0 preloads (the VPRM twin of 15778679a).
+- The adopted HBM_STREAM controller (081875cf2) cannot serve P >= 2048: `ot_qwen_rt_kv_stream_service` faults at
+  pos >= 2048 and its stream map has one DRAM row per layer. The 8K components therefore run on the REAL_MEM tagged
+  fill path, the same path as the realmem-ctx8k AR measurement. The AR layer here (P8187) is 14,574 cycles, which is
+  identical to that record's P8191 layer.
+
+Goldens (local GPU, `tools/qwen_rom_position_oracle_gpu.py --layers 1`, scripts in `ctx8k/scripts/`):
+- A: the 8,192-token prompt, positions 8187..8191. P8191 reproduces the retained realmem-ctx8k golden bit for bit.
+- B: the prompt to 8187, then three draft tokens [10952, 18065, 1269] at 8188..8190 that differ from the prompt's
+  [20, 13, 15]. The drafts are all rejected.
+- Drafter: `tools/qwen_rom_dspark_drafter_reencode.py` re-freezes the D0 program at start 8188; start 49 is
+  reproduced byte for byte first. The golden (`tools/qwen_rom_dspark_drafter_layer_golden.py --kv-window`) uses a
+  real-magnitude context window: the prompt's target layer-0 K/V, rows < 8188, per die.
+
+| job | what | cycles | result |
+|---|---|---|---|
+| k_L0 | Verify layer 0. S1 is block 8187..8190 (np 4). The host commits 1 (a = 0), so rows 8188..8190 are rolled back. S2 is block 8188..8191 over the HBM the RTL left. | S1 24,320; S2 25,252 | PASS: 40 checks, 0 mismatches, no faults, `committed_len` 8188 |
+| k_AR0 | Layer-0 AR (np 1) at P8187 | 14,574 | PASS, exact |
+| k_D0r | Drafter layer 0, S = 3, start 8188, real-magnitude window | 30,611 | PASS: 16 checks, 0 mismatches, no faults |
+| k_D0 | The same with the seeded synthetic window | 30,611 | X/K/V exact (16/16), but the ME fault flag is set (see below) |
+| c_H0/H1/H2 | lm_head p = 1; verify head p = 4 with the accept unit (a = 0, and a = 3) | 2,999 / 11,993 / 11,993 | Position-independent; measured at P255 (above) |
+
+The verify layer pays 3,249 cycles per extra position at 8K. The KV fill (131,032 sectors, about 10.4K cycles)
+is shared by the 4 block positions.
+
+Composition (`tools/qwen_dspark_step_collect.py --map`):
+- verify = 36 x 24,320 + 11,993 = 887,513
+- draft = 5 x 30,611 + drafter head 8,995 + priced ingest/Markov 7,875 = 169,925
+- commit = 65
+- step = 1,057,503 cycles
+- AR token = 36 x 14,574 + 2,999 = 527,663
+
+At tau 3.0375 (the owner 6-class equal blend of `tau_w8_S3_B4`; not measured here):
+- **DSpark 3,447 accepted tok/s per user**
+- **AR 2,274 tok/s**
+- **1.516x**
+
+The bounds are:
+- A free drafter would give 1.806x.
+- The verify layer breaks even at 39,466 cycles, so the measured 24,320 has a 38% margin.
+- The priced terms are 0.74% of the step.
+
+### Drafter fault root cause (`ctx8k/drafter_fault/`)
+
+An instrumented debug-only build (`debug_only_trace_patch.py`; nothing in `rtl/` changed) shows the source. The ME
+lane BF16 multiplier `ot_qwen_w12_bmul` fails closed (result 0, fault) on products below 2^-133.
+
+The seeded synthetic E4M3 history gives subnormal softmax probabilities:
+- At P49 there are 2,083 such deep-underflow PV products.
+- At 8K there are 1,586,817.
+
+They are absorbed in the sums, so every output is exact. This is the existing lane contract, shared with the AR
+layers; it is not a DSpark bug. A real-magnitude window has 0 subnormal products, and k_D0r runs fault-free with
+the same 30,611 cycles.
+
+### Verdict (target context)
+
+**Mandatory function: CLOSED at 8K, exact, fault-free.** The closure covers:
+- the multi-position KV service with per-position visibility at P8187..8191;
+- accept with a rejection, and accept with full acceptance (heads);
+- commit, and rollback of the rejected KV rows;
+- the next block over the RTL-left HBM;
+- the drafter as a separate component.
+
+**Rate: ADOPT, 1.516x per user at 8K (3,447 vs 2,274 tok/s).**
+
+The following remain unvalidated:
+- near-HBM attention, or HBM_STREAM, at 8K: neither is integrated with VPOS;
+- the priced drafter ingest and Markov terms;
+- tau, which comes from 3 prompts a class;
+- SS/FF closure of the VPOS/ARP/accept/mp-service logic.
+
+The P = 255 composition below (0.833x) is superseded: short context hid the KV cost that the verify block amortises.
+
 ## Components (each bit-exact against the GPU ISA golden on all 4 dies)
 
 The golden is `tools/qwen_rom_dspark_oracle_gpu_w12.py` on the 256-token prompt, from the `claude/qwen-dspark-oracle-20261004` records.
@@ -62,7 +143,7 @@ Bounds:
 
 ## Open
 
-The drafter run raises a core fault flag. Outputs are exact. The flag rises at cycle 4,657 in segment 0 on all 4 dies; the collective is clean. The source is being located with the `dbg_fault_src` observation port (`FAULTTRACE` lines from the host).
+RESOLVED (see the target-context section): the core fault flag (cycle 4,657, segment 0, all 4 dies) is the ME lane multiplier's fail-closed deep-underflow check, triggered by the seeded synthetic KV history. With a real-magnitude window the drafter layer runs fault-free.
 
 ## Claim boundary
 
