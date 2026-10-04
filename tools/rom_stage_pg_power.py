@@ -144,6 +144,49 @@ def power(a) -> int:
     return 0
 
 
+CLASSES = (("domain", ("u_pg.u_elem.", "u_pg.e_clk", "u_pg.u_elem")),
+           ("ao_sched_ctrl", ("u_pg.g_pg.u_ao.u_sched.",)),
+           ("ao_element", ("u_pg.g_pg.u_ao.",)))
+
+
+def classify(name: str) -> str:
+    """Instance class in the flat routed netlist: by RTL path for named cells (flops, ICGs, CTS buffers carry
+    their clock net's name), else root clock tree (buffers of the port clock) or unnamed logic."""
+    for cls, keys in CLASSES:
+        if any(k in name for k in keys):
+            return cls
+    if name.startswith(("clkbuf", "delaybuf", "clkload")) and name.endswith("_clk"):
+        return "root_clock"
+    return "unnamed"
+
+
+def inst(a) -> int:
+    """Per-instance TT power of each state, totalled by class (so_inst_power of tools/signoff_analysis)."""
+    work = a.work.resolve()
+    act = json.loads((work / "activity.json").read_text())
+    orig = so.session_script
+    out = {}
+    for n in WINDOWS:
+        so.session_script = lambda *x, **k: orig(*x, **dict(k, inst_power="/so_out/inst.txt"))
+        try:
+            so.analyze(Path(a.routed), work / f"inst_{n}", label=f"inst_{n}", record=None,
+                       saif=Path(act["saif"][n]["path"]), saif_scope="dut", groups=[], corners=["TT"], derate=0.0,
+                       ir_sources=[], bump_pitch_um=140.0, cycles_per_token=None, activity_meta=None,
+                       tt_stages=["power"])
+        finally:
+            so.session_script = orig
+        tot: dict[str, list] = {}
+        for ln in (work / f"inst_{n}" / "inst.txt").read_text().splitlines():
+            name, w = ln.rsplit(" ", 1)
+            c = tot.setdefault(classify(name), [0.0, 0])
+            c[0] += float(w)
+            c[1] += 1
+        out[n] = {k: dict(total_w=v[0], instances=v[1]) for k, v in sorted(tot.items())}
+    a.out.write_text(json.dumps(out, indent=1) + "\n")
+    print(json.dumps(out, indent=1))
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -155,8 +198,12 @@ def main() -> int:
     q.add_argument("--ao-routed", type=Path, required=True)
     q.add_argument("--work", type=Path, required=True)
     q.add_argument("--out", type=Path, required=True)
+    i = sub.add_parser("inst")
+    i.add_argument("--routed", type=Path, required=True)
+    i.add_argument("--work", type=Path, required=True)
+    i.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
-    return activity(a) if a.cmd == "activity" else power(a)
+    return dict(activity=activity, power=power, inst=inst)[a.cmd](a)
 
 
 if __name__ == "__main__":
