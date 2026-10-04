@@ -1759,6 +1759,20 @@ X_BCAST_BPC = 256             # x broadcast network width (2,048 wires), root ->
 V41_TAU = 3.649        # DSpark gamma 5 (6 verified positions), results/speculative/v41_flash_dspark_onpolicy_greedy.json
 V41_POSITIONS = 6
 V41_DRAFT_FRACTION = 3 / 40   # ASSUMED: the 3 built-in draft blocks (mtp.0-2) ~ 3 of 40 layers of an AR token
+# SUCCESSOR (2026-10-04): the V4.1 ROM draft TIME is the MEASURED DSpark step (52 bit-exact minimum-component slices,
+# transferred to S81 full shape; context-independent, it runs on the head dies), not a fraction of AR.  The HBM rows
+# and the energy terms keep V41_DRAFT_FRACTION.  --v41-rom-draft assumed reproduces records made before this flag.
+V41_ROM_DRAFT_RECORD = ROOT / "results/rtl/dsrom_dspark_step_slices_20261004/composition.json"
+V41_ROM_DRAFT_VARIANTS = {"as_built": "as_built_chain", "l1": "fused_head"}   # l1: fused bias + argmax head (L1)
+V41_ROM_DRAFT = "as_built"     # --v41-rom-draft {as_built, l1, assumed}
+
+
+def v41_rom_draft_s(T1):
+    """Draft time (s) of the V4.1 ROM MTP step: measured (V41_ROM_DRAFT_RECORD) or the legacy assumed fraction."""
+    if V41_ROM_DRAFT == "assumed":
+        return V41_DRAFT_FRACTION * T1
+    ctx = json.loads(V41_ROM_DRAFT_RECORD.read_text())["full_shape"]["ctx"]
+    return next(iter(ctx.values()))[V41_ROM_DRAFT_VARIANTS[V41_ROM_DRAFT]]["draft_us"] * 1e-6
 
 
 def v41_verify_T(d, p, lm, ctx=1048576):
@@ -1796,7 +1810,7 @@ def speculation_rows():
     d = copy.deepcopy(PRESETS["proposal"])
     for lm in (1, 2, V41_POSITIONS):
         Tp, T1 = v41_verify_T(d, V41_POSITIONS, lm)
-        Td = V41_DRAFT_FRACTION * T1
+        Td = v41_rom_draft_s(T1)
         rate = V41_TAU / (Tp + Td)
         extra_mm2 = (lm - 1) * (area_ledger(d)["blockdot_lanes"] + area_ledger(d)["bf16_lanes"])
         rows.append(dict(design=f"v41_rom_mtp_m{lm}", positions=V41_POSITIONS, lane_mult=lm, tau=V41_TAU,
@@ -2316,7 +2330,7 @@ def v41_rom_economics():
     ar = _curve(T1, sat, cap, "busiest stage occupancy", e_ar)
     # MTP m = 1: 6 positions per verify pass; compute terms x positions, HBM keys and rows once per pass
     Tp, _ = v41_verify_T(d, V41_POSITIONS, 1)
-    Td = V41_DRAFT_FRACTION * T1
+    Td = v41_rom_draft_s(T1)
     _, gv = _v41_graph(d, V41_POSITIONS)
     ledv = v41_rom_ledger(gv)
     head = max(ledv["stage_occupancy_s"])
@@ -2923,7 +2937,7 @@ def v41_static_power(ec=None):
         win, start, T = _stage_windows(g)
         busy = _region_busy(g)
         if P > 1:                                   # the MTP step adds the draft on the head dies
-            Td = V41_DRAFT_FRACTION * v["ar"]["rows"][0]["per_user_ms_per_token"] * 1e-3
+            Td = v41_rom_draft_s(v["ar"]["rows"][0]["per_user_ms_per_token"] * 1e-3)
             win[V41_STAGES] += Td
             T += Td
         tau = V41_TAU if P > 1 else 1.0
@@ -4213,7 +4227,7 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
         fstarts = cons_field_starts(g1, plan, r1["clock_hz"])
         eslack = cons_engram_slack(g1)
         winv, _ = _cons_windows(gv, plan)
-    Td = V41_DRAFT_FRACTION * T1
+    Td = v41_rom_draft_s(T1)
     step1 = Tp + Td
     occ_v.setdefault("head", dict(field=0.0, hub=0.0))["hub"] += Td
     tot = {s: v["field"] + v["hub"] for s, v in occ.items()}
@@ -6455,6 +6469,15 @@ def qwen_posted_kv_model(records):
 
 SWITCH_RANGE_DIR = "results/uarch/hbm_switch_latency_range_20261004"
 DSROM_WAVEFRONT = "results/rtl/dsrom_wavefront_verify_20261004/record.json"   # S81 + wavefront (ROM, light FEC)
+def dsrom_wavefront_mtp_tok_s(rom, rk):
+    """DS ROM S81 + wavefront MTP tok/s (occupancy rule): the measured-draft composition (V41_ROM_DRAFT_RECORD,
+    variant V41_ROM_DRAFT) unless --v41-rom-draft assumed, which keeps the record's assumed 0.1173 x AR draft."""
+    if V41_ROM_DRAFT == "assumed":
+        return rom[rk]["wavefront_occupancy"]["mtp_tok_s"]
+    ctx = json.loads(V41_ROM_DRAFT_RECORD.read_text())["full_shape"]["ctx"][rk]
+    return ctx[V41_ROM_DRAFT_VARIANTS[V41_ROM_DRAFT]]["wavefront_occupancy"]["mtp_tok_s"]
+
+
 TAU_OWNER6 = 4.159      # equal 6-class blend, gamma 5 (results/speculative/v41_mtp_acceptance_qualified_20261003/
                         # blend_owner6.json blends."owner 6-class equal".greedy.tau_blend_harmonic)
 
@@ -6514,7 +6537,7 @@ def hbm_switch_latency_range():
     rows = []
     for ctx, (rk, k) in ctxs.items():
         rr = rom[rk]
-        rom_ar, rom_mtp = rr["ar_tok_s"], rr["wavefront_occupancy"]["mtp_tok_s"]
+        rom_ar, rom_mtp = rr["ar_tok_s"], dsrom_wavefront_mtp_tok_s(rom, rk)
         for name, dd in designs.items():
             for split in (False, True):
                 for fec in ("kp4", "light"):
@@ -6546,7 +6569,8 @@ def hbm_switch_latency_range():
                     basis="V41_HBM_FABRIC_US collective_latency 125.9 = ~188 collectives x 0.668 us"),
                 tau=TAU_OWNER6, gamma=5, tau_src="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json",
                 rom_record=DSROM_WAVEFRONT, rom_fec="light (130 ns board link)",
-                rom=dict({c: dict(ar_tok_s=rom[rk]["ar_tok_s"], mtp_tok_s=rom[rk]["wavefront_occupancy"]["mtp_tok_s"])
+                rom_draft=dict(variant=V41_ROM_DRAFT, record=str(V41_ROM_DRAFT_RECORD.relative_to(ROOT))),
+                rom=dict({c: dict(ar_tok_s=rom[rk]["ar_tok_s"], mtp_tok_s=dsrom_wavefront_mtp_tok_s(rom, rk))
                           for c, (rk, _) in ctxs.items()}),
                 designs={k: {x: (round(y, 3) if isinstance(y, float) else y) for x, y in v.items()} for k, v in designs.items()},
                 retry_tail=dict(per_event_us=HBM_SWITCH_LATENCY["retry_tail_us"],
@@ -6567,6 +6591,9 @@ def hbm_accel_rows():
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--v41-rom-draft", choices=("as_built", "l1", "assumed"), default="as_built",
+                    help="V4.1 ROM MTP draft time: MEASURED DSpark step (as_built, or l1 fused head) or the legacy "
+                         "assumed 3/40 x AR (reproduces records made before 2026-10-04)")
     ap.add_argument("--dsrom-s81-minimum-group", action="store_true", help="selected W11 minimum protected group cuts/II/slot; target clocks, no fit or rate credit")
     ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
     ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
@@ -6599,6 +6626,8 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    global V41_ROM_DRAFT
+    V41_ROM_DRAFT = a.v41_rom_draft
     global _HBM_SWITCH, _HBM_FEC
     _HBM_SWITCH, _HBM_FEC = a.hbm_switch_latency, a.hbm_fec
     if a.hbm_switch_latency_range:
