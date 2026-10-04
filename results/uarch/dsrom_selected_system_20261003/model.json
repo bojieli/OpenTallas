@@ -65,11 +65,11 @@
   "parent_source_selection_ready": true,
   "build_admission": {
     "selected_token": false,
-    "missing": "S81 native allocation/CFG/spine tables, Nash finite no-READY RD64 capture/admission into actual VM, Turing source receipt/publication module",
+    "missing": "Nash preGO capture/VM commit debt interface; actual emitted programs/CFG from delegated Popper; actual native word provider; Erdos baseline admitted-pop inflight correctness fix",
     "historical_HBM_weight_system_not_selected_ROM": true,
-    "canonical_allocator_current_path": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s81_released_binding_20261004/canonical",
-    "canonical_allocator_live_pid": 1600776,
-    "canonical_live_files_not_read_as_frozen": true
+    "canonical_allocator_current_path": "results/uarch/dsrom_s81_released_binding_20261004/canonical",
+    "canonical_live_files_not_read_as_frozen": true,
+    "canonical_allocator_terminal_consumed": true
   },
   "clock_C": {
     "decision": "f954ad1ea",
@@ -94,5 +94,34 @@
     ],
     "collective_cycle_price_without_executed_calendar": null,
     "baseline_combination_headreg": 0
+  },
+  "actual_runtime_source": {
+    "host": "rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp",
+    "client": "rtl/test/v41_runtime/s81_selected/dsrom_s81_rom_client.hpp",
+    "strict_return_pin": "58168eb1d",
+    "strict_return_path": "results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/return.sv",
+    "active_leaves": 4834,
+    "retained_nodes": 5090,
+    "retained_unary_nodes": 384,
+    "ROOTD": 128,
+    "QD": 128,
+    "RD": 64,
+    "retained_return_storage_bits": 44831044,
+    "strict_return_storage_proxy_mm2": 33.98910431904,
+    "additional_debit_vs_compact_owner_screen_mm2": 2.44144502784,
+    "latency_change_from_exact_dead_pruning_cycles": 0,
+    "ready_port_added": false,
+    "faults": "actual full return graph OR every active pair fault",
+    "pre_edge_order_preserved": true,
+    "old_padded_host_tree_removed": true,
+    "default_off_flag": "DSROM_C8_S81=0",
+    "inactive_selection_refuses": true,
+    "word_transport_only_no_arithmetic_change": true,
+    "source_sha256": {
+      "rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp": "5069bc2ca64b2eb9da5f62151ebfad91040ba1da8d8059cc3a681e074264d372",
+      "rtl/test/v41_runtime/s81_selected/dsrom_s81_rom_client.hpp": "5e18c2febfe75db9384f1b6e51e4676d215721fd62ea6b654b2a09f4319641c2"
+    },
+    "compiled": false,
+    "numerical_measured": false
   }
 }

@@ -131,6 +131,7 @@ def main():
     parser.add_argument('--interface-pin',required=True)
     parser.add_argument('--payload-interface',required=True)
     parser.add_argument('--original-export',required=True)
+    parser.add_argument('--released-return-binding')
     parser.add_argument('--output',required=True)
     parser.add_argument('--stage',type=int)
     parser.add_argument('--drain',action='store_true')
@@ -138,7 +139,7 @@ def main():
     parser.add_argument('--trace',action='store_true')
     args=parser.parse_args()
     binding=ParentBinding(args.owner,args.selected,args.model_pin,args.interface_pin,
-                          payload_interface=args.payload_interface)
+                          payload_interface=args.payload_interface, released_return_binding=args.released_return_binding)
     result=install(binding,args.original_export,args.output,drain=args.drain,
                    head=args.head,trace=args.trace,stage=args.stage)
     result['allocation_receipts']=binding.receipts
