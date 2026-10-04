@@ -46,5 +46,8 @@ unordered.  Trace (+define+GPU_SYS_TRACE, per-SM hash of every global store and 
 original --threads 8 first differs at kernel 1 (layer 0) on all four SMs (cycles 361,379 vs 358,365), embed equal.
 Fix: bd_xd is a register (bd_xd <= the clocked block's own temporary bd_xn); the clocked block also no longer shares
 the comb LSU block's loop temporaries jj/lj/bi (harmless in Verilator, but a race in any event simulator).
-Fixed RTL: single-thread trace equal (cycles and hashes) to the original single-thread run; --threads 8 equal to both.
+Fixed RTL under --threads 8: PASS, tokens 2815/3537/2047, 19,394,782 clk_sm cycles = the single-thread record to the
+cycle (v41_e2e_threads8.json).  Fixed single-thread trace equals the original single-thread trace and the fixed
+--threads 8 trace on all 114 kernels both had reached (cycles and hashes); the fixed single-thread full run
+(det/fx_t1) was still running on a loaded host when this was recorded.
 Minimal repro: rtl/test/gpu_sys/repro_verilator_threads_blkseq.sv.  Runs: ot-epyc1tb .../hbm-system-rtl/det/.
