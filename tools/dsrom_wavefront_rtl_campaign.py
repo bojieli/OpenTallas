@@ -515,7 +515,8 @@ def run_stage(scratch: Path):
 
 # -- composition (model, from the measured per-stage terms) -----------------------------------
 S81 = {"1048576": dict(ar=2466.2, pass_tok_s_tau3649=3742.8), "200000": dict(ar=2574.1, pass_tok_s_tau3649=4096.7)}
-TAU = 4.159                       # V4.1 DSpark, equal 6-class blend, gamma 5 (blend_owner6.json)
+import third_party_tau as _TPT   # noqa: E402
+TAU = _TPT.tau_ds_v41(5)          # V4.1 DSpark gamma 5, third-party published (4.159 self-measured blend SUPERSEDED)
 DRAFT_OVER_AR = 0.1173            # scenario C draft composition (dsrom_wavefront_verify_20261003)
 # SUCCESSOR (2026-10-04): the MEASURED DSpark draft (+ seed/commit), dsrom_dspark_mtp_step_compose.py; compose
 # --draft {as_built, l1} uses it, --draft assumed keeps DRAFT_OVER_AR (reproduces the 20261004 record.json).
