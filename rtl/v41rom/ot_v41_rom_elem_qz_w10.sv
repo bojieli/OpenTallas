@@ -339,7 +339,10 @@ module ot_v41_rom_elem_qz_w10 #(
         // z(t+1) = cg_en_q(t+1): rst_n(t+1) = 1 and go(t+1) = go_pin(t) once rst_n_pin is high; en_r and ext load
         // only while rst_n(t) is high (both reset on rst_n)
 `ifdef QZ_MUTANT_Z
-        wire z_d = rst_n && (en_r_d || (QK != 0 ? (go || qz_en_r || qz_ext_lo) : 1'b0));   // negative control: go_pin lost
+        // negative control: the drain term lost, so the gate closes as soon as the walkers stop (in-flight words never
+        // reach the outputs).  (Dropping go_pin alone only removes the gated edge right after a go into a closed gate,
+        // whose beat capture is never used: invisible at the outputs, caught by the QP_CHECK assertion instead.)
+        wire z_d = go_pin || (rst_n && (((FAST != 0) ? go : 1'b0) || go_e || walk_busy));
 `else
         wire z_d = go_pin || (rst_n && (en_r_d || (QK != 0 ? (go || qz_en_r || qz_ext_lo) : 1'b0)));
 `endif

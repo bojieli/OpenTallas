@@ -4,7 +4,7 @@
 tools/dsrom_qpipe_exact.py run on the QZ copy (rtl/test/tb_dsrom_qz_exact.sv, bank-distinct ROM fixture): QZ adds no
 cycle, so every build keeps its QPIPE shift L.  Builds: pos (QZ = 1, L = 2), xs0 (QZ = 1, QP_XS = 0, L = 1), qz0 (QZ = 0,
 the qp circuit, L = 2), and negative controls dp / tree / half / shadow / lu (inherited, on QZ = 1) plus bk (one bank
-select copy inverted) and z (registered gate enable without go_pin).
+select copy inverted) and z (registered gate enable without its drain term).
 
 Original description (tools/dsrom_qpipe_exact.py):
 QPIPE exactness gate for the DS-V4.1 ROM q-pair element (ot_v41_rom_elem_q_qp_w10, 2026-10-03).
