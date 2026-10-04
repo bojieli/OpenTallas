@@ -9,7 +9,7 @@ export OT_ORFS_NUM_CORES=${CORES:-24}
 M=ot_sram_1r1w_512x128_m4_r2c2
 /srv/opentallas-scratch/admit.sh ${NEED:-120} -- python3 tools/run_abi3_physical_aligned.py --macro-track-gate \
   --view asap7 --top ot_hbm_accel_expert_fetch_stream_sram \
-  --source rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv --source rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc.sv \
+  --source rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv --source rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_rf.sv --source rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc.sv \
   --source rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_sram.sv \
   --source physical/asap7_memory_macros_v2/$M/${M}_bb.v \
   --macro-view $M=physical/asap7_memory_macros_v2/$M --macro-place-halo 3 3 \

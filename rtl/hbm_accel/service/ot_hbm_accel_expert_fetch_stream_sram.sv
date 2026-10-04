@@ -99,7 +99,7 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
         .row_op(row_op[p*3 +: 3]), .row_bank(row_bank[p*5 +: 5]), .row_row(row_row[p*19 +: 19]),
         .col_v(col_v[p]), .col_bank(col_bank[p*5 +: 5]), .col_col(col_col[p*5 +: 5]),
         .cred_ret(cred_ret[p*3 +: 3]), .busy(pc_busy[p]), .ref_fault(pc_fault[p]));
-      ot_hbm_accel_cdc_fifo #(.W(256), .AW(5)) u_land (
+      ot_hbm_accel_cdc_fifo_rf #(.W(256), .AW(5)) u_land (
         .wclk(hclk), .wrst_n(hrst_n), .we(rd_v[p]), .wdata(rd_data[p*256 +: 256]), .full(l_full[p]),
         .rd_freed(cred_ret[p*3 +: 3]),
         .rclk(clk), .rrst_n(rst_n), .re(l_re[p]), .rdata(l_q[p*256 +: 256]), .empty(l_empty[p]));
@@ -165,21 +165,32 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin rot <= 0; beats <= '0; end
       else begin rot <= rot_n; beats <= beats_n; end
+    // landed sector: captured per PC on its grant (one enable level after the grant, no 8-way
+    // select on the grant path); the bank write data is the AND-OR of the captured sectors under
+    // the registered one-hot winner, between those flops and the macro input (same edge as before).
+    reg [255:0] q_r [0:NPC-1];
+    for (genvar p = 0; p < NPC; p = p + 1) begin : cap
+      always @(posedge clk) if (grant[p]) q_r[p] <= l_q[p*256 +: 256];
+    end
     for (genvar m = 0; m < NSM; m = m + 1) begin : wb
       for (genvar c = 0; c < 4; c = c + 1) begin : q
-        // one-hot (at most one grant per bank): AND-OR select of the winner's slot and sector
-        reg v; reg [SW-1:0] a; reg [255:0] d;
+        // one-hot (at most one grant per bank): registered winner, its slot, and the select
+        reg v; reg [SW-1:0] a; reg [NI-1:0] sel;
         always @* begin
-          v = 1'b0; a = '0; d = '0;
+          v = 1'b0; a = '0; sel = '0;
           for (integer i = 0; i < NI; i = i + 1)
             if (grant[4*i + c] && cur_sm[4*i + c] == MW'(m)) begin
-              v = 1'b1; a = a | cur_slot[4*i + c]; d = d | l_q[(4*i + c)*256 +: 256];
+              v = 1'b1; a = a | cur_slot[4*i + c]; sel[i] = 1'b1;
             end
         end
-        reg v_r; reg [SW-1:0] a_r; reg [255:0] d_r;
+        reg v_r; reg [SW-1:0] a_r; reg [NI-1:0] sel_r; reg [255:0] d;
         always @(posedge clk or negedge rst_n) if (!rst_n) v_r <= 1'b0; else v_r <= v;
-        always @(posedge clk) begin a_r <= a; d_r <= d; end
-        assign w_v[m*4 + c] = v_r; assign w_a[m*4 + c] = a_r; assign w_d[m*4 + c] = d_r;
+        always @(posedge clk) begin a_r <= a; sel_r <= sel; end
+        always @* begin
+          d = '0;
+          for (integer i = 0; i < NI; i = i + 1) if (sel_r[i]) d = d | q_r[4*i + c];
+        end
+        assign w_v[m*4 + c] = v_r; assign w_a[m*4 + c] = a_r; assign w_d[m*4 + c] = d;
       end
     end
     // ---------------- banks, mask, release (clk) ----------------

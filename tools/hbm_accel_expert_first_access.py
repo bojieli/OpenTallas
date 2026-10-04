@@ -34,6 +34,7 @@ TOP = 'tb_hbm_accel_expert_first_access'
 VARIANTS = {
     'reg': (SOURCES, TOP),
     'sram': (['rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv',
+              'rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_rf.sv',
               'rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc.sv',
               'rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_sram.sv',
               'physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v',
