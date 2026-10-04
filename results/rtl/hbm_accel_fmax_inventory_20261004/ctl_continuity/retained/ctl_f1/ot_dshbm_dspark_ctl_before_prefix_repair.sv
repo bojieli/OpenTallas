@@ -139,10 +139,7 @@ module ot_dshbm_dspark_ctl #(
             if (!rst_n) fbase <= 0;
             else if (s == S_IDLE && start) fbase <= 0;
             else if (s == S_COMMIT) fbase <= fbase + B;
-        // ctl_f1 SS output miss was this mapped ripple, not the counters.
-        // Existing keep-prefix adder preserves the W16 modulo result/cycle.
-        ot_hdc_ksadd_k #(.W(16)) u_faddr (
-            .a(fbase), .b({12'd0, j}), .cin(1'b0), .s(f_addr), .cout());
+        assign f_addr = fbase + j;
     end endgenerate
     wire [31:0] q = n - 1;
     wire [31:0] room = (MAXPOS >= 2 && MAXPOS - 2 > q) ? MAXPOS - 2 - q : 0;

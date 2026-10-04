@@ -243,7 +243,11 @@ int main(int argc,char** argv) {
         const bool nonfield_i0=native_i0&&std::string(native_i0)=="1"&&runtime.stage==37;
         const char* native_index=std::getenv("DSROM_S81_NATIVE_L20_INDEX");
         const bool nonfield_index=native_index&&std::string(native_index)=="1"&&runtime.stage==37&&runtime.rank==3;
-        if(rc==0&&((!accepted_go&&!nonfield_i0&&!nonfield_index)||!runtime.identity||!runtime.publication_drained||
+        // The selected four-rank ATT caller uses native KV/attention services,
+        // not this host's field pair. Its own completion still owes all ACKs.
+        const char* native_att=std::getenv("DSROM_S81_NATIVE_L20_ATT");
+        const bool nonfield_att=native_att&&std::string(native_att)=="1"&&runtime.stage==37&&runtime.rank==0;
+        if(rc==0&&((!accepted_go&&!nonfield_i0&&!nonfield_index&&!nonfield_att)||!runtime.identity||!runtime.publication_drained||
                    !runtime.publication_drained(*runtime.identity)||!native->result().quiet))
             throw std::runtime_error("source exit precedes actual native field/publication drain");
         printf("MINIMUM_SOURCE_EXIT rc=%d cycles=%ld field_go=%llu stage=%d rank=%d pair=%d\n",

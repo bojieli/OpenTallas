@@ -387,6 +387,53 @@ def _apply(g, reader, sel, ck, variant, gather=None):
     return patches, modelled, scan_reader, sel_local, sel_final
 
 
+WINDOW_TYPES = ("window_only", "scan", "reindex", "reuse")
+
+
+def _window_type(L):
+    if L in (0, 1):
+        return "window_only"
+    if L in (2, 8, 14, 20):
+        return "scan"
+    if L in REINDEX:
+        return "reindex"
+    return "reuse"
+
+
+def _apply_window(g, win, kind):
+    """S81-bound WINDOW terms (tools/dsrom_s81_window_la.py record, results/rtl/dsrom_s81_window_bind_20261004):
+    per layer two measured nodes are inserted ahead of the layer's attention scores, in the S81 die's order --
+      own_row_write  the token's own packed row, 16 blocks through the as-built writer on the K channel, after
+                     kv_rope_qdq (measured with the layer type's concurrent index traffic);
+      window_load    the 128-row job, started at the attention issue (after the own row, q_rope and, in an
+                     indexed layer, the final select): start -> rows staged (CKV layers, whose measured CKV path
+                     streams the staged rows) or start -> rows delivered (window-only layers, whose patched
+                     scores node is the q.k over staged rows);
+    kind 'la' = the bound full-bandwidth load, 'asbuilt_c8' = the S81 selection's as-built refill (credits 8)."""
+    terms = win["composition_terms"][kind]
+    patches, new = [], {}
+    for name, nd in g.nodes.items():
+        if name.endswith(".attn.scores"):
+            L = int(name.split(".")[0][1:])
+            pre = f"L{L}.attn."
+            t = terms[_window_type(L)]
+            wr = dict(name=pre + "own_row_write", deps=[pre + "kv_rope_qdq"], layer=nd["layer"],
+                      issue=t["own_row_write_cycles"] / CLK, issue_cat="kv_sweep", depth=0.0, depth_cat="kv_sweep",
+                      ctrl=0.0, stream=False, kind="op", sweep=None, desc="S81 own-row write (measured)")
+            deps = [pre + "own_row_write", pre + "q_rope"] + ([pre + "idx.topk_final"] if pre + "idx.topk_final" in g.nodes else [])
+            ld = dict(name=pre + "window_load", deps=deps, layer=nd["layer"], issue=t["window_cycles"] / CLK,
+                      issue_cat="kv_sweep", depth=0.0, depth_cat="kv_sweep", ctrl=0.0, stream=False, kind="op",
+                      sweep=None, desc=f"S81 WINDOW job ({kind}, measured)")
+            new[wr["name"]], new[ld["name"]] = wr, ld
+            nd = dict(nd, deps=nd["deps"] + [pre + "window_load"])
+            for n in (wr, ld):
+                patches.append(dict(node=n["name"], model_us=0.0, measured_us=round(n["issue"] * 1e6, 4),
+                                    measured_cycles=int(round(n["issue"] * CLK)), source=f"{t['source']} ({kind})"))
+        new[name] = nd
+    g.nodes = new
+    return patches
+
+
 def cmd_compose(a):
     import copy
     reader = json.loads(Path(a.reader).read_text())
@@ -404,6 +451,9 @@ def cmd_compose(a):
             sel[f"{tag}_gather"] = dict(local=dict(runs=r["gather"]["runs"]), final=r["final"])
     if gather is not None:
         assert gather["status"] == "pass"
+    win = json.loads(Path(a.window).read_text()) if a.window else None
+    if win is not None:
+        assert win["status"] == "pass"
     g0, T0, _ = s58_graph()
     assert abs(1 / T0 - 2535.5) < 0.1, T0
     t_model, lt_model = layer_times(g0)
@@ -443,6 +493,43 @@ def cmd_compose(a):
                              for L, r in scan_reader.items()})
             print(variant, lat, json.dumps(dict(AR_us=round(ar, 3), AR=round(1e6 / ar, 1), II=round(ii, 3), MTP=mtp)),
                   flush=True)
+        if win is not None:
+            # the adopted re-index variant with the S81-bound window (and the gather read through the S81 wmux),
+            # and the same with the S81 selection's as-built window refill, for reference
+            base = out["variants"][f"candidate_gather.lat{lat}"]
+            for kind in ("la", "asbuilt_c8"):
+                g = copy.deepcopy(g0)
+                gs = win["kgather_s81"] if kind == "la" else gather
+                patches, modelled, scan_reader, sl, sf = _apply(g, reader, sel, ck, "candidate_gather", gs)
+                patches += _apply_window(g, win, kind)
+                t, lt = layer_times(g)
+                ar = t * 1e6 + S81_EXTRA_HOPS * HOP_US
+                idx_us = lambda L: sum(p["measured_us"] for p in patches if p["node"].startswith(f"L{L}.attn.idx"))
+                dl = lambda L: (lt[f"L{L}"] - layer_times_cache[f"L{L}"]) * 1e6
+                g_ref = copy.deepcopy(g0)
+                _apply(g_ref, reader, sel, ck, "candidate_gather", gs)
+                _, layer_times_cache = layer_times(g_ref)
+                l20_occ = WAVEFRONT["l20_occ_us"] - model_l20_idx + idx_us(20) + max(0.0, dl(20))
+                re_occ = WAVEFRONT["l20_occ_us"] - model_l20_idx + idx_us(24) + max(0.0, dl(24))
+                occ = max(WAVEFRONT["head_occ_us"], l20_occ, re_occ)
+                ii = occ * (1 + WAVEFRONT["overhead"]) + WAVEFRONT["hop_us"]
+                verify = ar + WAVEFRONT["positions"] * ii
+                mtp = {k: round(DRAFT["tau"] * 1e6 / (verify + DRAFT[k] + DRAFT["seed_commit_us"]), 1)
+                       for k in ("fused_us", "as_built_us", "l1l2_nv5_us")}
+                types = {}
+                for tname, v in TYPES.items():
+                    L = f"L{v['rep']}"
+                    types[tname] = dict(representative=v["rep"], count=len(v["layers"]), kind=v["kind"],
+                                        model_us=round(lt_model[L] * 1e6, 3), measured_composed_us=round(lt[L] * 1e6, 3))
+                types["head"] = dict(model_us=round(lt_model["head"] * 1e6, 3), measured_composed_us=round(lt["head"] * 1e6, 3))
+                out["variants"][f"candidate_gather.lat{lat}.s81_window_{kind}"] = dict(
+                    AR_us=round(ar, 3), AR_tok_s=round(1e6 / ar, 1), II_us=round(ii, 3), verify_us=round(verify, 3),
+                    stage_occupancy_us=dict(head=WAVEFRONT["head_occ_us"], L20=round(l20_occ, 3), reindex=round(re_occ, 3)),
+                    MTP_tok_s=mtp, per_layer_type=types, patches=patches, still_modelled_context_terms=modelled,
+                    delta_vs_candidate_gather_AR_us=round(ar - base["AR_us"], 3),
+                    window_record=a.window, gather_read=gs.get("worst_rank", {}).get("name"))
+                print("candidate_gather", lat, "s81_window", kind, json.dumps(dict(AR_us=round(ar, 3), AR=round(1e6 / ar, 1),
+                      II=round(ii, 3), MTP=mtp)), flush=True)
     out["constants"] = dict(clock_hz=CLK, hop_us=HOP_US, extra_hops=S81_EXTRA_HOPS, idx_array=IDX_ARRAY, attn=ATTN_JOB,
                             wavefront=WAVEFRONT, draft=DRAFT)
     rd = {r["name"]: r for r in reader["runs"]}
@@ -476,6 +563,11 @@ def cmd_compose(a):
            {k: dict(AR_tok_s=v[k + ".lat259"]["AR_tok_s"], MTP_fused_tok_s=v[k + ".lat259"]["MTP_tok_s"]["fused_us"],
                     II_us=v[k + ".lat259"]["II_us"], reindex_occupancy_us=v[k + ".lat259"]["stage_occupancy_us"]["reindex"])
             for k in ("mask_drop", "candidate_gather")}},
+        **({"s81_window": {k: dict(AR_tok_s=v[f"candidate_gather.lat259.s81_window_{k}"]["AR_tok_s"],
+                                   MTP_fused_tok_s=v[f"candidate_gather.lat259.s81_window_{k}"]["MTP_tok_s"]["fused_us"],
+                                   AR_us=v[f"candidate_gather.lat259.s81_window_{k}"]["AR_us"],
+                                   II_us=v[f"candidate_gather.lat259.s81_window_{k}"]["II_us"])
+                               for k in ("la", "asbuilt_c8")}} if win is not None else {}),
         interim="L20 (global-KV scan layer) is this tool's component measurement; Codex's S81 minimum run owns L20 at 1M "
                 "and replaces it when it lands",
         still_modelled=["context-independent nodes of every layer (weights in ROM: projections, MoE, norms, softmax/p.v "
@@ -510,6 +602,7 @@ def main():
     m.add_argument("--out", required=True)
     m.add_argument("--gather", default="", help="tools/dsrom_reindex_candidates.py gather.json (measured gather read)")
     m.add_argument("--reindex-select", default="", help="tools/dsrom_reindex_candidates.py select.json")
+    m.add_argument("--window", default="", help="tools/dsrom_s81_window_la.py window_load.json (S81-bound WINDOW terms)")
     a = ap.parse_args()
     dict(reader=cmd_reader, select=cmd_select, ckvvec=cmd_ckvvec, compose=cmd_compose)[a.cmd](a)
 
