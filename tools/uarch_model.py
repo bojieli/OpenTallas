@@ -6334,6 +6334,12 @@ def w10_pinaccess_contract_review(inputs):
         source_sha256=inputs["sources_sha256"])
 
 
+def dsrom_s81_components(ctx=1048576):
+    """Selected S81 component composition; unbound provider costs stay unknown."""
+    from dsrom_s81_unified_components import build
+    return build(ROOT, ctx=ctx)
+
+
 def dsrom_s82_rows():
     """Opt-in retained-RD64 conditional composition; defaults are unchanged."""
     from dsrom_s82_token_pricing import build
@@ -6402,6 +6408,7 @@ def hbm_accel_rows():
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
     ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
     ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
@@ -6426,6 +6433,13 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.dsrom_s81_components:
+        payload = json.dumps(dsrom_s81_components(a.ctx), indent=2, sort_keys=True, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.hbm_accel:
         payload = json.dumps(hbm_accel_rows(), indent=2, allow_nan=False) + "\n"
         if a.out:
