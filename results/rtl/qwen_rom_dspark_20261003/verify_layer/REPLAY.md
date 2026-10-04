@@ -24,3 +24,8 @@ Images: pinned PVE1 /home/ubuntu/w12/img_tp4 and st_tp4_sw64 (emitter-source dri
 
 ## Not done
 Head RTL runs (queued), SS/FF closure of the VPOS/ARP additions, SU overlap scheduling, near-HBM attention in the runtime, drafter program, accept/commit loop, end-to-end.
+
+## Head RTL measured (collected 2026-10-04; Kant collector f0027f749, export 9a564b1df, ot-epyc1tb /srv/opentallas-scratch/codex/qwen-dspark-head-f002)
+head_measured/: head1 PASS rc=0 3,006 cycles; head4 PASS rc=0 12,000 cycles, +2,998 cycles per extra position; collector rc=0.
+All 4 dies emit tokens/logit bits 50994/419c72b5, 67/41684b35, 2168/418bd275, 16/4180e6d6 = head_oracle_p4.json argmax (head4 oracle sha256 dba9f04a = committed head_oracle_p4.json; head1 oracle copied as head1/oracle.json).
+Boundary: head-only TP4 companion RTL with preloaded final X; no drafter, rollback, overlap, near-HBM or SS/FF.
