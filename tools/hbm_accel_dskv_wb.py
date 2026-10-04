@@ -267,14 +267,14 @@ def compose(rtl_path, out):
     # stream interference: every window row of the token lands on PC (pos mod 128) of stack 3 (40 events);
     # the owner's compressed row + key on stack 1 (die 31, 5 events) / stacks 0 + 2 (die 63, 3 events)
     per_stack_us = {
-        'stack3_window_40': dict(mean=n_win * win['background_stream']['delta_ns_mean'] / 1000,
-                                 worst=n_win * win['background_stream']['delta_ns_max'] / 1000),
-        'stack1_ckv_key_5_die31': dict(mean=n_r1 * ck1['background_stream']['delta_ns_mean'] / 1000,
-                                       worst=n_r1 * ck1['background_stream']['delta_ns_max'] / 1000),
-        'stack0_ckv_3_die63': dict(mean=n_r2 * ck2c['background_stream']['delta_ns_mean'] / 1000,
-                                   worst=n_r2 * ck2c['background_stream']['delta_ns_max'] / 1000),
-        'stack2_key_3_die63': dict(mean=n_r2 * ck2k['background_stream']['delta_ns_mean'] / 1000,
-                                   worst=n_r2 * ck2k['background_stream']['delta_ns_max'] / 1000)}
+        'stack3_window_40': dict(mean=round(n_win * win['background_stream']['delta_ns_mean'] / 1000, 3),
+                                 worst=round(n_win * win['background_stream']['delta_ns_max'] / 1000, 3)),
+        'stack1_ckv_key_5_die31': dict(mean=round(n_r1 * ck1['background_stream']['delta_ns_mean'] / 1000, 3),
+                                       worst=round(n_r1 * ck1['background_stream']['delta_ns_max'] / 1000, 3)),
+        'stack0_ckv_3_die63': dict(mean=round(n_r2 * ck2c['background_stream']['delta_ns_mean'] / 1000, 3),
+                                   worst=round(n_r2 * ck2c['background_stream']['delta_ns_max'] / 1000, 3)),
+        'stack2_key_3_die63': dict(mean=round(n_r2 * ck2k['background_stream']['delta_ns_mean'] / 1000, 3),
+                                   worst=round(n_r2 * ck2k['background_stream']['delta_ns_max'] / 1000, 3))}
     stream_add_worst = max(v['worst'] for v in per_stack_us.values())
     stream_add_mean = max(v['mean'] for v in per_stack_us.values())
     after = audit['after']
@@ -318,9 +318,15 @@ def compose(rtl_path, out):
             upper_bound_pct_of_token=round(100 * upper_us / token, 3)),
         token=dict(before_us=token, after_us=round(token + delta_us, 3),
                    tokens_s_before=base['headline']['measured_tokens_s'],
-                   tokens_s_after=round(1e6 / (token + delta_us), 1),
+                   tokens_s_after=(base['headline']['measured_tokens_s'] if delta_us == 0
+                                   else round(1e6 / (token + delta_us), 1)),
                    routed_expert_term='unchanged from the HBM-path audit (fetch measured 5.446 mean / 6.056 worst us vs '
                                       'model 5.33; +0.116 / +0.726 us), not folded here'),
+        default_off=dict(unit='ot_hbm_accel_dskv_wb ENABLE=0 ties every output to 0; nothing pinned instantiates it',
+                         pc='ot_hbm_accel_stream_pc_wb WB_EN=0: tb_hbm_accel_dskv_stream (the audit bench) with the PC '
+                            'swapped prints byte-identical BW lines to ot_hbm_accel_expert_stream_pc on 4 cases (scan '
+                            'L20 refactor+prefetch, scan L2 as built, gather 2 rows + notice, scan nk 16), 2026-10-04',
+                         pinned_files='none changed (new files only)'),
         unvalidated=['write-request / ACK path terms (10 ns each way, R5a bench values)',
                      'one stack simulated; die = 4 independent stacks (sectors sharded by address)',
                      'background stream on the r6 + notice stream PC policy (the r14 static stream PC with WR_EN=0 is '
