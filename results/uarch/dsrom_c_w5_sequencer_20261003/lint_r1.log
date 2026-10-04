@@ -1,0 +1,43 @@
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_pg.sv:159:95: Cell has missing pin: 'state_observe'
+  159 |     ot_dsrom_c_w5_pg #(.ENABLE_PG(ENABLE_PG), .DEBT_W(2*DEBT_W), .GUARD_CYCLES(GUARD_CYCLES)) pg (
+      |                                                                                               ^~
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:895:86: Cell has missing pin: 'i_preloaded'
+  895 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:895:86: Cell has missing pin: 'shared_wr_v'
+  895 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:895:86: Cell has missing pin: 'shared_wr_p'
+  895 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:895:86: Cell has missing pin: 'shared_wr_e'
+  895 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:895:86: Cell has missing pin: 'shared_wr_d'
+  895 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:895:86: Cell has missing pin: 'shared_rq_v'
+  895 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:895:86: Cell has missing pin: 'shared_rq_q'
+  895 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:895:86: Cell has missing pin: 'shared_rq_plg'
+  895 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:895:86: Cell has missing pin: 'shared_xr0'
+  895 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:1123:42: Cell has missing pin: 'qr_issue_ready'
+ 1123 |                      .QLB(QLB), .MP(MP)) u_qe (
+      |                                          ^~~~
+%Error: /home/ubuntu/OpenTallas/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv:102:12: Package/class 'ot_hdc_engram_tables_pkg' not found, and needs to be predeclared (IEEE 1800-2017 26.3)
+  102 |     import ot_hdc_engram_tables_pkg::*;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~
+        rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:1169:1: ... note: In file included from ot_dsrom_c_w5_core_v41x.sv
+%Error: /home/ubuntu/OpenTallas/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv:102:12: Importing from missing package 'ot_hdc_engram_tables_pkg'
+  102 |     import ot_hdc_engram_tables_pkg::*;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~
+        rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:1169:1: ... note: In file included from ot_dsrom_c_w5_core_v41x.sv
+%Error: Exiting due to 2 error(s)

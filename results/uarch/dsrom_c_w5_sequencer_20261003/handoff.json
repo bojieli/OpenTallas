@@ -1,0 +1,60 @@
+{
+  "schema": "W5_ROM_sequencer_closed_handoff_v1",
+  "status": "CLOSED_NOT_ADOPTED_GAIN_UNESTABLISHED",
+  "branch": "codex/dsrom-c-w5-20261003",
+  "ROM_only": true,
+  "HA_owner": "Claude",
+  "HA0_HA10_transferred": true,
+  "HA_builds": 0,
+  "adopted": false,
+  "composed_gain_pct": null,
+  "required_gain_pct": 1,
+  "production_calendar_bound": false,
+  "production_retained_debt_bound": false,
+  "source_pin": {
+    "commit": "681b8736590be4887f77cc65b0f10c04b6cbc83e",
+    "path": "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+    "sha256": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a"
+  },
+  "model_path": "results/uarch/dsrom_c_w5_sequencer_20261003/model.json",
+  "model_sha256": "246c9caa0b58f239c0563c711d022425717324e2f137ffc6ac7657b420b02987",
+  "RTL_successor": "rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv",
+  "RTL_gate_and_admission": "rtl/v41rom/ot_dsrom_c_w5_seq_gate.sv",
+  "default_enabled": false,
+  "Engram_always_on": true,
+  "component_ready_added_cycles": 0,
+  "component_late_added_cycles": 8,
+  "production_added_cycles": null,
+  "SS_FF_context": "NOT_QUALIFIED",
+  "analog_guarantee": false,
+  "wake_energy_J": null,
+  "offrail_gain_W": null,
+  "reason": "No composed >=1% lever supported by actual DS calendar/debt, switch leakage and production wake/PDN/clock costs. Candidate closed; source retained without adoption.",
+  "peer_acknowledgment": false,
+  "validation": {
+    "component_sim": "PASS",
+    "actual_ROM_core_defaultoff_lint": "PASS_WITH_INHERITED_WARNINGS",
+    "generic_synthesis": "PASS",
+    "inverse_source_transform": "PASS",
+    "complete_token_exactness": "NOT_RUN",
+    "physical_ICG_SS_FF": "NOT_RUN",
+    "production_calendar_debt_join": "NOT_BOUND",
+    "lint_elapsed_s": 97.435,
+    "lint_allocated_MB": 2455.91,
+    "lint_threads": 1,
+    "failed_attempts_preserved": [
+      "lint_r1.log",
+      "lint_r2.log",
+      "lint_r3.log",
+      "lint_r4.log",
+      "synth_r1.log"
+    ]
+  },
+  "evidence_sha256": {
+    "lint_r5.log": "0f8ffbc47d63bfea681c45175965252111e9b0962e069b12c6308b9dd6319332",
+    "sim_r2.log": "f4c1322ed76b4506d8c206e3603b882134f1de4b147fd9a56b4d65ced0c982a4",
+    "synth_r2.log": "8fc601d672ac549aacd2d39235b0027c3bb9664b6e7222b3d02f1ab5f89acc4c",
+    "generic_netlist.json": "9ee662cef286bc54d97f70981c021f75a37972ebe839358e5992d33a2c24f7a9"
+  },
+  "component_source_commit": "fd1e09b6ed127f82d1eed0e30c2b5d03a699f5c0"
+}

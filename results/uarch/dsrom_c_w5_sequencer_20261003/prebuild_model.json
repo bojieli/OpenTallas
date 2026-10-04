@@ -1,0 +1,44 @@
+{
+  "status": "CLOSED_NOT_ADOPTED_GAIN_UNESTABLISHED",
+  "source_commit": "681b8736590be4887f77cc65b0f10c04b6cbc83e",
+  "geometry": {
+    "NW": 21,
+    "PAW": 14,
+    "payload_bits": 56,
+    "adapter_FF_bits": 92,
+    "PG_controller_FF_bits": 14,
+    "total_added_FF_bits": 106,
+    "MACs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "replicas": 1,
+    "boundary_payload_bits": 56,
+    "retained_debt_classes": 8
+  },
+  "latency": {
+    "ready_start_added_cycles": 0,
+    "delayed_start_added_cycles": "count every clk edge from accepted start to core start; no upper analog bound",
+    "total_cycles": "33-bit engine cycles + measured W5 wait cycles",
+    "source_clock": "caller AON sequencer clock; no free CDC/clock-region conversion"
+  },
+  "physical": {
+    "routing_tracks": null,
+    "slot_fit": null,
+    "SS_FF": false,
+    "switch_clamp_clockgate_area": null,
+    "adapter_area": "generic inventory to be recorded; no physical fit claim"
+  },
+  "power": {
+    "Liberty_onrail_source": "results/uarch/dsrom_c_w5_pg_20261003/model_r7/liberty.json",
+    "offrail_leakage_W": null,
+    "wake_energy_J": null,
+    "inrush_A": null,
+    "activity_gain": null,
+    "clock_region_debit": "external measured handoff required; no RC estimate adopted"
+  },
+  "adoption": {
+    "composed_gain_pct": null,
+    "required_gain_pct": 1,
+    "adopted": false,
+    "reason": "no source-qualified offrail leakage, production calendar or wake/PDN/clock-region cost; no new broad study"
+  }
+}

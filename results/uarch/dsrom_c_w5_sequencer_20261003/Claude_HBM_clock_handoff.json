@@ -1,0 +1,13 @@
+{
+  "owner": "Claude",
+  "scope": "HA0-HA10 and HBM accelerator; W5 is ROM-only",
+  "W5_HBM_mutations_or_builds": 0,
+  "historical_read_only_references": [
+    "/home/ubuntu/OpenTallas/results/rtl/qwen_rom_real_memory_20261003/frozen_v2/summary.json",
+    "/home/ubuntu/OpenTallas/results/uarch/rom_die_clocking_decision_20261003.json",
+    "/tmp/peirce-clock-region-candidate-composition-20261003/results/uarch/clock_region_candidate_composition_20261003/model.json"
+  ],
+  "clock_region_requirement": "Preserve W5 wait debit + actual crossing/CDC/CTS costs. Option-C RC estimate is not measured power. No freewake or gating savings credit.",
+  "qualification": "no HBM optimization validation performed by W5",
+  "peer_acknowledgment": false
+}

@@ -1,0 +1,199 @@
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_pg.sv:159:95: Cell has missing pin: 'state_observe'
+  159 |     ot_dsrom_c_w5_pg #(.ENABLE_PG(ENABLE_PG), .DEBT_W(2*DEBT_W), .GUARD_CYCLES(GUARD_CYCLES)) pg (
+      |                                                                                               ^~
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:898:86: Cell has missing pin: 'i_preloaded'
+  898 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:898:86: Cell has missing pin: 'shared_wr_v'
+  898 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:898:86: Cell has missing pin: 'shared_wr_p'
+  898 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:898:86: Cell has missing pin: 'shared_wr_e'
+  898 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:898:86: Cell has missing pin: 'shared_wr_d'
+  898 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:898:86: Cell has missing pin: 'shared_rq_v'
+  898 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:898:86: Cell has missing pin: 'shared_rq_q'
+  898 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:898:86: Cell has missing pin: 'shared_rq_plg'
+  898 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:898:86: Cell has missing pin: 'shared_xr0'
+  898 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+%Warning-PINMISSING: rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:1126:42: Cell has missing pin: 'qr_issue_ready'
+ 1126 |                      .QLB(QLB), .MP(MP)) u_qe (
+      |                                          ^~~~
+%Warning-MODDUP: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv:449:8: Duplicate declaration of module: 'ot_hdc_v41x_idx_kmerge'
+  449 | module ot_hdc_v41x_idx_kmerge #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                 /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv:226:1: ... note: In file included from ot_hdc_v41x_idx_adapt.sv
+                 rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv:1003:1: ... note: In file included from ot_dsrom_c_w5_core_v41x.sv
+                 /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv:309:49: ... Location of original declaration
+  309 |         ot_hdc_v41x_idx_kmerge #(.NS(4),.FQ(4)) merge (
+      |                                                 ^~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_v41_matvec.sv:277:33: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_v41_matvec.sv:337:29: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_v41_matvec.sv:346:29: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv:309:49: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv:242:65: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_v41_stream.sv:359:17: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_v41_stream.sv:440:16: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_v41_stream.sv:452:26: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv:292:102: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv:300:87: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv:60:42: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv:366:62: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv:372:62: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:119:29: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:233:43: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec.sv:676:73: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_sel.sv:229:51: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv:287:34: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv:290:34: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv:34:46: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:143:67: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:203:34: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:381:33: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:464:34: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:500:29: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:513:30: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:559:45: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv:585:53: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv:37:47: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv:40:50: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_sinkhorn.sv:114:28: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_sinkhorn.sv:127:27: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_sinkhorn.sv:145:28: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_sinkhorn.sv:149:44: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:225:50: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:247:44: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv:267:44: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv:116:34: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv:125:34: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     /tmp/dsrom-c-w5-seq-pinned-681b87365/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv:5:9: ... Location of module with timescale
+    5 | package ot_hdc_engram_tables_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 39 error(s)

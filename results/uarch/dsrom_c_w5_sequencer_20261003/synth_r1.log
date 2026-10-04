@@ -1,0 +1,5 @@
+
+-- Running command `read_verilog -sv rtl/v41rom/ot_dsrom_c_w5_pg.sv rtl/v41rom/ot_dsrom_c_w5_seq_gate.sv; chparam -set ENABLE_PG 1 -set PAYLOAD_W 56 ot_dsrom_c_w5_seq_gate; hierarchy -top ot_dsrom_c_w5_seq_gate; proc; flatten; opt; techmap; opt; stat; write_json results/uarch/dsrom_c_w5_sequencer_20261003/generic_netlist.json' --
+
+1. Executing Verilog-2005 frontend: rtl/v41rom/ot_dsrom_c_w5_pg.sv
+rtl/v41rom/ot_dsrom_c_w5_pg.sv:5: ERROR: syntax error, unexpected TOK_REG, expecting TOK_ID or TOK_INTEGER or TOK_SIGNED or '['

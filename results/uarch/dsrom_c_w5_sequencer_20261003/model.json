@@ -1,0 +1,125 @@
+{
+  "adoption": {
+    "adopted": false,
+    "composed_gain_pct": null,
+    "reason": "no source-qualified offrail leakage, production calendar or wake/PDN/clock-region cost; no new broad study",
+    "required_gain_pct": 1
+  },
+  "allocation": {
+    "FF_bits_measured": 105,
+    "area_units": "ASAP7 source cell area in um2; area is a model allocation, not physical closure",
+    "by_corner": {
+      "FF": {
+        "area_um2_predictive_model": 623.20752,
+        "on_rail_leakage_W_upper_model": 6.594200646000001e-07
+      },
+      "SS": {
+        "area_um2_predictive_model": 623.20752,
+        "on_rail_leakage_W_upper_model": 1.3376376815999998e-05
+      },
+      "TT": {
+        "area_um2_predictive_model": 623.20752,
+        "on_rail_leakage_W_upper_model": 7.608116562000001e-07
+      }
+    },
+    "constructive_inventory_model": {
+      "DFFASRHQNx1_ASAP7_75t_R": 105,
+      "INVx1_ASAP7_75t_R": 3078,
+      "NAND2x1_ASAP7_75t_R": 5130
+    },
+    "exclusions": [
+      "isolation clamp",
+      "power switch",
+      "retained external debt",
+      "CDC",
+      "CTS",
+      "fanout buffering",
+      "PDN",
+      "SerDes"
+    ],
+    "generic_cell_count_measured": 1026,
+    "includes": "one ROM field-group PG controller plus retained start admission"
+  },
+  "clock_gate": {
+    "Liberty_ICG_reference_only": {
+      "FF": {
+        "area_library_units": 0.26244,
+        "off_rail_W": null,
+        "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+        "on_rail_max_state_W": 2.48747e-10
+      },
+      "SS": {
+        "area_library_units": 0.26244,
+        "off_rail_W": null,
+        "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+        "on_rail_max_state_W": 5.50726e-09
+      },
+      "TT": {
+        "area_library_units": 0.26244,
+        "off_rail_W": null,
+        "off_rail_status": "NOT_CHARACTERIZED_BY_ON_RAIL_LOGIC_STATES",
+        "on_rail_max_state_W": 3.9390699999999996e-10
+      }
+    },
+    "digital_latch_bits": 1,
+    "physical_ICG_mapping": "NOT_QUALIFIED"
+  },
+  "geometry": {
+    "MACs_per_cycle": 0,
+    "NW": 21,
+    "PAW": 14,
+    "PG_controller_FF_bits": 14,
+    "actual_added_FF_bits": 105,
+    "adapter_FF_bits": 92,
+    "boundary_payload_bits": 56,
+    "memory_bytes_per_cycle": 0,
+    "payload_bits": 56,
+    "prebuild_FF_bits_are_conservative_reservation": true,
+    "replicas": 1,
+    "retained_debt_classes": 8,
+    "total_added_FF_bits": 106
+  },
+  "latency": {
+    "delayed_start_added_cycles": "count every clk edge from accepted start to core start; no upper analog bound",
+    "late_start_added_cycles_component_measured": 8,
+    "production_added_cycles": null,
+    "ready_start_added_cycles": 0,
+    "ready_start_added_cycles_component_measured": 0,
+    "source_clock": "caller AON sequencer clock; no free CDC/clock-region conversion",
+    "total_cycles": "33-bit engine cycles + measured W5 wait cycles"
+  },
+  "physical": {
+    "SS_FF": false,
+    "adapter_area": "generic inventory to be recorded; no physical fit claim",
+    "routing_tracks": null,
+    "slot_fit": null,
+    "switch_clamp_clockgate_area": null
+  },
+  "power": {
+    "Liberty_onrail_source": "results/uarch/dsrom_c_w5_pg_20261003/model_r7/liberty.json",
+    "activity_gain": null,
+    "clock_region_debit": "external measured handoff required; no RC estimate adopted",
+    "inrush_A": null,
+    "offrail_leakage_W": null,
+    "wake_energy_J": null
+  },
+  "production": {
+    "Engram_always_on": true,
+    "HA_builds": 0,
+    "ROM_only": true,
+    "adoption_closed": true,
+    "calendar_bound": false,
+    "known_mask_unbound_behavior": "unknown class holds field awake; no sleep credit",
+    "retained_debt_signal_bound": false
+  },
+  "source_commit": "681b8736590be4887f77cc65b0f10c04b6cbc83e",
+  "source_sha256": {
+    "results/uarch/dsrom_c_w5_integration_20261003/production_dependency_packet.json": "3538a5079c1ed5f9ce45b9064972d53059d0dbe9f8722b7752a5fa7aa8d33e9a",
+    "results/uarch/dsrom_c_w5_pg_20261003/model_r7/liberty.json": "b86c8667b0122429a5037dff441560f5531e8f1acb91f0803939876400f9ff0c",
+    "rtl/test/tb_dsrom_c_w5_seq_gate.sv": "36365a5f622b3acde874de9b87ebaff996fe0ae820dd03ebda67b47a56198c70",
+    "rtl/v41rom/ot_dsrom_c_w5_core_v41x.sv": "4f4a82b078dba8cf61e4e0dea14e0087f0fb9be66c41b225482857f4a81d17af",
+    "rtl/v41rom/ot_dsrom_c_w5_pg.sv": "b817ecd643d9dc361127c3d1427f5fad1913a7e6a68c0330ab1fd31b8d51d08b",
+    "rtl/v41rom/ot_dsrom_c_w5_seq_gate.sv": "aad297b836c6c8ee8193a41e0515db4d871f2775eecd00abfdb1ee40651513de"
+  },
+  "status": "CLOSED_NOT_ADOPTED_GAIN_UNESTABLISHED"
+}
