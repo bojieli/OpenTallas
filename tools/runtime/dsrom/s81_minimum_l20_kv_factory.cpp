@@ -196,6 +196,11 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
         r.provider->wire_su(*b.su,1048575);
         std::visit([&](auto& c){
             r.provider->wire_quantizer(*b.quantizer,*c);
+            // I38/QE38 is a single native current-row producer (rank3).
+            // Every existing CKV service waits for enc_done, even nonowners;
+            // borrow those same OLD native mode3 words without replacing the
+            // rank-local mode1 WINDOW capture or synthesizing a row/commit.
+            if(i!=3)r.provider->wire_quantizer(*ranks[3].b.quantizer,*c,false);
             c->sel_v=0;
             if(b.su->accepts_on_current_shared_edge()&&selected_su(b.su->native())){
                 const auto& su=b.su->native();
