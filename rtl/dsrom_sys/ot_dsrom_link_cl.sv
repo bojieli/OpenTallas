@@ -175,8 +175,12 @@ module ot_dsrom_link_cl #(
     wire            rd_hit = rd_v2 && (rd_s2 == snd);
     wire            rp_go  = replaying && pace_ok && rd_hit;
     wire            launch = accept || rp_go;
-    wire [SEQW-1:0] snd_l  = launch ? snd + 1'b1 : snd;
-    wire [SEQW-1:0] snd_off = snd_l - una;
+    // ACK overtaking a rewound pointer, decided on snd - una (not snd_l - una): when an ACK lands exactly one
+    // past snd in a launch cycle both choices give snd + 1 = ra_ack, so the result equals link_rt's, and the
+    // late `launch` only selects the final mux.
+    wire [SEQW-1:0] snd_off = snd - una;
+    wire            ack_skip = ack_ok && (d_ack > snd_off);
+    wire [IW:0]     occ_a  = occ - (ack_ok ? d_ack[IW:0] : {(IW+1){1'b0}});
     wire [SEQW-1:0] una_n  = ack_ok ? ra_ack : una;
     wire            retry_exh = rewind && !progress && (retry >= MR_W);
 
@@ -319,10 +323,10 @@ module ot_dsrom_link_cl #(
             ra_fr  <= rr_f[32 +: CW];
             if (accept) nxt <= nxt + 1'b1;
             una <= una_n;
-            occ <= occ + {{IW{1'b0}}, accept} - (ack_ok ? d_ack[IW:0] : {(IW+1){1'b0}});
-            if (rewind)                          snd <= una_n;
-            else if (ack_ok && (d_ack > snd_off)) snd <= ra_ack;   // an ACK overtook a rewound pointer
-            else                                 snd <= snd_l;
+            occ <= accept ? occ_a + 1'b1 : occ_a;
+            if (rewind)        snd <= una_n;
+            else if (ack_skip) snd <= ra_ack;                       // an ACK overtook a rewound pointer
+            else if (launch)   snd <= snd + 1'b1;
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
             credits <= credits;
 `else
