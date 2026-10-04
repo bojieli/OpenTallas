@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.qwen-dspark-drafter-underflow-census.v1",
+ "question": "why the drafter layer raises the core (ME) fault while every output is bit-exact",
+ "rtl_observation": "debug-only instrumented build (debug_only_trace_patch.py, never committed to rtl/): the fault source is the ME lane BF16 multiplier ot_qwen_w12_bmul (mul=1 add=0), which fails closed (result 0, fault) when a product's biased FP32 exponent is below -6, i.e. |w*x| < 2^-133 (a subnormal that would need more than a 7-bit shift). Trace head: mf_D0_P49_trace_head.log.",
+ "golden_census_PV_products": {
+  "P49_seeded_window_die0": {"nonzero": 158496, "subnormal_lt_2^-126": 58717, "deep_lt_2^-133": 2083},
+  "P8188_seeded_window_4dies": {"nonzero": 99850500, "subnormal_lt_2^-126": 40448837, "deep_lt_2^-133": 1586817},
+  "P8188_real_magnitude_window_4dies": {"nonzero": 95680968, "subnormal_lt_2^-126": 0, "deep_lt_2^-133": 0}
+ },
+ "cause": "the seeded synthetic history (E4M3 values uniform over +-448) gives score spreads of thousands of nats, so softmax probabilities are subnormal; probability x V products fall below 2^-133. They are absorbed in the PV sums, so X/K/V stay bit-exact, but the lane contract (existing datapath, the same lanes the AR layers use) flags them. Not a DSpark program or KV-service bug.",
+ "closure": "drafter layer measured at the target context with a format-valid, real-magnitude context window (the 8K prompt's target layer-0 K/V, rows < 8188, per die): k_D0r."
+}

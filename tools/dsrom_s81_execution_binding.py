@@ -111,6 +111,52 @@ class CanonicalS81Execution:
                     instruction=tuple((word >> (32*k)) & 0xffffffff for k in range(64)),
                     output_extents=minimum_vm_extents(instruction,dynamic=dynamic))
 
+    def target_required_bindings(self, layers, *, position, include_head=False):
+        """Literal node census used by the factory, including sideband producers.
+
+        A field actor and a quantizer share ISA unit3 but are different native
+        providers. Unit presence alone must never admit a complete program.
+        Instructions are retained verbatim so runtime dynamic operands still
+        require their real captured source values.
+        """
+        result = []
+        for node in self.target_source_nodes(layers, position=position,
+                                             include_head=include_head):
+            source = self.source.nodes[node]
+            instruction = source.get('instruction', {})
+            unit = instruction.get('unit')
+            if source['kind'] != 'instruction':
+                provider = source['kind']
+            elif unit == 3:
+                mode = instruction.get('qe_mode', 0)
+                provider = {0:'field', 1:'qdq8-window', 2:'qdq8-index',
+                            3:'qdq4e-ckv'}[mode]
+            else:
+                provider = {0:'control', 1:'matrix', 2:'su', 4:'xu',
+                            5:'he', 6:'collective'}[unit]
+            result.append(dict(node=node, kind=source['kind'], unit=unit,
+                               provider=provider, instruction=instruction,
+                               template_sha256=source.get('template_word_sha256')))
+        return tuple(result)
+
+    def require_target_bindings(self, layers, bindings, *, position,
+                                include_head=False):
+        """Fail closed before issue if any selected native node is unbound.
+
+        Bindings map exact source node to its provider kind. This is a source
+        enrollment check, not a claim of execution, visibility or timing.
+        """
+        required = self.target_required_bindings(layers, position=position,
+                                                 include_head=include_head)
+        expected = {r['node']:r['provider'] for r in required}
+        missing = [n for n in expected if n not in bindings]
+        wrong = [n for n in expected if n in bindings and bindings[n] != expected[n]]
+        extra = [n for n in bindings if n not in expected]
+        if missing or wrong or extra:
+            raise ValueError(f'native target bindings missing={missing} '
+                             f'wrong_provider={wrong} outside_selected_program={extra}')
+        return required
+
     def dispatch(self, node, rank, *, expert_ids=None):
         return self.stage_join.compile_operation(self.source, node, rank, expert_ids=expert_ids)
 

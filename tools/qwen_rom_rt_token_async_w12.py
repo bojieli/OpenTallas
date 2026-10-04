@@ -97,7 +97,9 @@ def main() -> None:
     ap.add_argument("--tp", type=int, choices=(2, 4), default=2, help="dies (tensor-parallel ranks)")
     ap.add_argument("--enable-ar256", action="store_true", help="opt in to zero-count 256-word all-reduce descriptors")
     ap.add_argument("--async-coll", action="store_true", help="ASYNC_COLL=1: decode descriptor bit 20 as a cut-through all-reduce")
-    ap.add_argument("--sb-pipe", action="store_true", help="SB_PIPE=1: pipelined cut-through scoreboard set (tap register + 2 stages)")
+    ap.add_argument("--sb-pipe", type=int, nargs="?", const=1, default=0, choices=(0, 1, 2, 3, 4),
+                    help="SB_PIPE of the asynchronous sequencer (bare flag = 1: pipelined scoreboard set; "
+                         "2/3: also the registered read, no wide lookup in the read loop)")
     ap.add_argument("--coll-lat", type=int, default=11, help="collective link latency (cycles), ot_rom_oneshot_allreduce LAT")
     ap.add_argument("--coll-depth", type=int, default=16,
                     help="collective receive FIFO words per source (a power of two); credits return over the link, "
@@ -224,7 +226,7 @@ def main() -> None:
         "design_point": {"tp": args.tp, "collective_lat_cycles": args.coll_lat, "groups_per_die": G, "tiles_per_die": G // 4, "count_width": NW, "su_width": args.su_width,
                          "su_reducer_time_levels": args.lv, "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut,
                          "pruned": True, "kv_fp8": True, "scale_local": bool(args.scale_local),
-                         "ar256_enabled": bool(args.enable_ar256), "async_coll": bool(args.async_coll), "sb_pipe": bool(args.sb_pipe)},
+                         "ar256_enabled": bool(args.enable_ar256), "async_coll": bool(args.async_coll), "sb_pipe": args.sb_pipe},
         "wire_stages": {"broadcast_and_x_network_bd": args.bd, "vm_conflict_register_xvm": args.xvm,
                         "upper_tree_level_nws": args.nws, "tree_to_spine_tws": args.tws, "result_write_ord": args.ord,
                         "mem_extra": args.mem_extra,

@@ -1,5 +1,6 @@
 #pragma once
 #include "s81_minimum_runtime.hpp"
+#include "s81_minimum_hbm_counters.hpp"
 #include "VDsromS81Hbm.h"
 #include <memory>
 #include <stdexcept>
@@ -15,13 +16,16 @@ class NativeHbm : public std::enable_shared_from_this<NativeHbm> {
     long prepared=-1;
     bool admitted=false;
     uint8_t accepted=0,returned=0,committed=0,write_mask=0;
-    std::array<unsigned,4> lengths{};
+    std::array<unsigned,4> lengths{},request_owner{},response_owner{};
+    std::array<uint32_t,4> write_strobes{};
+    NativeHbmTrafficCounters traffic_counters;
     std::function<void()> join;
 public:
     explicit NativeHbm(DsromS81MinimumRuntime&,const std::string& instance);
     // Native sparse prior-history only; must precede shared cold_start/bind_context.
     void preload(const std::string& rank_history_directory);
     void preload_ckv(const std::string& rank_ckv_history_directory);
+    NativeHbmTrafficSnapshot traffic()const;
     uint32_t capacity_words()const{return model.capacity_words;}
     bool ckv_initialized()const{return model.ckv_history_ready;}
     template<class Mux> void wire(Mux& mux) {

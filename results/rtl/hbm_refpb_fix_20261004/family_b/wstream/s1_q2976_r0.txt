@@ -1,0 +1,7 @@
+RESULT nstk=1 words=2976 ref_mode=0 cycles=81925 rd=2285568 room_block=0 desc_gap_pc_cycles=2240 bytes=292552704 ns=83891 TBps_per_stack=3.4873
+pcs=32 viol_total=1424
+DRAMCHK_VIOLATION tb_hbmacc_wstream_bw.dut.g_on.g_pc[31].u_pc.u_dramchk.v t=369664 ps bank=0 refresh behind schedule
+DRAMCHK_VIOLATION tb_hbmacc_wstream_bw.dut.g_on.g_pc[30].u_pc.u_dramchk.v t=369664 ps bank=0 refresh behind schedule
+DRAMCHK_VIOLATION tb_hbmacc_wstream_bw.dut.g_on.g_pc[29].u_pc.u_dramchk.v t=369664 ps bank=0 refresh behind schedule
+DRAMCHK_VIOLATION tb_hbmacc_wstream_bw.dut.g_on.g_pc[28].u_pc.u_dramchk.v t=369664 ps bank=0 refresh behind schedule
+DRAMCHK_VIOLATION tb_hbmacc_wstream_bw.dut.g_on.g_pc[27].u_pc.u_dramchk.v t=369664 ps bank=0 refresh behind schedule
