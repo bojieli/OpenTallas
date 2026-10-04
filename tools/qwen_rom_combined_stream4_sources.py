@@ -28,6 +28,7 @@ def selected(output,*,hbm_layers=36):
     rec['source_sha256']={p:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in dict.fromkeys(rec['die']+rec['tile']+rec['collective']+rec['hbm'])}
     rec['runtime_contract']='Initialize all models before preload (157); existing P8191 descriptor3 inputs; bind STREAM4 mem and tagged near-row reads to SAME logical backing store; preserve actual controller timing/CDC; pulse rm_kv_free only after O+AR at MLP; drain wb_busy_o plus row_drained_o before readback/reuse; core done alone is insufficient.'
     rec['clocks'].update(STREAM4='core-domain ports, model CORE_FS833333/CTL_FS1024000 with actual controller crossings; tagged near-row transport retains independent hclk')
+    rec['runtime_wiring']=str(ROOT/'tools/runtime/qwen_combined/stream4_memory_binding.hpp')
     rec['scope']='source integration only; standalone P8191 bandwidth is not combined full-token gain or physical closure'
     (output/'sources.json').write_text(json.dumps(rec,indent=2)+'\n')
     (output/'die_sources.f').write_text('\n'.join(rec['die'])+'\n')
