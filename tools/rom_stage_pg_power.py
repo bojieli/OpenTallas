@@ -90,9 +90,13 @@ def activity(a) -> int:
         tees.append(f)
         readers[n] = subprocess.Popen([str(conv), str(f), str(work / f"{n}.nets.saif"), "so_icarus_top.bench.dut",
                                        str(b * 2 * HALF_PS), str(e * 2 * HALF_PS)], stderr=subprocess.PIPE, text=True)
-    tee = subprocess.Popen(f"cat {fifo} | tee {' '.join(str(f) for f in tees[1:])} > {tees[0]}", shell=True)
+    # each converter stops reading at its window's end: tee must keep feeding the others (--output-error=
+    # warn-nopipe), or the first window's end SIGPIPEs the whole chain and the simulator with it
+    tee = subprocess.Popen(f"cat {fifo} | tee --output-error=warn-nopipe /dev/null {' '.join(str(f) for f in tees[1:])} "
+                           f"> {tees[0]}", shell=True)
     t0 = time.time()
     sim = subprocess.run(["vvp", "-n", str(exe), f"+VCD={fifo}"], capture_output=True, text=True, cwd=work)
+    meta["sim_returncode"] = sim.returncode
     try:
         os.close(os.open(fifo, os.O_WRONLY | os.O_NONBLOCK))
     except OSError:
