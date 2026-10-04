@@ -1,5 +1,7 @@
 # Qwen3-8B ROM DSpark in the system RTL: minimum components and the composed step
 
+> **TAU SUPERSEDED (owner rule 2026-10-04).** `ctx8k/step_composed_ctx8k.json` is now composed at the third-party published tau (3.1445, `tools/third_party_tau.py`, `results/speculative/third_party_acceptance_20261004/`). Hand-written figures below that quote tau 3.0375 are the superseded self-measured composition: scale MTP tok/s by 3.1445/3.0375 = 1.0352 (and MTP J/token by its inverse); AR figures are unchanged. The off-target P255 `step_composed.json` was not regenerated and keeps 3.0375.
+
 These records cover the Qwen3-8B ROM DSpark function in the system RTL. Everything is default-off and lives in successor files only. The pinned REAL_MEM sources, including `ot_qwen_rt_kv_fill_service`, are byte-identical.
 
 The vehicle is the VPRM die, `rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_vprm.sv`, configured as follows:
