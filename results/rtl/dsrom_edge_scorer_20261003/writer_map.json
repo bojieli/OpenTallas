@@ -1,0 +1,13 @@
+{
+  "schema": "opentallas.dsrom-edge-writer-map.v1",
+  "pass_functional": true,
+  "command": "iverilog -g2012 -s tb_dsrom_edge_kwr -o <binary> rtl/test/dsrom_sys/tb_dsrom_edge_kwr.sv rtl/dsrom_sys/ot_dsrom_edge_layout.sv rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv; vvp <binary>",
+  "tool": "Icarus Verilog version 11.0 (stable) ()",
+  "result": "EDGE_WRITER held-map/payload/collision/encoding-fault/recovery PASS",
+  "source_sha256": {
+    "rtl/test/dsrom_sys/tb_dsrom_edge_kwr.sv": "40002b75560b44aef1de27d8b4dcc1d6842213a60d1da4efde2958014b9899ad",
+    "rtl/dsrom_sys/ot_dsrom_edge_layout.sv": "a779400a80549650e1c4011e0e2721c975f8211efb80b8ccb339f78f1f6e286d",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e"
+  },
+  "scope": "Pinned encoder payload and native code/scale address, held map under backpressure, collision refusal, faulted encoding suppression and good-record recovery. No actual CKV migration or system enrollment implied."
+}

@@ -1,0 +1,271 @@
+{
+  "admission": {
+    "engine_RTL": false,
+    "full_token": false,
+    "physical": false,
+    "reason": "Source ordering and demand now bounded; actual memory grants/slot and two-clock event mapping still required."
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "capacity": {
+    "bits": 16777216,
+    "elements": 524288,
+    "word_bits": 32
+  },
+  "construction": {
+    "admit": "Original waited/unit_ready/gates AND command credits AND all nonstall preload/result seats reserved AND generation live.",
+    "commit": "Keep source/dependency ordering in logical batches; snapshot all reads before batch writes; coalesce only source-proved same-edge aliases using literal winner rule. Physical backend commits winners, then visible receipts.",
+    "component_owner": "Claude: shared FIFO RTL; Archimedes: DS parent source events/provider/clock/reset/rate/load model",
+    "default_off": "DS_SPLIT_DOMAINS=0",
+    "joined_idle": "original idle AND epoch live AND requests0 AND writes0 AND journal0 AND actual engine/output retired. Separate reverse completion; no enqueue or mergerdone credit.",
+    "queue": "Earlier eight-seat bridge cost is a prospective reservation, not selected shared FIFO depth or a bound on producer bursts. Field raw journal remains reserved independently; do not replace CKV512 immutable seats.",
+    "read": "Hold accepted request/address/generation until matched response. Store response before arithmetic consumer step; one-cycle implicit replies cannot cross clocks unchanged.",
+    "service": "A backend must name native bank/address, read and write grants, maximum interval, macro response/capture latency, RMW/byte-mask semantics, and reset epoch receipts. Source reg array supplies no physical finite grant guarantee.",
+    "two_clock_limit": "Retained same-edge reference is not proof of split-domain event equivalence. Compiler dependency/address/home map must bind cross-domain ordering; no assumed phase/MCP exception."
+  },
+  "demand_envelope": {
+    "MACs_per_cycle": 0,
+    "SU_readmax_includes_VM_selected_only": true,
+    "legacy_SU_ports_pruned_only_by_X_SU1": true,
+    "meaning": "Source all-enabled envelope under X_SU1 and selected R64; not observed simultaneous traffic or a required full multiport implementation. Compiler calendar may lower it only with source-bound exclusion/address proof.",
+    "read_bytes_per_chain_cycle": 6080,
+    "read_element_ports": 1520,
+    "read_payload_bits_per_chain_cycle": 48640,
+    "write_bytes_per_chain_cycle": 2372,
+    "write_element_ports": 593,
+    "write_payload_bits_per_chain_cycle": 18976
+  },
+  "latency": {
+    "conditional_bound": "ceil(pending/grants_per_service)*max_grant_interval + measured_response_capture_cycles; add FIFO launch/capture and visibleACK, at actual destination clock.",
+    "no_all_enabled_envelope_serial_token_multiplication": true,
+    "no_fixed4_5_upper_bound": true,
+    "whole_token_calendar_binding": "Maxwell + installed source/trace Hubble; Arch per-edge event/reference supplied here."
+  },
+  "live_jobs_unchanged": true,
+  "new_engine_RTL": false,
+  "next_exact_contracts": [
+    {
+      "deliverable": "Bind actual VM provider homes/banks/masks to grant intervals and route/slot costs; validate witness aliases and compiled non-alias regions.",
+      "owner": "Archimedes with Maxwell"
+    },
+    {
+      "deliverable": "Freeze component ports, real two-clock reset/epoch/drain and measured loaded timing; DS parent dispatch uses resolved command packets, not Qwen ownership transfer.",
+      "owner": "Claude with Archimedes"
+    },
+    {
+      "deliverable": "Installed binary/defines/source lease; issue PC/waitmask/go, request accept/response, VM visible write and engine/output retirement trace.",
+      "owner": "Hubble"
+    },
+    {
+      "deliverable": "CKV generation/accept/immutable512/9 visible writes and QK/PV final retirement; no duplicated CKV implementation.",
+      "owner": "Epicurus"
+    }
+  ],
+  "pin_access_review": {
+    "chosen_placement_check_required": true,
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "confirmed_historical_cause": "p12q9 only",
+    "independent_tests": 7,
+    "not_via_PG_closure": true,
+    "other_R0_MY": "Routed TT negative timing preserved"
+  },
+  "profile": {
+    "AW": 30,
+    "ROM_R": 64,
+    "SUN": 256,
+    "VM_AW": 19,
+    "X_SU": 1
+  },
+  "read_ports": [
+    {
+      "active": true,
+      "anchor": "if (vh_re[q])",
+      "expanded_max": 8,
+      "owner": "HE"
+    },
+    {
+      "active": true,
+      "anchor": "if (vx_re[q])",
+      "expanded_max": 4,
+      "owner": "ME"
+    },
+    {
+      "active": false,
+      "anchor": "if (vs_re[q])",
+      "expanded_max": 32,
+      "owner": "legacy_SU"
+    },
+    {
+      "active": false,
+      "anchor": "if (vi_re[q])",
+      "expanded_max": 8,
+      "owner": "legacy_gather"
+    },
+    {
+      "active": true,
+      "anchor": "if (vq_re)",
+      "expanded_max": 1,
+      "owner": "QE_id"
+    },
+    {
+      "active": true,
+      "anchor": "if (rom_xre)",
+      "expanded_max": 64,
+      "owner": "field_activation"
+    },
+    {
+      "active": true,
+      "anchor": "if (rom_vre)",
+      "expanded_max": 1,
+      "owner": "field_id"
+    },
+    {
+      "active": true,
+      "anchor": "if (vr_re)",
+      "expanded_max": 1,
+      "owner": "XU_scalar"
+    },
+    {
+      "active": true,
+      "anchor": "if (wqr_re)",
+      "expanded_max": 32,
+      "owner": "QE_block"
+    },
+    {
+      "active": true,
+      "anchor": "if (wxr_re)",
+      "expanded_max": 32,
+      "owner": "XU_block"
+    },
+    {
+      "active": true,
+      "anchor": "if (vsl_re[q])",
+      "expanded_max": 64,
+      "owner": "selector"
+    },
+    {
+      "active": true,
+      "anchor": "if (xs_vi_re[q])",
+      "expanded_max": 256,
+      "owner": "SU_indirect"
+    },
+    {
+      "active": true,
+      "anchor": "2'd0: xs_rd_q",
+      "expanded_max": 1024,
+      "owner": "SU_operands"
+    },
+    {
+      "active": true,
+      "anchor": "if (xi_re)",
+      "expanded_max": 1,
+      "owner": "HBM_weight_id"
+    },
+    {
+      "active": true,
+      "anchor": "if (xa_re)",
+      "expanded_max": 16,
+      "owner": "package"
+    },
+    {
+      "active": true,
+      "anchor": "if (xb_re)",
+      "expanded_max": 16,
+      "owner": "collective"
+    }
+  ],
+  "schema": "DS_SPLIT_VM_ORDER_CONTRACT_V1",
+  "source_parent_commit": "9ffc7a30c13af94c9dc2f4c69b9fc1c276dd9cdc",
+  "source_semantics": {
+    "address": "Source generally slices AW30 to VM_AW19; masked-block arithmetic can then exceed the VM end. Expanded addresses must be region/home-bound, not assumed valid from high-level instruction width. No silent wrapping of expanded out-of-range addresses.",
+    "concurrency": "d_wait is a selected five-unit mask, not an all-engine barrier. Collective alone requires all idles; unit_ready permits overlap of other independent engines. Do not infer one producer at a time.",
+    "read_image": "Pre-edge VM for every read, including reads lexically after writes; NBA commits after the clocked block.",
+    "visible_receipt": "Only winner is visible in post-edge image. A superseded write can receive source-semantic retirement, never an owner-visible completion. Mandatory publication must reject/suppress aliases unless an exact intended-alias contract is proved.",
+    "write_image": "Last enabled write to a given expanded address wins in literal source order. Within a source loop, later lane wins. Collective bank3 wins over banks0..2 and package on the same aligned address."
+  },
+  "write_priority": [
+    {
+      "active": true,
+      "anchor": "if (ww_h_we)",
+      "expanded_max": 32,
+      "order": 0,
+      "owner": "HE"
+    },
+    {
+      "active": true,
+      "anchor": "if (rom_we[q])",
+      "expanded_max": 64,
+      "order": 1,
+      "owner": "field"
+    },
+    {
+      "active": true,
+      "anchor": "if (vw_me_mask[q*W + l])",
+      "expanded_max": 64,
+      "order": 2,
+      "owner": "ME"
+    },
+    {
+      "active": false,
+      "anchor": "if (vw_su_we[q])",
+      "expanded_max": 8,
+      "order": 3,
+      "owner": "legacy_SU"
+    },
+    {
+      "active": false,
+      "anchor": "if (vw_rd_we[q])",
+      "expanded_max": 8,
+      "order": 4,
+      "owner": "legacy_reducer"
+    },
+    {
+      "active": true,
+      "anchor": "if (xs_vm_we[q])",
+      "expanded_max": 256,
+      "order": 5,
+      "owner": "SU"
+    },
+    {
+      "active": true,
+      "anchor": "if (xs_res_we[q])",
+      "expanded_max": 32,
+      "order": 6,
+      "owner": "SU_reducer"
+    },
+    {
+      "active": true,
+      "anchor": "if (vw_xe_we)",
+      "expanded_max": 1,
+      "order": 7,
+      "owner": "XU_scalar"
+    },
+    {
+      "active": true,
+      "anchor": "if (ww_q_mask[q])",
+      "expanded_max": 32,
+      "order": 8,
+      "owner": "QE"
+    },
+    {
+      "active": true,
+      "anchor": "if (ww_x_mask[q])",
+      "expanded_max": 32,
+      "order": 9,
+      "owner": "XU_block"
+    },
+    {
+      "active": true,
+      "anchor": "if (xa_we)",
+      "expanded_max": 16,
+      "order": 10,
+      "owner": "package"
+    },
+    {
+      "active": true,
+      "anchor": "if (xb_we4[b])",
+      "expanded_max": 64,
+      "order": 11,
+      "owner": "collective"
+    }
+  ]
+}

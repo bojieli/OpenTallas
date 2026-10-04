@@ -1,0 +1,12 @@
+{
+  "tests": "python -m pytest -q tests/test_ds_hbm_staging_r69.py",
+  "test_count": 9,
+  "test_verdict": "PASS",
+  "fresh_full_local_hash_replay": "PASS",
+  "source_root": "/tmp/kepler-ds-pc01-r68-mainbase-20261003",
+  "source_model_sha256": "ae5e031ebbf51413095a5ae6aeee02958ea653ecedcd26ffe38860f12dafcfda",
+  "frozen915_unchanged": true,
+  "numerical_jobs": 0,
+  "constructors": 0,
+  "remote_transfers": 0
+}

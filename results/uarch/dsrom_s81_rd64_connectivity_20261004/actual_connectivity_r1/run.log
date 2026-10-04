@@ -1,0 +1,3 @@
+FUNCTIONAL rows=64 cycle=289
+PASS_PRUNED_CONNECTIVITY rows=64 cycles=801 identical_fault_cycles=448
+rtl/test/dsrom_s81_return/tb_pruned_connectivity.sv:41: $finish called at 8030000 (1ps)

@@ -1,0 +1,96 @@
+{
+  "actual": {
+    "actual_event_counts": {
+      "AQ_input_accept": 80,
+      "AQ_output_capture": 80,
+      "EID_VM_read_accept": 1,
+      "VM_read_accept": 80,
+      "VM_write_accept": 576,
+      "activation_field_accept": 80,
+      "active_pair_go_accept": 160,
+      "all_source_root_writer_drained": 1,
+      "bank_capture": 23040,
+      "cfg_ROM_read_accept": 102400,
+      "cfg_element_write_accept": 102400,
+      "field_cfg_accept": 1,
+      "field_go_accept": 1,
+      "final_destination_visible": 576,
+      "lane_consumer_sample": 23040,
+      "macro_read_accept": 46080,
+      "main_CE_accept": 23040,
+      "op_accept": 1,
+      "pair_partial": 576,
+      "phase_accept": 1,
+      "phase_retire": 1,
+      "root_row_accept": 576,
+      "spine_idle": 1,
+      "stream_ROM_advance": 192,
+      "stream_have_stall": 61
+    },
+    "actual_identity": [
+      0,
+      0,
+      10,
+      2149580800,
+      0
+    ],
+    "actual_node_occupancy_observed": false,
+    "actual_root_edges": [
+      414,
+      419
+    ],
+    "actual_visible_edges": [
+      415,
+      420
+    ],
+    "fresh_runtime": false,
+    "full_program_internal_bound": false,
+    "internal_queue_peaks_are_source_recurrence_reconstruction_not_observed_registers": true,
+    "queue_recurrence": {
+      "all_queue_and_held_debt_drained": true,
+      "calendar_terminal": 420,
+      "levels": 6,
+      "node_faults": [],
+      "nodes": 8064,
+      "peak_node_queues_per_level": [
+        2,
+        1,
+        2,
+        2,
+        1,
+        1
+      ],
+      "peak_root_held": 0,
+      "peak_root_input": 1,
+      "predicted_retired_rows": 576,
+      "root_count": 128,
+      "root_faults": []
+    },
+    "registered_root_writer_visibility_offset": 1,
+    "scope": "Only retained nonzero unit-weight I66 EID0 rank0 sameclock phase10. No fullprogram/current physical wrapper/other EIDs/CDC/SSFF/payload qualification.",
+    "source_queue_limits": {
+      "node_per_side": 64,
+      "root_held": 128,
+      "root_input": 128
+    },
+    "status": "PASS_RETAINED_ACTUAL_LEAF_TO_ROOT_AND_VISIBLE_CONSERVATION"
+  },
+  "all_compiled": {
+    "counts": {
+      "phases": 46509,
+      "singleposition_count_certificate_PASS": 46509,
+      "sixposition_count_certificate_PASS": 46419
+    },
+    "scope": "Queue count certificate only. Requires exact-once admitted pair outputs and no overlapping phases. Does not prove pair XFIFO/segment queue, accepted wholeprogram scheduling, arithmetic, added bridge or physical timing.",
+    "singleposition_max_node_side_writes_per_level": [
+      3,
+      6,
+      12,
+      24,
+      48,
+      64
+    ],
+    "singleposition_max_root_raw_writes": 64,
+    "sixposition_not_count_certified_means": "Inconclusive upper bound, not proof of overflow. Source accepted replay needed; no mandatory six-position allocation."
+  }
+}

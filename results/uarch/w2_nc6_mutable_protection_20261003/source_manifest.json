@@ -1,0 +1,35 @@
+{
+  "base_commit": "b5c16748e3ef385ea8cfc24161da3e13d69037bb",
+  "inputs": [
+    {
+      "archive": "results/uarch/w2_nc6_mutable_protection_20261003/inputs/tools/h4_hbm_baseline_bridge.py",
+      "path": "tools/h4_hbm_baseline_bridge.py",
+      "sha256": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2"
+    },
+    {
+      "archive": "results/uarch/w2_nc6_mutable_protection_20261003/inputs/tools/mem_compiler/ecc.py",
+      "path": "tools/mem_compiler/ecc.py",
+      "sha256": "ed2d874e102f9b08ee951faf583d12c142e77cfd5e3e1a2511af1430e3f10cdf"
+    },
+    {
+      "archive": "results/uarch/w2_nc6_mutable_protection_20261003/inputs/rtl/dft/ot_rom_secded_dec.sv",
+      "path": "rtl/dft/ot_rom_secded_dec.sv",
+      "sha256": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795"
+    },
+    {
+      "archive": "results/uarch/w2_nc6_mutable_protection_20261003/inputs/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv",
+      "path": "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv",
+      "sha256": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94"
+    },
+    {
+      "archive": "results/uarch/w2_nc6_mutable_protection_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json",
+      "path": "results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json",
+      "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+    },
+    {
+      "archive": "results/uarch/w2_nc6_mutable_protection_20261003/inputs/results/uarch/w2_nc6_component_20261003/preparation.json",
+      "path": "results/uarch/w2_nc6_component_20261003/preparation.json",
+      "sha256": "0a99b6ba29dd1741356612d654930f639b3dac2e51a5c06073a46a4bc38ec665"
+    }
+  ]
+}

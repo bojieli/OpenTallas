@@ -1,0 +1,49 @@
+%Warning-PINMISSING: /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'wr_owner'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv:11:20: ... Location of port declaration
+   11 |  input wire [45:0] wr_owner,output wire [45:0] ack_owner,
+      |                    ^~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'ack_owner'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv:11:48: ... Location of port declaration
+   11 |  input wire [45:0] wr_owner,output wire [45:0] ack_owner,
+      |                                                ^~~~~~~~~
+%Warning-PINMISSING: /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'ack_slot'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv:12:20: ... Location of port declaration
+   12 |  output wire [8:0] ack_slot,output wire ack_identity_fault
+      |                    ^~~~~~~~
+%Warning-PINMISSING: /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'ack_identity_fault'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv:12:41: ... Location of port declaration
+   12 |  output wire [8:0] ack_slot,output wire ack_identity_fault
+      |                                         ^~~~~~~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv:81:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                                  : ... note: In instance 'ot_gpu_full_sm_service'
+   81 |  if(ENABLE) begin:g_enabled
+      |  ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                                                                                                                                                            : ... note: In instance 'ot_gpu_full_sm_service.g_identity.g_enabled.g_lane[127].u_add.u.u_ca'
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv:77:44: Input port connection 'rr_addr' expects 14 bits on the pin connection, but pin connection's CONST '12'h0' generates 12 bits.
+                                                                                                                               : ... note: In instance 'ot_gpu_full_sm_service.g_identity.g_enabled.u_rf'
+   77 |     .w_mask_in({256{1'b1}}),.rr_en(2'b00),.rr_addr(12'd0),.cr_en(2'b00),.cr_sel(16'd0));
+      |                                            ^~~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv:81:44: Input port connection 'rr_addr' expects 14 bits on the pin connection, but pin connection's CONST '12'h0' generates 12 bits.
+                                                                                                                               : ... note: In instance 'ot_gpu_full_sm_service.g_identity.g_enabled.u_rf'
+   81 |     .w_mask_in({256{1'b1}}),.rr_en(2'b00),.rr_addr(12'd0),.cr_en(2'b00),.cr_sel(16'd0));
+      |                                            ^~~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.588 MB sources in 36 modules, into 94.301 MB in 97 C++ files needing 0.000 MB
+- Verilator: Walltime 75.967 s (elab=0.937, cvt=72.124, bld=0.000); cpu 54.074 s on 1 threads; allocated 2832.227 MB

@@ -1,0 +1,27 @@
+{
+ "probe": "uarch_model.qwen_tp_point(4, 6144, \"board\", PRODUCT_CLOCK_HZ, me_lat_extra=167(+1), su_width=64)",
+ "unified_model_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+ "base": {
+  "cycles": 179782,
+  "tok_s_b1": 6674.8
+ },
+ "plus_one": {
+  "cycles": 179999,
+  "tok_s_b1": 6666.7
+ },
+ "me_ops_on_token_path": 217,
+ "exposed_no_prefetch": {
+  "cycles_per_token": 217,
+  "us": 0.1808,
+  "rate_delta_pct": -0.1214
+ },
+ "exposed_static_prefetch": {
+  "cycles_per_token": 0,
+  "why": "instruction words are static program fields (go is a separate wire); the sequencer streams op i+1 into the 2-deep column FIFO while op i runs (every ME op occupies >= 2 cycles), so only beats issued after a pipeline drain are exposed"
+ },
+ "f1_reset": {
+  "cycles_per_token": 0,
+  "why": "reset is not on the token path; release takes <= 44 pipelined hops once at power-on"
+ },
+ "adopted_figure": "bound +217 cycles/token (0.121%) until the RTL prefetch is measured"
+}

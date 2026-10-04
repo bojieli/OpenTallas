@@ -158,6 +158,25 @@ SOURCES: tuple[SourceSpec, ...] = (
         active_parameters=15e9,
         profile_dir="candidates",
     ),
+    # Qwen3.8-27B (owner decision 2026-10-03: third target, model level
+    # first).  Dense hybrid: 48 Gated DeltaNet linear-attention layers and 16
+    # full gated-GQA layers (full_attention_interval 4), one native MTP layer,
+    # untied head, plus a 27-block vision tower that text decode never runs.
+    # Profiled from the pinned config.json and safetensors headers only.
+    SourceSpec(
+        slug="qwen3.8-27b",
+        repo="Qwen/Qwen3.8-27B",
+        revision="1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+        adapter="qwen3_5",
+        # Exact BF16 tensor count published by the official Hugging Face API
+        # (safetensors.parameters.BF16), vision tower and MTP layer included.
+        total_parameters=27_781_427_952,
+        # Ordinary text decode streams every decoder tensor plus the untied
+        # head; the input embedding, vision tower and MTP layer are excluded.
+        # The profile builder checks this against the header inventory.
+        active_parameters=25_624_600_064,
+        profile_dir="candidates",
+    ),
     SourceSpec(
         slug="qwen3-8b",
         repo="Qwen/Qwen3-8B",
@@ -360,6 +379,14 @@ def _weight_role(adapter: str, name: str) -> str:
             or name.startswith("audio_encoder.")
             or name.startswith("speech_embeddings.")
         ):
+            return "resident_only"
+    elif adapter == "qwen3_5":
+        # The single MTP layer is a drafter, read only under speculation.  The
+        # input embedding is a lookup and the vision tower runs on the prompt
+        # only; neither is streamed per text decode token.
+        if name.startswith("mtp."):
+            return "draft_dense"
+        if name == "model.language_model.embed_tokens.weight" or name.startswith("model.visual."):
             return "resident_only"
     elif adapter == "qwen3":
         # The input embedding is a lookup, while the checkpoint has a separate,
@@ -1351,6 +1378,161 @@ def _qwen3_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Mode
     )
 
 
+def _qwen35_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> ModelProfile:
+    """Qwen3.5-family hybrid (Qwen3.8-27B): Gated DeltaNet + gated full GQA.
+
+    ``layer_types`` marks each decoder layer ``linear_attention`` (Gated
+    DeltaNet, a recurrent delta-rule state per value head) or
+    ``full_attention`` (GQA with a sigmoid output gate and partial RoPE).
+    """
+
+    text = config["text_config"]
+    layers = int(text["num_hidden_layers"])
+    types = list(text["layer_types"])
+    if len(types) != layers:
+        raise ValueError("layer_types length does not match num_hidden_layers")
+    if set(inventory.dtype_bytes) != {"BF16"}:
+        raise ValueError("Qwen3.8-27B profile expects an all-BF16 released checkpoint")
+    if bool(text.get("tie_word_embeddings")) or bool(config.get("tie_word_embeddings")):
+        raise ValueError("Qwen3.8-27B profile expects the published untied LM head")
+    if inventory.checkpoint_bytes != int(spec.total_parameters) * 2:
+        raise ValueError("BF16 storage does not match the pinned parameter count")
+    if inventory.decode_dense_bytes != int(spec.active_parameters) * 2:
+        raise ValueError("decode bytes do not match active parameter accounting")
+    lin_count = sum(1 for t in types if t == "linear_attention")
+    full_count = sum(1 for t in types if t == "full_attention")
+    if lin_count + full_count != layers:
+        raise ValueError(f"unknown layer types {sorted(set(types))}")
+    heads = int(text["num_attention_heads"])
+    kv_heads = int(text["num_key_value_heads"])
+    head_dim = int(text["head_dim"])
+    nk = int(text["linear_num_key_heads"])
+    nv = int(text["linear_num_value_heads"])
+    dk = int(text["linear_key_head_dim"])
+    dv = int(text["linear_value_head_dim"])
+    conv_kernel = int(text["linear_conv_kernel_dim"])
+    conv_dim = 2 * nk * dk + nv * dv
+    state_dtype = str(text.get("mamba_ssm_dtype", "float32"))
+    if state_dtype != "float32":
+        raise ValueError(f"unexpected recurrent state dtype {state_dtype!r}")
+    # Recurrent state: one FP32 [dk, dv] matrix per value head (config
+    # mamba_ssm_dtype float32), plus the causal-conv history of kernel-1
+    # BF16 columns over the q|k|v conv channels.
+    recurrent_state_bytes = nv * dk * dv * 4 + conv_dim * (conv_kernel - 1) * 2
+    # Gated delta rule per value head (HF torch_recurrent_gated_delta_rule):
+    #   S <- S * exp(g)          dk*dv multiplies
+    #   m <- S^T k               2*dk*dv
+    #   S <- S + k (beta (v-m))^T  2*dk*dv
+    #   o <- S^T q               2*dk*dv
+    # = 7*dk*dv FP32 operations, plus 2*kernel per conv channel.
+    lin_ops = float(nv * 7 * dk * dv + conv_dim * 2 * conv_kernel)
+    # BF16 K/V would be 2 bytes an element; the released config declares no
+    # KV quantisation, so BF16 is the profile's conservative baseline.
+    entry_bytes = 2 * kv_heads * head_dim * 2
+    full_ops = float(2 * heads * head_dim * 2)
+    groups = (
+        AttentionGroup(
+            kind="recurrent",
+            count=lin_count,
+            recurrent_state_bytes=recurrent_state_bytes,
+            operations_per_token=lin_ops,
+            operations_format="fp32_x_fp32",
+            label="gated-deltanet",
+            evidence=(
+                "config linear_num_value_heads x key_dim x value_dim FP32 state "
+                "(mamba_ssm_dtype) + (conv_kernel-1) BF16 conv history; derived"
+            ),
+        ),
+        AttentionGroup(
+            kind="dense_kv",
+            count=full_count,
+            entry_bytes=entry_bytes,
+            operations_per_entry=full_ops,
+            operations_format="bf16_x_bf16",
+            label="gated-gqa",
+            evidence="config num_key_value_heads x head_dim K and V; BF16 KV assumed",
+        ),
+    )
+    sequence = ["gated-deltanet" if t == "linear_attention" else "gated-gqa" for t in types]
+    return ModelProfile(
+        name="Qwen3.8-27B",
+        source_repo=spec.repo,
+        source_revision=spec.revision,
+        total_parameters=spec.total_parameters,
+        active_parameters=spec.active_parameters,
+        checkpoint_bytes=inventory.checkpoint_bytes,
+        dense_weight_bytes=inventory.decode_dense_bytes,
+        routed_weight_bytes=0,
+        dense_compute_format="bf16_x_bf16",
+        routed_compute_format=None,
+        draft_dense_weight_bytes=inventory.draft_dense_bytes,
+        draft_routed_weight_bytes=0,
+        resident_only_weight_bytes=inventory.resident_only_bytes,
+        num_layers=layers,
+        num_experts=1,
+        experts_per_token=1,
+        hidden_size=int(text["hidden_size"]),
+        max_context_tokens=int(text["max_position_embeddings"]),
+        attention_groups=groups,
+        layer_dense_weight_bytes=tuple(
+            inventory.decode_layer_dense_bytes.get(str(layer), 0) for layer in range(layers)
+        ),
+        layer_routed_weight_bytes=tuple(0 for _ in range(layers)),
+        router_trace_status="not applicable: dense model",
+        metadata={
+            "adapter": "qwen3_5",
+            "architecture": (
+                f"{layers} layers: {lin_count} Gated DeltaNet ({nk} key / {nv} value heads, "
+                f"dk {dk} / dv {dv}, conv kernel {conv_kernel}) and {full_count} full gated GQA "
+                f"({heads} Q / {kv_heads} KV heads x {head_dim}, partial RoPE "
+                f"{text.get('partial_rotary_factor')}, sigmoid output gate), every "
+                f"{text.get('full_attention_interval')}th layer full; dense SwiGLU FFN "
+                f"{text['intermediate_size']}; untied head; {text.get('mtp_num_hidden_layers', 0)} MTP layer"
+            ),
+            "attention_sequence": sequence,
+            "checkpoint_inventory": f"data/inventory/{spec.slug}.json",
+            "checkpoint_storage_dtype": "BF16",
+            "compute_precision_policy": "BF16 weights x BF16 activations; FP32 recurrent state",
+            "compute_precision_status": "released BF16 checkpoint; state dtype from config",
+            "decode_active_parameter_derivation": (
+                "all ordinary-decode BF16 tensors divided by two bytes; input embedding, "
+                "vision tower and MTP layer excluded"
+            ),
+            "kv_cache_policy": "BF16 full-attention K/V + FP32 Gated DeltaNet state",
+            "kv_cache_policy_status": "topology and state dtype from config; KV precision assumed",
+            "linear_attention": {
+                "kind": "gated_deltanet",
+                "layers": lin_count,
+                "key_heads": nk,
+                "value_heads": nv,
+                "key_dim": dk,
+                "value_dim": dv,
+                "conv_kernel": conv_kernel,
+                "conv_channels": conv_dim,
+                "state_precision": "FP32 [dk, dv] per value head (config mamba_ssm_dtype)",
+                "bytes_per_layer": recurrent_state_bytes,
+                "bytes_per_user": lin_count * recurrent_state_bytes,
+                "operations_per_layer_per_token": lin_ops,
+            },
+            "full_attention_layers": full_count,
+            "num_attention_heads": heads,
+            "num_key_value_heads": kv_heads,
+            "head_dim": head_dim,
+            "vocab_size": int(text["vocab_size"]),
+            "intermediate_size": int(text["intermediate_size"]),
+            "mtp_num_hidden_layers": int(text.get("mtp_num_hidden_layers", 0)),
+            "native_context_tokens_published": int(text["max_position_embeddings"]),
+            "study_context_tokens": [8_192, 32_768],
+            "tie_word_embeddings": False,
+            "parameter_counts": dict(inventory.parameter_counts),
+            "weight_traffic_policy": (
+                "decoder and untied LM head streamed; input embedding lookup and vision "
+                "tower resident-only; MTP layer charged only under speculation"
+            ),
+        },
+    )
+
+
 MIMO_NAMES = {"mimo-v2.6-pro": "MiMo-V2.6-Pro", "mimo-v2.6-flash": "MiMo-V2.6-Flash"}
 
 
@@ -1544,6 +1726,8 @@ def build_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
         return _qwen3_profile(spec, config, inventory)
     if spec.adapter == "mimo_v2":
         return _mimo_profile(spec, config, inventory)
+    if spec.adapter == "qwen3_5":
+        return _qwen35_profile(spec, config, inventory)
     raise ValueError(f"unknown source adapter {spec.adapter!r}")
 
 

@@ -1189,7 +1189,17 @@ V41_HBM_FABRIC_US = dict(collective_latency=125.9, collective_bytes=1.5, pipelin
 V41_HBM_DIES = 96          # G = 96: every matrix 1/96 per die (W9 handoff 8)
 
 
-def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
+# Opt-in owner/ACK/fence and refresh-live first-access hypothesis from the retained
+# v41_hbm_service_term_20261003 proposal. Existing callers retain the exact off path.
+V41_HBM_SERVICE = dict(
+    off=dict(boundary_cycles=0, routed_fetch_ns=0.0),
+    low=dict(boundary_cycles=2, routed_fetch_ns=133.2 + 5.4),
+    central=dict(boundary_cycles=4, routed_fetch_ns=469.5 + 6.4 + 0.1),
+    high=dict(boundary_cycles=6, routed_fetch_ns=526.4 + 7.4 + 18.3),
+)
+
+
+def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None, service="off"):
     """V4.1 HBM token on the SM design, K-chain aware: the arch DAG's critical path at 1M with every matvec
     re-priced as an SM op on its 1/96 row slice (sm_op_cycles), the dedicated units' nodes (W11 spec widths)
     at their arch price, one barrier per global boundary, and the comparator's switched-fabric terms.  The
@@ -1223,6 +1233,11 @@ def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
     parts = dict(sm_matvec=mv * 1e6, x_broadcast_fill=xfill * 1e6, dedicated_and_su=other * 1e6,
                  verify_extra_issue=extra * 1e6, barrier=nb * bc / clock * 1e6, **V41_HBM_FABRIC_US)
     parts["collective_bytes"] *= positions             # every position's activations cross the fabric
+    sv = V41_HBM_SERVICE[service]  # named, source-priced profiles only
+    if sv["boundary_cycles"] or sv["routed_fetch_ns"]:
+        n_routed = sum(1 for x in path if x.endswith(".ffn.experts_gu"))
+        parts["boundary_service"] = nb * sv["boundary_cycles"] / clock * 1e6
+        parts["routed_fetch"] = n_routed * sv["routed_fetch_ns"] * 1e-3
     chain = sum(parts.values())
     T = max(chain, 37.4)
     return T, parts, nb
@@ -1817,6 +1832,25 @@ def hbm_speculation_rows():
     return rows
 
 
+V41_HBM_DSPARK_REC = ROOT / "results/speculative/v41_hbm_speculation_methods_20261003/v41_hbm_speculation_methods.json"
+
+
+def v41_hbm_dspark_rows(ctx=1048576):
+    """OPT-IN (--v41-hbm-dspark; never on a default path): the V4.1 HBM comparator's DSpark rows with the drafter
+    priced from its real structure (3 stages x 5 slots + LM head + 5 serial Markov argmaxes) and the verify pass's
+    MEASURED expert union, on W19's composer (tools/v41_hbm_speculation_methods.py).  V4.1's built-in 'MTP' is
+    DSpark: these rows re-price the existing headline's terms; HBM_W19 and V41_DRAFT_FRACTION are unchanged."""
+    rec = json.loads(V41_HBM_DSPARK_REC.read_text())
+    c = rec["contexts"][str(ctx)]
+    rows = [dict(design="v41_hbm_ar_w19", ctx=ctx, tokens_s=c["ar_tokens_s"], T_us=c["ar_us"])]
+    for k, v in c["headline_comparison_tau_3649_gamma5"].items():
+        rows.append(dict(design=f"v41_hbm_dspark_g5_tau3649_{k}", ctx=ctx, tokens_s=v["tokens_s"], step_us=v["step_us"]))
+    for ts, r in c["rates"].items():
+        for x in r["by_gamma"]:
+            rows.append(dict(design=f"v41_hbm_dspark_g{x['gamma']}", tau_set=ts, ctx=ctx, **x))
+    return rows
+
+
 # ---------------------------------------------------------------------------------------------------------
 # Fabric sensitivity and GPU tiers (user request 2026-09-29)
 # ---------------------------------------------------------------------------------------------------------
@@ -1852,6 +1886,48 @@ TIER1 = [
 ]
 
 
+def v41_gpu_index_scan(ctx, *, candidate_gather=True, c=None):
+    """Per-token index reads using the SAME source modes as the ROM budget.
+
+    Only index-owner layers scan; other layers reuse their selections. Keys
+    reside at the preceding KV owner. Candidate gather on the last four scans
+    is the analytical budget's explicit software assumption, NOT an assertion
+    that the current full-score golden/native program performs that gather.
+    candidate_gather=False retains their literal full-score read sensitivity.
+    """
+    if type(ctx) is not int or ctx <= 0:
+        raise ValueError("positive integer decode context required")
+    c = c if c is not None else A._env()["c"]
+    golden = json.loads((ROOT / "compiler/models/deepseek-v4.1-flash/inference_config.json").read_text())
+    scans = [L for L in range(c["num_layers"]) if c["modes"][L].get("scans_index")]
+    if (scans != golden["index_source_layers"] or scans != c["index_source_layer_ids"]
+            or c["kv_source_layer_ids"] != golden["kv_source_layers"]
+            or c["candidate_source_layer_id"] != golden["candidate_source_layer"]
+            or c["index_head_dim"] != golden["index_head_dim"]
+            or A.IDX_KEY_B != golden["index_head_dim"] // 2 + golden["index_head_dim"] // 32
+            or c["compress_ratios"][:c["num_layers"]] != golden["compress_ratios"][:golden["n_layers"]]):
+        raise ValueError("analytical index modes differ from golden source/ratio/KV ownership")
+    rows = []
+    for L in scans:
+        ratio = c["compress_ratios"][L]
+        owner = max(s for s in c["kv_source_layer_ids"] if s <= L)
+        if ratio <= 0 or ratio != c["compress_ratios"][owner]:
+            raise ValueError("invalid shared index-key compression identity")
+        full = ctx // ratio
+        cap = c["modes"][L].get("index_scan_entries_cap") or 0
+        if cap and (L <= c["candidate_source_layer_id"] or
+                    cap != golden["candidate_topk_blocks"] * golden["candidate_block_size"]):
+            raise ValueError("candidate cap lacks preceding source selection")
+        count = min(full, cap) if cap and candidate_gather else full
+        rows.append(dict(layer=L, KV_source_layer=owner, compression_ratio=ratio,
+                         full_source_entries=full, candidate_cap=cap,
+                         entries=count, bytes=count * A.IDX_KEY_B))
+    return dict(context=ctx, scanning_layers=scans, per_layer=rows,
+                entries=sum(r["entries"] for r in rows), bytes=sum(r["bytes"] for r in rows),
+                key_bytes=A.IDX_KEY_B, candidate_gather=candidate_gather,
+                scope="tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim")
+
+
 def gpu_tier2():
     """GPU-calibrated projection, anchored on B200 measurements.
     Qwen3-8B: the per-token fixed cost keeps the H200 fit (1.464 ms: launches and syncs, 36 layers), and the per-byte
@@ -1870,7 +1946,8 @@ def gpu_tier2():
     loc = GPU_CAL["local_gpu_rtx_pro_6000"]["concurrency_1"]["fp8"]
     spec_lab = loc["dflash_tok_s"] / loc["ar_tok_s"]
     fixed_layer = fixed / 36
-    v_bytes = 13.03e9 / 8 + 262144 * A.IDX_KEY_B * 4 * 38 / 8   # weights + 1M index keys (38 scanning layers)
+    index_scan = v41_gpu_index_scan(1048576)
+    v_bytes = (13.03e9 + index_scan["bytes"]) / 8   # weights + source-owned index reads
     tv = 40 * fixed_layer + s_per_B * v_bytes + 40 * 5 * NCCL_ALLREDUCE_S
     return [dict(tier=2, design="Qwen3-8B on 1x B200, FP8 weights, 8K, calibrated", tokens_s=round(1 / tq, 1),
                  spec_tokens_s_reasoning_mix=round(spec_lab / tq, 1),
@@ -1881,6 +1958,7 @@ def gpu_tier2():
                  spec_tokens_s=round(1.94 / tv, 1),
                  terms_us=dict(fixed=round(40 * fixed_layer * 1e6), bytes=round(s_per_B * v_bytes * 1e6),
                                collectives=round(40 * 5 * NCCL_ALLREDUCE_S * 1e6)),
+                 index_scan=index_scan,
                  check="DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)")]
 
 
@@ -2527,7 +2605,8 @@ def gpu_economics():
     # index keys and KV, NCCL-class all-reduces
     tot, dense, routed, c = _v41_weight_split()
     fixed_layer = fixed / 36
-    idx_user = 262144 * A.IDX_KEY_B * 4 * 38                        # gpu_tier2's per-token index-key read
+    index_scan = v41_gpu_index_scan(1048576, c=c)
+    idx_user = index_scan["bytes"]
     state_user = 0.0
     for L in range(c["num_layers"]):
         r = c["compress_ratios"][L]
@@ -2570,6 +2649,7 @@ def gpu_economics():
                  rows=v, tokens_s_b1=v[0]["per_user_tokens_s"], saturated_tokens_s=max(x["aggregate_tokens_s"] for x in v),
                  sat_batch=_sat_batch(v)["batch"], mtp_b1=vs["spec_tokens_s"], capacity_users=capv,
                  per_user_state_bytes=state_user,
+                 index_scan=index_scan,
                  capacity_basis="8 x 180 GB x 0.90 less the 510.3 GB checkpoint over each user's CKV + index keys "
                                 "(KV-owner layers 2, 8, 14, 20) and 40 windows"),
         anchors=anchors, power=dict(decode_w=B200_W_DECODE, tdp_w=B200_W_TDP,
@@ -3380,9 +3460,35 @@ SERIAL_TAG = ("ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build 
 # 30 (was 36), farthest cluster -> VM 33 (40), collective -> SerDes 45 (48), -> UCIe 34 (37); HBM window 25, index
 # keys 39, top-k 38, selected KV 24 (not separately priced in the graph).  The field broadcast/return regions take
 # the die's linear scale.  Die area, cost and power stay on the 815 mm2 ledger until the p12 floorplan lands.
-DIE_OLD = dict(expert_wire=W18B_EXPERT_WIRE, coll_stages=W15_V41_COLL_STAGES_SS, field_scale=1.0)
+DIE_OLD = dict(expert_wire=W18B_EXPERT_WIRE, coll_stages=W15_V41_COLL_STAGES_SS, field_scale=1.0,
+               ucie_stages=37, serdes_stages=48)
 DIE_SHRUNK_INTERIM = dict(expert_wire=30 + 33, coll_stages=45, field_scale=0.9062, mm2=669.255, pair_slots=5968,
-                          bf16_slots=1160, src="claude/w18-die-assembly 996f7982 shrink_p5_interim/shrunk_die.json")
+                          bf16_slots=1160, ucie_stages=34, serdes_stages=45,
+                          src="claude/w18-die-assembly 996f7982 shrink_p5_interim/shrunk_die.json")
+
+# Routed endpoint lengths, converted at the SS 504 um/stage reach. This is a
+# geometry/stage constraint, not a new SS/FF closure or a measured 83 ns link.
+HUB_EDGE_WIRE_SOURCE = dict(
+    revision="996f7982ce92a534e54722867ef8bba56b2cf417",
+    path="results/physical_abi3/asap7/chip/v41_w18/shrink_p5_interim/shrunk_die.json",
+    sha256="87e4170066f87d0532672a06bbc67621543017c326f8d1f4a3e119f79848c94c")
+UCIE_LEGACY_ONDIE_S = 1.5e-9  # technology.json's 10 ns hop includes this proxy
+
+
+def hub_edge_hop_wire_s(hop, clock, die=None, ucie_fanout=False):
+    """Replace the embedded routing proxy with BOTH routed endpoint paths.
+
+    Board paths pay SerDes endpoints; package paths pay UCIe endpoints. Board
+    transit/serialization stays in ArrayFabric. No intermediate hub is assumed.
+    Field trees and measured collective wires are separately priced already.
+    """
+    dv = die or DIE_OLD
+    package = hop["link"] == "UCIe"
+    stages = dv["ucie_stages" if package else "serdes_stages"]
+    if clock <= 0 or stages <= 0:
+        raise ValueError("positive endpoint wire stages and clock required")
+    proxy = UCIE_LEGACY_ONDIE_S if package or ucie_fanout else 0.0
+    return 2 * stages / clock - proxy
 SHRINK_TAG = SERIAL_TAG + " + W18b shrunk-die interim crossings (669 mm2)"
 # W11-stream (claude/w11-stream 540ef71c; record tool formulas at the shipped shape, idx_tail closed 1,249 MHz SS,
 # chunk and tile routes PENDING): indexer key -> score 48 -> 100 (+52; chunk 39 -> 83, the tail's +8 is already in
@@ -3922,6 +4028,19 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
     (slow = (hz, cdc_cycles)): their issue and depth stretch by clock / hz, and each crossing into the domain adds
     cdc_cycles of the slow clock (ASSUMED synchroniser); returns the pass time."""
     cyc = 1.0 / clock
+    # Every placement pays hub -> edge -> hub, including stage/head/substage,
+    # Engram and token-return hops. This is independent of the optional field
+    # SS retiming switch: disabling it cannot erase physical endpoint wires.
+    fabric = A.D.ArrayFabric(A.links_for(A.BASELINE), 2, "mesh", 4)
+    for nd in g.nodes.values():
+        if nd["kind"] == "hop":
+            hop = fabric.hop(nd["hop_kind"], nd["payload"], nd.get("stage"))
+            fan = ("UCIe fan-out" in hop["link"] and fabric.dp > 1)
+            wire = hub_edge_hop_wire_s(hop, clock, die, fan)
+            nd["depth"] += wire
+            nd["_hub_edge_s"] = wire
+            nd["_hub_edge_link"] = hop["link"]
+            nd["_hub_edge_die"] = die or DIE_OLD
     # the reducers' adder-tree levels, from the graph's as-priced depth (decode_critical_path: red_tail + FADD x levels)
     levels = {name: max(0, round((nd["depth"] * clock - A.D.K["red_tail"]) / A.D.FADD)) for name, nd in g.nodes.items()
               if nd["kind"] == "reduce"} if serial else {}
@@ -4122,7 +4241,9 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
                 ar_tokens_s_b1=round(1 / T1, 1), mtp_tokens_s_b1=round(V41_TAU / step1, 1),
                 ar_saturated_tokens_s=round(sat, 1), mtp_saturated_tokens_s=round(sat_m, 1),
                 stage_hops=sum(1 for n in g1.nodes.values() if n["kind"] == "hop" and n.get("hop_kind") in ("stage", "substage")),
-                pipeline_hops_us=round(r1["breakdown_us"].get("pipeline_hops", 0.0), 3),
+                pipeline_hops_us=round(sum(sum(g1.contrib[n].values()) for n in g1.path(
+                    next(n for n in g1.nodes if n.endswith("token.return")))
+                    if g1.nodes[n]["kind"] == "hop") * 1e6, 3),
                 cooling=_cons_cooling(die_static, die_static_ungated, cats, pair_s, pp, dyn_scale, sat, S, tot),
                 field_concurrency=field_concurrency, added_latency=dict(lat), slow_domain=slow_domain,
                 chain_stages=chain_stages, elem_stages=elem_stages, field_starts=fstarts, ss_wire=ss_wire, serial=serial,
@@ -5422,13 +5543,13 @@ B300_OVER_B200 = dict(hbm_bw=8.0 / 8.0, note="B300 keeps 8 TB/s of HBM3E a GPU (
                                              "within the model (ASSUMED; no public min-latency B300 DeepSeek record)")
 
 
-def gpu_tier2_v41_ctx(ctx, positions=1):
+def gpu_tier2_v41_ctx(ctx, positions=1, *, candidate_gather=True):
     """Tier-2 8x B200 V4.1-Flash step at context ctx (gpu_economics' form: fixed per layer + weight + index/KV bytes
     at the fitted B200 byte rate + NCCL-class all-reduces), batch 1."""
     fixed = GPU_FIT["fixed_seconds_qwen"]
     s_per_B = (1 / 230.0 - fixed) / (2 * GPU_FIT["qwen_fp8_weight_bytes"])
     c = A._env()["c"]
-    idx_user = 262144 * A.IDX_KEY_B * 4 * 38 * ctx / 1048576     # gpu_economics' 1M index-key read, scaled to ctx
+    idx_user = v41_gpu_index_scan(ctx, candidate_gather=candidate_gather, c=c)["bytes"]
     t = (40 * fixed / 36 + s_per_B * (_v41_weight_bytes(positions) + idx_user) / 8 + 40 * 5 * NCCL_ALLREDUCE_S)
     return t
 
@@ -6213,9 +6334,82 @@ def w10_pinaccess_contract_review(inputs):
         source_sha256=inputs["sources_sha256"])
 
 
+def dsrom_s81_components(ctx=1048576):
+    """Selected S81 component composition; unbound provider costs stay unknown."""
+    from dsrom_s81_unified_components import build
+    return build(ROOT, ctx=ctx)
+
+
+def dsrom_s82_rows():
+    """Opt-in retained-RD64 conditional composition; defaults are unchanged."""
+    from dsrom_s82_token_pricing import build
+    return build(ROOT)
+
+
+def qwen_posted_kv_model(records):
+    """Size the default-off posted-write issue gate, retaining retirement fences.
+
+    The existing 64-entry write table and token assembly buffer retain ownership.
+    This candidate removes only the HBM-ACK dependency of an ordinary SU issue;
+    it keeps SU idle, barriers, END, and layer-context reuse checks unchanged.
+    Stall counters give an opportunity bound, not a measured speedup.
+    """
+    rows = []
+    pins = {}
+    for filename in records:
+        path = Path(filename)
+        rec = json.loads(path.read_text())
+        if rec.get("configuration") != "REAL_MEM":
+            raise ValueError("posted-write sizing requires a REAL_MEM record")
+        pins[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
+        for stage, data in rec["stages"].items():
+            if stage == "E":
+                continue
+            cycles = data["cycles"]
+            opportunity = max(m["stall_drain"] for m in data["memory"].values())
+            rows.append(dict(position=rec["position"], stage=stage, baseline_cycles=cycles,
+                             baseline_qualified=rec["status"] == "pass" and rec["source_stable"],
+                             possible_saved_cycles=[0, opportunity],
+                             counter_opportunity_cycles=[cycles - opportunity, cycles],
+                             counter_opportunity_rate_pct=100 * opportunity / (cycles - opportunity),
+                             measured_saved_cycles=None))
+    return dict(schema="opentallas.uarch.qwen_posted_kv.v1", rows=rows, source_sha256=pins,
+                candidate="POSTED_KV=0 by default; release ordinary SU issue from write-done",
+                fences=["SU idle before next ordinary SU operation",
+                        "real tagged/generation-checked write-done before every barrier and END",
+                        "retire all old read/write/assembly debt before layer-context reuse",
+                        "next-token row reads and rollback cannot cross the retained END fence"],
+                resources=dict(replicas=4, new_macs_per_cycle=0, new_memory_bytes_per_cycle=0,
+                               new_boundary_bits_per_cycle=0, new_routing_tracks=0,
+                               new_muxes=0, new_demuxes=0, new_fanout_loads=0,
+                               new_storage_bits=0, incremental_area_mm2=0,
+                               area_basis="compile-time issue predicate specialization; existing buffers unchanged",
+                               slot_fit="reuse current core and KV service slots",
+                               existing_write_entries_per_die=64,
+                               existing_su_input_bytes_per_cycle=256,
+                               existing_hbm_write_sector_bytes=32,
+                               token_write_sectors_per_die=136),
+                latency=dict(added_cycles=0, saved_cycles="bounded by measured stall_drain; fence residual unknown",
+                             stream_hz=1.2e9, serial_hz=0.9e9,
+                             clock_policy="SS setup 60ps / FF hold 25ps; unchanged, contextual closure pending"),
+                bridge_pipeline="not included: ordinary issue still requires su_idle; needs separate credit sizing",
+                adoption=False, measured_composed_gain_pct=None,
+                qualification=["all pinned baseline runs terminal before successor launch",
+                               "P0/P255/P1023 X and HBM writeback exact; no early visibility or rollback",
+                               "measured gain >=1% after token composition", "contextual SS/FF and hub routing"])
+
+
+def hbm_accel_rows():
+    """Default-off HA0/HA10 hypotheses; no measured/adopted accelerator rate."""
+    from hbm_accelerator_model import build
+    return build(sys.modules[__name__])
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
+    ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
     ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
     ap.add_argument("--w10-baseline", action="store_true", help="audit existing FAST/PP/BP baseline only")
@@ -6224,8 +6418,14 @@ def main(argv=None):
     ap.add_argument("--sweep", action="store_true")
     ap.add_argument("--out")
     ap.add_argument("--qwen", action="store_true", help="the Qwen3-8B ROM die rows only")
-    ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM comparators only")
+    ap.add_argument("--qwen-posted-kv-baseline", action="append", help="REAL_MEM record for default-off posted-write sizing")
+    ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM ablation only")
+    ap.add_argument("--hbm-accel", action="store_true",
+                    help="default-off UNVALIDATED HBM accelerator ladder and fairness hypotheses")
+    ap.add_argument("--fec-fairness", action="store_true", help="same-FEC ROM board/NVLink-class switch model-only timing rows")
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
+    ap.add_argument("--v41-hbm-dspark", action="store_true", help="OPT-IN: V4.1 HBM DSpark rows (priced draft, "
+                    "measured expert union) from results/speculative/v41_hbm_speculation_methods_20261003")
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
     ap.add_argument("--vm-waterfall", action="store_true", help="the VM waterfall and levers (root 2026-10-01)")
@@ -6234,6 +6434,38 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.fec_fairness:
+        from fec_class_fairness import policy
+        payload = json.dumps(policy(ROOT), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.dsrom_s81_components:
+        payload = json.dumps(dsrom_s81_components(a.ctx), indent=2, sort_keys=True, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.hbm_accel:
+        payload = json.dumps(hbm_accel_rows(), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.dsrom_s82 or a.qwen_posted_kv_baseline:
+        if a.dsrom_s82:
+            payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"
+        else:
+            payload = json.dumps(qwen_posted_kv_model(a.qwen_posted_kv_baseline), indent=2) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.w10_pinaccess_contract:
         payload = json.dumps(w10_pinaccess_contract_review(json.loads(Path(a.w10_pinaccess_contract).read_text())), indent=2) + "\n"
         if a.out:
@@ -6435,6 +6667,47 @@ def main(argv=None):
     if a.out:
         Path(a.out).parent.mkdir(parents=True, exist_ok=True)
         Path(a.out).write_text(json.dumps(out, indent=1, default=str) + "\n")
+
+
+def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
+    """Cold token ROM lookup; retained dedicated storage, no field refit.
+
+    One outstanding 256-bit lookup, then four 16-lane FP32 VM commits.
+    Native backpressure adds cycles. Capture depth is an explicit unvalidated
+    parameter, not a macro SS/FF qualification or a new headline rate.
+    """
+    storage = inventory['dedicated_storage']['global_tensors'][0]
+    assert storage['tensor'] == 'embed.weight' and storage['shape'] == [129280, 5120]
+    assert inventory['stages'] == 81 and storage['word_data_bits'] == 256
+    words = 5120 // 16
+    # RTL state is one response register plus identity, token/address, counters.
+    state_bits = 256 + 47 + 26 + 19 + 9 + 2 + 2 + 2
+    return dict(schema='opentallas.dsrom.S81.embedding-bootstrap.model.v1',
+        all_numbers='MODEL_UNVALIDATED', adopted=False,
+        source_inventory='results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json',
+        retained_storage=storage, retained_storage_credit_mm2=0,
+        geometry_changed=False, ROM_ECC=False, replicas=1, MACs_per_cycle=0,
+        compute_intensity_MAC_per_byte=0, lookup_words_per_token=words,
+        one_outstanding_request=True, rom_response_bytes=32,
+        ROM_port_bytes_per_cycle_peak=32, VM_write_bytes_per_cycle_peak=64,
+        VM_commits_per_token=words*4, VM_FP32_words_per_token=20480,
+        clock_hz=1.2e9, rom_capture_cycles=rom_capture_cycles,
+        no_stall_latency_cycles=1 + words*(1+rom_capture_cycles+4),
+        no_stall_latency_us=(1 + words*(1+rom_capture_cycles+4))/1200,
+        composed_single_user_contribution='Cold embedding before native SSX reduction/L0.I0; stalls and transport are additive',
+        communication_intensity_FP32_output_bytes_per_source_byte=8,
+        boundary_bits_per_cycle=dict(ROM_response=256, VM_commit=512,
+            ROM_request=73, saved_context=47),
+        routing_tracks_required=dict(ROM_response_data=256, VM_commit_data=512,
+            VM_address=19, VM_identity=47, ROM_address=26),
+        routing_channel_capacity=None, routing_fit_qualified=False,
+        mux_demux_fanout='Single selected macro return mux retained in storage ledger; 16 BF16-to-FP32 wiring lanes, 4 sequential HC copies, one target VM endpoint at a time. TP4 fanout/delivery requires parent pricing.',
+        state_bits=state_bits, register_cell_lower_bound_mm2=state_bits*DFF_UM2/1e6,
+        unpriced_control_and_routes=['token/address decode and bounds', 'macro return mux/control',
+            'VM 16-lane arbitration/commit port', 'dedicated-store to TP4 transport', 'CTS/PDN/routes'],
+        floorplan_slot_fit=None, physical_SS_FF_qualified=False,
+        numerical_work='Lossless BF16 bits <<16; no arithmetic, expected activation or CPU inference',
+        required_next_native_producer='SSX = golden-order sum of H squared; never host-computed here')
 
 
 if __name__ == "__main__":

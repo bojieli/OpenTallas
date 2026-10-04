@@ -1,0 +1,26 @@
+{
+  "base_main": "86996e8f4",
+  "owner_review_head": "1daf3f6821f44653e6d37c430f0152c2747a5aab",
+  "executed_source": "e951f5097b852eeb94bf8511d86ecb5344dc9cd9",
+  "independent_review": {
+    "archived_files_hashed": 26,
+    "proposal_source_and_tool_hashes": "PASS",
+    "archived_binary_reexecution": "Actual /usr/bin/vvp execution, exact parsed trace equal",
+    "fresh_compile_by_parent": false,
+    "RTL_assertions": 611,
+    "accepted_transactions": 157,
+    "owner_tree_focused_tests": 51,
+    "owner_tree_subtests": 38,
+    "main_fullwidth_connector_and_trace_tests": 34,
+    "initial_main_test_invocation": "Two historical preparation test files absent from main; rerun selected fullwidth, connector and new trace tests passed"
+  },
+  "scope": "Default-off local protected control component; no installed caller, CDC queue, RF payload, source drain producer or physical context",
+  "owner_measured_unstalled_ACK_to_retirement_edges": 17,
+  "owner_measured_next_acceptance_interval_edges": 2,
+  "model_minimum_ACK_to_next_acceptance_edges": 19,
+  "bench_clock_ns": 10,
+  "SS_FF_qualified": false,
+  "full_bridge_admitted": false,
+  "headline_rate_credit": false,
+  "baseline_originals": "Byte-identical original RF, visibility fence and full-SM files retained"
+}

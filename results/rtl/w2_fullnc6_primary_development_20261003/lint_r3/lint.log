@@ -1,0 +1,116 @@
+%Warning-DECLFILENAME: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_0_ot_w2_sealed_secded72.sv:5:8: Filename 'input_0_ot_w2_sealed_secded72' does not match MODULE name: 'ot_w2_sealed_secded72'
+    5 | module ot_w2_sealed_secded72 #(
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.050
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-DECLFILENAME: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:5:8: Filename 'input_1_ot_w2_nc6_coded_secondary_acyclic' does not match MODULE name: 'ot_w2_nc6_coded_secondary_acyclic'
+    5 | module ot_w2_nc6_coded_secondary_acyclic #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:141:43: Instance pin connected by name with empty reference: 'encoded_word'
+  141 |     .payload(44'b0),.current_word(cw[w]),.encoded_word(),
+      |                                           ^~~~~~~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:142:6: Instance pin connected by name with empty reference: 'syndrome'
+  142 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |      ^~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:142:18: Instance pin connected by name with empty reference: 'overall_odd'
+  142 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |                  ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:142:33: Instance pin connected by name with empty reference: 'clean'
+  142 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |                                 ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:150:6: Instance pin connected by name with empty reference: 'syndrome'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |      ^~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:150:18: Instance pin connected by name with empty reference: 'overall_odd'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                  ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:150:33: Instance pin connected by name with empty reference: 'clean'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                                 ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:150:42: Instance pin connected by name with empty reference: 'correctable'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                                          ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:150:57: Instance pin connected by name with empty reference: 'uncorrectable'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                                                         ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:151:6: Instance pin connected by name with empty reference: 'seal_ok'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |      ^~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:151:17: Instance pin connected by name with empty reference: 'padding_ok'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                 ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:151:31: Instance pin connected by name with empty reference: 'release_clean'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                               ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:151:48: Instance pin connected by name with empty reference: 'repaired_payload'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                ^~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_1_ot_w2_nc6_coded_secondary_acyclic.sv:151:68: Instance pin connected by name with empty reference: 'repaired_word'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                                    ^~~~~~~~~~~~~
+%Warning-DECLFILENAME: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_2_ot_w2_nc6_correction_control.sv:4:8: Filename 'input_2_ot_w2_nc6_correction_control' does not match MODULE name: 'ot_w2_nc6_correction_control'
+    4 | module ot_w2_nc6_correction_control(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:4:8: Filename 'input_3_ot_w2_nc6_protected_completion' does not match MODULE name: 'ot_w2_nc6_protected_completion'
+    4 | module ot_w2_nc6_protected_completion #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:963:40: Instance pin connected by name with empty reference: 'encoded_word'
+  963 |  .payload(44'b0),.current_word(cw[l]),.encoded_word(),.syndrome(),.overall_odd(),.clean(),
+      |                                        ^~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:963:56: Instance pin connected by name with empty reference: 'syndrome'
+  963 |  .payload(44'b0),.current_word(cw[l]),.encoded_word(),.syndrome(),.overall_odd(),.clean(),
+      |                                                        ^~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:963:68: Instance pin connected by name with empty reference: 'overall_odd'
+  963 |  .payload(44'b0),.current_word(cw[l]),.encoded_word(),.syndrome(),.overall_odd(),.clean(),
+      |                                                                    ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:963:83: Instance pin connected by name with empty reference: 'clean'
+  963 |  .payload(44'b0),.current_word(cw[l]),.encoded_word(),.syndrome(),.overall_odd(),.clean(),
+      |                                                                                   ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:967:68: Instance pin connected by name with empty reference: 'syndrome'
+  967 |  .payload(bounded),.current_word(72'b0),.encoded_word(encoded[l]),.syndrome(),.overall_odd(),.clean(),
+      |                                                                    ^~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:967:80: Instance pin connected by name with empty reference: 'overall_odd'
+  967 |  .payload(bounded),.current_word(72'b0),.encoded_word(encoded[l]),.syndrome(),.overall_odd(),.clean(),
+      |                                                                                ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:967:95: Instance pin connected by name with empty reference: 'clean'
+  967 |  .payload(bounded),.current_word(72'b0),.encoded_word(encoded[l]),.syndrome(),.overall_odd(),.clean(),
+      |                                                                                               ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:968:3: Instance pin connected by name with empty reference: 'correctable'
+  968 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |   ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:968:18: Instance pin connected by name with empty reference: 'uncorrectable'
+  968 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                  ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:968:35: Instance pin connected by name with empty reference: 'seal_ok'
+  968 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                   ^~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:968:46: Instance pin connected by name with empty reference: 'padding_ok'
+  968 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                              ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:968:60: Instance pin connected by name with empty reference: 'release_clean'
+  968 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                            ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:968:77: Instance pin connected by name with empty reference: 'repaired_payload'
+  968 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                                             ^~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:968:97: Instance pin connected by name with empty reference: 'repaired_word'
+  968 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                                                                 ^~~~~~~~~~~~~
+%Warning-GENUNNAMED: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:1064:40: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                                                                     : ... Suggest assign a label with 'begin : gen_<label_name>'
+ 1064 |  if(re<6)assign repair_retire_ready[re]=primary_retire_offer[re];
+      |                                        ^
+                     ... For warning description see https://verilator.org/warn/GENUNNAMED?v=5.050
+                     ... Use "/* verilator lint_off GENUNNAMED */" and lint_on around source to disable this message.
+%Warning-GENUNNAMED: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:1065:37: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                                                                     : ... Suggest assign a label with 'begin : gen_<label_name>'
+ 1065 |  else assign repair_retire_ready[re]=primary_retire_offer[re]||(secondary_retire_offer[re]&&scrub_ready[re-6]);
+      |                                     ^
+%Error: /home/ubuntu/w2-pc-exact-completion-model-20261003/results/rtl/w2_fullnc6_primary_development_20261003/lint_r3/input_3_ot_w2_nc6_protected_completion.sv:1378:24: Can't find definition of variable: 'any_plan_bad'
+                                                                                                                                                                        : ... Suggested alternative: 'any_core_bad'
+ 1378 |  if(OPT_EXACT&&rst_n&&!any_plan_bad&&!correction_error)begin
+      |                        ^~~~~~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)

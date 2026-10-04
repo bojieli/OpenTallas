@@ -44,7 +44,7 @@
  "headlines": [
   {
    "id": "qwen.dflash",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Qwen3-8B headline: DFlash on the two-reticle package, four lane copies (m = 5), block 5, serial draft + verify + commit, design rate (tokens/s)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m5\"].best.tokens_s",
@@ -136,7 +136,7 @@
   },
   {
    "id": "qwen.dflash_cap_A_air",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Sensitivity: Qwen3-8B DFlash rate if air-cooled, scenario A (lane as built, ASAP7)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.cooling_classes.air.capped_rate",
@@ -169,7 +169,7 @@
   },
   {
    "id": "qwen.dflash_cap_B_air",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Sensitivity: Qwen3-8B DFlash rate if the package were air-cooled (374.6 W a die), scenario B",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.cooling_classes.air.capped_rate",
@@ -220,7 +220,7 @@
   },
   {
    "id": "qwen.dflash_cap_A",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Qwen3-8B DFlash cooling-capped rate in the liquid-cooled package (the design class), scenario A (lane as built, ASAP7); scenario B runs uncapped",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate",
@@ -302,7 +302,7 @@
   },
   {
    "id": "qwen.dflash_speedup",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Qwen3-8B DFlash speed-up over the plain specification chain (four lane copies)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m5\"].best.speedup",
@@ -329,7 +329,7 @@
   },
   {
    "id": "qwen.cooling_limit_w",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Two-die package cooling limit of the design class, liquid (W per die)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_limit_w",
@@ -356,7 +356,7 @@
   },
   {
    "id": "qwen.dflash_energy_B",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Qwen3-8B package with DFlash at its design rate, energy per token, scenario B (mJ)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
@@ -417,7 +417,7 @@
   },
   {
    "id": "qwen.dflash_energy_A",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Qwen3-8B package with DFlash, energy per token, scenario A (mJ)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
@@ -450,7 +450,7 @@
   },
   {
    "id": "qwen.dflash_die_power_B",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Qwen3-8B power of each die with DFlash at its design rate, scenario B (W)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.die_w_at_design_rate",
@@ -471,7 +471,7 @@
   },
   {
    "id": "qwen.dflash_die_power_A",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "Qwen3-8B power of each die with DFlash at its design rate, scenario A (W)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.die_w_at_design_rate",
@@ -492,7 +492,7 @@
   },
   {
    "id": "qwen.tau_block5",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "DFlash acceptance tau at block 5, pooled over 264 prompt turns (BF16, GPU)",
    "evidence_class": "measured-quality",
    "binding": "results/speculative/dflash_block_acceptance.json#blocks.5.pooled.primary.tau_direct_cycle_weighted",
@@ -537,7 +537,7 @@
   },
   {
    "id": "qwen.tau_block16",
-   "section": "Qwen3-8B headline (DFlash)",
+   "section": "Qwen3-8B headline (DFlash), superseded TP-2 design",
    "claim": "DFlash acceptance tau at block 16, pooled",
    "evidence_class": "measured-quality",
    "binding": "results/speculative/dflash_block_acceptance.json#blocks.16.pooled.primary.tau_direct_cycle_weighted",
@@ -571,7 +571,7 @@
   },
   {
    "id": "qwen.rate_8k",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Qwen3-8B without speculation: uncapped autoregressive design rate of the two-reticle package at specification widths (RTL-calibrated, UCIe exchanges included)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s",
@@ -663,7 +663,7 @@
   },
   {
    "id": "qwen.kv_floor",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Qwen3-8B ideal FP8 KV bandwidth ceiling at 8K on eight stacks (tokens/s)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s",
@@ -696,7 +696,7 @@
   },
   {
    "id": "qwen.target",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Qwen3-8B budget target (KV stream / 0.95)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#budget.target_tokens_s",
@@ -729,7 +729,7 @@
   },
   {
    "id": "qwen.chain_cycles",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Qwen3-8B calibrated dependency chain per token at 8K, UCIe exchanges included (cycles)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles",
@@ -762,7 +762,7 @@
   },
   {
    "id": "qwen.ucie_cycles",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Qwen3-8B die-to-die exchanges on the chain a token (73 exchanges, tensor-parallel 2; cycles)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#ucie.exchange.cycles_per_token",
@@ -813,7 +813,7 @@
   },
   {
    "id": "qwen.kv_stream_cycles",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Qwen3-8B FP8 KV stream floor at 8K on eight stacks (cycles)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#roofline_rom.8192.kv_hbm_read.cycles",
@@ -846,7 +846,7 @@
   },
   {
    "id": "qwen.spec_chain",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Qwen3-8B token in the analytical (specification) chain",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#dependency_chain[\"8192/spec\"].tokens_s",
@@ -873,7 +873,7 @@
   },
   {
    "id": "qwen.cap_B_air",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Sensitivity: Qwen3-8B autoregressive rate if the package were air-cooled (374.6 W a die), scenario B",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_classes.air.capped_rate",
@@ -918,7 +918,7 @@
   },
   {
    "id": "qwen.cap_A",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Qwen3-8B autoregressive cooling-capped rate in the liquid-cooled package, scenario A (lane as built, ASAP7); scenario B runs uncapped",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate",
@@ -988,7 +988,7 @@
   },
   {
    "id": "qwen.cap_A_air",
-   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "section": "Qwen3-8B autoregressive (uncapped target), superseded TP-2 design",
    "claim": "Sensitivity: Qwen3-8B autoregressive rate if air-cooled, scenario A (lane as built, ASAP7)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.cooling_classes.air.capped_rate",

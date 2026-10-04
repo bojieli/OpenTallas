@@ -1,0 +1,8 @@
+%Error-UNSUPPORTED: /tmp/ha5-cp20-native-backend-r1/build/ha5_cp20_runtime.sv:16:34: Unsupported: defparam with arrayed instance
+   16 | defparam dut.u_cluster.g_on.g_die[0].u_mem.u_ms.DIE_IDX=0;
+      |                                  ^
+                    ... For error description see https://verilator.org/warn/UNSUPPORTED?v=5.050
+%Error-UNSUPPORTED: /tmp/ha5-cp20-native-backend-r1/build/ha5_cp20_runtime.sv:17:34: Unsupported: defparam with arrayed instance
+   17 | defparam dut.u_cluster.g_on.g_die[1].u_mem.u_ms.DIE_IDX=1;
+      |                                  ^
+%Error: Exiting due to 2 error(s)

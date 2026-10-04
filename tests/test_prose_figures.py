@@ -170,7 +170,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # The measured 8-bit weight pass (results/quality/qwen3_8b_weight_format_search.json) binds three figures in
     # docs/ARCH_SPEC_QWEN3.md (15 -> 18) and four headlines in docs/HEADLINE_BUNDLE.md (194 -> 198).
     # The current-tree H200 FP8 calibration binds the last headline (198 -> 199).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1383
+    # Corrected numbers of 2026-10-03: docs/HEADLINE_BUNDLE_SCOPE.md binds them (0 -> 12), and the two existing
+    # docs/MICROARCH_MODEL.md DS HBM annotations are pinned (unlisted -> 2) (1383 -> 1397).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1397
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

@@ -1,0 +1,210 @@
+{
+  "frozen_main_commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+  "origins": [
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+      "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+      "sha256": "9c6bbc1289f33473c5395511b419bd0bba89b70910f7bc31840bf931b198ac25"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ot_chip_v41x_ckv_sel_collect.sv",
+      "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_sel_collect.sv",
+      "sha256": "e25d4f04685dbf3cfa4a0323f9050bbd5b0655027b47f197f4316d5bec1bd09c"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv",
+      "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_stream_merge.sv",
+      "sha256": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+      "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+      "sha256": "22a8c3224c140293bfe5f8a4f957f7baa3e58b8baab37c99c62e4084486403ad"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+      "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+      "sha256": "7a2cb51b8c5784c9c74c40012dae318034da05da6f9bbb5598699a94925c86cc"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+      "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+      "sha256": "673cd79bb136b37684a128d13da23a05c6073f1f629d2f94f2ee275f698ae78a"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ot_chip_v41x_ckv_row_encoder.sv",
+      "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_row_encoder.sv",
+      "sha256": "3b38f02de06b90b5881b82a77edf080cd740dec2c3c59750e778153943e48588"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+      "archive": "inputs/rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+      "sha256": "3ce5ca80f0a72d1b785689ae3bd854f94cc2fa96789b0a19c06d19b613ff1988"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
+      "archive": "inputs/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
+      "sha256": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+      "archive": "inputs/rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+      "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+      "archive": "inputs/rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+      "sha256": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/hdc/v41x/ckvsel/ot_hdc_core_v41x.sv",
+      "archive": "inputs/rtl/hdc/v41x/ckvsel/ot_hdc_core_v41x.sv",
+      "sha256": "1ff3c28d62b79af21250b4b55ceb1495d22b5f1368c096e4636860bea408b8fe"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+      "archive": "inputs/rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+      "sha256": "be2cd15b4977825dec71fe890a36f5eabe0345bdcf1ff2718af669f16ebab27a"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+      "archive": "inputs/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+      "sha256": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+      "archive": "inputs/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+      "sha256": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/test/v41_runtime/ot_v41_rt_die_l20.sv",
+      "archive": "inputs/rtl/test/v41_runtime/ot_v41_rt_die_l20.sv",
+      "sha256": "8deabb0f73e1200a1983a6cf6fcf3ddb23356f0de9d97d2ae033b3af7a2fb0ba"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/test/v41_runtime/v41_die_rt.cpp",
+      "archive": "inputs/rtl/test/v41_runtime/v41_die_rt.cpp",
+      "sha256": "fa94f887148628e496c7e6c9388a4870b8d0e4a23269ec686f727398fa9412b5"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/test/tb_w11_ckvdie_service.sv",
+      "archive": "inputs/rtl/test/tb_w11_ckvdie_service.sv",
+      "sha256": "1b3868c640bd6b94c53847a5a3e57d506eef44db626fd012b55f520a2696a4c5"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "tools/w11_ckvdie_src_l20.txt",
+      "archive": "inputs/tools/w11_ckvdie_src_l20.txt",
+      "sha256": "d204eac5286729f4f1b9d3984da4b2de7c4f3b66ca977c5bcbe9148034038e62"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "tools/w11_ckvdie_gate.py",
+      "archive": "inputs/tools/w11_ckvdie_gate.py",
+      "sha256": "114cf1d433ec2ec341c9899de5870ff9f06a4ad8f642719a29f79dc1d893af1b"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "tools/uarch_model.py",
+      "archive": "inputs/tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "results/uarch/w17_D1_retained_attention_binding_20261002/binding_record.json",
+      "archive": "inputs/results/uarch/w17_D1_retained_attention_binding_20261002/binding_record.json",
+      "sha256": "4e02bebbd53419ab349f13e83e52db3e30994e7e1844d8d431c3d8ea0725f29f"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "results/uarch/w17_D1_retained_attention_binding_20261002/driver_binding.json",
+      "archive": "inputs/results/uarch/w17_D1_retained_attention_binding_20261002/driver_binding.json",
+      "sha256": "fc1e38602bafd3273a7d92db55d76897431e0e05919d107e7d5ddd31ae771ac7"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "results/rtl/w17_connected_token_preparation_20261001/ckv_collector_clear_counterexample.json",
+      "archive": "inputs/results/rtl/w17_connected_token_preparation_20261001/ckv_collector_clear_counterexample.json",
+      "sha256": "e4b54f6ff84acff290780d7b18d934b8e63090a5a6cbd54f49873df5373bf747"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "results/rtl/w17_connected_token_preparation_20261001/ckv_delayed_peer_counterexample.json",
+      "archive": "inputs/results/rtl/w17_connected_token_preparation_20261001/ckv_delayed_peer_counterexample.json",
+      "sha256": "5bb4b029848b08cca4eb073bde47f5ba9736858168a9778ad8d2f9ca01b49cde"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "results/rtl/w17_connected_token_preparation_20261001/ckv_consumer_descriptor_retirement.json",
+      "archive": "inputs/results/rtl/w17_connected_token_preparation_20261001/ckv_consumer_descriptor_retirement.json",
+      "sha256": "10ce227e1b6286aff7b311e8de174c629dced87b89df3e28551efaa72aa92a27"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "results/rtl/w17_connected_token_preparation_20261001/ckv_peer_credit_model_v3.json",
+      "archive": "inputs/results/rtl/w17_connected_token_preparation_20261001/ckv_peer_credit_model_v3.json",
+      "sha256": "3d3c2281170d223af3e14731f400a6089d400ddc878e9e789e954ecfc4364ab3"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "results/rtl/w17_connected_token_preparation_20261001/ckv_joint_boundary_contract.json",
+      "archive": "inputs/results/rtl/w17_connected_token_preparation_20261001/ckv_joint_boundary_contract.json",
+      "sha256": "a501277dd7a92d30879a9dda2e0c436f275e960a93d37317e00ccb7ee3fdb95a"
+    },
+    {
+      "commit": "6e371c0ef48a92511d319dd00ad5a33926349ac2",
+      "path": "/tmp/claude-1000/queue/w17jobs/ckv_b93_r1.json",
+      "archive": "inputs/historical_ckv_b93_r1.json",
+      "sha256": "6ad42c131df6c5a5eddca40197fbccd25878cb7eb4893ef0d2959fb7de19fcd4",
+      "authority": "historical external terminal receipt; source pins inside record"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "tools/w17_current_fastpp_l20_sources.txt",
+      "archive": "inputs/tools/w17_current_fastpp_l20_sources.txt",
+      "sha256": "662e50f60f2a3048870448de7d68da428ab058b8337302045bd854ba731aabb9"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "tools/w17_pc21_ckvdie_src_l20.txt",
+      "archive": "inputs/tools/w17_pc21_ckvdie_src_l20.txt",
+      "sha256": "f13a819d4c5d5cc35540e668003aad0a0876ac5d76b468769921f843e20e06c9"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "tools/w17_current_fastpp_die_rt.py",
+      "archive": "inputs/tools/w17_current_fastpp_die_rt.py",
+      "sha256": "0673907bef97ea383144e7aadb10b4c79b7807cf4453867aa074a7d965c27d70"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+      "archive": "inputs/rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+      "sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+    },
+    {
+      "commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+      "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+      "archive": "inputs/rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+      "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251"
+    }
+  ]
+}

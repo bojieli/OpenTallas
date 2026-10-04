@@ -1,0 +1,74 @@
+[
+  {
+    "copy": "backend.sv",
+    "git": "298ba9d796d1441760359c85f3b909c199ca2495",
+    "path": "rtl/chip/ot_v41_vm_bank4_macro_pipe.sv",
+    "sha256": "a149e8877eae9919cd4539f14206eae431ac71e0c3a49ba1e0d8c16eda99a121"
+  },
+  {
+    "copy": "w6_codec.sv",
+    "git": "298ba9d796d1441760359c85f3b909c199ca2495",
+    "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+  },
+  {
+    "copy": "callback_contract.json",
+    "git": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+    "path": "results/uarch/dsrom_field_native_VM_join_20261003/callback_contract.json",
+    "sha256": "96855ce9f120d538ceaf9183542a8ab4d8116ce6b457f46a1c76efa76eddaf6b"
+  },
+  {
+    "copy": "native_handoff.json",
+    "git": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+    "path": "results/uarch/dsrom_field_native_VM_join_20261003/handoff.json",
+    "sha256": "77c2c3c33353ea1f79ae20e36646a5eda50b4a2f16520eb1f93098c1b724679b"
+  },
+  {
+    "copy": "prior_reset_FAIL.json",
+    "git": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+    "path": "results/uarch/dsrom_MTP_selected_parent_containment_20261003/model.json",
+    "sha256": "3dfc6642dfab9c6dc1dc738f233bdc6e79af00fabaac08e99a858079b39f3d4c"
+  },
+  {
+    "copy": "tech.lef.gz",
+    "git": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+    "path": "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/tech.lef.gz",
+    "sha256": "8a7e971c8d0048fe693cdda4c22f30584370fb3d17ff2e59cd173c705d1d2243"
+  },
+  {
+    "copy": "setRC.tcl",
+    "git": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+    "path": "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/setRC.tcl",
+    "sha256": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14"
+  },
+  {
+    "copy": "tracks.txt",
+    "git": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+    "path": "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/tracks.txt",
+    "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632"
+  },
+  {
+    "copy": "cell_prices.json",
+    "git": "686c552854d62db3ce051483e8a73ee8180484bf",
+    "path": "results/uarch/ds_mtp_serial_spine_context_r2_20261003/inputs/cell_prices.json",
+    "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+  },
+  {
+    "copy": "SRAM.json",
+    "git": "ce12ffd1472a4cb60110efb6ecc87139554e1e68",
+    "path": "results/uarch/dsrom_finite_vm_calendar_20261003/inputs/1_ot_sram_1r1w_512x128_m4_r2c2.json",
+    "sha256": "4749acc7f92350b8d1ec05baebec1a0f75de1bbc0cb8dee29eb63b5cd382eec3"
+  },
+  {
+    "copy": "codec_model.py",
+    "git": "468c2b913bc96f82dcf334a17b148dc993ec1bc9",
+    "path": "tools/ds_mtp_accept_leaf_model.py",
+    "sha256": "64e561298a7970012db2750452a5ef0cc19236c9d467d7e5348800d404545350"
+  },
+  {
+    "copy": "cells.lef.gz",
+    "git": "298ba9d796d1441760359c85f3b909c199ca2495",
+    "path": "results/uarch/dsrom_noECC_production_context_20261002/inputs/cells.lef.gz",
+    "sha256": "06c31275c8197e4078e5336e0e893f6daf6ca3002b02e8c53a14ca170471b9d0"
+  }
+]

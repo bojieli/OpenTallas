@@ -1,0 +1,100 @@
+`timescale 1ps/1fs
+// One stack:4096 physical tags,128contexts/PC,32actual128x2561R1W macros.
+// Upper4 TAG wire bits zero; callerTAG16/epochs/channel remain in immutable RAM.
+// Global lookup is finite-client subset of priced parallel map;12CORE edges
+// plus output holding are charged. No allocation or physical-return callback.
+module ot_hbm_r14_tag_owner(
+ input wire clk,rst_n,input wire av,output wire ar,
+ input ot_hbm_r14_pkg::request_t req,output wire [11:0] allocated_tag,
+ input wire iv,output wire ir,input wire [4:0] ipc,input wire [11:0] itag,
+ input wire [4:0] ibeat,input wire [255:0] idata,
+ output wire ov,input wire ore,output ot_hbm_r14_pkg::owned_t owned,
+ output reg fault,output reg [15:0] live_tags);
+ import ot_hbm_r14_pkg::*;
+ reg [4095:0] live;
+ reg [5:0] remaining_PC[0:4095];reg [5:0] allocate_PC_count;
+ reg [12:0] cam[0:31][0:127];reg [31:0] seen[0:31][0:127];
+ reg [1:0] write_phase;reg [4:0] alloc_bank;reg [6:0] free_tag_slot,free_context[0:31];reg [31:0] wanted;
+ reg tag_room;reg [31:0] context_room;
+ reg [1:0] state;reg [3:0] delay;reg [4:0] pc_saved;reg [11:0] tag_saved;
+ reg [4:0] beat_saved;reg [255:0] data_saved;reg [6:0] slot_saved;
+ reg held;owned_t output_reg;
+ reg [6:0] hit;reg hit_valid;
+ reg [31:0] rce,wce;reg [6:0] ra[0:31],wa[0:31];reg [255:0] wd[0:31];wire [255:0] rd[0:31];
+ integer p,k,b;reg found;
+ assign allocated_tag={alloc_bank,free_tag_slot};
+ assign ar=(state==0)&&tag_room&&((wanted&~context_room)==0);
+ assign ir=(state==0)&&!held&&!av;
+ assign ov=held;assign owned=output_reg;
+ always @*begin
+   wanted=0;for(integer i=0;i<32;i=i+1)if(i<req.len)wanted[pc_of(req.id.sector+34'(i))]=1;
+   allocate_PC_count=0;for(integer a=0;a<32;a=a+1)if(wanted[a])allocate_PC_count=allocate_PC_count+1'b1;
+   tag_room=0;free_tag_slot=0;
+   for(integer j=127;j>=0;j=j-1)if(!live[{alloc_bank,7'(j)}]&&(!req.we||2'(j)==write_phase))begin tag_room=1;free_tag_slot=7'(j);end
+   context_room=0;for(integer a=0;a<32;a=a+1)begin
+     free_context[a]=0;for(integer c=127;c>=0;c=c-1)if(!cam[a][c][12])begin context_room[a]=1;free_context[a]=7'(c);end
+   end
+   hit_valid=0;hit=0;
+   for(integer c=127;c>=0;c=c-1)if(cam[ipc][c][12]&&cam[ipc][c][11:0]==itag)begin hit_valid=1;hit=7'(c);end
+   rce=0;wce=0;
+   for(integer a=0;a<32;a=a+1)begin ra[a]=0;wa[a]=0;wd[a]=0;
+     if(av&&ar&&wanted[a])begin
+       wce[a]=1;wa[a]=free_context[a];wd[a][231:0]={req.id,req.len,beat_mask(req.len),2'b01};
+     end
+   end
+   if(iv&&ir&&hit_valid)begin rce[ipc]=1;ra[ipc]=hit;end
+ end
+ genvar g;
+ generate for(g=0;g<32;g=g+1)begin: contexts
+   ot_sram_1r1w_128x256_m1_r2c2 ram(.clk(clk),.r_ce_in(rce[g]),.r_addr_in(ra[g]),.rd_out(rd[g]),
+     .w_ce_in(wce[g]),.w_addr_in(wa[g]),.wd_in(wd[g]),.w_mask_in({256{1'b1}}),
+     .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+ end endgenerate
+ identity_t restored;reg [5:0] length;reg [31:0] mask,updated;
+ always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin
+     live<=0;alloc_bank<=0;write_phase<=0;state<=0;delay<=0;held<=0;output_reg<='0;fault<=0;live_tags<=0;
+     pc_saved<=0;tag_saved<=0;beat_saved<=0;data_saved<=0;slot_saved<=0;
+     for(p=0;p<32;p=p+1)for(k=0;k<128;k=k+1)begin cam[p][k]<=0;seen[p][k]<=0;end
+     // Root masks validity is governed by live, not by reset memory contents.
+   end else begin
+     if(av&&ar)begin
+       if(req.len==0||req.len>32||{1'b0,req.id.sector}+35'(req.len)>CAPACITY_SECTORS)fault<=1;
+       else begin live[allocated_tag]<=1;remaining_PC[allocated_tag]<=allocate_PC_count;
+         live_tags<=live_tags+1'b1;
+         for(p=0;p<32;p=p+1)if(wanted[p])begin cam[p][free_context[p]]<={1'b1,allocated_tag};seen[p][free_context[p]]<=0;end
+         alloc_bank<=alloc_bank+1'b1;if(req.we)write_phase<=write_phase+1'b1;
+       end
+     end
+     if(iv&&ir)begin
+       if(!live[itag]||!hit_valid||seen[ipc][hit][ibeat])fault<=1;
+       else begin pc_saved<=ipc;tag_saved<=itag;beat_saved<=ibeat;data_saved<=idata;slot_saved<=hit;
+         state<=1;delay<=0;end
+     end
+     if(state==1)begin
+       if(delay==11)begin
+         restored=identity_t'(rd[pc_saved][231:40]);length=rd[pc_saved][39:34];mask=rd[pc_saved][33:2];
+         if(beat_saved>=length||pc_of(restored.sector+34'(beat_saved))!=pc_saved)fault<=1;
+         else begin
+           output_reg<='{id:restored,data:data_saved,physical_tag:tag_saved,beat:beat_saved};
+           output_reg.id.sector<=restored.sector+34'(beat_saved);held<=1;state<=2;
+         end
+       end else delay<=delay+1'b1;
+     end
+     if(held&&ore)begin
+       held<=0;state<=0;seen[pc_saved][slot_saved][beat_saved]<=1;
+       updated=seen[pc_saved][slot_saved]|(32'b1<<beat_saved);
+       // Determine all beats touching thisPC from actual immutable base/LEN.
+       restored=identity_t'(rd[pc_saved][231:40]);length=rd[pc_saved][39:34];mask=0;
+       for(b=0;b<32;b=b+1)if(b<length&&pc_of(restored.sector+34'(b))==pc_saved)mask[b]=1;
+       if((updated&mask)==mask)begin
+         cam[pc_saved][slot_saved][12]<=0;
+         if(remaining_PC[tag_saved]==0)fault<=1;else remaining_PC[tag_saved]<=remaining_PC[tag_saved]-1'b1;
+         if(remaining_PC[tag_saved]==1)begin
+           live[tag_saved]<=0;live_tags<=live_tags-1'b1;
+         end
+       end
+     end
+   end
+ end
+endmodule

@@ -1,0 +1,9 @@
+HA2PHY phy_l=5 phy_g=5 js=1
+HA2CFG seed=2 N=2 GS=2 NG=1 NC=2 NOG=1 E=4096 LANES=256 ONESHOT=1 BF16=0 INJ=1 DEL=1 HUBW=37 WSTG=14 BITS_X100=1308000 PWB=8217 PHY_L=5 PHY_G=5 JS=1 T_CORE=0.833333 T_PHY=0.400000 TOT=16
+HA2DIE die=0 issue_ns=400.718 done_ns=514.976 lat_ns=114.332
+HA2DIE die=1 issue_ns=400.644 done_ns=514.902 lat_ns=114.258
+HA2DONE seed=2 lat_ns=114.332 lat_cyc_1p2=137.2 worst_die=0 mismatches=0 faults=0 credit_stall_cycles=0
+- src/rtl/hbm_accel/ha2_ar/tb_ha2_ar.sv:230: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 557ns; walltime 0.361 s; speed 1.541 us/s
+- Verilator: cpu 0.361 s on 5 threads; allocated 33 MB

@@ -1,0 +1,9 @@
+{
+  "actual_RTL_terminal": false,
+  "command": "python3 tools/Euclid_W4_peer_interface_review.py",
+  "missing": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+  "owner_commit": "c74a256cf",
+  "schema": "W4_PEER_INTERFACE_COLD_PARENT_HOLD_R1",
+  "scope": "Interface packet references design/source archive absent from main; actual gate supervisor live, no terminal failure or restart inferred. Owner asked for minimal source dependency bundle.",
+  "verdict": "HOLD_MISSING_SOURCE_DEPENDENCY"
+}

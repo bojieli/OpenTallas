@@ -1,0 +1,518 @@
+{
+  "FF_hold_uncertainty_ps": 25,
+  "SETN_TIEHI_LEF_area_um2": 64.86642,
+  "SETN_TIEHI_cells": 1483,
+  "SS_setup_uncertainty_ps": 60,
+  "additional_clock_skew_ps": 25,
+  "all768_identical_row_to_root": true,
+  "arithmetic_and_hardware_admitted": false,
+  "cell_body_area_by_section_um2": {
+    "bank_ID_increment": 2.79936,
+    "bank_empty_compare": 184.75776000000002,
+    "bank_full_decode": 50.38848,
+    "bank_valid_read_write_qualification": 134.36928,
+    "clock_fanout": 601.54164,
+    "constant_row_decode": 1223.32032,
+    "control_storage": 627.04206,
+    "control_write_hold_mux": 454.06494000000004,
+    "counter_increment": 223.9488,
+    "incoming_context_compare": 64.42902000000001,
+    "local_read_position_decode": 167.9616,
+    "owner_active_fanout": 1.9391399999999999,
+    "record_storage": 13327.752960000002,
+    "record_write_hold_mux": 10455.609600000002,
+    "reserve_terminal_rearm_and_fault_logic": 2.6244,
+    "reset_fanout": 21.84084,
+    "row_valid_owner_duplicate_guard": 251.9424,
+    "scalar_read_mux": 10437.4575,
+    "selected_bank_decode": 101.08314,
+    "terminal_reductions": 92.11644000000001,
+    "vector_select_fanout": 1409.65272
+  },
+  "cell_counts_by_section": {
+    "bank_ID_increment": {
+      "INVx1_ASAP7_75t_R": 6,
+      "NAND2x1_ASAP7_75t_R": 29
+    },
+    "bank_empty_compare": {
+      "INVx1_ASAP7_75t_R": 640,
+      "NAND2x1_ASAP7_75t_R": 1792
+    },
+    "bank_full_decode": {
+      "INVx1_ASAP7_75t_R": 640,
+      "NAND2x1_ASAP7_75t_R": 256
+    },
+    "bank_valid_read_write_qualification": {
+      "INVx1_ASAP7_75t_R": 1024,
+      "NAND2x1_ASAP7_75t_R": 1024
+    },
+    "clock_fanout": {
+      "BUFx4_ASAP7_75t_R": 5894
+    },
+    "constant_row_decode": {
+      "INVx1_ASAP7_75t_R": 10688,
+      "NAND2x1_ASAP7_75t_R": 8640
+    },
+    "control_storage": {
+      "DFFASRHQNx1_ASAP7_75t_R": 1483,
+      "INVx1_ASAP7_75t_R": 1483
+    },
+    "control_write_hold_mux": {
+      "INVx1_ASAP7_75t_R": 1483,
+      "NAND2x1_ASAP7_75t_R": 4449
+    },
+    "counter_increment": {
+      "INVx1_ASAP7_75t_R": 512,
+      "NAND2x1_ASAP7_75t_R": 2304
+    },
+    "incoming_context_compare": {
+      "INVx1_ASAP7_75t_R": 245,
+      "NAND2x1_ASAP7_75t_R": 614
+    },
+    "local_read_position_decode": {
+      "INVx1_ASAP7_75t_R": 1536,
+      "NAND2x1_ASAP7_75t_R": 1152
+    },
+    "owner_active_fanout": {
+      "BUFx4_ASAP7_75t_R": 19
+    },
+    "record_storage": {
+      "DFFHQNx1_ASAP7_75t_R": 39744,
+      "INVx1_ASAP7_75t_R": 39744
+    },
+    "record_write_hold_mux": {
+      "INVx1_ASAP7_75t_R": 576,
+      "NAND2x1_ASAP7_75t_R": 119232
+    },
+    "reserve_terminal_rearm_and_fault_logic": {
+      "INVx1_ASAP7_75t_R": 24,
+      "NAND2x1_ASAP7_75t_R": 18
+    },
+    "reset_fanout": {
+      "BUFx4_ASAP7_75t_R": 214
+    },
+    "row_valid_owner_duplicate_guard": {
+      "INVx1_ASAP7_75t_R": 2304,
+      "NAND2x1_ASAP7_75t_R": 1728
+    },
+    "scalar_read_mux": {
+      "INVx1_ASAP7_75t_R": 575,
+      "NAND2x1_ASAP7_75t_R": 119025
+    },
+    "selected_bank_decode": {
+      "INVx1_ASAP7_75t_R": 775,
+      "NAND2x1_ASAP7_75t_R": 768
+    },
+    "terminal_reductions": {
+      "INVx1_ASAP7_75t_R": 702,
+      "NAND2x1_ASAP7_75t_R": 702
+    },
+    "vector_select_fanout": {
+      "BUFx4_ASAP7_75t_R": 13812
+    }
+  },
+  "control_bits": {
+    "causal_fence_latches": 6,
+    "prior_ef6": 1468,
+    "selected_bank_ID": 7,
+    "sticky_fault": 2,
+    "total": 1483
+  },
+  "control_boolean_obligations": {
+    "release": "source_idle &all_seen &all_banks_empty &delivery_fence &causal_visible &provenance &lease_valid",
+    "reserve": "!active &source_drained &wire_drained &input_visible &VM_exclusive &metadata_valid &provider_fenced",
+    "sticky_fault": "old_fault |bad_owner |bad_row |duplicate |overflow |unexpected_return |fault_terminal"
+  },
+  "fanout8_tree": {
+    "clock": [
+      5154,
+      645,
+      81,
+      11,
+      2,
+      1
+    ],
+    "owner_active": [
+      16,
+      2,
+      1
+    ],
+    "per_vector_select": [
+      9,
+      2,
+      1
+    ],
+    "reset": [
+      186,
+      24,
+      3,
+      1
+    ]
+  },
+  "fanout_loads": {
+    "FF": {
+      "SETN_pin_fF": 1726.89418,
+      "bounded_BUF_leaf_clock_load_fF": 9.93608,
+      "bounded_BUF_leaf_select_load_fF": 14.404399999999999,
+      "clock_pin_fF": 21492.939856,
+      "reset_pin_fF": 1190.714047,
+      "vector_select_69_NAND_input_fF": 74.55794999999999,
+      "wire_budget_is_obligation_not_measured": true,
+      "wire_cap_budget_fF": 5.76
+    },
+    "SS": {
+      "SETN_pin_fF": 1522.16603,
+      "bounded_BUF_leaf_clock_load_fF": 9.333103999999999,
+      "bounded_BUF_leaf_select_load_fF": 13.159192000000001,
+      "clock_pin_fF": 18394.775977999998,
+      "reset_pin_fF": 1044.069075,
+      "vector_select_69_NAND_input_fF": 63.818031000000005,
+      "wire_budget_is_obligation_not_measured": true,
+      "wire_cap_budget_fF": 5.76
+    }
+  },
+  "frequency_GHz": 1.2,
+  "full_slot_completion": false,
+  "local_control_cell_counts_are_construction_budget_not_HDL_equivalence": true,
+  "missing_deadline_is_not_zero": true,
+  "mux": {
+    "bits": 69,
+    "conditional_added_read_edges": null,
+    "maximum_mux_levels": 10,
+    "maximum_series_NAND_levels": 20,
+    "no_pipeline_selected": true,
+    "nodes": 575,
+    "one_edge_timing_qualified": false,
+    "one_scalar_port": true
+  },
+  "new_RTL_or_build": false,
+  "physical_variant": "exact576 FF seats; no640padding selected",
+  "prerequisite_capture_commit": "ef6da37de6f6c641936615f61825628c2db7b8d4",
+  "raw_record_slot_templates": [
+    {
+      "allocated_um2": 26397.9648,
+      "body_utilization": 0.5,
+      "empty_routing_row_height_um": 0.27,
+      "fixed_record_bit_row_height_um": 0.27,
+      "height_um": 172.8,
+      "orientation": "R0 on separated source rows; actual PG rail phase UNBOUND",
+      "physical_home_accepted_by_Maxwell": false,
+      "root_count": 64,
+      "scalar_mux_control_clock_reset_not_inside_this_raw_slot": true,
+      "seats": 320,
+      "shard": 0,
+      "width_um": 152.766
+    },
+    {
+      "allocated_um2": 21118.37184,
+      "body_utilization": 0.5,
+      "empty_routing_row_height_um": 0.27,
+      "fixed_record_bit_row_height_um": 0.27,
+      "height_um": 138.24,
+      "orientation": "R0 on separated source rows; actual PG rail phase UNBOUND",
+      "physical_home_accepted_by_Maxwell": false,
+      "root_count": 64,
+      "scalar_mux_control_clock_reset_not_inside_this_raw_slot": true,
+      "seats": 256,
+      "shard": 1,
+      "width_um": 152.766
+    }
+  ],
+  "remaining_provider_boundaries": [
+    "command/source/wire rearm causal fence provider",
+    "512bit VM bridge/formatter ownership and commit",
+    "128 raw writer and scalar drain route geometry"
+  ],
+  "reset": {
+    "ASR_QN_restored_with_INV": true,
+    "HQ_QN_restored_with_INV": true,
+    "control_SETN_tied_high": true,
+    "control_async_RESETN": true,
+    "record_reset": false,
+    "shared_old_source_and_wire_debt_fence_before_rearm": true
+  },
+  "row_to_root": "(row %256)//2",
+  "schema": 1,
+  "slot_and_provider_deadline_from_Hubble": null,
+  "source_DONT_USE_patterns": [
+    "*x1p*_ASAP7*",
+    "*xp*_ASAP7*",
+    "SDF*",
+    "ICG*"
+  ],
+  "source_cell_facts": {
+    "BUFx4_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.10206,
+        "pins": {
+          "A": {
+            "cap_fF": 0.581966,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "A",
+            "max_cap_fF": 184.32
+          }
+        },
+        "size_um": [
+          0.378,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.10206,
+        "pins": {
+          "A": {
+            "cap_fF": 0.511385,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "A",
+            "max_cap_fF": 184.32
+          }
+        },
+        "size_um": [
+          0.378,
+          0.27
+        ]
+      }
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.37908,
+        "pins": {
+          "CLK": {
+            "cap_fF": 0.503152,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "D": {
+            "cap_fF": 0.623429,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "QN": {
+            "cap_fF": null,
+            "function": "IQN",
+            "max_cap_fF": 46.08
+          },
+          "RESETN": {
+            "cap_fF": 0.802909,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "SETN": {
+            "cap_fF": 1.16446,
+            "function": null,
+            "max_cap_fF": null
+          }
+        },
+        "size_um": [
+          1.404,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.37908,
+        "pins": {
+          "CLK": {
+            "cap_fF": 0.433982,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "D": {
+            "cap_fF": 0.527811,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "QN": {
+            "cap_fF": null,
+            "function": "IQN",
+            "max_cap_fF": 46.08
+          },
+          "RESETN": {
+            "cap_fF": 0.704025,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "SETN": {
+            "cap_fF": 1.02641,
+            "function": null,
+            "max_cap_fF": null
+          }
+        },
+        "size_um": [
+          1.404,
+          0.27
+        ]
+      }
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.2916,
+        "pins": {
+          "CLK": {
+            "cap_fF": 0.52201,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "D": {
+            "cap_fF": 0.62135,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "QN": {
+            "cap_fF": null,
+            "function": "IQN",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          1.08,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.2916,
+        "pins": {
+          "CLK": {
+            "cap_fF": 0.446638,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "D": {
+            "cap_fF": 0.524726,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "QN": {
+            "cap_fF": null,
+            "function": "IQN",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          1.08,
+          0.27
+        ]
+      }
+    },
+    "INVx1_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.04374,
+        "pins": {
+          "A": {
+            "cap_fF": 0.683716,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "!A",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          0.162,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.04374,
+        "pins": {
+          "A": {
+            "cap_fF": 0.578766,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "!A",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          0.162,
+          0.27
+        ]
+      }
+    },
+    "NAND2x1_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.08748,
+        "pins": {
+          "A": {
+            "cap_fF": 1.07898,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "B": {
+            "cap_fF": 1.08055,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "(!A) + (!B)",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          0.324,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.08748,
+        "pins": {
+          "A": {
+            "cap_fF": 0.924899,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "B": {
+            "cap_fF": 0.924444,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "(!A) + (!B)",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          0.324,
+          0.27
+        ]
+      }
+    }
+  },
+  "source_clock_reset_PG_ingress": null,
+  "source_pins": {
+    "results/uarch/dsrom_I66_capture_banks_20261002/model.json": "7fc51d71aeeeb8d392e099b044b4aa7eab8345bd026f8a9fd516cc4049ce898d",
+    "results/uarch/dsrom_I66_capture_cells_20261002/inputs/cell_LEF.json": "802969ef259feebb2c8c1cab7f8b2e2f367a832605cc59d1156342b6c9153130",
+    "results/uarch/dsrom_I66_capture_cells_20261002/inputs/cell_bodies.json": "018ffe0772ee34a3b054c1786638493b264d6d33b79010021258b132b634974e",
+    "results/uarch/dsrom_I66_capture_cells_20261002/inputs/config.mk.txt": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c",
+    "results/uarch/dsrom_I66_capture_cells_20261002/inputs/extraction_receipt.json": "374f2c667cb6fe2f53ff5fb3535501f63f385555b660a5410da5cb8e2fe52b54",
+    "tools/dsrom_I66_capture_banks.py": "823fe399eaf34d73bf8e0127c878d90414311b263d56662459fc7cbfd60e8640",
+    "tools/dsrom_I66_capture_cells.py": "65176065a0a9d3a07b29ecb2d4d9c35fee51a3cd6755bee7b6a12cda9e490091"
+  },
+  "subtotal_body_area_um2": 39901.508819999995,
+  "subtotal_core_reservation_at50pct_mm2": 0.07980301763999999,
+  "subtotal_core_reservation_at50pct_um2": 79803.01763999999,
+  "timeout1024_failure_preserved": true,
+  "timeout4096_selected": false,
+  "total_cell_counts": {
+    "BUFx4_ASAP7_75t_R": 19939,
+    "DFFASRHQNx1_ASAP7_75t_R": 1483,
+    "DFFHQNx1_ASAP7_75t_R": 39744,
+    "INVx1_ASAP7_75t_R": 62957,
+    "NAND2x1_ASAP7_75t_R": 261733
+  },
+  "verdict": "ALLOWED_CELL_CONSTRUCTION_PRICED_NOT_FULL_IMPLEMENTATION"
+}

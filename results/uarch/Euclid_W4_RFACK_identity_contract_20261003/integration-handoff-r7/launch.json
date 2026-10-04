@@ -1,0 +1,29 @@
+{
+  "tool_pins": {
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+    "/usr/bin/iverilog": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+    "/usr/bin/vvp": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+  },
+  "sourcefreeze": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f",
+  "supervisor_PID": 2970098,
+  "exclusive_out": "/tmp/W4-Euclid-component-native-20261003-r2",
+  "status": "LIVE",
+  "meminfo": "MemTotal:       197661924 kB\nMemFree:         1870024 kB\nMemAvailable:   105415948 kB\nBuffers:         6982600 kB\nCached:         88427140 kB\nSwapCached:        78760 kB\nActive:         116003284 kB\nInactive:       65900876 kB\nActive(anon):   82027364 kB\nInactive(anon):  4490492 kB\nActive(file):   33975920 kB\nInactive(file): 61410384 kB\nUnevictable:       27996 kB\nMlocked:           27996 kB\nSwapTotal:       8388604 kB\nSwapFree:             48 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:           3690384 kB\nWriteback:        108772 kB\nAnonPages:      86444752 kB\nMapped:          2577768 kB\nShmem:             14256 kB\nKReclaimable:    9932560 kB\nSlab:           10998456 kB\nSReclaimable:    9782828 kB\nSUnreclaim:      1215628 kB\nKernelStack:       40192 kB\nPageTables:       287768 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    107219564 kB\nCommitted_AS:   137726188 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      115744 kB\nVmallocChunk:          0 kB\nPercpu:            50304 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:      2048 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nUnaccepted:            0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:    77379020 kB\nDirectMap2M:    121651200 kB\nDirectMap1G:     2097152 kB\n",
+  "disk_available_bytes": 474120523776,
+  "limits_unlimited_CPU_AS_FSIZE": true,
+  "source_sha256": {
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv": "0c78df13fc5f356a24b99e42fbf0b7477e0fe57ba6475d3c8f5b80eab966b7d9",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv": "1467492957a70900e969ffee3493e6969a6ac4b0244202a8c0cdd06f6ccfdd18",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_scratch_service.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "/tmp/opentallas-W4-RFACK-identity-contract-20261003/results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "jobs": [],
+  "scope": "actual source-selected conditional W4 component; no upstream connector/CDC/physical/rate qualification"
+}

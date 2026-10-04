@@ -1,0 +1,43 @@
+%Warning-PINMISSING: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'wr_owner'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:11:20: ... Location of port declaration
+   11 |  input wire [45:0] wr_owner,output wire [45:0] ack_owner,
+      |                    ^~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'ack_owner'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:11:48: ... Location of port declaration
+   11 |  input wire [45:0] wr_owner,output wire [45:0] ack_owner,
+      |                                                ^~~~~~~~~
+%Warning-PINMISSING: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'ack_slot'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:12:20: ... Location of port declaration
+   12 |  output wire [8:0] ack_slot,output wire ack_identity_fault
+      |                    ^~~~~~~~
+%Warning-PINMISSING: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'ack_identity_fault'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:12:41: ... Location of port declaration
+   12 |  output wire [8:0] ack_slot,output wire ack_identity_fault
+      |                                         ^~~~~~~~~~~~~~~~~~
+%Error: rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_c0_connected_bridge_r5.sv:40:9: Import package not found: 'ot_gpu_w6_secded_pkg'
+   40 |  import ot_gpu_w6_secded_pkg::*;
+      |         ^~~~~~~~~~~~~~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_fmin_consumer_r5.sv:13:9: Import package not found: 'ot_gpu_w6_secded_pkg'
+   13 |  import ot_gpu_w6_secded_pkg::*;
+      |         ^~~~~~~~~~~~~~~~~~~~
+%Error: rtl/experimental/hbm_c0_connected_20261003/r5/ot_gpu_pc40_native_ingress_r5.sv:30:9: Import package not found: 'ot_gpu_w6_secded_pkg'
+   30 |  import ot_gpu_w6_secded_pkg::*;
+      |         ^~~~~~~~~~~~~~~~~~~~
+%Error: rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv:6:9: Import package not found: 'ot_gpu_w6_secded_pkg'
+    6 |  import ot_gpu_w6_secded_pkg::*;
+      |         ^~~~~~~~~~~~~~~~~~~~
+%Error: rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv:37:10: Import package not found: 'ot_gpu_w6_secded_pkg'
+   37 |   import ot_gpu_w6_secded_pkg::*;
+      |          ^~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 5 error(s)

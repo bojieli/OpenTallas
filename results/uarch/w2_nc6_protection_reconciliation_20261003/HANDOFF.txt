@@ -1,0 +1,69 @@
+W2 protected ownership reconciliation and exact codec characterization source
+
+Added-only successor to b846a38ee; no change to that record or original NC6 RTL.
+NC6/MAX16, scoped39 customer32/gen4, occupied KVclient5, LEN1/BEAT0 retained.
+Selected 189-word/13608-bit inventory remains the antecedent area budget.
+Full NC6 protection RTL is NOT admitted yet; no whole caller/rate credit.
+
+Source reconciliation:
+- table low39 = state2/tag32/gen4/direction1. Version4 + lock1 fill44 payload.
+- return key39 = selectedclient3/tag32/gen4; direction comes from read/write port.
+- coded FREE row lock must commit before p_req_v. Stop cancels only unaccepted
+  reservation. req_take creates accepted debt even before coded ISSUED commit.
+- pending issue journals exclude duplicate admissions, but are NOT forwarded
+  as eligible table return matches. Return query holds behind bank commit.
+- consumer handshake retires output once; table/count debt persists until coded
+  retirement commit. All snapshot/rowversion queries drain before row reuse.
+- current-word CE/DUE and seal/padding fail block batch commit. Scrub cannot
+  overwrite a changed snapshot. Source reset/rearm cannot erase accepted debt.
+- separate source/provider/reverseCDC fences remain mandatory, no timer proof.
+
+Calendar correction preserved additively:
+The antecedent5/5/6 minimum used a one-edge journal stage despite its four-edge
+coded commit contract. Selected capture/check/match/prepare at0/1/2/3, coded
+commit7, first qualified consumer8; request/read/write minimum8/8/9.
+Conservative II8 =>4 B/serviceedge upper bound, not throughput measurement.
+Backend request accepted at0 has coded issue visible after edge4 NBA. Earliest
+legal return capture1 would check2; current check resumes5: three extra edges.
+Early read/write11/12 under this serialization policy. Held/contended/CE adds
+stalls, and actual loaded timing may add registers/edges. No constants fitted
+from runtime and no production rate changed.
+
+Executable Ledger checks journal capacity9, pending debt, duplicate exclusion,
+16/client slots, held read/write direction, generation/client refusal, stale
+snapshot failclose, disjoint commits and fence refusal. Its Python auxiliary
+sets/objects are verification state, NOT additional or installed hardware.
+reserve models COMPLETED coded lock acquisition; it is not a zero-edge RTL
+lock. Reference model excludes unimplemented utility/count-cache control.
+
+Actual new hardware source: ot_w2_sealed_secded72.sv, a combinational K64/N72
+leaf with static physical word seals. Interleaved F0 parity placement, clean
+check, single-bit repair candidate, DUE zero outputs, address/padding validation.
+release_clean requires uncorrected CURRENT clean word; CE never directly
+releases. There is no production instantiation or added sequential state.
+Exact installed Verilator5.050 lint PASS with no warnings (receipt included).
+This is syntax evidence, not RTL truth-table/fault runtime or SS/FF evidence.
+
+Next constructive gates:
+1. Protected count-cache same-client delta fold/commit (allocation + read/write
+   retirement) must prove coherent and price actual secondary write ports and
+   journal storage. It cannot inherit the9 TABLE writer budget as extra free
+   cache ports. Do not silently instantiate an unprotected counter or treat
+   its old value as sufficient admission.
+2. Eight correction contexts need executable utility self-repair scheduling,
+   including their protected selector/controller and failclosed context fault.
+3. Enroll explicit held-valid quarantine; no undeclared legacy valid withdrawal.
+4. Characterize the exact K64 encoder/current-clean/seal/repair plus16-row
+   equality and coded feedback/reset cuts at actual load and SS/FF uncertainty.
+   The provided leaf is the real source entrypoint for that characterization.
+
+No full NC6 engine build or physical launch occurred. Local sample32CPU load73
+is not a full compile reservation. Syntax-only check was0.191s, no C++
+build/long job. New physical jobs require main194417d02 guarded launcher
+--macro-track-gate and ot_mts::place/assert. Original v1 aligned hooks acceptable;
+v2 requires updated slot/area/timing. No geometry adoption or livejob changes.
+
+Replay:
+ python3 -m pytest -q tests/test_w2_nc6_protection_reconciliation.py tests/test_w2_nc6_mutable_protection_model.py
+ python3 tools/w2_nc6_protection_reconciliation.py --output /tmp/w2-reconciled.json
+ cmp /tmp/w2-reconciled.json results/uarch/w2_nc6_protection_reconciliation_20261003/model.json

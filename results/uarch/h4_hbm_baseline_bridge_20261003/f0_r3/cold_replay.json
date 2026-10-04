@@ -1,0 +1,19 @@
+{
+  "exact_git_archives_verified": 12,
+  "exit_code": 0,
+  "git_object_database_present": false,
+  "outputs": [
+    {
+      "byte_exact": true,
+      "path": "model.json",
+      "sha256": "8a291ffefb7cb72741e60321528618bdd99f580b50662e5e96c886b63d01fde5"
+    },
+    {
+      "byte_exact": true,
+      "path": "Dewey_21event_F0_contract.json",
+      "sha256": "d375e10e86cd6ccbf13761bcb02f26d1e1f4d55bde9c0352f73972ad02606779"
+    }
+  ],
+  "schema": "HBM_F0_R3_COLD_REPLAY",
+  "verify_stdout": "PASS bridge F0 directory,21events and complete allocation refusal replay; hardware FAIL\n"
+}

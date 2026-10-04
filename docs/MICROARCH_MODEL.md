@@ -129,13 +129,15 @@ Proposal at 1M context, 1.034 GHz, 3,809 tok/s. The busiest die by energy is sta
 - With the per-pair ICG the saturated average stays inside cooling. The instantaneous peak grows with the clock (2.2 kW at 1.5 GHz), and that is the PDN's problem.
 - The architecture model's 396.6 W hottest die sizes static power from the analytical logic area, and includes MTP and 1,024-user batches. This ledger does not yet model MTP.
 
+See [the publication configuration scope](HEADLINE_BUNDLE_SCOPE.md) for the retained TP-2/DFlash figures versus the current TP-4 AR target. The captured full TP-4 position-zero result establishes exactness only at its recorded runtime scope; physical/service qualification and a current product rate remain pending. Seven fill lanes are a model-sizing candidate for a 3,000 tok/s target, not a measured sustained PHY result.
+
 ## Calibration and limits
 
 Calibrated 2026-09-29:
 - **Element fill:** 78 cycles, measured by W2's QE ROM/MAC exact bench (the formula gave 45–60).
 - **Long-crossing wire:** 0.76 ps/µm, from W3's real-technology channel runs (0.72–0.81 under load). The fit's 0.60 is unloaded.
 - **GPU grid sync:** 1.43 µs, measured on a V100 with 1 block/SM and 32 threads (L. Zhang et al., "A Study of Single and Multi-device Synchronization Methods in Nvidia GPUs", IPDPS 2020, Fig. 5). Sensitivities: 2.21 µs on V100 at 1,024 threads, 1.77 µs on P100. The earlier 1.77 µs "V100" was the P100 figure.
-- **Hardware barrier:** 30 cycles (Qwen die) and 40 cycles (V4.1 die) from last arrival to every SM released. Derived from the floorplan's wire stages and measured in RTL (`results/rtl/gpu_supply_barrier.json`). This replaces the ASSUMED 200. Reference: H800 SM-to-SM DSMEM latency is 181–213 cycles (Luo et al., arXiv 2501.12084, §7.1).
+- **Hardware barrier:** 30 cycles (earlier Qwen basis); the selected V4.1 record uses 62 measured cycles from last arrival to every SM released, plus a 16-cycle broadcast tail for its 78-cycle boundary. Derived from the floorplan's wire stages and measured in RTL (`results/rtl/gpu_supply_barrier.json`). This replaces the ASSUMED 200. Reference: H800 SM-to-SM DSMEM latency is 181–213 cycles (Luo et al., arXiv 2501.12084, §7.1).
 
 - Calibrated against measurements: the as-built engines, the index reader's sector rate, the attention and softmax jobs, and the collective cycles.
 - Not yet calibrated against a routed element:
@@ -226,8 +228,8 @@ The SM has four sub-partitions of an exact Tensor-Core-style MMA:
 | Bulk copy in flight | 512 lines of 128 B per SM | same | Little's law gives 440. Measured in RTL, 512 reaches the SM's full share (102.5 of 102.4 B/clk) under ±50 ns jitter; 7 outstanding gives 1.6 B/clk |
 | SMEM staging | 128 KB/SM | 128 KB/SM | The fluid model's knee: 64 KB loses 0.7% on Qwen |
 | Global barriers per token | 181 | 329 | One per matrix op and one per attention layer (V4.1 also one per index top-k and one for the argmax). Heads are SM-local; norms and the router top-6 run redundantly on the replicated x. The earlier 289 and 629 counted those |
-| Barrier round trip | 30 cycles | 38 cycles | Floorplan: leaf 4.3 mm / trunk 6.8 mm (Qwen), 3.5 / 11.4 mm (V4.1). RTL bench: 32 SMs at 8 × 4 fan-in |
-| Boundary cost | 46 cycles | 54 cycles | Round trip plus the x-broadcast tail |
+| Barrier round trip | 30 cycles (earlier Qwen basis) | 63 derived / 62 measured cycles | V4.1 record: leaf 3.2482 mm / trunk 11.0337 mm; RTL bench: 32 SMs at 8 × 4 fan-in |
+| Boundary cost | 46 cycles (earlier Qwen basis) | 78 cycles | V4.1: measured round trip plus 16-cycle x-broadcast tail |
 | L2 | 4 slices × 2 MB | same | Holds x and result gather, TP staging and KV-write coalescing. Weights bypass L2: each SM's rows live in its own quadrant's stack |
 
 ### Token
@@ -242,22 +244,24 @@ The bulk copy prefetches the static weight stream through every boundary. A boun
 | Qwen HBM, ASSUMED 200-cycle barrier, no prefetch | 854.9 |
 | Qwen HBM, V100 grid sync 1.43 µs, with prefetch / without | 758.5 / 716.6 |
 | Qwen HBM, today's adapter | 10.5 |
-| **V4.1 HBM, GPU die, K-chain-aware, group-slot issue (adopted)** | **2,920** |
-| V4.1 HBM, same, row-slot issue (sensitivity) | 2,533 |
-| V4.1 HBM, group-slot, V100 grid sync | 1,257 |
+| **V4.1 HBM, GPU die, K-chain-aware, group-slot issue (legacy DAG analytical comparator)** | **2,801.8** | <!-- figure: 2801.8 src="results/uarch/hbm_gpu.json#rows[design=v41_hbm_gpu_groupslot].tokens_s" name="selected DS HBM group-slot analytical rate" -->
+| V4.1 HBM, same, row-slot issue (sensitivity) | 2,443.3 |
+| V4.1 HBM, group-slot, V100 grid sync | 1,246.0 |
 | V4.1 HBM published (additive, pooled widths, no barrier) | 3,579 |
-| V4.1 HBM, pooled-width chain with prefetch (superseded upper bound) | 3,882 |
+| V4.1 HBM, pooled-width chain with prefetch (superseded upper bound) | 3,779.4 |
+
+The legacy DS DAG comparison values in this section bind `rows[design=v41_hbm_gpu_groupslot]` in [`hbm_gpu.json`](../results/uarch/hbm_gpu.json), at 1M context, TP-96 and 32 SMs per die. They are legacy DAG analytical comparisons, not the newer selected `HBM_W19` composition, measured whole-product throughput or current adoption. See the [three-composition authority table](HEADLINE_BUNDLE_SCOPE.md) for historical W19 versus the newer measured-select W19 basis; current source/calendar/physical qualification remains unknown. The 1.0339 GHz modeled clock is not contextual SS/FF sign-off; the supply fraction of 1 assumes the modeled bulk-copy supply, including the assumed 500 ns loaded latency. Isolated RTL calibration does not establish installed sustained HBM/PHY bandwidth or a full-token service gate. MTP uses the separately recorded 632.0 µs verify plus 26.8 µs assumed draft, with τ = 3.649.
 
 **How the V4.1 chain is priced** (`v41_hbm_chain`):
 - It walks the arch DAG's critical path at 1M.
 - Each matvec is an SM op on its 1/96 row slice (`sm_op_cycles`, calibrated on the RTL SM).
 - The dedicated units' nodes are at their arch price (W11 spec widths).
-- Barriers are at 54 cycles.
+- Barriers are at 78 cycles per boundary (62 measured round-trip cycles plus 16 x-broadcast tail cycles), at the record's modeled 1.0339 GHz clock.
 - Every SM needs the whole x after each collective: the die's 256 B/cycle x broadcast fills the 32 x stores (K × positions × 2 B / 256 cycles per matvec).
 - The comparator's switched-fabric terms are 125.9 + 1.5 + 0.9 + 2.0 µs.
 - The weight sweep (37.4 µs) streams under the chain.
 
-Group-slot breakdown: SM matvecs 66.9 µs (row-slot: 119.3), x-broadcast fill 7.6, dedicated units and stream unit 120.4, barriers 17.3, fabric 130.3.
+Group-slot breakdown: SM matvecs 73.7 µs (row-slot: 126.1), x-broadcast fill 7.6, dedicated units and stream unit 120.4, barriers 24.8, fabric 130.3. The selected row records 356.9 µs per token; individually rounded terms need not sum to the rounded total. <!-- figure: 356.9 src="results/uarch/hbm_gpu.json#rows[design=v41_hbm_gpu_groupslot].T_us" name="selected DS HBM group-slot analytical token time" -->
 
 ### Speculation on the SM design (`speculation` in the record): MODEL ONLY
 
@@ -268,8 +272,8 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 | Qwen HBM AR | 1 | 880.6 | 1.0× |
 | Qwen HBM DFlash, block 5 | 2.859 | 2,089 | 2.37× |
 | **Qwen HBM DFlash, block 16** (best; step cost is flat up to 16 columns) | 3.656 | **2,671** | **3.03×** |
-| V4.1 HBM AR (group-slot) | 1 | 2,920 | 1.0× |
-| **V4.1 HBM DSpark MTP, γ = 5, 6 positions** | 3.649 | **5,673** | **1.94×** |
+| V4.1 HBM AR (group-slot) | 1 | 2,801.8 | 1.0× |
+| **V4.1 HBM DSpark MTP, γ = 5, 6 positions** | 3.649 | **5,539.4** | **1.977×** |
 
 - **Qwen:** a step streams the target's bytes plus the drafter's 1.05 B parameters (INT8, ASSUMED) and a re-read of the shared lm_head over the draft slots. tau is measured per block (`results/speculative/dflash_block_acceptance.json`).
 - **V4.1:** verify runs the matvecs once, on the columns. The dedicated units issue every position's work, which adds 229 µs. Collective bytes and the x-broadcast fill scale with positions. The draft is 3/40 of an AR token (ASSUMED, as in the ROM rows).
@@ -280,12 +284,12 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 
 **Decisions:**
 1. **The weight path is a TMA-style bulk-copy engine** (`rtl/gpu/ot_gpu_bulk_copy.sv`): 512 outstanding 128-B lines and a 128 KB staging ring per SM. Today's adapter is 64× short in flight.
-2. **A hardware barrier network**, a sense-reversing toggle tree with one register per node (`ot_gpu_barrier_node`), costs 30–40 cycles. Grid sync through L2 would cost Qwen 14% and V4.1 2.8×.
+2. **A hardware barrier network**, a sense-reversing toggle tree with one register per node (`ot_gpu_barrier_node`), retains the earlier Qwen 30-cycle comparison; the selected V4.1 model prices a 78-cycle boundary. Grid sync through L2 would cost Qwen 14% on that earlier basis; the selected V4.1 grid-sync sensitivity takes 802.6 µs versus 356.9 µs, about 2.25×.
 3. **The Qwen HBM die is bandwidth-bound at 880.6 tok/s.** The barrier and SM terms are hidden under the stream.
 4. **The floorplans fit** (`results/floorplan/hbm_gpu/*.json`, legal, macro-placed SRAMs, 4 PHYs on 48 mm of the long edges):
    - Qwen: 160 of 688 mm² core used (SM array 155.6, L2 5.0).
    - V4.1: 196 mm², including the 112.7 mm² dedicated-unit hub between the SM half-arrays.
-5. **V4.1 SMs issue group-slot on small slices.** This takes the HBM token from 2,533 to 2,920 tok/s. The x store that delivers a whole 8-column fragment every cycle is 99 shallow macros per SM.
+5. **V4.1 SMs issue group-slot on small slices.** In the selected analytical record this takes the HBM token from 2,443.3 to 2,801.8 tok/s. The x store that delivers a whole 8-column fragment every cycle is 99 shallow macros per SM.
 
 ## HBM comparator feasibility audit (W19, `tools/hbm_feasibility_audit.py`, `results/uarch/hbm_feasibility_audit.json`)
 
@@ -333,14 +337,19 @@ This audit is analysis only: no P&R and no RTL. It walks the V4.1 HBM chain node
   6. One full-shape token by runtime composition over 96 ranks, checked against the 1M reference token (21946).
   7. Re-price the model from steps 1–6 and restate the headline.
 
-## Summary: what the model changed
+## Summary: historical model checkpoints, not current product rates
 
 | Design | Previous figure | Microarchitecture model (fits die) | Largest lever |
 |---|---:|---:|---|
 | V4.1 ROM, 1M | 4,933 (architecture) | 3,809 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
-| Qwen ROM, 8K | 10,874 (published) | 9,851 | AR only (no drafter ROM) lets G = 6,144 pruned fit; wires +12%; vector stream unit |
+| Qwen ROM, historical TP-2, 8K | 10,874 (historical published TP-2 AR) | 9,851 (historical TP-2 model) | AR only (no drafter ROM) lets G = 6,144 pruned fit; wires +12%; vector stream unit; not the current TP-4 target |
 | Qwen HBM, 8K | 881 | 880.6 (DFlash b16 2,671) | bulk-copy weight supply prefetching through boundaries; hardware barrier (30 cycles) |
-| V4.1 HBM, 1M | 3,579 | 2,920 (MTP 5,673) | SM op latency on 1/96 row slices (group-slot issue); hardware barrier (40 cycles); bulk-copy supply |
+| V4.1 HBM, 1M | 3,579 | 2,801.8 (MTP 5,539.4; model only) | SM op latency on 1/96 row slices (group-slot issue); 78-cycle boundary; bulk-copy supply |
+
+**Corrected numbers, 2026-10-03 (user decision: publish now; all model only).** Sources and evidence classes are in [HEADLINE_BUNDLE_SCOPE.md](HEADLINE_BUNDLE_SCOPE.md), section "Corrected numbers".
+- **Qwen ROM (option C, TP-4, AR).** The 10,874 figure above is the superseded TP-2 + DFlash-era package. It is not the option C design, so the row is not a comparison. The calibrated finite-calendar token at 8K is **357.99 µs = 2,793 tok/s**: decode position 8,191, batch 1, FP8 KV, cold per-layer KV lease, measured 4,668-cycle RTL layer (`results/uarch/qwen_rom_calibrated_calendar_20261003/summary-r1.json`). The near-HBM attention entry selected for build is **190.97 µs = 5,237 tok/s** on unqualified HBM and closure inputs; with a one-segment all-reduce it is 160.9–168.7 µs (sensitivity). The 9,851 / 9,368 / 8,460 / 6,222 / 10,262 rows in this document are compute-chain compositions with no KV-delivery term, and are superseded as rates.
+- **V4.1 HBM.** The 2,801.8 record row does not charge the 40 routed-expert HBM fetches. Charging them, with a 4-cycle boundary service term, gives about 2,651 (MTP about 5,362; `results/uarch/v41_hbm_service_term_20261003/dshbm_service_term.json`, model-only pricing, patch not applied). The RTL-op composition `w19_hbm_token_ar.json` gives 2,019.2, with collectives at 283.7 µs against 125.9 µs. These are separate historical bases. The newer `HBM_W19` composition is 442.14 µs / 2,261.7 tok/s fused, already including 5.33 µs fetch and measured wide select; the legacy fetch correction must not be added to it. Complete hardware service and contextual physical qualification remain open.
+- **V4.1 MTP.** τ 3.649 is a mixed-set measurement. A pilot agentic median is 4.69, and multi-turn agents alone give 3.92 (`results/speculative/v41_mtp_acceptance_pilot_20261003/mtp_acceptance.json`). τ 3.78 is a third-party verify window, not an accepted length. MTP acceptance is not yet qualified.
 
 ## Speculation (`--spec`, `results/uarch/speculation.json`)
 
@@ -354,7 +363,7 @@ The lane multiplier m counts the positions that multiply one ROM weight word in 
 | V4.1 ROM MTP, m = 2 | 1.89× | 7,064 | 1.86× | 86.0 mm² (does not fit) | rejected |
 | V4.1 ROM MTP, m = 6 | 1.65× | 8,051 | 2.11× | 429.9 mm² | rejected |
 | Qwen ROM DFlash, m = 1 (best block = 1, i.e. AR) | — | 9,017 | 1.0× | 0 (+29 mm² drafter ROM) | **AR only** |
-| Qwen ROM DFlash, m = 5, block 5 | — | 18,720 | 2.08× | 178.7 mm² | rejected: does not fit |
+| Qwen ROM DFlash, historical TP-2, m = 5, block 5 | — | 18,720 | 2.08× | 178.7 mm² | rejected: does not fit; nonadopted for current TP-4 AR target |
 
 **Why the two ROM designs differ:**
 - **V4.1 tokens are latency-bound.** Fill is about half the token, so 6 positions share the expensive part.
@@ -375,15 +384,17 @@ Every multi-die design here assumes deterministic hardware collectives at link l
 
 | Collective / exchange latency | V4.1 ROM (AR) | V4.1 HBM (GPU org., AR) | Qwen ROM (AR, G = 6,144) | Qwen HBM (AR) |
 |---|---:|---:|---:|---:|
-| own baseline | **3,809** (W15-measured collectives) | **2,920** (0.668 µs switch) | **9,851** (W15-measured exchange; 9,968 at 17.5 ns) | **881** |
+| own baseline | **3,809** (W15-measured collectives) | **2,801.8** (selected `hbm_gpu.json` row; 0.668 µs switch) | **9,851** (W15-measured exchange; 9,968 at 17.5 ns) | **881** |
 | 0.1–0.15 µs | 3,752 | 4,084 | 9,404 | 876 |
 | 0.5–0.668 µs | 2,785 | 2,920 | 7,378 | 854 |
 | 1 µs | 2,390 | 2,469 | 5,813 | 828 |
 | 5 µs | 881 | 863 | 2,155 | 667 |
 | 10 µs | 493 | 476 | — | — |
 
-**At equal collective latency, V4.1 ROM and V4.1 HBM have almost the same single-user speed.** Both are latency-bound, not bandwidth-bound.
-- The ROM array's advantage (3,809 against 2,920) is structural. Its weights are local, so small TP-4 groups on direct links suffice.
+The sweep cells above retain the independently stored [`fabric.json`](../results/uarch/fabric.json) sensitivity: its DS group-slot point at 0.668 µs is 2,919.7 tok/s (rounded to 2,920). That frozen sweep is not the selected `hbm_gpu.json` row at 2,801.8; it has not been regenerated to that row's clock/barrier basis. The own-baseline DS cell selects `hbm_gpu.json`; the remaining sweep comparison below stays on the stored fabric basis. None establishes a current product headline. The selected row itself omits the routed-expert HBM fetch, which costs about 5.4% (≈ 2,651; see the corrected numbers above). An RTL-op composition gives 2,019.2.
+
+**Within that stored sweep, at equal collective latency, V4.1 ROM and V4.1 HBM have almost the same single-user speed.** Both are latency-bound, not bandwidth-bound.
+- The stored fabric comparison (3,809 against 2,920) is structural on that historical sensitivity basis. Its weights are local, so small TP-4 groups on direct links suffice.
 - The HBM machine must spread every matrix over 96 dies to reach its bandwidth, which needs a switched fabric.
 - Qwen ROM stays about 11× faster than Qwen HBM at every latency, because the Qwen HBM machine is bandwidth-bound.
 - Every headline depends strongly on deterministic hardware collectives. At NCCL-class latency (5–10 µs) both V4.1 designs fall to 500–900 tok/s.
@@ -401,7 +412,7 @@ Tier 1 is measured. Tier 2 is a projection calibrated on B200 measurements. Tier
 | 2 | Qwen3-8B, 1× B200, FP8, 8K (per-byte cost fitted to the B200 BF16 230; H200 fixed cost) | 331 | 853 (reasoning mix) / 1,390–1,690 (math/code τ 6.5–8.0) |
 | 2 | DeepSeek-V4.1-Flash, 8× B200 (+ NCCL-class 8 µs all-reduce, ASSUMED) | 278 | 539 |
 | 3 | Qwen HBM, idealised | 881 | 2,671 (τ 3.66) / 4,749 (τ 6.50) / 5,852 (τ 8.01) |
-| 3 | V4.1 HBM, idealised | 2,920 | 5,673 |
+| 3 | V4.1 HBM, selected analytical group-slot comparator | 2,801.8 | 5,539.4 |
 
 **Acceptance is strongly workload-dependent.** Every speculative row must name its τ and workload:
 - DFlash τ is 6.5–8.0 on math and code with thinking disabled (paper).
@@ -456,11 +467,11 @@ User positioning (2026-09-29): the paper claims single-user speed against GPUs (
 | Qwen 1× B200, AR (tier 2) | 331 | 2,081 | 255 | 7,907 | 31.0 | 87.1 | 255 |
 | V4.1 ROM, AR (ungated) | 3,809 | 19,309 | 32 | 77,022 | 2,407 | 1,056 | 866 |
 | V4.1 ROM, MTP m = 1 (ungated) | 5,857 | 12,637 | 16 | 50,708 | 3,169 | 1,591 | 866 |
-| V4.1 HBM tier 3, AR | 2,920 | 3,692 | 16 | 21,792 | 1,362 | 913 | 811 |
-| V4.1 HBM tier 3, MTP | 5,673 | 2,287 | 4 | 12,122 | 3,030 | 1,676 | 811 |
+| V4.1 HBM tier 3, AR | 2,801.8 | 3,781 | 32 | 21,792 | 681 | 913 | 811 |
+| V4.1 HBM tier 3, MTP | 5,539.4 | 2,312 | 4 | 12,079 | 3,020 | 1,677 | 811 |
 | V4.1 8× B200, AR (tier 2) | 278 | 19,852 | 839 | 13,018 | 15.5 | 423 | 839 |
 
-Per-batch rows (per-user rate, aggregate, per-user latency, energy, system power) are in the record. Measured anchors, at 689 W:
+The DS HBM cells above use `economics.json#v41_hbm.ar` and `.mtp`, including their own saturation batch and energy fields. They are ledger model results, not measured service/PHY performance. Per-batch rows (per-user rate, aggregate, per-user latency, energy, system power) are in the record. Measured anchors, at 689 W:
 - B200 AR at 1 to 32 users: 2,996 to 121 mJ/token.
 - B200 DFlash at batch 1: 586 mJ (Math500) and 722 mJ (HumanEval).
 - DeepSeek-R1 on 8× B200: 14,978 mJ.
@@ -588,13 +599,15 @@ Use MTP while its aggregate exceeds AR's, and AR beyond. On the ROM array, AR's 
 
 | Batch | V4.1 ROM mode | Per-user tok/s | Aggregate tok/s | V4.1 HBM tier 3 mode | Per-user tok/s | Aggregate tok/s |
 |---:|---|---:|---:|---|---:|---:|
-| 1 | MTP | 5,857 | 5,857 | MTP | 5,673 | 5,673 |
-| 2 | MTP | 5,857 | 11,713 | MTP | 5,673 | 11,346 |
-| 4 | MTP | 5,857 | 23,426 | MTP | 3,031 | 12,122 |
-| 8 | MTP | 5,857 | 46,852 | MTP | 1,515 | 12,122 |
-| 16 | AR | 3,809 | 60,941 | AR | 1,362 | 21,792 |
-| 32 | AR | 2,407 | 77,022 | AR | 681 | 21,792 |
-| 866 / 811 (capacity) | AR | 88.9 | 77,022 | AR | 26.7 | 21,658 |
+| 1 | MTP | 5,857 | 5,857 | MTP | 5,539.4 | 5,539.4 |
+| 2 | MTP | 5,857 | 11,713 | MTP | 5,539.4 | 11,078.8 |
+| 4 | MTP | 5,857 | 23,426 | MTP | 3,019.7 | 12,078.7 |
+| 8 | MTP | 5,857 | 46,852 | MTP | 1,509.8 | 12,078.7 |
+| 16 | AR | 3,809 | 60,941 | AR | 1,347.7 | 21,563.7 |
+| 32 | AR | 2,407 | 77,022 | AR | 681.0 | 21,791.8 |
+| 866 / 811 (capacity) | AR | 88.9 | 77,022 | AR | 26.7 | 21,658.2 |
+
+The DS HBM columns above use `economics_levers.json#adaptive_mtp.v41_hbm.rows`, selected by batch; the retained ROM columns have their own historical basis.
 
 ### ROM mask cost: via-programmable ROM
 
@@ -627,7 +640,7 @@ This is root's fairness follow-up (2026-09-29). The same policies and cited cons
   - SerDes and UCIe: 5 µs wake, 10% low-power-idle residual.
 - **No wake on the token path.** Each wake finishes at the end of its gap, from the static schedule.
 - **Busy time and gaps** come from each design's own schedule:
-  - **V4.1 HBM comparator:** the W13 chain walked node by node (`v41_hbm_timeline`, which reproduces 342.5 µs AR and 617.5 µs MTP).
+  - **V4.1 HBM comparator:** the W13 chain walked node by node (`v41_hbm_timeline`); the table below is sourced from `economics_levers.json#gated_alike`, not an independent measured token-rate gate.
   - **Qwen dies:** their op boundaries (181), KV streams (36) and UCIe exchanges (73), with the gaps split evenly.
   - **At saturation,** each domain gets one contiguous idle gap per pass or token, the ROM array's rule.
 - **GPU rows** stay at measured board power, which already contains whatever the GPU gates.
@@ -648,14 +661,16 @@ This table supersedes the energy columns of "Batch, energy and capacity" above.
 | V4.1 ROM AR | saturated | 77,022 | 1,056 | 344 | **221** | 73,145 → 8,837 |
 | V4.1 ROM MTP m = 1 | B = 1 | 5,857 | 12,638 | 2,876 | **412** | 73,145 → 1,544 |
 | V4.1 ROM MTP m = 1 | saturated | 50,708 | 1,591 | 515 | **296** | 73,145 → 7,501 |
-| V4.1 HBM tier 3 AR | B = 1 | 2,920 | 3,692 | 3,468 | **3,246** | 6,513 → 5,210 |
-| V4.1 HBM tier 3 AR | saturated | 21,792 | 913 | 895 | **755** | 6,513 → 3,067 |
-| V4.1 HBM tier 3 MTP | B = 1 | 5,673 | 2,287 | 2,184 | **1,922** | 6,513 → 4,444 |
-| V4.1 HBM tier 3 MTP | saturated | 12,122 | 1,676 | 1,654 | **1,475** | 6,513 → 4,081 |
+| V4.1 HBM tier 3 AR | B = 1 | 2,801.8 | 3,781 | 3,552 | **3,328** | 6,499 → 5,230 |
+| V4.1 HBM tier 3 AR | saturated | 21,792 | 913 | 896 | **759** | 6,499 → 3,145 |
+| V4.1 HBM tier 3 MTP | B = 1 | 5,539.4 | 2,312 | 2,208 | **1,944** | 6,499 → 4,462 |
+| V4.1 HBM tier 3 MTP | saturated | 12,079 | 1,677 | 1,657 | **1,483** | 6,499 → 4,161 |
 | V4.1 8× B200 AR (tier 2) | B = 1 | 278 | 19,852 | — | **19,852** | measured |
 | V4.1 8× B200 AR (tier 2) | saturated | 13,018 | 423 | — | **423** | measured |
 
 - **Gating does not change the Qwen rows.** Their energy is dynamic: the ROM package's KV read and the HBM die's weight stream. Their idle gaps (under 1 µs between ops) are shorter than a core wake plus break-even. Gated or not, Qwen ROM uses 84.6 mJ/token against 356 for HBM tier 3 DFlash and 2,081 for a B200.
+The DS HBM gating table is synchronized only to `economics_levers.json#gated_alike.rows` by design and point. The SM-idle narrative and cross-design energy ratios below retain an earlier timeline/ROM basis and are historical, not recalculated or adopted by this bounded audit.
+
 - **The V4.1 HBM comparator gains 12–16% at batch 1 and 12–17% at saturation.**
   - Its 96 TP dies are all on every token. Their idle comes in short gaps between phases: the SMs have 281 gaps within the 253 µs they are idle, and only 91 µs of them are long enough to gate.
   - The SerDes idle between collectives mostly in gaps under 5 µs.
@@ -703,8 +718,8 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 | Design | Tier | Per-user AR | Per-user DFlash | Saturated tok/s | mJ/token, B = 1 / saturated | Capex | Users at 8K |
 |---|---|---:|---:|---:|---:|---:|---:|
 | Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144), TT | ROM | 9,368 | — | 23,842 | 98 / 85 | $29k | 536 |
-| Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, KV_PREP, droop cap75 + preramp256) | ROM | 8,460 | — | 23,842 | 120 / 107 | $29k | 536 |
-| Qwen ROM option C at 1.2 GHz SS, RTL-attributed, as built: per-layer body x 1.0923 (W12b 2,687 / model 2,460) + 2 all-reduces at the measured 991 cycles (2 serialized 128-word TP segments; W12b a17a3c79) | ROM | 6,222 | — | 23,842 | — / — | $29k | 536 |
+| Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, KV_PREP, droop cap75 + preramp256); superseded 2026-10-03: compute chain only, KV delivery not modelled | ROM | 8,460 | — | 23,842 | 120 / 107 | $29k | 536 |
+| Qwen ROM option C at 1.2 GHz SS, RTL-attributed, as built (superseded 2026-10-03: mixes a position-0 body ratio with the 8K chain, no KV delivery; calibrated calendar 2,793): per-layer body x 1.0923 (W12b 2,687 / model 2,460) + 2 all-reduces at the measured 991 cycles (2 serialized 128-word TP segments; W12b a17a3c79) | ROM | 6,222 | — | 23,842 | — / — | $29k | 536 |
 | Qwen ROM option C at 1.2 GHz SS, RTL-attributed, body only: per-layer body x 1.0923; all-reduces at the model's 442 cycles, PENDING W12b's one-segment fix (79783ff9, unmeasured; est. ~620 at LAT 339) | ROM | 7,921 | — | 23,842 | — / — | $29k | 536 |
 | Qwen HBM, 1 right-sized die(s) x 6 stacks (388.9 mm2 each) (tier 3, idealised; DFlash W19 audit -14%) | 3 | 660 | 1,722 | 5,328 | 356 / 128 | $19k | 188 |
 | Qwen HBM, 2 right-sized die(s) x 4 stacks (265.8 mm2 each) (tier 3, idealised; DFlash W19 audit -14%) | 3 | 880 | 2,296 | 7,104 | 356 / 128 | $20k | 255 |
@@ -713,7 +728,7 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 | Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, Math500 (tau 8.01, 5.1x) | 1 | 1,175 | — | — | 586 / — | — | — |
 | Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, HumanEval (tau 6.50, 4.2x) | 1 | 955 | — | — | 722 / — | — | — |
 
-**MTP acceptance** (`tau_sweep_1m`). The headline τ is third-party: 3.78, arena-hard (general chat), from LMSYS, 'DSpark in SGLang' (2026-07-06), https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ Figure 4: DeepSeek-V4-Flash, H200 TP4 DP-attention, block 6, cap-accept verify (acceptance ceiling). It is V4-Flash, not V4.1-Flash, and cap-accept is a ceiling. Our measured 3.649 corroborates it. γ = 5, so τ ≤ 6 always holds.
+**MTP acceptance sensitivity, not adopted agentic acceptance** (`tau_sweep_1m`). The historical headline τ is third-party: 3.78, arena-hard (general chat), from LMSYS, 'DSpark in SGLang' (2026-07-06), https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ Figure 4: DeepSeek-V4-Flash, H200 TP4 DP-attention, block 6, cap-accept verify (acceptance ceiling). It is V4-Flash, not V4.1-Flash, and cap-accept is a ceiling. Our measured 3.649 corroborates it. γ = 5, so τ ≤ 6 always holds.
 
 | Design | τ 2.91 | τ 3.649 | τ 3.78 | τ 4.5 | τ 5.24 |
 |---|---:|---:|---:|---:|---:|
@@ -930,6 +945,8 @@ Two attributed rows replace the single calibrated ratio. **As built:** the per-l
 | L1 + overlap (KR credit, SU chase), estimate | 8,825 | 6,418 |
 | + one-segment all-reduce (as built), estimate | 8,825 | 7,541 |
 
+**Superseded 2026-10-03.** These step rows are compute-chain compositions with no KV-delivery term, and the as-built column mixes positions. The finite calendar with KV delivery, at measured compute, gives 357.99 µs = 2,793 tok/s at 8K (model only; `results/uarch/qwen_rom_calibrated_calendar_20261003/baseline-r1.json`). Its binder is the KV fill service: the 7 × 64 B fill network has a 281.4 µs floor, and the command bus a 308.16 µs floor.
+
 Lane registers alone save about nothing on Qwen: the vstream drains on every SFU class change and releases dependents only on a full drain, so the saving needs the per-vector credit (overlap). W12b's earlier 13,455 / 11,346-cycle bounds are withdrawn: they removed each op's pipeline depth, which a register file does not.
 
 **Clock-domain cases** (`clock_domain_cases`, all with the cap; the measured W11 FP32 add prices every serial chain):
@@ -989,7 +1006,7 @@ The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5
 - **G = 6,144 (W12's die, layer 0 exact) is the product.** It uses 529.5 of 560 mm² (5.45% margin).
 - **the TP-4 token is not lane-bound: G 6,144 -> 6,336 buys +0.04% (9,367.6 -> 9,371.4 tok/s) and the saturated rate is KV-stream bound at every G >= 4,096, so extra area does not buy per-user speed; legal G step is 64 groups (the program's embedding-word rule).**
 - **ROMA-safe sensitivity:** G = 4,928 at 8,673 tok/s (−7.4%).
-- **At 1.2 GHz SS:** C runs at 10,262 tok/s, and 10,556 with W12's TP-4 wire count (66 cycles per ME op, including the SS pin-capture register).
+- **At 1.2 GHz SS:** C runs at 10,262 tok/s, and 10,556 with W12's TP-4 wire count (66 cycles per ME op, including the SS pin-capture register). Superseded 2026-10-03: compute chain only; the calibrated calendar with KV delivery gives 2,793 tok/s.
 - **A smaller die** holds the placed tiles, spine, PHYs and UCIe with a 10% margin:
   - W12 estimate 308 mm2 (ASAP7 tiles): 443.9 mm², yield 0.661, $210.7 per die, $10,643 for 4 dies and 2 packages.
   - W12 estimate 359 mm2 (ASAP7 tiles): 504.0 mm², yield 0.6276, $256.3 per die, $10,825 for 4 dies and 2 packages.
@@ -997,6 +1014,8 @@ The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5
   - 815 mm2 reference: 815.0 mm², yield 0.4863, $578.2 per die, $12,113 for 4 dies and 2 packages.
 
 **Qwen context sweep** (`qwen_context_sweep`). W12b context audit (claude/w12-qwen-rom b4d2715f): KV read 18,432 x T bytes a token a die; HBM binds from ~32K (W12b ~1.4k tok/s at 128K, ~0.9k at 200K with SW 1,024, matching this sweep); 32K needs parameters and 2 larger SRAMs (+~10 mm2 a die); 128K and 200K need a 27-bit address and a larger VM (or head-serial scores).  Qwen3-8B is natively 32K and 128K with YaRN; 200K is beyond official support.  FP8 KV (baseline); the FP4/INT4-KV rows halve the KV bytes and are QUALITY-UNTESTED
+
+**Correction, 2026-10-03.** The 8K ROM rows below assume the KV fill runs at PHY rate. In the calibrated calendar the binder is the KV fill service, not the compute chain: the fill network has a 281.4 µs floor and the command bus a 308.16 µs floor. The resulting token is 357.99 µs = 2,793 tok/s (`results/uarch/qwen_rom_calibrated_calendar_20261003/baseline-r1.json`, model only). The off-chip KV read is 150,690,816 B per die per token.
 
 | Context | Design | AR tok/s | KV bytes per token | KV read µs | Binding | Users | Saturated | mJ, B = 1 / saturated |
 |---:|---|---:|---:|---:|---|---:|---:|---:|
@@ -1058,7 +1077,7 @@ The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5
 
 - To hold 866 users at 1M, the comparator needs 17 dies × 4 stacks or 11 × 6.
 - Its existing 811-user figure uses a pipelined busiest-die rule; under TP-96 it holds 7,763.
-- W13 at SS pre-layout: an 8-stage fp32_add_rne_pipe breaks the IL = 8 circulating accumulator; IL = 16 gives V4.1 HBM ~2,500 AR (from ~2,920); a 7-stage adder keeps IL = 8 (W13 estimate, not priced here).
+- W13 at SS pre-layout: an 8-stage fp32_add_rne_pipe breaks the IL = 8 circulating accumulator; IL = 16 gives V4.1 HBM ~2,500 AR (from ~2,920, the stale fabric sweep point; the record row is 2,801.8); a 7-stage adder keeps IL = 8 (W13 estimate, not priced here).
 
 ### Cost: die area with a yield model (`fab`), replacing the iso-package B200 price
 

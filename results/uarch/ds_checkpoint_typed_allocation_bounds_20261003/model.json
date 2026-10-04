@@ -1,0 +1,116 @@
+{
+  "APIs": {
+    "phase_object_bounds": "partial logical storage ledger only; rejects unknown supplied terms; cannot produce admission",
+    "profile_actual_state": "default-off; exact V3 quiescence/backing -> snapshot -> typed node/array/sector counts; no provider constructor",
+    "profile_json_metadata": "actual identity/role/journal/witness/closure objects -> source node and exact canonical byte counts; no full JSON buffer"
+  },
+  "actual_constructor_runs": 0,
+  "actual_payload_reads": 0,
+  "actual_state_snapshot_available": false,
+  "complete_source_phase_bounds": false,
+  "full_runtime_upper_bytes": null,
+  "original_guards_changed": false,
+  "phases": {
+    "atomic_verify": {
+      "required_counts": [
+        "state and observations encoded bytes",
+        "decoded JSON nodes/key memo",
+        "CPython scanner scratch",
+        "retained source contract/receipt/observations"
+      ],
+      "retained": "full state/observations JSON read and parse; fsynced sibling rename no payload copy"
+    },
+    "capture": {
+      "required_counts": [
+        "max stream frame depth",
+        "snapshot wrappers",
+        "max leaf tree/canonical bytes",
+        "noncontiguous array temporary",
+        "identity/role/journal/witness graphs",
+        "atomic observations JSON"
+      ],
+      "retained": "R2 two passes/hash consistency, original leaf writer, no whole encoded tree; original V3 project still runs first"
+    },
+    "cold_restore": {
+      "required_counts": [
+        "actual closure node histogram",
+        "all decoded state primitive/container nodes",
+        "arrays copied per occurrence",
+        "source image equality two tobytes temporaries",
+        "restored port/provider auxiliary objects",
+        "shared factory objects/counters",
+        "verify_actual_restore compare temporaries"
+      ],
+      "retained": "full constructor, closure parse, decoded arrays/sectors, all old tables plus all accumulating copies, exact same-home identities",
+      "table_overlap_upper_bytes": 259806720
+    },
+    "constructor": {
+      "changed": false,
+      "missing": "allocator/pages, kernel/peer growth and cumulative physical write-set",
+      "source_floor_bytes": 40910816974
+    },
+    "physical": {
+      "guest_plus_host_available_sum": false,
+      "pagecache_release_credit_bytes": 0,
+      "required_counts": [
+        "allocator retained-page upper",
+        "mmap/file-cache touch union",
+        "source process-to-process cumulative COW union",
+        "kernel and peer lease growth"
+      ]
+    },
+    "project": {
+      "required_counts": [
+        "typed node histogram",
+        "maximum canonical scalar",
+        "full closure/identity/role/journal/witness node counts",
+        "max active sorted-dict workspace",
+        "deep_metadata seen-set cardinality",
+        "snapshot wrapper counts"
+      ],
+      "retained": "V3 measure_state constructs encoded tree and canonical buffer, followed by deep_metadata seen set; original projection retained"
+    }
+  },
+  "physical_admission": false,
+  "protected_R2_source_unchanged": true,
+  "restore_correction": {
+    "R69_commit": "23bc3975b2483774dfbecf68a06bc2108006122c",
+    "R69_retained_base_before_correction_bytes": 43899508682,
+    "actual_constructor_runs": 0,
+    "actual_payload_reads": 0,
+    "all_empty_table_headers_upper_bytes": 13824,
+    "all_table_copies_upper_bytes": 259806720,
+    "all_table_entries_upper_bytes": 259792896,
+    "complete_source_phase_bounds": false,
+    "constructor_floor_unchanged_bytes": 40910816974,
+    "copied_key_and_sector_values_alias_saved_objects": true,
+    "duplicate_sector_contents_charged_here": false,
+    "existing_guard_changed": false,
+    "existing_singleton_table_allowance": 352,
+    "full_homes": 290730,
+    "full_native_PCs": 2213,
+    "full_runtime_upper_bytes": null,
+    "missing_copy_increment_upper_bytes": 257100544,
+    "old_largest_only_allowance_bytes": 2706176,
+    "physical_admission": false,
+    "restored_port_upper": 96,
+    "restored_sector_upper": 738048,
+    "retained_base_with_corrected_table_term_bytes": 44156609226,
+    "schema": "R69_ALL_RESTORED_PORT_TABLE_OVERLAP_CORRECTION",
+    "simultaneous_lifetime": "saved retains all decoded backing dictionaries until restore returns; copied tables accumulate in installed RF/state/shared ports"
+  },
+  "schema": "R69_TYPED_ALLOCATION_AUDIT",
+  "source_sha256": {
+    "inputs/PC01_model.json": "b6e5166011ac7460170b5d59e9944a8f01d0b74b1bc72f6ec89b3bf0b98dee48",
+    "inputs/R2_stream.py": "9c6cf76363ce0f95a2794c1afeda755aeb8119c6313f57eaa07c020f6492fcbb",
+    "inputs/R56_preflight_model.json": "feac363017cf6ebc5a57383b3f7f744fbb82dbfb9fc69c203a307008474fe63b",
+    "inputs/R56_source.py": "edbf6366f660e205fcbc40a703e83e7b11237748412524dbde6e36906a71831d",
+    "inputs/R69_child.py": "f1fc221921e90772efa437e6751fd165ef06c91967a6d407989903d6390f203b",
+    "inputs/R69_ledger.json": "45b16b2fc0cb3e2d3558ffd1024fa7011921248a9ad97fa283db5d5c8f168481",
+    "inputs/R69_phases.py": "d528d3697a3888efbc5a917aa6b7d4e95707017f0ffd4ef2aff78f99f1c7e36a",
+    "inputs/R69_selection.py": "0adec98f1fcb2380082f936b3a25cc515c3593aa737b1f6b8050a451adf32d41",
+    "inputs/V3_source.py": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e",
+    "inputs/journal_source.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0"
+  },
+  "source_upper_is_not_measured_usage": true
+}

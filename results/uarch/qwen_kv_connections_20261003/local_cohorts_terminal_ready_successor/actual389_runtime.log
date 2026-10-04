@@ -1,0 +1,13 @@
+test_actual_roots_then_receipts_empty_and_exact_held_identity (test_canonical_qwen_local_cohorts.LocalCohortTests.test_actual_roots_then_receipts_empty_and_exact_held_identity) ... ok
+test_default_off_and_inventory (test_canonical_qwen_local_cohorts.LocalCohortTests.test_default_off_and_inventory) ... ok
+test_invalid_source_key_refuses_quiet_and_source_loss_retains (test_canonical_qwen_local_cohorts.LocalCohortTests.test_invalid_source_key_refuses_quiet_and_source_loss_retains) ... ok
+test_late_receipt_revokes_offer_before_acceptance (test_canonical_qwen_local_cohorts.LocalCohortTests.test_late_receipt_revokes_offer_before_acceptance) ... ok
+test_new_root_under_quiesce_faults_but_old_continuation_can_retire (test_canonical_qwen_local_cohorts.LocalCohortTests.test_new_root_under_quiesce_faults_but_old_continuation_can_retire) ... ok
+test_reset_keeps_all_old_roots_and_held_queries (test_canonical_qwen_local_cohorts.LocalCohortTests.test_reset_keeps_all_old_roots_and_held_queries) ... ok
+test_sector_idle_not_whole_byte_RPC_retirement (test_canonical_qwen_local_cohorts.LocalCohortTests.test_sector_idle_not_whole_byte_RPC_retirement) ... ok
+test_wrong_stage_owner_and_wrong_state_identity_retain_debt (test_canonical_qwen_local_cohorts.LocalCohortTests.test_wrong_stage_owner_and_wrong_state_identity_retain_debt) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.299s
+
+OK

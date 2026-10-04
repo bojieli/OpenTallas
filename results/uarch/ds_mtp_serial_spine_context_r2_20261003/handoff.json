@@ -1,0 +1,120 @@
+{
+  "owner": "Archimedes",
+  "worktree": "/home/ubuntu/w17-dsrom-ratio-fifo-gap-20261003",
+  "branch": "model/dsrom-ratio-fifo-gap-20261003",
+  "authoritative_owner_commit": "a9691644a",
+  "model_sha256": "8217890f47e61a16376c8587e13ef978a984310ac754bcc4b329fbaa71a95f6b",
+  "request": {
+    "actual_reserved_rectangle": null,
+    "body_um2": 12264.477299999999,
+    "corridor_or_macro_frame_borrowing": false,
+    "credits_for_old_state_or_slot_embedding": 0,
+    "fit_qualified": false,
+    "gross50pct_mm2": 0.024528954599999996,
+    "height_um": 191.7,
+    "leaf_plus_scalar_width_only_gross50pct_mm2": 0.05588012448,
+    "name": "MTP_ACCEPT_SERIAL_SPINE_PER_ACTUAL_CORE",
+    "physical_reply": "NOT_RESERVED: new kernel request and mandatory scalar provider debit require named disjoint selected-home instance containment; sourcekernel enrollment not a physical allocation",
+    "rectangle_mm2": 0.0245376,
+    "scalar_width_only_added_separate_mm2": 0.03135116988,
+    "spare_geometric_um2": 8.645400000001246,
+    "width_um": 128
+  },
+  "replicas": {
+    "N_TP_is_link_replication_not_core_count": true,
+    "PAR2_physical_binding": "Maxwell assigns one source core namespace and resolves which selected shard hosts it; no implicit second core, rankfleet or perstage replication",
+    "actual_cores_per_source_die_wrapper": 1,
+    "actual_fleet_count_unproven": true,
+    "enrolled_successor_instances": 0,
+    "hierarchy": "die.u_tile.u_core; scalar u_xu.u_sel remains one originalK512 provider",
+    "one_kernel_per_actual_enrolled_core": 1
+  },
+  "clock_reset": {
+    "sinks": 2016,
+    "SS_pin_fF": 874.907712,
+    "FF_pin_fF": 1014.354432,
+    "tree_counts": [
+      252,
+      32,
+      4,
+      1
+    ],
+    "clock_reset_buffers": 578,
+    "already_charged": true
+  },
+  "channels": {
+    "PG_or_corridor_free_capacity_credit": 0,
+    "each_producer_floor_um_at48nm": 2.496,
+    "if_all_share_one_cut_floor_um_at48nm": 35.52,
+    "if_all_share_one_cut_signals": 740,
+    "independent_boundary_names": [
+      "serial_core_leaf",
+      "XU_origin_terminal_holder",
+      "ME_origin_terminal_holder"
+    ],
+    "leaf_bytes_per_edge": {
+      "accept": 3.5,
+      "amax": 6.125,
+      "clock_reset_stop_fault_corrected": 0.0,
+      "fence": 4.0,
+      "result": 27.625,
+      "source_stok": 21.0,
+      "start": 5.625,
+      "tokx": 6.125
+    },
+    "leaf_floor_um_at48nm": 30.528,
+    "leaf_nominal_TOKX_AMAX_II_edges": 2,
+    "leaf_signals": 636,
+    "legal_tracks_after_PG_via_clock": null,
+    "no_full_selector_II2_claim": true,
+    "producer_cut_instances": 2,
+    "producer_fields": {
+      "begin_finish_discriminator": 1,
+      "original_lease": 25,
+      "ready": 1,
+      "slot": 3,
+      "token": 21,
+      "valid": 1
+    },
+    "producer_holder_occupancy_each": 1,
+    "producer_signals_each": 52,
+    "source_scalar_read_write_bytes_per_edge": 4,
+    "sum_not_selected_single_corridor": true
+  },
+  "dependency_list": [
+    {
+      "action": "Freeze currentNSLOT8/NW21 defaultoff kernel + protected origin holder source and fullK512 scalar width/protection realization, with actual begin/finish/stamp mapping",
+      "owner": "Russell01a0fd4d"
+    },
+    {
+      "action": "Return one selected actual core home/shard identifier and disjoint128x191.70 rectangle plus scalar0.03135116988width-only debit; actualfleet replica census and oldmatched containment required",
+      "owner": "Maxwell"
+    },
+    {
+      "action": "Join these2016+7690 and bridge native sink pins to retained fullparentCLK/reset tree, rail/via exclusions and separate636/52/52channel routes",
+      "owner": "Archimedes+Maxwell"
+    },
+    {
+      "action": "Match fullcompletion/reverse bridge packet ports and related-clock reset/epoch cancellation to truthful ownerdrain; sharedFIFO ownership unchanged",
+      "owner": "Claude"
+    },
+    {
+      "action": "Supply actual positive allcopies fence/parallelME lane identity and finite reuse/delivery contract; localtake is not KVrelease",
+      "owner": "Dewey/Popper"
+    }
+  ],
+  "admission": {
+    "new_RTL_or_build_authorized_here": false,
+    "physical_G0": false,
+    "slot_reserved": false,
+    "source_model_reply_ready": true,
+    "whole_MTP": false
+  },
+  "mandatory_correctness": true,
+  "minimum_gain_filter": false,
+  "prior": "69c556aae request superseded; unchangedhistory retained",
+  "replay": "python3 tools/ds_mtp_serial_spine_context_r2.py",
+  "tests": "python3 -m unittest discover -s tests -p test_ds_mtp_serial_spine_context_r2.py -v",
+  "standalone_inputs": true,
+  "no_live_jobs_changed": true
+}

@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS_DEFAULT_OFF_NO_RELEASE",
+  "compile_rc": 0,
+  "run_rc": 0,
+  "elapsed_s": 1.143959156703204,
+  "source_sha256": {
+    "rtl/model/qwen_banked_atomic_receiver_20261003/default_off_r1/tb.sv": "6a964550dd59b78ef34cdd8c140243cba85941c6784da535caaefa533d1efa3a",
+    "rtl/model/qwen_banked_atomic_receiver_20261003/ot_gpu_qwen_banked_output_join.sv": "ba0377d7f4274a152ebcaced004cc783efebd30719f83a432c9e8b34dce3acd2"
+  },
+  "post_sha256": {
+    "rtl/model/qwen_banked_atomic_receiver_20261003/default_off_r1/tb.sv": "6a964550dd59b78ef34cdd8c140243cba85941c6784da535caaefa533d1efa3a",
+    "rtl/model/qwen_banked_atomic_receiver_20261003/ot_gpu_qwen_banked_output_join.sv": "ba0377d7f4274a152ebcaced004cc783efebd30719f83a432c9e8b34dce3acd2"
+  },
+  "scope": "actual new output join disabled, all inputs asserted; no ACK/visibility/publication acceptance",
+  "limits": "CPU/AS/FSIZE unlimited; no wall cap"
+}

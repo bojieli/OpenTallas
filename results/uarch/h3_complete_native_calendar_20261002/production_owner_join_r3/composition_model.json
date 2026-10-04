@@ -1,0 +1,555 @@
+{
+  "DS_chain_boundary_pricing": {
+    "baseline_clock_hz": 1033900000.0,
+    "baseline_design": "v41_hbm_gpu_groupslot",
+    "baseline_exact_T_us": 356.91512220088396,
+    "baseline_native_chain_is_AR_not_MTP": true,
+    "current_complete_service": {
+      "CPU_ticks_converted": false,
+      "MTP_iteration": false,
+      "actual_native_PC_boundary_join_complete": false,
+      "boundaries": 329,
+      "conditional_AR_rate": null,
+      "conditional_AR_total_us": null,
+      "conditional_complete_service_us": null,
+      "configured_known_edges_by_domain": {},
+      "existing_barrier_receipt_preserved": true,
+      "headline_replacement_allowed": false,
+      "known_additive_service_us": 0.0,
+      "measured_acceptance_assumed": false,
+      "missing_terms_by_boundary": {
+        "CDC_request": 329,
+        "CDC_return": 329,
+        "CDC_reverse": 329,
+        "SRAM_acceptance": 329,
+        "backend_wait": 329,
+        "common_ACK": 329,
+        "consumer": 329,
+        "credit_return_wait": 329,
+        "owner_admission": 329,
+        "reverse": 329,
+        "visibility": 329
+      },
+      "physical_admission": false,
+      "production_rate": null,
+      "schema": "DS_CHAIN_BOUNDARY_CONDITIONAL_PRICE_R3",
+      "unverified_overlap_credit": false
+    },
+    "current_headline_modified": false,
+    "docs_modified": false,
+    "endpoint_cycles_not_measured_context": true,
+    "headline_consumer": "tools/uarch_model.py:v41_hbm_chain; missing owner/commonACK/visibility/reverse/CDC/stall phases",
+    "local_chat_or_pooled_acceptance_used": false,
+    "missing_headline_terms": [
+      "owner_admission",
+      "SRAM_acceptance",
+      "common_ACK",
+      "visibility",
+      "consumer",
+      "reverse",
+      "CDC_request",
+      "CDC_return",
+      "CDC_reverse",
+      "backend_wait",
+      "credit_return_wait"
+    ],
+    "one_percent_rate_loss_uniform_cycles_threshold": 11.329542993567712,
+    "schema": "DS_BOUNDARY_HEADLINE_CONSUMER_DELTA_R3",
+    "source_boundaries": 329,
+    "source_boundaries_are_not_a_full_native_PC_or_primitive_mapping": true,
+    "source_boundary_census_sha256": "6d7f4853979ad67ce145e82a6aa6d869a66ed4d907c42c9964ca80719b0951a8",
+    "uniform_sensitivity": [
+      {
+        "conditional_AR_T_us": 357.2333347939781,
+        "conditional_AR_rate": 2799.2908348732776,
+        "conditional_delta_us": 0.3182125930941097,
+        "rate_loss_percent": 0.0890769595389601,
+        "scope": "uniform sensitivity at legacy analytical clock; not actual configured endpoint service",
+        "uniform_cycles_per_boundary": 1
+      },
+      {
+        "conditional_AR_T_us": 357.55154738707216,
+        "conditional_AR_rate": 2796.799530886764,
+        "conditional_delta_us": 0.6364251861882194,
+        "rate_loss_percent": 0.17799536621757334,
+        "scope": "uniform sensitivity at legacy analytical clock; not actual configured endpoint service",
+        "uniform_cycles_per_boundary": 2
+      },
+      {
+        "conditional_AR_T_us": 358.5061851663545,
+        "conditional_AR_rate": 2789.3521545129793,
+        "conditional_delta_us": 1.5910629654705484,
+        "rate_loss_percent": 0.4438034910701084,
+        "scope": "uniform sensitivity at legacy analytical clock; not actual configured endpoint service",
+        "uniform_cycles_per_boundary": 5
+      },
+      {
+        "conditional_AR_T_us": 359.46082294563683,
+        "conditional_AR_rate": 2781.944334866321,
+        "conditional_delta_us": 2.5457007447528777,
+        "rate_loss_percent": 0.7081997765130241,
+        "scope": "uniform sensitivity at legacy analytical clock; not actual configured endpoint service",
+        "uniform_cycles_per_boundary": 8
+      },
+      {
+        "conditional_AR_T_us": 360.7336733180133,
+        "conditional_AR_rate": 2772.128231894854,
+        "conditional_delta_us": 3.8185511171293163,
+        "rate_loss_percent": 1.0585513356727811,
+        "scope": "uniform sensitivity at legacy analytical clock; not actual configured endpoint service",
+        "uniform_cycles_per_boundary": 12
+      },
+      {
+        "conditional_AR_T_us": 365.1886496213308,
+        "conditional_AR_rate": 2738.3107362096657,
+        "conditional_delta_us": 8.273527420446852,
+        "rate_loss_percent": 2.2655488961734673,
+        "scope": "uniform sensitivity at legacy analytical clock; not actual configured endpoint service",
+        "uniform_cycles_per_boundary": 26
+      },
+      {
+        "conditional_AR_T_us": 372.82575185558943,
+        "conditional_AR_rate": 2682.218154252769,
+        "conditional_delta_us": 15.910629654705485,
+        "rate_loss_percent": 4.267577970544352,
+        "scope": "uniform sensitivity at legacy analytical clock; not actual configured endpoint service",
+        "uniform_cycles_per_boundary": 50
+      }
+    ],
+    "verified_published_baseline": {
+      "T_us": 356.9,
+      "boundaries": 329,
+      "breakdown_us": {
+        "barrier": 24.8,
+        "collective_bytes": 1.5,
+        "collective_latency": 125.9,
+        "control": 2.0,
+        "dedicated_and_su": 120.4,
+        "pipeline_hops": 0.9,
+        "sm_matvec": 73.7,
+        "verify_extra_issue": 0.0,
+        "x_broadcast_fill": 7.6
+      },
+      "design": "v41_hbm_gpu_groupslot",
+      "form": "K-chain-aware SM chain, prefetching bulk copy",
+      "supply_frac": 1.0,
+      "tokens_s": 2801.8
+    }
+  },
+  "Goodall_consumer_binding": {
+    "decoded_sector32_transactions": 9216,
+    "geometry": {
+      "KV_heads_per_rank": 4,
+      "SIMD": 128,
+      "SMs": 32,
+      "TP": 2,
+      "head_dim": 128,
+      "query_heads_per_rank": 16
+    },
+    "group_count": 72,
+    "hardware_qualified": false,
+    "metadata_contract_conflict": {
+      "Goodall_required": "record_before_bitmap",
+      "action": "producer/consumer owners must agree exact source publication contract",
+      "adoption_allowed": false,
+      "current_Popper_source": "bitmap_before_record",
+      "resolved": false
+    },
+    "native_consumer_instructions": 216,
+    "old_K_tail_capture_transactions": 18432,
+    "physical_RF_mirrors": 2,
+    "producer_RF_vectors": 576,
+    "representative_gate": {
+      "active_arithmetic_repetitions": null,
+      "archive_harness_completion_credit": false,
+      "endpoint_cost_profiles": null,
+      "inputs": "actual checkpoint query and prepack operands; source-captured initialized old tails",
+      "ready_for_full_token_RTL": false,
+      "required_receipts": [
+        "producer bothRF commonACK",
+        "native FP8 packing",
+        "old-sector capture",
+        "backend visibility",
+        "child consumption",
+        "validated reverse",
+        "metadata publication",
+        "SCORES_EXP_SUM_PV arithmetic source steps",
+        "output publication",
+        "parent reverse"
+      ],
+      "scope": "one actual layer/rank position-zero full-geometry chain"
+    },
+    "schema": "QWEN_SOURCE_BOUND_ACTIVE_CONSUMER_SPANS_R3",
+    "unwritten_old_K_tail_bytes": 552960,
+    "whole_token_ns": null
+  },
+  "KV_phase_costs_missing": 21,
+  "Qwen_KV_DAG_sha256": "5e1bbf94ddf9826f99ade5bb7ad610680546f04b6ef9eedd4a641e7606a3082e",
+  "Qwen_KV_historical_cost_reconciliation": {
+    "automatic_zero_reuse": false,
+    "complete_incremental_edges_by_domain": null,
+    "hardware_qualified": false,
+    "incremental_known_edges_by_domain": {},
+    "missing_by_phase": {
+      "KV_PV_consumer": 72,
+      "KV_SCORES_consumer": 72,
+      "KV_metadata_consumer": 144,
+      "KV_metadata_grant": 144,
+      "KV_metadata_mask_merge": 144,
+      "KV_metadata_old_capture": 144,
+      "KV_metadata_reverse": 144,
+      "KV_metadata_write_visible": 144,
+      "KV_parent_grant": 72,
+      "KV_parent_reverse": 72,
+      "KV_reader_acquire": 72,
+      "KV_sector_consumer": 39168,
+      "KV_sector_mask_merge": 18432,
+      "KV_sector_old_capture": 18432,
+      "KV_sector_read_capture": 19584,
+      "KV_sector_reverse": 39168,
+      "KV_sector_write_visible": 19584,
+      "KV_state_bitmap_visible": 72,
+      "KV_state_record_bitmap_fence": 72,
+      "KV_state_record_visible": 72,
+      "existing_native_calendar_frontier": 1737,
+      "sector_grant": 39168,
+      "structural_frontier": 1881
+    },
+    "reused_paid_events": {},
+    "source_events": 198594,
+    "status": "UNKNOWN_UNPAID_SOURCE_EVENTS",
+    "whole_token_ns": null
+  },
+  "Qwen_KV_native_program_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+  "RTL_build_allowed": false,
+  "TP96_literal64B_geometry_to_wide_product_rate": false,
+  "audit_correction": "No flagged zero changes a current headline/gate. Missing DS chain owner/ACK/CDC/stall terms are the headline omission. C0 serialized timing already charges ACK once; HDC PC reference is not installed comparator.",
+  "audit_main": "b1397a0501ceb7e11f145fe36739fc31afa3b207",
+  "audit_sha256": "44f4e634232e79776704d4efc0bbd10015f51e5ceca58b579745ca8710880fab",
+  "audited_zero_classification": [
+    {
+      "classification": "DELIBERATELY_NONADOPTED",
+      "id": "Z1",
+      "where": [
+        "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv:27-28 (c_wr_done_v/tag outputs, no ready input)",
+        "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv:83-87 (combinational fan-out)",
+        "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv:100-104 (decrement on p_wr_done_v, client id only)",
+        "tools/h3_complete_native_calendar_installed_r2.py:49 (write_take always true, faithful to RTL)"
+      ]
+    },
+    {
+      "classification": "DELIBERATELY_NONADOPTED",
+      "id": "Z2",
+      "where": [
+        "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:133"
+      ]
+    },
+    {
+      "classification": "IMPLICITLY_CREDITED (justified by construction)",
+      "id": "Z3",
+      "where": [
+        "rtl/gpu/ot_gpu_bulk_copy.sv:40-42",
+        "rtl/gpu/ot_gpu_bulk_copy.sv:79",
+        "rtl/gpu/ot_gpu_bulk_copy.sv:137-138"
+      ]
+    },
+    {
+      "classification": "CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO",
+      "id": "Z4",
+      "where": [
+        "tools/h4_hbm_kv_validity_fence_model.py:278-280"
+      ]
+    },
+    {
+      "classification": "DELIBERATELY_NONADOPTED",
+      "id": "Z5",
+      "where": [
+        "tools/h3_complete_native_calendar_grants_r1.py:96-100",
+        "tools/h3_complete_native_calendar_grants_r1.py:306"
+      ]
+    },
+    {
+      "classification": "DELIBERATELY_NONADOPTED (latent CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO)",
+      "id": "Z6",
+      "where": [
+        "tools/h3_complete_native_calendar_grants_r1.py:486",
+        "tools/h3_complete_native_calendar_grants_r1.py:341",
+        "tools/h3_complete_native_calendar_grants_r1.py:379"
+      ]
+    },
+    {
+      "classification": "DELIBERATELY_NONADOPTED",
+      "id": "Z7",
+      "where": [
+        "tools/h4_hbm_production_owner.py:428"
+      ]
+    },
+    {
+      "classification": "DELIBERATELY_NONADOPTED",
+      "id": "Z8",
+      "where": [
+        "tools/h4_hbm_selected_cache_rmw.py:43",
+        "tools/h4_hbm_selected_cache_rmw.py:166-167",
+        "tools/h4_hbm_selected_cache_rmw.py:184"
+      ]
+    },
+    {
+      "classification": "CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO",
+      "id": "Z9",
+      "where": [
+        "tools/h4_c0_v1_owner_lock_addressed.py:154",
+        "tools/h4_c0_v1_owner_lock_addressed.py:175",
+        "tools/h4_v1_physical_join.py:142-149",
+        "tools/h4_v1_physical_join.py:161-170"
+      ]
+    },
+    {
+      "classification": "DELIBERATELY_NONADOPTED",
+      "id": "Z10",
+      "where": [
+        "tools/h4_hbm_service_context_g0.py:218"
+      ]
+    }
+  ],
+  "boundaries": {
+    "CDC_FIFO_depth_each": 2,
+    "CDC_PC_replicas": 128,
+    "CDC_bits_per_word": {
+      "request": 649,
+      "response": 616,
+      "reverse": 360,
+      "write_completion": 360
+    },
+    "CDC_channels_per_PC": 4,
+    "CDC_control_bits_per_fifo": 26,
+    "RF_BANK_replicas_per_SM": 32,
+    "SM_replicas_per_die": 32,
+    "complete_latency_by_domain": null,
+    "contextual_clock_reset_and_SS_FF": null,
+    "full_tracks_and_channel_fit": null,
+    "mux_demux_and_fanout_area": null,
+    "new_shared_data_crossbar_credited": false,
+    "source_RF_read_bits_per_SM": 8192,
+    "source_RF_write_input_bits_per_SM": 4096,
+    "source_RF_written_bits_both_copies": 8192,
+    "source_existing_data_port_reuse_receipt": null,
+    "source_shared_transaction_bits": 512
+  },
+  "current_metadata_binding": {
+    "actual_complete_owner_bridge": false,
+    "hardware_qualified": false,
+    "metadata_source_writes": 432,
+    "old_R1_metadata_writes": 144,
+    "old_R1_record_before_bitmap_not_adopted": true,
+    "old_metadata_subgraph_replacement_required": true,
+    "old_payload_subgraph_reuse_unverified": true,
+    "phase_counts": {
+      "KV_PV_consumer": 72,
+      "KV_SCORES_consumer": 72,
+      "KV_metadata_consumer": 432,
+      "KV_metadata_grant": 432,
+      "KV_metadata_mask_merge": 432,
+      "KV_metadata_old_capture": 432,
+      "KV_metadata_reverse": 432,
+      "KV_metadata_write_visible": 432,
+      "KV_parent_reverse": 72,
+      "KV_reader_acquire": 72,
+      "KV_state_record_bitmap_fence": 72,
+      "RF_both_copy_write": 576,
+      "RF_common_ACK": 576
+    },
+    "physical_costs": null,
+    "production_consumer_receipts": false,
+    "schema": "QWEN_CURRENT_POPPER_METADATA_SOURCE_BINDING_R3",
+    "source_RF_producer_vectors": 576,
+    "source_combined_ACKs": 576,
+    "source_groups": 72,
+    "source_metadata_bus_observed": false,
+    "source_metadata_order": "begin header -> bitmap -> producer record -> acquire record -> SCORES record -> PV record"
+  },
+  "current_metadata_cost_reconciliation": {
+    "automatic_zero_reuse": false,
+    "complete_incremental_edges_by_domain": null,
+    "hardware_qualified": false,
+    "incremental_known_edges_by_domain": {},
+    "missing_by_phase": {
+      "KV_PV_consumer": 72,
+      "KV_SCORES_consumer": 72,
+      "KV_metadata_consumer": 432,
+      "KV_metadata_grant": 432,
+      "KV_metadata_mask_merge": 432,
+      "KV_metadata_old_capture": 432,
+      "KV_metadata_reverse": 432,
+      "KV_metadata_write_visible": 432,
+      "KV_parent_reverse": 72,
+      "KV_reader_acquire": 72,
+      "KV_state_record_bitmap_fence": 72,
+      "RF_both_copy_write": 576,
+      "RF_common_ACK": 576
+    },
+    "reused_paid_events": {},
+    "source_events": 4104,
+    "status": "UNKNOWN_UNPAID_SOURCE_EVENTS",
+    "whole_token_ns": null
+  },
+  "finite_waits": {
+    "CDC": null,
+    "actual_program_priority_starvation_reachable": null,
+    "backend_gap": null,
+    "consumer": null,
+    "credit_return": null,
+    "reverse": null,
+    "selected_control_finite_exhaustion_is_not_production_fairness": true
+  },
+  "full_owner_bridge": false,
+  "hardware_qualified": false,
+  "headline_consumer_omission": "tools/uarch_model.py:v41_hbm_chain has no complete owner/commonACK/visibility/reverse/CDC/stall term",
+  "implementation_steps": [
+    {
+      "action": "Prioritize exact329 DS critical-path boundary owner/ACK/CDC/stall pricing with price_ds_boundaries; freeze selected owner, PC completion and CDC port inventory; source-pin the current model and bind exact native/RF/provider paid interval receipts.",
+      "delivered": "R3 actual SelectedEndpoint and DrainGate composition; every per-bank byte checked; unreceipted prices UNKNOWN",
+      "id": "M0",
+      "owner": "Popper/calendar"
+    },
+    {
+      "action": "Common-ACK successor for C0/V1: register full accepted owner, derive both-copy go observations, consume one commonACK; reject two timed mirror ACK prices and remove default zero stalls.",
+      "gate": "actual owner trace parity, wrong generation/lease, duplicate ACK, held-ready; once-only cost replacement",
+      "id": "M1",
+      "inputs": [
+        "current C0/V1 emitted command identity",
+        "actual H1 write_go/ACK traces",
+        "paid RF/C0/V1 interval map"
+      ],
+      "owner": "Popper/calendar"
+    },
+    {
+      "action": "Model one all-class rotating SM/bank owner gate and exact accepted PC tag/gen/direction table, held completion storage and fault admission; bind C0/SIMD/matrix/KV/L2 actual contender DAG.",
+      "gate": "finite capacity, alias and premature reuse rejection; actual finite contender exhaustion or priced fair successor; complete gate/mux/fanout/cuts/context area",
+      "id": "M2",
+      "inputs": [
+        "installed physical rank/SM/bank homes",
+        "whole-program source contender/lease journal",
+        "backend accepted tag provenance"
+      ],
+      "owner": "Popper/calendar"
+    },
+    {
+      "action": "Join old-sector validity/capture, masked KV writes, writer exclusion and metadata visibility to the same owner; implement generic L2 word service software driver over existing source BankFence.",
+      "gate": "18432 old partial-K captures and all39168 sector child reverses; reference-order metadata fence resolved with producer before adoption; no invented full-valid sector",
+      "id": "M3",
+      "inputs": [
+        "actual entering checkpoint sector bytes/validity",
+        "all72 observed Qwen groups",
+        "actual L2 bank reservation",
+        "21 positive KV phase terms or exact paid receipts"
+      ],
+      "owner": "Popper/Kepler/calendar"
+    },
+    {
+      "action": "Price request/return/write-completion/reverse CDC FIFO and reset/clock bridges in actual comparator context; source-map both-domain receipts before enabling any RTL.",
+      "gate": "capacity/backpressure/reverse trace plus actual context SS/FF/ports/routing; no software tick conversion",
+      "id": "M4",
+      "inputs": [
+        "selected widths and2-entry depth here",
+        "actual domain/clock/reset configuration",
+        "finite sender/receiver sink and credit terms"
+      ],
+      "owner": "Popper/calendar"
+    },
+    {
+      "action": "Replay actual full native program movement journal through the selected owners; prove actual retirement/aging and reconcile old intervals once before composing complete token calendar.",
+      "gate": "all PC/micro-op source resolution, common ACK, causal visibility/consume/reverse, finite global/rank resources; every unbound term remains UNKNOWN",
+      "id": "M5",
+      "inputs": [
+        "DS2213/Qwen1737 source-native recipe expansions",
+        "actual owner/ref/span and issued-SM journals",
+        "M1..M4 admitted costs"
+      ],
+      "owner": "Sagan/Kepler/calendar"
+    },
+    {
+      "action": "Only after full selected owner sizing and CDC/port/cut/latency composition, prepare default-off W2..W13 RTL successors only after model gates; Claude owns independent W1 disabled-output hygiene.",
+      "gate": "originals immutable; opt-in zero; correct ENABLE0/1 lint; golden exact/context SSFF; measured gain before adoption",
+      "id": "M6",
+      "inputs": [
+        "M0..M5 complete reviewed model"
+      ],
+      "owner": "Popper/parent; Claude independently W1 only"
+    }
+  ],
+  "model_before_RTL": true,
+  "owner_candidate": {
+    "DFF_um2_assumed": 0.2916,
+    "DS_shared_PC_geometry": "UNBOUND_DO_NOT_INHERIT_QWEN",
+    "Qwen_PC_geometry_source": "HDC ROM-core bench reference only; not comparator connection",
+    "SM_owners": 32,
+    "accepted_PC_contexts": 12288,
+    "adopted": false,
+    "all_storage_reuse_uncredited": true,
+    "bank_owners": 32,
+    "dictionary_and_combinational_logic_area": null,
+    "entry_bits": 324,
+    "installed": false,
+    "one_bit_generation_or_16bit_tag_reduction_adopted": false,
+    "register_cell_area_um2_assumed": 1395518.2848,
+    "register_footprint_mm2_assumed": 2.7910365696,
+    "reservation_bits": {
+      "CDC_FIFO_payload_and_control": 521472,
+      "SM_and_bank_owners": 20736,
+      "accepted_PC_contexts": 3981312,
+      "held_SM_completion_payload_and_valid": 262208
+    },
+    "selected_hardware_field_spec_complete": false,
+    "sizing_scope": "untrimmed software-key conservative reference envelope, not minimal physical owner design",
+    "total_additional_register_bits": 4785728,
+    "utilization_assumed": 0.5
+  },
+  "r14_default_off": {
+    "commit_r_undriven": true,
+    "commit_ready_implicit": true,
+    "gate": "separate pinned default-off hygiene successor; no ENABLE1 timing credit",
+    "owner": "Claude independent W1",
+    "source_modified": false
+  },
+  "schema": "HBM_COORDINATED_OWNER_COMPLETION_IMPLEMENTATION_MODEL_R3",
+  "selected_scope": "actual96 PC0 partialRF publications; retained directed PC10 rank0 shared; no whole-comparator owner bridge",
+  "source_common_ACK": {
+    "C0_V1_protocol_shape_two_calls_requires_common_ACK_adapter": true,
+    "C0_V1_serialized_time_already_charged_once": true,
+    "R3_receipt_token_is_retained_context_not_wire_authentication": true,
+    "RF_copies": 2,
+    "banks_per_copy": 16,
+    "host_ACK_pins": 1,
+    "source_ACK_tags_present": false,
+    "two_independent_ACK_latency_charge_not_adopted": true,
+    "write_go_shared": true
+  },
+  "source_pins": {
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/C0_owner_addressed.py": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/DS_chain_boundaries.json": "69d671da20cd9793d7a9c407564e2a48683944969e8957b4392a713df96fe547",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/Goodall_requirements.json": "bf94c549f58901af3bdb816e90aa622730454b8e03122058481f90178d9ef980",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/KV_current_owner.py": "019b08bdca39d3c9c851d9139e0de0d247beff72265b2dd9fcc57a6c425f0547",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/KV_current_plan.json.gz": "ba50d70cfcb2c4d73eff56a707bf4d99470681de06117d428c15af2eb962801a",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/V1_serialized_owner.py": "bcbc01538348a37609451307816471a702482dc551b6917fc66ae8ef3ccc2cda",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/audit.json": "44f4e634232e79776704d4efc0bbd10015f51e5ceca58b579745ca8710880fab",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/audit.md": "0ebd61f798c21f4295a7f5aee063e31ebcfcbd8033c750e4c373f080c4bf299f",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/codex_notes.txt": "f9ef2c698f3d9fa5992823d8d2fab13899e16f7a1a01a895bba45ae3c73ac099",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/dependency_fields.json": "4d88b003fc730ded5fab4abe7fc8c6903f1ae647a8504e01cfaefca1b800a069",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/fifo2.sv": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/hbm_gpu.json": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "results/uarch/h3_complete_native_calendar_20261002/production_owner_join_r3/inputs/zero_classification.json": "5cbd5556118befd8ce10a8d43272b56bda0a6a0a9740953d9da50788e97b4e39",
+    "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+    "results/uarch/h4_hbm_selected_cache_rmw_20261002/selected_r4/commands.json.gz": "9f8c0fbf277c3405f09444efa7a592496b6c92761cc9c8c9fa22da9af41f5464",
+    "tools/h3_complete_native_calendar_grants_r1.py": "4bbd9ce96f4cf0afef069d6b0a94379d04a0e054e337477d125ed6cf999d6dbd",
+    "tools/h4_hbm_atomic_source_g0.py": "3d76eacbd22a39745af395db77215fd19468dd26b233465dee5e49c6b822121b",
+    "tools/h4_hbm_selected_cache_rmw.py": "04f271fa5a647e7132a2bd36f6c764cb5fe440e18cec7c096c9c860be3e50ade"
+  },
+  "source_program_counts": {
+    "DeepSeek": 2213,
+    "Qwen": 1737
+  },
+  "structural_retire_and_native_interval_receipts_missing": true,
+  "whole_token_ns": null,
+  "zero_placeholder_adopted": false
+}

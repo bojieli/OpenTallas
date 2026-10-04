@@ -1,0 +1,23 @@
+{
+  "time_utc": "2026-10-03T02:09:42.132386+00:00",
+  "tests": [
+    {
+      "command": "python3 tests/test_pve1_odb_stage_driver.py -v",
+      "passed": 25
+    },
+    {
+      "command": "python3 tests/test_pve1_source_constraint_successor.py -v",
+      "passed": 9
+    },
+    {
+      "command": "python3 -m pytest -q tests/test_abi3_persistent_launcher.py",
+      "passed": 7
+    }
+  ],
+  "total_passed": 41,
+  "diff_check": "PASS",
+  "native_or_heavy_job_launched": false,
+  "native_collector_status": "PREPARED_SYNTAX_AND_SYNTHETIC_RECORD_TESTS_ONLY; installedAPI NOT_VALIDATED",
+  "safe_export": "189whitelisteddeclared/referencedORFSexports; no rawenviron/privatepatches; credentialpatternscan clean",
+  "original_files_changed": []
+}
