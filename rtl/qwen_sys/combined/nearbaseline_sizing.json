@@ -1,0 +1,13 @@
+{
+  "scope": "mandatory nearHBM baseline source join; TP4 G6144 SW64 NW18 HD128 R8",
+  "geometry_change": false,
+  "engine_source": "6256d9a04a15438d0f38be3f1b3a6fcef684e7c8",
+  "base_sizing": "rtl/qwen_sys/combined/sizing_before_rtl.json",
+  "measured_engine_cycles_at_context8192": 1857,
+  "parent_engine_cycles_at_context8192": 1824,
+  "added_cycles": 33,
+  "system_latency": "measure per-layer then compose; no full-token rate claim",
+  "memory": "existing canonical tagged REAL_MEM row/sector/writeACK adapter and protected four-stack CDC; stream27eb window<2048 does not cover8K",
+  "new_mac_or_storage": 0,
+  "routing_or_clock_adoption": "Claude owns r8 SS/FF; source join does not grant physical closure"
+}
