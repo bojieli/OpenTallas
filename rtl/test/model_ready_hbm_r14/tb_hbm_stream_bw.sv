@@ -38,7 +38,8 @@ module tb_hbm_stream_bw;
   ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(REF_MODE), .CRED(CRED), .PHASE(PHASE)) dut (
     .clk(clk), .rst_n(rst_n), .desc_v(desc_v), .desc_r(desc_r), .desc_row(desc_row), .desc_n(11'(NS)),
     .go(go), .next_posted(B2B != 0), .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
-    .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .cred_ret(cred_ret), .busy(busy), .fault(fault));
+    .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .cred_ret(cred_ret), .busy(busy), .fault(fault),
+    .wr_v(32'b0), .wr_bank(160'b0), .wr_col(160'b0), .wr_r(), .col_we());
 
   function automatic [255:0] src(input integer layer, input integer s);
     for (integer w = 0; w < 8; w++) src[32*w +: 32] = (32'(layer) * 32'h01000193 ^ 32'(s * 8 + w)) * 32'h9E3779B1 ^ 32'h5bd1e995;
@@ -132,6 +133,7 @@ module tb_hbm_stream_bw;
             if (now < b_act[p][bk] + RAS + RP) v("tRC (REFpb)", p, bk);
             if (now < b_ref_end[p][bk]) v("REFpb during refresh", p, bk);
             if (now < p_last_act[p] + RREFD) v("tRREFD (REFpb after ACT)", p, bk);
+            if (now < p_last_refpb_any[p] + RREFD) v("tRREFD (REFpb after REFpb)", p, bk);
             if (p_round[p][bk]) v("REFpb bank twice in one round", p, bk);
             p_round[p][bk] = 1; if (&p_round[p]) p_round[p] = 0;
             if (now - p_last_ref[p] > REFI / 32 - (MUT == 3 ? 2000 : 0)) v("REFpb late", p, bk);

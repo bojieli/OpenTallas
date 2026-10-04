@@ -11,11 +11,14 @@ from tools.runtime.qwen_combined.fulltoken_inputs import inspect
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--cache', type=Path, required=True)
+    ap.add_argument('--position', type=int, default=255)
+    ap.add_argument('--token', type=int, default=6280)
     ap.add_argument('--oracle-sha256', required=True)
     ap.add_argument('--compiled-params', type=Path, required=True)
     ap.add_argument('--output', type=Path, required=True)
     a = ap.parse_args()
-    result = inspect(a.cache, oracle_sha256=a.oracle_sha256, compiled_params=a.compiled_params)
+    result = inspect(a.cache, oracle_sha256=a.oracle_sha256, compiled_params=a.compiled_params,
+                     position=a.position, token=a.token)
     a.output.mkdir(parents=True, exist_ok=False)
     lines = [' '.join([r['name'], *r['directories'], str(r['kv_reset'])]) for r in result['stages']]
     (a.output/'stages_E_L0_L35_head.txt').write_text('\n'.join(lines)+'\n')

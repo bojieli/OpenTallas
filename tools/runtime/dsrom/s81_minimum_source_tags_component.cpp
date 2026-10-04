@@ -20,18 +20,34 @@ struct Provider {
  std::map<std::tuple<std::uint64_t,std::uint32_t,std::uint32_t>,MacroWrite> held_records;
  std::vector<T::Tag227> actual_order;
  unsigned phase=0,entry=0;
- static constexpr std::size_t MAX_RECORDS=8192;
+ // Software witness bound: one full VM19 output image plus one held 16-scalar
+ // bank offer/read. This is NOT a hardware seat/credit capacity. Native literal
+ // SU bursts include 20,480 outputs, so the former prefix-only 8,192 limit
+ // cannot represent their actual captured outputs before matched retirement.
+ static constexpr std::size_t MAX_RECORDS=(1u<<19)+16;
  Provider(DsromS81MinimumRuntime&r,std::uint64_t identity):runtime(r),id(identity),stage(r.stage),rank(r.rank),pair(r.pair){
   if(id!=(1ull<<31)||r.stage<0||r.stage>80||r.rank<0||r.rank>3||r.pair<0||r.pair>2416||!r.cycle)
    throw std::runtime_error("component source/runtime/identity range");
   // Bind the actual selected source directory; no hardcoded obsolete stage37.
+  // Nonfield I0 consumes no CFG/PHROM. Its exact L20 literal is enrolled
+  // by the selected factory; scalar reservations retain stage/rank/producer.
+  const char* native_i0=std::getenv("DSROM_S81_NATIVE_L20_I0");
+  const char* native_index=std::getenv("DSROM_S81_NATIVE_L20_INDEX");
+  if((native_i0&&std::string(native_i0)=="1")||(native_index&&std::string(native_index)=="1")) {
+   if(r.stage!=37)throw std::runtime_error("native L20 I0 requires canonical stage37");
+   phase=0;entry=0;return;
+  }
+  const char* head=std::getenv("DSROM_S81_NATIVE_HEAD_END");
+  const bool native_head=head&&std::string(head)=="1";
+  if(native_head&&(r.stage!=80||r.pair!=11))
+   throw std::runtime_error("native HEAD requires selected stage80/pair11");
   const char* path=std::getenv("DSROM_S81_MINIMUM_SELECTED_DIR");
   if(!path||!*path)throw std::runtime_error("source-selected PHROM/CFG path required");
   std::ifstream in(std::string(path)+"/spine_phase.hex");std::string s;
   if(!std::getline(in,s))throw std::runtime_error("source PHROM missing");
   std::size_t n=0;auto ph=std::stoull(s,&n,16);
-  if(n!=s.size()||ph!=22517998140008448ull)throw std::runtime_error("minimum source PHROM not selected literal");
-  std::ifstream cfg(std::string(path)+"/e"+std::to_string(r.pair)+".cfg.hex");
+  if(n!=s.size()||ph!=(native_head?0xdf90000000502801ull:22517998140008448ull))throw std::runtime_error("minimum source PHROM not selected literal");
+  std::ifstream cfg(std::string(path)+(native_head?"/cfg.hex":"/e"+std::to_string(r.pair)+".cfg.hex"));
   if(!cfg.good())throw std::runtime_error("actual selected pair CFG missing");
   // Selected factory's literal component phase/key are phase0 / emitted_key0.
   // Enrolled through exact PHROM plus caller ReturnPhaseBinding equality below.
@@ -39,7 +55,7 @@ struct Provider {
  }
  T::Tag227 reserve(std::uint32_t scalar,bool read,unsigned source_phase,unsigned source_entry){
   if(runtime.stage!=stage||runtime.rank!=rank||runtime.pair!=pair)throw std::runtime_error("changed frozen compiled selection");
-  if(scalar>=(1u<<19)||plans.size()==MAX_RECORDS||planned_ordinal>=(1ull<<26))
+  if(scalar>=(1u<<19)||plans.size()>=MAX_RECORDS||planned_ordinal>=(1ull<<26))
    throw std::runtime_error("bounded component planned tags exhausted; no wrap");
   auto c=T::experiment_context(runtime.stage,runtime.rank,runtime.pair,source_phase,source_entry);
   auto tag=T::pack({c,1,planned_ordinal>>10,planned_ordinal&1023});
@@ -97,7 +113,7 @@ DsromS81MinimumSourceTags dsrom_s81_bind_minimum_source_tags(DsromS81MinimumRunt
 // publication.native_scalar. Actual accept remains Popper's later callback.
 MacroWrite dsrom_s81_reserve_native_scalar_tag(DsromS81MinimumRuntime&r,uint64_t id,
  unsigned producer,uint32_t address,uint32_t bits){
- auto p=registered[&r].lock();if(!p||id!=p->id||producer>8)throw std::runtime_error("native producer tag binding");
+ auto p=registered[&r].lock();if(!p||id!=p->id||producer>=(1u<<14))throw std::runtime_error("native producer tag binding");
  return p->scalar(address,bits,p->phase,producer);
 }
 

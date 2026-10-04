@@ -1,0 +1,63 @@
+# 4_1_cts setup repair
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 7.27s
+[INFO RSZ-0046] Found 723 endpoints with hold violations.
+    final |       0 |     734 |            0 |    +0.8% |  10.028 |   0.000 | core_pos[0]$_DFF_P_/D
+[INFO RSZ-0032] Inserted 734 hold buffers.
+[INFO RSZ-0506] Runtime: 5.62s
+Took 13 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -verbose
+# 5_1_grt repair
+    final |     +1.8% |      77 |     622 |           353 |         0
+[INFO RSZ-0094] Found 50 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 50 out of 50 (100.00%) violating endpoints...
+    final |       0 |      11 |        0 |      0 |     0 |    +0.0% |   -2.238 |       -2.2 |       -3.5 |      2 | seq.next_token\[12\]$_DFFE_PN0P_/D
+[WARNING RSZ-0062] Unable to repair all setup violations.
+    final |       0 |      27 |            0 |    +0.0% |  10.010 |   0.000 | vm_wdata[393]$_DFF_P_/D
+[INFO RSZ-0094] Found 2 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1 out of 2 (0.00%) violating endpoints...
+    final |       0 |       0 |        0 |      0 |     0 |    +0.0% |   -2.238 |       -2.2 |       -3.5 |      2 | seq.next_token\[12\]$_DFFE_PN0P_/D
+[WARNING RSZ-0062] Unable to repair all setup violations.
+Design area 7028 um^2 45% utilization.
+[INFO FLW-0009] Clock core_clk slack -2.238
+# 5_2 detailed route (ORFS run timed out in iteration 18)
+[INFO DRT-0195] Start 0th optimization iteration.
+[INFO DRT-0199]   Number of violations = 66156.
+[INFO DRT-0195] Start 1st optimization iteration.
+[INFO DRT-0199]   Number of violations = 40011.
+[INFO DRT-0195] Start 2nd optimization iteration.
+[INFO DRT-0199]   Number of violations = 36078.
+[INFO DRT-0195] Start 3rd optimization iteration.
+[INFO DRT-0199]   Number of violations = 17981.
+[INFO DRT-0195] Start 4th optimization iteration.
+[INFO DRT-0199]   Number of violations = 12272.
+[INFO DRT-0195] Start 5th optimization iteration.
+[INFO DRT-0199]   Number of violations = 9956.
+[INFO DRT-0195] Start 6th optimization iteration.
+[INFO DRT-0199]   Number of violations = 8016.
+[INFO DRT-0195] Start 7th optimization iteration.
+[INFO DRT-0199]   Number of violations = 6593.
+[INFO DRT-0195] Start 8th optimization iteration.
+[INFO DRT-0199]   Number of violations = 5710.
+[INFO DRT-0195] Start 9th optimization iteration.
+[INFO DRT-0199]   Number of violations = 5081.
+[INFO DRT-0195] Start 10th optimization iteration.
+[INFO DRT-0199]   Number of violations = 4042.
+[INFO DRT-0195] Start 11th optimization iteration.
+[INFO DRT-0199]   Number of violations = 3581.
+[INFO DRT-0195] Start 12th optimization iteration.
+[INFO DRT-0199]   Number of violations = 3053.
+[INFO DRT-0195] Start 13th optimization iteration.
+[INFO DRT-0199]   Number of violations = 2920.
+[INFO DRT-0195] Start 14th optimization iteration.
+[INFO DRT-0199]   Number of violations = 2740.
+[INFO DRT-0195] Start 15th optimization iteration.
+[INFO DRT-0199]   Number of violations = 2698.
+[INFO DRT-0195] Start 16th optimization iteration.
+[INFO DRT-0199]   Number of violations = 2610.
+[INFO DRT-0195] Start 17th optimization iteration.
+[INFO DRT-0199]   Number of violations = 9993.
+[INFO DRT-0195] Start 18th optimization iteration.
+    elapsed time = 01:04:02, memory = 7638.19 (MB).
+    Completing 70% with 9254 violations.
+    elapsed time = 01:04:02, memory = 7638.19 (MB).

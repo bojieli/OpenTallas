@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import hdc_isa_v41 as ISA
 from dsrom_checkpoint import Checkpoint
 
-CANONICAL = ROOT / 'results/uarch/dsrom_s81_released_binding_20261004/canonical'
+CANONICAL = ROOT / 'results/uarch/dsrom_s81_head12_partition_20261004/canonical'
 DEMAND = ROOT / 'results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz'
 TP, ROWS, K = 4, 32320, 5120
 SHAPES = {'head.weight': [TP * ROWS, K], 'norm.weight': [K]}
@@ -46,8 +46,22 @@ class HeadSourceBinding:
                  inv['rows'], inv['macros_per_pair'], inv['ROM_ECC']) ==
                 (81, 4, 2417, 519, 4096, 4, False), 'not accepted S81 geometry')
         self.layout = inv['dedicated_storage']
-        require((self.layout['head_dies'], self.layout['head_storage_pairs_per_die_ceiling']) ==
-                (8, 632), 'head storage topology mismatch')
+        self.head_dies = self.layout['head_dies']
+        self.pairs_per_die = self.layout['head_storage_pairs_per_die_ceiling']
+        self.partition = self.layout.get('head_storage_partition', 'contiguous')
+        require(self.head_dies == inv['head_dies'] and type(self.pairs_per_die) is int,
+                'inventory/storage head topology mismatch')
+        if self.partition == 'global_pair_round_robin':
+            ds = self.layout['dspark_storage']
+            total = self.layout['head_storage_total_pairs']
+            require(self.head_dies == 12 and ds['pair_start'] == 5051 and
+                    ds['bytes'] == 7932874632 and ds['tensor_count'] == 2401 and
+                    ds['pairs'] == (ds['bytes']+524287)//524288 and
+                    total == 5051+ds['pairs'] and self.pairs_per_die == (total+11)//12,
+                    'selected 12-head drafter partition mismatch')
+        else:
+            require(self.partition == 'contiguous' and self.head_dies == 8 and
+                    self.pairs_per_die == (5051+7)//8, 'historical head topology mismatch')
         self.tensors = {x['tensor']: x for x in self.layout['global_tensors']}
         for name, start, pairs, shape in [('embed.weight', 0, 2525, [129280, 5120]),
                                          ('head.weight', 2525, 2525, SHAPES['head.weight']),
@@ -85,12 +99,15 @@ class HeadSourceBinding:
         idx = row * (shape[1] if len(shape) == 2 else 1) + col
         w, lane = divmod(idx, 16)
         gp = self.tensors[tensor]['pair_start'] + w // 16384
-        die, pair = divmod(gp, 632)
+        if self.partition == 'global_pair_round_robin':
+            pair, die = divmod(gp, self.head_dies)
+        else:
+            die, pair = divmod(gp, self.pairs_per_die)
         mb, logical = divmod(w % 16384, 8192)
-        require(die < 8, 'head storage capacity exceeded')
+        require(die < self.head_dies and pair < self.pairs_per_die, 'head storage capacity exceeded')
         return dict(tensor=tensor, element=idx, byte_offset=idx * 2,
                     provider_class='head_storage', die_namespace='dedicated_head_storage',
-                    die=die, pair=pair, mb=mb, parity=logical % 2, physical_row=logical // 2,
+                    die=die, pair=pair, global_pair=gp, partition=self.partition, mb=mb, parity=logical % 2, physical_row=logical // 2,
                     bit_range=[lane * 16, (lane + 1) * 16], word_bits=256,
                     physical_macros_per_pair=4, physical_macro_depth=4096,
                     transport_ABI_qualified=False)
@@ -100,7 +117,9 @@ class HeadSourceBinding:
 
     def model(self):
         # Existing dedicated-head chunk8/1024-tree contract, not legacy ME recurrence.
-        return dict(schema='dsrom.s81.head.source-model.v1', ranks=4, head_storage_dies=8,
+        return dict(schema='dsrom.s81.head.source-model.v1', ranks=4, head_storage_dies=self.head_dies,
+                    head_storage_partition=self.partition,
+                    head_storage_pairs_per_die=self.pairs_per_die,
                     rows_per_rank=ROWS, K=K, MACs_per_rank=ROWS*K,
                     weight_read_bytes_per_rank=ROWS*K*2, raw_weight_words_per_rank=ROWS*K//16,
                     logits_bytes_per_rank=ROWS*4, BF16_activation_bytes_per_rank=K*2,
@@ -215,10 +234,12 @@ class ReleasedHeadByteProvider:
         Reject padding and a request aliasing embed/norm instead of head.
         """
         require(tensor in SHAPES and all(type(v) is int for v in (die,macro,row)) and
-                0<=die<8 and 0<=macro<632*4 and 0<=row<4096,
+                0<=die<self.binding.head_dies and
+                0<=macro<self.binding.pairs_per_die*4 and 0<=row<4096,
                 'head physical request outside selected storage')
         pair,leaf=divmod(macro,4)
-        gp=die*632+pair
+        gp=(pair*self.binding.head_dies+die if
+            self.binding.partition=='global_pair_round_robin' else die*self.binding.pairs_per_die+pair)
         w=(gp-self.binding.tensors[tensor]['pair_start'])*16384+(leaf//2)*8192+row*2+leaf%2
         require(0<=w<self.binding.tensors[tensor]['words'],
                 'physical request outside source tensor/padding')

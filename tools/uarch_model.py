@@ -3009,6 +3009,25 @@ PG = dict(
 )
 
 
+# MEASURED clock-gated idle of one ROM element pair (2026-10-04, results/rtl/rom_stage_power_gating_20261004,
+# route R3, OpenSTA TT on routed SPEF + gate-level SAIF at 1.2 GHz): 3.005 mW per pair (0.243 mW of it leakage).  The
+# ledger used to charge PG["cg_residual"] (10%, ASSUMED) of the ungated pair clock (79.2 mW at 1.034 GHz) + 0.22 mW
+# leakage = 8.14 mW per clock-gated idle pair.  The ROM field's idle clock now uses the measured residual clock
+# (scaled linearly with the clock, as pair_power does); the hub keeps the ASSUMED 10% (not measured).
+def _pair_cg_idle_measured():
+    v = json.loads((ROOT / "results/rtl/rom_stage_power_gating_20261004/verdict.json").read_text())["power_w"]["cg_idle"]
+    return dict(total_w=v["total"], leak_w=v["leakage"], clock_w=v["total"] - v["leakage"], clock_hz=1.2e9,
+                src="results/rtl/rom_stage_power_gating_20261004/verdict.json power_w.cg_idle (route R3, TT)")
+
+
+PAIR_CG_IDLE = _pair_cg_idle_measured()
+
+
+def field_cg_residual(clock):
+    """The ROM field's clock-gated idle clock as a fraction of the ungated pair clock at `clock` (MEASURED numerator)."""
+    return PAIR_CG_IDLE["clock_w"] * clock / PAIR_CG_IDLE["clock_hz"] / pair_power(clock)["clock"]
+
+
 def _stage_windows(g):
     """Per-stage time on the single-user critical path (the stage's active window at batch 1; the head stage
     carries the embed and argmax), and each stage's start time on the path."""
@@ -3056,6 +3075,7 @@ def v41_die_static_parts(d):
     return dict(
         # ROM field MEASURED per pair (PAIR_W); hub from its area, UNCALIBRATED
         field=dict(clock=N * pair_power(clock)["clock"], leak_logic=N * PAIR_W["leak_cell"], leak_rom=N * PAIR_W["leak_rom"]),
+        field_cg_residual=field_cg_residual(clock),     # MEASURED pair clock-gated idle (PAIR_CG_IDLE)
         hub=dict(clock=cl * (a["hub_logic_mm2"] + 0.15 * a["vm_ports"]),
                  leak_logic=a["hub_logic_mm2"] * LEAK["logic"], leak_sram=a["vm_ports"] * LEAK["sram_array"]),
         hbm_if=4 * HBM_IDLE_W_STACK, serdes=rack["serdes_always_on"], ucie=rack["ucie_idle"])
@@ -3067,18 +3087,19 @@ def _die_energy(p, period, window, busy, policy, wake_s, pg_ok):
     policies: 0 ungated; 1 stage clock gating; 2 + region clock gating inside the window; 3 + power gating of the
     idle stage (retention SRAM, gated logic and ROM, HBM PHY power-down, SerDes / UCIe low-power idle) when the
     idle gap fits the wake-up and the break-even time."""
-    r = PG["cg_residual"]
+    rk = dict(field=p.get("field_cg_residual", PG["cg_residual"]), hub=PG["cg_residual"])
     idle = max(0.0, period - window)
     clk = p["field"]["clock"] + p["hub"]["clock"]
+    clk_r = rk["field"] * p["field"]["clock"] + rk["hub"] * p["hub"]["clock"]     # clock left with the ICGs closed
     leak = p["field"]["leak_logic"] + p["field"]["leak_rom"] + p["hub"]["leak_logic"] + p["hub"]["leak_sram"]
     io = p["hbm_if"] + p["serdes"] + p["ucie"]
     if policy == 0:
         return (clk + leak + io) * period
     if policy == 1:
-        e_clk = clk * (window + r * idle)
+        e_clk = clk * window + clk_r * idle
     else:
-        e_clk = sum(p[k]["clock"] * (min(busy[k], window) + r * (window - min(busy[k], window))) for k in ("field", "hub")) \
-            + r * clk * idle
+        e_clk = sum(p[k]["clock"] * (min(busy[k], window) + rk[k] * (window - min(busy[k], window))) for k in ("field", "hub")) \
+            + clk_r * idle
     if policy < 3 or not pg_ok:
         return e_clk + (leak + io) * period
     on = window + wake_s                      # the wake-up runs with the stage leaking at its ON level
@@ -3089,7 +3110,7 @@ def _die_energy(p, period, window, busy, policy, wake_s, pg_ok):
     serdes_on = min(period, window + PG["serdes_wake_s"])
     e_io = p["hbm_if"] * on + p["hbm_if"] * PG["hbm_if_residual"] * off \
         + (p["serdes"] + p["ucie"]) * (serdes_on + PG["serdes_lpi_residual"] * (period - serdes_on))
-    e_clk -= r * clk * off                    # a power-gated stage has no clock at all
+    e_clk -= clk_r * off                      # a power-gated stage has no clock at all
     return e_clk + leak * on + leak_off * off + leak * PG["stage_bet_s"] + e_io
 
 
@@ -4417,9 +4438,12 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
     # ADOPTED per-pair ICG (W18 / power-cal): an idle pair keeps only its 0.22 mW leakage; a busy pair's clock is
     # dynamic (pair-seconds x its clock power).  The ungated form (every idle pair clocked, 0.092 W at 1.2 GHz) is
     # kept as `cooling_ungated` for the waterfall only.
+    # 2026-10-04: the idle pair's ICG does not stop its whole clock: the MEASURED clock-gated idle pair keeps
+    # PAIR_CG_IDLE clock_w (2.76 mW at 1.2 GHz) besides its leakage, so that residual stays static.
     field_clock_ungated = pw["field"]["clock_w"]
+    field_cg_w = PAIR_W["placed_pairs"] * field_cg_residual(r1["clock_hz"]) * pp["clock"]
     die_static_ungated = pw["clock_w"] + pw["leakage_w"] + pw["hbm_idle_w"] + link_die
-    die_static = die_static_ungated - field_clock_ungated
+    die_static = die_static_ungated - field_clock_ungated + field_cg_w
     head_w = rack["static"]["head_dies"] / V41_ROM_SYSTEM["head_dies"]
     tl = rack["per_die"]["table_leakage_w"] * V41_ROM_SYSTEM["table_dies"] * table_leak_scale
     to = (rack["per_die"]["table_static_w"] - rack["per_die"]["table_leakage_w"]) * n_table
@@ -4438,7 +4462,8 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
     dyn_m = (e_pass + V41_DRAFT_FRACTION * dyn) / V41_TAU
     # gated (the adopted stage power gating, 1 us wake): v41_static_power's rule on this plan's stages
     p = v41_die_static_parts(d)
-    p["field"]["clock"] = 0.0          # per-pair ICG: the field clock is in the dynamic energy (cats field_clock_busy)
+    p["field"]["clock"] = field_cg_w   # per-pair ICG: the busy clock is dynamic (cats field_clock_busy); the MEASURED
+    p["field_cg_residual"] = 1.0       # clock-gated idle clock stays (and goes with the stage when it is power gated)
     ungated_die = sum(p["field"].values()) + sum(p["hub"].values()) + p["hbm_if"] + p["serdes"] + p["ucie"]
     table_leak_die, table_other_die = tl / max(1, n_table), to / max(1, n_table)
     wake = PG["stage_wake_s"]
@@ -6660,14 +6685,18 @@ def dsrom_wavefront_mtp_tok_s(rom, rk):
     return ctx[V41_ROM_DRAFT_VARIANTS[V41_ROM_DRAFT]]["wavefront_occupancy"]["mtp_tok_s"]
 
 
-TAU_OWNER6 = 4.159      # equal 6-class blend, gamma 5 (results/speculative/v41_mtp_acceptance_qualified_20261003/
-                        # blend_owner6.json blends."owner 6-class equal".greedy.tau_blend_harmonic)
+TAU_OWNER6 = 4.159      # SUPERSEDED 2026-10-04 (owner rule: tau from published third-party sources only). Our equal
+                        # 6-class blend, gamma 5 (results/speculative/v41_mtp_acceptance_qualified_20261003/
+                        # blend_owner6.json blends."owner 6-class equal".greedy.tau_blend_harmonic); kept for reproduction.
+import third_party_tau as _TPT                                                     # noqa: E402
+TAU_DS = _TPT.tau_ds_v41(5)               # DEFAULT: published third-party DSpark gamma-5 tau (OT_TAU_SOURCE=self_measured -> 4.159)
+TAU_DS_SRC = _TPT.tau_src("deepseek_v41", 5)
 NVLS_SCEN = ("push_optimistic", "nvls_measured", "gpu_fenced")
 TU_SCEN = ("tomahawk_ultra_protocol", "tomahawk_ultra_inc")
 
 
 def hbm_switch_latency_authoritative():
-    """AUTHORITATIVE DS-V4.1 HBM per-user AR / MTP (tau 4.159, gamma 5) at 1M and 200K under every switch scenario, for
+    """AUTHORITATIVE DS-V4.1 HBM per-user AR / MTP (tau TAU_DS = third-party published, gamma 5) at 1M and 200K under every switch scenario, for
     the W19 GPU-organised ablation, the accelerator (frozen HA firm ladder without R2 -- the switch tier is retained --
     and, under a replaced transport, without R3a, whose endpoint cut-through the replacement already contains), the
     measured composition and the GPU-faithful R0 row (every boundary a MEASURED H100 1.097 us grid sync); ROM:HBM
@@ -6766,7 +6795,7 @@ def hbm_switch_latency_authoritative():
                 d1, d6 = delta(sc, P=1, **kw), delta(sc, P=6, **kw)
                 ar = dd["ar"] * k + d1
                 step = (dd["ver"] + dd["draft"]) * k + d6 + d1 * n_draft / n["total"]
-                ar_r, mtp_r = 1e6 / ar, TAU_OWNER6 * 1e6 / step
+                ar_r, mtp_r = 1e6 / ar, TAU_DS * 1e6 / step
                 primary = kw.get("fec", "board") == "board" and kw.get("gathers", "measured_ag") == "measured_ag" \
                     and kw.get("msg", "small") == "small" and kw.get("cable", "twinax_3m") == "twinax_3m"
                 rows.append(dict(ctx=ctx, design=name, scenario=sc, **kw, primary=primary,
@@ -6854,7 +6883,7 @@ def hbm_switch_latency_authoritative():
                 collective_counts=dict(w19_pass=n, draft_assumed=round(n_draft, 2),
                                        draft_basis="W19 per-collective mix at P = 1 bytes x DRAFT_PARTS.collective / "
                                                    "W19 collective"),
-                tau=TAU_OWNER6, gamma=5, tau_src="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json",
+                tau=TAU_DS, gamma=5, tau_src=TAU_DS_SRC, tau_superseded=dict(tau=TAU_OWNER6, src="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (self-measured)"),
                 rom_records=dict(ar=DSROM_WAVEFRONT, mtp=DSROM_DRAFT_MEASURED, l1l2=DSROM_DRAFT_L1L2), rom_fec="light (130 ns board link)",
                 rom=romv, rom_projections_note="L1 fused head = the measured-draft record's fused_head (= L1, 7,186 at "
                                                "1M); L2 batched head and L1+L2 = EXPECTED projections (no lever "
@@ -6899,6 +6928,36 @@ def hbm_switch_latency_range():
 hbm_switch_latency_measured = hbm_switch_latency_range
 
 
+HBM_DRAFT_MEASURED = "results/rtl/dshbm_dspark_draft_20261004/composition.json"   # MEASURED DS HBM draft (successor)
+
+
+def hbm_mtp_both_drafts_measured():
+    """SUCCESSOR (owner 2026-10-04) to the authoritative record's MTP columns: the DS HBM DSpark draft is MEASURED the
+    way the ROM's is (tools/dshbm_dspark_draft_chain.py: closed-loop RTL chain bit-exact on the reduced vehicle,
+    full-shape SM / argmax cycles, every draft collective counted and priced with the authoritative transports) and
+    replaces DRAFT_PARTS (51.88 us, ASSUMED).  Step = verify(P=6) + draft + seed_commit on both sides (the ROM's
+    seed_commit term; HBM: main_proj, main_x gather, main_norm, the stages' window rows, ctl commit).  The AR rows,
+    the verify passes and hbm_switch_latency_authoritative() itself are unchanged."""
+    rec = json.loads((ROOT / HBM_DRAFT_MEASURED).read_text())
+    pick = lambda r, v: dict(draft_us=r[v]["draft_us"], step_us=r[v]["step_us"], mtp_tok_s=r[v]["mtp_tok_s"],  # noqa: E731
+                             rom_over_hbm_mtp=r[v]["rom_over_hbm_mtp"])
+    rows = [dict(ctx=r["ctx"], design=r["design"], scenario=r["scenario"], ar_tok_s=r["ar_tok_s"],
+                 rom_over_hbm_ar=r["rom_over_hbm_ar"], seed_commit_us=r["seed_commit_us"],
+                 model_draft_us=r["model_draft_us"], mtp_tok_s_model_draft=r["old_mtp_tok_s"],
+                 as_built=pick(r, "as_built"), per_step_head=pick(r, "per_step_head"))
+            for r in rec["rows"] if r["authoritative_default"]]
+    return dict(schema="opentallas.uarch.hbm_mtp_both_drafts_measured.v1",
+                status="AUTHORITATIVE successor for MTP (owner 2026-10-04); AR unchanged",
+                hbm_draft_record=HBM_DRAFT_MEASURED, rom_draft_record=DSROM_DRAFT_MEASURED, tau=rec["tau"],
+                hbm_variants=dict(as_built="the HBM design as built (ctl DHEAD = one 5-column head pass; bias + argmax "
+                                           "fused in the SM epilogue): HBM already has the ROM's L1 and L2",
+                                  per_step_head="the ROM as-built structure on HBM (one 1-column head pass a chain "
+                                                "step), the like-for-like structural row"),
+                rom_columns=dict(rom_as_built="ROM as built (measured)", rom_l1="ROM L1 fused head (measured record)",
+                                 rom_l1l2_expected="ROM L1+L2 k=5 (EXPECTED projection)"),
+                collective_count=rec["collective_count"], rows=rows)
+
+
 def hbm_accel_rows():
     """Default-off HA0/HA10 hypotheses; no measured/adopted accelerator rate."""
     from hbm_accelerator_model import build
@@ -6930,6 +6989,8 @@ def main(argv=None):
                     dest="hbm_switch_latency_range", action="store_true",
                     help="AUTHORITATIVE HBM switch collective record: every scenario, DS HBM AR/MTP, ROM:HBM, "
                          "GPU-faithful, GPU baseline and Qwen checks")
+    ap.add_argument("--hbm-mtp-drafts-measured", action="store_true",
+                    help="SUCCESSOR MTP rows: DS HBM and ROM drafts both MEASURED (results/rtl/dshbm_dspark_draft_20261004)")
     ap.add_argument("--hbm-switch-latency", choices=("w15", "push_optimistic", "nvls_measured", "gpu_fenced",
                                                      "tomahawk_ultra_protocol", "tomahawk_ultra_inc",
                                                      "low", "central", "high"),
@@ -6954,6 +7015,13 @@ def main(argv=None):
     global _HBM_SWITCH, _HBM_FEC
     _HBM_SWITCH = HBM_SWITCH_ALIASES.get(a.hbm_switch_latency, a.hbm_switch_latency) or _HBM_SWITCH
     _HBM_FEC = a.hbm_fec or _HBM_FEC
+    if a.hbm_mtp_drafts_measured:
+        payload = json.dumps(hbm_mtp_both_drafts_measured(), indent=1, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.hbm_switch_latency_range:
         payload = json.dumps(hbm_switch_latency_range(), indent=1, allow_nan=False) + "\n"
         if a.out:
@@ -7242,6 +7310,103 @@ def dsrom_s81_native_su_prefix():
         combined_single_user_added_us=None, overlap_credit_us=0)
 
 
+def dsrom_s81_native_su_ik128():
+    """Opt-in literal I36 IK128 address selection; existing SUN256 body costs.
+
+    KVT_SH is a compile-time wire shift into the unchanged address adders.
+    This selects the D128 writer layout, not dynamic format selection or a
+    strobe remap. Existing prefix defaults and headline rows stay unchanged.
+    """
+    base = dsrom_s81_native_su_prefix()
+    selected = copy.deepcopy(base)
+    selected['schema'] = 'opentallas.dsrom.S81.native-SU-IK128.v1'
+    selected['parameters']['KVT_SH'] = 11
+    source_paths = (
+        'rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_vec.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv',
+        'tools/runtime/dsrom/s81_minimum_l20_index_writer.cpp',
+    )
+    selected.update(
+        scope='Opt-in minimum native L20.I36 IK128 SUN256 SH11 source binding; not a final S81 headline change',
+        literal_source='L20.I36 unit2 dst3 nin128 nout1 abase94496 asi1 obase0; actual DY4 GLOBAL row = position; backend local record is separate',
+        literal_word_sha256='436e442bdf1b4743ac79abc55ab08892561afe7bfdf29803d631ed531180c072',
+        source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in source_paths},
+        IK_dimensions=128, interleaved_rows=16, scalar_element_bits=32,
+        prior_KVT_SH=9, selected_KVT_SH=11,
+        prior_block_stride_elements=512, selected_block_stride_elements=2048,
+        prior_block_stride_bytes=2048, selected_block_stride_bytes=8192,
+        address_formula='obase + ((row >> 4) << KVT_SH) + (dimension << 4) + (row & 15)',
+        prior_stride_collision={'row0_dimension32': 512, 'row16_dimension0': 512},
+        target_global_position=1048575, target_DY4=1048575,
+        target_dimension0_element_address=134215695,
+        target_dimension127_element_address=134217727,
+        selected_address_extent_bytes=536870912,
+        address_extent_scope='Logical selected scalar-address extent, not physical replicated bank capacity',
+        selected_body_delta=dict(MACs_per_cycle=0, memory_ports=0, boundary_bits=0,
+                                 state_bits=0, replicas=0, mux_demux=0, fanout=0,
+                                 address_adders=0, pipeline_cycles=0,
+                                 new_body_area_mm2=0, single_user_added_latency_cycles=0),
+        constant_wire_stride_delta='Existing row high bits align two positions higher into same AW30 adders; no dynamic shifter, added stage, new engine or strobe rewrite',
+        routing_cost='Same bounded bus/port/replica inventory; selected wire endpoints differ. Exact placed routes and SS/FF remain unqualified, not zero-cost physical qualification.',
+        all_KV_formats_qualified=False, physical_dynamic_selection_qualified=False,
+        minimum_selected_build_model_ready=True,
+        measured_runtime_qualified=False, measured_rate_credit=0,
+    )
+    return selected
+
+
+def dsrom_s81_native_su_kvt_stride_policy():
+    """Priced opt-in captured-ni fixed SH11/SH13 selector, before KVT add.
+
+    Source scope is Arch's 82 selected KVT operations: D128 IK and D512 KT.
+    Other formats are outside this selection. No extra register or engine.
+    """
+    base = dsrom_s81_native_su_prefix()
+    lanes = base['parameters']['N']
+    aw = base['parameters']['AW']
+    cw = 24  # ot_hdc_v41x_vec.sv localparam CW; existing ni_e per lane.
+    # Existing model uses ASSUMED 0.2 um2/2:1 bit mux (HBM mux screen).
+    # Equality network proxy is explicit, not mapped area/timing evidence.
+    mux_um2 = lanes * aw * 0.2
+    compare_um2 = lanes * cw * 0.2
+    return dict(
+        schema='opentallas.dsrom.S81.native-SU-KVT-stride-policy.v1',
+        adopted=False, model_ready_for_selected_RTL=True,
+        source_scope='82 canonical KVT ops; L20.I21/I53 D512, L20.I36 D128',
+        base_parameters=base['parameters'], ports=base['ports'],
+        supported_dimensions=[128,512], shifts={128:11,512:13},
+        block_stride_elements={128:2048,512:8192},
+        selection='Captured ni_e==128 selects fixed (row_e>>4)<<11; otherwise selected D512 uses fixed <<13, before existing u_kv1. Unsupported dimensions are not enrolled.',
+        arithmetic_order='Existing u_kv1 base+block_offset, then u_kv2 dimension<<4|row_low4 unchanged',
+        defaultoff_required=True, captured_control='Existing CW24 ni_e in same emitting lane/stage; no new capture FF',
+        MACs_per_cycle_peak=base['MACs_per_cycle_peak'],
+        operand_bytes_per_edge_peak=base['operand_bytes_per_edge_peak'],
+        native_write_bytes_per_edge_peak=base['native_write_bytes_per_edge_peak'],
+        new_ports=0, new_queues=0, new_engine_replicas=0, new_FF_bits=0,
+        new_address_adders=0, new_pipeline_cycles=0,
+        replicas_per_rank=base['replicas_per_rank'], TP=base['TP'],
+        mux_bits_per_lane=aw, mux_bits_per_rank=lanes*aw,
+        equality_bits_per_lane=cw, equality_bits_per_rank=lanes*cw,
+        local_select_fanout_per_lane=aw,
+        extra_ni_bit_compare_loads_per_lane=1,
+        extra_global_control_broadcast_bits=0,
+        area_basis='ASSUMED analytical proxy 0.2um2/mux-bit and 0.2um2/equality-input-bit; no mapped/routed/SSFF claim',
+        mux_proxy_um2_per_rank=mux_um2,
+        equality_proxy_um2_per_rank=compare_um2,
+        added_cell_proxy_mm2_per_rank=(mux_um2+compare_um2)/1e6,
+        added_cell_proxy_mm2_TP4=4*(mux_um2+compare_um2)/1e6,
+        loaded_path='ni_e -> CW24 equality -> AW30 fixed-offset mux -> existing u_kv1 -> u_kv2 -> same f_o register',
+        loaded_path_SS_FF_closed=False, loaded_path_delay_ps=None,
+        added_latency_cycles=0, added_physical_latency_ps=None,
+        all_KV_formats_qualified=False, physical_dynamic_selection_qualified=False,
+        measured_rate_credit=0,
+        source_sha256=dsrom_s81_native_su_ik128()['source_sha256'],
+        fixed_IK_SH11_minimum_build_independent=True,
+    )
+
+
 def dsrom_s81_native_he_bootstrap():
     """Native prefix leaves, reusing selected HE and SUN256 reducer arithmetic.
 
@@ -7468,3 +7633,60 @@ def dsrom_s81_head_result_hook(roots=128):
 
 if __name__ == "__main__":
     main()
+
+
+def dsrom_s81_native_bf_head_producer():
+    """Serialized native archive reuse vehicle, not a new parallel head engine."""
+    rows, k, ranks = 32320, 5120, 4
+    return {
+        'schema': 'dsrom.s81.native_bf_head_producer.v1',
+        'selected_storage': 'existing dedicated BF head2525pairs/10100macros; unchanged',
+        'ranks': ranks, 'rows_per_rank': rows, 'k': k,
+        'macs_per_rank': rows*k, 'macs_per_native_word_per_bank': 16,
+        'native_macro_read_bits': 274, 'native_pair_read_bits': 548,
+        'released_raw_bytes_per_native_word': 256,
+        'released_raw_useful_bytes_per_native_word': 32,
+        'released_provider_port_bytes_per_cycle': None,
+        'native_rom_words_per_rank_per_bank': (rows//2)*320,
+        'activation_snapshot_bytes_per_reused_vehicle': k*4,
+        'ordered_root_staging_bits_per_vehicle': 2*2*32,
+        'native_input_boundary_bits': 1024+32+4+3+3+1,
+        'native_return': 'retained RD64 branch + D128/QD128 root, nseg1; no host arithmetic',
+        'grain_issue_cycles_per_rowpair': [256,64],
+        'grain_issue_lower_bound_cycles_per_rank': (rows//2)*320,
+        'latency_terms': ['source XN acquisition5120 scalar words on actual ready',
+                          'two actual CFG/GO/native BF phases per rowpair',
+                          'PB lane recurrence LAT8, native EARLY tree',
+                          'actual retained return/capture/drain before rebind',
+                          'actual carried B+0+0 and A+B, finite in_ready',
+                          'actual global argmax chain/final broadcast and VM ACK'],
+        'replicas_in_reuse_vehicle': 1,
+        'replicas_if_four_rank_host_participants': 4,
+        'physical_parallel_head_replicas': None,
+        'new_engine_area_mm2': 0,
+        'simulation_snapshot_and_controls_are_not_hardware_free_area': True,
+        'source_provider_routing_tracks': None, 'physical_slot_fit': None,
+        'token_latency_ns': None, 'headline_or_rate_credit': False,
+        'default_enabled': False,
+    }
+
+
+def hbm_dspark_ctl_fast_prefix_candidate():
+    """FAST-only W16 carry repair, model before RTL; no clock/rate adoption.
+
+    Existing control accepts the same commands and emits the same values on
+    the same edges. Retain ctl_f1 output SS miss and full spec_f1 setup fail.
+    """
+    return dict(model_record="results/uarch/hbm_accel_fmax_ctl_20261004/prebuild_model.json",
+                adopted=False, target_period_ps=833, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, replicas=1, MACs_per_cycle=0,
+                new_memory_ports=0, new_boundary_bits=0, new_latency_cycles=0,
+                single_user_token_latency_delta_cycles=0, FAST_default=0,
+                retained_fast_fbase_FF_bits=16, repair_additional_FF_bits=0,
+                carry_width=16, carry_levels=5, carry_prefix_nodes=54,
+                local_kept_wire_bits=204, local_prefix_fanout_bound=2,
+                gate_equivalent_upper=210, added_logic_proxy_um2=105,
+                added_50pct_reservation_proxy_um2=210,
+                area_basis="assumed0.5um2/gate; mapped/routed area not measured",
+                required_leaf_area_growth_um2=210, physical_fit=False,
+                SS_FF_closed=False, measured_gain=False)

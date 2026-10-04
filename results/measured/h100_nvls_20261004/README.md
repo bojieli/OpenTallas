@@ -51,3 +51,25 @@ Readings used by the model:
 - The relaxed barrier costs 0.70-0.73 us, so the all-reduce's two barriers take about 1.4 of its 2.24 us.
 - The sys-scope fences add about 3.3 us per barrier.
 - Per-leg reach is the peer load RTT minus a local miss, (490 - 155) / 4, which is about 85 ns a leg including the switch. That is board reach, at or below the ROM's light-FEC 130 ns board-link class.
+
+## Addendum (2026-10-04): prefill/decode-separated vLLM baselines and published references
+Decode rate = (generated - 1) / (end-to-end latency - prefill-only latency); prefill-only = output length 1. Raw logs in vllm_logs/.
+
+Qwen3-8B, vLLM 0.11, H100 SXM:
+| config | prefill 128 | prefill 8K | decode @128 ctx | decode @8K ctx |
+|---|---|---|---|---|
+| TP1 BF16 | 9.5 ms | 223 ms | 138 tok/s (7.24 ms) | 131 tok/s (7.65 ms) |
+| TP1 FP8 | 7.0 ms | 163 ms | 194 tok/s (5.15 ms) | 180 tok/s (5.55 ms) |
+| TP8 BF16 | 7.2 ms | - | 294 tok/s (3.40 ms) | - |
+| TP8 FP8 | 5.5 ms | 56 ms | 306 tok/s (3.27 ms) | 299 tok/s (3.35 ms) |
+| TP8 FP8 + all-reduce/RMSNorm fusion | 5.6 ms | - | 304 tok/s (3.29 ms) | - |
+Verify-step proxy (6 sequences in flight, TP1): BF16 7.49 ms vs 7.24 single (+3.5%); FP8 5.35 vs 5.15 ms (+3.9%).
+
+Qwen3.8-27B, vLLM 0.30 (CUDA 13 forward-compat), H100 SXM TP1 FP8: prefill 128 = 52 ms, 8K = 494 ms; decode 80.6 tok/s @128 ctx, 79.7 tok/s @8K ctx.
+Multi-GPU (TP8) runs under vLLM 0.30 failed with an NCCL CUDA error under the CUDA-13 forward-compatibility layer (driver 570); not measured. DeepSeek-V4.1-Flash (needs TP8) therefore not measured on this node.
+EAGLE-3 runs used vLLM's random-token latency benchmark (acceptance meaningless); excluded. Acceptance comes from published values.
+
+Published references used instead (third party):
+- CORRECTED 2026-10-04 (pages re-fetched; registry `results/external/registry.json` id `nvls:lmsys_dsv4_day0`): the LMSYS Day-0 post reports DeepSeek-**V4**-Flash (not V4.1) on H200 TP4 at 266 tok/s for 4K context, falling to 240 tok/s at 900K, and V4-Pro on B200 TP8 at 199 to 180 tok/s, all single batch with OSL 4096 (https://www.lmsys.org/blog/2026-04-25-deepseek-v4/). The post does not say whether speculation was on for that figure, but it most likely was: Figure 1 used EAGLE 3/1/4 and the caption cites in-graph spec metadata. The 30K prefix belongs to Figure 1. The NVIDIA Dynamo V4.1 recipe (https://docs.nvidia.com/dynamo/dev/recipes/deepseek-v4-1-flash) carries no performance figure. See `results/measured/gpu_third_party_20261004/`; H100 is not a supported target (user reports 40-50 tok/s; https://github.com/sgl-project/sglang/discussions/39791).
+- Qwen3.8-27B single-stream (concurrency 1) on 2x H100: Together 189.6 tok/s (TP2), g factor MTP4 133.0, Fireworks 114.5, vanilla vLLM 69.3 (https://dev.to/g_factor/benchmarking-qwen-38-27b-across-inference-providers-together-fireworks-doubleword-and-g-factor-4c1i).
+Note: figures quoted from search summaries; verify against the pages before publication.
