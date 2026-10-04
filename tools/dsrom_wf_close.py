@@ -38,6 +38,103 @@ INST = {"src": dict(COMMON, SOURCE=1, XWORDS=41, RXWORDS=41),
         "stg": dict(COMMON, SOURCE=0, XWORDS=46, RXWORDS=41)}
 
 
+STA_TCL = r"""
+set P /OpenROAD-flow-scripts/flow/platforms/asap7
+foreach f [lsort [glob $P/lib/NLDM/*_RVT_$::env(WF_LIB)_*.lib*]] { read_liberty $f }
+read_db $::env(WF_ODB)
+read_sdc $::env(WF_SDC)
+read_spef $::env(WF_SPEF)
+set_propagated_clock [all_clocks]
+set ck [get_clocks]
+proc fails {} {
+  set nv 0; set nh 0
+  foreach p [concat [all_registers -data_pins] [all_outputs]] {
+    set s [get_property $p slack_max]; if {$s != "INF" && $s < 0} { incr nv }
+    set s [get_property $p slack_min]; if {$s != "INF" && $s < 0} { incr nh }
+  }
+  return "$nv $nh"
+}
+proc rep {tag} {
+  puts "WFSTA $tag setup [sta::worst_slack_cmd max] hold [sta::worst_slack_cmd min] fails [fails]"
+  puts "WFPATH $tag max"; report_checks -path_delay max -digits 1
+  puts "WFPATH $tag min"; report_checks -path_delay min -digits 1
+  puts "WFEND"
+}
+# insertion delay of the block's own tree (register clock pins)
+set lmin 1e9; set lmax 0
+foreach p [all_registers -clock_pins] {
+  set a [get_property $p arrival_max_rise]; if {$a != "INF" && $a > $lmax} { set lmax $a }
+  set a [get_property $p arrival_min_rise]; if {$a != "INF" && $a < $lmin} { set lmin $a }
+}
+puts "WFLAT $lmin $lmax"
+rep block
+# in context: the neighbours hang off the same die clock tree -> IO relative to a virtual clock that
+# carries the block's own insertion delay (setup: launch late / capture early; hold: the reverse)
+set per [get_property $ck period]
+set io [expr 0.2 * $per]
+set ins [lsearch -all -inline -not [all_inputs] [get_ports $::env(WF_CLK)]]
+unset_input_delay $ins
+unset_output_delay [all_outputs]
+create_clock -name vclk -period $per
+set_clock_latency -min $lmin [get_clocks vclk]
+set_clock_latency -max $lmax [get_clocks vclk]
+set_clock_uncertainty -setup $::env(WF_USETUP) [get_clocks vclk]
+set_clock_uncertainty -hold $::env(WF_UHOLD) [get_clocks vclk]
+set_input_delay $io -clock vclk $ins
+set_output_delay $io -clock vclk [all_outputs]
+rep incontext
+set_false_path -from $ins
+set_false_path -to [all_outputs]
+rep reg2reg
+puts "WFDONE"
+"""
+
+
+def corner_sta(work: Path, nick: str, out: Path):
+    res = next(work.rglob(f"results/asap7/{nick}/base"))
+    mount = res.parents[3]
+    (mount / "wf_sta.tcl").write_text(STA_TCL)
+    rel = lambda q: "/work/" + str(q.relative_to(mount))
+    rec = dict(basis="OpenSTA on 6_final.odb + RCX 6_final.spef, one ASAP7 RVT liberty corner per run, propagated "
+                     "clock. block = the routed SDC (IO at 20 % of the period vs an ideal clock); incontext = IO at "
+                     "20 % vs a virtual clock carrying the block's own min/max insertion delay (same die tree as "
+                     "the neighbours); reg2reg = IO false-pathed. 60 ps setup / 25 ps hold uncertainty.",
+               artifacts_sha256={q.name: sha(res / q) for q in (Path("6_final.odb"), Path("6_final.sdc"),
+                                                                 Path("6_final.spef"))}, corners={})
+    import re
+    for lib in ("SS", "FF"):
+        c = ["docker", "run", "--rm", "-v", f"{mount}:/work", "-e", f"WF_LIB={lib}",
+             "-e", f"WF_ODB={rel(res / '6_final.odb')}", "-e", f"WF_SDC={rel(res / '6_final.sdc')}",
+             "-e", f"WF_SPEF={rel(res / '6_final.spef')}", "-e", "WF_CLK=clk", "-e", "WF_USETUP=60",
+             "-e", "WF_UHOLD=25", "openroad/orfs:latest", "bash", "-lc",
+             "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /work/wf_sta.tcl"]
+        p = subprocess.run(c, capture_output=True, text=True)
+        log = p.stdout + p.stderr
+        (out / f"wf_sta_{lib}.log").write_text(log)
+        r = dict(exit=p.returncode, done="WFDONE" in log)
+        m = re.search(r"WFLAT (\S+) (\S+)", log)
+        if m:
+            r["insertion_ps"] = [round(float(m.group(1)), 1), round(float(m.group(2)), 1)]
+        for m in re.finditer(r"WFSTA (\w+) setup (\S+) hold (\S+) fails (\d+) (\d+)", log):
+            r[m.group(1)] = dict(setup_wns_ps=round(float(m.group(2)) * 1e12, 1),
+                                 hold_wns_ps=round(float(m.group(3)) * 1e12, 1),
+                                 failing_setup=int(m.group(4)), failing_hold=int(m.group(5)))
+        for m in re.finditer(r"WFPATH (\w+) (max|min)\n(.*?)(?=WFPATH|WFEND)", log, re.S):
+            sp = re.search(r"Startpoint: (\S+)", m.group(3))
+            ep = re.search(r"Endpoint: (\S+)", m.group(3))
+            r.setdefault(m.group(1), {})[f"worst_{m.group(2)}_path"] = [sp and sp.group(1), ep and ep.group(1)]
+        rec["corners"][lib] = r
+    ss, ff = rec["corners"]["SS"], rec["corners"]["FF"]
+    def met(mode):
+        try:
+            return ss[mode]["setup_wns_ps"] >= 0 and ff[mode]["hold_wns_ps"] >= 0 and ss[mode]["hold_wns_ps"] >= 0
+        except (KeyError, TypeError):
+            return None
+    rec["signoff"] = {m: met(m) for m in ("block", "incontext", "reg2reg")}
+    (out / "wf_sta.json").write_text(json.dumps(rec, indent=1) + "\n")
+    return rec
+
+
 def module(name, path):
     spec = importlib.util.spec_from_file_location(name, path)
     m = importlib.util.module_from_spec(spec)
@@ -75,11 +172,7 @@ def cmd_route(a):
         break
     sta = None
     if nick:
-        r = subprocess.run([sys.executable, str(ROOT / "tools/qwen_async_seq_incontext_physical.py"), "sta",
-                            "--workdir", str(out / "work"), "--nickname", nick, "--out", str(out / "sta.json")],
-                           capture_output=True, text=True)
-        (out / "sta.log").write_text(r.stdout + r.stderr)
-        sta = r.returncode
+        sta = corner_sta(out / "work", nick, out)["signoff"]
     (out / "done.json").write_text(json.dumps(dict(route_rc=rc, nickname=nick, sta_rc=sta)) + "\n")
 
 
@@ -110,6 +203,56 @@ def cmd_stage(a):
     print(json.dumps(res))
 
 
+def _screen(d):
+    f = Path(d) / "screen.json"
+    if not f.is_file():
+        return None
+    j = json.loads(f.read_text())
+    return {k: j.get(k) for k in ("top", "params", "ss_setup_wns_ps", "ff_hold_wns_ps", "cell_area_um2",
+                                   "worst_start", "worst_end")} | {
+        "worst_stages_ps": dict(list(j.get("worst_slack_by_stage_ps", {}).items())[:8])}
+
+
+def _route(d):
+    d = Path(d)
+    if not (d / "physical.json").is_file():
+        return None
+    ph = json.loads((d / "physical.json").read_text())
+    de, pr = ph.get("design", {}), ph.get("place_and_route", {})
+    sta = json.loads((d / "wf_sta.json").read_text()) if (d / "wf_sta.json").is_file() else {}
+    return dict(route_args=json.loads((d / "route_args.json").read_text()) if (d / "route_args.json").is_file() else None,
+                flow_completed=ph.get("flow_completed"), driver_status=ph.get("status"),
+                area_um2=de.get("area_um2"), core_area_um2=de.get("core_area_um2"), cells=de.get("cells"),
+                utilization=de.get("utilization_fraction"), drc=de.get("drc"), antenna=de.get("antenna"),
+                signal_integrity_clean=de.get("signal_integrity_clean"),
+                orfs_setup_wns_ns=de.get("setup_wns_ns"), orfs_hold_wns_ns=de.get("hold_wns_ns"),
+                synth=dict((k, ph.get("synthesis", {}).get(k)) for k in ("cell_area_um2", "cell_count",
+                                                                         "sequential_cell_count")),
+                elapsed_s=ph.get("elapsed_seconds"),
+                signoff_sta=sta, closed_incontext=sta.get("signoff", {}).get("incontext"))
+
+
+def cmd_record(a):
+    d = a.dir.resolve()
+    eq = {}
+    for f in sorted(d.glob("eq*/run.log")) + sorted(d.glob("eq_icarus/*.out")):
+        lines = [l for l in f.read_text(errors="replace").splitlines() if l.startswith("EQUIV")]
+        eq[str(f.relative_to(d))] = lines
+    stage = {w: json.loads((d / f"stage_w{w}" / f"stage_w{w}.json").read_text())
+             for w in (1, 0) if (d / f"stage_w{w}" / f"stage_w{w}.json").is_file()}
+    rec = dict(schema="opentallas.rtl.dsrom_wf_close.v1",
+               block="ot_rom_pkg_ctrl_wf (WAVE=1) -> closed implementation ot_rom_pkg_ctrl_wfc",
+               source=SRC, source_sha256=sha(ROOT / SRC),
+               reference="rtl/rom/wavefront/ot_rom_pkg_ctrl_wf.sv",
+               reference_sha256=sha(ROOT / "rtl/rom/wavefront/ot_rom_pkg_ctrl_wf.sv"),
+               instances=INST, period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+               screens={k: _screen(d / k) for k in a.screen},
+               routes={k: _route(d / k) for k in a.route},
+               equivalence=eq, stage_bench=stage)
+    a.out.write_text(json.dumps(rec, indent=1) + "\n")
+    print(json.dumps({k: (v and {kk: v.get(kk) for kk in ("closed", "area_um2", "cells")}) for k, v in rec["routes"].items()}))
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -122,8 +265,19 @@ def main():
     t.add_argument("--from", dest="src", type=Path, required=True)
     t.add_argument("--scratch", type=Path, required=True)
     t.add_argument("--wave", type=int, default=1)
+    c = sub.add_parser("record")
+    c.add_argument("--dir", type=Path, required=True)
+    c.add_argument("--screen", action="append", default=[])
+    c.add_argument("--route", action="append", default=[])
+    c.add_argument("--out", type=Path, required=True)
+    q = sub.add_parser("sta")
+    q.add_argument("--run-dir", type=Path, required=True)
     a = ap.parse_args()
-    {"route": cmd_route, "stage": cmd_stage}[a.cmd](a)
+    if a.cmd == "sta":
+        nick = next((a.run_dir / "work").rglob("6_final.odb")).parent.parent.name
+        print(json.dumps(corner_sta((a.run_dir / "work").resolve(), nick, a.run_dir.resolve()), indent=1)[:4000])
+        return
+    {"route": cmd_route, "stage": cmd_stage, "record": cmd_record}[a.cmd](a)
 
 
 if __name__ == "__main__":
