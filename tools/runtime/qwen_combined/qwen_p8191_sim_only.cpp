@@ -530,6 +530,12 @@ int main(int argc, char** argv) {
     // authoritative mutable HBM array. No output/golden activation is an input.
     // Cached near-HBM RTL arithmetic/link/CDC model; pipeline/service timing excluded.
     auto run_near=[&](int rank) {
+        // nc changes the thread's current context. Restore only after n and nc
+        // have both been destroyed, before the enclosing models resume/clean up.
+        struct RestoreContext {
+            VerilatedContext* previous = Verilated::threadContextp();
+            ~RestoreContext() { Verilated::threadContextp(previous); }
+        } restore_context;
         VerilatedContext nc;
         nc.threads(1);
         Vot_qwen_nearhbm_sys_tb n(&nc,"SIM_ONLY_NEAR");
@@ -715,6 +721,7 @@ int main(int argc, char** argv) {
                     struct rusage ru; getrusage(RUSAGE_SELF, &ru);
                     printf("SIM_ONLY_QWEN_LAYER_COMPLETED stages=%zu cycles=%u edges=%ld settle_max=%d wall_s=%.1f RSS_KiB=%ld threads=%d kv_ideal=%d\n",
                            stages.size(), cyc, edges, max_settle, sec, ru.ru_maxrss, threads, int(kv_ideal));
+                    fflush(stdout);
                     return 0;
                 }
                 next_stage = true;
