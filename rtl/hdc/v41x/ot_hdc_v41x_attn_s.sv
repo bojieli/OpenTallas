@@ -105,8 +105,11 @@ module ot_hdc_v41x_attn_s #(
     parameter integer NBANKP = 0,      // stationary banks; 0 = as built (3 / 4 with PWORDS 2, +1 with ILV).  The
                                        // bank lifetime grows with the skew (6 FPL): at FPL 7 more banks keep p.v
                                        // at one beat per cycle (see the W11 stream record)
-    parameter integer TILE_S = 0       // 1: the head-group tile ot_hdc_v41x_attn_tile_s (same cycles; hardens
+    parameter integer TILE_S = 0,      // 1: the head-group tile ot_hdc_v41x_attn_tile_s (same cycles; hardens
                                        //    hierarchically, rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv)
+    parameter integer NARROW = 0       // 1: block counters (load / fill / issue / filled / count) BKW bits wide, not
+                                       //    16 (values never exceed NBLKMAX; same values and cycles for T <= TROWS):
+                                       //    shortens the controller's compare/increment loops for 1.2 GHz
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -157,6 +160,7 @@ module ot_hdc_v41x_attn_s #(
     localparam integer AW = $clog2(DEPTH);
     localparam integer NBLKMAX = (TROWS + TD - 1) / TD;
     localparam integer MLEV = (NBLKMAX <= 1) ? 1 : $clog2(NBLKMAX);
+    localparam integer BKW = (NARROW != 0) ? $clog2(NBLKMAX + 1) + 1 : 16;   // block counter width
     localparam integer NBANK = (NBANKP > 0) ? NBANKP : (((PWORDS >= 2) ? 4 : 3) + ((ILV != 0) ? 1 : 0));
     localparam integer BW = (NBANK > 4) ? $clog2(NBANK) : 2;
     localparam integer BD = (NBANK <= 4) ? 4 : (1 << $clog2(NBANK));   // block -> bank table entries
@@ -212,18 +216,19 @@ module ot_hdc_v41x_attn_s #(
     //   stationary load  p word first, else q word  (q_ready drops for a cycle a p word is accepted)
     //   stationary banks NBANK = 4 (PWORDS = 1) or 5 (PWORDS = 2): the p.v blocks' banks plus one q set; a new
     //                    set takes the lowest free bank whose write-after-read guard has expired.
-    reg  [15:0]   fill_blk_d;
+    reg  [BKW-1:0] fill_blk_d;
     reg  [7:0]    fill_cnt_d;
     reg           rd_qk, rd_fill;
     wire          fill_wr = rd_fill;
     reg        act;
     reg [15:0] T;
-    reg [15:0] nblk;
+    reg [BKW-1:0] nblk;
     reg        phase_pv;
     reg        reuse_f;               // ILV: the front job keeps the staged rows (job_t[15])
     reg        act_b;                 // ILV: back job
     reg        fbuf, bbuf;            // NSTAGE = 2: staging buffer of the front / back job
-    reg [15:0] T_b, nblk_b;
+    reg [15:0] T_b;
+    reg [BKW-1:0] nblk_b;
     reg [15:0] wptr;                  // rows written
     reg [15:0] qk_row;                // next q.k row base
     reg [7:0]  q_cnt;                 // q words loaded
@@ -234,21 +239,21 @@ module ot_hdc_v41x_attn_s #(
     reg [7:0]  sc_cred;
     reg [7:0]  pv_cred;
     // p loads
-    reg [15:0] pl_blk;                // block being loaded
+    reg [BKW-1:0] pl_blk;                // block being loaded
     reg [7:0]  pl_word;               // word within it
     reg [BW-1:0] pl_bank;
     reg [BW-1:0] blk_bank [0:BD-1];   // bank of block (index mod BD)
     // fills
-    reg [15:0] fl_blk;
+    reg [BKW-1:0] fl_blk;
     reg [7:0]  fl_cnt;
-    reg [15:0] filled_upto;           // blocks whose transposer fill is complete
+    reg [BKW-1:0] filled_upto;           // blocks whose transposer fill is complete
     // p.v issue
-    reg [15:0] iss_blk;
+    reg [BKW-1:0] iss_blk;
     reg [7:0]  iss_c;
 
     // the p side's job (ILV: the back job)
     wire [15:0] T_p = (ILV != 0) ? T_b : T;
-    wire [15:0] nblk_p = (ILV != 0) ? nblk_b : nblk;
+    wire [BKW-1:0] nblk_p = (ILV != 0) ? nblk_b : nblk;
     wire        p_side = (ILV != 0) ? act_b : (act && (q_cnt == H));
     wire        pv_side = (ILV != 0) ? act_b : (act && phase_pv);
     wire [15:0] job_rows = (ILV != 0) ? {1'b0, job_t[14:0]} : job_t;
@@ -434,7 +439,7 @@ module ot_hdc_v41x_attn_s #(
     reg              pv_go_d;
     reg [BW-1:0]     iss_bank_d;
     reg              iss_final_d;
-    reg [15:0]       iss_blk_d;
+    reg [BKW-1:0]    iss_blk_d;
     reg [7:0]        iss_c_d;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) pv_go_d <= 1'b0;
@@ -447,7 +452,7 @@ module ot_hdc_v41x_attn_s #(
     reg              pv_go_dd;
     reg [BW-1:0]     iss_bank_dd;
     reg              iss_final_dd;
-    reg [15:0]       iss_blk_dd;
+    reg [BKW-1:0]    iss_blk_dd;
     reg [7:0]        iss_c_dd;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) pv_go_dd <= 1'b0;
@@ -459,7 +464,7 @@ module ot_hdc_v41x_attn_s #(
     wire             pv_e = (XD != 0) ? pv_go_dd : (ILV != 0) ? pv_go_d : pv_go;
     wire [BW-1:0]    e_iss_bank = (XD != 0) ? iss_bank_dd : (ILV != 0) ? iss_bank_d : iss_bank;
     wire             e_iss_final = (XD != 0) ? iss_final_dd : (ILV != 0) ? iss_final_d : iss_final;
-    wire [15:0]      e_iss_blk = (XD != 0) ? iss_blk_dd : (ILV != 0) ? iss_blk_d : iss_blk;
+    wire [BKW-1:0]   e_iss_blk = (XD != 0) ? iss_blk_dd : (ILV != 0) ? iss_blk_d : iss_blk;
     wire [7:0]       e_iss_c = (XD != 0) ? iss_c_dd : (ILV != 0) ? iss_c_d : iss_c;
     function automatic [15:0] count_ones(input [NL-1:0] m);
         integer i;

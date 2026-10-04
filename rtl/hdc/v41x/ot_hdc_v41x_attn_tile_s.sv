@@ -155,8 +155,8 @@ module ot_hdc_v41x_attn_tile_s #(
     parameter integer NBANK = 3,
     parameter integer BW = 2,
     parameter integer PWORDS = 1,
-    parameter integer FPL = 3,
-    parameter integer FML = 3,
+    parameter integer FPL = 7,
+    parameter integer FML = 6,           // 6 only (split product)
     parameter integer HG = 4           // heads per hardened group (H % HG == 0)
 ) (
     input  wire              clk,

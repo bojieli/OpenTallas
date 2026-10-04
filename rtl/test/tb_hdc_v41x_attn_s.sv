@@ -36,8 +36,8 @@ module tb_hdc_v41x_attn (input wire clk);
     parameter integer NBANKP = 0;          // stationary banks (0 = as built)
     parameter integer ILV = 0;             // position-interleaved verify mode (engine ILV)
     parameter integer REPL = 0;            // engine REPL (per-tile index copies; needs ILV)
-    parameter integer NSTAGE = 1;
-    parameter integer TILE_S = 0;          // engine TILE_S (head-group tile)          // engine NSTAGE (2: two staging buffers; needs ILV; jobs carry no reuse flag)
+    parameter integer NSTAGE = 1;          // engine NSTAGE (2: two staging buffers; needs ILV; jobs carry no reuse flag)
+    parameter integer TILE_S = 0;          // engine TILE_S (head-group tile)
     localparam integer S = D / TD;
     localparam integer NT = NL * S;
     localparam integer DPT = D / NT;
