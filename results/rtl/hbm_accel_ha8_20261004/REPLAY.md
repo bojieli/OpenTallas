@@ -47,6 +47,7 @@ python3 tools/qwen_hbmacc_layer_parallel.py --plan --plan-dir RUN --stages st614
   --layout img6144/L0-d0/layer0_rom.json --build-dir BUILD --pos 1023 --token 1796 --preroll 655 --preroll-stage L0=5000,L1=5000 --only L0,L1,L2,head
 python3 tools/qwen_hbmacc_layer_parallel.py --run --plan-dir RUN
 ```
+- The measurements used ot_hbm_r14_stream_pc.sv at 52ce3e9c1 (source_sha256 in each token_result.json); main now carries the r8 SS-closing successor (3f14a175f), not re-measured here.
 - Stream bandwidth bench: `rtl/test/hbm_accel_qwen/tb_hbmacc_wstream_bw.sv` (`stream_bench/`).
 
 **Not claimed.**

@@ -1,0 +1,47 @@
+{
+  "schema": "qwen.combined.baseline-sizing.v1",
+  "source_base": "fullshape w12_rm/3d355; memory adapter62ed; unchanged ot_async_fifo baseline",
+  "selection": "TP4,G6144,SW64,NW18; optional levers default off",
+  "before_RTL": true,
+  "core_service_clock": "same clk; independent hclk across HBM request/response ports",
+  "MACs_per_cycle": 0,
+  "compute_intensity": "unchanged measured W12/nearHBM arithmetic; integration adds no MACs",
+  "ports_bytes_per_cycle": {
+    "Q_VM": 128,
+    "Q_near_BF16": 64,
+    "ATTN_VM": 64,
+    "HBM_return_stack": 1024
+  },
+  "boundary_bits_per_cycle": {
+    "HBM_req_stack": 299,
+    "HBM_return_stack": 8768,
+    "collective_die": 558
+  },
+  "CDC": {
+    "request_replicas": 4,
+    "request_depth": 16,
+    "response_replicas": 128,
+    "response_depth": 8,
+    "payload_coded_bits": 360,
+    "storage_bits": 391680,
+    "pointer_reset_sync": "unchanged baseline Gray-pointer ot_async_fifo, independent reset rendezvous; optional meso/3FF source not selected"
+  },
+  "added_control": {
+    "NHB_output_identity_bitmap_bits": 64,
+    "collective_generation_bits": 2,
+    "VM_Q_read_replicas": 32,
+    "VM_ATTN_write_replicas": 16
+  },
+  "area_mm2_storage_FF_upper_bound": 0.114213888,
+  "mux_demux_fanout": "four stack-local request FIFOs; independent 32-PC response FIFOs per stack, no serialized return bottleneck; Q32 VM mux andATTN16 write mux require loaded route check",
+  "routing_tracks": "299req+8768rsp bits/stack at service boundary; Goodall actual channel capacity required before adoption",
+  "slot_fit": "unmeasured integration, no fit claim",
+  "composed_latency": {
+    "request_crossing": "two destination Gray sync cycles + finite queue/ready, measured in combined run",
+    "ACK_return": "two destination Gray sync cycles + finite queue; token drained only after original service accepts ACK",
+    "NHB_Q_feed": "32 Q beats + one registered VM read stage after actual fences",
+    "ATTN_retirement": "64 output records, next descriptor starts only after final actual VM write",
+    "baseline": "consume Claude actual36layer nonzero memory measurements; no projected rate claim"
+  },
+  "adoption": false
+}
