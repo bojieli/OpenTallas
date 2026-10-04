@@ -1,0 +1,43 @@
+{
+  "RTL_written": false,
+  "cold_model_byte_equal": true,
+  "focused_metadata_tests_PASS": 3,
+  "functional_RTL_gate_launched": false,
+  "input_provenance": [
+    {
+      "committed_input_copy": "inputs/epicurus_construction.json",
+      "observed_HEAD": "4d5c70aea6b67af143f42892d7e51ddfe7974cf6",
+      "origin_path": "results/uarch/dsrom_qpipe_xneed_lookahead_20261003/model.json",
+      "origin_path_status": "tracked-clean",
+      "origin_root": "/tmp/opentallas-dsrom-qpipe-xneed-lookahead-20261003",
+      "sha256": "e3e4dae1c96f25d6c219f521d422e1e0a504caa8bbd5e4c691b14ca157946c26"
+    },
+    {
+      "committed_input_copy": "inputs/selected_S81.json",
+      "observed_HEAD": "c33abd820e8637c5d59f0ecc04afcb2c11380216",
+      "origin_path": "results/uarch/dsrom_c_recheck_20261004/model.json",
+      "origin_path_status": "tracked-clean",
+      "origin_root": "/home/ubuntu/OpenTallas",
+      "sha256": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348"
+    },
+    {
+      "committed_input_copy": "inputs/retained_RD64.json",
+      "observed_HEAD": "bc95bf781bd4d16078dd2ef4727dc470df35bca4",
+      "origin_path": "results/uarch/dsrom_s81_rd64_connectivity_20261004/source_geometry_r1/model.json",
+      "origin_path_status": "tracked-clean",
+      "origin_root": "/home/ubuntu/dsrom-s81-rd64-20261004",
+      "sha256": "320aab1de5847876c2b5cfc46dfbd618e917f1c07a009c1a32a82f017d83a2d9"
+    }
+  ],
+  "physical_job_launched": false,
+  "schema": "dsrom-xneed-context-source-milestone-r1",
+  "source_owner": "Epicurus",
+  "source_pins": {
+    "results/rtl/dsrom_xneed_context_20261004/model_r1.json": "a0b90b3aa0dd129121b2a96e0064ee235a57c2a69f8c0179762daf49614b85f6",
+    "tools/dsrom_xneed_s81_context_model.py": "6883cb541856ea5620a32deddfa4c9d046c3ddc57f50e8fa8be3f6fbc6bf798b",
+    "tools/dsrom_xneedwalker_context.py": "9f5a9f3e30f7098ab8cd68cdd344e32210347bb8dfe3e848ab60610b683fac2e",
+    "tools/test_dsrom_xneedwalker_context.py": "cf5ca282e5399d999b6f4f3e210e2c0050ae25d8f00c2aa3f59ae258b063de93"
+  },
+  "timing_scope": "xneed endpoint cut on existing selected parent context only; Claude qelement untouched",
+  "verdict": "NOT_ADMITTED_SOURCE_AND_PHYSICAL_MISSING"
+}

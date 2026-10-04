@@ -1,0 +1,100 @@
+{
+  "adoption": false,
+  "construction_commit": "4d5c70aea6b67af143f42892d7e51ddfe7974cf6",
+  "construction_owner": "Epicurus",
+  "fullfield_increment": {
+    "FFs": 154967904,
+    "cell_area_reserve_mm2": 299.27611934064,
+    "placed_area_50pct_reserve_mm2": 598.55223868128,
+    "q_only_sites": 614952
+  },
+  "historical_failure": {
+    "endpoint": "u_e.n_q[2]$_SDFFCE_PP0P_",
+    "fmax_mhz": 634.6712900997713,
+    "record_commit": "2078c269c4a14dd566b96a73b52a272582faa13f",
+    "scope": "placement parasitics, ideal clock, not routed SS/FF; baseline is not qpipe successor",
+    "setup_wns_ps": -742.618774,
+    "source_commit": "e156ed54e8ff31def4b8c58d69da3743bb6b498c",
+    "startpoint": "u_e.n_c[1]$_DFFE_PP_"
+  },
+  "increments_per_qpair": {
+    "FFs": 252,
+    "MAC_per_cycle": 0,
+    "actual_tracks": null,
+    "async_valid_FFs": 3,
+    "cell_area_reserve_um2": 486.66582,
+    "clock_buffer_reserve": 37,
+    "control_buffer_reserve": 120,
+    "data_FFs": 249,
+    "external_bits_per_cycle": 0,
+    "internal_metadata_logical_wire_reserve": 252,
+    "memory_bytes_per_cycle": 0,
+    "placed_area_50pct_reserve_um2": 973.33164
+  },
+  "latency": {
+    "accepted_II_cycles": 1,
+    "actual_selected_measured_increment_cycles": null,
+    "actual_token_latency_delta": null,
+    "inherited_qpipe_Rcap0_cycles": 2,
+    "inherited_qpipe_Rcap1_cycles": 3,
+    "lookahead_proposed_increment_cycles": 0,
+    "old_nA_nB_nQ2_storage_doublecharged": false,
+    "two_cycle_walker_permitted": false
+  },
+  "nonlayer_dies": {
+    "count": 44,
+    "lookahead_increment": null,
+    "qpair_inventory": null,
+    "scope": "head/table dies are not replicated layer fields; do not multiply by368"
+  },
+  "once_only_fit": {
+    "clock_reset_PG_RC_tracks": "not yet constructed/mapped; logical wires are not route capacity",
+    "conditional_die_mm2_with_retained_return_and_placed_lookahead": 843.5278284805601,
+    "conditional_margin_frac": 0.016867332773240023,
+    "meets_2pct_model_reserve": false,
+    "physical_slot_fit": null,
+    "remaining_reserve_mm2": 14.47217151943994,
+    "retained_return_additional_reservation_mm2": 2.44144502784,
+    "retained_return_nodes": 5090,
+    "reticle_mm2": 858.0,
+    "selected_compact_screen_mm2": 839.239,
+    "unilateral_nodes": 384
+  },
+  "physical_policy": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "no_qelement_timing_overlap": true,
+    "period_ps": 833,
+    "physical_launch_allowed": false
+  },
+  "rankdie_increment": {
+    "FFs": 478296,
+    "cell_area_reserve_mm2": 0.92369172636,
+    "clock_buffer_reserve": 70226,
+    "control_buffer_reserve": 227760,
+    "placed_area_50pct_reserve_mm2": 1.84738345272
+  },
+  "remaining": [
+    "Epicurus selected actual RTL + corrected caller decoder + functional terminal/II1/latency",
+    "actual S81 q/BF site identity and finite control/clock/reset/PG slot allocation",
+    "source-matched existing parent mapped/routed context and actual root/producer arrivals"
+  ],
+  "schema": "dsrom-xneed-S81-context-price-r1",
+  "selected_S81": {
+    "BF_pairs_per_rankdie": 519,
+    "BF_site_ID_binding": null,
+    "actual_S81_inventory_binding": null,
+    "layer_rankdies": 324,
+    "pairs_per_rankdie": 2417,
+    "q_only_pairs_per_rankdie": 1898,
+    "stages": 81,
+    "total_dies": 368
+  },
+  "source_pins": {
+    "epicurus_construction.json": "e3e4dae1c96f25d6c219f521d422e1e0a504caa8bbd5e4c691b14ca157946c26",
+    "retained_RD64.json": "320aab1de5847876c2b5cfc46dfbd618e917f1c07a009c1a32a82f017d83a2d9",
+    "selected_S81.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348"
+  },
+  "source_status": "MODEL_ONLY; candidate RTL not written and actual functional terminal absent",
+  "verdict": "NOT_ADMITTED_SOURCE_AND_PHYSICAL_MISSING"
+}
