@@ -212,7 +212,10 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
             .w_mask_in({128{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
         end
       end
-      wire [DEPTH-1:0] clr = take[m] ? (DEPTH'(1) << cs) : '0;
+      // one-hot copies of cs / cs1 (rotating): the release reads the mask by AND-OR, so Yosys cannot
+      // share the two index selects into full[ra] (e7: opt_share put s_ready back on a 512-way index)
+      reg [DEPTH-1:0] oh0, oh1;
+      wire [DEPTH-1:0] clr = take[m] ? oh0 : '0;
       wire [DEPTH-1:0] set0 = w_v[m*4 + 0] ? (DEPTH'(1) << w_a[m*4 + 0]) : '0;
       wire [DEPTH-1:0] set1 = w_v[m*4 + 1] ? (DEPTH'(1) << w_a[m*4 + 1]) : '0;
       wire [DEPTH-1:0] set2 = w_v[m*4 + 2] ? (DEPTH'(1) << w_a[m*4 + 2]) : '0;
@@ -229,14 +232,14 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
       assign ovr[m] = |hit;
       // valid for the line read at this edge, from the mask before this edge's writes; both
       // candidates are selected from registers, and the take (s_ready) only picks between them
-      // (* keep *): e6 showed ABC folding the take back into the 512-way index (s_ready -> mux tree)
-      (* keep *) wire f_hold = full[cs];
-      (* keep *) wire f_take = full[cs1];
+      wire f_hold = |(full & oh0), f_take = |(full & oh1);
       always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cs <= 0; cs1 <= SW'(1); vq <= 1'b0; end
+        if (!rst_n) begin cs <= 0; cs1 <= SW'(1); vq <= 1'b0; oh0 <= DEPTH'(1); oh1 <= DEPTH'(2); end
         else begin
           vq <= take[m] ? f_take : f_hold;
-          if (take[m]) begin cs <= cs1; cs1 <= cs1 + 1'b1; end
+          if (take[m]) begin
+            cs <= cs1; cs1 <= cs1 + 1'b1; oh0 <= oh1; oh1 <= {oh1[DEPTH-2:0], oh1[DEPTH-1]};
+          end
         end
     end
     always @(posedge clk or negedge rst_n)
