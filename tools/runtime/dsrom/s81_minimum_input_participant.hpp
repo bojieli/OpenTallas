@@ -17,6 +17,30 @@ public:
     using ReadWord=std::function<std::optional<uint32_t>(uint64_t,uint32_t)>;
     using PublishedSpan=std::function<bool(uint64_t,uint32_t,size_t)>;
     static constexpr uint32_t XBASE=46464,K=5120;
+    // Literal selected L0.I7 input_control.json, not a derived cut address.
+    static constexpr uint32_t SOURCE_OUTPUT_BASE=419776,SOURCE_OPS=320;
+    // An explicit input-only local alias is not a physical output home. The
+    // private constructor prevents the old implicit uint16_t narrowing API.
+    class InputOnlyOutputAlias {
+        friend class NativeInputParticipant;
+        uint64_t identity;
+        uint16_t phase;
+        uint32_t source_base,source_ops;
+        uint16_t cut_base;
+        InputOnlyOutputAlias(uint64_t id,uint16_t ph,uint32_t source,uint32_t ops,uint16_t alias)
+            :identity(id),phase(ph),source_base(source),source_ops(ops),cut_base(alias){}
+    };
+    static InputOnlyOutputAlias declare_input_only_alias(uint64_t identity,uint16_t phase,
+                 uint32_t actual_output_base,uint32_t actual_ops,uint32_t declared_cut_alias) {
+        if(identity>=(uint64_t(1)<<47) || phase!=0 || actual_ops!=SOURCE_OPS ||
+           actual_output_base!=SOURCE_OUTPUT_BASE ||
+           actual_output_base>=(1u<<19) || actual_ops>(1u<<19)-actual_output_base ||
+           declared_cut_alias>=(1u<<16) || actual_ops>(1u<<16)-declared_cut_alias ||
+           (declared_cut_alias<XBASE+K && XBASE<declared_cut_alias+actual_ops))
+            throw std::runtime_error("input-only alias/source VM19 span or cut VM16 span invalid");
+        return InputOnlyOutputAlias(identity,phase,actual_output_base,actual_ops,
+                                    static_cast<uint16_t>(declared_cut_alias));
+    }
 private:
     DsromS81MinimumRuntime& runtime;
     Vcut& cut;
@@ -24,6 +48,8 @@ private:
     PublishedSpan published_span;
     uint64_t identity=0;
     uint32_t loaded=0;
+    uint32_t source_output_base=0,source_ops=0,source_rows=0;
+    uint16_t local_output_alias=0;
     bool cold_seen=false,armed=false,issued=false,saw_pair_go=false;
     uint64_t cfg_edges=0,xs_edges=0,vm_read_edges=0;
 
@@ -91,25 +117,39 @@ public:
 
     void arm(uint64_t actual_identity,uint16_t phase,
              const std::array<uint64_t,2>& literal_phrom,
-             const std::vector<uint64_t>& literal_stream,uint16_t obase,uint16_t ops) {
+             const std::vector<uint64_t>& literal_stream,
+             uint32_t actual_output_base,uint32_t actual_ops,
+             const InputOnlyOutputAlias& declared_alias) {
         if(!cold_seen || armed || issued || !runtime.identity ||
            *runtime.identity!=actual_identity || actual_identity>=(uint64_t(1)<<47) || phase!=0)
             throw std::runtime_error("native input arm requires selected cold/context/phase");
         const uint64_t word=literal_phrom[0];
         const uint32_t k=(word>>1)&8191,beats=(word>>14)&65535,base=(word>>30)&65535;
+        const uint32_t rows=(word>>46)&65535;
         if((word&1) || k!=K || !beats || beats!=literal_stream.size() ||
            base>=16384 || beats>16384-base || literal_phrom[1]>>16)
             throw std::runtime_error("literal source PHROM does not fit retained FP8 encoder");
+        if(rows!=SOURCE_OPS || actual_ops!=SOURCE_OPS || actual_output_base!=SOURCE_OUTPUT_BASE ||
+           actual_output_base>=(1u<<19) ||
+           rows>(1u<<19)-actual_output_base || declared_alias.identity!=actual_identity ||
+           declared_alias.phase!=phase || declared_alias.source_base!=actual_output_base ||
+           declared_alias.source_ops!=actual_ops)
+            throw std::runtime_error("declared input-only alias differs from actual source output route");
         for(auto stream:literal_stream)if(stream>>48)
             throw std::runtime_error("literal source STREAM exceeds native 48-bit word");
         identity=actual_identity;
+        source_output_base=actual_output_base;source_ops=actual_ops;source_rows=rows;
+        local_output_alias=declared_alias.cut_base;
         auto* root=cut.rootp;
         root->dsrom_source_cut__DOT__dut__DOT__u_sp__DOT__phrom[2*phase]=literal_phrom[0];
         root->dsrom_source_cut__DOT__dut__DOT__u_sp__DOT__phrom[2*phase+1]=literal_phrom[1];
         for(size_t i=0;i<literal_stream.size();i++)
             root->dsrom_source_cut__DOT__dut__DOT__u_sp__DOT__strom[base+i]=literal_stream[i];
         cut.i_ph=phase;cut.i_np=0;cut.i_xbase=XBASE;cut.i_xps=0;
-        cut.i_obase=obase;cut.i_ops=ops;
+        // Only the input encoder uses this local cut alias. The actual root
+        // supplier must route by actual_output_address(), never cut.o_addr or
+        // cut VM writes. Full literal PHROM rows/stream remain unchanged.
+        cut.i_obase=local_output_alias;cut.i_ops=static_cast<uint16_t>(actual_ops);
         armed=true;
     }
     DsromS81MinimumParticipant participant() {
@@ -124,7 +164,27 @@ public:
     bool input_finished() const {
         return issued && saw_pair_go && !cut.obs_ld_run && !cut.obs_sm_run && !cut.fault;
     }
-    bool phase_idle() const{return issued && bool(cut.idle);}
+    uint32_t actual_output_address(uint32_t row,uint32_t position) const {
+        if(!armed || position!=0 || row>=source_rows)
+            throw std::runtime_error("actual source output row/position outside selected route");
+        return source_output_base+position*source_ops+row;
+    }
+    uint32_t actual_output_base() const {
+        if(!armed)throw std::runtime_error("actual source output route not armed");
+        return source_output_base;
+    }
+    uint32_t actual_output_ops() const {
+        if(!armed)throw std::runtime_error("actual source output route not armed");
+        return source_ops;
+    }
+    uint16_t input_only_cut_alias() const {
+        if(!armed)throw std::runtime_error("input-only cut alias not declared/armed");
+        return local_output_alias;
+    }
+    // Deliberately no phase_idle/publication callback: this input-only cut
+    // cannot qualify actual source output visibility or a 320-row completion.
+    bool input_only_cut_idle() const{return issued && bool(cut.idle);}
+    static constexpr bool cut_output_publication_credit(){return false;}
     uint64_t native_cfg_edges() const{return cfg_edges;}
     uint64_t native_xs_edges() const{return xs_edges;}
     uint64_t native_vm_read_edges() const{return vm_read_edges;}
