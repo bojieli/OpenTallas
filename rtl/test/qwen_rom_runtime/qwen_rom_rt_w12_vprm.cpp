@@ -621,7 +621,13 @@ int main(int argc, char** argv) {
                 for (int d = 0; d < D; d++) {
                     if (die[d]->core_fault && !tr_core[d]) {
                         tr_core[d] = true;
-                        printf("FAULTTRACE core_fault die=%d cyc=%u pc_base=%u stage=%s\n", d, cyc, unsigned(die[d]->prog_base), stages[cur].name.c_str());
+                        printf("FAULTTRACE core_fault die=%d cyc=%u pc_base=%u prog_a=%u src=%04x stage=%s\n", d, cyc, unsigned(die[d]->prog_base),
+                               unsigned(die[d]->dbg_prog_a), unsigned(die[d]->dbg_fault_src), stages[cur].name.c_str());
+                    }
+                    if (die[d]->dbg_fault_src && !tr_seq[d] && !tr_core[d]) {
+                        static int tr_src_n[8] = {};
+                        if (tr_src_n[d]++ < 4)
+                            printf("FAULTTRACE src die=%d cyc=%u prog_a=%u src=%04x\n", d, cyc, unsigned(die[d]->dbg_prog_a), unsigned(die[d]->dbg_fault_src));
                     }
                     if (die[d]->s_fault && !tr_seq[d]) {
                         tr_seq[d] = true;

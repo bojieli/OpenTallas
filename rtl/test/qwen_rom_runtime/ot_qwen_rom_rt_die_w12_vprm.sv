@@ -153,7 +153,10 @@ module ot_qwen_rom_rt_die_w12_vprm #(
     output wire              kv_drained_o,
     output wire [31:0]       st_fill_cycles, st_fill_sectors, st_wr_sectors, st_rsp_stall,
     output wire [31:0]       st_kvok_low_desc, st_drain_low, st_wr_lat_max,
-    output reg  [31:0]       st_stall_kv, st_stall_drain, st_stall_bridge, st_stall_retire, st_stall_mem
+    output reg  [31:0]       st_stall_kv, st_stall_drain, st_stall_bridge, st_stall_retire, st_stall_mem,
+    // observation only: which source raised the core's fault, and the core's program address
+    output wire [15:0]       dbg_fault_src,
+    output wire [11:0]       dbg_prog_a
 );
     localparam integer W=16, AW=24, PAW=12, DAW=6, FW=512, NPORT = G >> SMIN, NXC = 1 << SMAX;
     initial begin rt_rst_n = 0; start = 0; cyc = 0; end
@@ -419,6 +422,12 @@ module ot_qwen_rom_rt_die_w12_vprm #(
     assign mem_fault = kv_fault | rom_fault | (|sc_fault) | emb_fault;
     assign kv_ok_o = kv_ok;
     assign kv_drained_o = kv_write_drained;
+
+    // ---- fault-source observation (no effect on the datapath) ---------------------------
+    //: [0] me  [1] su  [2] embed  [3] dyn tiles  [4] su reducer  [5] any su lane (lanes are hier blocks: no deeper refs)
+    assign dbg_fault_src = {10'd0, |core.g_vsu.u_su.l_fault, core.g_vsu.u_su.f_red, core.dyn_tiles_bad_instruction,
+                            |core.embed_faults, core.su_fault, core.me_fault};
+    assign dbg_prog_a = prog_a;
 
     // ---- issue-stall attribution (cycles an op waited at NEXT while a memory gate was low) --
     wire run_nx = (core.st == 2'd2) && core.nx_v;
