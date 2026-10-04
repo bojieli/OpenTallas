@@ -343,87 +343,75 @@ module ot_rom_pkg_ctrl_wfc #(
     reg  [MAXU-1:0] res_oh;                      // user of the registered RESULT (one-hot)
     reg  [NW-1:0] wpre;                          // RESULT's ring slot, read on the header cycle
     reg           wwr_r;                         // the ring was written on the previous cycle
-    // per-user state, read out
-    wire [NW-1:0] wnp_q  [0:MAXU-1];
-    wire [NW-1:0] wkt_q  [0:MAXU-1];
-    wire [NW-1:0] er_q   [0:MAXU-1];
-    wire [3:0]    wblk_q [0:MAXU-1];
-    wire [2:0]    wnf_q  [0:MAXU-1];
-    wire [2:0]    k0_q   [0:MAXU-1];
+    // per-user state, as per-bit vectors over the users (written by g_wf.g_wu)
+    wire [MAXU-1:0] wkt_t [0:NW-1];
+    wire [MAXU-1:0] wnp_t [0:NW-1];
+    wire [MAXU-1:0] er_t  [0:NW-1];
+    wire [MAXU-1:0] slot_t [0:NW-1];             // ring entry at the header's slot
+    wire [MAXU-1:0] blk_t [0:3];
+    wire [MAXU-1:0] k0_t  [0:2];
+    wire [MAXU-1:0] wnf_t [0:2];
+    wire [MAXU-1:0] enc_m [0:USER_W-1];          // constant: users whose index has bit b set
     wire [MAXU-1:0] ewk, ewf, kv_v, sqnz_v, sq1_v, nf2_v, kteq_v;
-    wire [NW-1:0] slot_tok [0:MAXU-1];           // ring entry at the header's slot
-    // lowest eligible user: two-level prefix (groups of 32) -> one-hot
+    // lowest eligible user (two-level prefix, groups of 32) -> one-hot; AND-OR reads with it
     localparam integer GS = 32, NG = (MAXU + GS - 1) / GS;
-    function automatic [MAXU-1:0] lowest(input [MAXU-1:0] e);
-        reg [NG-1:0] ga, gb;
-        reg [GS-1:0] w, m;
-        integer gg, k;
-        begin
-            ga = 0;
-            for (gg = 0; gg < NG; gg = gg + 1) begin
-                w = 0;
-                for (k = 0; k < GS; k = k + 1) if (gg * GS + k < MAXU) w[k] = e[gg * GS + k];
-                ga[gg] = |w;
+    wire [MAXU-1:0] ohwk, ohwf;
+    wire            st_wk_c = |ewk;
+    wire            wf_v = |ewf;
+    wire [USER_W-1:0] wk_u, wf_u;
+    wire [NW-1:0]   tok_wk, pos_wk, pos_wf, r_er, r_prp, w_pre_c;
+    wire [3:0]      blk_wf, r_prb;
+    wire [2:0]      r_k0, r_wnf;
+    wire            r_kv = |(res_oh & kv_v), r_sq = |(res_oh & sqnz_v), r_sq1 = |(res_oh & sq1_v);
+    wire            r_nf2 = |(res_oh & nf2_v), r_kteq = |(res_oh & kteq_v), r_prkv = |(pr1_oh & kv_v);
+    wire [UB-1:0]   in_ub = in_user[UB-1:0];
+    wire [2:0]      in_slot = in_pos[2:0] + 3'd1;
+    wire [MAXU-1:0] in_dec = {{(MAXU-1){1'b0}}, 1'b1} << in_ub;
+    genvar gb, gg;
+    generate if (WAVE && SOURCE) begin : g_rd
+        for (gb = 0; gb < NW; gb = gb + 1) begin : b21
+            assign tok_wk[gb] = |(ohwk & wkt_t[gb]);
+            assign pos_wk[gb] = |(ohwk & wnp_t[gb]);
+            assign pos_wf[gb] = |(ohwf & wnp_t[gb]);
+            assign r_er[gb]   = |(res_oh & er_t[gb]);
+            assign r_prp[gb]  = |(pr1_oh & wnp_t[gb]);
+            assign w_pre_c[gb] = |(in_dec & slot_t[gb]);
+        end
+        for (gb = 0; gb < 4; gb = gb + 1) begin : b4
+            assign blk_wf[gb] = |(ohwf & blk_t[gb]);
+            assign r_prb[gb]  = |(pr1_oh & blk_t[gb]);
+        end
+        for (gb = 0; gb < 3; gb = gb + 1) begin : b3
+            assign r_k0[gb]  = |(res_oh & k0_t[gb]);
+            assign r_wnf[gb] = |(res_oh & wnf_t[gb]);
+        end
+        for (gb = 0; gb < USER_W; gb = gb + 1) begin : bu
+            assign wk_u[gb] = |(ohwk & enc_m[gb]);
+            assign wf_u[gb] = |(ohwf & enc_m[gb]);
+        end
+        wire [NG*GS-1:0] ek = {{(NG*GS-MAXU){1'b0}}, ewk};
+        wire [NG*GS-1:0] ef = {{(NG*GS-MAXU){1'b0}}, ewf};
+        wire [NG-1:0] gak, gaf, gbk, gbf;
+        wire [NG*GS-1:0] ok, of;
+        for (gg = 0; gg < NG; gg = gg + 1) begin : grp
+            wire [GS-1:0] wk = ek[gg*GS +: GS], wf = ef[gg*GS +: GS];
+            assign gak[gg] = |wk;
+            assign gaf[gg] = |wf;
+            if (gg == 0) begin : g0
+                assign gbk[gg] = 1'b0; assign gbf[gg] = 1'b0;
+            end else begin : gn
+                assign gbk[gg] = |gak[gg-1:0]; assign gbf[gg] = |gaf[gg-1:0];
             end
-            gb[0] = 1'b0;
-            for (gg = 1; gg < NG; gg = gg + 1) gb[gg] = |(ga & ((NG'(1) << gg) - 1'b1));
-            lowest = 0;
-            for (gg = 0; gg < NG; gg = gg + 1) begin
-                w = 0;
-                for (k = 0; k < GS; k = k + 1) if (gg * GS + k < MAXU) w[k] = e[gg * GS + k];
-                m = w & ~(w - 1'b1);             // lowest set bit of the group
-                for (k = 0; k < GS; k = k + 1) if (gg * GS + k < MAXU) lowest[gg * GS + k] = m[k] && !gb[gg];
-            end
+            assign ok[gg*GS +: GS] = (wk & ~(wk - 1'b1)) & {GS{!gbk[gg]}};
+            assign of[gg*GS +: GS] = (wf & ~(wf - 1'b1)) & {GS{!gbf[gg]}};
         end
-    endfunction
-    function automatic [USER_W-1:0] enc(input [MAXU-1:0] oh);
-        integer k, b;
-        reg [MAXU-1:0] t;
-        begin
-            enc = 0;
-            for (b = 0; b < USER_W; b = b + 1) begin
-                t = 0;
-                for (k = 0; k < MAXU; k = k + 1) t[k] = oh[k] && ((k >> b) & 1);
-                enc[b] = |t;
-            end
-        end
-    endfunction
-    wire [MAXU-1:0] ohwk = WF ? lowest(ewk) : {MAXU{1'b0}};
-    wire [MAXU-1:0] ohwf = WF ? lowest(ewf) : {MAXU{1'b0}};
-    wire st_wk_c = |ewk;
-    wire wf_v = |ewf;
-    wire [USER_W-1:0] wk_u = WF ? enc(ohwk) : {USER_W{1'b0}};
-    wire [USER_W-1:0] wf_u = WF ? enc(ohwf) : {USER_W{1'b0}};
-    // AND-OR reads by a one-hot
-    reg [NW-1:0] tok_wk, pos_wk, pos_wf, r_er, r_prp;
-    reg [3:0]    blk_wf, r_prb;
-    reg [2:0]    r_k0, r_wnf;
-    reg          r_kv, r_sq, r_sq1, r_nf2, r_kteq, r_prkv;
-    integer bi, ui;
-    reg [MAXU-1:0] tv;
-    always @(*) begin
-        tok_wk = 0; pos_wk = 0; pos_wf = 0; r_er = 0; r_prp = 0; blk_wf = 0; r_prb = 0; r_k0 = 0; r_wnf = 0;
-        r_kv = 0; r_sq = 0; r_sq1 = 0; r_nf2 = 0; r_kteq = 0; r_prkv = 0;
-        if (WF) begin
-        for (bi = 0; bi < NW; bi = bi + 1) begin
-            for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = ohwk[ui] && wkt_q[ui][bi];  tok_wk[bi] = |tv;
-            for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = ohwk[ui] && wnp_q[ui][bi];  pos_wk[bi] = |tv;
-            for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = ohwf[ui] && wnp_q[ui][bi];  pos_wf[bi] = |tv;
-            for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = res_oh[ui] && er_q[ui][bi]; r_er[bi] = |tv;
-            for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = pr1_oh[ui] && wnp_q[ui][bi]; r_prp[bi] = |tv;
-        end
-        for (bi = 0; bi < 4; bi = bi + 1) begin
-            for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = ohwf[ui] && wblk_q[ui][bi];  blk_wf[bi] = |tv;
-            for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = pr1_oh[ui] && wblk_q[ui][bi]; r_prb[bi] = |tv;
-        end
-        for (bi = 0; bi < 3; bi = bi + 1) begin
-            for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = res_oh[ui] && k0_q[ui][bi];  r_k0[bi] = |tv;
-            for (ui = 0; ui < MAXU; ui = ui + 1) tv[ui] = res_oh[ui] && wnf_q[ui][bi]; r_wnf[bi] = |tv;
-        end
-        r_kv = |(res_oh & kv_v); r_sq = |(res_oh & sqnz_v); r_sq1 = |(res_oh & sq1_v);
-        r_nf2 = |(res_oh & nf2_v); r_kteq = |(res_oh & kteq_v); r_prkv = |(pr1_oh & kv_v);
-        end
-    end
+        assign ohwk = ok[MAXU-1:0];
+        assign ohwf = of[MAXU-1:0];
+    end else begin : g_nord
+        assign tok_wk = 0; assign pos_wk = 0; assign pos_wf = 0; assign r_er = 0; assign r_prp = 0;
+        assign w_pre_c = 0; assign blk_wf = 0; assign r_prb = 0; assign r_k0 = 0; assign r_wnf = 0;
+        assign wk_u = 0; assign wf_u = 0; assign ohwk = 0; assign ohwf = 0;
+    end endgenerate
 
     // reduction of the registered RESULT (combinational)
     reg          fb_v, fb_cont;
@@ -710,25 +698,6 @@ module ot_rom_pkg_ctrl_wfc #(
     wire       w_g1 = w_steps > 1;                         // (wnp = 1) < steps
     wire       w_prok = r_prp == pr_pos1 && r_prb == pr_blk1 && !r_prkv;
     wire       rd_wf = !(!st_new && !nu_ok && !nu_pend && next_u < cfg_users && next_u < MAXU) && wf_v;
-    // header-cycle pre-read of the RESULT's ring slot (in_user, in_pos + 1)
-    wire [UB-1:0] in_ub = in_user[UB-1:0];
-    wire [2:0]    in_slot = in_pos[2:0] + 3'd1;
-    reg  [NW-1:0] w_pre_c;
-    reg  [MAXU-1:0] in_dec;
-    integer pb, pu;
-    reg [MAXU-1:0] pv;
-    always @(*) begin
-        in_dec = 0;
-        w_pre_c = 0;
-        if (WF) begin
-            in_dec[in_ub] = 1'b1;
-            for (pb = 0; pb < NW; pb = pb + 1) begin
-                for (pu = 0; pu < MAXU; pu = pu + 1) pv[pu] = in_dec[pu] && slot_tok[pu][pb];
-                w_pre_c[pb] = |pv;
-            end
-        end
-    end
-
     genvar gu;
     generate if (WF) begin : g_wf
         for (gu = 0; gu < MAXU; gu = gu + 1) begin : g_wu
@@ -737,12 +706,23 @@ module ot_rom_pkg_ctrl_wfc #(
             reg [3:0]    wblk;
             reg [2:0]    wnf, wsq, k0;
             reg          wkv, wkp, wkm, stv, lt, e_wk, e_wf;
-            assign wnp_q[gu] = wnp; assign wkt_q[gu] = wkt; assign er_q[gu] = er; assign wblk_q[gu] = wblk;
-            assign wnf_q[gu] = wnf; assign k0_q[gu] = k0;
+            wire [NW-1:0] rs = ring[in_slot];
+            for (gb = 0; gb < NW; gb = gb + 1) begin : t21
+                assign wkt_t[gb][gu] = wkt[gb]; assign wnp_t[gb][gu] = wnp[gb];
+                assign er_t[gb][gu] = er[gb]; assign slot_t[gb][gu] = rs[gb];
+            end
+            for (gb = 0; gb < 4; gb = gb + 1) begin : t4
+                assign blk_t[gb][gu] = wblk[gb];
+            end
+            for (gb = 0; gb < 3; gb = gb + 1) begin : t3
+                assign k0_t[gb][gu] = k0[gb]; assign wnf_t[gb][gu] = wnf[gb];
+            end
+            for (gb = 0; gb < USER_W; gb = gb + 1) begin : tu
+                assign enc_m[gb][gu] = (gu >> gb) & 1;
+            end
             assign ewk[gu] = e_wk; assign ewf[gu] = e_wf; assign kv_v[gu] = wkv;
             assign sqnz_v[gu] = wsq != 0; assign sq1_v[gu] = wsq == 3'd1; assign nf2_v[gu] = wnf >= 3'd2;
             assign kteq_v[gu] = wkt == fb_idx;
-            assign slot_tok[gu] = ring[in_slot];
             wire isn = st_new && next_u == gu;
             wire isw = st_wk && ohwk[gu];
             wire isr = rd_wf && ohwf[gu];
@@ -801,11 +781,7 @@ module ot_rom_pkg_ctrl_wfc #(
             end
         end
     end else begin : g_nowf
-        for (gu = 0; gu < MAXU; gu = gu + 1) begin : g_wu
-            assign wnp_q[gu] = 0; assign wkt_q[gu] = 0; assign er_q[gu] = 0; assign wblk_q[gu] = 0;
-            assign wnf_q[gu] = 0; assign k0_q[gu] = 0; assign ewk[gu] = 1'b0; assign ewf[gu] = 1'b0;
-            assign kv_v[gu] = 1'b0; assign sqnz_v[gu] = 1'b0; assign sq1_v[gu] = 1'b0; assign nf2_v[gu] = 1'b0;
-            assign kteq_v[gu] = 1'b0; assign slot_tok[gu] = 0;
-        end
+        assign ewk = 0; assign ewf = 0; assign kv_v = 0; assign sqnz_v = 0; assign sq1_v = 0;
+        assign nf2_v = 0; assign kteq_v = 0;
     end endgenerate
 endmodule
