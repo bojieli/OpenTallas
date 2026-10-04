@@ -11,6 +11,7 @@ class DsromS81C8GroupStep {
     std::array<DsromC8SourceDispatch,4> dispatch;
     bool prepared=false,stopped=false;
     std::array<bool,4> taken{},sample_accept{};
+    std::array<std::function<bool()>,4> accepted_context{};
     std::function<void(const DsromC8SourceOffer&)> accepted_hook;
 public:
     explicit DsromS81C8GroupStep(std::array<DsromC8SourceOffer,4> source,
@@ -38,6 +39,12 @@ public:
                 if(!die||die->fault())throw std::runtime_error("incremental TP4 native fault/missing rank");
                 dispatch[i].before_edge(*die,offers[i].die_id,restore,drain);
                 sample_accept[i]=!taken[i]&&!dispatch[i].complete()&&die->c8_ready();
+                const auto offer=offers[i];
+                accepted_context[i]=[die,offer](){
+                    uint64_t identity=0;uint32_t token=0;uint16_t entry=0;
+                    return die->c8_context(identity,token,entry)&&identity==offer.identity&&
+                           token==offer.token&&entry==offer.entry;
+                };
             }
             prepared=!complete();return prepared;
         }catch(...){stopped=true;throw;}
@@ -46,6 +53,8 @@ public:
         if(stopped||!prepared)throw std::runtime_error("TP4 source acceptance without shared sampled edge");
         try {
             for(auto& d:dispatch)d.accepted_edge();
+            for(unsigned i=0;i<4;i++)if(sample_accept[i]&&!accepted_context[i]())
+                throw std::runtime_error("sampled C8 handshake lacks actual post-edge accepted context");
             for(unsigned i=0;i<4;i++)if(sample_accept[i])taken[i]=true;
             for(unsigned i=0;i<4;i++)if(sample_accept[i]&&accepted_hook)accepted_hook(offers[i]);
             prepared=false;
