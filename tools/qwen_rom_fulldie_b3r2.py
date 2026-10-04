@@ -62,7 +62,7 @@ def _isa_bits():
     return sum(w for n, w in I.FIELDS), me
 
 
-def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0):
+def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -122,7 +122,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2'] = dict(station_frame_um=list(v.STATION), station_extra_h_um=st_extra_h, strip_fifo_frame_um=list(v.FIFO),
                      strip_fifo_extra_h_um=sf_extra_h, bw_fifo_mm2=round(bw_mm2, 4), band=band or b3r3, b3r3=b3r3,
                      groups=groups)
-    _wrap_masters(v, m, area_pins, ns_faces=b3r3)
+    _wrap_masters(v, m, area_pins, ns_faces=b3r3, spread=spread)
+    m['b3r2']['spread_pins'] = spread
     m['b3r2']['area_pins'] = area_pins
     return v, m
 
@@ -429,7 +430,7 @@ def _spine_buses(v, m, gm):
     m['isa_bits'] = dict(total=total, me=me_bits, su_and_control=total - me_bits)
 
 
-def _wrap_masters(v, m, area_pins=False, ns_faces=False):
+def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False):
     """Every endpoint port that the b3 masters do not define becomes a pin group on the face toward the far
     endpoint (M4 on W/E), stacked from the top of the face so no two groups overlap."""
     base = v.masters
@@ -451,6 +452,21 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False):
         sc.face('e', v.LINK_TRACKS, 'E', 'M4', sc.h / 2, 1)
         out[sv.name] = sv
         out[sc.name] = sc
+        if spread:
+            # b3r4: the north link leaves the hub on its E face (the channel side); on the N face it ran into the
+            # tree top that abuts the hub (b3r3: M7/M9 windows over capacity at the hub top)
+            hub.ports['ln'] = ('face', 2 * v.LINK_TRACKS, 'E', 'M4', hub.h * 0.78, 1)
+            # block-word area pins: one word per eighth of the slab height, at the edge facing its tile array
+            # (b3r3: all eight words of a slab entered one 41 um M8 band, M8 windows 1.125 at the slab faces)
+            xs = model['geo']['x_vch']
+            for it in model['insts']:
+                if it.kind != 'spine_block' or not it.master.startswith('qfd_sp_port_tiles'):
+                    continue
+                b = out[it.master]
+                east = it.x > xs
+                for i in range(16):
+                    j = i % 8
+                    b.ports[f'bw{i}'] = ('area', v.TREE_BITS, (b.w - 40.0) if east else 20.0, b.h * (j + 0.5) / 8, 1)
         # spine slabs created by the band repack (fragments) need masters
         for it in model['insts']:
             if it.kind == 'spine_block' and it.master not in out:
@@ -682,6 +698,22 @@ def record(v, m):
                 link_stages=v.link_stages(m), bword_stages=bword_stages(v, m))
 
 
+GCELL_OVER_TCL = r"""
+# every gcell whose usage exceeds its capacity (per-gcell, not windowed)
+set out [open /work/gcell_over.txt w]
+foreach ln {M4 M5 M6 M7 M8 M9} {
+  set layer [$tech findLayer $ln]
+  for {set j 0} {$j < $ny} {incr j} {
+    for {set i 0} {$i < $nx} {incr i} {
+      set c [$grid getCapacity $layer $i $j]; set u [$grid getUsage $layer $i $j]
+      if {$u > $c} { puts $out "$ln [lindex $gx $i] [lindex $gy $j] $c $u" }
+    }
+  }
+}
+close $out
+"""
+
+
 def summarize(work):
     """Per-layer GRT overflow (final congestion report) and 4x4-gcell window use/capacity (gcell_usage.txt:
     `L <layer> <row> cap/use ...`, capacity first)."""
@@ -810,6 +842,7 @@ def main(argv=None):
     ap.add_argument('--area-pins', action='store_true', help='spine slab ports as M8 area pins')
     ap.add_argument('--b3r3', action='store_true', help='b3r3 spine: +0.5 mm, scale in port slab, crom beside SU64')
     ap.add_argument('--widen-um', type=float, default=500.0)
+    ap.add_argument('--spread', action='store_true', help='b3r4: hub north link on the E face, block-word pins spread')
     ap.add_argument('--work', type=Path)
     ap.add_argument('--out', type=Path)
     ap.add_argument('--k', type=int, default=16)
@@ -822,7 +855,7 @@ def main(argv=None):
     if a.mode == 'latency':
         print(json.dumps(latency(), indent=1))
         return 0
-    v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um)
+    v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread)
     if a.mode == 'plan':
         out = a.out
         out.mkdir(parents=True, exist_ok=True)
@@ -838,6 +871,7 @@ def main(argv=None):
         raise SystemExit('refuse existing output')
     if a.mode == 'grt':
         man = v.case_grt(m, work, a.k, a.tag, a.iters)
+        (work / 'run.tcl').write_text((work / 'run.tcl').read_text().replace('mem done', GCELL_OVER_TCL + 'mem done'))
         man.update(b3r2=record(v, m), producer=__file__)
         (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
         print(json.dumps({k: man[k] for k in ('tag', 'instances', 'bundle_pins', 'bundle_nets', 'wires')}))
