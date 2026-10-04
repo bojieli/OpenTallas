@@ -235,7 +235,11 @@ int main(int argc,char** argv) {
             }
         };
         int rc=source_main(runtime,argv[6]);
-        if(rc==0&&(!accepted_go||!runtime.identity||!runtime.publication_drained||
+        // The opt-in native SU I0 plan retires its accepted operator through
+        // actual VM publication/readback; it does not issue a field-pair GO.
+        const char* native_i0=std::getenv("DSROM_S81_NATIVE_L20_I0");
+        const bool field_required=!(native_i0&&std::string(native_i0)=="1");
+        if(rc==0&&((field_required&&!accepted_go)||!runtime.identity||!runtime.publication_drained||
                    !runtime.publication_drained(*runtime.identity)||!native->result().quiet))
             throw std::runtime_error("source exit precedes actual native field/publication drain");
         printf("MINIMUM_SOURCE_EXIT rc=%d cycles=%ld field_go=%llu stage=%d rank=%d pair=%d\n",
