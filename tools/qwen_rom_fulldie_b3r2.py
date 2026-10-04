@@ -609,6 +609,22 @@ def case_pdn(v, m, work, bump_um):
         meta = PG.write_pdn(work / 'pdn.tcl', m, bump_um)
     finally:
         PG.bump_pitch = orig
+    # pdngen matches -instances as a pattern: the grid of t_0_1 claims t_0_10..t_0_19 (PDN-0182, then PDN-0217 on
+    # the emptied grid; b3r2b_pdn run_pdn.log).  Define the macro grids longest name first so every grid keeps its
+    # own instance.
+    txt = (work / 'pdn.tcl').read_text().split('\n')
+    head, blocks, cur = [], [], None
+    for ln in txt:
+        if ln.startswith('define_pdn_grid -macro'):
+            cur = [ln]
+            blocks.append(cur)
+        elif cur is not None and ln.startswith(('add_pdn_stripe', 'add_pdn_connect')):
+            cur.append(ln)
+        elif ln:
+            head.append(ln)
+    key = lambda b: -len(re.search(r'-instances \{(\S+)\}', b[0]).group(1))
+    blocks.sort(key=key)
+    (work / 'pdn.tcl').write_text('\n'.join(head + [ln for b in blocks for ln in b]) + '\n')
     (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
 proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {VmRSS:\\s+(\\d+)} $s -> r; puts "OTMEM $tag [expr {$r/1024}] MB [clock seconds]" }
