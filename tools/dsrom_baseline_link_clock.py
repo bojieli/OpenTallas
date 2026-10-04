@@ -52,6 +52,9 @@ def route(work):
     # queue depth16 is a contextual leaf vehicle, NOT the selected512 queue.
     from chip_assembly import case as cs
     from chip_assembly.harden import CORNER_LIBS
+    preparation=model()['minimum_context']
+    if not preparation['prebuild_reserved_capacity_pass']:raise RuntimeError('minimum context reservation does not fit')
+    (work/'preparation.json').write_text(json.dumps(preparation,indent=2)+'\n')
     nickname='dsrom_baseline_clock1'
     sdc='''create_clock -name clk -period 833.333333 [get_ports clk]
 set_clock_uncertainty -setup 60 [get_clocks clk]
