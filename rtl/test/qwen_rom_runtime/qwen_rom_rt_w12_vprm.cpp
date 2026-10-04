@@ -426,6 +426,11 @@ int main(int argc, char** argv) {
     }
     cctx.randReset(0);
     Vcoll coll(&cctx, "coll");
+    // The ASAP7 macro models clear their arrays in an initial block, which Verilator runs at a model's first
+    // eval: evaluate every model once BEFORE any preload (the parent host's first stage is the embedding
+    // stage, which reads none of these ROMs, so its stage-0 preload being cleared went unnoticed there).
+    for (int d = 0; d < D; d++) { die[d]->clk = 0; die[d]->eval(); fab[d]->set_clk(0); fab[d]->eval(); }
+    coll.clk = 0; coll.eval();
     // ---- preloads: X of stage 0, ROMs of stage 0, HBM KV history of every region (first stage using it) ----
     for (int d = 0; d < D; d++) {
         load_vm(*die[d], stages[0].xpre);
