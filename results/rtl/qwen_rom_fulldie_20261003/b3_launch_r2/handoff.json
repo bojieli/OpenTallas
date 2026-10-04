@@ -1,0 +1,96 @@
+{
+  "schema": "QWEN_B3_CLAUDE_EXECUTION_HANDOFF_V1",
+  "execution_owner": "Claude per user latest direction; Goodall no successor congestion launch",
+  "branch": "codex/qwen-fulldie-pg-repair-20261003",
+  "published_milestone": "87c114367",
+  "changed_source": "e94757c6ff3ca96a0b71f0ae850a6763861d8e84",
+  "source_tree": "/srv/opentallas/repos/qwen-b3-e94757c6f",
+  "host": "ot-epyc1tb",
+  "output": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5",
+  "r1": {
+    "unit": "qwen-fulldie-b3-k16-banded-i5-20261003-r1.service",
+    "PID": 2810404,
+    "terminal": "failed exit1 before start receipt Docker user-manager permission; preserved r1-prephase-failure.journal"
+  },
+  "r2": {
+    "unit": "qwen-fulldie-b3-k16-banded-i5-20261003-r2.service",
+    "PID": 2813708,
+    "start_ticks": "2710004",
+    "terminal": "failed exit1 mandatory macro-track gate; phases[]; no OpenROAD invocation",
+    "runtime_caps": "MemoryMax/MemorySwapMax/RuntimeMax/CPUtime/FSIZE/AS infinity"
+  },
+  "changes": {
+    "F1": "corridor reset64 ->1; positive warm accepted-debt drain retained in separate transport source",
+    "F2": "instruction379 -> two190-bit beats plus3 controls; corridor637->388, tap325",
+    "VCH_um": 260.064,
+    "south_links": "2112 aggregate split W/E1056 unchanged payload; opposite hub W/E pins",
+    "area_mm2": 795.184,
+    "area_delta_mm2": 2.82,
+    "slack_to_858_mm2": 62.816,
+    "widening_added_cycles_token": 72,
+    "widening_added_us": 0.06,
+    "link_payload_demand_reduction_credit": 0,
+    "observed_after_DC": null
+  },
+  "missing": {
+    "qfd_sp_scale_rom_0..7": {
+      "interface_owner": "Goodall physical; Laplace joined system connectivity; canonical source existing W5/W12",
+      "source": "rtl/physical/ot_qwen_o4_g4_rommac.sv g_scale/g_bank, rtl/hdc/ot_qwen_me_array_w12.sv ot_qwen_me_spine_w12",
+      "real_leaf": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+      "leaf_ports": "clk,ce_in,addr_in[11:0],rd_out[265:0]",
+      "logical_ports": "scale_gre[95:0],scale_addr[96*24-1:0],scale_q[96*16*16-1:0] at GT6144/SMIN6/W16; source-bound group/bank map required",
+      "inventory": "results/floorplan/qwen_o4_rom_placement.json: 96 groups,16 banks/group,1536 common leaf instances; eight current slabs ARE geometric fragments, not eight entire scale-image replicas",
+      "aggregate_return_bits_cycle": 24576,
+      "old_slab_heights_um": [
+        4559.736,
+        1453.656,
+        4559.736,
+        4481.976,
+        4559.736,
+        4246.536,
+        1820.856,
+        1676.136
+      ],
+      "warning": "A common real leaf may be replicated into eight slab regions. Do not silently use identical group count per differently sized slab or reclassify empty slabs as qualified macros."
+    },
+    "qfd_sp_constants_sequencer": {
+      "interface_owner": "Goodall abstract; Laplace actual caller/memory composition",
+      "source": "rtl/rom/ot_qwen_tp_seq_w12.sv + rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv + tools/qwen_rom_rt_core_emit.py",
+      "ports": "program re/address12/data1024; descriptors re/address6/data64; constants SW enables +SW*24 addresses +SW*64 return; sequencer package/core/VM/collective boundaries in literal source",
+      "caution": "SW64 near-HBM plan vs SW1024 runtime default must bind selected fullsystem source. Laplace claude/qwen-rom-system-rtl-20261003 currently ff7ac3a76 rtl/qwen_sys/ot_qwen_sys_die.sv is a separate G4/default-core composition, not proof of full W12 dense scale caller."
+    },
+    "qfd_sp_port_tiles_6": {
+      "interface_owner": "Goodall source/floorplan mapping; Laplace source parameter/caller",
+      "source": "tools/qwen_rom_fulldie.py area packer lines284-312 produces7 port slabs, bus producer lines476-482 only targets0..5; rtl/hdc/ot_qwen_me_array_w12.sv actual ot_qwen_me_spine_w12 result ports",
+      "original_projection_refs": 0,
+      "real_result_group_count": 96,
+      "caution": "zero bus references in simplified physical projection is not native-unused proof. Removing loses1.589419mm2 of11.08mm2 paid result logic; reassign groups or remove with complete source/area proof. No dummy pin."
+    }
+  },
+  "old_b2": {
+    "container": "qfd_b2_k16_banded_run",
+    "ID": "2338557d4f28dcb8b3d0047fe957c3c795b42a840f980b3e060c5b64f213707d",
+    "init_PID": 1957145,
+    "wrapper_PID": 1956887,
+    "docker_PID": 1956919,
+    "started": "2026-10-03T12:47:04.539682004Z",
+    "mount": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b2_k16_banded:/work",
+    "last_verified_running": true,
+    "retired": false,
+    "instruction": "Claude sole owner may supersede only after actual changed successor ready; verify identity again; preserve partial data/stop reason"
+  },
+  "clock": {
+    "decision": "f954ad1ea option C",
+    "owner_FIFO_link_SDC": "Beauvoir",
+    "Goodall_scope": "distinct source-bound regional clock/floorplan integration; no duplicate congestion run",
+    "limits": "regions<=5.25mm, forwarded stages<=430.56um,3FF true async crossing,TAP_MESO0 default off,shielded M8/M9 trunk",
+    "integrated": false
+  },
+  "qualification": {
+    "routing_measured": false,
+    "die_IR": false,
+    "SSFF": false,
+    "full_system_numeric": false
+  },
+  "tests": "five b3 source tests PASS with PYTHONPATH=tools; py_compile runner PASS; real macro gate FAIL ten empty abstracts, not route candidate rejection"
+}
