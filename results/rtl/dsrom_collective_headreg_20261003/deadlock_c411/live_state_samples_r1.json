@@ -1,0 +1,767 @@
+{
+  "pid": 568829,
+  "scope": "Read-only existing process state, no pause/restart/replay or memory writes",
+  "source_commit": "c411a972b",
+  "exe_sha256": "603092f55103039817536e0f1488fdef01c938e5684f39059738c8e96a0789f4",
+  "layout_header_sha256": "da4e16370031205083b98d476b15934e11ce38ae8decf2c6e5f888497fdf83f0",
+  "model_address": "0x5d9b851a89c0",
+  "root_address": "0x5d9b851a8bc0",
+  "samples": [
+    {
+      "utc": "2026-10-04T01:09:38.300918+00:00",
+      "fields": {
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__inflight": [
+          1,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__inflight": [
+          1,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "cyc": [
+          187987905
+        ],
+        "sent": [
+          24,
+          24,
+          24,
+          24,
+          24,
+          24,
+          24,
+          24
+        ],
+        "received": [
+          24,
+          24,
+          24,
+          20,
+          24,
+          24,
+          20,
+          24
+        ],
+        "valid": [
+          15,
+          15
+        ],
+        "ready": [
+          0,
+          0
+        ],
+        "ov": [
+          0,
+          0
+        ],
+        "fault": [
+          0,
+          0
+        ],
+        "code": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__cnt": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__cnt": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "utc": "2026-10-04T01:09:43.301532+00:00",
+      "fields": {
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          1
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__0__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__1__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__2__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__0__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__g_src__BRA__3__KET____DOT__g_par__BRA__1__KET____DOT__g_flop__DOT__g_headreg__DOT__head_valid": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__ppar": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__pop": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__g_busy": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__s0_v": [
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__go_v": [
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__inflight": [
+          1,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__inflight": [
+          1,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__inflight": [
+          0,
+          0
+        ],
+        "cyc": [
+          188739136
+        ],
+        "sent": [
+          24,
+          24,
+          24,
+          24,
+          24,
+          24,
+          24,
+          24
+        ],
+        "received": [
+          24,
+          24,
+          24,
+          20,
+          24,
+          24,
+          20,
+          24
+        ],
+        "valid": [
+          11,
+          11
+        ],
+        "ready": [
+          0,
+          0
+        ],
+        "ov": [
+          0,
+          0
+        ],
+        "fault": [
+          0,
+          0
+        ],
+        "code": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__3__KET____DOT__g_cached__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__2__KET____DOT__g_cached__DOT__dut__DOT__cnt": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__1__KET____DOT__g_cached__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__1__KET____DOT__g_die__BRA__0__KET____DOT__g_cached__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__3__KET____DOT__g_reference__DOT__dut__DOT__cnt": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__2__KET____DOT__g_reference__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__1__KET____DOT__g_reference__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "g_model__BRA__0__KET____DOT__g_die__BRA__0__KET____DOT__g_reference__DOT__dut__DOT__cnt": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
+}

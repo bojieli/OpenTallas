@@ -1,0 +1,59 @@
+{
+  "verdict": "REJECTED_TESTED_COMPOSITION",
+  "reason": "Proven nonprogress: phantom reduction inflight debt blocks next gather and fills both parity FIFOs; present in reference and headreg successor",
+  "source_commit": "c411a972b",
+  "engine_sha256": "94395dc350d2cecee72d5e921a8597bc9eb353ac208f89ed4a3ce13b12c16a51",
+  "sample_cycle_start": 202774150,
+  "sample_cycle_end": 203522339,
+  "cycle_delta": 748189,
+  "accepted_records_per_producer": [
+    24,
+    24,
+    24,
+    24,
+    24,
+    24,
+    24,
+    24
+  ],
+  "received_per_model_rank": [
+    24,
+    24,
+    24,
+    20,
+    24,
+    24,
+    20,
+    24
+  ],
+  "input_ready": [
+    0,
+    0
+  ],
+  "output_valid": [
+    0,
+    0
+  ],
+  "reference_blocked_rank": 3,
+  "successor_blocked_rank": 2,
+  "blocked_inflight": 1,
+  "blocked_fifo_occupancies": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "root_cause_source": "inflight += pop_red - red_out; actual pop=(pop_red || pop_gat) && !g_stall; suppressed pop_red creates debt without launching an adder",
+  "selection_default": "COLL_HEADREG=0",
+  "physical_launch": false,
+  "numerical_mismatch_claim": false,
+  "reference_also_deadlocks": true,
+  "stop_reason": "Actual read-only process state and source invariant prove closed wait; not elapsed-time/resource cap",
+  "scope": "Mixed reduce/gather with GW4 output backpressure; not whole combined-top qualification; old -15 remains separate INVALID_FIXTURE",
+  "read_only_samples": "live-inspection/live_state_samples_r2.json",
+  "no_restart_or_replay": true
+}
