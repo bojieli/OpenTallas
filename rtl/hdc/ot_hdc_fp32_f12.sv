@@ -86,15 +86,22 @@ module ot_hdc_fp32_add_f12 #(
     wire dab_c, dba_c;
     ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
     ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
+    wire [5:0] g6, g0;                         // {valid, f_eq, f_lt, -, dab >= 28, dba >= 28}
+    ot_hdc_f12_cut #(.W(6), .CUT(K6)) u_g6 (.clk(clk), .rst_n(rst_n),
+        .d({valid_in, a_field == b_field, a_field < b_field, 1'b0, dab >= 8'd28, dba >= 8'd28}), .q(g6));
     localparam integer WA6 = 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8 + 31 + 31;
     wire [WA6-1:0] q6;
     ot_hdc_f12_cut #(.W(WA6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rst_n),
         .d({valid_in, bypass, (nonfinite ? E_NONFINITE : E_NONE), bypass_code, a[31] ^ b[31], a[31], b[31],
             a_exp, b_exp, a_man, b_man, dab, dba, a[30:0], b[30:0]}), .q(q6));
     wire [30:0] c_a = q6[61:31], c_b = q6[30:0];
-    wire cmp_c;
-    wire [30:0] cmp_s;
-    ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(c_a), .b(~c_b), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
+    // the magnitude order of the encodings (swap = |b| > |a|) split at the exponent field: the field order is decided
+    // beside the exponent differences (f_lt, f_eq, carried in g6 / g0), the fraction order after the cut; the same
+    // predicate as the 31-bit compare of add_lat (the lane's compare + swap stage was 2-13 ps over 0.833 ns)
+    wire frac_c;
+    wire [22:0] frac_s;
+    ot_hdc_ksadd_k #(.W(23)) u_cmp (.a(c_a[22:0]), .b(~c_b[22:0]), .cin(1'b1), .s(frac_s), .cout(frac_c));
+    wire cmp_c = g6[4] ? frac_c : !g6[3];          // a >= b
     localparam integer WA = 1 + 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8;
     wire [WA-1:0] qa;
     ot_hdc_f12_cut #(.W(WA), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rst_n),
@@ -121,9 +128,7 @@ module ot_hdc_fp32_add_f12 #(
     endfunction
     // the shifted-out-entirely flags (d >= 28), decided beside the exponent differences and carried through the cuts
     // (the stage after cut 6 was 4 ps over 0.833 ns in the lane with the compares in it)
-    wire [2:0] g6, g0;
-    ot_hdc_f12_cut #(.W(3), .CUT(K6)) u_g6 (.clk(clk), .rst_n(rst_n), .d({valid_in, dab >= 8'd28, dba >= 8'd28}), .q(g6));
-    ot_hdc_f12_cut #(.W(3), .CUT(K0)) u_g0 (.clk(clk), .rst_n(rst_n), .d(g6), .q(g0));
+
     function automatic [27:0] jam28f;
         input [23:0] man;
         input [4:0]  d;
@@ -138,6 +143,7 @@ module ot_hdc_fp32_add_f12 #(
             end
         end
     endfunction
+    ot_hdc_f12_cut #(.W(6), .CUT(K0)) u_g0 (.clk(clk), .rst_n(rst_n), .d(g6), .q(g0));
     wire [27:0] small_a = jam28f(x_aman, x_dba[4:0], g0[0]);
     wire [27:0] small_b = jam28f(x_bman, x_dab[4:0], g0[1]);
     localparam integer W1 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 28;
