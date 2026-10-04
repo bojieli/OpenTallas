@@ -28,7 +28,7 @@ def selected(output):
     for p in die:
         if not p.is_file():raise FileNotFoundError(p)
     rec['die']=list(map(str,die));rec['top']=TOP
-    rec['parameters'].update(DSPARK=1,ACCEPT_COMMIT=0,VPMAX=4,VWA=16,
+    rec['parameters'].update(DSPARK=1,ACCEPT_COMMIT=1,VPMAX=4,VWA=16,
                              NPROG=1024,NDESC=64,VM_ELEMS=1048576)
     rec['optional_candidates']['DSpark']=True
     rec['scope']='Opt-in owner VPOS/KVmp/near integration component; no full-token or timing qualification'
