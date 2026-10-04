@@ -122,6 +122,11 @@ def verdict(a) -> int:
     ctl = cls["pg_idle"]["ao_sched_ctrl"]["total_w"]
     p_pg_shared = p_pg - ctl * (1 - 1 / PAIRS_PER_DIE)
     resid_shared = p_pg_shared / p_cg
+    # sensitivity (ASSUMED die design): the stage clock spine is also gated while the whole stage sleeps (only the
+    # shared controller keeps a clock), so the per-element root clock tree measured here drops out
+    rc = cls["pg_idle"]["root_clock"]["total_w"]
+    p_pg_spine = p_pg_shared - rc
+    resid_spine = p_pg_spine / p_cg
     # wake: measured RTL sequence (req_on -> ready) with the bench's ring model; the ring's charge time bounded
     # by a rush current no larger than the busy current
     wl = next(x for r in ex["runs"] if r["mutant"] is None for x in r["tail"] if x.startswith("WAKE"))
@@ -155,6 +160,9 @@ def verdict(a) -> int:
     res_eff_sh = (logic_w * resid_shared + E.SERDES_W * 0.10) / E.LAYER_DIE_W
     E.PG_RES = res_eff_sh
     sh_P, _, _ = E.power(R)
+    res_eff_sp = (logic_w * resid_spine + E.SERDES_W * 0.10) / E.LAYER_DIE_W
+    E.PG_RES = res_eff_sp
+    sp_P, _, _ = E.power(R)
     E.PG_RES = 0.10
     keys = ("ar_b1_icg", "ar_b1_pg", "mtp_as_built_b1_pg", "mtp_l1_fused_b1_pg", "ar_sat_pg")
     reprice = {c: {k: dict(assumed_10pct=dict(J_per_token=base_P[c]["rom"][k]["J_per_token"],
@@ -165,7 +173,10 @@ def verdict(a) -> int:
                                          static_w=meas_P[c]["rom"][k]["static_w"]),
                            measured_controller_shared=dict(J_per_token=sh_P[c]["rom"][k]["J_per_token"],
                                                            tok_s_per_kW=sh_P[c]["rom"][k]["tok_s_per_kW"],
-                                                           static_w=sh_P[c]["rom"][k]["static_w"]))
+                                                           static_w=sh_P[c]["rom"][k]["static_w"]),
+                           spine_gated_assumed=dict(J_per_token=sp_P[c]["rom"][k]["J_per_token"],
+                                                    tok_s_per_kW=sp_P[c]["rom"][k]["tok_s_per_kW"],
+                                                    static_w=sp_P[c]["rom"][k]["static_w"]))
                    for k in keys} for c in E.CTX}
     # absolute cross-check: the ledger's per-pair ICG-idle logic (10% clock residual + leakage) vs this element
     import uarch_model as u
@@ -182,7 +193,8 @@ def verdict(a) -> int:
                      header_area_frac=round(n_sw * SW_AREA_UM2 / ELEM_AREA_UM2, 4),
                      header_off_leak_w=sw_leak, pg_idle=p_pg, cg_idle_total=p_cg, residual=round(resid, 5),
                      by_class=cls, sched_ctrl_pg_idle_w=ctl, pg_idle_controller_shared=p_pg_shared,
-                     residual_controller_shared=round(resid_shared, 5)),
+                     residual_controller_shared=round(resid_shared, 5), root_clock_pg_idle_w=rc,
+                     pg_idle_spine_gated=p_pg_spine, residual_spine_gated=round(resid_spine, 5)),
         wake=dict(rtl_req_to_ready_cycles_max=wmax, rtl_restore_cycles_max=rmax, domain_cap_pf=round(c_f * 1e12, 1),
                   rush_limit_a=round(i_busy, 4), charge_ns=round(t_charge_ns, 3), wake_cycles=wake_cycles,
                   wake_ns=round(wake_cycles * CLK_NS, 2), wake_energy_nj=round(e_wake * 1e9, 4),
@@ -192,6 +204,7 @@ def verdict(a) -> int:
                                 measured_pair_cg_idle_w=p_cg, measured_pair_pg_idle_w=p_pg),
         reprice=dict(logic_residual_measured=round(resid, 5), serdes_residual_assumed=0.10,
                      effective_PG_RES=round(res_eff, 5), effective_PG_RES_controller_shared=round(res_eff_sh, 5),
+                     effective_PG_RES_spine_gated=round(res_eff_sp, 5),
                      rows=reprice),
         assumptions=[
             "header switch = ASAP7 INVx4 pull-up (W18 SWITCH_CELL, R_on 912.5 ohm; no characterised ASAP7 switch cell); "
