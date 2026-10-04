@@ -37,8 +37,10 @@ for key, top, required in (
     if key == 'scorer' and (params['AW'],params['NW']) != (30,21):
         raise RuntimeError('scorer AW30/NW21 required')
     if key == 'selector' and any(params[k] != v for k,v in
-                               dict(X_SEL=1,SK=512,SQ=4,SW=16).items()):
+                               dict(X_SEL=1,SQ=4,SW=16).items()):
         raise RuntimeError('selector selected geometry mismatch')
+    if key == 'selector' and params['SK'] not in (512,2048):
+        raise RuntimeError('selector capacity must match selected S81 source')
     sources = unit['sources']
     if not sources or any('/test/' in x or not (root/x).is_file() for x in sources):
         raise RuntimeError('existing production source closure required')

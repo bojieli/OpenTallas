@@ -1,0 +1,5831 @@
+{
+ "cases": {
+  "c5_band_s": {
+   "avg_mv": {
+    "VDD": 3.77,
+    "VSS": 1.68
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 2021,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 0,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "layer",
+    "loads": 29550,
+    "peak": true,
+    "power_w": 10.5461,
+    "power_w_by_kind": {
+     "cfg": 0.1907,
+     "ctrl": 2.9242,
+     "fifo_blk": 0.02,
+     "node": 0.1391,
+     "q": 1.3392,
+     "svc": 5.913,
+     "waypoint": 0.02
+    },
+    "power_w_per_mm2": 0.8919,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     3000.016,
+     3941.28
+    ],
+    "stripes": {
+     "M8": 2731,
+     "M9": 9709,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 2856353,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "band_s",
+    "window_um": [
+     5997.024,
+     0.0,
+     8997.04,
+     3941.28
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 13419,
+   "rail_to_rail_interior_mv": 28.56,
+   "rail_to_rail_worst_mv": 44.0,
+   "wall": "11:57.89",
+   "worst_interior_mv": {
+    "VDD": 13.91,
+    "VSS": 14.65
+   },
+   "worst_mv": {
+    "VDD": 16.7,
+    "VSS": 27.3
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 16.66,
+     "VDD_interior": 13.91,
+     "VSS": 22.66,
+     "VSS_interior": 14.65
+    },
+    "phy": {
+     "VDD": 8.61,
+     "VDD_interior": 8.17,
+     "VSS": 4.87,
+     "VSS_interior": 1.88
+    },
+    "svc": {
+     "VDD": 14.95,
+     "VDD_interior": 12.51,
+     "VSS": 27.35,
+     "VSS_interior": 12.99
+    }
+   }
+  },
+  "c5_field": {
+   "avg_mv": {
+    "VDD": 3.58,
+    "VSS": 3.77
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 3024,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 0,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "layer",
+    "loads": 30753,
+    "peak": true,
+    "power_w": 25.1966,
+    "power_w_by_kind": {
+     "bf": 5.9734,
+     "cfg": 2.2757,
+     "fifo_blk": 0.0351,
+     "node": 3.5675,
+     "q": 13.2748,
+     "waypoint": 0.07
+    },
+    "power_w_per_mm2": 2.0417,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     4032.048,
+     3060.72
+    ],
+    "stripes": {
+     "M8": 1827,
+     "M9": 2407,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 2198795,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "field",
+    "window_um": [
+     8027.424,
+     9633.6,
+     12059.472,
+     12694.32
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 12068,
+   "rail_to_rail_interior_mv": 28.88,
+   "rail_to_rail_worst_mv": 49.3,
+   "wall": "12:14.12",
+   "worst_interior_mv": {
+    "VDD": 14.28,
+    "VSS": 14.6
+   },
+   "worst_mv": {
+    "VDD": 17.0,
+    "VSS": 32.3
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 17.05,
+     "VDD_interior": 14.28,
+     "VSS": 32.27,
+     "VSS_interior": 14.6
+    }
+   }
+  },
+  "c5_field_bf": {
+   "avg_mv": {
+    "VDD": 3.65,
+    "VSS": 3.81
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 2254,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 0,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "layer",
+    "loads": 22620,
+    "peak": true,
+    "power_w": 18.8354,
+    "power_w_by_kind": {
+     "bf": 5.3016,
+     "cfg": 1.74,
+     "fifo_blk": 0.0118,
+     "node": 1.6557,
+     "q": 10.1163,
+     "waypoint": 0.01
+    },
+    "power_w_per_mm2": 2.0713,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     3135.376,
+     2900.24
+    ],
+    "stripes": {
+     "M8": 1731,
+     "M9": 1871,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 1619351,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "field_bf",
+    "window_um": [
+     8471.52,
+     3421.44,
+     11606.896,
+     6321.68
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 8776,
+   "rail_to_rail_interior_mv": 29.74,
+   "rail_to_rail_worst_mv": 49.2,
+   "wall": "8:46.32",
+   "worst_interior_mv": {
+    "VDD": 14.5,
+    "VSS": 15.24
+   },
+   "worst_mv": {
+    "VDD": 14.5,
+    "VSS": 34.7
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 14.5,
+     "VDD_interior": 14.5,
+     "VSS": 34.67,
+     "VSS_interior": 15.24
+    }
+   }
+  },
+  "c5_spine": {
+   "avg_mv": {
+    "VDD": 3.31,
+    "VSS": 3.7
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 2376,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 140,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "layer",
+    "loads": 23800,
+    "peak": true,
+    "power_w": 9.2335,
+    "power_w_by_kind": {
+     "bf": 1.2419,
+     "cfg": 0.4115,
+     "fifo_blk": 0.04,
+     "hub": 4.47,
+     "hub_fifo": 0.192,
+     "node": 0.8091,
+     "q": 2.0828,
+     "waypoint": 0.0339
+    },
+    "power_w_per_mm2": 0.9593,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     3435.232,
+     2801.84
+    ],
+    "stripes": {
+     "M8": 3960,
+     "M9": 1056,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 576576,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "spine",
+    "window_um": [
+     14782.608,
+     11599.2,
+     18217.84,
+     14401.04
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 3598,
+   "rail_to_rail_interior_mv": 32.19,
+   "rail_to_rail_worst_mv": 55.8,
+   "wall": "1:54.29",
+   "worst_interior_mv": {
+    "VDD": 17.34,
+    "VSS": 14.85
+   },
+   "worst_mv": {
+    "VDD": 17.3,
+    "VSS": 38.5
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 17.34,
+     "VDD_interior": 17.34,
+     "VSS": 38.46,
+     "VSS_interior": 14.85
+    },
+    "hub": {
+     "VDD": 15.73,
+     "VDD_interior": 9.73,
+     "VSS": 24.38,
+     "VSS_interior": 10.82
+    }
+   }
+  },
+  "ga_real": {
+   "case": "a",
+   "errors": [
+    "[ERROR DRT-0073] No access point for e1003/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e100/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e1000/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e1/xs_q1[151] (ot_v41_rom_elem_q_qp_w10)."
+   ],
+   "exit": 0,
+   "legality": {
+    "instances": 24355,
+    "outside": 0,
+    "overlaps": 0
+   },
+   "manifest": {
+    "case": "a",
+    "generated_pins": 102866,
+    "instances": 24355,
+    "nets_bits": 2036717,
+    "variant": {
+     "bf": 519,
+     "die": "layer",
+     "nv": 0,
+     "pairs": 2417
+    }
+   },
+   "peak_rss_mb": 14551,
+   "pin_access": {
+    "examples": [
+     "[ERROR DRT-0073] No access point for e1003/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+     "[ERROR DRT-0073] No access point for e100/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+     "[ERROR DRT-0073] No access point for e1000/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+     "[ERROR DRT-0073] No access point for e1/xs_q1[151] (ot_v41_rom_elem_q_qp_w10)."
+    ],
+    "no_access_errors": 9,
+    "status": "FAIL"
+   },
+   "snap_moves": {
+    "by_master": {},
+    "count": 0,
+    "max_um": 0.0
+   },
+   "track_assert": {
+    "macros": 24355,
+    "max_offset_nm": 0.0,
+    "no_track_grid": 0,
+    "offtrack": 0,
+    "pins_checked": 5686228,
+    "verdict": "PASS"
+   },
+   "track_assert_offenders": [],
+   "wall": "7:29.60"
+  },
+  "gb_k16_i5": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:03:21",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 2410,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 121709,
+      "usage_pct": 1.98
+     },
+     "M5": {
+      "demand": 23418,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 180588,
+      "usage_pct": 12.97
+     },
+     "M6": {
+      "demand": 2983068,
+      "overflow_h": 1,
+      "overflow_total": 1,
+      "overflow_v": 0,
+      "resource": 51159746,
+      "usage_pct": 5.83
+     },
+     "M7": {
+      "demand": 2180038,
+      "overflow_h": 0,
+      "overflow_total": 1,
+      "overflow_v": 1,
+      "resource": 51501511,
+      "usage_pct": 4.23
+     },
+     "M8": {
+      "demand": 495884,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40311515,
+      "usage_pct": 1.23
+     },
+     "M9": {
+      "demand": 758981,
+      "overflow_h": 0,
+      "overflow_total": 1,
+      "overflow_v": 1,
+      "resource": 40287522,
+      "usage_pct": 1.88
+     }
+    },
+    "total": {
+     "demand": 6443799,
+     "overflow_h": 1,
+     "overflow_total": 3,
+     "overflow_v": 2,
+     "resource": 183562591,
+     "usage_pct": 3.51
+    },
+    "total_wirelength_bundle_um": 62924806.0
+   },
+   "grt_s": 201,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 134968,
+    "bundle_pins": 8032,
+    "case": "b",
+    "congestion_iterations": 5,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": false,
+    "instances": 24355,
+    "tag": "base",
+    "variant": {
+     "bf": 519,
+     "die": "layer",
+     "nv": 0,
+     "pairs": 2417
+    },
+    "wires": 2036717
+   },
+   "peak_rss_mb": 12488,
+   "wall": "8:09.42",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627721,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 626848,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 192332,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 189523,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 0.964,
+      "over_0p9": 116,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 267,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M9",
+      30012,
+      14821,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      14784,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      12160,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      12123,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      15043,
+      "frame_97"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      11642,
+      "frame_84"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      9018,
+      "frame_73"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      8981,
+      "frame_73"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      14562,
+      "frame_96"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      17482,
+      "frame_45"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      14821,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      14784,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      5877,
+      "frame_0"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      21326,
+      "frame_59"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      21289,
+      "frame_59"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      17963,
+      "frame_48"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      17926,
+      "frame_48"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      5174,
+      "frame_3"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      5137,
+      "frame_3"
+     ],
+     [
+      1.0,
+      "M9",
+      10238,
+      11199,
+      "frame_23"
+     ],
+     [
+      1.0,
+      "M9",
+      10238,
+      11162,
+      "frame_23"
+     ],
+     [
+      1.0,
+      "M9",
+      7946,
+      14599,
+      "frame_38"
+     ],
+     [
+      1.0,
+      "M9",
+      7946,
+      14562,
+      "frame_38"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      15671,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      15634,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      15597,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      15191,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      15154,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14969,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14932,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14895,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14488,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14451,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14414,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14230,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14193,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13749,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13712,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13269,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13232,
+      "frame_108"
+     ]
+    ]
+   },
+   "windows_baseline_subtracted": {
+    "baseline_subtracted": true,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 703
+     },
+     "M3": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 893
+     },
+     "M4": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 753
+     },
+     "M5": {
+      "max_use_over_cap": 0.02,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 988
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 784,
+      "over_1": 0,
+      "windows": 445872
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 350,
+      "over_1": 0,
+      "windows": 441148
+     },
+     "M8": {
+      "max_use_over_cap": 0.938,
+      "over_0p9": 9,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 102,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M9",
+      30012,
+      14821,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      14784,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      12160,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      12123,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      15043,
+      "frame_97"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      11642,
+      "frame_84"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      9018,
+      "frame_73"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      8981,
+      "frame_73"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      14562,
+      "frame_96"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      17482,
+      "frame_45"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      14821,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      14784,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      5877,
+      "frame_0"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      21326,
+      "frame_59"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      21289,
+      "frame_59"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      17963,
+      "frame_48"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      17926,
+      "frame_48"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      5174,
+      "frame_3"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      5137,
+      "frame_3"
+     ],
+     [
+      1.0,
+      "M9",
+      10238,
+      11199,
+      "frame_23"
+     ],
+     [
+      1.0,
+      "M9",
+      10238,
+      11162,
+      "frame_23"
+     ],
+     [
+      1.0,
+      "M9",
+      7946,
+      14599,
+      "frame_38"
+     ],
+     [
+      1.0,
+      "M9",
+      7946,
+      14562,
+      "frame_38"
+     ],
+     [
+      1.0,
+      "M7",
+      32044,
+      13269,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32044,
+      13232,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      11273,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      11236,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10903,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10866,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10829,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10792,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10755,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10718,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10681,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10644,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10608,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10571,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10534,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10497,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10460,
+      "vch"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "band": {
+     "bundle_nets": 256,
+     "bundle_um": 4478859.2,
+     "max_um": 30852.4,
+     "wire_m": 71.7
+    },
+    "cfg": {
+     "bundle_nets": 9668,
+     "bundle_um": 4698068.8,
+     "max_um": 988.7,
+     "wire_m": 75.2
+    },
+    "cfg_ctl": {
+     "bundle_nets": 2417,
+     "bundle_um": 960063.7,
+     "max_um": 794.6,
+     "wire_m": 15.4
+    },
+    "clock_trunk": {
+     "bundle_nets": 1,
+     "bundle_um": 10219.4,
+     "max_um": 10219.4,
+     "wire_m": 0.2
+    },
+    "hbm_read": {
+     "bundle_nets": 2216,
+     "bundle_um": 40951.7,
+     "max_um": 18.5,
+     "wire_m": 0.7
+    },
+    "hub": {
+     "bundle_nets": 388,
+     "bundle_um": 1043676.5,
+     "max_um": 7817.0,
+     "wire_m": 16.7
+    },
+    "lane_ctl": {
+     "bundle_nets": 512,
+     "bundle_um": 2387939.4,
+     "max_um": 7743.1,
+     "wire_m": 38.2
+    },
+    "link": {
+     "bundle_nets": 4608,
+     "bundle_um": 8633079.8,
+     "max_um": 4869.5,
+     "wire_m": 138.1
+    },
+    "phy_dfi": {
+     "bundle_nets": 5560,
+     "bundle_um": 6317739.1,
+     "max_um": 2799.7,
+     "wire_m": 101.1
+    },
+    "ret_root": {
+     "bundle_nets": 640,
+     "bundle_um": 2186941.7,
+     "max_um": 6347.9,
+     "wire_m": 35.0
+    },
+    "ret_tree": {
+     "bundle_nets": 22890,
+     "bundle_um": 5306171.6,
+     "max_um": 961.0,
+     "wire_m": 84.9
+    },
+    "svc_hub": {
+     "bundle_nets": 3328,
+     "bundle_um": 8799612.3,
+     "max_um": 12381.6,
+     "wire_m": 140.8
+    },
+    "trunk": {
+     "bundle_nets": 216,
+     "bundle_um": 287243.9,
+     "max_um": 1801.8,
+     "wire_m": 4.6
+    },
+    "trunk_tap": {
+     "bundle_nets": 212,
+     "bundle_um": 54811.7,
+     "max_um": 351.1,
+     "wire_m": 0.9
+    },
+    "x_chain": {
+     "bundle_nets": 45560,
+     "bundle_um": 9915046.7,
+     "max_um": 757.7,
+     "wire_m": 158.6
+    },
+    "x_entry": {
+     "bundle_nets": 4352,
+     "bundle_um": 7721840.3,
+     "max_um": 4869.5,
+     "wire_m": 123.5
+    },
+    "x_root": {
+     "bundle_nets": 36,
+     "bundle_um": 82540.9,
+     "max_um": 2578.0,
+     "wire_m": 1.3
+    }
+   }
+  },
+  "gb_k16_i50": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:05:25",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 7197,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 121709,
+      "usage_pct": 5.91
+     },
+     "M5": {
+      "demand": 54265,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 180588,
+      "usage_pct": 30.05
+     },
+     "M6": {
+      "demand": 2963714,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 51159746,
+      "usage_pct": 5.79
+     },
+     "M7": {
+      "demand": 2218542,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 51501511,
+      "usage_pct": 4.31
+     },
+     "M8": {
+      "demand": 477346,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40311515,
+      "usage_pct": 1.18
+     },
+     "M9": {
+      "demand": 684279,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40287522,
+      "usage_pct": 1.7
+     }
+    },
+    "total": {
+     "demand": 6405343,
+     "overflow_h": 0,
+     "overflow_total": 0,
+     "overflow_v": 0,
+     "resource": 183562591,
+     "usage_pct": 3.49
+    },
+    "total_wirelength_bundle_um": 62753718.0
+   },
+   "grt_s": 325,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 134968,
+    "bundle_pins": 8032,
+    "case": "b",
+    "congestion_iterations": 50,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": false,
+    "instances": 24355,
+    "tag": "base",
+    "variant": {
+     "bf": 519,
+     "die": "layer",
+     "nv": 0,
+     "pairs": 2417
+    },
+    "wires": 2036717
+   },
+   "peak_rss_mb": 12486,
+   "wall": "10:28.37",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627721,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627268,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 192417,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 189489,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 188,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 900,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M9",
+      32303,
+      12049,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      32303,
+      12012,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      32303,
+      11347,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      32303,
+      11310,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      32303,
+      11273,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      18591,
+      "frame_119"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      18554,
+      "frame_119"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      18517,
+      "frame_119"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      12308,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      12271,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      12234,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      21696,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      21659,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      12308,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      12271,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      12234,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      12308,
+      "frame_84"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      12271,
+      "frame_84"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      12234,
+      "frame_84"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      6024,
+      "frame_65"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      5988,
+      "frame_65"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      5951,
+      "frame_65"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18591,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18554,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18517,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18332,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18295,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18258,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      12308,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      12271,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      12234,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      16669,
+      "frame_45"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      16632,
+      "frame_45"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      16595,
+      "frame_45"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      13564,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      13527,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      13490,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      13453,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      12529,
+      21215,
+      "frame_58"
+     ],
+     [
+      1.0,
+      "M9",
+      12529,
+      21178,
+      "frame_58"
+     ]
+    ]
+   },
+   "windows_baseline_subtracted": {
+    "baseline_subtracted": true,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 703
+     },
+     "M3": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 893
+     },
+     "M4": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 753
+     },
+     "M5": {
+      "max_use_over_cap": 0.02,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 988
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 910,
+      "over_1": 0,
+      "windows": 445872
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 370,
+      "over_1": 0,
+      "windows": 441148
+     },
+     "M8": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 51,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 551,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M9",
+      32303,
+      12049,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      32303,
+      12012,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      32303,
+      11347,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      32303,
+      11310,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      32303,
+      11273,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      18591,
+      "frame_119"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      18554,
+      "frame_119"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      18517,
+      "frame_119"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      12308,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      12271,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      12234,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      21696,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      21659,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      12308,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      12271,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      12234,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      12308,
+      "frame_84"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      12271,
+      "frame_84"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      12234,
+      "frame_84"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      6024,
+      "frame_65"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      5988,
+      "frame_65"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      5951,
+      "frame_65"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18591,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18554,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18517,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18332,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18295,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      18258,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      12308,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      12271,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      12234,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      16669,
+      "frame_45"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      16632,
+      "frame_45"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      16595,
+      "frame_45"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      13564,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      13527,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      13490,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      14821,
+      13453,
+      "frame_32"
+     ],
+     [
+      1.0,
+      "M9",
+      12529,
+      21215,
+      "frame_58"
+     ],
+     [
+      1.0,
+      "M9",
+      12529,
+      21178,
+      "frame_58"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "band": {
+     "bundle_nets": 256,
+     "bundle_um": 4478859.2,
+     "max_um": 30852.4,
+     "wire_m": 71.7
+    },
+    "cfg": {
+     "bundle_nets": 9668,
+     "bundle_um": 4764643.0,
+     "max_um": 730.0,
+     "wire_m": 76.2
+    },
+    "cfg_ctl": {
+     "bundle_nets": 2417,
+     "bundle_um": 965589.2,
+     "max_um": 628.3,
+     "wire_m": 15.4
+    },
+    "clock_trunk": {
+     "bundle_nets": 1,
+     "bundle_um": 10219.4,
+     "max_um": 10219.4,
+     "wire_m": 0.2
+    },
+    "hbm_read": {
+     "bundle_nets": 2216,
+     "bundle_um": 40951.7,
+     "max_um": 18.5,
+     "wire_m": 0.7
+    },
+    "hub": {
+     "bundle_nets": 388,
+     "bundle_um": 1043704.2,
+     "max_um": 7817.0,
+     "wire_m": 16.7
+    },
+    "lane_ctl": {
+     "bundle_nets": 512,
+     "bundle_um": 2369468.6,
+     "max_um": 7770.8,
+     "wire_m": 37.9
+    },
+    "link": {
+     "bundle_nets": 4608,
+     "bundle_um": 8633079.8,
+     "max_um": 4869.5,
+     "wire_m": 138.1
+    },
+    "phy_dfi": {
+     "bundle_nets": 5560,
+     "bundle_um": 6286877.5,
+     "max_um": 2799.7,
+     "wire_m": 100.6
+    },
+    "ret_root": {
+     "bundle_nets": 640,
+     "bundle_um": 2186941.7,
+     "max_um": 6347.9,
+     "wire_m": 35.0
+    },
+    "ret_tree": {
+     "bundle_nets": 22890,
+     "bundle_um": 5242461.8,
+     "max_um": 961.0,
+     "wire_m": 83.9
+    },
+    "svc_hub": {
+     "bundle_nets": 3328,
+     "bundle_um": 8801072.3,
+     "max_um": 12381.6,
+     "wire_m": 140.8
+    },
+    "trunk": {
+     "bundle_nets": 216,
+     "bundle_um": 287502.6,
+     "max_um": 1801.8,
+     "wire_m": 4.6
+    },
+    "trunk_tap": {
+     "bundle_nets": 212,
+     "bundle_um": 52492.4,
+     "max_um": 304.9,
+     "wire_m": 0.8
+    },
+    "x_chain": {
+     "bundle_nets": 45560,
+     "bundle_um": 9788431.0,
+     "max_um": 757.7,
+     "wire_m": 156.6
+    },
+    "x_entry": {
+     "bundle_nets": 4352,
+     "bundle_um": 7723947.0,
+     "max_um": 4869.5,
+     "wire_m": 123.6
+    },
+    "x_root": {
+     "bundle_nets": 36,
+     "bundle_um": 77477.4,
+     "max_um": 2319.2,
+     "wire_m": 1.2
+    }
+   }
+  },
+  "gb_k16_i5_base": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:00:30",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 7,
+      "usage_pct": 0.0
+     },
+     "M5": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M6": {
+      "demand": 61,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 51159746,
+      "usage_pct": 0.0
+     },
+     "M7": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 51501511,
+      "usage_pct": 0.0
+     },
+     "M8": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40311515,
+      "usage_pct": 0.0
+     },
+     "M9": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40287522,
+      "usage_pct": 0.0
+     }
+    },
+    "total": {
+     "demand": 61,
+     "overflow_h": 0,
+     "overflow_total": 0,
+     "overflow_v": 0,
+     "resource": 183260301,
+     "usage_pct": 0.0
+    },
+    "total_wirelength_bundle_um": 619.0
+   },
+   "grt_s": 31,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 0,
+    "bundle_pins": 8032,
+    "case": "b",
+    "congestion_iterations": 5,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": true,
+    "instances": 24355,
+    "tag": "base",
+    "variant": {
+     "bf": 519,
+     "die": "layer",
+     "nv": 0,
+     "pairs": 2417
+    },
+    "wires": 0
+   },
+   "peak_rss_mb": 11686,
+   "wall": "5:19.12",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 190522,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 188976,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 0.714,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 0.75,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M7",
+      32525,
+      15671,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      15634,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      15597,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      15191,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      15154,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14969,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14932,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14895,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14488,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14451,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14414,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14230,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14193,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13749,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13712,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13269,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13232,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12529,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12492,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12049,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12012,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11827,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11790,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11753,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11347,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11310,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11273,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11088,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11051,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      10608,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      10571,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      10386,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      10349,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      10312,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15671,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15634,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15597,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15486,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15449,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15412,
+      "frame_108"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "cfg_ctl": {
+     "bundle_nets": 1,
+     "bundle_um": 619.1,
+     "max_um": 619.1,
+     "wire_m": 0.0
+    }
+   }
+  },
+  "h_c5_field": {
+   "avg_mv": {
+    "VDD": 2.91,
+    "VSS": 2.94
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 3024,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 0,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "head",
+    "loads": 30753,
+    "peak": true,
+    "power_w": 20.4551,
+    "power_w_by_kind": {
+     "bf": 4.144,
+     "bf_nv": 2.9867,
+     "cfg": 1.5923,
+     "fifo_blk": 0.0351,
+     "node": 2.4762,
+     "nvx": 1.364,
+     "q": 7.7868,
+     "waypoint": 0.07
+    },
+    "power_w_per_mm2": 1.6575,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     4032.048,
+     3060.72
+    ],
+    "stripes": {
+     "M8": 1827,
+     "M9": 2407,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 2198795,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "field",
+    "window_um": [
+     8027.424,
+     9633.6,
+     12059.472,
+     12694.32
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 12075,
+   "rail_to_rail_interior_mv": 28.95,
+   "rail_to_rail_worst_mv": 44.9,
+   "wall": "12:04.57",
+   "worst_interior_mv": {
+    "VDD": 14.25,
+    "VSS": 14.7
+   },
+   "worst_mv": {
+    "VDD": 16.8,
+    "VSS": 28.1
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 16.82,
+     "VDD_interior": 14.25,
+     "VSS": 28.12,
+     "VSS_interior": 14.7
+    }
+   }
+  },
+  "h_c5_field_nv": {
+   "avg_mv": {
+    "VDD": 3.03,
+    "VSS": 3.17
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 2254,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 143,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "head",
+    "loads": 22477,
+    "peak": true,
+    "power_w": 12.7054,
+    "power_w_by_kind": {
+     "bf": 2.3936,
+     "bf_nv": 1.4503,
+     "cfg": 0.805,
+     "fifo_blk": 0.02,
+     "hub": 1.9889,
+     "node": 1.2381,
+     "nvx": 0.6623,
+     "q": 4.2163,
+     "waypoint": 0.02
+    },
+    "power_w_per_mm2": 1.3972,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     3135.376,
+     2900.24
+    ],
+    "stripes": {
+     "M8": 2360,
+     "M9": 2091,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 1178703,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "field_nv",
+    "window_um": [
+     13047.264,
+     3421.44,
+     16182.64,
+     6321.68
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 6566,
+   "rail_to_rail_interior_mv": 29.34,
+   "rail_to_rail_worst_mv": 43.5,
+   "wall": "5:39.03",
+   "worst_interior_mv": {
+    "VDD": 14.5,
+    "VSS": 14.84
+   },
+   "worst_mv": {
+    "VDD": 14.5,
+    "VSS": 29.0
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 14.5,
+     "VDD_interior": 14.5,
+     "VSS": 29.04,
+     "VSS_interior": 14.84
+    },
+    "hub": {
+     "VDD": 9.62,
+     "VDD_interior": 9.62,
+     "VSS": 10.73,
+     "VSS_interior": 9.65
+    }
+   }
+  },
+  "h_ga_real": {
+   "case": "a",
+   "errors": [
+    "[ERROR DRT-0073] No access point for e1002/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e1007/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e1010/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e1/xs_q1[151] (ot_v41_rom_elem_q_qp_w10)."
+   ],
+   "exit": 0,
+   "legality": {
+    "instances": 17216,
+    "outside": 0,
+    "overlaps": 0
+   },
+   "manifest": {
+    "case": "a",
+    "generated_pins": 104994,
+    "instances": 17216,
+    "nets_bits": 1828229,
+    "variant": {
+     "bf": 316,
+     "die": "head",
+     "nv": 211,
+     "pairs": 1682
+    }
+   },
+   "peak_rss_mb": 11697,
+   "pin_access": {
+    "examples": [
+     "[ERROR DRT-0073] No access point for e1002/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+     "[ERROR DRT-0073] No access point for e1007/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+     "[ERROR DRT-0073] No access point for e1010/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+     "[ERROR DRT-0073] No access point for e1/xs_q1[151] (ot_v41_rom_elem_q_qp_w10)."
+    ],
+    "no_access_errors": 9,
+    "status": "FAIL"
+   },
+   "snap_moves": {
+    "by_master": {},
+    "count": 0,
+    "max_um": 0.0
+   },
+   "track_assert": {
+    "macros": 17216,
+    "max_offset_nm": 0.0,
+    "no_track_grid": 0,
+    "offtrack": 0,
+    "pins_checked": 5202840,
+    "verdict": "PASS"
+   },
+   "track_assert_offenders": [],
+   "wall": "6:50.47"
+  },
+  "h_gb_k16_i5": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:03:16",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 2410,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 88634,
+      "usage_pct": 2.72
+     },
+     "M5": {
+      "demand": 32643,
+      "overflow_h": 0,
+      "overflow_total": 1,
+      "overflow_v": 1,
+      "resource": 166520,
+      "usage_pct": 19.6
+     },
+     "M6": {
+      "demand": 2849243,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 53303763,
+      "usage_pct": 5.35
+     },
+     "M7": {
+      "demand": 1842482,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 53622689,
+      "usage_pct": 3.44
+     },
+     "M8": {
+      "demand": 472587,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40311515,
+      "usage_pct": 1.17
+     },
+     "M9": {
+      "demand": 845666,
+      "overflow_h": 0,
+      "overflow_total": 1,
+      "overflow_v": 1,
+      "resource": 40287522,
+      "usage_pct": 2.1
+     }
+    },
+    "total": {
+     "demand": 6045031,
+     "overflow_h": 0,
+     "overflow_total": 2,
+     "overflow_v": 2,
+     "resource": 187780643,
+     "usage_pct": 3.22
+    },
+    "total_wirelength_bundle_um": 58637816.0
+   },
+   "grt_s": 196,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 119841,
+    "bundle_pins": 8166,
+    "case": "b",
+    "congestion_iterations": 5,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": false,
+    "instances": 17216,
+    "tag": "base",
+    "variant": {
+     "bf": 316,
+     "die": "head",
+     "nv": 211,
+     "pairs": 1682
+    },
+    "wires": 1828229
+   },
+   "peak_rss_mb": 12330,
+   "wall": "8:26.70",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627718,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.005,
+      "over_0p9": 626892,
+      "over_1": 1,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 180278,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 177430,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 170,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 78,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.005,
+      "M5",
+      16188,
+      12640,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      21326,
+      "frame_120"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      21289,
+      "frame_120"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      4213,
+      "frame_3"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      4176,
+      "frame_3"
+     ],
+     [
+      1.0,
+      "M8",
+      21659,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      21622,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      21585,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      21548,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      21511,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      15634,
+      12308,
+      "spine"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14969,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14932,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14895,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14488,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14451,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14414,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13749,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13712,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13269,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13232,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12308,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12271,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12234,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11347,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11310,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11273,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11088,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11051,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      10608,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      10571,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15597,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15560,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15486,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15449,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15412,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15375,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14969,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14932,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14895,
+      "frame_108"
+     ]
+    ]
+   },
+   "windows_baseline_subtracted": {
+    "baseline_subtracted": true,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 703
+     },
+     "M3": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 893
+     },
+     "M4": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 753
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 1,
+      "over_1": 0,
+      "windows": 1358
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 772,
+      "over_1": 0,
+      "windows": 457662
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 297,
+      "over_1": 0,
+      "windows": 452914
+     },
+     "M8": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 22,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 20,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M9",
+      18591,
+      21326,
+      "frame_120"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      21289,
+      "frame_120"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      4213,
+      "frame_3"
+     ],
+     [
+      1.0,
+      "M9",
+      11384,
+      4176,
+      "frame_3"
+     ],
+     [
+      1.0,
+      "M8",
+      21659,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      21622,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      21585,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      21548,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      21511,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      15634,
+      12308,
+      "spine"
+     ],
+     [
+      1.0,
+      "M7",
+      32044,
+      13269,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32044,
+      13232,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      16558,
+      12566,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16484,
+      12751,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16262,
+      12862,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16262,
+      12825,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      11236,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10977,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10940,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10903,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10866,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10829,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10792,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10755,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10718,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10681,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10644,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10608,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10571,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10534,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10497,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10460,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10423,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10386,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10349,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10312,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10275,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10238,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10201,
+      "vch"
+     ],
+     [
+      1.0,
+      "M7",
+      16225,
+      10164,
+      "vch"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "band": {
+     "bundle_nets": 256,
+     "bundle_um": 4479118.2,
+     "max_um": 30852.4,
+     "wire_m": 71.7
+    },
+    "cfg": {
+     "bundle_nets": 6728,
+     "bundle_um": 3461313.2,
+     "max_um": 988.7,
+     "wire_m": 55.4
+    },
+    "cfg_ctl": {
+     "bundle_nets": 1682,
+     "bundle_um": 717227.3,
+     "max_um": 887.0,
+     "wire_m": 11.5
+    },
+    "clock_trunk": {
+     "bundle_nets": 1,
+     "bundle_um": 10219.4,
+     "max_um": 10219.4,
+     "wire_m": 0.2
+    },
+    "hbm_read": {
+     "bundle_nets": 2216,
+     "bundle_um": 40951.7,
+     "max_um": 18.5,
+     "wire_m": 0.7
+    },
+    "hub": {
+     "bundle_nets": 388,
+     "bundle_um": 1041421.9,
+     "max_um": 7826.3,
+     "wire_m": 16.7
+    },
+    "lane_ctl": {
+     "bundle_nets": 512,
+     "bundle_um": 2194943.5,
+     "max_um": 7567.6,
+     "wire_m": 35.1
+    },
+    "link": {
+     "bundle_nets": 4608,
+     "bundle_um": 8657242.4,
+     "max_um": 5017.3,
+     "wire_m": 138.5
+    },
+    "nv_local": {
+     "bundle_nets": 14137,
+     "bundle_um": 279824.2,
+     "max_um": 27.7,
+     "wire_m": 4.5
+    },
+    "phy_dfi": {
+     "bundle_nets": 5560,
+     "bundle_um": 6321462.8,
+     "max_um": 2762.8,
+     "wire_m": 101.1
+    },
+    "ret_root": {
+     "bundle_nets": 640,
+     "bundle_um": 1898635.2,
+     "max_um": 6052.2,
+     "wire_m": 30.4
+    },
+    "ret_tree": {
+     "bundle_nets": 15540,
+     "bundle_um": 3444718.2,
+     "max_um": 794.6,
+     "wire_m": 55.1
+    },
+    "svc_hub": {
+     "bundle_nets": 3328,
+     "bundle_um": 8799289.1,
+     "max_um": 12390.8,
+     "wire_m": 140.8
+    },
+    "trunk": {
+     "bundle_nets": 216,
+     "bundle_um": 287216.2,
+     "max_um": 1820.3,
+     "wire_m": 4.6
+    },
+    "trunk_tap": {
+     "bundle_nets": 212,
+     "bundle_um": 55051.9,
+     "max_um": 406.6,
+     "wire_m": 0.9
+    },
+    "x_chain": {
+     "bundle_nets": 33201,
+     "bundle_um": 9119076.1,
+     "max_um": 1496.9,
+     "wire_m": 145.9
+    },
+    "x_entry": {
+     "bundle_nets": 4352,
+     "bundle_um": 7748396.0,
+     "max_um": 4795.6,
+     "wire_m": 124.0
+    },
+    "x_root": {
+     "bundle_nets": 36,
+     "bundle_um": 81709.3,
+     "max_um": 2476.3,
+     "wire_m": 1.3
+    }
+   }
+  },
+  "h_gb_k16_i50": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:04:45",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 5629,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 88634,
+      "usage_pct": 6.35
+     },
+     "M5": {
+      "demand": 53771,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 166520,
+      "usage_pct": 32.29
+     },
+     "M6": {
+      "demand": 2831775,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 53303763,
+      "usage_pct": 5.31
+     },
+     "M7": {
+      "demand": 1850474,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 53622689,
+      "usage_pct": 3.45
+     },
+     "M8": {
+      "demand": 461741,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40311515,
+      "usage_pct": 1.15
+     },
+     "M9": {
+      "demand": 811254,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40287522,
+      "usage_pct": 2.01
+     }
+    },
+    "total": {
+     "demand": 6014644,
+     "overflow_h": 0,
+     "overflow_total": 0,
+     "overflow_v": 0,
+     "resource": 187780643,
+     "usage_pct": 3.2
+    },
+    "total_wirelength_bundle_um": 58484330.0
+   },
+   "grt_s": 285,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 119841,
+    "bundle_pins": 8166,
+    "case": "b",
+    "congestion_iterations": 50,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": false,
+    "instances": 17216,
+    "tag": "base",
+    "variant": {
+     "bf": 316,
+     "die": "head",
+     "nv": 211,
+     "pairs": 1682
+    },
+    "wires": 1828229
+   },
+   "peak_rss_mb": 12328,
+   "wall": "9:16.76",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627718,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627089,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 180328,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 177409,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 251,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 1004,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M9",
+      31157,
+      11827,
+      "frame_94"
+     ],
+     [
+      1.0,
+      "M9",
+      31157,
+      11790,
+      "frame_94"
+     ],
+     [
+      1.0,
+      "M9",
+      31157,
+      11753,
+      "frame_94"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      11347,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      11310,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      11273,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      14045,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      14008,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      13971,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      13934,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      13897,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      13860,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      10866,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      10829,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      10792,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      20993,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      20956,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      20919,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      14710,
+      "frame_98"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      14673,
+      "frame_98"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      10608,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      10571,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      18110,
+      "frame_110"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      18073,
+      "frame_110"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      18036,
+      "frame_110"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      17408,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      17371,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      17334,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      17297,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11421,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11384,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11347,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11310,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11273,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11236,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11199,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      4842,
+      "frame_64"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      4805,
+      "frame_64"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      4768,
+      "frame_64"
+     ],
+     [
+      1.0,
+      "M9",
+      16336,
+      14377,
+      "vch"
+     ]
+    ]
+   },
+   "windows_baseline_subtracted": {
+    "baseline_subtracted": true,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 703
+     },
+     "M3": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 893
+     },
+     "M4": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 753
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 1,
+      "over_1": 0,
+      "windows": 1358
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 890,
+      "over_1": 0,
+      "windows": 457662
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 323,
+      "over_1": 0,
+      "windows": 452914
+     },
+     "M8": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 65,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 583,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M9",
+      31157,
+      11827,
+      "frame_94"
+     ],
+     [
+      1.0,
+      "M9",
+      31157,
+      11790,
+      "frame_94"
+     ],
+     [
+      1.0,
+      "M9",
+      31157,
+      11753,
+      "frame_94"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      11347,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      11310,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      30012,
+      11273,
+      "frame_93"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      14045,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      14008,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      13971,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      13934,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      13897,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      13860,
+      "frame_99"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      10866,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      10829,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      22028,
+      10792,
+      "frame_86"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      20993,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      20956,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      20919,
+      "frame_122"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      14710,
+      "frame_98"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      14673,
+      "frame_98"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      10608,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      20882,
+      10571,
+      "frame_85"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      18110,
+      "frame_110"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      18073,
+      "frame_110"
+     ],
+     [
+      1.0,
+      "M9",
+      19737,
+      18036,
+      "frame_110"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      17408,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      17371,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      17334,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      17297,
+      "frame_109"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11421,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11384,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11347,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11310,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11273,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11236,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      11199,
+      "frame_83"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      4842,
+      "frame_64"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      4805,
+      "frame_64"
+     ],
+     [
+      1.0,
+      "M9",
+      18591,
+      4768,
+      "frame_64"
+     ],
+     [
+      1.0,
+      "M9",
+      16336,
+      14377,
+      "vch"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "band": {
+     "bundle_nets": 256,
+     "bundle_um": 4479118.2,
+     "max_um": 30852.4,
+     "wire_m": 71.7
+    },
+    "cfg": {
+     "bundle_nets": 6728,
+     "bundle_um": 3501729.0,
+     "max_um": 730.0,
+     "wire_m": 56.0
+    },
+    "cfg_ctl": {
+     "bundle_nets": 1682,
+     "bundle_um": 718299.1,
+     "max_um": 628.3,
+     "wire_m": 11.5
+    },
+    "clock_trunk": {
+     "bundle_nets": 1,
+     "bundle_um": 10219.4,
+     "max_um": 10219.4,
+     "wire_m": 0.2
+    },
+    "hbm_read": {
+     "bundle_nets": 2216,
+     "bundle_um": 40951.7,
+     "max_um": 18.5,
+     "wire_m": 0.7
+    },
+    "hub": {
+     "bundle_nets": 388,
+     "bundle_um": 1041329.5,
+     "max_um": 7826.3,
+     "wire_m": 16.7
+    },
+    "lane_ctl": {
+     "bundle_nets": 512,
+     "bundle_um": 2181674.9,
+     "max_um": 7595.3,
+     "wire_m": 34.9
+    },
+    "link": {
+     "bundle_nets": 4608,
+     "bundle_um": 8657242.4,
+     "max_um": 5017.3,
+     "wire_m": 138.5
+    },
+    "nv_local": {
+     "bundle_nets": 14137,
+     "bundle_um": 279824.2,
+     "max_um": 27.7,
+     "wire_m": 4.5
+    },
+    "phy_dfi": {
+     "bundle_nets": 5560,
+     "bundle_um": 6290508.8,
+     "max_um": 2762.8,
+     "wire_m": 100.6
+    },
+    "ret_root": {
+     "bundle_nets": 640,
+     "bundle_um": 1898635.2,
+     "max_um": 6052.2,
+     "wire_m": 30.4
+    },
+    "ret_tree": {
+     "bundle_nets": 15540,
+     "bundle_um": 3412923.4,
+     "max_um": 794.6,
+     "wire_m": 54.6
+    },
+    "svc_hub": {
+     "bundle_nets": 3328,
+     "bundle_um": 8799418.5,
+     "max_um": 12390.8,
+     "wire_m": 140.8
+    },
+    "trunk": {
+     "bundle_nets": 216,
+     "bundle_um": 288269.5,
+     "max_um": 1820.3,
+     "wire_m": 4.6
+    },
+    "trunk_tap": {
+     "bundle_nets": 212,
+     "bundle_um": 52575.6,
+     "max_um": 314.2,
+     "wire_m": 0.8
+    },
+    "x_chain": {
+     "bundle_nets": 33201,
+     "bundle_um": 9003132.6,
+     "max_um": 1496.9,
+     "wire_m": 144.1
+    },
+    "x_entry": {
+     "bundle_nets": 4352,
+     "bundle_um": 7750826.2,
+     "max_um": 4795.6,
+     "wire_m": 124.0
+    },
+    "x_root": {
+     "bundle_nets": 36,
+     "bundle_um": 77653.0,
+     "max_um": 2347.0,
+     "wire_m": 1.2
+    }
+   }
+  },
+  "h_gb_k16_i5_base": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:00:29",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 7,
+      "usage_pct": 0.0
+     },
+     "M5": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M6": {
+      "demand": 61,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 53303763,
+      "usage_pct": 0.0
+     },
+     "M7": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 53622689,
+      "usage_pct": 0.0
+     },
+     "M8": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40311515,
+      "usage_pct": 0.0
+     },
+     "M9": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40287522,
+      "usage_pct": 0.0
+     }
+    },
+    "total": {
+     "demand": 61,
+     "overflow_h": 0,
+     "overflow_total": 0,
+     "overflow_v": 0,
+     "resource": 187525496,
+     "usage_pct": 0.0
+    },
+    "total_wirelength_bundle_um": 619.0
+   },
+   "grt_s": 30,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 0,
+    "bundle_pins": 8166,
+    "case": "b",
+    "congestion_iterations": 5,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": true,
+    "instances": 17216,
+    "tag": "base",
+    "variant": {
+     "bf": 316,
+     "die": "head",
+     "nv": 211,
+     "pairs": 1682
+    },
+    "wires": 0
+   },
+   "peak_rss_mb": 11618,
+   "wall": "5:04.27",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 178230,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 176913,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 0.714,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 0.75,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M7",
+      32525,
+      14969,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14932,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14895,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14488,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14451,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      14414,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13749,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13712,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13269,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      13232,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12308,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12271,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      12234,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11347,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11310,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11273,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11088,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      11051,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      10608,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32525,
+      10571,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15597,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15560,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15486,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15449,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15412,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      15375,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14969,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14932,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14895,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14747,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14710,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14673,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14488,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14451,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14414,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14156,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14119,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14045,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      14008,
+      "frame_108"
+     ],
+     [
+      1.0,
+      "M7",
+      32488,
+      13971,
+      "frame_108"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "cfg_ctl": {
+     "bundle_nets": 1,
+     "bundle_um": 619.1,
+     "max_um": 619.1,
+     "wire_m": 0.0
+    }
+   }
+  },
+  "h_m_field_nv_025": {
+   "avg_mv": {
+    "VDD": 0.54,
+    "VSS": 0.61
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "budget_mv": 35.0,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.25,
+     "hub": 0.025,
+     "svc": 0.1639
+    },
+    "die": "head",
+    "instances": 234,
+    "masters": [
+     "dsfd_bf",
+     "dsfd_fifo",
+     "dsfd_node",
+     "dsfd_nvx",
+     "dsfd_stn_h",
+     "ot_rom_4096x72_m8",
+     "ot_v41_rom_elem_q_qp_w10"
+    ],
+    "method": "real element abstracts + pdngen + PSM",
+    "power_w": 8.3759,
+    "power_w_per_mm2": 0.9211,
+    "size_um": [
+     3135.376,
+     2900.24
+    ],
+    "strap_offset_um": 0.9087,
+    "strap_pitch_um": 1.8183,
+    "vdd_v": 0.7,
+    "window": "field_nv",
+    "window_um": [
+     13047.264,
+     3421.44,
+     16182.64,
+     6321.68
+    ]
+   },
+   "pass": false,
+   "pass_interior": false,
+   "peak_rss_mb": 26501,
+   "rail_to_rail_interior_mv": 38.02,
+   "rail_to_rail_worst_mv": 38.0,
+   "wall": "23:47.90",
+   "worst_interior_mv": {
+    "VDD": 18.88,
+    "VSS": 19.14
+   },
+   "worst_mv": {
+    "VDD": 18.9,
+    "VSS": 19.1
+   },
+   "worst_mv_by_region": {
+    "bf": {
+     "VDD": 18.88,
+     "VDD_interior": 18.88,
+     "VSS": 13.93,
+     "VSS_interior": 13.93
+    },
+    "bf_nv": {
+     "VDD": 17.85,
+     "VDD_interior": 17.85,
+     "VSS": 19.14,
+     "VSS_interior": 19.14
+    },
+    "cfg": {
+     "VDD": 2.07,
+     "VDD_interior": 2.07,
+     "VSS": 3.4,
+     "VSS_interior": 1.93
+    },
+    "fifo_blk": {
+     "VDD": 1.44,
+     "VDD_interior": 1.44,
+     "VSS": 1.32,
+     "VSS_interior": 1.32
+    },
+    "node": {
+     "VDD": 9.94,
+     "VDD_interior": 9.94,
+     "VSS": 9.89,
+     "VSS_interior": 9.89
+    },
+    "nvx": {
+     "VDD": 5.7,
+     "VDD_interior": 5.7,
+     "VSS": 6.93,
+     "VSS_interior": 6.93
+    },
+    "q": {
+     "VDD": 16.95,
+     "VDD_interior": 16.95,
+     "VSS": 18.47,
+     "VSS_interior": 18.47
+    },
+    "waypoint": {
+     "VDD": 4.98,
+     "VDD_interior": 4.98,
+     "VSS": 3.5,
+     "VSS_interior": 3.5
+    }
+   }
+  },
+  "m5_spine_0128": {
+   "avg_mv": {
+    "VDD": 1.06,
+    "VSS": 0.74
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "budget_mv": 35.0,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "clipped": [
+     "e1579",
+     "e1583",
+     "e1812",
+     "e1816",
+     "e368",
+     "e373",
+     "e605",
+     "e610",
+     "n19_20",
+     "n32_16",
+     "sp_collective",
+     "sp_gather",
+     "sp_hc"
+    ],
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.025,
+     "svc": 0.1639
+    },
+    "die": "layer",
+    "instances": 155,
+    "masters": [
+     "dsfd_bf_clip_e1579",
+     "dsfd_bf_clip_e1583",
+     "dsfd_bf_clip_e1812",
+     "dsfd_bf_clip_e1816",
+     "dsfd_bf_clip_e368",
+     "dsfd_bf_clip_e373",
+     "dsfd_bf_clip_e605",
+     "dsfd_bf_clip_e610",
+     "dsfd_fifo",
+     "dsfd_mfifo",
+     "dsfd_node",
+     "dsfd_node_clip_n19_20",
+     "dsfd_node_clip_n32_16",
+     "dsfd_sp_capture",
+     "dsfd_sp_collective_clip_sp_collective",
+     "dsfd_sp_gather_clip_sp_gather",
+     "dsfd_sp_hc_clip_sp_hc",
+     "dsfd_sp_vm",
+     "dsfd_stn_h",
+     "dsfd_stn_v",
+     "ot_rom_4096x72_m8"
+    ],
+    "method": "real element abstracts + pdngen + PSM",
+    "power_w": 7.1889,
+    "power_w_per_mm2": 0.7469,
+    "size_um": [
+     3435.232,
+     2801.84
+    ],
+    "strap_offset_um": 1.6743,
+    "strap_pitch_um": 3.3495,
+    "vdd_v": 0.7,
+    "window": "spine",
+    "window_um": [
+     14782.608,
+     11599.2,
+     18217.84,
+     14401.04
+    ]
+   },
+   "pass": false,
+   "pass_interior": false,
+   "peak_rss_mb": 11126,
+   "rail_to_rail_interior_mv": 267.44,
+   "rail_to_rail_worst_mv": 267.7,
+   "wall": "7:31.95",
+   "worst_interior_mv": {
+    "VDD": 168.76,
+    "VSS": 98.68
+   },
+   "worst_mv": {
+    "VDD": 169.0,
+    "VSS": 98.7
+   },
+   "worst_mv_by_region": {
+    "bf": {
+     "VDD": 29.3,
+     "VDD_interior": 29.3,
+     "VSS": 32.47,
+     "VSS_interior": 32.47
+    },
+    "cfg": {
+     "VDD": 3.14,
+     "VDD_interior": 2.98,
+     "VSS": 4.79,
+     "VSS_interior": 3.3
+    },
+    "fifo_blk": {
+     "VDD": 3.39,
+     "VDD_interior": 3.39,
+     "VSS": 1.33,
+     "VSS_interior": 1.33
+    },
+    "hub": {
+     "VDD": 168.76,
+     "VDD_interior": 168.76,
+     "VSS": 98.68,
+     "VSS_interior": 98.68
+    },
+    "hub_fifo": {
+     "VDD": 3.71,
+     "VDD_interior": 3.71,
+     "VSS": 4.0,
+     "VSS_interior": 4.0
+    },
+    "node": {
+     "VDD": 15.99,
+     "VDD_interior": 15.99,
+     "VSS": 16.16,
+     "VSS_interior": 16.16
+    },
+    "waypoint": {
+     "VDD": 5.49,
+     "VDD_interior": 5.49,
+     "VSS": 8.8,
+     "VSS_interior": 8.8
+    }
+   }
+  },
+  "m_field_025": {
+   "avg_mv": {
+    "VDD": 1.05,
+    "VSS": 1.0
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "budget_mv": 35.0,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.25,
+     "hub": 0.025,
+     "svc": 0.1639
+    },
+    "die": "layer",
+    "instances": 634,
+    "masters": [
+     "dsfd_bf",
+     "dsfd_fifo",
+     "dsfd_node",
+     "dsfd_stn_h",
+     "dsfd_stn_l",
+     "ot_rom_4096x72_m8",
+     "ot_v41_rom_elem_q_qp_w10"
+    ],
+    "method": "real element abstracts + pdngen + PSM",
+    "power_w": 21.9386,
+    "power_w_per_mm2": 1.7777,
+    "size_um": [
+     4032.048,
+     3060.72
+    ],
+    "strap_offset_um": 0.9087,
+    "strap_pitch_um": 1.8183,
+    "vdd_v": 0.7,
+    "window": "field",
+    "window_um": [
+     8027.424,
+     9633.6,
+     12059.472,
+     12694.32
+    ]
+   },
+   "pass": false,
+   "pass_interior": false,
+   "peak_rss_mb": 49215,
+   "rail_to_rail_interior_mv": 36.68,
+   "rail_to_rail_worst_mv": 36.7,
+   "wall": "55:23.54",
+   "worst_interior_mv": {
+    "VDD": 18.36,
+    "VSS": 18.32
+   },
+   "worst_mv": {
+    "VDD": 18.4,
+    "VSS": 18.3
+   },
+   "worst_mv_by_region": {
+    "bf": {
+     "VDD": 16.47,
+     "VDD_interior": 16.47,
+     "VSS": 16.58,
+     "VSS_interior": 16.58
+    },
+    "cfg": {
+     "VDD": 2.09,
+     "VDD_interior": 2.09,
+     "VSS": 1.95,
+     "VSS_interior": 1.95
+    },
+    "fifo_blk": {
+     "VDD": 0.84,
+     "VDD_interior": 0.84,
+     "VSS": 1.78,
+     "VSS_interior": 1.78
+    },
+    "node": {
+     "VDD": 9.88,
+     "VDD_interior": 9.01,
+     "VSS": 9.5,
+     "VSS_interior": 9.5
+    },
+    "q": {
+     "VDD": 18.36,
+     "VDD_interior": 18.36,
+     "VSS": 18.32,
+     "VSS_interior": 18.32
+    },
+    "waypoint": {
+     "VDD": 5.7,
+     "VDD_interior": 5.7,
+     "VSS": 5.24,
+     "VSS_interior": 5.24
+    }
+   }
+  },
+  "m_field_bf_0128": {
+   "avg_mv": {
+    "VDD": 1.46,
+    "VSS": 1.49
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "budget_mv": 35.0,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.025,
+     "svc": 0.1639
+    },
+    "die": "layer",
+    "instances": 444,
+    "masters": [
+     "dsfd_bf",
+     "dsfd_node",
+     "dsfd_stn_h",
+     "ot_rom_4096x72_m8",
+     "ot_v41_rom_elem_q_qp_w10"
+    ],
+    "method": "real element abstracts + pdngen + PSM",
+    "power_w": 11.7487,
+    "power_w_per_mm2": 1.292,
+    "size_um": [
+     3135.376,
+     2900.24
+    ],
+    "strap_offset_um": 1.6743,
+    "strap_pitch_um": 3.3495,
+    "vdd_v": 0.7,
+    "window": "field_bf",
+    "window_um": [
+     8471.52,
+     3421.44,
+     11606.896,
+     6321.68
+    ]
+   },
+   "pass": false,
+   "pass_interior": false,
+   "peak_rss_mb": 12779,
+   "rail_to_rail_interior_mv": 62.15,
+   "rail_to_rail_worst_mv": 62.1,
+   "wall": "11:49.15",
+   "worst_interior_mv": {
+    "VDD": 29.93,
+    "VSS": 32.22
+   },
+   "worst_mv": {
+    "VDD": 29.9,
+    "VSS": 32.2
+   },
+   "worst_mv_by_region": {
+    "bf": {
+     "VDD": 28.43,
+     "VDD_interior": 28.43,
+     "VSS": 32.22,
+     "VSS_interior": 32.22
+    },
+    "cfg": {
+     "VDD": 3.38,
+     "VDD_interior": 3.38,
+     "VSS": 5.64,
+     "VSS_interior": 3.08
+    },
+    "node": {
+     "VDD": 16.8,
+     "VDD_interior": 16.8,
+     "VSS": 18.17,
+     "VSS_interior": 18.17
+    },
+    "q": {
+     "VDD": 29.93,
+     "VDD_interior": 29.93,
+     "VSS": 31.16,
+     "VSS_interior": 31.16
+    },
+    "waypoint": {
+     "VDD": 10.04,
+     "VDD_interior": 10.04,
+     "VSS": 3.1,
+     "VSS_interior": 3.1
+    }
+   }
+  },
+  "m_field_bf_025": {
+   "avg_mv": {
+    "VDD": 0.78,
+    "VSS": 0.78
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "budget_mv": 35.0,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.25,
+     "hub": 0.025,
+     "svc": 0.1639
+    },
+    "die": "layer",
+    "instances": 444,
+    "masters": [
+     "dsfd_bf",
+     "dsfd_node",
+     "dsfd_stn_h",
+     "ot_rom_4096x72_m8",
+     "ot_v41_rom_elem_q_qp_w10"
+    ],
+    "method": "real element abstracts + pdngen + PSM",
+    "power_w": 11.7487,
+    "power_w_per_mm2": 1.292,
+    "size_um": [
+     3135.376,
+     2900.24
+    ],
+    "strap_offset_um": 0.9087,
+    "strap_pitch_um": 1.8183,
+    "vdd_v": 0.7,
+    "window": "field_bf",
+    "window_um": [
+     8471.52,
+     3421.44,
+     11606.896,
+     6321.68
+    ]
+   },
+   "pass": false,
+   "pass_interior": false,
+   "peak_rss_mb": 29810,
+   "rail_to_rail_interior_mv": 37.58,
+   "rail_to_rail_worst_mv": 37.5,
+   "wall": "28:04.01",
+   "worst_interior_mv": {
+    "VDD": 18.44,
+    "VSS": 19.14
+   },
+   "worst_mv": {
+    "VDD": 18.4,
+    "VSS": 19.1
+   },
+   "worst_mv_by_region": {
+    "bf": {
+     "VDD": 16.99,
+     "VDD_interior": 16.99,
+     "VSS": 19.14,
+     "VSS_interior": 19.14
+    },
+    "cfg": {
+     "VDD": 2.08,
+     "VDD_interior": 2.08,
+     "VSS": 3.42,
+     "VSS_interior": 1.93
+    },
+    "node": {
+     "VDD": 10.4,
+     "VDD_interior": 10.4,
+     "VSS": 10.36,
+     "VSS_interior": 10.36
+    },
+    "q": {
+     "VDD": 18.44,
+     "VDD_interior": 18.44,
+     "VSS": 18.31,
+     "VSS_interior": 18.31
+    },
+    "waypoint": {
+     "VDD": 4.97,
+     "VDD_interior": 4.97,
+     "VSS": 3.23,
+     "VSS_interior": 3.23
+    }
+   }
+  }
+ },
+ "psm_macro_current_control": {
+  "cells": {
+   "avg_mv": 0.602,
+   "worst_mv": 2.39
+  },
+  "macro": {
+   "avg_mv": 0.878,
+   "worst_mv": 54.8
+  },
+  "note": "PSM macro-current control (why case c, not case irm, is the IR sign-off method): one 1,000 x 1,000 um block\nwith M7 PG stripes at 1 W, versus the same power as 2,116 21.6 um cells with the same stripes, on the identical\nbump-aligned M8/M9 grid and bump array."
+ },
+ "schema": "opentallas.dsrom-s81-fulldie.feasibility.v1",
+ "tool_sha256": "3d85b41af7f1049102fb5924ca3e565fb0031daa3faba2a281ceceb611f3e955"
+}
