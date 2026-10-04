@@ -63,7 +63,7 @@ def _isa_bits():
 
 
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
-             tree_cols=0, bw_align=False, east_mirror=False):
+             tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -121,19 +121,22 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     _spine_buses(v, m, groups)
     if bw_align:
         by = {i.name: i for i in m['insts']}
-        ry = {}
+        ry, rx = {}, {}
         for bid, cl, bits, eps in m['buses']:
             if bid.startswith('bword_'):
                 (root, _), (slab, pin) = eps
                 ry.setdefault(slab, {})[int(pin[2:])] = by[root].y + by[root].h / 2
+                rx.setdefault(slab, {})[int(pin[2:])] = by[root].x + by[root].w / 2
         m['b3r8_root_y'] = ry
+        m['b3r8_root_x'] = rx
     m['clock_regions'] = clock_regions(v, m)
     m['die']['budget_mm2'] = 858
     m['die']['margin_mm2'] = round(858 - m['die']['mm2'], 3)
     m['b3r2'] = dict(station_frame_um=list(v.STATION), station_extra_h_um=st_extra_h, strip_fifo_frame_um=list(v.FIFO),
                      strip_fifo_extra_h_um=sf_extra_h, bw_fifo_mm2=round(bw_mm2, 4), band=band or b3r3, b3r3=b3r3,
                      groups=groups)
-    _wrap_masters(v, m, area_pins, ns_faces=b3r3, spread=spread or b3r6, channel=b3r6, bw_align=bw_align)
+    _wrap_masters(v, m, area_pins, ns_faces=b3r3, spread=spread or b3r6, channel=b3r6, bw_align=bw_align,
+                  bw_edge=bw_edge)
     m['b3r2']['spread_pins'] = spread or b3r6
     m['b3r2']['b3r6_channel_pins'] = b3r6
     if tree_cols:
@@ -141,6 +144,10 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['b3r7_tree_pin_columns'] = tree_cols
     m['b3r2']['b3r8_bw_align'] = bw_align
     m['b3r2']['b3r9_east_mirror'] = east_mirror
+    m['b3r2']['b3r10_bw_edge'] = bw_edge
+    if io_faces:
+        _io_faces(v)
+    m['b3r2']['b3r11_io_faces'] = io_faces
     m['b3r2']['area_pins'] = area_pins
     return v, m
 
@@ -447,7 +454,8 @@ def _spine_buses(v, m, gm):
     m['isa_bits'] = dict(total=total, me=me_bits, su_and_control=total - me_bits)
 
 
-def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=False, bw_align=False):
+def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=False, bw_align=False,
+                  bw_edge=False):
     """Every endpoint port that the b3 masters do not define becomes a pin group on the face toward the far
     endpoint (M4 on W/E), stacked from the top of the face so no two groups overlap."""
     base = v.masters
@@ -494,6 +502,20 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
                     # the spine edge from the root row to a slab pin up to 2.6 mm away
                     ry = model['b3r8_root_y'].get(it.name, {})
                     ws = sorted((i for i in words if i in ry), key=lambda i: ry[i])
+                    yr = sum(ry[i] for i in ws) / len(ws) - it.y if ws else 0.0
+                    if ws and bw_edge and not (50.0 <= yr <= b.h - 50.0):
+                        # b3r10: the root row lies outside the slab (band 3 W sits above the tree top, band 2 E
+                        # below its row): the words enter at the near edge, spread over the slab width, so the
+                        # vertical climb runs over the neighbouring block's M9, not down one column at the spine
+                        # edge (b3r8: M9 windows 1.30 at x 10.8-11.5 mm, y 18.85 mm, all eight band-3 W words)
+                        ye = 70.0 if yr < 50.0 else b.h - 70.0
+                        ordx = sorted(ws, key=lambda i: model['b3r8_root_x'][it.name][i], reverse=not east)
+                        for q, i in enumerate(ordx):
+                            xq = 20.0 + (b.w - 60.0) * (q + 0.5) / len(ordx)
+                            if f'bw{i}' not in b.order:
+                                b.order.append(f'bw{i}')
+                            b.ports[f'bw{i}'] = ('area', v.TREE_BITS, xq, ye, 2)
+                        continue
                     if ws:
                         sp = 100.0
                         cen = sum(ry[i] for i in ws) / len(ws) - it.y
@@ -697,6 +719,22 @@ def _east_mirror(v, m):
         out.append((bid, cl, bits, eps))
     m['buses'] = out
     m['geo']['b3r9_mirrored_buses'] = n
+
+
+def _io_faces(v):
+    """b3r11: the collective -> SerDes word leaves io_collective on its E face (below the UCIe word) and enters
+    io_serdes on its W face, instead of N (the die edge: 21 um of sliver above the IO row) and S.  b3r8: the only
+    M9 window over 1.0 outside the spine was n_serdes_tx (53 of 53 nets) at x 12.34-12.42 mm on the die top edge."""
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        out = base(model, k, port_bits)
+        col, ser = out['qfd_io_collective'], out['qfd_io_serdes']
+        kind, w, face, layer, centre, pitch = col.ports['u']
+        col.ports['s'] = ('face', col.ports['s'][1], 'E', 'M4', centre + 400.0, 2)
+        ser.ports['c'] = ('face', ser.ports['c'][1], 'W', 'M4', centre + 400.0, 2)
+        return out
+    v.masters = masters
 
 
 TREE_COL_UM = 9.24          # one GRT gcell (the k16 GRT grid pitch, gcell_over.txt x step)
@@ -1100,6 +1138,9 @@ def main(argv=None):
                     'name fix), channel buses face-to-face inside the blocks\' overlap, tree-top pins at 2 tracks')
     ap.add_argument('--tree-cols', type=int, default=0, help='b3r7: tile tree-word pins in this many gcell columns')
     ap.add_argument('--bw-align', action='store_true', help='b3r8: slab block-word pins at their block-root height')
+    ap.add_argument('--bw-edge', action='store_true', help='b3r10: words of a slab whose roots lie outside it enter '
+                    'at the near edge, spread over the slab width')
+    ap.add_argument('--io-faces', action='store_true', help='b3r11: collective->SerDes word on the E/W faces')
     ap.add_argument('--east-mirror', action='store_true', help='b3r9: east-array block trees mirrored (root spine-side)')
     ap.add_argument('--work', type=Path)
     ap.add_argument('--out', type=Path)
@@ -1115,7 +1156,8 @@ def main(argv=None):
         return 0
     v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
                     b3r6=a.b3r6, tree_cols=a.tree_cols,
-                    bw_align=a.bw_align, east_mirror=a.east_mirror)
+                    bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
+                    io_faces=a.io_faces)
     if a.mode == 'plan':
         out = a.out
         out.mkdir(parents=True, exist_ok=True)
