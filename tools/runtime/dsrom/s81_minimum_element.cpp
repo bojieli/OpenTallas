@@ -165,15 +165,17 @@ int main(int argc,char** argv) {
                 throw std::runtime_error("actual native input/publication participants required");
             auto before=native->result();
             if(before.fault)throw std::runtime_error("native element fault");
-            if(driven.go) {
-                if(!runtime.identity||before.busy||!runtime.publication_ready(*runtime.identity))
-                    throw std::runtime_error("field GO lacks actual native publication admission");
-                accepted_go++;
-            }
             for(auto& p:runtime.participants) {
                 if(p.name.empty()||!p.prepare||!p.rising||!p.falling||!p.fault)
                     throw std::runtime_error("incomplete actual native participant");
                 p.prepare(before);
+            }
+            // Input participants set the command for this edge in prepare().
+            // Admit that command, rather than the preceding edge's held GO.
+            if(driven.go) {
+                if(!runtime.identity||before.busy||!runtime.publication_ready(*runtime.identity))
+                    throw std::runtime_error("field GO lacks actual native publication admission");
+                accepted_go++;
             }
             // All consumers sample pre-edge ports. No consumer sees the
             // element's newly evaluated rising-edge result on this edge.
