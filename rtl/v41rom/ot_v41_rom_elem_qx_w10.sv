@@ -1009,7 +1009,7 @@ module ot_v41_rom_elem_qx_w10 #(
     wire qx_hz_h0 = qx_hz({HW{1'b0}}), qx_hz_hp = qx_hz(w_cnt + 1'b1), qx_hz_hs = qx_hz(w_cnt);
     wire qx_hz_is = qx_hz_zero ? (w_cnt == {HW{1'b0}}) || qx_hz_h0 : qx_hz_hp;
 `ifdef QX_MUTANT_HZ
-    wire qx_hz_nx = go_e ? (issue && w_cnt == {HW{1'b0}}) || qx_hz_h0 : issue ? qx_hz_hp : qx_hz_hs;   // negative control
+    wire qx_hz_nx = go_e ? (issue && w_cnt == {HW{1'b0}}) || qx_hz_h0 : qx_hz_hs;   // negative control: count advance ignored
 `else
     wire qx_hz_nx = go_e ? (issue && w_cnt == {HW{1'b0}}) || qx_hz_h0 : issue ? qx_hz_is : qx_hz_hs;
 `endif
