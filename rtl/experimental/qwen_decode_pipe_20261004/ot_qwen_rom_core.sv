@@ -258,51 +258,6 @@ module ot_qwen_rom_core #(
         end
     end endgenerate
 
-
-    // Five distinct edges: capture raw FIFO word, position, selectors/shift,
-    // constant odd division, then load NEXT. FIFO ownership changes only at load.
-    function automatic integer dp_tz(input integer value);
-        integer n;
-        begin
-            n=0;
-            while (value>0 && (value & 1)==0) begin value=value>>1; n=n+1; end
-            dp_tz=n;
-        end
-    endfunction
-    localparam integer DP_WT=dp_tz(W), DP_GT=dp_tz(G), DP_ODD=G>>DP_GT;
-    wire [4:0] dp_amount=DP_WT+DP_GT-`F(ME_SPLIT);
-    generate if (DECODE_PIPE != 0) begin : g_decode_pipe
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) dp_phase <= 0;
-            else if (st != S_RUN || fin) dp_phase <= 0;
-            else begin
-                case (dp_phase)
-                    0: if (fq_n != 0) begin dp_ir <= fq[fq_rd]; dp_phase <= 1; end
-                    1: begin dp_pos <= (VPOS != 0) ? pos_r+vp_off : pos_r; dp_phase <= 2; end
-                    2: begin
-                        dp_shifted <= dp_pos >> dp_amount;
-                        dp_invalid <= (W != (1<<DP_WT)) || `F(ME_SPLIT)>DP_GT || `F(ME_SPLIT)>DP_WT+DP_GT;
-                    dp_dyn[0] <= `DYNS(`F(ME_D_NOUT));
-                    dp_dyn[1] <= `DYNS(`F(ME_D_TILES));
-                    dp_dyn[2] <= `DYNS(`F(ME_D_K));
-                    dp_dyn[3] <= `DYNS(`F(ME_D_WBASE));
-                    dp_dyn[4] <= `DYNS(`F(ME_D_XBASE));
-                    dp_dyn[5] <= `DYNS(`F(ME_D_OBASE));
-                    dp_dyn[6] <= `DYNS(`F(SU_D_NIN));
-                    dp_dyn[7] <= `DYNS(`F(A_D));
-                    dp_dyn[8] <= `DYNS(`F(B_D));
-                    dp_dyn[9] <= `DYNS(`F(C_D));
-                    dp_dyn[10] <= `DYNS(`F(D_D));
-                        dp_phase <= 3;
-                    end
-                    3: begin dp_rounds <= dp_invalid ? {NW{1'b0}} : (dp_shifted/DP_ODD)+1'b1; dp_phase <= 4; end
-                    4: if (load) dp_phase <= 0;
-                    default: dp_phase <= 0;
-                endcase
-            end
-        end
-    end endgenerate
-
     // decoded, DYN-adjusted fields
     reg [1:0]    d_unit;
     reg          d_barrier;
@@ -457,6 +412,51 @@ module ot_qwen_rom_core #(
         end
     end
     `define DYNS(sel) ((VPOS != 0) ? dynp[{vp_off, sel}] : dyn[sel])
+
+
+    // Five distinct edges: capture raw FIFO word, position, selectors/shift,
+    // constant odd division, then load NEXT. FIFO ownership changes only at load.
+    function automatic integer dp_tz(input integer value);
+        integer n;
+        begin
+            n=0;
+            while (value>0 && (value & 1)==0) begin value=value>>1; n=n+1; end
+            dp_tz=n;
+        end
+    endfunction
+    localparam integer DP_WT=dp_tz(W), DP_GT=dp_tz(G), DP_ODD=G>>DP_GT;
+    wire [4:0] dp_amount=DP_WT+DP_GT-`F(ME_SPLIT);
+    generate if (DECODE_PIPE != 0) begin : g_decode_pipe
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) dp_phase <= 0;
+            else if (st != S_RUN || fin) dp_phase <= 0;
+            else begin
+                case (dp_phase)
+                    0: if (fq_n != 0) begin dp_ir <= fq[fq_rd]; dp_phase <= 1; end
+                    1: begin dp_pos <= (VPOS != 0) ? pos_r+vp_off : pos_r; dp_phase <= 2; end
+                    2: begin
+                        dp_shifted <= dp_pos >> dp_amount;
+                        dp_invalid <= (W != (1<<DP_WT)) || `F(ME_SPLIT)>DP_GT || `F(ME_SPLIT)>DP_WT+DP_GT;
+                    dp_dyn[0] <= `DYNS(`F(ME_D_NOUT));
+                    dp_dyn[1] <= `DYNS(`F(ME_D_TILES));
+                    dp_dyn[2] <= `DYNS(`F(ME_D_K));
+                    dp_dyn[3] <= `DYNS(`F(ME_D_WBASE));
+                    dp_dyn[4] <= `DYNS(`F(ME_D_XBASE));
+                    dp_dyn[5] <= `DYNS(`F(ME_D_OBASE));
+                    dp_dyn[6] <= `DYNS(`F(SU_D_NIN));
+                    dp_dyn[7] <= `DYNS(`F(A_D));
+                    dp_dyn[8] <= `DYNS(`F(B_D));
+                    dp_dyn[9] <= `DYNS(`F(C_D));
+                    dp_dyn[10] <= `DYNS(`F(D_D));
+                        dp_phase <= 3;
+                    end
+                    3: begin dp_rounds <= dp_invalid ? {NW{1'b0}} : (dp_shifted/DP_ODD)+1'b1; dp_phase <= 4; end
+                    4: if (load) dp_phase <= 0;
+                    default: dp_phase <= 0;
+                endcase
+            end
+        end
+    end endgenerate
 
     // Decode: every base and count may add one DYN value.
     always @(posedge clk) if (load) begin

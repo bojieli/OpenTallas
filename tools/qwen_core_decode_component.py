@@ -18,7 +18,7 @@ input [1023:0] prog_q,
 output reg prog_re,output reg [11:0] prog_addr,
 output reg done,output reg [31:0] cycles,
 output reg [17:0] next_token,output reg [31:0] next_val,
-output [4095:0] decoded,output accepted,output invalid_at_load);
+output [877:0] decoded,output accepted,output invalid_at_load);
 localparam AW=24,NW=18,PAW=12,W=16,IL=1,G=6144,HID=4096,HD=128,HALF=64,
 INSTR_BITS=1024,KV_HBM=1,W_HBM=1,KV_VEC_WRITE_BRIDGE=1,QWEN_FULLSHAPE=1;
 `include "ot_hdc_isa.svh"
@@ -35,6 +35,8 @@ assign invalid_at_load=dyn_tiles_bad_instruction;
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True)
     a=ap.parse_args();a.out.parent.mkdir(parents=True,exist_ok=True)
-    a.out.write_text(component(E.emit(E.V.E.CORE.read_text())))
+    text=component(E.emit(E.V.E.CORE.read_text()))
+    text=text.replace('`include "ot_hdc_isa.svh"', (E.V.E.CORE.parent/'ot_hdc_isa.svh').read_text())
+    a.out.write_text(text)
 
 if __name__=='__main__':main()

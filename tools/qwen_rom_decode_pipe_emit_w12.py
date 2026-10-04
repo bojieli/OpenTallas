@@ -76,7 +76,7 @@ ASSIGNMENTS
         end
     end endgenerate
 '''.replace('ASSIGNMENTS',assignments)
-    text = once(text, '    // decoded, DYN-adjusted fields', block+'\n    // decoded, DYN-adjusted fields')
+    text = once(text, '    // Decode: every base and count may add one DYN value.', block+'\n    // Decode: every base and count may add one DYN value.')
     return '// Generated held-decode candidate: DECODE_PIPE default OFF; no timing/adoption claim.\n'+text
 
 

@@ -1,25 +1,26 @@
 `timescale 1ns/1ps
-module tb;
+module tb #(parameter VPOS=1, POSITION=8187);
 reg clk=0; always #5 clk=~clk;
 reg rst_n=0,start=0;
-reg [17:0] token=3,pos=8187;
+reg [17:0] token=3,pos=POSITION;
 reg [1023:0] mem[0:64];
 reg [1023:0] q0=0,q1=0;
 wire re0,re1,done0,done1,accept0,accept1,bad0,bad1;
 wire [11:0] addr0,addr1;
-wire [4095:0] dec0,dec1;
-reg [4095:0] events0[0:63],events1[0:63];
+wire [877:0] dec0,dec1;
+reg [877:0] events0[0:63],events1[0:63];
 integer cycle=0,n0=0,n1=0,invalid0=0,invalid1=0,i,v;
 wire ready=cycle%7!=0;
 wire idle=cycle%11!=0;
 `include "ot_hdc_isa.svh"
-decode_component #(.DECODE_PIPE(0),.VPOS(1)) a(.clk(clk),.rst_n(rst_n),.start(start),.token(token),.pos(pos),.me_ready(ready),.me_idle(idle),.su_ready(ready),.su_idle(idle),.prog_q(q0),.prog_re(re0),.prog_addr(addr0),.done(done0),.decoded(dec0),.accepted(accept0),.invalid_at_load(bad0));
-decode_component #(.DECODE_PIPE(1),.VPOS(1)) b(.clk(clk),.rst_n(rst_n),.start(start),.token(token),.pos(pos),.me_ready(ready),.me_idle(idle),.su_ready(ready),.su_idle(idle),.prog_q(q1),.prog_re(re1),.prog_addr(addr1),.done(done1),.decoded(dec1),.accepted(accept1),.invalid_at_load(bad1));
+decode_component #(.DECODE_PIPE(0),.VPOS(VPOS)) a(.clk(clk),.rst_n(rst_n),.start(start),.token(token),.pos(pos),.me_ready(ready),.me_idle(idle),.su_ready(ready),.su_idle(idle),.prog_q(q0),.prog_re(re0),.prog_addr(addr0),.done(done0),.decoded(dec0),.accepted(accept0),.invalid_at_load(bad0));
+decode_component #(.DECODE_PIPE(1),.VPOS(VPOS)) b(.clk(clk),.rst_n(rst_n),.start(start),.token(token),.pos(pos),.me_ready(ready),.me_idle(idle),.su_ready(ready),.su_idle(idle),.prog_q(q1),.prog_re(re1),.prog_addr(addr1),.done(done1),.decoded(dec1),.accepted(accept1),.invalid_at_load(bad1));
 always @(posedge clk) begin
  cycle<=cycle+1;
  if(re0) q0<=mem[addr0%65];
  if(re1) q1<=mem[addr1%65];
- if(rst_n) begin
+ if(!rst_n) begin n0=0;n1=0;invalid0=0;invalid1=0;end
+ else begin
   if(accept0) begin events0[n0]=dec0;n0=n0+1;end
   if(accept1) begin events1[n1]=dec1;n1=n1+1;end
   if(bad0) invalid0=invalid0+1;
@@ -37,6 +38,9 @@ initial begin
   mem[i][900+:3]=i%8;
  end
  mem[64]=0;
+ repeat(3) @(negedge clk);rst_n=1;start=1;
+ @(negedge clk);start=0;
+ repeat(20) @(negedge clk);rst_n=0;
  repeat(3) @(negedge clk);rst_n=1;start=1;
  @(negedge clk);start=0;
  wait(done0);wait(done1);@(negedge clk);
