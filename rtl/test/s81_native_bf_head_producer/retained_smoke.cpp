@@ -11,7 +11,7 @@ using namespace dsrom_s81_minimum;
 NativeBfHeadProducer<Vretn,Vroot>* producer=nullptr;
 #ifdef DSROM_S81_RELEASED_HEAD_COMPONENT
 #include "s81_native_bf_head_factory.hpp"
-static DsromS81NativeHeadBinding* released_head=nullptr;
+
 #endif
 std::map<const void*,unsigned> banks;
 extern "C" void v41rt_rom_register(const char* instance) {
@@ -21,14 +21,14 @@ extern "C" void v41rt_rom_register(const char* instance) {
 extern "C" void v41rt_cfg_register() {}
 extern "C" long long v41rt_cfg_read(int address) {
 #ifdef DSROM_S81_RELEASED_HEAD_COMPONENT
-    if(released_head)return released_head->cfg_word(address);
+    // The existing producer below owns direct component ROM/CFG routing.
 #endif
     if(!producer)throw std::runtime_error("CFG before actual head producer");
     return producer->cfg_word(address);
 }
 extern "C" void v41rt_rom_read(int address,svBitVecVal* out) {
 #ifdef DSROM_S81_RELEASED_HEAD_COMPONENT
-    if(released_head){auto w=released_head->raw_word(banks.at(svGetScope()),address);std::copy(w.begin(),w.end(),out);return;}
+    // No whole-caller PairMem installer is substituted here.
 #endif
     if(!producer)throw std::runtime_error("ROM before actual head producer");
     auto word=producer->raw_word(banks.at(svGetScope()),address);
@@ -42,7 +42,7 @@ int synthetic_main(int argc,char** argv) {
     long cycles=0;uint32_t source=(argc>1)?0x3f800001:0x3f800000;unsigned reads=0,accepted=0,raw_reads=0;
     DsromS81PairDrive driven{};
     rt.result=[&](){return DsromS81PairResult{pair.pv,pair.perr,pair.ppos,pair.pseg,pair.pnseg,
-       pair.prow,pair.pval,bool(pair.busy),bool(pair.quiet),bool(pair.fault)};};
+        pair.prow,pair.pval,bool(pair.busy),bool(pair.quiet),bool(pair.fault)};};
     rt.drive=[&](const DsromS81PairDrive& p){driven=p;
       pair.cfg_go=p.cfg_go;pair.cfg_ph=p.cfg_ph;pair.cfg_np=p.cfg_np;
       pair.go=p.go;pair.go_bf=p.go_bf;pair.xs_v=p.xs_v;pair.xs_p=p.xs_p;pair.xs_b=p.xs_b;
@@ -93,6 +93,13 @@ int main(int argc,char** argv){return synthetic_main(argc,argv);}
 #include "s81_native_bf_head_factory.hpp"
 #include "s81_minimum_prefix_providers.hpp"
 #include "s81_published_span_accept_sink.hpp"
+// Opt in only for a successor caller with Arch's actual publication helper.
+#ifdef DSROM_S81_RELEASED_HEAD_LOGIT_PUBLICATION
+#ifndef DSROM_S81_HEAD_WINNER_BINDING_HEADER
+#error "Logit publication requires the existing emitted HEAD winner binding header"
+#endif
+#include "s81_minimum_source_plan.hpp"
+#endif
 #include "Vnative_vm.h"
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -171,6 +178,12 @@ int main(int argc,char** argv) {
         instructions>>std::dec;if(!instructions)throw std::runtime_error("literal head instruction input");
         publication.enroll_literal(op.index,extents[i]);
     }
+#ifdef DSROM_S81_RELEASED_HEAD_LOGIT_PUBLICATION
+    publication.enroll_literal(4892,{{486848,32320}});
+    DsromS81MinimumPrefixOutputBatch logit_batch(rt,ID,publication,io,tags);
+    bool head_publication_begun=false;
+    uint32_t held_join_tag=0,held_join_bits=0;
+#endif
     Vpb pair(&ctx,"released_head_pair");Vcut cut(&ctx,"released_head_shared_cut");
     rt.result=[&](){return DsromS81PairResult{pair.pv,pair.perr,pair.ppos,pair.pseg,pair.pnseg,
         pair.prow,pair.pval,bool(pair.busy),bool(pair.quiet),bool(pair.fault)};};
@@ -187,7 +200,7 @@ int main(int argc,char** argv) {
     std::ofstream logit_file(output+"/logits_rank"+std::to_string(rank)+".u32",std::ios::binary);
     std::ofstream xn_file(output+"/XN_rank"+std::to_string(rank)+".u32",std::ios::binary);
     unsigned raw_reads=0;
-    DsromS81NativeHeadBinding head(rt,cut,io,
+    DsromS81NativeHeadProducer head(rt,cut,io.read_word,io.span_lease,
         [&](unsigned r,unsigned row,unsigned group,unsigned step){
             if(r!=rank||row>=32320||group>=40||step>=8)throw std::runtime_error("released head source coordinates");
             NativeBfHeadRom::Word w{};
@@ -205,12 +218,13 @@ int main(int argc,char** argv) {
                 throw std::runtime_error("held native roots changed");
             if(!taken)return false;
             held.reset();tail_stage=0;taken=false;return true;
-        },false);released_head=&head;
+        },false);producer=&head;
     auto bank=target.participant();auto oldrise=bank.rising;
     bank.rising=[&](bool r){oldrise(r);if(r)actual_acks+=__builtin_popcount(unsigned(vm.wr_ack_v));};
-    auto input_part=head.selected_input_participant(),ret_part=head.selected_return_participant();
-    auto cold_return=head.return_participant();
     bool su_active=true,head_active=false;
+    auto input_part=dsrom_s81_select_native_bf_head_phase(rt,cut,[&](){return head_active;},head.input_participant());
+    auto ret_part=dsrom_s81_select_native_bf_head_phase(rt,cut,[&](){return head_active;},head.return_participant());
+    auto cold_return=head.return_participant();
     auto tail_drive=[&](Vretn& node,uint32_t a,uint32_t b){
         uint32_t row=rank*32320+held->local_row;
         node.a_v=1;node.b_v=1;node.a_t=(row<<13)|2;node.b_t=(row<<13)|258;
@@ -225,12 +239,40 @@ int main(int argc,char** argv) {
             else if(tail_stage==2&&pad2.o_v){if(pad2.o_e)throw std::runtime_error("head pad2 error");tail_drive(join,held->root4096,pad2.o_d);tail_stage=3;}
             else if(tail_stage==3&&join.o_v){
                 if(join.o_e||join.o_t!=(((rank*32320+held->local_row)<<13)|34))throw std::runtime_error("head join native error/tag");
-                write_bits(logit_file,join.o_d);++logits;taken=true;
+#ifdef DSROM_S81_RELEASED_HEAD_LOGIT_PUBLICATION
+            // Capture the actual pulse once; native roots remain owned while
+            // the existing batch waits for the SAME bank's positive VM ACK.
+            held_join_tag=join.o_t;held_join_bits=join.o_d;tail_stage=4;
+#else
+            write_bits(logit_file,join.o_d);++logits;taken=true;
+#endif
             }
         }
+#ifdef DSROM_S81_RELEASED_HEAD_LOGIT_PUBLICATION
+        if(released&&held&&!taken&&tail_stage==4) {
+            if(!head_publication_begun)throw std::runtime_error("head logit before native I5 acceptance");
+            if(dsrom_s81_publish_minimum_head_logit(rt,logit_batch,ID,rank,
+                 held->local_row,held_join_tag,held_join_bits,true)) {
+                write_bits(logit_file,held_join_bits);++logits;taken=true;
+            }
+        }
+        // Exactly NativeBfHeadInput's preedge acceptance predicate. start()
+        // merely arms the input and cannot authorize a publication generation.
+        const bool first_head_go=released&&head_active&&!head_publication_begun&&cut.go&&cut.ready;
+        if(first_head_go&&(!rt.identity||*rt.identity!=ID||cut.i_ph!=0))
+            throw std::runtime_error("first native I5 GO owner/phase mismatch");
+#endif
         bank.rising(released);if(su_active)su.participant.rising(released);
         if(head_active||!released){pair.clk=1;pair.rst_n=released;pair.eval();}
-        input_part.rising(released);ret_part.rising(released);
+        input_part.rising(released);
+#ifdef DSROM_S81_RELEASED_HEAD_LOGIT_PUBLICATION
+        if(first_head_go) {
+            // Only after the selected input has executed that actual edge.
+            if(input_part.fault())throw std::runtime_error("native I5 GO fault");
+            publication.begin(ID,4892);head_publication_begun=true;
+        }
+#endif
+        ret_part.rising(released);
         if(!released){cut.clk=1;cut.rst_n=0;cut.eval();cold_return.rising(false);}
         for(auto* node:tail){node->clk=1;node->rst_n=released;node->eval();}
         bank.falling(released);if(su_active)su.participant.falling(released);
@@ -275,12 +317,21 @@ int main(int argc,char** argv) {
         if(logits&&logits%512==0&&taken)std::cout<<"NATIVE_HEAD_LOGITS rank="<<rank<<" rows="<<logits<<" cycle="<<cycles<<std::endl;
     }
     if(logits!=32320||read_pending||!target.source_span_lease(ID,46464,5120))throw std::runtime_error("head native terminal count/lease");
+#ifdef DSROM_S81_RELEASED_HEAD_LOGIT_PUBLICATION
+    if(!head_publication_begun||logit_batch.pending()||logit_batch.fault()||
+        !publication.complete(ID,4892)||!target.source_span_lease(ID,486848,32320))
+        throw std::runtime_error("head logit terminal lacks actual full publication/lease");
+#endif
     logit_file.close();std::ofstream terminal(output+"/native_rank"+std::to_string(rank)+".json");
     terminal<<"{\"rank\":"<<rank<<",\"input_end\":"<<input_end<<",\"normalization_end\":"<<norm_end
       <<",\"dot_start\":"<<dot_start<<",\"terminal_cycle\":"<<cycles<<",\"logits\":"<<logits
       <<",\"native_vm_accepts\":"<<actual_accepts<<",\"native_vm_acks\":"<<actual_acks
-      <<",\"raw_native_words\":"<<raw_reads<<",\"argmax_bound\":false,\"reference_compared\":false}";
-    released_head=nullptr;munmap(mapped,st.st_size);close(fd);
+      <<",\"raw_native_words\":"<<raw_reads
+#ifdef DSROM_S81_RELEASED_HEAD_LOGIT_PUBLICATION
+      <<",\"logit_publication_acknowledged\":true"
+#endif
+      <<",\"argmax_bound\":false,\"reference_compared\":false}";
+    producer=nullptr;munmap(mapped,st.st_size);close(fd);
     std::cout<<"NATIVE_HEAD_COMPONENT_DONE rank="<<rank<<" logits="<<logits<<" cycles="<<cycles<<std::endl;return 0;
  }catch(const std::exception& e){std::cerr<<"NATIVE_HEAD_COMPONENT_ERROR "<<e.what()<<std::endl;return 1;}
 }

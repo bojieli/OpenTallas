@@ -1,0 +1,13 @@
+images loaded in 6.8 s
+models constructed and preloaded in 11.3 s (tiles/die=1536, stages=1, pos0=255 np0=1)
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 kv_ok=0 drained=1 wall=1s passes=3
+STAGE H0 done cycles=2999 start_cyc=7 end_cyc=3006 me_busy=2434/2434 pos=255 np=1 layer=-1 seq_fault=0 core_fault=0 coll_fault=0 wall=1486s
+MEMSTAT H0 die0 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=70 stall_retire=0 stall_mem=0 tile_edges=2434
+VERIFY_TOKENS die=0 n=1 t0=98951/42098785
+MEMSTAT H0 die1 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=70 stall_retire=0 stall_mem=0 tile_edges=2434
+VERIFY_TOKENS die=1 n=1 t0=98951/42098785
+MEMSTAT H0 die2 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=70 stall_retire=0 stall_mem=0 tile_edges=2434
+VERIFY_TOKENS die=2 n=1 t0=98951/42098785
+MEMSTAT H0 die3 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=70 stall_retire=0 stall_mem=0 tile_edges=2434
+VERIFY_TOKENS die=3 n=1 t0=98951/42098785
+QWEN_ROM_VPRM PASS stages=1 cycles=3006 edges=3006 settle_max=2 wall_s=1486.2 RSS_KiB=3636232 threads=6
