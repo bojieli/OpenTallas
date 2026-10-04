@@ -49,4 +49,16 @@ int main() {
     offers[3]=offers[0];refused=false;
     try{DsromS81C8GroupStep duplicate(offers);}catch(const std::runtime_error&){refused=true;}
     assert(refused);
+    // Old ready/offer alone must not insert a RESULT generation when the
+    // native post-edge context did not actually latch the offered tuple.
+    std::array<PortFixture,4> unlatched{};
+    RuntimeFixture missing;for(auto& p:unlatched)missing.dies.push_back(&p);
+    unsigned false_accepts=0;
+    const std::array<DsromC8SourceOffer,4> valid{{
+        {8,17,9,5,3,13,id},{9,17,9,5,3,14,id},
+        {10,17,9,5,3,15,id},{11,17,9,5,3,16,id}}};
+    DsromS81C8GroupStep checked(valid,[&](const auto&){false_accepts++;});
+    assert(checked.before_edge(missing,restore,drain));
+    refused=false;try{checked.after_edge();}catch(const std::runtime_error&){refused=true;}
+    assert(refused&&checked.fault()&&!false_accepts);
 }
