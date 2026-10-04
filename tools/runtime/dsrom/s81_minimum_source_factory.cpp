@@ -18,6 +18,9 @@
 #endif
 #include <fstream>
 #include <cstdlib>
+#ifdef DSROM_S81_L20_KV_ENCLOSING
+#include "s81_minimum_l20_kv_factory.hpp"
+#endif
 
 namespace {
 using namespace dsrom_s81_minimum;
@@ -533,3 +536,136 @@ DsromS81MinimumSourcePlan dsrom_s81_bind_minimum_source(
     plan.complete=[source](){return source->complete();};
     return plan;
 }
+
+#ifdef DSROM_S81_L20_KV_ENCLOSING
+// Borrow the already constructed native TP4 factory. It owns the descriptor,
+// generation, history and actual transport bindings; this function supplies
+// only the existing caller's literal engine selection and shared-edge clocks.
+void dsrom_s81_join_minimum_l20_kv_source(
+    std::shared_ptr<dsrom_s81_minimum::L20KvFactory> factory,
+    const std::array<DsromS81MinimumRuntime*,4>& ranks,
+    std::array<DsromS81PrefixNativeEngine,4>& su,
+    std::array<DsromS81PrefixNativeEngine,4>& me) {
+    using Engine=DsromS81PrefixNativeEngine;
+    auto valid=[](const Engine& e){return !e.participant.name.empty()&&
+        e.participant.prepare&&e.participant.rising&&e.participant.falling&&
+        e.participant.fault&&e.ready&&e.idle&&e.inputs_ready&&e.drive;};
+    if(!factory)throw std::runtime_error("native L20 KV factory absent");
+    for(unsigned i=0;i<4;++i) {
+        if(!ranks[i]||ranks[i]->identity||ranks[i]->rank!=int(i)||ranks[i]->stage!=37||
+           !valid(su[i])||!valid(me[i])||
+           me[i].participant.name.find("l20-source-selected-ME-rank")==0)
+            throw std::runtime_error("L20 KV enclosing join requires all four cold actual engines");
+        if(i&&ranks[i]->context!=ranks[0]->context)
+            throw std::runtime_error("L20 KV enclosing ranks must share one context");
+    }
+    // One existing ME slot dispatches literal ATT operations; the retained
+    // scorer/weight-ME engine remains the other branch, with its own leases.
+    struct Dispatch {
+        Engine previous,attention;
+        std::vector<DsromS81MinimumParticipant> auxiliaries;
+        std::shared_ptr<dsrom_s81_minimum::L20KvFactory> owner;
+        std::optional<DsromS81PrefixOperation> held;
+        bool selected=false;
+        static bool is_attention(const DsromS81PrefixOperation& op) {
+            const char* sha=op.index==2526?
+                "00bb7b6a8b1a67526169d39c1f5b0954d2dbc600f330a42af48d1c0d7c46bc65":
+                op.index==2534?
+                "6124df21d8de509ccbb8e0f114d2ed9776a4316dd810e92c35c0a07acfb9083a":nullptr;
+            if(!sha)return false;
+            if(op.unit!=1||!op.template_sha256||std::string(op.template_sha256)!=sha)
+                throw std::runtime_error("L20 QK/PV literal identity changed");
+            return true;
+        }
+        Engine& active(){return selected?attention:previous;}
+        bool inputs(const DsromS81PrefixOperation& op) {
+            if(op.unit!=1)throw std::runtime_error("L20 ME dispatch received another ISA unit");
+            const bool next=is_attention(op);
+            if(!held||held->index!=op.index) {
+                if(held) {
+                    if(!active().idle())return false;
+                    active().drive(*held,false);
+                }
+                selected=next;held=op;
+            }else if(held->instruction!=op.instruction||held->unit!=op.unit)
+                throw std::runtime_error("L20 held ME literal changed");
+            return active().inputs_ready(op);
+        }
+        void drive(const DsromS81PrefixOperation& op,bool go) {
+            if(go&&(!held||held->index!=op.index||held->instruction!=op.instruction))
+                throw std::runtime_error("L20 ME GO without actual held operand admission");
+            // Generic prefix withdraws GO with its next op before inputs_ready.
+            // Preserve the old literal during that withdrawal, not new operands.
+            if(held)active().drive(*held,go);
+            else if(go)throw std::runtime_error("L20 ME missing source operation");
+        }
+    };
+    auto participants=factory->participants();
+    const unsigned shared=participants.size()==21?1:0;
+    if(participants.size()!=20+shared || (shared&&participants[0].name!="SIM_ONLY-existing-CKV-TP4-11-142-II2"))
+        throw std::runtime_error("L20 native KV participant census changed");
+    for(unsigned i=0;i<4;++i)for(unsigned j=0;j<5;++j) {
+        const auto& p=participants[shared+5*i+j];
+        if(p.name.empty()||!p.prepare||!p.rising||!p.falling||!p.fault)
+            throw std::runtime_error("L20 native KV participant incomplete");
+        for(const auto& old:ranks[i]->participants)if(old.name==p.name)
+            throw std::runtime_error("L20 KV participant already enrolled");
+    }
+    std::array<Engine,4> next_su,next_me;
+    for(unsigned i=0;i<4;++i) {
+        next_su[i]=factory->bind_su(i,su[i]);
+        auto d=std::make_shared<Dispatch>();d->previous=me[i];
+        d->attention=factory->attention(i);d->owner=factory;
+        if(!valid(d->attention))throw std::runtime_error("actual packed640 attention engine missing");
+        if(i==0&&shared)d->auxiliaries.push_back(std::move(participants[0]));
+        for(unsigned j=0;j<5;++j)d->auxiliaries.push_back(std::move(participants[shared+5*i+j]));
+        // Nest, rather than separately enroll, the five existing participants
+        // so provider OLD snapshots precede endpoint cut prepare on every edge.
+        // The caller enrolls this returned ME slot once with its other engines.
+        next_me[i]={{"l20-source-selected-ME-rank"+std::to_string(i),
+            [d](const auto& result){
+                d->previous.participant.prepare(result);
+                for(auto& p:d->auxiliaries)
+                    if(p.name=="SIM_ONLY-existing-CKV-TP4-11-142-II2")p.prepare(result);
+                d->attention.participant.prepare(result);
+                for(auto& p:d->auxiliaries)
+                    if(p.name!="SIM_ONLY-existing-CKV-TP4-11-142-II2")p.prepare(result);
+            },
+            [d](bool released){
+                d->previous.participant.rising(released);d->attention.participant.rising(released);
+                for(auto& p:d->auxiliaries)p.rising(released);
+            },
+            [d](bool released){
+                d->previous.participant.falling(released);d->attention.participant.falling(released);
+                for(auto& p:d->auxiliaries)p.falling(released);
+            },
+            [d](){
+                if(d->previous.participant.fault()||d->attention.participant.fault())return true;
+                for(auto& p:d->auxiliaries)if(p.fault())return true;
+                return false;
+            }},
+            [d](){return d->held&&d->active().ready();},
+            [d](){return d->active().idle();},
+            [d](const auto& op){return d->inputs(op);},
+            [d](const auto& op,bool go){d->drive(op,go);}};
+    }
+    su=std::move(next_su);me=std::move(next_me);
+
+}
+std::shared_ptr<dsrom_s81_minimum::L20KvFactory> dsrom_s81_join_minimum_l20_kv_source(
+    std::array<dsrom_s81_minimum::L20KvRankBinding,4> bindings,
+    std::function<void(const std::array<dsrom_s81_minimum::L20NativeCkv,4>&)> transport,
+    std::array<DsromS81PrefixNativeEngine,4>& su,
+    std::array<DsromS81PrefixNativeEngine,4>& me) {
+    std::array<DsromS81MinimumRuntime*,4> runtimes{};
+    for(unsigned i=0;i<4;++i)runtimes[i]=bindings[i].runtime;
+    // Missing lifecycle/transport may be selected only by Noether's explicit
+    // SIM_ONLY source opt-in inside the existing factory. Native IO/ACKs and
+    // source-published selected IDs are mandatory in either selection.
+    auto factory=std::make_shared<dsrom_s81_minimum::L20KvFactory>(
+        std::move(bindings),std::move(transport),true);
+    dsrom_s81_join_minimum_l20_kv_source(factory,runtimes,su,me);
+    return factory; // caller uses the actual factory drain for source terminal
+}
+
+#endif
