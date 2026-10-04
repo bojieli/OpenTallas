@@ -1,0 +1,5 @@
+#!/bin/bash
+set -euo pipefail
+source ~/.opentallas-env
+cd /srv/opentallas/repos/russell-qwen-rom-combined-20261003
+exec /srv/opentallas-scratch/admit.sh "${1:?supply justified peak GiB before launch}" -- verilator --cc -O3 -Wno-fatal -Wno-TIMESCALEMOD -Wno-WIDTH --output-split 10000 --output-split-cfuncs 1000 -I/srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc --top-module ot_qwen_rom_combined_die --prefix Vdie --Mdir /srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die -GG=6144 -GNW=18 -GSNW=18 -GQWEN_FULLSHAPE=1 -GME_IDLE_GATE=1 -GD=4 -GSW=64 -GLV=7 -GSCALE_LOCAL=0 -GMEM_EXTRA=1 -GSMIN=7 -GSMAX=11 -GTCUT=7 -GBD=41 -GXVM=1 -GNWS=5 -GTWS=38 -GORD=7 -GREAL_MEM=1 -GENABLE_AR256=1 -GSCALE_BANKS=13 -GCROM_WORDS=1048576 -GHBM_LAYERS=36 -GEMBED_ROM=1 -GFILL_LAT=8 -GNRD=256 -GLKA=512 -GNEAR_HBM=0 /srv/opentallas-scratch/claude/realmem/build_v2/gen/public.vlt -f /srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/source/die_sources.f --hierarchical /srv/opentallas-scratch/claude/realmem/build_v2/gen/hier.vlt

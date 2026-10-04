@@ -1,0 +1,172 @@
+make: Entering directory '/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die'
+make[1]: Entering directory '/srv/opentallas/repos/russell-qwen-rom-combined-20261003'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_fmul__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 9.805 MB sources in 79 modules, into 0.197 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 0.169 s (elab=0.066, cvt=0.016, bld=0.000); cpu 0.167 s on 1 threads; allocated 59.383 MB
+make[1]: Leaving directory '/srv/opentallas/repos/russell-qwen-rom-combined-20261003'
+make[1]: Entering directory '/srv/opentallas/repos/russell-qwen-rom-combined-20261003'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_qadd__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 9.805 MB sources in 79 modules, into 0.303 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 0.236 s (elab=0.064, cvt=0.085, bld=0.000); cpu 0.236 s on 1 threads; allocated 59.383 MB
+make[1]: Leaving directory '/srv/opentallas/repos/russell-qwen-rom-combined-20261003'
+make[1]: Entering directory '/srv/opentallas/repos/russell-qwen-rom-combined-20261003'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_vstream_lane_a__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 9.977 MB sources in 79 modules, into 10.716 MB in 30 C++ files needing 0.015 MB
+- Verilator: Walltime 3.583 s (elab=0.095, cvt=3.201, bld=0.000); cpu 3.582 s on 1 threads; allocated 266.387 MB
+make[1]: Leaving directory '/srv/opentallas/repos/russell-qwen-rom-combined-20261003'
+make[1]: Entering directory '/srv/opentallas/repos/russell-qwen-rom-combined-20261003'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vdie__hierMkArgs.f
+%Warning-SELRANGE: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/qwen_sys/combined/ot_qwen_tp_seq_combined.sv:172:70: Selection index out of range: 65:48 outside 63:0
+                                                                                                                                   : ... note: In instance 'ot_qwen_rom_combined_die.seq'
+  172 |                             ({desc_q[19:18], desc_q[63:48]}) : desc_q[48 +: NW];
+      |                                                                      ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/ot_qwen_w12_matvec.sv:780:29: Replication of more that --replication-limit 8192 is suspect: 98304
+                                                                                                                   : ... note: In instance 'ot_qwen_rom_combined_die.core.u_me.u_top'
+  780 |         assign lfault = {G*W{1'b0}};
+      |                             ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/ot_qwen_me_array_w12.sv:318:66: Replication of more that --replication-limit 8192 is suspect: 786432
+                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_die.core.u_me'
+  318 |         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q({GT*W*8{1'b0}}),
+      |                                                                  ^
+%Warning-WIDTHCONCAT: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/ot_qwen_me_array_w12.sv:320:50: Replication of more that --replication-limit 8192 is suspect: 3145728
+                                                                                                                     : ... note: In instance 'ot_qwen_rom_combined_die.core.u_me'
+  320 |         .kv_re(kv_re), .kv_addr(), .kv_q({GT*W*32{1'b0}}),
+      |                                                  ^
+%Warning-WIDTHCONCAT: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/qwen_sys/combined/ot_qwen_rom_combined_die.sv:151:57: Replication of more that --replication-limit 8192 is suspect: 1572864
+                                                                                                                                       : ... note: In instance 'ot_qwen_rom_combined_die'
+  151 |         .wrom_re(wrom_re),.wrom_addr(),.wrom_q({(G*W*16){1'b0}}),
+      |                                                         ^
+%Warning-CMPCONST: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/ot_hdc_dyn_ttiles.sv:28:71: Comparison is constant due to limited range
+                                                                                                              : ... note: In instance 'ot_qwen_rom_combined_die.core.u_dyn_tiles_split'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                                       ^
+                   ... For warning description see https://verilator.org/warn/CMPCONST?v=5.050
+                   ... Use "/* verilator lint_off CMPCONST */" and lint_on around source to disable this message.
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:213:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk1.h' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  213 |     always @(*) begin
+      |     ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:213:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk1.t' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  213 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:213:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk1.d' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  213 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:213:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk1.w' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  213 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:213:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk1.pp' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  213 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:213:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk1.q' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  213 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk2.s' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  254 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk2.a' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  254 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk2.h' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  254 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk2.t' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  254 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk2.d' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  254 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk2.lm' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  254 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk2.w' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  254 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk2.pp' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  254 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk2.q' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  254 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:313:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk3.ok' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  313 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:313:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.k_rsp_ready' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  313 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:313:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk3.unnamedblk4.p' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  313 |     always @(*) begin
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:313:5: Latch inferred for signal 'ot_qwen_rom_combined_die.u_kv.g_on.kv.unnamedblk3.mj' (not all control paths of combinational always assign a value)
+                                                                                                                       : ... Suggest use of always_latch for intentional latches
+  313 |     always @(*) begin
+      |     ^~~~~~
+%Warning-UNOPTFLAT: /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/nearhbm/ot_qwen_nearhbm_realmem_service.sv:41:55: Signal unoptimizable: Circular combinational logic: 'ot_qwen_rom_combined_die.u_kv.g_on.k_rsp_ready'
+   41 |         reg [NPC-1:0] k_rsp_v,k_rsp_wr;wire [NPC-1:0] k_rsp_ready;
+      |                                                       ^~~~~~~~~~~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/nearhbm/ot_qwen_nearhbm_realmem_service.sv:41:55:      Example path: ot_qwen_rom_combined_die.u_kv.g_on.k_rsp_ready
+                    /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/nearhbm/ot_qwen_nearhbm_realmem_service.sv:69:9:      Example path: ALWAYS
+                    /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/nearhbm/ot_qwen_nearhbm_realmem_service.sv:41:23:      Example path: ot_qwen_rom_combined_die.u_kv.g_on.k_rsp_v
+                    /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:254:5:      Example path: ALWAYS
+                    /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:245:26:      Example path: ot_qwen_rom_combined_die.u_kv.g_on.kv.b_wrack
+                    /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv:313:5:      Example path: ALWAYS
+                    /srv/opentallas/repos/russell-qwen-rom-combined-20261003/rtl/hdc/nearhbm/ot_qwen_nearhbm_realmem_service.sv:41:55:      Example path: ot_qwen_rom_combined_die.u_kv.g_on.k_rsp_ready
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 10.857 MB sources in 80 modules, into 974.202 MB in 2046 C++ files needing 1241.709 MB
+- Verilator: Walltime 332.418 s (elab=2.110, cvt=311.040, bld=0.000); cpu 332.265 s on 1 threads; allocated 16408.422 MB
+make[1]: Leaving directory '/srv/opentallas/repos/russell-qwen-rom-combined-20261003'
+make: Leaving directory '/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 9.805 MB sources in 79 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 338.615 s (elab=0.000, cvt=0.000, bld=0.000); cpu 1.824 s on 1 threads; allocated 448.176 MB
+	Command being timed: "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/compile_die_model.sh 48"
+	User time (seconds): 330.00
+	System time (seconds): 8.44
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:38.69
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 16540260
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5454899
+	Voluntary context switches: 88
+	Involuntary context switches: 873
+	Swaps: 0
+	File system inputs: 8
+	File system outputs: 2027512
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

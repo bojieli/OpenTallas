@@ -1,0 +1,51 @@
+{
+  "kind": "actual_fullshape_combined_verilator_model_generation",
+  "verdict": "PASS",
+  "returncode": 0,
+  "source_commit": "ddd5cd0470707ed143d29b1add0808e148a76446",
+  "combined_top_commit": "f14f04348ef5b135790be5c369aedee7d6ccfcd1",
+  "host": "ot-epyc1tb",
+  "owner": "Russell",
+  "root": "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1",
+  "supervisor_pid": 116195,
+  "verilator_pid": 116412,
+  "terminal": true,
+  "wall_seconds": 338.69,
+  "max_rss_kib": 16540260,
+  "admission_peak_GiB": 48,
+  "admission_reserve_GiB": 150,
+  "initial_failure": {
+    "returncode": 1,
+    "reason": "Missing build/die output directory; failed before elaboration",
+    "log": "model_initial_failure.log"
+  },
+  "generated_header_sha256": {
+    "Vdie.h": "e76e1500b727b4a4e4e2d7d9aa149394686c6ef974f8e1df8379ecaf18efead2",
+    "Vdie___024root.h": "2bf3355f25b9802fe72f0e0612d83f0f11ddf801750bfeba7dc31f163aadcdee"
+  },
+  "die_sources_f_sha256": "607340ee3ae3174f9de1fe269dcd4773af68042fad41f54b13f5e02604b4ef73",
+  "warnings_retained": [
+    "WIDTHCONCAT",
+    "CMPCONST",
+    "LATCH",
+    "UNOPTFLAT"
+  ],
+  "scope": "Verilator hierarchical model generation only; C++ compilation/link/runtime/SSFF pending. No connected context rerun.",
+  "runtime_join_sources": [
+    "9c6031abc",
+    "5a5feeaa"
+  ],
+  "optional_candidates": {
+    "near_hbm": false,
+    "async_collective": false,
+    "DSpark": false,
+    "stream_controller": false,
+    "clock_C": false
+  },
+  "file_sha256": {
+    "compile_die_model.sh": "44929d5b57cd386239b8a8bde1e3da5189ca5cc528869fd4a47156285f35ee83",
+    "model_initial_failure.log": "7e287236c193fc23bd82f273ead71179a77ed62645b9cfa9c8bc8c28bd08333b",
+    "model_r2.log": "efc71410250c3c4411f1df8508bcc16d9283499eb9104ad2ff02b5011667cc33",
+    "sources.json": "ecdf1bb7657d7b8d1f7a28828cafbae21bc812dcd210e4053140cfc5e9ee7d59"
+  }
+}
