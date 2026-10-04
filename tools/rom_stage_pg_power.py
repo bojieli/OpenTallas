@@ -155,7 +155,7 @@ def classify(name: str) -> str:
     for cls, keys in CLASSES:
         if any(k in name for k in keys):
             return cls
-    if name.startswith(("clkbuf", "delaybuf", "clkload")) and name.endswith("_clk"):
+    if name.startswith(("clkbuf", "delaybuf", "clkload")) and ("_clk" in name):
         return "root_clock"
     return "unnamed"
 

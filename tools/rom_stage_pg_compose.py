@@ -40,6 +40,7 @@ SW_AREA_UM2 = 0.432 * 0.27
 SW_DROP_V = 0.010                    # W18 ring budget (10 mV), tools/uarch_model.py SWITCH_RING
 PAIR_BUSY_W = 0.2296                 # W18 measured busy pair (toggle 0.5), tools/uarch_model.py PAIR_W: switch sizing
 ELEM_AREA_UM2 = 510.84 * 126.9
+PAIRS_PER_DIE = 2417                 # S81 NP (results/uarch/dsrom_c_recheck_20261004 area.pairs)
 
 
 def inv4_off_leak_w() -> float:
@@ -114,6 +115,13 @@ def verdict(a) -> int:
     p_cg = st["cg_idle"]["total"]
     p_pg = st["pg_idle"]["total"] - leak_dom + sw_leak     # the off domain leaks only through its headers
     resid = p_pg / p_cg
+    # sensitivity (ASSUMED sharing): one scheduler + power controller per die region of PAIRS_PER_DIE elements instead
+    # of one per element; its measured class power (flops, ICG, logic) is divided among them.  The root clock tree
+    # stays charged per element (conservative: in a die it is the shared AO spine)
+    cls = json.loads((d / "power_by_class.json").read_text())
+    ctl = cls["pg_idle"]["ao_sched_ctrl"]["total_w"]
+    p_pg_shared = p_pg - ctl * (1 - 1 / PAIRS_PER_DIE)
+    resid_shared = p_pg_shared / p_cg
     # wake: measured RTL sequence (req_on -> ready) with the bench's ring model; the ring's charge time bounded
     # by a rush current no larger than the busy current
     wl = next(x for r in ex["runs"] if r["mutant"] is None for x in r["tail"] if x.startswith("WAKE"))
@@ -144,6 +152,9 @@ def verdict(a) -> int:
     base_P, _, _ = E.power(R)
     E.PG_RES = res_eff
     meas_P, _, _ = E.power(R)
+    res_eff_sh = (logic_w * resid_shared + E.SERDES_W * 0.10) / E.LAYER_DIE_W
+    E.PG_RES = res_eff_sh
+    sh_P, _, _ = E.power(R)
     E.PG_RES = 0.10
     keys = ("ar_b1_icg", "ar_b1_pg", "mtp_as_built_b1_pg", "mtp_l1_fused_b1_pg", "ar_sat_pg")
     reprice = {c: {k: dict(assumed_10pct=dict(J_per_token=base_P[c]["rom"][k]["J_per_token"],
@@ -151,7 +162,10 @@ def verdict(a) -> int:
                                                static_w=base_P[c]["rom"][k]["static_w"]),
                            measured=dict(J_per_token=meas_P[c]["rom"][k]["J_per_token"],
                                          tok_s_per_kW=meas_P[c]["rom"][k]["tok_s_per_kW"],
-                                         static_w=meas_P[c]["rom"][k]["static_w"]))
+                                         static_w=meas_P[c]["rom"][k]["static_w"]),
+                           measured_controller_shared=dict(J_per_token=sh_P[c]["rom"][k]["J_per_token"],
+                                                           tok_s_per_kW=sh_P[c]["rom"][k]["tok_s_per_kW"],
+                                                           static_w=sh_P[c]["rom"][k]["static_w"]))
                    for k in keys} for c in E.CTX}
     # absolute cross-check: the ledger's per-pair ICG-idle logic (10% clock residual + leakage) vs this element
     import uarch_model as u
@@ -166,7 +180,9 @@ def verdict(a) -> int:
                      leakage_element_route=leak_full, leakage_ao_route=leak_ao, leakage_domain=leak_dom,
                      header_cells=n_sw, header_area_um2=round(n_sw * SW_AREA_UM2, 1),
                      header_area_frac=round(n_sw * SW_AREA_UM2 / ELEM_AREA_UM2, 4),
-                     header_off_leak_w=sw_leak, pg_idle=p_pg, cg_idle_total=p_cg, residual=round(resid, 5)),
+                     header_off_leak_w=sw_leak, pg_idle=p_pg, cg_idle_total=p_cg, residual=round(resid, 5),
+                     by_class=cls, sched_ctrl_pg_idle_w=ctl, pg_idle_controller_shared=p_pg_shared,
+                     residual_controller_shared=round(resid_shared, 5)),
         wake=dict(rtl_req_to_ready_cycles_max=wmax, rtl_restore_cycles_max=rmax, domain_cap_pf=round(c_f * 1e12, 1),
                   rush_limit_a=round(i_busy, 4), charge_ns=round(t_charge_ns, 3), wake_cycles=wake_cycles,
                   wake_ns=round(wake_cycles * CLK_NS, 2), wake_energy_nj=round(e_wake * 1e9, 4),
@@ -175,7 +191,8 @@ def verdict(a) -> int:
         ledger_cross_check=dict(ledger_pair_icg_idle_w=round(0.10 * pp["clock"] + pp["leak"], 6),
                                 measured_pair_cg_idle_w=p_cg, measured_pair_pg_idle_w=p_pg),
         reprice=dict(logic_residual_measured=round(resid, 5), serdes_residual_assumed=0.10,
-                     effective_PG_RES=round(res_eff, 5), rows=reprice),
+                     effective_PG_RES=round(res_eff, 5), effective_PG_RES_controller_shared=round(res_eff_sh, 5),
+                     rows=reprice),
         assumptions=[
             "header switch = ASAP7 INVx4 pull-up (W18 SWITCH_CELL, R_on 912.5 ohm; no characterised ASAP7 switch cell); "
             "off leakage = Liberty INVx4 (A=1) leakage; ring sized for 10 mV at the W18 busy-pair current",
