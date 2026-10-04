@@ -9,7 +9,8 @@ output [4095:0] decoded,output accepted,output invalid_at_load);
 localparam AW=24,NW=18,PAW=12,W=16,IL=1,G=6144,HID=4096,HD=128,HALF=64,
 INSTR_BITS=1024,KV_HBM=1,W_HBM=1,KV_VEC_WRITE_BRIDGE=1,QWEN_FULLSHAPE=1;
 `include "ot_hdc_isa.svh"
-wire me_en=1,kv_ok=1,kvd_v=0,w_ok=1,wd_v=0,emb_ok=1,kv_write_drained=1;
+assign me_en=1;
+wire kv_ok=1,kvd_v=0,w_ok=1,wd_v=0,emb_ok=1,kv_write_drained=1;
 wire [15:0] kv_we=0;
 wire kv_write_flush;
 wire [17:0] fin_idx=5; wire [31:0] fin_val=32'h3f800000;
