@@ -17,6 +17,7 @@
 // Latency: input -> chunk sum 15 cycles (block-dot P0..P8 + adder + output).
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_bd_col #(
+    parameter integer M1   = 10,        // ot_hbm_accel_bterm2 P2/P3 CSA cut (10: 3 + 5 levels; 7: original 4 + 4)
     parameter integer LB   = 2,         // defaults = the hardened macro (V4.1 SM: 2 lanes, 16-bit tag)
     parameter integer IL   = 8,
     parameter integer TAGW = 16
@@ -48,7 +49,7 @@ module ot_hbm_accel_bd_col #(
     wire [LB*32-1:0] term;
     genvar l;
     generate for (l = 0; l < LB; l = l + 1) begin : g_bt
-        ot_hbm_accel_bterm2 #(.TW(1)) u_bt (.clk(clk), .rst_n(rst_n), .v(v), .fp4(fp4),
+        ot_hbm_accel_bterm2 #(.TW(1), .M1(M1)) u_bt (.clk(clk), .rst_n(rst_n), .v(v), .fp4(fp4),
             .xq(xq[256*l +: 256]), .xe(xe[10*l +: 10]), .wq(wq[256*l +: 256]), .we(we[10*l +: 10]),
             .tag(1'b0), .ov(tv_l[l]), .y(term[32*l +: 32]), .f(tf_l[l]), .otag());
     end endgenerate
@@ -125,7 +126,9 @@ endmodule
 // increment as a ripple of ORs).  Arithmetic bit-identical to ot_v41_bterm; LATENCY = 11 (was 9).
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_bterm2 #(
-    parameter integer TW = 8
+    parameter integer TW = 8,
+    parameter integer M1 = 7        // P2's CSA output count: 7 = ot_v41_bterm2's cut (32 -> 7 | 7 -> 2);
+                                    // 10 moves one 3:2 level from P2 (behind the term shift) to P3
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -203,11 +206,11 @@ module ot_hbm_accel_bterm2 #(
         for (i = 0; i < 32; i = i + 1)
             terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
     end
-    wire [7*W-1:0] c7;
-    ot_v41_csa #(.N(32), .M(7), .W(W)) u_csa1 (.d(terms), .q(c7));
+    wire [M1*W-1:0] c7;
+    ot_v41_csa #(.N(32), .M(M1), .W(W)) u_csa1 (.d(terms), .q(c7));
     reg               p2_v, p2_first, p2_last, p2_nan;
     reg signed [10:0] p2_es;
-    reg [7*W-1:0]     p2_c;
+    reg [M1*W-1:0]    p2_c;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p2_v <= 1'b0;
         else p2_v <= p1_v;
@@ -219,7 +222,7 @@ module ot_hbm_accel_bterm2 #(
 
     // -- P3: CSA 7 -> 2 ------------------------------------------------------------------------
     wire [2*W-1:0] c2;
-    ot_v41_csa #(.N(7), .M(2), .W(W)) u_csa2 (.d(p2_c), .q(c2));
+    ot_v41_csa #(.N(M1), .M(2), .W(W)) u_csa2 (.d(p2_c), .q(c2));
     reg               p3_v, p3_first, p3_last, p3_nan;
     reg signed [10:0] p3_es;
     reg [W-1:0]       p3_a, p3_b;
