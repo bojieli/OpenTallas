@@ -23,6 +23,7 @@ Subcommands:
             the token's own row (the golden shard's win<L>), packed FP8 + UE8M0 (round trip asserted bit-exact),
             as the stack-0 sector image and the expected packed rows; the real 1M candidate lists for KG.
   run       build the vehicle (Verilator) per configuration and run the cases (refresh phases) -> runs.json
+  emit      emit the patched die, full source list and opt-in parameters without building or running
   bind      patch + lint the S81 die at WINDOW_STREAM_LA = 0 / 1 (and IDX_KGATHER_PORT) -> bind.json
   record    runs.json (+ screen.json, bind.json) -> results/rtl/dsrom_s81_window_bind_20261004/window_load.json
 """
@@ -381,6 +382,57 @@ def install_die(text: str) -> str:
     return t
 
 
+def cmd_emit(a):
+    """Materialize the existing source hookup for the caller's sole build.
+
+    Selects no operands, model workers or expected output. Full-die source
+    emission is not a simulation, timing or physical qualification.
+    """
+    out = a.out.resolve()
+    out.mkdir(parents=True, exist_ok=False)
+    patched = out / "ot_chip_v41x_die_owner_safe_c8.sv"
+    patched.write_text(install_die((ROOT / DIE).read_text()))
+    base = json.loads((ROOT / "rtl/dsrom_sys/s81_capture_parent/selection.json").read_text())
+    wrapper_path = "rtl/dsrom_sys/s81_capture_parent/ot_v41_rt_die_l20_c8.sv"
+    wrapper = (ROOT / wrapper_path).read_text()
+    wrapper = _one(wrapper, "    parameter integer WINDOW_REFILL_CREDITS = 1,\n",
+                   DIE_PARAMS + "    parameter integer WINDOW_REFILL_CREDITS = 1,\n")
+    # Real wide-client ports pass through the real runtime wrapper. No dummy
+    # client or second backend: the caller owns these requests/responses.
+    wrapper = _one(wrapper, "    input wire [ROM_R*19-1:0] capture_root_rows,\n",
+                   KGW_PORTS.replace("K_HAW", "30") +
+                   "    input wire [ROM_R*19-1:0] capture_root_rows,\n")
+    wrapper = _one(wrapper, ".WINDOW_REFILL_CREDITS(WINDOW_REFILL_CREDITS)",
+                   ".WINDOW_STREAM_LA(WINDOW_STREAM_LA),.IDX_KGATHER_PORT(IDX_KGATHER_PORT)," +
+                   ".WINDOW_REFILL_CREDITS(WINDOW_REFILL_CREDITS)")
+    names = ("req_v", "req_rdy", "req_addr", "req_len", "req_tag",
+             "rsp_v", "rsp_rdy", "rsp_tag", "rsp_beat", "rsp_data")
+    wrapper = _one(wrapper, "        .capture_root_rows(capture_root_rows),",
+                   "        " + ",".join(f".kgw_{n}(kgw_{n})" for n in names) + ",\n" +
+                   "        .capture_root_rows(capture_root_rows),")
+    wrapper_out = out / "ot_v41_rt_die_l20_c8.sv"
+    wrapper_out.write_text(wrapper)
+    original = [s.strip() for s in (ROOT / base["sources_file"]).read_text().splitlines() if s.strip()]
+    sources = [str(patched) if s == DIE else (str(wrapper_out) if s == wrapper_path else str(ROOT / s))
+               for s in original]
+    sources = list(dict.fromkeys(sources + [str(ROOT / s) for s in NEW_RTL +
+                                           ["rtl/chip/ot_dsrom_window_stream_la.sv"]]))
+    for source in sources:
+        if not Path(source).is_file():
+            raise ValueError("missing actual source: " + source)
+    (out / "sources.f").write_text("\n".join(sources) + "\n")
+    params = dict(base["parameters"], WINDOW_STREAM_LA=1, IDX_KGATHER_PORT=a.kgather)
+    includes = [str(ROOT / "rtl/hdc/v41"), str(ROOT / "rtl/hdc/v41x"),
+                str(ROOT / "rtl/dsrom_sys/s81_capture_parent")]
+    selection = dict(top=base["top"], parameters=params, sources_file=str(out / "sources.f"),
+                     include_dirs=includes, source_sha256={s: sha(Path(s)) for s in sources},
+                     installer_sha256=sha(Path(__file__)),
+                     scope="source hookup only; existing caller owns operands, shared clocks and run",
+                     native_I55_selected=False, physical_qualified=False)
+    (out / "selection.json").write_text(json.dumps(selection, indent=1) + "\n")
+    print(str(out / "selection.json"))
+
+
 def cmd_bind(a):
     """Patch the S81 die and lint the S81 source set with it at WINDOW_STREAM_LA / IDX_KGATHER_PORT = 0/0, 1/0, 1/1."""
     out = a.out.resolve()
@@ -397,7 +449,7 @@ def cmd_bind(a):
         params = dict(sel["parameters"])
         cmd = [a.verilator, "--lint-only", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-PINMISSING",
                "-Wno-UNUSED", "-Wno-CASEINCOMPLETE", "-Wno-IMPLICIT", "--top-module", "ot_chip_v41x_die_owner_safe_c8",
-               "-I" + str(ROOT / "rtl/hdc/v41"), "-I" + str(ROOT / "rtl/hdc/v41x"), f"-GFULL_SHAPE={a.full_shape}", "-GWINDOW_HBM_ATTENTION=1", f"-GCKV_SELECTED={a.full_shape}",
+               "-I" + str(ROOT / "rtl/hdc/v41"), "-I" + str(ROOT / "rtl/hdc/v41x"), "-I" + str(ROOT / "rtl/dsrom_sys/s81_capture_parent"), f"-GFULL_SHAPE={a.full_shape}", "-GWINDOW_HBM_ATTENTION=1", f"-GCKV_SELECTED={a.full_shape}",
                f"-GWINDOW_REFILL_OWNER_SAFE={params.get('WINDOW_REFILL_OWNER_SAFE', 1)}",
                f"-GWINDOW_REFILL_CREDITS={params.get('WINDOW_REFILL_CREDITS', 8)}",
                f"-GWINDOW_STREAM_LA={la}", f"-GIDX_KGATHER_PORT={kg}", "-GX_IDX=2", "-GIDX_RING=1",
@@ -511,6 +563,9 @@ def main():
     r.add_argument("--jobs", type=int, default=16)
     r.add_argument("--only", default="")
     r.add_argument("--verilator", default="verilator")
+    e = sub.add_parser("emit")
+    e.add_argument("--out", type=Path, required=True)
+    e.add_argument("--kgather", type=int, choices=(0, 1), default=0)
     b = sub.add_parser("bind")
     b.add_argument("--out", type=Path, required=True)
     b.add_argument("--verilator", default="verilator")
@@ -521,7 +576,7 @@ def main():
     c.add_argument("--screen", default="")
     c.add_argument("--out", default=str(REC / "window_load.json"))
     a = ap.parse_args()
-    dict(vectors=cmd_vectors, run=cmd_run, bind=cmd_bind, record=cmd_record)[a.cmd](a)
+    dict(vectors=cmd_vectors, run=cmd_run, emit=cmd_emit, bind=cmd_bind, record=cmd_record)[a.cmd](a)
 
 
 if __name__ == "__main__":

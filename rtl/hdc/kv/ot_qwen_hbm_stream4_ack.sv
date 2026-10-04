@@ -29,6 +29,7 @@ module ot_qwen_hbm_stream4_ack #(
     parameter integer TAGW      = 9,
     parameter integer CRED      = 32,
     parameter integer PHASE     = 0,
+    parameter integer PULLIN    = 0,           // controller refresh pull-in (ot_hbm_r14_stream_pc PULLIN)
     parameter integer WQ        = 4,
     parameter integer WBUF      = 16,          // power of two
     parameter integer CORE_FS   = 833333,      // core clock period (fs): 1.2 GHz
@@ -104,7 +105,7 @@ module ot_qwen_hbm_stream4_ack #(
     reg  [NPC*3-1:0] cred_ret;
     reg  [NPC-1:0] wr_v_q; reg [NPC*5-1:0] wr_bank_q, wr_col_q;
     for (genvar sk = 0; sk < NSTK; sk = sk + 1) begin : stk
-        ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(1), .CRED(CRED), .PHASE(PHASE), .WR_EN(1), .WQ(WQ)) u_ctl (
+        ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(1), .CRED(CRED), .PHASE(PHASE), .WR_EN(1), .WQ(WQ), .PULLIN(PULLIN)) u_ctl (
             .clk(hclk), .rst_n(rst_n), .desc_v(desc_v_q && desc_r), .desc_r(desc_rk[sk]), .desc_row(dq_row), .desc_n(dq_n),
             .go(go_q), .next_posted(1'b0), .row_v(row_v[sk*32 +: 32]), .row_op(row_op[sk*96 +: 96]),
             .row_bank(row_bank[sk*160 +: 160]), .row_row(row_row[sk*608 +: 608]),
@@ -196,6 +197,7 @@ module ot_qwen_hbm_stream4_ack #(
     longint now;
     bit     b_open [0:NPC-1][0:31]; int b_row [0:NPC-1][0:31];
     longint b_act [0:NPC-1][0:31], b_pre [0:NPC-1][0:31], b_rd [0:NPC-1][0:31], b_wr [0:NPC-1][0:31], b_ref_end [0:NPC-1][0:31];
+    longint p_ref0 [0:NPC-1], p_nref [0:NPC-1];   // PULLIN: schedule origin, REFpb count
     longint p_last_act [0:NPC-1], p_last_rd [0:NPC-1], p_last_wr [0:NPC-1], p_last_col [0:NPC-1], p_last_ref [0:NPC-1], p_last_refpb_any [0:NPC-1];
     int     p_wr_bg [0:NPC-1];
     longint p_act_bg [0:NPC-1][0:3], p_col_bg [0:NPC-1][0:3], p_faw [0:NPC-1][0:3];
@@ -231,6 +233,7 @@ module ot_qwen_hbm_stream4_ack #(
                     automatic int P = 118;                                       // REFpb period (cycles), as the RTL
                     automatic int base = (PHASE + ((q % 32) * P) / 32) % P;
                     p_last_ref[q] = longint'(base + ((base + P + (q % 32)) % 2)) * CYC;
+                    p_ref0[q] = p_last_ref[q]; p_nref[q] = 0;
                 end
                 for (gg = 0; gg < 4; gg = gg + 1) begin p_act_bg[q][gg] = -1000000; p_col_bg[q][gg] = -1000000; p_faw[q][gg] = -1000000; end
                 for (b = 0; b < 32; b = b + 1) begin
@@ -278,6 +281,7 @@ module ot_qwen_hbm_stream4_ack #(
                         end
                         6: begin // REFpb
                             n_ref++;
+                            if (trace) $display("HBMTRACE REF h=%0d pc=%0d bank=%0d", hcyc, q, bk);
                             if (b_open[q][bk]) v("REFpb to open bank", q, bk);
                             if (now < b_pre[q][bk] + RP) v("tRP (REFpb)", q, bk);
                             if (now < b_act[q][bk] + RAS + RP) v("tRC (REFpb)", q, bk);
@@ -286,14 +290,24 @@ module ot_qwen_hbm_stream4_ack #(
                             if (now < p_last_refpb_any[q] + RREFD) v("tRREFD (REFpb after REFpb)", q, bk);
                             if (p_round[q][bk]) v("REFpb bank twice in one round", q, bk);
                             p_round[q][bk] = 1; if (&p_round[q]) p_round[q] = 0;
-                            if (now - p_last_ref[q] > REFI / 32) v("REFpb late", q, bk);
-                            p_last_ref[q] = now; p_last_refpb_any[q] = now;
+                            if (PULLIN == 0) begin
+                                if (now - p_last_ref[q] > REFI / 32) v("REFpb late", q, bk);
+                                p_last_ref[q] = now;
+                            end else begin
+                                //: pull-in: the k-th REFpb is due by origin + k * tREFI/32 and may come at most PULLIN
+                                //: controller periods (118 cycles) before the controller's own schedule
+                                p_nref[q]++;
+                                if (now > p_ref0[q] + p_nref[q] * (REFI / 32)) v("REFpb late", q, bk);
+                                if (now < p_ref0[q] + (p_nref[q] - PULLIN) * 118 * CYC - 2 * CYC) v("REFpb pulled in too far", q, bk);
+                            end
+                            p_last_refpb_any[q] = now;
                             b_ref_end[q][bk] = now + RFCPB;
                         end
                         default: v("row op not used by this controller", q, bk);
                     endcase
                 end
-                if (now - p_last_ref[q] > REFI / 32) begin v("refresh overdue", q, 0); p_last_ref[q] = now; end
+                if (PULLIN == 0 && now - p_last_ref[q] > REFI / 32) begin v("refresh overdue", q, 0); p_last_ref[q] = now; end
+                if (PULLIN != 0 && now > p_ref0[q] + (p_nref[q] + 1) * (REFI / 32)) begin v("refresh overdue", q, 0); p_nref[q]++; end
                 if (col_v[q]) begin
                     automatic int bk = col_bank[q*5 +: 5], cl = col_col[q*5 +: 5], g = bk & 3;
                     automatic logic [16:0] ls = p2l(q, 5'(bk), 5'(cl));
