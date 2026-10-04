@@ -54,7 +54,8 @@ def fixture(kind, K, positions, round_input=True, mode=1, amax=False):
     dyn[P.I.DYN_VWRITE]=16; f['me_d_xbase']=P.I.DYN_VWRITE
     if kind=='PV':
         f.update(me_k=0, me_d_k=P.I.DYN_T);dyn[P.I.DYN_T]=K
-    vm_size=16384+8*max(positions,width,K)
+    # VM output homes are padded to complete W-lane position words.
+    vm_size=16384+8*max(((positions+P.W-1)//P.W)*P.W,width,K)
     kv_size=(f['me_wbase']+dyn[f['me_d_wbase']])*P.W + (2*((positions+P.W-1)//P.W)*max(1,K)*P.W if kind=='QK' else 2*max(1,K)*width)
     rng=np.random.default_rng(47+K+positions)
     vm=rng.standard_normal(vm_size).astype(np.float32)
