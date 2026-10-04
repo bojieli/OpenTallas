@@ -27,12 +27,7 @@
 // `issued` counts handshaken sectors, `acked` counts posted-write ACKs returned (ack_n a cycle).  fence_ok =
 // nothing pending and every issued write ACKed: the visibility fence the next token's reads of a written region
 // wait for.  b / 96 = ((b >> 5) * 2731) >> 13 (exact for b >> 5 < 4096, i.e. any 20-bit position).
-// r1 (2026-10-04, 1.2 GHz closure; cycle-identical to r0 sha256 baeca01c...): the key shadow is one 4352-bit word
-// per slot (8 keys x 544 bits; key n of the block is bits 544n, so the merge is a chunk write) instead of a
-// byte array (Yosys 0.68 asserts on r0's two-dimensional array); the emitting key block is copied into `dat` at
-// S_MAP, so every emitted sector is dat[256 * idx] with idx a registered counter (t, or the key's sector
-// within its block); the sector address S = s0 + t is a registered counter.
-module ot_hbm_accel_dskv_wb #(
+module ot_hbm_accel_dskv_wb_r0_ref #(
   parameter integer ENABLE = 0,
   parameter integer STACK = 0,
   parameter integer WIN_ROW0 = 2000, parameter integer CKV_ROW0 = 3000, parameter integer KEY_ROW0 = 4000,
@@ -57,21 +52,26 @@ module ot_hbm_accel_dskv_wb #(
     localparam [1:0] S_IDLE = 0, S_MAP = 1, S_EMIT = 2;
     reg [1:0] st;
     reg [1:0] kind; reg [5:0] slot; reg r2; reg [4351:0] dat;
-    reg [4351:0] shadow [0:7];
+    reg [7:0] shadow [0:7][0:543];
     reg [19:0] n; reg [16:0] b; reg [13:0] k; reg own;
     reg [20:0] s0;            // first die-local sector (window: PC index with j = t)
     reg [4:0] ns, t;          // sectors in this row, current
     reg [16:0] kb_s;          // key: first sector of k's block (17 (k >> 3))
-    reg [20:0] sr;            // r1: s0 + t (registered)
-    reg [4:0]  idx;           // r1: sector of dat to emit (t; for a key, the sector within its block)
     reg [15:0] iss, ack;
     // ---- address map of sector t (combinational from registered state) ----
-    wire [20:0] S = (kind == 2'd0) ? 21'(pos[6:0]) : sr;
+    wire [20:0] S = (kind == 2'd0) ? 21'(pos[6:0]) : s0 + 21'(t);
     wire [6:0]  pcg = S[6:0];
     wire [13:0] jj = (kind == 2'd0) ? 14'(t) : 14'(S >> 7);
     wire [18:0] rbase = (kind == 2'd0) ? 19'(WIN_ROW0) : (kind == 2'd1) ? 19'(CKV_ROW0) : 19'(KEY_ROW0);
     wire [18:0] wrow_a = rbase + 19'(slot) * 19'(SLOT_ROWS) + 19'(jj >> 10);
-    wire [255:0] sdat = dat[256 * idx +: 256];
+    wire [4:0]  ksec = 5'(S - 21'(kb_s));           // key: sector within the block (0..16)
+    reg [255:0] sdat;
+    always @* begin
+      sdat = 0;
+      if (kind == 2'd2) begin
+        for (integer y = 0; y < 32; y = y + 1) sdat[8*y +: 8] = shadow[slot[2:0]][32 * ksec + y];
+      end else sdat = dat[256 * t +: 256];
+    end
     wire on_stack = (pcg[6:5] == 2'(STACK));
     wire emit = (st == S_EMIT) && on_stack;
     assign wq_v = emit; assign wq_pc = pcg[4:0]; assign wq_bank = {jj[9:7], jj[1:0]}; assign wq_row = wrow_a;
@@ -89,33 +89,30 @@ module ot_hbm_accel_dskv_wb #(
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin
         st <= S_IDLE; kind <= 0; slot <= 0; r2 <= 0; dat <= 0; n <= 0; b <= 0; k <= 0; own <= 0; s0 <= 0;
-        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; sr <= 0; idx <= 0;
+        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0;
       end else begin
         ack <= ack + 16'(ack_n);
         if (wq_v && wq_r) iss <= iss + 1'b1;
         case (st)
           S_IDLE: begin
-            if (sh_v) shadow[sh_slot] <= sh_data;
+            if (sh_v) for (integer y = 0; y < 544; y = y + 1) shadow[sh_slot][y] <= sh_data[8*y +: 8];
             else if (row_v) begin
               kind <= row_kind; slot <= row_slot; r2 <= row_r2; dat <= row_data;
               n <= n_in; b <= b_in; k <= k_in; own <= (own_in[6:0] == die);
-              if (row_kind == 2'd2)          // merge the new key into the open block's shadow (chunk n_in[2:0])
-                for (integer c = 0; c < 8; c = c + 1)
-                  if (n_in[2:0] == 3'(c)) shadow[row_slot[2:0]][544*c +: 544] <= row_data[543:0];
+              if (row_kind == 2'd2)          // merge the new key into the open block's shadow
+                for (integer y = 0; y < 68; y = y + 1)
+                  shadow[row_slot[2:0]][68 * n_in[2:0] + y] <= row_data[8*y +: 8];
               st <= S_MAP;
             end
           end
           S_MAP: begin
             t <= 0;
             kb_s <= 17'(k >> 3) * 17'd17;
-            if (kind == 2'd2) dat <= shadow[slot[2:0]];
-            // idx: t (window, compressed row); for a key the sector within its block, (68 k >> 5) - 17 (k >> 3)
-            idx <= (kind == 2'd2) ? 5'(((21'(k) * 21'd68) >> 5) - 21'(17'(k >> 3) * 17'd17)) : 5'd0;
             case (kind)
-              2'd0: begin s0 <= 0; sr <= 0; ns <= 5'd17; st <= S_EMIT; end
-              2'd1: begin s0 <= 21'(k) * 21'd9; sr <= 21'(k) * 21'd9; ns <= 5'd9; st <= own ? S_EMIT : S_IDLE; end
+              2'd0: begin s0 <= 0; ns <= 5'd17; st <= S_EMIT; end
+              2'd1: begin s0 <= 21'(k) * 21'd9; ns <= 5'd9; st <= own ? S_EMIT : S_IDLE; end
               default: begin
-                s0 <= (21'(k) * 21'd68) >> 5; sr <= (21'(k) * 21'd68) >> 5;
+                s0 <= (21'(k) * 21'd68) >> 5;
                 ns <= 5'((((21'(k) * 21'd68) + 21'd67) >> 5) - ((21'(k) * 21'd68) >> 5) + 21'd1);
                 st <= own ? S_EMIT : S_IDLE;
               end
@@ -124,7 +121,7 @@ module ot_hbm_accel_dskv_wb #(
           default: begin                       // S_EMIT: one sector a cycle (off-stack sectors skip)
             if (!on_stack || wq_r) begin
               if (t == ns - 5'd1) st <= S_IDLE;
-              t <= t + 1'b1; sr <= sr + 1'b1; idx <= idx + 1'b1;
+              t <= t + 1'b1;
             end
           end
         endcase

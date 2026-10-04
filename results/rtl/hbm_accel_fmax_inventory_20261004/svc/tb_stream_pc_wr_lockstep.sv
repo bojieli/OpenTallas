@@ -1,0 +1,59 @@
+`timescale 1ps/1fs
+// Lockstep equivalence bench, WR_EN = 1: the r8w stream PC (main 7aa45755, renamed copy
+// ot_hbm_r14_stream_pc_r8w_ref) vs the edited ot_hbm_r14_stream_pc, same random inputs (descriptors,
+// grants, credits, go, next_posted AND posted writes), every output compared on every cycle.
+// Usage: +SEED=n +CYC=n; -GREFM=0/1 -GPCI=0/1 -GWQN=4 -GWP=<write probability, 1/WP per cycle>.
+module tb_stream_pc_wr_lockstep;
+  parameter integer REFM = 1, PCI = 0, PH = 0, WQN = 4, WP = 3;
+  reg clk = 0, rst_n = 0;
+  always #417 clk = ~clk;
+  reg desc_v, go, next_posted, row_gnt, wr_v; reg [18:0] desc_row; reg [10:0] desc_n; reg [2:0] cred_ret;
+  reg [4:0] wr_bank, wr_col;
+  wire [49:0] oa, ob;
+  ot_hbm_r14_stream_pc_r8w_ref #(.ENABLE(1),.REF_MODE(REFM),.PC(PCI),.REF_PHASE(PH),.WR_EN(1),.WQ(WQN)) a(.clk(clk),.rst_n(rst_n),
+    .desc_v(desc_v),.desc_r(oa[0]),.desc_row(desc_row),.desc_n(desc_n),.go(go),.next_posted(next_posted),
+    .row_v(oa[1]),.row_prio(oa[2]),.row_gnt(row_gnt),.row_op(oa[5:3]),.row_bank(oa[10:6]),.row_row(oa[29:11]),
+    .col_v(oa[30]),.col_bank(oa[35:31]),.col_col(oa[40:36]),.cred_ret(cred_ret),.busy(oa[41]),.ref_fault(oa[42]),
+    .wr_v(wr_v),.wr_bank(wr_bank),.wr_col(wr_col),.wr_r(oa[43]),.col_we(oa[44]));
+  ot_hbm_r14_stream_pc #(.ENABLE(1),.REF_MODE(REFM),.PC(PCI),.REF_PHASE(PH),.WR_EN(1),.WQ(WQN)) b(.clk(clk),.rst_n(rst_n),
+    .desc_v(desc_v),.desc_r(ob[0]),.desc_row(desc_row),.desc_n(desc_n),.go(go),.next_posted(next_posted),
+    .row_v(ob[1]),.row_prio(ob[2]),.row_gnt(row_gnt),.row_op(ob[5:3]),.row_bank(ob[10:6]),.row_row(ob[29:11]),
+    .col_v(ob[30]),.col_bank(ob[35:31]),.col_col(ob[40:36]),.cred_ret(cred_ret),.busy(ob[41]),.ref_fault(ob[42]),
+    .wr_v(wr_v),.wr_bank(wr_bank),.wr_col(wr_col),.wr_r(ob[43]),.col_we(ob[44]));
+  assign oa[49:45] = 0; assign ob[49:45] = 0;
+  reg pbusy = 0;
+  integer seed, seed0, cyc, i, mism = 0, acts = 0, wacts = 0, rds = 0, wrs = 0, refs = 0, descs = 0, faults = 0, pushes = 0;
+  initial begin
+    if (!$value$plusargs("SEED=%d", seed)) seed = 1; seed0 = seed;
+    if (!$value$plusargs("CYC=%d", cyc)) cyc = 200000;
+    desc_v = 0; go = 0; next_posted = 0; row_gnt = 0; desc_row = 0; desc_n = 0; cred_ret = 0;
+    wr_v = 0; wr_bank = 0; wr_col = 0;
+    repeat (3) @(posedge clk); #10 rst_n = 1;
+    for (i = 0; i < cyc; i = i + 1) begin
+      @(negedge clk);
+      if (oa !== ob) begin mism = mism + 1; if (mism < 10) $display("MISMATCH cyc=%0d a=%h b=%h", i, oa, ob); end
+      if (oa[1] && row_gnt && oa[5:3] == 1) acts = acts + 1;
+      if (oa[1] && row_gnt && oa[5:3] == 6) refs = refs + 1;
+      if (oa[30] && !oa[44]) rds = rds + 1;
+      if (oa[44]) wrs = wrs + 1;
+      if (oa[42]) faults = faults + 1;
+      if (oa[41] && !pbusy) descs = descs + 1; pbusy = oa[41];
+      if (wr_v && oa[43]) pushes = pushes + 1;
+      row_gnt = oa[2] || (($unsigned($random(seed)) % 8) != 0);
+      if (oa[42]) begin rst_n = 0; @(negedge clk); rst_n = 1; end
+      cred_ret = oa[30] ? (($unsigned($random(seed)) % 4 == 0) ? 3'd0 : 3'd1) : (($unsigned($random(seed)) % 3 == 0) ? 3'd1 : 3'd0);
+      desc_v = ($unsigned($random(seed)) % 16) == 0;
+      desc_n = (($unsigned($random(seed)) % 4) == 0) ? 11'($unsigned($random(seed)) % 2048) : 11'd1024;
+      desc_row = 19'($unsigned($random(seed)));
+      go = ($unsigned($random(seed)) % 4) == 0;
+      next_posted = ($unsigned($random(seed)) % 5) == 0;
+      // writes: bursts to the last set (the service's write-back region) or anywhere
+      wr_v = ($unsigned($random(seed)) % WP) == 0;
+      wr_bank = (($unsigned($random(seed)) % 2) == 0) ? {3'(($unsigned($random(seed)) % 8)), 2'($unsigned($random(seed)))} : 5'($unsigned($random(seed)));
+      wr_col = 5'($unsigned($random(seed)));
+    end
+    $display("SUMMARY wr_lockstep REFM=%0d PC=%0d PH=%0d WQ=%0d WP=%0d seed=%0d cycles=%0d mismatches=%0d acts=%0d rds=%0d wrs=%0d pushes=%0d refpb=%0d busy_starts=%0d fault_cycles=%0d verdict=%s",
+             REFM, PCI, PH, WQN, WP, seed0, cyc, mism, acts, rds, wrs, pushes, refs, descs, faults, (mism == 0) ? "PASS" : "FAIL");
+    $finish;
+  end
+endmodule

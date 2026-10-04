@@ -11,14 +11,8 @@
 // after a WR, RDs wait T_WTR (CWL + BL8 + tWTR_L).  A write-open bank no queued write needs is precharged after
 // write recovery T_WRR (CWL + BL8 + tWR) and tRAS.  A bank a queued write needs is protected from REFpb choice
 // (key 16) and a forced refresh PRE waits for write recovery.  wr_ack pulses on each WR issue (the bench adds the
-// r9 (2026-10-04, 1.2 GHz closure; cycle-identical to r0 sha256 8189205b..., lockstep bench
-// results/rtl/hbm_accel_fmax_inventory_20261004/svc): the r14 r8b changes (registered == 0 flags of every
-// timing counter, the current set k and the RD bank as registered one-hots, credit != 0 registered) and the
-// write queue as per-slot registered state (bank one-hots, row-hit and older-conflict flags, one-hot read
-// pointer), so the queue scans are AND-OR reductions of flops; and Yosys-parsable (r0 used automatic
-// variables inside an always block, which Yosys rejects).
 // DRAM write + response path to make the posted-write ACK the visibility fence counts).
-module ot_hbm_accel_stream_pc_wb #(
+module ot_hbm_accel_stream_pc_wb_r0_ref #(
   parameter integer ENABLE   = 0,
   parameter integer REF_MODE = 1,
   parameter integer PC       = 0,
@@ -71,44 +65,36 @@ module ot_hbm_accel_stream_pc_wb #(
     reg streaming; reg [2:0] last; reg [10:0] nm1;   // registered at descriptor accept
     wire [2:0] k = j[9:7];
     wire [4:0] rd_bank = {j[9:7], j[1:0]};
-    // r9: the RD bank as a registered one-hot (rd_oh, rd_bgoh) and credit != 0 as a registered flag, updated
-    // exactly with j / credit, so rd_ok is an AND-OR of flops (no j-decoded mux) -- the r14 r8b change.
-    reg [31:0] rd_oh; reg [3:0] rd_bgoh; reg cred_nz;
-    wire [10:0] j_p1 = j + 11'd1;
+    wire [1:0] rd_bg = j[1:0];
     // ---- posted write queue (WB_EN) ----------------------------------------------------
     reg [4:0] wqb [0:WQ-1]; reg [18:0] wqr [0:WQ-1]; reg [4:0] wqc [0:WQ-1]; reg [255:0] wqd [0:WQ-1];
     reg [WQW:0] wq_n; reg [WQW-1:0] wq_rp, wq_wp;
     reg [31:0] wopen;                                 // banks open on a WRITE row (invisible to the stream)
     reg [18:0] wrow [0:31];                           // the row a write-open bank holds
     reg [3:0] rtw_c, wtr_c;
-    reg rtw_z, wtr_nz, wq_ner;                        // r9: registered rtw_c == 0, wtr_c != 0, wq_n != 0
     reg c_w;                                          // the registered row command is a write ACT / write PRE
     reg [18:0] c_wrow;
-    wire [31:0] rcdw_z, wrr_z, rcdw_zn;
-    // r9: per queue SLOT p (physical entry), registered at push and kept exact afterwards:
-    //   sl_v[p]    the slot holds a queued write (set at push, cleared at pop);
-    //   sl_boh[p]  its bank one-hot, sl_bgoh[p] its bank-group one-hot;
-    //   sl_hit[p]  wrow[bank] == row (updated when a write ACT loads wrow[bank], or at push);
-    //   sl_conf[p] the slots holding an OLDER write to the same bank on a different row (the r0 "blocked"
-    //              relation; a column is cleared when its slot is pushed again, so only older entries count).
-    // rp_oh is the read pointer as a one-hot.  The queue scans of r0 (wneed, wneed_row_ok, the oldest
-    // openable write) become AND-OR reductions of these flops; nothing on the row-decision path indexes the
-    // queue or the bank state with a binary index.  WQ must be a power of two (pointers wrap at 2^WQW).
-    reg [WQ-1:0] sl_v, sl_hit, rp_oh;
-    reg [31:0] sl_boh [0:WQ-1]; reg [3:0] sl_bgoh [0:WQ-1]; reg [WQ*WQ-1:0] sl_conf, sl_old;   // [p*WQ +: WQ]
-    // r9b: everything the row/column decisions need from the queue is REGISTERED, computed one cycle ahead
-    // from the next-cycle slot state (n* below): the oldest openable write (wa_*), the write-open banks a
-    // queued write needs on their row (wnro_q), the head write's bank/row/column/data and its issuability
-    // (wbr_q = r0 wr_bank_rdy).  Each register equals, at every cycle, the r0 combinational value.
-    reg wa_v; reg [4:0] wa_b; reg [18:0] wa_r; reg [31:0] wa_oh; reg [3:0] wa_bgoh;
-    reg [31:0] wnro_q, hb_oh; reg [3:0] hbg_oh; reg [4:0] hb, hc; reg [18:0] hr; reg [255:0] hd; reg wbr_q;
-    reg [31:0] wneed;
-    integer e, f;
+    wire [31:0] rcdw_z, wrr_z;
+    // queued-write needs: wneed (bank one-hot), and the oldest openable write (bank closed, no earlier queued
+    // write to the same bank on a different row)
+    reg [31:0] wneed, wneed_row_ok;                   // wneed_row_ok[b]: some queued write needs b on wrow[b]
+    reg wa_v; reg [4:0] wa_b; reg [18:0] wa_r;
     always @* begin
-      wneed = 0;
-      for (e = 0; e < WQ; e = e + 1) if (W && sl_v[e]) wneed = wneed | sl_boh[e];
+      wneed = 0; wneed_row_ok = 0; wa_v = 0; wa_b = 0; wa_r = 0;
+      if (W) for (integer e = 0; e < WQ; e = e + 1) if (e < wq_n) begin : scan
+        automatic integer q = (wq_rp + e) % WQ;
+        automatic bit blocked = 0;
+        for (integer f = 0; f < WQ; f = f + 1) if (f < e) begin
+          automatic integer qf = (wq_rp + f) % WQ;
+          if (wqb[qf] == wqb[q] && wqr[qf] != wqr[q]) blocked = 1;
+        end
+        wneed[wqb[q]] = 1'b1;
+        if (wopen[wqb[q]] && wrow[wqb[q]] == wqr[q]) wneed_row_ok[wqb[q]] = 1'b1;
+        if (!wa_v && !blocked && !open[wqb[q]]) begin wa_v = 1; wa_b = wqb[q]; wa_r = wqr[q]; end
+      end
     end
-    wire wq_ne = W && wq_ner;
+    wire [4:0] hb = wqb[wq_rp]; wire [18:0] hr = wqr[wq_rp];
+    wire wq_ne = W && wq_n != 0;
     // ---- refresh windows -------------------------------------------------------------
     wire ref_due = (ref_c == 0);
     reg  phase;                                       // cycle parity; this PC's row slot when == PC[0]
@@ -132,25 +118,19 @@ module ot_hbm_accel_stream_pc_wb #(
     wire [223:0] keys;
     for (genvar b = 0; b < 32; b = b + 1) begin : bank
       reg [4:0] rcd, ras; reg [8:0] aok; reg [2:0] rtp; reg [4:0] rcdw, wrr;
-      reg aok_zr, rcd_zr, rcdw_zr, wrr_zr;          // r9: registered == 0 flags (same event priority)
-      wire wr_e  = W && wr_ok && hb_oh[b];
+      wire wr_e  = W && wr_ok && hb == 5'(b);
       wire act_e = row_fire && c_op == ACT && c_oh[b];
       wire pre_e = row_fire && ((c_op == PRE && c_oh[b]) || c_op == PREALL);
       wire rfa_e = row_fire && c_op == REFAB;
       wire rfp_e = row_fire && c_op == REFPB && c_oh[b];
-      wire rd_e  = rd_ok && rd_oh[b];
+      wire rd_e  = rd_ok && rd_bank == 5'(b);
       always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
-          rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; rcdw <= 0; wrr <= 0;
-          aok_zr <= 1'b1; rcd_zr <= 1'b1; rcdw_zr <= 1'b1; wrr_zr <= 1'b1;
-        end else begin
+        if (!rst_n) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; rcdw <= 0; wrr <= 0; end
+        else begin
           if (W) begin
             if (act_e) rcdw <= 5'(T_RCDW - 1); else if (rcdw != 0) rcdw <= rcdw - 1'b1;
             if (wr_e) wrr <= 5'(T_WRR - 1); else if (wrr != 0) wrr <= wrr - 1'b1;
-            rcdw_zr <= rcdw_zn[b];
-            wrr_zr  <= wr_e ? (T_WRR - 1 == 0) : (wrr <= 5'd1);
           end
-          rcd_zr <= act_e ? (T_RCD - 1 == 0) : (rcd <= 5'd1);
           if (act_e) begin rcd <= 5'(T_RCD - 1); ras <= 5'(T_RAS - 1); end
           else begin if (rcd != 0) rcd <= rcd - 1'b1; if (ras != 0) ras <= ras - 1'b1; end
           if (rd_e) rtp <= 3'(T_RTP - 1); else if (rtp != 0) rtp <= rtp - 1'b1;
@@ -159,16 +139,10 @@ module ot_hbm_accel_stream_pc_wb #(
           else if (rfp_e) aok <= 9'(T_RFCPB - 1);
           else if (pre_e && aok < 9'(T_RP)) aok <= 9'(T_RP - 1);
           else if (aok != 0) aok <= aok - 1'b1;
-          if (act_e) aok_zr <= (T_RAS + T_RP - 1 == 0);
-          else if (rfa_e) aok_zr <= (T_RFC - 1 == 0);
-          else if (rfp_e) aok_zr <= (T_RFCPB - 1 == 0);
-          else if (pre_e && aok < 9'(T_RP)) aok_zr <= (T_RP - 1 == 0);
-          else aok_zr <= (aok <= 9'd1);
         end
-      assign rcd_z[b] = rcd_zr; assign ras_z[b] = (ras == 0); assign rtp_z[b] = (rtp == 0);
-      assign aok_z[b] = aok_zr; assign aok_busy[b] = (aok > 9'(LEAD));
-      assign rcdw_z[b] = W ? rcdw_zr : 1'b1;
-      assign rcdw_zn[b] = W ? (act_e ? (T_RCDW - 1 == 0) : (rcdw <= 5'd1)) : 1'b1; assign wrr_z[b] = W ? wrr_zr : 1'b1;
+      assign rcd_z[b] = (rcd == 0); assign ras_z[b] = (ras == 0); assign rtp_z[b] = (rtp == 0);
+      assign aok_z[b] = (aok == 0); assign aok_busy[b] = (aok > 9'(LEAD));
+      assign rcdw_z[b] = (rcdw == 0); assign wrr_z[b] = (wrr == 0);
       // REFpb key: 127 refreshed; streaming/posted: open 24 (finished) / 32, protected (needed
       // within the next two sets) 16..18 farthest first, upcoming = distance, passed 8 + set;
       // idle: IDLE rank (+32 open); +64 if still busy from an earlier tRFCpb / tRC.
@@ -187,22 +161,18 @@ module ot_hbm_accel_stream_pc_wb #(
     // ---- per-bank-group state ----------------------------------------------------------
     wire [3:0] rrdl_z, ccdl_z, faw_z;
     for (genvar g = 0; g < 4; g = g + 1) begin : bgs
-      reg [2:0] rrdl; reg [1:0] ccdl; reg [3:0] faw; reg rrdl_zr, faw_zr, ccdl_zr;   // registered (== 0) flags
+      reg [2:0] rrdl; reg [1:0] ccdl; reg [3:0] faw;
       wire act_g = row_fire && c_op == ACT && c_bank[1:0] == 2'(g);
-      wire ccdl_e = (rd_ok && rd_bgoh[g]) || (W && wr_ok && hbg_oh[g]);
       // FAW slot g takes this ACT if it is the lowest free slot
       wire faw_take = row_fire && c_op == ACT && faw == 0 && (g == 0 || !(|faw_z[g == 0 ? 0 : g-1:0]));
       always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rrdl <= 0; ccdl <= 0; faw <= 0; rrdl_zr <= 1'b1; faw_zr <= 1'b1; ccdl_zr <= 1'b1; end
+        if (!rst_n) begin rrdl <= 0; ccdl <= 0; faw <= 0; end
         else begin
           if (act_g) rrdl <= 3'(T_RRDL - 1); else if (rrdl != 0) rrdl <= rrdl - 1'b1;
-          if (ccdl_e) ccdl <= 2'(T_CCDL - 1); else if (ccdl != 0) ccdl <= ccdl - 1'b1;
+          if ((rd_ok && rd_bg == 2'(g)) || (W && wr_ok && hb[1:0] == 2'(g))) ccdl <= 2'(T_CCDL - 1); else if (ccdl != 0) ccdl <= ccdl - 1'b1;
           if (faw_take) faw <= 4'(T_FAW - 1); else if (faw != 0) faw <= faw - 1'b1;
-          rrdl_zr <= act_g ? (T_RRDL - 1 == 0) : (rrdl <= 3'd1);
-          ccdl_zr <= ccdl_e ? (T_CCDL - 1 == 0) : (ccdl <= 2'd1);
-          faw_zr  <= faw_take ? (T_FAW - 1 == 0) : (faw <= 4'd1);
         end
-      assign rrdl_z[g] = rrdl_zr; assign ccdl_z[g] = ccdl_zr; assign faw_z[g] = faw_zr;
+      assign rrdl_z[g] = (rrdl == 0); assign ccdl_z[g] = (ccdl == 0); assign faw_z[g] = (faw == 0);
     end
     wire faw_ok = |faw_z;
     // ---- REFpb bank choice: argmin of keys, ties to the lowest bank ----------------------
@@ -241,11 +211,11 @@ module ot_hbm_accel_stream_pc_wb #(
       end
     // ---- column: one RD per cycle ------------------------------------------------------
     // WB_EN: the head write is issuable but for tRTW / tCCD_L: RDs stop so it can go; after a WR, RDs wait tWTR
-    wire wr_bank_rdy = W && wbr_q;
-    assign wr_ok = wr_bank_rdy && |(hbg_oh & ccdl_z) && rtw_z && !rd_block;
-    assign rd_ok = running && streaming && !rd_block &&
-                   |(rd_oh & open & ~stale & rcd_z & ~blk & ~(W ? wopen : 32'b0)) &&
-                   |(rd_bgoh & ccdl_z) && cred_nz && !(W && (wr_bank_rdy || wtr_nz));
+    wire wr_bank_rdy = wq_ne && wopen[hb] && wrow[hb] == hr && rcdw_z[hb] && !blk[hb];
+    assign wr_ok = wr_bank_rdy && ccdl_z[hb[1:0]] && rtw_c == 0 && !rd_block;
+    assign rd_ok = running && streaming && !rd_block && open[rd_bank] && !stale[rd_bank] &&
+                   rcd_z[rd_bank] && ccdl_z[rd_bg] && credit != 0 && !blk[rd_bank] &&
+                   !(W && (wopen[rd_bank] || wr_bank_rdy || wtr_c != 0));
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);
       act_bank = {(c >= 4) ? kk + 3'd1 : kk, 2'(c & 3)};
@@ -253,32 +223,22 @@ module ot_hbm_accel_stream_pc_wb #(
     // candidates (no dynamic indexing on the decision path): per-bank ACT eligibility, the 4-bank
     // groups of sets k and k+1, lowest-first one-hot selection; PRE of finished banks, lowest first
     wire [31:0] act_okb = ~open & ~done & ~blk & aok_z & {8{rrdl_z}};
-    // r9 (r14 r8b): k as a registered one-hot (koh) and the k+1 validity as a registered flag (k1v)
-    reg [7:0] koh; reg k1v;
-    wire [7:0] k1oh = {koh[6:0], 1'b0};                 // set k+1 (none when k == 7)
-    reg [3:0] grp_k, grp_k1;
-    always @* begin
-      grp_k = 4'b0; grp_k1 = 4'b0;
-      for (integer s = 0; s < 8; s = s + 1) begin
-        grp_k  = grp_k  | ({4{koh[s]}}  & act_okb[4*s +: 4]);
-        grp_k1 = grp_k1 | ({4{k1oh[s] & k1v}} & act_okb[4*s +: 4]);
-      end
-    end
+    wire [3:0] grp_k  = act_okb[{k, 2'b00} +: 4];
+    wire [3:0] grp_k1 = (k != 3'd7 && k + 3'd1 <= last) ? act_okb[{k + 3'd1, 2'b00} +: 4] : 4'b0;
     wire [7:0] act_cand = {grp_k1, grp_k};
     wire [7:0] act_oh8 = act_cand & (~act_cand + 8'd1);
     wire [31:0] pre_cand = open & (done | stale) & ~blk & ras_z & rtp_z & ~(W ? wopen : 32'b0);
     // WB_EN: write ACT (oldest openable queued write) and write PRE (a write-open bank no queued write needs on
     // its row, after write recovery and tRAS)
-    wire wact_ok = W && wa_v && !act_block && noact_c == 0 && rrds_c == 0 && faw_ok && |(wa_oh & aok_z) &&
-                   !(|(wa_oh & blk)) && |(wa_bgoh & rrdl_z);
-    wire [31:0] wpre_cand = W ? (wopen & ~wnro_q & ~blk & ras_z & wrr_z) : 32'b0;
-    wire [31:0] pre_oh, act_oh, wpre_oh;
+    wire wact_ok = W && wa_v && !act_block && noact_c == 0 && rrds_c == 0 && faw_ok && aok_z[wa_b] &&
+                   !blk[wa_b] && rrdl_z[wa_b[1:0]];
+    wire [31:0] wpre_cand = W ? (wopen & ~wneed_row_ok & ~blk & ras_z & wrr_z) : 32'b0;
+    wire [31:0] pre_oh, act_oh;
     for (genvar b = 0; b < 32; b = b + 1) begin : oh
-      if (b == 0) begin : z assign pre_oh[b] = pre_cand[b]; assign wpre_oh[b] = wpre_cand[b]; end
-      else begin : nz
-        assign pre_oh[b] = pre_cand[b] & ~(|pre_cand[b-1:0]); assign wpre_oh[b] = wpre_cand[b] & ~(|wpre_cand[b-1:0]);
-      end
-      assign act_oh[b] = (koh[b >> 2] & act_oh8[b & 3]) | (k1oh[b >> 2] & act_oh8[4 + (b & 3)]);
+      if (b == 0) begin : z assign pre_oh[b] = pre_cand[b]; end
+      else begin : nz assign pre_oh[b] = pre_cand[b] & ~(|pre_cand[b-1:0]); end
+      assign act_oh[b] = (3'(b >> 2) == k) ? act_oh8[b & 3] :
+                         (3'(b >> 2) == k + 3'd1 && k != 3'd7) ? act_oh8[4 + (b & 3)] : 1'b0;
     end
     function automatic [4:0] ffs32(input [31:0] v);   // index of the lowest set bit (tree)
       reg [15:0] v16; reg [7:0] v8; reg [3:0] v4; reg [1:0] v2;
@@ -295,12 +255,6 @@ module ot_hbm_accel_stream_pc_wb #(
     wire [4:0] pre_sel = ffs32(pre_cand);
     wire forced_pre = REF_MODE && ref_pend && |(blk & open & ras_z & rtp_z & wrr_z);
     wire [4:0] wpre_sel = ffs32(wpre_cand);
-    // next-cycle k and last (the same updates as j and last below)
-    wire desc_acc = desc_v && !streaming && !fault_r;
-    wire k_step = rd_ok && (j[6:0] == 7'h7f);
-    wire [2:0] k_n = desc_acc ? 3'd0 : k_step ? k + 3'd1 : k;
-    wire [2:0] last_n = desc_acc ? 3'((desc_n - 11'd1) >> 7) : last;
-    wire [7:0] koh_n = desc_acc ? 8'b1 : k_step ? {koh[6:0], koh[7]} : koh;
     reg r_w; reg [18:0] r_wrow;
     reg [31:0] r_oh;
     always @* begin
@@ -309,88 +263,20 @@ module ot_hbm_accel_stream_pc_wb #(
       else if (!REF_MODE && ref_due_n) begin r_v = 1; r_prio = 1; r_op = REFAB; end
       else if (preall_ok) begin r_v = 1; r_prio = 1; r_op = PREALL; end
       else if (forced_pre) begin r_v = 1; r_prio = 1; r_op = PRE; r_bank = rb; r_oh = blk; end
-      else if (|wpre_cand) begin r_v = 1; r_op = PRE; r_bank = wpre_sel; r_oh = wpre_oh; r_w = 1; end
-      else if (wact_ok) begin r_v = 1; r_op = ACT; r_bank = wa_b; r_oh = wa_oh; r_w = 1; r_wrow = wa_r; end
+      else if (|wpre_cand) begin r_v = 1; r_op = PRE; r_bank = wpre_sel; r_oh = 32'b1 << wpre_sel; r_w = 1; end
+      else if (wact_ok) begin r_v = 1; r_op = ACT; r_bank = wa_b; r_oh = 32'b1 << wa_b; r_w = 1; r_wrow = wa_r; end
       else if (act_ok_any) begin r_v = 1; r_op = ACT; r_bank = act_bank(act_sel, k); r_oh = act_oh; end
       else if (|pre_cand) begin r_v = 1; r_op = PRE; r_bank = pre_sel; r_oh = pre_oh; end
     end
     assign row_v = c_v; assign row_prio = c_prio; assign row_op = c_op; assign row_bank = c_bank;
     assign row_row = (W && c_w) ? c_wrow : row;
     assign col_v = rd_ok || (W && wr_ok); assign col_bank = (W && wr_ok) ? hb : rd_bank;
-    assign col_col = (W && wr_ok) ? hc : j[6:2];
-    assign col_we = W && wr_ok; assign col_wdata = (W && wr_ok) ? hd : 256'b0;
+    assign col_col = (W && wr_ok) ? wqc[wq_rp] : j[6:2];
+    assign col_we = W && wr_ok; assign col_wdata = (W && wr_ok) ? wqd[wq_rp] : 256'b0;
     assign col_row = (W && wr_ok) ? hr : 19'b0; assign wr_ack = W && wr_ok;
     assign wq_r = W && wq_n != (WQW+1)'(WQ); assign wq_empty = !wq_ne;
     assign desc_r = !streaming && !fault_r;
     assign busy = streaming; assign ref_fault = fault_r;
-    // push-time slot state: the new write's row hit (against wrow as it will be after this cycle's write
-    // ACT, if any) and its conflict set (valid older slots on the same bank with a different row)
-    wire push = W && wq_v && wq_r;
-    wire wact_fire = row_fire && c_w && c_op == ACT;
-    wire push_hit = (wact_fire && c_bank == wq_bank) ? (c_wrow == wq_row) : (wrow[wq_bank] == wq_row);
-    reg [WQ-1:0] push_conf;
-    always @* begin
-      push_conf = 0;
-      for (e = 0; e < WQ; e = e + 1) push_conf[e] = sl_v[e] && wqb[e] == wq_bank && wqr[e] != wq_row;
-    end
-    // ---- r9b: next-cycle queue/slot state (exactly the sequential updates below) and its registered digests
-    wire [WQ-1:0] nv = (sl_v | (push ? (WQ'(1) << wq_wp) : WQ'(0))) & ~(wr_ok ? rp_oh : WQ'(0));
-    wire [WQ-1:0] nrp = wr_ok ? {rp_oh[WQ-2:0], rp_oh[WQ-1]} : rp_oh;
-    wire [31:0] nwopen = wact_fire ? (wopen | c_oh) : (row_fire && c_op == PRE && (c_oh & wopen) != 0) ? (wopen & ~c_oh) : wopen;
-    wire [31:0] nblk = (row_fire && c_op == REFPB) ? 32'b0 : (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;
-    wire nwq_ne = (wq_n + (WQW+1)'(push) - (WQW+1)'(wr_ok)) != 0;
-    reg [32*WQ-1:0] nboh; reg [4*WQ-1:0] nbgoh; reg [5*WQ-1:0] nwqb, nwqc; reg [19*WQ-1:0] nwqr; reg [256*WQ-1:0] nwqd;
-    reg [WQ-1:0] nhit, nact, pwin_n; reg [WQ*WQ-1:0] nconf, nold;
-    reg wa_v_n; reg [4:0] wa_b_n; reg [18:0] wa_r_n; reg [31:0] wa_oh_n; reg [3:0] wa_bgoh_n;
-    reg [31:0] wnro_n, hb_oh_n; reg [3:0] hbg_oh_n; reg [4:0] hb_n, hc_n; reg [18:0] hr_n; reg [255:0] hd_n; reg h_hit_n;
-    always @* begin
-      for (e = 0; e < WQ; e = e + 1) begin
-        if (push && wq_wp == WQW'(e)) begin
-          nboh[e*32 +: 32] = 32'b1 << wq_bank; nbgoh[e*4 +: 4] = 4'b1 << wq_bank[1:0];
-          nwqb[e*5 +: 5] = wq_bank; nwqc[e*5 +: 5] = wq_col; nwqr[e*19 +: 19] = wq_row; nwqd[e*256 +: 256] = wq_data;
-          nhit[e] = push_hit;
-        end else begin
-          nboh[e*32 +: 32] = sl_boh[e]; nbgoh[e*4 +: 4] = sl_bgoh[e];
-          nwqb[e*5 +: 5] = wqb[e]; nwqc[e*5 +: 5] = wqc[e]; nwqr[e*19 +: 19] = wqr[e]; nwqd[e*256 +: 256] = wqd[e];
-          nhit[e] = (wact_fire && |(c_oh & sl_boh[e])) ? (c_wrow == wqr[e]) : sl_hit[e];
-        end
-        for (f = 0; f < WQ; f = f + 1)
-        begin
-          // r9c: a popped slot's column is cleared too, so "blocked" needs no valid mask; sl_old is the age
-          // matrix (slot f holds an older write than slot e), set at push from the slots still valid
-          nconf[e*WQ + f] = (push && wq_wp == WQW'(e)) ? (push_conf[f] && !(wr_ok && rp_oh[f])) :
-                            ((push && wq_wp == WQW'(f)) || (wr_ok && rp_oh[f])) ? 1'b0 : sl_conf[e*WQ + f];
-          nold[e*WQ + f] = (push && wq_wp == WQW'(e)) ? (sl_v[f] && !(wr_ok && rp_oh[f]) && f != e) :
-                           (push && wq_wp == WQW'(f)) ? 1'b0 : sl_old[e*WQ + f];
-        end
-      end
-      for (e = 0; e < WQ; e = e + 1)
-        nact[e] = nv[e] && !(|nconf[e*WQ +: WQ]) && !(|(nboh[e*32 +: 32] & open_nx));
-      for (e = 0; e < WQ; e = e + 1) pwin_n[e] = nact[e] && !(|(nold[e*WQ +: WQ] & nact));
-      wa_v_n = |nact; wa_b_n = 0; wa_r_n = 0; wa_oh_n = 0; wa_bgoh_n = 0; wnro_n = 0;
-      hb_oh_n = 0; hbg_oh_n = 0; hb_n = 0; hc_n = 0; hr_n = 0; hd_n = 0; h_hit_n = 1'b0;
-      for (e = 0; e < WQ; e = e + 1) begin
-        if (pwin_n[e]) begin
-          wa_b_n = wa_b_n | nwqb[e*5 +: 5]; wa_r_n = wa_r_n | nwqr[e*19 +: 19];
-          wa_oh_n = wa_oh_n | nboh[e*32 +: 32]; wa_bgoh_n = wa_bgoh_n | nbgoh[e*4 +: 4];
-        end
-        if (W && nv[e] && nhit[e]) wnro_n = wnro_n | (nboh[e*32 +: 32] & nwopen);
-        if (nrp[e]) begin
-          hb_oh_n = hb_oh_n | nboh[e*32 +: 32]; hbg_oh_n = hbg_oh_n | nbgoh[e*4 +: 4]; h_hit_n = h_hit_n | nhit[e];
-          hb_n = hb_n | nwqb[e*5 +: 5]; hc_n = hc_n | nwqc[e*5 +: 5]; hr_n = hr_n | nwqr[e*19 +: 19];
-          hd_n = hd_n | nwqd[e*256 +: 256];
-        end
-      end
-    end
-    wire wbr_n = W && nwq_ne && h_hit_n && |(hb_oh_n & nwopen & rcdw_zn & ~nblk);
-    always @(posedge clk or negedge rst_n)
-      if (!rst_n) begin
-        wa_v <= 1'b0; wa_b <= 0; wa_r <= 0; wa_oh <= 0; wa_bgoh <= 0; wnro_q <= 0; wbr_q <= 1'b0;
-        hb_oh <= 0; hbg_oh <= 0; hb <= 0; hc <= 0; hr <= 0; hd <= 0;
-      end else if (W) begin
-        wa_v <= wa_v_n; wa_b <= wa_b_n; wa_r <= wa_r_n; wa_oh <= wa_oh_n; wa_bgoh <= wa_bgoh_n; wnro_q <= wnro_n;
-        wbr_q <= wbr_n; hb_oh <= hb_oh_n; hbg_oh <= hbg_oh_n; hb <= hb_n; hc <= hc_n; hr <= hr_n; hd <= hd_n;
-      end
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
         streaming <= 0; last <= 0; nm1 <= 0;
@@ -398,34 +284,20 @@ module ot_hbm_accel_stream_pc_wb #(
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0; credit <= 7'(CRED);
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
         c_v <= 0; c_prio <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0;
-        koh <= 8'b1; k1v <= 1'b0; rd_oh <= 32'b1; rd_bgoh <= 4'b1; cred_nz <= (CRED != 0);
         wq_n <= 0; wq_rp <= 0; wq_wp <= 0; wopen <= 0; rtw_c <= 0; wtr_c <= 0; c_w <= 0; c_wrow <= 0;
-        rtw_z <= 1'b1; wtr_nz <= 1'b0; wq_ner <= 1'b0; sl_v <= 0; sl_hit <= 0; rp_oh <= WQ'(1);
       end else begin
         if (W) begin
           if (rd_ok) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
           if (wr_ok) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
-          rtw_z  <= rd_ok ? (T_RTW - 1 == 0) : (rtw_c <= 4'd1);
-          wtr_nz <= wr_ok ? (T_WTR - 1 != 0) : (wtr_c > 4'd1);
-          if (push) begin
+          if (wq_v && wq_r) begin
             wqb[wq_wp] <= wq_bank; wqr[wq_wp] <= wq_row; wqc[wq_wp] <= wq_col; wqd[wq_wp] <= wq_data;
             wq_wp <= (wq_wp == WQW'(WQ - 1)) ? '0 : wq_wp + 1'b1;
-            sl_boh[wq_wp] <= 32'b1 << wq_bank; sl_bgoh[wq_wp] <= 4'b1 << wq_bank[1:0];
           end
-          // slot valid: a push sets slot wq_wp, a pop clears slot wq_rp (distinct: no push when full)
-          sl_v <= nv;
-          sl_conf <= nconf; sl_old <= nold;
-          for (e = 0; e < WQ; e = e + 1) sl_hit[e] <= nhit[e];
-          if (wr_ok) begin wq_rp <= (wq_rp == WQW'(WQ - 1)) ? '0 : wq_rp + 1'b1; rp_oh <= nrp; end
-          wq_n <= wq_n + (WQW+1)'(push) - (WQW+1)'(wr_ok);
-          wq_ner <= (wq_n + (WQW+1)'(push) - (WQW+1)'(wr_ok)) != 0;
-          if (wact_fire) begin wopen[c_bank] <= 1'b1; wrow[c_bank] <= c_wrow; end
+          if (wr_ok) wq_rp <= (wq_rp == WQW'(WQ - 1)) ? '0 : wq_rp + 1'b1;
+          wq_n <= wq_n + (WQW+1)'(wq_v && wq_r) - (WQW+1)'(wr_ok);
+          if (row_fire && c_w && c_op == ACT) begin wopen[c_bank] <= 1'b1; wrow[c_bank] <= c_wrow; end
           if (row_fire && c_op == PRE && (c_oh & wopen) != 0) wopen <= wopen & ~c_oh;   // write or forced PRE
         end
-        if (desc_acc) begin rd_oh <= 32'b1; rd_bgoh <= 4'b1; end
-        else if (rd_ok) begin rd_oh <= 32'b1 << {j_p1[9:7], j_p1[1:0]}; rd_bgoh <= 4'b1 << j_p1[1:0]; end
-        cred_nz <= rd_ok ? (cr_dec != 7'd0) : (cr_inc != 7'd0);
-        koh <= koh_n; k1v <= (k_n != 3'd7) && (k_n + 3'd1 <= last_n);
         if (rrds_c != 0) rrds_c <= rrds_c - 1'b1;
         if (noact_c != 0) noact_c <= noact_c - 1'b1;
         credit <= rd_ok ? cr_dec : cr_inc;      // both sums precomputed; rd_ok only selects
@@ -441,9 +313,9 @@ module ot_hbm_accel_stream_pc_wb #(
         if (streaming && go) running <= 1;
         // column
         if (rd_ok) begin
-          j <= j_p1;
+          j <= j + 1'b1;
           if (j == nm1) streaming <= 0;
-          if (j[6:2] == 5'd31) done <= done | rd_oh;
+          if (j[6:2] == 5'd31) done[rd_bank] <= 1'b1;
         end
         // row
         if (row_fire) case (c_op)
