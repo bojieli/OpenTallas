@@ -46,6 +46,10 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
     std::optional<DsromS81PrefixOperation> proposed_kvt,kvt_owner;
     bool old_kvt_issue=false;
     uint32_t old_blocks_written=0;
+    std::optional<DsromS81PrefixOperation> proposed_ckv,ckv_owner;
+    bool old_ckv_write=false,old_ckv_visible=false,ckv_visible=false;
+    std::function<bool()> native_ckv_visible;
+
     long prepared_cycle=-1;
 
     static void require(bool ok,const char* why) {
@@ -94,6 +98,7 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
             old_done=window.done;old_generation=generation();
             old_full_drained=!target_engine||
                 (selected_bound&&selected_drained&&descriptor_drained());
+            old_ckv_visible=ckv_owner&&native_ckv_visible&&native_ckv_visible();
             old_kvt_issue=blocks.issue&&blocks.issue_ready;
             old_blocks_written=window.blocks_written;
             old_kvt_visible=kvt_pending&&blocks.idle&&window.blk_ready&&
@@ -105,12 +110,24 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
             require(!stopped,"packed KV provider quarantined");
             // Only the canonical host's shared edge clocks these two models.
             // Attention, QE and HBM remain their existing owners' participants.
-            require(released || (!staged_debt&&!stream_active&&(!kvt_pending||kvt_visible)),
+            require(released || (!staged_debt&&!stream_active&&(!kvt_pending||kvt_visible)&&(!ckv_owner||ckv_visible)),
                     "reset would erase admitted packed WINDOW debt");
             blocks.rst_n=released;window.rst_n=released;
             if(released) {
                 require(prepared_cycle==runtime.cycle(),"packed KV missing pre-edge prepare");
                 consumed=old_kv_accept;
+                bool new_ckv=false;
+                if(old_ckv_write) {
+                    require(bool(proposed_ckv),"native CKV write lacks held quantizer operation");
+                    new_ckv=!ckv_owner||ckv_owner->index!=proposed_ckv->index;
+                    if(new_ckv) {
+                        require(!ckv_owner||ckv_visible,"native CKV writer overwrites uncommitted row");
+                        ckv_owner=proposed_ckv;ckv_visible=false;
+                    } else require(ckv_owner->unit==proposed_ckv->unit&&
+                                   ckv_owner->instruction==proposed_ckv->instruction,
+                                   "native CKV held writer changed literal");
+                }
+                if(old_ckv_visible&&!new_ckv)ckv_visible=true;
                 if(old_kvt_issue) {
                     require(proposed_kvt&&(!kvt_pending||kvt_visible),
                             "native KVT issue overlaps uncommitted current row");
@@ -174,6 +191,54 @@ public:
         for(unsigned i=0;i<8;i++)blocks.cap_codes[i]=qe.kvb_codes[i];
         blocks.cap_scale=qe.kvb_scale;
         require(!qe.kvb_fault,"actual QE packed capture fault");
+    }
+    // Hubble's distinct native ot_hdc_v41_qe quantizer, not the QAL/KVAL
+    // field actor. Join OLD outputs before ANY native rising evaluation.
+    template<class QuantizerPorts,class NativeCkvService>
+    void wire_quantizer(QuantizerPorts& hooks,NativeCkvService& ckv) {
+        require(hooks.native&&hooks.held_mode&&hooks.held_operation,
+                "actual native QE quantizer hooks absent");
+        const auto& qe=hooks.native();
+        require(qe.contextp()==runtime.context&&ckv.contextp()==runtime.context&&
+                qe.clk==0&&ckv.clk==0&&!qe.fault,
+                "quantizer/CKV must borrow live SAME-context low edge");
+        wire_qe(qe); // mode1 kvb payload is copied verbatim, with its fault.
+        old_ckv_write=false;ckv.nw_we=0;
+        if(!(qe.w_we&1u))return;
+        const unsigned mode=hooks.held_mode();
+        require(mode==qe.i_mode,"quantizer held native mode changed");
+        if(mode!=3)return;
+        const auto op=hooks.held_operation();
+        require(op.unit==3&&runtime.identity&&qe.w_mask==0xffffffffu&&
+                (qe.w_addr&31u)==0&&qe.w_addr>>9==1048575,
+                "QDQ4E write lacks actual target row/held literal/mask");
+        // Original ww_q_we[0] && qe_mode3 -> ckv_nw_* wiring. The
+        // service's native row encoder consumes these BF16-bearing words.
+        ckv.position_identity=*runtime.identity;
+        ckv.nw_we=1;ckv.nw_addr=qe.w_addr;ckv.nw_data=qe.w_data;
+        proposed_ckv=op;old_ckv_write=true;
+    }
+    // All ranks observe the actual committing owner of gid1048575 (rank3).
+    // Nonowners must not manufacture completion from their local quiet state.
+    template<class QuantizerPorts,class CommittingCkvService>
+    void bind_quantizer_sink(QuantizerPorts& hooks,CommittingCkvService& committing_owner) {
+        require(!native_ckv_visible&&!hooks.ckv_writes_visible&&
+                committing_owner.contextp()==runtime.context,
+                "native CKV visibility requires one actual committing owner");
+        auto self=this->shared_from_this();
+        native_ckv_visible=[self,&committing_owner]() {
+            if(!committing_owner.own_visible_v)return false;
+            require(!committing_owner.fault&&self->runtime.identity&&
+                    committing_owner.own_visible_identity==*self->runtime.identity&&
+                    committing_owner.own_visible_gid==1048575,
+                    "native CKV commit identity/target row mismatch");
+            return true; // native pulse only after ninth positive c_wr_done.
+        };
+        hooks.ckv_writes_visible=[self](const DsromS81PrefixOperation& op) {
+            return !self->fault()&&self->ckv_visible&&self->ckv_owner&&
+                   self->ckv_owner->index==op.index&&self->ckv_owner->unit==op.unit&&
+                   self->ckv_owner->instruction==op.instruction;
+        };
     }
     // issue/issue_src_base/issue_kvt_base/issue_row/issue_abs_row are driven by
     // the actual SU21/KVT instruction owner. Never infer them from a VM write.
