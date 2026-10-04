@@ -154,11 +154,23 @@ end else begin : g_on
         for (i = NSM - 1; i >= 0; i = i - 1) if (acc_x[i]) fx = i[SB-1:0];
     end
 
-    // ---- merged contribution of this cycle
+    // ---- merged contribution of this cycle: each SM's data shifted up by off lanes (a log-depth barrel shifter),
+    //      its lane mask ((1 << nown) - 1) << off, the residual at its own lanes
     reg  [NL*32-1:0] dat_n, res_n;
     reg  [NL-1:0]    ok_n;
     reg              bad_x;
-    integer s, l, lj;
+    wire [NL*32-1:0] sh_d [0:NSM-1];
+    wire [NL-1:0]    sh_m [0:NSM-1];
+    wire [NL*32-1:0] sh_m32 [0:NSM-1];
+    for (g = 0; g < NSM; g = g + 1) begin : g_sh
+        wire [NL:0]  ones = ({{NL{1'b0}}, 1'b1} << s_nown[g*8 +: 8]) - 1'b1;
+        assign sh_d[g] = s_data[g*NL*32 +: NL*32] << {s_off[g*8 +: 8], 5'd0};
+        assign sh_m[g] = ones[NL-1:0] << s_off[g*8 +: 8];
+        for (genvar q = 0; q < NL; q = q + 1) begin : g_m
+            assign sh_m32[g][32*q +: 32] = {32{sh_m[g][q]}};
+        end
+    end
+    integer s, l;
     always @* begin
         dat_n = (st == S_IDLE) ? {NL*32{1'b0}} : dat;
         res_n = (st == S_IDLE) ? {NL*32{1'b0}} : resid;
@@ -170,15 +182,10 @@ end else begin : g_on
                 s_fuse[s] != ((st == S_IDLE) ? s_fuse[fx] : fuse_q) ||
                 32'(s_off[s*8 +: 8]) + 32'(s_nown[s*8 +: 8]) > 32'(s_count[s*8 +: 8]))
                 bad_x = 1'b1;
-            for (l = 0; l < NL; l = l + 1) begin
-                lj = l - 32'(s_off[s*8 +: 8]);
-                if (l >= 32'(s_off[s*8 +: 8]) && lj < 32'(s_nown[s*8 +: 8])) begin
-                    if (ok_n[l]) bad_x = 1'b1;
-                    ok_n[l] = 1'b1;
-                    dat_n[32*l +: 32] = s_data[s*NL*32 + 32*lj +: 32];
-                    res_n[32*l +: 32] = s_resid[s*NL*32 + 32*l +: 32];
-                end
-            end
+            if (|(ok_n & sh_m[s])) bad_x = 1'b1;
+            ok_n  = ok_n | sh_m[s];
+            dat_n = (dat_n & ~sh_m32[s]) | (sh_d[s] & sh_m32[s]);
+            res_n = (res_n & ~sh_m32[s]) | (s_resid[s*NL*32 +: NL*32] & sh_m32[s]);
         end
         // lanes at or above count need no contribution (sent as +0)
         for (l = 0; l < NL; l = l + 1)

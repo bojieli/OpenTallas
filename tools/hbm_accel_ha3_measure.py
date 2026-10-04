@@ -46,6 +46,7 @@ def sections(path):
         kern[k] = out
     nk = min(len(v) for v in kern.values())
     ar_o, ar_d = [], []
+    parts = {}
     for d in (0, 1):
         sms = [k for k in kern if k[0] == d]
         for i in range(nk):
@@ -57,9 +58,33 @@ def sections(path):
             ar_o.append(max(t[2] for t in tcw) - max(t[1] for t in tcd))
             done = [kk[-1][0] for kk in ks]
             ar_d.append(max(done) - max(t[3] for t in tcd))
+            for nm, lo, hi in (("ar_o", max(t[1] for t in tcd), max(t[2] for t in tcw)),
+                               ("ar_d", max(t[3] for t in tcd), max(done))):
+                bw, cw = [], []
+                for kk in ks:
+                    b = c = 0
+                    t_bar = t_req = None
+                    for cy, e in kk:
+                        if not (lo <= cy <= hi):
+                            continue
+                        if e == "BAR":
+                            t_bar = cy
+                        elif e == "BARREL" and t_bar is not None:
+                            b += cy - t_bar
+                        elif e == "REQ":
+                            t_req = cy
+                        elif e == "RSP" and t_req is not None:
+                            c += cy - t_req
+                    bw.append(b)
+                    cw.append(c)
+                parts.setdefault(nm + "_barrier_wait", []).append(max(bw))
+                parts.setdefault(nm + "_collective_wait", []).append(max(cw))
     return dict(n_layer_kernels_x_dies=len(ar_o), ar_o_mean=st.mean(ar_o), ar_o_median=st.median(ar_o),
                 ar_o_min=min(ar_o), ar_o_max=max(ar_o), ar_d_mean=st.mean(ar_d), ar_d_median=st.median(ar_d),
-                ar_d_min=min(ar_d), ar_d_max=max(ar_d), step_cycles=steps, total_step_cycles=sum(steps))
+                ar_d_min=min(ar_d), ar_d_max=max(ar_d), step_cycles=steps, total_step_cycles=sum(steps),
+                breakdown_mean={k: round(st.mean(v), 1) for k, v in parts.items()},
+                breakdown_note="max over the die's SMs, inside the section: cycles waiting at BAR (arrive->release) "
+                               "and in a collective (issue->response)")
 
 
 def main():
