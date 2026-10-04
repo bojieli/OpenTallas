@@ -8,11 +8,11 @@ bool DsromS81MinimumEmbedding::complete()const{return true;}
 int main(){
  DsromS81MinimumRuntime runtime{};runtime.stage=80;runtime.identity=17;
  DsromS81MinimumEmbedding embedding(runtime,"","",0,0,17,0,{});
- bool go=false;unsigned driving=0;std::set<unsigned> accepted,published;
+ bool go=false,drained=false;unsigned driving=0;std::set<unsigned> accepted,published;
  auto engine=[&](const char* name){
   DsromS81PrefixNativeEngine e;
   e.participant={name,[](auto){},[](bool){},[](bool){},[](){return false;}};
-  e.ready=[](){return true;};e.idle=[](){return true;};
+  e.ready=[](){return true;};e.idle=[&](){return drained;};
   e.inputs_ready=[](auto){return true;};
   e.drive=[&](const auto& op,bool take){if(take){go=true;driving=op.index;}};
   return e;
@@ -27,6 +27,9 @@ int main(){
  DsromS81MinimumPrefix execute(runtime,embedding,17,engine("su"),engine("he"),vm,program,{{4,engine("xu")}});
  auto edge=[&](bool release){for(auto& p:runtime.participants)p.prepare({});for(auto& p:runtime.participants)p.rising(release);for(auto& p:runtime.participants)p.falling(release);};
  edge(false);execute.start();edge(true);assert(accepted.count(20));
+ published.insert(20);edge(true);assert(accepted.size()==1&&!execute.complete()); // staged/active debt blocks retirement, not launch
+ published.erase(20);
+ drained=true;
  edge(true);assert(accepted.size()==1&&!execute.complete()); // idle alone cannot advance
  for(unsigned i=20;i<29;++i){published.insert(i);edge(true);}
  assert(execute.complete()&&accepted.size()==9);
