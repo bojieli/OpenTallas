@@ -119,8 +119,27 @@ module ot_hdc_fp32_add_f12 #(
             end
         end
     endfunction
-    wire [27:0] small_a = jam28(x_aman, x_dba);
-    wire [27:0] small_b = jam28(x_bman, x_dab);
+    // the shifted-out-entirely flags (d >= 28), decided beside the exponent differences and carried through the cuts
+    // (the stage after cut 6 was 4 ps over 0.833 ns in the lane with the compares in it)
+    wire [2:0] g6, g0;
+    ot_hdc_f12_cut #(.W(3), .CUT(K6)) u_g6 (.clk(clk), .rst_n(rst_n), .d({valid_in, dab >= 8'd28, dba >= 8'd28}), .q(g6));
+    ot_hdc_f12_cut #(.W(3), .CUT(K0)) u_g0 (.clk(clk), .rst_n(rst_n), .d(g6), .q(g0));
+    function automatic [27:0] jam28f;
+        input [23:0] man;
+        input [4:0]  d;
+        input        far;
+        reg [27:0] val, lost;
+        begin
+            val = {1'b0, man, 3'b000};
+            if (far) jam28f = {27'd0, |val};
+            else begin
+                lost = val & ~({28{1'b1}} << d);
+                jam28f = (val >> d) | {27'd0, |lost};
+            end
+        end
+    endfunction
+    wire [27:0] small_a = jam28f(x_aman, x_dba[4:0], g0[0]);
+    wire [27:0] small_b = jam28f(x_bman, x_dab[4:0], g0[1]);
     localparam integer W1 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 28;
     wire [W1-1:0] q1;
     ot_hdc_f12_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n),

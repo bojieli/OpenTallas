@@ -509,14 +509,17 @@ module ot_hdc_v41x_fdiv (
         d_e    <= $signed({na[9], na[9:0]}) - $signed({nb[9], nb[9:0]});
     end
 
-    // 3 mb, once
+    // 3 mb, once (hbm-fmax-su: a keep-prefix add)
+    wire [25:0] mb3_w;
+    wire        mb3_co;
+    ot_hdc_ksadd_k #(.W(26)) u_mb3 (.a({2'b0, d_mb}), .b({1'b0, d_mb, 1'b0}), .cin(1'b0), .s(mb3_w), .cout(mb3_co));
     reg        e_sign, e_zero, e_bad;
     reg [23:0] e_ma, e_mb;
     reg [25:0] e_mb3;
     reg signed [10:0] e_e;
     always @(posedge clk) begin
         e_sign <= d_sign; e_zero <= d_zero; e_bad <= d_bad; e_e <= d_e;
-        e_ma <= d_ma; e_mb <= d_mb; e_mb3 <= {2'b0, d_mb} + {1'b0, d_mb, 1'b0};
+        e_ma <= d_ma; e_mb <= d_mb; e_mb3 <= mb3_w;
     end
 
     reg [24:0]        r_rem  [0:NS-1];
@@ -538,9 +541,12 @@ module ot_hdc_v41x_fdiv (
             wire [QB-1:0] qin = (j == 0) ? {QB{1'b0}} : r_q[j-1];
             wire [26:0]   x   = (j == 0) ? {2'b0, e_ma, 1'b0} :
                                 TWO ? {r_rem[j-1][24:0], 2'b0} : {1'b0, r_rem[j-1][24:0], 1'b0};
-            wire [27:0]   d1 = {1'b0, x} - {4'b0, mb};
-            wire [27:0]   d2 = {1'b0, x} - {3'b0, mb, 1'b0};
-            wire [27:0]   d3 = {1'b0, x} - {2'b0, mb3};
+            // hbm-fmax-su: the three trial subtractions as keep-prefix adders (behavioural, 177 ps over 0.833 ns at SS)
+            wire [27:0]   d1, d2, d3;
+            wire [2:0]    unused_dc;
+            ot_hdc_ksadd_k #(.W(28)) u_d1 (.a({1'b0, x}), .b(~{4'b0, mb}), .cin(1'b1), .s(d1), .cout(unused_dc[0]));
+            ot_hdc_ksadd_k #(.W(28)) u_d2 (.a({1'b0, x}), .b(~{3'b0, mb, 1'b0}), .cin(1'b1), .s(d2), .cout(unused_dc[1]));
+            ot_hdc_ksadd_k #(.W(28)) u_d3 (.a({1'b0, x}), .b(~{2'b0, mb3}), .cin(1'b1), .s(d3), .cout(unused_dc[2]));
             wire [1:0]    q  = !d3[27] ? 2'd3 : !d2[27] ? 2'd2 : !d1[27] ? 2'd1 : 2'd0;
             wire [26:0]   r  = !d3[27] ? d3[26:0] : !d2[27] ? d2[26:0] : !d1[27] ? d1[26:0] : x;
             always @(posedge clk) begin
