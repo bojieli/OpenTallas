@@ -1,0 +1,897 @@
+{
+ "prompt": "gold4",
+ "drafter": "forced",
+ "gamma": 5,
+ "pos": 4,
+ "token": 2506,
+ "entry": 4029,
+ "end": 29500,
+ "iter_instructions": 25471,
+ "slices": [
+  {
+   "name": "draft",
+   "pc": [
+    4029,
+    4039
+   ],
+   "instructions": 10,
+   "heads": 0,
+   "units": {
+    "2": 10
+   },
+   "accepted": null
+  },
+  {
+   "name": "draft_L40",
+   "pc": [
+    4039,
+    4449
+   ],
+   "instructions": 410,
+   "heads": 0,
+   "units": {
+    "1": 40,
+    "2": 280,
+    "3": 65,
+    "4": 15,
+    "5": 10
+   },
+   "accepted": null
+  },
+  {
+   "name": "draft_L41",
+   "pc": [
+    4449,
+    4859
+   ],
+   "instructions": 410,
+   "heads": 0,
+   "units": {
+    "1": 40,
+    "2": 280,
+    "3": 65,
+    "4": 15,
+    "5": 10
+   },
+   "accepted": null
+  },
+  {
+   "name": "draft_L42",
+   "pc": [
+    4859,
+    5269
+   ],
+   "instructions": 410,
+   "heads": 0,
+   "units": {
+    "1": 40,
+    "2": 280,
+    "3": 65,
+    "4": 15,
+    "5": 10
+   },
+   "accepted": null
+  },
+  {
+   "name": "draft_1",
+   "pc": [
+    5269,
+    5324
+   ],
+   "instructions": 55,
+   "heads": 0,
+   "units": {
+    "0": 5,
+    "1": 10,
+    "2": 35,
+    "4": 5
+   },
+   "accepted": null
+  },
+  {
+   "name": "prologue",
+   "pc": [
+    5324,
+    5355
+   ],
+   "instructions": 31,
+   "heads": 0,
+   "units": {
+    "0": 1,
+    "2": 12,
+    "4": 18
+   },
+   "accepted": null
+  },
+  {
+   "name": "L0",
+   "pc": [
+    5355,
+    5919
+   ],
+   "instructions": 564,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 372,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L1",
+   "pc": [
+    5919,
+    6531
+   ],
+   "instructions": 612,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 414,
+    "3": 120,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L2",
+   "pc": [
+    6531,
+    7257
+   ],
+   "instructions": 726,
+   "heads": 0,
+   "units": {
+    "1": 72,
+    "2": 480,
+    "3": 138,
+    "4": 24,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L3",
+   "pc": [
+    7257,
+    7833
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L4",
+   "pc": [
+    7833,
+    8409
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L5",
+   "pc": [
+    8409,
+    8985
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L6",
+   "pc": [
+    8985,
+    9561
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L7",
+   "pc": [
+    9561,
+    10137
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L8",
+   "pc": [
+    10137,
+    10863
+   ],
+   "instructions": 726,
+   "heads": 0,
+   "units": {
+    "1": 72,
+    "2": 480,
+    "3": 138,
+    "4": 24,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L9",
+   "pc": [
+    10863,
+    11439
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L10",
+   "pc": [
+    11439,
+    12015
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L11",
+   "pc": [
+    12015,
+    12591
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L12",
+   "pc": [
+    12591,
+    13167
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L13",
+   "pc": [
+    13167,
+    13743
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L14",
+   "pc": [
+    13743,
+    14517
+   ],
+   "instructions": 774,
+   "heads": 0,
+   "units": {
+    "1": 72,
+    "2": 522,
+    "3": 144,
+    "4": 24,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L15",
+   "pc": [
+    14517,
+    15093
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L16",
+   "pc": [
+    15093,
+    15669
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L17",
+   "pc": [
+    15669,
+    16245
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L18",
+   "pc": [
+    16245,
+    16821
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L19",
+   "pc": [
+    16821,
+    17397
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L20",
+   "pc": [
+    17397,
+    18099
+   ],
+   "instructions": 702,
+   "heads": 0,
+   "units": {
+    "1": 72,
+    "2": 456,
+    "3": 138,
+    "4": 24,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L21",
+   "pc": [
+    18099,
+    18675
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L22",
+   "pc": [
+    18675,
+    19251
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L23",
+   "pc": [
+    19251,
+    19827
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L24",
+   "pc": [
+    19827,
+    20451
+   ],
+   "instructions": 624,
+   "heads": 0,
+   "units": {
+    "1": 60,
+    "2": 402,
+    "3": 126,
+    "4": 24,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L25",
+   "pc": [
+    20451,
+    21027
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L26",
+   "pc": [
+    21027,
+    21603
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L27",
+   "pc": [
+    21603,
+    22179
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L28",
+   "pc": [
+    22179,
+    22803
+   ],
+   "instructions": 624,
+   "heads": 0,
+   "units": {
+    "1": 60,
+    "2": 402,
+    "3": 126,
+    "4": 24,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L29",
+   "pc": [
+    22803,
+    23379
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L30",
+   "pc": [
+    23379,
+    23955
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L31",
+   "pc": [
+    23955,
+    24531
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L32",
+   "pc": [
+    24531,
+    25155
+   ],
+   "instructions": 624,
+   "heads": 0,
+   "units": {
+    "1": 60,
+    "2": 402,
+    "3": 126,
+    "4": 24,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L33",
+   "pc": [
+    25155,
+    25731
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L34",
+   "pc": [
+    25731,
+    26307
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L35",
+   "pc": [
+    26307,
+    26883
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "L36",
+   "pc": [
+    26883,
+    27507
+   ],
+   "instructions": 624,
+   "heads": 0,
+   "units": {
+    "1": 60,
+    "2": 402,
+    "3": 126,
+    "4": 24,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "mtp",
+   "pc": [
+    27507,
+    27525
+   ],
+   "instructions": 18,
+   "heads": 0,
+   "units": {
+    "2": 18
+   },
+   "accepted": null
+  },
+  {
+   "name": "L37",
+   "pc": [
+    27525,
+    28101
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "mtp_1",
+   "pc": [
+    28101,
+    28119
+   ],
+   "instructions": 18,
+   "heads": 0,
+   "units": {
+    "2": 18
+   },
+   "accepted": null
+  },
+  {
+   "name": "L38",
+   "pc": [
+    28119,
+    28695
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "mtp_2",
+   "pc": [
+    28695,
+    28713
+   ],
+   "instructions": 18,
+   "heads": 0,
+   "units": {
+    "2": 18
+   },
+   "accepted": null
+  },
+  {
+   "name": "L39",
+   "pc": [
+    28713,
+    29289
+   ],
+   "instructions": 576,
+   "heads": 0,
+   "units": {
+    "1": 48,
+    "2": 384,
+    "3": 114,
+    "4": 18,
+    "5": 12
+   },
+   "accepted": null
+  },
+  {
+   "name": "head",
+   "pc": [
+    29289,
+    29331
+   ],
+   "instructions": 42,
+   "heads": 6,
+   "units": {
+    "0": 6,
+    "1": 6,
+    "2": 30
+   },
+   "accepted": null
+  },
+  {
+   "name": "mtp_3",
+   "pc": [
+    29331,
+    29499
+   ],
+   "instructions": 168,
+   "heads": 0,
+   "units": {
+    "2": 126,
+    "3": 42
+   },
+   "accepted": null
+  },
+  {
+   "name": "accept",
+   "pc": [
+    29499,
+    29500
+   ],
+   "instructions": 1,
+   "heads": 0,
+   "units": {
+    "0": 1
+   },
+   "accepted": 3
+  }
+ ],
+ "accepted": 3,
+ "emitted": [
+  2191,
+  2548,
+  3674,
+  2401
+ ],
+ "drafts": [
+  2191,
+  2548,
+  3674,
+  2402,
+  3843
+ ],
+ "targets": [
+  2191,
+  2548,
+  3674,
+  2401,
+  246,
+  1902
+ ],
+ "golden_next": [
+  2191,
+  2548,
+  3674,
+  2401
+ ],
+ "emitted_equal_golden": true
+}

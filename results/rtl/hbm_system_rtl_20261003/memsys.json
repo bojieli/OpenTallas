@@ -1,0 +1,460 @@
+{
+ "schema": "opentallas.gpu_sys.memsys.v1",
+ "generated_utc": "2026-10-03T07:23:27Z",
+ "verdict": "PASS",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "sources": {
+  "rtl/gpu_sys/ot_gpu_xbar.sv": "5fa9a43e08af4ef23455b1b98b7e1094245775700a6441c2883f81cd0563cc0d",
+  "rtl/gpu_sys/ot_gpu_l2_slice.sv": "22f6c39433c9551e2c931853225a41de1a84bc1f44ae2f231a8cec793cc8986a",
+  "rtl/gpu_sys/ot_gpu_hbm_partition.sv": "1a2f10061d9bb7900fc9b9fd9b306c10345985d8f5be7be8d7f38fdb8330497f",
+  "rtl/gpu_sys/ot_gpu_memsys.sv": "73882cfce6282a027a678edc4eadf92b67875dae3544faf25c5fe1d026aba986",
+  "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+  "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94",
+  "rtl/gpu_sys/ot_gpu_memsys_lint.vlt": "9a87dbddb274b150893a8d13581e63aff3d758f67b6a5805397e6e53871fbe0b",
+  "rtl/test/gpu_sys/tb_gpu_memsys.sv": "08d9db893a4900ebc15a803173b2921f2c4766c7262771b0554d3a7c94cdeb15",
+  "rtl/test/w2_nc6_completion_20261003/tb.sv": "8427c1342f53311e8a2963773d12a302b06982b47e275623ef94efcfe0048c56",
+  "tools/gpu_sys/mem_image.py": "5f49a213735b218bf7e4e7154506ac55b17d8b1803a04c35f64cf699616bd170",
+  "tools/gpu_sys/run_memsys.py": "1f531ab13d522c47a6362c03f5893a10fbb6d34df3b30c8ca33b31765859494b"
+ },
+ "parameters": {
+  "NC": 4,
+  "NS": 2,
+  "NPC": 2,
+  "MEM_WORDS": 16384,
+  "OSD": 64,
+  "WIN": 4096,
+  "BWN": 8192,
+  "LATN": 64,
+  "CLK_PS": 1000,
+  "L2_BYTES": 32768
+ },
+ "interfaces": {
+  "mreq": "req_v/req_rdy/req_we/req_addr[31:0] byte (sector aligned)/req_wdata[255:0]/req_wstrb[31:0]/req_tag; rsp_v/rsp_rdy/rsp_tag/rsp_we/rsp_data[255:0]",
+  "ot_gpu_memsys": "#(ENABLE=0, NC=4, NS=2, NPC=2, MEM_WORDS=16384, CLK_PS=1000, L2_BYTES=32768, OSD=64, USE_W2=0, DIE_IDX=-1, IMAGE_PREFIX=\"\") (clk, rst_n, req_v[NC], req_rdy[NC], req_we[NC], req_addr[NC*32], req_wdata[NC*256], req_wstrb[NC*32], req_tag[NC*16], rsp_v[NC], rsp_rdy[NC], rsp_tag[NC*16], rsp_we[NC], rsp_data[NC*256], fault); client c at [c*W +: W]",
+  "ot_gpu_xbar": "#(ENABLE, NC, NS, TW=16) slice tag = {client, tag} (TW+log2 NC bits)",
+  "ot_gpu_l2_slice": "#(ENABLE, NS, TW, L2_BYTES, OSD) up MREQ (TW) + down MREQ (log2 OSD tag) + stat_* + fault",
+  "ot_gpu_hbm_partition": "#(ENABLE, NS, TW, NPC, MEM_WORDS, CLK_PS, USE_W2, PART_IDX, DIE_IDX, IMAGE_PREFIX) MREQ + fault"
+ },
+ "design": {
+  "xbar": "combinational routing, slice = addr[7 +: log2 NS], round-robin per slice (requests) and per client (responses), full valid/ready",
+  "l2_slice": "sectored direct-mapped (128 B lines, 4 x 32 B sectors, tag per line, valid per sector), write-through, update on write hit (whole merged sector written through), no allocate on write miss, read miss fills one sector; in order, NON-blocking: up to OSD outstanding misses/writes in an in-order completion queue; stalls only on a same-sector outstanding read miss or a same-line fill this cycle; responses retire in acceptance order (head-of-line)",
+  "partition": "slice bits removed, sector = local>>5; reads and full writes pass at one per cycle; partial writes by an exact read-modify-write that blocks the partition front end until the merged write is accepted; write ack at model acceptance (ordered before any later same-sector read by the model's same-sector rule); NPC response ports merged round-robin"
+ },
+ "memory_image": {
+  "array": "<memsys>.g_on.g_s[s].u_part.g_on.u_model.mem  (reg [255:0] mem [0:MEM_WORDS-1])",
+  "mapping": "X -> slice (X>>7)&(NS-1); local {X[31:7+log2 NS], X[6:0]}; sector local>>5; word sector % MEM_WORDS (helper refuses sector >= MEM_WORDS); byte lane X[4:0] = bits [8*lane +: 8]",
+  "helper": "tools/gpu_sys/mem_image.py write_images(mem_map, ns, mem_words, out_dir, prefix='mem', die=None) -> ['<out_dir>/<prefix>_p0.hex', ...] (die=d: '<prefix>_d<d>_p<s>.hex'; zero-filled, one per partition); mem_map = {die-global byte address: bytes | uint8 ndarray}",
+  "loading": "+gpu_sys_mem_prefix=<out_dir>/<prefix> plusarg, else parameter IMAGE_PREFIX; each partition zeroes its array then $readmemh(\"<prefix>_p<slice>.hex\") (DIE_IDX=-1) or \"<prefix>_d<DIE_IDX>_p<slice>.hex\" (DIE_IDX>=0)",
+  "verilog_snippet": "// system top: either pass the prefix as a parameter ...\not_gpu_memsys #(.ENABLE(1), .NC(4), .NS(2), .NPC(2), .MEM_WORDS(16384), .IMAGE_PREFIX(\"build/mem/die0\")) u_mem (...);\n// ... or at run time (overrides the parameter in every partition of every memsys instance):\n//   ./Vtop +gpu_sys_mem_prefix=build/mem/die0      -> loads build/mem/die0_p0.hex, build/mem/die0_p1.hex\n// multi-die top: give die d's memsys .DIE_IDX(d), write images with write_images(..., prefix=\"mem\", die=d), run\n//   ./Vtop +gpu_sys_mem_prefix=build/mem/mem       -> die d loads build/mem/mem_d<d>_p0.hex, ..._p1.hex\n// inside ot_gpu_hbm_partition (already implemented):\n//   initial begin for (w = 0; w < MEM_WORDS; w++) u_model.mem[w] = 0;\n//                 if (prefix != \"\") $readmemh($sformatf(\"%s_p%0d.hex\", prefix, PART_IDX), u_model.mem); end\n//   (with DIE_IDX >= 0 the name is \"%s_d%0d_p%0d.hex\", prefix, DIE_IDX, PART_IDX)\n"
+ },
+ "lint": [
+  {
+   "top": "ot_gpu_xbar",
+   "enable": 0,
+   "use_w2": null,
+   "pass": true,
+   "waived_unused": [
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:26:30: Signal is not used: 'clk'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:27:30: Signal is not used: 'rst_n'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:29:30: Signal is not used: 'c_req_v'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:31:30: Signal is not used: 'c_req_we'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:32:30: Signal is not used: 'c_req_addr'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:33:30: Signal is not used: 'c_req_wdata'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:34:30: Signal is not used: 'c_req_wstrb'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:35:30: Signal is not used: 'c_req_tag'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:37:30: Signal is not used: 'c_rsp_rdy'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:43:30: Signal is not used: 's_req_rdy'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:49:30: Signal is not used: 's_rsp_v'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:51:30: Signal is not used: 's_rsp_tag'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:52:30: Signal is not used: 's_rsp_we'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_xbar.sv:53:30: Signal is not used: 's_rsp_data'"
+   ],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_xbar",
+   "enable": 1,
+   "use_w2": null,
+   "pass": true,
+   "waived_unused": [],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_l2_slice",
+   "enable": 0,
+   "use_w2": null,
+   "pass": true,
+   "waived_unused": [
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:42:28: Signal is not used: 'clk'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:43:28: Signal is not used: 'rst_n'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:45:28: Signal is not used: 'req_v'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:47:28: Signal is not used: 'req_we'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:48:28: Signal is not used: 'req_addr'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:49:28: Signal is not used: 'req_wdata'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:50:28: Signal is not used: 'req_wstrb'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:51:28: Signal is not used: 'req_tag'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:53:28: Signal is not used: 'rsp_rdy'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:59:28: Signal is not used: 'd_req_rdy'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:65:28: Signal is not used: 'd_rsp_v'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:67:28: Signal is not used: 'd_rsp_tag'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:68:28: Signal is not used: 'd_rsp_we'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_l2_slice.sv:69:28: Signal is not used: 'd_rsp_data'"
+   ],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_l2_slice",
+   "enable": 1,
+   "use_w2": null,
+   "pass": true,
+   "waived_unused": [],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_hbm_partition",
+   "enable": 0,
+   "use_w2": 0,
+   "pass": true,
+   "waived_unused": [
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:57:26: Signal is not used: 'clk'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:58:26: Signal is not used: 'rst_n'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:59:26: Signal is not used: 'req_v'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:61:26: Signal is not used: 'req_we'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:62:26: Signal is not used: 'req_addr'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:63:26: Signal is not used: 'req_wdata'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:64:26: Signal is not used: 'req_wstrb'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:65:26: Signal is not used: 'req_tag'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:67:26: Signal is not used: 'rsp_rdy'"
+   ],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_hbm_partition",
+   "enable": 0,
+   "use_w2": 1,
+   "pass": true,
+   "waived_unused": [
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:57:26: Signal is not used: 'clk'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:58:26: Signal is not used: 'rst_n'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:59:26: Signal is not used: 'req_v'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:61:26: Signal is not used: 'req_we'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:62:26: Signal is not used: 'req_addr'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:63:26: Signal is not used: 'req_wdata'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:64:26: Signal is not used: 'req_wstrb'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:65:26: Signal is not used: 'req_tag'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_hbm_partition.sv:67:26: Signal is not used: 'rsp_rdy'"
+   ],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_hbm_partition",
+   "enable": 1,
+   "use_w2": 0,
+   "pass": true,
+   "waived_unused": [],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_hbm_partition",
+   "enable": 1,
+   "use_w2": 1,
+   "pass": true,
+   "waived_unused": [],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_memsys",
+   "enable": 0,
+   "use_w2": 0,
+   "pass": true,
+   "waived_unused": [
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:34:30: Signal is not used: 'clk'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:35:30: Signal is not used: 'rst_n'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:36:30: Signal is not used: 'req_v'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:38:30: Signal is not used: 'req_we'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:39:30: Signal is not used: 'req_addr'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:40:30: Signal is not used: 'req_wdata'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:41:30: Signal is not used: 'req_wstrb'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:42:30: Signal is not used: 'req_tag'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:44:30: Signal is not used: 'rsp_rdy'"
+   ],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_memsys",
+   "enable": 0,
+   "use_w2": 1,
+   "pass": true,
+   "waived_unused": [
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:34:30: Signal is not used: 'clk'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:35:30: Signal is not used: 'rst_n'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:36:30: Signal is not used: 'req_v'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:38:30: Signal is not used: 'req_we'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:39:30: Signal is not used: 'req_addr'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:40:30: Signal is not used: 'req_wdata'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:41:30: Signal is not used: 'req_wstrb'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:42:30: Signal is not used: 'req_tag'",
+    "/home/ubuntu/hbm-system-rtl-20261003/rtl/gpu_sys/ot_gpu_memsys.sv:44:30: Signal is not used: 'rsp_rdy'"
+   ],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_memsys",
+   "enable": 1,
+   "use_w2": 0,
+   "pass": true,
+   "waived_unused": [],
+   "violations": []
+  },
+  {
+   "top": "ot_gpu_memsys",
+   "enable": 1,
+   "use_w2": 1,
+   "pass": true,
+   "waived_unused": [],
+   "violations": []
+  }
+ ],
+ "simulations": [
+  {
+   "random_requests": 20000,
+   "random_responses": 20000,
+   "random_reads": 9956,
+   "random_full_writes": 5008,
+   "random_partial_writes": 5036,
+   "random_hot_set_requests": 5988,
+   "random_bp_cycles": 8621,
+   "random_cycles": 155977,
+   "random_mean_latency": 99.2662,
+   "l2_rd_hit": 2598,
+   "l2_rd_miss": 7358,
+   "l2_wr_hit": 2754,
+   "l2_wr_miss": 7290,
+   "readback_sectors": 4096,
+   "lat_read_miss_cycles": 47.5,
+   "lat_read_hit_cycles": 2.0,
+   "lat_write_full_miss_ack_cycles": 5.0,
+   "lat_write_partial_miss_ack_cycles": 91.875,
+   "bw1_sectors": 4096,
+   "bw1_cycles": 4892,
+   "bwN_sectors": 4096,
+   "bwN_cycles": 3327,
+   "total_requests": 32320,
+   "total_responses": 32320,
+   "errors": 0,
+   "pass": true,
+   "error_lines": [],
+   "wall_s": 0.38,
+   "seq_read_1client_sectors_per_cycle_total": 0.8373,
+   "seq_read_1client_sectors_per_cycle_per_partition": 0.4186,
+   "seq_read_allclients_sectors_per_cycle_total": 1.2311,
+   "seq_read_allclients_sectors_per_cycle_per_partition": 0.6156,
+   "seq_read_allclients_GBps_per_partition_at_clk_mem": 19.6982,
+   "use_w2": 0,
+   "seed": 1,
+   "image_files": [
+    "mem_p0.hex",
+    "mem_p1.hex"
+   ]
+  },
+  {
+   "random_requests": 20000,
+   "random_responses": 20000,
+   "random_reads": 9881,
+   "random_full_writes": 5142,
+   "random_partial_writes": 4977,
+   "random_hot_set_requests": 5994,
+   "random_bp_cycles": 8495,
+   "random_cycles": 153996,
+   "random_mean_latency": 99.9431,
+   "l2_rd_hit": 2615,
+   "l2_rd_miss": 7266,
+   "l2_wr_hit": 2742,
+   "l2_wr_miss": 7377,
+   "readback_sectors": 4096,
+   "lat_read_miss_cycles": 47.5,
+   "lat_read_hit_cycles": 2.0,
+   "lat_write_full_miss_ack_cycles": 5.0,
+   "lat_write_partial_miss_ack_cycles": 88.5,
+   "bw1_sectors": 4096,
+   "bw1_cycles": 4883,
+   "bwN_sectors": 4096,
+   "bwN_cycles": 3598,
+   "total_requests": 32320,
+   "total_responses": 32320,
+   "errors": 0,
+   "pass": true,
+   "error_lines": [],
+   "wall_s": 2.27,
+   "seq_read_1client_sectors_per_cycle_total": 0.8388,
+   "seq_read_1client_sectors_per_cycle_per_partition": 0.4194,
+   "seq_read_allclients_sectors_per_cycle_total": 1.1384,
+   "seq_read_allclients_sectors_per_cycle_per_partition": 0.5692,
+   "seq_read_allclients_GBps_per_partition_at_clk_mem": 18.2146,
+   "use_w2": 0,
+   "seed": 2,
+   "image_files": [
+    "mem_p0.hex",
+    "mem_p1.hex"
+   ]
+  },
+  {
+   "random_requests": 20000,
+   "random_responses": 20000,
+   "random_reads": 9855,
+   "random_full_writes": 5061,
+   "random_partial_writes": 5084,
+   "random_hot_set_requests": 6027,
+   "random_bp_cycles": 8567,
+   "random_cycles": 169699,
+   "random_mean_latency": 108.26985,
+   "l2_rd_hit": 2666,
+   "l2_rd_miss": 7189,
+   "l2_wr_hit": 2767,
+   "l2_wr_miss": 7378,
+   "readback_sectors": 4096,
+   "lat_read_miss_cycles": 50.5,
+   "lat_read_hit_cycles": 2.0,
+   "lat_write_full_miss_ack_cycles": 9.0,
+   "lat_write_partial_miss_ack_cycles": 98.0,
+   "bw1_sectors": 4096,
+   "bw1_cycles": 7625,
+   "bwN_sectors": 4096,
+   "bwN_cycles": 6201,
+   "total_requests": 32320,
+   "total_responses": 32320,
+   "errors": 0,
+   "pass": true,
+   "error_lines": [],
+   "wall_s": 1.1,
+   "seq_read_1client_sectors_per_cycle_total": 0.5372,
+   "seq_read_1client_sectors_per_cycle_per_partition": 0.2686,
+   "seq_read_allclients_sectors_per_cycle_total": 0.6605,
+   "seq_read_allclients_sectors_per_cycle_per_partition": 0.3303,
+   "seq_read_allclients_GBps_per_partition_at_clk_mem": 10.5686,
+   "use_w2": 1,
+   "seed": 1,
+   "image_files": [
+    "mem_p0.hex",
+    "mem_p1.hex"
+   ]
+  },
+  {
+   "random_requests": 20000,
+   "random_responses": 20000,
+   "random_reads": 10008,
+   "random_full_writes": 4945,
+   "random_partial_writes": 5047,
+   "random_hot_set_requests": 5967,
+   "random_bp_cycles": 8527,
+   "random_cycles": 171528,
+   "random_mean_latency": 106.9223,
+   "l2_rd_hit": 2680,
+   "l2_rd_miss": 7328,
+   "l2_wr_hit": 2645,
+   "l2_wr_miss": 7347,
+   "readback_sectors": 4096,
+   "lat_read_miss_cycles": 50.5,
+   "lat_read_hit_cycles": 2.0,
+   "lat_write_full_miss_ack_cycles": 9.0,
+   "lat_write_partial_miss_ack_cycles": 98.25,
+   "bw1_sectors": 4096,
+   "bw1_cycles": 7627,
+   "bwN_sectors": 4096,
+   "bwN_cycles": 6201,
+   "total_requests": 32320,
+   "total_responses": 32320,
+   "errors": 0,
+   "pass": true,
+   "error_lines": [],
+   "wall_s": 1.3,
+   "seq_read_1client_sectors_per_cycle_total": 0.537,
+   "seq_read_1client_sectors_per_cycle_per_partition": 0.2685,
+   "seq_read_allclients_sectors_per_cycle_total": 0.6605,
+   "seq_read_allclients_sectors_per_cycle_per_partition": 0.3303,
+   "seq_read_allclients_GBps_per_partition_at_clk_mem": 10.5686,
+   "use_w2": 1,
+   "seed": 2,
+   "image_files": [
+    "mem_p0.hex",
+    "mem_p1.hex"
+   ]
+  }
+ ],
+ "mutants": [
+  {
+   "mutant": "l2_no_same_sector_hazard",
+   "killed": true,
+   "errors": 55,
+   "first_errors": [
+    "ERROR c0 t2 read data",
+    "ERROR c3 t6 read data",
+    "ERROR c0 t13 read data"
+   ]
+  },
+  {
+   "mutant": "l2_no_update_on_write_hit",
+   "killed": true,
+   "errors": 1469,
+   "first_errors": [
+    "ERROR c2 t7 read data",
+    "ERROR c0 t6 read data",
+    "ERROR c0 t7 read data"
+   ]
+  },
+  {
+   "mutant": "partition_rmw_merge_inverted",
+   "killed": true,
+   "errors": 3813,
+   "first_errors": [
+    "ERROR c1 t7 read data",
+    "ERROR c0 t12 read data",
+    "ERROR c3 t13 read data"
+   ]
+  }
+ ],
+ "w2": {
+  "component": "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv",
+  "contract_bench": "rtl/test/w2_nc6_completion_20261003/tb.sv",
+  "fits": true,
+  "placement": "inside ot_gpu_hbm_partition between the front end (W2 client 0; clients 1..5 tied idle) and the model adapter (W2 provider), instantiated unmodified with OPT_EXACT=1 behind USE_W2 (default 0)",
+  "adaptation": [
+   "geometry is locked by $fatal (NC6/MAX_OUT16/CTAGW32/GENW4/SIDW3/PTAGW35/AW34): the partition keeps the default parameters, zero-extends its 27-LNS-bit sector address to AW 34 and its (TW+1)-bit front-end tag to CTAGW 32; the model runs with TAGW 35 so the provider tag {client, tag} round-trips unchanged",
+   "generation is tied to 0: the memory-system tags (L2 completion-queue indices) are reused only after their response, which is the W2 duplicate-free condition with a constant generation",
+   "W2 has no byte strobes, so the exact read-modify-write of partial writes stays in front of it; W2 only sees whole-sector reads and writes",
+   "the HBM model has no write response: the adapter's acceptance-time write ack (the point at which the write is ordered before every later read of its sector) is W2's provider write-done",
+   "admission_stop=0, rearm_v=0, provider_fenced=reset_fenced=1 (no runtime rearm/fence use); W2 resets asynchronously on the shared clk_mem reset (SYNCASYNCNET waived)"
+  ],
+  "cost": "W2 holds one request (holder register) and one read response stage: at most one request per two cycles and one read response per two cycles per partition, and MAX_OUT=16 outstanding per client: see the use_w2=1 bandwidth/latency figures against use_w2=0",
+  "functional_pass": true,
+  "measured": {
+   "use_w2_0": {
+    "seq_read_1client_sectors_per_cycle_per_partition": 0.4186,
+    "seq_read_allclients_sectors_per_cycle_per_partition": 0.6156,
+    "lat_read_miss_cycles": 47.5,
+    "lat_read_hit_cycles": 2.0,
+    "lat_write_full_miss_ack_cycles": 5.0,
+    "lat_write_partial_miss_ack_cycles": 91.875,
+    "random_cycles": 155977
+   },
+   "use_w2_1": {
+    "seq_read_1client_sectors_per_cycle_per_partition": 0.2686,
+    "seq_read_allclients_sectors_per_cycle_per_partition": 0.3303,
+    "lat_read_miss_cycles": 50.5,
+    "lat_read_hit_cycles": 2.0,
+    "lat_write_full_miss_ack_cycles": 9.0,
+    "lat_write_partial_miss_ack_cycles": 98.0,
+    "random_cycles": 169699
+   }
+  },
+  "verdict": "PASS: fits unmodified and is exact in the memory-system bench; default stays USE_W2=0 (it costs bandwidth/latency, see measured)"
+ },
+ "limits": [
+  "responses leave each slice in acceptance order (head-of-line blocking behind an older miss)",
+  "a partial write that misses L2 serialises its partition for one read latency (exact RMW)",
+  "one request per cycle per slice and per partition; the model's NPC pseudo-channels can take ~NPC/1.024 sectors per ns",
+  "sequential-read bandwidth with NC streams is bound by the model's DRAM row/bank behaviour, not by the slice's outstanding limit: OSD=128 measured 0.546 sectors/cycle/partition against 0.616 at OSD=64 (same bench, seed 1), so OSD stays 64",
+  "one client alone issues at most one request per cycle across all slices (0.5 sectors/cycle/partition ceiling at NS=2)",
+  "behavioural model only (timing-faithful DRAM, not synthesisable); no ECC on the HBM path modelled"
+ ]
+}

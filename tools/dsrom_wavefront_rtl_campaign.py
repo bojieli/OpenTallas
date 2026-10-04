@@ -517,6 +517,17 @@ def run_stage(scratch: Path):
 S81 = {"1048576": dict(ar=2466.2, pass_tok_s_tau3649=3742.8), "200000": dict(ar=2574.1, pass_tok_s_tau3649=4096.7)}
 TAU = 4.159                       # V4.1 DSpark, equal 6-class blend, gamma 5 (blend_owner6.json)
 DRAFT_OVER_AR = 0.1173            # scenario C draft composition (dsrom_wavefront_verify_20261003)
+# SUCCESSOR (2026-10-04): the MEASURED DSpark draft (+ seed/commit), dsrom_dspark_mtp_step_compose.py; compose
+# --draft {as_built, l1} uses it, --draft assumed keeps DRAFT_OVER_AR (reproduces the 20261004 record.json).
+DRAFT_RECORD = ROOT / "results/rtl/dsrom_dspark_step_slices_20261004/composition.json"
+DRAFT_VARIANTS = {"as_built": "as_built_chain", "l1": "fused_head"}
+
+
+def draft_us(ctx, ar, variant):
+    if variant == "assumed":
+        return DRAFT_OVER_AR * ar
+    c = json.loads(DRAFT_RECORD.read_text())["full_shape"]["ctx"][ctx]
+    return c[DRAFT_VARIANTS[variant]]["draft_us"] + c["seed_commit_us"]
 STAGE_US = {"1048576": dict(head_occ=12.37, l20_occ=11.62, window=19.24),
             "200000": dict(head_occ=12.37, l20_occ=4.51, window=15.42)}    # 4f0c050b8 model.json (S73 run)
 HOP_US = 0.48                     # one 4 x 5,120 BF16 hidden state per interval (model hop term)
@@ -557,14 +568,14 @@ def stage_measure(out: str):
                 total_cycles=int(st.group(2)), pass_=("\nPASS" in out))
 
 
-def compose(stage):
+def compose(stage, draft_variant="as_built"):
     busy = [r["busy"] for r in stage["jobs"]]
     hand = [r["handoff_after_prev_done"] for r in stage["jobs"][1:]]
     over = max(h / b for h, b in zip(hand, busy))           # interval / occupancy - 1, measured
     vis_frac = max(stage["visibility"][k]["last_write_to_all_visible_max_cycles"] for k in ("KV", "IK")) / min(busy)
     rows = {}
     for ctx, c in S81.items():
-        ar = 1e6 / c["ar"]; draft = DRAFT_OVER_AR * ar
+        ar = 1e6 / c["ar"]; draft = draft_us(ctx, ar, draft_variant)
         pass_step = 3.649e6 / c["pass_tok_s_tau3649"]
         su = STAGE_US[ctx]
         r = dict(ar_us=round(ar, 2), ar_tok_s=c["ar"], pass_m1=dict(step_us=round(pass_step, 2),
@@ -577,7 +588,9 @@ def compose(stage):
                                          step_us=round(step, 2), mtp_tok_s=round(TAU * 1e6 / step, 1),
                                          gain_vs_pass=round(pass_step / step - 1, 4))
         rows[ctx] = r
-    return dict(tau=TAU, draft_over_ar=DRAFT_OVER_AR, measured_interval_overhead=round(over, 5),
+    return dict(tau=TAU, draft_over_ar=DRAFT_OVER_AR if draft_variant == "assumed" else None,
+                draft_variant=draft_variant, draft_record=None if draft_variant == "assumed" else str(DRAFT_RECORD.relative_to(ROOT)),
+                measured_interval_overhead=round(over, 5),
                 measured_visibility_over_occupancy=round(vis_frac, 5), hop_us=HOP_US, head_rtl=HEAD_RTL,
                 basis="II = max stage occupancy (head 12.37 us; L20 11.62 us at 1M) x (1 + measured handoff/occupancy) "
                       "+ hop transfer (serialised, as in the reduced controller); visibility adds nothing: every K/V and "
@@ -593,6 +606,8 @@ def main():
     ap.add_argument("--scratch", type=Path, required=True)
     ap.add_argument("--config", choices=sorted(CONFIGS))
     ap.add_argument("--output", type=Path)
+    ap.add_argument("--draft", choices=("as_built", "l1", "assumed"), default="as_built",
+                    help="compose: MEASURED DSpark draft (as_built / l1 fused head) or the legacy assumed 0.1173 x AR")
     ap.add_argument("--all-unit", action="store_true"); ap.add_argument("--kv-hbm", action="store_true")
     a = ap.parse_args()
     if a.action == "prepare":
@@ -609,7 +624,7 @@ def main():
             if f.exists():
                 res[f"stage_wave{w}"] = stage_measure(f.read_text())
                 res[f"stage_wave{w}"]["log_sha256"] = hashlib.sha256(f.read_bytes()).hexdigest()
-        res["composition"] = compose(res["stage_wave1"])
+        res["composition"] = compose(res["stage_wave1"], a.draft)
         (a.output or a.scratch / "record.json").write_text(json.dumps(res, indent=1) + "\n")
         print(json.dumps(res["composition"], indent=1))
     elif a.action == "run":

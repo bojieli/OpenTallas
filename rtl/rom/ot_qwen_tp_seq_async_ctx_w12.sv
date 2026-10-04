@@ -21,6 +21,7 @@
 // ---------------------------------------------------------------------------
 module ot_qwen_tp_seq_async_ctx_w12 #(
     parameter integer ASYNC_COLL = 1,
+    parameter integer SB_PIPE = 0,         // 1: pipelined cut-through scoreboard set (ot_qwen_tp_seq_async_w12)
     parameter integer ENABLE_AR256 = 1,
     parameter integer NP   = 48,
     parameter integer MAW  = 24,
@@ -104,7 +105,7 @@ module ot_qwen_tp_seq_async_ctx_w12 #(
     wire [FW-1:0]     s_vm_wdata, s_c_data;
     wire [TAGW-1:0]   s_c_tag;
 
-    ot_qwen_tp_seq_async_w12 #(.ENABLE_AR256(ENABLE_AR256), .ASYNC_COLL(ASYNC_COLL), .NP(NP), .MAW(MAW),
+    ot_qwen_tp_seq_async_w12 #(.ENABLE_AR256(ENABLE_AR256), .ASYNC_COLL(ASYNC_COLL), .SB_PIPE(SB_PIPE), .NP(NP), .MAW(MAW),
         .N(N), .NW(NW), .PAW(PAW), .VWA(VWA), .DAW(DAW), .FW(FW), .TAGW(TAGW),
         .QWEN_FULLSHAPE(QWEN_FULLSHAPE)) seq (
         .clk(clk), .rst_n(rst_n), .start(i_start), .token(i_token), .pos(i_pos),
