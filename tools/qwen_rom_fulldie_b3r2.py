@@ -605,6 +605,52 @@ def latency(points=(0, 1)):
                                (d, -100 * (r[1]['tok_s_b1'] / r[0]['tok_s_b1'] - 1)))
 
 
+def bword_stages(v, m, pitch=None):
+    """Registered stages on each block word's path to the tree top: block root -> its slab (-> band primary when
+    it lands on a fragment) -> tree top, rectilinear centre distance at the link stage pitch (430.56 um)."""
+    pitch = pitch or v.LINK_STAGE_UM
+    by = {i.name: i for i in m['insts']}
+    d = lambda a, b: abs(by[a].cx - by[b].cx) + abs(by[a].cy - by[b].cy)
+    prim, frag = {}, {}
+    for bid, cl, bits, eps in m['buses']:
+        if bid.startswith('pword_'):
+            prim[eps[0][0]] = eps[1][0]
+        if bid.startswith('pfrag_'):
+            frag[eps[0][0]] = eps[1][0]
+    per = []
+    for bid, cl, bits, eps in m['buses']:
+        if not bid.startswith('bword_'):
+            continue
+        root, slab = eps[0][0], eps[1][0]
+        legs = [(root, slab)]
+        if slab in frag:
+            legs.append((slab, frag[slab]))
+            slab = frag[slab]
+        legs.append((slab, prim[slab]))
+        per.append(sum(math.ceil(d(a, b) / pitch) for a, b in legs))
+    return dict(pitch_um=pitch, words=len(per), max=max(per), mean=round(sum(per) / len(per), 2), min=min(per))
+
+
+def latency_tws(stages):
+    """Token cycles when the model's level-6 word -> spine-top term QWEN_WIRE_W12.tws (30) is replaced by the
+    floorplan's worst block-word stage count: me_lat_extra = 167 + (stages - 30) in the clocking-decision probe."""
+    import uarch_model as u
+    tws = u.QWEN_WIRE_W12['tws']
+    r = {}
+    for e in (0, stages - tws):
+        p = u.qwen_tp_point(4, 6144, 'board', clock_hz=u.PRODUCT_CLOCK_HZ, me_lat_extra=167 + e, su_width=64)
+        r[e] = (p['cycles'], p['tokens_s_b1'])
+    e = stages - tws
+    return dict(model_term='tools/uarch_model.py QWEN_WIRE_W12["tws"]', model_tws=tws, floorplan_stages=stages,
+                delta_stages_per_me_op=e, base_cycles=r[0][0], new_cycles=r[e][0], delta_cycles_per_token=r[e][0] - r[0][0],
+                delta_us=round((r[e][0] - r[0][0]) / 1.2e3, 3), base_tok_s=r[0][1], new_tok_s=r[e][1],
+                rate_delta_pct=round(100 * (r[e][1] / r[0][1] - 1), 3),
+                probe='uarch_model.qwen_tp_point(4, 6144, "board", PRODUCT_CLOCK_HZ, me_lat_extra=167+delta, su_width=64)',
+                unified_model_sha256=hashlib.sha256((ROOT / 'tools/uarch_model.py').read_bytes()).hexdigest(),
+                instruction_for_model_owner='set QWEN_WIRE_W12["tws"] = floorplan_stages (me_lat_extra follows) and '
+                                            're-run the Qwen ROM headline; bound until a routed path STA confirms the pitch')
+
+
 def write_def_regions(v, m, path):
     v.write_def_floorplan(m, path)
     txt = Path(path).read_text()
@@ -633,7 +679,7 @@ def record(v, m):
                 spine_parts=m['geo'].get('spine_parts_band') or m['geo']['spine_parts'],
                 fifo=fifo_accounting(v, m), clock_regions_summary=by_kind, clock_regions=m['clock_regions'],
                 spine_vertical_cut_bits=spine_cut(m, [3000, 8800, 12000, 18000, 25000]),
-                link_stages=v.link_stages(m))
+                link_stages=v.link_stages(m), bword_stages=bword_stages(v, m))
 
 
 def summarize(work):
