@@ -1,0 +1,80 @@
+{
+  "actual_loaded_host": "tools/runtime/dsrom/s81_minimum_element.cpp",
+  "actual_models": [
+    "Vpq",
+    "Vpb"
+  ],
+  "bad_cfg24_old_destination": 7,
+  "baseline_src": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1",
+  "correct_cfg24_destination": 15,
+  "current_cfg_paths": [
+    {
+      "actual_live_classes": [
+        {
+          "classes": [
+            {
+              "class": 0,
+              "first_segment": 0,
+              "last_segment": 0
+            }
+          ],
+          "phase": 0
+        }
+      ],
+      "all25entries_loaded_including24": true,
+      "path": "/tmp/dsrom-s81-minimum-source-selected-cicero-r1/e0.cfg.hex",
+      "sha256": "995e163b1fdef33dede1e6b648e6ee744a56a7e1067516ab6bff0cefc4d0004f",
+      "words": 25
+    },
+    {
+      "actual_live_classes": [
+        {
+          "classes": [
+            {
+              "class": 0,
+              "first_segment": 0,
+              "last_segment": 1
+            }
+          ],
+          "phase": 5
+        },
+        {
+          "classes": [
+            {
+              "class": 0,
+              "first_segment": 0,
+              "last_segment": 1
+            }
+          ],
+          "phase": 11
+        },
+        {
+          "classes": [
+            {
+              "class": 0,
+              "first_segment": 0,
+              "last_segment": 0
+            }
+          ],
+          "phase": 18
+        }
+      ],
+      "all25entries_loaded_including24": true,
+      "path": "/tmp/arch-s81-L20-full-field-r1/I7/e11.cfg.hex",
+      "sha256": "7b3cb178efab09af0cc2f5b529b97e39ca309772b84716a3c07bd2adc7ff3853",
+      "words": 475
+    }
+  ],
+  "direct_raw_weights_bypass_cfg_decode": false,
+  "eight_segment_supported_by_compiled_model": true,
+  "historical_S81_max3_segment_claim": "Claude be155 README statement retained as scoped historicalfield evidence, not universally exempting newcallbackCFG orfullNSEG8native archive",
+  "no_runtime_or_global_rebuild": true,
+  "nonfield_partial_runs": "SU/ATT with quietpair do not independently exercise segment7; preserve their verdict/scope withoutretroactiveerror",
+  "schema": "s81-active-rowdecode-source-applicability-v1",
+  "source_chain": [
+    "source_cfg or e*.cfg.hex -> v41rt_cfg_read",
+    "pair.loader cmr(ld_a) -> registered c_d",
+    "c_v/c_a at allCW25 addresses -> u_e.cfg_a_e",
+    "s_row config table -> public prow/idle filtering"
+  ]
+}
