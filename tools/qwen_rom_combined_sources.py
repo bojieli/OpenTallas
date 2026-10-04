@@ -4,7 +4,9 @@ from pathlib import Path
 import argparse,hashlib,json,sys
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
-def selected(output:Path,near_hbm=False):
+def selected(output:Path,near_hbm=False,*,hbm_layers=36):
+    if type(hbm_layers) is not int or not 1 <= hbm_layers <= 36:
+        raise ValueError('HBM layer extent must be an integer from 1 to 36')
     import qwen_rom_rt_token_w12_rm as baseline
     import qwen_rom_rt_core_emit_w12 as emitter
     output.mkdir(parents=True,exist_ok=True)
@@ -28,8 +30,9 @@ def selected(output:Path,near_hbm=False):
     if missing:raise FileNotFoundError('Missing selected actual source(s): '+', '.join(missing))
     sources={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in dict.fromkeys(die+tiles+collective)}
     rec=dict(top='ot_qwen_rom_combined_die',die=list(map(str,die)),tile=list(map(str,tiles)),collective=list(map(str,collective)),
-             include=[str(ROOT/'rtl/hdc')],parameters={'G':6144,'SW':64,'NW':18,'SNW':18,'D':4,'REAL_MEM':1,'NPC':32,'NEAR_HBM':int(near_hbm),'ENABLE_AR256':1},
-             collective_parameters={'N':4,'TAGW':44},source_sha256=sources,
+             include=[str(ROOT/'rtl/hdc')],parameters={'G':6144,'SW':64,'NW':18,'SNW':18,'D':4,'REAL_MEM':1,'NPC':32,'NEAR_HBM':int(near_hbm),'ENABLE_AR256':1,'SMIN':7,'SMAX':11,'TCUT':7,'BD':41,'XVM':1,'NWS':5,'TWS':38,'ORD':7,'MEM_EXTRA':1,'SCALE_BANKS':13,'CROM_WORDS':1048576,'HBM_LAYERS':hbm_layers,'EMBED_ROM':1,'FILL_LAT':8,'NRD':256,'LKA':512},
+             collective_parameters={'N':4,'LANES':16,'TAGW':44,'DEPTH':1024,'LAT':339,'BPC_NUM':3600},
+             tile_parameters={'GT':6144,'NW':18,'SMIN':7,'CODE_BANKS':5,'MEM_EXTRA':1,'KV_VB':131072,'KV_NH':2},source_sha256=sources,
              clocks={'core_service_tile':'clk','HBM':'hclk','reset':'rst_n/hrst_n independently conditioned by actual FIFO'},
              preload_arrays=['vm','prog_mem','desc_mem','crom_mem','crom_words','g_sc (unchanged ROM macro arrays)','embedding (unchanged baseline hierarchy)'],
              hbm='external four ot_qwen_hbm_model_ack per die; TAGW13/NPC32/WR_ACK1/PC_RDY1/CLK_PS agrees hclk',
@@ -40,5 +43,5 @@ def selected(output:Path,near_hbm=False):
     (output/'die_sources.f').write_text('\n'.join(map(str,die))+'\n')
     return rec
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--near-hbm',action='store_true');a=p.parse_args()
-    r=selected(a.output,a.near_hbm);print(json.dumps({'top':r['top'],'sources':str(a.output/'sources.json'),'NEAR_HBM':r['parameters']['NEAR_HBM']}))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--near-hbm',action='store_true');p.add_argument('--hbm-layers',type=int,default=36);a=p.parse_args()
+    r=selected(a.output,a.near_hbm,hbm_layers=a.hbm_layers);print(json.dumps({'top':r['top'],'sources':str(a.output/'sources.json'),'NEAR_HBM':r['parameters']['NEAR_HBM'],'HBM_LAYERS':r['parameters']['HBM_LAYERS']}))
