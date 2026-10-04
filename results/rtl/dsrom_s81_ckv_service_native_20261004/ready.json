@@ -1,0 +1,480 @@
+{
+  "scope": "existing CKV C8 service native header/archive only",
+  "supervisor_pid": 2626410,
+  "source_commit": "d7b2db738cc822533619c03699d5c9726832a7e3",
+  "source_sha256": {
+    "rtl/dsrom_sys/c8/ot_chip_v41x_ckv_die_service_c8.sv": "8a2bc1568c1e94691e8fd89f4613085a0a98c7f736760211ad2fcba17b2127d8",
+    "rtl/chip/ot_chip_v41x_ckv_sel_ids.sv": "22a8c3224c140293bfe5f8a4f957f7baa3e58b8baab37c99c62e4084486403ad",
+    "rtl/chip/ot_chip_v41x_ckv_row_encoder.sv": "3b38f02de06b90b5881b82a77edf080cd740dec2c3c59750e778153943e48588",
+    "rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv": "7a2cb51b8c5784c9c74c40012dae318034da05da6f9bbb5598699a94925c86cc",
+    "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv": "673cd79bb136b37684a128d13da23a05c6073f1f629d2f94f2ee275f698ae78a",
+    "rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv": "3ce5ca80f0a72d1b785689ae3bd854f94cc2fa96789b0a19c06d19b613ff1988",
+    "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166"
+  },
+  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "parameters": {
+    "C8_PUBLICATION": 1,
+    "K": 512,
+    "POS_W": 21,
+    "AW": 30,
+    "VWA": 15,
+    "HAW": 30,
+    "TAGW": 16,
+    "CKV_BASE": 4194304,
+    "CKV_SECTORS": 589824,
+    "NSLOT": 64
+  },
+  "actual_ranks": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "initial_headroom": {
+    "memory_bytes": {
+      "MemTotal": 202405810176,
+      "MemAvailable": 139491864576,
+      "SwapFree": 715173888
+    },
+    "disk_free_bytes": 1211369701376,
+    "CPUs": 32,
+    "load": [
+      19.44287109375,
+      24.02880859375,
+      31.52001953125
+    ]
+  },
+  "jobs": 8,
+  "runtime_context": "construct each model with EXISTING Runtime.context; no own context/runtime",
+  "limits": "No wall/CPU time, file size or address-space caps; preserve completed objects",
+  "ranks": [
+    {
+      "rank": 0,
+      "model": "VDsromS81CkvRank0",
+      "parameters": {
+        "C8_PUBLICATION": 1,
+        "K": 512,
+        "POS_W": 21,
+        "AW": 30,
+        "VWA": 15,
+        "HAW": 30,
+        "TAGW": 16,
+        "CKV_BASE": 4194304,
+        "CKV_SECTORS": 589824,
+        "NSLOT": 64,
+        "DIE_ID": 0
+      },
+      "header": "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank0/obj/VDsromS81CkvRank0.h",
+      "archive": "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank0/obj/VDsromS81CkvRank0__ALL.a",
+      "stages": [
+        {
+          "phase": "frontend",
+          "pid": 2626448,
+          "exit": 0,
+          "seconds": 2.8821500120684505,
+          "command": [
+            "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+            "--cc",
+            "--top-module",
+            "ot_chip_v41x_ckv_die_service_c8",
+            "--prefix",
+            "VDsromS81CkvRank0",
+            "--Mdir",
+            "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank0/obj",
+            "--output-split",
+            "20000",
+            "--output-split-cfuncs",
+            "200",
+            "-Wno-fatal",
+            "-CFLAGS",
+            "-O0 -fPIC",
+            "-GC8_PUBLICATION=1",
+            "-GK=512",
+            "-GPOS_W=21",
+            "-GAW=30",
+            "-GVWA=15",
+            "-GHAW=30",
+            "-GTAGW=16",
+            "-GCKV_BASE=4194304",
+            "-GCKV_SECTORS=589824",
+            "-GNSLOT=64",
+            "-GDIE_ID=0",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/dsrom_sys/c8/ot_chip_v41x_ckv_die_service_c8.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_row_encoder.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_stream_merge.sv"
+          ]
+        },
+        {
+          "phase": "archive",
+          "pid": 2626601,
+          "exit": 0,
+          "seconds": 6.061315974686295,
+          "command": [
+            "make",
+            "-C",
+            "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank0/obj",
+            "-f",
+            "VDsromS81CkvRank0.mk",
+            "-j8",
+            "OPT_FAST=-O0",
+            "OPT_SLOW=-O0",
+            "VDsromS81CkvRank0__ALL.a"
+          ]
+        }
+      ],
+      "headroom": {
+        "memory_bytes": {
+          "MemTotal": 202405810176,
+          "MemAvailable": 139491864576,
+          "SwapFree": 715173888
+        },
+        "disk_free_bytes": 1211369693184,
+        "CPUs": 32,
+        "load": [
+          19.44287109375,
+          24.02880859375,
+          31.52001953125
+        ]
+      },
+      "verdict": "PASS_NATIVE_ARCHIVE_ONLY"
+    },
+    {
+      "rank": 1,
+      "model": "VDsromS81CkvRank1",
+      "parameters": {
+        "C8_PUBLICATION": 1,
+        "K": 512,
+        "POS_W": 21,
+        "AW": 30,
+        "VWA": 15,
+        "HAW": 30,
+        "TAGW": 16,
+        "CKV_BASE": 4194304,
+        "CKV_SECTORS": 589824,
+        "NSLOT": 64,
+        "DIE_ID": 1
+      },
+      "header": "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank1/obj/VDsromS81CkvRank1.h",
+      "archive": "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank1/obj/VDsromS81CkvRank1__ALL.a",
+      "stages": [
+        {
+          "phase": "frontend",
+          "pid": 2627079,
+          "exit": 0,
+          "seconds": 3.0198719357140362,
+          "command": [
+            "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+            "--cc",
+            "--top-module",
+            "ot_chip_v41x_ckv_die_service_c8",
+            "--prefix",
+            "VDsromS81CkvRank1",
+            "--Mdir",
+            "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank1/obj",
+            "--output-split",
+            "20000",
+            "--output-split-cfuncs",
+            "200",
+            "-Wno-fatal",
+            "-CFLAGS",
+            "-O0 -fPIC",
+            "-GC8_PUBLICATION=1",
+            "-GK=512",
+            "-GPOS_W=21",
+            "-GAW=30",
+            "-GVWA=15",
+            "-GHAW=30",
+            "-GTAGW=16",
+            "-GCKV_BASE=4194304",
+            "-GCKV_SECTORS=589824",
+            "-GNSLOT=64",
+            "-GDIE_ID=1",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/dsrom_sys/c8/ot_chip_v41x_ckv_die_service_c8.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_row_encoder.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_stream_merge.sv"
+          ]
+        },
+        {
+          "phase": "archive",
+          "pid": 2627331,
+          "exit": 0,
+          "seconds": 6.050082680303603,
+          "command": [
+            "make",
+            "-C",
+            "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank1/obj",
+            "-f",
+            "VDsromS81CkvRank1.mk",
+            "-j8",
+            "OPT_FAST=-O0",
+            "OPT_SLOW=-O0",
+            "VDsromS81CkvRank1__ALL.a"
+          ]
+        }
+      ],
+      "headroom": {
+        "memory_bytes": {
+          "MemTotal": 202405810176,
+          "MemAvailable": 135912378368,
+          "SwapFree": 715173888
+        },
+        "disk_free_bytes": 1211209666560,
+        "CPUs": 32,
+        "load": [
+          22.16845703125,
+          24.45751953125,
+          31.57958984375
+        ]
+      },
+      "verdict": "PASS_NATIVE_ARCHIVE_ONLY"
+    },
+    {
+      "rank": 2,
+      "model": "VDsromS81CkvRank2",
+      "parameters": {
+        "C8_PUBLICATION": 1,
+        "K": 512,
+        "POS_W": 21,
+        "AW": 30,
+        "VWA": 15,
+        "HAW": 30,
+        "TAGW": 16,
+        "CKV_BASE": 4194304,
+        "CKV_SECTORS": 589824,
+        "NSLOT": 64,
+        "DIE_ID": 2
+      },
+      "header": "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank2/obj/VDsromS81CkvRank2.h",
+      "archive": "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank2/obj/VDsromS81CkvRank2__ALL.a",
+      "stages": [
+        {
+          "phase": "frontend",
+          "pid": 2627663,
+          "exit": 0,
+          "seconds": 2.261297722812742,
+          "command": [
+            "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+            "--cc",
+            "--top-module",
+            "ot_chip_v41x_ckv_die_service_c8",
+            "--prefix",
+            "VDsromS81CkvRank2",
+            "--Mdir",
+            "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank2/obj",
+            "--output-split",
+            "20000",
+            "--output-split-cfuncs",
+            "200",
+            "-Wno-fatal",
+            "-CFLAGS",
+            "-O0 -fPIC",
+            "-GC8_PUBLICATION=1",
+            "-GK=512",
+            "-GPOS_W=21",
+            "-GAW=30",
+            "-GVWA=15",
+            "-GHAW=30",
+            "-GTAGW=16",
+            "-GCKV_BASE=4194304",
+            "-GCKV_SECTORS=589824",
+            "-GNSLOT=64",
+            "-GDIE_ID=2",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/dsrom_sys/c8/ot_chip_v41x_ckv_die_service_c8.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_row_encoder.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_stream_merge.sv"
+          ]
+        },
+        {
+          "phase": "archive",
+          "pid": 2627696,
+          "exit": 0,
+          "seconds": 4.589693219866604,
+          "command": [
+            "make",
+            "-C",
+            "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank2/obj",
+            "-f",
+            "VDsromS81CkvRank2.mk",
+            "-j8",
+            "OPT_FAST=-O0",
+            "OPT_SLOW=-O0",
+            "VDsromS81CkvRank2__ALL.a"
+          ]
+        }
+      ],
+      "headroom": {
+        "memory_bytes": {
+          "MemTotal": 202405810176,
+          "MemAvailable": 134903918592,
+          "SwapFree": 715698176
+        },
+        "disk_free_bytes": 1211048337408,
+        "CPUs": 32,
+        "load": [
+          23.43408203125,
+          24.65625,
+          31.56787109375
+        ]
+      },
+      "verdict": "PASS_NATIVE_ARCHIVE_ONLY"
+    },
+    {
+      "rank": 3,
+      "model": "VDsromS81CkvRank3",
+      "parameters": {
+        "C8_PUBLICATION": 1,
+        "K": 512,
+        "POS_W": 21,
+        "AW": 30,
+        "VWA": 15,
+        "HAW": 30,
+        "TAGW": 16,
+        "CKV_BASE": 4194304,
+        "CKV_SECTORS": 589824,
+        "NSLOT": 64,
+        "DIE_ID": 3
+      },
+      "header": "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank3/obj/VDsromS81CkvRank3.h",
+      "archive": "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank3/obj/VDsromS81CkvRank3__ALL.a",
+      "stages": [
+        {
+          "phase": "frontend",
+          "pid": 2628141,
+          "exit": 0,
+          "seconds": 1.5128310238942504,
+          "command": [
+            "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+            "--cc",
+            "--top-module",
+            "ot_chip_v41x_ckv_die_service_c8",
+            "--prefix",
+            "VDsromS81CkvRank3",
+            "--Mdir",
+            "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank3/obj",
+            "--output-split",
+            "20000",
+            "--output-split-cfuncs",
+            "200",
+            "-Wno-fatal",
+            "-CFLAGS",
+            "-O0 -fPIC",
+            "-GC8_PUBLICATION=1",
+            "-GK=512",
+            "-GPOS_W=21",
+            "-GAW=30",
+            "-GVWA=15",
+            "-GHAW=30",
+            "-GTAGW=16",
+            "-GCKV_BASE=4194304",
+            "-GCKV_SECTORS=589824",
+            "-GNSLOT=64",
+            "-GDIE_ID=3",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/dsrom_sys/c8/ot_chip_v41x_ckv_die_service_c8.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_row_encoder.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+            "/home/ubuntu/dsrom-s81-ckv-service-build-20261004/rtl/chip/ot_chip_v41x_ckv_stream_merge.sv"
+          ]
+        },
+        {
+          "phase": "archive",
+          "pid": 2628412,
+          "exit": 0,
+          "seconds": 3.7057506926357746,
+          "command": [
+            "make",
+            "-C",
+            "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank3/obj",
+            "-f",
+            "VDsromS81CkvRank3.mk",
+            "-j8",
+            "OPT_FAST=-O0",
+            "OPT_SLOW=-O0",
+            "VDsromS81CkvRank3__ALL.a"
+          ]
+        }
+      ],
+      "headroom": {
+        "memory_bytes": {
+          "MemTotal": 202405810176,
+          "MemAvailable": 135190114304,
+          "SwapFree": 715698176
+        },
+        "disk_free_bytes": 1210888601600,
+        "CPUs": 32,
+        "load": [
+          24.0400390625,
+          24.76171875,
+          31.564453125
+        ]
+      },
+      "verdict": "PASS_NATIVE_ARCHIVE_ONLY"
+    }
+  ],
+  "verdict": "PASS_FOUR_ACTUAL_RANK_ARCHIVES_ONLY",
+  "final_headroom": {
+    "memory_bytes": {
+      "MemTotal": 202405810176,
+      "MemAvailable": 135140290560,
+      "SwapFree": 715960320
+    },
+    "disk_free_bytes": 1210729254912,
+    "CPUs": 32,
+    "load": [
+      23.95654296875,
+      24.732421875,
+      31.51806640625
+    ]
+  },
+  "artifacts": {
+    "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank0/obj/VDsromS81CkvRank0.h": {
+      "bytes": 15313,
+      "sha256": "60e48a26f93d17256fba49916e8608bc4a87949aff080164397a48a3798cba6d"
+    },
+    "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank0/obj/VDsromS81CkvRank0__ALL.a": {
+      "bytes": 4914070,
+      "sha256": "27160a81046653808ba33c1ec66fb852156a4b25ec7c297a65fdcd37fe427cba"
+    },
+    "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank1/obj/VDsromS81CkvRank1.h": {
+      "bytes": 15313,
+      "sha256": "decc16fdfb90048c10706e045893b4bf5ea6974c5b7539377e9c1d0cafbb781a"
+    },
+    "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank1/obj/VDsromS81CkvRank1__ALL.a": {
+      "bytes": 4914230,
+      "sha256": "598231337f47c319663fd285e277ad9c7b2bf858713d7735bef60a7b715e436f"
+    },
+    "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank2/obj/VDsromS81CkvRank2.h": {
+      "bytes": 15313,
+      "sha256": "6ddb0ad3fff79a6c23c6d601805b0b0e2bbfef86be40b231620bb4c3643fe190"
+    },
+    "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank2/obj/VDsromS81CkvRank2__ALL.a": {
+      "bytes": 4914230,
+      "sha256": "6e13d6a7f8cd63b3a57cb515375c3f24dab4f41d39ffab3a6e8c619ba183b748"
+    },
+    "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank3/obj/VDsromS81CkvRank3.h": {
+      "bytes": 15313,
+      "sha256": "7d92f3b7dc1d0f076ba0ef7a8bb1f904a63425ea83b532612a8a1469b82554c6"
+    },
+    "/tmp/dsrom-s81-ckv-service-efe1c5b8-r1/rank3/obj/VDsromS81CkvRank3__ALL.a": {
+      "bytes": 4914230,
+      "sha256": "fb8ea222af7c86aeccdaf68a6096b8b03d13948019aa8cbefe0a549358c65d6b"
+    }
+  },
+  "native_execution": false,
+  "owner_handoff": "Noether integrates existing rank model with Runtime.context; Boole retains phase; backend Maxwell and attention Nash untouched"
+}

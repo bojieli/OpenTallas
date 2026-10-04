@@ -6899,6 +6899,36 @@ def hbm_switch_latency_range():
 hbm_switch_latency_measured = hbm_switch_latency_range
 
 
+HBM_DRAFT_MEASURED = "results/rtl/dshbm_dspark_draft_20261004/composition.json"   # MEASURED DS HBM draft (successor)
+
+
+def hbm_mtp_both_drafts_measured():
+    """SUCCESSOR (owner 2026-10-04) to the authoritative record's MTP columns: the DS HBM DSpark draft is MEASURED the
+    way the ROM's is (tools/dshbm_dspark_draft_chain.py: closed-loop RTL chain bit-exact on the reduced vehicle,
+    full-shape SM / argmax cycles, every draft collective counted and priced with the authoritative transports) and
+    replaces DRAFT_PARTS (51.88 us, ASSUMED).  Step = verify(P=6) + draft + seed_commit on both sides (the ROM's
+    seed_commit term; HBM: main_proj, main_x gather, main_norm, the stages' window rows, ctl commit).  The AR rows,
+    the verify passes and hbm_switch_latency_authoritative() itself are unchanged."""
+    rec = json.loads((ROOT / HBM_DRAFT_MEASURED).read_text())
+    pick = lambda r, v: dict(draft_us=r[v]["draft_us"], step_us=r[v]["step_us"], mtp_tok_s=r[v]["mtp_tok_s"],  # noqa: E731
+                             rom_over_hbm_mtp=r[v]["rom_over_hbm_mtp"])
+    rows = [dict(ctx=r["ctx"], design=r["design"], scenario=r["scenario"], ar_tok_s=r["ar_tok_s"],
+                 rom_over_hbm_ar=r["rom_over_hbm_ar"], seed_commit_us=r["seed_commit_us"],
+                 model_draft_us=r["model_draft_us"], mtp_tok_s_model_draft=r["old_mtp_tok_s"],
+                 as_built=pick(r, "as_built"), per_step_head=pick(r, "per_step_head"))
+            for r in rec["rows"] if r["authoritative_default"]]
+    return dict(schema="opentallas.uarch.hbm_mtp_both_drafts_measured.v1",
+                status="AUTHORITATIVE successor for MTP (owner 2026-10-04); AR unchanged",
+                hbm_draft_record=HBM_DRAFT_MEASURED, rom_draft_record=DSROM_DRAFT_MEASURED, tau=rec["tau"],
+                hbm_variants=dict(as_built="the HBM design as built (ctl DHEAD = one 5-column head pass; bias + argmax "
+                                           "fused in the SM epilogue): HBM already has the ROM's L1 and L2",
+                                  per_step_head="the ROM as-built structure on HBM (one 1-column head pass a chain "
+                                                "step), the like-for-like structural row"),
+                rom_columns=dict(rom_as_built="ROM as built (measured)", rom_l1="ROM L1 fused head (measured record)",
+                                 rom_l1l2_expected="ROM L1+L2 k=5 (EXPECTED projection)"),
+                collective_count=rec["collective_count"], rows=rows)
+
+
 def hbm_accel_rows():
     """Default-off HA0/HA10 hypotheses; no measured/adopted accelerator rate."""
     from hbm_accelerator_model import build
@@ -6930,6 +6960,8 @@ def main(argv=None):
                     dest="hbm_switch_latency_range", action="store_true",
                     help="AUTHORITATIVE HBM switch collective record: every scenario, DS HBM AR/MTP, ROM:HBM, "
                          "GPU-faithful, GPU baseline and Qwen checks")
+    ap.add_argument("--hbm-mtp-drafts-measured", action="store_true",
+                    help="SUCCESSOR MTP rows: DS HBM and ROM drafts both MEASURED (results/rtl/dshbm_dspark_draft_20261004)")
     ap.add_argument("--hbm-switch-latency", choices=("w15", "push_optimistic", "nvls_measured", "gpu_fenced",
                                                      "tomahawk_ultra_protocol", "tomahawk_ultra_inc",
                                                      "low", "central", "high"),
@@ -6954,6 +6986,13 @@ def main(argv=None):
     global _HBM_SWITCH, _HBM_FEC
     _HBM_SWITCH = HBM_SWITCH_ALIASES.get(a.hbm_switch_latency, a.hbm_switch_latency) or _HBM_SWITCH
     _HBM_FEC = a.hbm_fec or _HBM_FEC
+    if a.hbm_mtp_drafts_measured:
+        payload = json.dumps(hbm_mtp_both_drafts_measured(), indent=1, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.hbm_switch_latency_range:
         payload = json.dumps(hbm_switch_latency_range(), indent=1, allow_nan=False) + "\n"
         if a.out:
@@ -7468,3 +7507,39 @@ def dsrom_s81_head_result_hook(roots=128):
 
 if __name__ == "__main__":
     main()
+
+
+def dsrom_s81_native_bf_head_producer():
+    """Serialized native archive reuse vehicle, not a new parallel head engine."""
+    rows, k, ranks = 32320, 5120, 4
+    return {
+        'schema': 'dsrom.s81.native_bf_head_producer.v1',
+        'selected_storage': 'existing dedicated BF head2525pairs/10100macros; unchanged',
+        'ranks': ranks, 'rows_per_rank': rows, 'k': k,
+        'macs_per_rank': rows*k, 'macs_per_native_word_per_bank': 16,
+        'native_macro_read_bits': 274, 'native_pair_read_bits': 548,
+        'released_raw_bytes_per_native_word': 256,
+        'released_raw_useful_bytes_per_native_word': 32,
+        'released_provider_port_bytes_per_cycle': None,
+        'native_rom_words_per_rank_per_bank': (rows//2)*320,
+        'activation_snapshot_bytes_per_reused_vehicle': k*4,
+        'ordered_root_staging_bits_per_vehicle': 2*2*32,
+        'native_input_boundary_bits': 1024+32+4+3+3+1,
+        'native_return': 'retained RD64 branch + D128/QD128 root, nseg1; no host arithmetic',
+        'grain_issue_cycles_per_rowpair': [256,64],
+        'grain_issue_lower_bound_cycles_per_rank': (rows//2)*320,
+        'latency_terms': ['source XN acquisition5120 scalar words on actual ready',
+                          'two actual CFG/GO/native BF phases per rowpair',
+                          'PB lane recurrence LAT8, native EARLY tree',
+                          'actual retained return/capture/drain before rebind',
+                          'actual carried B+0+0 and A+B, finite in_ready',
+                          'actual global argmax chain/final broadcast and VM ACK'],
+        'replicas_in_reuse_vehicle': 1,
+        'replicas_if_four_rank_host_participants': 4,
+        'physical_parallel_head_replicas': None,
+        'new_engine_area_mm2': 0,
+        'simulation_snapshot_and_controls_are_not_hardware_free_area': True,
+        'source_provider_routing_tracks': None, 'physical_slot_fit': None,
+        'token_latency_ns': None, 'headline_or_rate_credit': False,
+        'default_enabled': False,
+    }
