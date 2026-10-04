@@ -1,0 +1,4 @@
+STATS ISO_P0 hbm_act=512 rd=256 wr=136 refpb=292 violations=0 max_landing=1 rsp_tile_stall=64 fill_sectors=256 wr_sectors=136 wr_lat_max=29
+PASS ISO_P0 "P":0,"fill_cycles":70,"fill_sectors":256,"sectors_per_cycle":3.66,"tb_s_at_1p2ghz":0.140,"kv_ok_after_start":404,"su_drain_wait":339,"violations":0 : slices and token HBM codes exact
+KV_SERVICE4_STANDALONE PASS
+{"cases":[{"name":"ISO_P0","pass":true,"P":0,"fill_cycles":70,"fill_sectors":256,"sectors_per_cycle":3.66,"tb_s_at_1p2ghz":0.140,"kv_ok_after_start":404,"su_drain_wait":339,"violations":0,"detail":"slices and token HBM codes exact"}],"status":"pass"}

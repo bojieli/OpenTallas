@@ -1,0 +1,10 @@
+{
+ "spef_wire_ff": 160372.0,
+ "liberty_input_pin_ff": 275760.4,
+ "intrinsic_ff_assumed": 275760.4,
+ "rom_macros": 4,
+ "rom_array_ff": 785829.2,
+ "total_ff": 1497722.1,
+ "basis": "routed SPEF D_NET totals + Liberty input-pin capacitance of every instance (measured); cell-internal/diffusion capacitance ASSUMED equal to the input-pin total; ROM macros: compiler model 2,192 bitlines x bitline_cap + 512 wordlines x wordline_cap (TT), an upper bound (every via present)",
+ "cells": 180992
+}

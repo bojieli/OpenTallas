@@ -1,15 +1,17 @@
 `timescale 1ns/1ps
 // Existing native four-stack K service. No new queue/controller implementation.
 // Minimum WINDOW/RoPE participant: indexer B port inactive explicitly.
-module DsromS81Hbm #(parameter MEM_WORDS=4194304, CLK_PS=833)(
+module DsromS81Hbm #(parameter MEM_WORDS=4784128, CLK_PS=833)(
  input wire clk,rst_n,
  input wire[3:0] m_v,m_we, input wire[119:0] m_addr,
  input wire[15:0] m_len, input wire[63:0] m_tag,
  input wire[1023:0] m_wdata, input wire[127:0] m_wstrb,
  output wire[3:0] m_rdy,m_wr_done,s_v, input wire[3:0] s_rdy,
  output wire[63:0] s_tag, output wire[15:0] s_beat,
- output wire[1023:0] s_data, output reg history_ready=0,
+ output wire[1023:0] s_data, output reg history_ready=0, output reg ckv_history_ready=0,
+ output wire[31:0] capacity_words,
  output reg fault=0);
+ assign capacity_words=MEM_WORDS;
  reg admitted=0;
  wire[3:0] range_ok;
  generate for(genvar s=0;s<4;s=s+1) begin:g_s
@@ -58,5 +60,33 @@ module DsromS81Hbm #(parameter MEM_WORDS=4194304, CLK_PS=833)(
  endcase
  end
  history_ready=1;
+ endfunction
+ // Existing CKV source-image format is address/data (not readmemh).
+ // Loads retained prior images directly, never current-row/QDQ/golden data.
+ export "DPI-C" function s81_hbm_preload_ckv;
+ function void s81_hbm_preload_ckv(input string directory);
+ integer fd,n,count;reg[63:0] addr;reg[255:0] word_data;string path;
+ if(rst_n||admitted||!history_ready||ckv_history_ready)
+   $fatal(1,"CKV history init after admission or before base history");
+ for(integer s=0;s<4;s=s+1)begin
+   path=$sformatf("%s/ckv_s%0d.hex",directory,s);
+   fd=$fopen(path,"r");if(!fd)$fatal(1,"missing retained CKV history %s",path);
+   count=0;
+   while(!$feof(fd))begin
+     n=$fscanf(fd,"%h %h\n",addr,word_data);
+     if(n==2)begin
+       if(addr<4194304||addr>=MEM_WORDS)$fatal(1,"CKV history out of bounds");
+       case(s)
+       0:g_s[0].u_mem.mem[addr]=word_data;
+       1:g_s[1].u_mem.mem[addr]=word_data;
+       2:g_s[2].u_mem.mem[addr]=word_data;
+       3:g_s[3].u_mem.mem[addr]=word_data;
+       endcase
+       count=count+1;
+     end else if(!$feof(fd))$fatal(1,"malformed CKV source image");
+   end
+   $fclose(fd);if(count==0)$fatal(1,"empty CKV source image");
+ end
+ ckv_history_ready=1;
  endfunction
 endmodule

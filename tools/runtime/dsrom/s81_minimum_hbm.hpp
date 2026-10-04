@@ -1,5 +1,6 @@
 #pragma once
 #include "s81_minimum_runtime.hpp"
+#include "s81_minimum_hbm_counters.hpp"
 #include "VDsromS81Hbm.h"
 #include <memory>
 #include <stdexcept>
@@ -15,15 +16,27 @@ class NativeHbm : public std::enable_shared_from_this<NativeHbm> {
     long prepared=-1;
     bool admitted=false;
     uint8_t accepted=0,returned=0,committed=0,write_mask=0;
-    std::array<unsigned,4> lengths{};
+    std::array<unsigned,4> lengths{},request_owner{},response_owner{};
+    std::array<uint32_t,4> write_strobes{};
+    NativeHbmTrafficCounters traffic_counters;
     std::function<void()> join;
 public:
     explicit NativeHbm(DsromS81MinimumRuntime&,const std::string& instance);
     // Native sparse prior-history only; must precede shared cold_start/bind_context.
     void preload(const std::string& rank_history_directory);
+    void preload_ckv(const std::string& rank_ckv_history_directory);
+    NativeHbmTrafficSnapshot traffic()const;
+    uint32_t capacity_words()const{return model.capacity_words;}
+    bool ckv_initialized()const{return model.ckv_history_ready;}
     template<class Mux> void wire(Mux& mux) {
         static_assert(sizeof(mux.m_addr)==sizeof(model.m_addr),"HBM AW30 four-stack mismatch");
         static_assert(sizeof(mux.m_tag)==sizeof(model.m_tag),"HBM TAG16 four-stack mismatch");
+        // C8 master tag high bits: 00 WINDOW, 01 CKV, 10 RoPE.
+        // A caller omitting CKV init must not receive zero/default history.
+        for(unsigned s=0;s<4;s++)
+            if((mux.m_v&(1u<<s))&&((mux.m_tag>>(16*s+14))&3u)==1u&&
+               !model.ckv_history_ready)
+                throw std::runtime_error("actual CKV request before retained CKV history init");
         model.m_v=mux.m_v;model.m_we=mux.m_we;model.m_len=mux.m_len;model.m_tag=mux.m_tag;
         model.m_addr=mux.m_addr;model.m_wdata=mux.m_wdata;model.m_wstrb=mux.m_wstrb;
         model.s_rdy=mux.s_rdy;

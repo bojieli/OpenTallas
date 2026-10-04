@@ -48,7 +48,7 @@ struct DsromS81PrefixVm {
 
 class DsromS81MinimumPrefix {
     DsromS81MinimumRuntime& runtime;
-    DsromS81MinimumEmbedding& embedding;
+    DsromS81MinimumEmbedding* embedding;
     DsromS81PrefixNativeEngine su,he;
     std::map<unsigned,DsromS81PrefixNativeEngine> native_engines;
     DsromS81PrefixVm vm;
@@ -88,7 +88,7 @@ class DsromS81MinimumPrefix {
                 }
                 if(next<operations.size()) {
                     auto& e=engine();
-                    go=!inflight&&embedding.complete()&&
+                    go=!inflight&&(!embedding||embedding->complete())&&
                         vm.cold_inputs_visible(identity)&&
                         e.inputs_ready(operations.at(next))&&
                         e.ready();
@@ -121,6 +121,22 @@ public:
                          DsromS81PrefixNativeEngine h,DsromS81PrefixVm v,
                          std::vector<DsromS81PrefixOperation> native_program={},
                          std::map<unsigned,DsromS81PrefixNativeEngine> operators={})
+    :DsromS81MinimumPrefix(r,&e,id,std::move(s),std::move(h),std::move(v),
+                          std::move(native_program),std::move(operators)) {}
+    // Representative entry inputs are published through the actual target VM.
+    // No embedding model is constructed or marked complete for this path.
+    DsromS81MinimumPrefix(DsromS81MinimumRuntime& r,uint64_t id,
+                         DsromS81PrefixNativeEngine s,DsromS81PrefixNativeEngine h,
+                         DsromS81PrefixVm v,std::vector<DsromS81PrefixOperation> native_program,
+                         std::map<unsigned,DsromS81PrefixNativeEngine> operators={})
+    :DsromS81MinimumPrefix(r,nullptr,id,std::move(s),std::move(h),std::move(v),
+                          std::move(native_program),std::move(operators)) {}
+private:
+    DsromS81MinimumPrefix(DsromS81MinimumRuntime& r,DsromS81MinimumEmbedding* e,
+                         uint64_t id,DsromS81PrefixNativeEngine s,
+                         DsromS81PrefixNativeEngine h,DsromS81PrefixVm v,
+                         std::vector<DsromS81PrefixOperation> native_program,
+                         std::map<unsigned,DsromS81PrefixNativeEngine> operators)
     :runtime(r),embedding(e),su(std::move(s)),he(std::move(h)),native_engines(std::move(operators)),vm(std::move(v)),identity(id),operations(std::move(native_program)) {
         l0_prefix=operations.empty();
         if(operations.empty()) {
@@ -157,6 +173,7 @@ public:
                 catch(...){stopped=true;throw;}
             },[this](){return fault();}});
     }
+public:
     DsromS81MinimumPrefix(const DsromS81MinimumPrefix&)=delete;
     DsromS81MinimumPrefix& operator=(const DsromS81MinimumPrefix&)=delete;
     void start() {
