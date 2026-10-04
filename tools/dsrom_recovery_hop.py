@@ -44,6 +44,7 @@ CLK = 1.2e9
 LFEC_NS, KP4_NS, UCIE_NS = 130.0, 209.0, 10.0 - 1.5          # as tools/dsrom_1m_links.py
 SERDES_STAGES = 45
 RESIDUAL_B, RETURN_B, RETURN_TRAVERSALS = 40976, 8, 8
+DRAFT_B = 5 * RESIDUAL_B          # DSpark draft: one 5-row stage hop into each of the 3 draft blocks
 FB = 96
 
 
@@ -82,6 +83,8 @@ def cases():
          "the registered replay read, paced)"),
         ("ret_ct_flit", dict(base, MODE=0), RETURN_B, "HEADLINE token return: one 8-B flit, one board traversal"),
         ("hop_ct_halves_kp4", dict(base, CH=CH_KP4), RESIDUAL_B, "sensitivity: 209 ns full-KP4 cable tier"),
+        ("hop_ct_halves_draft5", dict(base, CRED=512, SEQW=10), DRAFT_B,
+         "DSpark draft 5-row hop (204,880 B), receive buffer 512 flits so credits do not bind"),
         ("hop_ct_halves_fb64", dict(base, FB=64, PNUM=0, PDEN=1), RESIDUAL_B,
          "ablation: halves with the 64-B endpoint unpaced (76.8 GB/s, just under the 92.2 GB/s lanes)"),
     ]
@@ -170,6 +173,7 @@ def cmd_record(a):
     kp4 = hop_row(runs["hop_ct_halves_kp4"], CH_KP4, CH_UCIE)
     fb64 = hop_row(runs["hop_ct_halves_fb64"], CH_LFEC, CH_UCIE)
     err = hop_row(runs["hop_ct_halves_err"], CH_LFEC, CH_UCIE)
+    draft = hop_row(runs["hop_ct_halves_draft5"], CH_LFEC, CH_UCIE) if "hop_ct_halves_draft5" in runs else None
     rf = runs["ret_ct_flit"]["fields"]
     ret_cyc = RETURN_TRAVERSALS * rf["first_flit"] + 2 * SERDES_STAGES
     ret = dict(exact=runs["ret_ct_flit"]["exact"], per_traversal_cycles=rf["first_flit"],
@@ -181,6 +185,8 @@ def cmd_record(a):
         p = work / f"screen_{nm}/screen.json"
         if p.is_file():
             scr[nm] = json.loads(p.read_text())
+    bp = work / "screen_base_rt/screen.json"
+    base_scr = json.loads(bp.read_text()) if bp.is_file() else None
     ss = min((s["ss_setup_wns_ps"] for s in scr.values() if s.get("ss_setup_wns_ps") is not None), default=None)
     ff = min((s["ff_hold_wns_ps"] for s in scr.values() if s.get("ff_hold_wns_ps") is not None), default=None)
     closes = ss is not None and ff is not None and ss >= 0 and ff >= 0
@@ -206,10 +212,14 @@ def cmd_record(a):
                   "stage lanes and matches the endpoint to their rate.",
             not_used="links.json phy_lane_rate 171.29 GB/s is the 13-lane TP budget per die pair, not stage lanes"),
         hop=hop, hop_kp4_sensitivity=kp4, hop_fb64_ablation=fb64, hop_error_injection=err, token_return=ret,
+        draft_hop_5row=draft,
         old=dict(per_hop_us=old["per_hop_us"], total_cycles=old["total_cycles"],
                  measured_endpoint_cycles=old["measured_endpoint_cycles"],
                  token_return_us=old["token_return_us"], source=str(LINKS.relative_to(ROOT))),
         screen=dict(runs=scr, ss_setup_wns_ps=ss, ff_hold_wns_ps=ff, closes=closes,
+                    baseline_link_rt_same_screen=base_scr,
+                    baseline_note="context only: the pinned ot_dsrom_link_rt (FLIT_BYTES 64, CREDITS 16) through the "
+                                  "same screen; the measured S81 hop (links.json) uses it unscreened",
                     configs={k: v for k, v in SCREENS.items()}),
         runs=runs, simulator=sim["simulator"], sources=sim["sources"],
         pinned_unchanged={p: sha(ROOT / p) for p in ("rtl/dsrom_sys/ot_dsrom_link_rt.sv",
@@ -218,6 +228,9 @@ def cmd_record(a):
     (REC / "hop/hop_ct.json").write_text(json.dumps(detail, indent=1, default=str) + "\n")
     gate = json.loads(Path(a.gate).read_text()) if a.gate else None
     verdict = "ADOPT" if exact and closes and (gate is None or gate["ar_gain"] >= 0.01) else "REJECT"
+    reasons = ([] if exact else ["not exact"]) + ([] if closes else [
+        f"SS/FF screen fails at 1.2 GHz: SS setup WNS {ss} ps (>= 0 required at 60 ps), FF hold WNS {ff} ps"]) + (
+        [] if gate is None or gate["ar_gain"] >= 0.01 else [f"AR gain {gate['ar_gain']:.4f} < 1%"])
     lever = dict(
         schema="opentallas.dsrom-recovery.lever.v1", lever="hop", verdict=verdict, exact=exact,
         ss_ff=dict(ss_setup_wns_ps=ss, ff_hold_wns_ps=ff, period_ps=833, setup_uncertainty_ps=60,
@@ -229,11 +242,18 @@ def cmd_record(a):
                   hop_source=f"ot_dsrom_link_ct RTL {hop['measured_endpoint_cycles']} cyc (per-die halves of 40,976 B, "
                              f"96-B flits paced to 7 x 13.18 GB/s lanes, cut-through UCIe exchange) + light-FEC PHY "
                              f"VENDOR BUDGET 130 ns + UCIe 10 ns + 2x45 routed wire stages",
-                  hop_cls="measured+vendor_phy"),
+                  hop_cls="measured+vendor_phy",
+                  **(dict(draft_hop_us=draft["us"],
+                          draft_hop_source=f"ot_dsrom_link_ct RTL, 5-row 204,880 B per-die halves "
+                                           f"({draft['total_cycles']} cyc incl. light-FEC 156 + UCIe 11 + 90 wire), "
+                                           f"tb_dsrom_1m_hop_ct case hop_ct_halves_draft5; was 2.89 us on "
+                                           f"ot_dsrom_link_rt") if draft else {})),
         nodes={"token.return": dict(us=ret["us"], cls="measured+vendor_phy",
                                     source=f"token return: {RETURN_TRAVERSALS} x (ot_dsrom_link_ct "
                                            f"{ret['measured_endpoint_cycles_per_traversal']} cyc + light-FEC VENDOR "
                                            f"BUDGET {CH_LFEC} cyc) + 90 wire")},
+        reject_reasons=reasons,
+        worst_paths_ss_ps={nm: s.get("worst_slack_by_stage_ps") for nm, s in scr.items()},
         old_hop_us=old["per_hop_us"], new_hop_us=hop["us"], old_hop_cycles=old["total_cycles"],
         new_hop_cycles=hop["total_cycles"], gate=gate, detail=str((REC / "hop/hop_ct.json").relative_to(ROOT)),
         rtl=dict(endpoint="rtl/dsrom_sys/ot_dsrom_link_ct.sv", bench="rtl/test/dsrom_sys/tb_dsrom_1m_hop_ct.sv",
