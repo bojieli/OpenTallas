@@ -11,6 +11,11 @@
 //     re-issued position after a rejection needs no snapshot);
 //   * lm_head logits are checked against the first-pass expectation (variant 0)
 //     until a package sees the user's position rewind, then against variant 1;
+//   * STAGE_BENCH = 1 (one package, NODES = 1): the package is not the SOURCE; a
+//     bench injector feeds its inbound link the HIDDEN messages of inject.hex back to
+//     back (as fast as the controller takes them; a position may rewind), and a sink
+//     compares every outbound flit with expect_out.hex (payload words bit for bit,
+//     header position and type) -- one stage in isolation;
 //   * observation only: JOB lines (HIDDEN header, payload, start and done cycle
 //     of every job at every package), WF lines (issue / reject / squash), and
 //     KV / index-key write-to-visible probes (VIS lines).
@@ -82,7 +87,8 @@ module tb_dsrom_wavefront_array #(
     parameter integer USERS = 2,
     parameter integer STALL = 0,
     parameter integer WAVE = 0,
-    parameter integer WIN = 6
+    parameter integer WIN = 6,
+    parameter integer STAGE_BENCH = 0
 ) (input wire clk);
     `include "v41_array_cfg.svh"
     localparam integer INSTR_BITS = 1536;
@@ -144,11 +150,50 @@ module tb_dsrom_wavefront_array #(
 
     // -- fabric --------------------------------------------------------------------------------
     localparam integer NLINKS = FABRIC ? 2 * NODES : NODES;
+    integer out_bad = 0, out_msgs = 0, n_out_msgs = 0;
+    reg op_hdr = 1'b1;
     wire [NLINKS*32-1:0] l_stalls;
     wire [31:0] r_drops; wire r_overflow;
     genvar n;
     generate
-        if (FABRIC == 0) begin : g_p2p
+        if (STAGE_BENCH) begin : g_stage
+            // bench injector (inbound) and checking sink (outbound) of the single package
+            localparam integer INJ_MAX = 4096;
+            reg [FLIT:0] inj [0:INJ_MAX-1];           // {last, flit}; a zero entry ends the list
+            reg [FLIT:0] exo [0:INJ_MAX-1];
+            integer ip = 0, op = 0;
+            assign rx_v[0] = rst_n && inj[ip] != 0;
+            assign rx_d[0 +: FLIT] = inj[ip][FLIT-1:0];
+            assign rx_l[0] = inj[ip][FLIT];
+            assign tx_r[0] = 1'b1;
+            reg [8*512-1:0] sdir;
+            initial begin
+                for (integer c = 0; c < INJ_MAX; c = c + 1) begin inj[c] = 0; exo[c] = 0; end
+                if (!$value$plusargs("DIR=%s", sdir)) sdir = ".";
+                $readmemh({sdir, "/inject.hex"}, inj);
+                $readmemh({sdir, "/expect_out.hex"}, exo);
+            end
+            always @(posedge clk) if (rst_n) begin
+                if (rx_v[0] && rx_r[0]) ip <= ip + 1;
+                if (tx_v[0]) begin
+                    // header flit: type and position; payload flits: every bit
+                    if (exo[op][FLIT-1:0] !== tx_d[FLIT-1:0] &&
+                        !(exo[op][FLIT] == 1'b0 && op_hdr &&
+                          exo[op][16 +: 4] == tx_d[16 +: 4] && exo[op][40 +: 16] == tx_d[40 +: 16])) begin
+                        if (out_bad < 5) $display("OUT_MISMATCH flit=%0d", op);
+                        out_bad <= out_bad + 1;
+                    end
+                    op <= op + 1;
+                    op_hdr <= tx_l[0];
+                    if (tx_l[0]) begin
+                        out_msgs <= out_msgs + 1;
+                        $display("OUT msg=%0d cycle=%0d", out_msgs, cyc);
+                    end
+                end
+            end
+            assign l_stalls = 0;
+            assign r_drops = 0; assign r_overflow = 1'b0;
+        end else if (FABRIC == 0) begin : g_p2p
             for (n = 0; n < NODES; n = n + 1) begin : g_link
                 localparam integer DST = (n + 1) % NODES;
                 ot_rom_pkg_link #(.FLIT_BYTES(FLIT / 8), .TX_STAGES(2), .CHANNEL_CYCLES(LINK_CH_MAX), .RX_STAGES(2),
@@ -778,7 +823,7 @@ module tb_dsrom_wavefront_array #(
             wire          t_v; wire [7:0] t_u; wire [NW-1:0] t_p, t_i; wire [7:0] u_done;
             ot_rom_pkg_ctrl_wf #(.WAVE(WAVE), .WIN(WIN), .PKG_ID(n), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(16), .MAXU(MAXU), .KVW(KVW),
                                 .XWORDS(C_TXW(n) > 0 ? C_TXW(n) : 1), .RXWORDS(C_RXW(n) > 0 ? C_RXW(n) : 1),
-                                .RXB(C_RXB(n)), .TXB(C_TXB(n)), .SOURCE(n == 0), .RESULT_PARTS(RPARTS),
+                                .RXB(C_RXB(n)), .TXB(C_TXB(n)), .SOURCE(n == 0 && !STAGE_BENCH), .RESULT_PARTS(RPARTS),
                                 .SEND_HIDDEN(HID >= 0), .HID_DEST(HID >= 0 ? HID : 0),
                                 .SEND_RESULT(C_RES(n)), .RES_DEST(0), .COMBINE_IN(C_COMB(n)), .ROW0(ROW0),
                                 .FWD_TOKEN(1), .SEND_SIDE(C_SOUT(n)), .SIDE_DEST(C_SDEST(n)),
@@ -1084,6 +1129,7 @@ module tb_dsrom_wavefront_array #(
         if (!$value$plusargs("HB=%d", hb)) hb = 0;
         if (!$value$plusargs("NPROMPT=%d", n_prompt)) n_prompt = NPMAX;
         if (!$value$plusargs("NGEN=%d", n_gen)) n_gen = 3;
+        if (!$value$plusargs("NOUT=%d", n_out_msgs)) n_out_msgs = 0;
         $readmemh({romdir, "/wrom.hex"}, wrom);
         $readmemh({romdir, "/qrom.hex"}, qrom);
         $readmemh({romdir, "/hrom.hex"}, hrom);
@@ -1109,7 +1155,7 @@ module tb_dsrom_wavefront_array #(
         if (hb > 0 && cyc != 0 && cyc % hb == 0)
             $display("HEARTBEAT cycle=%0d finished=%0d", cyc, finished);
         if (cyc == 5) rst_n <= 1'b1;
-        if (finished == n_users && !checking) begin
+        if ((STAGE_BENCH ? (out_msgs == n_out_msgs && n_out_msgs > 0) : finished == n_users) && !checking) begin
             if (end_cyc == 0) end_cyc <= cyc;
             // The final KV element writes can still be in the bounded sector
             // queue after the controller reports the token. Keep the token
@@ -1157,7 +1203,9 @@ module tb_dsrom_wavefront_array #(
                      NODES, n_users, gen_total, bad, lg_bad, lg_checked, st_bad, end_cyc);
             $display("USERS_DONE %0d", users_done);
             $display("LINK_STALLS %0d", l_stall_sum);
-            if (bad == 0 && lg_bad == 0 && st_bad == 0 && users_done == n_users) $display("PASS");
+            if (STAGE_BENCH) $display("STAGE_OUT msgs=%0d out_mismatch=%0d", out_msgs, out_bad);
+            if (bad == 0 && lg_bad == 0 && st_bad == 0 && out_bad == 0 &&
+                (STAGE_BENCH ? out_msgs == n_out_msgs : users_done == n_users)) $display("PASS");
             else $display("FAIL");
             $finish;
         end

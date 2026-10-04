@@ -217,13 +217,16 @@ def prepare(scratch: Path):
 
 
 def build(scratch: Path, wave: int) -> Path:
-    obj = scratch / f"obj_w{wave}"
+    threads = int(os.environ.get("OT_WF_THREADS", "0"))     # Verilator --threads (0: single-threaded)
+    stage = os.environ.get("OT_WF_STAGE", "0") == "1"
+    obj = scratch / ("obj_stage" if stage else f"obj_w{wave}" + (f"_t{threads}" if threads else ""))
     obj.mkdir(parents=True, exist_ok=True)
     (obj / "v41_array_cfg.svh").write_text((scratch / "array_cfg.svh").read_text())
     cmd = ["verilator", "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
            "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MULTIDRIVEN", "-Wno-TIMESCALEMOD",
            "-Wno-MODDUP", "-Wno-VARHIDDEN", "-Wno-UNOPTFLAT", "-Wno-PINMISSING",
-           "--top-module", "tb_dsrom_wavefront_array", "-GUSERS=1", "-GSTALL=0", f"-GWAVE={wave}", f"-GWIN={WIN}",
+           *(["--threads", str(threads)] if threads else []),
+           "--top-module", "tb_dsrom_wavefront_array", "-GUSERS=1", "-GSTALL=0", f"-GWAVE={wave}", f"-GWIN={WIN}", f"-GSTAGE_BENCH={int(stage)}",
            "-Mdir", str(obj), f"-I{obj}", f"-I{core.SVH.parent}", str(core.VLT),
            f"+define+HDC_SW={I.SU_LANES}",
            *[f"+define+HDC_X_{x}={2 if x == 'IDX' else 1}" for x in ("HE", "ME", "ATT", "IDX", "SEL", "EG", "SU")],
@@ -245,14 +248,16 @@ def build(scratch: Path, wave: int) -> Path:
 def run(scratch: Path, name: str):
     c = CONFIGS[name]
     exe = build(scratch, c["wave"])
-    log = scratch / f"out_{name}.txt"
+    tag = os.environ.get("OT_WF_TAG", "")
+    name_t = name + tag
+    log = scratch / f"out_{name_t}.txt"
     cmd = [str(exe), f"+DIR={scratch / f'cfg_{name}'}", f"+ROMS={scratch / 'roms'}", "+NUSERS=1",
            f"+NPROMPT={PLEN}", f"+NGEN={c['steps'] - PLEN + 1}", "+LINK_CH=60", "+HB=1000000"]
-    (scratch / f"run_{name}.json").write_text(json.dumps(dict(cmd=cmd, start=time.time())))
+    (scratch / f"run_{name_t}.json").write_text(json.dumps(dict(cmd=cmd, start=time.time())))
     t0 = time.time()
     with open(log, "w") as fh:
         rc = subprocess.run(["stdbuf", "-oL", *cmd], stdout=fh, stderr=subprocess.STDOUT).returncode
-    (scratch / f"run_{name}.rc").write_text(f"{rc} {time.time() - t0:.1f}\n")
+    (scratch / f"run_{name_t}.rc").write_text(f"{rc} {time.time() - t0:.1f}\n")
     return rc
 
 
@@ -312,7 +317,55 @@ def analyse(out: str, name: str):
         a["visible_after_last_write"] = a["vis"] - a["wlast"] if a["words"] else None
         a["margin_to_next_read"] = (a["next_need"] - a["vis"]) if (a["next_need"] is not None and a["words"]) else None
     rec["visibility"] = vlist
+    rec["summary"] = summarise(rec, name)
     return rec
+
+
+def summarise(rec, name):
+    """The three measurements, in cycles of the reduced vehicle (no clock is claimed)."""
+    per, toks = rec["jobs"], rec["parsed"]["tokens"]
+    commit = {t["position"]: t["cycle"] for t in toks}
+    nodes = sorted(per)
+    out = dict(commit_cycle=commit)
+    out["per_node"] = {n: [dict(pos=j["pos"], start=j["start"], busy=j["busy"], entry_gap=j["entry_gap"],
+                               handoff=j["wait_after_prev_done"], window=j["window"]) for j in per[n]]
+                       for n in nodes}
+    if name == "ar":
+        lat = [commit[p] - commit[p - 1] for p in sorted(commit) if p - 1 in commit]
+        out["ar_token_cycles"] = lat
+        out["ar_busy_per_node"] = {n: [j["busy"] for j in per[n]] for n in nodes}
+        out["ar_window_per_node"] = {n: [j["window"] for j in per[n]] for n in nodes}
+        return out
+    # wave: the second draft block (re-issued position REJ .. BLK1_END-1, all accepted)
+    starts0 = [j for j in per[0]]
+    seen, reissue = set(), None
+    for j in starts0:
+        if j["pos"] in seen and reissue is None:
+            reissue = j
+        seen.add(j["pos"])
+    out["squashed_jobs"] = sum(e["squash"] for e in rec["wf_events"])
+    out["rejections"] = [e["cycle"] for e in rec["wf_events"] if e["reject"]]
+    if reissue is not None:
+        i0 = starts0.index(reissue)
+        blk = starts0[i0:i0 + (BLK1_END - REJ)]
+        out["block1_positions"] = [j["pos"] for j in blk]
+        out["block1_issue_cycle"] = blk[0]["start"]
+        out["block1_last_commit_cycle"] = commit.get(BLK1_END - 1)
+        out["block1_verify_cycles"] = commit.get(BLK1_END - 1, 0) - blk[0]["start"]
+        out["reject_to_reissue_cycles"] = blk[0]["start"] - out["rejections"][0] if out["rejections"] else None
+    # block 0 (positions 1 .. 6 issued back to back; position 1's input is the last prompt token)
+    b0 = [j for j in starts0 if 1 <= j["pos"] < BLK0_END][:BLK0_END - 1]
+    out["block0_issue_cycles"] = [j["start"] for j in b0]
+    # steady-state entry spacing of consecutive same-user positions at every node (block 1)
+    sp = {}
+    for n in nodes:
+        js = per[n]
+        k = next((i for i in range(1, len(js)) if js[i]["pos"] <= js[i - 1]["pos"]), None)
+        b1 = js[k:k + (BLK1_END - REJ)] if k is not None else []
+        sp[n] = dict(entry_gaps=[j["entry_gap"] for j in b1[1:]], busy=[j["busy"] for j in b1],
+                     handoff=[j["wait_after_prev_done"] for j in b1[1:]], window=[j["window"] for j in b1])
+    out["block1_per_node"] = sp
+    return out
 
 
 def record(scratch: Path, output: Path):
@@ -335,9 +388,134 @@ def record(scratch: Path, output: Path):
     return res
 
 
+# -- one stage in isolation (owner method, 2026-10-04): the L20 package alone --------------------
+STAGE_BODY = lambda L: [list(range(0, 20)), [20], list(range(21, L))]   # package 1 = layer 20 (CSA producer + index scan)
+STAGE_K = 1
+STAGE_BAD = 3                                                           # position whose first input is corrupted
+
+
+class _OneStage:
+    """config_svh view of one package of a plan, as NODES = 1."""
+    def __init__(self, plan, k):
+        self.p, self.k = plan, k
+        self.n, self.nb, self.hp, self.side, self.head_mcast = 1, 1, 0, {}, False
+        self.vocab, self.pb = plan.vocab, plan.pb
+
+    def role(self, _):
+        r = dict(self.p.role(self.k))
+        r["hid_dest"] = 1
+        return r
+
+    def ehash(self, _):
+        return self.p.ehash(self.k)
+
+    def result_parts(self):
+        return 1
+
+
+def _hdr(pos, length, tok):
+    return (1 << 16) | (length << 24) | (pos << 40) | (tok << 104)
+
+
+def _flits(vm, word, nwords):
+    out = []
+    for w in range(nwords):
+        bits = G.bits(vm[(word + w) * A.W:(word + w + 1) * A.W])
+        out.append(sum(int(b) << (32 * l) for l, b in enumerate(bits)))
+    return out
+
+
+def prepare_stage(scratch: Path, gold_from: Path):
+    t0 = time.time()
+    scratch.mkdir(parents=True, exist_ok=True)
+    model = V.Model()
+    lay = P.Layout(model)
+    A.place_head_parts(lay)
+    base = P.Machine(lay, np.zeros(I.KV_WORDS * I.W_LANES, dtype=np.float32),
+                     np.zeros(I.VM_ELEMS, dtype=np.float32))
+    plan = A.Plan(lay, STAGE_BODY(model.L), 0, False, "relay")
+    progs = [A.StageBuilder(plan.lay, qchunk=P.QCHUNK).stage(plan, k) for k in range(plan.n)]
+    k = STAGE_K
+    rk, rprev = plan.role(k), plan.role(k - 1)
+    gold = json.loads(gold_from.read_text())
+    seq = gold["seq"]
+    bad = (seq[STAGE_BAD] + 1) % plan.vocab
+    jobs = [(seq[0], 0), (seq[1], 1), (seq[2], 2), (bad, STAGE_BAD), (seq[3], 3), (seq[4], 4)]
+
+    def replay(order, capture):
+        pipe = A.Pipeline(plan, progs, base)
+        inj, exo = [], []
+        for tok, pos in order:
+            for mc in pipe.pk:
+                mc.tokens = mc.tokens[:pos]
+            # the pipeline up to and including package k (package k + 1 is not needed)
+            pipe.pk[0].run(progs[0], tok, pos)
+            pipe.hop(0, 1)
+            if capture:
+                inj.append([(0, _hdr(pos, rk["rxw"], tok))] +
+                           [(int(i == rk["rxw"] - 1), f) for i, f in
+                            enumerate(_flits(pipe.pk[k].vm, rk["rxb"], rk["rxw"]))])
+            pipe.pk[k].run(progs[k], tok, pos)
+            if capture:
+                exo.append([(0, _hdr(pos, rk["txw"], tok))] +
+                           [(int(i == rk["txw"] - 1), f) for i, f in
+                            enumerate(_flits(pipe.pk[k].vm, rk["txb"], rk["txw"]))])
+        mc = pipe.pk[k]
+        return inj, exo, (mc.kv.copy(), mc.vm[plan.pb:plan.pb + A.PS].copy())
+
+    inj, exo, st = replay(jobs, True)
+    _, _, st_clean = replay([(seq[p], p) for p in range(5)], False)
+    same = (np.array_equal(G.bits(st[0]), G.bits(st_clean[0])) and
+            np.array_equal(G.bits(st[1]), G.bits(st_clean[1])))
+    if not same:
+        raise RuntimeError("stage ISA: squash + re-issue does not restore the clean state")
+    img = scratch / "cfg_stage"
+    img.mkdir(parents=True, exist_ok=True)
+    words = [I.encode(**{a: v for a, v in f.items() if not a.startswith("_")}) for f in progs[k]]
+    (img / "prog_stage00.hex").write_text(P.hexwords(words, I.INSTR_BITS))
+    sectors, firsts = P.qe_hbm_image(lay)
+    (img / "qlist_stage00.hex").write_text(P.hexwords(P.encode_list(P.qe_fetch_list(lay, progs[k], firsts)),
+                                                      P.LIST_BITS))
+    flat = lambda msgs: [(l << 512) | f for m in msgs for l, f in m]
+    (img / "inject.hex").write_text(P.hexwords(flat(inj), 513))
+    (img / "expect_out.hex").write_text(P.hexwords(flat(exo), 513))
+    (img / "known.hex").write_text(P.hexwords([0] * (NBLK * KMAX), 17))
+    (img / "expect_tokens.hex").write_text(P.hexwords([0] * SMAX, 16))
+    (img / "expect_logits.hex").write_text(P.hexwords([0] * (2 * SMAX * plan.vocab), 32))
+    (img / "expect_kv00_0.hex").write_text(P.hexwords(G.bits(st[0]), 32))
+    (img / "expect_vm00_0.hex").write_text(P.hexwords(G.bits(st[1]), 32))
+    svh = AC.config_svh(_OneStage(plan, k), lay, "p2p").replace("NPR = 2", "NPR = 1")
+    (scratch / "stage_cfg.svh").write_text(svh)
+    prep = dict(schema="opentallas.rtl.dsrom_wavefront_stage_prepare.v1", layers=plan.body[k], package=k,
+                rxw=rk["rxw"], txw=rk["txw"], prev_txw=rprev["txw"], jobs=[(int(t), p) for t, p in jobs],
+                corrupted_position=STAGE_BAD, corrupted_token=bad, clean_token=seq[STAGE_BAD],
+                isa_squash_reissue_state_equals_clean=same, program_instructions=len(progs[k]),
+                prepare_seconds=round(time.time() - t0, 1),
+                input_sha256={str(p_.relative_to(ROOT)): sha(p_) for p_ in sources()})
+    (scratch / "prepare_stage.json").write_text(json.dumps(prep, indent=1) + "\n")
+    print(json.dumps({x: prep[x] for x in ("layers", "rxw", "txw", "jobs", "isa_squash_reissue_state_equals_clean")}))
+    return prep
+
+
+def run_stage(scratch: Path):
+    (scratch / "array_cfg.svh").write_text((scratch / "stage_cfg.svh").read_text())
+    os.environ["OT_WF_STAGE"] = "1"
+    exe = build(scratch, 0)
+    log = scratch / "out_stage.txt"
+    n_out = len(json.loads((scratch / "prepare_stage.json").read_text())["jobs"])
+    cmd = [str(exe), f"+DIR={scratch / 'cfg_stage'}", f"+ROMS={scratch / 'roms'}", "+NUSERS=1",
+           f"+NOUT={n_out}", "+HB=1000000"]
+    t0 = time.time()
+    with open(log, "w") as fh:
+        rc = subprocess.run(["stdbuf", "-oL", *cmd], stdout=fh, stderr=subprocess.STDOUT).returncode
+    (scratch / "run_stage.rc").write_text(f"{rc} {time.time() - t0:.1f}\n")
+    return rc
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("action", choices=("prepare", "run", "record"))
+    ap.add_argument("action", choices=("prepare", "run", "record", "prepare-stage", "run-stage"))
+    ap.add_argument("--gold", type=Path, help="prepare-stage: golden.json of a prepare run")
     ap.add_argument("--scratch", type=Path, required=True)
     ap.add_argument("--config", choices=sorted(CONFIGS))
     ap.add_argument("--output", type=Path)
@@ -345,6 +523,10 @@ def main():
     a = ap.parse_args()
     if a.action == "prepare":
         prepare(a.scratch)
+    elif a.action == "prepare-stage":
+        prepare_stage(a.scratch, a.gold)
+    elif a.action == "run-stage":
+        return run_stage(a.scratch)
     elif a.action == "run":
         return run(a.scratch, a.config)
     else:
