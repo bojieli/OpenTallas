@@ -167,6 +167,16 @@ public:
                 value.next_value==held->next_value,"foreign or premature WAVE stage acceptance");
         held.reset();state=ACCEPTED;
     }
+    // Actual enclosing consumption, not ReadResult observation or final-port
+    // acceptance. Reuse the existing native winner owner; no second ACK path.
+    template<class NativeWinnerBinding>
+    void accepted(const DsromS81WaveStageResult& value,
+                  const std::shared_ptr<NativeWinnerBinding>& native_winner) {
+        require(native_winner&&!native_winner->fault(),"actual native winner consumer binding absent/faulted");
+        accepted(value); // existing full-stage HELD identity/sequence/value check
+        try {native_winner->consumed(value);}
+        catch(...) {warm_quarantine();throw;} // producer retains debt on failure
+    }
     void warm_quarantine(){stopped=true;ledger.warm_quarantine();}
     bool fault()const{return stopped;}
 };

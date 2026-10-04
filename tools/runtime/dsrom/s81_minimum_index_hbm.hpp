@@ -68,6 +68,12 @@ public:
  // For a source-owned adapter with different record names: explicit callback
  // gets the native model; caller must wire ONLY combinationally, never clock it.
  void bind_wiring(std::function<void(VDsromS81IndexHbm&)>);
+ // Settle the already-bound actual ports at low clock; owns no clock edge.
+ // Scorer preparation uses the same join as the backend participant.
+ void join_ports() {
+  if(!join||model.clk)throw std::runtime_error("index port join lacks bound low edge");
+  join();model.eval();
+ }
  DsromS81MinimumParticipant participant();
 };
 }

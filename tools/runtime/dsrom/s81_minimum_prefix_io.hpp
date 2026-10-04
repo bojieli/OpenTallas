@@ -86,6 +86,14 @@ public:
             active=false;offered=false;return true;
         }catch(...){stopped=true;throw;}
     }
+    // Caller keeps a native output stable while the existing stage waits for
+    // its matched ACK; a changed producer output must not retire the old one.
+    bool retains(const S81EmbeddingOutput& output,unsigned words)const {
+        if(!active||count!=words||held.vm_identity!=output.vm_identity||
+           held.vm_address!=output.vm_address||!output.vm_valid||output.fault)return false;
+        for(unsigned n=0;n<words;++n)if(held.vm_data[n]!=output.vm_data[n])return false;
+        return true;
+    }
     bool pending()const{return active;}
     bool fault()const{return stopped||publication.fault();}
 };
