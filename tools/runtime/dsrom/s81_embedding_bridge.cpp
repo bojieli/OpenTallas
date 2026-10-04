@@ -2,7 +2,7 @@
 #include "Vembedding_vm.h"
 #include <verilated.h>
 #include <stdexcept>
-struct Reader { VerilatedContext ctx; Vembedding_vm dut{&ctx}; };
+struct Reader { Vembedding_vm dut; };
 static void apply(Reader& r,const S81EmbeddingInput& i) {
  auto& d=r.dut;
  if(i.token>=(1u<<17)||i.identity>=(1ull<<47)||i.rsp_identity>=(1ull<<47)||
@@ -27,7 +27,7 @@ extern "C" void s81_embedding_eval(void* p,const S81EmbeddingInput* i,S81Embeddi
 }
 extern "C" void s81_embedding_edge(void* p,const S81EmbeddingInput* i,S81EmbeddingOutput* o){
  auto& r=*static_cast<Reader*>(p);apply(r,*i);r.dut.clk=0;r.dut.eval();r.dut.clk=1;
- r.ctx.timeInc(1);r.dut.eval();output(r,*o);
+ r.dut.eval();output(r,*o);
 }
 extern "C" uint32_t s81_embedding_vm_word(void* p,uint32_t address){
  if(address>=32768)throw std::runtime_error("small native endpoint bounds");
