@@ -29,7 +29,7 @@ Both runs use one `ASYNC_COLL=1`, `ENABLE_AR256=1` binary (`layer_parallel/lp_bu
 
 ## Not done
 
-- **Full token at a nonzero position.** It was not run because no 36-layer P255 golden exists. The oracle is NumPy-only, CPU goldens are banned, and there is no GPU exact oracle yet.
+- **Full token at a nonzero position.** It was not run. At launch no 36-layer P255 golden existed: the oracle is NumPy-only and CPU goldens are banned. A local-GPU full-36 P255 golden has since landed (`results/inputs/qwen_rom_full36_p255_20261003`). It was not used, because the lever is rejected physically and the owner rule allows no rescue runs.
 - **P1023.** It was still running on EPYC at record time.
 
 ## Physical
