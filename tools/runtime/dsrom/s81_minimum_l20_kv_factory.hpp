@@ -8,7 +8,12 @@
 class VDsromAttention;
 class VDsromAttEngine;
 class VDsromWindowBlocks;
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+class VDsromS81WindowLa;
+using VDsromPackedWindow=VDsromS81WindowLa;
+#else
 class VDsromPackedWindow;
+#endif
 class VDsromS81CkvRank0;
 class VDsromS81CkvRank1;
 class VDsromS81CkvRank2;
@@ -61,4 +66,6 @@ public:
     bool drained()const;
     const std::array<L20NativeCkv,4>& services()const;
 };
+// Existing minimum caller dispatches this actual four-rank component run.
+int run_minimum_l20_kv(DsromS81MinimumRuntime&,const char* output);
 } // namespace dsrom_s81_minimum

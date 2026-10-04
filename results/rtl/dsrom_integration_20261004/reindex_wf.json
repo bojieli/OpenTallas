@@ -1,0 +1,816 @@
+{
+ "schema": "opentallas.dsrom-integration.reindex-wf.v1",
+ "vehicle": "one re-index stage (L24 / L28) of one rank, full shape, position 1,048,575 (and 1,048,574 ahead of it), wavefront controller WAVE=1 WIN=6 -> candidate-block gather (4 timed HBM3E stacks, placement p2) -> scorer stand-in (idx-array latency 48 + settle 24, golden BF16 scores) -> mask-drop MDROP=1 -> top-512 select",
+ "unvalidated": [
+  "index scorer arithmetic (stand-in returns the golden score of each position after the measured idx-array latency; the as-built scorer's exactness is its own record)",
+  "job 0 data is a stand-in (L28 scores on half the candidate blocks): no golden exists for a second position at 1M"
+ ],
+ "all_pass": true,
+ "asbuilt_single_list_fails": true,
+ "runs": {
+  "slots_r0": {
+   "name": "slots_r0",
+   "lsw": 3,
+   "rank": 0,
+   "jobs": [
+    "r0_j0",
+    "r0_j1"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048574,
+     "slot": 6,
+     "start": 4106,
+     "first_key": 93,
+     "last_key": 652,
+     "last_scored": 700,
+     "done": 822,
+     "busy": 822,
+     "passes": 1,
+     "keys": 1944,
+     "out": 512,
+     "errors": 0
+    },
+    {
+     "job": 1,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 4929,
+     "first_key": 96,
+     "last_key": 649,
+     "last_scored": 697,
+     "done": 814,
+     "busy": 814,
+     "passes": 1,
+     "keys": 3880,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [
+    1
+   ],
+   "summary": {
+    "njobs": "2",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "2",
+    "errors": "0",
+    "cycles": "5770"
+   },
+   "first_errors": []
+  },
+  "slots_r1": {
+   "name": "slots_r1",
+   "lsw": 3,
+   "rank": 1,
+   "jobs": [
+    "r1_j0",
+    "r1_j1"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048574,
+     "slot": 6,
+     "start": 4106,
+     "first_key": 93,
+     "last_key": 729,
+     "last_scored": 777,
+     "done": 901,
+     "busy": 901,
+     "passes": 1,
+     "keys": 2160,
+     "out": 512,
+     "errors": 0
+    },
+    {
+     "job": 1,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 5008,
+     "first_key": 102,
+     "last_key": 728,
+     "last_scored": 776,
+     "done": 892,
+     "busy": 892,
+     "passes": 1,
+     "keys": 4328,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [
+    1
+   ],
+   "summary": {
+    "njobs": "2",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "2",
+    "errors": "0",
+    "cycles": "5927"
+   },
+   "first_errors": []
+  },
+  "slots_r2": {
+   "name": "slots_r2",
+   "lsw": 3,
+   "rank": 2,
+   "jobs": [
+    "r2_j0",
+    "r2_j1"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048574,
+     "slot": 6,
+     "start": 4106,
+     "first_key": 93,
+     "last_key": 619,
+     "last_scored": 667,
+     "done": 789,
+     "busy": 789,
+     "passes": 1,
+     "keys": 2072,
+     "out": 512,
+     "errors": 0
+    },
+    {
+     "job": 1,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 4896,
+     "first_key": 113,
+     "last_key": 567,
+     "last_scored": 615,
+     "done": 729,
+     "busy": 729,
+     "passes": 1,
+     "keys": 4136,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [
+    1
+   ],
+   "summary": {
+    "njobs": "2",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "2",
+    "errors": "0",
+    "cycles": "5652"
+   },
+   "first_errors": []
+  },
+  "slots_r3": {
+   "name": "slots_r3",
+   "lsw": 3,
+   "rank": 3,
+   "jobs": [
+    "r3_j0",
+    "r3_j1"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048574,
+     "slot": 6,
+     "start": 4106,
+     "first_key": 93,
+     "last_key": 692,
+     "last_scored": 740,
+     "done": 860,
+     "busy": 860,
+     "passes": 1,
+     "keys": 2024,
+     "out": 512,
+     "errors": 0
+    },
+    {
+     "job": 1,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 4967,
+     "first_key": 122,
+     "last_key": 661,
+     "last_scored": 709,
+     "done": 825,
+     "busy": 825,
+     "passes": 1,
+     "keys": 4040,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [
+    1
+   ],
+   "summary": {
+    "njobs": "2",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "2",
+    "errors": "0",
+    "cycles": "5819"
+   },
+   "first_errors": []
+  },
+  "asbuilt_r3": {
+   "name": "asbuilt_r3",
+   "lsw": 0,
+   "rank": 3,
+   "jobs": [
+    "r3_j0",
+    "r3_j1"
+   ],
+   "pass_": false,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048574,
+     "slot": 0,
+     "start": 4106,
+     "first_key": 93,
+     "last_key": 639,
+     "last_scored": 687,
+     "done": 791,
+     "busy": 791,
+     "passes": 1,
+     "keys": 2024,
+     "out": 512,
+     "errors": 518
+    },
+    {
+     "job": 1,
+     "pos": 1048575,
+     "slot": 0,
+     "start": 4898,
+     "first_key": 232,
+     "last_key": 624,
+     "last_scored": 672,
+     "done": 788,
+     "busy": 788,
+     "passes": 1,
+     "keys": 4040,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [
+    1
+   ],
+   "summary": {
+    "njobs": "2",
+    "lsw": "0",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "2",
+    "errors": "518",
+    "cycles": "5713"
+   },
+   "first_errors": [
+    "E job 0 q 0 got c03b1/3f63 want c03b3/3f8b",
+    "E job 0 q 0 got c03b3/3f8b want c03b5/3fe7",
+    "E job 0 q 0 got c03b5/3fe7 want c05bd/3fd1",
+    "E job 0 q 0 got c05ba/3f1d want c0b6b/3fa2",
+    "E job 0 q 0 got c05bb/3f6c want c0b6f/3fed"
+   ]
+  },
+  "solo_L24_r0": {
+   "name": "solo_L24_r0",
+   "lsw": 3,
+   "rank": 0,
+   "jobs": [
+    "r0_j1"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 2058,
+     "first_key": 93,
+     "last_key": 614,
+     "last_scored": 662,
+     "done": 778,
+     "busy": 778,
+     "passes": 1,
+     "keys": 3880,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [],
+   "summary": {
+    "njobs": "1",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "1",
+    "errors": "0",
+    "cycles": "2863"
+   },
+   "first_errors": []
+  },
+  "solo_L28_r0": {
+   "name": "solo_L28_r0",
+   "lsw": 3,
+   "rank": 0,
+   "jobs": [
+    "r0_j1L28"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 2058,
+     "first_key": 93,
+     "last_key": 614,
+     "last_scored": 662,
+     "done": 772,
+     "busy": 772,
+     "passes": 1,
+     "keys": 3880,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [],
+   "summary": {
+    "njobs": "1",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "1",
+    "errors": "0",
+    "cycles": "2857"
+   },
+   "first_errors": []
+  },
+  "solo_L24_r1": {
+   "name": "solo_L24_r1",
+   "lsw": 3,
+   "rank": 1,
+   "jobs": [
+    "r1_j1"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 2058,
+     "first_key": 93,
+     "last_key": 754,
+     "last_scored": 802,
+     "done": 918,
+     "busy": 918,
+     "passes": 1,
+     "keys": 4328,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [],
+   "summary": {
+    "njobs": "1",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "1",
+    "errors": "0",
+    "cycles": "3003"
+   },
+   "first_errors": []
+  },
+  "solo_L28_r1": {
+   "name": "solo_L28_r1",
+   "lsw": 3,
+   "rank": 1,
+   "jobs": [
+    "r1_j1L28"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 2058,
+     "first_key": 93,
+     "last_key": 754,
+     "last_scored": 802,
+     "done": 916,
+     "busy": 916,
+     "passes": 1,
+     "keys": 4328,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [],
+   "summary": {
+    "njobs": "1",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "1",
+    "errors": "0",
+    "cycles": "3001"
+   },
+   "first_errors": []
+  },
+  "solo_L24_r2": {
+   "name": "solo_L24_r2",
+   "lsw": 3,
+   "rank": 2,
+   "jobs": [
+    "r2_j1"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 2058,
+     "first_key": 93,
+     "last_key": 695,
+     "last_scored": 743,
+     "done": 856,
+     "busy": 856,
+     "passes": 1,
+     "keys": 4136,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [],
+   "summary": {
+    "njobs": "1",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "1",
+    "errors": "0",
+    "cycles": "2941"
+   },
+   "first_errors": []
+  },
+  "solo_L28_r2": {
+   "name": "solo_L28_r2",
+   "lsw": 3,
+   "rank": 2,
+   "jobs": [
+    "r2_j1L28"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 2058,
+     "first_key": 93,
+     "last_key": 695,
+     "last_scored": 743,
+     "done": 851,
+     "busy": 851,
+     "passes": 1,
+     "keys": 4136,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [],
+   "summary": {
+    "njobs": "1",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "1",
+    "errors": "0",
+    "cycles": "2936"
+   },
+   "first_errors": []
+  },
+  "solo_L24_r3": {
+   "name": "solo_L24_r3",
+   "lsw": 3,
+   "rank": 3,
+   "jobs": [
+    "r3_j1"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 2058,
+     "first_key": 93,
+     "last_key": 736,
+     "last_scored": 784,
+     "done": 900,
+     "busy": 900,
+     "passes": 1,
+     "keys": 4040,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [],
+   "summary": {
+    "njobs": "1",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "1",
+    "errors": "0",
+    "cycles": "2985"
+   },
+   "first_errors": []
+  },
+  "solo_L28_r3": {
+   "name": "solo_L28_r3",
+   "lsw": 3,
+   "rank": 3,
+   "jobs": [
+    "r3_j1L28"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 2058,
+     "first_key": 93,
+     "last_key": 736,
+     "last_scored": 784,
+     "done": 897,
+     "busy": 897,
+     "passes": 1,
+     "keys": 4040,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [],
+   "summary": {
+    "njobs": "1",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "1",
+    "errors": "0",
+    "cycles": "2982"
+   },
+   "first_errors": []
+  },
+  "replay": {
+   "name": "replay",
+   "lsw": 3,
+   "rank": 0,
+   "jobs": [
+    "replay_j0"
+   ],
+   "pass_": true,
+   "job": [
+    {
+     "job": 0,
+     "pos": 1048575,
+     "slot": 7,
+     "start": 2058,
+     "first_key": 24,
+     "last_key": 11517,
+     "last_scored": 11565,
+     "done": 11582,
+     "busy": 11582,
+     "passes": 3,
+     "keys": 51072,
+     "out": 512,
+     "errors": 0
+    }
+   ],
+   "handoff_cycles": [],
+   "summary": {
+    "njobs": "1",
+    "lsw": "3",
+    "mdrop": "1",
+    "lat": "48",
+    "key_errors": "0",
+    "short": "0",
+    "ovf": "0",
+    "hidden_out": "1",
+    "errors": "0",
+    "cycles": "13667"
+   },
+   "first_errors": []
+  }
+ },
+ "timing": {
+  "clock_hz": 1200000000.0,
+  "chained_cycles_start_to_last_out": {
+   "L24": {
+    "0": 778,
+    "1": 918,
+    "2": 856,
+    "3": 900
+   },
+   "L28": {
+    "0": 772,
+    "1": 916,
+    "2": 851,
+    "3": 897
+   }
+  },
+  "chained_worst": {
+   "L24": 918,
+   "L28": 916
+  },
+  "separate_composition_cycles": {
+   "L24": 1032,
+   "L28": 1064
+  },
+  "separate_basis": "tools/dsrom_1m_measure.py candidate_gather terms: idx.score = worst gather (757) + query settle 24 + idx-array latency 48, then idx.topk_local = worst select-on-gather-order segment (ingest + tail), serial",
+  "chained_over_separate": {
+   "L24": 0.8895,
+   "L28": 0.8609
+  },
+  "wavefront_target_job_cycles": {
+   "0": 814,
+   "1": 892,
+   "2": 729,
+   "3": 825
+  },
+  "wavefront_handoff_cycles": [
+   1,
+   1,
+   1,
+   1
+  ]
+ },
+ "sources": {
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_kgather.sv": "0d4b41add2e98afde8503d5393d642fdc6e3c367de299631ce9758d3473eb01c",
+  "rtl/dsrom_sys/integration/ot_hdc_v41x_idx_kgather_ps.sv": "d4e4fffd0a40130ca6b57af1c5eb2a898895375edb0f011260009b01b8406c2a",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_mdrop.sv": "5e74932ad866aa491eea0ce0c1a7038bd29e648ec4c004d7e06fdcfb5faa5e2e",
+  "rtl/dsrom_sys/integration/ot_dsrom_reindex_chain.sv": "25775633ae0b1b2ab6c87913fc61e90dfea94aaf41648fb855d8f59542e9f923",
+  "rtl/rom/wavefront/ot_rom_pkg_ctrl_wf.sv": "12843b3de997ca12acc76a36b7b11a29f174575b8d9bc6edc780effa4f108cbe",
+  "rtl/dsrom_sys/integration/tb_dsrom_integ_reindex_wf.sv": "6407c46dc0b8c05e6817948bddf2dfc7f04114c7f86a7cb27da0ed515ca6b32d",
+  "rtl/dsrom_sys/integration/tb_dsrom_integ_reindex_wf_harness.cpp": "234f9b15fc509e1f0d360ceb4bea006938119065dcccf398b1bfe23d5e6dd032",
+  "tools/dsrom_integ_reindex_wf.py": "612d8c909da01c87bc21017ccd4202935317f36ec5e623e721fb033fd385fd27"
+ },
+ "manifest": {
+  "p0": 1048574,
+  "newest_block": 131071,
+  "adversarial_bits": "0x40f1",
+  "ranks": {
+   "0": {
+    "blocks_j1": [
+     136,
+     110,
+     128,
+     111
+    ],
+    "blocks_j0": [
+     68,
+     55,
+     64,
+     56
+    ],
+    "late_positions_j0": 0,
+    "selected_j1": 512,
+    "selected_j0": 512,
+    "sel_j1_sha256": "7b2491a69e3a9cf8cc12e6306d76cb21b025e94918ccee5aab748ea96331e42f"
+   },
+   "1": {
+    "blocks_j1": [
+     132,
+     145,
+     140,
+     124
+    ],
+    "blocks_j0": [
+     66,
+     72,
+     70,
+     62
+    ],
+    "late_positions_j0": 0,
+    "selected_j1": 512,
+    "selected_j0": 512,
+    "sel_j1_sha256": "df9c81a782daa2995eca7166ada72dc1bc06eb4cc37edcc64d203f346905dc9f"
+   },
+   "2": {
+    "blocks_j1": [
+     137,
+     132,
+     132,
+     116
+    ],
+    "blocks_j0": [
+     69,
+     66,
+     66,
+     58
+    ],
+    "late_positions_j0": 0,
+    "selected_j1": 512,
+    "selected_j0": 512,
+    "sel_j1_sha256": "a7efeddd5f878dfc0f5b2d1d79207382d5d3df24b9eff42e098508904eb075f0"
+   },
+   "3": {
+    "blocks_j1": [
+     127,
+     133,
+     131,
+     114
+    ],
+    "blocks_j0": [
+     63,
+     67,
+     65,
+     58
+    ],
+    "late_positions_j0": 1,
+    "selected_j1": 512,
+    "selected_j0": 512,
+    "sel_j1_sha256": "39a3746f44568845daba871828234299e45c722716f2c9125fa6b2238385c014"
+   }
+  },
+  "replay": {
+   "blocks": [
+    2048,
+    0,
+    40,
+    40
+   ]
+  },
+  "golden": {
+   "cand": "570b5f5dc2d28df2e88510005bab07332aaa563d84d244f1f1f33f0745b84b0e",
+   "L24": "c7c2809d84a259425632856d9a942858c0da49a944788e69d49be098a88b9592",
+   "L28": "2bd9460587c78c912ceaee2c152f04f5ed8c3082a9b9185aff3f5cf66d7ceb09"
+  }
+ }
+}

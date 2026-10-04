@@ -7640,3 +7640,24 @@ def dsrom_s81_native_bf_head_producer():
         'token_latency_ns': None, 'headline_or_rate_credit': False,
         'default_enabled': False,
     }
+
+
+def hbm_dspark_ctl_fast_prefix_candidate():
+    """FAST-only W16 carry repair, model before RTL; no clock/rate adoption.
+
+    Existing control accepts the same commands and emits the same values on
+    the same edges. Retain ctl_f1 output SS miss and full spec_f1 setup fail.
+    """
+    return dict(model_record="results/uarch/hbm_accel_fmax_ctl_20261004/prebuild_model.json",
+                adopted=False, target_period_ps=833, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, replicas=1, MACs_per_cycle=0,
+                new_memory_ports=0, new_boundary_bits=0, new_latency_cycles=0,
+                single_user_token_latency_delta_cycles=0, FAST_default=0,
+                retained_fast_fbase_FF_bits=16, repair_additional_FF_bits=0,
+                carry_width=16, carry_levels=5, carry_prefix_nodes=54,
+                local_kept_wire_bits=204, local_prefix_fanout_bound=2,
+                gate_equivalent_upper=210, added_logic_proxy_um2=105,
+                added_50pct_reservation_proxy_um2=210,
+                area_basis="assumed0.5um2/gate; mapped/routed area not measured",
+                required_leaf_area_growth_um2=210, physical_fit=False,
+                SS_FF_closed=False, measured_gain=False)

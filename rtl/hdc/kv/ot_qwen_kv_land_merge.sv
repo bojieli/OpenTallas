@@ -80,7 +80,8 @@ module ot_qwen_kv_land_merge #(
         for (i = 0; i < NSRC; i = i + 1) begin
             s_grant[i] = !tok_v && same[i];
             for (j = 0; j < NSRC; j = j + 1)
-                if (same[j] && E[j][i] && (q4[j] & q4[i]) != 4'd0) s_grant[i] = 1'b0;
+                // same[i] && same[j] <=> same[i] && v_j && loc_j == loc_i: no first -> same chain on this term
+                if (s_v[j] && L[i][j] && E[j][i] && (q4[j] & q4[i]) != 4'd0) s_grant[i] = 1'b0;
         end
     end
     // ---- stage 2: the granted beats, registered, become one slice write ----------------------
