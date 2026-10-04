@@ -78,6 +78,14 @@ DsromS81MinimumParticipant NativeHbm::participant() {
             self->response_owner[s]=(m.s_tag>>(16*s+14))&3;
             self->write_strobes[s]=m.m_wstrb[s];
         }
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+        // Capture OLD actual client acceptance, including the wmux's held slot.
+        // Never re-read these pins after any participant's rising edge.
+        self->wide_accepted=m.wl_req_v&m.wl_req_rdy;
+        self->wide_returned=m.wl_rsp_v&m.wl_rsp_rdy;
+        for(unsigned pc=0;pc<32;pc++)
+            self->wide_lengths[pc]=(m.wl_req_len[pc/8]>>(4*(pc%8)))&15;
+#endif
         self->prepared=self->runtime.cycle();
       },
       [self](bool released) {
@@ -91,6 +99,26 @@ DsromS81MinimumParticipant NativeHbm::participant() {
             if(self->returned&bit){if(!self->reads[s])throw std::runtime_error("HBM response without accepted read");--self->reads[s];}
             if(self->committed&bit){if(!self->writes[s])throw std::runtime_error("HBM write completion without accepted write");--self->writes[s];}
           }
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+          for(unsigned pc=0;pc<32;pc++) {
+            const uint32_t bit=uint32_t(1)<<pc;
+            if(self->wide_accepted&bit){
+                if(!self->wide_lengths[pc])throw std::runtime_error("WINDOW accepted zero-length read");
+                self->admitted=true;self->wide_reads[pc]+=self->wide_lengths[pc];
+            }
+            if(self->wide_returned&bit){
+                if(!self->wide_reads[pc])throw std::runtime_error("WINDOW response without native accepted debt");
+                --self->wide_reads[pc];
+            }
+            // Reuse existing passive transfer counters for actual WINDOW traffic.
+            std::array<unsigned,4> len{},owner{};
+            std::array<uint32_t,4> strobes{};
+            len[0]=self->wide_lengths[pc];
+            self->traffic_counters.sample(self->runtime.cycle(),
+                bool(self->wide_accepted&bit),bool(self->wide_returned&bit),
+                0,0,len,owner,owner,strobes);
+          }
+#endif
           // Count ONCE on actual released rising edge, never in prepare/offer.
           self->traffic_counters.sample(self->runtime.cycle(),self->accepted,
               self->returned,self->committed,self->write_mask,self->lengths,

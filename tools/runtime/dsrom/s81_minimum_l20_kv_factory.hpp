@@ -8,7 +8,12 @@
 class VDsromAttention;
 class VDsromAttEngine;
 class VDsromWindowBlocks;
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+class VDsromS81WindowLa;
+using VDsromPackedWindow=VDsromS81WindowLa;
+#else
 class VDsromPackedWindow;
+#endif
 class VDsromS81CkvRank0;
 class VDsromS81CkvRank1;
 class VDsromS81CkvRank2;
