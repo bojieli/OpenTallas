@@ -1,0 +1,30 @@
+{
+  "FF": 16271,
+  "SSFF": false,
+  "body_um2": 29917.08108,
+  "cell_only_50pct_mm2": 0.05983416216,
+  "cells": 352899,
+  "constant_one_async_pin_connections": 7567,
+  "hierarchy_join": "Actual six return-to-capture port mappings + source CLK/cold-reset pins exported; 4706 binary+384 unary+128 ROOTD128 preserved. Constant ties/hold/Clock-C CTS/PG/routes must be constructed, not credited as already present.",
+  "mapped_netlist": "mapped.v.gz",
+  "minimal_prerequisite": "c305b9476a501736211fde7dcfab02112a4ceea4 (dd636 already main d61f0d2b0)",
+  "native_CLK_sinks": 16271,
+  "native_VM_grant_owner": "Nash, separate cost/source implementation",
+  "native_cold_reset_pins": {
+    "RESETN": 7566,
+    "SETN": 1
+  },
+  "native_model_sha256": "78adda37dbdbe673b6dda2edc735bebccd69d8533668ec82836b114e2dc2d64c",
+  "native_object": "native_object.json",
+  "new_latency_cycles_from_mapping": 0,
+  "next_actual_runtime_hook": "Use already selected capture_vm_accept, capture_live/drained/fault and saved47 C8 retirement from actual parent; mapped object supplies physical implementation only, does not synthesize behavioral VM into a bank service.",
+  "next_physical_hook": "Named capture home and native ties/clock/reset supply union plus source-typed unary/root objects, before contextual route.",
+  "no_repeated_synthesis": true,
+  "physical_fit": false,
+  "schema": "opentallas.dsrom.S81.capture-native-handoff.v1",
+  "sole_runtime_owner": "Archimedes; no duplicate runtime or proof",
+  "terminal": "PASS_EXIT0",
+  "test_command": "python3 -m pytest -q tests/test_dsrom_s81_capture_native_map.py tests/test_dsrom_s81_capture_native_object.py",
+  "tests": "15 PASS",
+  "verify_command": "python3 tools/dsrom_s81_capture_native_object.py --verify"
+}

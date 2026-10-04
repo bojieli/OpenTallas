@@ -1,0 +1,1 @@
+Derived-object checker initially assumed every async source reset uses RESETN. Actual mapping has 7566 RESETN and one SETN connected to source rst_n. First export rejected with ValueError: non-source reset on mapped FF. Mapping itself remained PASS unchanged; corrected exporter checks both typed native reset/set polarities and constant-one complements.

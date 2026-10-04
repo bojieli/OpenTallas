@@ -1,0 +1,158 @@
+{
+  "actual_FF_cells": 16271,
+  "actual_cell_census": {
+    "DFFASRHQNx1_ASAP7_75t_R": 7567,
+    "DFFHQNx1_ASAP7_75t_R": 8704,
+    "INVx1_ASAP7_75t_R": 112888,
+    "NAND2x1_ASAP7_75t_R": 223740
+  },
+  "actual_cells": 352899,
+  "artifacts_sha256": {
+    "map.ys": "6c739057b7f45127b0c3cefcf949cecd29469b1236667720ebbfbc497e4fca61",
+    "mapped.json": "4f186adf076558c2f4d7af4d9d8c48dc0191ad236989182ce09c8b35e89976c5",
+    "mapped.log": "77bcc0516943d90de6efa9cc46b6e1daeba6dd508e6c05cb807107499afe47d9",
+    "mapped.v": "86b1b8a0771636a77baa0091a961e9adb6a1396b2fc92935d06a32e9e476692b",
+    "preparation.json": "c95752bdce180fdfae36c1326c587ea27048c5c806357ae31a550243d49fdf72",
+    "process.json": "d2dad154e7aadaf697e0fb1031164c715fc21594acd656ff0a3ccabed7212953"
+  },
+  "elapsed_s": 495.4938712120056,
+  "exit_code": 0,
+  "physical_admission": false,
+  "ports": {
+    "clk": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "fault": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "held_identity": {
+      "bits": 47,
+      "direction": "output"
+    },
+    "held_phase": {
+      "bits": 10,
+      "direction": "output"
+    },
+    "phase_drained": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "phase_fmt": {
+      "bits": 2,
+      "direction": "input"
+    },
+    "phase_fp32_high": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "phase_fp32_low": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "phase_id": {
+      "bits": 10,
+      "direction": "input"
+    },
+    "phase_identity": {
+      "bits": 47,
+      "direction": "input"
+    },
+    "phase_idle": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "phase_live": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "phase_np": {
+      "bits": 3,
+      "direction": "input"
+    },
+    "phase_obase": {
+      "bits": 30,
+      "direction": "input"
+    },
+    "phase_ops": {
+      "bits": 30,
+      "direction": "input"
+    },
+    "phase_ready": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "phase_root_rows": {
+      "bits": 2432,
+      "direction": "input"
+    },
+    "phase_rsplit": {
+      "bits": 16,
+      "direction": "input"
+    },
+    "phase_valid": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "r_bf16": {
+      "bits": 2048,
+      "direction": "input"
+    },
+    "r_error": {
+      "bits": 128,
+      "direction": "input"
+    },
+    "r_fp32": {
+      "bits": 4096,
+      "direction": "input"
+    },
+    "r_pos": {
+      "bits": 384,
+      "direction": "input"
+    },
+    "r_row": {
+      "bits": 2048,
+      "direction": "input"
+    },
+    "r_valid": {
+      "bits": 128,
+      "direction": "input"
+    },
+    "reset_request": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "rst_n": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "vm_accept": {
+      "bits": 128,
+      "direction": "input"
+    },
+    "vm_addr": {
+      "bits": 3840,
+      "direction": "output"
+    },
+    "vm_data": {
+      "bits": 4096,
+      "direction": "output"
+    },
+    "vm_pos": {
+      "bits": 384,
+      "direction": "output"
+    },
+    "vm_row": {
+      "bits": 2048,
+      "direction": "output"
+    },
+    "vm_valid": {
+      "bits": 128,
+      "direction": "output"
+    }
+  },
+  "source_commit": "c305b9476a501736211fde7dcfab02112a4ceea4",
+  "source_unchanged": true,
+  "unmapped_cells": []
+}
