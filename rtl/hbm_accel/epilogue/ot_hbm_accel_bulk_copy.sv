@@ -95,7 +95,7 @@ module ot_hbm_accel_bulk_copy #(
     // ---- staging ring ----
     reg [DEPTH-1:0]     full;
     reg [TW:0]          alloc_p, cons_p;            // one extra bit: ring occupancy = alloc - cons
-    wire [TW:0]         used = alloc_p - cons_p;
+    reg  [TW:0]         used;                       // ring occupancy alloc_p - cons_p, kept as its own counter
     wire [NG-1:0] act_c, free_c, cred_c;            // copies: act ; used < DEPTH ; outstanding < MAX_OUT
     wire [NG-1:0] issue_c = act_c & free_c & cred_c & {NG{req_ready}};
     wire act = act_c[0];
@@ -111,6 +111,8 @@ module ot_hbm_accel_bulk_copy #(
     wire head_full = hf_c[2];
     (* keep *) wire [TW:0] alloc_inc; assign alloc_inc = alloc_p + 1'b1;
     (* keep *) wire [TW:0] cons_inc;  assign cons_inc = cons_p + 1'b1;
+    (* keep *) wire [TW:0] used_inc;  assign used_inc = used + 1'b1;
+    (* keep *) wire [TW:0] used_dec;  assign used_dec = used - 1'b1;
     // address / remaining-line counters: an 8-bit low part steps on issue; the high part's
     // +1 / -1 is a register recomputed every cycle (or loaded with the descriptor), used only on
     // a low-part wrap, which is >= 256 issues after the high part last changed
@@ -335,9 +337,14 @@ module ot_hbm_accel_bulk_copy #(
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            alloc_p <= 0; cons_p <= 0; outstanding <= 0; full <= {DEPTH{1'b0}};
+            alloc_p <= 0; cons_p <= 0; used <= 0; outstanding <= 0; full <= {DEPTH{1'b0}};
         end else begin
             if (issue_c[4]) alloc_p <= alloc_inc;
+            case ({issue_c[4], take_c[2]})
+                2'b10: used <= used_inc;
+                2'b01: used <= used_dec;
+                default: ;
+            endcase
             if (take_c[0]) cons_p <= cons_inc;
             case ({issue_c[5], rsp_q})
                 2'b10: outstanding <= out_inc;

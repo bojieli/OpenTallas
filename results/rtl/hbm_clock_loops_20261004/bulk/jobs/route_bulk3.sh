@@ -7,7 +7,7 @@ lab=$1; LB=$2; RM=${3:-1}
 if [ "$RM" = 1 ]; then M=ot_sram_1r1w_512x256_m1_r2c2; MD=physical/hbm_accel_macros/$M; SDC="--sdc-append rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_mc2.sdc"
 else M=ot_sram_1r1w_1024x256_m2_r2c2; MD=physical/asap7_memory_macros/$M; fi
 W=$R/routes/$lab; mkdir -p $W
-cd $R/src_bulk
+cd $R/${SRC:-src_bulk}
 export OT_ORFS_NUM_CORES=${CORES:-16}
 /srv/opentallas-scratch/admit.sh ${NEED:-24} -- python3 tools/run_abi3_physical.py --view asap7 --top ot_hbm_accel_bulk_copy \
   --source rtl/gpu/ot_gpu_bulk_copy.sv --source rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv --source $MD/${M}_bb.v \
