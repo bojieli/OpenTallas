@@ -110,7 +110,7 @@ def main():
                measured_reduced=meas, transfer_ratios={k: round(v, 5) for k, v in ratios.items()},
                full_shape=dict(tau=wave["tau"], head_occ_us=head_occ, ctx=rows,
                                note="draft is context-independent (head dies); verify from the adopted wavefront "
-                                    "record; tau 4.159 inherited from it"),
+                                    "record; tau inherited from it"),
                replaces=dict(draft_over_ar=OLD_DRAFT_OVER_AR, source="tools/dsrom_wavefront_rtl_campaign.py "
                                                                      "DRAFT_OVER_AR (main 025d24e3b)"),
                basis=__doc__.split("\n\n")[1].strip(),

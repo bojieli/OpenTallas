@@ -3,6 +3,7 @@
 #include "s81_minimum_embedding.hpp"
 #include <algorithm>
 #include <bitset>
+#include <vector>
 #include "../../native/dsrom_vm_tag227.hpp"
 
 namespace dsrom_s81_minimum {
@@ -49,6 +50,13 @@ private:
     std::array<MacroWrite,16> writes{};
     uint16_t accepted=0,acked=0;
     uint32_t published=0;
+    bool mutable_h_selected=false;
+    std::vector<std::pair<uint32_t,unsigned>> mutable_h_spans;
+    bool mutable_h_address(uint32_t address) const {
+        for(const auto& span:mutable_h_spans)
+            if(address>=span.first&&address-span.first<span.second)return true;
+        return false;
+    }
     bool active=false,reported=false,stopped=false;
     MacroAckAdapter<Model> backend;
     DsromS81MinimumParticipant write_ports;
@@ -97,8 +105,7 @@ private:
                 "embedding ACK lacks unique accepted scalar");
         acked|=uint16_t(1)<<n;
         if(prefix_batch) {
-            on_prefix_scalar_ack(c,receipt);
-            prefix_acked.set(c.source.element_address);
+            external_scalar_visible(c,receipt); // ONE matched native ACK publication/retirement path
         } else {
             require(!prefix_acked.test(c.source.element_address),"duplicate immutable embedding publication");
             prefix_acked.set(c.source.element_address);
@@ -175,7 +182,7 @@ private:
 public:
     PublishedSpanAcceptSink(Model& m,uint64_t id,uint32_t vm_base,Record r,
                           SpanLease lease,SpanLease write_allowed,ScalarAck ack,
-                          AcceptObservers observers={})
+                          AcceptObservers observers={},bool mutable_h=false)
     :model(m),accept_observers(std::move(observers)),identity(id),base(vm_base),record(std::move(r)),
      prefix_source_lease(std::move(lease)),prefix_write_allowed(std::move(write_allowed)),
      on_prefix_scalar_ack(std::move(ack)),
@@ -183,6 +190,7 @@ public:
              [this](unsigned b,const MacroWrite& c){took(b,c);},
              [this](unsigned b,const MacroWrite& c,const VmReceipt& a){visible(b,c,a);}),
      write_ports(backend.participant()) {
+        mutable_h_selected=mutable_h;
         require(identity<(1ull<<47)&&base<=32768-20480&&bool(record)&&
                 bool(prefix_source_lease)&&bool(prefix_write_allowed)&&bool(on_prefix_scalar_ack),
                 "embedding target requires source identity/layout/record encoder");
@@ -200,7 +208,10 @@ public:
     bool source_span_lease(uint64_t id,uint32_t address,unsigned words) const {
         if(fault()||id!=identity||!words||uint64_t(address)+words>(1u<<19))return false;
         if(address>=base&&uint64_t(address)+words<=uint64_t(base)+20480) {
-            for(unsigned n=0;n<words;n++)if(!prefix_acked.test(address+n))return false;
+            for(unsigned n=0;n<words;n++) {
+                if(!prefix_acked.test(address+n))return false;
+                if(mutable_h_address(address+n)&&!prefix_source_lease(id,address+n,1))return false;
+            }
             return true;
         }
         for(unsigned n=0;n<words;n++)if(!prefix_acked.test(address+n))return false;
@@ -222,8 +233,11 @@ private:
             }
             if(read_pending)return false;
             if(prefix) {
-                require(uint64_t(out.vm_address)+words<=base||out.vm_address>=base+20480,
-                        "prefix writer cannot overwrite immutable embedding input");
+                for(unsigned n=0;n<words;n++) {
+                    const auto address=out.vm_address+n;
+                    require(address<base||address>=base+20480||mutable_h_address(address),
+                            "prefix writer cannot overwrite unenrolled immutable embedding input");
+                }
                 require(prefix_write_allowed(identity,out.vm_address,words),
                         "prefix batch not in actual native writer source span");
             }else require(out.vm_address==next_embedding_address()&&published<20480,
@@ -262,6 +276,19 @@ private:
         }catch(...){stopped=true;throw;}
     }
 public:
+    // Source-only opt-in. The bank owner calls this after actual old readers
+    // drain, before pub.begin revokes the old version. No port/ACK is created.
+    bool mutable_write_drained() const {
+        return !fault()&&!read_pending&&backend.drained()&&(!active||(acked==required&&reported));
+    }
+    void admit_mutable_h_span(uint32_t address,unsigned words) {
+        require(mutable_h_selected&&published==20480&&mutable_write_drained()&&words&&
+                address>=base&&uint64_t(address)+words<=uint64_t(base)+20480,
+                "mutable H requires opt-in, initial ACKs and drained native owners");
+        mutable_h_spans.emplace_back(address,words);
+        for(unsigned n=0;n<words;n++)prefix_acked.reset(address+n);
+        read_done=false; // old cached bits cannot survive a new H version
+    }
     // Called by the OTHER selected writer's actual old-head ACK callback.
     // This shares the existing address witness; it does not clock a bank,
     // grant a lease, or treat producer/assignment acceptance as visibility.
@@ -273,6 +300,9 @@ public:
                     receipt.address==c.word.address&&receipt.mask==c.word.mask&&
                     receipt.owner==c.word.owner,
                     "external scalar lacks actual matching old-head receipt");
+            require(a<base||a>=base+20480||
+                    (mutable_h_address(a)&&prefix_write_allowed(identity,a,1)),
+                    "external H ACK lacks admitted literal mutable version");
             on_prefix_scalar_ack(c,receipt); // source checks unique admitted tuple/version
             prefix_acked.set(a);
             read_done=false; // never retain a cached read across this write

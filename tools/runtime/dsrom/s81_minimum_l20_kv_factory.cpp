@@ -9,7 +9,11 @@
 #include "VDsromAttention.h"
 #include "VDsromAttEngine.h"
 #include "VDsromWindowBlocks.h"
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+#include "VDsromS81WindowLa.h"
+#else
 #include "VDsromPackedWindow.h"
+#endif
 #include "VDsromKvRopeMux.h"
 #include "VDsromS81NativeKvPhase.h"
 #include "VDsromS81CkvRank0.h"
@@ -156,6 +160,9 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
             r.hbm->preload(v.prior_hbm_directory);r.hbm->preload_ckv(v.prior_ckv_directory);
             need(r.hbm->capacity_words()>=0x490000,"CKV source does not fit actual backend capacity");
             r.hbm->bind(*r.mux);
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+            r.hbm->bind_window_la(*r.window);
+#endif
             if(sim_only&&v.descriptor.participant.name.empty()){
                 need(!v.native_generation&&!v.join_window_owner,
                      "SIM_ONLY fallback cannot overwrite partial actual descriptor binding");

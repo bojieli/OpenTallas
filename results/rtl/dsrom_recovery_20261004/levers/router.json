@@ -48,5 +48,5 @@
   "saving_us_per_layer": 0.29916
  },
  "default": "opt-in: applied only in the recovery baseline; the as-built ot_hdc_select is unchanged",
- "note": "composed (recovery baseline, this lever alone): AR 721.672 -> 709.706 us, 1,385.7 -> 1,409.0 tok/s (+1.68%); MTP 2,744 -> 2,765.8 tok/s (+0.79%, II bound by the head stage); r1 screen failed FF hold -3.3 ps on an output copy register (router/screen_r1_fail_hold.json), r2 removes it (-1 cycle)"
+ "note": "composed (recovery baseline, this lever alone, main 2026-10-04 after merge): AR 721.672 -> 709.706 us, 1,385.7 -> 1,409.0 tok/s (+1.68%); MTP 2,565.1 -> 2,585.5 tok/s (+0.80%, II bound by the head stage); r1 screen failed FF hold -3.3 ps on an output copy register (router/screen_r1_fail_hold.json), r2 removes it (-1 cycle)"
 }
