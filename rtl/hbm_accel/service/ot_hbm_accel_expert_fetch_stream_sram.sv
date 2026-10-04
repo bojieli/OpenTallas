@@ -201,9 +201,8 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
     assign s_valid = v_q;
     reg ring_fault;
     for (genvar m = 0; m < NSM; m = m + 1) begin : sm
-      reg [SW-1:0] cs; reg vq;
+      reg [SW-1:0] cs, cs1; reg vq;                       // cs1 == cs + 1, held in its own flops
       assign v_q[m] = vq;
-      wire [SW-1:0] cs1 = cs + 1'b1;
       wire [SW-1:0] ra = take[m] ? cs1 : cs;
       for (genvar c = 0; c < 4; c = c + 1) begin : bank
         for (genvar h = 0; h < 2; h = h + 1) begin : half
@@ -228,12 +227,14 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
         assign hit[d] = |(mk & {set3[d], set2[d], set1[d], set0[d]});   // staging overrun
       end
       assign ovr[m] = |hit;
-      // valid for the line read at this edge, from the mask before this edge's writes
+      // valid for the line read at this edge, from the mask before this edge's writes; both
+      // candidates are selected from registers, and the take (s_ready) only picks between them
+      wire f_hold = full[cs], f_take = full[cs1];
       always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cs <= 0; vq <= 1'b0; end
+        if (!rst_n) begin cs <= 0; cs1 <= SW'(1); vq <= 1'b0; end
         else begin
-          vq <= take[m] ? full[cs1] : full[cs];
-          if (take[m]) cs <= cs1;
+          vq <= take[m] ? f_take : f_hold;
+          if (take[m]) begin cs <= cs1; cs1 <= cs1 + 1'b1; end
         end
     end
     always @(posedge clk or negedge rst_n)
