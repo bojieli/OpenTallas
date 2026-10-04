@@ -12,13 +12,14 @@
 //   * aon_clk  -- the always-on island's own branch (tapped before the spine gate; in the die the hub AO island,
 //                 one controller per stage): scheduler + W18 controller, retention shadow ICG, AO state ICG;
 //   * clk      -- the stage clock spine root; it reaches the domain only through u_spine_cg, whose enable is
-//                 spine_on, a register on aon_clk that is 1 whenever ANY header-ring segment acknowledges (is
-//                 powered).  Wake order: sw_en[0] -> first ring ack -> spine_on (next cycle) -> remaining segments
+//                 spine_on, a register on aon_clk that is 1 while a header-ring segment acknowledges (is powered)
+//                 and the ring is not being switched off (some sw_en still high).  Wake order: sw_en[0] -> first ring ack -> spine_on (next cycle) -> remaining segments
 //                 ((NSUB-1) x cfg_step cycles) -> domain reset with clock edges (cfg_rst) -> isolation release ->
 //                 retention replay -> ready.  The domain is held in reset and isolated the whole time the spine
 //                 starts, so the first (possibly partial) edges reach only reset flops.
-//                 Sleep order: clock enable off -> isolate -> reset -> switches off -> acks low -> spine_on = 0.
-//                 So the spine never stops while the domain is powered, and never runs while it is unpowered.
+//                 Sleep order: clock enable off -> isolate -> reset + switches off (spine_on = 0 the next cycle,
+//                 before the ring's acks fall) -> acks low.  So the spine runs only while the domain is powered and
+//                 stops while the domain is isolated, in reset and still powered.
 //   The spine gate is the platform latch ICG (glitch-free); its enable is a flop, so no combinational port path.
 // ---------------------------------------------------------------------------
 module ot_v41_rom_pg_ao_sp #(
@@ -172,7 +173,7 @@ module ot_v41_rom_pg_ao_sp #(
 `ifdef PG_MUTANT_SPINE_LATE
             else spine_on <= pwr_good;             // mutant: the spine starts only at isolation release
 `else
-            else spine_on <= |sw_ack;              // any ring segment powered
+            else spine_on <= (|sw_en) & (|sw_ack); // a segment powered and the ring not being switched off
 `endif
         ot_hdc_cg u_spine_cg (.clk(clk), .en(spine_on | !rst_n), .gclk(s_clk));
     end else begin : g_nspine

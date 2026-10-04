@@ -81,10 +81,11 @@ module tb_v41_rom_elem_pg_sp;
 
  // spine: no domain clock edge while the domain is unpowered; count the stopped cycles
  integer spine_off=0, spine_bad=0;
- // (at the falling edge the spine gate's latch holds the enable of the next rising edge)
- always @(negedge clk) if (rst_n) begin
+ // at a rising edge the spine gate's latch holds the enable it captured in the low phase before it (whether this
+ // edge passes), and sw_ack still holds the ring state before the edge's updates (whether the domain is powered)
+ always @(posedge clk) if (rst_n) begin
    if (!dut.g_pg.u_ao.g_spine.u_spine_cg.u_icg.en_l) spine_off = spine_off + 1;
-   if (pwr_off && dut.g_pg.u_ao.g_spine.u_spine_cg.u_icg.en_l) spine_bad = spine_bad + 1;
+   if (~|sw_ack && dut.g_pg.u_ao.g_spine.u_spine_cg.u_icg.en_l) spine_bad = spine_bad + 1;
  end
  integer cyc=0, rows=0, nonzero=0, sleeps=0, wakes=0, off_cyc=0, on_cyc=0, restores=0;
  integer wake_t0=-1, wake_max=0, wake_min=1<<30, restore_max=0, pg_t=-1;
