@@ -112,7 +112,24 @@ class DsromS81MinimumTargetEntry {
                     member(manifest,"expected_outputs_used")=="false"&&
                     member(manifest,"native_publication_qualified")=="false",
                     "pre-I75 exported source/context/scope differs");
-            (void)sha_member(manifest,"source_inputs_sha256"); // retained provenance, not a lease
+            // a18 exports the five source-file hashes as an OBJECT, not a
+            // single digest. Validate each declared canonical provenance pin;
+            // none of these hashes supplies native acceptance or a lease.
+            const auto source_inputs=member(manifest,"source_inputs_sha256");
+            const std::pair<const char*,const char*> source_pins[]={
+                {"results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json",
+                 "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480"},
+                {"results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json",
+                 "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815"},
+                {"results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz",
+                 "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326"},
+                {"results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz",
+                 "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f"},
+                {"results/uarch/dsrom_native_weight_address_join_20261002/r3/node_bindings.jsonl.gz",
+                 "07a9a3ff9a371c4ef3fbe941661105b91da281636674c4045a7b961e81c2b434"}};
+            for(const auto& pin:source_pins)
+                require(sha_member(source_inputs,pin.first)==pin.second,
+                        "pre-I75 source input provenance differs");
             const auto operands=member(manifest,"operands");
             struct Spec {const char* name;unsigned producer,address,count;const char* node;const char* sha;};
             const Spec specs[]={
