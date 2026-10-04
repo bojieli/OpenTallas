@@ -175,7 +175,7 @@ module ot_hbm_accel_bulk_copy #(
             end
         end
     end
-    integer k;
+    integer k, kf;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             next_slot <= 1; next2_slot <= 2; rsp_q <= 0; rsp_tag_q <= 0;
@@ -345,9 +345,9 @@ module ot_hbm_accel_bulk_copy #(
                 default: ;
             endcase
             // one-edge-late clear and set from the registered pre-decoded selects; a set wins
-            for (k = 0; k < DEPTH; k = k + 1)
-                if (set_hi[k >> LO] && set_lo[k % (1<<LO)]) full[k] <= 1'b1;
-                else if (clr_hi[k >> LO] && clr_lo[k % (1<<LO)]) full[k] <= 1'b0;
+            for (kf = 0; kf < DEPTH; kf = kf + 1)
+                if (set_hi[kf >> LO] && set_lo[kf % (1<<LO)]) full[kf] <= 1'b1;
+                else if (clr_hi[kf >> LO] && clr_lo[kf % (1<<LO)]) full[kf] <= 1'b0;
         end
     end
     always @(posedge clk) begin
