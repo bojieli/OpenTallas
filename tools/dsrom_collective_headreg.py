@@ -91,3 +91,29 @@ def install(sources, output, *, enable=False):
                 sources=result, source_sha256=pins,
                 input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
                 validation='Qwen cached-head algorithm reused; DS parity integration and physical context pending')
+
+
+def install_s81_parent(binding, original_export, output, *, enable=False,
+                       actual_collectives=None, clock_hz=1.2e9):
+    """Join Archimedes's actual selected S81 ParentBinding source factory.
+
+    Allocation, BF sites, active ragged pairs and RD64 remain binding-owned.
+    Refuse an S82 placeholder; no shape substitution or private source list.
+    The enclosing caller passes returned parameters to its existing elaborator.
+    """
+    if binding.stages != 81 or binding.inventory['TP'] != 4:
+        raise ValueError('selected S81/TP4 owner allocation required')
+    if binding.contract['return_contract']['RD'] != 64:
+        raise ValueError('selected active-pair RD64 required')
+    result = install(binding.native_sources(original_export), output, enable=enable)
+    result['selected_stages'] = binding.stages
+    result['pairs_per_rank_die'] = binding.pairs
+    result['return_depth'] = 64
+    result['collective_price'] = None if actual_collectives is None else price_collectives(
+        actual_collectives, clock_hz=clock_hz)
+    # Off selection has no latency/storage debit. The analytical price remains
+    # visible separately if a calendar was supplied, but is not an adoption.
+    result['added_cycles'] = (result['collective_price']['added_cycles']
+                             if enable and result['collective_price'] is not None
+                             else (None if enable else 0))
+    return result

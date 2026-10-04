@@ -38,3 +38,26 @@ def test_per_actual_collective_price():
     assert r['external_boundary_added_bits']==r['fifo_capacity_change']==r['II_change']==0
     assert not r['adopted'] and not r['clock_fit']
     with pytest.raises(ValueError): H.price_collectives(['same','same'])
+
+
+def test_selected_s81_reuses_owner_source_factory(tmp_path,monkeypatch):
+    from types import SimpleNamespace
+    actual_sources=[Path('/owner/actual-native.sv')]
+    binding=SimpleNamespace(stages=81,inventory={'TP':4},pairs=2417,
+                            contract={'return_contract':{'RD':64}},
+                            native_sources=lambda export: actual_sources)
+    calls=[]
+    def installer(sources,output,*,enable):
+        calls.append((sources,output,enable))
+        return {'parameters':{'COLL_HEADREG':int(enable)}}
+    monkeypatch.setattr(H,'install',installer)
+    r=H.install_s81_parent(binding,'original-export',tmp_path,enable=True,
+                          actual_collectives=['pos100:coll0','pos101:coll0'])
+    assert calls==[(actual_sources,tmp_path,True)]
+    assert r['pairs_per_rank_die']==2417 and r['return_depth']==64
+    assert r['added_cycles']==2
+    assert H.install_s81_parent(binding,'original-export',tmp_path)['added_cycles']==0
+    binding.stages=82
+    with pytest.raises(ValueError):H.install_s81_parent(binding,'original-export',tmp_path)
+    binding.stages=81;binding.contract['return_contract']['RD']=16
+    with pytest.raises(ValueError):H.install_s81_parent(binding,'original-export',tmp_path)
