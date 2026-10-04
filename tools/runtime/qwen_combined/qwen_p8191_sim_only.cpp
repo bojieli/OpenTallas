@@ -1,3 +1,6 @@
+// P8191 SIM_ONLY component host: actual selected layer descriptors and native E/head.
+// Source continuation only; historical L0 numerical PASS/process -11 is retained.
+// No composed token timing or corrected whole-run PASS follows from this source.
 // INITIALIZATION_ABI combined-initial-eval-v1
 // HEAD_HOST_ABI combined-head-host-v1
 // GENERATED source-bound combined runtime; baseline host SHA 5da95b5764c7bf837e59ebcc1806853f16474b46dc3b85352d71fdf3c7086817
@@ -117,6 +120,7 @@ struct DieMem {
     std::vector<uint32_t> prog, codes, scales;
     std::vector<uint64_t> desc, crom;
     size_t code_words = 0, scale_words = 0, crom_words = 0;
+    unsigned near_qbase = 0, near_obase = 0;
 };
 static void load_images(DieMem& m, const std::string& p) {
     m.prog = QwenHex::load(p + "/program.hex", 32);
@@ -134,6 +138,23 @@ static void load_images(DieMem& m, const std::string& p) {
     if (m.crom_words > RM_CROM_WORDS) fatal("constant image exceeds the constant ROM", long(m.crom_words));
 }
 struct Stage { std::string name, dir[D]; int layer; };
+// Host phase split of the ACTUAL descriptor3. Program/weights remain unchanged;
+// the native core executes its existing prefix END, then original O/MLP suffix.
+static void prepare_stage_prefix(DieMem& m, const Stage& stage) {
+    if(stage.layer<0)return; // existing native embedding/head descriptors
+    if((m.desc[0]&3)!=3 || (m.desc[1]&3)!=1 || (m.desc[2]&3)!=1 || (m.desc[3]&3)!=0)
+        fatal("SIM_ONLY decoder requires actual near/OAR/MLPAR/END descriptors",stage.layer);
+    m.near_qbase=(m.desc[0]>>2)&0xffffff;
+    m.near_obase=(m.desc[0]>>26)&0xffffff;
+    const unsigned prefix=(m.desc[0]>>50)&0xfff;
+    const unsigned o=(m.desc[1]>>32)&0xffff, mlp=(m.desc[2]>>32)&0xffff, end=(m.desc[3]>>32)&0xffff;
+    if(m.near_qbase>VM_ELEMS-1024 || m.near_obase>VM_ELEMS-1024 ||
+       !(prefix<o && o<mlp && mlp<end && end<m.prog.size()/32))
+        fatal("SIM_ONLY actual descriptor VM/program bounds",stage.layer);
+    m.desc.assign(8,0);
+    m.desc[0]=uint64_t(prefix)<<32; // original prefix base, native END descriptor
+}
+
 
 struct Fabric {
     Vdie& die;
@@ -319,7 +340,7 @@ static void preload_slices_ideal(Fabric& f, const std::vector<uint8_t>& codes, i
 
 int main(int argc, char** argv) {
     if (argc < 5 || strcmp(argv[1], "--stages")) {
-        fprintf(stderr, "usage: %s --stages FILE OUTDIR PRELOAD --pos P --token T [--kv-dir DIR] [--max-cycles N]\n", argv[0]);
+        fprintf(stderr, "usage: %s --stages FILE OUTDIR PRELOAD --pos P --token T [--kv-dir DIR]\n", argv[0]);
         return 2;
     }
     const std::string dir = argv[3], preload = argv[4];
@@ -360,17 +381,26 @@ int main(int argc, char** argv) {
             for (int d = 0; d < D; d++) { if (fscanf(fp, "%1023s", a) != 1) fatal("stage line"); st.dir[d] = a; }
             if (fscanf(fp, "%d", &k) != 1) fatal("stage kv_reset");
             if (st.name == "E") st.layer = -1;                    // embedding stage: no KV
-            else if (st.name.size() >= 2 && st.name[0] == 'L') st.layer = atoi(st.name.c_str() + 1);
+            else if (st.name.size() >= 2 && st.name[0] == 'L') {
+                if(st.name.find_first_not_of("0123456789",1)!=std::string::npos)fatal("invalid decoder stage name");
+                const auto layer=strtoul(st.name.c_str()+1,nullptr,10);
+                if(layer>=unsigned(RM_HBM_LAYERS))fatal("decoder layer beyond compiled memory extent");
+                st.layer=int(layer);
+            }
             else if (st.name == "head") st.layer = -1; // existing no-KV sentinel 255
             else fatal("combined head host requires E, L<n>, or head");
             if (st.layer >= RM_HBM_LAYERS) fatal("layer beyond the HBM model's regions", st.layer);
             stages.push_back(st);
         }
         fclose(fp);
-        if(stages.size()!=1 || stages[0].name!="L0")
-            fatal("SIM_ONLY selected P8191 L0 layer only");
         if(POS!=8191)fatal("SIM_ONLY selected P8191 only");
         if (stages.empty()) fatal("no stages");
+        for(size_t i=0;i<stages.size();++i) {
+            if(stages[i].name=="E" && i!=0)fatal("embedding must precede decoder components");
+            if(stages[i].name=="head" && i+1!=stages.size())fatal("head must follow decoder components");
+            if(i && stages[i].layer>=0 && stages[i-1].layer>=0 && stages[i].layer!=stages[i-1].layer+1)
+                fatal("decoder components must consume consecutive produced layer state");
+        }
     }
     DieMem mem[D];
     auto x0 = QwenHex::load(preload, 1);
@@ -410,11 +440,9 @@ int main(int argc, char** argv) {
     for(int d=0;d<D;++d)fab[d]->eval();
     for (int d = 0; d < D; d++) {
         load_images(mem[d], stages[0].dir[d]);
-        if((mem[d].desc[0]&3)!=3 || (mem[d].desc[1]&3)!=1 || (mem[d].desc[2]&3)!=1)
-            fatal("SIM_ONLY requires actual near/OAR/MLPAR descriptors",d);
-        mem[d].desc.assign(8,0); // native core runs actual prefix base0 through its END
+        prepare_stage_prefix(mem[d],stages[0]);
     }
-    printf("SIM_ONLY layer L0 P8191: actual fullshape core/program/weights; cached near RTL exact math; unfinished STREAM4 shared-memory controller timing stand-in; timing excluded\n");fflush(stdout);
+    printf("SIM_ONLY selected P8191 components: actual fullshape core/program/weights; cached near RTL exact math; unfinished STREAM4 shared-memory controller timing stand-in; timing excluded\n");fflush(stdout);
     printf("images loaded in %.1f s\n", std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count());
     // ---- preloads: vector memory X row, ROMs of stage 0, HBM KV history of every layer --------
     std::vector<std::vector<uint8_t>> kv_codes(RM_HBM_LAYERS);
@@ -524,7 +552,7 @@ int main(int argc, char** argv) {
             bool(v.mem_fault||v.core_fault||v.s_fault||coll.fault)};
     };
     bool booted=false,pulse_pending=false;
-    bool near_pending=true;
+    bool near_pending=stages[0].layer>=0;
     uint64_t sim_near_cycles=0;
     // SIM_ONLY unfinished STREAM4/native tagged-row join uses the SAME existing
     // authoritative mutable HBM array. No output/golden activation is an input.
@@ -567,7 +595,7 @@ int main(int argc, char** argv) {
             if(n.q_valid){
                 n.q_beat=qb;
                 for(int i=0;i<32;++i){
-                    uint32_t x=rm_vm(die[rank]->rootp)[15104+qb*32+i];
+                    uint32_t x=rm_vm(die[rank]->rootp)[mem[rank].near_qbase+qb*32+i];
                     uint16_t bf=(x+0x7fff+((x>>16)&1))>>16;
                     setb(n.q_data,16*i,16,bf);
                 }
@@ -605,13 +633,13 @@ int main(int argc, char** argv) {
                 for(int i=0;i<16;++i){
                     unsigned at=h*128+dim0+i;
                     if(at>=1024||seen[at]++)fatal("SIM_ONLY near duplicate output",rank,at);
-                    rm_vm(die[rank]->rootp)[88944+at]=getb(n.out_data,32*i,32);
+                    rm_vm(die[rank]->rootp)[mem[rank].near_obase+at]=getb(n.out_data,32*i,32);
                     ++count;
                 }
             }
         }
         n.final();
-        printf("SIM_ONLY_NEAR rank=%d outputs=%d cycles=%llu service=shared_actual_KV_functional_rows timing_excluded=1\n",rank,count,(unsigned long long)(cyc-begin));
+        printf("SIM_ONLY_NEAR stage=%s rank=%d outputs=%d cycles=%llu service=shared_actual_KV_functional_rows timing_excluded=1\n",stages[cur].name.c_str(),rank,count,(unsigned long long)(cyc-begin));
         fflush(stdout);
         return cyc-begin;
     };
@@ -639,7 +667,7 @@ int main(int argc, char** argv) {
             for(int d=0;d<D;++d)all_done&=layer_fences[d].can_retire(sample(d));
             if (booted && all_done && near_pending) {
                 for(int d=0;d<D;++d)layer_fences[d].retire(sample(d));
-                printf("SIM_ONLY_PREFIX done native_cycles=%u actual_QR=15104 actual_ATTN=88944\n",cyc);fflush(stdout);
+                printf("SIM_ONLY_PREFIX stage=%s done native_cycles=%u actual_QR=%u actual_ATTN=%u\n",stages[cur].name.c_str(),cyc,mem[0].near_qbase,mem[0].near_obase);fflush(stdout);
                 for(int d=0;d<D;++d)sim_near_cycles=std::max(sim_near_cycles,run_near(d));
                 for(int d=0;d<D;++d){
                     load_images(mem[d],stages[cur].dir[d]);
@@ -649,7 +677,7 @@ int main(int argc, char** argv) {
                     die[d]->h_start=1;
                 }
                 near_pending=false;done_armed=false;pulse_pending=true;all_done=0;
-                printf("SIM_ONLY_SUFFIX launch original OAR/MLPAR descriptors; near_cycles=%llu timing_excluded=1\n",(unsigned long long)sim_near_cycles);fflush(stdout);
+                printf("SIM_ONLY_SUFFIX stage=%s launch original OAR/MLPAR descriptors; near_cycles=%llu timing_excluded=1\n",stages[cur].name.c_str(),(unsigned long long)sim_near_cycles);fflush(stdout);
             }
             if (booted && all_done && !stage_done) {
                 for(int d=0;d<D;++d)layer_fences[d].retire(sample(d));
@@ -719,7 +747,7 @@ int main(int argc, char** argv) {
                 if (sf || cf || lf) { printf("TOKEN FAULT stage=%s\n", stages[cur].name.c_str()); return 1; }
                 if (cur + 1 == stages.size()) {
                     struct rusage ru; getrusage(RUSAGE_SELF, &ru);
-                    printf("SIM_ONLY_QWEN_LAYER_COMPLETED stages=%zu cycles=%u edges=%ld settle_max=%d wall_s=%.1f RSS_KiB=%ld threads=%d kv_ideal=%d\n",
+                    printf("SIM_ONLY_QWEN_COMPONENTS_COMPLETED stages=%zu cycles=%u edges=%ld settle_max=%d wall_s=%.1f RSS_KiB=%ld threads=%d kv_ideal=%d\n",
                            stages.size(), cyc, edges, max_settle, sec, ru.ru_maxrss, threads, int(kv_ideal));
                     fflush(stdout);
                     return 0;
@@ -768,9 +796,11 @@ int main(int argc, char** argv) {
 
         if (next_stage) {
             next_stage = false; stage_done = false; done_armed = false; cur++;
+            near_pending=stages[cur].layer>=0;sim_near_cycles=0;
             auto tp = std::chrono::steady_clock::now();
             for (int d = 0; d < D; d++) {
                 load_images(mem[d], stages[cur].dir[d]);
+                prepare_stage_prefix(mem[d],stages[cur]);
                 preload_die_roms(*die[d], mem[d], pool);
                 preload_tile_roms(*fab[d], mem[d]);
                 if (kv_ideal && stages[cur].layer >= 0) preload_slices_ideal(*fab[d], kvc[d][cur], POS);
