@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "a8d4ec0dc",
+ "generated_from_commit": "ef30774dc",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -1221,9 +1221,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "AR_tok_s",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 1409.0,
+   "value": 1402.3,
    "resolved": true,
-   "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
+   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
    "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
@@ -1251,9 +1251,9 @@
    "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
    "pointer": "AR_tok_s",
    "note": "as-built S81 microarchitecture, before the recovery levers",
-   "value": 1385.7,
+   "value": 1379.2,
    "resolved": true,
-   "blob": "7daf1e5e37c933706840628813aea2d866bfe132",
+   "blob": "c146ebd5dddbcc3a8b6c07886426aebc64fcf036",
    "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m": {
@@ -1266,9 +1266,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 2585.5,
+   "value": 2462.1,
    "resolved": true,
-   "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
+   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
    "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
@@ -1296,9 +1296,9 @@
    "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
    "note": "as-built S81 microarchitecture, before the recovery levers",
-   "value": 2565.1,
+   "value": 2443.6,
    "resolved": true,
-   "blob": "7daf1e5e37c933706840628813aea2d866bfe132",
+   "blob": "c146ebd5dddbcc3a8b6c07886426aebc64fcf036",
    "last_commit": "98226b1f6 2026-10-04"
   },
   "ds_rom.mtp_as_built_tok_s_1m": {
@@ -1341,9 +1341,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "AR_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 709.706,
+   "value": 713.09,
    "resolved": true,
-   "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
+   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
    "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
@@ -1371,9 +1371,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.verify_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 1086.57,
+   "value": 1090.037,
    "resolved": true,
-   "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
+   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
    "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
@@ -1400,9 +1400,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.II_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 75.373,
+   "value": 75.389,
    "resolved": true,
-   "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
+   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
    "last_commit": "973e1055f 2026-10-04"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
@@ -4494,9 +4494,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "measured_share",
    "note": "rest listed in still_modelled",
-   "value": 0.9956,
+   "value": 1.0,
    "resolved": true,
-   "blob": "90993a1899cf77310b2b69bbd1f266ad56039b7f",
+   "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
    "last_commit": "973e1055f 2026-10-04"
   },
   "qwen_rom.j_per_token_ar_8k": {
@@ -4893,7 +4893,7 @@
    "expr": "x0",
    "derived": true,
    "note": "still-modelled terms listed in the composition record",
-   "value": 0.9956,
+   "value": 1.0,
    "resolved": true,
    "status": "measured"
   },
@@ -5013,7 +5013,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
-   "value": 0.6535,
+   "value": 0.6504,
    "resolved": true,
    "status": "partial"
   },
@@ -5030,7 +5030,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
-   "value": 0.5931,
+   "value": 0.5648,
    "resolved": true,
    "status": "partial"
   },
@@ -5047,7 +5047,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side tier-2 MODEL: no DS-V4.1 decode measured on any GPU",
-   "value": 5.2791,
+   "value": 5.254,
    "resolved": true,
    "status": "modelled"
   },
@@ -5064,7 +5064,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side modelled (1.94x MTP sensitivity)",
-   "value": 4.9913,
+   "value": 4.7531,
    "resolved": true,
    "status": "modelled"
   },
@@ -5080,7 +5080,7 @@
    ],
    "expr": "x0/x1",
    "derived": true,
-   "value": 0.5713,
+   "value": 0.5686,
    "resolved": true,
    "status": "modelled"
   },
@@ -5792,9 +5792,9 @@
    ],
    "path_exists": true,
    "figure_values": {
-    "ds_rom.ar_tok_s_1m": 1409.0,
+    "ds_rom.ar_tok_s_1m": 1402.3,
     "ds_rom.ar_tok_s_1m_as_built": 2211.3,
-    "ds_rom.mtp_tok_s_1m": 2585.5,
+    "ds_rom.mtp_tok_s_1m": 2462.1,
     "ds_rom.mtp_tok_s_1m_as_built": 5919.3
    }
   },
