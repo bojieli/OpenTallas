@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "ef30774dc",
+ "generated_from_commit": "3647e0e5c",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -259,8 +259,8 @@
    "note": "93.4% of 4.000 TB/s peak",
    "value": 3.734,
    "resolved": true,
-   "blob": "24fafc6803682ba8ec1b944fc1404d31f4be79a2",
-   "last_commit": "aad67f56b 2026-10-04"
+   "blob": "58b6a6b9af20636be15981bf86af362dbf35bb78",
+   "last_commit": "4f0d6f2e9 2026-10-04"
   },
   "qwen_rom.stream4_fill_pct_peak": {
    "target": "qwen_rom",
@@ -273,8 +273,8 @@
    "pointer": "regex:\\| STREAM4 \\(this\\) \\|[^\\n]*\\| ([\\d.]+ %) \\|",
    "value": "93.4 %",
    "resolved": true,
-   "blob": "24fafc6803682ba8ec1b944fc1404d31f4be79a2",
-   "last_commit": "aad67f56b 2026-10-04"
+   "blob": "58b6a6b9af20636be15981bf86af362dbf35bb78",
+   "last_commit": "4f0d6f2e9 2026-10-04"
   },
   "qwen_rom.stream4_bench_P8191_pct": {
    "target": "qwen_rom",
@@ -288,8 +288,8 @@
    "note": "15/15 PASS bench",
    "value": "93.0 %",
    "resolved": true,
-   "blob": "24fafc6803682ba8ec1b944fc1404d31f4be79a2",
-   "last_commit": "aad67f56b 2026-10-04"
+   "blob": "58b6a6b9af20636be15981bf86af362dbf35bb78",
+   "last_commit": "4f0d6f2e9 2026-10-04"
   },
   "qwen_rom.kv_ideal_L0_P8191": {
    "target": "qwen_rom",
@@ -303,8 +303,8 @@
    "note": "README only; no committed JSON for this job",
    "value": 5290,
    "resolved": true,
-   "blob": "24fafc6803682ba8ec1b944fc1404d31f4be79a2",
-   "last_commit": "aad67f56b 2026-10-04"
+   "blob": "58b6a6b9af20636be15981bf86af362dbf35bb78",
+   "last_commit": "4f0d6f2e9 2026-10-04"
   },
   "qwen_rom.realmem_L0_P8191": {
    "target": "qwen_rom",
@@ -1224,7 +1224,7 @@
    "value": 1402.3,
    "resolved": true,
    "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
-   "last_commit": "973e1055f 2026-10-04"
+   "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1254,7 +1254,7 @@
    "value": 1379.2,
    "resolved": true,
    "blob": "c146ebd5dddbcc3a8b6c07886426aebc64fcf036",
-   "last_commit": "98226b1f6 2026-10-04"
+   "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m": {
    "target": "ds_rom",
@@ -1269,7 +1269,7 @@
    "value": 2462.1,
    "resolved": true,
    "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
-   "last_commit": "973e1055f 2026-10-04"
+   "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1299,7 +1299,7 @@
    "value": 2443.6,
    "resolved": true,
    "blob": "c146ebd5dddbcc3a8b6c07886426aebc64fcf036",
-   "last_commit": "98226b1f6 2026-10-04"
+   "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.mtp_as_built_tok_s_1m": {
    "target": "ds_rom",
@@ -1344,7 +1344,7 @@
    "value": 713.09,
    "resolved": true,
    "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
-   "last_commit": "973e1055f 2026-10-04"
+   "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1374,7 +1374,7 @@
    "value": 1090.037,
    "resolved": true,
    "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
-   "last_commit": "973e1055f 2026-10-04"
+   "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1403,7 +1403,7 @@
    "value": 75.389,
    "resolved": true,
    "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
-   "last_commit": "973e1055f 2026-10-04"
+   "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -4497,7 +4497,7 @@
    "value": 1.0,
    "resolved": true,
    "blob": "b4eba48ef8b7cc4568765f0624127116eb011670",
-   "last_commit": "973e1055f 2026-10-04"
+   "last_commit": "243809bdb 2026-10-04"
   },
   "qwen_rom.j_per_token_ar_8k": {
    "target": "qwen_rom",
