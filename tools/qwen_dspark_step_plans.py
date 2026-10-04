@@ -43,7 +43,8 @@ def main():
     ap.add_argument('--img4', type=Path, required=True)
     ap.add_argument('--img1', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
-    ap.add_argument('--layers', type=int, default=36)
+    ap.add_argument('--layers', type=int, default=36, help='decoder-layer jobs 0 .. N-1 (the owner rule: one layer)')
+    ap.add_argument('--head-input-layer', type=int, default=35)
     a = ap.parse_args()
     o = json.loads((a.oracle / 'oracle.json').read_text())
     s1, s2 = o['step1'], o['step2']
@@ -94,7 +95,7 @@ def main():
             'x': {f'p0_die{d}': str(p1[0] / f'L{n:02d}_die{d}_x.hex') for d in range(4)},
             'kv': {f'die{d}': kvblk(ja / f'ar_die{d}_kvblk.hex', p1[:1], n, d) for d in range(4)}}}}, indent=1) + '\n')
         jobs[f'L{n}'] = str(j); jobs[f'AR{n}'] = str(ja)
-    L = a.layers - 1
+    L = a.head_input_layer
     for tag, st, pds in (('H1', s1, p1), ('H2', s2, p2)):
         j = a.out / tag
         j.mkdir(exist_ok=True)
