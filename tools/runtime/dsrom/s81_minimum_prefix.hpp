@@ -21,6 +21,9 @@ struct DsromS81PrefixNativeEngine {
     std::function<void(const DsromS81PrefixOperation&,bool go)> drive;
 };
 struct DsromS81PrefixVm {
+    // Version transition on this instruction's real pre-edge GO acceptance,
+    // after operand prefetch and before native leaf rising evaluation.
+    std::function<void(uint64_t,unsigned)> instruction_accepted;
     // Same actual target as EmbeddingMacroSink: matched H publication plus
     // native cold producers for SSX[40960] and identity PF[41152..41155].
     // SSX must come from a native golden-order reducer, never host arithmetic.
@@ -86,6 +89,7 @@ class DsromS81MinimumPrefix {
             } else if(go) {
                 require(reset_seen&&!inflight&&next<7&&engine().ready(),
                         "prefix GO lacks native pre-edge acceptance");
+                vm.instruction_accepted(identity,next);
                 inflight=true;
             }
             su.participant.rising(released);he.participant.rising(released);
@@ -97,7 +101,8 @@ public:
                          DsromS81PrefixNativeEngine h,DsromS81PrefixVm v)
     :runtime(r),embedding(e),su(std::move(s)),he(std::move(h)),vm(std::move(v)),identity(id) {
         require(r.stage==0&&id<(1ull<<47)&&valid(su)&&valid(he)&&
-                vm.cold_inputs_visible&&vm.outputs_visible&&vm.fault&&vm.xn_span,
+                vm.instruction_accepted&&vm.cold_inputs_visible&&
+                vm.outputs_visible&&vm.fault&&vm.xn_span,
                 "actual native SU/HE, cold reducers and same-VM publication/read participants required");
         require(su.participant.name!=he.participant.name,
                 "prefix SU and HE must name distinct actual participants");
