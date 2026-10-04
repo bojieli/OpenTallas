@@ -51,6 +51,7 @@ DsromS81MinimumParticipant NativeIndexHbm::participant() {
    e.response=(m.returned[word]>>bit)&1;e.done=(m.committed[word]>>bit)&1;
    e.length=(m.accepted_len[p/8]>>(4*(p%8)))&15;
    e.migration=(m.accepted_tag[p/2]>>(16*(p%2)+12))&1;
+   e.response_migration=(m.r_rsp_tag[p/2]>>(16*(p%2)+12))&1;
    e.strobe=m.accepted_strb[p];
   }
   self->prepared=self->runtime.cycle();
@@ -65,7 +66,7 @@ DsromS81MinimumParticipant NativeIndexHbm::participant() {
      if(e.we){++self->writes[p];++c.accepted_write_beats;c.accepted_write_bytes+=__builtin_popcount(e.strobe);}
      else {self->reads[p]+=e.length;c.accepted_read_beats+=e.length;if(e.migration)c.migration_read_beats+=e.length;}
     }
-    if(e.response){if(!self->reads[p])throw std::runtime_error("index response without read debt");--self->reads[p];++c.delivered_read_beats;}
+    if(e.response){if(!self->reads[p])throw std::runtime_error("index response without read debt");--self->reads[p];++c.delivered_read_beats;if(e.response_migration)++c.migration_delivered_beats;}
     if(e.done){if(!self->writes[p])throw std::runtime_error("index commit without write debt");--self->writes[p];++c.write_done;}
     if(e.accept||e.response||e.done){if(!c.first_cycle)c.first_cycle=self->runtime.cycle();c.last_cycle=self->runtime.cycle();}
    }

@@ -6,7 +6,7 @@
 namespace dsrom_s81_minimum {
 struct IndexHbmPortTraffic {
  uint64_t accepted_read_beats=0,delivered_read_beats=0,accepted_write_beats=0,
-          accepted_write_bytes=0,write_done=0,migration_read_beats=0;
+          accepted_write_bytes=0,write_done=0,migration_read_beats=0,migration_delivered_beats=0;
  std::optional<long> first_cycle,last_cycle;
 };
 struct IndexHbmTraffic {std::array<IndexHbmPortTraffic,128> pc{};};
@@ -20,7 +20,7 @@ class NativeIndexHbm:public std::enable_shared_from_this<NativeIndexHbm> {
  bool admitted=false;
  long prepared=-1;
  std::array<uint64_t,128> reads{},writes{};
- struct Edge {bool accept=false,we=false,response=false,done=false,migration=false;
+ struct Edge {bool accept=false,we=false,response=false,done=false,migration=false,response_migration=false;
               unsigned length=0;uint32_t strobe=0;};
  std::array<Edge,128> edges{};
  IndexHbmTraffic counters;
