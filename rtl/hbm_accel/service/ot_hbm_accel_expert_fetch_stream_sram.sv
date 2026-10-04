@@ -229,7 +229,9 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
       assign ovr[m] = |hit;
       // valid for the line read at this edge, from the mask before this edge's writes; both
       // candidates are selected from registers, and the take (s_ready) only picks between them
-      wire f_hold = full[cs], f_take = full[cs1];
+      // (* keep *): e6 showed ABC folding the take back into the 512-way index (s_ready -> mux tree)
+      (* keep *) wire f_hold = full[cs];
+      (* keep *) wire f_take = full[cs1];
       always @(posedge clk or negedge rst_n)
         if (!rst_n) begin cs <= 0; cs1 <= SW'(1); vq <= 1'b0; end
         else begin
