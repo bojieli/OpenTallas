@@ -10,6 +10,7 @@ ROOT=Path(__file__).resolve().parents[1]
 SOURCES=['rtl/test/s81_native_he_bootstrap/native_leaves.sv',
  'rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv','rtl/hdc/v41x/ot_hdc_v41x_hcp.sv',
  'rtl/hdc/ot_hdc_vreduce.sv','rtl/hdc/ot_hdc_fastfp.sv','rtl/hdc/ot_hdc_delay.sv',
+ 'rtl/hdc/ot_hdc_sfu.sv',
  'rtl/hdc/v41/ot_hdc_fdiv.sv',
  'tools/runtime/dsrom/s81_native_he_bootstrap.cpp',
  'tools/runtime/dsrom/s81_native_he_bootstrap_abi.h',

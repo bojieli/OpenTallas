@@ -36,6 +36,7 @@ def test_actual_HE_and_chunk8_sources_only_with_positive_model_costs():
  assert m['combined_single_user_added_us'] is None and not m['adopted']
  sources=B.SOURCES
  assert 'rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv' in sources
+ assert 'rtl/hdc/ot_hdc_sfu.sv' in sources # original ot_hdc_vline provider
  assert not any('hcproj' in p or 'prefix_sim' in p for p in sources)
 
 
