@@ -433,6 +433,63 @@ def cmd_emit(a):
     print(str(out / "selection.json"))
 
 
+
+# WINDOW-only native model; backend/source lifecycle remains owned by caller.
+NATIVE_TOP = "DsromS81WindowLa"
+NATIVE_WRAPPER = "rtl/test/v41_runtime/s81_selected/" + NATIVE_TOP + ".sv"
+NATIVE_SOURCES = SOURCES[:9] + NEW_RTL[1:] + [NATIVE_WRAPPER]
+
+
+def cmd_native_emit(a):
+    """Emit complete selected source/pins, never compile, tick or generate history."""
+    out = a.out.resolve()
+    paths = [ROOT / s for s in dict.fromkeys(NATIVE_SOURCES)]
+    for p in paths:
+        if not p.is_file():
+            raise FileNotFoundError("Missing actual WINDOW source: " + str(p))
+    # Same original packed writer/merge parameters. STREAM_LA is the sole
+    # functional successor selection; module defaults remain off.
+    params = dict(STREAM_LA=1, REFILL_OWNER_SAFE=1, POS_W=21, USER_W=10,
+                  SEC_W=30, HAW=30, TAGW=16, RETAIN_L0=0, WIN_STACK=0,
+                  STREAM_II1=0, REFILL_CREDITS=1, NPC=32, WTAGW=13,
+                  WLENW=4, BEATW=4, LA_IW=8, MAX_CONTEXT=1048576)
+    out.mkdir(parents=True, exist_ok=False)
+    source_file = out / "sources.f"
+    source_file.write_text("\n".join(map(str, paths)) + "\n")
+    record = dict(top=NATIVE_TOP, prefix="V" + NATIVE_TOP, parameters=params,
+                  sources_file=str(source_file), sources=list(map(str, paths)),
+                  source_sha256={str(p):sha(p) for p in paths},
+                  installer_sha256=sha(Path(__file__)),
+                  typed_forwarding_header=str(ROOT / "tools/runtime/dsrom/s81_minimum_window_la.hpp"),
+                  typed_forwarding_sha256=sha(ROOT / "tools/runtime/dsrom/s81_minimum_window_la.hpp"),
+                  backend_contract=dict(shared_existing_four_stack_memory=True,
+                      wide_client=0, inactive_client=1, NPC=32, AW=30,
+                      LEN=4, TAG=13, BEAT=4, DW=256,
+                      stack_tag_bits=17, namespace="111", client_bits=1,
+                      aggregate_C8_tag_bits=16, actual_write_done_required=True,
+                      backend_owned_by="Noether", enclosing_caller_owned_by="Arch"),
+                  wrapper_model_delta=dict(additional_state_bits=0,
+                      additional_MACs_per_cycle=0, additional_pipeline_cycles=0,
+                      new_memory_bytes=0, added_clock_sinks=0, port_forward_fanout=1,
+                      incremental_logic_area_um2=0,
+                      request_boundary_bits_per_cycle=32*(1+1+30+4+13),
+                      response_boundary_bits_per_cycle=32*(1+1+13+4+256),
+                      maximum_response_bytes_per_cycle=32*256//8,
+                      request_bytes_offered_per_cycle=8*4*32,
+                      rate_is_interface_ceiling_not_observed=True,
+                      new_routing_tracks=0,
+                      tracks_basis="Direct hierarchical forwarding of existing 251a wide service wires; no new duplicated route or sink. Context route remains unqualified.",
+                      retained_cost_source="results/rtl/dsrom_s81_window_bind_20261004/historical_window_load.json",
+                      stage_and_wmux_cost_paid_once=True,
+                      model_clock_ps=833, actual_loaded_clock_qualified=False,
+                      scope="Wrapper-only delta, not stage/backend area, rate, slot fit or SS/FF qualification"),
+                  runtime_context="Borrow actual Runtime.context; one enclosing edge owner; no private clock or memory",
+                  first_I55_changed=False, built=False, native_I55_selected=False,
+                  physical_qualified=False)
+    (out / "selection.json").write_text(json.dumps(record, indent=2) + "\n")
+    print(str(out / "selection.json"))
+
+
 def cmd_bind(a):
     """Patch the S81 die and lint the S81 source set with it at WINDOW_STREAM_LA / IDX_KGATHER_PORT = 0/0, 1/0, 1/1."""
     out = a.out.resolve()
@@ -566,6 +623,8 @@ def main():
     e = sub.add_parser("emit")
     e.add_argument("--out", type=Path, required=True)
     e.add_argument("--kgather", type=int, choices=(0, 1), default=0)
+    n = sub.add_parser("native-emit", help="WINDOW-only borrowed wide-service model; source emission only")
+    n.add_argument("--out", type=Path, required=True)
     b = sub.add_parser("bind")
     b.add_argument("--out", type=Path, required=True)
     b.add_argument("--verilator", default="verilator")
@@ -576,7 +635,7 @@ def main():
     c.add_argument("--screen", default="")
     c.add_argument("--out", default=str(REC / "window_load.json"))
     a = ap.parse_args()
-    dict(vectors=cmd_vectors, run=cmd_run, emit=cmd_emit, bind=cmd_bind, record=cmd_record)[a.cmd](a)
+    dict(vectors=cmd_vectors, run=cmd_run, emit=cmd_emit, **{"native-emit": cmd_native_emit}, bind=cmd_bind, record=cmd_record)[a.cmd](a)
 
 
 if __name__ == "__main__":

@@ -929,7 +929,7 @@ def hbm_traffic(prog, tok_s, sm_us):
 
 def mtp_and_accelerator(prog, base, su1, su2):
     """MEASURED baseline AR and MTP (TU-protocol collectives, 1.2 GHz) against the model's ablation and accelerator
-    rows.  MTP step = verify(P = 6) + measured draft + seed_commit, tau 4.159 (owner 6-class, gamma 5)."""
+    rows.  MTP step = verify(P = 6) + measured draft + seed_commit, tau from the draft record (third-party published, gamma 5)."""
     import uarch_model as U
     from hbm_accelerator_model import _load_study
     mstudy, _, _, _ = _load_study(ROOT)
