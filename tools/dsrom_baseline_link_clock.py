@@ -34,6 +34,7 @@ def sim(work):
         text=(work/(name+'.run.log')).read_text()
         summary=re.search(r'LINKRT_SUMMARY .*',text)
         if not summary or 'result=PASS' not in summary.group():raise RuntimeError(text[-2000:])
+        if re.search(r'=x(?:\s|$)',summary.group()):raise RuntimeError('unknown component status: '+summary.group())
         rows.append(dict(case=name,summary=summary.group(),defines=defs))
     # Actual full residual over both pinned baseline legs; same payload/PHY.
     src=(ROOT/'rtl/test/dsrom_sys/tb_dsrom_1m_hop.sv').read_text().replace('ot_dsrom_link_rt #(', 'ot_dsrom_link_rt_clock #(.ENABLE_CLOCK_REPAIR(1), ')
@@ -42,6 +43,7 @@ def sim(work):
     run(['vvp','-n',str(exe),'+bytes=40976','+seed=81','+case=baseline_clock1'],work/'hop.run.log')
     text=(work/'hop.run.log').read_text();summary=re.search(r'HOP_SUMMARY .*',text)
     if not summary or 'result=PASS' not in summary.group():raise RuntimeError(text[-2000:])
+    if re.search(r'=x(?:\s|$)',summary.group()):raise RuntimeError('unknown hop status: '+summary.group())
     rows.append(dict(case='full_baseline_hop',summary=summary.group()))
     out=dict(model=model(),cases=rows,source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in RTL},physical_qualified=False)
     (work/'exact.json').write_text(json.dumps(out,indent=2)+'\n')
@@ -62,7 +64,7 @@ set_load 0.6 [all_outputs]
 set_false_path -from [get_ports rst_n]
 '''
     params=dict(FLIT_BYTES=64,TX_STAGES=2,RX_STAGES=2,CHANNEL_CYCLES=1,CREDITS=16,SEQW=5)
-    spec=cs.CaseSpec(nickname=nickname,top='ot_dsrom_link_rt_clock_core',sources=RTL[1:],die_um=(240.,180.),sdc=sdc,place_density=.5,extra={'CORNER':'WC','ABC_AREA':0,'ADDER_MAP_FILE':'','NUM_CORES':16})
+    spec=cs.CaseSpec(nickname=nickname,top='ot_dsrom_link_rt_clock_core',sources=RTL[1:],die_um=(240.,180.),sdc=sdc,place_density=.5,extra={'CORNER':'WC','ABC_AREA':0,'ADDER_MAP_FILE':'','NUM_CORES':4})
     spec.params=params;cs.write_case(work,spec)
     cmd=['docker','run','--rm','-v',str(ROOT)+':/src:ro','-v',str(work)+':/work','-w','/OpenROAD-flow-scripts/flow','openroad/orfs:latest','bash','-lc',"source /OpenROAD-flow-scripts/env.sh; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base finish; rc=$?; chmod -R a+rwX /work; exit $rc"]
     run(cmd,work/'route.log')

@@ -130,7 +130,8 @@ module ot_dsrom_link_rt_clock #(
             .st_naks(st_naks),
             .st_replays(st_replays),
             .st_timeouts(st_timeouts),
-            .st_retx_flits(st_retx_flits));
+            .st_retx_flits(st_retx_flits),
+            .st_max_replay_occ(st_max_replay_occ));
     end else begin : g_baseline
         ot_dsrom_link_rt #(.FLIT_BYTES(FLIT_BYTES), .TX_STAGES(TX_STAGES), .CHANNEL_CYCLES(CHANNEL_CYCLES), .RX_STAGES(RX_STAGES), .CREDITS(CREDITS), .DYNAMIC_DELAY(DYNAMIC_DELAY), .SEQW(SEQW), .REPLAY(REPLAY), .ERR_PERIOD_FWD(ERR_PERIOD_FWD), .ERR_PERIOD_REV(ERR_PERIOD_REV), .ERR_OFFSET(ERR_OFFSET), .ACK_TIMEOUT(ACK_TIMEOUT), .MAX_RETRY(MAX_RETRY), .LINK_CLASS(LINK_CLASS), .KEEPALIVE(KEEPALIVE)) u_link (.clk(clk),
             .rst_n(rst_n),
@@ -152,6 +153,7 @@ module ot_dsrom_link_rt_clock #(
             .st_naks(st_naks),
             .st_replays(st_replays),
             .st_timeouts(st_timeouts),
-            .st_retx_flits(st_retx_flits));
+            .st_retx_flits(st_retx_flits),
+            .st_max_replay_occ(st_max_replay_occ));
     end endgenerate
 endmodule
