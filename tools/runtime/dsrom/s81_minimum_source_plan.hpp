@@ -15,6 +15,10 @@ struct DsromS81MinimumSourcePlan {
     // real SU/HE, input sender, return and sole selected-bank participants.
     // Called BEFORE the single shared cold reset, not at prefix start time.
     std::function<void(DsromS81MinimumEmbedding&)> attach;
+    // Explicit representative-entry path: no embedding reader/model is made.
+    // The factory owns the same native input writer and actual ACK authority.
+    std::function<void()> attach_seeded,initialize_seeded;
+    std::function<bool()> seeded_inputs_visible;
     // Start the native prefix using the factory's actual target-VM read route
     // (EmbeddingMacroSink::target_word). No reader-private VM copy, installed
     // XN or expected intermediate; the prefix publishes its actual outputs.

@@ -8,9 +8,10 @@ import hashlib
 import json
 import re
 import socket
+import struct
 from pathlib import Path
 import dsrom_s82_payload_interface as API
-from dsrom_s82_native_word_server import serve_connection
+from dsrom_s82_native_word_server import serve_connection, receive
 
 
 def require(ok, message):
@@ -129,6 +130,72 @@ class ReleasedQeOperationWords:
     __call__ = read
 
 
+class DelayedExpertWords:
+    """One fixed node/rank/fragment actor; bind once from actual native capture.
+
+    The parent retains its capture lease through drain. This object verifies
+    source identity and tuple shape, not a numerical/publication grant.
+    """
+    def __init__(self, execution, source, node, rank, fragment=0):
+        require(type(rank) is int and 0 <= rank < 4 and type(fragment) is int and fragment >= 0,
+                'delayed actor rank/fragment')
+        binding = execution.source.bindings[node]
+        require(binding['selector_slot'] is not None, 'delayed binding requires dynamic source node')
+        instruction = execution.source.nodes[node]['instruction']
+        require(instruction['unit'] == 3 and instruction['qe_mode'] == 0,
+                'delayed actor requires source-weight QE')
+        require(source.root.resolve().name == API.SNAPSHOT, 'released checkpoint required')
+        self.execution,self.source,self.node = execution,source,node
+        self.rank,self.fragment = rank,fragment
+        self.node_sha256 = binding['source_node_semantic_sha256']
+        require(len(self.node_sha256) == 64, 'source node digest')
+        self.provider = None
+        self.fault = False
+
+    def bind(self, node_sha256, rank, fragment, eids):
+        require(not self.fault and self.provider is None, 'expert actor already bound/quarantined')
+        try:
+            require((node_sha256,rank,fragment) == (self.node_sha256,self.rank,self.fragment),
+                    'captured EIDs supplied for wrong source node/rank/fragment')
+            require(len(eids)==6 and all(type(e) is int and 0 <= e < 384 for e in eids) and
+                    list(eids)==sorted(set(eids)), 'six captured ascending EIDs required')
+            self.provider = ReleasedQeOperationWords(self.execution,self.source,self.node,self.rank,
+                                                      fragment=self.fragment,expert_ids=eids)
+        except Exception:
+            self.fault = True
+            raise
+
+    def read(self, stage, rank, macro, row):
+        require(not self.fault and self.provider is not None, 'expert actor unbound/quarantined')
+        return self.provider.read(stage,rank,macro,row)
+
+
+def serve_delayed_connection(sock, actor):
+    # READY comes only after the child opened checkpoint/index and enrolled the
+    # actual fixed source node. Parent constructor consumes it BEFORE threads.
+    sock.sendall(struct.pack('<I',0)+bytes.fromhex(actor.node_sha256)+struct.pack('<I',1))
+    while (request := receive(sock,16)) is not None:
+        stage,rank,macro,row = struct.unpack('<4I',request)
+        try:
+            if stage == 0xffffffff:
+                require(rank == 1, 'unknown delayed binding command')
+                payload = receive(sock,56)
+                require(payload is not None, 'missing captured EID command')
+                actor.bind(payload[:32].hex(),macro,row,list(struct.unpack('<6I',payload[32:])))
+                reply = bytes.fromhex(actor.node_sha256)+bytes(4)
+            else:
+                word = actor.read(stage,rank,macro,row)
+                require(type(word) is int and 0 <= word < 1 << 274, 'native word width')
+                reply = word.to_bytes(36,'little')
+            sock.sendall(struct.pack('<I',0)+reply)
+        except Exception as e:
+            # Unbound reads refuse but keep the pre-spawned child available for
+            # the later real capture. A bad binding permanently quarantines it.
+            print(json.dumps(dict(status='REJECTED_DELAYED_EXPERT_SOURCE',error=str(e))),flush=True)
+            sock.sendall(struct.pack('<I',1)+bytes(36))
+    return not actor.fault
+
+
 def main():
     from dsrom_s81_execution_binding import CanonicalS81Execution
     p = argparse.ArgumentParser(description=__doc__)
@@ -139,14 +206,20 @@ def main():
     p.add_argument('--rank', type=int, required=True)
     p.add_argument('--fragment', type=int, default=0)
     p.add_argument('--expert-ids', default='')
+    p.add_argument('--delayed-expert-binding', action='store_true')
     a = p.parse_args()
     expert_ids = [int(x) for x in a.expert_ids.split(',')] if a.expert_ids else None
     source = API.Checkpoint(a.checkpoint)
     try:
-        provider = ReleasedQeOperationWords(CanonicalS81Execution(a.owner), source,
-                                             a.node, a.rank, fragment=a.fragment, expert_ids=expert_ids)
+        execution = CanonicalS81Execution(a.owner)
         with socket.socket(fileno=a.fd) as connection:
-            return 0 if serve_connection(connection, provider) else 1
+            if a.delayed_expert_binding:
+                require(expert_ids is None, 'delayed actor cannot prefill EIDs')
+                actor = DelayedExpertWords(execution,source,a.node,a.rank,a.fragment)
+                return 0 if serve_delayed_connection(connection,actor) else 1
+            provider = ReleasedQeOperationWords(execution,source,a.node,a.rank,
+                                                 fragment=a.fragment,expert_ids=expert_ids)
+            return 0 if serve_connection(connection,provider) else 1
     finally:
         source.close()
 

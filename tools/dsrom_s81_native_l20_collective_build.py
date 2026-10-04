@@ -78,12 +78,20 @@ def main():
         # The selected tool installs headers in share/verilator/include.
         vinclude = Path(verilator_root) / 'include' if verilator_root else Path(args.verilator).resolve().parents[1] / 'share/verilator/include'
         commands.append(('provider', ['g++', '-std=c++17', '-O0', '-Wall', '-Wextra', '-Werror', '-pthread',
-                         '-I' + str(include), '-I' + str(obj),
+                         '-I' + str(include), '-isystem', str(obj),
                          '-I' + str(ROOT / 'rtl/test/v41_runtime'),
                          '-I' + str(ROOT / 'rtl/test/v41_runtime/s81_selected'),
-                         '-I' + str(vinclude),
+                         '-isystem', str(vinclude),
                          '-c', str(include / 's81_minimum_l20_collective.cpp'),
                          '-o', str(args.out / 's81_minimum_l20_collective.o')]))
+        commands.append(('factory', ['g++', '-std=c++17', '-Wall', '-Wextra', '-Werror',
+                         '-I' + str(include), '-I' + str(ROOT / 'rtl/test/v41_runtime'),
+                         '-I' + str(ROOT / 'rtl/test/v41_runtime/s81_selected'),
+                         '-isystem', str(vinclude), '-x', 'c++', '-fsyntax-only',
+                         '-include', str(include / 's81_minimum_l20_collective_factory.hpp'), '/dev/null']))
+        record['provider_pins'] = {p: hashlib.sha256((include / p).read_bytes()).hexdigest()
+            for p in ['s81_minimum_l20_collective.cpp', 's81_minimum_l20_collective.hpp',
+                      's81_minimum_l20_collective_factory.hpp']}
         for name, command in commands:
             record['commands'].append(command)
             start = time.monotonic()
