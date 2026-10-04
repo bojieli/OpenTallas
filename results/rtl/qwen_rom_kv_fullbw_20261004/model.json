@@ -1,0 +1,86 @@
+{
+ "S1_P8191": {
+  "P": 8191,
+  "stacks_per_die": 1,
+  "pseudo_channels_per_die": 32,
+  "peak_TBps_per_die": 1.0,
+  "sustained_TBps_per_die_at_stack_eff": 0.958,
+  "peak_sectors_per_core_cycle": 26.04,
+  "target_90pct_sectors_per_core_cycle": 23.44,
+  "window": {
+   "sectors": 131072,
+   "bytes": 4194304,
+   "per_pc_sectors": 4096
+  },
+  "fill_cycles": {
+   "at_peak": 5033,
+   "at_stack_eff": 5254,
+   "plus_first_latency": 5324
+  },
+  "ports": {
+   "controller_to_landing_bytes_per_ctl_cycle": 1024,
+   "landing_to_slices_bytes_per_core_cycle": 833.3,
+   "landing_bits_per_core_cycle": 6667,
+   "slice_write_capacity_bits_per_core_cycle": 786432,
+   "slice_writes_per_core_cycle_needed": "26 K-sector (1 write) .. 52 V-sector (2 writes) of 1536",
+   "landing_fifo": "per PC CRED = 32 sectors (1 KiB), 32 KiB a die, crossing CK/2 -> core"
+  },
+  "replicas": {
+   "stream_controllers": 1,
+   "pc_sequencers": 32,
+   "note": "the routed one-stack controller (ot_hbm_r14_stream_stack) replicated per stack; one descriptor broadcast, go to all; the landing adapter is per PC"
+  },
+  "per_layer": {
+   "kv_fill_cycles_in_layer_without_prefetch": 5324,
+   "kv_fill_hidden_with_prefetch_if_mlp_window_ge": 5324,
+   "attention_ideal_cycles": null
+  },
+  "token": {
+   "layers": 36,
+   "kv_bytes_per_token_per_die": 150994944,
+   "kv_time_per_token_us_at_stack_eff": 157.61
+  }
+ },
+ "S4_P8191": {
+  "P": 8191,
+  "stacks_per_die": 4,
+  "pseudo_channels_per_die": 128,
+  "peak_TBps_per_die": 4.0,
+  "sustained_TBps_per_die_at_stack_eff": 3.832,
+  "peak_sectors_per_core_cycle": 104.17,
+  "target_90pct_sectors_per_core_cycle": 93.75,
+  "window": {
+   "sectors": 131072,
+   "bytes": 4194304,
+   "per_pc_sectors": 1024
+  },
+  "fill_cycles": {
+   "at_peak": 1258,
+   "at_stack_eff": 1313,
+   "plus_first_latency": 1383
+  },
+  "ports": {
+   "controller_to_landing_bytes_per_ctl_cycle": 4096,
+   "landing_to_slices_bytes_per_core_cycle": 3333.3,
+   "landing_bits_per_core_cycle": 26667,
+   "slice_write_capacity_bits_per_core_cycle": 786432,
+   "slice_writes_per_core_cycle_needed": "104 K-sector (1 write) .. 208 V-sector (2 writes) of 1536",
+   "landing_fifo": "per PC CRED = 32 sectors (1 KiB), 128 KiB a die, crossing CK/2 -> core"
+  },
+  "replicas": {
+   "stream_controllers": 4,
+   "pc_sequencers": 128,
+   "note": "the routed one-stack controller (ot_hbm_r14_stream_stack) replicated per stack; one descriptor broadcast, go to all; the landing adapter is per PC"
+  },
+  "per_layer": {
+   "kv_fill_cycles_in_layer_without_prefetch": 1383,
+   "kv_fill_hidden_with_prefetch_if_mlp_window_ge": 1383,
+   "attention_ideal_cycles": null
+  },
+  "token": {
+   "layers": 36,
+   "kv_bytes_per_token_per_die": 150994944,
+   "kv_time_per_token_us_at_stack_eff": 39.4
+  }
+ }
+}

@@ -40,3 +40,29 @@ def test_literal_xu_and_gather_share_canonical_indices_not_pc_or_phase():
         join.target_native_operation('L0.I21',position=1048575,native_units=(2,))
     with pytest.raises(ValueError,match='field dispatcher'):
         join.target_native_operation('L0.I7',position=1048575,native_units=(3,))
+
+def test_l20_factory_census_requires_quantizers_and_later_ops_separately():
+    join=source()
+    required=join.target_required_bindings([20],position=1048575)
+    assert len(required)==146
+    assert sum(r['kind']=='instruction' for r in required)==144
+    by_node={r['node']:r for r in required}
+    assert [sum(r['unit']==u for r in required) for u in range(7)]==[3,9,80,30,5,2,15]
+    assert by_node['L20.I20']['provider']=='qdq8-window'
+    assert by_node['L20.I35']['provider']==by_node['L20.I41']['provider']=='qdq8-index'
+    assert by_node['L20.I38']['provider']=='qdq4e-ckv'
+    assert by_node['L20.I20']['instruction']['qe_xbase']==54720
+    assert by_node['L20.I38']['instruction']['qe_xbase']==93728
+    assert by_node['L20.I7']['provider']==by_node['L20.I8']['provider']=='field'
+    bindings={r['node']:r['provider'] for r in required}
+    assert join.require_target_bindings([20],bindings,position=1048575)==required
+    del bindings['L20.I38']
+    with pytest.raises(ValueError,match='missing=.*L20.I38'):
+        join.require_target_bindings([20],bindings,position=1048575)
+    bindings['L20.I38']='field'
+    with pytest.raises(ValueError,match='wrong_provider=.*L20.I38'):
+        join.require_target_bindings([20],bindings,position=1048575)
+    bindings['L20.I38']='qdq4e-ckv'
+    del bindings['L20.fence']
+    with pytest.raises(ValueError,match='missing=.*L20.fence'):
+        join.require_target_bindings([20],bindings,position=1048575)

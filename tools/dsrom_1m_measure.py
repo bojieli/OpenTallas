@@ -310,7 +310,7 @@ def _ckv_cycles(ckv):
     return ck
 
 
-def _apply(g, reader, sel, ck, variant):
+def _apply(g, reader, sel, ck, variant, gather=None):
     """Replace every context-dependent node of the graph by its measurement.  variant 'as_built': the four
     re-index layers score all 1,048,576 keys (what the native program and the golden do: score, then mask to the
     16,384 candidates); 'candidate_gather': they read only the candidate blocks (an UNBUILT lever: its index read
@@ -324,8 +324,21 @@ def _apply(g, reader, sel, ck, variant):
                    20: worst("csa1_full_L20")}
     if variant in ("as_built", "mask_drop"):
         scan_reader.update({L: worst("csa1_full_L20") for L in REINDEX})
-    seltag = {2: "L2", 8: "L8", 14: "L14", 20: "L20",
-              **{L: ("L24_full" if variant == "as_built" else "L24") for L in REINDEX}}
+    def reindex_tag(L):
+        """as_built: the full masked stream; the levers: their MEASURED select stream when
+        tools/dsrom_reindex_candidates.py records are given (L24 / L28 measured, L32 / L36 take the
+        worse of the two), else the candidate-only stream of the 1M record (projection)."""
+        suffix = {"mask_drop": "_mdrop", "candidate_gather": "_gather"}.get(variant)
+        if variant == "as_built":
+            return "L24_full"
+        own = [f"L{x}{suffix}" for x in (24, 28) if f"L{x}{suffix}" in sel]
+        if not own:
+            return "L24"
+        if f"L{L}{suffix}" in sel:
+            return f"L{L}{suffix}"
+        cost = lambda t: max(sg["last"] - sg["first"] + 1 + sg["tail"] for sg in sel[t]["local"]["runs"][0]["per_segment"])
+        return max(own, key=cost)
+    seltag = {2: "L2", 8: "L8", 14: "L14", 20: "L20", **{L: reindex_tag(L) for L in REINDEX}}
     sel_local, sel_final = {}, {}
     for L, key in seltag.items():
         r = sel[key]
@@ -350,6 +363,11 @@ def _apply(g, reader, sel, ck, variant):
                 r = scan_reader[L]
                 put(pre + "idx.score", r["cycles"] + IDX_ARRAY["query_settle"] + IDX_ARRAY["latency"],
                     f"reader {r['name']} ({r['keys']} keys/rank, {r['sectors']} sectors/rank) + idx array settle/latency")
+            elif gather is not None and L in REINDEX:
+                w = gather["worst_rank"]
+                put(pre + "idx.score", w["cycles"] + IDX_ARRAY["query_settle"] + IDX_ARRAY["latency"],
+                    f"candidate-block gather {w['name']} (real 1M candidate lists, {w['sectors']} sectors/rank, "
+                    f"{w['achieved_TBps']} TB/s) + idx array settle/latency")
             else:
                 modelled.append(dict(node=pre + "idx.score", us=round(sum(g.contrib[pre + "idx.score"].values()) * 1e6, 4),
                                      why="candidate-block gather reader is not built (unbuilt lever)"))
@@ -369,6 +387,53 @@ def _apply(g, reader, sel, ck, variant):
     return patches, modelled, scan_reader, sel_local, sel_final
 
 
+WINDOW_TYPES = ("window_only", "scan", "reindex", "reuse")
+
+
+def _window_type(L):
+    if L in (0, 1):
+        return "window_only"
+    if L in (2, 8, 14, 20):
+        return "scan"
+    if L in REINDEX:
+        return "reindex"
+    return "reuse"
+
+
+def _apply_window(g, win, kind):
+    """S81-bound WINDOW terms (tools/dsrom_s81_window_la.py record, results/rtl/dsrom_s81_window_bind_20261004):
+    per layer two measured nodes are inserted ahead of the layer's attention scores, in the S81 die's order --
+      own_row_write  the token's own packed row, 16 blocks through the as-built writer on the K channel, after
+                     kv_rope_qdq (measured with the layer type's concurrent index traffic);
+      window_load    the 128-row job, started at the attention issue (after the own row, q_rope and, in an
+                     indexed layer, the final select): start -> rows staged (CKV layers, whose measured CKV path
+                     streams the staged rows) or start -> rows delivered (window-only layers, whose patched
+                     scores node is the q.k over staged rows);
+    kind 'la' = the bound full-bandwidth load, 'asbuilt_c8' = the S81 selection's as-built refill (credits 8)."""
+    terms = win["composition_terms"][kind]
+    patches, new = [], {}
+    for name, nd in g.nodes.items():
+        if name.endswith(".attn.scores"):
+            L = int(name.split(".")[0][1:])
+            pre = f"L{L}.attn."
+            t = terms[_window_type(L)]
+            wr = dict(name=pre + "own_row_write", deps=[pre + "kv_rope_qdq"], layer=nd["layer"],
+                      issue=t["own_row_write_cycles"] / CLK, issue_cat="kv_sweep", depth=0.0, depth_cat="kv_sweep",
+                      ctrl=0.0, stream=False, kind="op", sweep=None, desc="S81 own-row write (measured)")
+            deps = [pre + "own_row_write", pre + "q_rope"] + ([pre + "idx.topk_final"] if pre + "idx.topk_final" in g.nodes else [])
+            ld = dict(name=pre + "window_load", deps=deps, layer=nd["layer"], issue=t["window_cycles"] / CLK,
+                      issue_cat="kv_sweep", depth=0.0, depth_cat="kv_sweep", ctrl=0.0, stream=False, kind="op",
+                      sweep=None, desc=f"S81 WINDOW job ({kind}, measured)")
+            new[wr["name"]], new[ld["name"]] = wr, ld
+            nd = dict(nd, deps=nd["deps"] + [pre + "window_load"])
+            for n in (wr, ld):
+                patches.append(dict(node=n["name"], model_us=0.0, measured_us=round(n["issue"] * 1e6, 4),
+                                    measured_cycles=int(round(n["issue"] * CLK)), source=f"{t['source']} ({kind})"))
+        new[name] = nd
+    g.nodes = new
+    return patches
+
+
 def cmd_compose(a):
     import copy
     reader = json.loads(Path(a.reader).read_text())
@@ -376,6 +441,19 @@ def cmd_compose(a):
     for f in a.select:
         sel.update(json.loads(Path(f).read_text())["layers"])
     runs = [json.loads(Path(f).read_text()) for f in a.ckv]
+    gather = json.loads(Path(a.gather).read_text()) if a.gather else None
+    measured_levers = bool(a.reindex_select)
+    if a.reindex_select:
+        rs = json.loads(Path(a.reindex_select).read_text())
+        assert rs["status"] == "pass"
+        for tag, r in rs["layers"].items():
+            sel[f"{tag}_mdrop"] = dict(local=dict(runs=r["drop_dense"]["runs"]), final=r["final"])
+            sel[f"{tag}_gather"] = dict(local=dict(runs=r["gather"]["runs"]), final=r["final"])
+    if gather is not None:
+        assert gather["status"] == "pass"
+    win = json.loads(Path(a.window).read_text()) if a.window else None
+    if win is not None:
+        assert win["status"] == "pass"
     g0, T0, _ = s58_graph()
     assert abs(1 / T0 - 2535.5) < 0.1, T0
     t_model, lt_model = layer_times(g0)
@@ -388,7 +466,7 @@ def cmd_compose(a):
         lat = run["results"][0]["fields"]["CKVSEL"]["lat"]
         for variant in ("as_built", "mask_drop", "candidate_gather"):
             g = copy.deepcopy(g0)
-            patches, modelled, scan_reader, sl, sf = _apply(g, reader, sel, ck, variant)
+            patches, modelled, scan_reader, sl, sf = _apply(g, reader, sel, ck, variant, gather)
             t, lt = layer_times(g)
             ar = t * 1e6 + S81_EXTRA_HOPS * HOP_US
             idx_us = lambda L: sum(p["measured_us"] for p in patches if p["node"].startswith(f"L{L}.attn.idx"))
@@ -415,6 +493,43 @@ def cmd_compose(a):
                              for L, r in scan_reader.items()})
             print(variant, lat, json.dumps(dict(AR_us=round(ar, 3), AR=round(1e6 / ar, 1), II=round(ii, 3), MTP=mtp)),
                   flush=True)
+        if win is not None:
+            # the adopted re-index variant with the S81-bound window (and the gather read through the S81 wmux),
+            # and the same with the S81 selection's as-built window refill, for reference
+            base = out["variants"][f"candidate_gather.lat{lat}"]
+            for kind in ("la", "asbuilt_c8"):
+                g = copy.deepcopy(g0)
+                gs = win["kgather_s81"] if kind == "la" else gather
+                patches, modelled, scan_reader, sl, sf = _apply(g, reader, sel, ck, "candidate_gather", gs)
+                patches += _apply_window(g, win, kind)
+                t, lt = layer_times(g)
+                ar = t * 1e6 + S81_EXTRA_HOPS * HOP_US
+                idx_us = lambda L: sum(p["measured_us"] for p in patches if p["node"].startswith(f"L{L}.attn.idx"))
+                dl = lambda L: (lt[f"L{L}"] - layer_times_cache[f"L{L}"]) * 1e6
+                g_ref = copy.deepcopy(g0)
+                _apply(g_ref, reader, sel, ck, "candidate_gather", gs)
+                _, layer_times_cache = layer_times(g_ref)
+                l20_occ = WAVEFRONT["l20_occ_us"] - model_l20_idx + idx_us(20) + max(0.0, dl(20))
+                re_occ = WAVEFRONT["l20_occ_us"] - model_l20_idx + idx_us(24) + max(0.0, dl(24))
+                occ = max(WAVEFRONT["head_occ_us"], l20_occ, re_occ)
+                ii = occ * (1 + WAVEFRONT["overhead"]) + WAVEFRONT["hop_us"]
+                verify = ar + WAVEFRONT["positions"] * ii
+                mtp = {k: round(DRAFT["tau"] * 1e6 / (verify + DRAFT[k] + DRAFT["seed_commit_us"]), 1)
+                       for k in ("fused_us", "as_built_us", "l1l2_nv5_us")}
+                types = {}
+                for tname, v in TYPES.items():
+                    L = f"L{v['rep']}"
+                    types[tname] = dict(representative=v["rep"], count=len(v["layers"]), kind=v["kind"],
+                                        model_us=round(lt_model[L] * 1e6, 3), measured_composed_us=round(lt[L] * 1e6, 3))
+                types["head"] = dict(model_us=round(lt_model["head"] * 1e6, 3), measured_composed_us=round(lt["head"] * 1e6, 3))
+                out["variants"][f"candidate_gather.lat{lat}.s81_window_{kind}"] = dict(
+                    AR_us=round(ar, 3), AR_tok_s=round(1e6 / ar, 1), II_us=round(ii, 3), verify_us=round(verify, 3),
+                    stage_occupancy_us=dict(head=WAVEFRONT["head_occ_us"], L20=round(l20_occ, 3), reindex=round(re_occ, 3)),
+                    MTP_tok_s=mtp, per_layer_type=types, patches=patches, still_modelled_context_terms=modelled,
+                    delta_vs_candidate_gather_AR_us=round(ar - base["AR_us"], 3),
+                    window_record=a.window, gather_read=gs.get("worst_rank", {}).get("name"))
+                print("candidate_gather", lat, "s81_window", kind, json.dumps(dict(AR_us=round(ar, 3), AR=round(1e6 / ar, 1),
+                      II=round(ii, 3), MTP=mtp)), flush=True)
     out["constants"] = dict(clock_hz=CLK, hop_us=HOP_US, extra_hops=S81_EXTRA_HOPS, idx_array=IDX_ARRAY, attn=ATTN_JOB,
                             wavefront=WAVEFRONT, draft=DRAFT)
     rd = {r["name"]: r for r in reader["runs"]}
@@ -444,16 +559,23 @@ def cmd_compose(a):
               "selections, CKV HBM latency 259 cycles, conservative over the reader's measured 87-88 ns mean)",
         AR_tok_s=v["as_built.lat259"]["AR_tok_s"], MTP_fused_tok_s=v["as_built.lat259"]["MTP_tok_s"]["fused_us"],
         model_AR_tok_s=out["model"]["AR_tok_s"],
-        levers_unbuilt={k: dict(AR_tok_s=v[k + ".lat259"]["AR_tok_s"], MTP_fused_tok_s=v[k + ".lat259"]["MTP_tok_s"]["fused_us"])
-                        for k in ("mask_drop", "candidate_gather")},
+        **{("levers_measured" if measured_levers else "levers_unbuilt"):
+           {k: dict(AR_tok_s=v[k + ".lat259"]["AR_tok_s"], MTP_fused_tok_s=v[k + ".lat259"]["MTP_tok_s"]["fused_us"],
+                    II_us=v[k + ".lat259"]["II_us"], reindex_occupancy_us=v[k + ".lat259"]["stage_occupancy_us"]["reindex"])
+            for k in ("mask_drop", "candidate_gather")}},
+        **({"s81_window": {k: dict(AR_tok_s=v[f"candidate_gather.lat259.s81_window_{k}"]["AR_tok_s"],
+                                   MTP_fused_tok_s=v[f"candidate_gather.lat259.s81_window_{k}"]["MTP_tok_s"]["fused_us"],
+                                   AR_us=v[f"candidate_gather.lat259.s81_window_{k}"]["AR_us"],
+                                   II_us=v[f"candidate_gather.lat259.s81_window_{k}"]["II_us"])
+                               for k in ("la", "asbuilt_c8")}} if win is not None else {}),
         interim="L20 (global-KV scan layer) is this tool's component measurement; Codex's S81 minimum run owns L20 at 1M "
                 "and replaces it when it lands",
         still_modelled=["context-independent nodes of every layer (weights in ROM: projections, MoE, norms, softmax/p.v "
                         "at T = 640, hc/Sinkhorn) from the S81 unified graph", "L20 candidate-block select (cand.*)",
                         "stage hop 0.482 us (RTL endpoint + technology channel delay, no PHY)",
                         "head 13.63 us in the AR path (wavefront II uses the measured reduced-shape head 12.37 us)",
-                        "candidate_gather variant: candidate-block index read (unbuilt)",
-                        "mask_drop variant: lane compaction ahead of the select (unbuilt)",
+                        *([] if gather is not None else ["candidate_gather variant: candidate-block index read (unbuilt)"]),
+                        *([] if measured_levers else ["mask_drop variant: lane compaction ahead of the select (unbuilt)"]),
                         "L1+L2 NV5 draft (56.07 us): SS pre-layout screen fails, not closed"])
     out["reader_runs"] = reader["runs"]
     Path(a.out).write_text(json.dumps(out, indent=1, default=str) + "\n")
@@ -478,6 +600,9 @@ def main():
     m.add_argument("--select", nargs="+", required=True)
     m.add_argument("--ckv", nargs="+", required=True)
     m.add_argument("--out", required=True)
+    m.add_argument("--gather", default="", help="tools/dsrom_reindex_candidates.py gather.json (measured gather read)")
+    m.add_argument("--reindex-select", default="", help="tools/dsrom_reindex_candidates.py select.json")
+    m.add_argument("--window", default="", help="tools/dsrom_s81_window_la.py window_load.json (S81-bound WINDOW terms)")
     a = ap.parse_args()
     dict(reader=cmd_reader, select=cmd_select, ckvvec=cmd_ckvvec, compose=cmd_compose)[a.cmd](a)
 
