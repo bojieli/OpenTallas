@@ -30,6 +30,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import re
 from pathlib import Path
 import sys
 
@@ -528,9 +529,113 @@ def record(v, m):
                 link_stages=v.link_stages(m))
 
 
+def summarize(work):
+    """Per-layer GRT overflow (final congestion report) and 4x4-gcell window use/capacity (gcell_usage.txt:
+    `L <layer> <row> cap/use ...`, capacity first)."""
+    import gzip
+    work = Path(work)
+    log = (work / 'run.log').read_text(errors='replace')
+    i = log.rfind('Final congestion report')
+    layers = {}
+    if i >= 0:
+        for ln in log[i:].splitlines()[3:14]:
+            f = ln.split()
+            if len(f) >= 9 and (f[0].startswith('M') or f[0] == 'Total'):
+                layers[f[0]] = dict(resource=int(f[1]), demand=int(f[2]), usage_pct=float(f[3].rstrip('%')),
+                                    max_h=int(f[4]), max_v=int(f[6]), overflow=int(f[8]))
+    gp = work / 'gcell_usage.txt'
+    op = gzip.open if not gp.exists() else open
+    gp = gp if gp.exists() else work / 'gcell_usage.txt.gz'
+    gx = gy = None
+    win = {}
+    with op(gp, 'rt') as fh:
+        for ln in fh:
+            if ln.startswith('GRIDX'):
+                gx = [int(x) for x in ln.split()[1].split(',')]
+                continue
+            if ln.startswith('GRIDY'):
+                gy = [int(x) for x in ln.split()[1].split(',')]
+                continue
+            f = ln.split()
+            layer, row = f[1], int(f[2])
+            e = win.setdefault(layer, dict(windows=0, over=0, zero_cap_used=0, max_ratio=0.0, at=None, over_xy=[]))
+            for ci, cu in enumerate(f[3:]):
+                cap, use = (float(z) for z in cu.split('/'))
+                e['windows'] += 1
+                if cap == 0:
+                    e['zero_cap_used'] += use > 0
+                    continue
+                r = use / cap
+                if r > 1:
+                    e['over'] += 1
+                    e['over_xy'].append((gx[4 * ci] / 1000, gy[row] / 1000))
+                if r > e['max_ratio']:
+                    e['max_ratio'], e['at'] = r, [gx[4 * ci] / 1000, gy[row] / 1000]
+    for e in win.values():
+        xy = e.pop('over_xy')
+        e['max_ratio'] = round(e['max_ratio'], 4)
+        if xy:
+            e['over_bbox_um'] = [min(x for x, _ in xy), min(y for _, y in xy), max(x for x, _ in xy), max(y for _, y in xy)]
+    ex = (work / 'run.log.exit').read_text().strip() if (work / 'run.log.exit').exists() else None
+    t = re.search(r'OT_TIME grt_s=(\d+)', log)
+    rss = re.search(r'Maximum resident set size \(kbytes\): (\d+)', log)
+    return dict(case=work.name, exit=ex, grt_s=int(t.group(1)) if t else None,
+                peak_rss_gb=round(int(rss.group(1)) / 2**20, 1) if rss else None, layers=layers, windows=win)
+
+
+def case_pdn(v, m, work, bump_um):
+    """Real-technology die (legality, track assert, pin access) with power abstracts (VDD/VSS M7 + M8 rails on every
+    element, tools/qwen_rom_fulldie_pg_r3.powered_lef) and the full-die pdn.tcl with one bump-aligned macro grid per
+    instance (pg_r3.write_pdn at the bump pitch of the IR PASS case); run_pdn.tcl runs pdngen + check_power_grid."""
+    man = v.case_real(m, work)
+    M = v.masters(m, 1)
+    pw = v.port_widths(m, 1)
+    parts = []
+    for name, mst in M.items():
+        text, _ = PG.powered_lef(mst, 1, {q: pw.get((name, q), 0) for q in mst.order})
+        parts.append(text)
+    (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
+                                       'END LIBRARY\n')
+    def aligned(coverage, vp=bump_um):
+        # case_ir(align=True) rule: largest pitch <= the coverage pitch with an odd count per per-net bump pitch,
+        # on the 1 nm grid (lattice drift over the die <= 380 bumps x 7 x 0.0005 um = 1.3 um, inside a 20 um bump)
+        raw = v.dn(0.48 / coverage, 0.160)
+        n = math.ceil(vp / raw - 1e-9)
+        n += (n % 2 == 0)
+        return round(vp / n, 3)
+    orig = PG.bump_pitch
+    PG.bump_pitch = aligned
+    try:
+        meta = PG.write_pdn(work / 'pdn.tcl', m, bump_um)
+    finally:
+        PG.bump_pitch = orig
+    (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
+proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
+  regexp {VmRSS:\\s+(\\d+)} $s -> r; puts "OTMEM $tag [expr {$r/1024}] MB [clock seconds]" }
+read_db /work/floorplan.odb
+mem read
+set t0 [clock seconds]
+if {[catch {source /work/pdn.tcl; pdngen} err]} { puts "OT_PDN FAIL $err" } else {
+  set nsw 0; foreach net [[ord::get_db_block] getNets] { foreach sw [$net getSWires] { incr nsw [llength [$sw getWires]] } }
+  puts "OT_PDN PASS special_shapes=$nsw" }
+puts "OT_TIME pdn_s=[expr {[clock seconds]-$t0}]"
+mem pdn
+foreach net {VDD VSS} { if {[catch {check_power_grid -net $net} err]} { puts "OT_PGCHECK $net FAIL $err" } else { puts "OT_PGCHECK $net PASS" } }
+mem check
+write_db /work/floorplan_pdn.odb
+""")
+    man.update(case='a_pdn', bump_um=bump_um, macro_grids=len(meta), producer=__file__, die=m['die'],
+               execution_order=['run.tcl', 'run_pdn.tcl'])
+    (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
+    return man
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['plan', 'grt', 'real', 'latency'])
+    ap.add_argument('mode', choices=['plan', 'grt', 'real', 'pdn', 'ir', 'latency', 'summary'])
+    ap.add_argument('--window', default='tile_field')
+    ap.add_argument('--vdd-pitch', type=float, default=63.64,
+                    help='per-net bump pitch: 63.64 = 45 um array, every core bump power (the IR PASS cases ir_*_align_b45)')
     ap.add_argument('--enable-b3r2', action='store_true')
     ap.add_argument('--band', action='store_true', help='band-local port/scale slabs')
     ap.add_argument('--work', type=Path)
@@ -539,6 +644,9 @@ def main(argv=None):
     ap.add_argument('--iters', type=int, default=5)
     ap.add_argument('--tag', default='b3r2')
     a = ap.parse_args(argv)
+    if a.mode == 'summary':
+        print(json.dumps(summarize(a.work), indent=1))
+        return 0
     if a.mode == 'latency':
         print(json.dumps(latency(), indent=1))
         return 0
@@ -561,6 +669,14 @@ def main(argv=None):
         man.update(b3r2=record(v, m), producer=__file__)
         (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
         print(json.dumps({k: man[k] for k in ('tag', 'instances', 'bundle_pins', 'bundle_nets', 'wires')}))
+    elif a.mode == 'ir':
+        # the IR PASS recipe of the b2 floorplan (cases ir_*_align_b45): bump-aligned straps, every core bump power
+        man = v.case_ir(m, work, a.window, align=True, vdd_pitch=a.vdd_pitch)
+        man['b3r2'] = dict(producer=__file__, band=a.band, die=m['die'])
+        (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
+        print(json.dumps({k: man[k] for k in ('window', 'power_w', 'bump_sites')}))
+    elif a.mode == 'pdn':
+        print(json.dumps(case_pdn(v, m, work, a.vdd_pitch)))
     else:
         man = v.case_real(m, work)
         print(json.dumps(man))
