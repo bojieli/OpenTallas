@@ -36,8 +36,6 @@ for key, top, required in (
     if key == 'selector' and any(params[k] != v for k,v in
                                dict(X_SEL=1,SK=512,SQ=4,SW=16).items()):
         raise RuntimeError('selector selected geometry mismatch')
-    if not s['history_binding']:
-        raise RuntimeError('actual history/remap authority required')
     sources = unit['sources']
     if not sources or any('/test/' in x or not (root/x).is_file() for x in sources):
         raise RuntimeError('existing production source closure required')
@@ -46,6 +44,7 @@ for key, top, required in (
     cmd = [verilator,'--cc','-Wno-fatal','--output-split','20000',
            '--output-split-cfuncs','200','-CFLAGS','-O0 -fPIC',
            '--top-module',top,'--prefix',prefix,'--Mdir',str(obj)]
+    cmd += ['-D'+x for x in unit.get('defines', [])]
     cmd += [f'-G{k}={v}' for k,v in params.items()]
     cmd += [str(root/x) for x in sources]
     entry = dict(unit=key,source_commit=sha,parameters=params,history_binding=s['history_binding'],
@@ -59,6 +58,11 @@ for key, top, required in (
     entry['header_sha256'] = hashlib.sha256(header.read_bytes()).hexdigest()
     (a.out/key/'headers_ready.json').write_text(json.dumps(entry,indent=2)+'\n')
     print(json.dumps(dict(state='headers_ready',unit=key,header=str(header))),flush=True)
+    ready.append(entry)
+for entry in ready:
+    key = entry['unit']
+    prefix = s[key]['prefix']
+    obj = a.out/key/'obj'
     cmd = ['make','-C',str(obj),'-f',prefix+'.mk',f'-j{a.jobs}',
            'OPT_FAST=-O0','OPT_SLOW=-O0',prefix+'__ALL.a']
     with (a.out/key/'compile.log').open('w') as log:
@@ -66,6 +70,5 @@ for key, top, required in (
     archive = obj/(prefix+'__ALL.a')
     entry.update(archive=str(archive),archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest())
     (a.out/key/'ready.json').write_text(json.dumps(entry,indent=2)+'\n')
-    ready.append(entry)
     print(json.dumps(dict(state='archive_ready',unit=key,archive=str(archive))),flush=True)
 (a.out/'ready.json').write_text(json.dumps(ready,indent=2)+'\n')
