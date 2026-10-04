@@ -297,7 +297,12 @@ module ot_rom_pkg_ctrl_wfc #(
     reg [31:0]   hdr_pa_val;
     reg          pend;                   // a received job waits for the outbound reads
     wire [VWA-1:0] rx_word = RXB + rx_j;
-    wire rx_word_free = !tx_reading || rx_word < tx_lo || rx_word >= TXB + XWORDS;
+    // (closed: the job_done select after the two compares, not before one)
+    wire rx_word_free = !tx_reading || (job_done ? rx_word < TXB : rx_word < TXB + tx_k) || rx_word >= TXB + XWORDS;
+    // a core start needs !running, so job_done = 0 there: the start terms use these job_done-free forms
+    wire tx_hold_i = tx_st == T_DATA || tx_st == T_SHDR || tx_st == T_SDATA;
+    wire rx_word_free_i = !(tx_st == T_DATA) || rx_word < TXB + tx_k || rx_word >= TXB + XWORDS;
+    wire rx_last_word_i = (rx_st == R_DATA) && in_valid && rx_word_free_i && (rx_j == RXW - 1);
     wire core_free = !running || job_done;
     assign vm_wdata = in_data;
 
@@ -467,9 +472,9 @@ module ot_rom_pkg_ctrl_wfc #(
         vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? SIDE_TXB + tx_k : TXB + tx_k;
 
         // core start: at most one source per cycle; the core samples it on this edge
-        st_rx = (rx_last_word || pend) && !running && !tx_hold && side_ok && hdr_user < MAXU;
+        st_rx = (rx_last_word_i || pend) && !running && !tx_hold_i && side_ok && hdr_user < MAXU;
         st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0; st_wk = 1'b0;
-        if (SOURCE && !running && !tx_hold && !pend && rx_st == R_IDLE) begin
+        if (SOURCE && !running && !tx_hold_i && !pend && rx_st == R_IDLE) begin
             st_new = nu_ok && next_u < MAXU;
             st_q   = !WAVE && !nu_ok && jq_n != 0;
             st_fb  = !WAVE && !nu_ok && jq_n == 0 && fb_v && fb_cont;
