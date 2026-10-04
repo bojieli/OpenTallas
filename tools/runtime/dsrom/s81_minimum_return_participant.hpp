@@ -215,6 +215,7 @@ public:
                 uint16_t(root.r_bf16),uint8_t(root.r_pos),uint32_t(root.r_fp32)};
     }
     unsigned root_region()const {require(admitted,"unbound native return root");return bound.root;}
+    bool has_admitted_phase()const{return admitted;}
     unsigned expected()const{return quota;}
     unsigned whole_root_expected()const{return admitted?native_root_quota(bound.phrom0,bound.positions_minus_one,bound.root):0;}
     unsigned received()const{return seen;}
