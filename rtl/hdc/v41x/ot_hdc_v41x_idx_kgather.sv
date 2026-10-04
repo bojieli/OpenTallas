@@ -140,17 +140,20 @@ module ot_hdc_v41x_idx_kgctl #(
     reg [NPC-1:0]  pf_cm  [0:2*PD-1], pf_sm [0:2*PD-1];
     reg [PW-1:0]   pf_wp, pf_rp;
     reg [PW:0]     pf_n;
-    reg            hd_v;   reg [QW-1:0] hd_seq; reg [1:0] hd_m;
+    reg            hd_v;   reg [QW-1:0] hd_seq; reg [1:0] hd_m; reg [SW-1:0] hd_s1;
     reg [LBW-1:0]  hd_blk[0:1]; reg [6:0] hd_j[0:1]; reg [4:0] hd_f0[0:1], hd_fc[0:1];
     reg [HW-1:0]   hd_b0[0:1], hd_bc[0:1];
-    reg [NPC-1:0]  hd_cm[0:1], hd_sm[0:1], hd_tc, hd_ts;
+    reg [NPC-1:0]  hd_cm[0:1], hd_sm[0:1];
 
     // -- dispatch: decided on registers, written one cycle later -----------------------------------
-    reg [NPC-1:0]  room_c, room_s;          // registered: >= 4 free (2 in flight + 2)
-    wire           rob_ok = (QW'(hd_seq + 2 - d_seq) <= QW'(WB - 2));
-    wire           disp = run && hd_v && rob_ok && ~|(hd_tc & ~room_c) && ~|(hd_ts & ~room_s);
+    // both conditions registered: every request FIFO has >= 4 free entries (2 in flight + 2),
+    // and the slots in use (dispatched pairs x 2 - drained) leave room for this pair and one
+    // in flight (conservative: a FIFO filling anywhere pauses dispatch for a cycle)
+    reg            room_all, rob_ok;
+    reg [QW-1:0]   inuse;
+    wire           disp = run && hd_v && rob_ok && room_all;
     wire           hd_take = !hd_v || disp;
-    reg            w_v;    reg [QW-1:0] w_seq; reg [1:0] w_m;
+    reg            w_v;    reg [QW-1:0] w_seq; reg [1:0] w_m; reg [SW-1:0] w_rs[0:1];
     reg [LBW-1:0]  w_blk[0:1]; reg [6:0] w_j[0:1]; reg [4:0] w_f0[0:1], w_fc[0:1];
     reg [HW-1:0]   w_b0[0:1], w_bc[0:1];
     reg [NPC-1:0]  w_cm[0:1], w_sm[0:1];
@@ -200,6 +203,8 @@ module ot_hdc_v41x_idx_kgctl #(
     reg [FW:0]     cnt;
     reg [FW-1:0]   wp;
     reg [NPC-1:0]  t;
+    reg [2*NPC-1:0] rm;
+    reg [QW-1:0]   nu;
 
     // registered responses
     reg [NPC-1:0]  rr_v;
@@ -212,7 +217,7 @@ module ot_hdc_v41x_idx_kgctl #(
             c0_v <= 1'b0; e1_v <= 1'b0; e2_v <= 1'b0; e3_v <= 1'b0; e4_v <= 1'b0; e5_v <= 1'b0;
             hd_v <= 1'b0; w_v <= 1'b0; pf_n <= 0; pf_wp <= 0; pf_rp <= 0; occ <= 0;
             adm <= 0; cmp <= 0; rr_v <= 0; rq <= 0; adv_r <= 0;
-            room_c <= {NPC{1'b1}}; room_s <= {NPC{1'b1}};
+            room_all <= 1'b1; rob_ok <= 1'b1; inuse <= 0;
             for (p = 0; p < 2 * NPC; p = p + 1) begin fq_rp[p] <= 0; fq_wp[p] <= 0; fq_n[p] <= 0; end
             for (p = 0; p < NPC * WB; p = p + 1) cntc[p] <= 2'd0;   // 4 beats wrap it back to 0
         end else begin
@@ -234,7 +239,7 @@ module ot_hdc_v41x_idx_kgctl #(
             // dispatch write stage (decided last cycle): slots, metadata, pending bits
             if (w_v) begin
                 for (l = 0; l < 2; l = l + 1) if (w_m[l]) begin
-                    rs = SW'(w_seq + l);
+                    rs = w_rs[l];
                     adm[rs] <= 1'b1;
                     pend_c[rs] <= w_cm[l];
                     pend_s[rs] <= w_sm[l];
@@ -257,7 +262,7 @@ module ot_hdc_v41x_idx_kgctl #(
                 run <= 1'b1; busy <= 1'b1;
                 base <= cmd_base; skip8 <= cmd_skip[9:3]; n <= cmd_n;
                 fault <= (cmd_skip[2:0] != 3'd0);
-                rd_seq <= 0; d_seq <= 0; d_left <= cmd_n; occ <= 0;
+                rd_seq <= 0; d_seq <= 0; d_left <= cmd_n; occ <= 0; inuse <= 0; rob_ok <= 1'b1;
                 c0_v <= 1'b0; e1_v <= 1'b0; e2_v <= 1'b0; e3_v <= 1'b0; e4_v <= 1'b0; e5_v <= 1'b0;
                 hd_v <= 1'b0; w_v <= 1'b0; pf_n <= 0; pf_wp <= 0; pf_rp <= 0; rq <= 0; adv_r <= 0; dq_v <= 1'b0;
             end else if (run) begin
@@ -306,15 +311,13 @@ module ot_hdc_v41x_idx_kgctl #(
                 if (hd_take) begin
                     hd_v <= (pf_n != 0);
                     if (pf_n != 0) begin
-                        hd_seq <= pf_seq[pf_rp]; hd_m <= pf_m[pf_rp];
+                        hd_seq <= pf_seq[pf_rp]; hd_m <= pf_m[pf_rp]; hd_s1 <= SW'(pf_seq[pf_rp]) + 1'b1;
                         for (l = 0; l < 2; l = l + 1) begin
                             hd_blk[l] <= pf_blk[2*pf_rp+l]; hd_j[l] <= pf_j[2*pf_rp+l];
                             hd_f0[l] <= pf_f0[2*pf_rp+l]; hd_fc[l] <= pf_fc[2*pf_rp+l];
                             hd_b0[l] <= pf_b0[2*pf_rp+l]; hd_bc[l] <= pf_bc[2*pf_rp+l];
                             hd_cm[l] <= pf_cm[2*pf_rp+l]; hd_sm[l] <= pf_sm[2*pf_rp+l];
                         end
-                        hd_tc <= pf_cm[2*pf_rp] | pf_cm[2*pf_rp+1];
-                        hd_ts <= pf_sm[2*pf_rp] | pf_sm[2*pf_rp+1];
                         pf_rp <= pf_rp + 1'b1;
                     end
                 end
@@ -323,6 +326,7 @@ module ot_hdc_v41x_idx_kgctl #(
                 w_v <= disp;
                 if (disp) begin
                     w_seq <= hd_seq; w_m <= hd_m;
+                    w_rs[0] <= hd_seq[SW-1:0]; w_rs[1] <= hd_s1;
                     for (l = 0; l < 2; l = l + 1) begin
                         w_blk[l] <= hd_blk[l]; w_j[l] <= hd_j[l]; w_f0[l] <= hd_f0[l]; w_fc[l] <= hd_fc[l];
                         w_b0[l] <= hd_b0[l]; w_bc[l] <= hd_bc[l]; w_cm[l] <= hd_cm[l]; w_sm[l] <= hd_sm[l];
@@ -351,7 +355,7 @@ module ot_hdc_v41x_idx_kgctl #(
                     if (w_v) begin
                         for (l = 0; l < 2; l = l + 1)
                             if (p < NPC ? w_cm[l][p % NPC] : w_sm[l][p % NPC]) begin
-                                fq_slot[p * DF + wp] <= SW'(w_seq + l);
+                                fq_slot[p * DF + wp] <= w_rs[l];
                                 // code: channel p serves column p ^ fold(Bc); scale: sector j of B0
                                 fq_addr[p * DF + wp] <= (p < NPC) ? AW'({w_bc[l], 5'(p % NPC) ^ w_fc[l], 2'b00})
                                                                   : AW'({w_b0[l], w_j[l]});
@@ -365,9 +369,9 @@ module ot_hdc_v41x_idx_kgctl #(
                         cnt = cnt - 1'b1;
                     end
                     fq_n[p] <= cnt;
-                    if (p < NPC) room_c[p % NPC] <= (cnt + 4 <= DF);
-                    else room_s[p % NPC] <= (cnt + 4 <= DF);
+                    rm[p] = (cnt + 4 <= DF);
                 end
+                room_all <= &rm;
                 // drain stage 1: head and next, in order
                 for (k = 0; k < 4; k = k + 1) rq[k] <= cmp[SW'(h0 + k)];
                 adv_r <= can1 ? 2'd2 : (can0 ? 2'd1 : 2'd0);
@@ -378,6 +382,9 @@ module ot_hdc_v41x_idx_kgctl #(
                     d_seq <= d_seq + (can1 ? 2 : 1);
                     d_left <= d_left - (can1 ? 2 : 1);
                 end
+                nu = inuse + (disp ? QW'(2) : QW'(0)) - (can1 ? QW'(2) : (can0 ? QW'(1) : QW'(0)));
+                inuse <= nu;
+                rob_ok <= (nu <= QW'(WB - 4));
                 if (d_left == 0 && !dq_v) run <= 1'b0;
             end else if (busy && dr_v == 2'b00 && !dq_v) busy <= 1'b0;
         end
