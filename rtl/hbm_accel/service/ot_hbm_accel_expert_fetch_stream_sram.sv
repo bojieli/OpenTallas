@@ -232,7 +232,10 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
       assign ovr[m] = |hit;
       // valid for the line read at this edge, from the mask before this edge's writes; both
       // candidates are selected from registers, and the take (s_ready) only picks between them
-      wire f_hold = |(full & oh0), f_take = |(full & oh1);
+      // (* keep *) cuts ABC at the two candidates: it sees s_ready as arriving at t=0 and otherwise
+      // pushes !take into the AND-OR trees (e8 netlist: s_ready -> 5 AND4 levels -> vq)
+      (* keep *) wire f_hold = |(full & oh0);
+      (* keep *) wire f_take = |(full & oh1);
       always @(posedge clk or negedge rst_n)
         if (!rst_n) begin cs <= 0; cs1 <= SW'(1); vq <= 1'b0; oh0 <= DEPTH'(1); oh1 <= DEPTH'(2); end
         else begin
