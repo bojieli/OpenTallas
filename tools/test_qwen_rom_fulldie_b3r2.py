@@ -9,7 +9,7 @@ import qwen_rom_fulldie_b3r2 as R
 
 
 def _case(band):
-    v, m = R.selected(True, band=band)
+    v, m = R.selected(True, band=band[0], area_pins=band[1])
     d = Path(tempfile.mkdtemp())
     v.case_grt(m, d, 16, 't', 1)
     return v, m, d
@@ -18,7 +18,7 @@ def _case(band):
 class B3R2(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.cases = {b: _case(b) for b in (False, True)}
+        cls.cases = {b: _case(b) for b in ((False, False), (True, False), (True, True))}
 
     def test_default_off(self):
         with self.assertRaises(ValueError):
@@ -52,7 +52,7 @@ class B3R2(unittest.TestCase):
             self.assertAlmostEqual(R.fifo_accounting(v, m)['total_mm2'], 2.53, places=2)
 
     def test_band_cut_below_b2(self):
-        _, m, _ = self.cases[True]
+        _, m, _ = self.cases[(True, True)]
         cut = R.spine_cut(m, [8800])['8800']['total']
         self.assertLess(cut, 35840 / 2)
 

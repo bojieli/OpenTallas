@@ -62,7 +62,7 @@ def _isa_bits():
     return sum(w for n, w in I.FIELDS), me
 
 
-def selected(enabled=False, band=False):
+def selected(enabled=False, band=False, area_pins=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -110,7 +110,8 @@ def selected(enabled=False, band=False):
     m['die']['margin_mm2'] = round(858 - m['die']['mm2'], 3)
     m['b3r2'] = dict(station_frame_um=list(v.STATION), station_extra_h_um=st_extra_h, strip_fifo_frame_um=list(v.FIFO),
                      strip_fifo_extra_h_um=sf_extra_h, bw_fifo_mm2=round(bw_mm2, 4), band=band, groups=groups)
-    _wrap_masters(v, m)
+    _wrap_masters(v, m, area_pins)
+    m['b3r2']['area_pins'] = area_pins
     return v, m
 
 
@@ -340,7 +341,7 @@ def _spine_buses(v, m, gm):
     m['isa_bits'] = dict(total=total, me=me_bits, su_and_control=total - me_bits)
 
 
-def _wrap_masters(v, m):
+def _wrap_masters(v, m, area_pins=False):
     """Every endpoint port that the b3 masters do not define becomes a pin group on the face toward the far
     endpoint (M4 on W/E), stacked from the top of the face so no two groups overlap."""
     base = v.masters
@@ -381,9 +382,25 @@ def _wrap_masters(v, m):
                 other = eps[1 - idx][0] if len(eps) == 2 else eps[0][0]
                 bits[(mst, port)] = max(bits.get((mst, port), 0), nb)
                 far[(mst, port)] = (by[inst], by[other])
-        for (mst, port), nb in sorted(bits.items()):
+        spine = {i.master for i in model['insts'] if i.kind == 'spine_block'}
+        colcur = {}
+        for (mst, port), nb in sorted(bits.items(), key=lambda kv: -kv[1]):
             M = out[mst]
             me, ot = far[(mst, port)]
+            if area_pins and mst in spine:
+                # M8 area pins over the slab interior (as the b2 block-word pins), in columns between the
+                # existing bw columns, stacked from the top; a slab is a reservation, so its ports reach the die
+                # nets from above instead of crowding one M4 face (b3r2b: M4-M7 overflow at the slab faces)
+                step = 0.080 * k
+                span = max(1, math.ceil(nb / k)) * step + 2.0
+                cols = colcur.setdefault(mst, {j: M.h - 4.0 for j in range(max(1, int((M.w - 60) // 60)))})
+                j = max(cols, key=lambda c_: cols[c_])
+                if cols[j] - span < 2.0:
+                    raise ValueError(f'{mst}.{port}: no area pin room ({nb} bits)')
+                centre = cols[j] - span / 2
+                cols[j] -= span
+                M.area(port, nb, 50.0 + 60.0 * j, centre, 1)
+                continue
             face = 'E' if ot.cx >= me.cx else 'W'
             layer = 'M4'
             step = 0.048 * k
@@ -654,6 +671,7 @@ def main(argv=None):
                     help='per-net bump pitch: 63.64 = 45 um array, every core bump power (the IR PASS cases ir_*_align_b45)')
     ap.add_argument('--enable-b3r2', action='store_true')
     ap.add_argument('--band', action='store_true', help='band-local port/scale slabs')
+    ap.add_argument('--area-pins', action='store_true', help='spine slab ports as M8 area pins')
     ap.add_argument('--work', type=Path)
     ap.add_argument('--out', type=Path)
     ap.add_argument('--k', type=int, default=16)
@@ -666,7 +684,7 @@ def main(argv=None):
     if a.mode == 'latency':
         print(json.dumps(latency(), indent=1))
         return 0
-    v, m = selected(a.enable_b3r2, band=a.band)
+    v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins)
     if a.mode == 'plan':
         out = a.out
         out.mkdir(parents=True, exist_ok=True)
