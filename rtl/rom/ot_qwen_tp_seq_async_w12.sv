@@ -41,10 +41,13 @@ module ot_qwen_tp_seq_async_w12 #(
     // {valid & full & addr < 512, addr[8:0]} and range-checks by two short compares against
     // registered limits; 2 registers the offset as two 16-way one-hots (as 1), 3 registers the
     // 8-bit offset and decodes it in the AND-OR stage (fewer flops).
-    // 4: the set and the mark visibility of 2 (cycle-identical to 2), and the issue loop has neither
-    // the segment-end compare nor the wide select: `more` (= rd_k < nw) is a register precomputed
-    // from both outcomes (rd_k < nw, rd_k + 1 < nw), and the ready bit is the registered pair
-    // {lw[rd_k], lw[rd_k + 1]} of the previous cycle selected by the registered previous rd_go.
+    // 4: the mark visibility of 2 (cycle-identical to 2) with no segment-end compare and no wide
+    // select or subtract on any loop: `more` (= rd_k < nw) and `rx_end` (= rx_k == rx_total - 1) are
+    // registers precomputed from both outcomes (hold / advance); the ready bit is the registered pair
+    // {lw[ra], lw[ra + 1]} selected by the registered previous rd_go; and lw is indexed by the word's
+    // ABSOLUTE address mod 256 (a region is at most 256 consecutive words, so the index is unique in
+    // it), so the set decodes addr[7:0] directly (no addr - vw) and the read index is ra = vw + rd_k,
+    // the vector-memory read address, kept as a register.
     parameter integer SB_PIPE = 0,
     parameter integer NP   = 1,            // ME result-port groups observed (G >> SMIN)
     parameter integer MAW  = 24,           // ME result word-address width
@@ -141,7 +144,8 @@ module ot_qwen_tp_seq_async_w12 #(
     reg  [255:0]  lw;
     wire [7:0]    rd_w = rd_k[7:0];
     reg           rdy;                      // SB_PIPE >= 2: registered lw[rd_k] (one cycle old)
-    reg           rdy_h, rdy_a, go_r;       // SB_PIPE = 4: lw[rd_k], lw[rd_k + 1] and rd_go, one cycle old
+    reg           rdy_h, rdy_a, go_r;       // SB_PIPE = 4: lw[ra], lw[ra + 1] and rd_go, one cycle old
+    reg  [7:0]    ra, rab;                  // SB_PIPE = 4: vw + rd_k and vw + rd_k + 1 (mod 256)
     wire          rdy_s = (SB_PIPE >= 4) ? (go_r ? rdy_a : rdy_h) : rdy;
     wire          word_ok = !cut || core_fin || ((SB_PIPE >= 2) ? rdy_s : lw[rd_w]);
 
@@ -167,7 +171,9 @@ module ot_qwen_tp_seq_async_w12 #(
     wire [31:0]  g_val = r_data[31:0];
     wire [NW-1:0] g_idx = r_data[32 +: NW];
     wire [8:0]   rx_total = (kind == K_ARGMAX) ? N : nw;
-    wire         rx_last = r_valid && (rx_k == rx_total - 1'b1);
+    reg          rx_end;                    // SB_PIPE = 4: registered rx_k == rx_total - 1
+    wire         rx_is_end = (SB_PIPE >= 4) ? rx_end : (rx_k == rx_total - 1'b1);
+    wire         rx_last = r_valid && rx_is_end;
 
     always @(*) begin
         vm_re = rd_go;
@@ -268,7 +274,10 @@ module ot_qwen_tp_seq_async_w12 #(
             s0_v[gp] <= me_we[gp] && (&me_mask[gp*16 +: LN]) && (ma >> 9) == 0;
             s0_a[gp*9 +: 9] <= ma[8:0];
             s1_v[gp] <= in && cut && st == S_CWAIT;
-            if (SB_PIPE != 3) begin
+            if (SB_PIPE >= 4) begin                     // absolute index: no subtract
+                s1_lo[gp*16 +: 16] <= 16'd1 << a[3:0];
+                s1_hi[gp*16 +: 16] <= 16'd1 << a[7:4];
+            end else if (SB_PIPE == 2) begin
                 s1_lo[gp*16 +: 16] <= 16'd1 << off[3:0];
                 s1_hi[gp*16 +: 16] <= 16'd1 << off[7:4];
             end else s1_o[gp*8 +: 8] <= off;
@@ -303,13 +312,33 @@ module ot_qwen_tp_seq_async_w12 #(
         else if (st == S_DLAT) rdy <= 1'b0;
         else rdy <= rd_go ? lw[rd_kb] : lw[rd_w];
     end
-    // SB_PIPE = 4: both outcomes are registered without rd_go (rdy_h = lw[rd_k], rdy_a = lw[rd_k + 1])
-    // and the previous rd_go picks one, so rdy_s(t+1) = rd_go(t) ? lw(t)[rd_k(t) + 1] : lw(t)[rd_k(t)],
-    // the rdy of SB_PIPE = 2 bit for bit (cleared alike in S_DLAT).
+    // SB_PIPE = 4: both outcomes are registered without rd_go (rdy_h = lw[ra], rdy_a = lw[ra + 1])
+    // and the previous rd_go picks one, so rdy_s(t+1) = rd_go(t) ? lw(t)[ra(t) + 1] : lw(t)[ra(t)]:
+    // the rdy of SB_PIPE = 2 with lw re-indexed (cleared alike in S_DLAT), so the same send cycles.
+    // ra follows rd_k: +1 on rd_go, vw at the two clears (the S_DLAT one loads vw from desc_q).
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin rdy_h <= 1'b0; rdy_a <= 1'b0; go_r <= 1'b0; end
         else if (st == S_DLAT) begin rdy_h <= 1'b0; rdy_a <= 1'b0; go_r <= 1'b0; end
-        else begin rdy_h <= lw[rd_w]; rdy_a <= lw[rd_kb]; go_r <= rd_go; end
+        else begin rdy_h <= lw[ra]; rdy_a <= lw[rab]; go_r <= rd_go; end
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin ra <= 8'd0; rab <= 8'd1; end
+        else if (st == S_DLAT && !desc_re) begin ra <= desc_q[2 +: 8]; rab <= desc_q[2 +: 8] + 8'd1; end
+        else if (st == S_CWAIT && core_done && !cut) begin ra <= vw; rab <= vw + 8'd1; end
+        else if (coll_on && rd_go) begin ra <= rab; rab <= rab + 8'd1; end
+    end
+    // SB_PIPE = 4: rx_end = (rx_k == rx_total - 1), precomputed likewise: rx_k changes only by an
+    // accepted receive in coll_on (+1) and the two clears; kind and nw change only in S_DLAT.
+    wire [8:0] n9 = N;
+    wire [8:0] rx_tot_ld = (desc_q[1:0] == K_ARGMAX) ? n9 : nw_ld;
+    wire [8:0] rx_k1  = rx_k + 9'd1;
+    wire [8:0] rx_tm1 = rx_total - 9'd1;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) rx_end <= 1'b0;
+        else if (st == S_DLAT && !desc_re) rx_end <= rx_tot_ld == 9'd1;
+        else if (st == S_CWAIT && core_done && !cut) rx_end <= rx_total == 9'd1;
+        else if (coll_on && r_valid) rx_end <= rx_k1 == rx_tm1;
+        else rx_end <= rx_k == rx_tm1;
     end
     // SB_PIPE = 4: more = (rd_k < nw), precomputed from both outcomes of this cycle.  rd_k changes only
     // by rd_go (+1) and by the two clears (S_DLAT, which also loads nw, and the non-cut S_CWAIT END);
@@ -325,15 +354,21 @@ module ot_qwen_tp_seq_async_w12 #(
     end
 `ifndef SYNTHESIS
     always @(posedge clk) begin
-        if (rst_n && ASYNC_COLL != 0 && SB_PIPE >= 4 && (more != (rd_k < nw) || (cut && rdy_s != rdy))) begin
-            $display("ot_qwen_tp_seq_async_w12: %m: precomputed issue state diverged (more=%0d rd_k=%0d nw=%0d)", more, rd_k, nw);
+        if (rst_n && ASYNC_COLL != 0 && SB_PIPE >= 4 && (more != (rd_k < nw) || rx_end != (rx_k == rx_total - 1'b1)
+                || ra != vw + rd_k[7:0] || rab != vw + rd_k[7:0] + 8'd1)) begin
+            $display("ot_qwen_tp_seq_async_w12: %m: precomputed issue state diverged (more=%0d rd_k=%0d nw=%0d rx_end=%0d rx_k=%0d ra=%0d vw=%0d)",
+                     more, rd_k, nw, rx_end, rx_k, ra, vw);
+            $fatal(1);
+        end
+        if (rst_n && ASYNC_COLL != 0 && SB_PIPE >= 4 && rd_go && cut && !core_fin && !lw[ra]) begin
+            $display("ot_qwen_tp_seq_async_w12: %m: early send of word %0d", rd_k);
             $fatal(1);
         end
     end
 `endif
 `ifndef SYNTHESIS
     always @(posedge clk) begin
-        if (rst_n && ASYNC_COLL != 0 && SB_PIPE >= 2 && rd_go && cut && !core_fin && !lw[rd_w]) begin
+        if (rst_n && ASYNC_COLL != 0 && (SB_PIPE == 2 || SB_PIPE == 3) && rd_go && cut && !core_fin && !lw[rd_w]) begin
             $display("ot_qwen_tp_seq_async_w12: %m: early send of word %0d", rd_k);
             $fatal(1);
         end
@@ -377,7 +412,7 @@ module ot_qwen_tp_seq_async_w12 #(
                 if (r_valid) begin
                     if (r_err) fault <= 1'b1;
                     rx_k <= rx_k + 1'b1;
-                    if (r_last != (rx_k == rx_total - 1'b1)) fault <= 1'b1;
+                    if (r_last != rx_is_end) fault <= 1'b1;
                     if (kind == K_AR) begin
                         vm_we <= 1'b1; vm_waddr <= vw + rx_k; vm_wdata <= r_data;
                     end else begin
