@@ -112,12 +112,11 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
     for (genvar p = 0; p < NPC; p = p + 1) begin : loc
       reg cv; reg [MW-1:0] csm; reg [SW-1:0] cslot; reg [JW-1:0] gj; reg [NSM*SW-1:0] gkb;
       // lut entry of line L = NI*g_j + p/4 (s = NPC g_j + p): a NSECT-way select from registers
-      reg [15:0] ent;
-      always @* begin
-        ent = 16'd0;
-        for (integer jj = 0; jj < NSECT; jj = jj + 1)
-          if (gj == JW'(jj)) ent = cfg_lut[(jj * NI + p / 4) * 16 +: 16];
+      wire [15:0] tbl [0:NSECT-1];
+      for (genvar jj = 0; jj < NSECT; jj = jj + 1) begin : t
+        assign tbl[jj] = cfg_lut[(jj * NI + p / 4) * 16 +: 16];
       end
+      wire [15:0] ent = tbl[gj];
       wire [MW-1:0] n_sm = ent[8 +: MW];
       wire [SW-1:0] n_slot = gkb[n_sm * SW +: SW] + SW'(ent[7:0]);
       wire adv = grant[p] || !cv;
@@ -177,13 +176,16 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
       end
     end
     // ---------------- banks, mask, release (clk) ----------------
-    reg [3:0] mask [0:NSM-1][0:DEPTH-1];
-    reg [SW-1:0] cons_p [0:NSM-1]; reg [NSM-1:0] v_q;
-    wire [NSM-1:0] take = v_q & s_ready;
+    // mask: one 4-bit quarter mask per (sm, slot), set by the bank writes (decoded registered
+    // addresses), cleared by the release; explicit per-slot flops (no dynamic array writes).
+    wire [NSM-1:0] take, ovr, v_q;
+    assign take = v_q & s_ready;
     assign s_valid = v_q;
     reg ring_fault;
     for (genvar m = 0; m < NSM; m = m + 1) begin : sm
-      wire [SW-1:0] cs = cons_p[m], cs1 = cons_p[m] + 1'b1;
+      reg [SW-1:0] cs; reg vq;
+      assign v_q[m] = vq;
+      wire [SW-1:0] cs1 = cs + 1'b1;
       wire [SW-1:0] ra = take[m] ? cs1 : cs;
       for (genvar c = 0; c < 4; c = c + 1) begin : bank
         for (genvar h = 0; h < 2; h = h + 1) begin : half
@@ -193,24 +195,31 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
             .w_mask_in({128{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
         end
       end
+      wire [DEPTH-1:0] clr = take[m] ? (DEPTH'(1) << cs) : '0;
+      wire [DEPTH-1:0] set0 = w_v[m*4 + 0] ? (DEPTH'(1) << w_a[m*4 + 0]) : '0;
+      wire [DEPTH-1:0] set1 = w_v[m*4 + 1] ? (DEPTH'(1) << w_a[m*4 + 1]) : '0;
+      wire [DEPTH-1:0] set2 = w_v[m*4 + 2] ? (DEPTH'(1) << w_a[m*4 + 2]) : '0;
+      wire [DEPTH-1:0] set3 = w_v[m*4 + 3] ? (DEPTH'(1) << w_a[m*4 + 3]) : '0;
+      wire [DEPTH-1:0] full, hit;
+      for (genvar d = 0; d < DEPTH; d = d + 1) begin : slot
+        reg [3:0] mk;
+        always @(posedge clk or negedge rst_n)
+          if (!rst_n) mk <= 4'd0;
+          else mk <= (clr[d] ? 4'd0 : mk) | {set3[d], set2[d], set1[d], set0[d]};
+        assign full[d] = &mk;
+        assign hit[d] = |(mk & {set3[d], set2[d], set1[d], set0[d]});   // staging overrun
+      end
+      assign ovr[m] = |hit;
+      // valid for the line read at this edge, from the mask before this edge's writes
+      always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cs <= 0; vq <= 1'b0; end
+        else begin
+          vq <= take[m] ? full[cs1] : full[cs];
+          if (take[m]) cs <= cs1;
+        end
     end
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) begin
-        ring_fault <= 0; v_q <= '0;
-        for (integer m = 0; m < NSM; m = m + 1) begin
-          cons_p[m] <= 0; for (integer d = 0; d < DEPTH; d = d + 1) mask[m][d] <= 4'd0;
-        end
-      end else begin
-        for (integer m = 0; m < NSM; m = m + 1) begin
-          // valid for the line read at this edge, from the mask before this edge's writes
-          v_q[m] <= take[m] ? (&mask[m][SW'(cons_p[m] + 1'b1)]) : (&mask[m][cons_p[m]]);
-          if (take[m]) begin cons_p[m] <= cons_p[m] + 1'b1; mask[m][cons_p[m]] <= 4'd0; end
-          for (integer c = 0; c < 4; c = c + 1) if (w_v[m*4 + c]) begin
-            if (mask[m][w_a[m*4 + c]][c]) ring_fault <= 1;              // staging overrun
-            mask[m][w_a[m*4 + c]][c] <= 1'b1;
-          end
-        end
-      end
+      if (!rst_n) ring_fault <= 1'b0; else if (|ovr) ring_fault <= 1'b1;
     reg pf_s1, pf_s2;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin pf_s1 <= 0; pf_s2 <= 0; end else begin pf_s1 <= (|pc_fault) || land_fault; pf_s2 <= pf_s1; end
