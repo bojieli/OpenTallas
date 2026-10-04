@@ -45,6 +45,7 @@ def emit(dispatch, groups, stage, out):
                       ('token', 'position', 'user', 'epoch', 'entry')] + [str(offer['identity'])+'ull']
             node = json.dumps(offer['node'], ensure_ascii=True)
             lines += [f'    group.ranks[{rank}].offer = {{{", ".join(values)}}};',
+                      f'    group.ranks[{rank}].source_node = {node};',
                       f'    dsrom_s81_bind_inputs(runtime,group.ranks[{rank}],{node});',
                       f'    dsrom_s81_bind_receipts(runtime,group.ranks[{rank}],{node});']
         lines += ['    plan.groups.push_back(std::move(group));', '  }']

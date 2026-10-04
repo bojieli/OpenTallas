@@ -111,7 +111,8 @@ int main(int argc,char** argv) {
     support = Path(__file__).resolve().parent/'runtime/dsrom'
     for name in ['s81_source_caller.cpp', 's81_source_caller_plan.hpp', 's81_source_receipts.cpp',
                  's81_source_caller_hooks.hpp', 's81_wavefront_c8_group_step.hpp',
-                 's81_wavefront_c8_port_join.hpp']:
+                 's81_wavefront_c8_port_join.hpp', 's81_wavefront_stage_poller.hpp',
+                 's81_wavefront_result_ledger.hpp']:
         (out/name).write_bytes((support/name).read_bytes())
     return out/'s81_c8_scheduler.cpp'
 
