@@ -27,6 +27,8 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
     bool staged_debt=false,stream_active=false;
     uint16_t staged_generation=0;
     bool target_engine=false;
+    bool old_kv_accept=false,old_staged=false,old_stream_go=false,old_done=false;
+    uint16_t old_generation=0;
     long prepared_cycle=-1;
 
     static void require(bool ok,const char* why) {
@@ -70,6 +72,11 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
             }
             if(window.kv_v)
                 require(generation()!=0,"packed KV lacks actual descriptor generation");
+            // Freeze actual pre-edge handshakes before Nash evaluates ME or
+            // any other shared participant takes its rising edge.
+            old_kv_accept=bool(window.kv_v&&window.kv_ready);
+            old_staged=window.staged_v;old_stream_go=window.stream_go;
+            old_done=window.done;old_generation=generation();
         }catch(...){stopped=true;throw;}
     }
     void rising(bool released) {
@@ -82,21 +89,21 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
             blocks.rst_n=released;window.rst_n=released;
             if(released) {
                 require(prepared_cycle==runtime.cycle(),"packed KV missing pre-edge prepare");
-                consumed=bool(window.kv_v&&window.kv_ready);
-                if(window.staged_v) {
-                    require(!staged_debt&&!stream_active&&generation()!=0,
+                consumed=old_kv_accept;
+                if(old_staged) {
+                    require(!staged_debt&&!stream_active&&old_generation!=0,
                             "packed WINDOW staged over held generation");
-                    staged_generation=generation();staged_debt=true;
+                    staged_generation=old_generation;staged_debt=true;
                 }
                 if(staged_debt||stream_active)
-                    require(generation()==staged_generation,
+                    require(old_generation==staged_generation,
                             "packed WINDOW generation changed with retained debt");
-                if(window.stream_go) {
+                if(old_stream_go) {
                     require(staged_debt&&!stream_active,
                             "packed WINDOW stream lacks staged native response");
                     staged_debt=false;stream_active=true;
                 }
-                if(window.done) {
+                if(old_done) {
                     require(stream_active,"packed WINDOW completion lacks accepted stream");
                     stream_active=false;staged_generation=0;
                 }
@@ -211,11 +218,14 @@ public:
             [self,source](bool reset){self->falling(reset);source->participant.falling(reset);},
             [self,source](){return self->fault()||source->participant.fault();}},
             [self,source](){return self->staged()&&source->ready()&&!source->participant.fault();},
-            [self,source](){return !self->stream_active&&source->idle()&&!self->fault();},
+            // A staged native WINDOW is busy but can admit its held consumer.
+            // Prefix polls idle before GO as well as at terminal retirement.
+            [self,source](){return !self->stream_active&&(self->staged()||source->idle())&&
+                                  !self->fault()&&!source->participant.fault();},
             [self,source](const auto& op){return source->inputs_ready(op)&&self->staged();},
             [self,source](const auto& op,bool go){
                 if(go)require(self->staged()&&!self->stream_active&&source->ready()&&
-                              source->idle()&&!source->participant.fault(),
+                              !source->participant.fault(),
                               "ME GO lacks committed native WINDOW generation");
                 source->drive(op,go);self->window.stream_go=go;
             }};
