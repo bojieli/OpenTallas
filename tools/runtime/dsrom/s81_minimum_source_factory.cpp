@@ -41,6 +41,10 @@ struct Source : std::enable_shared_from_this<Source> {
     DsromS81MinimumSourceTags tags;
     PrefixPublication publication{ID};
     std::unique_ptr<Target> target;
+    // QE enrollment extends these observers AFTER target construction. The
+    // target forwards to their current value so actual acceptance/old-head
+    // visibility reaches every owning actor without a second retirement.
+    std::function<void(unsigned,const MacroWrite&,const VmReceipt&)> factory_visibility;
     std::unique_ptr<Vcut> cut;
     std::unique_ptr<NativeInputParticipant> input;
     std::unique_ptr<Return> returned;
@@ -73,6 +77,10 @@ struct Source : std::enable_shared_from_this<Source> {
         require(phases.size()==2&&phases[0]==22517998140008448ull&&phases[1]==0&&stream.size()==192,
                 "actual selected L0.I7 PHROM/STREAM binding differs");
         phrom={phases[0],phases[1]};
+        factory_visibility=[this](unsigned bank,const auto& c,const auto& receipt){
+            publication.on_prefix_scalar_ack(c,receipt);
+            dsrom_s81_retire_source_scalar_tag(runtime,bank,c,receipt);
+        };
         target=std::make_unique<Target>(*vm,ID,0,
             [this](const auto& out,unsigned lane) {
                 return out.vm_address<20480?tags.record(out,lane):publication.record(out,lane);
@@ -80,10 +88,11 @@ struct Source : std::enable_shared_from_this<Source> {
             [this](auto id,auto a,auto n){return publication.source_span_lease(id,a,n);},
             [this](auto id,auto a,auto n){return publication.write_allowed(id,a,n);},
             [this](const auto& c,const auto& receipt){
-                publication.on_prefix_scalar_ack(c,receipt);
-                dsrom_s81_retire_source_scalar_tag(runtime,c.word.address&3,c,receipt);
+                factory_visibility(c.word.address&3,c,receipt);
             },
-            Target::AcceptObservers{true,tags.scalar_accept,tags.read_accept});
+            Target::AcceptObservers{true,
+                [this](auto bank,const auto& c){tags.scalar_accept(bank,c);},
+                [this](auto address,const auto& owner){tags.read_accept(address,owner);}});
         prefix_bank=target->participant();
         publication.enroll_literal(FIELD_PRODUCER,{{OUTPUT_BASE,OUTPUT_ROWS}});
     }
