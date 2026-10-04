@@ -11,7 +11,7 @@ using namespace dsrom_s81_minimum;
 NativeBfHeadProducer<Vretn,Vroot>* producer=nullptr;
 #ifdef DSROM_S81_RELEASED_HEAD_COMPONENT
 #include "s81_native_bf_head_factory.hpp"
-static DsromS81NativeHeadBinding* released_head=nullptr;
+
 #endif
 std::map<const void*,unsigned> banks;
 extern "C" void v41rt_rom_register(const char* instance) {
@@ -21,14 +21,14 @@ extern "C" void v41rt_rom_register(const char* instance) {
 extern "C" void v41rt_cfg_register() {}
 extern "C" long long v41rt_cfg_read(int address) {
 #ifdef DSROM_S81_RELEASED_HEAD_COMPONENT
-    if(released_head)return released_head->cfg_word(address);
+    // The existing producer below owns direct component ROM/CFG routing.
 #endif
     if(!producer)throw std::runtime_error("CFG before actual head producer");
     return producer->cfg_word(address);
 }
 extern "C" void v41rt_rom_read(int address,svBitVecVal* out) {
 #ifdef DSROM_S81_RELEASED_HEAD_COMPONENT
-    if(released_head){auto w=released_head->raw_word(banks.at(svGetScope()),address);std::copy(w.begin(),w.end(),out);return;}
+    // No whole-caller PairMem installer is substituted here.
 #endif
     if(!producer)throw std::runtime_error("ROM before actual head producer");
     auto word=producer->raw_word(banks.at(svGetScope()),address);
@@ -187,7 +187,7 @@ int main(int argc,char** argv) {
     std::ofstream logit_file(output+"/logits_rank"+std::to_string(rank)+".u32",std::ios::binary);
     std::ofstream xn_file(output+"/XN_rank"+std::to_string(rank)+".u32",std::ios::binary);
     unsigned raw_reads=0;
-    DsromS81NativeHeadBinding head(rt,cut,io,
+    DsromS81NativeHeadProducer head(rt,cut,io.read_word,io.span_lease,
         [&](unsigned r,unsigned row,unsigned group,unsigned step){
             if(r!=rank||row>=32320||group>=40||step>=8)throw std::runtime_error("released head source coordinates");
             NativeBfHeadRom::Word w{};
@@ -205,12 +205,13 @@ int main(int argc,char** argv) {
                 throw std::runtime_error("held native roots changed");
             if(!taken)return false;
             held.reset();tail_stage=0;taken=false;return true;
-        },false);released_head=&head;
+        },false);producer=&head;
     auto bank=target.participant();auto oldrise=bank.rising;
     bank.rising=[&](bool r){oldrise(r);if(r)actual_acks+=__builtin_popcount(unsigned(vm.wr_ack_v));};
-    auto input_part=head.selected_input_participant(),ret_part=head.selected_return_participant();
-    auto cold_return=head.return_participant();
     bool su_active=true,head_active=false;
+    auto input_part=dsrom_s81_select_native_bf_head_phase(rt,cut,[&](){return head_active;},head.input_participant());
+    auto ret_part=dsrom_s81_select_native_bf_head_phase(rt,cut,[&](){return head_active;},head.return_participant());
+    auto cold_return=head.return_participant();
     auto tail_drive=[&](Vretn& node,uint32_t a,uint32_t b){
         uint32_t row=rank*32320+held->local_row;
         node.a_v=1;node.b_v=1;node.a_t=(row<<13)|2;node.b_t=(row<<13)|258;
@@ -280,7 +281,7 @@ int main(int argc,char** argv) {
       <<",\"dot_start\":"<<dot_start<<",\"terminal_cycle\":"<<cycles<<",\"logits\":"<<logits
       <<",\"native_vm_accepts\":"<<actual_accepts<<",\"native_vm_acks\":"<<actual_acks
       <<",\"raw_native_words\":"<<raw_reads<<",\"argmax_bound\":false,\"reference_compared\":false}";
-    released_head=nullptr;munmap(mapped,st.st_size);close(fd);
+    producer=nullptr;munmap(mapped,st.st_size);close(fd);
     std::cout<<"NATIVE_HEAD_COMPONENT_DONE rank="<<rank<<" logits="<<logits<<" cycles="<<cycles<<std::endl;return 0;
  }catch(const std::exception& e){std::cerr<<"NATIVE_HEAD_COMPONENT_ERROR "<<e.what()<<std::endl;return 1;}
 }
