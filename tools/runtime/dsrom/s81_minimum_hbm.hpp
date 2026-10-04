@@ -21,6 +21,9 @@ public:
     explicit NativeHbm(DsromS81MinimumRuntime&,const std::string& instance);
     // Native sparse prior-history only; must precede shared cold_start/bind_context.
     void preload(const std::string& rank_history_directory);
+    void preload_ckv(const std::string& rank_ckv_history_directory);
+    uint32_t capacity_words()const{return model.capacity_words;}
+    bool ckv_initialized()const{return model.ckv_history_ready;}
     template<class Mux> void wire(Mux& mux) {
         static_assert(sizeof(mux.m_addr)==sizeof(model.m_addr),"HBM AW30 four-stack mismatch");
         static_assert(sizeof(mux.m_tag)==sizeof(model.m_tag),"HBM TAG16 four-stack mismatch");
