@@ -1,0 +1,20 @@
+{
+  "status": "PASS_MINIMUM_NATIVE_ROOT_MERGE_ARGMAX_COMPONENT_NOT_HEAD_ROM_OR_CORE_ENROLLMENT",
+  "worktree": "/tmp/peirce-s81-native-head-producer-20261004",
+  "producer": "rtl/test/s81_native_head_terminal/native_head_terminal.sv",
+  "model_function": "tools.uarch_model.dsrom_s81_native_head_terminal",
+  "opt_in": "OPT_NATIVE_HEAD=0 default",
+  "coverage": "Actual native full32320-row rank2 arithmetic, logit-by-logit checks, equal maxima lowest global ID, held16-credit ACK, held terminal, stale owner rejection, native nonfinite and cancel drains; three executable wrongtie/prematurecredit/wrongowner mutants fail exact assertions;5pytestPASS",
+  "known_initial_failures": "Initial stale-owner mutant needed explicit acceptance-edge assertion/finite semantic cycle bound; manually terminated own intentionally-invalid mutant. State-count test typo1412 corrected to source-count1312. Original failure logs retained. No DUT expectation weakening or FP source changes.",
+  "storage": "head.weight129280x5120, pair_start2525,2525pairs10100macros already charged, eight existing head dies; compute/route not granted by storage inventory",
+  "provider_ABI": "Start owner47 +rank2. Accepted matched paired roots A=golden K0..4095, B=K4096..5119, globalrow17 exactly rank*32320+acceptedOrdinal. Source lease must prove both subtree identities before presenting pair. Native output32/globalrow17/poison1 held until actual logit ACK; owner47 held; final argmax retained until done_ready. No host root producer, tag renaming or metadata-only acceptance permitted.",
+  "source_binding_limits": "Trusted source-bound exactly-once paired-root provider required; identical ghosts under a violated closed-provider lease cannot be detected from equal47bit owner+row. Reset only externally quiescent. No current selected core successor or four-rank delivery enrolled.",
+  "next_implementation_gate": [
+    "Arch/Boole bind actual ordered chunk8 subtree returns and prove same-row/owner/phase/lease before pair acceptance; price existing head compute/positive ROM ports and return capacity.",
+    "Popper binds dedicated releasedhead image words/descriptor and actual normalizer XN BF16 inputs; no synthetic activations/provider fallback.",
+    "Peirce adds opt-in successor core e_am route and EAM selection using this native terminal only after source interface composition; drain/idle must include native pipeline,16seats and terminal.",
+    "Minimum functional build uses one paired-root/selector leaf only, unchanged fastfp source; joined actual subtree leaf next, not full head array. Physical SS60/FF25 and floorplan/routes remain required; no rate credit."
+  ],
+  "build": "Existing minimum leaf Icarus generation/runtime completed locally; no CXX/P&R/array build, no arbitrary wall/file/memory caps. Runtime fixed semantic bound3*32320+200edges catches broken DUT progress; compile no deadline.",
+  "current_foreign_scope": "HE/PF finished; Cicero prefix debug only if needed. Popper compiler files untouched."
+}

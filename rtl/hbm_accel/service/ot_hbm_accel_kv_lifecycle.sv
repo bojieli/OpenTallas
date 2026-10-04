@@ -106,24 +106,118 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
   selected_word=0;
   for(integer r=0;r<72;r=r+1) selected_word=selected_word|row_word[r];
  end
+
+ // (2026-10-04 retime) Every completion event keeps its original ready, is captured on the
+ // accepting edge, and is checked and applied one edge later from the registered copy, so no
+ // input port and no in-cycle arithmetic sits in the check -> refuse/update cone. Events keep
+ // their order; each one's effect lands +1 cycle later. A command is not accepted on the edge
+ // after a hydrate capture (the original blocked it while hydrate_valid was high).
+ // The expected payload address is a register of the current cursor (cursor moves >=1 edge
+ // before the next ACK state).
+ reg payload_v_q, payload_wide_bad_q;
+ reg metadata_v_q;
+ reg [63:0] metadata_identity_q;
+ reg [19:0] metadata_key_q;
+ reg metadata_record_q;
+ reg consumer_v_q;
+ reg [63:0] consumer_identity_q;
+ reg [19:0] consumer_key_q;
+ reg consumer_stage_q;
+ reg consumer_accepted_q;
+ reg consumer_reverse_q;
+ reg reader_metadata_v_q;
+ reg [63:0] reader_metadata_identity_q;
+ reg [19:0] reader_metadata_key_q;
+ reg reader_metadata_stage_q;
+ reg drain_done_v_q, drain_bad_q;
+ reg [63:0] drain_done_identity_q;
+ reg [19:0] drain_done_key_q;
+ reg [7:0] drain_done_allcopies_q;
+ reg hydrate_v_q;
+ reg [19:0] hydrate_key_q;
+ reg [63:0] hydrate_producer_q;
+ reg [33:0] expected_payload_addr;
+ wire [33:0] expected_K_addr=K_base + (((sector_cursor >> 6)*512 +
+    (w_key[12:0] >> 4))*128 + ((sector_cursor & 63)*2))*16;
+ wire [33:0] expected_V_addr=V_base + ((((sector_cursor-256) >> 2)*8192 +
+    w_key[12:0])*128) + ((sector_cursor-256) & 3)*32;
+ always @(posedge clk) begin
+  expected_payload_addr <= sector_cursor<256 ? expected_K_addr : expected_V_addr;
+  metadata_identity_q <= metadata_identity;
+  metadata_key_q <= metadata_key;
+  metadata_record_q <= metadata_record;
+  consumer_identity_q <= consumer_identity;
+  consumer_key_q <= consumer_key;
+  consumer_stage_q <= consumer_stage;
+  consumer_accepted_q <= consumer_accepted;
+  consumer_reverse_q <= consumer_reverse;
+  reader_metadata_identity_q <= reader_metadata_identity;
+  reader_metadata_key_q <= reader_metadata_key;
+  reader_metadata_stage_q <= reader_metadata_stage;
+  drain_done_identity_q <= drain_done_identity;
+  drain_done_key_q <= drain_done_key;
+  drain_done_allcopies_q <= drain_done_allcopies;
+  hydrate_key_q <= hydrate_key;
+  hydrate_producer_q <= hydrate_producer;
+ end
+ always @(posedge clk or negedge por_n) begin
+  if(!por_n) begin payload_v_q<=0; payload_wide_bad_q<=0; metadata_v_q<=0; consumer_v_q<=0; reader_metadata_v_q<=0; drain_done_v_q<=0; drain_bad_q<=0; hydrate_v_q<=0; end
+  else begin
+   payload_v_q <= payload_valid && payload_ready;
+   payload_wide_bad_q <= payload_identity!=w_identity || payload_key!=w_key || payload_sector!=sector_cursor
+       || payload_source_addr!=expected_payload_addr;
+   metadata_v_q <= metadata_valid && metadata_ready;
+   consumer_v_q <= consumer_valid && consumer_ready;
+   reader_metadata_v_q <= reader_metadata_valid && reader_metadata_ready;
+   drain_done_v_q <= drain_done_valid && drain_done_ready;
+   drain_bad_q <= drain_done_identity!=ident || drain_done_key!=key || drain_done_allcopies!=8'hff;
+   hydrate_v_q <= hydrate_valid && hydrate_ready;
+  end
+ end
+
  wire active=ENABLE && por_n && run_enable && !fault;
  wire [6:0] cmd_row={cmd_key[19:14],cmd_key[13]};
  wire [6:0] row={key[19:14],key[13]};
- wire [6:0] event_row={consumer_key[19:14],consumer_key[13]};
- wire [6:0] reader_metadata_row={reader_metadata_key[19:14],reader_metadata_key[13]};
- wire [6:0] hydrate_row={hydrate_key[19:14],hydrate_key[13]};
+ wire [6:0] event_row={consumer_key_q[19:14],consumer_key_q[13]};
+ wire [6:0] reader_metadata_row={reader_metadata_key_q[19:14],reader_metadata_key_q[13]};
+ wire [6:0] hydrate_row={hydrate_key_q[19:14],hydrate_key_q[13]};
+
+ // Row-indexed event stage 2 (snapshot); same-row updates of the acting stage are forwarded.
+ reg c2_v, c2_bad_row, c2_live, c2_stage, c2_acc, c2_rev; reg [6:0] c2_row;
+ reg [63:0] c2_tag, c2_ident; reg [12:0] c2_pos, c2_keypos; reg [1:0] c2_cm, c2_crm;
+ reg m2_v, m2_bad_row, m2_live, m2_stage; reg [6:0] m2_row;
+ reg [63:0] m2_tag, m2_ident; reg [12:0] m2_pos, m2_keypos; reg [1:0] m2_resp, m2_rmm;
+ wire c_fwd = c2_v && c2_row == event_row;
+ wire m_fwd = m2_v && m2_row == reader_metadata_row;
+ reg h2_v, h2_bad_row, h2_live, h2_pubv; reg [6:0] h2_row; reg [12:0] h2_pos; reg [63:0] h2_producer;
+ always @(posedge clk) begin
+  c2_row <= event_row; c2_bad_row <= event_row >= 72;
+  c2_live <= reader_live[event_row]; c2_tag <= reader_tag[event_row]; c2_pos <= reader_pos[event_row];
+  c2_ident <= consumer_identity_q; c2_keypos <= consumer_key_q[12:0]; c2_stage <= consumer_stage_q;
+  c2_acc <= consumer_accepted_q; c2_rev <= consumer_reverse_q;
+  c2_cm <= consumer_mask[event_row] | ((c_fwd && c2_acc) ? (2'b01 << c2_stage) : 2'b00);
+  c2_crm <= consumer_reverse_mask[event_row] | ((c_fwd && c2_rev) ? (2'b01 << c2_stage) : 2'b00);
+  m2_row <= reader_metadata_row; m2_bad_row <= reader_metadata_row >= 72;
+  m2_live <= reader_live[reader_metadata_row]; m2_tag <= reader_tag[reader_metadata_row];
+  m2_pos <= reader_pos[reader_metadata_row];
+  m2_ident <= reader_metadata_identity_q; m2_keypos <= reader_metadata_key_q[12:0]; m2_stage <= reader_metadata_stage_q;
+  m2_resp <= responded_mask[reader_metadata_row];
+  m2_rmm <= reader_metadata_mask[reader_metadata_row] | (m_fwd ? (2'b01 << m2_stage) : 2'b00);
+  h2_row <= hydrate_row; h2_bad_row <= hydrate_row >= 72; h2_live <= reader_live[hydrate_row];
+  h2_pubv <= pub_valid[hydrate_row] | (h2_v && h2_row == hydrate_row);
+  h2_pos <= hydrate_key_q[12:0]; h2_producer <= hydrate_producer_q;
+ end
+ always @(posedge clk or negedge por_n) begin
+  if(!por_n) begin c2_v<=0; m2_v<=0; h2_v<=0; end
+  else begin c2_v <= consumer_v_q; m2_v <= reader_metadata_v_q; h2_v <= hydrate_v_q; end
+ end
  assign cmd_ready=active && (!quiesce || (cmd_op!=BEGIN && cmd_op!=ACQUIRE))
-    && state==IDLE && !rsp_valid && !hydrate_valid;
+    && state==IDLE && !rsp_valid && !hydrate_valid && !hydrate_v_q && !h2_v;
  assign writer_retained=writer_live;
  assign writer_identity=w_identity; assign writer_key=w_key;
  assign writer_stage_base=stage_base; assign writer_stage_SM=stage_SM;
  assign shared_SM=stage_SM; assign shared_rank=w_key[13];
  assign writer_K_base=K_base; assign writer_V_base=V_base;
- wire [33:0] expected_K_addr=K_base + (((payload_sector >> 6)*512 +
-    (w_key[12:0] >> 4))*128 + ((payload_sector & 63)*2))*16;
- wire [33:0] expected_V_addr=V_base + ((((payload_sector-256) >> 2)*8192 +
-    w_key[12:0])*128) + ((payload_sector-256) & 3)*32;
- wire [33:0] expected_payload_addr=payload_sector<256 ? expected_K_addr : expected_V_addr;
  assign idle=state==IDLE && !rsp_valid && !writer_live && reader_count==0;
  assign shared_valid=active && (state==WRITE || state==READ || state==LOAD);
  assign shared_write=state==WRITE;
@@ -179,14 +273,16 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
     consumer_mask[i]<=0; consumer_reverse_mask[i]<=0; responded_mask[i]<=0; reader_metadata_mask[i]<=0; end
   end else if(active) begin
    if(rsp_valid && rsp_ready) rsp_valid<=0;
-   if(hydrate_valid && hydrate_ready) begin
-    if(hydrate_row>=72 || reader_live[hydrate_row] || pub_valid[hydrate_row]) refuse();
-    else begin pub_valid[hydrate_row]<=1; pub_pos[hydrate_row]<=hydrate_key[12:0];
-      pub_tag[hydrate_row]<=hydrate_producer; end
+   if(h2_v) begin
+    if(h2_bad_row || h2_live || h2_pubv) refuse();
+    else begin pub_valid[h2_row]<=1; pub_pos[h2_row]<=h2_pos;
+      pub_tag[h2_row]<=h2_producer; end
    end
+   // Payload receipts keep the original edge (the per-sector REQ/ACK interval is unchanged):
+   // the narrow receipt/state checks act on the accepting edge, the wide identity/key/sector/
+   // address equality is captured on that edge and refused one edge later (sticky fault).
    if(payload_valid && payload_ready) begin
-    if(payload_identity!=w_identity || payload_key!=w_key || payload_sector!=sector_cursor
-       || payload_source_addr!=expected_payload_addr || payload_write!=(state==NEW_ACK)
+    if(payload_write!=(state==NEW_ACK)
        || (!payload_visible && !payload_reverse)
        || (payload_visible && receipt_visible) || (payload_reverse && receipt_reverse)
        || (payload_reverse && !payload_visible && !receipt_visible)) refuse();
@@ -202,32 +298,32 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
      end
     end
    end
-   if(metadata_valid && metadata_ready) begin
-    if(metadata_identity!=w_identity || metadata_key!=w_key
-       || metadata_mask[metadata_record] || (metadata_record && !metadata_mask[0])
+   if(payload_v_q && payload_wide_bad_q) refuse();
+   if(metadata_v_q) begin
+    if(metadata_identity_q!=w_identity || metadata_key_q!=w_key
+       || metadata_mask[metadata_record_q] || (metadata_record_q && !metadata_mask[0])
        || !(&visible_mask) || !(&reverse_mask)) refuse();
-    else metadata_mask[metadata_record]<=1;
+    else metadata_mask[metadata_record_q]<=1;
    end
-   if(consumer_valid && consumer_ready) begin
-    if(event_row>=72 || !reader_live[event_row]
-       || reader_tag[event_row]!=consumer_identity || reader_pos[event_row]!=consumer_key[12:0]
-       || (!consumer_accepted && !consumer_reverse)
-       || (consumer_accepted && consumer_mask[event_row][consumer_stage])
-       || (consumer_reverse && consumer_reverse_mask[event_row][consumer_stage])
-       || (consumer_reverse && !consumer_accepted && !consumer_mask[event_row][consumer_stage])
-       || (consumer_stage && !(consumer_mask[event_row][0] && consumer_reverse_mask[event_row][0]))) refuse();
+   // Row-indexed events: the accepted event's row record is snapshotted on the next edge
+   // (72:1 select from registers), then checked and applied (same check as the original).
+   if(c2_v) begin
+    if(c2_bad_row || !c2_live || c2_tag!=c2_ident || c2_pos!=c2_keypos
+       || (!c2_acc && !c2_rev)
+       || (c2_acc && c2_cm[c2_stage])
+       || (c2_rev && c2_crm[c2_stage])
+       || (c2_rev && !c2_acc && !c2_cm[c2_stage])
+       || (c2_stage && !(c2_cm[0] && c2_crm[0]))) refuse();
     else begin
-     if(consumer_accepted) consumer_mask[event_row][consumer_stage]<=1;
-     if(consumer_reverse) consumer_reverse_mask[event_row][consumer_stage]<=1; end
+     if(c2_acc) consumer_mask[c2_row][c2_stage]<=1;
+     if(c2_rev) consumer_reverse_mask[c2_row][c2_stage]<=1; end
    end
-   if(reader_metadata_valid && reader_metadata_ready) begin
-    if(reader_metadata_row>=72 || !reader_live[reader_metadata_row]
-       || reader_tag[reader_metadata_row]!=reader_metadata_identity
-       || reader_pos[reader_metadata_row]!=reader_metadata_key[12:0]
-       || !responded_mask[reader_metadata_row][reader_metadata_stage]
-       || reader_metadata_mask[reader_metadata_row][reader_metadata_stage]
-       || (reader_metadata_stage && !reader_metadata_mask[reader_metadata_row][0])) refuse();
-    else reader_metadata_mask[reader_metadata_row][reader_metadata_stage]<=1;
+   if(m2_v) begin
+    if(m2_bad_row || !m2_live || m2_tag!=m2_ident || m2_pos!=m2_keypos
+       || !m2_resp[m2_stage]
+       || m2_rmm[m2_stage]
+       || (m2_stage && !m2_rmm[0])) refuse();
+    else reader_metadata_mask[m2_row][m2_stage]<=1;
    end
    if(cmd_valid && cmd_ready) begin
     for(i=0;i<72;i=i+1) row_select[i]<=(cmd_row==7'(i));
@@ -323,8 +419,8 @@ module ot_hbm_accel_kv_lifecycle #(parameter ENABLE=0)(
       responded_mask[row][cstage]<=1; complete(); end
     WAIT_DRAIN: begin
      if(drain_valid && drain_ready) drain_sent<=1;
-     if(drain_done_valid && drain_done_ready) begin
-      if(drain_done_identity!=ident || drain_done_key!=key || drain_done_allcopies!=8'hff) refuse();
+     if(drain_done_v_q) begin
+      if(drain_bad_q) refuse();
       else begin reader_count<=reader_count-1'b1; reader_live[row]<=0; complete(); end
      end
     end

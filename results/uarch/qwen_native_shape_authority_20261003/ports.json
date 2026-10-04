@@ -1,0 +1,606 @@
+{
+  "ROM_files": [
+    "results/uarch/qwen_native_primitive_control_20261003/descriptor.mem",
+    "results/uarch/qwen_native_primitive_control_20261003/pc_templates.mem",
+    "results/uarch/qwen_native_shape_authority_20261003/shape_base.mem",
+    "results/uarch/qwen_native_shape_authority_20261003/shape_profile.mem"
+  ],
+  "controller_binding": "authority_shape_sha is existing collector captured independent profile_shape; new authority_descriptor/types/operands/signed mask/vector mask/counts observe corresponding sealed source cursor actor slice. cmd fields stay independent and protected. RF exports host_read_operand2/host_read_page1/host_write_page1 go to existing r6 RF router.",
+  "default_enabled": false,
+  "dependency_commit": "78cb40f8079c64a3fe5734f54da03678b4fe4c58",
+  "modules": {
+    "ot_gpu_native_primitive_controller_authority": {
+      "path": "rtl/gpu/native/ot_gpu_native_primitive_controller_authority.sv",
+      "ports": {
+        "authority_PC": {
+          "bits": 11,
+          "direction": "input"
+        },
+        "authority_descriptor": {
+          "bits": 8,
+          "direction": "input"
+        },
+        "authority_operands": {
+          "bits": 3,
+          "direction": "input"
+        },
+        "authority_owner": {
+          "bits": 55,
+          "direction": "input"
+        },
+        "authority_result_owner": {
+          "bits": 46,
+          "direction": "input"
+        },
+        "authority_result_slots": {
+          "bits": 18,
+          "direction": "input"
+        },
+        "authority_shape_sha": {
+          "bits": 256,
+          "direction": "input"
+        },
+        "authority_signed_i8_mask": {
+          "bits": 4,
+          "direction": "input"
+        },
+        "authority_source_counts": {
+          "bits": 32,
+          "direction": "input"
+        },
+        "authority_source_owners": {
+          "bits": 184,
+          "direction": "input"
+        },
+        "authority_source_slots": {
+          "bits": 72,
+          "direction": "input"
+        },
+        "authority_source_types": {
+          "bits": 8,
+          "direction": "input"
+        },
+        "authority_source_vector_mask": {
+          "bits": 4,
+          "direction": "input"
+        },
+        "authority_tuple": {
+          "bits": 239,
+          "direction": "input"
+        },
+        "authority_valid": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "busy": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "clk": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "cmd_PC": {
+          "bits": 11,
+          "direction": "input"
+        },
+        "cmd_canonical_zero": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "cmd_counts": {
+          "bits": 32,
+          "direction": "input"
+        },
+        "cmd_descriptor": {
+          "bits": 8,
+          "direction": "input"
+        },
+        "cmd_dtype": {
+          "bits": 2,
+          "direction": "input"
+        },
+        "cmd_elements": {
+          "bits": 8,
+          "direction": "input"
+        },
+        "cmd_input_vector_mask": {
+          "bits": 4,
+          "direction": "input"
+        },
+        "cmd_movement_map": {
+          "bits": 1280,
+          "direction": "input"
+        },
+        "cmd_operands": {
+          "bits": 3,
+          "direction": "input"
+        },
+        "cmd_owner": {
+          "bits": 55,
+          "direction": "input"
+        },
+        "cmd_program_sha": {
+          "bits": 256,
+          "direction": "input"
+        },
+        "cmd_ready": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "cmd_result_owner": {
+          "bits": 46,
+          "direction": "input"
+        },
+        "cmd_result_slots": {
+          "bits": 18,
+          "direction": "input"
+        },
+        "cmd_result_type": {
+          "bits": 2,
+          "direction": "input"
+        },
+        "cmd_result_vector": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "cmd_scalars": {
+          "bits": 4,
+          "direction": "input"
+        },
+        "cmd_sequence": {
+          "bits": 64,
+          "direction": "input"
+        },
+        "cmd_shape_sha": {
+          "bits": 256,
+          "direction": "input"
+        },
+        "cmd_signed_i8_mask": {
+          "bits": 4,
+          "direction": "input"
+        },
+        "cmd_source_owners": {
+          "bits": 184,
+          "direction": "input"
+        },
+        "cmd_source_slots": {
+          "bits": 72,
+          "direction": "input"
+        },
+        "cmd_step": {
+          "bits": 6,
+          "direction": "input"
+        },
+        "cmd_substep": {
+          "bits": 2,
+          "direction": "input"
+        },
+        "cmd_template": {
+          "bits": 4,
+          "direction": "input"
+        },
+        "cmd_tuple": {
+          "bits": 239,
+          "direction": "input"
+        },
+        "cmd_types": {
+          "bits": 8,
+          "direction": "input"
+        },
+        "cmd_valid": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "external_PC": {
+          "bits": 11,
+          "direction": "output"
+        },
+        "external_a": {
+          "bits": 256,
+          "direction": "output"
+        },
+        "external_a_scalar": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "external_b": {
+          "bits": 256,
+          "direction": "output"
+        },
+        "external_b_scalar": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "external_beat": {
+          "bits": 6,
+          "direction": "output"
+        },
+        "external_c": {
+          "bits": 256,
+          "direction": "output"
+        },
+        "external_c_scalar": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "external_canonical_zero": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "external_d": {
+          "bits": 256,
+          "direction": "output"
+        },
+        "external_dtype": {
+          "bits": 2,
+          "direction": "output"
+        },
+        "external_lane_fault": {
+          "bits": 4,
+          "direction": "input"
+        },
+        "external_mask": {
+          "bits": 4,
+          "direction": "output"
+        },
+        "external_opcode": {
+          "bits": 6,
+          "direction": "output"
+        },
+        "external_owner": {
+          "bits": 55,
+          "direction": "output"
+        },
+        "external_ready": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "external_result": {
+          "bits": 256,
+          "direction": "input"
+        },
+        "external_result_PC": {
+          "bits": 11,
+          "direction": "input"
+        },
+        "external_result_beat": {
+          "bits": 6,
+          "direction": "input"
+        },
+        "external_result_owner": {
+          "bits": 55,
+          "direction": "input"
+        },
+        "external_result_ready": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "external_result_sequence": {
+          "bits": 64,
+          "direction": "input"
+        },
+        "external_result_tuple": {
+          "bits": 239,
+          "direction": "input"
+        },
+        "external_result_type": {
+          "bits": 2,
+          "direction": "input"
+        },
+        "external_result_valid": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "external_sequence": {
+          "bits": 64,
+          "direction": "output"
+        },
+        "external_tuple": {
+          "bits": 239,
+          "direction": "output"
+        },
+        "external_types": {
+          "bits": 8,
+          "direction": "output"
+        },
+        "external_valid": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "fault": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "host_a": {
+          "bits": 9,
+          "direction": "output"
+        },
+        "host_ack_owner": {
+          "bits": 46,
+          "direction": "input"
+        },
+        "host_ack_ready": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "host_ack_slot": {
+          "bits": 9,
+          "direction": "input"
+        },
+        "host_ack_valid": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "host_b": {
+          "bits": 9,
+          "direction": "output"
+        },
+        "host_dst": {
+          "bits": 9,
+          "direction": "output"
+        },
+        "host_owner": {
+          "bits": 46,
+          "direction": "output"
+        },
+        "host_rd_ready": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "host_rd_valid": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "host_read_operand": {
+          "bits": 2,
+          "direction": "output"
+        },
+        "host_read_page": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "host_rsp_a": {
+          "bits": 4096,
+          "direction": "input"
+        },
+        "host_rsp_b": {
+          "bits": 4096,
+          "direction": "input"
+        },
+        "host_rsp_ready": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "host_rsp_valid": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "host_wdata": {
+          "bits": 4096,
+          "direction": "output"
+        },
+        "host_wr_ready": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "host_wr_valid": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "host_write_page": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "output_visible": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "power_on_reset_n": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "result_PC": {
+          "bits": 11,
+          "direction": "output"
+        },
+        "result_bytes": {
+          "bits": 11,
+          "direction": "output"
+        },
+        "result_data": {
+          "bits": 8192,
+          "direction": "output"
+        },
+        "result_dtype": {
+          "bits": 2,
+          "direction": "output"
+        },
+        "result_owner": {
+          "bits": 55,
+          "direction": "output"
+        },
+        "result_owner_held": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "result_ready": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "result_sequence": {
+          "bits": 64,
+          "direction": "output"
+        },
+        "result_tuple": {
+          "bits": 239,
+          "direction": "output"
+        },
+        "result_valid": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "reverse_PC": {
+          "bits": 11,
+          "direction": "output"
+        },
+        "reverse_ack_PC": {
+          "bits": 11,
+          "direction": "input"
+        },
+        "reverse_ack_owner": {
+          "bits": 55,
+          "direction": "input"
+        },
+        "reverse_ack_sequence": {
+          "bits": 64,
+          "direction": "input"
+        },
+        "reverse_ack_tuple": {
+          "bits": 239,
+          "direction": "input"
+        },
+        "reverse_owner": {
+          "bits": 55,
+          "direction": "output"
+        },
+        "reverse_ready": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "reverse_sequence": {
+          "bits": 64,
+          "direction": "output"
+        },
+        "reverse_tuple": {
+          "bits": 239,
+          "direction": "output"
+        },
+        "reverse_valid": {
+          "bits": 1,
+          "direction": "output"
+        },
+        "source_owner_held": {
+          "bits": 4,
+          "direction": "input"
+        },
+        "visible_owner": {
+          "bits": 55,
+          "direction": "input"
+        },
+        "visible_tuple": {
+          "bits": 239,
+          "direction": "input"
+        },
+        "warm_reset": {
+          "bits": 1,
+          "direction": "input"
+        }
+      }
+    },
+    "ot_gpu_native_shape_authority": {
+      "path": "rtl/gpu/native/ot_gpu_native_shape_authority.sv",
+      "ports": {
+        "profile_PC": {
+          "bits": 704,
+          "direction": "output"
+        },
+        "profile_double": {
+          "bits": 256,
+          "direction": "output"
+        },
+        "profile_present": {
+          "bits": 256,
+          "direction": "output"
+        },
+        "profile_result_double": {
+          "bits": 64,
+          "direction": "output"
+        },
+        "profile_sequence": {
+          "bits": 4096,
+          "direction": "output"
+        },
+        "profile_shape": {
+          "bits": 16384,
+          "direction": "output"
+        },
+        "profile_tuple": {
+          "bits": 15296,
+          "direction": "output"
+        },
+        "profile_valid": {
+          "bits": 64,
+          "direction": "output"
+        },
+        "source_counts": {
+          "bits": 2048,
+          "direction": "input"
+        },
+        "source_descriptor": {
+          "bits": 512,
+          "direction": "input"
+        },
+        "source_operands": {
+          "bits": 192,
+          "direction": "input"
+        },
+        "source_sequence": {
+          "bits": 4096,
+          "direction": "input"
+        },
+        "source_signed_i8_mask": {
+          "bits": 256,
+          "direction": "input"
+        },
+        "source_tuple": {
+          "bits": 15296,
+          "direction": "input"
+        },
+        "source_types": {
+          "bits": 512,
+          "direction": "input"
+        },
+        "source_valid": {
+          "bits": 64,
+          "direction": "input"
+        },
+        "source_vector_mask": {
+          "bits": 256,
+          "direction": "input"
+        }
+      }
+    }
+  },
+  "profile_outputs": "profile_* directly to existing r6 profile_* collector inputs; one shared service, no new pending identity",
+  "source_bindings": {
+    "source_counts": "native_aperture_source_counts",
+    "source_descriptor": "native_aperture_source_descriptor",
+    "source_operands": "native_aperture_source_operands",
+    "source_sequence": "native_aperture_authority_sequence",
+    "source_signed_i8_mask": "native_aperture_source_signed_i8_mask",
+    "source_tuple": "native_aperture_authority_tuple",
+    "source_types": "native_aperture_source_types",
+    "source_valid": "native_aperture_source_cursor_valid",
+    "source_vector_mask": "native_aperture_source_vector_mask"
+  },
+  "sources": [
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "rtl/abi3/ot_a3_format_pkg.sv",
+    "rtl/gpu_sys/ot_gpu_simt_lane.sv",
+    "rtl/experimental/qwen_native_fp32_20261003/ot_qwen_native_fp32_lanes.sv",
+    "rtl/gpu/native/ot_gpu_native_conversion.sv",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_native_bits.sv",
+    "rtl/hbm_accel/native_movement/ot_hbm_native_movement.sv",
+    "rtl/gpu/native/ot_gpu_native_conversion_i8.sv",
+    "rtl/gpu/native/ot_gpu_native_shape_authority.sv",
+    "rtl/gpu/native/ot_gpu_native_primitive_controller_authority.sv"
+  ],
+  "status": "SOURCE_ONLY_NO_NEW_RTL_GATE"
+}

@@ -1,0 +1,164 @@
+{
+ "schema": "qwen-nearhbm-attn-ss-screen.v1",
+ "basis": "pre-layout: ORFS yosys/abc at CORNER=WC (adder map off), OpenSTA SS RVT, ideal clock, 60 ps setup uncertainty, 833 ps; no wires, no buffering (repair_design not run)",
+ "tool": "tools/gpu_ss_prelayout.py (scratch copy with --extra/--nickname)",
+ "units": {
+  "add7": {
+   "top": "ot_hdc_fp32_add_lat7",
+   "params": {},
+   "ss_setup_wns_ps": 226.3,
+   "ss_fmax_prelayout_mhz": 1648.2,
+   "closes_1p2GHz_prelayout": true,
+   "worst_start": "u.s1_small[5]$_DFF_P_",
+   "worst_end": "u.u_cb.g_r.r[47]$_DFF_PN0_",
+   "synth_area_um2": 555.3522
+  },
+  "exp_q": {
+   "top": "ot_hdc_exp_q",
+   "params": {},
+   "ss_setup_wns_ps": -720.7,
+   "ss_fmax_prelayout_mhz": 643.6,
+   "closes_1p2GHz_prelayout": false,
+   "worst_start": "g_h[3].u_a.u.s1_small[4]$_DFF_P_",
+   "worst_end": "g_h[3].u_a.u.s2_exp[7]$_DFF_P_",
+   "synth_area_um2": 6677.61084
+  },
+  "hub": {
+   "top": "ot_qwen_nearhbm_attn_hub",
+   "params": {
+    "HD": "128"
+   },
+   "ss_setup_wns_ps": -798.1,
+   "ss_fmax_prelayout_mhz": 613.1,
+   "closes_1p2GHz_prelayout": false,
+   "worst_start": "mh[0]$_DFFE_PN0P_",
+   "worst_end": "mo_data[25]$_DFFE_PP_",
+   "synth_area_um2": 168714.68616,
+   "note": "screened on the hub RTL BEFORE the operand-register / pipelined-max fix (the -798 ps paths were the max compare chain and the 512-/128-entry operand reads into the adders); superseded by the P&R run"
+  },
+  "mac_rs0": {
+   "top": "ot_mac_bf16_fp32_pipe",
+   "params": {
+    "ROUND_STAGE": "0"
+   },
+   "ss_setup_wns_ps": -852.1,
+   "ss_fmax_prelayout_mhz": 593.4,
+   "closes_1p2GHz_prelayout": false,
+   "worst_start": "s4_sum[27]$_DFF_PN0_",
+   "worst_end": "y[31]$_DFF_PN0_",
+   "synth_area_um2": 432.34074
+  },
+  "mac_rs1": {
+   "top": "ot_mac_bf16_fp32_pipe",
+   "params": {
+    "ROUND_STAGE": "1"
+   },
+   "ss_setup_wns_ps": -427.9,
+   "ss_fmax_prelayout_mhz": 793.1,
+   "closes_1p2GHz_prelayout": false,
+   "worst_start": "s4_sum[25]$_DFF_PN0_",
+   "worst_end": "g_two_stages.r_e_pre[10]$_DFF_PN0_",
+   "synth_area_um2": 485.77644
+  },
+  "mul5": {
+   "top": "ot_hdc_fp32_mul_lat5",
+   "params": {},
+   "ss_setup_wns_ps": -106.2,
+   "ss_fmax_prelayout_mhz": 1064.8,
+   "closes_1p2GHz_prelayout": false,
+   "worst_start": "u.u_c3.g_r.r[2]$_DFF_PN0_",
+   "worst_end": "u.y[19]$_DFF_PN0_",
+   "synth_area_um2": 895.34322
+  },
+  "mul6": {
+   "top": "ot_hdc_fp32_mul_lat6",
+   "params": {},
+   "ss_setup_wns_ps": 143.5,
+   "ss_fmax_prelayout_mhz": 1450.3,
+   "closes_1p2GHz_prelayout": true,
+   "worst_start": "u.u_c3.g_r.r[0]$_DFF_PN0_",
+   "worst_end": "u.y[4]$_DFF_PN0_",
+   "synth_area_um2": 890.63388
+  },
+  "mul7": {
+   "top": "ot_hdc_fp32_mul_lat7",
+   "params": {},
+   "ss_setup_wns_ps": 174.3,
+   "ss_fmax_prelayout_mhz": 1518.2,
+   "closes_1p2GHz_prelayout": true,
+   "worst_start": "u.u_c2.g_r.r[194]$_DFF_PN0_",
+   "worst_end": "u.s2_prod[46]$_DFF_P_",
+   "synth_area_um2": 917.40276
+  },
+  "prod": {
+   "top": "ot_qwen_nearhbm_prod",
+   "params": {},
+   "ss_setup_wns_ps": 112.7,
+   "ss_fmax_prelayout_mhz": 1388.2,
+   "closes_1p2GHz_prelayout": true,
+   "worst_start": "s1_p[3]$_DFF_P_",
+   "worst_end": "s2_sh[0]$_DFF_P_",
+   "synth_area_um2": 90.35226
+  },
+  "recip_q": {
+   "top": "ot_hdc_recip_q",
+   "params": {},
+   "ss_setup_wns_ps": -571.7,
+   "ss_fmax_prelayout_mhz": 711.9,
+   "closes_1p2GHz_prelayout": false,
+   "worst_start": "g_nr[1].m_y.u.s2_sh[0]$_DFF_P_",
+   "worst_end": "g_nr[1].m_y.u.y[25]$_DFF_PN0_",
+   "synth_area_um2": 4900.65876
+  }
+ },
+ "row_engine": "not completed: the hierarchical synthesis stalled in yosys SHARE twice (>1 h) and was superseded by the full P&R launch",
+ "pipelined_sfu": {
+  "decision": "user decision 2026-10-03: pipeline deeper in the 1.2 GHz domain first. exp and reciprocal moved onto ot_hdc_fp32_add_lat #7 + ot_hdc_fp32_mul_lat; LM 6 left the multiplier's last stage 6.5 ps short inside exp (ABC in context), LM 7 closes both with margin. ADOPTED: LA 7, LM 7 (exp depth 49 -> 109, +60; reciprocal 28 -> 64, +36); no 0.9 GHz move needed",
+  "screens": {
+   "exp_p": {
+    "top": "ot_qwen_nearhbm_exp_p",
+    "LA": 7,
+    "LM": 6,
+    "ss_setup_wns_ps": -6.5,
+    "ss_fmax_prelayout_mhz": 1191.2,
+    "closes_1p2GHz_prelayout": false,
+    "worst_start": "g_h[6].u_m.u.u_c3.g_r.r[1]$_DFF_PN0_",
+    "worst_end": "g_h[6].u_m.u.y[6]$_DFF_PN0_",
+    "synth_area_um2": 11033.95446
+   },
+   "recip_p": {
+    "top": "ot_qwen_nearhbm_recip_p",
+    "LA": 7,
+    "LM": 6,
+    "ss_setup_wns_ps": 12.4,
+    "ss_fmax_prelayout_mhz": 1218.7,
+    "closes_1p2GHz_prelayout": true,
+    "worst_start": "g_nr[2].m_y.u.u_c3.g_r.r[1]$_DFF_PN0_",
+    "worst_end": "g_nr[2].m_y.u.y[13]$_DFF_PN0_",
+    "synth_area_um2": 7378.17984
+   },
+   "exp_p7": {
+    "top": "ot_qwen_nearhbm_exp_p",
+    "LA": 7,
+    "LM": 7,
+    "ss_setup_wns_ps": 78.8,
+    "ss_fmax_prelayout_mhz": 1326.0,
+    "closes_1p2GHz_prelayout": true,
+    "worst_start": "m_t.u.y[24]$_DFF_PN0_",
+    "worst_end": "nint[7]$_DFF_P_",
+    "synth_area_um2": 11303.11584
+   },
+   "recip_p7": {
+    "top": "ot_qwen_nearhbm_recip_p",
+    "LA": 7,
+    "LM": 7,
+    "ss_setup_wns_ps": 110.6,
+    "ss_fmax_prelayout_mhz": 1384.3,
+    "closes_1p2GHz_prelayout": true,
+    "worst_start": "g_nr[2].d_y.genblk1.g_line.line[434]$_DFF_P_",
+    "worst_end": "g_nr[2].m_y.u.u_c1.g_r.r[64]$_DFF_PN0_",
+    "synth_area_um2": 7606.12356
+   }
+  }
+ }
+}

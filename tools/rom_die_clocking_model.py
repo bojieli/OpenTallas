@@ -439,9 +439,68 @@ REFERENCES = [
 ]
 
 
+MEASURED_CONFIG = {"central_thick_metal": "d4_central", "tt_routed": "d8_tt_routed",
+                   "bound_ss_routed": "d16_bound_ss"}
+
+
+def measured_price(campaign_path: Path, physical_path, qwc, dsc, e) -> dict:
+    """Option C re-priced with the delta the dual-clock bench measured on rtl/common/ot_meso_fifo.sv.
+
+    Each priced op (Qwen ME op = tile tap in + tree top back; near-HBM attention round trip; DS field matvec and
+    streamed op) is a region round trip: two crossings whose lags sum to a whole number of periods.  The bench
+    measures that sum directly (data-ring lag + credit-ring lag - 2 T at each static phase), so the price per op is
+    the measured round-trip delta: its typical value (every phase but the half-period resolution edge) and
+    typical + 1 (the resolution edge, a static property of the chip after reset; also the bound for an op whose two
+    crossings join different region pairs).  The phase average of a single
+    crossing x 2 is reported alongside."""
+    m = json.loads(Path(campaign_path).read_text())
+    me, att = qwc["me_ops_per_token"], qwc["near_hbm_attention_round_trips"]
+    fo, st = dsc["field_ops"], dsc["streamed_attention_index_ops"]
+    out = dict(source=str(campaign_path), scope=m.get("scope"), rtl_sources=m.get("sources"), git=m.get("git"),
+               basis="per op = measured round-trip delta (two crossings); model-only price was 2 x DELTA",
+               wire_models={})
+    for wm, cfg in MEASURED_CONFIG.items():
+        c = m["configs"][cfg]
+        rt = c["round_trip_delta_periods"]
+        hist = rt["integer_histogram"]
+        rt_typ = int(max(hist, key=lambda k: hist[k]))
+        # the two lags of a round trip sit in OFFSET -+ T/2 windows and sum to whole periods, so the sum is the typical
+        # value +-1; +1 occurs at the half-period resolution edge (seen at d4), and also bounds an op whose two
+        # crossings join different region pairs (non-integer sum, rounded up at the destination edge)
+        rt_max = max(int(round(rt["max"])), rt_typ + 1)
+        x_mean = c["latency_no_wander"]["delta_periods_mean_over_phases"]
+        rows = {}
+        for label, per_op in (("typical", rt_typ), ("worst_phase", rt_max), ("phase_average", 2 * x_mean)):
+            qc = per_op * (me + att)
+            dc = per_op * (fo + st)
+            rows[label] = dict(per_op_cycles=round(per_op, 4),
+                               qwen=dict(vs_calibrated=rate_row(qc, e["qwen_base"]["calibrated_us"]),
+                                         vs_near_hbm_selected=rate_row(qc, e["qwen_base"]["near_hbm_selected_us"])),
+                               deepseek=rate_row(dc, e["ds_base"]["scenario_c_ar_us"]))
+        out["wire_models"][wm] = dict(
+            config=c["config"], round_trip_histogram=hist, crossing_delta_mean=x_mean,
+            crossing_delta_range=[c["latency_no_wander"]["delta_periods_min"],
+                                  c["latency_no_wander"]["delta_periods_max"]],
+            model_only_per_op_cycles=2 * e["dmeso"][wm]["added_cycles"],
+            nominal_words=c["nominal"]["words_delivered"], errors=c["nominal"]["errors"],
+            false_faults=c["nominal"]["faults"], window_violations=c["nominal"]["window_violations"],
+            drift_violation_before_fault=c["drift"]["violation_before_fault"], price=rows)
+    if physical_path:
+        ph = json.loads(Path(physical_path).read_text())
+        out["physical_note"] = dict(source=str(physical_path),
+                                    note="standard-cell area of one W=512 D4 crossing (data + credit rings, 8-entry "
+                                         "receive buffer); see the route record for closure")
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--measured-campaign", type=Path, default=None,
+                    help="campaign.json of tools/meso_fifo_campaign.py: re-price option C with the measured crossing "
+                         "delta (adds measured_price; the model-only fields are unchanged)")
+    ap.add_argument("--measured-physical", type=Path, default=None,
+                    help="physical.json of the W=512 D4 ot_meso_fifo route: measured standard-cell area a crossing")
     a = ap.parse_args(argv)
     qwc, dsc = probes()
     e = evaluate(qwc, dsc)
@@ -539,6 +598,11 @@ def main(argv=None):
                         metastability=e["meta"], related_ratio_fifo=e["ratio"], constants=C),
         references=REFERENCES,
         pins=PINS)
+    if a.measured_campaign:
+        rec["measured_price"] = measured_price(a.measured_campaign, a.measured_physical, qwc, dsc, e)
+        rec["pins"][str(a.measured_campaign)] = sha_bytes(a.measured_campaign.read_bytes())
+        if a.measured_physical:
+            rec["pins"][str(a.measured_physical)] = sha_bytes(a.measured_physical.read_bytes())
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(table, indent=1))

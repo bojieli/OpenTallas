@@ -1,0 +1,2476 @@
+{
+ "schema": "opentallas.floorplan.v41_vm_dist_spec.v1",
+ "status": "spec",
+ "claim_boundary": "Analytical bank specification of the distributed VM, sized from pinned sources; access patterns measured by laying out real stream ops (reduced vehicle, full-shape L0) at N = 1,024.  No RTL, synthesis or placement evidence in this record; the RTL gate is results/rtl/w11_vm_dist_gate.json.",
+ "capacity": {
+  "full_shape_vm_aw": 19,
+  "reduced_vm_aw": 16,
+  "words": 524288,
+  "bytes": 2097152,
+  "vm_aw_lines": {
+   "rtl/chip/ot_chip_v41x_die.sv": "parameter integer VM_AW   = FULL_SHAPE ? 19 : 16",
+   "rtl/chip/ot_chip_v41x_tile.sv": "parameter integer VM_AW   = FULL_SHAPE ? 19 : 16"
+  },
+  "mib": 2.0,
+  "source": "VM_AW default of ot_chip_v41x_die and ot_chip_v41x_tile (FULL_SHAPE ? 19 : 16); the tile's vm array is 2^VM_AW 32-bit words",
+  "per_group_words": 4096,
+  "per_group_bits": 131072,
+  "full_shape_l0_highest_element": {
+   "1048575": 430559,
+   "65535": 430559,
+   "200": 430559
+  }
+ },
+ "groups": {
+  "count": 128,
+  "lanes_per_group": 8,
+  "lane_to_group": "lane l in group l mod 128",
+  "element_to_group": "element e in group e mod 128",
+  "sfu_lanes_per_group": 2,
+  "light_lanes_per_group": 6
+ },
+ "interleave": {
+  "group": "e[6:0]",
+  "local_word": "w = e[18:7] (12 bits, 4,096 words)",
+  "column": "w[2:0] (32-bit element of the 256-bit row)",
+  "bank": "w[3]",
+  "macro_row": "w[11:4]",
+  "example": {
+   "0": {
+    "group": 0,
+    "word": 0,
+    "bank": 0,
+    "row": 0,
+    "column": 0
+   },
+   "127": {
+    "group": 127,
+    "word": 0,
+    "bank": 0,
+    "row": 0,
+    "column": 0
+   },
+   "128": {
+    "group": 0,
+    "word": 1,
+    "bank": 0,
+    "row": 0,
+    "column": 1
+   },
+   "1023": {
+    "group": 127,
+    "word": 7,
+    "bank": 0,
+    "row": 0,
+    "column": 7
+   },
+   "1024": {
+    "group": 0,
+    "word": 8,
+    "bank": 1,
+    "row": 0,
+    "column": 0
+   },
+   "365024": {
+    "group": 96,
+    "word": 2851,
+    "bank": 0,
+    "row": 178,
+    "column": 3
+   },
+   "524287": {
+    "group": 127,
+    "word": 4095,
+    "bank": 1,
+    "row": 255,
+    "column": 7
+   }
+  }
+ },
+ "macros": {
+  "candidates": [
+   {
+    "name": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "ports": "1r1w",
+    "words": 1024,
+    "bits": 256,
+    "area_um2": 12314.21,
+    "w_um": 174.744,
+    "h_um": 70.47,
+    "fmax_ss_mhz": 1489.2,
+    "clk_to_q_ss_ps": 691.8,
+    "read_energy_fj_tt": 1381.53,
+    "row_words": 8,
+    "words_per_macro": 8192,
+    "banks_per_replica": 1,
+    "used_fraction": 0.5,
+    "area_per_replica_um2": 12314.2,
+    "meets_clock_ss": true
+   },
+   {
+    "name": "ot_sram_1r1w_128x256_m1_r2c2",
+    "ports": "1r1w",
+    "words": 128,
+    "bits": 256,
+    "area_um2": 3891.577,
+    "w_um": 94.824,
+    "h_um": 41.04,
+    "fmax_ss_mhz": 2297.9,
+    "clk_to_q_ss_ps": 455.3,
+    "read_energy_fj_tt": 336.65,
+    "row_words": 8,
+    "words_per_macro": 1024,
+    "banks_per_replica": 4,
+    "used_fraction": 1.0,
+    "area_per_replica_um2": 15566.3,
+    "meets_clock_ss": true
+   },
+   {
+    "name": "ot_sram_1r1w_256x256_m2_r2c2",
+    "ports": "1r1w",
+    "words": 256,
+    "bits": 256,
+    "area_um2": 7091.712,
+    "w_um": 172.8,
+    "h_um": 41.04,
+    "fmax_ss_mhz": 2085.9,
+    "clk_to_q_ss_ps": 511.4,
+    "read_energy_fj_tt": 515.68,
+    "row_words": 8,
+    "words_per_macro": 2048,
+    "banks_per_replica": 2,
+    "used_fraction": 1.0,
+    "area_per_replica_um2": 14183.4,
+    "meets_clock_ss": true
+   },
+   {
+    "name": "ot_sram_1r1w_512x128_m4_r2c2",
+    "ports": "1r1w",
+    "words": 512,
+    "bits": 128,
+    "area_um2": 5170.651,
+    "w_um": 174.096,
+    "h_um": 29.7,
+    "fmax_ss_mhz": 2081.9,
+    "clk_to_q_ss_ps": 524.1,
+    "read_energy_fj_tt": 443.19,
+    "row_words": 4,
+    "words_per_macro": 2048,
+    "banks_per_replica": 2,
+    "used_fraction": 1.0,
+    "area_per_replica_um2": 10341.3,
+    "meets_clock_ss": true
+   },
+   {
+    "name": "ot_sram_1r1w_64x512_m1_r2c2",
+    "ports": "1r1w",
+    "words": 64,
+    "bits": 512,
+    "area_um2": 13319.355,
+    "w_um": 171.288,
+    "h_um": 77.76,
+    "fmax_ss_mhz": 2281.6,
+    "clk_to_q_ss_ps": 460.4,
+    "read_energy_fj_tt": 520.4,
+    "row_words": 16,
+    "words_per_macro": 1024,
+    "banks_per_replica": 4,
+    "used_fraction": 1.0,
+    "area_per_replica_um2": 53277.4,
+    "meets_clock_ss": true
+   },
+   {
+    "name": "ot_sram_1rw_2048x128_m4",
+    "ports": "1rw",
+    "words": 2048,
+    "bits": 128,
+    "area_um2": 7794.468,
+    "w_um": 118.8,
+    "h_um": 65.61,
+    "fmax_ss_mhz": 1594.5,
+    "clk_to_q_ss_ps": 647.5,
+    "read_energy_fj_tt": 1288.54,
+    "excluded": "a read replica takes a write every cycle its bank is written and a read every cycle its class reads: one read and one write port are needed; 1rw cannot do both in one cycle"
+   },
+   {
+    "name": "ot_sram_1rw_2048x128_m4_r2c2",
+    "ports": "1rw",
+    "words": 2048,
+    "bits": 128,
+    "area_um2": 8130.1,
+    "w_um": 122.904,
+    "h_um": 66.15,
+    "fmax_ss_mhz": 1531.8,
+    "clk_to_q_ss_ps": 684.9,
+    "read_energy_fj_tt": 1311.89,
+    "excluded": "a read replica takes a write every cycle its bank is written and a read every cycle its class reads: one read and one write port are needed; 1rw cannot do both in one cycle"
+   },
+   {
+    "name": "ot_sram_1rw_256x64_m4_r2c2",
+    "ports": "1rw",
+    "words": 256,
+    "bits": 64,
+    "area_um2": 1181.68,
+    "w_um": 66.312,
+    "h_um": 17.82,
+    "fmax_ss_mhz": 2563.1,
+    "clk_to_q_ss_ps": 435.8,
+    "read_energy_fj_tt": 151.29,
+    "excluded": "a read replica takes a write every cycle its bank is written and a read every cycle its class reads: one read and one write port are needed; 1rw cannot do both in one cycle"
+   },
+   {
+    "name": "ot_sram_2rw_512x64_m4_r2c2",
+    "ports": "2rw",
+    "words": 512,
+    "bits": 64,
+    "area_um2": 4559.108,
+    "w_um": 130.896,
+    "h_um": 34.83,
+    "fmax_ss_mhz": 2250.2,
+    "clk_to_q_ss_ps": 488.2,
+    "read_energy_fj_tt": 230.85,
+    "excluded": "a read replica takes a write every cycle its bank is written and a read every cycle its class reads: one read and one write port are needed; 2rw cannot do both in one cycle"
+   }
+  ],
+  "chosen": "ot_sram_1r1w_256x256_m2_r2c2",
+  "reason": "its row is the group's 8-lane vector (256 bits) and its capacity splits the group's 4,096 words into exactly two banks (row parity), so any 8 consecutive local words -- an unaligned stride-1 vector of the group's 8 lanes -- fall in one row of each bank.  No geometry built from the index's macros is conflict-free on the measured ops (word interleaving would need 32-bit banks, which the index lacks); on the full-shape L0 program 256x256 and 128x256 violate on the same vectors, and 256x256 is 9% smaller and has half the macros (see comparison)",
+  "comparison": [
+   {
+    "name": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "total_macros": 768,
+    "total_mm2": 9.457,
+    "vehicle_vectors_over_budget": 1224,
+    "full_l0_vectors_over_budget": 146,
+    "meets_clock_ss": true
+   },
+   {
+    "name": "ot_sram_1r1w_128x256_m1_r2c2",
+    "total_macros": 3072,
+    "total_mm2": 11.955,
+    "vehicle_vectors_over_budget": 96,
+    "full_l0_vectors_over_budget": 10,
+    "meets_clock_ss": true
+   },
+   {
+    "name": "ot_sram_1r1w_256x256_m2_r2c2",
+    "total_macros": 1536,
+    "total_mm2": 10.893,
+    "vehicle_vectors_over_budget": 564,
+    "full_l0_vectors_over_budget": 10,
+    "meets_clock_ss": true
+   },
+   {
+    "name": "ot_sram_1r1w_512x128_m4_r2c2",
+    "total_macros": 1536,
+    "total_mm2": 7.942,
+    "vehicle_vectors_over_budget": 664,
+    "full_l0_vectors_over_budget": 112,
+    "meets_clock_ss": true
+   },
+   {
+    "name": "ot_sram_1r1w_64x512_m1_r2c2",
+    "total_macros": 3072,
+    "total_mm2": 40.917,
+    "vehicle_vectors_over_budget": 80,
+    "full_l0_vectors_over_budget": 6,
+    "meets_clock_ss": true
+   }
+  ],
+  "banks_per_replica": 2,
+  "read_replicas": 6,
+  "read_classes": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "G",
+   "X"
+  ],
+  "per_group": 12,
+  "total": 1536,
+  "total_mm2": 10.893,
+  "bits_stored_per_replica": 16777216,
+  "replication_overhead": 6
+ },
+ "read_rule": {
+  "statement": "per cycle, per group, per read class: the local words asked for lie in at most one row of each bank (at most two 8-word rows of opposite parity); a broadcast counts once",
+  "holds_for": "any stride-1 run of <= 9 consecutive local words; any broadcast; row-aligned packed rows",
+  "classes": {
+   "A": "operand A (and the gathered A)",
+   "B": "operand B",
+   "C": "operand C (pair mode: A ^ 1)",
+   "D": "operand D",
+   "G": "gather-index read",
+   "X": "tree read (all non-SU readers)"
+  },
+  "measured": {
+   "vehicle": {
+    "source": "the reduced V4.1 vehicle's one-token program (hdc_program_v41.Builder), every stream op laid out at N = 1,024 / M = 256 by rtl_hdc_v41x_vec_campaign.layout; gathered operands use the index values the ISA simulator holds before the op",
+    "meta": {
+     "position": 7,
+     "token": 3582,
+     "program_instructions": 3992,
+     "stream_ops": 2649
+    },
+    "vectors": {
+     "A": 5021,
+     "B": 4944,
+     "C": 4673,
+     "D": 4666,
+     "E": 4788,
+     "G": 156
+    },
+    "elements": {
+     "A": 533217,
+     "B": 513445,
+     "C": 518725,
+     "D": 512325,
+     "E": 510581,
+     "G": 15328
+    },
+    "remote_elements": {
+     "A": 432691,
+     "B": 506847,
+     "C": 433140,
+     "D": 504784,
+     "E": 413443,
+     "G": 15212
+    },
+    "remote_share": {
+     "A": 0.8115,
+     "B": 0.9871,
+     "C": 0.835,
+     "D": 0.9853,
+     "E": 0.8098,
+     "G": 0.9924
+    },
+    "remote_share_excluding_broadcasts": {
+     "A": 0.8115,
+     "B": 0.5334,
+     "C": 0.4706,
+     "D": 0.0992,
+     "E": 0.8098,
+     "G": 0.9924
+    },
+    "broadcast_vectors": {
+     "A": 0,
+     "B": 3293,
+     "C": 1051,
+     "D": 3790,
+     "E": 0,
+     "G": 0
+    },
+    "gathered_streams_without_index_values": 0,
+    "max_element": 30111,
+    "by_geometry": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": {
+      "vectors_over_budget": {
+       "A": 372,
+       "B": 0,
+       "C": 248,
+       "D": 0,
+       "E": 604,
+       "G": 0
+      },
+      "ops_over_budget": {
+       "A": 216,
+       "B": 0,
+       "C": 248,
+       "D": 0,
+       "E": 448,
+       "G": 0
+      },
+      "worst_rows_in_one_bank": {
+       "A": 8,
+       "B": 1,
+       "C": 3,
+       "D": 1,
+       "E": 8,
+       "G": 1
+      },
+      "conflict_free": false,
+      "examples": [
+       {
+        "tag": "vehicle",
+        "op": 17,
+        "cls": "A",
+        "rows_in_one_bank": 3
+       },
+       {
+        "tag": "vehicle",
+        "op": 17,
+        "cls": "C",
+        "rows_in_one_bank": 3
+       },
+       {
+        "tag": "vehicle",
+        "op": 17,
+        "cls": "E",
+        "rows_in_one_bank": 3
+       },
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "A",
+        "rows_in_one_bank": 8
+       },
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "E",
+        "rows_in_one_bank": 8
+       },
+       {
+        "tag": "vehicle",
+        "op": 23,
+        "cls": "A",
+        "rows_in_one_bank": 4
+       }
+      ]
+     },
+     "ot_sram_1r1w_128x256_m1_r2c2": {
+      "vectors_over_budget": {
+       "A": 52,
+       "B": 0,
+       "C": 0,
+       "D": 0,
+       "E": 44,
+       "G": 0
+      },
+      "ops_over_budget": {
+       "A": 50,
+       "B": 0,
+       "C": 0,
+       "D": 0,
+       "E": 42,
+       "G": 0
+      },
+      "worst_rows_in_one_bank": {
+       "A": 3,
+       "B": 1,
+       "C": 1,
+       "D": 1,
+       "E": 3,
+       "G": 1
+      },
+      "conflict_free": false,
+      "examples": [
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "A",
+        "rows_in_one_bank": 3
+       },
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "E",
+        "rows_in_one_bank": 3
+       },
+       {
+        "tag": "vehicle",
+        "op": 23,
+        "cls": "A",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 23,
+        "cls": "E",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 23,
+        "cls": "A",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 23,
+        "cls": "E",
+        "rows_in_one_bank": 2
+       }
+      ]
+     },
+     "ot_sram_1r1w_256x256_m2_r2c2": {
+      "vectors_over_budget": {
+       "A": 246,
+       "B": 0,
+       "C": 80,
+       "D": 0,
+       "E": 238,
+       "G": 0
+      },
+      "ops_over_budget": {
+       "A": 168,
+       "B": 0,
+       "C": 80,
+       "D": 0,
+       "E": 160,
+       "G": 0
+      },
+      "worst_rows_in_one_bank": {
+       "A": 5,
+       "B": 1,
+       "C": 2,
+       "D": 1,
+       "E": 5,
+       "G": 1
+      },
+      "conflict_free": false,
+      "examples": [
+       {
+        "tag": "vehicle",
+        "op": 17,
+        "cls": "A",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 17,
+        "cls": "C",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 17,
+        "cls": "E",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "A",
+        "rows_in_one_bank": 5
+       },
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "E",
+        "rows_in_one_bank": 5
+       },
+       {
+        "tag": "vehicle",
+        "op": 23,
+        "cls": "A",
+        "rows_in_one_bank": 3
+       }
+      ]
+     },
+     "ot_sram_1r1w_512x128_m4_r2c2": {
+      "vectors_over_budget": {
+       "A": 292,
+       "B": 0,
+       "C": 88,
+       "D": 0,
+       "E": 284,
+       "G": 0
+      },
+      "ops_over_budget": {
+       "A": 176,
+       "B": 0,
+       "C": 88,
+       "D": 0,
+       "E": 168,
+       "G": 0
+      },
+      "worst_rows_in_one_bank": {
+       "A": 4,
+       "B": 1,
+       "C": 3,
+       "D": 1,
+       "E": 4,
+       "G": 1
+      },
+      "conflict_free": false,
+      "examples": [
+       {
+        "tag": "vehicle",
+        "op": 17,
+        "cls": "A",
+        "rows_in_one_bank": 3
+       },
+       {
+        "tag": "vehicle",
+        "op": 17,
+        "cls": "C",
+        "rows_in_one_bank": 3
+       },
+       {
+        "tag": "vehicle",
+        "op": 17,
+        "cls": "E",
+        "rows_in_one_bank": 3
+       },
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "A",
+        "rows_in_one_bank": 4
+       },
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "E",
+        "rows_in_one_bank": 4
+       },
+       {
+        "tag": "vehicle",
+        "op": 23,
+        "cls": "A",
+        "rows_in_one_bank": 4
+       }
+      ]
+     },
+     "ot_sram_1r1w_64x512_m1_r2c2": {
+      "vectors_over_budget": {
+       "A": 40,
+       "B": 0,
+       "C": 0,
+       "D": 0,
+       "E": 40,
+       "G": 0
+      },
+      "ops_over_budget": {
+       "A": 40,
+       "B": 0,
+       "C": 0,
+       "D": 0,
+       "E": 40,
+       "G": 0
+      },
+      "worst_rows_in_one_bank": {
+       "A": 2,
+       "B": 1,
+       "C": 1,
+       "D": 1,
+       "E": 2,
+       "G": 1
+      },
+      "conflict_free": false,
+      "examples": [
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "A",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 22,
+        "cls": "E",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 91,
+        "cls": "A",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 91,
+        "cls": "E",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 171,
+        "cls": "A",
+        "rows_in_one_bank": 2
+       },
+       {
+        "tag": "vehicle",
+        "op": 171,
+        "cls": "E",
+        "rows_in_one_bank": 2
+       }
+      ]
+     },
+     "word_interleaved_16_banks (no such macro)": {
+      "vectors_over_budget": {
+       "A": 0,
+       "B": 0,
+       "C": 0,
+       "D": 0,
+       "E": 0,
+       "G": 0
+      },
+      "ops_over_budget": {
+       "A": 0,
+       "B": 0,
+       "C": 0,
+       "D": 0,
+       "E": 0,
+       "G": 0
+      },
+      "worst_rows_in_one_bank": {
+       "A": 1,
+       "B": 1,
+       "C": 1,
+       "D": 1,
+       "E": 1,
+       "G": 1
+      },
+      "conflict_free": true,
+      "examples": []
+     }
+    }
+   },
+   "full_shape_l0": {
+    "source": "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json instruction trace (113 instructions), stream ops resolved with the core's FULL_SHAPE DYN bank at each position; gathered operand streams (a_ind) are counted but their index values are unknown here",
+    "positions": {
+     "1048575": {
+      "stream_ops": 62,
+      "vectors": {
+       "A": 400,
+       "B": 400,
+       "C": 384,
+       "D": 393,
+       "E": 397,
+       "G": 2
+      },
+      "elements": {
+       "A": 238135,
+       "B": 236051,
+       "C": 226083,
+       "D": 235619,
+       "E": 235341,
+       "G": 12
+      },
+      "remote_elements": {
+       "A": 71407,
+       "B": 234107,
+       "C": 25711,
+       "D": 233668,
+       "E": 27640,
+       "G": 12
+      },
+      "remote_share": {
+       "A": 0.2999,
+       "B": 0.9918,
+       "C": 0.1137,
+       "D": 0.9917,
+       "E": 0.1174,
+       "G": 1.0
+      },
+      "remote_share_excluding_broadcasts": {
+       "A": 0.2999,
+       "B": 0.0088,
+       "C": 0.0366,
+       "D": 0.0,
+       "E": 0.1174,
+       "G": 1.0
+      },
+      "broadcast_vectors": {
+       "A": 0,
+       "B": 286,
+       "C": 54,
+       "D": 290,
+       "E": 0,
+       "G": 0
+      },
+      "gathered_streams_without_index_values": 2,
+      "max_element": 430559,
+      "by_geometry": {
+       "ot_sram_1r1w_1024x256_m2_r2c2": {
+        "vectors_over_budget": {
+         "A": 82,
+         "B": 0,
+         "C": 16,
+         "D": 0,
+         "E": 48,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 22,
+         "B": 0,
+         "C": 13,
+         "D": 0,
+         "E": 18,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 9,
+         "B": 1,
+         "C": 9,
+         "D": 1,
+         "E": 9,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 5,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "ot_sram_1r1w_128x256_m1_r2c2": {
+        "vectors_over_budget": {
+         "A": 4,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 4,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 3,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 3,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 3,
+         "B": 1,
+         "C": 3,
+         "D": 1,
+         "E": 3,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "ot_sram_1r1w_256x256_m2_r2c2": {
+        "vectors_over_budget": {
+         "A": 4,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 4,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 3,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 3,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 5,
+         "B": 1,
+         "C": 5,
+         "D": 1,
+         "E": 5,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 5
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 5
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 5
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "E",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 3
+         }
+        ]
+       },
+       "ot_sram_1r1w_512x128_m4_r2c2": {
+        "vectors_over_budget": {
+         "A": 68,
+         "B": 0,
+         "C": 7,
+         "D": 0,
+         "E": 37,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 17,
+         "B": 0,
+         "C": 7,
+         "D": 0,
+         "E": 16,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 8,
+         "B": 1,
+         "C": 8,
+         "D": 1,
+         "E": 8,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 5,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "ot_sram_1r1w_64x512_m1_r2c2": {
+        "vectors_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 2,
+         "B": 1,
+         "C": 2,
+         "D": 1,
+         "E": 2,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "C",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "word_interleaved_16_banks (no such macro)": {
+        "vectors_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 4,
+         "B": 1,
+         "C": 4,
+         "D": 1,
+         "E": 4,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "A",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "C",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "E",
+          "rows_in_one_bank": 4
+         }
+        ]
+       }
+      }
+     },
+     "65535": {
+      "stream_ops": 62,
+      "vectors": {
+       "A": 400,
+       "B": 400,
+       "C": 384,
+       "D": 393,
+       "E": 397,
+       "G": 2
+      },
+      "elements": {
+       "A": 238135,
+       "B": 236051,
+       "C": 226083,
+       "D": 235619,
+       "E": 235341,
+       "G": 12
+      },
+      "remote_elements": {
+       "A": 71407,
+       "B": 234107,
+       "C": 25711,
+       "D": 233668,
+       "E": 27640,
+       "G": 12
+      },
+      "remote_share": {
+       "A": 0.2999,
+       "B": 0.9918,
+       "C": 0.1137,
+       "D": 0.9917,
+       "E": 0.1174,
+       "G": 1.0
+      },
+      "remote_share_excluding_broadcasts": {
+       "A": 0.2999,
+       "B": 0.0088,
+       "C": 0.0366,
+       "D": 0.0,
+       "E": 0.1174,
+       "G": 1.0
+      },
+      "broadcast_vectors": {
+       "A": 0,
+       "B": 286,
+       "C": 54,
+       "D": 290,
+       "E": 0,
+       "G": 0
+      },
+      "gathered_streams_without_index_values": 2,
+      "max_element": 430559,
+      "by_geometry": {
+       "ot_sram_1r1w_1024x256_m2_r2c2": {
+        "vectors_over_budget": {
+         "A": 82,
+         "B": 0,
+         "C": 16,
+         "D": 0,
+         "E": 48,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 22,
+         "B": 0,
+         "C": 13,
+         "D": 0,
+         "E": 18,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 9,
+         "B": 1,
+         "C": 9,
+         "D": 1,
+         "E": 9,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 5,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "ot_sram_1r1w_128x256_m1_r2c2": {
+        "vectors_over_budget": {
+         "A": 4,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 4,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 3,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 3,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 3,
+         "B": 1,
+         "C": 3,
+         "D": 1,
+         "E": 3,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "ot_sram_1r1w_256x256_m2_r2c2": {
+        "vectors_over_budget": {
+         "A": 4,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 4,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 3,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 3,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 5,
+         "B": 1,
+         "C": 5,
+         "D": 1,
+         "E": 5,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 5
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 5
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 5
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "E",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 3
+         }
+        ]
+       },
+       "ot_sram_1r1w_512x128_m4_r2c2": {
+        "vectors_over_budget": {
+         "A": 68,
+         "B": 0,
+         "C": 7,
+         "D": 0,
+         "E": 37,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 17,
+         "B": 0,
+         "C": 7,
+         "D": 0,
+         "E": 16,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 8,
+         "B": 1,
+         "C": 8,
+         "D": 1,
+         "E": 8,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 5,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "ot_sram_1r1w_64x512_m1_r2c2": {
+        "vectors_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 2,
+         "B": 1,
+         "C": 2,
+         "D": 1,
+         "E": 2,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "C",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "word_interleaved_16_banks (no such macro)": {
+        "vectors_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 4,
+         "B": 1,
+         "C": 4,
+         "D": 1,
+         "E": 4,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "A",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "C",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "E",
+          "rows_in_one_bank": 4
+         }
+        ]
+       }
+      }
+     },
+     "200": {
+      "stream_ops": 62,
+      "vectors": {
+       "A": 400,
+       "B": 400,
+       "C": 384,
+       "D": 393,
+       "E": 397,
+       "G": 2
+      },
+      "elements": {
+       "A": 238135,
+       "B": 236051,
+       "C": 226083,
+       "D": 235619,
+       "E": 235341,
+       "G": 12
+      },
+      "remote_elements": {
+       "A": 71407,
+       "B": 234107,
+       "C": 25711,
+       "D": 233668,
+       "E": 27640,
+       "G": 12
+      },
+      "remote_share": {
+       "A": 0.2999,
+       "B": 0.9918,
+       "C": 0.1137,
+       "D": 0.9917,
+       "E": 0.1174,
+       "G": 1.0
+      },
+      "remote_share_excluding_broadcasts": {
+       "A": 0.2999,
+       "B": 0.0088,
+       "C": 0.0366,
+       "D": 0.0,
+       "E": 0.1174,
+       "G": 1.0
+      },
+      "broadcast_vectors": {
+       "A": 0,
+       "B": 286,
+       "C": 54,
+       "D": 290,
+       "E": 0,
+       "G": 0
+      },
+      "gathered_streams_without_index_values": 2,
+      "max_element": 430559,
+      "by_geometry": {
+       "ot_sram_1r1w_1024x256_m2_r2c2": {
+        "vectors_over_budget": {
+         "A": 82,
+         "B": 0,
+         "C": 16,
+         "D": 0,
+         "E": 48,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 22,
+         "B": 0,
+         "C": 13,
+         "D": 0,
+         "E": 18,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 9,
+         "B": 1,
+         "C": 9,
+         "D": 1,
+         "E": 9,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 5,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "ot_sram_1r1w_128x256_m1_r2c2": {
+        "vectors_over_budget": {
+         "A": 4,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 4,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 3,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 3,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 3,
+         "B": 1,
+         "C": 3,
+         "D": 1,
+         "E": 3,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "ot_sram_1r1w_256x256_m2_r2c2": {
+        "vectors_over_budget": {
+         "A": 4,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 4,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 3,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 3,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 5,
+         "B": 1,
+         "C": 5,
+         "D": 1,
+         "E": 5,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 5
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 5
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 5
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "E",
+          "rows_in_one_bank": 3
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 20,
+          "cls": "A",
+          "rows_in_one_bank": 3
+         }
+        ]
+       },
+       "ot_sram_1r1w_512x128_m4_r2c2": {
+        "vectors_over_budget": {
+         "A": 68,
+         "B": 0,
+         "C": 7,
+         "D": 0,
+         "E": 37,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 17,
+         "B": 0,
+         "C": 7,
+         "D": 0,
+         "E": 16,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 8,
+         "B": 1,
+         "C": 8,
+         "D": 1,
+         "E": 8,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 3,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn_norm",
+          "op": 5,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "ot_sram_1r1w_64x512_m1_r2c2": {
+        "vectors_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 2,
+         "B": 1,
+         "C": 2,
+         "D": 1,
+         "E": 2,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "A",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "C",
+          "rows_in_one_bank": 2
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "E",
+          "rows_in_one_bank": 2
+         }
+        ]
+       },
+       "word_interleaved_16_banks (no such macro)": {
+        "vectors_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "ops_over_budget": {
+         "A": 2,
+         "B": 0,
+         "C": 2,
+         "D": 0,
+         "E": 2,
+         "G": 0
+        },
+        "worst_rows_in_one_bank": {
+         "A": 4,
+         "B": 1,
+         "C": 4,
+         "D": 1,
+         "E": 4,
+         "G": 1
+        },
+        "conflict_free": false,
+        "examples": [
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "A",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "C",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.attn",
+          "op": 15,
+          "cls": "E",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "A",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "C",
+          "rows_in_one_bank": 4
+         },
+         {
+          "tag": "L0.softmax",
+          "op": 24,
+          "cls": "E",
+          "rows_in_one_bank": 4
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "writes": {
+  "macro_write_port": "one masked 256-bit row write per bank per cycle (ot_sram_1r1w: w_ce/w_addr/wd/w_mask); every write goes to all R replicas of its bank",
+  "clients": [
+   {
+    "cls": "E",
+    "client": "SU element writes",
+    "per_group_per_cycle": "<= 8 words, <= 1 row per bank under the read rule applied to the write stream",
+    "back_pressure": false
+   },
+   {
+    "cls": "R",
+    "client": "SU reducer results",
+    "per_group_per_cycle": "1 word (consecutive r_so = 1 results); <= 128 in the worst case",
+    "back_pressure": false
+   },
+   {
+    "cls": "S",
+    "client": "matvec result scatter",
+    "per_group_per_cycle": "1 word",
+    "back_pressure": false
+   },
+   {
+    "cls": "C",
+    "client": "collective DMA write",
+    "per_group_per_cycle": "0.5 word",
+    "back_pressure": true,
+    "note": "exclusive with every engine: the core drains all units before a collective (ot_hdc_core_v41x S_ISSUE, d_unit 6)"
+   }
+  ],
+  "chosen": "fixed-priority arbitration E > R > S > C per bank into a per-bank write buffer (4 rows, merged by row) with read forwarding on every replica read port",
+  "never_loses_a_write": "a write enters the buffer the cycle it arrives; the buffer drains one row a cycle through the macro port when E does not use it; every read port compares its row with the buffer and takes the newest buffered words, so a buffered write is 'written' (protocol of ot_hdc_v41x_vec) the cycle after it arrives; a full buffer holds the collective tree (valid/ready) and raises a sticky fault for the fixed-timing classes (never a silent drop)",
+  "cost_cycles": "0 on every read (forwarding) while the buffer does not fill; the depth is sized from the RTL monitor's measured per-bank occupancy (results/rtl/w11_vm_dist_gate.json)",
+  "alternative_rejected": "dedicated write banks (a live-value table with one replica set per write class) multiply the 1536 macros by the 3 fixed-timing classes (32.7 mm2)"
+ },
+ "per_group_ports_bits_per_cycle": {
+  "su_operand_reads": 1024,
+  "su_gather_index_read": 256,
+  "su_element_write": 256,
+  "su_reducer_result_write": 32,
+  "x_gather_read": 32,
+  "ret_scatter_write": 32,
+  "coll_write": 32,
+  "replica_read_ports": 3072,
+  "bank_write_ports": 512
+ },
+ "trees": {
+  "x_gather": {
+   "client": "matvec x-broadcast read (ME / QE / HE / XU x operands; model vm_read_elems)",
+   "elements_per_cycle": 64,
+   "root_data_bits": 2048,
+   "root_request_bits": 27,
+   "per_group_bits_per_cycle": 32,
+   "groups_live_per_cycle": 64,
+   "path": "farthest group -> VM port (gather), request broadcast outward on the same run",
+   "distance_um": 8540,
+   "stages": 10,
+   "model_distance_um": 5187,
+   "model_rule_stages": 6,
+   "model_stages": 6
+  },
+  "ret_scatter": {
+   "client": "matvec result write (model vm_write_elems)",
+   "elements_per_cycle": 128,
+   "root_data_bits": 4096,
+   "root_ctl_bits": 147,
+   "per_group_bits_per_cycle": 32,
+   "path": "VM port -> farthest group",
+   "distance_um": 8540,
+   "stages": 10,
+   "model_distance_um": 5187,
+   "model_rule_stages": 6,
+   "model_stages": 6
+  },
+  "coll_write": {
+   "client": "collective DMA write from HUB_COLLECTIVE (4 x 512-bit words)",
+   "elements_per_cycle": 64,
+   "root_data_bits": 2048,
+   "root_ctl_bits": 64,
+   "per_group_bits_per_cycle": 32,
+   "path": "HUB_COLLECTIVE centre -> VM port -> farthest group",
+   "distance_um": 12456,
+   "stages": 15,
+   "model_distance_um": 9103,
+   "model_rule_stages": 11,
+   "model_stages": 6
+  },
+  "su_results": {
+   "client": "SU chunk8 reducer results (N/8 = 128 slots)",
+   "elements_per_cycle": 128,
+   "root_data_bits": 4096,
+   "root_ctl_bits": 176,
+   "per_group_bits_per_cycle": 32,
+   "path": "reducer root at the block centre -> farthest group (a broadcast bus; each group takes the slots whose address it owns)",
+   "distance_um": 5467,
+   "stages": 7,
+   "model_distance_um": 3458,
+   "model_rule_stages": 4,
+   "model_stages": 4
+  }
+ },
+ "geometry": {
+  "hub_su_vector": {
+   "x": 16020.72,
+   "y": 6603.12,
+   "w": 6146.928,
+   "h": 12420.0
+  },
+  "hub_vm": {
+   "x": 15735.6,
+   "y": 11476.08,
+   "w": 285.12,
+   "h": 2674.08
+  },
+  "hub_collective": {
+   "x": 15735.6,
+   "y": 6603.12,
+   "w": 285.12,
+   "h": 4872.96
+  },
+  "vm_port_xy_um": [
+   16020.72,
+   12813.12
+  ],
+  "collective_centre_to_port_um": 3916.1,
+  "block_w_um": 6146.9,
+  "block_h_um": 5909.8,
+  "fits_hub_su_vector": true,
+  "group_grid": [
+   16,
+   8
+  ],
+  "group_tile_w_um": 384.2,
+  "group_tile_h_um": 738.7,
+  "rule": "wire_cycles(um, 1e12/920, 0.76) (tools/uarch_model.py)"
+ },
+ "footprint": {
+  "per_group": {
+   "macros": 12,
+   "macro_um2": 85100.5,
+   "lanes_logic_um2": 93409.3,
+   "vm_logic_um2": 5944.0,
+   "vm_logic_parts_um2": {
+    "read_select": 2799.4,
+    "x_select": 70.0,
+    "write_buffer": 1217.7,
+    "forwarding": 1791.6,
+    "tree_leaves": 65.3
+   },
+   "tile_um2": 283807.1
+  },
+  "block_mm2": 36.327,
+  "block_w_um": 6146.9,
+  "block_h_um": 5909.8,
+  "basis": "macros at their area; lane and VM logic at 50% utilisation; 16 x 8 group tiles spanning HUB_SU_VECTOR's width, centred on the VM port's y",
+  "vm_only_increment_mm2": 12.415,
+  "variant_lanes_at_cell_area": {
+   "block_mm2": 24.371,
+   "block_w_um": 6146.9,
+   "block_h_um": 3964.7,
+   "x_gather_um": 7689,
+   "x_gather_stages": 9,
+   "ret_scatter_stages": 9,
+   "coll_write_stages": 14,
+   "su_results_um": 4616,
+   "su_results_stages": 6,
+   "note": "the model's lane-area basis (11.96 mm2 of cells, no utilisation) plus the VM macros"
+  },
+  "excludes": "the lane <-> group network for non-local SU accesses (see discrepancies)"
+ },
+ "discrepancies": [
+  {
+   "item": "SU operand reads and element writes are not lane-group-local",
+   "model": "VM_DIST prices 0 stages for SU reads / element writes ('element writes are local'); the stream_unit ledger has no network between lanes and banks",
+   "measured": "2,306,117 of 2,603,621 SU element accesses of the vehicle at N = 1,024 (88.6%) name an element in another group (base not a multiple of 128, packed rows, pair / half streams, broadcasts)",
+   "consequence": "a group-to-lane network per read class (rotation + broadcast at least) and a lane-to-group network for element writes; its stages add to the SU fetch / write depth"
+  },
+  {
+   "item": "tree distances assume a 3,458 um lane square at 100% utilisation without the VM macros",
+   "model": "x gather / scatter 5,187 um, collective 9,103 um, results 3,458 um",
+   "measured": "the SU + VM block is 36.33 mm2 (6,147 x 5,910 um): 8,540 / 12,456 / 5,467 um",
+   "consequence": "stages x 10 (model 6), scatter 10 (6), collective 15 (11), SU results 7 (4); with the lanes at their cell area (the model's basis) 9 / 9 / 14 / 6"
+  },
+  {
+   "item": "VM SRAM area",
+   "model": "vm_ports 24 x 1024x256 macros + su_vm_ports_mm2 6.0 = 6.30 mm2",
+   "measured": "1536 x ot_sram_1r1w_256x256_m2_r2c2 = 10.89 mm2 (R = 6 read replicas x 2 banks x 128 groups)"
+  },
+  {
+   "item": "non-SU readers outside the model's x-gather client list",
+   "model": "x gather = the matvec x operand (64 elements/cycle)",
+   "measured": "the core also reads the VM through HE x (8 ports), QE 32-element reads and expert index, XU element / 32-element reads, the select's 4 x 16 score reads, the QE streamer's expert id, and the die's word ports A / B (package controller, collective source); all of them share the x-gather tree and its replica (class X)"
+  },
+  {
+   "item": "read rule violations, full-shape L0 at position 1048575",
+   "measured": {
+    "A": 4,
+    "B": 0,
+    "C": 2,
+    "D": 0,
+    "E": 4,
+    "G": 0
+   },
+   "examples": [
+    {
+     "tag": "L0.attn",
+     "op": 15,
+     "cls": "A",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "L0.attn",
+     "op": 15,
+     "cls": "C",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "L0.attn",
+     "op": 15,
+     "cls": "E",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "L0.softmax",
+     "op": 20,
+     "cls": "A",
+     "rows_in_one_bank": 3
+    },
+    {
+     "tag": "L0.softmax",
+     "op": 20,
+     "cls": "E",
+     "rows_in_one_bank": 3
+    },
+    {
+     "tag": "L0.softmax",
+     "op": 20,
+     "cls": "A",
+     "rows_in_one_bank": 3
+    }
+   ]
+  },
+  {
+   "item": "read rule violations, full-shape L0 at position 65535",
+   "measured": {
+    "A": 4,
+    "B": 0,
+    "C": 2,
+    "D": 0,
+    "E": 4,
+    "G": 0
+   },
+   "examples": [
+    {
+     "tag": "L0.attn",
+     "op": 15,
+     "cls": "A",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "L0.attn",
+     "op": 15,
+     "cls": "C",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "L0.attn",
+     "op": 15,
+     "cls": "E",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "L0.softmax",
+     "op": 20,
+     "cls": "A",
+     "rows_in_one_bank": 3
+    },
+    {
+     "tag": "L0.softmax",
+     "op": 20,
+     "cls": "E",
+     "rows_in_one_bank": 3
+    },
+    {
+     "tag": "L0.softmax",
+     "op": 20,
+     "cls": "A",
+     "rows_in_one_bank": 3
+    }
+   ]
+  },
+  {
+   "item": "read rule violations, full-shape L0 at position 200",
+   "measured": {
+    "A": 4,
+    "B": 0,
+    "C": 2,
+    "D": 0,
+    "E": 4,
+    "G": 0
+   },
+   "examples": [
+    {
+     "tag": "L0.attn",
+     "op": 15,
+     "cls": "A",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "L0.attn",
+     "op": 15,
+     "cls": "C",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "L0.attn",
+     "op": 15,
+     "cls": "E",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "L0.softmax",
+     "op": 20,
+     "cls": "A",
+     "rows_in_one_bank": 3
+    },
+    {
+     "tag": "L0.softmax",
+     "op": 20,
+     "cls": "E",
+     "rows_in_one_bank": 3
+    },
+    {
+     "tag": "L0.softmax",
+     "op": 20,
+     "cls": "A",
+     "rows_in_one_bank": 3
+    }
+   ]
+  },
+  {
+   "item": "read rule violations, reduced vehicle laid out at N = 1,024",
+   "measured": {
+    "A": 246,
+    "B": 0,
+    "C": 80,
+    "D": 0,
+    "E": 238,
+    "G": 0
+   },
+   "ops": {
+    "A": 168,
+    "B": 0,
+    "C": 80,
+    "D": 0,
+    "E": 160,
+    "G": 0
+   },
+   "examples": [
+    {
+     "tag": "vehicle",
+     "op": 17,
+     "cls": "A",
+     "rows_in_one_bank": 2
+    },
+    {
+     "tag": "vehicle",
+     "op": 17,
+     "cls": "C",
+     "rows_in_one_bank": 2
+    },
+    {
+     "tag": "vehicle",
+     "op": 17,
+     "cls": "E",
+     "rows_in_one_bank": 2
+    },
+    {
+     "tag": "vehicle",
+     "op": 22,
+     "cls": "A",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "vehicle",
+     "op": 22,
+     "cls": "E",
+     "rows_in_one_bank": 5
+    },
+    {
+     "tag": "vehicle",
+     "op": 23,
+     "cls": "A",
+     "rows_in_one_bank": 3
+    }
+   ],
+   "consequence": "such a vector needs one extra array cycle per extra row in a bank: the SU must split it (issue cost) or stall; neither exists in ot_hdc_v41x_vec"
+  }
+ ],
+ "created_utc": "2026-09-30T19:30:43.715150+00:00",
+ "source_commit": "838ab6a250111e299de36a5dbdd39146b9564b7c",
+ "source_sha256": {
+  "tools/w11_vm_dist_spec.py": "ffb114db8415e567366447751091c6587bda3026efb2fabfa21720f3b4467920",
+  "tools/uarch_model.py": "398b303a987e31927d2fb14c1a878ad85349e098905dc01f96cfa021a4875645",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
+  "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
+  "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "results/floorplan/v41_pack_expanded_woa.json": "6c36746d55fa21650355b10a1316b7938b408f4167e6eba529a80c3e1dc1cb58",
+  "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+  "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04",
+  "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2"
+ }
+}
