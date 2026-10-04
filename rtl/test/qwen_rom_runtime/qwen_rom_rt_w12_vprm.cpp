@@ -615,6 +615,26 @@ int main(int argc, char** argv) {
                 }
                 next_stage = true;
             }
+            // first rise of each die's core / sequencer fault and of the collective's error / fault (observation only)
+            {
+                static bool tr_core[8] = {}, tr_seq[8] = {}, tr_coll = false;
+                for (int d = 0; d < D; d++) {
+                    if (die[d]->core_fault && !tr_core[d]) {
+                        tr_core[d] = true;
+                        printf("FAULTTRACE core_fault die=%d cyc=%u pc_base=%u stage=%s\n", d, cyc, unsigned(die[d]->prog_base), stages[cur].name.c_str());
+                    }
+                    if (die[d]->s_fault && !tr_seq[d]) {
+                        tr_seq[d] = true;
+                        printf("FAULTTRACE seq_fault die=%d cyc=%u pc_base=%u core_fault=%d coll_err=%u coll_fault=%u stage=%s\n", d, cyc,
+                               unsigned(die[d]->prog_base), int(die[d]->core_fault), unsigned(coll.out_err), unsigned(coll.fault),
+                               stages[cur].name.c_str());
+                    }
+                }
+                if ((coll.out_err || coll.fault) && !tr_coll) {
+                    tr_coll = true;
+                    printf("FAULTTRACE coll out_err=%u fault=%u cyc=%u\n", unsigned(coll.out_err), unsigned(coll.fault), cyc);
+                }
+            }
             if (cyc > max_cycles) { printf("timeout cyc=%u\n", cyc); return 3; }
         }
         // ---- tile clock enables, sampled on pre-edge values -------------------------------

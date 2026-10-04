@@ -60,7 +60,9 @@ class DrafterImage(PO.StageImage):
         self.image_sha = {f: sha(self.dir / f) for f in FILES}
         self.layout = {row['base']: row for row in m['matrix_layout']}
         self.program = [QI.decode_instruction(int(line, 16)) for line in (self.dir / 'program.hex').read_text().split()]
-        self.descriptors = [QI.decode_descriptor(int(line, 16)) for line in (self.dir / 'segments.hex').read_text().split()]
+        # V.decode_descriptor: an all-reduce over S slots carries its count's high bits in [23:20] (S x 256 words);
+        # QI.decode_descriptor reads only [17:10] and folded slot 0 alone (slots 1.. kept per-die partials).
+        self.descriptors = [V.decode_descriptor(int(line, 16)) for line in (self.dir / 'segments.hex').read_text().split()]
         lo, hi = [], []
         for line in (self.dir / 'crom.hex').read_text().split():
             if line.startswith('@'):
