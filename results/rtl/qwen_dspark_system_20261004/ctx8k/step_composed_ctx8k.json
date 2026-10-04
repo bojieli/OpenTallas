@@ -476,17 +476,22 @@
  },
  "bounds": {
   "verify_layer_increment_per_extra_position": 3248.6666666666665,
-  "speedup_if_draft_were_free": 1.8057864914407522,
-  "verify_layer_cycles_break_even": 39466.48229166667,
-  "verify_layer_cycles_for_1pct_gain": 39025.67471122112,
+  "speedup_if_draft_were_free": 1.8693977357482947,
+  "verify_layer_cycles_break_even": 41034.81398611111,
+  "verify_layer_cycles_for_1pct_gain": 40578.4783690869,
   "drafter_su_serial_stall_cycles_per_layer": 9406
  },
- "tau": 3.0375,
- "tau_source": "results/rtl/qwen_rom_dspark_20261003/drafter/tau_summary.json per_class tau_w8_S3_B4 (W8 target, S=3 drafter slots, verify block 4), equal weight over the owner 6 classes chat 2.708 / reasoning 3.687 / coding 3.364 / long_agentic 3.025 / assistant_structured 3.406 / creative 2.035 (long_doc_rag, multilingual retired); 3 prompts x 128 greedy tokens a class, not benchmark-grade",
+ "tau": 3.1445,
+ "tau_source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.qwen3_8b.by_draft_tokens.3 (DERIVED from published DSpark Table 1 (Qwen3-8B, gamma 7, T=1.0): per benchmark solve constant conditional acceptance r from tau7 = 1 + sum_{i<=7} r^i, then tau3 = 1 + sum_{i<=3} r^i; equal weight over the 9 benchmarks (3 math, 3 code, 3 chat))",
+ "tau_superseded": {
+  "tau": 3.0375,
+  "draft_tokens": 3,
+  "source": "results/rtl/qwen_rom_dspark_20261003/drafter/tau_summary.json tau_w8_S3_B4 (self-measured, owner 6 classes; SUPERSEDED 2026-10-04 by owner rule)"
+ },
  "clock_hz": 1200000000.0,
- "per_user_accepted_tok_s": 3446.7987324858655,
+ "per_user_accepted_tok_s": 3568.2168277536803,
  "ar_tok_s": 2274.1787845651484,
- "speedup_vs_ar": 1.5156234663164077,
+ "speedup_vs_ar": 1.569013329985825,
  "jobs": {
   "c_L0": "k_L0",
   "c_AR0": "k_AR0",
@@ -495,5 +500,5 @@
   "c_H2": "c_H2",
   "c_D0": "k_D0r"
  },
- "claim_boundary": "TARGET CONTEXT (owner rule): decoder layer 0 verify (P 8187..8190, 3 drafts rejected, commit 1, step 2 at 8188..8191 over the RTL-left HBM), layer-0 AR at P8187 and drafter layer 0 at start 8188 (real-magnitude context window) measured on the VPRM REAL_MEM RTL (REAL_MEM tagged-fill path, in-tile KV slices; HBM_STREAM cannot serve P>=2048, near-HBM attention not integrated); heads position-independent, measured at P255; 36- and 5-layer totals composed from layer 0; drafter context ingest and Markov epilogue priced (model), not RTL; tau not measured (owner 6-class values); no SS/FF closure of the new logic."
+ "claim_boundary": "TARGET CONTEXT (owner rule): decoder layer 0 verify (P 8187..8190, 3 drafts rejected, commit 1, step 2 at 8188..8191 over the RTL-left HBM), layer-0 AR at P8187 and drafter layer 0 at start 8188 (real-magnitude context window) measured on the VPRM REAL_MEM RTL (REAL_MEM tagged-fill path, in-tile KV slices; HBM_STREAM cannot serve P>=2048, near-HBM attention not integrated); heads position-independent, measured at P255; 36- and 5-layer totals composed from layer 0; drafter context ingest and Markov epilogue priced (model), not RTL; tau = published third-party value (tools/third_party_tau.py, owner rule 2026-10-04; superseded self-measured 3.0375); no SS/FF closure of the new logic."
 }

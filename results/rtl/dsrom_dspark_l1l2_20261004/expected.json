@@ -3,7 +3,7 @@
  "status": "expected (model; no lever measured yet)",
  "measured_inputs": null,
  "result": {
-  "tau": 4.159,
+  "tau": 3.8879,
   "head_occ_us": 12.37,
   "block5_us": 14.405,
   "transfer_ratios": {
@@ -24,24 +24,24 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 617.64,
-       "mtp_tok_s": 6733.7
+       "mtp_tok_s": 6294.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 652.13,
-       "mtp_tok_s": 6377.6
+       "mtp_tok_s": 5961.9
       }
      },
      "200000": {
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 600.36,
-       "mtp_tok_s": 6927.5
+       "mtp_tok_s": 6475.9
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 615.67,
-       "mtp_tok_s": 6755.2
+       "mtp_tok_s": 6314.9
       }
      }
     }
@@ -55,24 +55,24 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 578.75,
-       "mtp_tok_s": 7186.2
+       "mtp_tok_s": 6717.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 613.24,
-       "mtp_tok_s": 6782.1
+       "mtp_tok_s": 6340.0
       }
      },
      "200000": {
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 561.47,
-       "mtp_tok_s": 7407.3
+       "mtp_tok_s": 6924.5
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 576.78,
-       "mtp_tok_s": 7210.7
+       "mtp_tok_s": 6740.7
       }
      }
     }
@@ -96,12 +96,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 617.64,
-       "mtp_tok_s": 6733.7
+       "mtp_tok_s": 6294.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 652.13,
-       "mtp_tok_s": 6377.6
+       "mtp_tok_s": 5961.9
       },
       "gain_vs_as_built_occupancy": 0.0
      },
@@ -109,12 +109,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 600.36,
-       "mtp_tok_s": 6927.5
+       "mtp_tok_s": 6475.9
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 615.67,
-       "mtp_tok_s": 6755.2
+       "mtp_tok_s": 6314.9
       },
       "gain_vs_as_built_occupancy": 0.0
      }
@@ -137,12 +137,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 592.9,
-       "mtp_tok_s": 7014.7
+       "mtp_tok_s": 6557.4
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 627.39,
-       "mtp_tok_s": 6629.1
+       "mtp_tok_s": 6197.0
       },
       "gain_vs_as_built_occupancy": 0.0417
      },
@@ -150,12 +150,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 575.62,
-       "mtp_tok_s": 7225.2
+       "mtp_tok_s": 6754.2
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 590.93,
-       "mtp_tok_s": 7038.0
+       "mtp_tok_s": 6579.2
       },
       "gain_vs_as_built_occupancy": 0.043
      }
@@ -178,12 +178,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 580.53,
-       "mtp_tok_s": 7164.2
+       "mtp_tok_s": 6697.2
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 615.02,
-       "mtp_tok_s": 6762.4
+       "mtp_tok_s": 6321.6
       },
       "gain_vs_as_built_occupancy": 0.0639
      },
@@ -191,12 +191,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 563.25,
-       "mtp_tok_s": 7383.9
+       "mtp_tok_s": 6902.6
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 578.56,
-       "mtp_tok_s": 7188.5
+       "mtp_tok_s": 6719.9
       },
       "gain_vs_as_built_occupancy": 0.0659
      }
@@ -219,12 +219,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 568.16,
-       "mtp_tok_s": 7320.1
+       "mtp_tok_s": 6843.0
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 602.65,
-       "mtp_tok_s": 6901.2
+       "mtp_tok_s": 6451.4
       },
       "gain_vs_as_built_occupancy": 0.0871
      },
@@ -232,12 +232,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 550.88,
-       "mtp_tok_s": 7549.7
+       "mtp_tok_s": 7057.6
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 566.19,
-       "mtp_tok_s": 7345.5
+       "mtp_tok_s": 6866.7
       },
       "gain_vs_as_built_occupancy": 0.0898
      }
@@ -260,12 +260,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 568.16,
-       "mtp_tok_s": 7320.1
+       "mtp_tok_s": 6843.0
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 602.65,
-       "mtp_tok_s": 6901.2
+       "mtp_tok_s": 6451.4
       },
       "gain_vs_as_built_occupancy": 0.0871
      },
@@ -273,12 +273,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 550.88,
-       "mtp_tok_s": 7549.7
+       "mtp_tok_s": 7057.6
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 566.19,
-       "mtp_tok_s": 7345.5
+       "mtp_tok_s": 6866.7
       },
       "gain_vs_as_built_occupancy": 0.0898
      }
@@ -288,7 +288,7 @@
       "occupancy": {
        "verify_us": 466.22,
        "step_us": 564.4,
-       "mtp_tok_s": 7368.9
+       "mtp_tok_s": 6888.6
       },
       "window": null
      },
@@ -296,7 +296,7 @@
       "occupancy": {
        "verify_us": 413.53,
        "step_us": 511.43,
-       "mtp_tok_s": 8132.2
+       "mtp_tok_s": 7602.1
       },
       "window": null
      }
@@ -319,12 +319,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 617.64,
-       "mtp_tok_s": 6733.7
+       "mtp_tok_s": 6294.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 652.13,
-       "mtp_tok_s": 6377.6
+       "mtp_tok_s": 5961.9
       },
       "gain_vs_as_built_occupancy": 0.0
      },
@@ -332,12 +332,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 600.36,
-       "mtp_tok_s": 6927.5
+       "mtp_tok_s": 6475.9
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 615.67,
-       "mtp_tok_s": 6755.2
+       "mtp_tok_s": 6314.9
       },
       "gain_vs_as_built_occupancy": 0.0
      }
@@ -360,12 +360,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 617.64,
-       "mtp_tok_s": 6733.7
+       "mtp_tok_s": 6294.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 652.13,
-       "mtp_tok_s": 6377.6
+       "mtp_tok_s": 5961.9
       },
       "gain_vs_as_built_occupancy": 0.0
      },
@@ -373,12 +373,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 600.36,
-       "mtp_tok_s": 6927.5
+       "mtp_tok_s": 6475.9
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 615.67,
-       "mtp_tok_s": 6755.2
+       "mtp_tok_s": 6314.9
       },
       "gain_vs_as_built_occupancy": 0.0
      }
@@ -401,12 +401,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 617.64,
-       "mtp_tok_s": 6733.7
+       "mtp_tok_s": 6294.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 652.13,
-       "mtp_tok_s": 6377.6
+       "mtp_tok_s": 5961.9
       },
       "gain_vs_as_built_occupancy": 0.0
      },
@@ -414,12 +414,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 600.36,
-       "mtp_tok_s": 6927.5
+       "mtp_tok_s": 6475.9
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 615.67,
-       "mtp_tok_s": 6755.2
+       "mtp_tok_s": 6314.9
       },
       "gain_vs_as_built_occupancy": 0.0
      }
@@ -442,12 +442,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 617.64,
-       "mtp_tok_s": 6733.7
+       "mtp_tok_s": 6294.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 652.13,
-       "mtp_tok_s": 6377.6
+       "mtp_tok_s": 5961.9
       },
       "gain_vs_as_built_occupancy": 0.0
      },
@@ -455,12 +455,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 600.36,
-       "mtp_tok_s": 6927.5
+       "mtp_tok_s": 6475.9
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 615.67,
-       "mtp_tok_s": 6755.2
+       "mtp_tok_s": 6314.9
       },
       "gain_vs_as_built_occupancy": 0.0
      }
@@ -483,12 +483,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 617.64,
-       "mtp_tok_s": 6733.7
+       "mtp_tok_s": 6294.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 652.13,
-       "mtp_tok_s": 6377.6
+       "mtp_tok_s": 5961.9
       },
       "gain_vs_as_built_occupancy": 0.0
      },
@@ -496,12 +496,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 600.36,
-       "mtp_tok_s": 6927.5
+       "mtp_tok_s": 6475.9
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 615.67,
-       "mtp_tok_s": 6755.2
+       "mtp_tok_s": 6314.9
       },
       "gain_vs_as_built_occupancy": 0.0
      }
@@ -511,7 +511,7 @@
       "occupancy": {
        "verify_us": 466.22,
        "step_us": 613.88,
-       "mtp_tok_s": 6775.0
+       "mtp_tok_s": 6333.4
       },
       "window": null
      },
@@ -519,7 +519,7 @@
       "occupancy": {
        "verify_us": 413.53,
        "step_us": 560.91,
-       "mtp_tok_s": 7414.8
+       "mtp_tok_s": 6931.5
       },
       "window": null
      }
@@ -542,12 +542,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 578.75,
-       "mtp_tok_s": 7186.2
+       "mtp_tok_s": 6717.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 613.24,
-       "mtp_tok_s": 6782.1
+       "mtp_tok_s": 6340.0
       },
       "gain_vs_as_built_occupancy": 0.0672
      },
@@ -555,12 +555,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 561.47,
-       "mtp_tok_s": 7407.3
+       "mtp_tok_s": 6924.5
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 576.78,
-       "mtp_tok_s": 7210.7
+       "mtp_tok_s": 6740.7
       },
       "gain_vs_as_built_occupancy": 0.0693
      }
@@ -583,12 +583,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 554.01,
-       "mtp_tok_s": 7507.2
+       "mtp_tok_s": 7017.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 588.5,
-       "mtp_tok_s": 7067.2
+       "mtp_tok_s": 6606.5
       },
       "gain_vs_as_built_occupancy": 0.1149
      },
@@ -596,12 +596,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 536.73,
-       "mtp_tok_s": 7748.8
+       "mtp_tok_s": 7243.7
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 552.04,
-       "mtp_tok_s": 7533.9
+       "mtp_tok_s": 7042.8
       },
       "gain_vs_as_built_occupancy": 0.1186
      }
@@ -624,12 +624,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 541.64,
-       "mtp_tok_s": 7678.6
+       "mtp_tok_s": 7178.1
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 576.13,
-       "mtp_tok_s": 7218.9
+       "mtp_tok_s": 6748.4
       },
       "gain_vs_as_built_occupancy": 0.1403
      },
@@ -637,14 +637,14 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 524.36,
-       "mtp_tok_s": 7931.6
+       "mtp_tok_s": 7414.6
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 539.67,
-       "mtp_tok_s": 7706.6
+       "mtp_tok_s": 7204.2
       },
-      "gain_vs_as_built_occupancy": 0.1449
+      "gain_vs_as_built_occupancy": 0.145
      }
     }
    },
@@ -665,12 +665,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 529.27,
-       "mtp_tok_s": 7858.1
+       "mtp_tok_s": 7345.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 563.76,
-       "mtp_tok_s": 7377.3
+       "mtp_tok_s": 6896.4
       },
       "gain_vs_as_built_occupancy": 0.167
      },
@@ -678,12 +678,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 511.99,
-       "mtp_tok_s": 8123.2
+       "mtp_tok_s": 7593.7
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 527.3,
-       "mtp_tok_s": 7887.3
+       "mtp_tok_s": 7373.2
       },
       "gain_vs_as_built_occupancy": 0.1726
      }
@@ -706,12 +706,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 529.27,
-       "mtp_tok_s": 7858.1
+       "mtp_tok_s": 7345.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 563.76,
-       "mtp_tok_s": 7377.3
+       "mtp_tok_s": 6896.4
       },
       "gain_vs_as_built_occupancy": 0.167
      },
@@ -719,12 +719,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 511.99,
-       "mtp_tok_s": 8123.2
+       "mtp_tok_s": 7593.7
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 527.3,
-       "mtp_tok_s": 7887.3
+       "mtp_tok_s": 7373.2
       },
       "gain_vs_as_built_occupancy": 0.1726
      }
@@ -734,7 +734,7 @@
       "occupancy": {
        "verify_us": 466.22,
        "step_us": 525.5,
-       "mtp_tok_s": 7914.3
+       "mtp_tok_s": 7398.4
       },
       "window": null
      },
@@ -742,7 +742,7 @@
       "occupancy": {
        "verify_us": 413.53,
        "step_us": 472.53,
-       "mtp_tok_s": 8801.5
+       "mtp_tok_s": 8227.8
       },
       "window": null
      }
@@ -765,12 +765,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 578.75,
-       "mtp_tok_s": 7186.2
+       "mtp_tok_s": 6717.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 613.24,
-       "mtp_tok_s": 6782.1
+       "mtp_tok_s": 6340.0
       },
       "gain_vs_as_built_occupancy": 0.0672
      },
@@ -778,12 +778,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 561.47,
-       "mtp_tok_s": 7407.3
+       "mtp_tok_s": 6924.5
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 576.78,
-       "mtp_tok_s": 7210.7
+       "mtp_tok_s": 6740.7
       },
       "gain_vs_as_built_occupancy": 0.0693
      }
@@ -806,12 +806,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 578.75,
-       "mtp_tok_s": 7186.2
+       "mtp_tok_s": 6717.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 613.24,
-       "mtp_tok_s": 6782.1
+       "mtp_tok_s": 6340.0
       },
       "gain_vs_as_built_occupancy": 0.0672
      },
@@ -819,12 +819,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 561.47,
-       "mtp_tok_s": 7407.3
+       "mtp_tok_s": 6924.5
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 576.78,
-       "mtp_tok_s": 7210.7
+       "mtp_tok_s": 6740.7
       },
       "gain_vs_as_built_occupancy": 0.0693
      }
@@ -847,12 +847,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 578.75,
-       "mtp_tok_s": 7186.2
+       "mtp_tok_s": 6717.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 613.24,
-       "mtp_tok_s": 6782.1
+       "mtp_tok_s": 6340.0
       },
       "gain_vs_as_built_occupancy": 0.0672
      },
@@ -860,12 +860,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 561.47,
-       "mtp_tok_s": 7407.3
+       "mtp_tok_s": 6924.5
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 576.78,
-       "mtp_tok_s": 7210.7
+       "mtp_tok_s": 6740.7
       },
       "gain_vs_as_built_occupancy": 0.0693
      }
@@ -888,12 +888,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 578.75,
-       "mtp_tok_s": 7186.2
+       "mtp_tok_s": 6717.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 613.24,
-       "mtp_tok_s": 6782.1
+       "mtp_tok_s": 6340.0
       },
       "gain_vs_as_built_occupancy": 0.0672
      },
@@ -901,12 +901,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 561.47,
-       "mtp_tok_s": 7407.3
+       "mtp_tok_s": 6924.5
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 576.78,
-       "mtp_tok_s": 7210.7
+       "mtp_tok_s": 6740.7
       },
       "gain_vs_as_built_occupancy": 0.0693
      }
@@ -929,12 +929,12 @@
       "occupancy": {
        "verify_us": 469.98,
        "step_us": 578.75,
-       "mtp_tok_s": 7186.2
+       "mtp_tok_s": 6717.8
       },
       "window": {
        "verify_us": 504.47,
        "step_us": 613.24,
-       "mtp_tok_s": 6782.1
+       "mtp_tok_s": 6340.0
       },
       "gain_vs_as_built_occupancy": 0.0672
      },
@@ -942,12 +942,12 @@
       "occupancy": {
        "verify_us": 452.99,
        "step_us": 561.47,
-       "mtp_tok_s": 7407.3
+       "mtp_tok_s": 6924.5
       },
       "window": {
        "verify_us": 468.3,
        "step_us": 576.78,
-       "mtp_tok_s": 7210.7
+       "mtp_tok_s": 6740.7
       },
       "gain_vs_as_built_occupancy": 0.0693
      }
@@ -957,7 +957,7 @@
       "occupancy": {
        "verify_us": 466.22,
        "step_us": 574.98,
-       "mtp_tok_s": 7233.3
+       "mtp_tok_s": 6761.8
       },
       "window": null
      },
@@ -965,7 +965,7 @@
       "occupancy": {
        "verify_us": 413.53,
        "step_us": 522.01,
-       "mtp_tok_s": 7967.2
+       "mtp_tok_s": 7447.9
       },
       "window": null
      }
@@ -974,10 +974,10 @@
   }
  },
  "basis": "Successor of tools/dsrom_dspark_mtp_step_compose.py (whose bytes are pinned by its composition.json): it reads that\nrecord's measured slices and transfer ratios and prices the draft under each lever.  Nothing here is measured; the\nmeasured lever cycles enter through --l1-chain-ratio / --l2-sweep-ratio / --l2-chain-ratio.\nThe DSpark draft is 3 blocks over the 5 draft positions plus a SERIAL sampling chain: position i needs the token of\ni - 1 for its Markov term, so as built every chain step runs a full lm_head matvec, the Markov matvec, a vocab-length\nbias add and a vocab argmax select.  But the lm_head matvec of position i depends only on the block output h_i, not\non the previous token; only the Markov add and the argmax are serial.\n  as built   chain step = head_occ x R_chain                        (R_chain = measured chain step / head step, 1.637)\n  L1 fused   bias add and argmax ride the head's output stream, as the verify head's me_amax does:\n             chain step = head_occ x (1 + R_markov)                 (R_markov = Markov / lm_head MACs, 32 / 4096)\n  L2 batched the 5 lm_head matvecs leave the chain and run as one batched sweep over the block outputs, k vectors per\n             ROM read (ot_v41_rom_elem_nv_w10, NV = k).  The serial chain keeps the Markov add + argmax only:\n             draft head = sweeps(k) + 5 x chain_L2\n             sweeps(k) = ceil(5 / k) x T_sweep(k)\n               ROM-read-bound: T_sweep(k) = head_occ             (the MACs replicated per vector keep pace with the read)\n               MAC-bound:      T_sweep(k) = (vectors in it) x head_occ, so sweeps(k) = 5 x head_occ (no gain)\n               measured:       T_sweep(k) = head_occ x --l2-sweep-ratio k=R  (batched k-vector sweep / single head step)\n             chain_L2 = head_occ x (R_chain - 1)   with the as-built separate SU add + XU select (L2 alone)\n             chain_L2 = head_occ x R_markov        with L1's fused bias + argmax (L1 + L2)\n  draft = 3 x block5 + draft head;  step = wavefront verify + draft + seed/commit;  MTP tok/s = tau x 1e6 / step.\nA vector count k >= 6 can also batch the 6 verify heads (sensitivity only, occupancy rule): the head leaves the\nwavefront II, which becomes the next-slowest stage, and its single batched sweep stays inside the AR term.",
- "source_commit": "ce339a9d1fbc9495d19330944bbac94e205f70e8",
+ "source_commit": "f23c56908ec468c5362cc76be23937ebb74695d5",
  "input_sha256": {
   "tools/dsrom_dspark_l1l2_compose.py": "c8c26872547147110fb55d3afe916f18f04513562e2cdd0827a92da782464426",
-  "results/rtl/dsrom_dspark_step_slices_20261004/composition.json": "523aaacfbf787534b443e1df5bc42bd9629facae4069b0a332edee470b15cc1f",
-  "results/rtl/dsrom_wavefront_verify_20261004/record.json": "4d7aeff663fb7e9c6264d9c5d184dd1e6dfdef5bfca18d1c615b14aff8f4aad1"
+  "results/rtl/dsrom_dspark_step_slices_20261004/composition.json": "124803dc27679f7f252709d6fd3b44f568e5649e5575883154eb0082df41e9ec",
+  "results/rtl/dsrom_wavefront_verify_20261004/record.json": "885d1c3e734bfc3d2357e52f2b6699238311a72936d1bbfcb5ea2e24face0d09"
  }
 }

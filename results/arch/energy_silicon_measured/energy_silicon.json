@@ -1,0 +1,945 @@
+{
+ "schema": "opentallas.arch.energy_silicon_measured.v1",
+ "supersedes": "results/uarch/ds_energy_silicon_authoritative_20261004 (INVALID: old 2,466-2,532 tok/s DS ROM rate, ASSUMED 10% power-gating residual)",
+ "inputs": {
+  "scoreboard": "results/arch/measured_scoreboard/scoreboard.json",
+  "scoreboard_commit": "5deaae822",
+  "element_power": "results/rtl/rom_stage_power_gating_20261004/verdict.json",
+  "spine": "pending",
+  "registry": "results/external/registry.json",
+  "integration": "results/uarch/hbm_accelerator_integration_20261004/model.json",
+  "recheck": "results/uarch/dsrom_c_recheck_20261004/model.json",
+  "economics": "results/uarch/economics.json"
+ },
+ "status_rank": [
+  "measured",
+  "composed_from_measured",
+  "published",
+  "partial",
+  "off_target_context",
+  "modelled",
+  "assumed",
+  "unvalidated",
+  "pending"
+ ],
+ "ledger_fix": {
+  "ledger_clock": {
+   "clock_hz": 1033900000.0,
+   "before_w": 0.008141,
+   "after_w": 0.0026,
+   "field_cg_residual_after": 0.03005
+  },
+  "1.2GHz": {
+   "clock_hz": 1200000000.0,
+   "before_w": 0.009414,
+   "after_w": 0.002983,
+   "field_cg_residual_after": 0.03005
+  },
+  "measured_w": 0.003005219390615821,
+  "src": "results/rtl/rom_stage_power_gating_20261004/verdict.json power_w.cg_idle (route R3, TT)",
+  "where": "tools/uarch_model.py _die_energy (v41_static_power policies 1-3) and cons_v41_rom (the ICG die static keeps the measured residual clock of every idle pair instead of leakage only)"
+ },
+ "deepseek_1m": {
+  "rom": {
+   "design": "DS ROM S81 (324 layer + 44 head/table dies, 2 dies a package)",
+   "stages": 81,
+   "layer_dies": 324,
+   "total_dies": 368,
+   "pairs_per_layer_die": 2417,
+   "rates": {
+    "ar": {
+     "value": 1409.0,
+     "status": "composed_from_measured",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['ds_rom.ar_tok_s_1m'] <- results/rtl/dsrom_recovery_20261004/composition.json (AR_tok_s)",
+     "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+    },
+    "mtp": {
+     "value": 2585.5,
+     "status": "composed_from_measured",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['ds_rom.mtp_tok_s_1m'] <- results/rtl/dsrom_recovery_20261004/composition.json (MTP.MTP_tok_s)",
+     "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+    },
+    "ar_us": {
+     "value": 709.706,
+     "status": "composed_from_measured",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['ds_rom.ar_us_1m'] <- results/rtl/dsrom_recovery_20261004/composition.json (AR_us)",
+     "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+    }
+   },
+   "silicon": {
+    "logic_dies": 368,
+    "die_mm2": {
+     "value": 839.239,
+     "status": "modelled",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['ds_rom.die_mm2'] <- results/rtl/dsrom_s81_fulldie_20261004/floorplan.json (die.decision_priced_mm2)",
+     "note": "Reticle 858; margin 2.19%"
+    },
+    "logic_mm2": 308840.0,
+    "stacks": 452,
+    "dram_mm2": 492228.0,
+    "switch_chips": 0,
+    "switch_mm2": 0.0,
+    "total_mm2": 801068.0,
+    "status": "modelled"
+   },
+   "power": {
+    "ar_b1_icg": {
+     "tok_s": 1409.0,
+     "rate_status": "composed_from_measured",
+     "static_w": 23439.2,
+     "dynamic_w": 167.1,
+     "system_w": 23606.3,
+     "J_per_token": 16.7539,
+     "tok_s_per_kW": 59.69,
+     "status": "modelled",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)"
+     ],
+     "note": "per-pair ICG only (measured clock-gated idle pair)"
+    },
+    "mtp_b1_icg": {
+     "tok_s": 2585.5,
+     "rate_status": "composed_from_measured",
+     "static_w": 23439.2,
+     "dynamic_w": 413.4,
+     "system_w": 23852.6,
+     "J_per_token": 9.2255,
+     "tok_s_per_kW": 108.39,
+     "status": "modelled",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)"
+     ],
+     "note": ""
+    },
+    "ar_b1_pg_measured": {
+     "tok_s": 1409.0,
+     "rate_status": "composed_from_measured",
+     "static_w": 9399.4,
+     "dynamic_w": 167.1,
+     "system_w": 9566.5,
+     "J_per_token": 6.7896,
+     "tok_s_per_kW": 147.29,
+     "status": "modelled",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)",
+      "element residual 0.3541 applied to the hub logic (ASSUMED transfer)",
+      "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"
+     ],
+     "note": "stage power gating, active fraction 1/S + wake/T = 0.0125; pair PG idle 1.064 mW (measured)"
+    },
+    "mtp_b1_pg_measured": {
+     "tok_s": 2585.5,
+     "rate_status": "composed_from_measured",
+     "static_w": 10450.9,
+     "dynamic_w": 413.4,
+     "system_w": 10864.4,
+     "J_per_token": 4.202,
+     "tok_s_per_kW": 237.98,
+     "status": "modelled",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)",
+      "element residual 0.3541 applied to the hub logic (ASSUMED transfer)",
+      "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"
+     ],
+     "note": "f = 7/S"
+    }
+   },
+   "static_ledgers": {
+    "icg": {
+     "layer_die_w": 55.897,
+     "field_w": 7.264,
+     "hub_w": 18.034,
+     "serdes_w": 30.6,
+     "head_w": 738.5,
+     "table_w": 3324.4,
+     "stacks_idle_w": 1265.6
+    },
+    "pg_measured_ar_b1": {
+     "layer_die_w": 12.564,
+     "field_w": 2.631,
+     "hub_w": 6.531,
+     "serdes_w": 3.403,
+     "head_w": 738.5,
+     "table_w": 3324.4,
+     "stacks_idle_w": 1265.6,
+     "active_fraction": 0.01245
+    },
+    "pg_measured_mtp_b1": {
+     "layer_die_w": 15.81,
+     "field_w": 2.978,
+     "hub_w": 7.392,
+     "serdes_w": 5.44,
+     "head_w": 738.5,
+     "table_w": 3324.4,
+     "stacks_idle_w": 1265.6,
+     "active_fraction": 0.08642
+    }
+   },
+   "element": {
+    "active_w": {
+     "value": 0.11596836894750595,
+     "status": "measured",
+     "src": "results/rtl/rom_stage_power_gating_20261004/verdict.json power_w.active.total"
+    },
+    "cg_idle_w": {
+     "value": 0.003005219390615821,
+     "status": "measured",
+     "src": "results/rtl/rom_stage_power_gating_20261004/verdict.json power_w.cg_idle_total"
+    },
+    "pg_idle_w": {
+     "value": 0.0010641696747820026,
+     "status": "measured",
+     "src": "results/rtl/rom_stage_power_gating_20261004/verdict.json power_w.pg_idle (header ring off-leakage modelled: INVx4)"
+    },
+    "residual": {
+     "value": 0.35411,
+     "status": "measured",
+     "src": "results/rtl/rom_stage_power_gating_20261004/verdict.json power_w.residual"
+    },
+    "wake_ns": {
+     "value": 76.64,
+     "status": "measured",
+     "src": "results/rtl/rom_stage_power_gating_20261004/verdict.json wake.wake_ns"
+    },
+    "spine": null
+   },
+   "idle_window_1m": {
+    "token_us": 709.706,
+    "stage_window_us": 8.762,
+    "idle_us": 700.944,
+    "wake_us": 0.0766,
+    "wake_fits": true
+   }
+  },
+  "hbm_accel": {
+   "design": "DS HBM accelerator (96 dies TP-96, 4 stacks a die, Tomahawk Ultra tier + our protocol)",
+   "rates": {
+    "ar": {
+     "value": 2225.7,
+     "status": "partial",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['hbm_ds.ar_tok_s'] <- results/rtl/dshbm_baseline_measured_20261004/measured.json (mtp_and_accelerator.measured.ar_tok_s)",
+     "note": "one-die TP-96 share of L0/L2/head RTL-exact + SU chains; collectives = Tomahawk-Ultra protocol (vendor budget). This IS the GPU-organised baseline; no accelerator rung adopted, so it is also the published accelerator rate"
+    },
+    "mtp": {
+     "value": 4788.6,
+     "status": "partial",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['hbm_ds.mtp_tok_s'] <- results/rtl/dshbm_baseline_measured_20261004/measured.json (mtp_and_accelerator.measured.mtp_tok_s)",
+     "note": "verify(P=6) union SM/fetch increments and model-priced local steps unvalidated"
+    }
+   },
+   "silicon": {
+    "logic_dies": 96,
+    "die_mm2": {
+     "value": 340.5,
+     "status": "modelled",
+     "src": "results/uarch/hbm_accelerator_integration_20261004/model.json ds_system_counts[ds_1].logic_mm2 / 96"
+    },
+    "logic_mm2": 32688.0,
+    "stacks": 384,
+    "dram_mm2": 418176.0,
+    "switch_chips": 8,
+    "switch_mm2": 6400.0,
+    "total_mm2": 457264.0,
+    "status": "assumed"
+   },
+   "power": {
+    "ar_b1": {
+     "tok_s": 2225.7,
+     "rate_status": "partial",
+     "static_w": 9367.7,
+     "dynamic_w": 3252.6,
+     "system_w": 12620.3,
+     "J_per_token": 5.6703,
+     "tok_s_per_kW": 176.36,
+     "status": "assumed",
+     "unvalidated": [
+      "gated static 5,367.7 W and dynamic J/token are the study's transferred constants (no gate-level power of any HBM-accelerator block)",
+      "8 switch chips x 500 W (ASSUMED upper bound, registry new:tomahawk5_power)",
+      "HBM-accelerator rate is partial (vendor-budget collectives modelled)"
+     ],
+     "note": ""
+    },
+    "ar_b1_no_switch": {
+     "tok_s": 2225.7,
+     "rate_status": "partial",
+     "static_w": 5367.7,
+     "dynamic_w": 3252.6,
+     "system_w": 8620.3,
+     "J_per_token": 3.8731,
+     "tok_s_per_kW": 258.19,
+     "status": "modelled",
+     "unvalidated": [
+      "gated static 5,367.7 W and dynamic J/token are the study's transferred constants (no gate-level power of any HBM-accelerator block)",
+      "HBM-accelerator rate is partial (vendor-budget collectives modelled)"
+     ],
+     "note": "switch chips not charged (sensitivity)"
+    },
+    "mtp_b1": {
+     "tok_s": 4788.6,
+     "rate_status": "partial",
+     "static_w": 9367.7,
+     "dynamic_w": 4559.2,
+     "system_w": 13926.9,
+     "J_per_token": 2.9084,
+     "tok_s_per_kW": 343.84,
+     "status": "assumed",
+     "unvalidated": [
+      "gated static 5,367.7 W and dynamic J/token are the study's transferred constants (no gate-level power of any HBM-accelerator block)",
+      "8 switch chips x 500 W (ASSUMED upper bound, registry new:tomahawk5_power)",
+      "HBM-accelerator rate is partial (vendor-budget collectives modelled)"
+     ],
+     "note": ""
+    }
+   },
+   "terms": {
+    "static": {
+     "value": 5367.717140558499,
+     "status": "modelled",
+     "src": "results/uarch/hbm_accelerator_integration_20261004/model.json fairness.iso_power_average_bounds[0].static_w (gated, transferred)"
+    },
+    "dyn_ar": {
+     "value": 1.461381968734385,
+     "status": "modelled",
+     "src": "results/uarch/hbm_accelerator_integration_20261004/model.json fairness.iso_power_average_bounds[0].dynamic_J_per_token"
+    },
+    "dyn_mtp": {
+     "value": 0.9521,
+     "status": "modelled",
+     "src": "results/uarch/consolidation.json hbm.v41_sweep TP-96 x4 MTP batch-1 gated step energy / tau"
+    },
+    "switch_w": {
+     "value": 500.0,
+     "status": "assumed",
+     "src": "results/external/registry.json new:tomahawk5_power ('consumes less than 500 W'), charged always-on as an upper bound"
+    }
+   }
+  },
+  "b200x8": {
+   "design": "8x B200 (DeepSeek-V4.1-Flash, tier-2 model rate)",
+   "rates": {
+    "ar": {
+     "value": 266.9,
+     "status": "modelled",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['gpu_ds.b200x8_tier2_ar_1m'] <- results/uarch/ds_energy_silicon_authoritative_20261004/model.json (rates.1M.b200x8.ar)",
+     "note": "tier-2 gpu_tier2(), batch 1; NO measured GPU at 1M"
+    },
+    "mtp": {
+     "value": 518.0,
+     "status": "modelled",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['gpu_ds.b200x8_tier2_mtp_1m'] <- results/uarch/ds_energy_silicon_authoritative_20261004/model.json (rates.1M.b200x8.mtp)",
+     "note": "1.94x MTP sensitivity, not DSpark tau"
+    }
+   },
+   "silicon": {
+    "logic_dies": 16,
+    "die_mm2": {
+     "value": 800.0,
+     "status": "assumed",
+     "src": "results/external/registry.json sct:r-dgxb200 (two reticle-limited dies a GPU); 800 mm2 a die ASSUMED"
+    },
+    "logic_mm2": 12800.0,
+    "stacks": 64,
+    "dram_mm2": 69696.0,
+    "switch_chips": 2,
+    "switch_mm2": 1600.0,
+    "total_mm2": 84096.0,
+    "status": "assumed"
+   },
+   "power": {
+    "ar_b1": {
+     "tok_s": 266.9,
+     "rate_status": "modelled",
+     "static_w": 6512.0,
+     "dynamic_w": 0.0,
+     "system_w": 6512.0,
+     "J_per_token": 24.3987,
+     "tok_s_per_kW": 40.99,
+     "status": "modelled",
+     "unvalidated": [
+      "8 x 689 W measured decode draw (registry roofline:b200_decode_draw_w) + 2 NVSwitch x 500 W (ASSUMED)",
+      "B200 V4.1 rate is a tier-2 model"
+     ],
+     "note": ""
+    },
+    "mtp_b1": {
+     "tok_s": 518.0,
+     "rate_status": "modelled",
+     "static_w": 6512.0,
+     "dynamic_w": 0.0,
+     "system_w": 6512.0,
+     "J_per_token": 12.5714,
+     "tok_s_per_kW": 79.55,
+     "status": "modelled",
+     "unvalidated": [
+      "as ar_b1; MTP 1.94x sensitivity"
+     ],
+     "note": ""
+    }
+   }
+  }
+ },
+ "deepseek_compare": {
+  "per_user_ar_rom_over_hbm": 0.6331,
+  "per_user_mtp_rom_over_hbm": 0.5399,
+  "J_per_token_ar_hbm_over_rom": {
+   "ar_b1_icg": 0.3384,
+   "ar_b1_pg_measured": 0.8351
+  },
+  "J_per_token_mtp_hbm_over_rom": {
+   "mtp_b1_icg": 0.3153,
+   "mtp_b1_pg_measured": 0.6921
+  },
+  "J_per_token_ar_hbm_no_switch_over_rom": {
+   "ar_b1_icg": 0.2312,
+   "ar_b1_pg_measured": 0.5704
+  },
+  "best_rom_policy": "ar_b1_pg_measured",
+  "iso_silicon": {
+   "reference": "DS ROM",
+   "reference_total_mm2": 801068.0,
+   "rows": {
+    "rom_ar": {
+     "rate_label": "AR",
+     "per_user_tok_s": 1409.0,
+     "total_mm2": 801068.0,
+     "logic_dies": 368,
+     "per_user_tok_s_per_1000mm2": 1.7589,
+     "replicas_at_ref_silicon": 1.0,
+     "batch1_users_at_ref_silicon": 1.0,
+     "aggregate_b1_tok_s_integer_replicas": 1409.0,
+     "aggregate_b1_tok_s_fractional": 1409.0
+    },
+    "rom_mtp": {
+     "rate_label": "MTP",
+     "per_user_tok_s": 2585.5,
+     "total_mm2": 801068.0,
+     "logic_dies": 368,
+     "per_user_tok_s_per_1000mm2": 3.2276,
+     "replicas_at_ref_silicon": 1.0,
+     "batch1_users_at_ref_silicon": 1.0,
+     "aggregate_b1_tok_s_integer_replicas": 2585.5,
+     "aggregate_b1_tok_s_fractional": 2585.5
+    },
+    "hbm_ar": {
+     "rate_label": "AR",
+     "per_user_tok_s": 2225.7,
+     "total_mm2": 457264.0,
+     "logic_dies": 96,
+     "per_user_tok_s_per_1000mm2": 4.8674,
+     "replicas_at_ref_silicon": 1.752,
+     "batch1_users_at_ref_silicon": 1.75,
+     "aggregate_b1_tok_s_integer_replicas": 2225.7,
+     "aggregate_b1_tok_s_fractional": 3899.1
+    },
+    "hbm_mtp": {
+     "rate_label": "MTP",
+     "per_user_tok_s": 4788.6,
+     "total_mm2": 457264.0,
+     "logic_dies": 96,
+     "per_user_tok_s_per_1000mm2": 10.4723,
+     "replicas_at_ref_silicon": 1.752,
+     "batch1_users_at_ref_silicon": 1.75,
+     "aggregate_b1_tok_s_integer_replicas": 4788.6,
+     "aggregate_b1_tok_s_fractional": 8389.0
+    },
+    "b200x8_ar": {
+     "rate_label": "AR",
+     "per_user_tok_s": 266.9,
+     "total_mm2": 84096.0,
+     "logic_dies": 16,
+     "per_user_tok_s_per_1000mm2": 3.1738,
+     "replicas_at_ref_silicon": 9.526,
+     "batch1_users_at_ref_silicon": 9.53,
+     "aggregate_b1_tok_s_integer_replicas": 2402.1,
+     "aggregate_b1_tok_s_fractional": 2542.4
+    },
+    "b200x8_mtp": {
+     "rate_label": "MTP",
+     "per_user_tok_s": 518.0,
+     "total_mm2": 84096.0,
+     "logic_dies": 16,
+     "per_user_tok_s_per_1000mm2": 6.1596,
+     "replicas_at_ref_silicon": 9.526,
+     "batch1_users_at_ref_silicon": 9.53,
+     "aggregate_b1_tok_s_integer_replicas": 4662.0,
+     "aggregate_b1_tok_s_fractional": 4934.3
+    }
+   }
+  }
+ },
+ "qwen_8k": {
+  "rom": {
+   "design": "Qwen3-8B ROM, TP4: 4 reticle dies, 4 HBM stacks a die (KV)",
+   "rates": {
+    "ar": {
+     "value": 2274.1787845651484,
+     "status": "composed_from_measured",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['qwen_rom.ar_tok_s_8k_realmem'] <- results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json (ar_tok_s)",
+     "note": "36 x 14,574 + 2,999; one-stack REAL_MEM KV path (12.7% of 4-stack peak); STREAM4 layer is 6,468 but no STREAM4 token composed yet"
+    },
+    "dspark": {
+     "value": 3568.2168277536803,
+     "status": "partial",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['qwen_rom.dspark_tok_s_8k'] <- results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json (per_user_accepted_tok_s)",
+     "note": "HEADLINE. L0 verify/AR/drafter measured exact at P8187..8191 on REAL_MEM one-stack path, x36 composed; tau third-party published (not measured); drafter ingest+Markov priced; no SS/FF of new logic"
+    }
+   },
+   "silicon": {
+    "logic_dies": 4,
+    "die_mm2": {
+     "value": 795.977,
+     "status": "measured",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['qwen_rom.die_area_mm2'] <- results/rtl/qwen_rom_fulldie_20261003/b3r2/plan_b3r2b/plan.json (die.mm2)",
+     "note": "floorplan; GRT congestion not closed"
+    },
+    "logic_mm2": 3183.9,
+    "stacks": 16,
+    "dram_mm2": 17424.0,
+    "switch_chips": 0,
+    "switch_mm2": 0.0,
+    "total_mm2": 20607.9,
+    "status": "published"
+   },
+   "silicon_with_dspark_drafter": {
+    "logic_dies": 4,
+    "die_mm2": {
+     "value": 822.8,
+     "status": "modelled",
+     "src": "results/arch/measured_scoreboard/scoreboard.json figures['qwen_rom.dspark_die_mm2_model'] <- results/rtl/qwen_rom_dspark_20261003/drafter/drafter_rom_schedule.json (rom.option_a_plus_one_4096_bank.die_mm2)",
+     "note": "MODEL_ONLY; +30.84 mm2/die"
+    },
+    "logic_mm2": 3291.2,
+    "stacks": 16,
+    "dram_mm2": 17424.0,
+    "switch_chips": 0,
+    "switch_mm2": 0.0,
+    "total_mm2": 20715.2,
+    "status": "modelled"
+   },
+   "power": {
+    "ar": {
+     "tok_s": 2274.2,
+     "rate_status": "composed_from_measured",
+     "static_w": 200.0,
+     "dynamic_w": 174.2,
+     "system_w": 374.2,
+     "J_per_token": 0.1645,
+     "tok_s_per_kW": 6077.78,
+     "status": "modelled",
+     "unvalidated": [
+      "Qwen ROM static 200 W and dynamic 76.6 mJ/token are the uarch model (no gate-level power of the Qwen ROM tile; the DS element measurement does not transfer: KV SRAM slice + split-tree node)",
+      "AR rate is the REAL_MEM one-stack KV path (STREAM4 not composed into a token)"
+     ],
+     "note": ""
+    },
+    "dspark": {
+     "tok_s": 3568.2,
+     "rate_status": "partial",
+     "static_w": 200.0,
+     "dynamic_w": 273.3,
+     "system_w": 473.3,
+     "J_per_token": 0.1326,
+     "tok_s_per_kW": 7539.18,
+     "status": "modelled",
+     "unvalidated": [
+      "Qwen ROM static 200 W and dynamic 76.6 mJ/token are the uarch model (no gate-level power of the Qwen ROM tile; the DS element measurement does not transfer: KV SRAM slice + split-tree node)",
+      "AR rate is the REAL_MEM one-stack KV path (STREAM4 not composed into a token)",
+      "DSpark dynamic per accepted token taken = AR dynamic (ASSUMED; KV bytes shared across a step's positions)",
+      "tau not measured in RTL"
+     ],
+     "note": ""
+    }
+   },
+   "terms": {
+    "static": {
+     "value": 200.0,
+     "status": "modelled",
+     "src": "results/uarch/economics.json qwen_rom.energy.static_w_total (4 dies; ungated clock)"
+    },
+    "dyn": {
+     "value": 0.07659,
+     "status": "modelled",
+     "src": "results/uarch/economics.json qwen_rom.energy.dynamic_mJ_per_token"
+    }
+   }
+  },
+  "hbm_accel": {
+   "tp4_iso_silicon": {
+    "design": "Qwen HBM accelerator TP4 (4 reticle dies, 16 stacks)",
+    "rates": {
+     "ar": {
+      "value": 2154.2,
+      "status": "composed_from_measured",
+      "src": "results/rtl/qwen_hbmacc_p8191_20261004/measured_composition.json b_TP4_iso_silicon.w224_adopted.ar_tok_s (not yet on the scoreboard)"
+     }
+    },
+    "silicon": {
+     "logic_dies": 4,
+     "die_mm2": {
+      "value": 815.0,
+      "status": "modelled",
+      "src": "results/uarch/hbm_accelerator_integration_20261004/model.json qwen_area logic_mm2 / dies"
+     },
+     "logic_mm2": 3260.0,
+     "stacks": 16,
+     "dram_mm2": 17424.0,
+     "switch_chips": 0,
+     "switch_mm2": 0.0,
+     "total_mm2": 20684.0,
+     "status": "modelled"
+    },
+    "power": {
+     "ar": {
+      "tok_s": 2154.2,
+      "rate_status": "composed_from_measured",
+      "static_w": 182.1,
+      "dynamic_w": 1457.4,
+      "system_w": 1639.5,
+      "J_per_token": 0.7611,
+      "tok_s_per_kW": 1313.95,
+      "status": "modelled",
+      "unvalidated": [
+       "HBM accelerator power is the integration model (no gate-level power)",
+       "vehicle area/route/SS-FF not qualified (sram_macro_fit_and_routes_qualified = false)"
+      ],
+      "note": ""
+     }
+    },
+    "terms": {
+     "static_w": 182.1,
+     "dyn": {
+      "value": 0.67653,
+      "status": "modelled",
+      "src": "results/uarch/hbm_accelerator_integration_20261004/model.json qwen_area ar_power_model (system - static) / model rate"
+     }
+    }
+   },
+   "tp2_same_silicon": {
+    "design": "Qwen HBM accelerator TP2 (2 reticle dies, 8 stacks)",
+    "rates": {
+     "ar": {
+      "value": 1032.8,
+      "status": "composed_from_measured",
+      "src": "results/rtl/qwen_hbmacc_p8191_20261004/measured_composition.json a_TP2_same_silicon.w224_adopted.ar_tok_s (not yet on the scoreboard)"
+     },
+     "spec_dflash_model": {
+      "value": 3355.5,
+      "status": "unvalidated",
+      "src": "results/arch/measured_scoreboard/scoreboard.json figures['hbm_qwen.spec_dflash_model'] <- results/uarch/hbm_accelerator_integration_20261004/model.json (hypotheses.qwen.same_silicon_as_ablation.ar.dflash_tok_s)",
+      "note": "no measured Qwen HBM speculative record exists"
+     }
+    },
+    "silicon": {
+     "logic_dies": 2,
+     "die_mm2": {
+      "value": 815.0,
+      "status": "modelled",
+      "src": "results/uarch/hbm_accelerator_integration_20261004/model.json qwen_area logic_mm2 / dies"
+     },
+     "logic_mm2": 1630.0,
+     "stacks": 8,
+     "dram_mm2": 8712.0,
+     "switch_chips": 0,
+     "switch_mm2": 0.0,
+     "total_mm2": 10342.0,
+     "status": "modelled"
+    },
+    "power": {
+     "ar": {
+      "tok_s": 1032.8,
+      "rate_status": "composed_from_measured",
+      "static_w": 91.0,
+      "dynamic_w": 792.0,
+      "system_w": 883.0,
+      "J_per_token": 0.8549,
+      "tok_s_per_kW": 1169.69,
+      "status": "modelled",
+      "unvalidated": [
+       "HBM accelerator power is the integration model (no gate-level power)",
+       "vehicle area/route/SS-FF not qualified (sram_macro_fit_and_routes_qualified = false)"
+      ],
+      "note": ""
+     },
+     "spec_dflash_model": {
+      "tok_s": 3355.5,
+      "rate_status": "unvalidated",
+      "static_w": 91.0,
+      "dynamic_w": 804.9,
+      "system_w": 895.9,
+      "J_per_token": 0.267,
+      "tok_s_per_kW": 3745.46,
+      "status": "unvalidated",
+      "unvalidated": [
+       "DFlash rate and power are models"
+      ],
+      "note": ""
+     }
+    },
+    "terms": {
+     "static_w": 91.0,
+     "dyn": {
+      "value": 0.76682,
+      "status": "modelled",
+      "src": "results/uarch/hbm_accelerator_integration_20261004/model.json qwen_area ar_power_model (system - static) / model rate"
+     }
+    }
+   }
+  },
+  "gpu": {
+   "h100_tp1": {
+    "design": "1x H100 SXM FP8 (vLLM, measured 8K)",
+    "rates": {
+     "ar": {
+      "value": 180,
+      "status": "measured",
+      "src": "results/arch/measured_scoreboard/scoreboard.json figures['gpu_qwen.h100_tp1_fp8_decode_8k'] <- results/measured/h100_nvls_20261004/README.md (regex:\\| TP1 FP8 \\| [^|]+\\| [^|]+\\| [^|]+\\| ([\\d.]+) tok/s)",
+      "note": "1x H100 SXM, vLLM 0.11 dynamic FP8, 8192 in/256 out, AR, decode with prefill subtracted. AUTHORITATIVE single-GPU 8K row"
+     }
+    },
+    "silicon": {
+     "logic_dies": 1,
+     "die_mm2": {
+      "value": 814.0,
+      "status": "published",
+      "src": "results/external/registry.json sct:r-h200 ('a die size of 814 mm 2')"
+     },
+     "logic_mm2": 814.0,
+     "stacks": 5,
+     "dram_mm2": 5445.0,
+     "switch_chips": 0,
+     "switch_mm2": 0.0,
+     "total_mm2": 6259.0,
+     "status": "published",
+     "stacks_note": "5 HBM3 stacks (80 GB) ASSUMED"
+    },
+    "power": {
+     "ar_tdp": {
+      "tok_s": 180,
+      "rate_status": "measured",
+      "static_w": 700.0,
+      "dynamic_w": 0.0,
+      "system_w": 700.0,
+      "J_per_token": 3.8889,
+      "tok_s_per_kW": 257.14,
+      "status": "published",
+      "unvalidated": [
+       "board power at TDP (upper bound)"
+      ],
+      "note": ""
+     },
+     "ar_idle_floor": {
+      "tok_s": 180,
+      "rate_status": "measured",
+      "static_w": 71.8,
+      "dynamic_w": 0.0,
+      "system_w": 71.8,
+      "J_per_token": 0.3989,
+      "tok_s_per_kW": 2506.96,
+      "status": "published",
+      "unvalidated": [
+       "bare idle (lower bound)"
+      ],
+      "note": ""
+     }
+    }
+   },
+   "h100_tp8": {
+    "design": "8x H100 SXM FP8 TP8 (vLLM, measured 8K)",
+    "rates": {
+     "ar": {
+      "value": 299,
+      "status": "measured",
+      "src": "results/arch/measured_scoreboard/scoreboard.json figures['gpu_qwen.h100_tp8_fp8_decode_8k'] <- results/measured/h100_nvls_20261004/README.md (regex:\\| TP8 FP8 \\| [^|]+\\| [^|]+\\| [^|]+\\| ([\\d.]+) tok/s)",
+      "note": "8x H100 HGX NVLink4, vLLM 0.11 FP8, 8K, AR. Fastest measured GPU Qwen row"
+     }
+    },
+    "silicon": {
+     "logic_dies": 8,
+     "die_mm2": {
+      "value": 814.0,
+      "status": "published",
+      "src": "results/external/registry.json sct:r-h200 ('a die size of 814 mm 2')"
+     },
+     "logic_mm2": 6512.0,
+     "stacks": 40,
+     "dram_mm2": 43560.0,
+     "switch_chips": 0,
+     "switch_mm2": 0.0,
+     "total_mm2": 50072.0,
+     "status": "published"
+    },
+    "power": {
+     "ar_tdp": {
+      "tok_s": 299,
+      "rate_status": "measured",
+      "static_w": 5600.0,
+      "dynamic_w": 0.0,
+      "system_w": 5600.0,
+      "J_per_token": 18.7291,
+      "tok_s_per_kW": 53.39,
+      "status": "published",
+      "unvalidated": [
+       "8 boards at TDP (upper bound)"
+      ],
+      "note": ""
+     }
+    }
+   },
+   "b200_dflash": {
+    "design": "1x B200 SGLang DFlash (published, MATH-500, not 8K)",
+    "rates": {
+     "spec": {
+      "value": 1175.0,
+      "status": "published",
+      "src": "results/arch/measured_scoreboard/scoreboard.json figures['gpu_qwen.b200_sglang_dflash_math500'] <- results/uarch/hbm_accelerator_integration_20261004/model.json (hypotheses.qwen.gpus[1].tok_s)",
+      "note": "speculative, tau 8.01 (favourable set)"
+     }
+    },
+    "silicon": {
+     "logic_dies": 2,
+     "die_mm2": {
+      "value": 800.0,
+      "status": "assumed",
+      "src": "B200 two reticle-limited dies (sct:r-dgxb200), 800 mm2 a die ASSUMED"
+     },
+     "logic_mm2": 1600.0,
+     "stacks": 8,
+     "dram_mm2": 8712.0,
+     "switch_chips": 0,
+     "switch_mm2": 0.0,
+     "total_mm2": 10312.0,
+     "status": "assumed"
+    },
+    "power": {
+     "spec": {
+      "tok_s": 1175.0,
+      "rate_status": "published",
+      "static_w": 689.0,
+      "dynamic_w": 0.0,
+      "system_w": 689.0,
+      "J_per_token": 0.5864,
+      "tok_s_per_kW": 1705.37,
+      "status": "published",
+      "unvalidated": [
+       "689 W measured decode draw (cited)",
+       "published DFlash rate at short context"
+      ],
+      "note": ""
+     }
+    }
+   }
+  }
+ },
+ "qwen_compare": {
+  "per_user_ar_rom_over_hbm_tp4": 1.0557,
+  "per_user_ar_rom_over_h100_tp1": 12.6343,
+  "per_user_ar_rom_over_h100_tp8": 7.6059,
+  "J_per_token_ar": {
+   "rom": 0.1645,
+   "hbm_tp4": 0.7611,
+   "hbm_tp2": 0.8549,
+   "h100_tp1_tdp": 3.8889,
+   "h100_tp1_idle_floor": 0.3989,
+   "h100_tp8_tdp": 18.7291
+  },
+  "iso_silicon": {
+   "reference": "Qwen ROM (4 reticle dies + 16 stacks)",
+   "reference_total_mm2": 20607.9,
+   "rows": {
+    "rom_ar": {
+     "rate_label": "AR",
+     "per_user_tok_s": 2274.1787845651484,
+     "total_mm2": 20607.9,
+     "logic_dies": 4,
+     "per_user_tok_s_per_1000mm2": 110.3547,
+     "replicas_at_ref_silicon": 1.0,
+     "batch1_users_at_ref_silicon": 1.0,
+     "aggregate_b1_tok_s_integer_replicas": 2274.2,
+     "aggregate_b1_tok_s_fractional": 2274.2
+    },
+    "rom_dspark": {
+     "rate_label": "DSpark",
+     "per_user_tok_s": 3568.2168277536803,
+     "total_mm2": 20607.9,
+     "logic_dies": 4,
+     "per_user_tok_s_per_1000mm2": 173.148,
+     "replicas_at_ref_silicon": 1.0,
+     "batch1_users_at_ref_silicon": 1.0,
+     "aggregate_b1_tok_s_integer_replicas": 3568.2,
+     "aggregate_b1_tok_s_fractional": 3568.2
+    },
+    "hbm_tp4_ar": {
+     "rate_label": "AR",
+     "per_user_tok_s": 2154.2,
+     "total_mm2": 20684.0,
+     "logic_dies": 4,
+     "per_user_tok_s_per_1000mm2": 104.1481,
+     "replicas_at_ref_silicon": 0.996,
+     "batch1_users_at_ref_silicon": 1.0,
+     "aggregate_b1_tok_s_integer_replicas": 0.0,
+     "aggregate_b1_tok_s_fractional": 2146.3
+    },
+    "hbm_tp2_ar": {
+     "rate_label": "AR",
+     "per_user_tok_s": 1032.8,
+     "total_mm2": 10342.0,
+     "logic_dies": 2,
+     "per_user_tok_s_per_1000mm2": 99.8646,
+     "replicas_at_ref_silicon": 1.993,
+     "batch1_users_at_ref_silicon": 1.99,
+     "aggregate_b1_tok_s_integer_replicas": 1032.8,
+     "aggregate_b1_tok_s_fractional": 2058.0
+    },
+    "h100_tp1_ar": {
+     "rate_label": "AR",
+     "per_user_tok_s": 180,
+     "total_mm2": 6259.0,
+     "logic_dies": 1,
+     "per_user_tok_s_per_1000mm2": 28.7586,
+     "replicas_at_ref_silicon": 3.293,
+     "batch1_users_at_ref_silicon": 3.29,
+     "aggregate_b1_tok_s_integer_replicas": 540,
+     "aggregate_b1_tok_s_fractional": 592.7
+    },
+    "h100_tp8_ar": {
+     "rate_label": "AR",
+     "per_user_tok_s": 299,
+     "total_mm2": 50072.0,
+     "logic_dies": 8,
+     "per_user_tok_s_per_1000mm2": 5.9714,
+     "replicas_at_ref_silicon": 0.412,
+     "batch1_users_at_ref_silicon": 0.41,
+     "aggregate_b1_tok_s_integer_replicas": 0,
+     "aggregate_b1_tok_s_fractional": 123.1
+    },
+    "b200_dflash": {
+     "rate_label": "DFlash (published)",
+     "per_user_tok_s": 1175.0,
+     "total_mm2": 10312.0,
+     "logic_dies": 2,
+     "per_user_tok_s_per_1000mm2": 113.9449,
+     "replicas_at_ref_silicon": 1.998,
+     "batch1_users_at_ref_silicon": 2.0,
+     "aggregate_b1_tok_s_integer_replicas": 1175.0,
+     "aggregate_b1_tok_s_fractional": 2348.2
+    }
+   }
+  }
+ }
+}

@@ -1,5 +1,12 @@
 # DeepSeek-V4.1: energy, power and equal-silicon comparison on authoritative inputs (2026-10-04)
 
+> **INVALID, superseded (owner, 2026-10-04).** This record used the old 2,466-2,532 tok/s DS ROM rate and an ASSUMED 10%
+> power-gating residual; measured are 1,386 AR / 2,744 MTP (main 4fa71767c) and a 35.4% residual (b9e66e66d). Its
+> "ROM wins energy 1.6-2.3x" verdict is withdrawn. The regenerable replacement for both targets is
+> `results/arch/energy_silicon_measured/` (`tools/energy_silicon_measured.py`). Kept unchanged below as history.
+
+> **TAU SUPERSEDED (owner rule 2026-10-04).** `model.json`/the record is now composed at the third-party published tau (3.8879, `tools/third_party_tau.py`, `results/speculative/third_party_acceptance_20261004/`). Hand-written figures below that quote tau 4.159 are the superseded self-measured composition: scale MTP tok/s by 3.8879/4.159 = 0.9348 (and MTP J/token by its inverse); AR figures and ROM:HBM ratios are unchanged.
+
 Owner-requested model study. Replay: `python3 tools/ds_energy_silicon_authoritative.py` (writes `model.json`); `--check` prints the cross-checks.
 
 **Evidence class:** MODEL. Rates, silicon and power come from authoritative or measured records. Every other constant is listed under `assumed` in `model.json` and marked ASSUMED below.
