@@ -27,14 +27,15 @@ Branch: claude/hbm-system-rtl-20261003 (pushed). Records: results/rtl/hbm_system
 - W4 (Euclid) RTL was not on any origin branch when checked; W6/W5/W10 not integrated into this system top.
 - HBM controller/PHY remains the behavioural ot_hdc_hbm_model; weight load into HBM is a load-time image (no host DMA path).
 
-## DSpark lowering (tools/gpu_sys/v41_dspark.py)
-FIXED 2026-10-04 (9a76465cf): the per-column state slot stride was 4608 B, 36 B short of its contents (X 2560 + PRE 16 +
-CTR 4 + SEL 128 + NSEL 4 + MH 3 x 640 = 4644 B): the last main-hidden part overwrote the next slot's first residual
-words and broke the last verify column.  CSTR is now 4672 (derived, asserted).  Functional-machine gate, ngen 8:
---drafter forced: tokens OK, logits bit-exact, passes equal, accepts [0,1,2,3], 3,472 launches;
---drafter dspark: tokens OK, logits bit-exact, passes equal, accepts [0]*7, 6,095 launches
-(v41_dspark_check_{forced,dspark}.log).  --emit and the RTL run are not done.  Layer kernel 6,289 words,
-~12.2k IMEM per SM -> needs IMW=14.
+## DSpark lowering (tools/gpu_sys/v41_dspark.py, pinned; successor tools/gpu_sys/v41_dspark_connected.py)
+The per-column state slot stride 4608 B is 36 B short of its contents (X 2560 + PRE 16 + CTR 4 + SEL 128 + NSEL 4 +
+MH 3 x 640 = 4644 B): the last main-hidden part overwrote the next slot's first residual words and broke the last
+verify column.  On main this is fixed by the additive successor v41_dspark_connected.py (stride 4736, original file
+pinned; its gate: results/rtl/ds_hbm_connected_20261003/reduced_functional_six_columns_r2.json, gamma 5, PASS).
+Independent confirmation 2026-10-04 (v41_dspark_check_{forced,dspark}.log, run with the stride grown in place to
+4672 in a branch copy, gamma 4, ngen 8): forced drafter tokens OK, logits bit-exact, passes equal, accepts [0,1,2,3],
+3,472 launches; real DSpark drafter tokens OK, logits bit-exact, passes equal, accepts [0]*7, 6,095 launches.
+The in-place edit was not landed (the successor pins the original).  --emit and the RTL run are not done.
 
 ## Multi-thread determinism (2026-10-04)
 The DS V4.1 system run was exact single-threaded (v41_e2e.json) and wrong under Verilator --threads 8 at every step.
