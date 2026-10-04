@@ -70,4 +70,27 @@ python3 tools/qwen_nearhbm_attn_gate.py --bin OUT --hd 128 --r R --vectors v --o
 NHB_SWAP=hub,stack rtl/test/nearhbm/hubp_swap.sh rtl/test/qwen_sys/build_nearhbm_sys_fenced.sh OUT 128 8 dpi -GLAYER_START_FENCE=1
 ```
 
-The VP successor stack (`_vp`) keeps the parent row engine. The same transform has not been applied to it.
+## VP stack successor (stack_vp_p, source 9a879f832): the DSpark verify path
+
+`tools/qwen_nearhbm_stack_p_gen.py --vp` applies the same row-engine transform to the VP stack: 2x lanes (one lane set per verify position) and the causal mask (VMASK = 1, TM registered). The result is `rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_vp_p.sv` with top `ot_qwen_nearhbm_row_engine_vp_p`. Records are in `vp/`.
+
+- **DSpark VP gate (`vp/vp_gate_vpp.json`): PASS, 82/82 exact, 0 faults** (stack_vp_p + hub_p; the dspark step-2 job list and vectors).
+- **p = 6 sets: 54/54 exact on each of three builds** (`vp/vp6_gate_{parent,hubp,new}.json`). The vectors are ctx0 8187 normal/peaky and 125 mixed at HD 128, plus 121 wide at HD 16 real units; seeds are in `vp/run.sh`.
+- **Fenced subsystem (`vp/fence/`): 8/8 exact**, ctx 1 / 128 / 129 / 512, flips 0 and 97, R = 8, LAYER_START_FENCE = 1. This uses stack_vp_p at VMASK = 1 with 1,281 / 957 cycles, the same as stack_p.
+
+**Added cycles per attention op (`vp/vp6_delta.json`), full context 8,192 (ctx0 8187, the last position 8,192).** An op of p positions on L lane sets runs ceil(p / L) passes. Every added cycle is a fixed per-pass latency, and both cases (normal and peaky) are identical:
+
+| build | per pass | p = 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|---|
+| R = 8, 2 lane sets (parent 1,824 / pass) | +33 (row engine +20) | +33 | +33 | +66 | +66 | +99 | +99 |
+| R = 8, 1 lane set | +33 | +33 | +66 | +99 | +132 | +165 | +198 |
+| R = 6, 2 lane sets (parent 2,022 / pass) | +15 (row engine +6) | +15 | +15 | +30 | +30 | +45 | +45 |
+| R = 1, 2 lane sets (parent 8,728 / pass) | +9 (row engine +4) | +9 | +9 | +18 | +18 | +27 | +27 |
+
+At R = 8 that is +1.8% per pass. With odd p on 2 lane sets, the last pass is the measured pass at first = p - 1, so its stream is at most one row longer than needed (`tail_one_row_long`).
+
+```
+# ot-epyc1tb /srv/opentallas-scratch/claude/nearhbm/vp10: builds, 82 VP + 3 x 54 p = 6 + 8 fence runs, gates
+bash vp/run.sh
+python3 tools/qwen_nearhbm_attn_vp_p_delta.py --parent vp6_gate_parent.json --hubp vp6_gate_hubp.json --new vp6_gate_new.json --out vp6_delta.json
+```
