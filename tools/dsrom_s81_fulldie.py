@@ -107,7 +107,8 @@ def colgroups(n):
         out.append(3)
         n -= 3
     return out + [n]
-SPINE_W, VCH = 2635.2, 302.4
+SPINE_GAP = 172.8                # routing channel between stacked spine slabs (80 rows of 2.16)
+SPINE_W, VCH = 2635.2, 604.8     # VCH widened 302.4 -> 604.8 (r3: GRT overflow at the VM / hub FIFOs)
 LINK_COL = 261.36
 # bands
 PHY_W, PHY_H = 8500.056, 1177.2
@@ -391,14 +392,16 @@ def build(variant=None):
         hub[name] = it
         return it
     centre = ['gather', 'vm', 'capture', 'collective']
-    ch = sum(up(HUB_MM2[n] * 1e6 / cw, GY) for n in centre)
+    # r4: a SPINE_GAP routing channel between every pair of stacked W-column slabs (b3 GRT: the abutted slab faces
+    # carried the 1,024-bit VM <-> SU and the gather/capture buses with no escape room, M8 1.29 / M9 1.15 use/cap)
+    ch = sum(up(HUB_MM2[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch / 2, GY)
     su_lo = HUB_MM2['su'] * (yc - y_f) / (yc - y_f + y_top - (yc + ch))
-    s = slab('su_s', su_lo, x_sp, dn(yc - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
+    s = slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
     yy = yc
     for n in centre:
         it = slab(n, HUB_MM2[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2')
-        yy += up(HUB_MM2[n] * 1e6 / cw, GY)
+        yy += up(HUB_MM2[n] * 1e6 / cw, GY) + SPINE_GAP
     slab('su_n', HUB_MM2['su'] - su_lo, x_sp, yy, cw, dom='serial_0p9')
     hc_h = up(HUB_MM2['hc'] * 1e6 / cw, GY)
     slab('hc', HUB_MM2['hc'], x_spe, dn(mid - hc_h / 2, GY), cw, dom='serial_0p9')
@@ -564,15 +567,16 @@ def buses(m):
         """hub-side receive FIFO slot of a chain, packed in the VCH around the VM block"""
         hub_fifo_n[0] += 1
         n = hub_fifo_n[0] - 1
-        col, row = n % 2, n // 2
+        col, row = n % 4, n // 4
         x = x_vc + 8.64 + col * (MF[0] + 8.64)
-        y = vm.y - 900.0 + row * (MF[1] + 4.32)
+        y = vm.y + vm.h / 2 - 700.0 + row * 240.0
         it = Inst(f'mf_{chain}', 'dsfd_mfifo', up(x, GX), up(y, GY), MF[0] - SHAVE, MF[1] - SHAVE, kind='hub_fifo',
                   region='vch')
         insts.append(it)
         by[it.name] = it
         return it
     vstagger = defaultdict(int)
+    xroot = [(vm.name, 'xroot')]
     for half in 'WE':
         for t in range(TIERS):
             chain = f'T{half}{t}'
@@ -592,8 +596,10 @@ def buses(m):
             hf = hub_fifo(chain)
             nroots = sum(len(cr['cols']) for cr in crs)
             bits = LANE_X * 2 * 1 + NODE_W * nroots     # one tier bus: 2 lanes of x + every root of the tier
-            prev = (vm.name, f'x{half}{t}')
-            B.append((f'tk_{chain}_h', 'trunk', bits, [prev, (hf.name, 'h')]))
+            # x is one broadcast: a single VM x-root bus feeds every tier chain's hub FIFO; the return roots of the
+            # tier land in the gather block (capture side), not in the VM
+            xroot.append((hf.name, 'hx'))
+            B.append((f'tk_{chain}_r', 'trunk', NODE_W * nroots, [(hf.name, 'hr'), (m['hub']['gather'].name, f'r{chain}')]))
             prev = (hf.name, 'f')
             for kk, wv in enumerate(legs):
                 B.append((f'tk_{chain}_v{kk}', 'trunk', bits, [prev, (wv.name, 'a')]))
@@ -617,6 +623,7 @@ def buses(m):
                 near = min(hwps, key=lambda w_: abs(w_.x - fbi.x))
                 B.append((f'tp_{cr["name"]}', 'trunk_tap', LANE_X * 2 + NODE_W * len(cr['cols']),
                           [(near.name, 't'), (fbi.name, 'x')]))
+    B.append(('xroot', 'x_root', 2 * LANE_X, xroot))
     # ---- PHY -> controller (every real PHY signal pin), controller -> scan service, service <-> hub
     npins = len(real_ports()[real_lef(PHY_LEF)['name']]['dfi'])
     for st, ph in m['phys'].items():
@@ -751,10 +758,10 @@ def masters(m, k=1):
     bf.face('cfg', CFGB, 'S', 'M5', 400.0, 2)
     bf.face('r0', RET // 2, 'N', 'M5', 430.0, 2)
     bf.face('r1', RET // 2, 'N', 'M5', 460.0, 2)
-    bf.face('nv', NV_BITS, 'N', 'M5', 760.0, 1)
+    bf.face('nv', NV_BITS, 'N', 'M5', 620.0, 1)       # r5: 760 overlapped lane b's xbo (DRT-0073 on head dies)
     nx = mk('dsfd_nvx', 1002.888, up(NVX_UM2 / 1002.888, GY) - SHAVE, 7, 'NV5 batched draft head extension of an '
             'lm-head pair (+115,775.5 um2 placed, results/uarch/dsrom_l2_head_mac_20261004)')
-    nx.face('nv', NV_BITS, 'S', 'M5', 760.0, 1)
+    nx.face('nv', NV_BITS, 'S', 'M5', 620.0, 1)
     nd = mk('dsfd_node', NODE_FRAME[0] - SHAVE, NODE_FRAME[1] - SHAVE, 4, 'ragged RD64 return node '
             '(ot_v41_retn_w17w10, 2 x 66 in, 66 out; slot = decision storage area 6,704 um2)')
     nd.face('a', NODE_W, 'W', 'M4', 18.0, 2)
@@ -767,7 +774,7 @@ def masters(m, k=1):
         for ln in 'LR':
             fb.face(f'x{ci}{ln}', XI, 'N', 'M5', 30.0 + (2 * ci + (ln == 'R')) * 40.0, 1)
             fb.face(f'k{ci}{ln}', XCTL + 3, 'N', 'M5', 30.0 + (2 * ci + (ln == 'R')) * 40.0 + 16.0, 1)
-        fb.face(f'r{ci}', NODE_W, 'N', 'M5', 350.0 - ci * 8.0, 1)
+        fb.face(f'r{ci}', NODE_W, 'N', 'M5', 345.0 + ci * 7.0, 1)   # r5: 350 - 8 ci put r3 on k3R (pin_clashes)
     fb.face('x', 2 * LANE_X + NODE_W * ncol, 'E', 'M4', fb.h / 2, 1)
     fb.face('ck', CLK_BITS, 'S', 'M5', fb.w / 2, 1)
     sh = mk('dsfd_stn_h', STN_H[0] - SHAVE, STN_H[1] - SHAVE, 3, 'forwarded-link waypoint (4 x 430.56 um stages), horizontal')
@@ -806,6 +813,8 @@ def masters(m, k=1):
     sv.face('w', 1, 'W', 'M4', sv.h / 2, 1)
     sv.face('e', 1, 'E', 'M4', sv.h / 2, 1)
     mf.face('h', 1, 'E', 'M4', mf.h / 2, 1)
+    mf.face('hx', 1, 'N', 'M5', mf.w / 2, 1)
+    mf.face('hr', 1, 'S', 'M5', mf.w / 2, 1)
     mf.face('f', 1, 'W', 'M4', mf.h / 2, 1)
     if k > 1:
         _init_real()
@@ -818,11 +827,12 @@ def _slab_pins(M, m):
     """Faces of the hub slabs and band blocks, chosen by where their peers sit."""
     hb = m['hub']
     vm = M[hb['vm'].master]
-    for t in range(TIERS):
-        vm.face(f'xW{t}', 1, 'W', 'M4', 40.0 + 70.0 * t, 1)
-        vm.face(f'xE{t}', 1, 'E', 'M4', 40.0 + 70.0 * t, 1)
+    vm.face('xroot', 1, 'E', 'M4', 60.0, 1)
+    ga = M[hb['gather'].master]
+    for i, ch_ in enumerate(f'T{h}{t}' for h in 'WE' for t in range(TIERS)):
+        ga.face(f'r{ch_}', 1, 'E', 'M4', 60.0 + 95.0 * i, 1)
     for i, st in enumerate(('SW', 'SE', 'NW', 'NE')):
-        vm.face(f's{st}', 1, 'E', 'M4', vm.h - 40.0 - 90.0 * i, 1)
+        vm.face(f's{st}', 1, 'E', 'M4', vm.h - 40.0 - 110.0 * i, 1)   # r6: 90 um left no M4 escape (h_b5 i50 GCell)
     vm.face('sel', 512, 'S', 'M5', 200.0, 1)
     vm.face('col', 512, 'N', 'M5', 200.0, 1)
     vm.face('t_su_s', 1024, 'S', 'M5', 500.0, 1)
@@ -847,7 +857,7 @@ def _slab_pins(M, m):
     col = M[hb['collective'].master]
     for i, lk in enumerate(m['links']):
         side = lk.name[3]
-        col.face(f'l{lk.name[3:]}', 1, side, 'M4', 100.0 + 120.0 * (i % 4), 1)
+        col.face(f'l{lk.name[3:]}', 1, side, 'M4', 600.0 + 120.0 * (i % 4), 1)   # r5: clear of pll at 0.25 h (DRT-0073)
     for name, peer_face in (('selector', 'N'), ('collector', 'S')):
         b = M[hb[name].master]
         for i, st in enumerate(('SW', 'SE', 'NW', 'NE')):
@@ -893,6 +903,30 @@ def lef_text(mst, k, wmap):
         L += [f'    LAYER M{i} ;', f'      RECT 0 0 {mst.w:.3f} {mst.h:.3f} ;']
     L += ['  END', f'END {mst.name}', '']
     return '\n'.join(L), len(pins)
+
+
+def pin_clashes(m, k=1, space=0.024 - 1e-6):
+    """Generated pins of one master on one layer that overlap or sit closer than the min spacing (the r4 DRT-0073
+    pin-access faults were two ports placed on the same face span)."""
+    M, pw = masters(m, k), port_widths(m, k)
+    _init_real()
+    out = []
+    for name, mst in M.items():
+        if k == 1 and name in REAL_FILES:
+            continue
+        rects = sorted(pin_rects(mst, k, {p: pw.get((name, p), 0) for p in mst.order}), key=lambda r: (r[1], r[2][0]))
+        by = defaultdict(list)
+        for nm, ly, r in rects:
+            by[ly].append((nm, r))
+        for ly, rs in by.items():
+            act = []
+            for nm, r in rs:
+                act = [a for a in act if a[1][2] + space > r[0]]
+                for an, ar in act:
+                    if ar[1] < r[3] + space and r[1] < ar[3] + space:
+                        out.append((name, ly, an, nm))
+                act.append((nm, r))
+    return out
 
 
 def write_lefs(m, k, path):
@@ -1169,8 +1203,19 @@ def case_real(m, work):
     (work / 'snap.tcl').write_text((ROOT / SNAP_LIB).read_text())
     write_netlist(m, 1, work / 'die.v')
     W, H = DIE
-    pl = ['set _blk [ord::get_db_block]'] + [f'ot_mts::place [$_blk findInst {it.name}] {it.x:.3f} {it.y:.3f} {it.orient}'
-                                           for it in m['insts']]
+    # ot_mts::place rescans every placed macro per call (O(n^2): 8k of 24k instances in 31 min); the floorplan is
+    # built on the snap lattice, so snap each origin (snap_origin, no neighbour scan) and let the one sweep-line
+    # overlap check below prove the result legal; any snap move is logged as OT_MTS_PLACE as before.
+    pl = ['set _blk [ord::get_db_block]', 'set _dbu [ot_mts::get_dbu]', 'set _sg [ot_mts::site_grid]',
+          'proc fplace {nm x y o} { global _blk _dbu _sg; set i [$_blk findInst $nm]; set m [$i getMaster]',
+          '  lassign $_sg gx gw gy gh; set r [ot_mts::rule $m $o]',
+          '  lassign [dict get $r x] Px Sx; lassign [dict get $r y] Py Sy',
+          '  set px [expr {double([ot_mts::snap_axis [expr {round($x*$_dbu)}] $gx $gw $Px $Sx "$nm x"])/$_dbu}]',
+          '  set py [expr {double([ot_mts::snap_axis [expr {round($y*$_dbu)}] $gy $gh $Py $Sy "$nm y"])/$_dbu}]',
+          '  $i setOrient $o; $i setLocation [expr {round($px*$_dbu)}] [expr {round($py*$_dbu)}]; $i setPlacementStatus FIRM',
+          '  if {abs($px-$x) > 1e-6 || abs($py-$y) > 1e-6} { puts [format "OT_MTS_PLACE %s %s %s requested (%.3f, %.3f) '
+          'placed (%.3f, %.3f)" $nm [$m getName] $o $x $y $px $py] } }']
+    pl += [f'fplace {it.name} {it.x:.3f} {it.y:.3f} {it.orient}' for it in m['insts']]
     (work / 'place.tcl').write_text('\n'.join(pl) + '\n')
     tcl = f"""# case (a): real-technology S81 die floorplan, macro legality, on-track assert, pin access
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
@@ -1243,8 +1288,8 @@ def case_grt(m, work, k, tag, iters, cov, empty=False):
     npins = write_lefs(m, k, work / 'elements.lef')
     (work / 'tech.lef').write_text(VD.bundled_tech_lef(k))
     mm = dict(m)
-    if empty:
-        mm['buses'] = []
+    if empty:      # one short local bus only: GRT builds no GCell grid without a net
+        mm['buses'] = [next(b_ for b_ in m['buses'] if b_[1] == 'cfg_ctl')]
     write_netlist(mm, k, work / 'die.v')
     W, H = DIE
     tracks = [f'make_tracks {n} -x_offset {off * k:.3f} -x_pitch {p * k:.3f} -y_offset {off * k:.3f} -y_pitch {p * k:.3f}'
@@ -1345,6 +1390,10 @@ def windows(m):
     rb = max(f, key=lambda r: sum(1 for e in f[r]['elems'] if e[1] == 'BF'))
     fr = f[rb]
     w['field_bf'] = (fr['x'] - 1000.0, fr['y'] - 300.0, fr['x'] + COL_W + 1000.0, fr['y'] + 2600.0)
+    if NV_PAIRS:
+        rn = max(f, key=lambda r: sum(1 for e in f[r]['elems'] if e[1] == 'NV'))
+        fr = f[rn]
+        w['field_nv'] = (fr['x'] - 1000.0, fr['y'] - 300.0, fr['x'] + COL_W + 1000.0, fr['y'] + 2600.0)
     return {k: tuple(round(v, 3) for v in r) for k, r in w.items()}
 
 
@@ -1567,6 +1616,162 @@ exit
     return meta
 
 
+def _pg_only_m7(text):
+    """A real LEF with its PG pins reduced to their M7 shapes: the abstract carries the element's internal M1/M2/M6
+    rails without the vias joining them, so PSM sees them as floating (the PSM-0069 VDD-connectivity fault of the
+    S82 native-parent attempt).  The die grid connects to the M7 stripes; the element's internal grid is element
+    sign-off."""
+    def fix(mm):
+        out, cur = [], None
+        for line in mm.group(0).splitlines():
+            st = line.strip()
+            if st.startswith('LAYER'):
+                cur = st.split()[1]
+                if cur == 'M7':
+                    out.append(line)
+            elif st.startswith('RECT') or st.startswith('POLYGON'):
+                if cur == 'M7':
+                    out.append(line)
+            else:
+                cur = None if st in ('END', 'PORT') else cur
+                out.append(line)
+        return '\n'.join(out)
+    return re.sub(r'  PIN (VDD|VSS)\n(.*?)\n  END \1', fix, text, flags=re.S)
+
+
+def _gen_pg_lef(mst):
+    """Generated abstract with M7 PG stripes (0.288 um, 10.8 um pitch, as the routed q element) for the PSM window."""
+    L = [f'MACRO {mst.name}', '  CLASS BLOCK ;', f'  FOREIGN {mst.name} 0 0 ;', f'  SIZE {mst.w:.3f} BY {mst.h:.3f} ;',
+         '  SYMMETRY X Y ;']
+    for net, off in (('VDD', 1.0), ('VSS', 6.4)):
+        L += [f'  PIN {net}', '    DIRECTION INOUT ;', f'    USE {"POWER" if net == "VDD" else "GROUND"} ;', '    PORT',
+              '      LAYER M7 ;']
+        x = off
+        while x + 0.288 < mst.w - 0.2:
+            L.append(f'        RECT {x:.3f} 0.300 {x + 0.288:.3f} {mst.h - 0.3:.3f} ;')
+            x += 10.8
+        L += ['    END', f'  END {net}']
+    L += ['  OBS'] + [f'    LAYER M{i} ;\n      RECT 0 0 {mst.w:.3f} {mst.h:.3f} ;' for i in range(1, 7)] + ['  END',
+                                                                                                  f'END {mst.name}', '']
+    return '\n'.join(L)
+
+
+def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
+    """IR window with the REAL element abstracts: pdngen builds the bump-aligned M8/M9 die grid, connects it to the
+    q element's and every generated abstract's M7 PG stripes (M7-M8 vias) and to the cfg ROMs' M4 rails through an
+    M5 macro grid (M4-M5, M5-M8 via stacks); PSM solves the grid with each instance's power on its own pins."""
+    work.mkdir(parents=True, exist_ok=True)
+    x0, y0, x1, y1 = windows(m)[window]
+    x0, y0 = max(0.0, dn(x0, GX)), max(0.0, dn(y0, GY))
+    W, H = round(x1 - x0, 3), round(y1 - y0, 3)
+    vp = vdd_pitch or BUMP_PITCH / math.sqrt(0.5)
+    p = cov['field']
+    raw = dn(0.48 / p, 0.160)
+    n = math.ceil(vp / raw - 1e-9)
+    n += (n % 2 == 0)
+    pitch = round(vp / n, 4)
+    _init_real()
+    M = masters(m, 1)
+    ins, clip_pw = [], {}
+    for it in m['insts']:
+        if it.kind in ('phy', 'link') or it.x >= x1 or it.y >= y1 or it.x + it.w <= x0 or it.y + it.h <= y0:
+            continue
+        if it.x >= x0 and it.y >= y0 and it.x + it.w <= x1 and it.y + it.h <= y1:
+            ins.append(it)
+        elif it.master not in REAL_FILES:
+            # a generated slab crossing the window edge (spine SU / gather / collective, service blocks): its
+            # in-window part as a clipped generated master carrying its area share of the instance power
+            a, b = up(max(it.x, x0), GX), up(max(it.y, y0), GY)
+            w_, h_ = dn(min(it.x + it.w, x1) - a, GX), dn(min(it.y + it.h, y1) - b, GY)
+            if w_ < 20.0 or h_ < 20.0:
+                continue
+            nm = f'{it.master}_clip_{it.name}'
+            M[nm] = Q.Master(nm, w_, h_, M[it.master].obs_top, 'window clip of ' + it.master)
+            c = Inst(it.name, nm, a, b, w_, h_, 'R0', it.kind, it.region, it.domain)
+            clip_pw[it.name] = inst_power(it) * (w_ * h_) / (it.w * it.h)
+            ins.append(c)
+    masters_used = sorted({it.master for it in ins})
+    gen = [M[n_] for n_ in masters_used if n_ not in REAL_FILES]
+    (work / 'gen_pg.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' +
+                                     '\n'.join(_gen_pg_lef(g_) for g_ in gen) + 'END LIBRARY\n')
+    (work / 'q_pg.lef').write_text(_pg_only_m7(_lef_text(Q_LEF)))
+    (work / 'cfg.lef').write_text(_lef_text(CFG_LEF))
+    o = {'R0': 'N', 'MY': 'FN', 'MX': 'FS'}
+    d = ['VERSION 5.8 ;', 'DIVIDERCHAR "/" ;', 'BUSBITCHARS "[]" ;', 'DESIGN qirm ;', 'UNITS DISTANCE MICRONS 1000 ;',
+         f'DIEAREA ( 0 0 ) ( {round(W * 1000)} {round(H * 1000)} ) ;', f'COMPONENTS {len(ins)} ;']
+    d += [f'- {it.name} {it.master} + FIXED ( {round((it.x - x0) * 1000)} {round((it.y - y0) * 1000)} ) {o[it.orient]} ;'
+          for it in ins]
+    d += ['END COMPONENTS', 'END DESIGN', '']
+    (work / 'win.def').write_text('\n'.join(d))
+    sites = {'VDD': [], 'VSS': []}
+    for net, off in (('VDD', vp / 2), ('VSS', 0.0)):
+        yy = off if off > 0 else vp
+        while yy < H - 1.0:
+            xx = off if off > 0 else vp
+            while xx < W - 1.0:
+                sites[net].append((round(xx, 3), round(yy, 3)))
+                xx += vp
+            yy += vp
+    for net in ('VDD', 'VSS'):
+        (work / f'vsrc_{net}.loc').write_text(''.join(f'{x:.3f}, {y:.3f}, {BUMP_SIZE:.1f}, {VDD_V if net == "VDD" else 0.0}\n'
+                                                     for x, y in sites[net]))
+    off = round((vp / 2) % pitch, 4)
+    cfgm = real_lef(CFG_LEF)['name']
+    other = ' '.join(x for x in masters_used if x != cfgm)
+    power = {it.name: (clip_pw[it.name] if it.name in clip_pw else inst_power(it)) * (1.0 if peak else 0.25) for it in ins}
+    tcl = f"""
+set t0 [clock seconds]
+read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
+read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
+read_lef /work/q_pg.lef
+read_lef /work/cfg.lef
+read_lef /work/gen_pg.lef
+read_def /work/win.def
+add_global_connection -net {{VDD}} -inst_pattern {{.*}} -pin_pattern {{^VDD$}} -power
+add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -ground
+global_connect
+set_voltage_domain -name CORE -power VDD -ground VSS
+define_pdn_grid -name top -voltage_domains CORE
+add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch} -spacing {pitch / 2 - 0.48:.4f} -offset {off}
+add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch / 2 - 0.48:.4f} -offset {off}
+add_pdn_connect -grid top -layers {{M8 M9}}
+define_pdn_grid -macro -name m7 -cells {{{other}}} -halo {{0 0 0 0}} -voltage_domains CORE
+add_pdn_connect -grid m7 -layers {{M7 M8}}
+define_pdn_grid -macro -name mcfg -cells {{{cfgm}}} -halo {{0 0 0 0}} -voltage_domains CORE
+add_pdn_stripe -grid mcfg -layer M5 -width 0.12 -pitch 2.4 -spacing 1.08 -offset 0.6
+add_pdn_connect -grid mcfg -layers {{M4 M5}}
+add_pdn_connect -grid mcfg -layers {{M5 M8}}
+if {{[catch {{pdngen}} err]}} {{ puts "OT_PDN FAIL $err" }} else {{ puts "OT_PDN PASS" }}
+puts "OT_TIME pdn_s=[expr {{[clock seconds]-$t0}}]"
+read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+set_cmd_units -power W
+source {PLAT}/setRC.tcl
+set_pdnsim_source_settings -bump_dx {int(round(vp))} -bump_dy {int(round(vp))} -bump_size {int(BUMP_SIZE)} -bump_interval 1
+{chr(10).join(f'set_pdnsim_inst_power -inst {n_} -power {p_:.9f}' for n_, p_ in power.items() if p_ > 0)}
+foreach net {{VDD VSS}} {{
+  if {{[catch {{check_power_grid -net $net -error_file /work/pg_err_$net.rpt}} err]}} {{ puts "OT_PSM net=$net status=FAIL err=$err" }} else {{ puts "OT_PSM net=$net status=PASS" }}
+}}
+foreach net {{VDD VSS}} {{
+  set_pdnsim_net_voltage -net $net -voltage [expr {{$net eq "VDD" ? {VDD_V} : 0.0}}]
+  if {{[catch {{analyze_power_grid -net $net -vsrc /work/vsrc_$net.loc -voltage_file /work/ir_$net.rpt -error_file /work/ir_err_$net.rpt}} err]}} {{
+    puts "OT_IR net=$net status=FAIL err=$err" }} else {{ puts "OT_IR net=$net status=PASS" }}
+}}
+puts "OT_TIME psm_s=[expr {{[clock seconds]-$t0}}]"
+exit
+"""
+    (work / 'run.tcl').write_text(tcl)
+    kinds = {it.name: it.kind for it in ins}
+    (work / 'kinds.json').write_text(json.dumps(kinds))
+    meta = dict(case='c', method='real element abstracts + pdngen + PSM', window=window, window_um=[x0, y0, x1, y1],
+                size_um=[W, H], instances=len(ins), clipped=sorted(clip_pw), power_w=round(sum(power.values()), 4),
+                power_w_per_mm2=round(sum(power.values()) / (W * H / 1e6), 4), coverage=cov,
+                strap_pitch_um=pitch, strap_offset_um=off, masters=masters_used,
+                bumps=dict(array_pitch_um=BUMP_PITCH, vdd_pitch_um=round(vp, 2), size_um=BUMP_SIZE),
+                vdd_v=VDD_V, budget_mv=35.0)
+    (work / 'manifest.json').write_text(json.dumps(meta, indent=1))
+    return meta
+
+
 # ------------------------------------------------------------------------------------------------ records
 def record_b(work, m):
     from chip_assembly import v41_die as VD
@@ -1660,7 +1865,7 @@ def where(m, x, y):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['plan', 'real', 'grt', 'ir', 'record', 'check'])
+    ap.add_argument('mode', choices=['plan', 'real', 'grt', 'ir', 'irm', 'record', 'check'])
     ap.add_argument('--work', type=Path)
     ap.add_argument('--k', type=int, default=16)
     ap.add_argument('--tag', default='base')
@@ -1672,6 +1877,7 @@ def main(argv=None):
     ap.add_argument('--no-align', action='store_true')
     ap.add_argument('--avg', action='store_true')
     ap.add_argument('--out', type=Path)
+    ap.add_argument('--only', default='', help='record: case-name regex (cases built by the current floorplan)')
     ap.add_argument('--die', default='layer', choices=['layer', 'head'])
     a = ap.parse_args(argv)
     configure(a.die)
@@ -1682,6 +1888,9 @@ def main(argv=None):
         cov[k_] = float(v)
     if a.mode == 'check':
         print(json.dumps(legality(m), indent=1))
+        pc = pin_clashes(m)
+        pc16 = pin_clashes(m, 16, 0.024 * 16 - 1e-6)
+        print(json.dumps(dict(generated_pin_clashes=len(pc), examples=pc[:10], k16_clashes=len(pc16), k16_examples=pc16[:10])))
         print(json.dumps(trunk_stages(m), indent=1))
         return 0
     if a.mode == 'plan':
@@ -1699,7 +1908,7 @@ def main(argv=None):
     if a.mode == 'record':
         cases = {}
         for d in sorted(a.work.iterdir()):
-            if not (d / 'manifest.json').is_file():
+            if not (d / 'manifest.json').is_file() or (a.only and not re.fullmatch(a.only, d.name)):
                 continue
             man = json.loads((d / 'manifest.json').read_text())
             try:
@@ -1709,7 +1918,7 @@ def main(argv=None):
                     configure(man.get('variant', {}).get('die', 'layer'))
                     m = build()
                     cases[d.name] = record_b(d, m)
-                    bd = a.work / (d.name + '_base')
+                    bd = a.work / (re.sub(r'_i\d+$', '_i5', d.name) + '_base')   # the empty baseline is iteration-free
                     if not man.get('empty_baseline') and bd.is_dir():
                         cases[d.name]['windows_baseline_subtracted'] = gcell_windows(d, m, bd)
                 elif man.get('case') == 'c':
@@ -1727,9 +1936,17 @@ def main(argv=None):
     if a.mode == 'real':
         print(json.dumps(case_real(m, work)))
     elif a.mode == 'grt':
-        print(json.dumps(case_grt(m, work, a.k, a.tag, a.iters, cov, empty=a.empty)))
+        print(json.dumps(case_grt(m, work, a.k, a.tag, a.iters, cov, empty=a.empty)))  # variant carries die
+    elif a.mode == 'irm':
+        meta = case_irm(m, work, a.window, cov, vdd_pitch=a.vdd_pitch, peak=not a.avg)
+        meta['die'] = a.die
+        (work / 'manifest.json').write_text(json.dumps(meta, indent=1))
+        print(json.dumps(meta))
     elif a.mode == 'ir':
-        print(json.dumps(case_ir(m, work, a.window, cov, peak=not a.avg, vdd_pitch=a.vdd_pitch, align=not a.no_align)))
+        meta = case_ir(m, work, a.window, cov, peak=not a.avg, vdd_pitch=a.vdd_pitch, align=not a.no_align)
+        meta['die'] = a.die
+        (work / 'manifest.json').write_text(json.dumps(meta, indent=1))
+        print(json.dumps(meta))
     return 0
 
 
