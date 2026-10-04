@@ -23,7 +23,6 @@ def main():
     cmd,rec=prepare(a.selection,a.stages,a.preload,a.oracle_root,a.baseline,a.output)
     require(int.from_bytes(payload[:4],'little')==rec['token'],'embedding row token differs')
     cmd+=['--embed-bin',str(a.embedding_bin.resolve())]
-    (a.output/'run').mkdir()
     rec['command']=cmd
     rec['embedding']={'path':str(a.embedding_bin.resolve()),'sha256':a.embedding_sha256}
     rec['status']='prepared'
