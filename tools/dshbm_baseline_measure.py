@@ -126,6 +126,19 @@ def cmd_sm(a):
     """tools/w19_sm_real_ops.py on the dump, in process: its pinned source list predates the LAT-parameterised FP32
     add (799afc7bc), whose prefix adders (ot_hdc_ksadd_k) live in rtl/hdc/ot_hdc_prefix.sv, so that file is added
     to the compile list here (no pinned file edited)."""
+    if a.sm_accelerator:
+        # Same retained executor operands and W19 codecs; explicit candidate
+        # selection never replaces the baseline record consumed by compose.
+        import hbm_accel_sm_v_gate as gate
+        out = Path(a.out).resolve()
+        record = out / "sm_accel_real_ops.json"
+        if record.exists():
+            raise FileExistsError("Preserve the prior SM candidate verdict: " + str(record))
+        return gate.main(["real", "--dump", str(out / "sm_dump.pkl"),
+                          "--out", str(record),
+                          "--workdir", str(Path(a.work).resolve() if a.work else out / "sm_accel_work"),
+                          "--jobs", str(a.jobs), "--simulator", a.sm_simulator,
+                          "--verilator", a.sm_verilator, "--build-jobs", str(a.sm_build_jobs)])
     import rtl_gpu_sm_exact as S
     import w19_sm_real_ops as SM
     if "rtl/hdc/ot_hdc_prefix.sv" not in S.SMV_SRC:
@@ -1033,6 +1046,11 @@ if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] in ("execute", "
     ap.add_argument("step")
     ap.add_argument("--out", required=True)
     ap.add_argument("--jobs", type=int, default=12)
+    ap.add_argument("--sm-accelerator", action="store_true",
+                    help="SM step only: explicit ENABLE0/1 accelerator comparison on the retained dump; separate record")
+    ap.add_argument("--sm-simulator", choices=("iverilog", "verilator"), default="iverilog")
+    ap.add_argument("--sm-verilator", default="verilator")
+    ap.add_argument("--sm-build-jobs", type=int, default=1)
     ap.add_argument("--bcast", type=int, default=0)
     ap.add_argument("--ret", type=int, default=0)
     ap.add_argument("--mlat", type=int, default=3)
