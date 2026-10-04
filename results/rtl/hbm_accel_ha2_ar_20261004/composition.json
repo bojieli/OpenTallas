@@ -1,0 +1,95 @@
+{
+ "ar_op": {
+  "baseline_w19_ns": 1046.1,
+  "baseline_words": 44,
+  "baseline_source": "W19 AR token collective_model: W15b hbm_p48_ss all_reduce fit (988.74 fixed + 6.0696/word) at 32,768 B, slot 749.7 B",
+  "model_accel_ns": 763.9,
+  "model_accel_basis": "R2 fixed 823.6->608.8 ns (2 x 83.4 in-package + 2 x 221.0 C1 reduce) and R3a 67.4 ns cut-through, slope kept",
+  "measured_ns": 625.3,
+  "measured_minus_model_ns": -138.6,
+  "ops_per_token": 40
+ },
+ "saved_us": {
+  "model": 11.29,
+  "measured": 16.83
+ },
+ "ds_rates": {
+  "1M": {
+   "ablation_honest_r0c_us": 457.0,
+   "ablation_honest_r0c_tok_s": 2188.2,
+   "ha2_ar_only_on_r0c_tok_s": 2271.9,
+   "ha2_ar_gain_pct_on_r0c": 3.82,
+   "model_firm_ar_us": 331.65,
+   "model_firm_ar_tok_s": 3015.2,
+   "firm_with_measured_ar_us": 326.11,
+   "firm_with_measured_ar_tok_s": 3066.5,
+   "ha2_ar_gain_pct_in_firm_composition": 5.16,
+   "w19_ablation_us": 442.14
+  },
+  "200K": {
+   "ablation_honest_r0c_us": 456.13,
+   "ablation_honest_r0c_tok_s": 2192.4,
+   "ha2_ar_only_on_r0c_tok_s": 2276.2,
+   "ha2_ar_gain_pct_on_r0c": 3.82,
+   "model_firm_ar_us": 331.02,
+   "model_firm_ar_tok_s": 3021.0,
+   "firm_with_measured_ar_us": 325.49,
+   "firm_with_measured_ar_tok_s": 3072.3,
+   "ha2_ar_gain_pct_in_firm_composition": 5.16,
+   "w19_ablation_us": 441.3
+  }
+ },
+ "qwen": {
+  "measured_tp2_ar_ns": 115.1,
+  "ars_per_token": 72,
+  "model_exposed_us_per_token": 0.3,
+  "model_ar_tok_s": null,
+  "note": "Qwen AR is hidden under the weight stream in the model (Q3 REJECTED at 0 gain); the direct link cannot change a hidden term. Upper bound if every AR were exposed: 8.3 us a token, which is the ablation's own in-package link term as well (both designs use the same direct UCIe pair)"
+ },
+ "gather_sensitivity": {
+  "measured_ns": {
+   "128B_per_rank": 422.4,
+   "512B_per_rank": 745.1
+  },
+  "measured_fixed_ns": 314.9,
+  "measured_slope_ns_per_B_rank": 0.8401,
+  "w15_nvls_ag_fixed_ns": 777.0,
+  "model_accel_ag_fixed_ns": 436.4,
+  "codex_snapshot_gather_last_ns": 2158.392,
+  "note": "all 96 dies, 64 / 256 BF16 a rank, exact; fixed by two-point extrapolation to 0 B"
+ },
+ "area_power": {
+  "endpoint_register_bits": {
+   "rx_buffers": 343680,
+   "tx_queues": 945120,
+   "delivery_queues": 34368,
+   "cdc_afifos": 687360,
+   "port_wire_stages": 300720,
+   "hub_wire_stages": 112140,
+   "operand_slots": 32768
+  },
+  "endpoint_register_bits_total": 2456156,
+  "endpoint_cell_mm2": 0.774,
+  "endpoint_floorplan_mm2_at_70pct": 1.106,
+  "fp32_adders": 112,
+  "serdes": {
+   "lanes": 40,
+   "mm2_at_0p4": 16.0,
+   "mm2_codex_18_over_42": 17.14,
+   "ledger_reservation_mm2": 18.0,
+   "fits": true,
+   "always_on_w": 29.12,
+   "always_on_w_band": [
+    25.09,
+    33.6
+   ],
+   "codex_w": 31.43,
+   "budget_w": 33.0,
+   "grade": "ESTIMATE (no PHY view; transferred per-lane constants)"
+  },
+  "die_core_mm2": 660.08,
+  "die_used_before_mm2": "sm 74.2 + l2 4.96 + hub 112.7 + io 28 (v41_hbm_die.json)",
+  "note": "queues as flops are an upper bound (SRAM macros would hold the 32-deep FIFOs); the endpoint replaces the NVLS port logic, whose area is not credited"
+ },
+ "ladder_sha256": "5266d81b537fe18edd427f853bdb25c6b6533c3c65e7dafc2ac3bedb0378125f"
+}

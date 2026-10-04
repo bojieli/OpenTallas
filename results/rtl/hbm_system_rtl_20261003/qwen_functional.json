@@ -1,0 +1,129 @@
+{
+ "schema": "opentallas.gpu_sys.qwen_functional.v1",
+ "tool": "tools/gpu_sys/qwen_hbm.py --check",
+ "golden": "tools/hdc_golden.py Model(groups=256, tp=2) decode_token_tp, default env",
+ "scope": "OTG-1 kernels on the functional machine (tools/gpu_sys/machine.py); every layer residual of die 0 and the token compared bit-exactly at every position",
+ "positions": [
+  {
+   "pos": 0,
+   "input": 92,
+   "machine": 3978,
+   "golden": 3978
+  },
+  {
+   "pos": 1,
+   "input": 872,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 2,
+   "input": 198,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 3,
+   "input": 361,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 4,
+   "input": 448,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 5,
+   "input": 2210,
+   "machine": 3932,
+   "golden": 3932
+  },
+  {
+   "pos": 6,
+   "input": 13,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 7,
+   "input": 93,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 8,
+   "input": 198,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 9,
+   "input": 92,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 10,
+   "input": 3363,
+   "machine": 3837,
+   "golden": 3837
+  },
+  {
+   "pos": 11,
+   "input": 198,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 12,
+   "input": 115,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 13,
+   "input": 271,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 14,
+   "input": 116,
+   "machine": 382,
+   "golden": 382
+  },
+  {
+   "pos": 15,
+   "input": 271,
+   "machine": 1073,
+   "golden": 1073
+  }
+ ],
+ "layer_residual_mismatches": 0,
+ "fp_fail_closed_lanes": 0,
+ "machine_totals": {
+  "instr": 298608,
+  "tc_lines": 1277952,
+  "ldg_bytes": 1737216,
+  "stg_bytes": 627200
+ },
+ "peak_vector_registers": 82,
+ "kernel_words": {
+  "embed": 7,
+  "L0": 1085,
+  "L1": 1085,
+  "L2": 1085,
+  "L3": 1085,
+  "head": 341
+ },
+ "status": "pass",
+ "source_sha256": {
+  "tools/gpu_sys/isa.py": "dfbd61c80978272f11a5f687c136f2f26da0fe4e20e944b1dd91ec3e9cf4d7bc",
+  "tools/gpu_sys/asm.py": "ffe25d4ed9ea7d00e3a45cf470a303056f62182c9cdccfebbababb37cb04702c",
+  "tools/gpu_sys/machine.py": "39b58517da510530fb14fecdb5ca7bee191573cc0d2f750e94085a79de3c09e2",
+  "tools/gpu_sys/qwen_hbm.py": "dfdbfb8de427b3df931ab4e83e68c26abd349035d56b9e334b053808f187ab1f",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+ }
+}

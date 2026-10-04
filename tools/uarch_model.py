@@ -1188,8 +1188,62 @@ def sm_op_cycles(rows_die: float, K: int, fmt: str, drain: int, group_slot: bool
 V41_HBM_FABRIC_US = dict(collective_latency=125.9, collective_bytes=1.5, pipeline_hops=0.9, control=2.0)
 V41_HBM_DIES = 96          # G = 96: every matrix 1/96 per die (W9 handoff 8)
 
+# Sourced HBM switch collective latency (owner decision 2026-10-04): the single quoted 250 ns switch core
+# (alpha = 2 x 209 + 250 = 668 ns, W15 measured fixed AR 823.6 / AG 777.0 ns) is replaced, OPT-IN, by a sourced
+# low / central / high hardware-path latency for one 32 KB all-reduce across 48 packages in one NVL72-class 18-chip
+# tier (results/uarch/hbm_switch_latency_range_20261004/switch_latency_research.md).  Default None: every existing
+# figure is unchanged.  Slope / bytes terms are kept.  FEC: the sourced range is the as-published (rack-cable KP4
+# class) path; "light" removes (209 - 130) ns on every SerDes leg the mechanism crosses (2 per switch traversal),
+# the same light-FEC 130 ns class as the ROM board links.  The 0.2-0.5 us LLR retry is a p99.9 tail, not a median.
+HBM_SWITCH_LATENCY = dict(
+    low=dict(ar_us=0.65, ag_us=0.60, traversals_ar=1, traversals_ag=1,
+             mechanism="push-mode in-switch reduce, SUE/UALink-class endpoints (~0.5 us one-way, Broadcom RM104 "
+                       "App. A; UALink 1.0 RTT < 1 us) + 36 ns serialisation + ~50 ns reduce + ~0.1 us stripe tail"),
+    central=dict(ar_us=1.40, ag_us=1.20, traversals_ar=1, traversals_ag=1, ar_range_us=[1.3, 1.5],
+                 mechanism="push-mode in-switch reduce with measured GB200 endpoint constants: 0.792 us one-way + "
+                           "~0.3 us L2 (arXiv:2607.16100 Sec. VI) + serialisation + reduce + tail"),
+    high=dict(ar_us=3.25, ag_us=2.0, traversals_ar=4, traversals_ag=2, ar_range_us=[3.0, 3.5],
+              mechanism="NVLS as exposed today: readiness barrier + multimem.ld_reduce RTT + multicast store + tail "
+                        "(~3.3 us), or one-shot multicast store 1.4 us SoL + 1.7 us ingress (~3.1 us)"),
+    retry_tail_us=[0.2, 0.5], kp4_leg_ns=209.0, light_leg_ns=130.0,
+    w15_fixed_ns=dict(ar=988.74 / 1.20048019208, ag=932.8 / 1.20048019208),   # W19_COLL_FIT (hbm_p48_ss)
+    ag_basis="all-gather is latency-bound at these sizes: one traversal + tail, 0.6 (SUE-class) - 1.2 us (GB200-class) "
+             "(research note); high adds one readiness/flag traversal (0.8 us, [1]) -- DERIVED, labelled",
+    src="results/uarch/hbm_switch_latency_range_20261004/switch_latency_research.md (sec. 2)")
+_HBM_SWITCH = None      # opt-in scenario name (low / central / high); None keeps every published figure
+_HBM_FEC = "kp4"
 
-def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
+
+def hbm_switch_collective_us(scenario, kind="ar", fec="kp4", split=False):
+    """Fixed hardware-path latency of one TP-96 collective (us) under a sourced scenario.  split=False (the owner's
+    primary): every collective priced at the all-reduce range; split=True: gathers at the gather note's range."""
+    sc = HBM_SWITCH_LATENCY[scenario]
+    key = "ag" if (split and kind == "ag") else "ar"
+    legs = 2 * sc["traversals_" + key]
+    d = HBM_SWITCH_LATENCY["kp4_leg_ns"] - HBM_SWITCH_LATENCY["light_leg_ns"]
+    return sc[key + "_us"] - (legs * d * 1e-3 if fec == "light" else 0.0)
+
+
+def v41_hbm_fabric_us(switch=None, fec="kp4"):
+    """The legacy fabric lump (V41_HBM_FABRIC_US: ~188 collectives x 0.668 us); with a scenario, the per-collective
+    fixed latency is the sourced one.  Bytes, pipeline hops and control are kept."""
+    f = dict(V41_HBM_FABRIC_US)
+    if switch:
+        f["collective_latency"] = f["collective_latency"] / 0.668 * hbm_switch_collective_us(switch, "ar", fec)
+    return f
+
+
+# Opt-in owner/ACK/fence and refresh-live first-access hypothesis from the retained
+# v41_hbm_service_term_20261003 proposal. Existing callers retain the exact off path.
+V41_HBM_SERVICE = dict(
+    off=dict(boundary_cycles=0, routed_fetch_ns=0.0),
+    low=dict(boundary_cycles=2, routed_fetch_ns=133.2 + 5.4),
+    central=dict(boundary_cycles=4, routed_fetch_ns=469.5 + 6.4 + 0.1),
+    high=dict(boundary_cycles=6, routed_fetch_ns=526.4 + 7.4 + 18.3),
+)
+
+
+def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None, service="off", switch=None, fec="kp4"):
     """V4.1 HBM token on the SM design, K-chain aware: the arch DAG's critical path at 1M with every matvec
     re-priced as an SM op on its 1/96 row slice (sm_op_cycles), the dedicated units' nodes (W11 spec widths)
     at their arch price, one barrier per global boundary, and the comparator's switched-fabric terms.  The
@@ -1221,8 +1275,14 @@ def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
     nb = v41_boundaries(path, g.nodes)
     bc = d["barrier"]["boundary_cycles"] if barrier_cycles is None else barrier_cycles
     parts = dict(sm_matvec=mv * 1e6, x_broadcast_fill=xfill * 1e6, dedicated_and_su=other * 1e6,
-                 verify_extra_issue=extra * 1e6, barrier=nb * bc / clock * 1e6, **V41_HBM_FABRIC_US)
+                 verify_extra_issue=extra * 1e6, barrier=nb * bc / clock * 1e6,
+                 **v41_hbm_fabric_us(switch or _HBM_SWITCH, fec if switch else _HBM_FEC))
     parts["collective_bytes"] *= positions             # every position's activations cross the fabric
+    sv = V41_HBM_SERVICE[service]  # named, source-priced profiles only
+    if sv["boundary_cycles"] or sv["routed_fetch_ns"]:
+        n_routed = sum(1 for x in path if x.endswith(".ffn.experts_gu"))
+        parts["boundary_service"] = nb * sv["boundary_cycles"] / clock * 1e6
+        parts["routed_fetch"] = n_routed * sv["routed_fetch_ns"] * 1e-3
     chain = sum(parts.values())
     T = max(chain, 37.4)
     return T, parts, nb
@@ -1814,6 +1874,25 @@ def hbm_speculation_rows():
                      draft_us=round(Td, 1), tokens_s=round(V41_TAU * 1e6 / (T_v + Td), 1),
                      speedup=round(V41_TAU * T_ar / (T_v + Td), 3),
                      verify_breakdown_us={k: round(x, 1) for k, x in parts_v.items()}))
+    return rows
+
+
+V41_HBM_DSPARK_REC = ROOT / "results/speculative/v41_hbm_speculation_methods_20261003/v41_hbm_speculation_methods.json"
+
+
+def v41_hbm_dspark_rows(ctx=1048576):
+    """OPT-IN (--v41-hbm-dspark; never on a default path): the V4.1 HBM comparator's DSpark rows with the drafter
+    priced from its real structure (3 stages x 5 slots + LM head + 5 serial Markov argmaxes) and the verify pass's
+    MEASURED expert union, on W19's composer (tools/v41_hbm_speculation_methods.py).  V4.1's built-in 'MTP' is
+    DSpark: these rows re-price the existing headline's terms; HBM_W19 and V41_DRAFT_FRACTION are unchanged."""
+    rec = json.loads(V41_HBM_DSPARK_REC.read_text())
+    c = rec["contexts"][str(ctx)]
+    rows = [dict(design="v41_hbm_ar_w19", ctx=ctx, tokens_s=c["ar_tokens_s"], T_us=c["ar_us"])]
+    for k, v in c["headline_comparison_tau_3649_gamma5"].items():
+        rows.append(dict(design=f"v41_hbm_dspark_g5_tau3649_{k}", ctx=ctx, tokens_s=v["tokens_s"], step_us=v["step_us"]))
+    for ts, r in c["rates"].items():
+        for x in r["by_gamma"]:
+            rows.append(dict(design=f"v41_hbm_dspark_g{x['gamma']}", tau_set=ts, ctx=ctx, **x))
     return rows
 
 
@@ -6300,6 +6379,12 @@ def w10_pinaccess_contract_review(inputs):
         source_sha256=inputs["sources_sha256"])
 
 
+def dsrom_s81_components(ctx=1048576):
+    """Selected S81 component composition; unbound provider costs stay unknown."""
+    from dsrom_s81_unified_components import build
+    return build(ROOT, ctx=ctx)
+
+
 def dsrom_s82_rows():
     """Opt-in retained-RD64 conditional composition; defaults are unchanged."""
     from dsrom_s82_token_pricing import build
@@ -6359,9 +6444,121 @@ def qwen_posted_kv_model(records):
                                "measured gain >=1% after token composition", "contextual SS/FF and hub routing"])
 
 
+SWITCH_RANGE_DIR = "results/uarch/hbm_switch_latency_range_20261004"
+DSROM_WAVEFRONT = "results/rtl/dsrom_wavefront_verify_20261004/record.json"   # S81 + wavefront (ROM, light FEC)
+TAU_OWNER6 = 4.159      # equal 6-class blend, gamma 5 (results/speculative/v41_mtp_acceptance_qualified_20261003/
+                        # blend_owner6.json blends."owner 6-class equal".greedy.tau_blend_harmonic)
+
+
+def hbm_switch_latency_range():
+    """DS-V4.1 HBM per-user AR / MTP (tau 4.159, gamma 5) at 1M and 200K under the sourced switch-latency scenarios,
+    both FEC classes, for the W19 ablation, the accelerator (frozen HA firm ladder with R2 removed: the owner retains
+    the NVLink-class switch), the measured composition and the GPU-faithful R0 row; ROM:HBM ratios against the DS ROM
+    S81 + wavefront record.  Every collective's FIXED term is re-priced; slope / bytes terms are kept."""
+    from hbm_accelerator_model import _load_study, COMPOSITION
+    m, _, ds, _ = _load_study(ROOT)
+    fit = HBM_SWITCH_LATENCY["w15_fixed_ns"]
+    n = m.W19_COLL_COUNT
+    n_draft = n["total"] * m.DRAFT_PARTS["collective"] / m.W19_AR["collective"]   # ASSUMED: same per-collective mix
+    T = m.T
+
+    def delta(scen, fec, split, scale=1.0):
+        """us added to a pass whose collective count is scale x W19's (40 AR + 225 gather-like)."""
+        if scen == "baseline":
+            if fec == "kp4":
+                return 0.0
+            return -scale * n["total"] * 2 * (HBM_SWITCH_LATENCY["kp4_leg_ns"] - HBM_SWITCH_LATENCY["light_leg_ns"]) * 1e-3
+        ar = hbm_switch_collective_us(scen, "ar", fec, split) - fit["ar"] * 1e-3
+        ag = hbm_switch_collective_us(scen, "ag", fec, split) - fit["ag"] * 1e-3
+        return scale * (n["all_reduce"] * ar + n["gather_like"] * ag)
+
+    rungs = {r: s for r, s, _ in m.ds_rungs(1, include_conditional=False)}
+    rungs6 = {r: s for r, s, _ in m.ds_rungs(6, include_conditional=False)}
+    keep = [r for r in rungs if r != "R2"]
+    d = dict(m.DRAFT_PARTS)
+    d["collective"] *= 1 - rungs["R3a"] / m.W19_AR["collective"]
+    d["barrier"] *= (m.W19_BOUNDARY_CYC - m.W19_BARRIER_RELEASE_CYC) / m.W19_BOUNDARY_CYC
+    hw_b = m.W19_BOUNDARY_CYC / m.F_FAST * 1e6
+    grid = m.GPU_GRID_SYNC_NS * 1e-3
+    gpu_extra = lambda parts: parts["barrier"] / hw_b * (grid - hw_b)          # noqa: E731  every boundary a grid sync
+    comp = json.loads((ROOT / COMPOSITION).read_text())["revisions"][-1]
+    measured = sum(r["measured_gain_us"] for r in comp["rows"]
+                   if r["measured_gain_us"] and not r["verdict"].startswith("REJECT"))
+    designs = dict(
+        ablation_w19=dict(ar=T(m.VERIFY_PARTS[1]), ver=T(m.VERIFY_PARTS[6]), draft=T(m.DRAFT_PARTS),
+                          what="W19 composed GPU-organised HBM ablation (custom 62-cycle barrier; not GPU-real)"),
+        accelerator_firm_switch=dict(ar=T(m.VERIFY_PARTS[1]) - sum(rungs[r] for r in keep),
+                                     ver=T(m.VERIFY_PARTS[6]) - sum(rungs6[r] for r in keep), draft=T(d),
+                                     what="frozen HA firm ladder (R0c..R6a, no R7a) WITHOUT R2: the switch tier is "
+                                          "retained (direct mesh owner-rejected); UNVALIDATED hypothesis"),
+        accelerator_measured_composition=dict(ar=T(m.VERIFY_PARTS[1]) - measured, ver=T(m.VERIFY_PARTS[6]) - measured,
+                                              draft=T(m.DRAFT_PARTS), measured_gain_us=measured,
+                                              what=f"W19 minus measured, non-rejected rung gains ({COMPOSITION} "
+                                                   f"r{comp['revision']}: R5a 13.381 us, exact+measured, NOT adopted)"),
+        gpu_faithful_r0=dict(ar=T(m.VERIFY_PARTS[1]) + gpu_extra(m.VERIFY_PARTS[1]),
+                             ver=T(m.VERIFY_PARTS[6]) + gpu_extra(m.VERIFY_PARTS[6]),
+                             draft=T(m.DRAFT_PARTS) + gpu_extra(m.DRAFT_PARTS),
+                             what="W19 with every boundary a 1.43 us cooperative-grid sync (study R0, GPU-faithful)"))
+    rom = json.loads((ROOT / DSROM_WAVEFRONT).read_text())["composition"]["ctx"]
+    ctxs = {"1M": ("1048576", 1.0), "200K": ("200000", m.CTX_200K_RATIO)}
+    scen = ["baseline", "low", "central", "high"]
+    rows = []
+    for ctx, (rk, k) in ctxs.items():
+        rr = rom[rk]
+        rom_ar, rom_mtp = rr["ar_tok_s"], rr["wavefront_occupancy"]["mtp_tok_s"]
+        for name, dd in designs.items():
+            for split in (False, True):
+                for fec in ("kp4", "light"):
+                    for sc in scen:
+                        if split and sc == "baseline":
+                            continue
+                        ar = dd["ar"] * k + delta(sc, fec, split)
+                        step = (dd["ver"] + dd["draft"]) * k + delta(sc, fec, split, 1 + n_draft / n["total"])
+                        ar_r, mtp_r = 1e6 / ar, TAU_OWNER6 * 1e6 / step
+                        rows.append(dict(ctx=ctx, design=name, scenario=sc, fec=fec,
+                                         gathers="ar_range" if not split else "gather_note",
+                                         ar_us=round(ar, 2), ar_tok_s=round(ar_r, 1), mtp_step_us=round(step, 2),
+                                         mtp_tok_s=round(mtp_r, 1), rom_over_hbm_ar=round(rom_ar / ar_r, 3),
+                                         rom_over_hbm_mtp=round(rom_mtp / mtp_r, 3),
+                                         fec_matched_to_rom=fec == "light"))
+    per_coll = {sc: {fec: dict(ar_us=round(hbm_switch_collective_us(sc, "ar", fec), 3),
+                               ag_note_us=round(hbm_switch_collective_us(sc, "ag", fec, True), 3))
+                     for fec in ("kp4", "light")} for sc in ("low", "central", "high")}
+    per_coll["baseline_w15_measured"] = {"kp4": dict(ar_us=round(fit["ar"] * 1e-3, 4), ag_us=round(fit["ag"] * 1e-3, 4)),
+                                         "light": dict(ar_us=round(fit["ar"] * 1e-3 - 0.158, 4),
+                                                       ag_us=round(fit["ag"] * 1e-3 - 0.158, 4))}
+    legacy = {sc: {fec: round(v41_hbm_fabric_us(sc, fec)["collective_latency"], 1) for fec in ("kp4", "light")}
+              for sc in ("low", "central", "high")}
+    return dict(schema="opentallas.uarch.hbm_switch_latency_range.v1", evidence="MODEL_ONLY (sourced latency range)",
+                default_enabled=False, scenarios=HBM_SWITCH_LATENCY, per_collective_fixed_us=per_coll,
+                collective_counts=dict(w19_pass=n, draft_assumed=round(n_draft, 2),
+                                       draft_basis="W19 per-collective mix x DRAFT_PARTS.collective / W19 collective"),
+                legacy_fabric_collective_latency_us=dict(baseline_0p668=V41_HBM_FABRIC_US["collective_latency"], **legacy,
+                    basis="V41_HBM_FABRIC_US collective_latency 125.9 = ~188 collectives x 0.668 us"),
+                tau=TAU_OWNER6, gamma=5, tau_src="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json",
+                rom_record=DSROM_WAVEFRONT, rom_fec="light (130 ns board link)",
+                rom=dict({c: dict(ar_tok_s=rom[rk]["ar_tok_s"], mtp_tok_s=rom[rk]["wavefront_occupancy"]["mtp_tok_s"])
+                          for c, (rk, _) in ctxs.items()}),
+                designs={k: {x: (round(y, 3) if isinstance(y, float) else y) for x, y in v.items()} for k, v in designs.items()},
+                retry_tail=dict(per_event_us=HBM_SWITCH_LATENCY["retry_tail_us"],
+                                one_event_per_token_pct_of_w19_ar=[round(100 * t / T(m.W19_AR), 3)
+                                                                   for t in HBM_SWITCH_LATENCY["retry_tail_us"]],
+                                rule="p99-p99.9 LLR term (any of ~864 stripe paths); not in the median rows"),
+                fec_rule="ROM board links are light-FEC 130 ns: fec=light rows are FEC-matched; fec=kp4 rows are the "
+                         "as-published (unequal) comparison, kept for reference",
+                rows=rows)
+
+
+def hbm_accel_rows():
+    """Default-off HA0/HA10 hypotheses; no measured/adopted accelerator rate."""
+    from hbm_accelerator_model import build
+    return build(sys.modules[__name__])
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
     ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
     ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
@@ -6372,8 +6569,18 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--qwen", action="store_true", help="the Qwen3-8B ROM die rows only")
     ap.add_argument("--qwen-posted-kv-baseline", action="append", help="REAL_MEM record for default-off posted-write sizing")
-    ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM comparators only")
+    ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM ablation only")
+    ap.add_argument("--hbm-accel", action="store_true",
+                    help="default-off UNVALIDATED HBM accelerator ladder and fairness hypotheses")
+    ap.add_argument("--hbm-switch-latency-range", action="store_true",
+                    help="sourced low/central/high HBM switch collective latency: DS HBM AR/MTP, both FEC classes, ROM:HBM")
+    ap.add_argument("--hbm-switch-latency", choices=("low", "central", "high"),
+                    help="OPT-IN: price the V4.1 HBM fabric's per-collective latency at this sourced scenario")
+    ap.add_argument("--hbm-fec", choices=("kp4", "light"), default="kp4", help="with --hbm-switch-latency: SerDes FEC class")
+    ap.add_argument("--fec-fairness", action="store_true", help="same-FEC ROM board/NVLink-class switch model-only timing rows")
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
+    ap.add_argument("--v41-hbm-dspark", action="store_true", help="OPT-IN: V4.1 HBM DSpark rows (priced draft, "
+                    "measured expert union) from results/speculative/v41_hbm_speculation_methods_20261003")
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
     ap.add_argument("--vm-waterfall", action="store_true", help="the VM waterfall and levers (root 2026-10-01)")
@@ -6382,6 +6589,42 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    global _HBM_SWITCH, _HBM_FEC
+    _HBM_SWITCH, _HBM_FEC = a.hbm_switch_latency, a.hbm_fec
+    if a.hbm_switch_latency_range:
+        payload = json.dumps(hbm_switch_latency_range(), indent=1, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.fec_fairness:
+        from fec_class_fairness import policy
+        payload = json.dumps(policy(ROOT), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.dsrom_s81_components:
+        payload = json.dumps(dsrom_s81_components(a.ctx), indent=2, sort_keys=True, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.hbm_accel:
+        acc = hbm_accel_rows()
+        if a.hbm_switch_latency:     # opt-in: the sourced switch scenario's rows ride the accelerator record
+            rng = hbm_switch_latency_range()
+            acc["switch_latency_scenario"] = dict(scenario=a.hbm_switch_latency, fec=a.hbm_fec, src=SWITCH_RANGE_DIR,
+                rows=[r for r in rng["rows"] if r["scenario"] == a.hbm_switch_latency and r["fec"] == a.hbm_fec])
+        payload = json.dumps(acc, indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.dsrom_s82 or a.qwen_posted_kv_baseline:
         if a.dsrom_s82:
             payload = json.dumps(dsrom_s82_rows(), indent=2, sort_keys=True) + "\n"
@@ -6593,6 +6836,159 @@ def main(argv=None):
     if a.out:
         Path(a.out).parent.mkdir(parents=True, exist_ok=True)
         Path(a.out).write_text(json.dumps(out, indent=1, default=str) + "\n")
+
+
+def dsrom_s81_native_su_prefix():
+    """Selected SUN256 leaf and its explicit minimum-component staging costs.
+
+    Functional operand staging is charged separately from the existing SU.
+    Unbound arbitration, routes and visibility prohibit product-rate credit.
+    """
+    path = Path(__file__).resolve().parents[1] / 'results/uarch/dsrom_sun256_native_prefix_20261004/model.json'
+    selected = json.loads(path.read_text())
+    staging = selected['extra_staging']
+    state_bits = (staging['payload_bits'] + staging['address_valid_metadata_floor_bits']
+                  + staging['output_collect_data_address_bits'] + staging['descriptor_hold_bits'])
+    return dict(schema='opentallas.dsrom.S81.native-SU-prefix.v1',
+        adopted=False, scope='Selected native leaf/component integration; no token-rate or physical admission',
+        selected_model=str(path.relative_to(path.parents[3])),
+        parameters=selected['parameters'], ports=selected['ports'],
+        MACs_per_cycle_peak=selected['parameters']['N'],
+        operand_bytes_per_edge_peak=selected['ports']['native_operand_bits'] // 8,
+        compute_intensity_MACs_per_operand_byte=selected['parameters']['N'] / (selected['ports']['native_operand_bits'] // 8),
+        native_write_bytes_per_edge_peak=4 * (selected['ports']['native_VM_write_lanes'] + selected['ports']['native_reducer_write_lanes']),
+        prefix_operations=selected['prefix_operations'],
+        adapter_calendar=selected['adapter_calendar'],
+        staging=staging, state_bits_floor=state_bits,
+        staging_DFF_floor_mm2=state_bits * DFF_UM2 / 1e6,
+        replicas_per_rank=1, TP=4,
+        routing_tracks_data_bundle_floor=selected['ports']['native_operand_bits'],
+        corridor_capacity=None, slot_fit=False, SS_FF_in_context=False,
+        mux_fanout_cost='Actual staged operand read ports and retained native writes; no additional unlimited VM port',
+        missing_costs=selected['missing_costs'],
+        combined_single_user_added_us=None, overlap_credit_us=0)
+
+
+def dsrom_s81_native_he_bootstrap():
+    """Native prefix leaves, reusing selected HE and SUN256 reducer arithmetic.
+
+    A source-component gate, not another physical engine allocation. Actual
+    VM/weight providers must supply fixed-latency reads and matched visibility.
+    """
+    return dict(schema='opentallas.dsrom.S81.native-HE-bootstrap.v1',
+        all_numbers='SOURCE_BOUND_MODEL_NOT_MEASURED_TOKEN_RATE', adopted=False,
+        HE=dict(source='rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv', HW=8, TL=9,
+            KCMAX=2560, PMAX=2, MP=1, AW=30, NW=21, BAW=16,
+            FP32_MAC_lanes=64, MACs_per_cycle_peak=64,
+            VM_read_ports=8, VM_read_bytes_per_edge_peak=32,
+            weight_read_banks=8, weight_bytes_per_edge_peak=256,
+            weight_data_boundary_bits=2048, VM_read_data_boundary_bits=256,
+            VM_read_address_boundary_bits=240, output_masked_data_boundary_bits=1024,
+            output_address_bits=30, output_mask_bits=32,
+            input_staging_BF16_bits=8*2*320*8*16,
+            nout=24, K=20480, runs_per_row=320, input_LOAD_read_edges=2560,
+            dot_products=491520, minimum_issue_edges=24*320,
+            scalar_normalization_in_HE=False,
+            LOAD_capture_edges=2, command_staging_edges=1,
+            native_tail_and_result_drain_edges=None,
+            ordered_arithmetic='chunk8 R-ARITH, sequential products per chunk then padded pairwise tree; raw mode scale=0',
+            accepted_VM_visibility_not_engine_idle=True),
+        SSX=dict(source='rtl/hdc/ot_hdc_vreduce.sv', SW=256, LV=7, AW=30,
+            source_H_words=20480, source_H_base=0, result_address=40960,
+            vector_accepts=80, VM_read_bytes_per_vector=1024,
+            actual_target_read_span_words=16, staging_reads_per_vector=16,
+            actual_target_read_span_beats=1280,
+            actual_target_read_boundary_bits=512,
+            assembly_rule='Each 256-word vector requires sixteen identity/address-qualified same-VM 16-word returns; valid only after complete assembly. No unlimited 256-lane target callback implied.',
+            read_data_boundary_bits=8192, squared_multipliers=256,
+            chain_adders=32*7, vector_tree_adders=31, time_tree_adders=7,
+            MACs_per_cycle=0, multiplier_ops=20480,
+            source_order='R-ARITH su csum over all H squared: contiguous8 sequential, padded pairwise tree; no interleaved partials or per-copy regrouping',
+            first_input_to_output_pipeline_edges_model=3+1+21+5*4+7*4+1,
+            no_stall_vector_issue_edges=80, actual_VM_read_and_visibility_edges=None,
+            arithmetic_replica_count=1, already_selected_SUN256_reducer=True,
+            additional_physical_MAC_or_reducer_area_charge_mm2=0),
+        PF=dict(addresses=[41152,41153,41154,41155], raw_FP32_words=[1065353216]*4,
+            role='Declared identity literals only, not trained/expected intermediate activation',
+            native_VM_write_beats=4, accepted_visibility_required=True),
+        adapter=dict(shared_clock_edges_only=True, holding_input_vector_bits=8192,
+            holding_output_word_bits=32, saved_identity_bits=47,
+            counters_and_flags_bits=33, reserved_HE_write_seats=32,
+            HE_write_seat_bits=1024+30+32+47+2,
+            minimum_added_state_bits=8192+32+47+33+32*(1024+30+32+47+2),
+            DFF_cell_floor_mm2=(8192+32+47+33+32*(1024+30+32+47+2))*DFF_UM2/1e6,
+            no_new_ROM_storage=True, borrowed_arithmetic_credit_not_extra_engine=True,
+            VM_staging_arbitration_routes_area_mm2=None, replicas_per_rank=1, TP=4,
+            route_tracks_minimum_data_bundle=8192, corridor_capacity=None,
+            fanout_mux_cost='Bind existing VM read fabric and eight HE weight banks; no ideal unlimited provider or dropped fixed-latency response',
+            slot_fit=False, SS_FF_in_context=False),
+        cold_critical_path='embedding actual H visibility -> 80 accepted SSX vectors -> native SSX result -> actual VM SSX/PF visibility -> L0I0 -> I1 native HE -> remaining SU prefix. No CPU FP arithmetic or expected XN restore.',
+        combined_single_user_added_us=None,
+        overlap_credit_us=0, actual_provider_deadlines_required=True)
+
+
+def dsrom_s81_native_he_bootstrap_source():
+    """Additive corrected source-factory contract; prior component stays history."""
+    row=copy.deepcopy(dsrom_s81_native_he_bootstrap())
+    row['schema']='opentallas.dsrom.S81.native-HE-bootstrap.source-factory.v2'
+    row['PF']['raw_FP32_words']=[1065353216,0,0,0]
+    row['adapter'].update(explicit_bootstrap_arming=True, per_operation_inputs_ready=True,
+        sole_edge_owner='bootstrap participant; HE participant only drives ports; zero prepare evals; one native eval per rising/falling edge',
+        runtime_reserved_tag_namespace_only=True, grouped_scalar_acceptance_inferred=False,
+        actual_same_VM_scalar_prefetch_words=20480,
+        raw_cached_H_bytes=81920, raw_H_cache_register_floor_mm2=20480*32*DFF_UM2/1e6,
+        source_VM_read_return_latency_edges=4, source_old_request_reuse_wait_required=True,
+        scalar_serial_read_service_edges_model=20480*6,
+        serial_read_edge_derivation='Request acceptedE; native target returnedatE+4postedge; bootstrap polls E+5prepare; next scalar starts E+6. One canonicalbank, no private grouped acceptance.',
+        source_VM_capture_identity_callbacks_required=True,
+        H_cache_reuse_for_HE='Only literalI1 under unchanged H lease; L0I0 writes RF40992, not H. No source-version substitution or host FP.',
+        raw_HE_image_bytes=24*20480*4,
+        actual_HE_image_required='hbank.hex plus hbank.source full revision/tensor/dtype/shape/HHW8 codec/SHA; no zero fallback',
+        software_immutable_image_mirror_not_free_new_hardware_storage=True)
+    row['corrected_source_factory_symbol']='dsrom_s81_bind_minimum_he_bootstrap'
+    row['cold_critical_path']='Actual embedding publication -> explicit arm -> serialized actual H read returns -> 80 native SSX vectors -> native SSX/PF reserved scalar commands -> actual scalar ACKs -> per-op native inputs_ready -> L0I0/I1/remainingSU. Routes/provider/clock costs remain additive; no ideal native-port overlap.'
+    return row
+
+
+def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
+    """Cold token ROM lookup; retained dedicated storage, no field refit.
+
+    One outstanding 256-bit lookup, then four 16-lane FP32 VM commits.
+    Native backpressure adds cycles. Capture depth is an explicit unvalidated
+    parameter, not a macro SS/FF qualification or a new headline rate.
+    """
+    storage = inventory['dedicated_storage']['global_tensors'][0]
+    assert storage['tensor'] == 'embed.weight' and storage['shape'] == [129280, 5120]
+    assert inventory['stages'] == 81 and storage['word_data_bits'] == 256
+    words = 5120 // 16
+    # RTL state is one response register plus identity, token/address, counters.
+    state_bits = 256 + 47 + 26 + 19 + 9 + 2 + 2 + 2
+    return dict(schema='opentallas.dsrom.S81.embedding-bootstrap.model.v1',
+        all_numbers='MODEL_UNVALIDATED', adopted=False,
+        source_inventory='results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json',
+        retained_storage=storage, retained_storage_credit_mm2=0,
+        geometry_changed=False, ROM_ECC=False, replicas=1, MACs_per_cycle=0,
+        compute_intensity_MAC_per_byte=0, lookup_words_per_token=words,
+        one_outstanding_request=True, rom_response_bytes=32,
+        ROM_port_bytes_per_cycle_peak=32, VM_write_bytes_per_cycle_peak=64,
+        VM_commits_per_token=words*4, VM_FP32_words_per_token=20480,
+        clock_hz=1.2e9, rom_capture_cycles=rom_capture_cycles,
+        no_stall_latency_cycles=1 + words*(1+rom_capture_cycles+4),
+        no_stall_latency_us=(1 + words*(1+rom_capture_cycles+4))/1200,
+        composed_single_user_contribution='Cold embedding before native SSX reduction/L0.I0; stalls and transport are additive',
+        communication_intensity_FP32_output_bytes_per_source_byte=8,
+        boundary_bits_per_cycle=dict(ROM_response=256, VM_commit=512,
+            ROM_request=73, saved_context=47),
+        routing_tracks_required=dict(ROM_response_data=256, VM_commit_data=512,
+            VM_address=19, VM_identity=47, ROM_address=26),
+        routing_channel_capacity=None, routing_fit_qualified=False,
+        mux_demux_fanout='Single selected macro return mux retained in storage ledger; 16 BF16-to-FP32 wiring lanes, 4 sequential HC copies, one target VM endpoint at a time. TP4 fanout/delivery requires parent pricing.',
+        state_bits=state_bits, register_cell_lower_bound_mm2=state_bits*DFF_UM2/1e6,
+        unpriced_control_and_routes=['token/address decode and bounds', 'macro return mux/control',
+            'VM 16-lane arbitration/commit port', 'dedicated-store to TP4 transport', 'CTS/PDN/routes'],
+        floorplan_slot_fit=None, physical_SS_FF_qualified=False,
+        numerical_work='Lossless BF16 bits <<16; no arithmetic, expected activation or CPU inference',
+        required_next_native_producer='SSX = golden-order sum of H squared; never host-computed here')
 
 
 if __name__ == "__main__":

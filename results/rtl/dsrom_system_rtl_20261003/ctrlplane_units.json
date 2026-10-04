@@ -1,0 +1,132 @@
+{
+ "schema": "opentallas.dsrom.system_unit_bench.v1",
+ "bench": "ctrlplane_units",
+ "simulator": "Icarus Verilog version 11.0 (stable) ()",
+ "command": [
+  "iverilog",
+  "-g2012",
+  "-o",
+  "/tmp/tmp9c6ohkj9/x_base",
+  "rtl/dsrom_sys/ot_dsrom_host_cq.sv",
+  "rtl/dsrom_sys/ot_dsrom_stall_export.sv",
+  "rtl/dsrom_sys/ot_dsrom_stage_guard.sv",
+  "rtl/test/dsrom_sys/tb_dsrom_ctrlplane_units.sv"
+ ],
+ "verdict": "PASS",
+ "cases": [
+  {
+   "line": "CASE cq_refuse_missing_prompt PASS"
+  },
+  {
+   "line": "CASE cq_refuse_bound PASS"
+  },
+  {
+   "line": "CASE cq_refuse_space PASS"
+  },
+  {
+   "line": "CASE cq_run_tokens_exact_backpressure PASS"
+  },
+  {
+   "line": "CASE cq_identity_duplicate_faults PASS"
+  },
+  {
+   "line": "CASE cq_watchdog_cause PASS"
+  },
+  {
+   "line": "CASE sx_stuck_snapshot PASS"
+  },
+  {
+   "line": "CASE sx_trace_drops_counted PASS"
+  },
+  {
+   "line": "CASE gd_good_stream PASS"
+  },
+  {
+   "line": "CASE gd_bad_dest PASS"
+  },
+  {
+   "line": "CASE gd_bad_src PASS"
+  },
+  {
+   "line": "CASE gd_bad_type PASS"
+  },
+  {
+   "line": "CASE gd_bad_len PASS"
+  },
+  {
+   "line": "CASE gd_early_last PASS"
+  },
+  {
+   "line": "CASE gd_bad_user PASS"
+  },
+  {
+   "line": "CASE gd_skipped_pos PASS"
+  }
+ ],
+ "source_sha256": {
+  "rtl/dsrom_sys/ot_dsrom_host_cq.sv": "1c7a1ea0b3947a194aa269253c98a10be51864781a122f804febd888695b8599",
+  "rtl/dsrom_sys/ot_dsrom_stall_export.sv": "1008978333b07a3dff572c668dc5e7edb41d243f8501a5c9353500dbe46dc7cc",
+  "rtl/dsrom_sys/ot_dsrom_stage_guard.sv": "43ddd9d96c8b6c21c835ecc11084afd2301ea0b92bc0e67ea48aa57ced92b86a",
+  "rtl/test/dsrom_sys/tb_dsrom_ctrlplane_units.sv": "b868ea3a949266b7c89d9dbee952b35f1a34f2c15de4ae3dc4f4d4bd64259d34"
+ },
+ "mutants": {
+  "DSROM_CQ_MUTANT_NORSV": {
+   "what": "LAUNCH admitted without reserving completion space",
+   "command": [
+    "iverilog",
+    "-g2012",
+    "-DDSROM_CQ_MUTANT_NORSV",
+    "-o",
+    "/tmp/tmp9c6ohkj9/x_DSROM_CQ_MUTANT_NORSV",
+    "rtl/dsrom_sys/ot_dsrom_host_cq.sv",
+    "rtl/dsrom_sys/ot_dsrom_stall_export.sv",
+    "rtl/dsrom_sys/ot_dsrom_stage_guard.sv",
+    "rtl/test/dsrom_sys/tb_dsrom_ctrlplane_units.sv"
+   ],
+   "verdict": "FAIL",
+   "must_fail": true,
+   "ok": true,
+   "lines": [
+    "CASE cq_refuse_missing_prompt PASS",
+    "CASE cq_refuse_bound PASS",
+    "CASE cq_refuse_space FAIL"
+   ]
+  },
+  "DSROM_GUARD_MUTANT_NOSRC": {
+   "what": "stage guard does not check the sender",
+   "command": [
+    "iverilog",
+    "-g2012",
+    "-DDSROM_GUARD_MUTANT_NOSRC",
+    "-o",
+    "/tmp/tmp9c6ohkj9/x_DSROM_GUARD_MUTANT_NOSRC",
+    "rtl/dsrom_sys/ot_dsrom_host_cq.sv",
+    "rtl/dsrom_sys/ot_dsrom_stall_export.sv",
+    "rtl/dsrom_sys/ot_dsrom_stage_guard.sv",
+    "rtl/test/dsrom_sys/tb_dsrom_ctrlplane_units.sv"
+   ],
+   "verdict": "FAIL",
+   "must_fail": true,
+   "ok": true,
+   "lines": [
+    "CASE cq_refuse_missing_prompt PASS",
+    "CASE cq_refuse_bound PASS",
+    "CASE cq_refuse_space PASS",
+    "CASE cq_run_tokens_exact_backpressure PASS",
+    "CASE cq_identity_duplicate_faults PASS",
+    "CASE cq_watchdog_cause PASS",
+    "CASE sx_stuck_snapshot PASS",
+    "CASE sx_trace_drops_counted PASS",
+    "CASE gd_good_stream PASS",
+    "CASE gd_bad_dest PASS",
+    "CASE gd_bad_src FAIL",
+    "CASE gd_bad_type PASS",
+    "CASE gd_bad_len PASS",
+    "CASE gd_early_last PASS",
+    "CASE gd_bad_user PASS",
+    "CASE gd_skipped_pos PASS"
+   ]
+  }
+ },
+ "pass": true
+}

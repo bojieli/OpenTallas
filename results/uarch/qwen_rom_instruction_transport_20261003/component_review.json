@@ -1,0 +1,63 @@
+{
+  "scope": "ACTUAL_TRANSPORT_COMPONENT_PASS_AND_ADDITIVE_TILE_SOURCE_ONLY",
+  "actual_transport_checks": 794,
+  "source_tests": 7,
+  "component_runtime": "short local iverilog/vvp; no fullsize arithmetic compile or P&R",
+  "compiler": "Icarus Verilog version 11.0 (stable) ()",
+  "exact_gate_recipe": [
+    "iverilog -g2012 -s tb_qwen_w12_instruction_transport_r1 -o OUT/gate.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/qwen_sys/ot_qwen_w12_instruction_transport_r1.sv rtl/test/qwen_sys/tb_qwen_w12_instruction_transport_r1.sv",
+    "vvp OUT/gate.vvp",
+    "python3 -m unittest discover -s tools -p test_qwen_rom_instruction_transport_r1.py -v"
+  ],
+  "pinned_original_files_byte_identical": true,
+  "installed_system_caller": false,
+  "changed_source_route": false,
+  "head_branch_acceptance_implemented": false,
+  "full_die_IR": false,
+  "arithmetic_or_full_token_credit": false,
+  "link_spine_hotspot_relief": 0,
+  "source_sha256": {
+    "rtl/qwen_sys/ot_qwen_w12_instruction_transport_r1.sv": "1dc71fad5b1e8193254823caa44b72340be8d63c1d376a1de02de7502b3b248b",
+    "rtl/qwen_sys/ot_qwen_w12_instruction_tile_adapter_r1.sv": "093f312557632fef643fbc5dacd0ab7101741efefb974b21165475d04c109ada",
+    "rtl/test/qwen_sys/tb_qwen_w12_instruction_transport_r1.sv": "a04dad21ef690d9bd0ce05c7caace9fca34c7d392e8695e21c129007ede24000",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "tools/uarch_model_qwen_instruction_transport_r1.py": "70107eb146a301f51ecd763f392ad9b59dc6ac8788eaecc6c63a358616cddd5b",
+    "tools/qwen_rom_fulldie_instruction_r1.py": "32021aeb8ede20b38a72505799dce0c13ed36f6f5ac406fddd6fc9fd931f0b80",
+    "tools/test_qwen_rom_instruction_transport_r1.py": "865547adb9e9d1770d932adcb580026a9f5aa1abd0d2f45ed622657986b83c84"
+  },
+  "preparation_history": [
+    {
+      "output": "/tmp/Goodall-qwen-instruction-full-die-r1-selected-20261003",
+      "outcome": "FAIL_PREPARATION",
+      "diagnosis": "powered_lef returns tuple(text,count), initial additive join passed tuple to str.join; TypeError; original partial output preserved"
+    },
+    {
+      "output": "/tmp/Goodall-qwen-instruction-full-die-r1-selected-20261003-r3",
+      "outcome": "PASS_PREPARATION_ONLY",
+      "no_execution": true
+    },
+    {
+      "output": "/tmp/Goodall-qwen-instruction-full-die-r1-selected-20261003-r4",
+      "outcome": "PASS_FINAL_SOURCE_PINNED_PREPARATION_ONLY",
+      "source_hashes_rechecked": true,
+      "model_json_identical": true,
+      "no_execution": true
+    }
+  ],
+  "required_actual_caller": [
+    "Identity-qualified instruction retirement; delayed duplicate during new instruction cannot be distinguished by bare level in this local component",
+    "Cold-only rst_n; warm all-copy fence includes all reverse/CDC branches",
+    "Top tags and x timing delayed consistently with tile instruction acceptance",
+    "Source-sized three-way head broadcast acceptance ledger and literal serializer/receiver placement across each channel"
+  ],
+  "cold_prepare_argv": "python3 tools/qwen_rom_fulldie_instruction_r1.py --enable-two-beat --work NEW_EMPTY_OUTPUT",
+  "archived_sha256": {
+    "source-tests.log": "89a74dfcfd5e788e989cd2e6f7e6613541f6c70358b0f6ad3c3a587d4a0281dd",
+    "full_die_preparation.json": "b65078c7a50d0a9a26401566244f275787f6cc6504152d9bca6a2f587b9bd618",
+    "model-source-r2.json": "cdb67fa4ba440c351321fc8c684fea35877e1d80a4d393dd4d6dd11df4c59164",
+    "model-r1.json": "db9c88b887aa96d779222b6ab250e9e5cbcf7b183a54c32f9b7411adc5328e72",
+    "actual_transport_gate.log": "31d65d81c26dee11841fd2772a143695412596e546bf9060b23aa47c7132c072"
+  }
+}

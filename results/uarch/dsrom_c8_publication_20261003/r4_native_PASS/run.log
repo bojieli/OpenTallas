@@ -1,0 +1,5 @@
+PASS C8_ACTUAL_CWRITER own_sectors=9 visible_ACKs=9 native_readback=9 K512=1 stacks4_NPC32=1 early_memory_not_receipt=1 cycle=962
+- /home/ubuntu/otjobs/dsrom-c8/source-d25d2d538/rtl/test/dsrom_sys/c8/tb_dsrom_c8_native.sv:97: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 809ns; walltime 0.059 s; speed 13.752 us/s
+- Verilator: cpu 0.059 s on 1 threads; allocated 9 MB
