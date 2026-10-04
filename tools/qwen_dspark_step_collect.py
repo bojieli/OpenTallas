@@ -34,10 +34,14 @@ def main():
     ap.add_argument('--drafter-layers', type=int, default=5)
     ap.add_argument('--slots', type=int, default=3)
     ap.add_argument('--drafter-job', default='c_D0', help='result name of the drafter-layer run')
+    ap.add_argument('--map', type=json.loads, default={}, help='role -> result/run name, e.g. {"c_L0": "k_L0"} (target-context jobs)')
+    ap.add_argument('--claim-boundary', help='replaces the default (P = 255) claim boundary')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
-    R = {k: json.loads((a.res / f'{k}.json').read_text()) for k in ('c_L0', 'c_AR0', 'c_H0', 'c_H1', 'c_H2', a.drafter_job)}
-    R['c_D0'] = R.pop(a.drafter_job) if a.drafter_job != 'c_D0' else R['c_D0']
+    if a.drafter_job != 'c_D0':
+        a.map.setdefault('c_D0', a.drafter_job)
+    nm = lambda k: a.map.get(k, k)  # noqa: E731
+    R = {k: json.loads((a.res / f'{nm(k)}.json').read_text()) for k in ('c_L0', 'c_AR0', 'c_H0', 'c_H1', 'c_H2', 'c_D0')}
     cyc = lambda k, s: R[k]['stages'][s]['cycles']  # noqa: E731
     s1, s2, ar, h0, h1, h2, d0 = (cyc('c_L0', 'S1L0'), cyc('c_L0', 'S2L0'), cyc('c_AR0', 'ARL0'), cyc('c_H0', 'H0'),
                                   cyc('c_H1', 'H1'), cyc('c_H2', 'H2'), cyc('c_D0', 'D0'))
@@ -46,7 +50,7 @@ def main():
     ACCEPT_WINDOW = 64
     acc_lat = {}
     for h in ('c_H1', 'c_H2'):
-        t = (a.runs / h / 'token.log').read_text()
+        t = (a.runs / nm(h) / 'token.log').read_text()
         end = int(re.search(r'STAGE \S+ done .*?end_cyc=(\d+)', t).group(1))
         accs = [int(m.group(1)) for m in re.finditer(r'ACCEPT die=\d .*?cyc=(\d+)', t)]
         acc_lat[h] = (max(accs) - end) if accs else (ACCEPT_WINDOW if 'ACCEPT die=' in t else None)
@@ -64,8 +68,8 @@ def main():
         'outputs_bit_exact': {k: bool(r['checks']) and all(c['mismatches'] == 0 for c in r['checks'].values()) or
                               (k in ('c_H0', 'c_H1', 'c_H2') and r['tokens_ok']) for k, r in R.items()},
         'faults': {k: re.findall(r'STAGE (\S+) done .*?seq_fault=(\d+) core_fault=(\d+) coll_fault=(\d+)',
-                                 (a.runs / (a.drafter_job if k == 'c_D0' else k) / 'token.log').read_text()) for k in R},
-        'fault_trace': {k: re.findall(r'FAULTTRACE .*', (a.runs / (a.drafter_job if k == 'c_D0' else k) / 'token.log').read_text())
+                                 (a.runs / nm(k) / 'token.log').read_text()) for k in R},
+        'fault_trace': {k: re.findall(r'FAULTTRACE .*', (a.runs / nm(k) / 'token.log').read_text())
                         for k in R},
         'components_cycles': {'verify_layer_L0_step1_P': s1, 'verify_layer_L0_step2_Pprime': s2, 'ar_layer_L0_P': ar,
                               'head_p1': h0, 'verify_head_p4_step1': h1, 'verify_head_p4_step2': h2,
@@ -88,7 +92,8 @@ def main():
         },
         'tau': a.tau, 'tau_source': a.tau_source, 'clock_hz': F_HZ,
         'per_user_accepted_tok_s': a.tau * F_HZ / step, 'ar_tok_s': F_HZ / ar_tok, 'speedup_vs_ar': a.tau * ar_tok / step,
-        'claim_boundary': ('Layer, head and drafter-layer cycles measured on the VPRM REAL_MEM RTL at P=255 (in-tile KV slices, '
+        'jobs': {k: nm(k) for k in R},
+        'claim_boundary': a.claim_boundary or ('Layer, head and drafter-layer cycles measured on the VPRM REAL_MEM RTL at P=255 (in-tile KV slices, '
                            'not near-HBM attention); 36- and 5-layer totals composed from layer 0; drafter context ingest and '
                            'Markov epilogue priced (model), not RTL; no SS/FF closure of the new logic.'),
     }

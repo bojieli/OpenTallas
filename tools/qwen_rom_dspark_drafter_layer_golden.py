@@ -109,6 +109,9 @@ def main():
     ap.add_argument('--layer', type=int, required=True)
     ap.add_argument('--x', required=True, help='comma-separated FP32 hex vectors (4,096 words), one per slot')
     ap.add_argument('--seed', type=int, default=20261004)
+    ap.add_argument('--kv-window', type=Path, help='per-die context KV instead of the seeded history: L<layer>_die<d>.npy '
+                    '(u32 FP32 bits of E4M3 values, 2*kv_v0 words, zero at positions >= start), e.g. a real target '
+                    "layer's window (format-valid context with realistic magnitudes)")
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--remote-root', help='image/out paths as the RTL host on EPYC sees them (plan only)')
     a = ap.parse_args()
@@ -122,9 +125,21 @@ def main():
     vms_map, vm_elems = V.vm_map_p(S)
     start = ims[0].meta.get('context_program_position', 48) + 1
     ms = [GO.GpuDieMachine(im) for im in ims]
-    kv = kv_history(ms[0].lay, start, a.seed)
+    if a.kv_window:
+        kvs = [G.from_bits(np.load(a.kv_window / f'L{a.layer}_die{d}.npy').astype(np.uint32)) for d in range(TP)]
+        for k in kvs:
+            if k.shape != (2 * ms[0].lay.kv_v0,):
+                raise SystemExit('KV window has the wrong extent')
+            lay = ms[0].lay
+            for h in range(2):
+                for p_ in range(start, 8192):
+                    if np.any(k[((h * 512 + p_ // 16) * 128 + np.arange(128)) * 16 + p_ % 16]) or \
+                            np.any(k[lay.kv_v0 + (h * 8192 + p_) * 128 + np.arange(128)]):
+                        raise SystemExit(f'KV window holds position {p_} >= start {start}')
+    else:
+        kvs = [kv_history(ms[0].lay, start, a.seed)] * TP
     vms = []
-    for m in ms:
+    for m, kv in zip(ms, kvs):
         m.vm = np.zeros(max(vm_elems, 1 << 20), dtype=np.float32)
         m.kv = kv.copy()
         vm = m.vm.copy()
@@ -135,10 +150,12 @@ def main():
     a.out.mkdir(parents=True, exist_ok=True)
     rec = {'schema': 'opentallas.qwen-dspark-drafter-layer-golden.v1', 'layer': a.layer, 'slots': S, 'start': start,
            'images': {f'die{d}': im.image_sha for d, im in enumerate(ims)}, 'x_inputs': {p: sha(p) for p in a.x.split(',')},
-           'kv_seed': a.seed, 'x_bases': [m['X'] for m in vms_map], 'files': {}}
+           'kv_seed': None if a.kv_window else a.seed,
+           'kv_window': {f'die{d}': sha(a.kv_window / f'L{a.layer}_die{d}.npy') for d in range(TP)} if a.kv_window else None,
+           'x_bases': [m['X'] for m in vms_map], 'files': {}}
     kvdir = a.out / 'kv'; kvdir.mkdir(exist_ok=True)
     for d in range(TP):
-        kv.view(np.uint32).astype('<u4').tofile(kvdir / f'L{a.layer}_die{d}.bin')
+        kvs[d].view(np.uint32).astype('<u4').tofile(kvdir / f'L{a.layer}_die{d}.bin')
     for d, (m, vm) in enumerate(zip(ms, out)):
         for j in range(S):
             p = a.out / f'D{a.layer}_p{j}_die{d}_x.hex'
