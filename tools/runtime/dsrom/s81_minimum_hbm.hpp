@@ -27,6 +27,12 @@ public:
     template<class Mux> void wire(Mux& mux) {
         static_assert(sizeof(mux.m_addr)==sizeof(model.m_addr),"HBM AW30 four-stack mismatch");
         static_assert(sizeof(mux.m_tag)==sizeof(model.m_tag),"HBM TAG16 four-stack mismatch");
+        // C8 master tag high bits: 00 WINDOW, 01 CKV, 10 RoPE.
+        // A caller omitting CKV init must not receive zero/default history.
+        for(unsigned s=0;s<4;s++)
+            if((mux.m_v&(1u<<s))&&((mux.m_tag>>(16*s+14))&3u)==1u&&
+               !model.ckv_history_ready)
+                throw std::runtime_error("actual CKV request before retained CKV history init");
         model.m_v=mux.m_v;model.m_we=mux.m_we;model.m_len=mux.m_len;model.m_tag=mux.m_tag;
         model.m_addr=mux.m_addr;model.m_wdata=mux.m_wdata;model.m_wstrb=mux.m_wstrb;
         model.s_rdy=mux.s_rdy;
