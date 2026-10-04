@@ -9,6 +9,11 @@ struct IndexHbmPortTraffic {
           accepted_write_bytes=0,write_done=0,migration_read_beats=0,migration_delivered_beats=0;
  std::optional<long> first_cycle,last_cycle;
 };
+struct IndexCurrentRecordStatus {
+ uint64_t accepted_records=0,committed_records=0,accepted_writes=0,acknowledged_writes=0;
+ uint32_t last_position=0;
+ std::optional<long> accepted_cycle,committed_cycle;
+};
 struct IndexHbmTraffic {std::array<IndexHbmPortTraffic,128> pc{};};
 // Owns ONLY ring writer + 4 B arbiters/backends. Scorer/selector and current
 // encoder clocks remain owned by their existing participants. Never attach
@@ -19,7 +24,10 @@ class NativeIndexHbm:public std::enable_shared_from_this<NativeIndexHbm> {
  std::function<void()> join;
  bool admitted=false;
  long prepared=-1;
- std::array<uint64_t,128> reads{},writes{};
+ std::array<uint64_t,128> reads{},writes{},writer_reads{};
+ IndexCurrentRecordStatus current_record;
+ bool old_record_accept=false;
+ uint32_t old_record_position=0;
  struct Edge {bool accept=false,we=false,response=false,done=false,migration=false,response_migration=false;
               unsigned length=0;uint32_t strobe=0;};
  std::array<Edge,128> edges{};
@@ -29,7 +37,12 @@ public:
  void preload_ring(const std::string& rank_ring_directory);
  bool initialized()const{return model.history_ready;}
  bool drained()const;
- bool current_committed()const{return drained();} // includes migration/read debt + writer busy
+ // Positive native record/ACK certificate, retained through downstream scan reads.
+ bool current_committed()const;
+ bool current_committed(uint32_t expected_position)const {
+  return current_committed()&&current_record.last_position==expected_position;
+ }
+ IndexCurrentRecordStatus current_record_status()const{return current_record;}
  uint32_t capacity_words()const{return model.capacity_words;}
  IndexHbmTraffic traffic()const{return counters;}
  // Writer is actual ot_hdc_v41x_idx_pool_kwr RING1 record producer.
