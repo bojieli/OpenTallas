@@ -6340,6 +6340,15 @@ def dsrom_s81_components(ctx=1048576):
     return build(ROOT, ctx=ctx)
 
 
+def dsrom_s81_minimum_group(ctx=1048576):
+    """Named minimum W11 construction branch, preserving the r4 historical floor."""
+    from dsrom_s81_minimum_protected_group import build
+    out = dsrom_s81_components(ctx)
+    out['selected_minimum_W11_group'] = build(ROOT)
+    out['selected_minimum_W11_group']['unified_S81']['global_r4_floor_not_added_to_new_group'] = True
+    return out
+
+
 def dsrom_s82_rows():
     """Opt-in retained-RD64 conditional composition; defaults are unchanged."""
     from dsrom_s82_token_pricing import build
@@ -6408,6 +6417,7 @@ def hbm_accel_rows():
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--dsrom-s81-minimum-group", action="store_true", help="selected W11 minimum protected group cuts/II/slot; target clocks, no fit or rate credit")
     ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
     ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
     ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
@@ -6437,6 +6447,13 @@ def main(argv=None):
     if a.fec_fairness:
         from fec_class_fairness import policy
         payload = json.dumps(policy(ROOT), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.dsrom_s81_minimum_group:
+        payload = json.dumps(dsrom_s81_minimum_group(a.ctx), indent=2, sort_keys=True, allow_nan=False) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(payload)

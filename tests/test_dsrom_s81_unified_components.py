@@ -112,7 +112,7 @@ def test_existing_functions_AST_unchanged():
     base=subprocess.check_output(['git','show','5064dc64f:tools/uarch_model.py'],cwd=ROOT,text=True)
     before={n.name:ast.dump(n) for n in ast.parse(base).body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))}
     after={n.name:ast.dump(n) for n in ast.parse((ROOT/'tools/uarch_model.py').read_text()).body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))}
-    assert set(after)-set(before)=={'dsrom_s81_components'}
+    assert set(after)-set(before)=={'dsrom_s81_components', 'dsrom_s81_minimum_group'}
     old_other = [ast.dump(n) for n in ast.parse(base).body if not isinstance(n, ast.FunctionDef)]
     new_other = [ast.dump(n) for n in ast.parse((ROOT/'tools/uarch_model.py').read_text()).body if not isinstance(n, ast.FunctionDef)]
     assert old_other == new_other
