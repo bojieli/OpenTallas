@@ -20,6 +20,11 @@
 #include <cstdio>
 #include <cstdlib>
 #ifdef DSROM_S81_HEAD_WINNER_BINDING_HEADER
+#include <filesystem>
+#include <spawn.h>
+#include <sys/wait.h>
+#include <cerrno>
+extern char** environ;
 #include "s81_native_bf_head_factory.hpp"
 #include "s81_native_head_argmax.hpp"
 #include "VDsromS81CoreEnd.h"
@@ -459,11 +464,12 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
     uint32_t join_tag=0,join_bits=0;
     bool attached=false,initialized=false,dot=false,taken=false,root_sent=false,observed_head_go=false;
     bool sampled_root=false,sampled_packet_take=false,sampled_final=false,winner_taken=false,consumed=false;
-    bool argmax_started=false,replay=false;
+    bool argmax_started=false,replay=false,sim_actual_xn=false;
     std::optional<unsigned> replay_row;
-    std::array<std::vector<uint32_t>,4> archived_outputs;
-    unsigned row()const{return replay?*replay_row:held->local_row;}
-    bool pending()const{return replay?bool(replay_row):bool(held);}
+    std::array<std::vector<uint32_t>,4> returned_outputs;
+    bool returned_rows()const{return replay||sim_actual_xn;}
+    unsigned row()const{return returned_rows()?*replay_row:held->local_row;}
+    bool pending()const{return returned_rows()?bool(replay_row):bool(held);}
     static void pinned_file(const std::string& path,const char* expected) {
         std::ifstream f(path,std::ios::binary);Source::require(bool(f),"native boundary source pin missing");
         f.seekg(0,std::ios::end);const auto size=f.tellg();
@@ -504,8 +510,13 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         const char* sim=std::getenv("DSROM_S81_SIM_ONLY_HEAD_RETURN");
         Source::require(!sim||std::string(sim)=="0"||std::string(sim)=="1","HEAD return selector must explicit 0/1");
         replay=sim&&std::string(sim)=="1";
+        const char* actual_xn=std::getenv("SIM_ONLY_HEAD_ACTUAL_XN");
+        Source::require(!actual_xn||std::string(actual_xn)=="0"||std::string(actual_xn)=="1",
+            "actual-XN math selector must explicit 0/1");
+        sim_actual_xn=actual_xn&&std::string(actual_xn)=="1";
+        Source::require(!(replay&&sim_actual_xn),"actual-XN math cannot consume archived logits");
 #ifdef DSROM_S81_NATIVE_HEAD_STREAM
-        Source::require(!replay,"native stream requires actual roots; SIM_ONLY return replay is not enrollment");
+        Source::require(!returned_rows(),"native stream requires actual roots; SIM_ONLY returns are not native enrollment");
 #endif
         if(replay) {
             const char* archive=std::getenv("DSROM_S81_NATIVE_HEAD_RETURN_DIR");
@@ -521,9 +532,11 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
                 "d2402bb6f734d3b4bfdd70980592b79230ce4b89e5dd0d59cbe1bc295c7fb540"}};
             for(unsigned rank=0;rank<4;++rank){
                 const auto file=path+"/logits_rank"+std::to_string(rank)+".u32";pinned_file(file,pins[rank]);
-                archived_outputs[rank]=HeadRank::raw(file,32320);
-                for(auto bits:archived_outputs[rank])Source::require((bits&0x7f800000u)!=0x7f800000u,"native archived nonfinite HEAD value");
+                returned_outputs[rank]=HeadRank::raw(file,32320);
+                for(auto bits:returned_outputs[rank])Source::require((bits&0x7f800000u)!=0x7f800000u,"native archived nonfinite HEAD value");
             }
+        }else if(sim_actual_xn) {
+            bytes=std::make_shared<HeadBytes>(); // released source extent, never a logit oracle
         }else {
         bytes=std::make_shared<HeadBytes>();
         head=std::make_unique<DsromS81NativeHeadBinding>(r,cut,ios,
@@ -572,10 +585,11 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         if(runtime.identity && runtime.cycle()%65536==0) {
             bool all_published=true;
             for(const auto& rank:ranks)all_published=all_published&&rank->published();
-            fprintf(stderr,"HEAD_NATIVE_PROGRESS cycle=%ld phase=%s rank=%u I5_accepted=%u "
+            fprintf(stderr,"HEAD_NATIVE_PROGRESS cycle=%ld phase=%s math=%s rank=%u I5_accepted=%u "
                 "norm_ops=%u,%u,%u,%u published_rows=%u,%u,%u,%u "
                 "final_accepted=%u END_done=%u\n",
-                runtime.cycle(),!dot?"normalization":all_published?"collective-END":"native-DOT",
+                runtime.cycle(),!dot?"normalization":all_published?"collective-END":"DOT",
+                sim_actual_xn?"SIM_ONLY_HEAD_ACTUAL_XN":replay?"native-archive-return":"native",
                 current,unsigned(dot),ranks[0]->norm,ranks[1]->norm,ranks[2]->norm,ranks[3]->norm,
                 ranks[0]->logits,ranks[1]->logits,ranks[2]->logits,ranks[3]->logits,
                 unsigned(winner_taken),unsigned(core->done));
@@ -583,8 +597,8 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         }
         for(auto& rank:ranks)rank->prepare();
         if(head){input.prepare(old);returned.prepare(old);}else runtime.drive({});
-        if(replay&&dot&&current<4&&!replay_row&&ranks[current]->logits<32320) {
-            replay_row=ranks[current]->logits;join_bits=archived_outputs[current][*replay_row];tail_stage=4;root_sent=false;
+        if(returned_rows()&&dot&&current<4&&!replay_row&&ranks[current]->logits<32320) {
+            replay_row=ranks[current]->logits;join_bits=returned_outputs[current][*replay_row];tail_stage=4;root_sent=false;
         }
         for(auto* node:{&pad1,&pad2,&join}){node->a_v=node->b_v=0;node->a_e=node->b_e=0;}
         if(held&&!taken){
@@ -638,11 +652,11 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
                     pin(core->capture_vm_accept,root,1,1);expected_accept=1u<<bank;
                 }
             }else {
-                if(replay&&!rank.batch->pending()) {
+                if(returned_rows()&&!rank.batch->pending()) {
                     S81EmbeddingOutput out{};out.vm_valid=1;out.vm_identity=ID;out.vm_address=486848+row();out.vm_data[0]=join_bits;
                     rank.batch->capture(4892,out,1,true); // explicit SIM_ONLY boundary writer, not a new native join observation
                 }
-                const bool ack=replay?rank.batch->progress():
+                const bool ack=returned_rows()?rank.batch->progress():
                     dsrom_s81_publish_minimum_head_logit(rank.rt,*rank.batch,ID,current,row(),join_tag,join_bits,true);
                 if(ack){++rank.logits;taken=true;}
                 for(auto& owner:ranks)owner->prepare_bank();
@@ -740,7 +754,7 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
 #endif
         for(const auto& rank:ranks)if(rank->fault())return true;
         return false;}
-    bool publications_drained()const {if(!dot||pending()||(!replay&&!head->all_roots_accepted())||fault())return false;
+    bool publications_drained()const {if(!dot||pending()||(!returned_rows()&&!head->all_roots_accepted())||fault())return false;
         for(const auto& rank:ranks)if(!rank->published())return false;
         return true;}
     void initialize(){Source::require(attached&&!initialized&&runtime.identity&&*runtime.identity==ID,
@@ -749,15 +763,59 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         initialized=true;}
     bool inputs_visible(){Source::require(initialized,"HEAD inputs before cold initialization");
         bool ready=true;for(auto& rank:ranks){rank->load();rank->normalize();ready=ready&&rank->normalizations_done;}return ready;}
+    void calculate_actual_xn_rows() {
+        const char* helper=std::getenv("DSROM_S81_SIM_ONLY_HEAD_DOT_HELPER");
+        const char* output=std::getenv("DSROM_S81_SIM_ONLY_HEAD_DOT_DIR");
+        const char* python=std::getenv("DSROM_S81_SIM_ONLY_HEAD_DOT_PYTHON");
+        Source::require(helper&&*helper&&output&&*output,
+            "actual-XN math requires explicit DOT-only helper and fresh output directory");
+        const std::filesystem::path root(output),input=root/"xn",result=root/"dot";
+        Source::require(std::filesystem::create_directory(root),"preserve actual-XN math output");
+        Source::require(std::filesystem::create_directory(input),"actual-XN input directory unavailable");
+        for(unsigned rank=0;rank<4;++rank) {
+            auto& owner=*ranks[rank];
+            Source::require(owner.normalizations_done&&owner.prefetched==5120&&
+                owner.io.span_lease(ID,46464,5120),"actual-XN math before native normalization/read lease");
+            std::ofstream raw(input/("XN_rank"+std::to_string(rank)+".u32"),std::ios::binary);
+            Source::require(bool(raw),"actual-XN source output unavailable");
+            for(uint32_t value:owner.xn) {
+                Source::require(!(value&65535u)&&((value>>23)&255)!=255,
+                    "actual-XN math requires finite native BF16-widened readbacks");
+                const char b[]={char(value),char(value>>8),char(value>>16),char(value>>24)};
+                raw.write(b,4);
+            }
+            raw.close();Source::require(bool(raw),"actual-XN source output failed");
+        }
+        // The existing helper computes only released-weight DOT from these
+        // actual native readbacks. It cannot normalize, select, or grant ACKs.
+        std::vector<std::string> args={python&&*python?python:"python3",helper,
+            "--input-dir",input.string(),"--head-shard",std::getenv("DSROM_S81_NATIVE_HEAD_SHARD"),
+            "--head-byte-offset",std::to_string(bytes->offset),"--output-dir",result.string()};
+        std::vector<char*> argv;for(auto& a:args)argv.push_back(a.data());argv.push_back(nullptr);
+        pid_t child;Source::require(posix_spawnp(&child,argv[0],nullptr,nullptr,argv.data(),environ)==0,
+            "actual-XN DOT-only helper launch failed");
+        int status=0;pid_t waited;
+        do {waited=waitpid(child,&status,0);} while(waited<0&&errno==EINTR);
+        Source::require(waited==child&&WIFEXITED(status)&&WEXITSTATUS(status)==0,
+            "actual-XN DOT-only helper failed; accepted command retained");
+        for(unsigned rank=0;rank<4;++rank) {
+            returned_outputs[rank]=HeadRank::raw((result/("logits_rank"+std::to_string(rank)+".u32")).string(),32320);
+            for(auto value:returned_outputs[rank])Source::require(((value>>23)&255)!=255,
+                "actual-XN DOT-only helper returned nonfinite row");
+        }
+        fprintf(stderr,"HEAD_MATH_SCOPE SIM_ONLY_HEAD_ACTUAL_XN native_normalization=1 native_DOT=0 native_selector=1\n");
+        fflush(stderr);
+    }
     void start(){Source::require(initialized&&!dot&&observed_head_go,
         "HEAD DOT requires actual accepted original core I5");
         for(const auto& rank:ranks)Source::require(rank->normalizations_done,"HEAD DOT before native normalization/XN staging");
+        if(sim_actual_xn)calculate_actual_xn_rows();
         dot=true;current=0;
-        if(replay){for(auto& rank:ranks){rank->publication.begin(ID,4892);rank->publication_begun=true;}}
+        if(returned_rows()){for(auto& rank:ranks){rank->publication.begin(ID,4892);rank->publication_begun=true;}}
         else head->start(ID,1,current);}
 
     void advance(){if(!dot)return;
-        if(replay){
+        if(returned_rows()){
             if(taken){replay_row.reset();taken=false;tail_stage=0;root_sent=false;}
             if(!replay_row&&current<3&&ranks[current]->published())++current;
         }else {

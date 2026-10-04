@@ -538,7 +538,9 @@ extern "C" int dsrom_s81_minimum_source_main(DsromS81MinimumRuntime& runtime,con
     if(!journal)throw std::runtime_error("preserve existing native source stage results");
     const int wrote=fprintf(journal,"scope\tstage\trank\tpair\tidentity\ttoken\tinput_start\tinput_end\tinput_words\tterminal_cycle\n"
         "%s\t%d\t%d\t%d\t%llu\t%u\t%ld\t%ld\t%u\t%ld\n",
-        head_end?"Lhead.I5.I6.actual-core-END":index_component?"L20.I36.I44.native-SIM_ONLY-boundary-inputs":seeded?"L20.seeded-native-component":"L0.I7-component-rows0,1",
+        head_end?(std::getenv("SIM_ONLY_HEAD_ACTUAL_XN")&&
+            std::string(std::getenv("SIM_ONLY_HEAD_ACTUAL_XN"))=="1"
+            ?"Lhead.I5.I6.SIM_ONLY_HEAD_ACTUAL_XN.actual-core-END":"Lhead.I5.I6.actual-core-END"):index_component?"L20.I36.I44.native-SIM_ONLY-boundary-inputs":seeded?"L20.seeded-native-component":"L0.I7-component-rows0,1",
         runtime.stage,runtime.rank,runtime.pair,(unsigned long long)plan->identity,
         plan->token,input_start,input_end,index_component?4256u:seeded?20480u:embedding->committed_words(),runtime.cycle());
     const int closed=fclose(journal);

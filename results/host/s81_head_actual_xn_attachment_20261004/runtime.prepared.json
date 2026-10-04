@@ -1,0 +1,39 @@
+{
+  "cwd": "/home/ubuntu/arch-s81-native-head-end-8b22cfcdc",
+  "argv": [
+    "/home/ubuntu/peirce-s81-head-actual-xn-b6505c674-r1/minimum_head_actual_xn",
+    "pb",
+    "80",
+    "0",
+    "11",
+    "/home/ubuntu/arch-s81-native-head-end-r1/controls/cfg.hex",
+    "/home/ubuntu/peirce-s81-head-actual-xn-b6505c674-r1/runtime",
+    "-",
+    "/tmp/dsrom-s81-minimum-field-57e3.sock",
+    "+OT_ROM_DIR=/home/ubuntu/arch-s81-native-head-end-r1/controls"
+  ],
+  "environment": {
+    "DSROM_S81_NATIVE_HEAD_END": "1",
+    "DSROM_S81_SIM_ONLY_HEAD_RETURN": "0",
+    "DSROM_S81_NATIVE_HEAD_INPUT_DIR": "/home/ubuntu/arch-s81-native-head-end-r1/native-inputs",
+    "DSROM_S81_MINIMUM_CROM_HEX": "/home/ubuntu/arch-s81-native-head-end-r1/native-inputs/norm.crom.hex",
+    "DSROM_S81_NATIVE_HEAD_PROGRAM_DIR": "/home/ubuntu/arch-s81-native-head-end-r1/controls",
+    "DSROM_S81_MINIMUM_SELECTED_DIR": "/home/ubuntu/arch-s81-native-head-end-r1/controls",
+    "DSROM_S81_NATIVE_HEAD_LINK_CYCLES": "251",
+    "DSROM_S81_NATIVE_HEAD_FINAL_CYCLES": "264",
+    "DSROM_S81_NATIVE_HEAD_SHARD": "/home/ubuntu/peirce-s81-head-released-assets-20261004/d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+    "DSROM_S81_NATIVE_HEAD_BYTE_OFFSET": "184",
+    "SIM_ONLY_HEAD_ACTUAL_XN": "1",
+    "DSROM_S81_NATIVE_HEAD_CARRY_DIR": "/home/ubuntu/arch-s81-L20-sim-att-pending-descriptor-r5-be155-strict-O2-cold/continuation-r1",
+    "DSROM_S81_SIM_ONLY_HEAD_DOT_HELPER": "/home/ubuntu/peirce-s81-head-actual-xn-b6505c674-r1/src/tools/dsrom_s81_head_dot.py",
+    "DSROM_S81_SIM_ONLY_HEAD_DOT_DIR": "/home/ubuntu/peirce-s81-head-actual-xn-b6505c674-r1/actual-xn-dot"
+  },
+  "unset_environment": [
+    "DSROM_S81_NATIVE_HEAD_RETURN_DIR"
+  ],
+  "status": "PREPARED_NOT_LAUNCHED_WAIT_ACTUAL_SUFFIX",
+  "launch_owner": "Peirce",
+  "source_pin": "b6505c674",
+  "runtime_scope": "SIM_ONLY_HEAD_ACTUAL_XN; nativeSU normalization/nativeVM/nativeSELECTTOP/coreEND; no nativeDOT or timing credit",
+  "requires_before_execution": "Arch sole suffix successful terminal plus H_rank0..3.u32 20480 words each and PF_rank0..3.u32 4 words each; no fixture/oracle fallback"
+}
