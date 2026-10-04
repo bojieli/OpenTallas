@@ -364,16 +364,13 @@ module ot_meso_ring #(
     localparam int NS = 2 * DEPTH;
     wire [PW-1:0] rp_place = gb + PW'(PLACE) - PW'(late);
     logic [NS-1:0] oh;
-    logic [DEPTH-1:0] di;
     always_ff @(posedge rclk) begin
         if (r_align) begin
             rp <= rp_place;
             oh <= NS'(1) << rp_place;
-            di <= DEPTH'(1) << rp_place[AW-1:0];
         end else if (r_on) begin
             rp <= rp + 1'b1;
             oh <= {oh[NS-2:0], oh[NS-1]};
-            di <= {di[DEPTH-2:0], di[DEPTH-1]};
         end
     end
     // position j = {lap, slot}: valid in the expected lap, and lap bit as expected
@@ -383,9 +380,16 @@ module ot_meso_ring #(
     function automatic logic [NS-1:0] rot(input logic [NS-1:0] x, input int k);
         for (int j = 0; j < NS; j++) rot[j] = x[(j - k + 2 * NS) % NS];
     endfunction
-    always_comb begin
-        r_d = '0;
-        for (int i = 0; i < DEPTH; i++) r_d = r_d | (s_d[i] & {W{di[i]}});
+    // data word: NCH chunks, each with its own one-hot slot-index register (fanout 64, not W)
+    localparam int NCH = (W % 64 == 0) ? W / 64 : 1;
+    localparam int WCH = W / NCH;
+    for (genvar c = 0; c < NCH; c++) begin : dch
+        logic [DEPTH*WCH-1:0] sd_c;
+        for (genvar i = 0; i < DEPTH; i++) begin : sl
+            assign sd_c[i*WCH +: WCH] = s_d[i][c*WCH +: WCH];
+        end
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH)) u_dsel (.clk(rclk), .align(r_align), .on(r_on),
+                                                      .place(rp_place[AW-1:0]), .sd(sd_c), .y(r_d[c*WCH +: WCH]));
     end
     ot_meso_ohor #(.N(NS)) u_v   (.sel(oh), .x(pos_v),   .y(r_v));
     ot_meso_ohor #(.N(NS)) u_lap (.sel(oh), .x(pos_lap), .y(r_lap_ok));
@@ -435,4 +439,26 @@ module ot_meso_ohor #(parameter int N = 2) (
     output logic         y
 );
     assign y = |(sel & x);
+endmodule
+
+// One chunk of the data-ring read: its own one-hot copy of the slot index (placed and advanced with rp), then a
+// one-hot AND-OR of the DEPTH slots.  Kept hierarchy keeps the replicated index registers from being merged.
+(* keep_hierarchy *)
+module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4) (
+    input  logic                    clk,
+    input  logic                    align,
+    input  logic                    on,
+    input  logic [$clog2(DEPTH)-1:0] place,
+    input  logic [DEPTH*W-1:0]      sd,
+    output logic [W-1:0]            y
+);
+    logic [DEPTH-1:0] di;
+    always_ff @(posedge clk) begin
+        if (align) di <= DEPTH'(1) << place;
+        else if (on) di <= {di[DEPTH-2:0], di[DEPTH-1]};
+    end
+    always_comb begin
+        y = '0;
+        for (int i = 0; i < DEPTH; i++) y = y | (sd[i*W +: W] & {W{di[i]}});
+    end
 endmodule
