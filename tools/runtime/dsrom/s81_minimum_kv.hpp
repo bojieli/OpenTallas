@@ -3,6 +3,7 @@
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <sstream>
 #include <utility>
 #include <tuple>
 
@@ -402,8 +403,34 @@ public:
             [self,&ckv,restore,prepared](bool released){
                 require(*prepared&&!self->fault()&&(!self->runtime.identity||released),
                         "native CKV edge lacks snapshot or resets admitted context");
-                restore();ckv.rst_n=released;ckv.clk=1;ckv.eval();
-                if(ckv.fault){self->stopped=true;throw std::runtime_error("native CKV edge fault");}
+                restore();
+                const auto edge_addr=ckv.c_addr;
+                const auto edge_tag=ckv.c_tag;
+                const unsigned edge_request=ckv.c_v,edge_write=ckv.c_we;
+                const unsigned edge_vm_re=ckv.vm_re,edge_vm_addr=ckv.vm_raddr;
+                ckv.rst_n=released;ckv.clk=1;ckv.eval();
+                if(ckv.fault){
+                    self->stopped=true;
+                    // Report existing native outputs and the OLD restored inputs
+                    // at the failing edge. No repair, retry or invented authority.
+                    std::ostringstream e;
+                    e<<"native CKV edge fault rank="<<self->runtime.rank
+                     <<" cycle="<<self->runtime.cycle()<<" fault_code="<<unsigned(ckv.fault_code)
+                     <<" sel_v="<<unsigned(ckv.sel_v)<<" sel_vmword="<<ckv.sel_vmword
+                     <<" vm_re="<<edge_vm_re<<" vm_raddr="<<edge_vm_addr
+                     <<" nw_we="<<unsigned(ckv.nw_we)<<" nw_addr=0x"<<std::hex<<ckv.nw_addr
+                     <<" c_v=0x"<<edge_request<<" c_we=0x"<<edge_write
+                     <<" c_rdy=0x"<<unsigned(ckv.c_rdy)<<" c_wr_done=0x"<<unsigned(ckv.c_wr_done)
+                     <<" c_tag=0x"<<edge_tag<<" c_sv=0x"<<unsigned(ckv.c_sv)
+                     <<" c_stag=0x"<<ckv.c_stag<<" c_sbeat=0x"<<ckv.c_sbeat
+                     <<" c_addr_words=";
+                    for(unsigned w=0;w<4;w++)e<<(w?",":"")<<edge_addr[w];
+                    e<<" vm_rq_words=";
+                    for(unsigned w=0;w<16;w++)e<<(w?",":"")<<ckv.vm_rq[w];
+                    e<<" ag_rx_valid=0x"<<unsigned(ckv.ag_rx_valid)
+                     <<" ag_rx_rank=0x"<<ckv.ag_rx_rank<<" ag_rx_gid=0x"<<ckv.ag_rx_gid;
+                    throw std::runtime_error(e.str());
+                }
             },
             [&ckv,restore,prepared](bool released){
                 restore();ckv.rst_n=released;ckv.clk=0;ckv.eval();*prepared=false;
