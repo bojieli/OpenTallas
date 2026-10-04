@@ -454,6 +454,7 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
     unsigned phase=0;
     bool finished=false,pv=false;
     unsigned h_pc=0; // optional native HC-post suffix; 0 preserves I55/PV
+    bool pre_i75_boundary=false; // explicit combined native-PV-based SIM_ONLY boundary
     long first_h=-1;
     long first_qk=-1,last=-1,first_pv=-1;
     static std::vector<uint32_t> load(const std::string& file,size_t count){
@@ -480,6 +481,12 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
              "ATT SU suffix must be 0, 76 or 142");
         if(h&&std::string(h)!="0")h_pc=std::string(h)=="76"?76:142;
         need(!h_pc||pv,"native HC-post suffix requires actual QK/SU/PV path");
+        // Requires Arch's combined export derived from actual native PV. The
+        // standalone minimum export is not an implicit combined-stage input.
+        const char* pre_i75=std::getenv("DSROM_S81_NATIVE_L20_ATT_PRE_I75_INPUT");
+        pre_i75_boundary=pre_i75&&*pre_i75;
+        need(!pre_i75_boundary||(pv&&h_pc==76),
+             "combined pre-I75 boundary requires native PV and PC76");
         std::array<L20KvRankBinding,4> bindings;
         for(unsigned i=0;i<4;i++){
             auto& r=ranks[i];r.runtime=host;r.runtime.rank=i;r.runtime.participants.clear();
@@ -492,7 +499,10 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
                       {2518,447360,load(std::string(dir)+"/I47.SELG_rank"+name+".u32",512)},
                       {2525,55744,load(std::string(dir)+"/I55.Q_rank"+name+".u32",8192)}};
             for(const auto& in:r.inputs)r.bank->publication().enroll_literal(in.producer,{{in.base,uint32_t(in.data.size())}});
-            if(h_pc)for(unsigned k=0;k<3;++k)
+            if(pre_i75_boundary)r.bank->entry().install_sim_only_pre_i75(pre_i75);
+            // The boundary owns the actual I74 T publication. Do not enroll
+            // or execute I73/I74 again; I75 still computes its native rewrite.
+            if(h_pc)for(unsigned k=pre_i75_boundary?2:0;k<3;++k)
                 r.bank->publication().enroll_literal(h_operations()[k].index,{{20480,20480}});
             r.bank->publication().enroll_literal(l20_ops[0].index,{{55232,512}});
             r.bank->publication().enroll_literal(l20_ops[1].index,{});
@@ -674,7 +684,7 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
                     !r.bank->io().span_lease(L20_ID,0,20480))return;
                 finished=true;last=host.cycle();return;
             }
-            ++phase;
+            phase=(phase==8&&pre_i75_boundary)?11:phase+1;
         }
         for(auto& r:ranks){r.accepted=false;r.go=false;}
         fprintf(stderr,"I55_NATIVE_SOURCE_PHASE %u cycle=%ld\n",phase,host.cycle());
