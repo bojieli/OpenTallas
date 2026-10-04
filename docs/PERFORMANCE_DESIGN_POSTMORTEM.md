@@ -380,6 +380,16 @@ design point the comparison is charged on. A study that chooses its own free par
 believable if it can show it chose them against itself.
 Recorded 2026-09-05 from section 7.3 of the architecture design.
 
+## 8. Process lessons from the 2026-10-03 integration push
+
+Some losses on the three targets came from process, not architecture. Five habits now stand in [AGENTS.md](../AGENTS.md) under "Workflow habits".
+
+- **Finished work waited to be merged.** Branches piled up for days waiting for a single integrating agent, while their results sat uncommitted on remote hosts. Fifty finished branches were outside main when this was noticed. The habit now: merge into main and push the moment an agent finishes, with `~/OpenTallas` as the central merge point.
+- **Worktrees and scratch filled the disk.** Agents created worktrees and session scratch and never removed them. The local disk reached 100% with hundreds of worktrees registered, and three-day-old stopped processes were still holding scratch directories. The habit now: delete the worktree after merging, remove inactive worktrees once their state is preserved as a ref plus a patch, and write bulk outputs to the compute host.
+- **Ceremony displaced completion.** Review, freeze, seal and receipt commits, proof re-runs and broad test sweeps took a large share of the commits. Meanwhile no full-shape token had been measured on any of the three targets. The habit now: finish the build, integration and measurement first.
+- **Ideas went unvalidated after hand-off.** Optimisations were handed off and then sat unmeasured, or were judged on the wrong vehicle. The asynchronous collective was rejected on the reduced core, although at full shape it measured a seven-percent per-layer saving. The direct-link all-reduce was excluded although its build had failed, so it was never measured at all. The habit now: whoever proposes a lever measures it at full shape, and every rejection is checked for the right vehicle.
+- **Effort drifted to the ablation.** Most integration effort went into the GPU-organised HBM design after it had become an ablation. The habit now: re-check effort against the targets whenever the positioning changes.
+
 ---
 
 ## Appendix: how to reproduce the arithmetic in this document

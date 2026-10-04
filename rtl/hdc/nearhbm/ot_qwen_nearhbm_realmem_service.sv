@@ -128,12 +128,12 @@ module ot_qwen_nearhbm_realmem_service #(
         reg [63:0] ll,rr,oo;
         reg [65:0] od;
         reg [KTAGW-1:0] kt;
-        integer oi,bt,ln;
+        integer oi,bt,ln,prior;
         reg [15:0] seen,need;
         always @(posedge clk or negedge rst_n)begin
             if(!rst_n)begin
                 arb_fault<=0;locks<=encode64(0);rotation<=encode64(0);
-                for(oi=0;oi<2*(1<<IDW);oi=oi+1)owner[oi]=encode64(0);
+                for(oi=0;oi<2*(1<<IDW);oi=oi+1)owner[oi]<=encode64(0);
             end else if(!arb_fault)begin
                 ll=lk[63:0];rr=rot[63:0];
                 if(lk[65]||rot[65]||bad_return)arb_fault<=1;
@@ -146,18 +146,25 @@ module ot_qwen_nearhbm_realmem_service #(
                             oi=(k_tag[KTAGW-1]?(1<<IDW):0)+k_tag[IDW-1:0];od=decode64(owner[oi]);
                             if(od[65]||od[34])arb_fault<=1;
                             oo=0;oo[KTAGW-1:0]=k_tag;oo[KTAGW +: 2]=2'(s);oo[KTAGW+2 +: 5]=k_len;oo[34]=1;
-                            owner[oi]=encode64(oo);
+                            owner[oi]<=encode64(oo);
                         end
                     end else ll[s]=0;
                 end
                 for(p=0;p<NPC;p=p+1)if(pick[p]>=0 && k_rsp_v[p] && k_rsp_ready[p])begin
                     kt=k_rsp_tag[p*KTAGW +: KTAGW];oi=(kt[KTAGW-1]?(1<<IDW):0)+kt[IDW-1:0];
-                    // Blocking updates combine simultaneous beats of the same descriptor.
+                    // Keep the offered response/ready stable through the sampling edge.
+                    // State commits after all receivers have sampled their handshake.
+                    // Earlier PC beats are folded into this descriptor locally, so
+                    // the last NBA write retains every simultaneous accepted beat.
                     od=decode64(owner[oi]);oo=od[63:0];bt=k_rsp_beat[p*4 +: 4];ln=oo[KTAGW+2 +: 5];
                     seen=oo[KTAGW+7 +: 16];need=(17'd1<<ln)-1;
+                    for(prior=0;prior<p;prior=prior+1)
+                        if(pick[prior]>=0 && k_rsp_v[prior] && k_rsp_ready[prior] &&
+                           k_rsp_tag[prior*KTAGW +: KTAGW]==kt)
+                            seen[k_rsp_beat[prior*4 +: 4]]=1;
                     if(od[65]||!oo[34]||oo[KTAGW-1:0]!=kt||oo[KTAGW +: 2]!=pick[p]||bt>=ln||seen[bt]||
                         k_rsp_wr[p]!=kt[KTAGW-1])arb_fault<=1;
-                    else begin seen[bt]=1;oo[KTAGW+7 +: 16]=seen;if(seen==need)oo[34]=0;owner[oi]=encode64(oo);end
+                    else begin seen[bt]=1;oo[KTAGW+7 +: 16]=seen;if(seen==need)oo[34]=0;owner[oi]<=encode64(oo);end
                     rr[2*p +: 2]=2'((pick[p]+1)%4);
                 end
                 locks<=encode64(ll);rotation<=encode64(rr);
