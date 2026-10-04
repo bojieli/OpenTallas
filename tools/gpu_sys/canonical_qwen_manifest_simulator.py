@@ -11,9 +11,9 @@ PORTBOOK=Path(__file__).resolve().parents[2]/'rtl/model/qwen_hbm_manifest_factor
 def validate_manifest_book(book):
  contract=book.get('manifest_contract',{})
  owner=contract.get('owner_module')
- if owner not in ('ot_gpu_qwen_manifest_range_owner','ot_gpu_qwen_banked_manifest_range_owner') or contract.get('issuer_module')!='ot_gpu_qwen_full_issuer_r3':
+ if owner not in ('ot_gpu_qwen_manifest_range_owner','ot_gpu_qwen_banked_manifest_range_owner','ot_gpu_qwen_native_aperture_range_owner') or contract.get('issuer_module')!='ot_gpu_qwen_full_issuer_r3':
   raise TransportError('actual manifest owner/typed issuer namespace')
- if owner=='ot_gpu_qwen_banked_manifest_range_owner':
+ if owner in ('ot_gpu_qwen_banked_manifest_range_owner','ot_gpu_qwen_native_aperture_range_owner'):
   for name in ('required_bank_mask64','required_input_bank_mask64','required_output_bank_mask64'):
    p=book.get('pins',{}).get('source_owner_'+name,{})
    if not (p.get('direction')=='output' and p.get('leaf_bits')==64 and p.get('count')==64 and p.get('bits')==4096 and p.get('block')=='source_owner' and p.get('leaf')==name):
