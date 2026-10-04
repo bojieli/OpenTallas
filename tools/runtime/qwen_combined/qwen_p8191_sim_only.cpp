@@ -530,6 +530,12 @@ int main(int argc, char** argv) {
     // authoritative mutable HBM array. No output/golden activation is an input.
     // Cached near-HBM RTL arithmetic/link/CDC model; pipeline/service timing excluded.
     auto run_near=[&](int rank) {
+        // nc changes the thread's current context. Restore only after n and nc
+        // have both been destroyed, before the enclosing models resume/clean up.
+        struct RestoreContext {
+            VerilatedContext* previous = Verilated::threadContextp();
+            ~RestoreContext() { Verilated::threadContextp(previous); }
+        } restore_context;
         VerilatedContext nc;
         nc.threads(1);
         Vot_qwen_nearhbm_sys_tb n(&nc,"SIM_ONLY_NEAR");
