@@ -5,7 +5,7 @@
   "scoreboard": "results/arch/measured_scoreboard/scoreboard.json",
   "scoreboard_commit": "5deaae822",
   "element_power": "results/rtl/rom_stage_power_gating_20261004/verdict.json",
-  "spine": "pending",
+  "spine": "results/rtl/rom_stage_spine_gate_20261004/verdict.json",
   "registry": "results/external/registry.json",
   "integration": "results/uarch/hbm_accelerator_integration_20261004/model.json",
   "recheck": "results/uarch/dsrom_c_recheck_20261004/model.json",
@@ -158,6 +158,126 @@
       "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"
      ],
      "note": "f = 7/S"
+    },
+    "ar_b1_pg_spine": {
+     "tok_s": 1409.0,
+     "rate_status": "composed_from_measured",
+     "static_w": 8130.4,
+     "dynamic_w": 167.1,
+     "system_w": 8297.5,
+     "J_per_token": 5.889,
+     "tok_s_per_kW": 169.81,
+     "status": "unvalidated",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)",
+      "element residual 0.2080 applied to the hub logic (ASSUMED transfer)",
+      "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"
+     ],
+     "note": "stage power gating, active fraction 1/S + wake/T = 0.0125; pair PG idle 0.513 mW (unvalidated)"
+    },
+    "mtp_b1_pg_spine": {
+     "tok_s": 2585.5,
+     "rate_status": "composed_from_measured",
+     "static_w": 9277.0,
+     "dynamic_w": 413.4,
+     "system_w": 9690.5,
+     "J_per_token": 3.748,
+     "tok_s_per_kW": 266.81,
+     "status": "unvalidated",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)",
+      "element residual 0.2080 applied to the hub logic (ASSUMED transfer)",
+      "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"
+     ],
+     "note": "f = 7/S"
+    },
+    "ar_b1_pg_spine_ctl_shared": {
+     "tok_s": 1409.0,
+     "rate_status": "composed_from_measured",
+     "static_w": 7683.4,
+     "dynamic_w": 167.1,
+     "system_w": 7850.5,
+     "J_per_token": 5.5717,
+     "tok_s_per_kW": 179.48,
+     "status": "unvalidated",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)",
+      "element residual 0.1498 applied to the hub logic (ASSUMED transfer)",
+      "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"
+     ],
+     "note": "stage power gating, active fraction 1/S + wake/T = 0.0125; pair PG idle 0.370 mW (unvalidated)"
+    },
+    "mtp_b1_pg_spine_ctl_shared": {
+     "tok_s": 2585.5,
+     "rate_status": "composed_from_measured",
+     "static_w": 8863.4,
+     "dynamic_w": 413.4,
+     "system_w": 9276.9,
+     "J_per_token": 3.588,
+     "tok_s_per_kW": 278.7,
+     "status": "unvalidated",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)",
+      "element residual 0.1498 applied to the hub logic (ASSUMED transfer)",
+      "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"
+     ],
+     "note": "f = 7/S"
+    },
+    "ar_b1_pg_spine_ctl_aon_shared": {
+     "tok_s": 1409.0,
+     "rate_status": "composed_from_measured",
+     "static_w": 6630.3,
+     "dynamic_w": 167.1,
+     "system_w": 6797.4,
+     "J_per_token": 4.8243,
+     "tok_s_per_kW": 207.28,
+     "status": "unvalidated",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)",
+      "element residual 0.0127 applied to the hub logic (ASSUMED transfer)",
+      "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"
+     ],
+     "note": "stage power gating, active fraction 1/S + wake/T = 0.0125; pair PG idle 0.031 mW (unvalidated)"
+    },
+    "mtp_b1_pg_spine_ctl_aon_shared": {
+     "tok_s": 2585.5,
+     "rate_status": "composed_from_measured",
+     "static_w": 7889.3,
+     "dynamic_w": 413.4,
+     "system_w": 8302.7,
+     "J_per_token": 3.2113,
+     "tok_s_per_kW": 311.4,
+     "status": "unvalidated",
+     "unvalidated": [
+      "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
+      "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
+      "head dies 738.5 W and Engram table dies 3324.4 W, never gated (modelled)",
+      "HBM stack idle 2.8 W x 452 stacks (ASSUMED band 1.2-6.4 W; stack count W3 rule ASSUMED)",
+      "dynamic energy per token (C1 model)",
+      "element residual 0.0127 applied to the hub logic (ASSUMED transfer)",
+      "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"
+     ],
+     "note": "f = 7/S"
     }
    },
    "static_ledgers": {
@@ -184,6 +304,66 @@
      "layer_die_w": 15.81,
      "field_w": 2.978,
      "hub_w": 7.392,
+     "serdes_w": 5.44,
+     "head_w": 738.5,
+     "table_w": 3324.4,
+     "stacks_idle_w": 1265.6,
+     "active_fraction": 0.08642
+    },
+    "pg_spine_ar_b1": {
+     "layer_die_w": 8.648,
+     "field_w": 1.315,
+     "hub_w": 3.93,
+     "serdes_w": 3.403,
+     "head_w": 738.5,
+     "table_w": 3324.4,
+     "stacks_idle_w": 1265.6,
+     "active_fraction": 0.01245
+    },
+    "pg_spine_mtp_b1": {
+     "layer_die_w": 12.187,
+     "field_w": 1.761,
+     "hub_w": 4.986,
+     "serdes_w": 5.44,
+     "head_w": 738.5,
+     "table_w": 3324.4,
+     "stacks_idle_w": 1265.6,
+     "active_fraction": 0.08642
+    },
+    "pg_spine_ctl_shared_ar_b1": {
+     "layer_die_w": 7.268,
+     "field_w": 0.973,
+     "hub_w": 2.893,
+     "serdes_w": 3.403,
+     "head_w": 738.5,
+     "table_w": 3324.4,
+     "stacks_idle_w": 1265.6,
+     "active_fraction": 0.01245
+    },
+    "pg_spine_ctl_shared_mtp_b1": {
+     "layer_die_w": 10.91,
+     "field_w": 1.444,
+     "hub_w": 4.027,
+     "serdes_w": 5.44,
+     "head_w": 738.5,
+     "table_w": 3324.4,
+     "stacks_idle_w": 1265.6,
+     "active_fraction": 0.08642
+    },
+    "pg_spine_ctl_aon_shared_ar_b1": {
+     "layer_die_w": 4.018,
+     "field_w": 0.165,
+     "hub_w": 0.45,
+     "serdes_w": 3.403,
+     "head_w": 738.5,
+     "table_w": 3324.4,
+     "stacks_idle_w": 1265.6,
+     "active_fraction": 0.01245
+    },
+    "pg_spine_ctl_aon_shared_mtp_b1": {
+     "layer_die_w": 7.904,
+     "field_w": 0.697,
+     "hub_w": 1.767,
      "serdes_w": 5.44,
      "head_w": 738.5,
      "table_w": 3324.4,
@@ -217,7 +397,46 @@
      "status": "measured",
      "src": "results/rtl/rom_stage_power_gating_20261004/verdict.json wake.wake_ns"
     },
-    "spine": null
+    "spine": {
+     "pg_idle": {
+      "value": 0.0005132058110797663,
+      "status": "unvalidated",
+      "src": "results/rtl/rom_stage_spine_gate_20261004/verdict.json power_w.pg_idle_spine_gated"
+     },
+     "residual": {
+      "value": 0.20804,
+      "status": "unvalidated",
+      "src": "results/rtl/rom_stage_spine_gate_20261004/verdict.json power_w.residual_spine_gated_measured"
+     },
+     "pg_idle_ctl_shared": {
+      "value": 0.0003695555546555586,
+      "status": "unvalidated",
+      "src": "results/rtl/rom_stage_spine_gate_20261004/verdict.json power_w.pg_idle_spine_gated_controller_shared",
+      "note": "measured controller power divided over the stage's elements (one controller per stage)"
+     },
+     "residual_ctl_shared": {
+      "value": 0.14981,
+      "status": "unvalidated",
+      "src": "results/rtl/rom_stage_spine_gate_20261004/verdict.json power_w.residual_spine_gated_controller_shared"
+     },
+     "pg_idle_ctl_aon_shared": {
+      "value": 3.1223551514934994e-05,
+      "status": "unvalidated",
+      "src": "results/rtl/rom_stage_spine_gate_20261004/verdict.json power_w.pg_idle_spine_gated_controller_and_aon_shared",
+      "note": "controller AND its always-on clock branch divided over the stage's elements"
+     },
+     "residual_ctl_aon_shared": {
+      "value": 0.01266,
+      "status": "unvalidated",
+      "src": "results/rtl/rom_stage_spine_gate_20261004/verdict.json power_w.residual_spine_gated_controller_and_aon_shared"
+     },
+     "wake_ns": {
+      "value": 76.64,
+      "status": "unvalidated",
+      "src": "results/rtl/rom_stage_spine_gate_20261004/verdict.json wake.wake_ns"
+     },
+     "verdict": "REJECT: in the element frame the spine route is worse than the PG reference R4 (WC setup -535 vs -228 ps, hold -455 vs -13 ps): the domain -> AO scheduler crossing pays the skew between the gated spine tree and the AO branch"
+    }
    },
    "idle_window_1m": {
     "token_us": 709.706,
@@ -399,17 +618,27 @@
   "per_user_mtp_rom_over_hbm": 0.5399,
   "J_per_token_ar_hbm_over_rom": {
    "ar_b1_icg": 0.3384,
-   "ar_b1_pg_measured": 0.8351
+   "ar_b1_pg_measured": 0.8351,
+   "ar_b1_pg_spine": 0.9629,
+   "ar_b1_pg_spine_ctl_shared": 1.0177,
+   "ar_b1_pg_spine_ctl_aon_shared": 1.1754
   },
   "J_per_token_mtp_hbm_over_rom": {
    "mtp_b1_icg": 0.3153,
-   "mtp_b1_pg_measured": 0.6921
+   "mtp_b1_pg_measured": 0.6921,
+   "mtp_b1_pg_spine": 0.776,
+   "mtp_b1_pg_spine_ctl_shared": 0.8106,
+   "mtp_b1_pg_spine_ctl_aon_shared": 0.9057
   },
   "J_per_token_ar_hbm_no_switch_over_rom": {
    "ar_b1_icg": 0.2312,
-   "ar_b1_pg_measured": 0.5704
+   "ar_b1_pg_measured": 0.5704,
+   "ar_b1_pg_spine": 0.6577,
+   "ar_b1_pg_spine_ctl_shared": 0.6951,
+   "ar_b1_pg_spine_ctl_aon_shared": 0.8028
   },
-  "best_rom_policy": "ar_b1_pg_measured",
+  "best_rom_policy": "ar_b1_pg_spine_ctl_aon_shared",
+  "spine_adopted": false,
   "iso_silicon": {
    "reference": "DS ROM",
    "reference_total_mm2": 801068.0,

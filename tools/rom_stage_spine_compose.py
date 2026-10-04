@@ -99,6 +99,21 @@ def main() -> int:
         reasons.append(f"AO + spine gate route does not close SS/FF ({a3})")
     if not win["wake_fits"]:
         reasons.append("wake does not fit the stage window")
+    # the element frame never closed (R0 ungated -219 ps); the spine must not make it worse than the PG reference R4
+    r4 = json.loads((PG_DIR / "route_R4_physical.json").read_text())["design"]
+    r5p = d / "route_R5_physical.json"
+    if r5p.exists():
+        r5 = json.loads(r5p.read_text())["design"]
+        tim["R4_pg_reference_wc"] = dict(setup_wns_ps=round(r4["setup_wns_ns"] * 1e3, 2), hold_wns_ps=round(r4["hold_wns_ns"] * 1e3, 2))
+        tim["R5_element_wc"] = dict(setup_wns_ps=round(r5["setup_wns_ns"] * 1e3, 2), hold_wns_ps=round(r5["hold_wns_ns"] * 1e3, 2),
+                                    worst_setup_path="u_pg.u_elem.drain[2] (spine domain) -> u_pg.g_pg.u_ao.u_sched.u_pg.cnt "
+                                                     "(AO branch): domain busy into the scheduler across the unbalanced trees",
+                                    src="jobs/R5 6_finish.rpt")
+        if r5["setup_wns_ns"] < r4["setup_wns_ns"] or r5["hold_wns_ns"] < r4["hold_wns_ns"]:
+            reasons.append(f"in the element frame the spine route is worse than the PG reference R4 (WC setup "
+                           f"{r5['setup_wns_ns'] * 1e3:.0f} vs {r4['setup_wns_ns'] * 1e3:.0f} ps, hold "
+                           f"{r5['hold_wns_ns'] * 1e3:.0f} vs {r4['hold_wns_ns'] * 1e3:.0f} ps): the domain -> AO "
+                           "scheduler crossing pays the skew between the gated spine tree and the AO branch")
     if resid >= old["power_w"]["residual"]:
         reasons.append("no residual reduction")
     verdict = ("ADOPT (opt-in SPINE = 1): exact under power cycling, AO + spine gate closes SS/FF, wake fits the 1M "
