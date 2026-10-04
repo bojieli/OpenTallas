@@ -196,16 +196,14 @@ public:
     // Hubble's distinct native ot_hdc_v41_qe quantizer, not the QAL/KVAL
     // field actor. Join OLD outputs before ANY native rising evaluation.
     template<class QuantizerPorts,class NativeCkvService>
-    void wire_quantizer(QuantizerPorts& hooks,NativeCkvService& ckv,bool capture_window=true) {
+    void wire_quantizer(QuantizerPorts& hooks,NativeCkvService& ckv) {
         require(hooks.native&&hooks.held_mode&&hooks.held_operation,
                 "actual native QE quantizer hooks absent");
         const auto& qe=hooks.native();
         require(qe.contextp()==runtime.context&&ckv.contextp()==runtime.context&&
                 qe.clk==0&&ckv.clk==0&&!qe.fault,
                 "quantizer/CKV must borrow live SAME-context low edge");
-        // WINDOW mode1 capture stays rank-local. A borrowed current-row
-        // quantizer may feed the same actual mode3 stream to each CKV encoder.
-        if(capture_window)wire_qe(qe);
+        wire_qe(qe); // mode1 kvb payload is copied verbatim, with its fault.
         old_ckv_write=false;ckv.nw_we=0;
         if(!(qe.w_we&1u))return;
         const unsigned mode=hooks.held_mode();
