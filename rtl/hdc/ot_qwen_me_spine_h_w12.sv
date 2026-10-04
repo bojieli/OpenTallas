@@ -126,8 +126,8 @@ module ot_qwen_me_spine_h_w12 #(
     // -- control element ---------------------------------------------------------------------------------------
     wire [LG:0] t_sel_e, t_tv_e;
     wire [W-1:0] tr_fault;
-    wire p_v_e;
-    wire [FW-1:0] p_f_e;
+    wire p_v_e2;
+    wire [FW-1:0] p_f_e2;
     wire [NPE*CW-1:0] p_am;
     wire [NPE-1:0] p_fault;
     wire [NXC*32-1:0] xl0;
@@ -146,7 +146,7 @@ module ot_qwen_me_spine_h_w12 #(
         .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr),
         .x_re(x_re), .x_addr(x_addr), .x_q(x_q), .xl0(xl0),
         .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault),
-        .p_v_e(p_v_e), .p_f_e(p_f_e), .p_am(p_am), .p_fault(p_fault), .fab_fault(fab_fault),
+        .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am), .p_fault(p_fault), .fab_fault(fab_fault),
         .ov(ov), .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
         .progress(progress), .fault(fault));
@@ -189,7 +189,7 @@ module ot_qwen_me_spine_h_w12 #(
             ot_qwen_me_spport_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .SMIN(SMIN), .PQ(PQ),
                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
                 .clk(clk), .rst_n(rst_n), .pt_id(q[15:0]),
-                .lv_in(lvt[q*PQ*W*32 +: PQ*W*32]), .a_v_e(p_v_e), .a_f_e(p_f_e),
+                .lv_in(lvt[q*PQ*W*32 +: PQ*W*32]), .a_v_e2(p_v_e2), .a_f_e2(p_f_e2),
                 .scale_q(scale_q[q*PQ*W*16 +: PQ*W*16]),
                 .o_we(we2[q*PQ +: PQ]), .o_addr(addr2[q*PQ*AW +: PQ*AW]), .o_mask(mask2[q*PQ*W +: PQ*W]),
                 .o_data(data2[q*PQ*W*32 +: PQ*W*32]), .am(p_am[q*CW +: CW]), .fault(p_fault[q]));
@@ -275,9 +275,9 @@ module ot_qwen_me_spctl_w12 #(
     output wire [$clog2(GT):0] t_sel_e,
     output wire [$clog2(GT):0] t_tv_e,
     input  wire [W-1:0]        tr_fault,       // the tree elements' registered faults
-    // port elements: the element tag fields and valid one cycle early; their argmax nodes and faults
-    output wire              p_v_e,
-    output wire [1+1+1+1+4+AW+AW+3*(NW+1)-1:0] p_f_e,
+    // port elements: the element tag fields and valid two cycles early; their argmax nodes and faults
+    output wire              p_v_e2,
+    output wire [1+1+1+1+4+AW+AW+3*(NW+1)-1:0] p_f_e2,
     input  wire [((GT >> SMIN) / PQ)*(1+32+NW)-1:0] p_am,
     input  wire [((GT >> SMIN) / PQ)-1:0]   p_fault,
     input  wire              fab_fault,
@@ -659,30 +659,30 @@ end endgenerate
     always @(posedge clk) begin
         s1_tag <= m_tag; s1b_tag <= s1_tag; s2_tag <= s1b_tag; s3_tag <= s2_tag;
     end
-    //: a_tag = s3_tag + (SD + OD + XDD); the port elements take it one cycle early (a_tag_e) and register it
+    //: a_tag = s3_tag + (SD + OD + XDD); the port elements take it TWO cycles early (a_tag_e2) and register it twice
     localparam integer AD = SD + OD + XDD;
-    wire [TW-1:0] a_tag_e;
-    reg  [TW-1:0] a_tag;
-    ot_hdc_delay #(.W(TW), .D(AD - 1)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag_e));
-    always @(posedge clk) a_tag <= a_tag_e;
+    wire [TW-1:0] a_tag_e2;
+    reg  [TW-1:0] a_tag_e1, a_tag;
+    ot_qwen_me_rdelay_w12 #(.W(TW), .D(AD - 2)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag_e2));
+    always @(posedge clk) begin a_tag_e1 <= a_tag_e2; a_tag <= a_tag_e1; end
     wire [AD:0] vline;
     ot_hdc_vline #(.D(AD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
-    assign p_v_e = vline[AD - 1];
+    assign p_v_e2 = vline[AD - 2];
     wire          pf_last, pf_oen, pf_amax, pf_wsrc, pf_mmode, pf_rmax, pf_opend;
     wire [3:0]    pf_split;
     wire [AW-1:0] pf_oa, pf_ots, pf_mbase, pf_sbase;
     wire [NW:0]   pf_nb, pf_lb, pf_nout;
     wire [2:0]    pf_j;
     assign {pf_last, pf_oen, pf_amax, pf_wsrc, pf_mmode, pf_split, pf_oa, pf_ots, pf_nb, pf_lb, pf_nout,
-            pf_rmax, pf_j, pf_opend, pf_mbase, pf_sbase} = a_tag_e;
-    assign p_f_e = {pf_last, pf_oen, pf_wsrc, pf_mmode, pf_split, pf_oa, pf_ots, pf_nb, pf_lb, pf_nout};
+            pf_rmax, pf_j, pf_opend, pf_mbase, pf_sbase} = a_tag_e2;
+    assign p_f_e2 = {pf_last, pf_oen, pf_wsrc, pf_mmode, pf_split, pf_oa, pf_ots, pf_nb, pf_lb, pf_nout};
 
     // -- split tree control: level lv's input split (split_at), its select and adder valid ----------------
     //: split_at[lv] at level lv+1's input; sat_e[lv] the same value one cycle earlier
     wire [LG*4+3:0] split_at, sat_e;
     wire [3:0] t_split, t_split_e;
     localparam integer D0 = SD + TL * LV0 + XDD;
-    ot_hdc_delay #(.W(4), .D(D0 - 1)) u_ts (.clk(clk), .rst_n(rst_n), .d(s3_tag[TW-6 -: 4]), .q(t_split_e));
+    ot_qwen_me_rdelay_w12 #(.W(4), .D(D0 - 1)) u_ts (.clk(clk), .rst_n(rst_n), .d(s3_tag[TW-6 -: 4]), .q(t_split_e));
     reg [3:0] t_split_r;
     always @(posedge clk) t_split_r <= t_split_e;
     assign t_split = t_split_r;
@@ -714,11 +714,11 @@ end endgenerate
     localparam integer PD = SD - 3 + OD + XDD;
     wire [TW-1:0] pre_tag;
     wire [PD:0]   pre_vline;
-    ot_hdc_delay #(.W(TW), .D(PD)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
+    ot_qwen_me_rdelay_w12 #(.W(TW), .D(PD)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
     ot_hdc_vline #(.D(PD)) u_prev (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(pre_vline));
     wire [NW-1:0] pre_t;
     generate if (SCALE_LOCAL != 0) begin : g_pret
-        ot_hdc_delay #(.W(NW), .D(PD)) u_pret (.clk(clk), .rst_n(rst_n), .d(s3_t), .q(pre_t));
+        ot_qwen_me_rdelay_w12 #(.W(NW), .D(PD)) u_pret (.clk(clk), .rst_n(rst_n), .d(s3_t), .q(pre_t));
     end else begin : g_nopret
         assign pre_t = {NW{1'b0}};
     end endgenerate
@@ -754,7 +754,7 @@ end endgenerate
     // -- result tag (a_tag + SCALE_LAT, the post-scale multiply) and the result valid ---------------------------------
     wire [TW-1:0] result_tag;
     wire [SCALE_LAT:0] vd;
-    ot_hdc_delay #(.W(TW), .D(SCALE_LAT)) u_rtag (.clk(clk), .rst_n(rst_n), .d(a_tag), .q(result_tag));
+    ot_qwen_me_rdelay_w12 #(.W(TW), .D(SCALE_LAT)) u_rtag (.clk(clk), .rst_n(rst_n), .d(a_tag), .q(result_tag));
     ot_hdc_vline #(.D(SCALE_LAT)) u_rv (.clk(clk), .rst_n(rst_n), .v(vline[AD]), .vd(vd));
     wire [SCALE_LAT:0] post_pending = vd;
     wire          r_v = vd[SCALE_LAT];
@@ -814,7 +814,7 @@ end endgenerate
         else tv <= {tv[LV-1:0], r_v && r_last && (r_amax || r_rmax)};
     end
     wire [1+3+1+AW-1:0] ttag;
-    ot_hdc_delay #(.W(1 + 3 + 1 + AW), .D(LV + 1)) u_ttag (.clk(clk), .rst_n(rst_n),
+    ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV + 1)) u_ttag (.clk(clk), .rst_n(rst_n),
         .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag));
     wire          t_rmax, t_opend;
     wire [2:0]    t_j;
@@ -990,7 +990,7 @@ module ot_qwen_me_sptree_w12 #(
                 assign pf = 1'b0;
             end
             if (!ALWAYS && HOLD_TO > 0) begin : g_hold
-                ot_hdc_delay #(.W(HOLD_TO*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_n),
+                ot_qwen_me_rdelay_w12 #(.W(HOLD_TO*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_n),
                     .d(lvf[(lv-1)*GI*32 +: HOLD_TO*32]), .q(held[HOLD_TO*32-1:0]));
                 if (HOLD_TO < GI) begin : g_hz
                     assign held[GI*32-1:HOLD_TO*32] = 0;
@@ -1030,11 +1030,12 @@ endmodule
 
 // PQ result-port groups of the spine (ot_qwen_w12_matvec_part PART 2 g_post_scale / results / argmax leaves) for
 // global groups q = pt_id*PQ .. +PQ-1 (pt_id: a strap, so every port element is one netlist): tree level LG (at
-// GT >> LG == 0 a pure TA-cycle hold of level LG-1, then the level register), the INT8 post-scale (ot_hdc_fmul;
-// scale_q captured in a register first, its request having left one cycle early), the two result registers, the
-// argmax leaves and the first log2(PQ*W) argmax levels.  The element tags arrive one cycle early and are
-// registered here (a = the monolithic engine's a_tag), then delayed 5 locally (r = its result_tag).  Products of
-// the strap with tag fields are formed in the tag line, off the result path (zero cycles).
+// GT >> LG == 0 a pure TA-cycle hold of level LG-1, then the level register), the INT8 post-scale (scale_q captured
+// in a register first, its request having left one cycle early), the two result registers, the argmax leaves and
+// the first log2(PQ*W) argmax levels.  The element tags arrive TWO cycles early: stage E registers them and forms
+// the per-group quantities (group in range, nout - row base, row base, (q0+g)*ots) with kept adders; stage A (the
+// monolithic engine's a_tag cycle) registers those, so the lane mask is a 4-bit compare, and the result tag
+// (a + SCALE_LAT) carries the finished mask, rows and addresses: zero added cycles.
 module ot_qwen_me_spport_w12 #(
     parameter integer W  = 16,
     parameter integer IL = 8,
@@ -1050,8 +1051,8 @@ module ot_qwen_me_spport_w12 #(
     input  wire              rst_n,
     input  wire [15:0]       pt_id,
     input  wire [PQ*W*32-1:0] lv_in,          // tree level LG-1 at positions pt_id*PQ.., word-major (position, lane)
-    input  wire              a_v_e,
-    input  wire [1+1+1+1+4+AW+AW+3*(NW+1)-1:0] a_f_e,
+    input  wire              a_v_e2,
+    input  wire [1+1+1+1+4+AW+AW+3*(NW+1)-1:0] a_f_e2,
     input  wire [PQ*W*16-1:0] scale_q,
     output reg  [PQ-1:0]     o_we,
     output reg  [PQ*AW-1:0]  o_addr,
@@ -1065,52 +1066,75 @@ module ot_qwen_me_spport_w12 #(
     localparam integer LPT = $clog2(NL);
     localparam integer CW = 1 + 32 + NW;
     localparam integer FW = 1 + 1 + 1 + 1 + 4 + AW + AW + 3 * (NW + 1);
+    localparam integer BW = 32;
     // -- tree level LG: hold TA, then the level register ---------------------------------------------------
     wire [NL*32-1:0] held;
     reg  [NL*32-1:0] raw_res;
-    ot_hdc_delay #(.W(NL*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_n), .d(lv_in), .q(held));
+    ot_qwen_me_rdelay_w12 #(.W(NL*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_n), .d(lv_in), .q(held));
     always @(posedge clk) raw_res <= held;
-    // -- tags --------------------------------------------------------------------------------------------------
-    reg          raw_v;
-    reg [FW-1:0] raw_f;
-    always @(posedge clk or negedge rst_n) if (!rst_n) raw_v <= 1'b0; else raw_v <= a_v_e;
-    always @(posedge clk) raw_f <= a_f_e;
-    wire          raw_last, raw_oen, raw_wsrc, raw_mmode;
-    wire [3:0]    raw_split;
-    wire [AW-1:0] raw_oa, raw_ots;
-    wire [NW:0]   raw_nb, raw_lb, raw_nout;
-    assign {raw_last, raw_oen, raw_wsrc, raw_mmode, raw_split, raw_oa, raw_ots, raw_nb, raw_lb, raw_nout} = raw_f;
-    //: the group base of this element: q0 = pt_id * PQ (global group of local group 0)
+    // -- stage E: the tags (a - 1) ------------------------------------------------------------------------------
+    reg          e_v;
+    reg [FW-1:0] e_f;
+    always @(posedge clk or negedge rst_n) if (!rst_n) e_v <= 1'b0; else e_v <= a_v_e2;
+    always @(posedge clk) e_f <= a_f_e2;
+    wire          e_last, e_oen, e_wsrc, e_mmode;
+    wire [3:0]    e_split;
+    wire [AW-1:0] e_oa, e_ots;
+    wire [NW:0]   e_nb, e_lb, e_nout;
+    assign {e_last, e_oen, e_wsrc, e_mmode, e_split, e_oa, e_ots, e_nb, e_lb, e_nout} = e_f;
     wire [31:0] q0 = {16'd0, pt_id} * PQ;
-    //: strap products (in the tag line): (q0 + g)*ots per local group g, and the row / lane-vector bases
-    //: nb + q0*W*IL, lb + q0*W
+    wire [$clog2(GT):0] e_ports = GT >> e_split;
     localparam integer QB = 16;
-    wire [PQ*AW-1:0] qots;
-    genvar b, g;
-    generate for (g = 0; g < PQ; g = g + 1) begin : g_qots
+    wire [PQ-1:0]     e_gok, e_pos, e_big;
+    wire [PQ*4-1:0]   e_dlo;
+    wire [PQ*BW-1:0]  e_rowb;
+    wire [PQ*AW-1:0]  e_qots;
+    genvar b, g, e;
+    generate for (g = 0; g < PQ; g = g + 1) begin : g_e
         wire [31:0] qg = q0 + g;
+        assign e_gok[g] = (qg < e_ports);
+        //: row base nb + qg*W*IL, lane-vector base lb + qg*W; the lane mask is base + lane < nout
+        wire [BW-1:0] rowb, lvb, base, nd;
+        ot_qwen_w12_kadd #(.W(BW)) u_rb (.a({{(BW-NW-1){1'b0}}, e_nb}), .b(qg * (W * IL)), .s(rowb));
+        ot_qwen_w12_kadd #(.W(BW)) u_lb (.a({{(BW-NW-1){1'b0}}, e_lb}), .b(qg * W), .s(lvb));
+        assign base = e_mmode ? lvb : rowb;
+        //: nout - base (base <= nout - 1 iff the borrow is clear and the difference is non-zero)
+        wire nd_c;
+        ot_qwen_w12_ksa #(.W(BW)) u_nd (.a({{(BW-NW-1){1'b0}}, e_nout}), .b(~base), .cin(1'b1), .s(nd), .cout(nd_c));
+        assign e_pos[g] = nd_c && (nd != 0);
+        assign e_big[g] = (nd[BW-1:4] != 0);
+        assign e_dlo[g*4 +: 4] = nd[3:0];
+        assign e_rowb[g*BW +: BW] = rowb;
+        //: (q0 + g) * ots
         wire [QB*AW-1:0] qrows;
         wire [AW-1:0] qs, qc;
         for (b = 0; b < QB; b = b + 1) begin : g_qr
-            assign qrows[b*AW +: AW] = qg[b] ? (raw_ots << b) : {AW{1'b0}};
+            assign qrows[b*AW +: AW] = qg[b] ? (e_ots << b) : {AW{1'b0}};
         end
         ot_qwen_w12_csa_tree #(.W(AW), .N(QB)) u_qcs (.rows(qrows), .s(qs), .c(qc));
-        ot_qwen_w12_kadd #(.W(AW)) u_qka (.a(qs), .b(qc), .s(qots[g*AW +: AW]));
+        ot_qwen_w12_kadd #(.W(AW)) u_qka (.a(qs), .b(qc), .s(e_qots[g*AW +: AW]));
     end endgenerate
-    localparam integer BW = 32;
-    wire [BW-1:0] nb0, lb0;
-    ot_qwen_w12_kadd #(.W(BW)) u_nb0 (.a({{(BW-NW-1){1'b0}}, raw_nb}), .b(q0 * (W * IL)), .s(nb0));
-    ot_qwen_w12_kadd #(.W(BW)) u_lb0 (.a({{(BW-NW-1){1'b0}}, raw_lb}), .b(q0 * W), .s(lb0));
-    //: the post-scale valid (only its fault depends on it): every lane of a group with an output row
-    wire [$clog2(GT):0] raw_ports = GT >> raw_split;
-    wire [NL-1:0] act;
-    genvar e;
+    // -- stage A (the monolithic a_tag cycle) --------------------------------------------------------------------
+    reg              raw_v, raw_last, raw_oen, raw_wsrc;
+    reg  [AW-1:0]    raw_oa;
+    reg  [PQ-1:0]    a_gok, a_pos, a_big;
+    reg  [PQ*4-1:0]  a_dlo;
+    reg  [PQ*BW-1:0] a_rowb;
+    reg  [PQ*AW-1:0] a_qots;
+    always @(posedge clk or negedge rst_n) if (!rst_n) raw_v <= 1'b0; else raw_v <= e_v;
+    always @(posedge clk) begin
+        raw_last <= e_last; raw_oen <= e_oen; raw_wsrc <= e_wsrc; raw_oa <= e_oa;
+        a_gok <= e_gok; a_pos <= e_pos; a_big <= e_big; a_dlo <= e_dlo; a_rowb <= e_rowb; a_qots <= e_qots;
+    end
+    //: lane l of group g is active (an output row): (q0+g < GT >> split) && base + l < nout
+    wire [NL-1:0]    act;
+    wire [NL*NW-1:0] rows;
     generate for (e = 0; e < NL; e = e + 1) begin : g_act
         localparam integer EQ = e / W, EL = e % W;
-        wire [BW-1:0] rb = nb0 + EQ * (W * IL) + EL;
-        wire [BW-1:0] lb = lb0 + EQ * W + EL;
-        assign act[e] = ((q0 + EQ) < raw_ports) && (raw_mmode ? (lb < {{(BW-NW-1){1'b0}}, raw_nout}) :
-                                                                (rb < {{(BW-NW-1){1'b0}}, raw_nout}));
+        assign act[e] = a_gok[EQ] && a_pos[EQ] && (a_big[EQ] || (a_dlo[EQ*4 +: 4] > EL));
+        wire [NW-1:0] r;
+        ot_qwen_w12_kadd #(.W(NW)) u_row (.a(a_rowb[EQ*BW +: NW]), .b(EL[NW-1:0]), .s(r));
+        assign rows[e*NW +: NW] = r;
     end endgenerate
     // -- post-scale ----------------------------------------------------------------------------------------------
     reg  [NL*16-1:0] sq;
@@ -1134,81 +1158,103 @@ module ot_qwen_me_spport_w12 #(
         end
     end endgenerate
     always @(posedge clk or negedge rst_n) if (!rst_n) fault <= 1'b0; else fault <= |sf;
-    // -- result tag: a + SCALE_LAT (the multiply), with the strap products carried along --------------------------------
-    localparam integer RW = 1 + 1 + 1 + 4 + AW + PQ*AW + BW + BW + (NW + 1);
+    // -- result tag: a + SCALE_LAT, carrying the finished mask, rows and addresses -------------------------------
+    localparam integer RW = 1 + 1 + PQ + AW + PQ*AW + NL + NL*NW;
+    wire [PQ*AW-1:0] a_oaq;
+    generate for (g = 0; g < PQ; g = g + 1) begin : g_oa
+        ot_qwen_w12_kadd #(.W(AW)) u_a (.a(raw_oa), .b(a_qots[g*AW +: AW]), .s(a_oaq[g*AW +: AW]));
+    end endgenerate
     wire [RW-1:0] rt;
     wire [SCALE_LAT:0] rv;
-    ot_hdc_delay #(.W(RW), .D(SCALE_LAT)) u_rt (.clk(clk), .rst_n(rst_n),
-        .d({raw_last, raw_oen, raw_mmode, raw_split, raw_oa, qots, nb0, lb0, raw_nout}), .q(rt));
+    ot_qwen_me_rdelay_w12 #(.W(RW), .D(SCALE_LAT)) u_rt (.clk(clk), .rst_n(rst_n),
+        .d({raw_last, raw_oen, a_gok, raw_oa, a_oaq, act, rows}), .q(rt));
     ot_hdc_vline #(.D(SCALE_LAT)) u_rv (.clk(clk), .rst_n(rst_n), .v(raw_v), .vd(rv));
     wire          r_v = rv[SCALE_LAT];
-    wire          r_last, r_oen, r_mmode;
-    wire [3:0]    r_split;
+    wire          r_last, r_oen;
+    wire [PQ-1:0] r_gok;
     wire [AW-1:0] r_oa;
-    wire [PQ*AW-1:0] r_qots;
-    wire [BW-1:0] r_nb0, r_lb0;
-    wire [NW:0]   r_nout;
-    assign {r_last, r_oen, r_mmode, r_split, r_oa, r_qots, r_nb0, r_lb0, r_nout} = rt;
-    wire [$clog2(GT):0] r_ports = GT >> r_split;
-    //: the lane mask (also the argmax leaf's valid) and the rows
+    wire [PQ*AW-1:0] r_oaq;
     wire [NL-1:0] r_mask;
-    wire [NL*NW-1:0] rows;
-    generate for (e = 0; e < NL; e = e + 1) begin : g_mask
-        localparam integer EQ = e / W, EL = e % W;
-        wire [BW-1:0] rb, lb;
-        ot_qwen_w12_kadd #(.W(BW)) u_rb (.a(r_nb0), .b(EQ * (W * IL) + EL), .s(rb));
-        ot_qwen_w12_kadd #(.W(BW)) u_lb (.a(r_lb0), .b(EQ * W + EL), .s(lb));
-        assign r_mask[e] = ((q0 + EQ) < r_ports) && (r_mmode ? (lb < {{(BW-NW-1){1'b0}}, r_nout}) :
-                                                               (rb < {{(BW-NW-1){1'b0}}, r_nout}));
-        assign rows[e*NW +: NW] = rb[NW-1:0];
-    end endgenerate
+    wire [NL*NW-1:0] r_rows;
+    assign {r_last, r_oen, r_gok, r_oa, r_oaq, r_mask, r_rows} = rt;
     // -- the two result registers --------------------------------------------------------------------------------
     reg  [PQ-1:0]     o_we1;
     reg  [PQ*AW-1:0]  o_addr1;
     reg  [PQ*W-1:0]   o_mask1;
     reg  [PQ*W*32-1:0] o_data1;
-    integer q;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin o_we1 <= 0; o_we <= 0; end
         else begin
-            for (q = 0; q < PQ; q = q + 1)
-                o_we1[q] <= r_v && r_last && r_oen && ((q0 + q) < r_ports);
+            o_we1 <= {PQ{r_v && r_last && r_oen}} & r_gok;
             o_we <= o_we1;
         end
     end
-    generate for (g = 0; g < PQ; g = g + 1) begin : g_oa
-        wire [AW-1:0] s;
-        ot_qwen_w12_kadd #(.W(AW)) u_a (.a(r_oa), .b(r_qots[g*AW +: AW]), .s(s));
-        always @(posedge clk) o_addr1[g*AW +: AW] <= s;
-    end endgenerate
     always @(posedge clk) begin
-        o_mask1 <= r_mask; o_data1 <= res;
+        o_addr1 <= r_oaq; o_mask1 <= r_mask; o_data1 <= res;
         o_mask <= o_mask1; o_data <= o_data1; o_addr <= o_addr1;
     end
     // -- argmax leaves and levels 1 .. LPT ------------------------------------------------------------------------
     function automatic [31:0] okey(input [31:0] v);
         okey = v[31] ? ~v : {1'b1, v[30:0]};
     endfunction
-    wire [CW*NL-1:0] alv [0:LPT];
+    wire [(LPT+1)*CW*NL-1:0] alv;          // level al at [al*CW*NL +: CW*NL] (flat: Yosys 0.68 wire-array assert)
     genvar al;
     generate
         for (e = 0; e < NL; e = e + 1) begin : g_leaf
             reg [CW-1:0] c;
-            always @(posedge clk) c <= {r_mask[e], okey(res[32*e +: 32]), rows[e*NW +: NW]};
-            assign alv[0][CW*e +: CW] = c;
+            always @(posedge clk) c <= {r_mask[e], okey(res[32*e +: 32]), r_rows[e*NW +: NW]};
+            assign alv[CW*e +: CW] = c;
         end
         for (al = 1; al <= LPT; al = al + 1) begin : g_alvl
             for (e = 0; e < (NL >> al); e = e + 1) begin : g_node
-                wire [CW-1:0] x0 = alv[al-1][CW*(2*e) +: CW];
-                wire [CW-1:0] x1 = alv[al-1][CW*(2*e+1) +: CW];
+                wire [CW-1:0] x0 = alv[(al-1)*CW*NL + CW*(2*e) +: CW];
+                wire [CW-1:0] x1 = alv[(al-1)*CW*NL + CW*(2*e+1) +: CW];
                 wire          x0_wins = x0[CW-1] && (!x1[CW-1] || x0[CW-2 -: 32] > x1[CW-2 -: 32] ||
                                         (x0[CW-2 -: 32] == x1[CW-2 -: 32] && x0[NW-1:0] < x1[NW-1:0]));
                 reg  [CW-1:0] c;
                 always @(posedge clk) c <= x0_wins ? x0 : x1;
-                assign alv[al][CW*e +: CW] = c;
+                assign alv[al*CW*NL + CW*e +: CW] = c;
             end
-            assign alv[al][CW*NL-1 : CW*(NL >> al)] = 0;
+            assign alv[al*CW*NL + CW*NL-1 : al*CW*NL + CW*(NL >> al)] = 0;
         end
     endgenerate
-    assign am = alv[LPT][CW-1:0];
+    assign am = alv[LPT*CW*NL +: CW];
+endmodule
+
+// ot_qwen_me_rdelay_w12: q = d delayed D cycles, as ot_hdc_delay, built as a ring of D entries (one-hot write/read
+// pointer, a copy per SL-bit slice) instead of a D-deep shift register: every entry is written once and read D
+// cycles later through a one-hot select, so no flop drives a flop directly (no hold buffer per bit at FF) and a
+// word toggles one entry per cycle instead of D.  D <= 1: ot_hdc_delay.
+module ot_qwen_me_rdelay_w12 #(
+    parameter integer W = 32,
+    parameter integer D = 1,
+    parameter integer SL = 64
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    generate if (D <= 1) begin : g_short
+        ot_hdc_delay #(.W(W), .D(D)) u_d (.clk(clk), .rst_n(rst_n), .d(d), .q(q));
+    end else begin : g_ring
+        localparam integer NS = (W + SL - 1) / SL;
+        genvar s, i;
+        for (s = 0; s < NS; s = s + 1) begin : g_s
+            localparam integer LO = s * SL;
+            localparam integer SW = ((W - LO) < SL) ? (W - LO) : SL;
+            reg [D-1:0] ptr;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) ptr <= {{(D-1){1'b0}}, 1'b1};
+                else ptr <= {ptr[D-2:0], ptr[D-1]};
+            reg  [D*SW-1:0] mem;            // flat (entry-major): Yosys 0.68 asserts on wire arrays under chparam
+            wire [(D+1)*SW-1:0] sel;
+            assign sel[SW-1:0] = {SW{1'b0}};
+            for (i = 0; i < D; i = i + 1) begin : g_e
+                always @(posedge clk) if (ptr[i]) mem[i*SW +: SW] <= d[LO +: SW];
+                assign sel[(i+1)*SW +: SW] = sel[i*SW +: SW] | (mem[i*SW +: SW] & {SW{ptr[i]}});
+            end
+            assign q[LO +: SW] = sel[D*SW +: SW];
+        end
+    end endgenerate
 endmodule
