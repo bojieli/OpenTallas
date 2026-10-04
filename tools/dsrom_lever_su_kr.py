@@ -29,6 +29,22 @@ sys.path.insert(0, str(ROOT / "tools"))
 LV = ROOT / "rtl/dsrom_sys/levers"
 SUCC = {"ot_hdc_core_v41x_kr.sv": LV / "ot_hdc_core_v41x_kr_lv.sv",
         "ot_hdc_v41x_me_adapt.sv": LV / "ot_hdc_v41x_me_adapt_lv.sv"}
+# OT_LV_CORE=w17: the W17 RUNTIME core (rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv) with the same fusion edits
+# (rtl/dsrom_sys/levers/ot_hdc_core_v41x_w17_kr_lv.sv) in place of the `_kr` fork, with its runtime companion
+# att_adapt and the modules its X_ROM / KV_HBM branches name (not built at X_ROM = 0, but Verilator resolves them)
+W17 = os.environ.get("OT_LV_CORE", "") == "w17"
+if W17:
+    SUCC["ot_hdc_core_v41x_kr.sv"] = LV / "ot_hdc_core_v41x_w17_kr_lv.sv"
+    SUCC["ot_hdc_v41x_att_adapt.sv"] = ROOT / "rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv"
+W17_EXTRA = [ROOT / p for p in ("rtl/v41die/ot_v41_rom_adapt.sv", "rtl/w17_runtime/v41die/ot_v41_spine.sv",
+                                "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv")]
+
+
+def _w17_extra(D):
+    if W17:
+        for q in W17_EXTRA:
+            if q not in D.RTL:
+                D.RTL.append(q)
 
 
 def install(D, W, succ=True):
@@ -43,6 +59,7 @@ def install(D, W, succ=True):
                 D.RTL[k] = SUCC[p.name]
                 n += 1
         assert n == len(SUCC), n
+        _w17_extra(D)
 
 
 def lint(orig=False, pinned=False, cmd_json=None):
@@ -135,7 +152,8 @@ def main():
         for k, p in enumerate(D.RTL):
             if p.name in SUCC:
                 D.RTL[k] = SUCC[p.name]
-        assert sum(p.parent == LV for p in D.RTL) == len(SUCC)
+        assert sum(p in SUCC.values() for p in D.RTL) == len(SUCC)
+        _w17_extra(D)
     W._swap = swap
     D.TOOLS.append(Path(__file__).resolve())
     try:
