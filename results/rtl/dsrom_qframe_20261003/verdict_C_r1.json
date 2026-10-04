@@ -1,0 +1,26 @@
+{
+ "cause": "foreign load on shared ot-agidock128; not a design verdict",
+ "design_evidence_before_kill": {
+  "drt_0255": 0,
+  "drt_0419_offtrack_pin_warnings": 0,
+  "drt_violation_note": "iterations 0-5; iteration 6 was in progress at the kill",
+  "drt_violations_by_iteration": [
+   79571,
+   25134,
+   9155,
+   7925
+  ],
+  "frame": "p12q9 frame 510.84 x 126.9 um with the p12q9 macro table; only the mirrored-macro track snap differs",
+  "instance_utilisation": 0.860245,
+  "note": "pin access no longer blocks: the p12q9 frame completed DRT iterations 0-5 that p12q9 never reached",
+  "post_cts_hold_wns_ps_SS": 0.0838218,
+  "post_cts_setup_tns_ps": -494581,
+  "post_cts_setup_wns_ps": -263.367
+ },
+ "follow_up": "C_r2 on ot-pve1 (identical args, commit b128da83), running since 2026-10-03T05:17:14Z",
+ "remote_preserved": "ot-agidock128:/home/ubuntu/otjobs/dsrom_qframe_20261003/C_r1/",
+ "run": "C_r1",
+ "schema": "opentallas.dsrom_qframe.verdict.v1",
+ "stage_failed": "5_2_route killed by the host global OOM killer at 2026-10-03T06:31:29Z during the 6th detail-route iteration (openroad anon-rss 26.5 GB, DRT peak 30.8 GB)",
+ "verdict": "FAIL_INFRASTRUCTURE_OOM"
+}

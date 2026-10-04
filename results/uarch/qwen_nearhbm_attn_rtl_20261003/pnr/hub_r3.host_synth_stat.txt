@@ -1,0 +1,59 @@
+
+17. Printing statistics.
+
+=== ot_qwen_nearhbm_attn_hub ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+  1039499        - wires
+  1039499        - wire bits
+   176795        - public wires
+   176795        - public wire bits
+     2820        - ports
+     2820        - port bits
+   981656 1.36E+05 cells
+    37345 3.27E+03   AND2x2_ASAP7_75t_R
+    26262   2297.4   AND3x1_ASAP7_75t_R
+     3588  366.191   AND4x1_ASAP7_75t_R
+     1677  195.605   AND5x1_ASAP7_75t_R
+       27    6.299   AO211x2_ASAP7_75t_R
+   246288 2.15E+04   AO21x1_ASAP7_75t_R
+    17787 2.59E+03   AO221x1_ASAP7_75t_R
+     1765  308.804   AO222x2_ASAP7_75t_R
+     1666  218.613   AO22x1_ASAP7_75t_R
+       43   10.031   AO31x2_ASAP7_75t_R
+     7728  901.394   AO32x1_ASAP7_75t_R
+       40    5.832   AO33x2_ASAP7_75t_R
+      803  140.493   AOI211x1_ASAP7_75t_R
+     4418  515.316   AOI21x1_ASAP7_75t_R
+      195   39.803   AOI221x1_ASAP7_75t_R
+      507   73.921   AOI22x1_ASAP7_75t_R
+      431    31.42   BUFx2_ASAP7_75t_R
+    33641 1.28E+04   DFFASRHQNx1_ASAP7_75t_R
+   173848 5.07E+04   DFFHQNx1_ASAP7_75t_R
+    65500  2864.97   INVx1_ASAP7_75t_R
+     9564 1.25E+03   MAJx2_ASAP7_75t_R
+    17928 1.57E+03   NAND2x1_ASAP7_75t_R
+      500    80.19   NAND3x1_ASAP7_75t_R
+   154524 1.35E+04   NOR2x1_ASAP7_75t_R
+      189   30.312   NOR3x1_ASAP7_75t_R
+    32497  3790.45   OA211x2_ASAP7_75t_R
+    51303 5.24E+03   OA21x2_ASAP7_75t_R
+       16    3.732   OA221x2_ASAP7_75t_R
+     5664  990.973   OA222x2_ASAP7_75t_R
+     4887  712.525   OA22x2_ASAP7_75t_R
+       20    4.374   OA31x2_ASAP7_75t_R
+      126   18.371   OA33x2_ASAP7_75t_R
+    10094 1.18E+03   OAI21x1_ASAP7_75t_R
+     6834  996.397   OAI22x1_ASAP7_75t_R
+    13444 1.18E+03   OR2x2_ASAP7_75t_R
+    17875 1.56E+03   OR3x1_ASAP7_75t_R
+     3622  369.661   OR4x1_ASAP7_75t_R
+      499   58.203   OR5x1_ASAP7_75t_R
+    22299 3.58E+03   XNOR2x2_ASAP7_75t_R
+     6212  996.281   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_qwen_nearhbm_attn_hub': 135950.364360
+     of which used for sequential elements: 63446.707080 (46.67%)
+

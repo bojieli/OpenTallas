@@ -1,0 +1,47 @@
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 506116.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 444909.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 243933.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 71610.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 59027.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 48192.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 20185.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 0.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:14, elapsed time = 00:00:03, memory = 2737.76 (MB), peak = 2723.43 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 829261 vertical wires in 19 frboxes and 564711 horizontal wires in 7 frboxes.
+[INFO DRT-0186] Done with 77477 vertical wires in 19 frboxes and 127619 horizontal wires in 7 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:03:36, elapsed time = 00:01:05, memory = 4647.44 (MB), peak = 4633.23 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:04, elapsed time = 00:00:04, memory = 4858.34 (MB), peak = 4843.73 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+    Completing 10% with 0 violations.
+    elapsed time = 00:00:59, memory = 12277.55 (MB).
+Elapsed time: 9:02.83[h:]min:sec. CPU time: user 6576.48 sys 263.47 (1260%). Peak memory: 19868188KB.
+Oct 03 05:11:53 vm-xry57mhfyn kernel: Out of memory: Killed process 76235 (systemd) total-vm:22652kB, anon-rss:2728kB, file-rss:1884kB, shmem-rss:0kB, UID:1000 pgtables:84kB oom_score_adj:100
+Oct 03 05:11:53 vm-xry57mhfyn kernel: Out of memory: Killed process 76237 ((sd-pam)) total-vm:22756kB, anon-rss:2016kB, file-rss:572kB, shmem-rss:0kB, UID:1000 pgtables:76kB oom_score_adj:100
+Oct 03 05:11:53 vm-xry57mhfyn kernel: Out of memory: Killed process 3090996 (verilator_bin) total-vm:8274064kB, anon-rss:8247592kB, file-rss:1324kB, shmem-rss:0kB, UID:1000 pgtables:16232kB oom_score_adj:0
+Oct 03 05:12:45 vm-xry57mhfyn kernel: Out of memory: Killed process 3099781 (systemd) total-vm:21848kB, anon-rss:2264kB, file-rss:1948kB, shmem-rss:0kB, UID:1000 pgtables:88kB oom_score_adj:100
+Oct 03 05:12:45 vm-xry57mhfyn kernel: Out of memory: Killed process 3099783 ((sd-pam)) total-vm:22752kB, anon-rss:2012kB, file-rss:828kB, shmem-rss:0kB, UID:1000 pgtables:80kB oom_score_adj:100
+Oct 03 05:12:45 vm-xry57mhfyn kernel: Out of memory: Killed process 3081271 (openroad) total-vm:13515416kB, anon-rss:10376992kB, file-rss:1448kB, shmem-rss:0kB, UID:0 pgtables:21412kB oom_score_adj:0
+Oct 03 05:25:31 vm-xry57mhfyn kernel: Out of memory: Killed process 3119549 (openroad) total-vm:22080852kB, anon-rss:17721548kB, file-rss:8kB, shmem-rss:0kB, UID:0 pgtables:35884kB oom_score_adj:0
