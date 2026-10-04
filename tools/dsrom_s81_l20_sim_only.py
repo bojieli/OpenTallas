@@ -83,6 +83,62 @@ def head_chain(ranks, model, output, result):
     result['exact']=bool(result['exact'] and result['head']['exact'])
 
 
+
+def capture_h_chain_inputs(ranks, nodes, execution, output, result):
+    """Produced pre-I75 operands only. Files do not confer native VM leases."""
+    if result['simulation_ticks'] != 75 or nodes[75]['id'] != 'L20.I75':
+        raise M.Defect('H-chain export must precede the real I75 after I74')
+    if any(r.unwritten or r.rope_held for r in ranks):
+        raise M.Defect('H-chain export has unresolved source writes/read state')
+    # These are the final source writers, not the I1 ancestor or consumer PCs.
+    selected = [('T', 74, 20480), ('CA', 60, 16), ('POA', 57, 4), ('Y', 72, 5120)]
+    source_order = list(execution.source.nodes)
+    operands = {}
+    for name, pc, count in selected:
+        node = nodes[pc]
+        if node['id'] != f'L20.I{pc}' or name not in node['instruction'].get('_writes', []):
+            raise M.Defect('H-chain boundary source writer changed: '+name)
+        literal = node['instruction']
+        address = (literal['xu_dst'] if name == 'CA' else
+                   literal['coll_dst'] if name == 'Y' else literal['o_base'])
+        source_count = (literal['xu_n'] if name == 'CA' else
+                        literal['coll_n'] if name == 'Y' else
+                        literal['su_nin'] * literal['su_nout'])
+        if source_count != count:
+            raise M.Defect('H-chain boundary source extent changed: '+name)
+        files = {}
+        for rank in ranks:
+            if rank.V[name] != address:
+                raise M.Defect('H-chain boundary differs from the source VM home: '+name)
+            values = rank.read(address+np.arange(count), 'native_I75_'+name, 75)
+            path = output/f'I75.{name}_rank{rank.r}.u32'
+            # Same raw little-endian FP32 format as NativeTargetEntry::load.
+            # No rounding, host result computation, accepted owner or VM ACK.
+            M.G.bits(values).astype('<u4').tofile(path)
+            files[path.name] = M.sha(path)
+        operands[name] = dict(producer=9+source_order.index(node['id']),
+            source_node=node['id'], template_sha256=node['template_word_sha256'],
+            address=address, count=count, bytes_per_rank=count*4, files=files)
+    manifest = dict(scope='produced source operands before native L20.I75 -> L20.I76',
+        position=1048575, token=16754, stage=37, seed=20260930,
+        instructions_completed=75, expected_outputs_used=False,
+        payload_format='little-endian raw binary32; no native lease/acceptance/ACK in files',
+        operands=operands,
+        I75=dict(producer=9+source_order.index(nodes[75]['id']),
+            template_sha256=nodes[75]['template_word_sha256']),
+        I76=dict(producer=9+source_order.index(nodes[76]['id']),
+            template_sha256=nodes[76]['template_word_sha256']),
+        dynamics={str(r.r):[int(v) for v in r.dyn] for r in ranks},
+        source_inputs_sha256=execution.input_sha256,
+        native_publication_qualified=False,
+        native_loader='existing SourceIo offer/visible and source-owned publication tags; actual same-bank ACK required',
+        initial_H='unchanged released initial TargetEntry H; no expected/final H imported')
+    (output/'native_h_chain_inputs.json').write_text(json.dumps(manifest,indent=2)+'\n')
+    result.update(scope='S81.L20.produced_native_h_chain_inputs',
+        disposition='PAUSED_BEFORE_NATIVE_I75', completed=False, exact=None,
+        h_chain_inputs=manifest)
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
@@ -97,7 +153,12 @@ def main():
                    help='completed native QK/softmax/PV directory; import four actual I63 ACC outputs')
     p.add_argument('--capture-attention-inputs',action='store_true',
                    help='capture produced attention operands in this continuation, stopping before I63')
+    p.add_argument('--capture-h-chain-inputs',action='store_true',
+                   help='stop before I75; export produced T/I74, CA/I60, POA/I57 and Y/I72 for native I75->76')
     a = p.parse_args()
+    if a.capture_h_chain_inputs and (a.carry_input or a.head_chain or
+            a.capture_index_inputs or a.capture_attention_inputs):
+        p.error('--capture-h-chain-inputs requires the L20 prefix through I74, without another capture stop/head path')
     native_pv=None
     native_pv_bits={}
     if a.native_attention_result:
@@ -249,6 +310,9 @@ def main():
                         9+list(execution.source.nodes).index(node['id'])!=native_pv['producer']):
                         raise M.Defect('native PV output does not match the actual selected I63 literal/geometry')
 
+                if a.capture_h_chain_inputs and pc==75:
+                    capture_h_chain_inputs(ranks,nodes,execution,a.output,result)
+                    return # I75 T and I76 H remain real downstream native computations
                 if a.capture_attention_inputs and pc in (20,38,55,63):
                     name,address,count={20:('I20.KVN',54720,512),38:('I38.LAT',93728,512),
                         55:('I55.Q',55744,8192),63:('I63.S',63936,10240)}[pc]
