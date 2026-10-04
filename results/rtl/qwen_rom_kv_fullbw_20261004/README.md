@@ -88,3 +88,18 @@ VERDICT: at 8K on the full-bandwidth path the verify layer is compute bound; DSp
 ot_hbm_r14_stream_stack NCH=1 slice, 1.024 ns, WC setup / WC+BC hold: PULLIN=16 PASS (setup +18.7 ps, hold +5.3 ps);
 PULLIN=16 + AQ_RD=1 (tagged reads) PASS (pc_aq3). The per-tile landing merge does not close yet (setup -0.75 ns
 grant path at 0.833 ns, CTS hold repair exhausts buffers): OPEN item; the landing network remains modelled.
+
+### DSpark update: third-party tau and the weight-reuse check
+
+tau = 3.1445 (tools/third_party_tau.py, Qwen3-8B, 3 drafts): 4,710 tok/s per user = 0.763x AR with prefetch (free-draft
+bound 0.969x). Per-cycle trace of the verify layer (dspark_verify_P8187/s1_trace): ME-busy 1.47x (attention) and 2.09x
+(MLP) of AR for 4 positions, i.e. the ROM verify path does NOT apply each weight word to all 4 positions in one pass.
+Lever: single-pass weight reuse, measured bound 2,144 ME cycles a layer (9.6% of the step); the bigger excess is
+non-ME per-position work (8,564 cycles a layer). Detail in dspark_step_stream4.json verify_segment_breakdown.
+
+## DSpark KV closure element (multi-position commit / rollback / visibility)
+
+rtl/hdc/kv/ot_qwen_kv_mp_commit.sv: the synthesizable token-side control of ot_qwen_rt_kv_stream4_mp_service
+(E4M3 encode, block visibility of K lanes / V rows, K tile select, V block row, open-tile mask, commit_n / ack-debt /
+restart checks, committed_len). Lockstep vs the service's expressions (tb_qwen_kv_mp_commit.sv): 4 seeds x 100k cycles,
+0 mismatches; mutation (committed_len off by one) FAILS as required. Route at 0.833 ns WC / WC+BC hold: see physical/.
