@@ -24,13 +24,13 @@ int main(){
  vm.fault=[](){return false;};vm.xn_span=[](auto,auto){return std::optional<std::array<uint32_t,16>>{};};
  auto op=dsrom_s81_l0_prefix_operations()[0];std::vector<DsromS81PrefixOperation> program;
  for(unsigned i=20;i<29;++i){op.index=i;program.push_back(op);}
- DsromS81MinimumPrefix execute(runtime,embedding,17,engine("su"),engine("he"),vm,program);
+ DsromS81MinimumPrefix execute(runtime,embedding,17,engine("su"),engine("he"),vm,program,{{4,engine("xu")}});
  auto edge=[&](bool release){for(auto& p:runtime.participants)p.prepare({});for(auto& p:runtime.participants)p.rising(release);for(auto& p:runtime.participants)p.falling(release);};
  edge(false);execute.start();edge(true);assert(accepted.count(20));
  edge(true);assert(accepted.size()==1&&!execute.complete()); // idle alone cannot advance
  for(unsigned i=20;i<29;++i){published.insert(i);edge(true);}
  assert(execute.complete()&&accepted.size()==9);
- op.index=30;execute.load_program({op});edge(true);assert(accepted.count(30)&&!execute.complete());
+ op.index=30;op.unit=4;execute.load_program({op});edge(true);assert(accepted.count(30)&&!execute.complete());
  published.insert(30);edge(true);assert(execute.complete());
  bool refused=false;try{execute.xn_span(46464);}catch(const std::runtime_error&){refused=true;}assert(refused);
 }
