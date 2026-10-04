@@ -106,6 +106,12 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
     end
     always @(posedge hclk or negedge hrst_n)
       if (!hrst_n) land_fault <= 0; else if (|(rd_v & l_full)) land_fault <= 1;   // credit breach
+    // ---------------- static configuration, registered at the element (clk) ----------------
+    // cfg_lines / cfg_lut are static for a run (loaded before reset is released); a local copy takes
+    // the input delay and the 32-PC fan-out off the expert-base adder and the lut select (e9
+    // floorplan: cfg_lines[64] -> 9-bit ripple -> loc.gkb at -7 ps).
+    reg [NSM*16-1:0] cfg_lines_r; reg [NSECT*NPC/4*16-1:0] cfg_lut_r;
+    always @(posedge clk) begin cfg_lines_r <= cfg_lines; cfg_lut_r <= cfg_lut; end
     // ---------------- look-ahead landing locations (clk) ----------------
     // cur_*: where this PC's next landed sector goes; g_j / g_kb: the sector after it.
     wire [NPC-1:0] cur_v; wire [MW-1:0] cur_sm [0:NPC-1]; wire [SW-1:0] cur_slot [0:NPC-1];
@@ -115,7 +121,7 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
       // lut entry of line L = NI*g_j + p/4 (s = NPC g_j + p): a NSECT-way select from registers
       wire [15:0] tbl [0:NSECT-1];
       for (genvar jj = 0; jj < NSECT; jj = jj + 1) begin : t
-        assign tbl[jj] = cfg_lut[(jj * NI + p / 4) * 16 +: 16];
+        assign tbl[jj] = cfg_lut_r[(jj * NI + p / 4) * 16 +: 16];
       end
       wire [15:0] ent = tbl[gj];
       wire [MW-1:0] n_sm = ent[8 +: MW];
@@ -126,7 +132,7 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
       reg av; reg [MW-1:0] a_sm; reg [7:0] a_ln; reg [SW-1:0] a_kb;
       wire adv = grant[p] || !cv;
       reg [NSM*SW-1:0] gkb_n;
-      always @* for (integer m = 0; m < NSM; m = m + 1) gkb_n[m*SW +: SW] = gkb[m*SW +: SW] + cfg_lines[m*16 +: SW];
+      always @* for (integer m = 0; m < NSM; m = m + 1) gkb_n[m*SW +: SW] = gkb[m*SW +: SW] + cfg_lines_r[m*16 +: SW];
       always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
           cv <= 1'b0; csm <= 0; cslot <= 0; gj <= 0; gkb <= '0; av <= 1'b0; a_sm <= 0; a_ln <= 0; a_kb <= 0;
