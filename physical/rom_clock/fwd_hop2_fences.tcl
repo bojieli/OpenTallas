@@ -1,4 +1,4 @@
-# --step-tcl POST_PDN hook for the ot_fwd_link_hop2 fixture (die 490 x 160 um): stage A at the west edge, stage B at the
+# --step-tcl POST_PDN hook for the ot_fwd_link_hop2 fixture (die 490 x 320 um): stage A at the west edge, stage B at the
 # east edge, fence centroids 440 um apart (>= the 430.56 um link span).  Each stage's fence holds its flops and the
 # logic local to them (A: its flops' D-side cone, i.e. the reset/enable gating; B: its flops' Q-side loads), so the
 # only long wires are the hop's data bus and its forwarded clock.  Geometry only; no timing constraint.
@@ -26,8 +26,8 @@ proc add_driver_cone {region iterm depth} {
   }
   return $n
 }
-set west [fence $block $dbu tx_west $XA0 $XA1 5 155]
-set east [fence $block $dbu rx_east $XB0 $XB1 5 155]
+set west [fence $block $dbu tx_west $XA0 $XA1 5 315]
+set east [fence $block $dbu rx_east $XB0 $XB1 5 315]
 set nw 0; set ne 0; set cw 0; set ce 0
 foreach inst [$block getInsts] {
   if {![[$inst getMaster] isSequential]} { continue }
@@ -52,12 +52,12 @@ foreach inst [$block getInsts] {
   if {[string match "u_a.*u_fwd_inv*" [$inst getName]] && [$inst getRegion] eq "NULL"} { $west addInst $inst; incr ni }
 }
 # forwarded-clock span repeaters u_rep<k> (k = 0..5): a 4 x 4 um fence each, at even pitch from the forwarding inverter
-# (x 25) to stage B's subtree root (x 465) along the die's mid line (y 80), as a hand-placed clock spine
+# (x 25) to stage B's subtree root (x 465) along the die's mid line (y 160), as a hand-placed clock spine
 set nr 0
 foreach inst [$block getInsts] {
   if {[regexp {^u_rep([0-9])/} [$inst getName] -> k]} {
     set x [expr {25.0 + 440.0 * ($k + 1) / 7.0}]
-    set r [fence $block $dbu "fwd_rep_$k" [expr {$x - 2}] [expr {$x + 2}] 78 82]
+    set r [fence $block $dbu "fwd_rep_$k" [expr {$x - 2}] [expr {$x + 2}] 158 162]
     $r addInst $inst; incr nr
   }
 }

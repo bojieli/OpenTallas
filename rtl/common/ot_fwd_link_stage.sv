@@ -12,7 +12,8 @@ module ot_fwd_link_stage #(
     generate if(ENABLE)begin:active
         reg v;reg [W-1:0] d;
         always @(negedge fclk_i)begin
-            if(!rst_n)v<=0;else begin v<=i_v;d<=i_d;end
+            if(!rst_n)v<=0;else v<=i_v;
+            d<=i_d;   // data needs no reset hold (o_v qualifies it): no W-wide reset enable on the capture flops
         end
         // The forwarded clock is a real cell (kept hierarchy): flattened, yosys would fold the inversion into the next
         // stage's flops and the flow would balance both stages on one tree (a synchronous span, not a forwarded clock).
