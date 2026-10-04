@@ -6838,6 +6838,37 @@ def main(argv=None):
         Path(a.out).write_text(json.dumps(out, indent=1, default=str) + "\n")
 
 
+def dsrom_s81_native_su_prefix():
+    """Selected SUN256 leaf and its explicit minimum-component staging costs.
+
+    Functional operand staging is charged separately from the existing SU.
+    Unbound arbitration, routes and visibility prohibit product-rate credit.
+    """
+    path = Path(__file__).resolve().parents[1] / 'results/uarch/dsrom_sun256_native_prefix_20261004/model.json'
+    selected = json.loads(path.read_text())
+    staging = selected['extra_staging']
+    state_bits = (staging['payload_bits'] + staging['address_valid_metadata_floor_bits']
+                  + staging['output_collect_data_address_bits'] + staging['descriptor_hold_bits'])
+    return dict(schema='opentallas.dsrom.S81.native-SU-prefix.v1',
+        adopted=False, scope='Selected native leaf/component integration; no token-rate or physical admission',
+        selected_model=str(path.relative_to(path.parents[3])),
+        parameters=selected['parameters'], ports=selected['ports'],
+        MACs_per_cycle_peak=selected['parameters']['N'],
+        operand_bytes_per_edge_peak=selected['ports']['native_operand_bits'] // 8,
+        compute_intensity_MACs_per_operand_byte=selected['parameters']['N'] / (selected['ports']['native_operand_bits'] // 8),
+        native_write_bytes_per_edge_peak=4 * (selected['ports']['native_VM_write_lanes'] + selected['ports']['native_reducer_write_lanes']),
+        prefix_operations=selected['prefix_operations'],
+        adapter_calendar=selected['adapter_calendar'],
+        staging=staging, state_bits_floor=state_bits,
+        staging_DFF_floor_mm2=state_bits * DFF_UM2 / 1e6,
+        replicas_per_rank=1, TP=4,
+        routing_tracks_data_bundle_floor=selected['ports']['native_operand_bits'],
+        corridor_capacity=None, slot_fit=False, SS_FF_in_context=False,
+        mux_fanout_cost='Actual staged operand read ports and retained native writes; no additional unlimited VM port',
+        missing_costs=selected['missing_costs'],
+        combined_single_user_added_us=None, overlap_credit_us=0)
+
+
 def dsrom_s81_native_he_bootstrap():
     """Native prefix leaves, reusing selected HE and SUN256 reducer arithmetic.
 
@@ -6894,6 +6925,29 @@ def dsrom_s81_native_he_bootstrap():
         cold_critical_path='embedding actual H visibility -> 80 accepted SSX vectors -> native SSX result -> actual VM SSX/PF visibility -> L0I0 -> I1 native HE -> remaining SU prefix. No CPU FP arithmetic or expected XN restore.',
         combined_single_user_added_us=None,
         overlap_credit_us=0, actual_provider_deadlines_required=True)
+
+
+def dsrom_s81_native_he_bootstrap_source():
+    """Additive corrected source-factory contract; prior component stays history."""
+    row=copy.deepcopy(dsrom_s81_native_he_bootstrap())
+    row['schema']='opentallas.dsrom.S81.native-HE-bootstrap.source-factory.v2'
+    row['PF']['raw_FP32_words']=[1065353216,0,0,0]
+    row['adapter'].update(explicit_bootstrap_arming=True, per_operation_inputs_ready=True,
+        sole_edge_owner='bootstrap participant; HE participant only drives ports; zero prepare evals; one native eval per rising/falling edge',
+        runtime_reserved_tag_namespace_only=True, grouped_scalar_acceptance_inferred=False,
+        actual_same_VM_scalar_prefetch_words=20480,
+        raw_cached_H_bytes=81920, raw_H_cache_register_floor_mm2=20480*32*DFF_UM2/1e6,
+        source_VM_read_return_latency_edges=4, source_old_request_reuse_wait_required=True,
+        scalar_serial_read_service_edges_model=20480*6,
+        serial_read_edge_derivation='Request acceptedE; native target returnedatE+4postedge; bootstrap polls E+5prepare; next scalar starts E+6. One canonicalbank, no private grouped acceptance.',
+        source_VM_capture_identity_callbacks_required=True,
+        H_cache_reuse_for_HE='Only literalI1 under unchanged H lease; L0I0 writes RF40992, not H. No source-version substitution or host FP.',
+        raw_HE_image_bytes=24*20480*4,
+        actual_HE_image_required='hbank.hex plus hbank.source full revision/tensor/dtype/shape/HHW8 codec/SHA; no zero fallback',
+        software_immutable_image_mirror_not_free_new_hardware_storage=True)
+    row['corrected_source_factory_symbol']='dsrom_s81_bind_minimum_he_bootstrap'
+    row['cold_critical_path']='Actual embedding publication -> explicit arm -> serialized actual H read returns -> 80 native SSX vectors -> native SSX/PF reserved scalar commands -> actual scalar ACKs -> per-op native inputs_ready -> L0I0/I1/remainingSU. Routes/provider/clock costs remain additive; no ideal native-port overlap.'
+    return row
 
 
 def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
