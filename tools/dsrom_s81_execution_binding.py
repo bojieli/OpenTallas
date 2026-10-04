@@ -121,3 +121,33 @@ class CanonicalS81Execution:
                      native_execution_qualified=False)
         (out/'dispatch.json').write_text(json.dumps(entry,indent=2)+'\n')
         return entry
+
+    def emit_minimum_nonfield_run(self, nodes, stage, rank, out, *, symbol="s81_native_operations"):
+        """Compile literal operators for existing PrefixNativeEngine callbacks.
+
+        This does not make a missing native provider executable. Non SU/HE
+        instructions require their actual participant rather than relabelling
+        one of these two engines. Existing prog.hex/dispatch.json stay the
+        authority; the C++ table copies their exact 2048-bit words.
+        """
+        import re
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", symbol):
+            raise ValueError("C++ native operation symbol required")
+        for node in nodes:
+            if self.source.nodes[node].get('instruction', {}).get('unit') not in (2, 5):
+                raise ValueError(f"actual native nonfield provider absent for {node}")
+        entry = self.emit_nonfield_run(nodes, stage, rank, out)
+        words = (Path(out)/'prog.hex').read_text().splitlines()
+        rows = []
+        for record, text in zip(entry['nodes'], words[:-1]):
+            word = int(text, 16)
+            if hashlib.sha256(word.to_bytes(256, 'little')).hexdigest() != record['template_word_sha256']:
+                raise ValueError('native operation differs from emitted source word')
+            lanes = ','.join(f'0x{(word >> (32*k)) & 0xffffffff:08x}u' for k in range(64))
+            rows.append('DsromS81PrefixOperation{%d,%d,"%s",{%s}}' % (
+                record['pc'], record['instruction']['unit'], record['template_word_sha256'], lanes))
+        header = ('#pragma once\n#include "s81_minimum_prefix.hpp"\n'
+                  'inline std::vector<DsromS81PrefixOperation> '+symbol+'(){return {'+
+                  ',\n'.join(rows)+'};}\n')
+        (Path(out)/'native_operations.hpp').write_text(header)
+        return entry
