@@ -6422,6 +6422,7 @@ def main(argv=None):
     ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM ablation only")
     ap.add_argument("--hbm-accel", action="store_true",
                     help="default-off UNVALIDATED HBM accelerator ladder and fairness hypotheses")
+    ap.add_argument("--fec-fairness", action="store_true", help="same-FEC ROM board/NVLink-class switch model-only timing rows")
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
     ap.add_argument("--v41-hbm-dspark", action="store_true", help="OPT-IN: V4.1 HBM DSpark rows (priced draft, "
                     "measured expert union) from results/speculative/v41_hbm_speculation_methods_20261003")
@@ -6433,6 +6434,14 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.fec_fairness:
+        from fec_class_fairness import policy
+        payload = json.dumps(policy(ROOT), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.dsrom_s81_components:
         payload = json.dumps(dsrom_s81_components(a.ctx), indent=2, sort_keys=True, allow_nan=False) + "\n"
         if a.out:
