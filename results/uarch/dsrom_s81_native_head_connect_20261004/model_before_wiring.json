@@ -1,0 +1,53 @@
+{
+  "status": "MODEL_UNVALIDATED_WIRING_ONLY",
+  "adopted": false,
+  "parent": "a3030dc68eb31424d3006e756afa4f2bf65a5b1b",
+  "model_source": "Peirce tools/uarch_model.py::dsrom_s81_native_head_carried",
+  "rows_per_rank": 32320,
+  "ranks": 4,
+  "carried_chain_order": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "reuse": "s81_native_head_carried four replicas already priced by owner; ot_rom_argmax_reduce LANES16 DEPTH8 unchanged",
+  "added_register_bits": 0,
+  "added_MACs_per_cycle": 0,
+  "added_memory_ports": 0,
+  "added_serial_register_cycles": 0,
+  "root_input_bits_per_cycle_per_rank": 64,
+  "root_row_owner_sequence_bits_per_rank": 128,
+  "logit_data_bits_per_cycle_per_rank": 32,
+  "carried_boundary_bits_per_cycle": 624,
+  "carried_boundaries": 3,
+  "handshake_bits_per_boundary": 2,
+  "mux_demux": "No datapath mux/demux; one-to-one adjacent rank chain; no root broadcast",
+  "fanout": "Each link feeds one following rank. Fault reduction reads four rank flags; final readiness fans to rank3 only.",
+  "final_output_bits": {
+    "global_ID": 32,
+    "raw_value": 32,
+    "owner": 47,
+    "sequence": 64
+  },
+  "same_clock_component": true,
+  "composed_single_user_latency": "Owner local lower bound (32320+17)/900 us plus three actual rank joins/skids, wires/CDC and final ACK. Wiring adds no registered stage; these transport costs remain UNKNOWN, never zero system cost.",
+  "area_mm2": "ESTIMATE/UNKNOWN existing four terminal bodies charged once; added packet/bounds decode and fault reduction need physical measurement",
+  "routing_tracks_per_link_minimum": 626,
+  "routing_channel_capacity": null,
+  "floorplan_slot_fit": null,
+  "wire_CDC_latency_cycles": null,
+  "SS60_FF25_in_context": false,
+  "actual_native_root_producer": "Peirce native dot provider still required; connection does not create logits or root values",
+  "source_dependencies_sha256": {
+    "/tmp/peirce-s81-native-head-producer-20261004/rtl/test/s81_native_head_terminal/native_head_carried.sv": "49f0c5a9e57874eb2772a0efe822e706e3e647bb930edb4660b67c1891e7d378",
+    "rtl/rom/collectives/ot_rom_argmax_reduce.sv": "ceeed96c2348765a1a5043321ce68c9bc1970d7723a6ce28cb645d8b6e439ebc",
+    "rtl/rom/collectives/ot_rom_coll_pkg.sv": "bd509f84d43a0459f957c72a88bf266ecc21e7f024fef4ca0ad44e6382181dfb",
+    "rtl/rom/collectives/ot_rom_coll_skid.sv": "27ce17a0e2d6a4715941e691e8346a5676ab5743d649a763b12363055fcb16e9"
+  },
+  "source_compile": {
+    "exit_code": 12,
+    "tool": "iverilog -g2012 -s ot_s81_native_head_tp4",
+    "terminal": "Dependency native_head_carried.sv uses reserved SV keyword sequence as register name at42/51/64/68/97/101. Sent owner exact fix; dependency not edited. No functional simulation, token result or qualification claimed."
+  }
+}

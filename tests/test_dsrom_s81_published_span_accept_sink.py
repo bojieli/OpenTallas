@@ -87,6 +87,19 @@ struct AcceptRun {
     void tick(bool released=true){p.prepare({});p.rising(released);p.falling(released);}
 };
 int main() {
+    {AcceptRun r;
+     const unsigned offsets[]={0,5120,10240,15360,16};
+     for(unsigned i=0;i<5;i++) {
+         auto o=batch(64+offsets[i]);assert(r.binder.offer(o));
+         assert(!r.binder.source_span_lease(123,o.vm_address,16));
+         for(unsigned edge=0;edge<19;edge++)r.tick();
+         assert(r.binder.visible(o));
+         assert(r.binder.source_span_lease(123,o.vm_address,16));
+         assert(r.binder.published_words()==16*(i+1));
+         if(i<4)assert(!r.binder.source_span_lease(123,80,16));
+     }
+     assert(!r.binder.source_span_lease(123,96,16));
+    }
     {AcceptRun r;assert(!r.writes_seen&&!r.reads_seen);
      r.tick();assert(!r.writes_seen&&!r.reads_seen); // idle strobe=0
      auto o=batch(46464);assert(r.binder.offer_prefix(o,16));

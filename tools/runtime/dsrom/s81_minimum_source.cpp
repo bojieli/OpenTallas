@@ -63,6 +63,9 @@ extern "C" int dsrom_s81_minimum_source_main(DsromS81MinimumRuntime& runtime,con
     // into retirement of unproduced roots or whole-C8/all-copy authority.
     if(!runtime.publication_drained(plan->identity)||!runtime.result().quiet)
         throw std::runtime_error("source terminal precedes native field/context publication drain");
+    if(plan->position==1048575&&!plan->write_measurements)
+        throw std::runtime_error("target L20 terminal lacks actual native measurement exporter");
+    if(plan->write_measurements)plan->write_measurements(output);
     const auto path=std::filesystem::path(output)/"native_source_component.tsv";
     FILE* journal=fopen(path.c_str(),"wx");
     if(!journal)throw std::runtime_error("preserve existing native source stage results");
