@@ -7,7 +7,9 @@
 #include "s81_minimum_l20_bank.hpp"
 #include "s81_minimum_source_tags_component.hpp"
 #include "VDsromAttention.h"
+#ifndef DSROM_S81_SIM_ONLY_ATT_ENDPOINT
 #include "VDsromAttEngine.h"
+#endif
 #include "VDsromWindowBlocks.h"
 #ifdef DSROM_S81_NATIVE_WINDOW_LA
 #include "VDsromS81WindowLa.h"
@@ -29,7 +31,7 @@ namespace dsrom_s81_minimum {
 namespace {
 void need(bool ok,const char* why){if(!ok)throw std::runtime_error(why);}
 using Provider=PackedKvProvider<VDsromWindowBlocks,VDsromPackedWindow>;
-using Cut=DsromS81MinimumAttentionCut<VDsromAttention,VDsromAttEngine>;
+using Cut=DsromS81MinimumAttentionCut<VDsromAttention,DsromS81AttentionEndpoint>;
 bool selected_su(const VDsromSu256& su){
     return su.i_aind==2&&su.i_dst==3&&su.i_asrc==0&&su.i_aso==512;
 }
@@ -435,7 +437,7 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
         DsromS81MinimumRuntime runtime{};
         std::unique_ptr<DsromS81MinimumL20Bank> bank;
         std::shared_ptr<VDsromAttention> adapter;
-        std::shared_ptr<VDsromAttEngine> endpoint;
+        std::shared_ptr<DsromS81AttentionEndpoint> endpoint;
         std::shared_ptr<VDsromSu256> command;
         DsromS81NativeSuPorts su_ports;
         DsromS81NativeQeQuantizerPorts qe_ports;
@@ -529,7 +531,7 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
             r.qe=dsrom_s81_bind_minimum_qe_quantizer(r.runtime,L20_ID,r.bank->publication(),r.bank->io(),r.qe_ports);
             r.qe_ports.actual_dynamic=[](unsigned d)->std::optional<uint32_t>{return l20_dynamic(d);};
             r.adapter=dsrom_s81_create_minimum_me_attention(r.runtime);
-            r.endpoint=std::make_shared<VDsromAttEngine>(host.context,("I55_endpoint_rank"+name).c_str());
+            r.endpoint=std::make_shared<DsromS81AttentionEndpoint>(host.context,("I55_endpoint_rank"+name).c_str());
             auto& b=bindings[i];b.runtime=&r.runtime;b.identity=L20_ID;b.publication=&r.bank->publication();
             b.io=r.bank->io();b.tags=r.bank->tags();b.su=&r.su_ports;b.quantizer=&r.qe_ports;
             b.adapter=r.adapter;b.endpoint=r.endpoint;b.source_dynamic=l20_dynamic;
