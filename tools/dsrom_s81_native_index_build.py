@@ -11,6 +11,7 @@ p = argparse.ArgumentParser()
 p.add_argument('--selection', type=Path, required=True)
 p.add_argument('--out', type=Path, required=True)
 p.add_argument('--jobs', type=int, required=True)
+p.add_argument('--unit', choices=('scorer','selector'))
 a = p.parse_args()
 root = Path(__file__).resolve().parents[1]
 s = json.loads(a.selection.read_text())
@@ -27,6 +28,8 @@ for key, top, required in (
       'SHARDED','SLICE_SECTORS','RING','RING_RSB','RING_RTAIL','RING_WB','RING_GA']),
     ('selector', 'ot_hdc_v41x_xu_adapt',
      ['AW','NW','K','IKW','SK_STEP','X_SEL','X_EG','SQ','SW','SK','SLAW'])):
+    if a.unit and key != a.unit:
+        continue
     unit = s[key]
     params = unit['parameters']
     if set(params) != set(required):
@@ -44,7 +47,7 @@ for key, top, required in (
     cmd = [verilator,'--cc','-Wno-fatal','--output-split','20000',
            '--output-split-cfuncs','200','-CFLAGS','-O0 -fPIC',
            '--top-module',top,'--prefix',prefix,'--Mdir',str(obj)]
-    cmd += ['-D'+x for x in unit.get('defines', [])]
+    cmd += ['-D'+x for x in s.get('defines', []) + unit.get('defines', [])]
     cmd += [f'-G{k}={v}' for k,v in params.items()]
     cmd += [str(root/x) for x in sources]
     entry = dict(unit=key,source_commit=sha,parameters=params,history_binding=s['history_binding'],
