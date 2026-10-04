@@ -62,7 +62,7 @@ def _isa_bits():
     return sum(w for n, w in I.FIELDS), me
 
 
-def selected(enabled=False, band=False, area_pins=False):
+def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -86,7 +86,18 @@ def selected(enabled=False, band=False, area_pins=False):
     v.SPINE_BLOCKS = [(n, (a + bw_mm2) if n == 'port_tiles' else a, d, s) for n, a, d, s in v.SPINE_BLOCKS]
     m = v.build(tree_mode='banded')
     _split_south(v, m)
-    if band:
+    if b3r3:
+        # b3r3: spine widened ~0.5 mm; one port+scale slab per band half (scale ROM inside its port slab, so the
+        # scale bus is slab-internal); central blocks around the hub; constant ROM beside SU64
+        w0 = m['geo']['spine_w_needed']
+        w = v.up(w0 + widen_um, 2 * v.GX)
+        m = v.build(spine_w=w, tree_mode='banded')
+        m['geo']['spine_w_needed'] = w0
+        m['geo']['b3r3_spine_w'] = w
+        m['geo']['b3r3_widen_um'] = round(w - w0, 3)
+        _split_south(v, m)
+        _repack_b3r3(v, m)
+    elif band:
         # the band repack loses the sub-group slivers of each interval: widen the spine on the 0.432 um lattice
         # until every slab packs (the step count is recorded with the die)
         w0 = m['geo']['spine_w_needed']
@@ -109,8 +120,9 @@ def selected(enabled=False, band=False, area_pins=False):
     m['die']['budget_mm2'] = 858
     m['die']['margin_mm2'] = round(858 - m['die']['mm2'], 3)
     m['b3r2'] = dict(station_frame_um=list(v.STATION), station_extra_h_um=st_extra_h, strip_fifo_frame_um=list(v.FIFO),
-                     strip_fifo_extra_h_um=sf_extra_h, bw_fifo_mm2=round(bw_mm2, 4), band=band, groups=groups)
-    _wrap_masters(v, m, area_pins)
+                     strip_fifo_extra_h_um=sf_extra_h, bw_fifo_mm2=round(bw_mm2, 4), band=band or b3r3, b3r3=b3r3,
+                     groups=groups)
+    _wrap_masters(v, m, area_pins, ns_faces=b3r3)
     m['b3r2']['area_pins'] = area_pins
     return v, m
 
@@ -247,6 +259,80 @@ def _repack_band(v, m):
     m['geo']['spine_parts_band'] = parts
 
 
+def _place_near(v, free, col, h, t):
+    """lowest-cost y in column col's free intervals for a block of height h centred nearest t; cuts the interval."""
+    best = None
+    for iv in free[col]:
+        if iv[1] - iv[0] < h - 1e-6:
+            continue
+        y = min(max(t - h / 2, iv[0]), iv[1] - h)
+        y = v.up(y, v.GY) if v.up(y, v.GY) + h <= iv[1] + 1e-6 else v.dn(y, v.GY)
+        if best is None or abs(y + h / 2 - t) < best[0] - 1e-6:
+            best = (abs(y + h / 2 - t), iv, y)
+    if best is None:
+        raise SystemExit(f'spine: {h:.1f} um does not fit column {col}')
+    _, iv, y = best
+    _take(free[col], iv, y, y + h)
+    return y
+
+
+def _repack_b3r3(v, m):
+    """Central blocks first, fixed around the hub (W column): vector memory directly below the hub (x root on the
+    head row), SU64 below it, tree top directly above; the constant ROM + sequencer in the E column level with SU64
+    (crom bus across the channel only).  Then one port+scale slab per band half, in the column of its half
+    (block columns 0-7 west, 8-15 east), nearest its band centre; bands nearest the hub first."""
+    g = m['geo']
+    cw = g['cw']
+    hub = m['hub']
+    m['insts'] = [i for i in m['insts'] if i.kind != 'spine_block']
+    cols, free = _spine_free(v, m, [])
+    area = {n: a for n, a, *_ in v.SPINE_BLOCKS}
+    dom = {n: d for n, a, d, *_ in v.SPINE_BLOCKS}
+    hh = lambda mm2: v.up(mm2 * 1e6 / cw, v.GY)
+    parts = []
+
+    def put(name, master, col, y, h, domain='stream_1p2'):
+        it = v.Inst(name, master, cols[col], y, cw - v.SHAVE, h - v.SHAVE, kind='spine_block', region='hub',
+                    domain=domain)
+        m['insts'].append(it)
+        return it
+    hub_lo, hub_hi = hub.y, hub.y + hub.h + v.SHAVE
+    h_vm, h_su, h_tt, h_cs = hh(area['vector_memory']), hh(area['su64_sfu']), hh(area['tree_top']), \
+        hh(area['constants_sequencer'])
+    y_vm = _place_near(v, free, 'W', h_vm, hub_lo - h_vm / 2)
+    y_su = _place_near(v, free, 'W', h_su, y_vm - h_su / 2)
+    y_tt = _place_near(v, free, 'W', h_tt, hub_hi + h_tt / 2)
+    y_cs = _place_near(v, free, 'E', h_cs, y_su + h_su / 2)
+    put('sp_vector_memory', 'qfd_sp_vector_memory', 'W', y_vm, h_vm, dom['vector_memory'])
+    put('sp_su64_sfu', 'qfd_sp_su64_sfu', 'W', y_su, h_su, dom['su64_sfu'])
+    put('sp_tree_top', 'qfd_sp_tree_top', 'W', y_tt, h_tt, dom['tree_top'])
+    put('sp_constants_sequencer', 'qfd_sp_constants_sequencer', 'E', y_cs, h_cs, dom['constants_sequencer'])
+    for n, y, h, c in (('vector_memory', y_vm, h_vm, 'W'), ('su64_sfu', y_su, h_su, 'W'), ('tree_top', y_tt, h_tt, 'W'),
+                       ('constants_sequencer', y_cs, h_cs, 'E')):
+        parts.append(dict(name=n, col=c, y=round(y, 3), h=h))
+    rows = g['row_y']
+    tgt = [(rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2 for b in range(BANDS)]
+    half = (area['port_tiles'] + area['scale_rom']) / (2 * BANDS)
+    h_sl = hh(half)
+    m['band_slabs'] = {}
+    order = sorted(range(BANDS), key=lambda b: abs(tgt[b] - g['mid']))
+    for b in order:
+        for side in ('W', 'E'):
+            y = _place_near(v, free, side, h_sl, tgt[b])
+            name = f'sp_port_tiles_{b}' if side == 'W' else f'sp_port_tiles_{b}_f1'
+            it = put(name, 'qfd' + name[2:], side, y, h_sl)
+            gs = [GROUPS_PER_BAND * b + (0 if side == 'W' else 8) + j for j in range(8)]
+            m['band_slabs'].setdefault(('port', b), []).append((it, gs))
+            parts.append(dict(name=name[3:], kind='port+scale', band=b, side=side, col=side, groups=gs, y=round(y, 3),
+                              h=h_sl, target_y=round(tgt[b], 1), offset_um=round(y + h_sl / 2 - tgt[b], 1)))
+    for b in range(BANDS):
+        m['band_slabs'][('port', b)].sort(key=lambda z: z[0].name)
+        m['band_slabs'][('scale', b)] = m['band_slabs'][('port', b)]
+    m['scale_in_port'] = True
+    m['geo']['spine_parts_band'] = parts
+    m['geo']['spine_free_after_um'] = {c: [[round(a, 1), round(b_, 1)] for a, b_ in iv] for c, iv in free.items()}
+
+
 def _take(lst, iv, lo, hi):
     i = lst.index(iv)
     new = []
@@ -326,6 +412,8 @@ def _spine_buses(v, m, gm):
     for g in range(PORT_GROUPS):
         pairs.setdefault((gm['port'][g], gm['scale'][g]), []).append(g)
     for (p, s), gs in sorted(pairs.items()):
+        if p == s:
+            continue          # scale ROM inside its port slab (b3r3): slab-internal
         tag = f'{p[3:]}__{s[3:]}'
         B.append((f'sca_{tag}', 'scale', len(gs) * SC_IN + 1, [(p, f'sa_{s[3:]}'), (s, f'a_{p[3:]}')]))
         B.append((f'scq_{tag}', 'scale', len(gs) * SC_OUT, [(s, f'q_{p[3:]}'), (p, f'sq_{s[3:]}')]))
@@ -341,7 +429,7 @@ def _spine_buses(v, m, gm):
     m['isa_bits'] = dict(total=total, me=me_bits, su_and_control=total - me_bits)
 
 
-def _wrap_masters(v, m, area_pins=False):
+def _wrap_masters(v, m, area_pins=False, ns_faces=False):
     """Every endpoint port that the b3 masters do not define becomes a pin group on the face toward the far
     endpoint (M4 on W/E), stacked from the top of the face so no two groups overlap."""
     base = v.masters
@@ -401,11 +489,13 @@ def _wrap_masters(v, m, area_pins=False):
                 cols[j] -= span
                 M.area(port, nb, 50.0 + 60.0 * j, centre, 1)
                 continue
-            face = 'E' if ot.cx >= me.cx else 'W'
-            layer = 'M4'
+            vert = ns_faces and abs(ot.cy - me.cy) > abs(ot.cx - me.cx)
+            face = ('N' if ot.cy >= me.cy else 'S') if vert else ('E' if ot.cx >= me.cx else 'W')
+            layer = 'M5' if vert else 'M4'
             step = 0.048 * k
             span = max(1, math.ceil(nb / k)) * step if k > 1 else nb * 0.048
-            c = cursor.get((mst, face), M.h - 4.0)
+            along = M.w if vert else M.h
+            c = cursor.get((mst, face), along - 4.0)
             centre = c - span / 2 - 1.0
             cursor[(mst, face)] = centre - span / 2 - 1.0
             if centre - span / 2 < 1.0:
@@ -672,6 +762,8 @@ def main(argv=None):
     ap.add_argument('--enable-b3r2', action='store_true')
     ap.add_argument('--band', action='store_true', help='band-local port/scale slabs')
     ap.add_argument('--area-pins', action='store_true', help='spine slab ports as M8 area pins')
+    ap.add_argument('--b3r3', action='store_true', help='b3r3 spine: +0.5 mm, scale in port slab, crom beside SU64')
+    ap.add_argument('--widen-um', type=float, default=500.0)
     ap.add_argument('--work', type=Path)
     ap.add_argument('--out', type=Path)
     ap.add_argument('--k', type=int, default=16)
@@ -684,7 +776,7 @@ def main(argv=None):
     if a.mode == 'latency':
         print(json.dumps(latency(), indent=1))
         return 0
-    v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins)
+    v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um)
     if a.mode == 'plan':
         out = a.out
         out.mkdir(parents=True, exist_ok=True)
