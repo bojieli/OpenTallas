@@ -109,7 +109,7 @@ int main(int argc,char** argv) {
     # The actual executable caller and its VM-carry integration are support
     # sources; they need not be present in the immutable native-model owner.
     support = Path(__file__).resolve().parent/'runtime/dsrom'
-    for name in ['s81_source_caller.cpp', 's81_source_caller_plan.hpp',
+    for name in ['s81_source_caller.cpp', 's81_source_caller_plan.hpp', 's81_source_receipts.cpp',
                  's81_source_caller_hooks.hpp']:
         (out/name).write_bytes((support/name).read_bytes())
     return out/'s81_c8_scheduler.cpp'
