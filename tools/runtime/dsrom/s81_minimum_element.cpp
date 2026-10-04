@@ -90,12 +90,14 @@ extern "C" long long v41rt_cfg_read(int address) {
 
 int main(int argc,char** argv) {
     if(argc!=9) {
-        fprintf(stderr,"usage: minimum_element pq|pb STAGE RANK PAIR CFG_HEX OUTPUT SOURCE_CALLER.so ROM_SOCKET\n");
+        fprintf(stderr,"usage: minimum_element pq|pb STAGE RANK PAIR CFG_HEX OUTPUT SOURCE_CALLER.so|- ROM_SOCKET\n");
         return 2;
     }
     // Keep the source image loaded until every retained participant closure
     // has been destroyed. No unload before native model/observer destruction.
-    void* caller=dlopen(argv[7],RTLD_NOW|RTLD_LOCAL);
+    // '-' selects the actual source factory/entry linked into this executable.
+    // This keeps retained non-PIC native return archives in their host image.
+    void* caller=dlopen(std::string(argv[7])=="-"?nullptr:argv[7],RTLD_NOW|RTLD_LOCAL);
     if(!caller){fprintf(stderr,"actual minimum source caller: %s\n",dlerror());return 2;}
     auto source_main=reinterpret_cast<int(*)(DsromS81MinimumRuntime&,const char*)>(
         dlsym(caller,"dsrom_s81_minimum_source_main"));
