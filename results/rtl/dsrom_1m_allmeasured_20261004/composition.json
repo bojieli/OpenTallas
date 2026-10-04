@@ -2,6 +2,7 @@
  "schema": "opentallas.dsrom-1m.allmeasured.composition.v1",
  "context": 1048576,
  "position": 1048575,
+ "baseline": "asbuilt",
  "base": "candidate_gather.lat259 (results/rtl/dsrom_reindex_candidates_20261004/composition.json, 394.911 us)",
  "AR_us": 721.672,
  "AR_tok_s": 1385.7,
@@ -25,7 +26,7 @@
  "modelled_inside_measured_note": "CDC fast->slow ratio-FIFO crossings (4 slow cycles a crossing edge, W18) charged on SU nodes as the model does; no CDC bench",
  "still_modelled_total_us": 3.122,
  "MTP": {
-  "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 x block5 + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 4.159",
+  "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 x block5 + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 3.8879 (third-party published)",
   "stage_busy_top": [
    {
     "first": "head.hc_pre",
@@ -74,9 +75,9 @@
   },
   "seed_commit_us": 3.217,
   "step_us": 1515.696,
-  "MTP_tok_s": 2744.0,
-  "tau": 4.159,
-  "mtp_over_ar": 1.98
+  "MTP_tok_s": 2565.1,
+  "tau": 3.8879,
+  "mtp_over_ar": 1.851
  },
  "still_modelled": [
   {
@@ -110,9 +111,9 @@
    "why": "reduced-vehicle slice x transfer ratio (dsrom_dspark_step_slices_20261004), not full shape"
   },
   {
-   "term": "tau 4.159",
+   "term": "tau 3.8879",
    "us": null,
-   "why": "6-class mix acceptance, not an RTL quantity"
+   "why": "published third-party acceptance (tools/third_party_tau.py), not an RTL quantity"
   }
  ],
  "requires_binding": [
@@ -29866,7 +29867,7 @@
   "results/rtl/dsrom_1m_allmeasured_20261004/links.json": "13757346b2039c2794c00996871b98fbcd5747783a81f501a0eb140404824a4b",
   "results/rtl/dsrom_1m_allmeasured_20261004/cand_select.json": "76af1b31c74dab2438ef87564a14f0588ec258b880e6a5238458869f44534218",
   "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json": "47b6dbf89f1772c5bb83c712a2e4a637f6211d42bc17e0633f2b8baeafe5a18f",
-  "results/rtl/dsrom_wavefront_verify_20261004/record.json": "4d7aeff663fb7e9c6264d9c5d184dd1e6dfdef5bfca18d1c615b14aff8f4aad1",
+  "results/rtl/dsrom_wavefront_verify_20261004/record.json": "885d1c3e734bfc3d2357e52f2b6699238311a72936d1bbfcb5ea2e24face0d09",
   "results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json": "aa7c78726595290552e17201782429a761ee51667de1ca3f73d72b7995a62051",
   "results/rtl/dsrom_1m_measured_20261004/reader.json": "580267417a12eb4873a7e611757a9745557255009eab8cfd126c00468c36f26e",
   "results/rtl/dsrom_1m_measured_20261004/ckv_lat259.json": "b0c2fc5669ea796735053b841486da31224ba56b1c286625a723a4ec3f42d0cf",
@@ -29874,7 +29875,7 @@
   "results/rtl/dsrom_reindex_candidates_20261004/select.json": "1b6fc6822b9f211af799335153f1b4a952ce35fc62ff0342a3929e791fcdf315"
  },
  "tool_sha256": {
-  "tools/dsrom_1m_allmeasured.py": "7ace55c8a0aae7aeaac99965e6767b13b5632ff838f3edcd53f7d90419b75a55",
-  "tools/dsrom_1m_measure.py": "50effa723f6bf50b2ee6f33caa9c0c9c8c993106730c3a4f11d160fa0ce85818"
+  "tools/dsrom_1m_allmeasured.py": "979f212a210a8d079aab7045608f71308b7ef8c285f4ab9a5be659c11bbcf2c2",
+  "tools/dsrom_1m_measure.py": "76ad2faed9f8a4683d350b7aa91548e0b78468261c88b416e377c94937757bff"
  }
 }

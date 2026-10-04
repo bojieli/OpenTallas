@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.rtl.dshbm_baseline_measured.v1",
- "generated_utc": "2026-10-04T07:27:20Z",
- "source_commit": "efe1c5b8f4b3c0402b93be5ce9ae97c521755c28",
+ "generated_utc": "2026-10-04T16:35:04Z",
+ "source_commit": "f23c56908ec468c5362cc76be23937ebb74695d5",
  "design": "DeepSeek-V4.1-Flash HBM BASELINE (GPU-organised ablation): TP-96, 32 SMs/die, static schedule, hardware barrier, W15 NVLS switch; 1M context, position 1,048,575, AR, batch 1",
  "model": {
   "tokens_s": 2261.7,
@@ -11786,7 +11786,7 @@
    "mtp": {
     "verify_p6_us": 763.06,
     "step_us": 811.91,
-    "mtp_tok_s": 5122.5,
+    "mtp_tok_s": 4788.6,
     "verify_parts_us": {
      "sm": 117.86,
      "barrier": 22.29,
@@ -11795,14 +11795,14 @@
      "fetch": 33.78
     }
    },
-   "mtp_tok_s": 5122.5,
+   "mtp_tok_s": 4788.6,
    "draft_us": 45.28,
    "seed_commit_us": 3.567,
-   "tau": 4.159,
+   "tau": 3.8879,
    "sensitivity_tile_one_job_for_6_positions": {
     "verify_p6_us": 664.76,
     "step_us": 713.61,
-    "mtp_tok_s": 5828.1,
+    "mtp_tok_s": 5448.2,
     "verify_parts_us": {
      "sm": 117.86,
      "barrier": 22.29,
@@ -11833,14 +11833,14 @@
      "fetch": 33.78
     },
     "draft_us": 45.28,
-    "mtp_tok_s": 5910.8
+    "mtp_tok_s": 5525.6
    },
    "accelerator_firm": {
     "ar_tok_s": 2624.4,
     "verify_p6_us": 607.54,
     "draft_us": 44.5,
     "seed_commit_us": 3.464,
-    "mtp_tok_s": 6344.7,
+    "mtp_tok_s": 5931.2,
     "rungs_kept": [
      "R0c",
      "R1b",

@@ -20,7 +20,7 @@ from hbm_accelerator_model import _load_study              # noqa: E402
 
 OUT = ROOT / "results/uarch/ds_energy_silicon_authoritative_20261004/model.json"
 CTX = {"1M": "1048576", "200K": "200000"}
-TAU = u.TAU_OWNER6                                          # 4.159, owner 6-class blend, gamma 5
+TAU = u.TAU_DS        # third-party published DSpark gamma-5 tau (tools/third_party_tau.py); 4.159 self-measured SUPERSEDED
 
 SRC = dict(
     rates="tools/uarch_model.py hbm_switch_latency_authoritative() (record results/uarch/hbm_switch_latency_authoritative_20261004)",
@@ -53,7 +53,7 @@ ASSUMED = dict(
     b200_die_mm2=dict(value=800.0, basis="repo record ds_5 (16 dies x 800 mm2, integration fairness) -- ASSUMED die area"),
     rom_mtp_step_energy=dict(basis="ASSUMED: ROM MTP dynamic energy per STEP = C1 170.4 / 164.5 mJ per token x tau 3.649 "
                                    "(work per step is schedule-invariant; the wavefront changes overlap, not work); "
-                                   "divided by tau 4.159"),
+                                   f"divided by tau {TAU:g}"),
     rom_mtp_pg_active=dict(basis="ASSUMED: wavefront MTP keeps 6 positions + 1 pre-woken stage active: f = 7/S"),
     rom_pg_residual=dict(value=0.10, basis="ASSUMED (scenario C): gated logic and gated SerDes keep 10%"),
     rom_mtp_saturation=dict(basis="ASSUMED: saturated MTP step occupancy = C1 non-draft occupancy (tau 3.649 / C1 mtp_sat "
@@ -123,7 +123,7 @@ def rates():
             ablation_nvls=dict(ar=r_abl["ar_tok_s"], mtp=r_abl["mtp_tok_s"]),
             gpu_faithful_r0=dict(ar=r_r0["ar_tok_s"], mtp=r_r0["mtp_tok_s"]),
             b200x8=dict(ar=round(g, 1), mtp=round(g * t2["spec_tokens_s"] / t2["tokens_s"], 1),
-                        mtp_basis="existing 1.94x B200 MTP sensitivity (not DSpark tau 4.159)"))
+                        mtp_basis=f"existing 1.94x B200 MTP sensitivity (not DSpark tau {TAU:g})"))
     return out, checks, a
 
 

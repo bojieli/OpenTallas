@@ -343,7 +343,7 @@ def main():
                                       "on SU nodes as the model does; no CDC bench",
         still_modelled_total_us=round(sum(p["us"] for p in modelled) + sub_us, 3),
         MTP=dict(rule="II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; "
-                      "draft = 3 x block5 + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 4.159",
+                      "draft = 3 x block5 + 5 x head occupancy x (1 + Markov/lm_head MACs); tau " + f"{M.DRAFT['tau']:g} (third-party published)",
                  stage_busy_top=sorted(segs, key=lambda s: -s["busy_us"])[:6], worst_stage=worst,
                  II_us=round(ii, 3), verify_us=round(verify, 3), draft_us=round(draft, 3),
                  draft_terms=dict(block5_us=dr["block5_us"], block5_basis="reduced-vehicle slice x transfer ratio "
@@ -362,7 +362,7 @@ def main():
                  why="added arithmetically to the RTL quantiser (other SU nodes ran them in RTL)"),
             dict(term="MTP draft block5 (3 DSpark blocks)", us=round(3 * dr["block5_us"], 3),
                  why="reduced-vehicle slice x transfer ratio (dsrom_dspark_step_slices_20261004), not full shape"),
-            dict(term="tau 4.159", us=None, why="6-class mix acceptance, not an RTL quantity")],
+            dict(term=f"tau {M.DRAFT['tau']:g}", us=None, why="published third-party acceptance (tools/third_party_tau.py), not an RTL quantity")],
         requires_binding=["WINDOW load: ot_dsrom_window_stream_la measured 93.9% of peak; the as-built S81 prefetch "
                           "measures 124.5 us a layer -- composition REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)"],
         info=info, patches=list(P.rows.values()), base_patches=base_patches, critical_path=path,

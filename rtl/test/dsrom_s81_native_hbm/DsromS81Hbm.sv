@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Existing native four-stack K service. No new queue/controller implementation.
 // Minimum WINDOW/RoPE participant: indexer B port inactive explicitly.
-module DsromS81Hbm #(parameter MEM_WORDS=4784128, CLK_PS=833)(
+module DsromS81Hbm #(parameter MEM_WORDS=4784128, CLK_PS=833, WINDOW_STREAM_LA=0, WIN_STACK=0)(
  input wire clk,rst_n,
  input wire[3:0] m_v,m_we, input wire[119:0] m_addr,
  input wire[15:0] m_len, input wire[63:0] m_tag,
@@ -10,8 +10,24 @@ module DsromS81Hbm #(parameter MEM_WORDS=4784128, CLK_PS=833)(
  output wire[63:0] s_tag, output wire[15:0] s_beat,
  output wire[1023:0] s_data, output reg history_ready=0, output reg ckv_history_ready=0,
  output wire[31:0] capacity_words,
+ input wire[31:0] wl_req_v, output wire[31:0] wl_req_rdy,
+ input wire[959:0] wl_req_addr, input wire[127:0] wl_req_len,
+ input wire[415:0] wl_req_tag,
+ output wire[31:0] wl_rsp_v, input wire[31:0] wl_rsp_rdy,
+ output wire[415:0] wl_rsp_tag, output wire[127:0] wl_rsp_beat,
+ output wire[8191:0] wl_rsp_data,
+ output wire window_la_enabled, output wire[1:0] window_la_stack,
  output reg fault=0);
  assign capacity_words=MEM_WORDS;
+ assign window_la_enabled=(WINDOW_STREAM_LA!=0);
+ assign window_la_stack=WIN_STACK;
+ initial if(WIN_STACK<0 || WIN_STACK>3)$fatal(1,"WINDOW stack out of range");
+ wire[31:0] wide_range_ok;
+ wire[3:0] wide_fault;
+ generate for(genvar pc=0;pc<32;pc=pc+1)begin:g_range
+   assign wide_range_ok[pc]=wl_req_len[pc*4+:4]!=0 &&
+     (64'(wl_req_addr[pc*30+:30])+64'(wl_req_len[pc*4+:4])<=MEM_WORDS);
+ end endgenerate
  reg admitted=0;
  wire[3:0] range_ok;
  generate for(genvar s=0;s<4;s=s+1) begin:g_s
@@ -19,6 +35,35 @@ module DsromS81Hbm #(parameter MEM_WORDS=4784128, CLK_PS=833)(
  wire[959:0] ha; wire[127:0] hl,rb;
  wire[543:0] ht,rt,done_tag; wire[959:0] done_addr;
  wire[8191:0] hw,rd;wire[1023:0] hs;
+ wire[31:0] mv,mr,mwe,md,mrv,mrr;
+ wire[959:0] ma;wire[127:0] ml,mrb;
+ wire[543:0] mt,mrt;wire[8191:0] mw,mrd;wire[1023:0] ms;
+ wire[63:0] wrdy,wrv;wire[831:0] wrtag;
+ wire[255:0] wrbeat;wire[16383:0] wrdata;
+ localparam WIDE=(WINDOW_STREAM_LA!=0 && s==WIN_STACK);
+ wire[31:0] wvalid=WIDE ? (wl_req_v & wide_range_ok &
+     {32{history_ready&&!fault}}) : 32'b0;
+ if(s==WIN_STACK)begin:g_window
+   assign wl_req_rdy=wrdy[31:0]&wide_range_ok&{32{history_ready&&!fault}};
+   assign wl_rsp_v=wrv[31:0];assign wl_rsp_tag=wrtag[415:0];
+   assign wl_rsp_beat=wrbeat[127:0];assign wl_rsp_data=wrdata[8191:0];
+ end
+ // Existing bounded read-only wide mux, client0 WINDOW; client1 inactive.
+ // Both ports feed the SAME u_mem below. Its hierarchy/preload stays unchanged.
+ ot_dsrom_hbm_wmux #(.ENABLE(WIDE),.NPC(32),.AW(30),.TAGW(17),
+ .LENW(4),.BEATW(4),.DW(256),.NW(2),.CW(1),.WTAGW(13)) u_wmux(
+ .clk(clk),.rst_n(rst_n),
+ .a_v(hv),.a_rdy(hr),.a_addr(ha),.a_len(hl),.a_tag(ht),.a_we(hwe),
+ .a_wdata(hw),.a_wstrb(hs),.a_wr_done(hd),.a_rsp_v(rv),.a_rsp_rdy(rr),
+ .a_rsp_tag(rt),.a_rsp_beat(rb),.a_rsp_data(rd),
+ .w_v({32'b0,wvalid}),.w_rdy(wrdy),.w_addr({960'b0,wl_req_addr}),
+ .w_len({128'b0,wl_req_len}),.w_tag({416'b0,wl_req_tag}),
+ .w_rsp_v(wrv),.w_rsp_rdy({32'b0,(WIDE ? wl_rsp_rdy : 32'b0)}),
+ .w_rsp_tag(wrtag),.w_rsp_beat(wrbeat),.w_rsp_data(wrdata),
+ .h_v(mv),.h_rdy(mr),.h_addr(ma),.h_len(ml),.h_tag(mt),.h_we(mwe),
+ .h_wdata(mw),.h_wstrb(ms),.h_wr_done(md),.r_v(mrv),.r_rdy(mrr),
+ .r_tag(mrt),.r_beat(mrb),.r_data(mrd),.fault(wide_fault[s]),
+ .w_grants(),.a_held());
  assign range_ok[s]=m_len[s*4+:4]!=0 &&
    (64'(m_addr[s*30+:30])+64'(m_len[s*4+:4])<=MEM_WORDS);
  ot_chip_v41x_hbm_karb #(.NPC(32),.AW(30),.TAGW(16)) u_arb(
@@ -34,14 +79,15 @@ module DsromS81Hbm #(parameter MEM_WORDS=4784128, CLK_PS=833)(
  .h_wdata(hw),.h_wstrb(hs),.h_wr_done(hd),.r_v(rv),.r_rdy(rr),.r_tag(rt),.r_beat(rb),.r_data(rd));
  ot_hdc_v41x_idx_hbm_c8 #(.NPC(32),.AW(30),.TAGW(17),.LENW(4),.BEATW(4),
  .MEM_WORDS(MEM_WORDS),.MEM_MODE(0),.REFPB(3),.QD(64),.RQD(32),.CLK_PS(CLK_PS)) u_mem(
- .clk(clk),.rst_n(rst_n),.req_v(hv),.req_rdy(hr),.req_addr(ha),.req_len(hl),
- .req_tag(ht),.req_we(hwe),.req_wdata(hw),.req_wstrb(hs),.wr_done(hd),
+ .clk(clk),.rst_n(rst_n),.req_v(mv),.req_rdy(mr),.req_addr(ma),.req_len(ml),
+ .req_tag(mt),.req_we(mwe),.req_wdata(mw),.req_wstrb(ms),.wr_done(md),
  .wr_done_addr(done_addr),.wr_done_tag(done_tag),
- .rsp_v(rv),.rsp_rdy(rr),.rsp_tag(rt),.rsp_beat(rb),.rsp_data(rd));
+ .rsp_v(mrv),.rsp_rdy(mrr),.rsp_tag(mrt),.rsp_beat(mrb),.rsp_data(mrd));
  end endgenerate
  always @(posedge clk) if(rst_n) begin
-   if(|m_v) admitted<=1;
-   if(|(m_v&~range_ok))fault<=1;
+   if(|m_v || (WINDOW_STREAM_LA && |wl_req_v)) admitted<=1;
+   if(|(m_v&~range_ok) || |wide_fault ||
+      (WINDOW_STREAM_LA && |(wl_req_v&~wide_range_ok)))fault<=1;
  end
  // Literal existing sparse prior-history images, before any admitted service.
  // Current-row writes still run through native request/commit paths.
