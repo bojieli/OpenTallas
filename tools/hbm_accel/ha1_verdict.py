@@ -35,7 +35,7 @@ def main():
     for m in ("qwen", "ds"):
         recs = {k: json.loads((d / f"{m}_{k}.json").read_text()) for k in ("base", "tx") if (d / f"{m}_{k}.json").exists()}
         if len(recs) < 2:
-            sysr[m] = dict(status="NOT_COMPLETE", have=sorted(recs))
+            sysr[m] = dict(status="NOT_RUN", have=sorted(recs), note="whole-system DS runs stopped under the owner minimum-component rule (2026-10-04); exactness rests on the Qwen e2e + unit bench, latency on the die bench")
             continue
         b, t = recs["base"], recs["tx"]
         bb = {x["inst"]: x for x in b["barrier_monitor"]}
