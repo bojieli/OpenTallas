@@ -12,7 +12,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 
-def native_stream(matrix):
+def native_stream(matrix, *, fp32_output=False):
     import v41_die_images_w17w10 as fast
     source = inspect.getsource(fast.add_phase)
     body = ast.parse(source).body[0].body
@@ -32,14 +32,68 @@ def native_stream(matrix):
             q = (u-fast.S.unit_range(sg['fmt'],sg['e0'],sg['elems'])[0])//fast.S.IL
             rounds.setdefault((q,b),set()).add(u)
             demand[q,b,pair] = demand.get((q,b,pair),0)+1
-    ns = dict(vars(fast),bf=False,K=matrix['K'],
+    bf = matrix['format']=='bf16'
+    ns = dict(vars(fast),bf=bf,K=matrix['K'],
               field=SimpleNamespace(add_latency=8,fast=True),rounds=rounds,demand=demand)
     exec(compile(ast.Module(body=body[start:stop],type_ignores=[]),
                  inspect.getsourcefile(fast.add_phase),'exec'),ns)
     beats = ns['beats']
-    phrom = fast.phase_words(dict(bf=False,K=matrix['K'],nbeat=len(beats),sbase=0,
-        nrows=matrix['rows'],fmt_fp32=[False,False],rsplit=0))
+    phrom = fast.phase_words(dict(bf=bf,K=matrix['K'],nbeat=len(beats),sbase=0,
+        nrows=matrix['rows'],fmt_fp32=[fp32_output,fp32_output],rsplit=0))
     return phrom,beats,hashlib.sha256(source.encode()).hexdigest()
+
+
+def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
+                               fragment_index=0,expert_ids=None):
+    """Source-exact controls for any selected QE/weight-ME fragment.
+
+    Dynamic EIDs must be the caller's captured native tuple. This function
+    does not select experts, encode weights, fork a source reader or grant GO.
+    Partial-K pair plans remain explicit; no complete-K branch is invented.
+    """
+    from dsrom_s81_phase_capture_join import emitted_phase_profile
+    resolved=execution.source.resolve(node,rank,expert_ids=expert_ids)
+    dispatch=execution.dispatch(node,rank,expert_ids=expert_ids)
+    if type(fragment_index) is not int or not 0<=fragment_index<len(resolved['fragments']):
+        raise ValueError('actual selected fragment index required')
+    if len(resolved['fragments'])!=len(dispatch['fragments']):
+        raise ValueError('source fragment/dispatch coverage differs')
+    matrix=resolved['fragments'][fragment_index]['matrix']
+    fragment=dispatch['fragments'][fragment_index]
+    instruction=fragment['instruction']
+    me=instruction['unit']==1 and instruction.get('me_wsrc')==0
+    qe=instruction['unit']==3 and instruction.get('qe_mode',0)==0
+    if not (me or qe) or (matrix['format']=='bf16')!=me:
+        raise ValueError('actual weight ME or mode0 QE controls required')
+    fp32=not instruction.get('me_round',0) if me else bool(instruction.get('qe_unrounded',0))
+    phrom,beats,stream_pin=native_stream(matrix,fp32_output=fp32)
+    profile=emitted_phase_profile(execution.stage_join,connectivity,
+        stage=fragment['stage'],rank=rank,phase=fragment['phase'],positions=1,
+        key=fragment['key'],ME=me)
+    if profile['source_matrix_sha256']!=fragment['source_matrix_sha256']:
+        raise ValueError('actual capture profile/source dispatch differs')
+    out=Path(out);out.mkdir(parents=True,exist_ok=False)
+    (out/'spine_phase.hex').write_text(''.join(f'{w:016x}\n' for w in phrom))
+    (out/'spine_stream.hex').write_text(''.join(f'{w:010x}\n' for w in beats))
+    pairs=sorted({p[1] for p in matrix['plans']})
+    for pair in pairs:
+        cfg=[execution.stage_join.cfg(fragment['stage'],rank,pair,a)
+             for a in range(25*(fragment['phase']+1))]
+        (out/f'e{pair}.cfg.hex').write_text(''.join(f'{w:012x}\n' for w in cfg))
+    output_base=instruction['me_obase']*16 if me else instruction['qe_obase']
+    info=dict(node=node,position=1048575,rank=rank,stage=fragment['stage'],
+        phase=fragment['phase'],key=fragment['key'],fragment_index=fragment_index,
+        captured_expert_ids=expert_ids,source_matrix_sha256=fragment['source_matrix_sha256'],
+        instruction=instruction,output_base=output_base,rows=matrix['rows'],K=matrix['K'],
+        format=matrix['format'],ordered_K_segments=matrix['segments'],plans=matrix['plans'],
+        PHROM_words=phrom,stream_words=len(beats),stream_source_sha256=stream_pin,
+        pairs=pairs,root_rows=profile['root_rows'],root_return_counts=profile['root_return_counts'],
+        actual_BF_site_IDs=execution.stage_join.stage_map['BF_site_IDs'],
+        input_VM_base=instruction['me_xbase'] if me else instruction['qe_xbase'],
+        ME=me,FP32_output=fp32,cfg_phase_must_not_be_relabelled=True,
+        native_execution_qualified=False)
+    (out/'binding.json').write_text(json.dumps(info,indent=2)+'\n')
+    return info
 
 
 def emit(execution,node,rank,out,connectivity):
