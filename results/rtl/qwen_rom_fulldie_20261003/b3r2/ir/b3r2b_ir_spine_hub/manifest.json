@@ -1,0 +1,66 @@
+{
+ "case": "c",
+ "window": "spine_hub",
+ "window_um": [
+  10838.88,
+  14318.64,
+  13427.424,
+  16918.96
+ ],
+ "size_um": [
+  2588.544,
+  2600.32
+ ],
+ "cell_um": 20.0,
+ "loads": 16380,
+ "power_w_by_region": {
+  "tile_field": 2.8392,
+  "corridor": 0.546,
+  "hub": 1.041,
+  "channel": 0.6552
+ },
+ "power_w": 5.0814,
+ "cells_without_both_rails": 390,
+ "peak": true,
+ "cov_scale": 1.0,
+ "bump_pad": false,
+ "align": true,
+ "signal_bumps_phy": false,
+ "bump_sites": 1681,
+ "stripes": {
+  "M9": 501,
+  "M8": 2529,
+  "vias": 129263,
+  "width_um": 0.48,
+  "pitch_by_region": {
+   "tile_field": 9.0914,
+   "corridor": 9.0914,
+   "channel": 9.0914,
+   "hub": 12.728,
+   "strip": 1.8183,
+   "ctrl": 1.8183,
+   "io": 12.728
+  }
+ },
+ "bumps": {
+  "array_pitch_um": 45.0,
+  "power_fraction": 0.25,
+  "vdd_pitch_um": 63.64,
+  "size_um": 20.0,
+  "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+ },
+ "vdd_v": 0.7,
+ "budget_mv": 35.0,
+ "b3r2": {
+  "producer": "/home/ubuntu/qwen-rom-die-b3-20261004/tools/qwen_rom_fulldie_b3r2.py",
+  "band": true,
+  "die": {
+   "w": 24266.304,
+   "h": 32801.76,
+   "mm2": 795.977,
+   "budget_mm2": 858,
+   "margin_mm2": 62.023
+  }
+ },
+ "source_commit": "2835bfbce7c6893a14c5d77072aaa183535abe12"
+}

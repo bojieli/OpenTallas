@@ -1,0 +1,4043 @@
+{
+  "schema": "opentallas.uarch.hbm_accelerator_integration.v2",
+  "status": "UNVALIDATED_MODEL_HYPOTHESES",
+  "default_enabled": false,
+  "adopted": false,
+  "study_source_commit": "a3ed9c36d50312f33fa99bf2b49d31c0423ec3f9",
+  "published_accelerator_rates": [],
+  "measured_composition": null,
+  "hypotheses": {
+    "ds": {
+      "1M": {
+        "firm": {
+          "ladder": [
+            {
+              "rung": "R0",
+              "ar_us": 910.23,
+              "ar_tok_s": 1098.6
+            },
+            {
+              "rung": "R1 (= W19 ablation as recorded)",
+              "ar_us": 442.14,
+              "ar_tok_s": 2261.7,
+              "saved_us": 468.09
+            },
+            {
+              "rung": "R0c",
+              "saved_ar_us": -14.86,
+              "saved_verify6_us": -14.86,
+              "ar_us": 457.0,
+              "ar_tok_s": 2188.2,
+              "verify6_us": 715.7,
+              "note": "service term central (refresh-live first access + ACK/fence/owner)",
+              "pct_of_rate": -3.36
+            },
+            {
+              "rung": "R1b",
+              "saved_ar_us": 8.86,
+              "saved_verify6_us": 8.86,
+              "ar_us": 448.14,
+              "ar_tok_s": 2231.5,
+              "verify6_us": 706.84,
+              "note": "tx-count arrival, release broadcast removed",
+              "pct_of_rate": 1.94
+            },
+            {
+              "rung": "R2",
+              "saved_ar_us": 70.08,
+              "saved_verify6_us": 70.08,
+              "ar_us": 378.05,
+              "ar_tok_s": 2645.1,
+              "verify6_us": 636.75,
+              "note": "AG fixed 777->504 ns, AR 824->609 ns",
+              "pct_of_rate": 15.64
+            },
+            {
+              "rung": "R3a",
+              "saved_ar_us": 17.85,
+              "saved_verify6_us": 17.85,
+              "ar_us": 360.21,
+              "ar_tok_s": 2776.2,
+              "verify6_us": 618.91,
+              "note": "cut-through collective",
+              "pct_of_rate": 4.72
+            },
+            {
+              "rung": "R3b",
+              "saved_ar_us": 6.1,
+              "saved_verify6_us": 11.8,
+              "ar_us": 354.11,
+              "ar_tok_s": 2824.0,
+              "verify6_us": 607.11,
+              "note": "TMEM-style register epilogue (norm partials, quantise, residual)",
+              "pct_of_rate": 1.69
+            },
+            {
+              "rung": "R4b",
+              "saved_ar_us": 3.41,
+              "saved_verify6_us": 3.41,
+              "ar_us": 350.69,
+              "ar_tok_s": 2851.5,
+              "verify6_us": 603.69,
+              "note": "per-stack index scorers + local top-k chase",
+              "pct_of_rate": 0.96
+            },
+            {
+              "rung": "R5a",
+              "saved_ar_us": 13.46,
+              "saved_verify6_us": 13.46,
+              "ar_us": 337.24,
+              "ar_tok_s": 2965.3,
+              "verify6_us": 590.24,
+              "note": "refresh-aware routed fetch",
+              "pct_of_rate": 3.84
+            },
+            {
+              "rung": "R5b",
+              "saved_ar_us": 5.59,
+              "saved_verify6_us": 10.6,
+              "ar_us": 331.65,
+              "ar_tok_s": 3015.2,
+              "verify6_us": 579.64,
+              "note": "shared expert issued first; routed fetch overlaps",
+              "pct_of_rate": 1.66
+            },
+            {
+              "rung": "R6a",
+              "saved_ar_us": 0.0,
+              "saved_verify6_us": 13.97,
+              "ar_us": 331.65,
+              "ar_tok_s": 3015.2,
+              "verify6_us": 565.67,
+              "note": "P parallel 96x512 select units",
+              "pct_of_rate": 0.0
+            }
+          ],
+          "best_ar_us": 331.65,
+          "best_ar_tok_s": 3015.2,
+          "draft_us": 42.32,
+          "spec": {
+            "mixed_n36": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 421.22,
+                  "tau": 1.8187,
+                  "tokens_s": 4317.7
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 471.65,
+                  "tau": 2.4684,
+                  "tokens_s": 5233.5
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 516.91,
+                  "tau": 2.9653,
+                  "tokens_s": 5736.6
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 564.68,
+                  "tau": 3.3431,
+                  "tokens_s": 5920.4
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 607.99,
+                  "tau": 3.6486,
+                  "tokens_s": 6001.1
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 607.99,
+                "tau": 3.6486,
+                "tokens_s": 6001.1
+              }
+            },
+            "agentic_multiturn": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 421.22,
+                  "tau": 1.9042,
+                  "tokens_s": 4520.7
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 471.65,
+                  "tau": 2.6629,
+                  "tokens_s": 5645.9
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 516.91,
+                  "tau": 3.225,
+                  "tokens_s": 6239.0
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 564.68,
+                  "tau": 3.7487,
+                  "tokens_s": 6638.7
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 607.99,
+                  "tau": 4.0222,
+                  "tokens_s": 6615.5
+                }
+              ],
+              "best": {
+                "gamma": 4,
+                "step_us": 564.68,
+                "tau": 3.7487,
+                "tokens_s": 6638.7
+              }
+            },
+            "agentic_all5_n30": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 421.22,
+                  "tau": 1.9382,
+                  "tokens_s": 4601.4
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 471.65,
+                  "tau": 2.7736,
+                  "tokens_s": 5880.6
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 516.91,
+                  "tau": 3.469,
+                  "tokens_s": 6711.0
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 564.68,
+                  "tau": 4.1126,
+                  "tokens_s": 7283.1
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 607.99,
+                  "tau": 4.5554,
+                  "tokens_s": 7492.5
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 607.99,
+                "tau": 4.5554,
+                "tokens_s": 7492.5
+              }
+            }
+          },
+          "ablation_spec": {
+            "mixed_n36": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 550.2,
+                  "tau": 1.8187,
+                  "tokens_s": 3305.5
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 604.57,
+                  "tau": 2.4684,
+                  "tokens_s": 4082.9
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 653.76,
+                  "tau": 2.9653,
+                  "tokens_s": 4535.8
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 705.46,
+                  "tau": 3.3431,
+                  "tokens_s": 4738.9
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 752.71,
+                  "tau": 3.6486,
+                  "tokens_s": 4847.3
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 752.71,
+                "tau": 3.6486,
+                "tokens_s": 4847.3
+              }
+            },
+            "agentic_multiturn": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 550.2,
+                  "tau": 1.9042,
+                  "tokens_s": 3460.9
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 604.57,
+                  "tau": 2.6629,
+                  "tokens_s": 4404.6
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 653.76,
+                  "tau": 3.225,
+                  "tokens_s": 4933.0
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 705.46,
+                  "tau": 3.7487,
+                  "tokens_s": 5313.8
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 752.71,
+                  "tau": 4.0222,
+                  "tokens_s": 5343.6
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 752.71,
+                "tau": 4.0222,
+                "tokens_s": 5343.6
+              }
+            },
+            "agentic_all5_n30": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 550.2,
+                  "tau": 1.9382,
+                  "tokens_s": 3522.7
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 604.57,
+                  "tau": 2.7736,
+                  "tokens_s": 4587.7
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 653.76,
+                  "tau": 3.469,
+                  "tokens_s": 5306.2
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 705.46,
+                  "tau": 4.1126,
+                  "tokens_s": 5829.7
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 752.71,
+                  "tau": 4.5554,
+                  "tokens_s": 6052.0
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 752.71,
+                "tau": 4.5554,
+                "tokens_s": 6052.0
+              }
+            }
+          },
+          "tau4_gamma5_tok_s": 6579.0,
+          "ablation_tau4_gamma5_tok_s": 5314.1
+        },
+        "with_R7a": {
+          "ladder": [
+            {
+              "rung": "R0",
+              "ar_us": 910.23,
+              "ar_tok_s": 1098.6
+            },
+            {
+              "rung": "R1 (= W19 ablation as recorded)",
+              "ar_us": 442.14,
+              "ar_tok_s": 2261.7,
+              "saved_us": 468.09
+            },
+            {
+              "rung": "R0c",
+              "saved_ar_us": -14.86,
+              "saved_verify6_us": -14.86,
+              "ar_us": 457.0,
+              "ar_tok_s": 2188.2,
+              "verify6_us": 715.7,
+              "note": "service term central (refresh-live first access + ACK/fence/owner)",
+              "pct_of_rate": -3.36
+            },
+            {
+              "rung": "R1b",
+              "saved_ar_us": 8.86,
+              "saved_verify6_us": 8.86,
+              "ar_us": 448.14,
+              "ar_tok_s": 2231.5,
+              "verify6_us": 706.84,
+              "note": "tx-count arrival, release broadcast removed",
+              "pct_of_rate": 1.94
+            },
+            {
+              "rung": "R2",
+              "saved_ar_us": 70.08,
+              "saved_verify6_us": 70.08,
+              "ar_us": 378.05,
+              "ar_tok_s": 2645.1,
+              "verify6_us": 636.75,
+              "note": "AG fixed 777->504 ns, AR 824->609 ns",
+              "pct_of_rate": 15.64
+            },
+            {
+              "rung": "R3a",
+              "saved_ar_us": 17.85,
+              "saved_verify6_us": 17.85,
+              "ar_us": 360.21,
+              "ar_tok_s": 2776.2,
+              "verify6_us": 618.91,
+              "note": "cut-through collective",
+              "pct_of_rate": 4.72
+            },
+            {
+              "rung": "R3b",
+              "saved_ar_us": 6.1,
+              "saved_verify6_us": 11.8,
+              "ar_us": 354.11,
+              "ar_tok_s": 2824.0,
+              "verify6_us": 607.11,
+              "note": "TMEM-style register epilogue (norm partials, quantise, residual)",
+              "pct_of_rate": 1.69
+            },
+            {
+              "rung": "R4b",
+              "saved_ar_us": 3.41,
+              "saved_verify6_us": 3.41,
+              "ar_us": 350.69,
+              "ar_tok_s": 2851.5,
+              "verify6_us": 603.69,
+              "note": "per-stack index scorers + local top-k chase",
+              "pct_of_rate": 0.96
+            },
+            {
+              "rung": "R5a",
+              "saved_ar_us": 13.46,
+              "saved_verify6_us": 13.46,
+              "ar_us": 337.24,
+              "ar_tok_s": 2965.3,
+              "verify6_us": 590.24,
+              "note": "refresh-aware routed fetch",
+              "pct_of_rate": 3.84
+            },
+            {
+              "rung": "R5b",
+              "saved_ar_us": 5.59,
+              "saved_verify6_us": 10.6,
+              "ar_us": 331.65,
+              "ar_tok_s": 3015.2,
+              "verify6_us": 579.64,
+              "note": "shared expert issued first; routed fetch overlaps",
+              "pct_of_rate": 1.66
+            },
+            {
+              "rung": "R6a",
+              "saved_ar_us": 0.0,
+              "saved_verify6_us": 13.97,
+              "ar_us": 331.65,
+              "ar_tok_s": 3015.2,
+              "verify6_us": 565.67,
+              "note": "P parallel 96x512 select units",
+              "pct_of_rate": 0.0
+            },
+            {
+              "rung": "R7a",
+              "saved_ar_us": 13.59,
+              "saved_verify6_us": 26.21,
+              "ar_us": 318.06,
+              "ar_tok_s": 3144.0,
+              "verify6_us": 539.46,
+              "note": "serial chain 0.9 -> 1.091 GHz (conditional)",
+              "pct_of_rate": 4.1
+            }
+          ],
+          "best_ar_us": 318.06,
+          "best_ar_tok_s": 3144.0,
+          "draft_us": 40.37,
+          "spec": {
+            "mixed_n36": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 403.15,
+                  "tau": 1.8187,
+                  "tokens_s": 4511.2
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 451.06,
+                  "tau": 2.4684,
+                  "tokens_s": 5472.4
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 493.79,
+                  "tau": 2.9653,
+                  "tokens_s": 6005.1
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 539.04,
+                  "tau": 3.3431,
+                  "tokens_s": 6202.0
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 579.83,
+                  "tau": 3.6486,
+                  "tokens_s": 6292.6
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 579.83,
+                "tau": 3.6486,
+                "tokens_s": 6292.6
+              }
+            },
+            "agentic_multiturn": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 403.15,
+                  "tau": 1.9042,
+                  "tokens_s": 4723.3
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 451.06,
+                  "tau": 2.6629,
+                  "tokens_s": 5903.6
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 493.79,
+                  "tau": 3.225,
+                  "tokens_s": 6531.1
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 539.04,
+                  "tau": 3.7487,
+                  "tokens_s": 6954.4
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 579.83,
+                  "tau": 4.0222,
+                  "tokens_s": 6936.9
+                }
+              ],
+              "best": {
+                "gamma": 4,
+                "step_us": 539.04,
+                "tau": 3.7487,
+                "tokens_s": 6954.4
+              }
+            },
+            "agentic_all5_n30": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 403.15,
+                  "tau": 1.9382,
+                  "tokens_s": 4807.6
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 451.06,
+                  "tau": 2.7736,
+                  "tokens_s": 6149.0
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 493.79,
+                  "tau": 3.469,
+                  "tokens_s": 7025.2
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 539.04,
+                  "tau": 4.1126,
+                  "tokens_s": 7629.5
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 579.83,
+                  "tau": 4.5554,
+                  "tokens_s": 7856.5
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 579.83,
+                "tau": 4.5554,
+                "tokens_s": 7856.5
+              }
+            }
+          },
+          "ablation_spec": {
+            "mixed_n36": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 550.2,
+                  "tau": 1.8187,
+                  "tokens_s": 3305.5
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 604.57,
+                  "tau": 2.4684,
+                  "tokens_s": 4082.9
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 653.76,
+                  "tau": 2.9653,
+                  "tokens_s": 4535.8
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 705.46,
+                  "tau": 3.3431,
+                  "tokens_s": 4738.9
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 752.71,
+                  "tau": 3.6486,
+                  "tokens_s": 4847.3
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 752.71,
+                "tau": 3.6486,
+                "tokens_s": 4847.3
+              }
+            },
+            "agentic_multiturn": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 550.2,
+                  "tau": 1.9042,
+                  "tokens_s": 3460.9
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 604.57,
+                  "tau": 2.6629,
+                  "tokens_s": 4404.6
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 653.76,
+                  "tau": 3.225,
+                  "tokens_s": 4933.0
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 705.46,
+                  "tau": 3.7487,
+                  "tokens_s": 5313.8
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 752.71,
+                  "tau": 4.0222,
+                  "tokens_s": 5343.6
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 752.71,
+                "tau": 4.0222,
+                "tokens_s": 5343.6
+              }
+            },
+            "agentic_all5_n30": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 550.2,
+                  "tau": 1.9382,
+                  "tokens_s": 3522.7
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 604.57,
+                  "tau": 2.7736,
+                  "tokens_s": 4587.7
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 653.76,
+                  "tau": 3.469,
+                  "tokens_s": 5306.2
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 705.46,
+                  "tau": 4.1126,
+                  "tokens_s": 5829.7
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 752.71,
+                  "tau": 4.5554,
+                  "tokens_s": 6052.0
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 752.71,
+                "tau": 4.5554,
+                "tokens_s": 6052.0
+              }
+            }
+          },
+          "tau4_gamma5_tok_s": 6898.6,
+          "ablation_tau4_gamma5_tok_s": 5314.1
+        }
+      },
+      "200K": {
+        "firm": {
+          "ladder": [
+            {
+              "rung": "R0",
+              "ar_us": 908.5,
+              "ar_tok_s": 1100.7
+            },
+            {
+              "rung": "R1 (= W19 ablation as recorded)",
+              "ar_us": 441.3,
+              "ar_tok_s": 2266.0,
+              "saved_us": 467.2
+            },
+            {
+              "rung": "R0c",
+              "saved_ar_us": -14.83,
+              "saved_verify6_us": -14.83,
+              "ar_us": 456.13,
+              "ar_tok_s": 2192.4,
+              "verify6_us": 714.34,
+              "note": "service term central (refresh-live first access + ACK/fence/owner)",
+              "pct_of_rate": -3.36
+            },
+            {
+              "rung": "R1b",
+              "saved_ar_us": 8.84,
+              "saved_verify6_us": 8.84,
+              "ar_us": 447.28,
+              "ar_tok_s": 2235.7,
+              "verify6_us": 705.49,
+              "note": "tx-count arrival, release broadcast removed",
+              "pct_of_rate": 1.94
+            },
+            {
+              "rung": "R2",
+              "saved_ar_us": 69.95,
+              "saved_verify6_us": 69.95,
+              "ar_us": 377.34,
+              "ar_tok_s": 2650.2,
+              "verify6_us": 635.55,
+              "note": "AG fixed 777->504 ns, AR 824->609 ns",
+              "pct_of_rate": 15.64
+            },
+            {
+              "rung": "R3a",
+              "saved_ar_us": 17.82,
+              "saved_verify6_us": 17.82,
+              "ar_us": 359.52,
+              "ar_tok_s": 2781.5,
+              "verify6_us": 617.73,
+              "note": "cut-through collective",
+              "pct_of_rate": 4.72
+            },
+            {
+              "rung": "R3b",
+              "saved_ar_us": 6.09,
+              "saved_verify6_us": 11.78,
+              "ar_us": 353.43,
+              "ar_tok_s": 2829.4,
+              "verify6_us": 605.95,
+              "note": "TMEM-style register epilogue (norm partials, quantise, residual)",
+              "pct_of_rate": 1.69
+            },
+            {
+              "rung": "R4b",
+              "saved_ar_us": 3.41,
+              "saved_verify6_us": 3.41,
+              "ar_us": 350.03,
+              "ar_tok_s": 2856.9,
+              "verify6_us": 602.55,
+              "note": "per-stack index scorers + local top-k chase",
+              "pct_of_rate": 0.96
+            },
+            {
+              "rung": "R5a",
+              "saved_ar_us": 13.43,
+              "saved_verify6_us": 13.43,
+              "ar_us": 336.6,
+              "ar_tok_s": 2970.9,
+              "verify6_us": 589.11,
+              "note": "refresh-aware routed fetch",
+              "pct_of_rate": 3.84
+            },
+            {
+              "rung": "R5b",
+              "saved_ar_us": 5.58,
+              "saved_verify6_us": 10.58,
+              "ar_us": 331.02,
+              "ar_tok_s": 3021.0,
+              "verify6_us": 578.53,
+              "note": "shared expert issued first; routed fetch overlaps",
+              "pct_of_rate": 1.66
+            },
+            {
+              "rung": "R6a",
+              "saved_ar_us": 0.0,
+              "saved_verify6_us": 13.94,
+              "ar_us": 331.02,
+              "ar_tok_s": 3021.0,
+              "verify6_us": 564.59,
+              "note": "P parallel 96x512 select units",
+              "pct_of_rate": 0.0
+            }
+          ],
+          "best_ar_us": 331.02,
+          "best_ar_tok_s": 3021.0,
+          "draft_us": 42.24,
+          "spec": {
+            "mixed_n36": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 420.42,
+                  "tau": 1.8187,
+                  "tokens_s": 4326.0
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 470.76,
+                  "tau": 2.4684,
+                  "tokens_s": 5243.5
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 515.93,
+                  "tau": 2.9653,
+                  "tokens_s": 5747.5
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 563.6,
+                  "tau": 3.3431,
+                  "tokens_s": 5931.7
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 606.84,
+                  "tau": 3.6486,
+                  "tokens_s": 6012.5
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 606.84,
+                "tau": 3.6486,
+                "tokens_s": 6012.5
+              }
+            },
+            "agentic_multiturn": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 420.42,
+                  "tau": 1.9042,
+                  "tokens_s": 4529.3
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 470.76,
+                  "tau": 2.6629,
+                  "tokens_s": 5656.6
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 515.93,
+                  "tau": 3.225,
+                  "tokens_s": 6250.9
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 563.6,
+                  "tau": 3.7487,
+                  "tokens_s": 6651.3
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 606.84,
+                  "tau": 4.0222,
+                  "tokens_s": 6628.1
+                }
+              ],
+              "best": {
+                "gamma": 4,
+                "step_us": 563.6,
+                "tau": 3.7487,
+                "tokens_s": 6651.3
+              }
+            },
+            "agentic_all5_n30": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 420.42,
+                  "tau": 1.9382,
+                  "tokens_s": 4610.2
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 470.76,
+                  "tau": 2.7736,
+                  "tokens_s": 5891.8
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 515.93,
+                  "tau": 3.469,
+                  "tokens_s": 6723.8
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 563.6,
+                  "tau": 4.1126,
+                  "tokens_s": 7297.0
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 606.84,
+                  "tau": 4.5554,
+                  "tokens_s": 7506.8
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 606.84,
+                "tau": 4.5554,
+                "tokens_s": 7506.8
+              }
+            }
+          },
+          "ablation_spec": {
+            "mixed_n36": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 549.15,
+                  "tau": 1.8187,
+                  "tokens_s": 3311.8
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 603.42,
+                  "tau": 2.4684,
+                  "tokens_s": 4090.7
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 652.52,
+                  "tau": 2.9653,
+                  "tokens_s": 4544.4
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 704.12,
+                  "tau": 3.3431,
+                  "tokens_s": 4747.9
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 751.28,
+                  "tau": 3.6486,
+                  "tokens_s": 4856.5
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 751.28,
+                "tau": 3.6486,
+                "tokens_s": 4856.5
+              }
+            },
+            "agentic_multiturn": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 549.15,
+                  "tau": 1.9042,
+                  "tokens_s": 3467.5
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 603.42,
+                  "tau": 2.6629,
+                  "tokens_s": 4413.0
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 652.52,
+                  "tau": 3.225,
+                  "tokens_s": 4942.4
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 704.12,
+                  "tau": 3.7487,
+                  "tokens_s": 5324.0
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 751.28,
+                  "tau": 4.0222,
+                  "tokens_s": 5353.8
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 751.28,
+                "tau": 4.0222,
+                "tokens_s": 5353.8
+              }
+            },
+            "agentic_all5_n30": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 549.15,
+                  "tau": 1.9382,
+                  "tokens_s": 3529.4
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 603.42,
+                  "tau": 2.7736,
+                  "tokens_s": 4596.5
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 652.52,
+                  "tau": 3.469,
+                  "tokens_s": 5316.3
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 704.12,
+                  "tau": 4.1126,
+                  "tokens_s": 5840.8
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 751.28,
+                  "tau": 4.5554,
+                  "tokens_s": 6063.5
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 751.28,
+                "tau": 4.5554,
+                "tokens_s": 6063.5
+              }
+            }
+          },
+          "tau4_gamma5_tok_s": 6591.6,
+          "ablation_tau4_gamma5_tok_s": 5324.2
+        },
+        "with_R7a": {
+          "ladder": [
+            {
+              "rung": "R0",
+              "ar_us": 908.5,
+              "ar_tok_s": 1100.7
+            },
+            {
+              "rung": "R1 (= W19 ablation as recorded)",
+              "ar_us": 441.3,
+              "ar_tok_s": 2266.0,
+              "saved_us": 467.2
+            },
+            {
+              "rung": "R0c",
+              "saved_ar_us": -14.83,
+              "saved_verify6_us": -14.83,
+              "ar_us": 456.13,
+              "ar_tok_s": 2192.4,
+              "verify6_us": 714.34,
+              "note": "service term central (refresh-live first access + ACK/fence/owner)",
+              "pct_of_rate": -3.36
+            },
+            {
+              "rung": "R1b",
+              "saved_ar_us": 8.84,
+              "saved_verify6_us": 8.84,
+              "ar_us": 447.28,
+              "ar_tok_s": 2235.7,
+              "verify6_us": 705.49,
+              "note": "tx-count arrival, release broadcast removed",
+              "pct_of_rate": 1.94
+            },
+            {
+              "rung": "R2",
+              "saved_ar_us": 69.95,
+              "saved_verify6_us": 69.95,
+              "ar_us": 377.34,
+              "ar_tok_s": 2650.2,
+              "verify6_us": 635.55,
+              "note": "AG fixed 777->504 ns, AR 824->609 ns",
+              "pct_of_rate": 15.64
+            },
+            {
+              "rung": "R3a",
+              "saved_ar_us": 17.82,
+              "saved_verify6_us": 17.82,
+              "ar_us": 359.52,
+              "ar_tok_s": 2781.5,
+              "verify6_us": 617.73,
+              "note": "cut-through collective",
+              "pct_of_rate": 4.72
+            },
+            {
+              "rung": "R3b",
+              "saved_ar_us": 6.09,
+              "saved_verify6_us": 11.78,
+              "ar_us": 353.43,
+              "ar_tok_s": 2829.4,
+              "verify6_us": 605.95,
+              "note": "TMEM-style register epilogue (norm partials, quantise, residual)",
+              "pct_of_rate": 1.69
+            },
+            {
+              "rung": "R4b",
+              "saved_ar_us": 3.41,
+              "saved_verify6_us": 3.41,
+              "ar_us": 350.03,
+              "ar_tok_s": 2856.9,
+              "verify6_us": 602.55,
+              "note": "per-stack index scorers + local top-k chase",
+              "pct_of_rate": 0.96
+            },
+            {
+              "rung": "R5a",
+              "saved_ar_us": 13.43,
+              "saved_verify6_us": 13.43,
+              "ar_us": 336.6,
+              "ar_tok_s": 2970.9,
+              "verify6_us": 589.11,
+              "note": "refresh-aware routed fetch",
+              "pct_of_rate": 3.84
+            },
+            {
+              "rung": "R5b",
+              "saved_ar_us": 5.58,
+              "saved_verify6_us": 10.58,
+              "ar_us": 331.02,
+              "ar_tok_s": 3021.0,
+              "verify6_us": 578.53,
+              "note": "shared expert issued first; routed fetch overlaps",
+              "pct_of_rate": 1.66
+            },
+            {
+              "rung": "R6a",
+              "saved_ar_us": 0.0,
+              "saved_verify6_us": 13.94,
+              "ar_us": 331.02,
+              "ar_tok_s": 3021.0,
+              "verify6_us": 564.59,
+              "note": "P parallel 96x512 select units",
+              "pct_of_rate": 0.0
+            },
+            {
+              "rung": "R7a",
+              "saved_ar_us": 13.56,
+              "saved_verify6_us": 26.16,
+              "ar_us": 317.46,
+              "ar_tok_s": 3150.0,
+              "verify6_us": 538.43,
+              "note": "serial chain 0.9 -> 1.091 GHz (conditional)",
+              "pct_of_rate": 4.1
+            }
+          ],
+          "best_ar_us": 317.46,
+          "best_ar_tok_s": 3150.0,
+          "draft_us": 40.3,
+          "spec": {
+            "mixed_n36": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 402.39,
+                  "tau": 1.8187,
+                  "tokens_s": 4519.8
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 450.21,
+                  "tau": 2.4684,
+                  "tokens_s": 5482.8
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 492.86,
+                  "tau": 2.9653,
+                  "tokens_s": 6016.6
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 538.01,
+                  "tau": 3.3431,
+                  "tokens_s": 6213.8
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 578.73,
+                  "tau": 3.6486,
+                  "tokens_s": 6304.5
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 578.73,
+                "tau": 3.6486,
+                "tokens_s": 6304.5
+              }
+            },
+            "agentic_multiturn": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 402.39,
+                  "tau": 1.9042,
+                  "tokens_s": 4732.3
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 450.21,
+                  "tau": 2.6629,
+                  "tokens_s": 5914.8
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 492.86,
+                  "tau": 3.225,
+                  "tokens_s": 6543.5
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 538.01,
+                  "tau": 3.7487,
+                  "tokens_s": 6967.7
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 578.73,
+                  "tau": 4.0222,
+                  "tokens_s": 6950.1
+                }
+              ],
+              "best": {
+                "gamma": 4,
+                "step_us": 538.01,
+                "tau": 3.7487,
+                "tokens_s": 6967.7
+              }
+            },
+            "agentic_all5_n30": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 402.39,
+                  "tau": 1.9382,
+                  "tokens_s": 4816.8
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 450.21,
+                  "tau": 2.7736,
+                  "tokens_s": 6160.7
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 492.86,
+                  "tau": 3.469,
+                  "tokens_s": 7038.6
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 538.01,
+                  "tau": 4.1126,
+                  "tokens_s": 7644.1
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 578.73,
+                  "tau": 4.5554,
+                  "tokens_s": 7871.4
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 578.73,
+                "tau": 4.5554,
+                "tokens_s": 7871.4
+              }
+            }
+          },
+          "ablation_spec": {
+            "mixed_n36": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 549.15,
+                  "tau": 1.8187,
+                  "tokens_s": 3311.8
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 603.42,
+                  "tau": 2.4684,
+                  "tokens_s": 4090.7
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 652.52,
+                  "tau": 2.9653,
+                  "tokens_s": 4544.4
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 704.12,
+                  "tau": 3.3431,
+                  "tokens_s": 4747.9
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 751.28,
+                  "tau": 3.6486,
+                  "tokens_s": 4856.5
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 751.28,
+                "tau": 3.6486,
+                "tokens_s": 4856.5
+              }
+            },
+            "agentic_multiturn": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 549.15,
+                  "tau": 1.9042,
+                  "tokens_s": 3467.5
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 603.42,
+                  "tau": 2.6629,
+                  "tokens_s": 4413.0
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 652.52,
+                  "tau": 3.225,
+                  "tokens_s": 4942.4
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 704.12,
+                  "tau": 3.7487,
+                  "tokens_s": 5324.0
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 751.28,
+                  "tau": 4.0222,
+                  "tokens_s": 5353.8
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 751.28,
+                "tau": 4.0222,
+                "tokens_s": 5353.8
+              }
+            },
+            "agentic_all5_n30": {
+              "rows": [
+                {
+                  "gamma": 1,
+                  "step_us": 549.15,
+                  "tau": 1.9382,
+                  "tokens_s": 3529.4
+                },
+                {
+                  "gamma": 2,
+                  "step_us": 603.42,
+                  "tau": 2.7736,
+                  "tokens_s": 4596.5
+                },
+                {
+                  "gamma": 3,
+                  "step_us": 652.52,
+                  "tau": 3.469,
+                  "tokens_s": 5316.3
+                },
+                {
+                  "gamma": 4,
+                  "step_us": 704.12,
+                  "tau": 4.1126,
+                  "tokens_s": 5840.8
+                },
+                {
+                  "gamma": 5,
+                  "step_us": 751.28,
+                  "tau": 4.5554,
+                  "tokens_s": 6063.5
+                }
+              ],
+              "best": {
+                "gamma": 5,
+                "step_us": 751.28,
+                "tau": 4.5554,
+                "tokens_s": 6063.5
+              }
+            }
+          },
+          "tau4_gamma5_tok_s": 6911.7,
+          "ablation_tau4_gamma5_tok_s": 5324.2
+        }
+      },
+      "topology_optimistic_firm_ar_tok_s": 3333.8
+    },
+    "qwen": {
+      "ladder": [
+        {
+          "rung": "Q0 GPU-faithful (kernel launch + sync, H200-NIM fixed 1.464 ms)",
+          "ar_us": 2599.2,
+          "ar_tok_s": 384.7
+        },
+        {
+          "rung": "Q1 persistent program + hw barrier = GPU-organised ablation (2 dies, 8 stacks at 0.9 TB/s)",
+          "ar_us": 1135.3,
+          "ar_tok_s": 880.8,
+          "dflash_tok_s": 2671.1
+        },
+        {
+          "rung": "Q2 refresh-aware streaming controller (0.958 TB/s/stack measured worst layer)",
+          "ar_us": 1066.6,
+          "ar_tok_s": 937.6,
+          "dflash_tok_s": 2843.1
+        },
+        {
+          "rung": "Q3 one-stream / async collectives (TP-2 exchange)",
+          "ar_tok_s": 937.6,
+          "note": "0: hidden under the weight stream (154 cycles exposed); REJECTED below the 1% gate"
+        },
+        {
+          "rung": "Q4 near-HBM attention",
+          "ar_tok_s": 937.6,
+          "note": "0: the KV bytes are still read from DRAM; REJECTED for a weight-streaming design"
+        },
+        {
+          "rung": "Q5 SRAM residency on the same 2 x 815 mm2 footprint (842 MiB: lm_head first)",
+          "ar_us": 951.4,
+          "ar_tok_s": 1051.0,
+          "dflash_tok_s": 3355.5,
+          "sram_mib": 842,
+          "sram_mm2": 1098.4
+        },
+        {
+          "rung": "Q6 DFlash b16 on the 16 MMA columns (tau 3.656 lab mix)",
+          "dflash_tok_s": 3355.5,
+          "dflash_tok_s_tau_humaneval": 5965.8,
+          "dflash_tok_s_tau_math500": 7351.8
+        }
+      ],
+      "same_silicon_as_ablation": {
+        "ar": {
+          "ar_us": 951.4,
+          "ar_tok_s": 1051.0,
+          "ar_bytes": 7289482038.724606,
+          "dflash_step_us": 1089.5,
+          "dflash_tok_s": 3355.5,
+          "dflash_step_bytes": 8339482038.724606,
+          "dflash_tok_s_tau_humaneval": 5965.8,
+          "dflash_tok_s_tau_math500": 7351.8
+        },
+        "power_ar": {
+          "static_w": 91.0,
+          "system_w": 897.0,
+          "J_per_token": 0.8534
+        },
+        "power_dflash": {
+          "static_w": 91.0,
+          "system_w": 895.9,
+          "J_per_token": 0.267
+        },
+        "sram_mib": 842
+      },
+      "ablation": {
+        "point": {
+          "ar_us": 1135.3,
+          "ar_tok_s": 880.8,
+          "ar_bytes": 8172000000.0,
+          "dflash_step_us": 1368.7,
+          "dflash_tok_s": 2671.1,
+          "dflash_step_bytes": 9844329856.0,
+          "dflash_tok_s_tau_humaneval": 4749.1,
+          "dflash_tok_s_tau_math500": 5852.4
+        },
+        "power": {
+          "static_w": 68.7,
+          "system_w": 823.6,
+          "J_per_token": 0.9351
+        }
+      },
+      "iso_total_silicon_with_rom": {
+        "point": {
+          "ar_us": 418.3,
+          "ar_tok_s": 2390.7,
+          "ar_bytes": 6406964077.449211,
+          "dflash_step_us": 487.9,
+          "dflash_tok_s": 7493.3,
+          "dflash_step_bytes": 7456964077.449211,
+          "dflash_tok_s_tau_humaneval": 13322.6,
+          "dflash_tok_s_tau_math500": 16417.6
+        },
+        "point_without_sram": {
+          "ar_us": 533.4,
+          "ar_tok_s": 1874.6,
+          "ar_bytes": 8172000000.0,
+          "dflash_step_us": 643.6,
+          "dflash_tok_s": 5680.0,
+          "dflash_step_bytes": 9844329856.0,
+          "dflash_tok_s_tau_humaneval": 10098.8,
+          "dflash_tok_s_tau_math500": 12444.8
+        },
+        "power_ar": {
+          "static_w": 182.1,
+          "system_w": 1799.5,
+          "J_per_token": 0.7527
+        },
+        "power_dflash": {
+          "static_w": 182.1,
+          "system_w": 1794.5,
+          "J_per_token": 0.2395
+        },
+        "sram_mib": 1683,
+        "logic_mm2": 3260.0
+      },
+      "rom": {
+        "calibrated": {
+          "tok_s": 2793.0,
+          "J_per_token": 0.1482,
+          "system_w": 413.9
+        },
+        "near_hbm": {
+          "tok_s": 5237.0,
+          "J_per_token": 0.1148,
+          "system_w": 601.1
+        }
+      },
+      "gpus": [
+        {
+          "gpu": "1x B200, SGLang FA4, BF16, AR (DFlash paper Table 3, measured)",
+          "tok_s": 230.0,
+          "tier": 1
+        },
+        {
+          "gpu": "1x B200, SGLang FA4, DFlash b16 Math500 tau 8.01 (measured)",
+          "tok_s": 1175.0,
+          "tier": 1
+        },
+        {
+          "gpu": "1x B200, SGLang FA4, DFlash b16 HumanEval tau 6.50 (measured)",
+          "tok_s": 955.0,
+          "tier": 1
+        },
+        {
+          "gpu": "1x H200, NIM FP8, AR (published)",
+          "tok_s": 234.95,
+          "tier": 1
+        },
+        {
+          "gpu": "RTX PRO 6000 (this lab), vLLM FP8 AR / DFlash tau 3.72 (measured, shared GPU)",
+          "tok_s": 151.4,
+          "dflash_tok_s": 390.3,
+          "tier": 1
+        },
+        {
+          "gpu": "1x B200 FP8 8K (tier-2 calibrated)",
+          "tok_s": 331.0,
+          "dflash_tok_s_lab_mix": 853.3,
+          "tier": 2,
+          "power_w": 689.0,
+          "power_note": "measured decode draw 689 W (567-994); TDP 1,000-1,200 W"
+        },
+        {
+          "gpu": "1x H100 SXM FP8 8K (tier-2 MODELLED: B200 fit scaled to 3.35 TB/s; no measurement)",
+          "tok_s": 193.0,
+          "tier": 2,
+          "power_w": 700.0,
+          "power_note": "H100 SXM TDP 700 W (published)"
+        }
+      ]
+    },
+    "qwen27": {
+      "config": "results/uarch/hbm_accelerator_integration_20261004/qwen3.8-27b_hbm_inputs.json",
+      "source_revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+      "streamed_weight_bytes": 25624600064,
+      "kv_and_state_bytes_per_token_8k": 576323584,
+      "lm_head_bytes": 1271398400,
+      "hbm_accel_16_stacks": {
+        "ar_us": 1594.5,
+        "ar_tok_s": 627.2,
+        "ar_bytes": 24435887725.44921,
+        "dflash_step_us": 1664.1,
+        "dflash_tok_s": 2196.9,
+        "dflash_step_bytes": 25485887725.44921,
+        "dflash_tok_s_tau_humaneval": 3906.0,
+        "dflash_tok_s_tau_math500": 4813.4
+      },
+      "hbm_accel_24_stacks": {
+        "ar_us": 1063.1,
+        "ar_tok_s": 940.6,
+        "ar_bytes": 24435887725.44921,
+        "dflash_step_us": 1109.9,
+        "dflash_tok_s": 3294.0,
+        "dflash_step_bytes": 25485887725.44921,
+        "dflash_tok_s_tau_humaneval": 5856.6,
+        "dflash_tok_s_tau_math500": 7217.1
+      },
+      "b200_fp8_tier2_tok_s": 131.7,
+      "study_assumed": {
+        "assumed_config": "dense 27B, 64 layers, hidden 5120, 8 KV heads x 128, 8-bit weights, FP8 KV 8K",
+        "hbm_accel_16_stacks": {
+          "ar_us": 1716.7,
+          "ar_tok_s": 582.5,
+          "ar_bytes": 26308705901.44921,
+          "dflash_step_us": 1786.3,
+          "dflash_tok_s": 2046.7,
+          "dflash_step_bytes": 27358705901.44921,
+          "dflash_tok_s_tau_humaneval": 3638.8,
+          "dflash_tok_s_tau_math500": 4484.2
+        },
+        "hbm_accel_24_stacks": {
+          "ar_us": 1144.6,
+          "ar_tok_s": 873.7,
+          "ar_bytes": 26308705901.44921,
+          "dflash_step_us": 1191.3,
+          "dflash_tok_s": 3068.8,
+          "dflash_step_bytes": 27358705901.44921,
+          "dflash_tok_s_tau_humaneval": 5456.1,
+          "dflash_tok_s_tau_math500": 6723.6
+        },
+        "b200_fp8_tier2_tok_s": 125.8,
+        "rom_near_hbm_scaled_tok_s": 2945.8,
+        "rom_dies_scaled": 15,
+        "note": "ROM row = Qwen3-8B near-HBM chain x 64/36 layers (ASSUMED scaling; ROM silicon ~x3.6)"
+      },
+      "evidence": "MODEL; DFlash tau is the Qwen3-8B b16 tau (not measured on 27B)",
+      "delta_vs_study_ar_pct": {
+        "hbm_accel_16_stacks": 7.7,
+        "hbm_accel_24_stacks": 7.7
+      }
+    }
+  },
+  "ladder_reproduction": {
+    "ds": {
+      "leaves": 845,
+      "max_rel_dev": 0.0,
+      "at": "/topology_optimistic_firm_ar_tok_s",
+      "tolerance": 0.001,
+      "pass_": true
+    },
+    "qwen": {
+      "leaves": 92,
+      "max_rel_dev": 0.0,
+      "at": "/same_silicon_as_ablation/sram_mib",
+      "tolerance": 0.001,
+      "pass_": true
+    }
+  },
+  "measured_composition_record": "results/rtl/hbm_accel_composition_20261004/measured_composition.json",
+  "labeled_baselines": {
+    "gpu_faithful_R0": {
+      "row": "R0 GPU-faithful grid sync",
+      "grid_sync_us_per_boundary": 1.43,
+      "ablation_barrier_us_per_boundary": 0.065,
+      "ablation_barrier_cycles": 78,
+      "boundaries": 342.9230769230769,
+      "ar_us": 910.23,
+      "ar_tok_s": 1098.6,
+      "w19_ablation_ar_tok_s": 2261.7,
+      "label": "ablation barrier (62 cycles) is NOT GPU-real; R0 is the GPU-faithful row",
+      "source": "V100 cooperative-groups grid sync 1.43 us (IPDPS 2020), study GPU_GRID_SYNC_NS"
+    },
+    "legacy_service_rows": [
+      {
+        "profile": "off",
+        "authority": "legacy architecture DAG, not W19",
+        "token_us": 356.91512220088396,
+        "parts_us": {
+          "sm_matvec": 73.73150207950466,
+          "x_broadcast_fill": 7.6216268497920385,
+          "dedicated_and_su": 120.44141101024675,
+          "verify_extra_issue": 0.0,
+          "barrier": 24.820582261340554,
+          "collective_latency": 125.9,
+          "collective_bytes": 1.5,
+          "pipeline_hops": 0.9,
+          "control": 2.0
+        },
+        "boundaries": 329,
+        "evidence": "UNVALIDATED_SERVICE_MODEL"
+      },
+      {
+        "profile": "low",
+        "authority": "legacy architecture DAG, not W19",
+        "token_us": 363.09554738707214,
+        "parts_us": {
+          "sm_matvec": 73.73150207950466,
+          "x_broadcast_fill": 7.6216268497920385,
+          "dedicated_and_su": 120.44141101024675,
+          "verify_extra_issue": 0.0,
+          "barrier": 24.820582261340554,
+          "collective_latency": 125.9,
+          "collective_bytes": 1.5,
+          "pipeline_hops": 0.9,
+          "control": 2.0,
+          "boundary_service": 0.6364251861882193,
+          "routed_fetch": 5.5440000000000005
+        },
+        "boundaries": 329,
+        "evidence": "UNVALIDATED_SERVICE_MODEL"
+      },
+      {
+        "profile": "central",
+        "authority": "legacy architecture DAG, not W19",
+        "token_us": 377.2279725732604,
+        "parts_us": {
+          "sm_matvec": 73.73150207950466,
+          "x_broadcast_fill": 7.6216268497920385,
+          "dedicated_and_su": 120.44141101024675,
+          "verify_extra_issue": 0.0,
+          "barrier": 24.820582261340554,
+          "collective_latency": 125.9,
+          "collective_bytes": 1.5,
+          "pipeline_hops": 0.9,
+          "control": 2.0,
+          "boundary_service": 1.2728503723764386,
+          "routed_fetch": 19.04
+        },
+        "boundaries": 329,
+        "evidence": "UNVALIDATED_SERVICE_MODEL"
+      },
+      {
+        "profile": "high",
+        "authority": "legacy architecture DAG, not W19",
+        "token_us": 380.90839775944863,
+        "parts_us": {
+          "sm_matvec": 73.73150207950466,
+          "x_broadcast_fill": 7.6216268497920385,
+          "dedicated_and_su": 120.44141101024675,
+          "verify_extra_issue": 0.0,
+          "barrier": 24.820582261340554,
+          "collective_latency": 125.9,
+          "collective_bytes": 1.5,
+          "pipeline_hops": 0.9,
+          "control": 2.0,
+          "boundary_service": 1.9092755585646581,
+          "routed_fetch": 22.083999999999996
+        },
+        "boundaries": 329,
+        "evidence": "UNVALIDATED_SERVICE_MODEL"
+      }
+    ],
+    "w19_recorded": "custom 62-cycle hardware barrier; not GPU-faithful grid sync",
+    "gpu_grid": "1.43 us historical cooperative-grid synchronization assumption; not measured B200",
+    "corrected_B200": {
+      "tier": 2,
+      "design": "DeepSeek-V4.1-Flash on 8x B200, calibrated",
+      "tokens_s": 282.4,
+      "spec_tokens_s": 547.8,
+      "terms_us": {
+        "fixed": 1627,
+        "bytes": 315,
+        "collectives": 1600
+      },
+      "index_scan": {
+        "context": 1048576,
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "per_layer": [
+          {
+            "layer": 2,
+            "KV_source_layer": 2,
+            "compression_ratio": 2,
+            "full_source_entries": 524288,
+            "candidate_cap": 0,
+            "entries": 524288,
+            "bytes": 35651584
+          },
+          {
+            "layer": 8,
+            "KV_source_layer": 8,
+            "compression_ratio": 2,
+            "full_source_entries": 524288,
+            "candidate_cap": 0,
+            "entries": 524288,
+            "bytes": 35651584
+          },
+          {
+            "layer": 14,
+            "KV_source_layer": 14,
+            "compression_ratio": 2,
+            "full_source_entries": 524288,
+            "candidate_cap": 0,
+            "entries": 524288,
+            "bytes": 35651584
+          },
+          {
+            "layer": 20,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 0,
+            "entries": 1048576,
+            "bytes": 71303168
+          },
+          {
+            "layer": 24,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 16384,
+            "entries": 16384,
+            "bytes": 1114112
+          },
+          {
+            "layer": 28,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 16384,
+            "entries": 16384,
+            "bytes": 1114112
+          },
+          {
+            "layer": 32,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 16384,
+            "entries": 16384,
+            "bytes": 1114112
+          },
+          {
+            "layer": 36,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 16384,
+            "entries": 16384,
+            "bytes": 1114112
+          }
+        ],
+        "entries": 2686976,
+        "bytes": 182714368,
+        "key_bytes": 68,
+        "candidate_gather": true,
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "check": "DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)"
+    },
+    "full_score_AR_tok_s": 281.84379348323137,
+    "B200_MTP": "existing 1.94x sensitivity; not DSpark workload-matched tau",
+    "H100": {
+      "gpu": "1x H100 SXM FP8 8K (tier-2 MODELLED: B200 fit scaled to 3.35 TB/s; no measurement)",
+      "tok_s": 193.0,
+      "tier": 2,
+      "power_w": 700.0,
+      "power_note": "H100 SXM TDP 700 W (published)"
+    }
+  },
+  "fairness": {
+    "DRAM_core_and_base_mm2_per_stack": {
+      "central": 1000.0,
+      "low": 900.0,
+      "high": 1450.0,
+      "basis": "ASSUMED: 8-Hi 24 GB HBM3E = 8 core dies of ~110 mm2 + ~110 mm2 base die (12-Hi ~1,450)"
+    },
+    "DRAM_mm2_per_stack_sourced": {
+      "bound_8hi": 1089.0,
+      "bound_12hi": 1573.0,
+      "source": "Micron HBM3E product brief: 11 mm x 11 mm x 0.72 mm cube (assets.micron.com hbm3e-product-brief.pdf)",
+      "rule": "core and base dies each <= cube footprint; bound, not a measured die area"
+    },
+    "ds_sourced_bound_8hi": {
+      "ds_0": {
+        "logic_mm2": 32688,
+        "stacks": 384,
+        "dram_core_and_base_mm2": 418176.0,
+        "total_silicon_mm2": 450864.0
+      },
+      "ds_1": {
+        "logic_mm2": 32688,
+        "stacks": 384,
+        "dram_core_and_base_mm2": 418176.0,
+        "total_silicon_mm2": 450864.0
+      },
+      "ds_2": {
+        "logic_mm2": 32688,
+        "stacks": 192,
+        "dram_core_and_base_mm2": 209088.0,
+        "total_silicon_mm2": 241776.0
+      },
+      "ds_3": {
+        "logic_mm2": 32688,
+        "stacks": 384,
+        "dram_core_and_base_mm2": 418176.0,
+        "total_silicon_mm2": 450864.0
+      },
+      "ds_4": {
+        "logic_mm2": 169520,
+        "stacks": 464,
+        "dram_core_and_base_mm2": 505296.0,
+        "total_silicon_mm2": 674816.0
+      },
+      "ds_5": {
+        "logic_mm2": 12800,
+        "stacks": 64,
+        "dram_core_and_base_mm2": 69696.0,
+        "total_silicon_mm2": 82496.0
+      },
+      "ds_6": {
+        "logic_mm2": 12800,
+        "stacks": 64,
+        "dram_core_and_base_mm2": 69696.0,
+        "total_silicon_mm2": 82496.0
+      }
+    },
+    "ds_system_counts": [
+      {
+        "id": "ds_0",
+        "model": "DeepSeek-V4.1",
+        "study_point": {
+          "design": "DS HBM ablation (GPU-organised, W19 composed, 96 dies TP-96, 4 stacks/die)",
+          "ar": 2261.7,
+          "mtp_tau3649": 4847.7,
+          "mtp_tau4": 5314.1,
+          "logic_mm2": 32688,
+          "stacks": 384,
+          "dram_mm2": 384000,
+          "total_mm2": 416688,
+          "J_per_token": 3.835,
+          "system_w": 8673
+        },
+        "area_sensitivities": {
+          "low": {
+            "logic_mm2": 32688,
+            "stacks": 384,
+            "dram_core_and_base_mm2": 345600.0,
+            "total_silicon_mm2": 378288.0
+          },
+          "central": {
+            "logic_mm2": 32688,
+            "stacks": 384,
+            "dram_core_and_base_mm2": 384000.0,
+            "total_silicon_mm2": 416688.0
+          },
+          "high": {
+            "logic_mm2": 32688,
+            "stacks": 384,
+            "dram_core_and_base_mm2": 556800.0,
+            "total_silicon_mm2": 589488.0
+          }
+        },
+        "evidence": "UNVALIDATED_MODEL_HYPOTHESIS",
+        "adopted": false
+      },
+      {
+        "id": "ds_1",
+        "model": "DeepSeek-V4.1",
+        "study_point": {
+          "design": "DS HBM accelerator, firm rungs (R1b-R6a), 4 stacks/die",
+          "ar": 3015.2,
+          "mtp_tau3649": 6001.1,
+          "mtp_tau4": 6579.0,
+          "logic_mm2": 32688,
+          "stacks": 384,
+          "dram_mm2": 384000,
+          "total_mm2": 416688,
+          "J_per_token": 3.242,
+          "system_w": 9774
+        },
+        "area_sensitivities": {
+          "low": {
+            "logic_mm2": 32688,
+            "stacks": 384,
+            "dram_core_and_base_mm2": 345600.0,
+            "total_silicon_mm2": 378288.0
+          },
+          "central": {
+            "logic_mm2": 32688,
+            "stacks": 384,
+            "dram_core_and_base_mm2": 384000.0,
+            "total_silicon_mm2": 416688.0
+          },
+          "high": {
+            "logic_mm2": 32688,
+            "stacks": 384,
+            "dram_core_and_base_mm2": 556800.0,
+            "total_silicon_mm2": 589488.0
+          }
+        },
+        "evidence": "UNVALIDATED_MODEL_HYPOTHESIS",
+        "adopted": false
+      },
+      {
+        "id": "ds_2",
+        "model": "DeepSeek-V4.1",
+        "study_point": {
+          "design": "DS HBM accelerator, firm rungs, 2 stacks/die (R8b)",
+          "ar": 3015.2,
+          "mtp_tau3649": null,
+          "mtp_note": "verify union stream doubles at half bandwidth; ~-4% MTP (ASSUMED, see md)",
+          "logic_mm2": 32688,
+          "stacks": 192,
+          "dram_mm2": 192000,
+          "total_mm2": 224688,
+          "J_per_token": 3.063,
+          "system_w": 9236
+        },
+        "area_sensitivities": {
+          "low": {
+            "logic_mm2": 32688,
+            "stacks": 192,
+            "dram_core_and_base_mm2": 172800.0,
+            "total_silicon_mm2": 205488.0
+          },
+          "central": {
+            "logic_mm2": 32688,
+            "stacks": 192,
+            "dram_core_and_base_mm2": 192000.0,
+            "total_silicon_mm2": 224688.0
+          },
+          "high": {
+            "logic_mm2": 32688,
+            "stacks": 192,
+            "dram_core_and_base_mm2": 278400.0,
+            "total_silicon_mm2": 311088.0
+          }
+        },
+        "evidence": "UNVALIDATED_MODEL_HYPOTHESIS",
+        "adopted": false
+      },
+      {
+        "id": "ds_3",
+        "model": "DeepSeek-V4.1",
+        "study_point": {
+          "design": "DS HBM accelerator incl. conditional R7a (serial chain 1.091 GHz)",
+          "ar": 3144.0,
+          "mtp_tau3649": 6292.6,
+          "mtp_tau4": 6898.6,
+          "logic_mm2": 32688,
+          "stacks": 384,
+          "dram_mm2": 384000,
+          "total_mm2": 416688,
+          "J_per_token": 3.169,
+          "system_w": 9962
+        },
+        "area_sensitivities": {
+          "low": {
+            "logic_mm2": 32688,
+            "stacks": 384,
+            "dram_core_and_base_mm2": 345600.0,
+            "total_silicon_mm2": 378288.0
+          },
+          "central": {
+            "logic_mm2": 32688,
+            "stacks": 384,
+            "dram_core_and_base_mm2": 384000.0,
+            "total_silicon_mm2": 416688.0
+          },
+          "high": {
+            "logic_mm2": 32688,
+            "stacks": 384,
+            "dram_core_and_base_mm2": 556800.0,
+            "total_silicon_mm2": 589488.0
+          }
+        },
+        "evidence": "UNVALIDATED_MODEL_HYPOTHESIS",
+        "adopted": false
+      },
+      {
+        "id": "ds_4",
+        "model": "DeepSeek-V4.1",
+        "study_point": {
+          "design": "DS ROM array (product basis, consolidation.json headline_table)",
+          "ar": 2786.8,
+          "mtp_tau3649": 4588.9,
+          "logic_mm2": 169520,
+          "stacks": 464,
+          "dram_mm2": 464000,
+          "total_mm2": 633520,
+          "J_per_token": 0.6795,
+          "system_w": 1894,
+          "note": "stacks from the 188-die economics record; J/token = consolidation mJ_b1 (gated product basis)"
+        },
+        "area_sensitivities": {
+          "low": {
+            "logic_mm2": 169520,
+            "stacks": 464,
+            "dram_core_and_base_mm2": 417600.0,
+            "total_silicon_mm2": 587120.0
+          },
+          "central": {
+            "logic_mm2": 169520,
+            "stacks": 464,
+            "dram_core_and_base_mm2": 464000.0,
+            "total_silicon_mm2": 633520.0
+          },
+          "high": {
+            "logic_mm2": 169520,
+            "stacks": 464,
+            "dram_core_and_base_mm2": 672800.0,
+            "total_silicon_mm2": 842320.0
+          }
+        },
+        "evidence": "UNVALIDATED_MODEL_HYPOTHESIS",
+        "adopted": false
+      },
+      {
+        "id": "ds_5",
+        "model": "DeepSeek-V4.1",
+        "study_point": {
+          "design": "8x B200, V4.1-Flash 1M (tier-2 calibrated, 38->8 scan fix 32d865831)",
+          "ar": 282.4,
+          "mtp_tau3649": 547.8,
+          "logic_mm2": 12800,
+          "stacks": 64,
+          "dram_mm2": 64000,
+          "total_mm2": 76800,
+          "system_w": 5512,
+          "J_per_token": 19.52
+        },
+        "area_sensitivities": {
+          "low": {
+            "logic_mm2": 12800,
+            "stacks": 64,
+            "dram_core_and_base_mm2": 57600.0,
+            "total_silicon_mm2": 70400.0
+          },
+          "central": {
+            "logic_mm2": 12800,
+            "stacks": 64,
+            "dram_core_and_base_mm2": 64000.0,
+            "total_silicon_mm2": 76800.0
+          },
+          "high": {
+            "logic_mm2": 12800,
+            "stacks": 64,
+            "dram_core_and_base_mm2": 92800.0,
+            "total_silicon_mm2": 105600.0
+          }
+        },
+        "evidence": "UNVALIDATED_MODEL_HYPOTHESIS",
+        "adopted": false
+      },
+      {
+        "id": "ds_6",
+        "model": "DeepSeek-V4.1",
+        "study_point": {
+          "design": "8x B200, DeepSeek-R1 TRT-LLM min-latency, MTP-3, ~3K ctx (published)",
+          "ar": null,
+          "mtp_tau3649": 368.0,
+          "logic_mm2": 12800,
+          "stacks": 64,
+          "dram_mm2": 64000,
+          "total_mm2": 76800,
+          "note": "R1 is 37B active vs V4.1-Flash 13B: anchor, not like-for-like"
+        },
+        "area_sensitivities": {
+          "low": {
+            "logic_mm2": 12800,
+            "stacks": 64,
+            "dram_core_and_base_mm2": 57600.0,
+            "total_silicon_mm2": 70400.0
+          },
+          "central": {
+            "logic_mm2": 12800,
+            "stacks": 64,
+            "dram_core_and_base_mm2": 64000.0,
+            "total_silicon_mm2": 76800.0
+          },
+          "high": {
+            "logic_mm2": 12800,
+            "stacks": 64,
+            "dram_core_and_base_mm2": 92800.0,
+            "total_silicon_mm2": 105600.0
+          }
+        },
+        "evidence": "UNVALIDATED_MODEL_HYPOTHESIS",
+        "adopted": false
+      }
+    ],
+    "qwen_area": {
+      "same_silicon_as_ablation": {
+        "dies": 2,
+        "area_sensitivities": {
+          "low": {
+            "logic_mm2": 1630.0,
+            "stacks": 8,
+            "dram_core_and_base_mm2": 7200.0,
+            "total_silicon_mm2": 8830.0
+          },
+          "central": {
+            "logic_mm2": 1630.0,
+            "stacks": 8,
+            "dram_core_and_base_mm2": 8000.0,
+            "total_silicon_mm2": 9630.0
+          },
+          "high": {
+            "logic_mm2": 1630.0,
+            "stacks": 8,
+            "dram_core_and_base_mm2": 11600.0,
+            "total_silicon_mm2": 13230.0
+          }
+        },
+        "ar_power_model": {
+          "static_w": 91.0,
+          "system_w": 897.0,
+          "J_per_token": 0.8534
+        },
+        "dflash_power_model": {
+          "static_w": 91.0,
+          "system_w": 895.9,
+          "J_per_token": 0.267
+        },
+        "sram_mib": 842,
+        "sram_macro_fit_and_routes_qualified": false
+      },
+      "iso_total_silicon_with_rom": {
+        "dies": 4,
+        "area_sensitivities": {
+          "low": {
+            "logic_mm2": 3260.0,
+            "stacks": 16,
+            "dram_core_and_base_mm2": 14400.0,
+            "total_silicon_mm2": 17660.0
+          },
+          "central": {
+            "logic_mm2": 3260.0,
+            "stacks": 16,
+            "dram_core_and_base_mm2": 16000.0,
+            "total_silicon_mm2": 19260.0
+          },
+          "high": {
+            "logic_mm2": 3260.0,
+            "stacks": 16,
+            "dram_core_and_base_mm2": 23200.0,
+            "total_silicon_mm2": 26460.0
+          }
+        },
+        "ar_power_model": {
+          "static_w": 182.1,
+          "system_w": 1799.5,
+          "J_per_token": 0.7527
+        },
+        "dflash_power_model": {
+          "static_w": 182.1,
+          "system_w": 1794.5,
+          "J_per_token": 0.2395
+        },
+        "sram_mib": 1683,
+        "sram_macro_fit_and_routes_qualified": false
+      }
+    },
+    "qwen_ROM_option_C_area": {
+      "low": {
+        "logic_mm2": 3260.0,
+        "stacks": 16,
+        "dram_core_and_base_mm2": 14400.0,
+        "total_silicon_mm2": 17660.0
+      },
+      "central": {
+        "logic_mm2": 3260.0,
+        "stacks": 16,
+        "dram_core_and_base_mm2": 16000.0,
+        "total_silicon_mm2": 19260.0
+      },
+      "high": {
+        "logic_mm2": 3260.0,
+        "stacks": 16,
+        "dram_core_and_base_mm2": 23200.0,
+        "total_silicon_mm2": 26460.0
+      }
+    },
+    "iso_power_average_bounds": [
+      {
+        "model": "DeepSeek-V4.1",
+        "stacks": 384,
+        "mode": "AR",
+        "power_basis": "eight_B200_measured_decode_draw",
+        "budget_w": 5512.0,
+        "static_w": 5367.717140558499,
+        "dynamic_J_per_token": 1.461381968734385,
+        "average_rate_upper_bound_tok_s": 98.7304226604466,
+        "source_unrestricted_rate_hypothesis_tok_s": 3015.2,
+        "minimum_mean_intertoken_us": 10128.590287101244,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate",
+        "source": "study transferred dynamic energy and gated-static constants",
+        "actual_routing_and_capacity_qualified": false
+      },
+      {
+        "model": "DeepSeek-V4.1",
+        "stacks": 384,
+        "mode": "AR",
+        "power_basis": "eight_B200_1200W_TDP_sensitivity",
+        "budget_w": 9600.0,
+        "static_w": 5367.717140558499,
+        "dynamic_J_per_token": 1.461381968734385,
+        "average_rate_upper_bound_tok_s": 2896.0825779907677,
+        "source_unrestricted_rate_hypothesis_tok_s": 3015.2,
+        "minimum_mean_intertoken_us": 345.2940215170853,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate",
+        "source": "study transferred dynamic energy and gated-static constants",
+        "actual_routing_and_capacity_qualified": false
+      },
+      {
+        "model": "DeepSeek-V4.1",
+        "stacks": 192,
+        "mode": "AR",
+        "power_basis": "eight_B200_measured_decode_draw",
+        "budget_w": 5512.0,
+        "static_w": 4830.117140558499,
+        "dynamic_J_per_token": 1.461381968734385,
+        "average_rate_upper_bound_tok_s": 466.6013910326529,
+        "source_unrestricted_rate_hypothesis_tok_s": 3015.2,
+        "minimum_mean_intertoken_us": 2143.156919843001,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate",
+        "source": "study transferred dynamic energy and gated-static constants",
+        "actual_routing_and_capacity_qualified": false
+      },
+      {
+        "model": "DeepSeek-V4.1",
+        "stacks": 192,
+        "mode": "AR",
+        "power_basis": "eight_B200_1200W_TDP_sensitivity",
+        "budget_w": 9600.0,
+        "static_w": 4830.117140558499,
+        "dynamic_J_per_token": 1.461381968734385,
+        "average_rate_upper_bound_tok_s": 3015.2,
+        "source_unrestricted_rate_hypothesis_tok_s": 3015.2,
+        "minimum_mean_intertoken_us": 331.6529583443885,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate",
+        "source": "study transferred dynamic energy and gated-static constants",
+        "actual_routing_and_capacity_qualified": false
+      },
+      {
+        "model": "Qwen3-8B",
+        "geometry": "same_silicon_as_ablation",
+        "mode": "AR",
+        "power_basis": "one_B200_measured_decode_draw",
+        "budget_w": 689.0,
+        "static_w": 91.0,
+        "dynamic_J_per_token": 0.7668157944814463,
+        "average_rate_upper_bound_tok_s": 779.8483081642746,
+        "source_unrestricted_rate_hypothesis_tok_s": 1051.0,
+        "minimum_mean_intertoken_us": 1282.3006596679704,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate"
+      },
+      {
+        "model": "Qwen3-8B",
+        "geometry": "same_silicon_as_ablation",
+        "mode": "AR",
+        "power_basis": "one_B200_1200W_TDP_sensitivity",
+        "budget_w": 1200.0,
+        "static_w": 91.0,
+        "dynamic_J_per_token": 0.7668157944814463,
+        "average_rate_upper_bound_tok_s": 1051.0,
+        "source_unrestricted_rate_hypothesis_tok_s": 1051.0,
+        "minimum_mean_intertoken_us": 951.4747859181732,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate"
+      },
+      {
+        "model": "Qwen3-8B",
+        "geometry": "same_silicon_as_ablation",
+        "mode": "DFlash_lab_tau",
+        "power_basis": "one_B200_measured_decode_draw",
+        "budget_w": 689.0,
+        "static_w": 91.0,
+        "dynamic_J_per_token": 0.2398803457010878,
+        "average_rate_upper_bound_tok_s": 2492.9095305922274,
+        "source_unrestricted_rate_hypothesis_tok_s": 3355.5,
+        "minimum_mean_intertoken_us": 401.13770184128396,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate"
+      },
+      {
+        "model": "Qwen3-8B",
+        "geometry": "same_silicon_as_ablation",
+        "mode": "DFlash_lab_tau",
+        "power_basis": "one_B200_1200W_TDP_sensitivity",
+        "budget_w": 1200.0,
+        "static_w": 91.0,
+        "dynamic_J_per_token": 0.2398803457010878,
+        "average_rate_upper_bound_tok_s": 3355.5,
+        "source_unrestricted_rate_hypothesis_tok_s": 3355.5,
+        "minimum_mean_intertoken_us": 298.01817910892566,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate"
+      },
+      {
+        "model": "Qwen3-8B",
+        "geometry": "iso_total_silicon_with_rom",
+        "mode": "AR",
+        "power_basis": "one_B200_measured_decode_draw",
+        "budget_w": 689.0,
+        "static_w": 182.1,
+        "dynamic_J_per_token": 0.6765298406324508,
+        "average_rate_upper_bound_tok_s": 749.2648063034837,
+        "source_unrestricted_rate_hypothesis_tok_s": 2390.7,
+        "minimum_mean_intertoken_us": 1334.6416268148566,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate"
+      },
+      {
+        "model": "Qwen3-8B",
+        "geometry": "iso_total_silicon_with_rom",
+        "mode": "AR",
+        "power_basis": "one_B200_1200W_TDP_sensitivity",
+        "budget_w": 1200.0,
+        "static_w": 182.1,
+        "dynamic_J_per_token": 0.6765298406324508,
+        "average_rate_upper_bound_tok_s": 1504.5899513440838,
+        "source_unrestricted_rate_hypothesis_tok_s": 2390.7,
+        "minimum_mean_intertoken_us": 664.6329115163089,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate"
+      },
+      {
+        "model": "Qwen3-8B",
+        "geometry": "iso_total_silicon_with_rom",
+        "mode": "DFlash_lab_tau",
+        "power_basis": "one_B200_measured_decode_draw",
+        "budget_w": 689.0,
+        "static_w": 182.1,
+        "dynamic_J_per_token": 0.21519829047282238,
+        "average_rate_upper_bound_tok_s": 2355.5019832465487,
+        "source_unrestricted_rate_hypothesis_tok_s": 7493.3,
+        "minimum_mean_intertoken_us": 424.5379571371521,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate"
+      },
+      {
+        "model": "Qwen3-8B",
+        "geometry": "iso_total_silicon_with_rom",
+        "mode": "DFlash_lab_tau",
+        "power_basis": "one_B200_1200W_TDP_sensitivity",
+        "budget_w": 1200.0,
+        "static_w": 182.1,
+        "dynamic_J_per_token": 0.21519829047282238,
+        "average_rate_upper_bound_tok_s": 4730.056162451493,
+        "source_unrestricted_rate_hypothesis_tok_s": 7493.3,
+        "minimum_mean_intertoken_us": 211.41398022676333,
+        "static_floor_exceeds_budget": false,
+        "instantaneous_power_and_throttling_schedule_qualified": false,
+        "scope": "necessary average-power envelope only; no measured iso-power rate"
+      }
+    ],
+    "iso_total_silicon_budget_ablation": [
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 7,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 2383.5,
+          "stacks": 28,
+          "dram_core_and_base_mm2": 25200.0,
+          "total_silicon_mm2": 27583.5
+        },
+        "unused_silicon_budget_mm2": 42816.5,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1370.5,
+            "aggregate_tokens_s": 1370.5,
+            "ungated_mJ": 1816.25,
+            "gated_mJ": 1747.01,
+            "gated_system_w": 2394.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 595.0,
+            "aggregate_tokens_s": 4760.3,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 3160.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 8,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 2724.0,
+          "stacks": 32,
+          "dram_core_and_base_mm2": 28800.0,
+          "total_silicon_mm2": 31524.0
+        },
+        "unused_silicon_budget_mm2": 38876.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1490.2,
+            "aggregate_tokens_s": 1490.2,
+            "ungated_mJ": 1834.36,
+            "gated_mJ": 1761.59,
+            "gated_system_w": 2625.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 680.0,
+            "aggregate_tokens_s": 5440.3,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 3611.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 10,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 3405.0,
+          "stacks": 40,
+          "dram_core_and_base_mm2": 36000.0,
+          "total_silicon_mm2": 39405.0
+        },
+        "unused_silicon_budget_mm2": 30995.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1679.6,
+            "aggregate_tokens_s": 1679.6,
+            "ungated_mJ": 1875.02,
+            "gated_mJ": 1794.31,
+            "gated_system_w": 3014.0
+          },
+          "saturated": {
+            "batch": 320,
+            "per_user_tokens_s": 21.3,
+            "aggregate_tokens_s": 6800.4,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 4514.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 12,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 4086.0,
+          "stacks": 48,
+          "dram_core_and_base_mm2": 43200.0,
+          "total_silicon_mm2": 47286.0
+        },
+        "unused_silicon_budget_mm2": 23114.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1833.2,
+            "aggregate_tokens_s": 1833.2,
+            "ungated_mJ": 1916.17,
+            "gated_mJ": 1827.43,
+            "gated_system_w": 3350.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 1020.1,
+            "aggregate_tokens_s": 8160.5,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 5416.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 16,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 5448.0,
+          "stacks": 64,
+          "dram_core_and_base_mm2": 57600.0,
+          "total_silicon_mm2": 63048.0
+        },
+        "unused_silicon_budget_mm2": 7352.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2091.9,
+            "aggregate_tokens_s": 2091.9,
+            "ungated_mJ": 1992.76,
+            "gated_mJ": 1889.08,
+            "gated_system_w": 3952.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 680.0,
+            "aggregate_tokens_s": 10880.7,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 7222.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 17,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 5788.5,
+          "stacks": 68,
+          "dram_core_and_base_mm2": 61200.0,
+          "total_silicon_mm2": 66988.5
+        },
+        "unused_silicon_budget_mm2": 3411.5,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2117.2,
+            "aggregate_tokens_s": 2117.2,
+            "ungated_mJ": 2019.23,
+            "gated_mJ": 1910.38,
+            "gated_system_w": 4045.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 722.5,
+            "aggregate_tokens_s": 11560.7,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 7673.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 5,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 2131.0,
+          "stacks": 30,
+          "dram_core_and_base_mm2": 27000.0,
+          "total_silicon_mm2": 29131.0
+        },
+        "unused_silicon_budget_mm2": 41269.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1420.0,
+            "aggregate_tokens_s": 1420.0,
+            "ungated_mJ": 1750.04,
+            "gated_mJ": 1693.72,
+            "gated_system_w": 2405.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 637.5,
+            "aggregate_tokens_s": 5100.3,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 3331.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 6,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 2557.2,
+          "stacks": 36,
+          "dram_core_and_base_mm2": 32400.0,
+          "total_silicon_mm2": 34957.2
+        },
+        "unused_silicon_budget_mm2": 35442.8,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1578.2,
+            "aggregate_tokens_s": 1578.2,
+            "ungated_mJ": 1773.04,
+            "gated_mJ": 1712.23,
+            "gated_system_w": 2702.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 765.0,
+            "aggregate_tokens_s": 6120.4,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 3998.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 8,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 3409.6,
+          "stacks": 48,
+          "dram_core_and_base_mm2": 43200.0,
+          "total_silicon_mm2": 46609.6
+        },
+        "unused_silicon_budget_mm2": 23790.4,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1829.5,
+            "aggregate_tokens_s": 1829.5,
+            "ungated_mJ": 1819.84,
+            "gated_mJ": 1749.9,
+            "gated_system_w": 3201.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 1020.1,
+            "aggregate_tokens_s": 8160.5,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 5330.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 10,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 4262.0,
+          "stacks": 60,
+          "dram_core_and_base_mm2": 54000.0,
+          "total_silicon_mm2": 58262.0
+        },
+        "unused_silicon_budget_mm2": 12138.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2019.5,
+            "aggregate_tokens_s": 2019.5,
+            "ungated_mJ": 1867.3,
+            "gated_mJ": 1788.1,
+            "gated_system_w": 3611.0
+          },
+          "saturated": {
+            "batch": 752,
+            "per_user_tokens_s": 13.6,
+            "aggregate_tokens_s": 10200.6,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 6663.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 11,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 4688.2,
+          "stacks": 66,
+          "dram_core_and_base_mm2": 59400.0,
+          "total_silicon_mm2": 64088.2
+        },
+        "unused_silicon_budget_mm2": 6311.800000000003,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2108.2,
+            "aggregate_tokens_s": 2108.2,
+            "ungated_mJ": 1889.08,
+            "gated_mJ": 1805.63,
+            "gated_system_w": 3807.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 701.3,
+            "aggregate_tokens_s": 11220.7,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 7329.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "low",
+        "budget_total_silicon_mm2": 70400.0,
+        "dies": 12,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 5114.4,
+          "stacks": 72,
+          "dram_core_and_base_mm2": 64800.0,
+          "total_silicon_mm2": 69914.4
+        },
+        "unused_silicon_budget_mm2": 485.6000000000058,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2175.0,
+            "aggregate_tokens_s": 2175.0,
+            "ungated_mJ": 1913.64,
+            "gated_mJ": 1825.4,
+            "gated_system_w": 3970.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 765.0,
+            "aggregate_tokens_s": 12240.8,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 7995.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 7,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 2383.5,
+          "stacks": 28,
+          "dram_core_and_base_mm2": 28000.0,
+          "total_silicon_mm2": 30383.5
+        },
+        "unused_silicon_budget_mm2": 46416.5,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1370.5,
+            "aggregate_tokens_s": 1370.5,
+            "ungated_mJ": 1816.25,
+            "gated_mJ": 1747.01,
+            "gated_system_w": 2394.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 595.0,
+            "aggregate_tokens_s": 4760.3,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 3160.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 8,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 2724.0,
+          "stacks": 32,
+          "dram_core_and_base_mm2": 32000.0,
+          "total_silicon_mm2": 34724.0
+        },
+        "unused_silicon_budget_mm2": 42076.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1490.2,
+            "aggregate_tokens_s": 1490.2,
+            "ungated_mJ": 1834.36,
+            "gated_mJ": 1761.59,
+            "gated_system_w": 2625.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 680.0,
+            "aggregate_tokens_s": 5440.3,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 3611.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 10,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 3405.0,
+          "stacks": 40,
+          "dram_core_and_base_mm2": 40000.0,
+          "total_silicon_mm2": 43405.0
+        },
+        "unused_silicon_budget_mm2": 33395.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1679.6,
+            "aggregate_tokens_s": 1679.6,
+            "ungated_mJ": 1875.02,
+            "gated_mJ": 1794.31,
+            "gated_system_w": 3014.0
+          },
+          "saturated": {
+            "batch": 320,
+            "per_user_tokens_s": 21.3,
+            "aggregate_tokens_s": 6800.4,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 4514.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 12,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 4086.0,
+          "stacks": 48,
+          "dram_core_and_base_mm2": 48000.0,
+          "total_silicon_mm2": 52086.0
+        },
+        "unused_silicon_budget_mm2": 24714.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1833.2,
+            "aggregate_tokens_s": 1833.2,
+            "ungated_mJ": 1916.17,
+            "gated_mJ": 1827.43,
+            "gated_system_w": 3350.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 1020.1,
+            "aggregate_tokens_s": 8160.5,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 5416.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 16,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 5448.0,
+          "stacks": 64,
+          "dram_core_and_base_mm2": 64000.0,
+          "total_silicon_mm2": 69448.0
+        },
+        "unused_silicon_budget_mm2": 7352.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2091.9,
+            "aggregate_tokens_s": 2091.9,
+            "ungated_mJ": 1992.76,
+            "gated_mJ": 1889.08,
+            "gated_system_w": 3952.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 680.0,
+            "aggregate_tokens_s": 10880.7,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 7222.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 17,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 5788.5,
+          "stacks": 68,
+          "dram_core_and_base_mm2": 68000.0,
+          "total_silicon_mm2": 73788.5
+        },
+        "unused_silicon_budget_mm2": 3011.5,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2117.2,
+            "aggregate_tokens_s": 2117.2,
+            "ungated_mJ": 2019.23,
+            "gated_mJ": 1910.38,
+            "gated_system_w": 4045.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 722.5,
+            "aggregate_tokens_s": 11560.7,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 7673.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 5,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 2131.0,
+          "stacks": 30,
+          "dram_core_and_base_mm2": 30000.0,
+          "total_silicon_mm2": 32131.0
+        },
+        "unused_silicon_budget_mm2": 44669.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1420.0,
+            "aggregate_tokens_s": 1420.0,
+            "ungated_mJ": 1750.04,
+            "gated_mJ": 1693.72,
+            "gated_system_w": 2405.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 637.5,
+            "aggregate_tokens_s": 5100.3,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 3331.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 6,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 2557.2,
+          "stacks": 36,
+          "dram_core_and_base_mm2": 36000.0,
+          "total_silicon_mm2": 38557.2
+        },
+        "unused_silicon_budget_mm2": 38242.8,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1578.2,
+            "aggregate_tokens_s": 1578.2,
+            "ungated_mJ": 1773.04,
+            "gated_mJ": 1712.23,
+            "gated_system_w": 2702.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 765.0,
+            "aggregate_tokens_s": 6120.4,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 3998.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 8,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 3409.6,
+          "stacks": 48,
+          "dram_core_and_base_mm2": 48000.0,
+          "total_silicon_mm2": 51409.6
+        },
+        "unused_silicon_budget_mm2": 25390.4,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1829.5,
+            "aggregate_tokens_s": 1829.5,
+            "ungated_mJ": 1819.84,
+            "gated_mJ": 1749.9,
+            "gated_system_w": 3201.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 1020.1,
+            "aggregate_tokens_s": 8160.5,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 5330.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 10,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 4262.0,
+          "stacks": 60,
+          "dram_core_and_base_mm2": 60000.0,
+          "total_silicon_mm2": 64262.0
+        },
+        "unused_silicon_budget_mm2": 12538.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2019.5,
+            "aggregate_tokens_s": 2019.5,
+            "ungated_mJ": 1867.3,
+            "gated_mJ": 1788.1,
+            "gated_system_w": 3611.0
+          },
+          "saturated": {
+            "batch": 752,
+            "per_user_tokens_s": 13.6,
+            "aggregate_tokens_s": 10200.6,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 6663.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "central",
+        "budget_total_silicon_mm2": 76800.0,
+        "dies": 11,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 4688.2,
+          "stacks": 66,
+          "dram_core_and_base_mm2": 66000.0,
+          "total_silicon_mm2": 70688.2
+        },
+        "unused_silicon_budget_mm2": 6111.800000000003,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2108.2,
+            "aggregate_tokens_s": 2108.2,
+            "ungated_mJ": 1889.08,
+            "gated_mJ": 1805.63,
+            "gated_system_w": 3807.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 701.3,
+            "aggregate_tokens_s": 11220.7,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 7329.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 7,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 2383.5,
+          "stacks": 28,
+          "dram_core_and_base_mm2": 40600.0,
+          "total_silicon_mm2": 42983.5
+        },
+        "unused_silicon_budget_mm2": 62616.5,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1370.5,
+            "aggregate_tokens_s": 1370.5,
+            "ungated_mJ": 1816.25,
+            "gated_mJ": 1747.01,
+            "gated_system_w": 2394.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 595.0,
+            "aggregate_tokens_s": 4760.3,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 3160.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 8,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 2724.0,
+          "stacks": 32,
+          "dram_core_and_base_mm2": 46400.0,
+          "total_silicon_mm2": 49124.0
+        },
+        "unused_silicon_budget_mm2": 56476.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1490.2,
+            "aggregate_tokens_s": 1490.2,
+            "ungated_mJ": 1834.36,
+            "gated_mJ": 1761.59,
+            "gated_system_w": 2625.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 680.0,
+            "aggregate_tokens_s": 5440.3,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 3611.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 10,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 3405.0,
+          "stacks": 40,
+          "dram_core_and_base_mm2": 58000.0,
+          "total_silicon_mm2": 61405.0
+        },
+        "unused_silicon_budget_mm2": 44195.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1679.6,
+            "aggregate_tokens_s": 1679.6,
+            "ungated_mJ": 1875.02,
+            "gated_mJ": 1794.31,
+            "gated_system_w": 3014.0
+          },
+          "saturated": {
+            "batch": 320,
+            "per_user_tokens_s": 21.3,
+            "aggregate_tokens_s": 6800.4,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 4514.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 12,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 4086.0,
+          "stacks": 48,
+          "dram_core_and_base_mm2": 69600.0,
+          "total_silicon_mm2": 73686.0
+        },
+        "unused_silicon_budget_mm2": 31914.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1833.2,
+            "aggregate_tokens_s": 1833.2,
+            "ungated_mJ": 1916.17,
+            "gated_mJ": 1827.43,
+            "gated_system_w": 3350.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 1020.1,
+            "aggregate_tokens_s": 8160.5,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 5416.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 16,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 5448.0,
+          "stacks": 64,
+          "dram_core_and_base_mm2": 92800.0,
+          "total_silicon_mm2": 98248.0
+        },
+        "unused_silicon_budget_mm2": 7352.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2091.9,
+            "aggregate_tokens_s": 2091.9,
+            "ungated_mJ": 1992.76,
+            "gated_mJ": 1889.08,
+            "gated_system_w": 3952.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 680.0,
+            "aggregate_tokens_s": 10880.7,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 7222.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 17,
+        "stacks_per_die": 4,
+        "area": {
+          "logic_mm2": 5788.5,
+          "stacks": 68,
+          "dram_core_and_base_mm2": 98600.0,
+          "total_silicon_mm2": 104388.5
+        },
+        "unused_silicon_budget_mm2": 1211.5,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2117.2,
+            "aggregate_tokens_s": 2117.2,
+            "ungated_mJ": 2019.23,
+            "gated_mJ": 1910.38,
+            "gated_system_w": 4045.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 722.5,
+            "aggregate_tokens_s": 11560.7,
+            "ungated_mJ": 716.45,
+            "gated_mJ": 663.73,
+            "gated_system_w": 7673.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 5,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 2131.0,
+          "stacks": 30,
+          "dram_core_and_base_mm2": 43500.0,
+          "total_silicon_mm2": 45631.0
+        },
+        "unused_silicon_budget_mm2": 59969.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1420.0,
+            "aggregate_tokens_s": 1420.0,
+            "ungated_mJ": 1750.04,
+            "gated_mJ": 1693.72,
+            "gated_system_w": 2405.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 637.5,
+            "aggregate_tokens_s": 5100.3,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 3331.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 6,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 2557.2,
+          "stacks": 36,
+          "dram_core_and_base_mm2": 52200.0,
+          "total_silicon_mm2": 54757.2
+        },
+        "unused_silicon_budget_mm2": 50842.8,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1578.2,
+            "aggregate_tokens_s": 1578.2,
+            "ungated_mJ": 1773.04,
+            "gated_mJ": 1712.23,
+            "gated_system_w": 2702.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 765.0,
+            "aggregate_tokens_s": 6120.4,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 3998.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 8,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 3409.6,
+          "stacks": 48,
+          "dram_core_and_base_mm2": 69600.0,
+          "total_silicon_mm2": 73009.6
+        },
+        "unused_silicon_budget_mm2": 32590.399999999994,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 1829.5,
+            "aggregate_tokens_s": 1829.5,
+            "ungated_mJ": 1819.84,
+            "gated_mJ": 1749.9,
+            "gated_system_w": 3201.0
+          },
+          "saturated": {
+            "batch": 8,
+            "per_user_tokens_s": 1020.1,
+            "aggregate_tokens_s": 8160.5,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 5330.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 10,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 4262.0,
+          "stacks": 60,
+          "dram_core_and_base_mm2": 87000.0,
+          "total_silicon_mm2": 91262.0
+        },
+        "unused_silicon_budget_mm2": 14338.0,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2019.5,
+            "aggregate_tokens_s": 2019.5,
+            "ungated_mJ": 1867.3,
+            "gated_mJ": 1788.1,
+            "gated_system_w": 3611.0
+          },
+          "saturated": {
+            "batch": 752,
+            "per_user_tokens_s": 13.6,
+            "aggregate_tokens_s": 10200.6,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 6663.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      },
+      {
+        "area_case": "high",
+        "budget_total_silicon_mm2": 105600.0,
+        "dies": 11,
+        "stacks_per_die": 6,
+        "area": {
+          "logic_mm2": 4688.2,
+          "stacks": 66,
+          "dram_core_and_base_mm2": 95700.0,
+          "total_silicon_mm2": 100388.2
+        },
+        "unused_silicon_budget_mm2": 5211.800000000003,
+        "historical_ablation": {
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2108.2,
+            "aggregate_tokens_s": 2108.2,
+            "ungated_mJ": 1889.08,
+            "gated_mJ": 1805.63,
+            "gated_system_w": 3807.0
+          },
+          "saturated": {
+            "batch": 16,
+            "per_user_tokens_s": 701.3,
+            "aggregate_tokens_s": 11220.7,
+            "ungated_mJ": 694.65,
+            "gated_mJ": 653.18,
+            "gated_system_w": 7329.0
+          }
+        },
+        "accelerator_rate": null,
+        "reason": "96-rank ladder not qualified at this TP; no linear rate scaling"
+      }
+    ],
+    "comparable_workload_precision_context_and_acceptance_qualified": false,
+    "historical_ablation_energy": {
+      "qwen_hbm": {
+        "ar": {
+          "evidence": "historical legacy-DAG ablation, not W19 or accelerator",
+          "batch1": {
+            "batch": 1,
+            "block": 1,
+            "tau": 1.0,
+            "per_user_tokens_s": 880.5,
+            "aggregate_tokens_s": 880.5,
+            "per_user_ms_per_token": 1.1357,
+            "binding": "weight stream",
+            "energy_mJ_per_token": 982.144,
+            "package_w": 864.8
+          },
+          "saturated": {
+            "batch": 16,
+            "block": 1,
+            "tau": 1.0,
+            "per_user_tokens_s": 417.7,
+            "aggregate_tokens_s": 6683.5,
+            "per_user_ms_per_token": 2.3939,
+            "binding": "weight stream",
+            "energy_mJ_per_token": 132.968,
+            "package_w": 888.7
+          },
+          "source": "results/uarch/economics.json#qwen_hbm.ar"
+        },
+        "dflash": {
+          "evidence": "historical legacy-DAG ablation, not W19 or accelerator",
+          "batch1": {
+            "batch": 1,
+            "block": 16,
+            "tau": 3.6559,
+            "per_user_tokens_s": 2670.1,
+            "aggregate_tokens_s": 2670.1,
+            "per_user_ms_per_token": 0.3745,
+            "binding": "weight stream",
+            "energy_mJ_per_token": 357.915,
+            "package_w": 955.7
+          },
+          "saturated": {
+            "batch": 8,
+            "block": 2,
+            "tau": 1.7361,
+            "per_user_tokens_s": 887.4,
+            "aggregate_tokens_s": 7099.2,
+            "per_user_ms_per_token": 1.1269,
+            "binding": "weight stream",
+            "energy_mJ_per_token": 129.045,
+            "package_w": 916.1
+          },
+          "source": "results/uarch/economics.json#qwen_hbm.dflash"
+        }
+      },
+      "v41_hbm": {
+        "ar": {
+          "evidence": "historical legacy-DAG ablation, not W19 or accelerator",
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 2801.8,
+            "aggregate_tokens_s": 2801.8,
+            "per_user_ms_per_token": 0.3569,
+            "binding": "chain (latency)",
+            "energy_mJ_per_token": 3780.853,
+            "system_w": 10593.0
+          },
+          "saturated": {
+            "batch": 32,
+            "per_user_tokens_s": 681.0,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 1.4684,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 912.504,
+            "system_w": 19885.0
+          },
+          "source": "results/uarch/economics.json#v41_hbm.ar"
+        },
+        "mtp": {
+          "evidence": "historical legacy-DAG ablation, not W19 or accelerator",
+          "batch1": {
+            "batch": 1,
+            "per_user_tokens_s": 5539.4,
+            "aggregate_tokens_s": 5539.4,
+            "per_user_ms_per_token": 0.1805,
+            "binding": "chain (latency)",
+            "energy_mJ_per_token": 2311.928,
+            "system_w": 12807.0
+          },
+          "saturated": {
+            "batch": 4,
+            "per_user_tokens_s": 3019.7,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 0.3312,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          },
+          "source": "results/uarch/economics.json#v41_hbm.mtp"
+        }
+      }
+    },
+    "saturated_accelerator_J_per_token": null,
+    "saturation_gap": "no composed batch/union/credit calendar; never infer from batch1"
+  },
+  "wire_accounting": {
+    "source_commit": "4ec2eef0e",
+    "transfer_scope": "four-die collective fit; 96-rank topology remains unvalidated",
+    "C1_gather_fixed_ns": 210.16799999999998,
+    "C1_reduce_fixed_ns": 221.01,
+    "C5hc_increment_ns": 83.39999999999999,
+    "endpoint_stages_per_side": 34,
+    "wire_only_two_endpoint_ns": 56.66666666666667,
+    "rule": "C1/C5hc transferred fits already include endpoint wires; do not add them twice or replace them by 10ns"
+  },
+  "gates": {
+    "R0": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "GPU-faithful sync (grid barrier per dependent op, persistent kernel)",
+        "kind": "GPU-standard",
+        "exactness": "none (timing)",
+        "risk": "-",
+        "deps": "-",
+        "cost": "-"
+      }
+    },
+    "R0c": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Ablation made honest: refresh-live routed fetch + ACK/fence/owner service (central)",
+        "kind": "correction",
+        "exactness": "n/a",
+        "risk": "-",
+        "deps": "-",
+        "cost": "-"
+      }
+    },
+    "R1": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "One statically scheduled persistent program + hardware barrier network (62 cyc measured)",
+        "kind": "partly GPU-standard (persistent kernels / CUDA graphs); die-wide 62-cycle barrier is OURS",
+        "exactness": "class A (no arithmetic change)",
+        "risk": "low (measured tb_gpu_barrier)",
+        "deps": "already in the comparator",
+        "cost": "barrier tree, <0.1 mm2/die"
+      }
+    },
+    "R1b": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Dataflow completion: tx-count arrival counters (mbarrier-style), no release broadcast",
+        "kind": "GPU-derived (Hopper mbarrier/TMA tx-count), extended die-wide",
+        "exactness": "class A",
+        "risk": "low",
+        "deps": "W4 RF ACK identity, W6 visibility fence",
+        "cost": "~32 counters/SM, negligible"
+      }
+    },
+    "R2": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Direct die-to-die links, 2-level topology (groups of 16 dies fully connected + global links)",
+        "kind": "OURS (vs NVLink switch); link = ROM array's light-FEC board link",
+        "exactness": "class A (fixed-order tree, same as NVLS record)",
+        "risk": "medium: port count 20/die, endpoint fan-in 15",
+        "deps": "link PHY sizing; C1 measured hop",
+        "cost": "~40 SerDes lanes/die at <= the NVLS port's lane count"
+      }
+    },
+    "R3a": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Cut-through collectives: SM rows injected as drained, consumers start on arrival (levels 2/3/5)",
+        "kind": "OURS (measured on the Qwen ROM path, d79a2089c)",
+        "exactness": "class A",
+        "risk": "low-medium (async gate passed on Qwen; SS not closed)",
+        "deps": "R2 endpoint",
+        "cost": "endpoint FIFO + credit, ~0.01 mm2/die"
+      }
+    },
+    "R3b": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Register/TMEM epilogue fusion (norm partials, block quantise, residual add)",
+        "kind": "GPU-standard (Blackwell TMEM epilogue)",
+        "exactness": "class A if golden order kept (two Qwen fused-epilogue gates FAILED: non-finite, wide overflow)",
+        "risk": "medium",
+        "deps": "-",
+        "cost": "1.37 mm2/die (W13b)"
+      }
+    },
+    "R4b": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Near-memory index scan: one scorer per HBM stack + per-stack top-k chase",
+        "kind": "OURS",
+        "exactness": "class A (top-k of per-stack top-k)",
+        "risk": "low",
+        "deps": "streaming controller",
+        "cost": "3 extra scorer slices/die (~0.3 mm2, ASSUMED)"
+      }
+    },
+    "R5a": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Refresh-aware streaming HBM controller (REFpb + notice) on the routed-expert fetch",
+        "kind": "OURS (measured 0.958 TB/s/stack bench)",
+        "exactness": "class A (no data change)",
+        "risk": "medium: closes 976.6 MHz SS, -4.7 ps at 1.2 GHz",
+        "deps": "r14 stream_pc/stack",
+        "cost": "0.151 mm2/stack"
+      }
+    },
+    "R5b": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Shared expert issued before routed slots; routed fetch overlaps it",
+        "kind": "OURS (compiler)",
+        "exactness": "class A (sum order unchanged: routed in id order then shared)",
+        "risk": "low",
+        "deps": "W19 executor program order",
+        "cost": "none"
+      }
+    },
+    "R6a": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Speculation: one 96x512 select unit per verify position",
+        "kind": "OURS",
+        "exactness": "class A",
+        "risk": "low",
+        "deps": "ot_coll_topk_merge",
+        "cost": "5 extra select units/die (small)"
+      }
+    },
+    "R7a": {
+      "status": "UNVALIDATED",
+      "ordered_gates": {
+        "exact": "NOT_PASSED",
+        "latency": "NOT_PASSED",
+        "area": "NOT_PASSED",
+        "route": "NOT_PASSED",
+        "timing": "NOT_PASSED",
+        "gain": "NOT_PASSED"
+      },
+      "adopted": false,
+      "modeled_input": {
+        "name": "Serial chain at 1.091 GHz LAT-3 (adder map off) instead of 0.9 GHz",
+        "kind": "OURS",
+        "exactness": "class A",
+        "risk": "HIGH: ratio FIFO fails SS -75.6 ps; serial units unmeasured at 1.091",
+        "deps": "2-clock CDC fix (shared with ROM lane)",
+        "cost": "none (re-timing)"
+      }
+    }
+  },
+  "clock_blocker": {
+    "source_commit": "2078c269c4a14dd566b96a73b52a272582faa13f",
+    "evidence": "placed control-loop screens; not final routed SS/FF",
+    "reported_MHz": {
+      "SM_issue": [
+        750,
+        815
+      ],
+      "bulk_copy": [
+        590,
+        680
+      ],
+      "W6_SECDED_fence": 429,
+      "KV_lifecycle": 458
+    },
+    "admission": false,
+    "throughput_halving_allowed": false,
+    "placed_miss_under_150ps": "route before concluding",
+    "required_fix": "lookahead or registered flags with preserved issue throughput"
+  },
+  "priority": [
+    "HA2",
+    "clock_loops",
+    "HA8",
+    "HA1"
+  ],
+  "measured_gate_requirements": "exact -> system latency incl wire/CDC/credits/refresh -> area -> routed corridor -> SS60/FF25 -> composed gain >=1%; reject failures, no tuning away",
+  "resource_price_limits": "study costs are estimates; mux/fanout/ports/routes/replicas and clock/power grid require composition before build",
+  "input_sha256": {
+    "results/uarch/hbm_accelerator_study_20261003/ladder_model.py": "5266d81b537fe18edd427f853bdb25c6b6533c3c65e7dafc2ac3bedb0378125f",
+    "results/uarch/hbm_accelerator_study_20261003/ladder.json": "0f21684483496bd811b2ac08e4f4a4f8e29cbd91bb8ad5f696162dbd80b62e2c",
+    "tools/uarch_model.py": "a78e8886b11121ee1ffed8e8e01989d690798047698977bb89404dc2b546df5f",
+    "tools/hbm_accelerator_model.py": "e60db6eb5fda1721cdc9a6d14c2b0498eacb7f2bfeacc68f7bb1e56a300e7119",
+    "results/uarch/consolidation.json": "0d99324bb6e983f75fb786901ae2e6db3000072443c351549f661af35bda3976",
+    "results/uarch/economics.json": "4f584946473201c60fcf1ac2c0509b0816ae138f134629cf50f5ed8f081166db",
+    "results/uarch/dsrom_gpu_index_scan_correction_20261003/model.json": "90faa72f09270e8fa05536f9447c0349bc5f625c7ec100c5abdddbc1494d0113",
+    "results/uarch/dsrom_hub_edge_wires_20261003/model.json": "63d6b9b34626bca1cb52f38a448979f02bec9fc178b008b9c4a4d8d516f64231",
+    "results/uarch/hbm_accelerator_integration_20261003/defaults_before.json": "33214dbbefaa965b3dc909001d73d636c2c765e6ae23e176c99a112db4d57ce0",
+    "results/uarch/v41_hbm_service_term_20261003/uarch_model_service_term.patch": "1743c8eeb197a0b7e0a5790257fe7db78b4dfc55fe499e607a645d218bd78ae8",
+    "results/uarch/hbm_accelerator_integration_20261003/VALIDATION_ADDENDUM.md": "7c22a425e27d3578c31d49296dddf9107e0eac95ec6196501dca23b0a647acf2",
+    "results/uarch/hbm_accelerator_integration_20261003/C1_C5hc_REPLAY.md": "f456fda9f4762beff1f6a812356fb74c5c73cc580a3a2f9ebf8f8140cbddc43d",
+    "results/uarch/hbm_accelerator_integration_20261004/qwen3.8-27b_hbm_inputs.json": "f157b6ae5075b9bf42e8724a7e7f7ddc5eeecaddac7dd7ee54ee2bbb8926e78c"
+  }
+}

@@ -1,0 +1,79 @@
+# r4 SS screen (WC 0.833 ns, 60 ps setup uncertainty): r3 + registered REFpb keys; RTL sha256: 5b1f9d8e95e8a7c1 109133bfc08191d4 
+# Stopped after CTS: WNS -104.5 ps, TNS -7.25 ns; worst path rb/ref_pend -> ACT candidate (dynamic bank index) -> row one-hot c_oh. Superseded by r5 (index-free one-hot decision).
+cts final report_tns
+--------------------------------------------------------------------------
+tns max -7250.18
+--
+cts final report_wns
+--------------------------------------------------------------------------
+wns max -104.53
+cts final report_checks -path_delay max
+--------------------------------------------------------------------------
+Startpoint: on.pc[0].u.on.rb[1]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: on.pc[0].u.on.c_oh[29]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+     1   12.98    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                 26.95    8.50    8.50 ^ clkbuf_0_clk/A (BUFx16f_ASAP7_75t_R)
+     4   22.05   32.54   37.81   46.31 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+                                         clknet_0_clk (net)
+                 34.73    4.51   50.82 ^ clkbuf_2_3_0_clk/A (BUFx24_ASAP7_75t_R)
+     4   14.91   22.27   42.89   93.71 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_2_3_0_clk (net)
+                 22.72    1.61   95.32 ^ clkbuf_4_12__f_clk/A (BUFx16f_ASAP7_75t_R)
+    10   28.98   37.42   40.66  135.98 ^ clkbuf_4_12__f_clk/Y (BUFx16f_ASAP7_75t_R)
+                                         clknet_4_12__leaf_clk (net)
+                 37.71    1.84  137.82 ^ clkbuf_leaf_57_clk/A (BUFx24_ASAP7_75t_R)
+    15   13.79   21.19   43.88  181.69 ^ clkbuf_leaf_57_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_leaf_57_clk (net)
+                 21.35    0.89  182.58 ^ on.pc[0].u.on.rb[1]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     2    1.85   49.75   99.75  282.33 v on.pc[0].u.on.rb[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+                                         _02506_ (net)
+                 49.75    0.06  282.39 v place7603/A (BUFx6f_ASAP7_75t_R)
+    11    7.78   22.24   43.22  325.61 v place7603/Y (BUFx6f_ASAP7_75t_R)
+                                         net7600 (net)
+                 22.37    0.94  326.55 v _20467_/A (OR2x2_ASAP7_75t_R)
+     4    2.81   24.49   44.92  371.48 v _20467_/Y (OR2x2_ASAP7_75t_R)
+                                         _05472_ (net)
+                 24.49    0.11  371.59 v _20468_/E (OR5x1_ASAP7_75t_R)
+     2    1.13   30.63   78.46  450.05 v _20468_/Y (OR5x1_ASAP7_75t_R)
+                                         _05473_ (net)
+                 30.63    0.04  450.09 v _20508_/C (AND4x1_ASAP7_75t_R)
+     1    0.61   11.88   30.81  480.90 v _20508_/Y (AND4x1_ASAP7_75t_R)
+                                         _05513_ (net)
+                 11.88    0.03  480.92 v _20509_/E (OR5x1_ASAP7_75t_R)
+     3    2.40   44.90   86.61  567.53 v _20509_/Y (OR5x1_ASAP7_75t_R)
+                                         _05514_ (net)
+                 44.91    0.29  567.82 v _20510_/A (OR3x1_ASAP7_75t_R)
+     2    1.00   21.79   52.08  619.90 v _20510_/Y (OR3x1_ASAP7_75t_R)
+                                         _05515_ (net)
+                 21.79    0.04  619.94 v _20580_/A2 (AO33x2_ASAP7_75t_R)
+     4    4.37   40.55   76.45  696.39 v _20580_/Y (AO33x2_ASAP7_75t_R)
+                                         _05585_ (net)
+                 40.56    0.27  696.66 v _21037_/B (AND2x4_ASAP7_75t_R)
+     2    1.06   10.86   36.80  733.46 v _21037_/Y (AND2x4_ASAP7_75t_R)
+                                         _06040_ (net)
+                 10.86    0.03  733.48 v _21038_/B1 (AO221x1_ASAP7_75t_R)
+     1    0.50   16.58   40.97  774.45 v _21038_/Y (AO221x1_ASAP7_75t_R)
+                                         _06041_ (net)
+                 16.58    0.02  774.47 v _21046_/B2 (AO221x1_ASAP7_75t_R)
+     1    1.15   23.37   48.04  822.50 v _21046_/Y (AO221x1_ASAP7_75t_R)
+                                         _06049_ (net)
+                 23.38    0.08  822.59 v _21054_/A2 (AO211x2_ASAP7_75t_R)
+     1    0.86   13.55   38.20  860.79 v _21054_/Y (AO211x2_ASAP7_75t_R)
+                                         _06057_ (net)
+                 13.55    0.05  860.84 v _21062_/B2 (AO22x2_ASAP7_75t_R)
+     2    2.37   23.20   43.98  904.83 v _21062_/Y (AO22x2_ASAP7_75t_R)
+                                         _06065_ (net)
+                 23.21    0.27  905.10 v place5908/A (BUFx6f_ASAP7_75t_R)
+     5   13.38   31.88   39.44  944.53 v place5908/Y (BUFx6f_ASAP7_75t_R)
+                                         net5905 (net)
