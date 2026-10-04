@@ -3,7 +3,7 @@ import hashlib
 import unittest
 from types import SimpleNamespace
 
-from dsrom_reduced_system_readback import check_log
+from dsrom_reduced_system_readback import check_log, user_accepted_three_tokens
 
 
 class ReadbackTests(unittest.TestCase):
@@ -66,6 +66,21 @@ class ReadbackTests(unittest.TestCase):
                   {**self.terminal(self.text), 'input_sha256': {}}]:
             with self.subTest(t=t), self.assertRaises(ValueError):
                 check_log(self.text, self.b, t)
+
+    def test_explicit_user_stop_retains_three_tokens_without_final_pass(self):
+        text = '\n'.join(line for line in self.text.splitlines()
+                         if line.startswith(('TOK ', 'CPL TOKEN ')) and 'pos=3' not in line) + '\n'
+        r = user_accepted_three_tokens(text, self.b)
+        self.assertEqual(r['status'], 'INTENTIONAL_USER_STOP_ACCEPTED_THREE_TOKENS')
+        self.assertEqual([t['token'] for t in r['tokens']], [2815, 3537, 2047])
+        self.assertTrue(r['token_comparison_pass'])
+        self.assertFalse(r['numerical_qualified'])
+        self.assertFalse(r['full_four_position_pass'])
+        self.assertFalse(r['final_state_checks_available'])
+        with self.assertRaises(ValueError):
+            user_accepted_three_tokens(self.text, self.b)
+        with self.assertRaises(ValueError):
+            user_accepted_three_tokens(text.replace('tag=5a', 'tag=5b'), self.b)
 
 
 if __name__ == '__main__':

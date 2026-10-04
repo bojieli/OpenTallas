@@ -48,6 +48,44 @@ def integer(r, key):
     return int(v)
 
 
+def user_accepted_three_tokens(text, binding):
+    """Explicit owner stop scope; no fourth-position or final-state assertion."""
+    require(binding.users == 1 and binding.steps == 4, 'unsupported accepted prefix')
+    observed = {}
+    for label in ('TOK', 'CPL TOKEN'):
+        rows = records(text, label)
+        require(len(rows) == 3, f'{label}: accepted scope requires exactly three records')
+        found = {}
+        for row in rows:
+            key = integer(row, 'user'), integer(row, 'pos')
+            require(key in {(0, 0), (0, 1), (0, 2)} and key not in found,
+                    f'{label}: duplicate or out-of-scope token')
+            require(integer(row, 'token') == binding.expected_output(*key),
+                    f'{label}: cached token mismatch')
+            if label == 'CPL TOKEN':
+                require(row.get('tag') == '5a', 'foreign completion job tag')
+            found[key] = row
+        observed[label] = found
+    tokens = [{'user': 0, 'position': p,
+               'token': integer(observed['TOK'][(0, p)], 'token'),
+               'device_cycle': integer(observed['TOK'][(0, p)], 'cycle'),
+               'completion_stamp': integer(observed['CPL TOKEN'][(0, p)], 'stamp')}
+              for p in range(3)]
+    diagnostics = [line for line in text.splitlines() if re.match(
+        r'^(FAIL|MISMATCH|CPL_MISMATCH|LOGIT|KV|VM|FAULT|SYS_FAULT|WATCHDOG|TIMEOUT)(\s|$)', line)]
+    return {'schema': 'opentallas.dsrom.reduced_system_readback.v1',
+            'status': 'INTENTIONAL_USER_STOP_ACCEPTED_THREE_TOKENS',
+            'tokens': tokens, 'token_comparison_pass': True,
+            'runtime_diagnostics': diagnostics,
+            'numerical_qualified': False, 'full_four_position_pass': False,
+            'final_logit_summary_available': bool(records(text, 'HDC41_ARRAY')),
+            'final_state_checks_available': bool(records(text, 'NODE')),
+            'raw_field_export': False, 'accepted_write_visibility_qualified': False,
+            'global_drain_qualified': False,
+            'scope': 'user-accepted three actual device tokens and matching host completions only',
+            'log_sha256': hashlib.sha256(text.encode()).hexdigest()}
+
+
 def check_log(text, binding, terminal):
     """Check terminal evidence; without a terminal receipt return progress only."""
     tok, cpl = records(text, 'TOK'), records(text, 'CPL TOKEN')
@@ -208,10 +246,21 @@ def main():
     p.add_argument('--source-root', required=True)
     p.add_argument('--log', required=True)
     p.add_argument('--terminal', help='owner gate JSON written after simulator return')
+    p.add_argument('--user-accepted-three-tokens', action='store_true',
+                   help='explicit intentional-user-stop scope; never asserts full numerical PASS')
     p.add_argument('--out', required=True)
     a = p.parse_args()
     terminal = json.loads(Path(a.terminal).read_text()) if a.terminal else None
-    result = qualify(a.scratch, a.source_root, a.log, terminal)
+    if a.user_accepted_three_tokens:
+        require(terminal is None, 'user-stop scope does not reinterpret a full terminal verdict')
+        b = CachedReducedTokenBinding(a.scratch, NAME)
+        require(b.prep['input_sha256'].get(TB) == TB_SHA
+                and digest(Path(a.source_root) / TB) == TB_SHA, 'unsupported checker source')
+        result = user_accepted_three_tokens(Path(a.log).read_text(), b)
+        result['source_pins'] = b.prep['input_sha256']
+        result['cached_token_image_sha256'] = digest(b.img / 'expect_tokens.hex')
+    else:
+        result = qualify(a.scratch, a.source_root, a.log, terminal)
     Path(a.out).write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
     print(result['status'])
 
