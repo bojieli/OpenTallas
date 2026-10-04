@@ -133,12 +133,12 @@
    "target": "qwen_rom",
    "section": "rate",
    "key": "ar_tok_s_P255_hbm_stream",
-   "label": "AR rate at P255 with HBM_STREAM",
+   "label": "AR rate at P255 with HBM_STREAM (RETIRED)",
    "path": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/compose_P255_ar256.json",
    "pointer": "tok_per_s_1p2ghz.hbm_stream",
    "unit": "tok/s",
    "status": "off_target_context",
-   "note": "not target context (P255); HBM_STREAM faults at P>=2048"
+   "note": "RETIRED 2026-10-04 in favour of STREAM4 (results/rtl/qwen_rom_hbm_stream_realmem_20261004/RETIRED.json); not target context (P255); faults at P>=2048"
   },
   {
    "target": "qwen_rom",
@@ -149,7 +149,7 @@
    "pointer": "ar_tok_per_s_at_1p2GHz.headline_chained_mean",
    "unit": "tok/s",
    "status": "off_target_context",
-   "note": "superseded by HBM_STREAM 7,708.9 at P255; not target context"
+   "note": "superseded at P255 by HBM_STREAM (now retired for STREAM4); not target context"
   },
   {
    "target": "qwen_rom",
@@ -391,23 +391,34 @@
   {
    "target": "qwen_rom",
    "section": "levers",
+   "key": "kv_path_selected",
+   "label": "Qwen ROM KV path selected (HBM_STREAM retired)",
+   "path": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/RETIRED.json",
+   "pointer": "successor.name",
+   "unit": "verdict",
+   "status": "measured",
+   "note": "STREAM4 P8191 L0 6,468 cycles exact, 93.4% of 4-stack peak (c14759ef1)"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
    "key": "hbm_stream_verdict",
-   "label": "HBM_STREAM (one stack) verdict",
+   "label": "HBM_STREAM (one stack) verdict (RETIRED)",
    "path": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/compose_P255_ar256.json",
    "pointer": "verdict",
    "unit": "verdict",
    "status": "composed_from_measured",
-   "note": "ADOPT at P255; cannot serve P>=2048 so not usable at 8K"
+   "note": "ADOPT at P255 (history, not overwritten); RETIRED 2026-10-04: faults at P>=2048, 12.7% of 4-stack peak; KV path selected = STREAM4"
   },
   {
    "target": "qwen_rom",
    "section": "levers",
    "key": "hbm_stream_gain_pct",
-   "label": "HBM_STREAM gain at P255",
+   "label": "HBM_STREAM gain at P255 (RETIRED)",
    "path": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/compose_P255_ar256.json",
    "pointer": "token_rate_gain_pct",
    "unit": "%",
-   "status": "composed_from_measured"
+   "status": "off_target_context"
   },
   {
    "target": "qwen_rom",
