@@ -5,6 +5,10 @@
 #include "s81_minimum_xu.hpp"
 #include "s81_minimum_l20_bank.hpp"
 #include "s81_minimum_prefix_providers.hpp"
+#include "s81_minimum_su256_ports.hpp"
+#include "s81_minimum_l20_index_writer.hpp"
+#include "s81_minimum_index_source_l20.hpp"
+#include "VDsromS81IndexScorer.h"
 #include "s81_published_span_accept_sink.hpp"
 #include "Vnative_vm.h"
 #include "Vretn.h"
@@ -305,10 +309,205 @@ struct SourceL20I0 : std::enable_shared_from_this<SourceL20I0> {
     }
     static void require(bool ok,const char* message){if(!ok)throw std::runtime_error(message);}
 };
+
+// Selected next minimum component: actual I36 encoding/publication followed by
+// the unchanged canonical I44 full scan. Boundary inputs are produced by the
+// current SIM_ONLY prefix, never comparison/reference values or current-key
+// checkpoint images. Both engines read those values through the real bank.
+struct SourceL20Index : std::enable_shared_from_this<SourceL20Index> {
+    DsromS81MinimumRuntime& runtime;
+    DsromS81MinimumL20Bank bank;
+    DsromS81NativeSuPorts su_ports;
+    DsromS81PrefixNativeEngine su,scan;
+    std::shared_ptr<NativeIndexHbm> backend;
+    std::shared_ptr<L20IndexWriter> writer;
+    std::shared_ptr<VDsromS81IndexScorer> scorer;
+    std::shared_ptr<DsromS81IndexSourceL20<VDsromS81IndexScorer>> index;
+    DsromS81PrefixOperation key_operation=DsromS81PrefixOperation{2507,2,"436e442bdf1b4743ac79abc55ab08892561afe7bfdf29803d631ed531180c072",{0x22u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x40000004u,0x80000000u,0x5c4u,0x400000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0xc000000u,0x0u,0x0u,0x1000000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x80000000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
+    DsromS81PrefixOperation scan_operation=DsromS81PrefixOperation{2515,1,"901ec7b483f2be4d78aa2165831f719a8b748991b026b9c8c5cf772c6ecc85f1",{0x31u,0x10000000u,0x400u,0x10000u,0x80u,0x0u,0xc0d00u,0x647au,0xaa400001u,0x40u,0x800u,0x2cu,0x0u,0x4002u,0x8u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x191c08u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
+    struct Input {unsigned producer;uint32_t base;std::vector<uint32_t> data;};
+    std::vector<Input> inputs;
+    std::vector<uint32_t> native_scores=std::vector<uint32_t>(262144);
+    size_t input=0,offset=0;
+    bool started=false,loading=false,held=false,offered=false,attached=false;
+    bool key_accepted=false,scan_accepted=false,finished=false,key_go=false,scan_go=false;
+    S81EmbeddingOutput out{};
+    unsigned count=0;
+    long key_first=-1,key_visible=-1,scan_first=-1,last=-1;
+    static void require(bool v,const char* message){if(!v)throw std::runtime_error(message);}
+    template<class Wide> static uint32_t bits(const Wide& data,unsigned first,unsigned width) {
+        uint32_t value=0;
+        for(unsigned j=0;j<width;++j)value|=((data[(first+j)/32]>>((first+j)%32))&1u)<<j;
+        return value;
+    }
+    static std::vector<uint32_t> load(const std::string& file,size_t words) {
+        std::ifstream f(file,std::ios::binary);
+        require(bool(f),"actual SIM_ONLY-produced index operand file missing");
+        std::vector<unsigned char> bytes(words*4);
+        f.read(reinterpret_cast<char*>(bytes.data()),bytes.size());
+        require(size_t(f.gcount())==bytes.size()&&f.peek()==std::char_traits<char>::eof(),
+                "source index operand extent differs");
+        std::vector<uint32_t> data(words);
+        for(size_t j=0;j<words;++j)data[j]=uint32_t(bytes[4*j])|(uint32_t(bytes[4*j+1])<<8)|
+            (uint32_t(bytes[4*j+2])<<16)|(uint32_t(bytes[4*j+3])<<24);
+        return data; // opaque actual source VM bits, no FP conversion
+    }
+    SourceL20Index(DsromS81MinimumRuntime& r,std::shared_ptr<Vnative_vm> vm)
+      :runtime(r),bank(r,ID,std::move(vm),dsrom_s81_bind_minimum_source_tags(r,ID)) {
+        require(r.rank==3&&!r.identity,"current global key belongs to native rank3 before cold admission");
+        const char* directory=std::getenv("DSROM_S81_NATIVE_L20_INDEX_INPUT");
+        require(directory&&*directory,"actual produced I35/I41/I43 operand directory required");
+        const std::string dir=directory;
+        inputs={{2506,94496,load(dir+"/I35.IKQ.u32",128)},
+                {2512,98720,load(dir+"/I41.IQQ.u32",4096)},
+                {2514,102848,load(dir+"/I43.WTS.u32",32)}};
+        for(const auto& i:inputs)bank.publication().enroll_literal(i.producer,{{i.base,uint32_t(i.data.size())}});
+        bank.publication().enroll_literal(key_operation.index,{}); // KV output, not a VM extent
+        bank.publication().enroll_literal(scan_operation.index,{{102880,262144}});
+        su=dsrom_s81_bind_minimum_su256(r,ID,bank.publication(),bank.io(),bank.tags(),su_ports);
+        // Actual target context fixes only selectors needed by these two
+        // literal operations. Unknown selectors remain unavailable.
+        su_ports.actual_dynamic=[](unsigned selector)->std::optional<uint32_t> {
+            if(selector==4)return 1048575;
+            if(selector==36)return 262144; // source SC1=ceil((POS+1)/TP4)
+            if(selector==42)return 16384;  // source ceil(SC1/16)
+            return std::nullopt;
+        };
+        backend=std::make_shared<NativeIndexHbm>(r,"native_L20_rank3_index_backend");
+        backend->preload_ring("/tmp/opentallas-L20-RING-priorhistory-20261004-r1/r3");
+        writer=std::make_shared<L20IndexWriter>(r,ID,su_ports,backend,key_operation);
+        scorer=std::make_shared<VDsromS81IndexScorer>(r.context,"native_L20_rank3_fullscan");
+        backend->bind_wiring([this](VDsromS81IndexHbm& m) {
+            // Record coordinates alone map GLOBAL POS to rank3's released
+            // local quarter. All native encoded bits retain their source.
+            writer->join_backend(m);
+            m.r_v=scorer->h_req_v;m.r_addr=scorer->h_req_addr;m.r_len=scorer->h_req_len;
+            m.r_tag=scorer->h_req_tag;m.r_rsp_rdy=scorer->h_rsp_rdy;m.eval();
+            scorer->h_req_rdy=m.r_rdy;scorer->h_rsp_v=m.r_rsp_v;
+            scorer->h_rsp_tag=m.r_rsp_tag;scorer->h_rsp_beat=m.r_rsp_beat;
+            scorer->h_rsp_data=m.r_rsp_data;scorer->eval();
+        });
+        index=std::make_shared<DsromS81IndexSourceL20<VDsromS81IndexScorer>>(
+            r,ID,bank.publication(),bank.io(),scorer,scan_operation,su_ports.actual_dynamic,
+            [this](auto&){backend->join_ports();},
+            [this](){return writer->source_idle()&&backend->current_committed(262143);},true);
+        scan=dsrom_s81_bind_index_source_l20(index);
+    }
+    bool inputs_visible() {
+        if(input!=inputs.size()||held)return false;
+        for(const auto& i:inputs)
+            if(!bank.publication().complete(ID,i.producer)||!bank.io().span_lease(ID,i.base,i.data.size()))return false;
+        return !bank.fault();
+    }
+    void attach() {
+        require(!attached,"index factory attached twice");
+        runtime.participants.push_back(bank.bank_participant());
+        runtime.participants.push_back({"source-L20-I36-I44-native-control",
+          [this](const auto& result) {
+            key_go=scan_go=false;
+            if(started&&!key_accepted)key_go=su.inputs_ready(key_operation)&&su.ready();
+            if(started&&key_accepted&&!scan_accepted&&writer->source_idle()&&backend->current_committed(262143)) {
+                if(key_visible<0)key_visible=runtime.cycle();
+                scan_go=scan.inputs_ready(scan_operation)&&scan.ready();
+            }
+            su.drive(key_operation,key_go);scan.drive(scan_operation,scan_go);
+            su.participant.prepare(result);scan.participant.prepare(result);
+          },
+          [this](bool released) {
+            if(!released)require(!started&&!key_accepted&&!scan_accepted,"reset erases native index work");
+            if(released&&key_go){bank.publication().begin(ID,key_operation.index);key_accepted=true;key_first=runtime.cycle();}
+            if(released&&scan_go){bank.publication().begin(ID,scan_operation.index);scan_accepted=true;scan_first=runtime.cycle();}
+            su.participant.rising(released);scan.participant.rising(released);
+            // The source adapter just validated/captured these same native
+            // registered outputs. Persist their raw bits for the existing
+            // continuation only; no oracle or second publication witness.
+            if(released&&scan_accepted)for(unsigned port=0;port<8;++port)
+                if((scorer->o_we>>port)&1u) {
+                    const auto word=bits(scorer->o_addr,30*port,30);
+                    for(unsigned lane=0;lane<16;++lane)
+                        if(bits(scorer->o_mask,16*port+lane,1))
+                            native_scores.at(word*16+lane-102880)=scorer->o_data[port*16+lane];
+                }
+          },
+          [this](bool released){su.participant.falling(released);scan.participant.falling(released);},
+          [this](){return bank.fault()||su.participant.fault()||scan.participant.fault();}});
+        runtime.participants.push_back(writer->participant());
+        runtime.participants.push_back(backend->participant());
+        auto self=shared_from_this();
+        runtime.publication_ready=[self](auto id){return id==ID&&!self->bank.fault()&&!self->writer->fault();};
+        runtime.publication_drained=[self](auto id){return id==ID&&self->finished;};
+        attached=true;
+    }
+    void initialize() {
+        require(attached&&!loading&&runtime.identity&&*runtime.identity==ID,"index input publication before cold admission");
+        loading=true;bank.publication().begin(ID,inputs.front().producer);
+    }
+    void start(){require(inputs_visible()&&!started,"index GO before actual boundary-input visibility");started=true;}
+    void advance() {
+        if(loading&&input<inputs.size()) {
+            const auto& i=inputs[input];
+            if(!held) {
+                count=std::min<size_t>(16,i.data.size()-offset);
+                out={};out.vm_valid=1;out.vm_identity=ID;out.vm_address=i.base+offset;
+                for(unsigned lane=0;lane<count;++lane) {
+                    out.vm_data[lane]=i.data[offset+lane];
+                    auto command=dsrom_s81_reserve_native_scalar_tag(runtime,ID,i.producer,out.vm_address+lane,out.vm_data[lane]);
+                    bank.publication().native_scalar(i.producer,command,true);
+                }
+                held=true;offered=false;
+            }
+            if(!offered){offered=bank.io().offer(out,count);return;}
+            if(!bank.io().visible(out,count))return;
+            offset+=count;held=offered=false;
+            if(offset==i.data.size()) {
+                require(bank.publication().complete(ID,i.producer),"boundary operand has unmatched native ACK");
+                ++input;offset=0;
+                if(input<inputs.size())bank.publication().begin(ID,inputs[input].producer);
+            }
+        }
+        if(scan_accepted&&scan.idle()&&bank.publication().complete(ID,scan_operation.index)&&
+           writer->source_idle()&&backend->current_committed(262143)&&backend->drained()) {
+            finished=true;if(last<0)last=runtime.cycle();
+        }
+    }
+    void write(const std::string& directory)const {
+        require(finished&&key_first>=0&&key_visible>=key_first&&scan_first>=key_visible&&last>=scan_first,
+                "native I36/I44 has no completed source interval");
+        std::ofstream f(directory+"/native_L20_index.tsv",std::ios::out|std::ios::app);
+        require(bool(f),"index output unavailable");
+        f<<"scope\trank\tposition\tkey_accept\tkey_visible\tscan_accept\tterminal\trequested_bytes\tdelivered_bytes\n"
+         <<"I36.I44.native-SIM_ONLY-boundary-inputs\t3\t1048575\t"<<key_first<<'\t'<<key_visible<<'\t'
+         <<scan_first<<'\t'<<last<<'\t'<<index->accepted_request_bytes()<<'\t'<<index->accepted_response_bytes()<<'\n';
+        require(bool(f),"index output write failed");
+        const std::string file=directory+"/native_L20_I44.u32";
+        require(!std::ifstream(file).good(),"preserve existing native score dump");
+        std::ofstream raw(file,std::ios::out|std::ios::binary);
+        require(bool(raw),"native score output unavailable");
+        for(uint32_t value:native_scores) {
+            const char bytes[]={char(value),char(value>>8),char(value>>16),char(value>>24)};
+            raw.write(bytes,4);
+        }
+        require(bool(raw),"native score output write failed");
+    }
+};
 }
 
 DsromS81MinimumSourcePlan dsrom_s81_bind_minimum_source(
     DsromS81MinimumRuntime& runtime,std::shared_ptr<Vnative_vm> vm) {
+    const char* native_index=std::getenv("DSROM_S81_NATIVE_L20_INDEX");
+    if(native_index&&std::string(native_index)=="1") {
+        auto source=std::make_shared<SourceL20Index>(runtime,std::move(vm));
+        DsromS81MinimumSourcePlan plan;
+        plan.identity=ID;plan.token=16754;plan.position=1048575;
+        plan.attach_seeded=[source](){source->attach();};
+        plan.initialize_seeded=[source](){source->initialize();};
+        plan.seeded_inputs_visible=[source](){source->advance();return source->inputs_visible();};
+        plan.begin_prefix=[source](){source->start();};
+        plan.advance=[source](){source->advance();};
+        plan.complete=[source](){return source->finished;};
+        plan.write_measurements=[source](const auto& directory){source->write(directory);};
+        return plan;
+    }
     const char* l20=std::getenv("DSROM_S81_NATIVE_L20_I0");
     if(l20&&std::string(l20)=="1") {
         auto source=std::make_shared<SourceL20I0>(runtime,std::move(vm));

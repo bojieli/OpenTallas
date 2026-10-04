@@ -25,7 +25,7 @@ struct L20IndexWriter::Impl:std::enable_shared_from_this<Impl> {
       std::shared_ptr<NativeIndexHbm>b,const DsromS81PrefixOperation&o)
  :runtime(r),identity(id),hooks(h),backend(std::move(b)),source(o),
   leaf(r.context,("native_L20_I36_index_writer_r"+std::to_string(r.rank)).c_str()) {
-  need(r.context&&r.cycle&&id<(1ull<<47)&&r.rank>=0&&r.rank<4&&backend&&
+  need(r.context&&r.cycle&&id<(1ull<<47)&&r.rank==3&&backend&&
        backend->initialized()&&backend->capacity_words()==139520,
        "I36 writer requires actual shared runtime and selected ring history backend");
   need(source.index==36&&source.unit==2&&source.template_sha256&&
@@ -44,7 +44,7 @@ struct L20IndexWriter::Impl:std::enable_shared_from_this<Impl> {
  bool fault()const{return stopped||leaf.fault||hooks.native().fault;}
  bool visible()const {
   return !fault()&&accepted&&observed_kv&&captured.all()&&leaf.dbg_keys==1&&!leaf.w_v&&
-   backend->current_committed(position);
+   backend->current_committed(position-3u*262144u);
  }
  bool idle()const{return visible()&&origin_idle_seen;}
  void context()const {
@@ -82,7 +82,7 @@ struct L20IndexWriter::Impl:std::enable_shared_from_this<Impl> {
     if(o.index==36) {
      context();need(same(o)&&!accepted&&su.go&&su.ready,"I36 duplicate/non-native SU acceptance");
      auto dy=hooks.actual_dynamic(4);
-     need(dy&&*dy==su.i_orow&&su.i_orow<262144&&su.i_dst==3&&
+     need(dy&&*dy==su.i_orow&&su.i_orow==1048575&&su.i_dst==3&&
           su.i_asrc==0&&su.i_abase==94496&&su.i_asi==1&&su.i_nin==128&&su.i_nout==1&&
           su.i_obase==0,"I36 actual source input/position/IK namespace mismatch");
      position=su.i_orow;old_accept=true;leaf.su_go=1;
@@ -119,7 +119,12 @@ struct L20IndexWriter::Impl:std::enable_shared_from_this<Impl> {
  }
  void join(VDsromS81IndexHbm&m) {
   need(m.contextp()==runtime.context,"I36 writer/backend context mismatch");
-  m.w_v=leaf.w_v;m.w_csec=leaf.w_csec;m.w_ssec=leaf.w_ssec;
+  // Literal SU/encoder coordinates remain GLOBAL POS. Only the released
+  // rank3 backend record coordinate is translated to its contiguous quarter.
+  // Codes/scales/address strobes are never re-encoded or renumbered here.
+  if(leaf.w_v)need(leaf.w_csec==position&&position==1048575,
+                   "current record lost canonical global position");
+  m.w_v=leaf.w_v;m.w_csec=leaf.w_v?leaf.w_csec-3u*262144u:0;m.w_ssec=leaf.w_ssec;
   m.w_codes=leaf.w_codes;m.w_scales=leaf.w_scales;m.w_sslot=leaf.w_sslot;
   m.eval();leaf.w_rdy=m.w_rdy;leaf.eval();
  }
