@@ -41,6 +41,12 @@
 //   sample a cycle later (stale, never early), takes up to 2 blocks = 16 keys a cycle in
 //   list order (the select needs ascending positions), and reads the slots' metadata in a
 //   second stage.
+//   Routed at 1.2 GHz (results/rtl/dsrom_reindex_close_20261004, 2026-10-04) the first cut failed SS by
+//   89 ps on broadcast fan-out across its ~40k flops; the control now (a) loads the dispatch write stage
+//   into 8 kept copies (each feeding 16 slots or 4 channels' request FIFOs), (b) writes slots through a
+//   one-hot slot register, (c) registers each response's slot one-hot, (d) reads the drain's metadata
+//   AND-OR through a one-hot head, and (e) forms completion in two registered levels (8-channel partials,
+//   then their AND with adm delayed alongside: one more cycle from last beat to completion, never early).
 // DATA (ot_hdc_v41x_idx_kgdata): per pseudo-channel bank WB x 4 code beats + WB scale
 // sectors (behavioural here; one 1W1R SRAM bank per channel on silicon, the
 // kstream_range ROB plus a WB x 256 b scale bank); the drain gathers each key's
@@ -97,9 +103,18 @@ module ot_hdc_v41x_idx_kgctl #(
     localparam integer ND = 5;              // decode stages (fixed latency, never stall)
     localparam integer PD = 8;              // decoded-pair FIFO depth
     localparam integer PW = $clog2(PD);
+    localparam integer GS = 8;              // copies of the dispatch write stage
+    localparam integer SG = WB / GS;        // slots fed by one slot-side copy
+    localparam integer CG = NPC / GS;       // channels fed by one channel-side copy
 
     function automatic [4:0] fold(input [HW-1:0] b);
         fold = b[4:0] ^ b[9:5];
+    endfunction
+    function automatic [WB-1:0] onehot(input [SW-1:0] s);
+        onehot = {{(WB-1){1'b0}}, 1'b1} << s;
+    endfunction
+    function automatic [WB-1:0] rotl(input [WB-1:0] v, input integer k);
+        rotl = (v << k) | (v >> (WB - k));
     endfunction
 
     reg            run;
@@ -153,10 +168,15 @@ module ot_hdc_v41x_idx_kgctl #(
     reg [QW-1:0]   inuse;
     wire           disp = run && hd_v && rob_ok && room_all;
     wire           hd_take = !hd_v || disp;
-    reg            w_v;    reg [QW-1:0] w_seq; reg [1:0] w_m; reg [SW-1:0] w_rs[0:1];
-    reg [LBW-1:0]  w_blk[0:1]; reg [6:0] w_j[0:1]; reg [4:0] w_f0[0:1], w_fc[0:1];
-    reg [HW-1:0]   w_b0[0:1], w_bc[0:1];
-    reg [NPC-1:0]  w_cm[0:1], w_sm[0:1];
+    reg            w_v;
+    reg [WB-1:0]   w_oh0, w_oh1;            // the write stage's slots, one-hot (zero when nothing is written)
+    // The write stage's operands, in GS kept copies (ot_hdc_v41x_kg_kreg) loaded from the head every cycle
+    // (used only on w_v / a one-hot slot): slot copy g feeds slots [g SG, (g+1) SG), channel copy g the request
+    // FIFOs of channels [g CG, (g+1) CG); the channel copies' masks are gated by the dispatch (zero otherwise).
+    localparam integer SLW = LBW + 7 + 5 + 5 + 2 * NPC;            // blk, j, f0, fc, cm, sm
+    localparam integer CHW = 2 * HW + 5 + 7 + SW + 2 * CG;         // b0, bc, fc, j, rs, cm / sm of the group
+    wire [GS*2*SLW-1:0] sl_q;               // copy g, lane l at [(2 g + l) SLW +: SLW]
+    wire [GS*2*CHW-1:0] ch_q;
 
     // -- per-channel request FIFOs: [0, NPC) code, [NPC, 2 NPC) scale ------------------------------
     reg [AW-1:0]   fq_addr [0:2*NPC*DF-1];
@@ -170,7 +190,9 @@ module ot_hdc_v41x_idx_kgctl #(
     reg [NPC-1:0]  pend_s [0:WB-1];
     reg [1:0]      cntc   [0:NPC*WB-1];
     reg [WB-1:0]   adm;
-    reg [WB-1:0]   cmp;                     // registered completion
+    reg [WB-1:0]   adm_q;                   // adm, a cycle later (aligned with cpart)
+    reg [7:0]      cpart [0:WB-1];          // nothing pending in each 8-channel group (code 0-3, scale 4-7)
+    reg [WB-1:0]   cmp;                     // registered completion: adm_q && &cpart
     reg [6:0]      m_j   [0:WB-1];
     reg [4:0]      m_fc  [0:WB-1];
     reg [4:0]      m_f0  [0:WB-1];
@@ -181,12 +203,14 @@ module ot_hdc_v41x_idx_kgctl #(
     // -- drain: completion of head .. head+3 sampled a cycle earlier; adv_r = the step taken then ----
     reg [3:0]      rq;
     reg [1:0]      adv_r;
+    reg [WB-1:0]   hoh;                     // the drain head's slot, one-hot (= d_seq mod WB)
     wire [SW-1:0]  h0 = d_seq[SW-1:0];
     wire           rq0 = (adv_r == 2'd0) ? rq[0] : (adv_r == 2'd1) ? rq[1] : rq[2];
     wire           rq1 = (adv_r == 2'd0) ? rq[1] : (adv_r == 2'd1) ? rq[2] : rq[3];
     wire           can0 = run && (d_left != 0) && rq0 && dr_ready;
     wire           can1 = can0 && (d_left > 1) && rq1;
     reg            dq_v; reg [1:0] dq_m; reg [SW-1:0] dq_slot;    // drain decided: read metadata next
+    reg [WB-1:0]   dq_oh;
 
     // per channel issue: the scale head first, else the code head
     reg [NPC-1:0]  iss, use_s;
@@ -198,171 +222,118 @@ module ot_hdc_v41x_idx_kgctl #(
         end
     end
 
-    integer p, l, e, c, k;
-    reg [SW-1:0]   rs;
+    // -- the write-stage copies ------------------------------------------------------------------------
+    genvar gg, gl;
+    generate for (gg = 0; gg < GS; gg = gg + 1) begin : g_cp
+        for (gl = 0; gl < 2; gl = gl + 1) begin : g_l
+            wire [SW-1:0] rs = gl ? hd_s1 : hd_seq[SW-1:0];
+            wire [CG-1:0] cmg = disp ? hd_cm[gl][gg*CG +: CG] : {CG{1'b0}};
+            wire [CG-1:0] smg = disp ? hd_sm[gl][gg*CG +: CG] : {CG{1'b0}};
+            ot_hdc_v41x_kg_kreg #(.W(SLW)) u_s (.clk(clk), .d({hd_blk[gl], hd_j[gl], hd_f0[gl], hd_fc[gl],
+                                                               hd_cm[gl], hd_sm[gl]}), .q(sl_q[(2*gg+gl)*SLW +: SLW]));
+            ot_hdc_v41x_kg_kreg #(.W(CHW)) u_c (.clk(clk), .d({hd_b0[gl], hd_bc[gl], hd_fc[gl], hd_j[gl], rs,
+                                                               cmg, smg}), .q(ch_q[(2*gg+gl)*CHW +: CHW]));
+        end
+    end endgenerate
+
+    integer p, l, e, c, k, g;
     reg [FW:0]     cnt;
     reg [FW-1:0]   wp;
     reg [NPC-1:0]  t;
     reg [2*NPC-1:0] rm;
     reg [QW-1:0]   nu;
+    reg            b0, b1;
+    reg [HW-1:0]   cb0, cbc;
+    reg [4:0]      cfc;
+    reg [6:0]      cj;
+    reg [SW-1:0]   crs;
+    reg [SW-1:0]   x_rs [0:1];
+    reg [AW-1:0]   x_ad [0:1];
 
-    // registered responses
-    reg [NPC-1:0]  rr_v;
-    reg [SW-1:0]   rr_s [0:NPC-1];
-    reg            rr_k [0:NPC-1];
+    // registered responses: one-hot slot (zero when no beat), kind
+    reg [WB-1:0]   rr_oh [0:NPC-1];
+    reg [NPC-1:0]  rr_k;
 
+    // ---- control (synchronously reset) ----------------------------------------------------------------
     always @(posedge clk) begin
         if (!rst_n) begin
             run <= 1'b0; busy <= 1'b0; fault <= 1'b0; req_v <= 0; dr_v <= 0; dq_v <= 1'b0;
             c0_v <= 1'b0; e1_v <= 1'b0; e2_v <= 1'b0; e3_v <= 1'b0; e4_v <= 1'b0; e5_v <= 1'b0;
-            hd_v <= 1'b0; w_v <= 1'b0; pf_n <= 0; pf_wp <= 0; pf_rp <= 0; occ <= 0;
-            adm <= 0; cmp <= 0; rr_v <= 0; rq <= 0; adv_r <= 0;
+            hd_v <= 1'b0; w_v <= 1'b0; w_oh0 <= 0; w_oh1 <= 0; pf_n <= 0; pf_wp <= 0; pf_rp <= 0; occ <= 0;
+            adm <= 0; adm_q <= 0; cmp <= 0; rq <= 0; adv_r <= 0; hoh <= {{(WB-1){1'b0}}, 1'b1};
             room_all <= 1'b1; rob_ok <= 1'b1; inuse <= 0;
+            for (p = 0; p < NPC; p = p + 1) rr_oh[p] <= 0;
             for (p = 0; p < 2 * NPC; p = p + 1) begin fq_rp[p] <= 0; fq_wp[p] <= 0; fq_n[p] <= 0; end
             for (p = 0; p < NPC * WB; p = p + 1) cntc[p] <= 2'd0;   // 4 beats wrap it back to 0
         end else begin
-            // completion, one cycle late; head look-ahead, one more
-            for (e = 0; e < WB; e = e + 1) cmp[e] <= adm[e] && ~|pend_c[e] && ~|pend_s[e];
-            // responses: registered, then counted
+            // completion, two cycles late: per-group partials, then their AND (never early: adm_q is
+            // registered alongside the partials)
+            adm_q <= adm;
+            for (e = 0; e < WB; e = e + 1) begin
+                for (k = 0; k < 4; k = k + 1) begin
+                    cpart[e][k]     <= ~|pend_c[e][8*k +: 8];
+                    cpart[e][4 + k] <= ~|pend_s[e][8*k +: 8];
+                end
+                cmp[e] <= adm_q[e] && &cpart[e];
+            end
+            // responses: registered (one-hot slot), then counted
             for (p = 0; p < NPC; p = p + 1) begin
-                rr_v[p] <= rsp_v[p];
-                rr_s[p] <= rsp_tag[p*TAGW +: SW];
+                rr_oh[p] <= rsp_v[p] ? onehot(rsp_tag[p*TAGW +: SW]) : {WB{1'b0}};
                 rr_k[p] <= rsp_tag[p*TAGW + SW];
-                if (rr_v[p]) begin
-                    if (rr_k[p]) pend_s[rr_s[p]][p] <= 1'b0;
-                    else begin
-                        cntc[p * WB + rr_s[p]] <= cntc[p * WB + rr_s[p]] + 2'd1;
-                        if (cntc[p * WB + rr_s[p]] == 2'd3) pend_c[rr_s[p]][p] <= 1'b0;
-                    end
-                end
+                if (!rr_k[p])
+                    for (e = 0; e < WB; e = e + 1)
+                        if (rr_oh[p][e]) cntc[p * WB + e] <= cntc[p * WB + e] + 2'd1;
             end
-            // dispatch write stage (decided last cycle): slots, metadata, pending bits
-            if (w_v) begin
-                for (l = 0; l < 2; l = l + 1) if (w_m[l]) begin
-                    rs = w_rs[l];
-                    adm[rs] <= 1'b1;
-                    pend_c[rs] <= w_cm[l];
-                    pend_s[rs] <= w_sm[l];
-                    m_j[rs] <= w_j[l]; m_fc[rs] <= w_fc[l]; m_f0[rs] <= w_f0[l]; m_blk[rs] <= w_blk[l];
-                end
-            end
-            // drain stage 2: retire the slots, read their metadata for the data path
+            // dispatch write stage (decided last cycle): admitted slots
+            adm <= adm | w_oh0 | w_oh1;
+            // drain stage 2: retire the slots (after the dispatch write, as before)
             dr_v <= 2'b00;
             if (dq_v) begin
-                adm[dq_slot] <= 1'b0;
-                if (dq_m[1]) adm[SW'(dq_slot + 1)] <= 1'b0;
+                adm <= (adm | w_oh0 | w_oh1) & ~(dq_oh | (dq_m[1] ? rotl(dq_oh, 1) : {WB{1'b0}}));
                 dr_v <= dq_m;
                 dr_slot <= dq_slot;
-                dr_j <= {m_j[SW'(dq_slot + 1)], m_j[dq_slot]};
-                dr_fc <= {m_fc[SW'(dq_slot + 1)], m_fc[dq_slot]};
-                dr_f0 <= {m_f0[SW'(dq_slot + 1)], m_f0[dq_slot]};
-                dr_blk <= {m_blk[SW'(dq_slot + 1)], m_blk[dq_slot]};
             end
+            w_oh0 <= 0; w_oh1 <= 0;
             if (cmd_v && !busy) begin
                 run <= 1'b1; busy <= 1'b1;
                 base <= cmd_base; skip8 <= cmd_skip[9:3]; n <= cmd_n;
                 fault <= (cmd_skip[2:0] != 3'd0);
                 rd_seq <= 0; d_seq <= 0; d_left <= cmd_n; occ <= 0; inuse <= 0; rob_ok <= 1'b1;
+                hoh <= {{(WB-1){1'b0}}, 1'b1};
                 c0_v <= 1'b0; e1_v <= 1'b0; e2_v <= 1'b0; e3_v <= 1'b0; e4_v <= 1'b0; e5_v <= 1'b0;
                 hd_v <= 1'b0; w_v <= 1'b0; pf_n <= 0; pf_wp <= 0; pf_rp <= 0; rq <= 0; adv_r <= 0; dq_v <= 1'b0;
             end else if (run) begin
                 // list read (SRAM output valid next cycle)
-                c0_v <= rd_go; c0_seq <= rd_seq; c0_m <= {(QW'(rd_seq + 1) < n), 1'b1};
+                c0_v <= rd_go; c0_m <= {(QW'(rd_seq + 1) < n), 1'b1};
                 if (rd_go) rd_seq <= rd_seq + 2;
                 occ <= occ + (rd_go ? 5'd1 : 5'd0) - (disp ? 5'd1 : 5'd0);
-                // decode pipe
-                e1_v <= c0_v; e1_seq <= c0_seq; e1_m <= c0_m;
-                e2_v <= e1_v; e2_seq <= e1_seq; e2_m <= e1_m;
-                e3_v <= e2_v; e3_seq <= e2_seq; e3_m <= e2_m;
-                e4_v <= e3_v; e4_seq <= e3_seq; e4_m <= e3_m;
-                e5_v <= e4_v; e5_seq <= e4_seq; e5_m <= e4_m;
-                for (l = 0; l < 2; l = l + 1) begin
-                    e1_blk[l] <= l ? lr_o : lr_e;
-                    e1_lk[l] <= {{LBW{1'b0}}, skip8} + {7'd0, l ? lr_o : lr_e};
-                    e2_blk[l] <= e1_blk[l]; e2_j[l] <= e1_lk[l][6:0];
-                    e2_m17[l] <= {e1_lk[l][LBW+6:7], 4'd0} + {4'd0, e1_lk[l][LBW+6:7]};
-                    e3_blk[l] <= e2_blk[l]; e3_j[l] <= e2_j[l];
-                    e3_o0[l] <= HW'(e2_m17[l]);
-                    e3_oc[l] <= HW'(e2_m17[l]) + HW'(1) + HW'(e2_j[l][6:3]);
-                    e4_blk[l] <= e3_blk[l]; e4_j[l] <= e3_j[l];
-                    e4_b0[l] <= base + e3_o0[l];
-                    e4_bc[l] <= base + e3_oc[l];
-                    e5_blk[l] <= e4_blk[l]; e5_j[l] <= e4_j[l]; e5_b0[l] <= e4_b0[l]; e5_bc[l] <= e4_bc[l];
-                    e5_f0[l] <= fold(e4_b0[l]); e5_fc[l] <= fold(e4_bc[l]);
-                    t = 0;
-                    for (c = 0; c < 4; c = c + 1) t[(5'({e4_j[l][2:0], 2'b00}) + 5'(c)) ^ fold(e4_bc[l])] = 1'b1;
-                    e5_cm[l] <= t;
-                    t = 0;
-                    t[e4_j[l][6:2] ^ fold(e4_b0[l])] = 1'b1;
-                    e5_sm[l] <= t;
-                end
-                // pair FIFO: push from the pipe, pop into the head register
-                if (e5_v) begin
-                    pf_seq[pf_wp] <= e5_seq; pf_m[pf_wp] <= e5_m;
-                    for (l = 0; l < 2; l = l + 1) begin
-                        pf_blk[2*pf_wp+l] <= e5_blk[l]; pf_j[2*pf_wp+l] <= e5_j[l];
-                        pf_f0[2*pf_wp+l] <= e5_f0[l]; pf_fc[2*pf_wp+l] <= e5_fc[l];
-                        pf_b0[2*pf_wp+l] <= e5_b0[l]; pf_bc[2*pf_wp+l] <= e5_bc[l];
-                        pf_cm[2*pf_wp+l] <= e5_m[l] ? e5_cm[l] : {NPC{1'b0}};
-                        pf_sm[2*pf_wp+l] <= e5_m[l] ? e5_sm[l] : {NPC{1'b0}};
-                    end
-                    pf_wp <= pf_wp + 1'b1;
-                end
+                e1_v <= c0_v; e2_v <= e1_v; e3_v <= e2_v; e4_v <= e3_v; e5_v <= e4_v;
+                if (e5_v) pf_wp <= pf_wp + 1'b1;
                 if (hd_take) begin
                     hd_v <= (pf_n != 0);
-                    if (pf_n != 0) begin
-                        hd_seq <= pf_seq[pf_rp]; hd_m <= pf_m[pf_rp]; hd_s1 <= SW'(pf_seq[pf_rp]) + 1'b1;
-                        for (l = 0; l < 2; l = l + 1) begin
-                            hd_blk[l] <= pf_blk[2*pf_rp+l]; hd_j[l] <= pf_j[2*pf_rp+l];
-                            hd_f0[l] <= pf_f0[2*pf_rp+l]; hd_fc[l] <= pf_fc[2*pf_rp+l];
-                            hd_b0[l] <= pf_b0[2*pf_rp+l]; hd_bc[l] <= pf_bc[2*pf_rp+l];
-                            hd_cm[l] <= pf_cm[2*pf_rp+l]; hd_sm[l] <= pf_sm[2*pf_rp+l];
-                        end
-                        pf_rp <= pf_rp + 1'b1;
-                    end
+                    if (pf_n != 0) pf_rp <= pf_rp + 1'b1;
                 end
                 pf_n <= pf_n + (e5_v ? 1'b1 : 1'b0) - ((hd_take && pf_n != 0) ? 1'b1 : 1'b0);
                 // dispatch decision -> write stage
                 w_v <= disp;
-                if (disp) begin
-                    w_seq <= hd_seq; w_m <= hd_m;
-                    w_rs[0] <= hd_seq[SW-1:0]; w_rs[1] <= hd_s1;
-                    for (l = 0; l < 2; l = l + 1) begin
-                        w_blk[l] <= hd_blk[l]; w_j[l] <= hd_j[l]; w_f0[l] <= hd_f0[l]; w_fc[l] <= hd_fc[l];
-                        w_b0[l] <= hd_b0[l]; w_bc[l] <= hd_bc[l]; w_cm[l] <= hd_cm[l]; w_sm[l] <= hd_sm[l];
-                    end
-                end
+                w_oh0 <= (disp && hd_m[0]) ? onehot(hd_seq[SW-1:0]) : {WB{1'b0}};
+                w_oh1 <= (disp && hd_m[1]) ? onehot(hd_s1) : {WB{1'b0}};
                 // per-channel issue
                 for (p = 0; p < NPC; p = p + 1) begin
                     if (req_v[p] && req_rdy[p]) req_v[p] <= 1'b0;
-                    if (iss[p]) begin
-                        req_v[p] <= 1'b1;
-                        if (use_s[p]) begin
-                            req_addr[p*AW +: AW] <= fq_addr[(NPC + p) * DF + fq_rp[NPC + p]];
-                            req_len[p*LENW +: LENW] <= LENW'(1);
-                            req_tag[p*TAGW +: TAGW] <= TAGW'({1'b1, fq_slot[(NPC + p) * DF + fq_rp[NPC + p]]});
-                        end else begin
-                            req_addr[p*AW +: AW] <= fq_addr[p * DF + fq_rp[p]];
-                            req_len[p*LENW +: LENW] <= LENW'(4);
-                            req_tag[p*TAGW +: TAGW] <= TAGW'({1'b0, fq_slot[p * DF + fq_rp[p]]});
-                        end
-                    end
+                    if (iss[p]) req_v[p] <= 1'b1;
                 end
-                // FIFO pushes (from the write stage) / pops, counts, room
+                // FIFO pushes (from the write stage; masks zero unless written) / pops, counts, room
                 for (p = 0; p < 2 * NPC; p = p + 1) begin
+                    g = (p % NPC) / CG;
+                    c = (p % NPC) % CG;
                     cnt = fq_n[p];
                     wp = fq_wp[p];
-                    if (w_v) begin
-                        for (l = 0; l < 2; l = l + 1)
-                            if (p < NPC ? w_cm[l][p % NPC] : w_sm[l][p % NPC]) begin
-                                fq_slot[p * DF + wp] <= w_rs[l];
-                                // code: channel p serves column p ^ fold(Bc); scale: sector j of B0
-                                fq_addr[p * DF + wp] <= (p < NPC) ? AW'({w_bc[l], 5'(p % NPC) ^ w_fc[l], 2'b00})
-                                                                  : AW'({w_b0[l], w_j[l]});
-                                wp = wp + 1'b1;
-                                cnt = cnt + 1'b1;
-                            end
-                    end
+                    for (l = 0; l < 2; l = l + 1)
+                        if (ch_q[(2*g+l)*CHW + (p < NPC ? CG : 0) + c]) begin
+                            wp = wp + 1'b1;
+                            cnt = cnt + 1'b1;
+                        end
                     fq_wp[p] <= wp;
                     if (p < NPC ? (iss[p % NPC] && !use_s[p % NPC]) : (iss[p % NPC] && use_s[p % NPC])) begin
                         fq_rp[p] <= fq_rp[p] + 1'b1;
@@ -373,14 +344,16 @@ module ot_hdc_v41x_idx_kgctl #(
                 end
                 room_all <= &rm;
                 // drain stage 1: head and next, in order
-                for (k = 0; k < 4; k = k + 1) rq[k] <= cmp[SW'(h0 + k)];
+                for (k = 0; k < 4; k = k + 1) rq[k] <= |(cmp & rotl(hoh, k));
                 adv_r <= can1 ? 2'd2 : (can0 ? 2'd1 : 2'd0);
                 dq_v <= can0;
                 dq_m <= {can1, 1'b1};
                 dq_slot <= h0;
+                dq_oh <= hoh;
                 if (can0) begin
                     d_seq <= d_seq + (can1 ? 2 : 1);
                     d_left <= d_left - (can1 ? 2 : 1);
+                    hoh <= can1 ? rotl(hoh, 2) : rotl(hoh, 1);
                 end
                 nu = inuse + (disp ? QW'(2) : QW'(0)) - (can1 ? QW'(2) : (can0 ? QW'(1) : QW'(0)));
                 inuse <= nu;
@@ -389,6 +362,130 @@ module ot_hdc_v41x_idx_kgctl #(
             end else if (busy && dr_v == 2'b00 && !dq_v) busy <= 1'b0;
         end
     end
+
+    // ---- data (no reset: every word is written before it is read) ---------------------------------------
+    integer p2, l2, e2, c2, g2;
+    reg [6:0]      aj [0:1];
+    reg [4:0]      afc [0:1], af0 [0:1];
+    reg [LBW-1:0]  ablk [0:1];
+    always @(posedge clk) begin
+        // decode pipe
+        c0_seq <= rd_seq;
+        e1_seq <= c0_seq; e2_seq <= e1_seq; e3_seq <= e2_seq; e4_seq <= e3_seq; e5_seq <= e4_seq;
+        e1_m <= c0_m; e2_m <= e1_m; e3_m <= e2_m; e4_m <= e3_m; e5_m <= e4_m;
+        for (l2 = 0; l2 < 2; l2 = l2 + 1) begin
+            e1_blk[l2] <= l2 ? lr_o : lr_e;
+            e1_lk[l2] <= {{LBW{1'b0}}, skip8} + {7'd0, l2 ? lr_o : lr_e};
+            e2_blk[l2] <= e1_blk[l2]; e2_j[l2] <= e1_lk[l2][6:0];
+            e2_m17[l2] <= {e1_lk[l2][LBW+6:7], 4'd0} + {4'd0, e1_lk[l2][LBW+6:7]};
+            e3_blk[l2] <= e2_blk[l2]; e3_j[l2] <= e2_j[l2];
+            e3_o0[l2] <= HW'(e2_m17[l2]);
+            e3_oc[l2] <= HW'(e2_m17[l2]) + HW'(1) + HW'(e2_j[l2][6:3]);
+            e4_blk[l2] <= e3_blk[l2]; e4_j[l2] <= e3_j[l2];
+            e4_b0[l2] <= base + e3_o0[l2];
+            e4_bc[l2] <= base + e3_oc[l2];
+            e5_blk[l2] <= e4_blk[l2]; e5_j[l2] <= e4_j[l2]; e5_b0[l2] <= e4_b0[l2]; e5_bc[l2] <= e4_bc[l2];
+            e5_f0[l2] <= fold(e4_b0[l2]); e5_fc[l2] <= fold(e4_bc[l2]);
+            t = 0;
+            for (c2 = 0; c2 < 4; c2 = c2 + 1) t[(5'({e4_j[l2][2:0], 2'b00}) + 5'(c2)) ^ fold(e4_bc[l2])] = 1'b1;
+            e5_cm[l2] <= t;
+            t = 0;
+            t[e4_j[l2][6:2] ^ fold(e4_b0[l2])] = 1'b1;
+            e5_sm[l2] <= t;
+        end
+        // pair FIFO: push from the pipe, pop into the head register
+        if (run && e5_v) begin
+            pf_seq[pf_wp] <= e5_seq; pf_m[pf_wp] <= e5_m;
+            for (l2 = 0; l2 < 2; l2 = l2 + 1) begin
+                pf_blk[2*pf_wp+l2] <= e5_blk[l2]; pf_j[2*pf_wp+l2] <= e5_j[l2];
+                pf_f0[2*pf_wp+l2] <= e5_f0[l2]; pf_fc[2*pf_wp+l2] <= e5_fc[l2];
+                pf_b0[2*pf_wp+l2] <= e5_b0[l2]; pf_bc[2*pf_wp+l2] <= e5_bc[l2];
+                pf_cm[2*pf_wp+l2] <= e5_m[l2] ? e5_cm[l2] : {NPC{1'b0}};
+                pf_sm[2*pf_wp+l2] <= e5_m[l2] ? e5_sm[l2] : {NPC{1'b0}};
+            end
+        end
+        if (run && hd_take && pf_n != 0) begin
+            hd_seq <= pf_seq[pf_rp]; hd_m <= pf_m[pf_rp]; hd_s1 <= SW'(pf_seq[pf_rp]) + 1'b1;
+            for (l2 = 0; l2 < 2; l2 = l2 + 1) begin
+                hd_blk[l2] <= pf_blk[2*pf_rp+l2]; hd_j[l2] <= pf_j[2*pf_rp+l2];
+                hd_f0[l2] <= pf_f0[2*pf_rp+l2]; hd_fc[l2] <= pf_fc[2*pf_rp+l2];
+                hd_b0[l2] <= pf_b0[2*pf_rp+l2]; hd_bc[l2] <= pf_bc[2*pf_rp+l2];
+                hd_cm[l2] <= pf_cm[2*pf_rp+l2]; hd_sm[l2] <= pf_sm[2*pf_rp+l2];
+            end
+        end
+        // responses clear pending bits; the dispatch write (one-hot slots, slot copies) then sets them
+        for (p2 = 0; p2 < NPC; p2 = p2 + 1)
+            for (e2 = 0; e2 < WB; e2 = e2 + 1)
+                if (rr_oh[p2][e2]) begin
+                    if (rr_k[p2]) pend_s[e2][p2] <= 1'b0;
+                    else if (cntc[p2 * WB + e2] == 2'd3) pend_c[e2][p2] <= 1'b0;
+                end
+        for (e2 = 0; e2 < WB; e2 = e2 + 1)
+            for (l2 = 0; l2 < 2; l2 = l2 + 1)
+                if (l2 ? w_oh1[e2] : w_oh0[e2])
+                    {m_blk[e2], m_j[e2], m_f0[e2], m_fc[e2], pend_c[e2], pend_s[e2]} <= sl_q[(2*(e2/SG)+l2)*SLW +: SLW];
+        // request FIFO entries (lane 0 at the write pointer, lane 1 after it)
+        for (p2 = 0; p2 < 2 * NPC; p2 = p2 + 1) begin
+            g2 = (p2 % NPC) / CG;
+            c2 = (p2 % NPC) % CG;
+            b0 = ch_q[(2*g2+0)*CHW + (p2 < NPC ? CG : 0) + c2];
+            b1 = ch_q[(2*g2+1)*CHW + (p2 < NPC ? CG : 0) + c2];
+            for (l2 = 0; l2 < 2; l2 = l2 + 1) begin
+                {cb0, cbc, cfc, cj, crs} = ch_q[(2*g2+l2)*CHW + 2*CG +: CHW - 2*CG];
+                x_rs[l2] = crs;
+                // code: channel p serves column p ^ fold(Bc); scale: sector j of B0
+                x_ad[l2] = (p2 < NPC) ? AW'({cbc, 5'(p2 % NPC) ^ cfc, 2'b00}) : AW'({cb0, cj});
+            end
+            if (b0) begin fq_slot[p2 * DF + fq_wp[p2]] <= x_rs[0]; fq_addr[p2 * DF + fq_wp[p2]] <= x_ad[0]; end
+            if (b1) begin
+                fq_slot[p2 * DF + FW'(fq_wp[p2] + (b0 ? 1 : 0))] <= x_rs[1];
+                fq_addr[p2 * DF + FW'(fq_wp[p2] + (b0 ? 1 : 0))] <= x_ad[1];
+            end
+        end
+        // per-channel issue data
+        for (p2 = 0; p2 < NPC; p2 = p2 + 1)
+            if (iss[p2]) begin
+                if (use_s[p2]) begin
+                    req_addr[p2*AW +: AW] <= fq_addr[(NPC + p2) * DF + fq_rp[NPC + p2]];
+                    req_len[p2*LENW +: LENW] <= LENW'(1);
+                    req_tag[p2*TAGW +: TAGW] <= TAGW'({1'b1, fq_slot[(NPC + p2) * DF + fq_rp[NPC + p2]]});
+                end else begin
+                    req_addr[p2*AW +: AW] <= fq_addr[p2 * DF + fq_rp[p2]];
+                    req_len[p2*LENW +: LENW] <= LENW'(4);
+                    req_tag[p2*TAGW +: TAGW] <= TAGW'({1'b0, fq_slot[p2 * DF + fq_rp[p2]]});
+                end
+            end
+        // drain stage 2 data: the retired slots' metadata, AND-OR read through the one-hot slot
+        for (l2 = 0; l2 < 2; l2 = l2 + 1) begin
+            aj[l2] = 0; afc[l2] = 0; af0[l2] = 0; ablk[l2] = 0;
+        end
+        for (e2 = 0; e2 < WB; e2 = e2 + 1) begin
+            aj[0] = aj[0] | (m_j[e2] & {7{dq_oh[e2]}});
+            afc[0] = afc[0] | (m_fc[e2] & {5{dq_oh[e2]}});
+            af0[0] = af0[0] | (m_f0[e2] & {5{dq_oh[e2]}});
+            ablk[0] = ablk[0] | (m_blk[e2] & {LBW{dq_oh[e2]}});
+            aj[1] = aj[1] | (m_j[e2] & {7{dq_oh[(e2 + WB - 1) % WB]}});
+            afc[1] = afc[1] | (m_fc[e2] & {5{dq_oh[(e2 + WB - 1) % WB]}});
+            af0[1] = af0[1] | (m_f0[e2] & {5{dq_oh[(e2 + WB - 1) % WB]}});
+            ablk[1] = ablk[1] | (m_blk[e2] & {LBW{dq_oh[(e2 + WB - 1) % WB]}});
+        end
+        if (dq_v) begin
+            dr_j <= {aj[1], aj[0]}; dr_fc <= {afc[1], afc[0]}; dr_f0 <= {af0[1], af0[0]};
+            dr_blk <= {ablk[1], ablk[0]};
+        end
+    end
+endmodule
+
+// A W-bit register that synthesis keeps as its own instance: Yosys opt_merge merges flip-flops with identical
+// inputs even under (* keep *), which would fold the write-stage copies back into one high-fanout register
+// (same reasoning as rtl/v41rom/ot_v41_kreg.sv).
+(* keep_hierarchy *)
+module ot_hdc_v41x_kg_kreg #(parameter integer W = 1) (
+    input  wire         clk,
+    input  wire [W-1:0] d,
+    output reg  [W-1:0] q
+);
+    always @(posedge clk) q <= d;
 endmodule
 
 // Reorder storage and the drain gather (behavioural banks; SRAM on silicon).
