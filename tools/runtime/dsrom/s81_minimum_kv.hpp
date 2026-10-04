@@ -1,6 +1,7 @@
 #pragma once
 #include "s81_minimum_prefix.hpp"
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -31,6 +32,8 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
     bool target_engine=false;
     bool old_kv_accept=false,old_staged=false,old_stream_go=false,old_done=false;
     uint16_t old_generation=0;
+    std::optional<DsromS81PrefixOperation> held_consumer;
+    bool held_go=false;
     long prepared_cycle=-1;
 
     static void require(bool ok,const char* why) {
@@ -99,13 +102,14 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
                     require(old_generation==staged_generation,
                             "packed WINDOW generation changed with retained debt");
                 if(old_stream_go) {
-                    require(staged_debt&&!stream_active,
+                    require(staged_debt&&!stream_active&&(!target_engine||held_go),
                             "packed WINDOW stream lacks staged native response");
                     staged_debt=false;stream_active=true;
                 }
                 if(old_done) {
                     require(stream_active,"packed WINDOW completion lacks accepted stream");
                     stream_active=false;staged_generation=0;
+                    held_consumer.reset();held_go=false;
                 }
             }
             blocks.clk=1;window.clk=1;
@@ -216,17 +220,40 @@ public:
             [self,source](bool reset){self->rising(reset);source->participant.rising(reset);},
             [self,source](bool reset){self->falling(reset);source->participant.falling(reset);},
             [self,source](){return self->fault()||source->participant.fault();}},
-            [self,source](){return self->staged()&&source->ready()&&!source->participant.fault();},
-            // A staged native WINDOW is busy but can admit its held consumer.
-            // Prefix polls idle before GO as well as at terminal retirement.
-            [self,source](){return !self->stream_active&&(self->staged()||source->idle())&&
+            // Keep pre-edge readiness asserted through the driven GO pulse;
+            // the shared rising edge moves staged ownership into active debt.
+            [self,source](){return self->held_consumer&&!self->stream_active&&self->staged()&&
+                                  source->ready()&&!source->participant.fault();},
+            // Terminal drain only. Staged rows retain native ownership and
+            // therefore cannot be presented as an idle source before ME GO.
+            [self,source](){return !self->stream_active&&!self->staged_debt&&
+                                  !self->held_consumer&&source->idle()&&
                                   !self->fault()&&!source->participant.fault();},
-            [self,source](const auto& op){return source->inputs_ready(op)&&self->staged();},
+            [self,source](const auto& op){
+                require(!self->fault()&&!source->participant.fault(),
+                        "packed WINDOW source authority fault");
+                if(self->held_go||self->stream_active)return false;
+                if(self->held_consumer)
+                    require(self->held_consumer->index==op.index&&
+                            self->held_consumer->unit==op.unit&&
+                            self->held_consumer->instruction==op.instruction,
+                            "packed WINDOW held consumer changed before GO");
+                // This is actual descriptor authorization for THIS literal
+                // operation, not a lease derived from a generation number.
+                if(!source->inputs_ready(op)||!source->ready()||!self->staged())return false;
+                self->held_consumer=op;
+                return true;
+            },
             [self,source](const auto& op,bool go){
-                if(go)require(self->staged()&&!self->stream_active&&source->ready()&&
+                if(go)require(self->held_consumer&&!self->held_go&&
+                              self->held_consumer->index==op.index&&
+                              self->held_consumer->unit==op.unit&&
+                              self->held_consumer->instruction==op.instruction&&
+                              self->staged()&&!self->stream_active&&source->ready()&&
                               !source->participant.fault(),
                               "ME GO lacks committed native WINDOW generation");
                 source->drive(op,go);self->window.stream_go=go;
+                if(go)self->held_go=true;
             }};
     }
 };
