@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.hbm_accel.ha5.verdict.v1",
+  "R5b": {
+    "modelled_gain_us": 5.59,
+    "estimated_hide_window_us": 10.6,
+    "measured_slot6_sm": {
+      "w1_cycles": 241,
+      "w3_cycles": 241,
+      "total_ns": 401.7,
+      "per_token_us": 16.07,
+      "source": "results/rtl/w19_sm_real_ops_oreduce.json (RTL, busiest SM0, exact) = Codex terminal_r4 elements"
+    },
+    "system_measured_gain_us": 0.0,
+    "system_record": "results/rtl/hbm_accel_ha5_20261003/actual_field_composition_r1/measured_composition.json (158,661 edges both, 22 fields exact)",
+    "component_composed_gain_us_after_R5a": 5.451,
+    "diff_cause": "the reduced native vehicle measures 0 because no routed-fetch first access is exposed in it (baseline = candidate to the edge); at full shape the hide window (401.7 ns) exceeds the measured R5a first access (136.3 ns mean), so the composed component estimate is 40 x 136.3 ns",
+    "verdict": "REJECT as measured (0 in system context, Codex verdict kept); the 5.45 us component composition is not a system measurement and may be re-opened only on a vehicle with real HBM fetch timing"
+  },
+  "R6a": {
+    "modelled_verify6_gain_us": 13.97,
+    "unit_latency_cycles": 419,
+    "unit_source": "results/rtl/w15_topk_merge_hbm96_p1024f256.json",
+    "physical": "results/physical_abi3/asap7/chip/topk_parent_review_20261002/review.json: ot_coll_topk_merge (reduced N=4/P=64 shape) global-route setup WNS -10,228.6 ps at 833 ps, core 0.209 mm2",
+    "exact": "class A by construction (identical replicated unit per position)",
+    "verdict": "REJECT: cannot close physically; the unit it replicates fails SS by 10.2 ns at global route even reduced, and P=1024 x6 replication is unpriced"
+  },
+  "collectives": {
+    "record": "results/rtl/hbm_accel_ha5_20261004/collective_study.json",
+    "collectives_per_regular_layer": 6,
+    "removed": 0,
+    "verdict": "REJECT: 0 exact profitable merges (router/x-proj/wo_b replication stream +1.0/+2.4/+10.8 us of HBM per layer per die vs 0.78 us saved; w2 K-split not exact vs the golden 32-block chunk8 order)"
+  }
+}

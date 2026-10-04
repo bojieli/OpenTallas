@@ -1,0 +1,17 @@
+{
+  "scope": "source join checks only, no new leaf/full simulation campaign",
+  "actual_native_pin_header_matches": 1080,
+  "all_physical_aperture_boundaries_are_outputs": true,
+  "profile_services": 1,
+  "controller_replicas": 64,
+  "source_pins_match": 82,
+  "external_service_unused_for_all_literal_descriptors": 25,
+  "runtime": null,
+  "SS_FF": null,
+  "numerical_qualified": false,
+  "frozen_dependencies": [
+    "d8740c526",
+    "78cb40f8079c64a3fe5734f54da03678b4fe4c58"
+  ],
+  "full_build_ready_scope": "actual source assembly; sole Russell build/runtime still unlaunched and numerical qualification false"
+}
