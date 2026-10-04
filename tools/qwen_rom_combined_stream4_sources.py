@@ -9,7 +9,7 @@ def selected(output,*,hbm_layers=36):
     output=Path(output)
     rec=base.selected(output,hbm_layers=hbm_layers)
     c=ROOT/'rtl/qwen_sys/combined'
-    pin=json.loads((c/'stream4_source_pin.json').read_text())
+    pin=json.loads((c/'stream4_tagged_source_pin.json').read_text())
     for p,h in pin['sources'].items():
         if hashlib.sha256((ROOT/p).read_bytes()).hexdigest()!=h:
             raise ValueError('actual Claude STREAM4 source changed: '+p)
@@ -20,9 +20,11 @@ def selected(output,*,hbm_layers=36):
     rec['die']=list(map(str,dict.fromkeys(die)))
     rec['top']='ot_qwen_rom_combined_stream4_die'
     rec['parameters'].update(HBM_STREAM4=1,NSTK=4,WBW=4)
-    rec['hbm_top']='ot_qwen_hbm_stream4_ack'
-    rec['hbm_parameters']=dict(NSTK=4,NPC=128,MEM_WORDS=hbm_layers*131072,TAGW=9,CORE_FS=833333,CTL_FS=1024000)
-    rec['hbm']=[str(ROOT/p) for p in pin['sources'] if Path(p).name!='ot_qwen_rt_kv_stream4_service.sv' and Path(p).name!='ot_qwen_kv_land_merge.sv']
+    rec['hbm_top']='ot_qwen_hbm_stream4_tagged'
+    rec['hbm_parameters']=dict(NSTK=4,NPC=128,MEM_WORDS=hbm_layers*131072,TAGW=9,TTAGW=13,CORE_FS=833333,CTL_FS=1024000)
+    rec['hbm']=[str(ROOT/p) for p in pin['sources'] if Path(p).name not in {'ot_qwen_rt_kv_stream4_service.sv','ot_qwen_rt_kv_stream4_mp_service.sv','ot_qwen_kv_land_merge.sv'}]
+    rec['hbm']=[p for p in rec['hbm'] if Path(p).name!='ot_qwen_hbm_stream4_ack.sv']
+    rec['hbm']=list(dict.fromkeys(rec['hbm']))
     rec['optional_candidates']['stream_controller']=True
     rec['mandatory_baseline']['stream4_source']=pin['main_commit']
     rec['source_sha256']={p:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in dict.fromkeys(rec['die']+rec['tile']+rec['collective']+rec['hbm'])}

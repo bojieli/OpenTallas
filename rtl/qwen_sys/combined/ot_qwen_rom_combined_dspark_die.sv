@@ -1,5 +1,5 @@
 // SOURCE-ONLY opt-in DSpark join: existing VPOS/KVmp/accept and near arithmetic.
-// STREAM4 remains a separate owner-native service dependency; no gain claim.
+// Optional STREAM4 uses owner tagged controller and multi-position service; no gain claim.
 // OWNER mandatory nearHBM baseline: fenced 7960 + pipelined 6256; one-stream AR.
 `timescale 1ns/1ps
 // Fullshape successor of the pinned W12 REAL_MEM runtime die. All code/scale,
@@ -7,8 +7,9 @@
 // Independent hclk crosses only the tagged HBM ports, with actual WR_ACK.
 // No ideal-memory bypass. Optional near descriptor is OFF by default.
 // No async collective. DSPARK is opt-in; this successor reuses owner KVmp.
-// Native STREAM4 multiposition service remains a separate Claude-owned join.
+// HBM_STREAM4=1 selects the actual owner multi-position STREAM4 service.
 module ot_qwen_rom_combined_dspark_die #(
+    parameter integer HBM_STREAM4=0, NSTK=4, WBW=4,
     parameter integer DSPARK=0, ACCEPT_COMMIT=0, VPMAX=4, VWA=16, NPROG=1024, NDESC=64,
     parameter integer NEAR_HBM=1,
     parameter integer G = 6144,
@@ -57,6 +58,20 @@ module ot_qwen_rom_combined_dspark_die #(
     output wire [127:0] h_rsp_ready,
     input wire [1663:0] h_rsp_tag,input wire [511:0] h_rsp_beat,
     input wire [32767:0] h_rsp_data,
+    // Claude STREAM4 core-domain service boundary (4 stacks x 32 PCs).
+    input wire [7:0] rm_next_layer,
+    input wire rm_early_go,rm_posted_wb,rm_kv_free,
+    output wire wb_busy_o,kv_free_o,
+    output wire [31:0] st_fill_exposed,
+    output wire stream_d_v,stream_go,input wire stream_d_rdy,
+    output wire [18:0] stream_d_row,output wire [10:0] stream_d_n,
+    input wire [127:0] stream_l_v,stream_w_room,stream_wd_v,
+    input wire [2175:0] stream_l_sec,input wire [1023:0] stream_l_row,
+    input wire [32767:0] stream_l_data,
+    output wire [127:0] stream_l_pop,stream_w_v,
+    output wire [3071:0] stream_w_sec,output wire [32767:0] stream_w_data,
+    output wire [1151:0] stream_w_tag,input wire [1151:0] stream_wd_tag,
+    input wire stream_fault,
     output wire              rt_rst_n,
     output reg  [31:0]       cyc,
     output wire              start,
@@ -334,6 +349,45 @@ module ot_qwen_rom_combined_dspark_die #(
         .acc_arm((DSPARK!=0)&&acc_arm),.acc_commit_en((DSPARK!=0)&&acc_commit_en),
         .acc_done(acc_done),.a(acc_a),.n_emit(acc_n_emit),.bonus(acc_bonus),
         .kv_commit_v(kv_commit_v),.kv_commit_n(kv_commit_n));
+    generate if(HBM_STREAM4!=0)begin:g_stream4
+    // Descriptor3 splits near attention from O/AR. The runtime pulses rm_kv_free
+    // ONLY at the actual post-O/all-reduce MLP boundary, not every core_start.
+    // Request/response drains and row visibility must precede slice reuse.
+    wire release_ok=rm_kv_free && !nhb_request && row_drained && !kv_layer_start;
+    reg release_fault;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)release_fault<=0;
+        else if(rm_kv_free && !release_ok)release_fault<=1;
+    assign kv_free_o=release_ok;
+    wire stream_svc_fault,row_fault;
+    wire [15:0] stream_svc_code;
+    ot_qwen_rt_kv_stream4_mp_service #(.VPMAX((DSPARK!=0)?VPMAX:1),.G(G),.SW(SW),.AW(AW),.NW(NW),.NSTK(4),.NPC(128),.FILL_LAT(FILL_LAT),.KV_IDEAL(0),.WBW(WBW)) u_kv(
+        .clk(clk),.rst_n(rst_n),.start(kv_layer_start),.ideal_in(1'b0),.pos(core_pos[NW-1:0]),.layer(rm_layer),
+        .npos(stage_npos),.commit_v(kv_commit_v),.commit_n(kv_commit_n),.committed_len(kv_committed_len),.committed_v(kv_committed_v),
+        .nx_layer(rm_next_layer),.pos_hint(tp_pos[NW-1:0]),.kv_free(release_ok),.early_go_in(rm_early_go),.posted_wb_in(rm_posted_wb),.wb_busy(wb_busy_o),
+        .kvd_v(kvd_v),.kvd_pos(kvd_pos),.kvd_kindk(kvd_kindk),.kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
+        .kv_ok(kv_ok),.kv_write_drained(kv_write_drained),.kvw_ce(kvw_ce),.kvw_addr(kvw_addr),.kvw_data(kvw_data),.kvw_mask(kvw_mask),
+        .d_v(stream_d_v),.d_rdy(stream_d_rdy),.d_row(stream_d_row),.d_n(stream_d_n),.go(stream_go),
+        .l_v(stream_l_v),.l_sec(stream_l_sec),.l_row(stream_l_row),.l_data(stream_l_data),.l_pop(stream_l_pop),
+        .w_v(stream_w_v),.w_sec(stream_w_sec),.w_data(stream_w_data),.w_tag(stream_w_tag),.w_room(stream_w_room),.wd_v(stream_wd_v),.wd_tag(stream_wd_tag),
+        .fault(stream_svc_fault),.fault_code(stream_svc_code),
+        .st_fill_cycles(st_fill_cycles),.st_fill_sectors(st_fill_sectors),.st_wr_sectors(st_wr_sectors),.st_rsp_stall(st_rsp_stall),
+        .st_kvok_low_desc(st_kvok_low_desc),.st_drain_low(st_drain_low),.st_wr_lat_max(st_wr_lat_max),.st_fill_exposed(st_fill_exposed));
+    assign kv_fault=stream_svc_fault|row_fault|release_fault|stream_fault;
+    assign kv_fault_code=stream_svc_code|((row_fault|release_fault|stream_fault)?16'h8000:16'h0);
+    // Same canonical near-row engines; stream write ACK debt is required before
+    // reading token K/V from HBM even when posted_wb bypasses the core drain gate.
+    ot_qwen_combined_stream4_rows #(.R(8)) u_rows(
+        .clk(clk),.rst_n(rst_n),.start(kv_layer_start),.pos(core_pos[NW-1:0]+NW'(stage_npos)-NW'(1)),.layer(rm_layer),
+        .memory_ready(kv_ok&&kv_write_drained&&!wb_busy_o&&!kv_fault&&!mem_fault),
+        .row_valid(row_valid),.row_v(row_v),.row_g(row_g),.row_t(row_t),.row_rsp_valid(row_rsp_valid),.row_rsp_data(row_rsp_data),
+        .m_req_v(m_req_v),.m_req_ready(m_req_ready),.m_req_we(m_req_we),.m_req_addr(m_req_addr),.m_req_len(m_req_len),.m_req_tag(m_req_tag),.m_req_wdata(m_req_wdata),
+        .m_pc_room(m_pc_room),.m_rsp_v(m_rsp_v),.m_rsp_ready(m_rsp_ready),.m_rsp_wr(m_rsp_wr),.m_rsp_tag(m_rsp_tag),.m_rsp_beat(m_rsp_beat),.m_rsp_data(m_rsp_data),
+        .fault(row_fault),.row_drained(row_drained));
+    end else begin:g_canonical_kvmp
+    assign wb_busy_o=0;assign kv_free_o=0;assign st_fill_exposed=0;
+    assign stream_d_v=0;assign stream_go=0;assign stream_d_row=0;assign stream_d_n=0;
+    assign stream_l_pop=0;assign stream_w_v=0;assign stream_w_sec=0;assign stream_w_data=0;assign stream_w_tag=0;
     ot_qwen_combined_nearhbm_mp_service #(.VPMAX((DSPARK!=0)?VPMAX:1),.ENABLE(1),.G(G),.SW(SW),.NW(NW),.NPC(32),.NRD(NRD),.LKA(LKA),.FILL_LAT(FILL_LAT)) u_kv(
         .clk(clk),.rst_n(rst_n),.start(kv_layer_start),.pos(core_pos[NW-1:0]),.layer(rm_layer),
         .npos(stage_npos),.commit_v(kv_commit_v),.commit_n(kv_commit_n),.committed_len(kv_committed_len),.committed_v(kv_committed_v),
@@ -345,6 +399,7 @@ module ot_qwen_rom_combined_dspark_die #(
         .fault(kv_fault),.kv_fault_code(kv_fault_code),.row_drained(row_drained),.rows_retired(),.read_bursts(),
         .st_fill_cycles(st_fill_cycles),.st_fill_sectors(st_fill_sectors),.st_wr_sectors(st_wr_sectors),.st_rsp_stall(st_rsp_stall),
         .st_kvok_low_desc(st_kvok_low_desc),.st_drain_low(st_drain_low),.st_wr_lat_max(st_wr_lat_max));
+    end endgenerate
     ot_qwen_combined_hbm_cdc transport(
         .clk(clk),.rst_n(rst_n),.hclk(hclk),.hrst_n(hrst_n),
         .s_req_v(m_req_v),.s_req_ready(m_req_ready),.s_req_we(m_req_we),.s_req_addr(m_req_addr),.s_req_len(m_req_len),.s_req_tag(m_req_tag),.s_req_wdata(m_req_wdata),
