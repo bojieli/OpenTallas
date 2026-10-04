@@ -391,6 +391,12 @@ const std::array<DsromS81PrefixOperation,5> l20_ops={{
 {2524,2,"3c6c724aa878711f9d8d8057b931deb554e8e1fad2d6e406ae4ec785fb6141a1",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x1f001u,0x0u,0x400002u,0x8000000u,0x6d38u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0xc000000u,0x0u,0x0u,0x7000000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x80000000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}},
 {2526,1,"00bb7b6a8b1a67526169d39c1f5b0954d2dbc600f330a42af48d1c0d7c46bc65",{0x11u,0x40000000u,0x400u,0x40000u,0x80u,0x0u,0x6ce00u,0x3e72u,0xbe200001u,0x40u,0x2000u,0x2cu,0x140u,0x10002u,0x1404u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}}
 }};
+// Native attention continuation: unchanged canonical I61/I62/I63 words.
+const std::array<DsromS81PrefixOperation,3> l20_pv_ops={{
+{2532,2,"c32a2c493d38f4812518e59d75768ba2c7df6675ba68af2dcdfc60245042b816",{0xau,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x40u,0x880000u,0x800003e7u,0x400002u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x40000c0u,0xf9cu,0x100000au,0x20000000u,0x80024380u,0x60000000u,0x7a6a09eu,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x1u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}},
+{2533,2,"fd6862b6c54c37a1e98e2c34589eb59367ddca17dd5c94605f80670f97ae7f33",{0x12u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x40u,0x880000u,0x800003e7u,0x400002u,0x0u,0x0u,0x400121cu,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x402c000u,0xf9cu,0x100000au,0x10000000u,0x800243c0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x1u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}},
+{2534,1,"6124df21d8de509ccbb8e0f114d2ed9776a4316dd810e92c35c0a07acfb9083a",{0x100011u,0x10u,0x400u,0x200u,0x1000u,0x0u,0x7ce00u,0x488au,0x1u,0x62u,0x2800u,0x2cu,0x100u,0x14002u,0x1004u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}}
+}};
 uint32_t op_bits(const DsromS81PrefixOperation& op,unsigned off,unsigned n){
     uint32_t v=0;for(unsigned j=0;j<n;j++)v|=((op.instruction[(off+j)/32]>>((off+j)%32))&1u)<<j;return v;
 }
@@ -411,7 +417,8 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
         std::shared_ptr<VDsromSu256> command;
         DsromS81NativeSuPorts su_ports;
         DsromS81NativeQeQuantizerPorts qe_ports;
-        DsromS81PrefixNativeEngine qe,su,me;
+        DsromS81PrefixNativeEngine qe,su,me,softmax;
+        DsromS81NativeSuPorts softmax_ports;
         std::optional<DsromS81PrefixOperation> su_op;
         bool su_go=false,su_accepted=false;
         std::vector<Input> inputs;size_t input=0,offset=0;
@@ -423,8 +430,8 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
     std::array<Rank,4> ranks;
     std::shared_ptr<L20KvFactory> factory;
     unsigned phase=0;
-    bool finished=false;
-    long first_qk=-1,last=-1;
+    bool finished=false,pv=false;
+    long first_qk=-1,last=-1,first_pv=-1;
     static std::vector<uint32_t> load(const std::string& file,size_t count){
         std::ifstream f(file,std::ios::binary);need(bool(f),"actual produced ATT input missing");
         std::vector<unsigned char> b(count*4);f.read(reinterpret_cast<char*>(b.data()),b.size());
@@ -440,6 +447,10 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
         const char* sim=std::getenv("DSROM_S81_SIM_ONLY_KV_SOURCE");
         need(dir&&*dir&&history&&*history&&sim&&std::string(sim)=="1",
              "I55 needs actual operand/history directories and explicit SIM_ONLY source boundary");
+        const char* continuation=std::getenv("DSROM_S81_NATIVE_L20_ATT_PV");
+        need(!continuation||std::string(continuation)=="0"||std::string(continuation)=="1",
+             "ATT_PV selector must be explicit 0 or 1");
+        pv=continuation&&std::string(continuation)=="1";
         std::array<L20KvRankBinding,4> bindings;
         for(unsigned i=0;i<4;i++){
             auto& r=ranks[i];r.runtime=host;r.runtime.rank=i;r.runtime.participants.clear();
@@ -457,6 +468,14 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
             r.bank->publication().enroll_literal(l20_ops[2].index,{});
             r.bank->publication().enroll_literal(l20_ops[3].index,{});
             r.bank->publication().enroll_literal(l20_ops[4].index,{{63936,10240}});
+            if(pv){
+                r.bank->publication().enroll_literal(l20_pv_ops[0].index,{{63936,10240},{74176,16}});
+                r.bank->publication().enroll_literal(l20_pv_ops[1].index,{{63936,10240},{74208,16}});
+                r.bank->publication().enroll_literal(l20_pv_ops[2].index,{{74272,8192}});
+                r.softmax=dsrom_s81_bind_minimum_su256(r.runtime,L20_ID,r.bank->publication(),
+                    r.bank->io(),r.bank->tags(),r.softmax_ports);
+                r.softmax_ports.actual_dynamic=[](unsigned d)->std::optional<uint32_t>{return l20_dynamic(d);};
+            }
             // Native vec requests all four ports even for a copy. Initial H16
             // is the existing released seeded entry, published through real ACK.
             const auto h=load("/home/ubuntu/w17work/isa/scratch_s20260930/images/ctx1048576_L20_r0/io.h_in.bin",20480);
@@ -511,15 +530,25 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
             [](bool){},[weak](){return weak.expired();}});
         // All OLD inputs are sampled before any rising; command acceptance is
         // frozen by provider before SIM_ONLY command participant retires GO.
-        for(auto& r:ranks){host.participants.push_back(r.me.participant);host.participants.push_back(r.qe.participant);host.participants.push_back(r.su.participant);}
+        for(auto& r:ranks){host.participants.push_back(r.me.participant);host.participants.push_back(r.qe.participant);host.participants.push_back(r.su.participant);
+            if(pv)host.participants.push_back(r.softmax.participant);}
         for(auto p:factory->participants())host.participants.push_back(std::move(p));
         host.publication_ready=[weak](uint64_t id){auto s=weak.lock();if(!s||id!=L20_ID)return false;for(auto& r:s->ranks)if(r.bank->fault())return false;return true;};
         host.publication_drained=[weak](uint64_t id){auto s=weak.lock();return s&&id==L20_ID&&s->finished&&s->factory->drained();};
     }
-    DsromS81PrefixNativeEngine& active(unsigned i){return phase==1||phase==3?ranks[i].qe:phase==2||phase==4?ranks[i].su:ranks[i].me;}
-    const DsromS81PrefixOperation& operation()const{return l20_ops[phase-1];}
+    DsromS81PrefixNativeEngine& active(unsigned i){
+        if(phase==6||phase==7)return ranks[i].softmax;
+        return phase==1||phase==3?ranks[i].qe:phase==2||phase==4?ranks[i].su:ranks[i].me;
+    }
+    const DsromS81PrefixOperation& operation()const{
+        return phase<=5?l20_ops.at(phase-1):l20_pv_ops.at(phase-6);
+    }
+    bool continuation_visible()const{
+        for(const auto& r:ranks)if(!r.bank->publication().complete(L20_ID,operation().index))return false;
+        return true;
+    }
     void prepare_controls(){
-        if(phase==0||phase>5)return;
+        if(phase==0||phase>(pv?8u:5u))return;
         for(unsigned i=0;i<4;i++){
             auto& r=ranks[i];r.go=false;if(phase==3&&i!=3)continue;
             auto& e=active(i);const auto& op=operation();
@@ -528,9 +557,10 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
         }
     }
     void accepted_controls(){
-        if(phase==0||phase>5)return;
+        if(phase==0||phase>(pv?8u:5u))return;
         for(auto& r:ranks)if(r.go){r.bank->publication().begin(L20_ID,operation().index);r.accepted=true;}
         if(phase==5&&first_qk<0)for(auto& r:ranks)if(r.go){first_qk=host.cycle();break;}
+        if(phase==8&&first_pv<0)for(auto& r:ranks)if(r.go){first_pv=host.cycle();break;}
     }
     void advance_inputs(){
         for(auto& r:ranks){
@@ -562,7 +592,21 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
             if(!complete)return;
             for(unsigned i=0;i<4;i++)if(!(phase==3&&i!=3))active(i).drive(operation(),false);
             if(phase==4&&!ranks[3].qe.idle())return;
-            if(phase==5){if(factory->drained()){finished=true;last=host.cycle();}return;}
+            if(phase==5){
+                if(!factory->drained())return;
+                if(!pv){finished=true;last=host.cycle();return;}
+                // Scale/MAX may overwrite S only after every actual QK write
+                // is positively visible and the full provider debt is drained.
+                if(!continuation_visible())return;
+                for(auto& r:ranks)need(r.bank->io().span_lease(L20_ID,63936,10240),
+                    "native softmax lacks actual published QK score lease");
+            }
+            if(phase>=6&&!continuation_visible())return;
+            if(phase==7)for(auto& r:ranks)
+                need(r.bank->io().span_lease(L20_ID,63936,10240)&&
+                     r.bank->io().span_lease(L20_ID,74208,16),
+                     "PV requires native exponent outputs and sum publication");
+            if(phase==8){if(factory->drained()){finished=true;last=host.cycle();}return;}
             ++phase;
         }
         for(auto& r:ranks){r.accepted=false;r.go=false;}
@@ -577,17 +621,26 @@ int run_minimum_l20_kv(DsromS81MinimumRuntime& runtime,const char* output){
     runtime.cold_start();runtime.bind_context(L20_ID);
     for(auto& r:source->ranks)r.runtime.identity=L20_ID;
     while(!source->finished){source->advance();runtime.tick();}
+    const unsigned result_base=source->pv?74272:63936,result_count=source->pv?8192:10240;
+    const char* result_name=source->pv?"native_L20_I63_rank":"native_L20_I55_rank";
     for(unsigned i=0;i<4;i++){
-        auto& r=source->ranks[i];std::ofstream f(std::string(output)+"/native_L20_I55_rank"+std::to_string(i)+".u32",std::ios::binary|std::ios::out);
-        need(bool(f),"I55 score output unavailable");
-        for(unsigned j=0;j<10240;j++){std::optional<uint32_t> v;
-            while(!(v=r.bank->io().read_word(L20_ID,63936+j)))runtime.tick();
+        auto& r=source->ranks[i];
+        if(source->pv)need(r.bank->publication().complete(L20_ID,l20_pv_ops[2].index)&&
+             r.bank->io().span_lease(L20_ID,result_base,result_count),"PV export requires actual native publication/lease");
+        std::ofstream f(std::string(output)+"/"+result_name+std::to_string(i)+".u32",std::ios::binary|std::ios::out);
+        need(bool(f),source->pv?"I63 native PV output unavailable":"I55 score output unavailable");
+        for(unsigned j=0;j<result_count;j++){std::optional<uint32_t> v;
+            while(!(v=r.bank->io().read_word(L20_ID,result_base+j)))runtime.tick();
             const auto x=*v;unsigned char bytes[4]={uint8_t(x),uint8_t(x>>8),uint8_t(x>>16),uint8_t(x>>24)};
             f.write(reinterpret_cast<const char*>(bytes),4);
         }
-        need(bool(f),"I55 score output write failed");
+        need(bool(f),source->pv?"I63 native PV output write failed":"I55 score output write failed");
     }
     std::ofstream f(std::string(output)+"/native_L20_ATT.tsv");
+    if(source->pv)
+        f<<"scope\tposition\tranks\tqk_accept\tpv_accept\tterminal\nQK.I61.I62.PV.native.SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"
+         <<source->first_qk<<'\t'<<source->first_pv<<'\t'<<source->last<<'\n';
+    else
     f<<"scope\tposition\tranks\tqk_accept\tterminal\nI55.native-QK-KV.SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"<<source->first_qk<<'\t'<<source->last<<'\n';
     need(bool(f),"I55 terminal output unavailable");return 0;
 }
