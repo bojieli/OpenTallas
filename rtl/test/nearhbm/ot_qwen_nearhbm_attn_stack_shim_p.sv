@@ -2,6 +2,41 @@
 // BENCH-ONLY shim: the name ot_qwen_nearhbm_attn_stack bound to the timing successor ot_qwen_nearhbm_attn_stack_p
 // (rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv), used through rtl/test/nearhbm/hubp_swap.sh (NHB_SWAP=hub,stack) in place
 // of the pinned parent stack source, so the parent's benches run unchanged around the successor.  Nothing shipped includes it.
+// The parent file's two helpers (ot_nhb_fgt, ot_nhb_fifo), which the subsystem benches also instantiate, are copied
+// verbatim below.
+
+// FP32 a > b for finite operands that are never -0 (every unit here canonicalises zeros to +0)
+module ot_nhb_fgt (input wire [31:0] a, input wire [31:0] b, output wire gt);
+    assign gt = (a[31] != b[31]) ? !a[31] : (!a[31] ? (a[30:0] > b[30:0]) : (a[30:0] < b[30:0]));
+endmodule
+
+// synchronous FIFO, registered output, no reset on data
+module ot_nhb_fifo #(parameter integer W = 32, parameter integer D = 16) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         push,
+    input  wire [W-1:0] din,
+    input  wire         pop,
+    output wire [W-1:0] dout,
+    output wire         nonempty,
+    output reg  [$clog2(D+1)-1:0] count
+);
+    localparam integer AW = (D > 1) ? $clog2(D) : 1;
+    reg [W-1:0] mem [0:D-1];
+    reg [AW-1:0] rp, wp;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin rp <= 0; wp <= 0; count <= 0; end
+        else begin
+            if (push) wp <= (wp == D - 1) ? 0 : wp + 1;
+            if (pop) rp <= (rp == D - 1) ? 0 : rp + 1;
+            count <= count + (push ? 1 : 0) - (pop ? 1 : 0);
+        end
+    end
+    always @(posedge clk) if (push) mem[wp] <= din;
+    assign dout = mem[rp];
+    assign nonempty = (count != 0);
+endmodule
+
 module ot_qwen_nearhbm_attn_stack #(
     parameter integer HD = 128,
     parameter integer S = 0,
