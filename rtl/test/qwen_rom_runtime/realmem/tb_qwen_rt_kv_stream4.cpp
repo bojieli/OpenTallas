@@ -26,6 +26,7 @@
 // Prints PASS/FAIL lines and a JSON summary on the last line.
 #include "Vtb_qwen_rt_kv_stream4.h"
 #include "Vtb_qwen_rt_kv_stream4___024root.h"
+#include <cinttypes>
 #include "verilated.h"
 #include <cstdio>
 #include <cstdint>
@@ -42,11 +43,44 @@ static Vtb_qwen_rt_kv_stream4* top;
 static uint64_t cyc = 0;
 static bool dbg = getenv("KVB_DEBUG") != nullptr;
 static bool dbg2 = getenv("KVB_DEBUG2") != nullptr;
+#ifdef TAGGED
+static uint8_t t_rdy_prev = 0;
+static bool t_req_rdy_prev(int s) { return (t_rdy_prev >> s) & 1; }
+#endif
+#ifndef TAGGED
 static void tick() {
     top->clk = 0; top->eval();
     top->clk = 1; top->eval();
     cyc++;
 }
+#else
+// TAGGED: the tagged port's own clock t_clk (period KVB_TFS fs, default 1,000,000) beside the 1.2 GHz core
+// clock, and a load generator of 4 row clients: 16-sector aligned reads of the current layer's history
+// (never the open tile or the token row), every returned beat checked against the backing array
+static const uint64_t CFS = 833333, TFS = getenv("KVB_TFS") ? strtoull(getenv("KVB_TFS"), 0, 10) : 1000000;
+static uint64_t now_fs = 0, next_t = 123457;
+static bool t_hi = false;
+static int t_rate = getenv("KVB_TRATE") ? atoi(getenv("KVB_TRATE")) : 0;   // percent of t cycles a client issues
+static bool t_on = false; static int t_layer = 0, t_P = 0; static int t_neg = 0;
+static uint64_t t_out = 0, t_req_n = 0, t_beats = 0, t_bad = 0, t_tcyc = 0;
+struct TOut { uint32_t addr; uint16_t got; };
+static TOut t_tab[4][2048];
+static std::mt19937 t_rng(7);
+static void t_edge();
+static void step_to(uint64_t t) {
+    while (next_t <= t) {
+        now_fs = next_t; t_hi = !t_hi; top->t_clk = t_hi;
+        if (t_hi) { top->eval(); t_edge(); } else top->eval();
+        next_t += TFS / 2;
+    }
+    now_fs = t;
+}
+static void tick() {
+    step_to(cyc * CFS + CFS / 2); top->clk = 0; top->eval();
+    step_to((cyc + 1) * CFS); top->clk = 1; top->eval();
+    cyc++;
+}
+#endif
 // E4M3 code -> FP32 (the tile's e4m3_f32)
 static uint32_t e4m3_f32(uint8_t c) {
     uint32_t s = c >> 7, e = (c >> 3) & 15, m = c & 7, fe, fm;
@@ -68,6 +102,48 @@ static void hbm_set_byte(uint32_t sec, int b, uint8_t v) {
     uint32_t& w = hbm()[sec][b / 4];
     w = (w & ~(0xffu << (8 * (b % 4)))) | (uint32_t(v) << (8 * (b % 4)));
 }
+#ifdef TAGGED
+// after a t_clk rising edge: consume the beats presented at it, account the accepted requests, drive the next
+static uint32_t t_seq[4];
+static void t_edge() {
+    t_tcyc++;
+    for (int p = 0; p < 128; p++) {
+        if (!((top->t_rsp_v[p / 32] >> (p % 32)) & 1)) continue;
+        uint32_t tag = 0;
+        for (int b = 0; b < 13; b++) { size_t bit = size_t(p) * 13 + b; tag |= ((top->t_rsp_tag[bit / 32] >> (bit % 32)) & 1u) << b; }
+        int beat = (top->t_rsp_beat[p / 8] >> (4 * (p % 8))) & 15, s = tag >> 11, id = tag & 2047;
+        TOut& o = t_tab[s][id];
+        uint32_t a = o.addr + beat;
+        bool ok = (p / 32 == s) && !((o.got >> beat) & 1) && (((a >> 2) ^ (a >> 7) ^ (a >> 12)) & 31) == uint32_t(p % 32) &&
+                  !((top->t_rsp_wr[p / 32] >> (p % 32)) & 1);
+        for (int k = 0; k < 8 && ok; k++) if (top->t_rsp_data[p * 8 + k] != hbm()[a][k]) ok = false;
+        if (!ok) { if (t_bad < 5) printf("TAGGED beat wrong: port %d client %d id %d beat %d\n", p, s, id, beat); t_bad++; }
+        o.got |= 1u << beat; t_beats++;
+        if (o.got == 0xffff) t_out--;
+    }
+    for (int s = 0; s < 4; s++) {
+        bool v = (top->t_req_v >> s) & 1;
+        if (v && t_req_rdy_prev(s)) { t_req_n++; t_out++; top->t_req_v &= ~(1u << s); v = false; }
+        if (!v && t_on && int(t_rng() % 100) < t_rate) {
+            // a K burst of a full tile t < P/16 or a V burst of 4 positions < P - 3 (history only)
+            int T = t_P >> 4; uint32_t rel;
+            if ((t_rng() & 1) && T > 0) rel = (t_rng() & 1) * 32768 + (t_rng() % T) * 64 + (t_rng() % 4) * 16;
+            else rel = 65536 + (t_rng() & 1) * 32768 + ((t_rng() % ((t_P > 4 ? t_P - 4 : 1))) & ~3) * 4;
+            uint32_t addr = uint32_t(t_neg == 2 ? t_layer + 1 : t_layer) * 131072 + rel;
+            int id = (t_seq[s]++) & 2047;
+            t_tab[s][id] = {addr, 0};
+            uint32_t tag = (uint32_t(s) << 11) | id;
+            top->t_req_v |= 1u << s;
+            top->t_req_we = (t_neg == 1) ? 0xf : 0;
+            for (int b = 0; b < 24; b++) { size_t bit = s * 24 + b; uint32_t& w = top->t_req_addr[bit / 32]; w = (w & ~(1u << (bit % 32))) | (((addr >> b) & 1u) << (bit % 32)); }
+            top->t_req_len = (top->t_req_len & ~(31u << (5 * s))) | (16u << (5 * s));
+            top->t_req_tag = (top->t_req_tag & ~(uint64_t(8191) << (13 * s))) | (uint64_t(tag) << (13 * s));
+        }
+    }
+    for (int p = 0; p < 4; p++) top->t_rsp_ready[p] = 0xffffffffu;
+    t_rdy_prev = top->t_req_ready;
+}
+#endif
 static uint8_t slice_byte(int t, int l, int b) { return (slice()[t][l][b / 4] >> (8 * (b % 4))) & 0xff; }
 
 // independent map: which (tile, local, byte) holds lane `lane` of KV word a (the tile formula, KV_LOCAL = 1)
@@ -203,8 +279,15 @@ static void fresh() {
     delete top; top = new Vtb_qwen_rt_kv_stream4; cyc = 0;
     top->rst_n = 0; top->start = 0; top->kvd_v = 0; top->nx_layer = 255; top->pos_hint = 0; top->kv_free = 0;
     top->early_go = 0; top->posted_wb = 0;
+#ifdef TAGGED
+    top->t_rst_n = 0; top->t_req_v = 0; t_on = false; t_out = 0; t_req_n = 0; t_beats = 0; t_bad = 0; t_rdy_prev = 0; t_neg = 0;
+#endif
     for (int i = 0; i < 5; i++) tick();
-    top->rst_n = 1; tick();
+    top->rst_n = 1;
+#ifdef TAGGED
+    top->t_rst_n = 1;
+#endif
+    tick();
 }
 static std::string js;
 static bool all_pass = true;
@@ -311,6 +394,57 @@ int main(int argc, char** argv) {
     if (want("CHAIN_P4095_early_posted")) chain("CHAIN_P4095_early_posted", 4095, 13, true, true, 600, 3000);
     if (want("CHAIN_P8191_early_short_mlp")) chain("CHAIN_P8191_early_short_mlp", 8191, 14, true, true, 1200, 400);
     if (want("CHAIN_P255_early_posted")) chain("CHAIN_P255_early_posted", 255, 15, true, true, 300, 2500);
+#ifdef TAGGED
+    // ISO_P8191 with tagged near-row reads of the same layer during the whole fill (same controllers / array)
+    for (int rate : {5, 15, 30}) {
+        std::string nm = "TAG_ISO_P8191_r" + std::to_string(rate);
+        if (!want(nm.c_str())) continue;
+        fresh();
+        Layer L{1, 8191}; clear_slices(); prep(L, 21 + rate);
+        t_layer = 1; t_P = 8191; t_rate = rate;
+        top->pos_hint = 8191; top->pos = 8191; top->layer = 1; top->start = 1; tick(); top->start = 0;
+        uint64_t t0 = cyc, tc0 = t_tcyc; t_on = true;
+        for (int i = 0; i < 6; i++) tick();
+        bool ok = wait_for("fill", [] { return top->st_fill_sectors >= 131072u; });
+        uint64_t fill_end = cyc, tc1 = t_tcyc, beats_fill = t_beats;
+        t_on = false; top->t_req_v = 0;
+        ok = ok && wait_for("tagged drain", [] { return t_out == 0; });
+        drain_wait = 0;
+        ok = ok && token_writes(L, 0);
+        top->kvd_v = 1; top->kvd_pos = 8191; tick(); top->kvd_v = 0;
+        ok = ok && wait_for("kv_ok", [] { return top->kv_ok != 0; });
+        ok = ok && wait_for("drain", [] { return top->kv_write_drained && !top->wb_busy; });
+        for (int i = 0; i < 20; i++) tick();
+        stats_line(nm.c_str());
+        double fc = top->st_fill_cycles, sec = top->st_fill_sectors, tsec = beats_fill;
+        double stream_tbs = sec * 32 / (fc * 0.833333) * 1e-3, tag_tbs = tsec * 32 / ((fill_end - t0) * 0.833333) * 1e-3;
+        char kv[600];
+        snprintf(kv, sizeof kv, "\"P\":8191,\"tag_rate_pct\":%d,\"fill_cycles\":%u,\"stream_TBps\":%.3f,\"stream_pct_of_peak\":%.1f,"
+                 "\"tagged_sectors_during_fill\":%" PRIu64 ",\"tagged_TBps_during_fill\":%.3f,\"total_pct_of_peak\":%.1f,"
+                 "\"tagged_requests\":%" PRIu64 ",\"tagged_beats\":%" PRIu64 ",\"tagged_bad\":%" PRIu64 ",\"violations\":%ld",
+                 rate, top->st_fill_cycles, stream_tbs, 100 * stream_tbs / 4.0, (uint64_t)tsec, tag_tbs, 100 * (stream_tbs + tag_tbs) / 4.0,
+                 t_req_n, t_beats, t_bad, (long)top->rootp->tb_qwen_rt_kv_stream4__DOT__u_hbm__DOT__viol);
+        (void)tc0; (void)tc1;
+        std::string why = !ok ? "timeout" : top->fault ? "fault code " + std::to_string(top->fault_code) : t_bad ? "tagged beat mismatch" : check_slices(L);
+        if (why.empty()) why = check_hbm_token(L);
+        report(nm, why.empty(), why.empty() ? "slices, token HBM codes and every tagged beat exact" : why, kv);
+    }
+    // negative: a tagged WRITE (the port is read-only) and a read of a layer that is not the current row
+    for (int neg : {1, 2}) {
+        std::string nm = neg == 1 ? "TAG_NEG_write" : "TAG_NEG_other_layer";
+        if (!want(nm.c_str())) continue;
+        fresh();
+        Layer L{1, 255}; clear_slices(); prep(L, 31);
+        t_layer = 1; t_P = 255; t_rate = 30; t_neg = neg;
+        top->pos_hint = 255; top->pos = 255; top->layer = 1; top->start = 1; tick(); top->start = 0;
+        t_on = true;
+        for (int i = 0; i < 3000 && !top->fault; i++) tick();
+        t_on = false; top->t_req_v = 0;
+        report(nm, top->fault != 0, top->fault ? "faulted as required (code " + std::to_string(top->fault_code) + ")" : "no fault", "\"P\":255");
+    }
+#endif
+    if (only && std::string(only) == "CHAIN_SWEEP")   // phase sweep: KVB_ATTN / KVB_MLP cycles
+        chain("CHAIN_SWEEP_a" + std::string(getenv("KVB_ATTN")), 8191, 16, true, true, atoi(getenv("KVB_ATTN")), atoi(getenv("KVB_MLP")));
     if (want("NEG_wrong_position")) iso("NEG_wrong_position", 0, 255, 7, 1, false);
     if (want("NEG_not_e4m3")) iso("NEG_not_e4m3", 0, 255, 8, 2, false);
     if (want("NEG_P8192_beyond_map")) iso("NEG_P8192_beyond_map", 0, 8192, 9, 3, false);

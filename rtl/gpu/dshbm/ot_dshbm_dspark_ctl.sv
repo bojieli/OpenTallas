@@ -39,7 +39,9 @@ module ot_dshbm_dspark_ctl #(
     parameter integer NST    = 3,
     parameter integer MAXPOS = 128,
     parameter integer MUT    = 0,
-    parameter integer ACCEPT_LEAF = 0      // 0: ot_hdc_accept, 1: Codex's protected DS MTP accept leaf
+    parameter integer ACCEPT_LEAF = 0,     // 0: ot_hdc_accept, 1: Codex's protected DS MTP accept leaf
+    parameter integer FAST   = 0           // 1: 1.2 GHz SS successor: keep-prefix observation counters and an
+                                           //    incrementally kept forced-draft address (same values, same cycles)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -128,7 +130,20 @@ module ot_dshbm_dspark_ctl #(
         end
     endgenerate
     assign p_addr = pp;
-    assign f_addr = steps * B + j;
+    generate if (FAST == 0) begin : g_fa0
+        assign f_addr = steps * B + j;
+    end else begin : g_fa1
+        // fbase = steps * B (mod 2^16), kept with steps: no multiplier on the port
+        reg [15:0] fbase;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) fbase <= 0;
+            else if (s == S_IDLE && start) fbase <= 0;
+            else if (s == S_COMMIT) fbase <= fbase + B;
+        // ctl_f1 SS output miss was this mapped ripple, not the counters.
+        // Existing keep-prefix adder preserves the W16 modulo result/cycle.
+        ot_hdc_ksadd_k #(.W(16)) u_faddr (
+            .a(fbase), .b({12'd0, j}), .cin(1'b0), .s(f_addr), .cout());
+    end endgenerate
     wire [31:0] q = n - 1;
     wire [31:0] room = (MAXPOS >= 2 && MAXPOS - 2 > q) ? MAXPOS - 2 - q : 0;
     wire [3:0]  g_new = (room < cfg_gamma) ? room[3:0] : cfg_gamma;
@@ -140,6 +155,16 @@ module ot_dshbm_dspark_ctl #(
             cmd_v <= 1'b1; s <= S_ISSUE;
         end
     endtask
+    // observation counters through keep-prefix incrementers (FAST = 1; ABC re-ripples a plain + 1)
+    wire [31:0] ct_n, ce_n, cm_n;
+    wire        c_eng = (s == S_ISSUE || s == S_WAIT);
+    generate if (FAST != 0) begin : g_cnt1
+        ot_hdc_inc_k #(.W(32)) u_ct (.a(cyc_total),  .inc(s != S_IDLE && s != S_DONE), .y(ct_n), .co());
+        ot_hdc_inc_k #(.W(32)) u_ce (.a(cyc_engine), .inc(c_eng), .y(ce_n), .co());
+        ot_hdc_inc_k #(.W(32)) u_cm (.a(cyc_markov), .inc(c_eng && cmd_op == C_MARKOV), .y(cm_n), .co());
+    end else begin : g_cnt0
+        assign ct_n = 32'd0; assign ce_n = 32'd0; assign cm_n = 32'd0;
+    end endgenerate
     integer k;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -150,10 +175,14 @@ module ot_dshbm_dspark_ctl #(
         end else begin
             e_v <= 1'b0; n_set <= 1'b0; tw_v <= 1'b0; acc_start <= 1'b0; acc_tokx <= 1'b0; acc_amax <= 1'b0;
             acc_go <= 1'b0; step_v <= 1'b0; acc_rel <= 1'b0;
-            if (s != S_IDLE && s != S_DONE) cyc_total <= cyc_total + 1;
-            if (s == S_ISSUE || s == S_WAIT) begin
-                cyc_engine <= cyc_engine + 1;
-                if (cmd_op == C_MARKOV) cyc_markov <= cyc_markov + 1;
+            if (FAST == 0) begin
+                if (s != S_IDLE && s != S_DONE) cyc_total <= cyc_total + 1;
+                if (s == S_ISSUE || s == S_WAIT) begin
+                    cyc_engine <= cyc_engine + 1;
+                    if (cmd_op == C_MARKOV) cyc_markov <= cyc_markov + 1;
+                end
+            end else begin
+                cyc_total <= ct_n; cyc_engine <= ce_n; cyc_markov <= cm_n;
             end
             // argmax results, routed by the command they belong to
             if (am_v && (s == S_ISSUE || s == S_WAIT)) begin
