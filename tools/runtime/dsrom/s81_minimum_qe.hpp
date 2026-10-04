@@ -13,7 +13,7 @@ struct DsromS81QePairBinding {
 };
 struct DsromS81QePhase {
     DsromS81PrefixOperation operation;
-    uint32_t xbase=0,ops=0,cut_output_alias=0;
+    uint32_t xbase=0,ops=0,cut_output_alias=0,cut_input_alias=0;
     std::array<uint64_t,2> phrom{};
     std::vector<uint64_t> stream;
     std::vector<DsromS81QePairBinding> pairs;
