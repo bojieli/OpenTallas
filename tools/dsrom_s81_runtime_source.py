@@ -22,6 +22,22 @@ def transform_host(source):
     source=source.replace('DSROM_C8_S82','DSROM_C8_S81').replace('DSROM_S82_STAGE','DSROM_S81_STAGE')
     source=source.replace('dsrom_s82','dsrom_s81').replace('S82','S81')
     one('#include "Vretn.h"\n#include "Vroot.h"','#include "Vrd64.h"')
+    one('extern "C" int v41rt_vm_word(int a);',
+        'extern "C" int v41rt_vm_word(int a);\nextern "C" int v41rt_c8_workspace_write(uint64_t identity, int address, int raw_bits);')
+    one('    virtual void c8_observe(long)=0;',
+        '    virtual void c8_observe(long)=0;\n    virtual bool c8_workspace_write(uint64_t identity, uint32_t address, uint32_t raw_bits)=0;')
+    one('    long c8_observed_cycle=-1;', '''    bool c8_workspace_write(uint64_t identity,uint32_t address,uint32_t raw_bits) override {
+        if(identity>=(uint64_t(1)<<47) || address>=(1u<<19))
+            throw std::runtime_error("actual C8 workspace identity/address bounds");
+        uint64_t live_identity;uint32_t live_token;uint16_t live_entry;
+        if(!c8_context(live_identity,live_token,live_entry) || live_identity!=identity)
+            return false;
+        svSetScope(g_diescope[id]);
+        // Source input loading only. This cannot grant context restoration or
+        // fabricate a native write/drain ACK; the caller still owes both.
+        return v41rt_c8_workspace_write(identity,int(address),int(raw_bits))==0;
+    }
+    long c8_observed_cycle=-1;''')
     one('    int NL, L, LR, LS;','    int NL;')
     one('    std::vector<std::vector<std::unique_ptr<Vretn>>> nodes;\n    std::vector<std::unique_ptr<Vroot>> roots;\n    std::vector<int> return_owner;',
         '    std::unique_ptr<Vrd64> rd64; // actual strict-pruned 5090-node source, not a contracted tree')

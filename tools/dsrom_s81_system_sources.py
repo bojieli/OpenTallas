@@ -21,7 +21,8 @@ def _one(text, old, new):
 
 
 def install(binding, original_export, output, *, drain=False, head=False,
-            actual_collectives=None, trace=False, stage=None, accepted_pop=False):
+            actual_collectives=None, trace=False, stage=None, accepted_pop=False,
+            workspace=False):
     """Return actual elaborator sources/parameters, with every flag default off.
 
     trace is simulation-only and records commands admitted at dut.cmd_go,
@@ -71,8 +72,8 @@ def install(binding, original_export, output, *, drain=False, head=False,
             s = _one(s, 'ot_chip_v41x_die_owner_safe_c8 #(',
                      'ot_chip_v41x_die_owner_safe_c8 #(.IDX_DRAIN_LOOKAHEAD(IDX_DRAIN_LOOKAHEAD),')
             s = _one(s, '    parameter integer C8_PUBLICATION=0,',
-                     '    parameter integer S81_COMMAND_TRACE=0,\n    parameter integer S81_TRACE_STAGE=-1,\n    parameter integer C8_PUBLICATION=0,')
-            s = _one(s, '\nendmodule', OBSERVER + '\nendmodule')
+                     '    parameter integer S81_COMMAND_TRACE=0,\n    parameter integer S81_TRACE_STAGE=-1,\n    parameter integer S81_HOST_WORKSPACE=0,\n    parameter integer C8_PUBLICATION=0,')
+            s = _one(s, '\nendmodule', OBSERVER + WORKSPACE + '\nendmodule')
         changed[p] = s
     dests = {p: output/'native'/p.name for p in changed}
     for p, dest in dests.items():
@@ -92,8 +93,9 @@ def install(binding, original_export, output, *, drain=False, head=False,
     result.update(sources=sources,
                   source_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
                   parameters=dict(result['parameters'], IDX_DRAIN_LOOKAHEAD=int(drain),
-                                  S81_COMMAND_TRACE=int(trace), S81_TRACE_STAGE=-1 if stage is None else stage),
-                  verilator_args=result['verilator_args'] + ['-GIDX_DRAIN_LOOKAHEAD='+str(int(drain)), '-GS81_COMMAND_TRACE='+str(int(trace)), '-GS81_TRACE_STAGE='+str(-1 if stage is None else stage)],
+                                  S81_COMMAND_TRACE=int(trace), S81_TRACE_STAGE=-1 if stage is None else stage,
+                                  S81_HOST_WORKSPACE=int(workspace)),
+                  verilator_args=result['verilator_args'] + ['-GIDX_DRAIN_LOOKAHEAD='+str(int(drain)), '-GS81_COMMAND_TRACE='+str(int(trace)), '-GS81_TRACE_STAGE='+str(-1 if stage is None else stage), '-GS81_HOST_WORKSPACE='+str(int(workspace))],
                   capture_ready_not_inferred=True, parent_clock_loaded=False,
                   source_rebase='actual FASTPP PC21 L20; originals byte-identical')
     return result
@@ -124,6 +126,28 @@ OBSERVER = r'''
 `endif
 '''
 
+# Simulation input-loader ABI, not a native SRAM write port or visibility ACK.
+# It must never set context_restored. The caller supplies actual producer bits;
+# physical capture/debt qualification remains with the enclosing native service.
+WORKSPACE = r'''
+`ifndef SYNTHESIS
+    export "DPI-C" function v41rt_c8_workspace_write;
+    function int v41rt_c8_workspace_write(input longint unsigned identity,
+                                         input int address, input int raw_bits);
+        v41rt_c8_workspace_write=1;
+        if(S81_HOST_WORKSPACE && C8_CONTEXT && C8_PUBLICATION && rst_n &&
+           identity < (64'd1 << 47) && address>=0 && address<(1<<19) &&
+           c8_context_v && !c8_context_restored && !c8_stage_active &&
+           identity[46:0]==c8_context_identity && c8_write_quiet &&
+           !c8_write_fault && !c8_write_quarantine && !c8_stage_quarantine &&
+           !(|dut.u_tile.rom_we)) begin
+            dut.u_tile.vm[address]=32'(raw_bits);
+            v41rt_c8_workspace_write=(dut.u_tile.vm[address]===32'(raw_bits)) ? 0 : 2;
+        end
+    endfunction
+`endif
+'''
+
 
 def main():
     import argparse
@@ -142,12 +166,14 @@ def main():
     parser.add_argument('--drain',action='store_true')
     parser.add_argument('--head',action='store_true')
     parser.add_argument('--accepted-pop',action='store_true')
+    parser.add_argument('--workspace',action='store_true')
     parser.add_argument('--trace',action='store_true')
     args=parser.parse_args()
     binding=ParentBinding(args.owner,args.selected,args.model_pin,args.interface_pin,
                           payload_interface=args.payload_interface, released_return_binding=args.released_return_binding)
     result=install(binding,args.original_export,args.output,drain=args.drain,
-                   head=args.head,trace=args.trace,stage=args.stage,accepted_pop=args.accepted_pop)
+                   head=args.head,trace=args.trace,stage=args.stage,accepted_pop=args.accepted_pop,
+                   workspace=args.workspace)
     result['allocation_receipts']=binding.receipts
     text=json.dumps(result,default=str,indent=2)+'\n'
     receipt=Path(args.output)/'sources.json'

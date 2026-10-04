@@ -22,7 +22,7 @@ def test_actual_complete_source_chain_and_defaults(tmp_path):
     b=binding()
     before={p:p.read_bytes() for p in b.native_sources(None)}
     r=S.install(b,'unused-fixture-export',tmp_path/'selected')
-    assert r['parameters']==dict(COLL_ACCEPTED_POP=0,IDX_DRAIN_LOOKAHEAD=0,S81_COMMAND_TRACE=0,S81_TRACE_STAGE=-1)
+    assert r['parameters']==dict(COLL_ACCEPTED_POP=0,IDX_DRAIN_LOOKAHEAD=0,S81_COMMAND_TRACE=0,S81_TRACE_STAGE=-1,S81_HOST_WORKSPACE=0)
     assert r['added_cycles']==0 and r['pairs_per_rank_die']==2417
     roles={p.name:p for p in r['sources']}
     assert '.DRAIN_LOOKAHEAD(IDX_DRAIN_LOOKAHEAD)' in roles['ot_hdc_core_v41x.sv'].read_text()
@@ -41,7 +41,7 @@ def test_actual_complete_source_chain_and_defaults(tmp_path):
 def test_actual_identity_price_unknown_until_trace(tmp_path):
     r=S.install(binding(),'unused',tmp_path/'selected',drain=True,accepted_pop=True,trace=True,stage=20)
     assert r['added_cycles'] == 0
-    assert r['parameters']==dict(COLL_ACCEPTED_POP=1,IDX_DRAIN_LOOKAHEAD=1,S81_COMMAND_TRACE=1,S81_TRACE_STAGE=20)
+    assert r['parameters']==dict(COLL_ACCEPTED_POP=1,IDX_DRAIN_LOOKAHEAD=1,S81_COMMAND_TRACE=1,S81_TRACE_STAGE=20,S81_HOST_WORKSPACE=0)
     p=next(p for p in r['sources'] if p.name=='ot_v41_rt_die_l20_c8.sv')
     s=p.read_text()
     assert 'if(dut.cmd_go)' in s and 'trace_identity=c8_engine_identity' in s
@@ -76,3 +76,15 @@ def test_trace_refuses_unowned_stage(tmp_path):
 def test_abandoned_head_candidate_refused(tmp_path):
     with pytest.raises(ValueError,match='headreg candidate rejected'):
         S.install(binding(),'unused',tmp_path,head=True)
+
+
+def test_workspace_abi_is_setup_only_and_failclosed(tmp_path):
+    r=S.install(binding(),'unused',tmp_path,workspace=True)
+    p=next(p for p in r['sources'] if p.name=='ot_v41_rt_die_l20_c8.sv')
+    s=p.read_text();w=s[s.index('function int v41rt_c8_workspace_write'):s.index('endfunction',s.index('function int v41rt_c8_workspace_write'))]
+    assert r['parameters']['S81_HOST_WORKSPACE']==1
+    assert 'identity[46:0]==c8_context_identity' in w and 'address<(1<<19)' in w
+    assert '!c8_context_restored' in w and '!c8_stage_active' in w
+    assert 'c8_write_quarantine' in w and 'rom_we' in w
+    assert 'context_restored=' not in w and 'retire_v=' not in w
+    assert 'v41rt_c8_workspace_write=1' in w
