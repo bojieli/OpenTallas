@@ -95,7 +95,7 @@ module ot_qwen_combined_nearbaseline_subsystem #(
         wire          hd_v, hd_r, hd_ne;
         wire [PW-1:0] hd_d;
         wire [9:0]    hd_n;
-        ot_nhb_fifo #(.W(PW), .D(EFD)) u_hdq (.clk(clk), .rst_n(rst_n), .push(dn_any), .din(dn_rec),
+        ot_nhb_fifo_p #(.W(PW), .D(EFD)) u_hdq (.clk(clk), .rst_n(rst_n), .push(dn_any), .din(dn_rec),
                                                 .pop(hd_ne && hd_r), .dout(hd_d), .nonempty(hd_ne), .count(hd_n));
         assign efo[2*s] = dn_any && (hd_n == EFD);
         wire [FW-1:0] h_tx, s_tx, h_rx, s_rx;
@@ -178,7 +178,7 @@ module ot_qwen_combined_nearbaseline_subsystem #(
         wire          up_any = (!LAYER_START_FENCE || layer_started) && (so_valid || pv_valid);
         wire [PW-1:0] up_rec = {so_valid, so_type, so_g, so_hh, so_k, so_any, so_data, pv_valid, pv_g, pv_beat, pv_data};
         wire [9:0]    su_n;
-        ot_nhb_fifo #(.W(PW), .D(EFD)) u_suq (.clk(clk), .rst_n(rst_n), .push(up_any), .din(up_rec),
+        ot_nhb_fifo_p #(.W(PW), .D(EFD)) u_suq (.clk(clk), .rst_n(rst_n), .push(up_any), .din(up_rec),
                                                 .pop(su_ne && su_r), .dout(su_d), .nonempty(su_ne), .count(su_n));
         assign efo[2*s+1] = up_any && (su_n == EFD);
         // hub side of the up record
