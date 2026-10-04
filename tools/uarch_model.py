@@ -6646,6 +6646,87 @@ def main(argv=None):
         Path(a.out).write_text(json.dumps(out, indent=1, default=str) + "\n")
 
 
+def dsrom_s81_native_he_bootstrap():
+    """Native prefix leaves, reusing selected HE and SUN256 reducer arithmetic.
+
+    A source-component gate, not another physical engine allocation. Actual
+    VM/weight providers must supply fixed-latency reads and matched visibility.
+    """
+    return dict(schema='opentallas.dsrom.S81.native-HE-bootstrap.v1',
+        all_numbers='SOURCE_BOUND_MODEL_NOT_MEASURED_TOKEN_RATE', adopted=False,
+        HE=dict(source='rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv', HW=8, TL=9,
+            KCMAX=2560, PMAX=2, MP=1, AW=30, NW=21, BAW=16,
+            FP32_MAC_lanes=64, MACs_per_cycle_peak=64,
+            VM_read_ports=8, VM_read_bytes_per_edge_peak=32,
+            weight_read_banks=8, weight_bytes_per_edge_peak=256,
+            weight_data_boundary_bits=2048, VM_read_data_boundary_bits=256,
+            VM_read_address_boundary_bits=240, output_masked_data_boundary_bits=1024,
+            output_address_bits=30, output_mask_bits=32,
+            input_staging_BF16_bits=8*2*320*8*16,
+            nout=24, K=20480, runs_per_row=320, input_LOAD_read_edges=2560,
+            dot_products=491520, minimum_issue_edges=24*320,
+            scalar_normalization_in_HE=False,
+            LOAD_capture_edges=2, command_staging_edges=1,
+            native_tail_and_result_drain_edges=None,
+            ordered_arithmetic='chunk8 R-ARITH, sequential products per chunk then padded pairwise tree; raw mode scale=0',
+            accepted_VM_visibility_not_engine_idle=True),
+        SSX=dict(source='rtl/hdc/ot_hdc_vreduce.sv', SW=256, LV=7, AW=30,
+            source_H_words=20480, source_H_base=0, result_address=40960,
+            vector_accepts=80, VM_read_bytes_per_vector=1024,
+            actual_target_read_span_words=16, staging_reads_per_vector=16,
+            actual_target_read_span_beats=1280,
+            actual_target_read_boundary_bits=512,
+            assembly_rule='Each 256-word vector requires sixteen identity/address-qualified same-VM 16-word returns; valid only after complete assembly. No unlimited 256-lane target callback implied.',
+            read_data_boundary_bits=8192, squared_multipliers=256,
+            chain_adders=32*7, vector_tree_adders=31, time_tree_adders=7,
+            MACs_per_cycle=0, multiplier_ops=20480,
+            source_order='R-ARITH su csum over all H squared: contiguous8 sequential, padded pairwise tree; no interleaved partials or per-copy regrouping',
+            first_input_to_output_pipeline_edges_model=3+1+21+5*4+7*4+1,
+            no_stall_vector_issue_edges=80, actual_VM_read_and_visibility_edges=None,
+            arithmetic_replica_count=1, already_selected_SUN256_reducer=True,
+            additional_physical_MAC_or_reducer_area_charge_mm2=0),
+        PF=dict(addresses=[41152,41153,41154,41155], raw_FP32_words=[1065353216]*4,
+            role='Declared identity literals only, not trained/expected intermediate activation',
+            native_VM_write_beats=4, accepted_visibility_required=True),
+        adapter=dict(shared_clock_edges_only=True, holding_input_vector_bits=8192,
+            holding_output_word_bits=32, saved_identity_bits=47,
+            counters_and_flags_bits=33, reserved_HE_write_seats=32,
+            HE_write_seat_bits=1024+30+32+47+2,
+            minimum_added_state_bits=8192+32+47+33+32*(1024+30+32+47+2),
+            DFF_cell_floor_mm2=(8192+32+47+33+32*(1024+30+32+47+2))*DFF_UM2/1e6,
+            no_new_ROM_storage=True, borrowed_arithmetic_credit_not_extra_engine=True,
+            VM_staging_arbitration_routes_area_mm2=None, replicas_per_rank=1, TP=4,
+            route_tracks_minimum_data_bundle=8192, corridor_capacity=None,
+            fanout_mux_cost='Bind existing VM read fabric and eight HE weight banks; no ideal unlimited provider or dropped fixed-latency response',
+            slot_fit=False, SS_FF_in_context=False),
+        cold_critical_path='embedding actual H visibility -> 80 accepted SSX vectors -> native SSX result -> actual VM SSX/PF visibility -> L0I0 -> I1 native HE -> remaining SU prefix. No CPU FP arithmetic or expected XN restore.',
+        combined_single_user_added_us=None,
+        overlap_credit_us=0, actual_provider_deadlines_required=True)
+
+
+def dsrom_s81_native_he_bootstrap_source():
+    """Additive corrected source-factory contract; prior component stays history."""
+    row=copy.deepcopy(dsrom_s81_native_he_bootstrap())
+    row['schema']='opentallas.dsrom.S81.native-HE-bootstrap.source-factory.v2'
+    row['PF']['raw_FP32_words']=[1065353216,0,0,0]
+    row['adapter'].update(explicit_bootstrap_arming=True, per_operation_inputs_ready=True,
+        sole_edge_owner='bootstrap participant; HE participant only drives ports; zero prepare evals; one native eval per rising/falling edge',
+        runtime_reserved_tag_namespace_only=True, grouped_scalar_acceptance_inferred=False,
+        actual_same_VM_scalar_prefetch_words=20480,
+        raw_cached_H_bytes=81920, raw_H_cache_register_floor_mm2=20480*32*DFF_UM2/1e6,
+        source_VM_read_return_latency_edges=4, source_old_request_reuse_wait_required=True,
+        scalar_serial_read_service_edges_model=20480*6,
+        serial_read_edge_derivation='Request acceptedE; native target returnedatE+4postedge; bootstrap polls E+5prepare; next scalar starts E+6. One canonicalbank, no private grouped acceptance.',
+        source_VM_capture_identity_callbacks_required=True,
+        H_cache_reuse_for_HE='Only literalI1 under unchanged H lease; L0I0 writes RF40992, not H. No source-version substitution or host FP.',
+        raw_HE_image_bytes=24*20480*4,
+        actual_HE_image_required='hbank.hex plus hbank.source full revision/tensor/dtype/shape/HHW8 codec/SHA; no zero fallback',
+        software_immutable_image_mirror_not_free_new_hardware_storage=True)
+    row['corrected_source_factory_symbol']='dsrom_s81_bind_minimum_he_bootstrap'
+    row['cold_critical_path']='Actual embedding publication -> explicit arm -> serialized actual H read returns -> 80 native SSX vectors -> native SSX/PF reserved scalar commands -> actual scalar ACKs -> per-op native inputs_ready -> L0I0/I1/remainingSU. Routes/provider/clock costs remain additive; no ideal native-port overlap.'
+    return row
+
+
 def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
     """Cold token ROM lookup; retained dedicated storage, no field refit.
 
