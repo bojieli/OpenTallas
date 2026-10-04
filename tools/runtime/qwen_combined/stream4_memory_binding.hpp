@@ -65,6 +65,32 @@ inline Stream4PhysicalSector stream4_physical_sector(uint32_t logical_sector,uns
     const unsigned j=(((l>>6)&511u)<<1)|((l>>16)&1u);
     return {l&3u,((l>>15)&1u)*16+((l>>2)&15u),((j>>7)<<2)|(j&3u),(j>>2)&31u,logical_sector>>17};
 }
+// Read the already-loaded f2a5 descriptor image, never regenerate it. The
+// first normal descriptor executes O and its all-reduce; the following normal
+// descriptor starts MLP after that collective has actually retired.
+template<class Descriptors>
+unsigned stream4_mlp_program_base(const Descriptors& actual_descriptors) {
+    if(actual_descriptors.size()<3)
+        throw std::invalid_argument("STREAM4 descriptor3/O/MLP image required");
+    const uint64_t near=actual_descriptors[0],o=actual_descriptors[1],mlp=actual_descriptors[2];
+    if((near&3u)!=3u||(near>>62)!=0||(o&3u)!=1u||(mlp&3u)!=1u)
+        throw std::invalid_argument("STREAM4 actual near/O-AR/MLP descriptors");
+    const unsigned o_base=(o>>32)&65535u,mlp_base=(mlp>>32)&65535u;
+    if(o_base>=4096||mlp_base>=4096||mlp_base<=o_base)
+        throw std::invalid_argument("STREAM4 actual PAW12 suffix/MLP boundaries");
+    return mlp_base;
+}
+template<class Die>
+bool wire_stream4_kv_free(Die& d,unsigned actual_mlp_program_base) {
+    if(actual_mlp_program_base>=4096)
+        throw std::out_of_range("STREAM4 actual MLP program boundary");
+    // Invoke in the existing low-clock settle loop. The sequencer itself
+    // asserts core_start after O's actual AR retirement; no host clock/count.
+    // RTL additionally enforces near inactive and row drain before slice reuse.
+    const uint8_t release=bool(d.core_start_o)&&!bool(d.kv_arm_o)&&
+        d.rm_layer!=255&&unsigned(d.prog_base)==actual_mlp_program_base;
+    return rt_set(d.rm_kv_free,release);
+}
 template<class Die> bool stream4_layer_terminal(const Die& d) {
     // Posted kv_drained alone is insufficient. Readback/reuse also retains
     // actual write-ACK debt, row retirement and sequencer completion.
