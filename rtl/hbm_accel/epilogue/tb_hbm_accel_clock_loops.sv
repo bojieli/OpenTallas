@@ -11,7 +11,21 @@ module ot_sram_1r1w_1024x256_m2_r2c2 (
  end
 endmodule
 
-module ha3_connected_case #(parameter ENABLE=0, SRAM=0)(input clk,rst_n,go,
+module ot_sram_1r1w_512x256_m1_r2c2 (
+ input clk,r_ce_in,input [8:0] r_addr_in, output reg [255:0] rd_out,
+ input w_ce_in,input [8:0] w_addr_in,input [255:0] wd_in,w_mask_in,
+ input [1:0] rr_en,input [17:0] rr_addr,input [1:0] cr_en,input [15:0] cr_sel);
+ reg [255:0] m[0:511];
+ // the read output holds for two cycles only (it is captured on a two-cycle path): X once it is stale
+ reg [1:0] age;
+ always @(posedge clk) begin
+  if(w_ce_in) m[w_addr_in] <= (m[w_addr_in] & ~w_mask_in) | (wd_in & w_mask_in);
+  if(r_ce_in) begin rd_out <= m[r_addr_in]; age <= 0; end
+  else if(age != 2'd3) begin age <= age + 1'b1; if(age == 2'd1) rd_out <= {256{1'bx}}; end
+ end
+endmodule
+
+module ha3_connected_case #(parameter ENABLE=0, SRAM=0, RMAC=1)(input clk,rst_n,go,
  input [12:0] rows,input [15:0] chunks,input [7:0] groups,input gs,input [1:0] stress,
  output reg finished);
  reg desc_sent;
@@ -25,7 +39,7 @@ module ha3_connected_case #(parameter ENABLE=0, SRAM=0)(input clk,rst_n,go,
  wire rdone=retire_pipe[2];
  wire req_ready = !stress || cyc%7 != 3;
  wire x_ready = !stress || cyc%19 < 16;
- ot_hbm_accel_bulk_copy #(.ENABLE(ENABLE),.SRAM_RING(SRAM)) copy (
+ ot_hbm_accel_bulk_copy #(.ENABLE(ENABLE),.SRAM_RING(SRAM),.RING_MACRO(RMAC)) copy (
   .clk(clk),.rst_n(rst_n),.d_valid(go && !desc_sent),.d_ready(dr),.d_base(32'd100),
   .d_lines(24'(rows*chunks*groups)),.req_v(req_v),.req_ready(req_ready),
   .req_addr(addr),.req_tag(tag),.rsp_v(rsp_v),.rsp_tag(rsp_tag),.rsp_data(rsp_data),
@@ -90,11 +104,12 @@ endmodule
 
 module tb_hbm_accel_clock_loops;
  parameter SRAM=0;
+ parameter RMAC=1;   // successor ring: 1 = even/odd groups of 512x256 macros, two-cycle capture (the 1.2 GHz SS configuration)
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,go=0;reg [12:0] rows;reg [15:0] chunks;reg [7:0] groups;reg gs;reg [1:0] stress;
  wire f0,f1;
  ha3_connected_case #(.ENABLE(0),.SRAM(SRAM)) b(clk,rst_n,go,rows,chunks,groups,gs,stress,f0);
- ha3_connected_case #(.ENABLE(1),.SRAM(SRAM)) n(clk,rst_n,go,rows,chunks,groups,gs,stress,f1);
+ ha3_connected_case #(.ENABLE(1),.SRAM(SRAM),.RMAC(RMAC)) n(clk,rst_n,go,rows,chunks,groups,gs,stress,f1);
  integer temp;
  initial begin
   if(!$value$plusargs("ROWS=%d",temp))temp=17;rows=temp;

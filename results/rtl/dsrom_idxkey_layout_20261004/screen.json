@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.dsrom-idxkey-layout.screen.v1",
+ "period_ps": 833.0,
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "basis": "pre-layout: ORFS yosys/abc at CORNER=WC (ADDER_MAP_FILE off), OpenSTA ASAP7 RVT SS (setup) and FF (hold) libs, ideal clock, inputs/outputs false-pathed; the data banks (ot_hdc_v41x_idx_kgrdata) and the list SRAM outside the screened control, as for ot_hdc_v41x_idx_kgctl",
+ "source_sha256": {
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_kgrow.sv": "8e205b8d6eb18863ddbd08d60efcb50ed67bc7b389898f6f3d395d66c654aa97",
+  "tools/dsrom_reindex_screen.py": "5d969fa901fc03cacef6295051f90042c1c1514e5be522efbefcfd2cddb79051"
+ },
+ "runs": {
+  "kgrctl": {
+   "top": "ot_hdc_v41x_idx_kgrctl",
+   "params": {},
+   "period_ps": 833.0,
+   "ss_setup_wns_ps": -634.6,
+   "ff_hold_wns_ps": 8.4,
+   "cell_area_um2": 41556.23676,
+   "ss_fmax_prelayout_hz": 681361567,
+   "worst_start": "lr[9][1]$_SDFFE_PN0P_",
+   "worst_end": "isu[4][15]$_DFFE_PP_",
+   "worst_slack_by_stage_ps": {
+    "isu": -634.65,
+    "elig": -508.33,
+    "en_ic": -506.57,
+    "req_addr": -480.6,
+    "wv": -446.93,
+    "okf": -438.25,
+    "wpe": -371.22,
+    "lr": -365.93,
+    "req_tag": -334.25,
+    "fp": -329.3,
+    "rob_ok": -300.49,
+    "d_left": -277.17,
+    "rd_seq": -262.03,
+    "dr_blk": -256.77,
+    "adm": -255.05,
+    "inuse": -248.39,
+    "dr_e": -242.7,
+    "e2_x": -214.77,
+    "lbe": -138.29,
+    "ap": -125.93,
+    "hd_blk": -121.85,
+    "hd_bk": -121.83,
+    "hd_hi": -121.83,
+    "hd_lo": -121.83,
+    "hd_pcf": -121.83,
+    "hd_seq": -121.83,
+    "e1_xr": -108.53,
+    "d_seq": -100.44,
+    "_674490_": -97.82,
+    "w_pc": -97.82
+   },
+   "basis": "pre-layout: ORFS yosys/abc at CORNER=WC, OpenSTA SS RVT libs (setup, 60 ps) and FF RVT libs (hold, 25 ps), ideal clock"
+  }
+ },
+ "status": "fail"
+}

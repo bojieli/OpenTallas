@@ -1,0 +1,8 @@
+SIM_ONLY canonical S81 L20 source loading; expected comparison only at END
+{"scope": "S81.L20.position1048575", "functional": "SIM_ONLY", "headline_timing": false, "completed": false, "exact": null, "source_stage": 37, "simulation_ticks": 0, "native_cycles": null, "failure": "AssertionError()", "elapsed_seconds": 43.3754141558893}
+Traceback (most recent call last):
+  File "/home/ubuntu/dsrom-minimum-token-caller-20261004/tools/dsrom_s81_l20_sim_only.py", line 126, in <module>
+    main()
+  File "/home/ubuntu/dsrom-minimum-token-caller-20261004/tools/dsrom_s81_l20_sim_only.py", line 34, in main
+    assert len(nodes) == 144
+AssertionError

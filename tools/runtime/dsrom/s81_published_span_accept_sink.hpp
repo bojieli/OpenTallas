@@ -262,6 +262,22 @@ private:
         }catch(...){stopped=true;throw;}
     }
 public:
+    // Called by the OTHER selected writer's actual old-head ACK callback.
+    // This shares the existing address witness; it does not clock a bank,
+    // grant a lease, or treat producer/assignment acceptance as visibility.
+    void external_scalar_visible(const MacroWrite& c,const VmReceipt& receipt) {
+        try {
+            const auto a=c.source.element_address;
+            require(!fault()&&!read_pending&&a<(1u<<19)&&c.source.identity==identity&&
+                    c.word.address==(a>>4)&&c.word.mask==(uint16_t(1)<<(a&15))&&
+                    receipt.address==c.word.address&&receipt.mask==c.word.mask&&
+                    receipt.owner==c.word.owner,
+                    "external scalar lacks actual matching old-head receipt");
+            on_prefix_scalar_ack(c,receipt); // source checks unique admitted tuple/version
+            prefix_acked.set(a);
+            read_done=false; // never retain a cached read across this write
+        }catch(...){stopped=true;throw;}
+    }
     DsromS81EmbeddingSink sink() {
         return {[this](const auto& o){return offer(o);},
                 [this](const auto& o){return visible(o);},[this](){return fault();}};

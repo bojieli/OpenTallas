@@ -1,10 +1,12 @@
 #include "s81_minimum_runtime.hpp"
+#include "s81_minimum_pair_source.hpp"
 #include "dsrom_s81_rom_client.hpp"
 #include "Vpq.h"
 #include "Vpb.h"
 #include "svdpi.h"
 #include "verilated.h"
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <dlfcn.h>
 #include <filesystem>
@@ -14,7 +16,13 @@
 #include <unordered_map>
 
 namespace {
-struct PairMem {int stage,rank,pair;std::vector<uint64_t> cfg;};
+struct PairMem {
+    int stage,rank,pair;std::vector<uint64_t> cfg;
+    DsromS81MinimumRuntime* runtime=nullptr;
+    std::function<bool()> source_selected;
+    std::function<std::array<uint32_t,9>(unsigned,unsigned)> source_rom;
+    std::function<uint64_t(unsigned)> source_cfg;
+};
 PairMem* registering=nullptr;
 std::unordered_map<const void*,std::pair<PairMem*,int>> rom_scopes;
 std::unordered_map<const void*,PairMem*> cfg_scopes;
@@ -68,6 +76,24 @@ template<class Model> struct NativePair:PairBase {
 };
 }
 
+void dsrom_s81_minimum::bind_native_pair_source(
+    DsromS81MinimumRuntime& runtime,std::function<bool()> selected,
+    std::function<std::array<uint32_t,9>(unsigned,unsigned)> rom,
+    std::function<uint64_t(unsigned)> cfg) {
+    if(!selected||!rom||!cfg||!runtime.cycle||runtime.cycle()!=0||runtime.identity)
+        throw std::runtime_error("native pair source must bind before shared cold/context admission");
+    PairMem* memory=nullptr;
+    for(const auto& scope:cfg_scopes)if(scope.second->runtime==&runtime) {
+        if(memory&&memory!=scope.second)
+            throw std::runtime_error("ambiguous native pair source owner");
+        memory=scope.second;
+    }
+    if(!memory||memory->source_selected)
+        throw std::runtime_error("missing or already bound native pair source owner");
+    memory->source_selected=std::move(selected);
+    memory->source_rom=std::move(rom);memory->source_cfg=std::move(cfg);
+}
+
 extern "C" void v41rt_rom_register(const char* instance) {
     if(!registering)throw std::runtime_error("native ROM registration outside pair construction");
     int bank=instance&&*instance&&instance[strlen(instance)-1]=='b';
@@ -79,11 +105,22 @@ extern "C" void v41rt_cfg_register() {
 }
 extern "C" void v41rt_rom_read(int address,svBitVecVal* q) {
     const auto& binding=rom_scopes.at(svGetScope());const auto& owner=*binding.first;
-    const auto word=dsrom_s81::read(owner.stage,owner.rank,owner.pair,binding.second,address);
+    if(address<0)throw std::runtime_error("negative native ROM source address");
+    const auto word=owner.source_selected&&owner.source_selected()
+        ?owner.source_rom(binding.second,unsigned(address))
+        :dsrom_s81::read(owner.stage,owner.rank,owner.pair,binding.second,address);
+    if(word[8]>>18)throw std::runtime_error("native ROM source exceeds raw274 word");
     for(int i=0;i<9;i++)q[i]=word[i];
 }
 extern "C" long long v41rt_cfg_read(int address) {
-    const auto& cfg=cfg_scopes.at(svGetScope())->cfg;
+    const auto& owner=*cfg_scopes.at(svGetScope());
+    if(address<0)throw std::runtime_error("negative native CFG source address");
+    if(owner.source_selected&&owner.source_selected()) {
+        auto word=owner.source_cfg(unsigned(address));
+        if(word>>48)throw std::runtime_error("native selected CFG exceeds word48");
+        return static_cast<long long>(word);
+    }
+    const auto& cfg=owner.cfg;
     if(address<0||size_t(address)>=cfg.size())throw std::runtime_error("unowned native CFG phase/address");
     return static_cast<long long>(cfg[address]);
 }
@@ -105,7 +142,7 @@ int main(int argc,char** argv) {
     try {
         bool bf=std::string(argv[1])=="pb";
         if(!bf&&std::string(argv[1])!="pq")throw std::runtime_error("actual PQ/PB model kind required");
-        PairMem memory{std::stoi(argv[2]),std::stoi(argv[3]),std::stoi(argv[4]),cfg_words(argv[5])};
+        PairMem memory{std::stoi(argv[2]),std::stoi(argv[3]),std::stoi(argv[4]),cfg_words(argv[5]),nullptr,{},{},{}};
         owner_bounds(memory.stage,memory.rank,memory.pair);
         if(setenv("DSROM_S81_ROM_SOCKET",argv[8],1))throw std::runtime_error("native ROM socket binding failed");
         VerilatedContext ctx;ctx.commandArgs(argc,argv);ctx.randReset(0);
@@ -115,6 +152,7 @@ int main(int argc,char** argv) {
         native->drive({});native->eval(false,false);native->eval(true,false);native->eval(false,false);
         registering=nullptr;
         DsromS81MinimumRuntime runtime{};
+        memory.runtime=&runtime;
         runtime.stage=memory.stage;runtime.rank=memory.rank;runtime.pair=memory.pair;
         runtime.bf16=bf;runtime.context=&ctx;
         long cycle=0;uint64_t accepted_go=0;bool started=false;
@@ -198,7 +236,18 @@ int main(int argc,char** argv) {
             }
         };
         int rc=source_main(runtime,argv[6]);
-        if(rc==0&&(!accepted_go||!runtime.identity||!runtime.publication_drained||
+        // The opted-in I0 path performs native SU work and no field GO. Its
+        // source plan requires actual SU acceptance, output publication ACK
+        // and readback before completion. Preserve every common drain check.
+        const char* native_i0=std::getenv("DSROM_S81_NATIVE_L20_I0");
+        const bool nonfield_i0=native_i0&&std::string(native_i0)=="1"&&runtime.stage==37;
+        const char* native_index=std::getenv("DSROM_S81_NATIVE_L20_INDEX");
+        const bool nonfield_index=native_index&&std::string(native_index)=="1"&&runtime.stage==37&&runtime.rank==3;
+        // The selected four-rank ATT caller uses native KV/attention services,
+        // not this host's field pair. Its own completion still owes all ACKs.
+        const char* native_att=std::getenv("DSROM_S81_NATIVE_L20_ATT");
+        const bool nonfield_att=native_att&&std::string(native_att)=="1"&&runtime.stage==37&&runtime.rank==0;
+        if(rc==0&&((!accepted_go&&!nonfield_i0&&!nonfield_index&&!nonfield_att)||!runtime.identity||!runtime.publication_drained||
                    !runtime.publication_drained(*runtime.identity)||!native->result().quiet))
             throw std::runtime_error("source exit precedes actual native field/publication drain");
         printf("MINIMUM_SOURCE_EXIT rc=%d cycles=%ld field_go=%llu stage=%d rank=%d pair=%d\n",

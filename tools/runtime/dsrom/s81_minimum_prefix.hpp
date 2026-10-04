@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 #include <set>
+#include <map>
 
 // Port orchestration only. Arithmetic, reads, writes and ACKs belong to actual
 // native SU/HE and target-VM participants supplied by the caller. This header
@@ -18,6 +19,8 @@ const std::array<DsromS81PrefixOperation,7>& dsrom_s81_l0_prefix_operations();
 
 struct DsromS81PrefixNativeEngine {
     DsromS81MinimumParticipant participant;
+    // ready authorizes command admission, including held prefetched operands.
+    // idle means all accepted work and staged debt has drained for retirement.
     std::function<bool()> ready,idle;
     // Poll/admit this operation's real native operand prefetch. Returns true
     // only with the required source leases and fixed-latency endpoint ready.
@@ -45,8 +48,9 @@ struct DsromS81PrefixVm {
 
 class DsromS81MinimumPrefix {
     DsromS81MinimumRuntime& runtime;
-    DsromS81MinimumEmbedding& embedding;
+    DsromS81MinimumEmbedding* embedding;
     DsromS81PrefixNativeEngine su,he;
+    std::map<unsigned,DsromS81PrefixNativeEngine> native_engines;
     DsromS81PrefixVm vm;
     uint64_t identity;
     std::vector<DsromS81PrefixOperation> operations;
@@ -62,7 +66,10 @@ class DsromS81MinimumPrefix {
             e.ready&&e.idle&&e.inputs_ready&&e.drive;
     }
     DsromS81PrefixNativeEngine& engine() {
-        return operations.at(next).unit==5?he:su;
+        const auto unit=operations.at(next).unit;
+        if(unit==2)return su;
+        if(unit==5)return he;
+        return native_engines.at(unit);
     }
     void prepare(const DsromS81PairResult& result) {
         try {
@@ -72,6 +79,7 @@ class DsromS81MinimumPrefix {
             // including the SU->HE boundary and the final XN drain edge.
             su.drive(dsrom_s81_l0_prefix_operations()[0],false);
             he.drive(dsrom_s81_l0_prefix_operations()[1],false);
+            for(auto& e:native_engines)e.second.drive(operations.at(next<operations.size()?next:0),false);
             if(started&&next<operations.size()) {
                 require(runtime.identity&&*runtime.identity==identity,
                         "native prefix lost admitted context");
@@ -80,14 +88,15 @@ class DsromS81MinimumPrefix {
                 }
                 if(next<operations.size()) {
                     auto& e=engine();
-                    go=!inflight&&embedding.complete()&&
+                    go=!inflight&&(!embedding||embedding->complete())&&
                         vm.cold_inputs_visible(identity)&&
                         e.inputs_ready(operations.at(next))&&
-                        e.ready()&&e.idle();
+                        e.ready();
                     e.drive(operations.at(next),go);
                 }
             }
             su.participant.prepare(result);he.participant.prepare(result);
+            for(auto& e:native_engines)e.second.participant.prepare(result);
         }catch(...){stopped=true;throw;}
     }
     void rising(bool released) {
@@ -103,14 +112,32 @@ class DsromS81MinimumPrefix {
                 inflight=true;
             }
             su.participant.rising(released);he.participant.rising(released);
+            for(auto& e:native_engines)e.second.participant.rising(released);
         }catch(...){stopped=true;throw;}
     }
 public:
     DsromS81MinimumPrefix(DsromS81MinimumRuntime& r,DsromS81MinimumEmbedding& e,
                          uint64_t id,DsromS81PrefixNativeEngine s,
                          DsromS81PrefixNativeEngine h,DsromS81PrefixVm v,
-                         std::vector<DsromS81PrefixOperation> native_program={})
-    :runtime(r),embedding(e),su(std::move(s)),he(std::move(h)),vm(std::move(v)),identity(id),operations(std::move(native_program)) {
+                         std::vector<DsromS81PrefixOperation> native_program={},
+                         std::map<unsigned,DsromS81PrefixNativeEngine> operators={})
+    :DsromS81MinimumPrefix(r,&e,id,std::move(s),std::move(h),std::move(v),
+                          std::move(native_program),std::move(operators)) {}
+    // Representative entry inputs are published through the actual target VM.
+    // No embedding model is constructed or marked complete for this path.
+    DsromS81MinimumPrefix(DsromS81MinimumRuntime& r,uint64_t id,
+                         DsromS81PrefixNativeEngine s,DsromS81PrefixNativeEngine h,
+                         DsromS81PrefixVm v,std::vector<DsromS81PrefixOperation> native_program,
+                         std::map<unsigned,DsromS81PrefixNativeEngine> operators={})
+    :DsromS81MinimumPrefix(r,nullptr,id,std::move(s),std::move(h),std::move(v),
+                          std::move(native_program),std::move(operators)) {}
+private:
+    DsromS81MinimumPrefix(DsromS81MinimumRuntime& r,DsromS81MinimumEmbedding* e,
+                         uint64_t id,DsromS81PrefixNativeEngine s,
+                         DsromS81PrefixNativeEngine h,DsromS81PrefixVm v,
+                         std::vector<DsromS81PrefixOperation> native_program,
+                         std::map<unsigned,DsromS81PrefixNativeEngine> operators)
+    :runtime(r),embedding(e),su(std::move(s)),he(std::move(h)),native_engines(std::move(operators)),vm(std::move(v)),identity(id),operations(std::move(native_program)) {
         l0_prefix=operations.empty();
         if(operations.empty()) {
             const auto& prefix=dsrom_s81_l0_prefix_operations();
@@ -118,17 +145,22 @@ public:
         }
         std::set<unsigned> indices;
         for(const auto& op:operations)
-            require((op.unit==2||op.unit==5)&&op.template_sha256&&
+            require((op.unit==2||op.unit==5||native_engines.count(op.unit))&&op.template_sha256&&
                     indices.insert(op.index).second,
                     "literal SU/HE program with unique publication indices required");
         require(r.stage>=0&&r.stage<81&&id<(1ull<<47)&&valid(su)&&valid(he)&&
                 vm.instruction_accepted&&vm.cold_inputs_visible&&
                 vm.outputs_visible&&vm.fault&&vm.xn_span,
                 "actual native SU/HE, cold reducers and same-VM publication/read participants required");
+        std::set<std::string> names{su.participant.name,he.participant.name};
+        for(const auto& e:native_engines)
+            require(e.first!=2&&e.first!=5&&e.first<=6&&valid(e.second)&&
+                    names.insert(e.second.participant.name).second,
+                    "actual distinct native operator participant required");
         require(su.participant.name!=he.participant.name,
                 "prefix SU and HE must name distinct actual participants");
         for(const auto& p:r.participants)
-            require(p.name!=su.participant.name&&p.name!=he.participant.name,
+            require(!names.count(p.name),
                     "native prefix leaf already registered; duplicate clock forbidden");
         // This participant owns these two leaf callbacks. Do not also register
         // them separately: the host supplies exactly one shared edge each.
@@ -136,10 +168,12 @@ public:
             [this](const auto& p){prepare(p);},
             [this](bool reset){rising(reset);},
             [this](bool reset){
-                try{su.participant.falling(reset);he.participant.falling(reset);}
+                try{su.participant.falling(reset);he.participant.falling(reset);
+                    for(auto& e:native_engines)e.second.participant.falling(reset);}
                 catch(...){stopped=true;throw;}
             },[this](){return fault();}});
     }
+public:
     DsromS81MinimumPrefix(const DsromS81MinimumPrefix&)=delete;
     DsromS81MinimumPrefix& operator=(const DsromS81MinimumPrefix&)=delete;
     void start() {
@@ -155,12 +189,14 @@ public:
                 "nonfield reload requires published old run and nonempty native program");
         std::set<unsigned> indices;
         for(const auto& op:native_program)
-            require((op.unit==2||op.unit==5)&&op.template_sha256&&
+            require((op.unit==2||op.unit==5||native_engines.count(op.unit))&&op.template_sha256&&
                     indices.insert(op.index).second, "literal native program required");
         operations=std::move(native_program);next=0;l0_prefix=false;go=false;
     }
     bool fault() const {
-        return stopped||su.participant.fault()||he.participant.fault()||vm.fault();
+        if(stopped||su.participant.fault()||he.participant.fault()||vm.fault())return true;
+        for(const auto& e:native_engines)if(e.second.participant.fault())return true;
+        return false;
     }
     bool complete() const {return started&&next==operations.size()&&!inflight&&!fault();}
     unsigned next_instruction() const {return next;}

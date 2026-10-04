@@ -35,12 +35,12 @@ class HeadBindingTest(unittest.TestCase):
                 h=self.binding.head_address(rank,row,col)
                 w=((rank*32320+row)*5120+col)//16
                 gp=2525+w//16384
-                self.assertEqual(h['die']*632+h['pair'],gp)
+                self.assertEqual(h['pair']*self.binding.head_dies+h['die'],gp)
                 self.assertEqual(h['physical_row']*2+h['parity'],w%8192)
                 self.assertEqual(h['bit_range'][0],col%16*16)
         for args in ((4,0,0),(0,32320,0),(0,0,5120),(0,-1,0)):
             with self.assertRaises(ValueError):self.binding.head_address(*args)
-        self.assertEqual(self.binding.address('norm.weight',5119)['die'],7)
+        self.assertEqual(self.binding.address('norm.weight',5119)['die'],5050%12)
 
     def test_model_no_false_timing(self):
         p=self.binding.model()
