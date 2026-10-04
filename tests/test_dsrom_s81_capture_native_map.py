@@ -13,3 +13,7 @@ def test_not_default_off_map():
 
 def test_no_timeout_or_memory_cap():
     text=P.read_text();assert 'timeout=' not in text;assert 'setrlimit' not in text
+
+def test_pinned_builtin_frontend_no_dynamic_plugin():
+    assert m.yosys_argv()==['yosys','-s','map.ys']
+    assert 'frontend_help_sha256' in P.read_text()

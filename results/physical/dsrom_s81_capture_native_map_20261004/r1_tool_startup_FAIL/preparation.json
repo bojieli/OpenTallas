@@ -1,0 +1,27 @@
+{
+  "PnR": false,
+  "body_addition_requires_disjoint_containment": true,
+  "corner": "TT AREA ONLY; no SSFF/timing or physical admission",
+  "new_RTL": false,
+  "new_latency_edges": 0,
+  "parameters": {
+    "CAPACITY": 1,
+    "ENABLE": 1,
+    "ROOTS": 128,
+    "VM_ALWAYS_ACCEPT": 1,
+    "VM_AW": 19
+  },
+  "raw_model_bits": 16527,
+  "retained_parent_VM_physical_ports_proven": false,
+  "scope": "Full selected capture object including address arithmetic/formatting/quotas; native VM grant cone excluded, not free",
+  "source_commit": "dd636c7ff24a699484b3330574568e59c89f9536",
+  "source_parent_commit": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1",
+  "source_sha256": {
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+    "/srv/opentallas-scratch/codex/s81-capture-native-map-r1/source/jobs/dsrom_s81_capture_native_map_20261004/native_map.v": "c98a01c53ab3f3fb06059dbf970b970a88472b0a6be27bcbe75f538da950da5d",
+    "/srv/opentallas-scratch/codex/s81-capture-native-map-r1/source/rtl/dsrom_sys/rd64_capture/ot_dsrom_rd64_vm_capture.sv": "a0921062ea08456a95f19da8c1ebd029d3e90ad9ee54ca9279082862c7473e5b"
+  },
+  "tool": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+}

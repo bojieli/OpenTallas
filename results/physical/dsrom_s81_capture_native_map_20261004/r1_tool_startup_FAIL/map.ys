@@ -1,0 +1,13 @@
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+read_slang --top ot_dsrom_rd64_vm_capture -G ENABLE=1 -G ROOTS=128 -G CAPACITY=1 -G VM_AW=19 -G VM_ALWAYS_ACCEPT=1 /srv/opentallas-scratch/codex/s81-capture-native-map-r1/source/rtl/dsrom_sys/rd64_capture/ot_dsrom_rd64_vm_capture.sv
+synth -top ot_dsrom_rd64_vm_capture -flatten -noabc
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -g NAND
+techmap -map /srv/opentallas-scratch/codex/s81-capture-native-map-r1/source/jobs/dsrom_s81_capture_native_map_20261004/native_map.v
+clean
+check -assert
+write_json mapped.json
+write_verilog -noattr mapped.v
+stat

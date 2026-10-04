@@ -26,6 +26,10 @@ def script(libs):
         'techmap -map '+str(HERE/'native_map.v'),'clean','check -assert',
         'write_json mapped.json','write_verilog -noattr mapped.v','stat'])+'\n'
 
+def yosys_argv():
+    # This pinned Yosys0.68 already includes read_slang; loading slang.so fails.
+    return ['yosys','-s','map.ys']
+
 def run(out,pdk):
     selection,model=check_source();out.mkdir(parents=True,exist_ok=False)
     libs=[pdk/('asap7sc7p5t_'+n+'.lib') for n in LIBS]
@@ -35,8 +39,10 @@ def run(out,pdk):
     pins={str(ROOT/SOURCE):sha(ROOT/SOURCE),str(HERE/'native_map.v'):sha(HERE/'native_map.v')}
     pins.update({str(p):sha(p) for p in libs})
     identity=subprocess.check_output(['yosys','-V'],text=True).strip()
+    frontend=subprocess.check_output(['yosys','-Q','-T','-p','help read_slang'],text=True)
+    if 'read_slang [options]' not in frontend:raise ValueError('pinned built-in read_slang absent')
     prep={'source_commit':commit,'source_parent_commit':'57e3f45e3473e9e36b052f558a3b65ab71b1d6d1','parameters':PARAMS,
-          'source_sha256':pins,'tool':identity,'raw_model_bits':model['raw_bits_all_roots'],
+          'source_sha256':pins,'tool':identity,'frontend_help_sha256':hashlib.sha256(frontend.encode()).hexdigest(),'raw_model_bits':model['raw_bits_all_roots'],
           'scope':'Full selected capture object including address arithmetic/formatting/quotas; native VM grant cone excluded, not free',
           'new_RTL':False,'PnR':False,'corner':'TT AREA ONLY; no SSFF/timing or physical admission',
           'retained_parent_VM_physical_ports_proven':False,'new_latency_edges':0,
@@ -44,7 +50,7 @@ def run(out,pdk):
     (out/'preparation.json').write_text(json.dumps(prep,sort_keys=True,indent=2)+'\n')
     (out/'map.ys').write_text(script(libs));start=time.time()
     with (out/'mapped.log').open('w') as log:
-        proc=subprocess.Popen(['yosys','-m','slang','-s','map.ys'],cwd=out,stdout=log,stderr=subprocess.STDOUT)
+        proc=subprocess.Popen(yosys_argv(),cwd=out,stdout=log,stderr=subprocess.STDOUT)
         (out/'process.json').write_text(json.dumps({'yosys_PID':proc.pid,'started_unix':start})+'\n');rc=proc.wait()
     terminal={'exit_code':rc,'elapsed_s':time.time()-start,'source_commit':commit,'source_unchanged':all(sha(p)==h for p,h in pins.items()),'physical_admission':False}
     if rc==0:
