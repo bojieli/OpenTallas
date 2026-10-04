@@ -358,6 +358,16 @@ public:
                     }
                     const bool re=core->prog_re;const unsigned addr=core->prog_addr;
                     core->clk=1;core->eval();
+                    // These pulses were consumed on the ONE real rising edge.
+                    // Do not reinterpret OLD root-valid/VM-accept against the
+                    // post-NBA FIFO count: a push fills CAPACITY1 and a pop
+                    // empties it. Keep payload/owners and sticky faults intact.
+                    for(unsigned root=0;root<128;++root) {
+                        const unsigned valid_bit=root*69+68;
+                        core->rom_fr[valid_bit/32]&=~(uint32_t(1)<<(valid_bit%32));
+                    }
+                    for(unsigned j=0;j<4;++j)core->capture_vm_accept[j]=0;
+                    core->eval(); // same HIGH clock: combinational settle only
                     // Synchronous program read: CAP sees OLD prog_q. Update
                     // after the edge, preserving real FETCH/WAIT/CAP chronology.
                     if(reset_n&&re) {
