@@ -41,6 +41,10 @@ module ot_qwen_tp_seq_async_w12 #(
     // {valid & full & addr < 512, addr[8:0]} and range-checks by two short compares against
     // registered limits; 2 registers the offset as two 16-way one-hots (as 1), 3 registers the
     // 8-bit offset and decodes it in the AND-OR stage (fewer flops).
+    // 4: the set and the mark visibility of 2 (cycle-identical to 2), and the issue loop has neither
+    // the segment-end compare nor the wide select: `more` (= rd_k < nw) is a register precomputed
+    // from both outcomes (rd_k < nw, rd_k + 1 < nw), and the ready bit is the registered pair
+    // {lw[rd_k], lw[rd_k + 1]} of the previous cycle selected by the registered previous rd_go.
     parameter integer SB_PIPE = 0,
     parameter integer NP   = 1,            // ME result-port groups observed (G >> SMIN)
     parameter integer MAW  = 24,           // ME result word-address width
@@ -137,7 +141,9 @@ module ot_qwen_tp_seq_async_w12 #(
     reg  [255:0]  lw;
     wire [7:0]    rd_w = rd_k[7:0];
     reg           rdy;                      // SB_PIPE >= 2: registered lw[rd_k] (one cycle old)
-    wire          word_ok = !cut || core_fin || ((SB_PIPE >= 2) ? rdy : lw[rd_w]);
+    reg           rdy_h, rdy_a, go_r;       // SB_PIPE = 4: lw[rd_k], lw[rd_k + 1] and rd_go, one cycle old
+    wire          rdy_s = (SB_PIPE >= 4) ? (go_r ? rdy_a : rdy_h) : rdy;
+    wire          word_ok = !cut || core_fin || ((SB_PIPE >= 2) ? rdy_s : lw[rd_w]);
 
     // -- transmit: vector-memory words (all-reduce) or the argmax record ------------------
     localparam integer QD = 4;
@@ -152,7 +158,9 @@ module ot_qwen_tp_seq_async_w12 #(
     assign c_mode  = (kind == K_ARGMAX);
     assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
     wire   c_fire  = c_valid && c_ready;
-    wire   rd_go   = coll_on && kind == K_AR && rd_k < nw && (q_n + rd_v) < QD && word_ok;
+    reg    more;                            // SB_PIPE = 4: registered rd_k < nw (the segment-end check)
+    wire   rd_more = (SB_PIPE >= 4) ? more : (rd_k < nw);
+    wire   rd_go   = coll_on && kind == K_AR && rd_more && (q_n + rd_v) < QD && word_ok;
 
     reg [NW-1:0] best_i;
     reg [31:0]   best_v;
@@ -260,7 +268,7 @@ module ot_qwen_tp_seq_async_w12 #(
             s0_v[gp] <= me_we[gp] && (&me_mask[gp*16 +: LN]) && (ma >> 9) == 0;
             s0_a[gp*9 +: 9] <= ma[8:0];
             s1_v[gp] <= in && cut && st == S_CWAIT;
-            if (SB_PIPE == 2) begin
+            if (SB_PIPE != 3) begin
                 s1_lo[gp*16 +: 16] <= 16'd1 << off[3:0];
                 s1_hi[gp*16 +: 16] <= 16'd1 << off[7:4];
             end else s1_o[gp*8 +: 8] <= off;
@@ -272,7 +280,7 @@ module ot_qwen_tp_seq_async_w12 #(
         hit_or = 256'd0;
         for (wi = 0; wi < 256; wi = wi + 1)
             for (pi = 0; pi < NP; pi = pi + 1)
-                if (SB_PIPE == 2)
+                if (SB_PIPE != 3)
                     hit_or[wi] = hit_or[wi] | (s1_v[pi] & s1_lo[pi*16 + (wi % 16)] & s1_hi[pi*16 + (wi / 16)]);
                 else
                     hit_or[wi] = hit_or[wi] | (s1_v[pi] && s1_o[pi*8 +: 8] == wi[7:0]);
@@ -295,6 +303,34 @@ module ot_qwen_tp_seq_async_w12 #(
         else if (st == S_DLAT) rdy <= 1'b0;
         else rdy <= rd_go ? lw[rd_kb] : lw[rd_w];
     end
+    // SB_PIPE = 4: both outcomes are registered without rd_go (rdy_h = lw[rd_k], rdy_a = lw[rd_k + 1])
+    // and the previous rd_go picks one, so rdy_s(t+1) = rd_go(t) ? lw(t)[rd_k(t) + 1] : lw(t)[rd_k(t)],
+    // the rdy of SB_PIPE = 2 bit for bit (cleared alike in S_DLAT).
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin rdy_h <= 1'b0; rdy_a <= 1'b0; go_r <= 1'b0; end
+        else if (st == S_DLAT) begin rdy_h <= 1'b0; rdy_a <= 1'b0; go_r <= 1'b0; end
+        else begin rdy_h <= lw[rd_w]; rdy_a <= lw[rd_kb]; go_r <= rd_go; end
+    end
+    // SB_PIPE = 4: more = (rd_k < nw), precomputed from both outcomes of this cycle.  rd_k changes only
+    // by rd_go (+1) and by the two clears (S_DLAT, which also loads nw, and the non-cut S_CWAIT END);
+    // nw changes only in S_DLAT.  Asserted below against the direct compare.
+    wire [8:0] nw_ld = (ENABLE_AR256 != 0 && desc_q[1:0] == K_AR && desc_q[10 +: 8] == 8'd0) ? 9'd256 : {1'b0, desc_q[10 +: 8]};
+    wire       m_hold = rd_k < nw;
+    wire       m_adv  = {1'b0, rd_k} + 10'd1 < {1'b0, nw};
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) more <= 1'b0;
+        else if (st == S_DLAT && !desc_re) more <= nw_ld != 9'd0;
+        else if (st == S_CWAIT && core_done && !cut) more <= nw != 9'd0;
+        else more <= rd_go ? m_adv : m_hold;
+    end
+`ifndef SYNTHESIS
+    always @(posedge clk) begin
+        if (rst_n && ASYNC_COLL != 0 && SB_PIPE >= 4 && (more != (rd_k < nw) || (cut && rdy_s != rdy))) begin
+            $display("ot_qwen_tp_seq_async_w12: %m: precomputed issue state diverged (more=%0d rd_k=%0d nw=%0d)", more, rd_k, nw);
+            $fatal(1);
+        end
+    end
+`endif
 `ifndef SYNTHESIS
     always @(posedge clk) begin
         if (rst_n && ASYNC_COLL != 0 && SB_PIPE >= 2 && rd_go && cut && !core_fin && !lw[rd_w]) begin
