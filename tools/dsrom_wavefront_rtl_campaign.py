@@ -219,7 +219,7 @@ def prepare(scratch: Path):
 def build(scratch: Path, wave: int) -> Path:
     threads = int(os.environ.get("OT_WF_THREADS", "0"))     # Verilator --threads (0: single-threaded)
     stage = os.environ.get("OT_WF_STAGE", "0") == "1"
-    obj = scratch / ("obj_stage" if stage else f"obj_w{wave}" + (f"_t{threads}" if threads else ""))
+    obj = scratch / (f"obj_stage_w{wave}" if stage else f"obj_w{wave}" + (f"_t{threads}" if threads else ""))
     obj.mkdir(parents=True, exist_ok=True)
     (obj / "v41_array_cfg.svh").write_text((scratch / "array_cfg.svh").read_text())
     cmd = ["verilator", "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
@@ -500,21 +500,95 @@ def prepare_stage(scratch: Path, gold_from: Path):
 def run_stage(scratch: Path):
     (scratch / "array_cfg.svh").write_text((scratch / "stage_cfg.svh").read_text())
     os.environ["OT_WF_STAGE"] = "1"
-    exe = build(scratch, 0)
-    log = scratch / "out_stage.txt"
+    wave = int(os.environ.get("OT_WF_STAGE_WAVE", "1"))   # WAVE=0: negative control (a rewind latches proto_fault)
+    exe = build(scratch, wave)
+    log = scratch / f"out_stage_w{wave}.txt"
     n_out = len(json.loads((scratch / "prepare_stage.json").read_text())["jobs"])
     cmd = [str(exe), f"+DIR={scratch / 'cfg_stage'}", f"+ROMS={scratch / 'roms'}", "+NUSERS=1",
            f"+NOUT={n_out}", "+HB=1000000"]
     t0 = time.time()
     with open(log, "w") as fh:
         rc = subprocess.run(["stdbuf", "-oL", *cmd], stdout=fh, stderr=subprocess.STDOUT).returncode
-    (scratch / "run_stage.rc").write_text(f"{rc} {time.time() - t0:.1f}\n")
+    (scratch / f"run_stage_w{wave}.rc").write_text(f"{rc} {time.time() - t0:.1f}\n")
     return rc
+
+
+# -- composition (model, from the measured per-stage terms) -----------------------------------
+S81 = {"1048576": dict(ar=2466.2, pass_tok_s_tau3649=3742.8), "200000": dict(ar=2574.1, pass_tok_s_tau3649=4096.7)}
+TAU = 4.159                       # V4.1 DSpark, equal 6-class blend, gamma 5 (blend_owner6.json)
+DRAFT_OVER_AR = 0.1173            # scenario C draft composition (dsrom_wavefront_verify_20261003)
+STAGE_US = {"1048576": dict(head_occ=12.37, l20_occ=11.62, window=19.24),
+            "200000": dict(head_occ=12.37, l20_occ=4.51, window=15.42)}    # 4f0c050b8 model.json (S73 run)
+HOP_US = 0.48                     # one 4 x 5,120 BF16 hidden state per interval (model hop term)
+HEAD_RTL = dict(ii_cycles=12219, latency_cycles=12217, source="results/rtl/dsrom_c8_wavefront_20261003/head_interval_r1.json")
+
+
+def stage_measure(out: str):
+    jobs = [dict(zip(("node", "user", "pos", "hdr", "pay", "cstart", "start", "done"), map(int, m)))
+            for m in JOB.findall(out)]
+    outs = [int(c) for c in re.findall(r"OUT msg=\d+ cycle=(\d+)", out)]
+    rows = []
+    for i, j in enumerate(jobs):
+        rows.append(dict(pos=j["pos"], start=j["start"], busy=j["done"] - j["start"],
+                         entry_gap=(j["start"] - jobs[i - 1]["start"]) if i else None,
+                         handoff_after_prev_done=(j["start"] - jobs[i - 1]["done"]) if i else None,
+                         out_done_after_done=(outs[i] - j["done"]) if i < len(outs) else None))
+    vis = [dict(zip(("kind", "pkg", "stack", "job", "words", "wlast", "vis", "lat", "need", "pending"),
+                    [m[0], *map(int, m[1:])])) for m in VIS.findall(out)]
+    starts = {i + 1: j["start"] for i, j in enumerate(jobs)}
+    v = {}
+    for kind in ("KV", "IK"):
+        xs = [x for x in vis if x["kind"] == kind and x["words"]]
+        nxt = [x for x in vis if x["kind"] == kind and x["need"] >= 0 and x["job"] > 1]
+        v[kind] = dict(write_to_visible_max_cycles=max(x["lat"] for x in xs),
+                       write_to_visible_median_cycles=sorted(x["lat"] for x in xs)[len(xs) // 2],
+                       last_write_to_all_visible_max_cycles=max(x["vis"] - x["wlast"] for x in xs),
+                       next_position_first_read_after_its_start_min_cycles=min(
+                           x["need"] - starts[x["job"]] for x in nxt) if nxt else None,
+                       visible_before_next_start_min_cycles=min(
+                           starts[x["job"] + 1] - x["vis"] for x in xs if x["job"] + 1 in starts))
+    m = re.search(r"KVHBM ops=(\d+) words=(\d+) writes=(\d+) holds=(\d+) state_bad=(\d+)", out)
+    so = re.search(r"STAGE_OUT msgs=(\d+) out_mismatch=(\d+)", out)
+    fa = re.search(r"FAULT core=(\d+) protocol=(\d+)", out)
+    st = re.search(r"state_mismatch=(\d+) total_cycles=(\d+)", out)
+    return dict(jobs=rows, visibility=v, kv_hold_cycles=int(m.group(4)), kv_state_bad=int(m.group(5)),
+                out_msgs=int(so.group(1)), out_mismatch=int(so.group(2)),
+                fault_protocol=int(fa.group(2)) if fa else 0, state_mismatch=int(st.group(1)),
+                total_cycles=int(st.group(2)), pass_=("\nPASS" in out))
+
+
+def compose(stage):
+    busy = [r["busy"] for r in stage["jobs"]]
+    hand = [r["handoff_after_prev_done"] for r in stage["jobs"][1:]]
+    over = max(h / b for h, b in zip(hand, busy))           # interval / occupancy - 1, measured
+    vis_frac = max(stage["visibility"][k]["last_write_to_all_visible_max_cycles"] for k in ("KV", "IK")) / min(busy)
+    rows = {}
+    for ctx, c in S81.items():
+        ar = 1e6 / c["ar"]; draft = DRAFT_OVER_AR * ar
+        pass_step = 3.649e6 / c["pass_tok_s_tau3649"]
+        su = STAGE_US[ctx]
+        r = dict(ar_us=round(ar, 2), ar_tok_s=c["ar"], pass_m1=dict(step_us=round(pass_step, 2),
+                 mtp_tok_s=round(TAU * 1e6 / pass_step, 1)))
+        for rule, occ in (("occupancy", max(su["head_occ"], su["l20_occ"])), ("window", su["window"])):
+            ii = occ * (1 + over) + HOP_US
+            ver = ar + 5 * ii
+            step = ver + draft
+            r[f"wavefront_{rule}"] = dict(ii_us=round(ii, 3), verify_us=round(ver, 2), verify_over_ar=round(ver / ar, 3),
+                                         step_us=round(step, 2), mtp_tok_s=round(TAU * 1e6 / step, 1),
+                                         gain_vs_pass=round(pass_step / step - 1, 4))
+        rows[ctx] = r
+    return dict(tau=TAU, draft_over_ar=DRAFT_OVER_AR, measured_interval_overhead=round(over, 5),
+                measured_visibility_over_occupancy=round(vis_frac, 5), hop_us=HOP_US, head_rtl=HEAD_RTL,
+                basis="II = max stage occupancy (head 12.37 us; L20 11.62 us at 1M) x (1 + measured handoff/occupancy) "
+                      "+ hop transfer (serialised, as in the reduced controller); visibility adds nothing: every K/V and "
+                      "index-key row is visible before the next position starts. Verify = AR + 5 II; step = verify + "
+                      "draft. S81 AR from results/uarch/dsrom_c_recheck_20261004; pass step from its tau-3.649 MTP figure.",
+                ctx=rows)
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("action", choices=("prepare", "run", "record", "prepare-stage", "run-stage"))
+    ap.add_argument("action", choices=("prepare", "run", "record", "prepare-stage", "run-stage", "compose"))
     ap.add_argument("--gold", type=Path, help="prepare-stage: golden.json of a prepare run")
     ap.add_argument("--scratch", type=Path, required=True)
     ap.add_argument("--config", choices=sorted(CONFIGS))
@@ -527,6 +601,17 @@ def main():
         prepare_stage(a.scratch, a.gold)
     elif a.action == "run-stage":
         return run_stage(a.scratch)
+    elif a.action == "compose":
+        res = dict(schema="opentallas.rtl.dsrom_wavefront_stage.v1",
+                   prepare=json.loads((a.scratch / "prepare_stage.json").read_text()))
+        for w in (0, 1):
+            f = a.scratch / f"out_stage_w{w}.txt"
+            if f.exists():
+                res[f"stage_wave{w}"] = stage_measure(f.read_text())
+                res[f"stage_wave{w}"]["log_sha256"] = hashlib.sha256(f.read_bytes()).hexdigest()
+        res["composition"] = compose(res["stage_wave1"])
+        (a.output or a.scratch / "record.json").write_text(json.dumps(res, indent=1) + "\n")
+        print(json.dumps(res["composition"], indent=1))
     elif a.action == "run":
         return run(a.scratch, a.config)
     else:
