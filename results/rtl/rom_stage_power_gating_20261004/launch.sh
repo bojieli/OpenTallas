@@ -11,7 +11,7 @@ mkdir -p $J
 cd $WT
 test -z "$(git status --porcelain)" || { echo "worktree not clean"; exit 2; }
 SRCS=""
-for s in rtl/v41rom/ot_v41_rom_elem_q_pg_w10.sv rtl/v41rom/ot_v41_rom_elem_pg_w10.sv rtl/v41rom/ot_v41_stage_pg_sched.sv \
+for s in rtl/v41rom/ot_v41_rom_elem_q_pg_w10.sv rtl/v41rom/ot_v41_rom_elem_pg_w10.sv rtl/v41rom/ot_v41_rom_pg_ao.sv rtl/v41rom/ot_v41_stage_pg_sched.sv \
   rtl/chip/ot_chip_v41_pg_ctrl.sv rtl/v41rom/ot_v41_rom_elem_w10.sv \
   rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_chain.sv rtl/v41rom/ot_v41_segtree.sv rtl/v41rom/ot_v41_bf16_lanes.sv \
   rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_cg.sv \

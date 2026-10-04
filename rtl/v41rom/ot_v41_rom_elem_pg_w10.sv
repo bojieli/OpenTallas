@@ -3,21 +3,8 @@
 // ot_v41_rom_elem_pg_w10 -- the V4.1 ROM-array element (ot_v41_rom_elem_w10) as a power-gated domain.
 //
 // PG = 0 (default): the element, unchanged; every PG port is ignored and pg_ready = 1.
-// PG = 1: the element sits behind a header switch ring.  The always-on (AO) side keeps
-//   * the stage scheduler + W18 power controller (ot_v41_stage_pg_sched; shared by a whole domain in the die,
-//     one per element only in this vehicle): staggered ring wake, reset, isolation, clock enable, pre-wake from
-//     the static token schedule;
-//   * output isolation: every element output is clamped to 0 while iso_n = 0 (AND clamps);
-//   * retention of the configuration, the only element state that must survive a sleep (the element is a
-//     stateless consumer between tokens: walkers, FIFOs, chains and trees all restart at `go`; the ROM is a
-//     mask ROM).  Retention is an AO shadow of exactly the bits the element decodes (676 for NSEG = 8, NB = 2),
-//     written on the host's configuration writes through a write-enabled AO clock gate (no idle clock), and
-//     replayed into the element, one entry a cycle, after every wake.  Host writes while the domain is asleep or
-//     restoring update only the shadow and are replayed.
-//   * the domain clock gate (clk_en from the controller).
-// pg_ready rises when the domain is powered, reset, de-isolated and restored.  A `go` that arrives before
-// pg_ready is a schedule miss: it is not delivered and pg_late latches (fail closed; the static pre-wake makes
-// it unreachable when cfg_lead covers the wake).
+// PG = 1: the element sits behind a header switch ring; its always-on side (scheduler + W18 power controller,
+// output isolation clamps, configuration retention shadow and replay, domain clock gate) is ot_v41_rom_pg_ao.
 // ---------------------------------------------------------------------------
 module ot_v41_rom_elem_pg_w10 #(
     parameter integer NSEG = 8,
@@ -88,11 +75,6 @@ module ot_v41_rom_elem_pg_w10 #(
     output wire         pg_late,
     output wire         pg_fault
 );
-    // retained width of configuration entry a (see g_pg)
-    function integer ew(input integer a);
-        ew = (a < NSEG) ? 43 : (a < 2 * NSEG) ? 23 : (a == 2 * NSEG) ? 20 : 16;
-    endfunction
-
     // element-side nets
     wire         e_clk, e_rst_n, e_cfg_v, e_go;
     wire [4:0]   e_cfg_a;
@@ -120,85 +102,15 @@ module ot_v41_rom_elem_pg_w10 #(
         assign perr = e_perr; assign ppos = e_ppos; assign busy = e_busy; assign fault = e_fault;
         assign sw_en = {NSUB{1'b1}}; assign pg_ready = 1'b1; assign pg_late = 1'b0; assign pg_fault = 1'b0;
     end else begin : g_pg
-        // ------------- retention shadow: the decoded configuration bits, per address class -------------
-        // a < NSEG: segment [42:0]; NSEG <= a < 2NSEG: class [19+SW-1:0] with bit 22 (BF16 family);
-        // a = 2NSEG: [19:0]; 2NSEG < a <= 3NSEG (NB = 2): second-macro row [15:0]
-        localparam integer NA = (NB == 2) ? 3 * NSEG + 1 : 2 * NSEG + 1;
-        localparam integer AW = 5;
-        if (NSEG != 8) begin : g_bad
-            initial $error("ot_v41_rom_elem_pg_w10: the retention map is written for NSEG = 8");
-        end
-
-        wire iso_n, dom_rst_n, clk_en, pwr_good, ctl_fault;
-        reg  ready, late, restoring;
-        reg  [NA-1:0] valid, dirty;
-        wire host_wr = cfg_v && ({27'd0, cfg_a} < NA);
-
-        // the shadow is clocked only on a host write (AO ICG); idle, it costs leakage only
-        wire sh_clk;
-        ot_hdc_cg u_sh_cg (.clk(clk), .en(cfg_v | !rst_n), .gclk(sh_clk));
-        wire [47:0] sh_q [0:NA-1];
-        genvar ga;
-        for (ga = 0; ga < NA; ga = ga + 1) begin : g_sh
-            localparam integer W = ew(ga);
-            reg [W-1:0] r;
-            always @(posedge sh_clk) if (cfg_v && cfg_a == ga[AW-1:0]) r <= cfg_d[W-1:0];
-            assign sh_q[ga] = {{(48 - W){1'b0}}, r};
-        end
-
-        // restore: lowest dirty entry first, one a cycle, once powered and before ready
-        reg [AW-1:0] ridx; reg rhit;
-        integer k;
-        always @* begin
-            ridx = {AW{1'b0}}; rhit = 1'b0;
-            for (k = NA - 1; k >= 0; k = k - 1) if (dirty[k]) begin ridx = k[AW-1:0]; rhit = 1'b1; end
-        end
-        wire rst_wr = pwr_good && !ready && rhit;
-        reg pg_q;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin valid <= {NA{1'b0}}; dirty <= {NA{1'b0}}; ready <= 1'b0; late <= 1'b0; pg_q <= 1'b0; end
-            else begin
-                pg_q <= pwr_good;
-                if (pg_q && !pwr_good) begin ready <= 1'b0; dirty <= valid; end       // power lost: replay all
-                else begin
-                    if (rst_wr) dirty[ridx] <= 1'b0;
-                    if (host_wr) begin
-                        valid[cfg_a] <= 1'b1;
-                        if (!ready) dirty[cfg_a] <= 1'b1;                              // replayed after wake
-                    end
-                    if (pwr_good && !ready && !rhit && !(host_wr)) ready <= 1'b1;
-                end
-                if (go && !ready) late <= 1'b1;
-            end
-
-        // configuration port of the element: the host while ready, the replay while restoring
-        assign e_cfg_v = ready ? cfg_v : rst_wr;
-        assign e_cfg_a = ready ? cfg_a : ridx;
-        assign e_cfg_d = ready ? cfg_d : sh_q[ridx];
-        assign e_go    = go && ready;
-        assign e_rst_n = rst_n && dom_rst_n;
-        ot_hdc_cg u_dom_cg (.clk(clk), .en(clk_en | !rst_n), .gclk(e_clk));
-
-        // output isolation (clamp to 0)
-        assign pv    = e_pv    & {NB{iso_n}};
-        assign pval  = e_pval  & {32*NB{iso_n}};
-        assign prow  = e_prow  & {16*NB{iso_n}};
-        assign pseg  = e_pseg  & {5*NB{iso_n}};
-        assign pnseg = e_pnseg & {5*NB{iso_n}};
-        assign perr  = e_perr  & {NB{iso_n}};
-        assign ppos  = e_ppos  & {3*NB{iso_n}};
-        assign busy  = e_busy  & iso_n;
-        assign fault = (e_fault & iso_n) | late | ctl_fault;
-
-        wire dom_busy = go || busy || (|pv) || (pwr_good && !ready) || (|dirty && pwr_good);
-        wire req_on;
-        ot_v41_stage_pg_sched #(.NSUB(NSUB), .TW(TW)) u_sched (
-            .clk(clk), .rst_n(rst_n), .pg_en(pg_en), .sched_v(sched_v), .sched_gap(sched_gap), .cfg_lead(pg_lead),
-            .cfg_bet(pg_bet), .cfg_idle(pg_idle), .cfg_step(pg_step), .cfg_rst(pg_rst), .cfg_ack_to(pg_ack_to),
-            .dom_busy(dom_busy), .sw_en(sw_en), .sw_ack(sw_ack), .iso_n(iso_n), .dom_rst_n(dom_rst_n),
-            .clk_en(clk_en), .pwr_good(pwr_good), .fault(ctl_fault), .req_on(req_on));
-        assign pg_ready = ready;
-        assign pg_late  = late;
-        assign pg_fault = ctl_fault;
+        // the always-on side is one module (ot_v41_rom_pg_ao) so it can be hardened and measured on its own
+        ot_v41_rom_pg_ao #(.NSEG(NSEG), .NB(NB), .NSUB(NSUB), .TW(TW)) u_ao (
+            .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go),
+            .e_clk(e_clk), .e_rst_n(e_rst_n), .e_cfg_v(e_cfg_v), .e_cfg_a(e_cfg_a), .e_cfg_d(e_cfg_d), .e_go(e_go),
+            .e_pv(e_pv), .e_pval(e_pval), .e_prow(e_prow), .e_pseg(e_pseg), .e_pnseg(e_pnseg), .e_perr(e_perr),
+            .e_ppos(e_ppos), .e_busy(e_busy), .e_fault(e_fault),
+            .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr), .ppos(ppos), .busy(busy),
+            .fault(fault), .pg_en(pg_en), .sched_v(sched_v), .sched_gap(sched_gap), .pg_lead(pg_lead), .pg_bet(pg_bet),
+            .pg_idle(pg_idle), .pg_step(pg_step), .pg_rst(pg_rst), .pg_ack_to(pg_ack_to), .sw_en(sw_en),
+            .sw_ack(sw_ack), .pg_ready(pg_ready), .pg_late(pg_late), .pg_fault(pg_fault));
     end
 endmodule
