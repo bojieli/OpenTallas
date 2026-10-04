@@ -375,6 +375,12 @@ int main(int argc, char** argv) {
     }
     cctx.randReset(0);
     Vcoll coll(&cctx, "coll");
+    // ---- first evaluation BEFORE any preload: it runs every model's initial blocks, and the ROM/SRAM macro
+    // models (ot_rom_4096x266_m8, ot_sram_1r1w_128x256_m1_r2c2) clear their arrays there.  Preloading first lost
+    // the stage-0 code/scale ROM (and ideal KV slices): harmless only while stage 0 was E, which reads neither.
+    // Clocks are low and the die holds its reset (cyc < 5), so no state advances.
+    for (int d = 0; d < D; d++) { die[d]->clk = 0; die[d]->eval(); fab[d]->set_clk(0); fab[d]->eval(); }
+    coll.clk = 0; coll.eval();
     // ---- preloads: vector memory X row, ROMs of stage 0, HBM KV history of every layer --------
     std::vector<std::vector<uint8_t>> kv_codes(RM_HBM_LAYERS);
     for (auto& st : stages) {
