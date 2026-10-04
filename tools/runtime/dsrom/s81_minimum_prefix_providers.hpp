@@ -1,5 +1,6 @@
 #pragma once
 #include "s81_minimum_source_bindings.hpp"
+#include "s81_minimum_source_tags_component.hpp"
 
 // Required real provider exports. No weak symbols, registration singleton,
 // optional dlopen, fallback engine or second runtime/VM ABI.
@@ -24,15 +25,21 @@ DsromS81MinimumHeBootstrapProvider dsrom_s81_bind_minimum_he_bootstrap(
 // offering the held batch. Retrying offer/visible MUST NOT reserve again.
 // The single caller-owned reservation namespace also serves H and root writes.
 inline dsrom_s81_minimum::MacroWrite dsrom_s81_capture_minimum_prefix_scalar(
+    DsromS81MinimumRuntime& runtime,
     dsrom_s81_minimum::PrefixPublication& publication,
-    const DsromS81MinimumSourceTags& tags,unsigned producer,
+    unsigned producer,
     const S81EmbeddingOutput& native_output,unsigned lane,bool actual_write) {
     if(!actual_write||!native_output.vm_valid||native_output.fault||lane>=16||
        native_output.vm_identity>=(1ull<<47)||
-       uint64_t(native_output.vm_address)+lane>=(1u<<19)||!tags.record)
+       uint64_t(native_output.vm_address)+lane>=(1u<<19)||producer>8||
+       !runtime.identity||*runtime.identity!=native_output.vm_identity)
         throw std::runtime_error("prefix capture lacks actual native scalar and source tag reservation");
-    auto command=tags.record(native_output,lane); // actual reservation FIRST
     const uint32_t address=native_output.vm_address+lane;
+    // Hubble's SAME runtime-registered reservation provider, versioned by the
+    // admitted literal producer. ID/address/bits alone is NOT a write version:
+    // I2 and I3 can write identical bits to the same T address.
+    auto command=dsrom_s81_reserve_native_scalar_tag(
+        runtime,native_output.vm_identity,producer,address,native_output.vm_data[lane]);
     if(command.source.identity!=native_output.vm_identity||
        command.source.element_address!=address||command.word.address!=(address>>4)||
        command.word.mask!=(uint16_t(1)<<(address&15))||
