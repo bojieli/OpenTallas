@@ -1,0 +1,62 @@
+{
+ "schema": "opentallas.qwen-rom-realmem-fulltoken-summary.v1",
+ "position": 255,
+ "token_in": 6280,
+ "configuration": "REAL_MEM TP4 G6144 SW64, one-stream AR256 all-reduce (ENABLE_AR256=1, collective depth 256), HBM model 36 layer regions, KV history from the GPU golden; async collective OFF",
+ "exactness": {
+  "stages_simulated_exact": "E, L0..L24, head (27 isolated jobs) + chained E,L0,L1,L2: every die X, every token K/V written back to HBM, head token/logit bit-exact vs the GPU golden",
+  "head": {
+   "rtl_next_token": 98951,
+   "golden_next_token": 98951,
+   "logit_bits": "42098785"
+  },
+  "layers_not_simulated": [
+   "L25",
+   "L26",
+   "L27",
+   "L28",
+   "L29",
+   "L30",
+   "L31",
+   "L32",
+   "L33",
+   "L34",
+   "L35"
+  ],
+  "why": "owner rule 2026-10-04 (simulate the minimum component): L25..L35 have the same shape; their cycles are composed from the simulated layers. The golden chain itself covers all 36 layers (GPU golden, bit-checked vs CPU golden)."
+ },
+ "per_layer_cycles": {
+  "isolated_cold_memory": 4338,
+  "isolated_all_25_layers_identical": true,
+  "chained_L0": 4337,
+  "chained_L1": 4776,
+  "chained_L2": 4653,
+  "chained_penalty_vs_isolated": [
+   439,
+   316
+  ],
+  "penalty_cause": "stall_drain: token K/V write-backs meet HBM all-bank refresh in a chained run (wr_lat_max 114 -> 549, stall_drain 369 -> 808/685, fill 373 -> 830/1161); an isolated job starts the HBM model from reset, before its first refresh",
+  "head": 2999,
+  "E": 98
+ },
+ "token_cycles": {
+  "isolated_composition_lower_bound": 159272,
+  "chained_adjusted_mean_penalty": 172484,
+  "chained_adjusted_max_penalty": 174637,
+  "formula": "7 + E + L0 chained + 35 x (L0 chained + chained refresh/drain penalty) + head (chained = isolated - 1) + 37 stage switches"
+ },
+ "ar_tok_per_s_at_1p2GHz": {
+  "headline_chained_mean": 6957.1,
+  "chained_max": 6871.4,
+  "isolated_lower_bound_cycles": 7534.3
+ },
+ "ideal_memory": {
+  "token_cycles_P0_AR256": 144522,
+  "ar_tok_per_s_P0": 8303.2,
+  "layer_cycles_P0": 3930,
+  "real_over_ideal_token_headline": 1.1935
+ },
+ "async_collective": "not included: Claude's async agent has not adopted it (codex_notes: optional async OFF in every combined selection as of this record)",
+ "P1023": "not run: the batch was retired by the coordinator (EPYC memory emergency) and the owner rule limits future positions to a few representative layers + head; GPU golden for P1023 exists (golden/), RTL not run",
+ "defect_fixed": "REAL_MEM host preloaded stage-0 ROMs before the first eval (macro initial blocks wiped them): fixed at 15778679a; the first P255 batch (runs/P255 L*/head) is invalid and not used"
+}
