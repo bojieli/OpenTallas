@@ -585,7 +585,11 @@ def main():
                      AR_tok_s=round(1e6 / tw, 1), MTP_tok_s=mw["mtp_tok_s"],
                      ar_gain_pct=round(100 * (t / tw - 1), 2), mtp_gain_pct=round(100 * (mw["mtp_tok_s"] /
                                                                                     m["mtp_tok_s"] - 1), 2),
-                     area="+1,024 light lanes ~ +7.5 mm2/die pre-layout (dshbm_local_chains wide lever)")
+                     area="+1,024 light lanes ~ +7.5 mm2/die pre-layout (dshbm_local_chains wide lever)",
+                     wire_stages=rel(a.rec / "su_n2048" / "wire_stages.json"))
+        n2048["verdict"] = ("REJECT (not in the headline): with its real wire stages AR %+.2f%%; MTP %+.2f%% alone, "
+                            "and the wider lane array has no area/route/SS-FF (the N1024 lane itself screens 638.6 MHz)"
+                            % (n2048["ar_gain_pct"], n2048["mtp_gain_pct"]))
     else:
         n2048 = dict(status="NOT INCLUDED: N2048 with its real wire stages not measured yet")
     rec = dict(

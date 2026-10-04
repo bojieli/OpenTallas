@@ -45,8 +45,10 @@ and tc16 also miss; the whole SM element was never routed), SU 638.6 MHz (light-
 asmb), router top-6 621.5 MHz, HBM stream PC 1,209.6 MHz (closes). The new TU endpoint has no area, route or STA:
 its 394.5 MHz is the as-built endpoint's, not a measurement of the new one.
 
-**N2048 lanes option.** Included only when its rule-derived wire stages (BCAST 6 / RET 6 for the 2x lane span,
-`uarch_model.wire_cycles` at the W1 920 ps period) are measured: see `option_su_n2048`.
+**N2048 lanes option: REJECT.** Measured with the wire stages it really needs (BCAST 6 / RET 6 from the
+`uarch_model.wire_cycles` rule that gives N1024's 4/5; `su_n2048/wire_stages.json`), 38 + 38 chains exact. AR
+2,146.9 tok/s (-0.42 %: the extra stages cost more than the wider lanes save at P = 1); MTP 4,434.4 (+1.72 %). Not
+adopted: AR regresses, and the wider array has no area, route or SS/FF evidence.
 
 **Replay.**
 ```

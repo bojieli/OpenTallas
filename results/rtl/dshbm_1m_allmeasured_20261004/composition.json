@@ -233,7 +233,15 @@
   }
  },
  "option_su_n2048": {
-  "status": "NOT INCLUDED: N2048 with its real wire stages not measured yet"
+  "status": "measured with rule-derived wire stages BCAST 6 / RET 6",
+  "AR_us": 465.796,
+  "AR_tok_s": 2146.9,
+  "MTP_tok_s": 4434.4,
+  "ar_gain_pct": -0.42,
+  "mtp_gain_pct": 1.72,
+  "area": "+1,024 light lanes ~ +7.5 mm2/die pre-layout (dshbm_local_chains wide lever)",
+  "wire_stages": "results/rtl/dshbm_1m_allmeasured_20261004/su_n2048/wire_stages.json",
+  "verdict": "REJECT (not in the headline): with its real wire stages AR -0.42%; MTP +1.72% alone, and the wider lane array has no area/route/SS-FF (the N1024 lane itself screens 638.6 MHz)"
  },
  "sensitivities": {
   "hbm_loads_with_notice": {
@@ -18974,6 +18982,6 @@
   "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_p6om_ildr.json": "abb8607487000187d443c1a3f813073137f5036742e4a63fdd6e7d1cf9d2625c"
  },
  "tool_sha256": {
-  "tools/dshbm_1m_allmeasured.py": "c5a5dbe2e940280f2824352be61fc3ce2ceb2e2169c2e7c9ca3bbbfa0b87426f"
+  "tools/dshbm_1m_allmeasured.py": "691ccf7f4931af8343f7d439e0e433abb84f60109dbf1ef8eb484a77b7abc4a0"
  }
 }
