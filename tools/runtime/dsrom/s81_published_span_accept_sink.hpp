@@ -42,6 +42,8 @@ private:
     // Fixed64KiB software receipt witness, NOT a hardware scoreboard price.
     // A source callback alone can NEVER make an unwritten address eligible.
     std::bitset<(1u<<19)> prefix_acked;
+    // Software source-version witness; no additional native VM/RTL state.
+    std::bitset<20480> mutable_h_addresses;
     unsigned count=16;
     uint16_t required=65535;
     bool prefix_batch=false;
@@ -200,7 +202,11 @@ public:
     bool source_span_lease(uint64_t id,uint32_t address,unsigned words) const {
         if(fault()||id!=identity||!words||uint64_t(address)+words>(1u<<19))return false;
         if(address>=base&&uint64_t(address)+words<=uint64_t(base)+20480) {
-            for(unsigned n=0;n<words;n++)if(!prefix_acked.test(address+n))return false;
+            for(unsigned n=0;n<words;n++) {
+                if(!prefix_acked.test(address+n))return false;
+                if(mutable_h_addresses.test(address+n-base)&&
+                   !prefix_source_lease(id,address+n,1))return false;
+            }
             return true;
         }
         for(unsigned n=0;n<words;n++)if(!prefix_acked.test(address+n))return false;
@@ -248,7 +254,10 @@ private:
                         c.word.data[k]==out.vm_data[n]&&!(c.word.owner[7]&~7u),
                         "embedding target record does not bind actual scalar payload/address/owner");
             }
-            if(prefix)for(unsigned n=0;n<words;n++)prefix_acked.reset(out.vm_address+n);
+            if(prefix)for(unsigned n=0;n<words;n++) {
+                prefix_acked.reset(out.vm_address+n);
+                if(mutable_record)mutable_h_addresses.set(out.vm_address+n-base);
+            }
             // Rewrites revoke cached target data before any acceptance. Producer
             // version/generation eligibility remains the source callback's job.
             read_done=false;
