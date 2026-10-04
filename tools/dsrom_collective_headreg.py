@@ -44,6 +44,15 @@ def install(sources, output, *, enable=False):
     Elaborate the same ot_v41_rt_die_l20_c8 top; COLL_HEADREG defaults to zero.
     enable=True returns its opt-in parameter, never changes source defaults.
     """
+    return _install_selected(sources, output, enable=enable,
+                             parameter='COLL_HEADREG', child_parameter='REGISTER_HEAD',
+                             module='ot_w15_rom_oneshot_die_px_headreg', engine_path=ENGINE,
+                             validation='Qwen cached-head algorithm reused; DS parity integration and physical context pending')
+
+
+def _install_selected(sources, output, *, enable, parameter, child_parameter,
+                      module, engine_path, validation):
+    """Shared immutable enclosing-source export, no simulation or RTL tuning."""
     paths = [Path(p).resolve() for p in sources]
     if len(paths) != len(set(paths)):
         raise ValueError('duplicate source path')
@@ -61,20 +70,20 @@ def install(sources, output, *, enable=False):
             raise ValueError('source interface changed: ' + old)
         return s.replace(old, new, 1)
     for name in targets:
-        header = '    parameter integer COLL_HEADREG=0,'
+        header = f'    parameter integer {parameter}=0,'
         if header not in data[name]:
             data[name] = replace_once(data[name], '    parameter integer C8_PUBLICATION=0,',
                                       header+'\n    parameter integer C8_PUBLICATION=0,')
         elif data[name].count(header) != 1:
             raise ValueError('ambiguous collective parameter: '+name)
     die = targets[0]
-    selected_engine = 'ot_w15_rom_oneshot_die_px_headreg #(.REGISTER_HEAD(COLL_HEADREG),'
+    selected_engine = f'{module} #(.{child_parameter}({parameter}),'
     if selected_engine not in data[die]:
         data[die] = replace_once(data[die], 'ot_w15_rom_oneshot_die_px #(', selected_engine)
     elif data[die].count(selected_engine) != 1:
         raise ValueError('ambiguous selected collective instance')
     top = targets[1]
-    selected_die = 'ot_chip_v41x_die_owner_safe_c8 #(.COLL_HEADREG(COLL_HEADREG),'
+    selected_die = f'ot_chip_v41x_die_owner_safe_c8 #(.{parameter}({parameter}),'
     if selected_die not in data[top]:
         data[top] = replace_once(data[top], 'ot_chip_v41x_die_owner_safe_c8 #(', selected_die)
     elif data[top].count(selected_die) != 1:
@@ -82,7 +91,7 @@ def install(sources, output, *, enable=False):
     # No partial export on a failed interface check. Refuse to mutate inputs.
     if any(output == p.parent or output in p.parents for p in paths):
         raise ValueError('output must be separate from input sources')
-    engine = ROOT / ENGINE
+    engine = ROOT / engine_path
     # An upstream source installer may already carry the same successor from
     # another checkout. Reuse its exact bytes instead of defining it twice.
     engines = [p for p in paths if p.name == engine.name]
@@ -108,11 +117,11 @@ def install(sources, output, *, enable=False):
     if not engines:
         result.append(engine)
     pins = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in result}
-    return dict(top='ot_v41_rt_die_l20_c8', parameters={'COLL_HEADREG': int(enable)},
+    return dict(top='ot_v41_rt_die_l20_c8', parameters={parameter: int(enable)},
                 sources=result, source_sha256=pins,
-                verilator_args=['-GCOLL_HEADREG='+str(int(enable))],
+                verilator_args=['-G'+parameter+'='+str(int(enable))],
                 input_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
-                validation='Qwen cached-head algorithm reused; DS parity integration and physical context pending')
+                validation=validation)
 
 
 def install_s81_parent(binding, original_export, output, *, enable=False,
