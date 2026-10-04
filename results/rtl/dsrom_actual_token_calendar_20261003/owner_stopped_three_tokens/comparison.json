@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.dsrom.owner_stopped_three_token_prefix.v1",
+  "verdict": "THREE_ACTUAL_TOK_CPL_PAIRS_MATCH_CACHED_COMPARISONS",
+  "termination": "INTENTIONAL_USER_STOP",
+  "termination_authority": "Owner explicitly accepts three produced tokens; parent verifies/stops exact existing simulator3222690",
+  "process_state_at_extract": {
+    "3211140": false,
+    "3222690": false
+  },
+  "terminal_record_exists_at_extract": true,
+  "actual_owner_host": "ot-epyc1tb",
+  "actual_owner_root": "/srv/opentallas-scratch/claude/dsrom-system/run/sys_b5_p3g2_r2",
+  "actual_source_commit": "8f64594624778e038dbf46b2447d7569d99a138c",
+  "snapshot_log_sha256": "385d0ff4c2c406856fd40bc0e882e56e7eb581f84989dda6125b3c9c9fe037fb",
+  "tokens": [
+    {
+      "user": 0,
+      "position": 0,
+      "token": 2815,
+      "expected_comparison_token": 2815,
+      "cycle": 429460,
+      "host_completion": {
+        "token": 2815,
+        "stamp": 429454,
+        "tag": 90
+      },
+      "interval_from_previous_token_cycles": null,
+      "input_token": 0
+    },
+    {
+      "user": 0,
+      "position": 1,
+      "token": 3537,
+      "expected_comparison_token": 3537,
+      "cycle": 870174,
+      "host_completion": {
+        "token": 3537,
+        "stamp": 870168,
+        "tag": 90
+      },
+      "interval_from_previous_token_cycles": 440714,
+      "input_token": 3563
+    },
+    {
+      "user": 0,
+      "position": 2,
+      "token": 2047,
+      "expected_comparison_token": 2047,
+      "cycle": 1307334,
+      "host_completion": {
+        "token": 2047,
+        "stamp": 1307328,
+        "tag": 90
+      },
+      "interval_from_previous_token_cycles": 437160,
+      "input_token": 3745
+    }
+  ],
+  "token_interval_cycles": [
+    440714,
+    437160
+  ],
+  "clock_scope": "TOK same-system cycles; CPL producer stamps retained separately",
+  "first_token_latency_cycles": null,
+  "four_position_run_completed": false,
+  "expected_four_position_extent": 4,
+  "raw_field_numerical_qualified": false,
+  "full_shape_qualified": false,
+  "composed_field_calendar": null,
+  "adopted": false,
+  "no_fourth_token_requested": true,
+  "no_restart": true,
+  "actual_process_returncode": -15,
+  "actual_terminal_record_sha256": "2b5fcb0492520789656df1c3d842f71eb0fbe5ebf6b16c500db3e8765714be17",
+  "original_four_position_gate_passed": false,
+  "original_four_position_gate_parse_scope": "no full terminal summary after intentional SIGTERM; original record preserved",
+  "numerical_failure_inferred_from_stop": false
+}
