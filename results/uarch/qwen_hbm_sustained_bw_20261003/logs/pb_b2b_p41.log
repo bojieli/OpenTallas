@@ -1,0 +1,45 @@
+RESULT ref_mode=1 hint=320 b2b=1 phase=41 cred=32 layers=36
+LAYER 0 go=3 first_ps=41984 stream_ps=1103872 data_ps=1061888
+LAYER 1 go=1083 first_ps=43008 stream_ps=1114112 data_ps=1071104
+LAYER 2 go=2173 first_ps=41984 stream_ps=1119232 data_ps=1077248
+LAYER 3 go=3268 first_ps=43008 stream_ps=1121280 data_ps=1078272
+LAYER 4 go=4365 first_ps=43008 stream_ps=1119232 data_ps=1076224
+LAYER 5 go=5460 first_ps=43008 stream_ps=1115136 data_ps=1072128
+LAYER 6 go=6551 first_ps=43008 stream_ps=1113088 data_ps=1070080
+LAYER 7 go=7640 first_ps=43008 stream_ps=1118208 data_ps=1075200
+LAYER 8 go=8734 first_ps=45056 stream_ps=1119232 data_ps=1074176
+LAYER 9 go=9829 first_ps=41984 stream_ps=1115136 data_ps=1073152
+LAYER 10 go=10920 first_ps=41984 stream_ps=1120256 data_ps=1078272
+LAYER 11 go=12016 first_ps=43008 stream_ps=1115136 data_ps=1072128
+LAYER 12 go=13107 first_ps=43008 stream_ps=1115136 data_ps=1072128
+LAYER 13 go=14198 first_ps=55296 stream_ps=1115136 data_ps=1059840
+LAYER 14 go=15289 first_ps=41984 stream_ps=1120256 data_ps=1078272
+LAYER 15 go=16385 first_ps=43008 stream_ps=1117184 data_ps=1074176
+LAYER 16 go=17478 first_ps=43008 stream_ps=1115136 data_ps=1072128
+LAYER 17 go=18569 first_ps=41984 stream_ps=1118208 data_ps=1076224
+LAYER 18 go=19663 first_ps=43008 stream_ps=1120256 data_ps=1077248
+LAYER 19 go=20759 first_ps=41984 stream_ps=1116160 data_ps=1074176
+LAYER 20 go=21851 first_ps=41984 stream_ps=1114112 data_ps=1072128
+LAYER 21 go=22941 first_ps=41984 stream_ps=1117184 data_ps=1075200
+LAYER 22 go=24034 first_ps=43008 stream_ps=1116160 data_ps=1073152
+LAYER 23 go=25126 first_ps=41984 stream_ps=1115136 data_ps=1073152
+LAYER 24 go=26217 first_ps=55296 stream_ps=1379328 data_ps=1324032
+LAYER 25 go=27566 first_ps=43008 stream_ps=1118208 data_ps=1075200
+LAYER 26 go=28660 first_ps=43008 stream_ps=1115136 data_ps=1072128
+LAYER 27 go=29751 first_ps=43008 stream_ps=1482752 data_ps=1439744
+LAYER 28 go=31201 first_ps=43008 stream_ps=1115136 data_ps=1072128
+LAYER 29 go=32292 first_ps=49152 stream_ps=1119232 data_ps=1070080
+LAYER 30 go=33387 first_ps=43008 stream_ps=1527808 data_ps=1484800
+LAYER 31 go=34881 first_ps=43008 stream_ps=1117184 data_ps=1074176
+LAYER 32 go=35974 first_ps=56320 stream_ps=1119232 data_ps=1062912
+LAYER 33 go=37069 first_ps=43008 stream_ps=1538048 data_ps=1495040
+LAYER 34 go=38573 first_ps=43008 stream_ps=1117184 data_ps=1074176
+LAYER 35 go=39666 first_ps=53248 stream_ps=1116160 data_ps=1062912
+SUMMARY worst_stream_ps=1538048 mean_stream_ps=1157205 first_data_ps_min=41984 first_data_ps_max=56320 layers_over_need=4
+SUMMARY bytes_per_layer=1048576 worst_Bps=681757656458 mean_Bps=906127866676
+SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36968 PRE=36968 PREab=0 REF=10928 RD=1179648 max_ref_gap_ps=121856 max_landing=32
+SUMMARY verdict=PASS
+- rtl/test/model_ready_hbm_r14/tb_hbm_stream_bw.sv:220: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 42us; walltime 5.534 s; speed 7.542 us/s
+- Verilator: cpu 4.417 s on 1 threads; allocated 44 MB
