@@ -12,7 +12,7 @@ layer SRC+1/SRC+2/SRC+3, each checked against that layer's own record).  Later j
 (labelled): no golden exists after the last position of the 1M context; each is 512 distinct ids <= its position,
 seeded per position, sorted as the golden's.
 Orders: `ahead` (the producer WIN-ahead worst case: every SIDE before the first HIDDEN) and `lead1` (SIDE q+1
-before HIDDEN q).  Configurations: PSL = 3 (8 slots >= WIN) and PSL = 0 (as built, must fail), N = 2 and 6, plus
+before HIDDEN q); `relay`: the selection rides in the hop (no SIDE; per position by construction, as built).  Configurations: PSL = 3 (8 slots >= WIN) and PSL = 0 (as built, must fail), N = 2 and 6, plus
 a fail-closed control `conflict` (SIDE for q and q+8 both outstanding: proto_fault expected).
 
     python3 tools/dsrom_pslot_reuse.py prep   --scratch DIR
@@ -99,7 +99,10 @@ def write_case(d: Path, name: str, src: int, njobs: int, order: str):
             for p in pos}
     hid = {p: [(0, header(1, 1, p)), (1, int(("%08x" % p) * 16, 16))] for p in pos}
     msgs = []
-    if order == "ahead":
+    if order == "relay":                         # the hop carries the selection: header, marker, 32 words
+        msgs = [[(0, header(1, 1 + SW, p)), (0, int(("%08x" % p) * 16, 16))] +
+                [(int(f == SW - 1), w) for f, w in enumerate(pack(pay[p]))] for p in pos]
+    elif order == "ahead":
         msgs = [side[p] for p in pos] + [hid[p] for p in pos]
     elif order == "lead1":
         msgs = [side[pos[0]]]
@@ -118,7 +121,7 @@ def write_case(d: Path, name: str, src: int, njobs: int, order: str):
                 stim_sha256=sha(d / f"{name}.stim"), exp_sha256=sha(d / f"{name}.exp"))
 
 
-CASES = [(f"L{s}_n{n}_{o}", s, n, o) for s in SOURCES for n in (2, 6) for o in ("ahead", "lead1")] + \
+CASES = [(f"L{s}_n{n}_{o}", s, n, o) for s in SOURCES for n in (2, 6) for o in ("ahead", "lead1", "relay")] + \
         [("L20_n2_conflict", 20, 2, "conflict")]
 
 
@@ -132,22 +135,23 @@ def cmd_prep(a):
     print(len(man["cases"]), "cases")
 
 
-def build(d: Path, psl: int, nj: int) -> Path:
-    obj = d / f"obj_psl{psl}_n{nj}"
+def build(d: Path, psl: int, nj: int, relay: int = 0) -> Path:
+    obj = d / f"obj_psl{psl}_n{nj}" if not relay else d / f"obj_relay_n{nj}"
     exe = obj / "Vtb_dsrom_pslot_reuse"
     if not exe.exists():
         cmd = [str(VERILATOR), "--binary", "--timing", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-O2",
                "--top-module", "tb_dsrom_pslot_reuse", "--Mdir", str(obj), "-j", "4",
-               f"-GPSL={psl}", f"-GNJOBS={nj}", f"-GCORE_LAT={CORE_LAT}"] + [str(ROOT / s) for s in SRC + [TB]]
+               f"-GPSL={psl}", f"-GRELAY={relay}", f"-GNJOBS={nj}", f"-GCORE_LAT={CORE_LAT}"] + [str(ROOT / s) for s in SRC + [TB]]
         p = subprocess.run(cmd, capture_output=True, text=True)
-        (d / f"build_psl{psl}_n{nj}.log").write_text(p.stdout + p.stderr)
+        (d / f"build_{obj.name}.log").write_text(p.stdout + p.stderr)
         if p.returncode:
             raise RuntimeError(f"build failed psl{psl} n{nj}")
     return exe
 
 
 def run_one(d: Path, case: dict, psl: int):
-    exe = build(d, psl, case["njobs"])
+    relay = int(case["order"] == "relay")
+    exe = build(d, psl, case["njobs"], relay)
     tag = f"{case['name']}_psl{psl}"
     p = subprocess.run([str(exe), f"+STIM={d / case['name']}.stim", f"+EXP={d / case['name']}.exp",
                         f"+P0={case['positions'][0]}"], capture_output=True, text=True, cwd=d)
@@ -171,7 +175,9 @@ def cmd_run(a):
     for psl in (0, 3):
         for nj in (2, 6):
             build(d, psl, nj)
-    jobs = [(c, psl) for c in man["cases"] for psl in (0, 3)]
+    for nj in (2, 6):
+        build(d, 0, nj, 1)
+    jobs = [(c, psl) for c in man["cases"] for psl in ((0,) if c["order"] == "relay" else (0, 3))]
     with ThreadPoolExecutor(a.jobs) as ex:
         runs = list(ex.map(lambda j: run_one(d, *j), jobs))
     (d / "runs.json").write_text(json.dumps(runs, indent=1) + "\n")
@@ -185,7 +191,9 @@ def cmd_record(a):
     runs = json.loads((d / "runs.json").read_text())
     exp = {}
     for r in runs:
-        if r["order"] == "conflict":
+        if r["order"] == "relay":
+            exp[(r["case"], r["psl"])] = "PASS"
+        elif r["order"] == "conflict":
             exp[(r["case"], r["psl"])] = "FAIL_proto_fault" if r["psl"] == 3 else None
         else:
             exp[(r["case"], r["psl"])] = "PASS" if r["psl"] == 3 else "FAIL"

@@ -17,10 +17,13 @@
 // offsets -- and compares every word with +EXP=file (per job and read: 32 words, the golden layer's ctx_in.sel
 // for the real position, the labelled stand-in for the others).  The controller's expected-position register
 // is preset to the first position (the user is already there; labelled, as in tb_dsrom_integ_reindex_wf).
+// RELAY = 1: the selection rides in the hop instead (tools/hdc_program_v41_array.py `relay`: HIDDEN payload word 0
+// the hop marker, words 1..32 the selection), read from the received payload; no SIDE.
 // Prints JOB / READ lines and PASS / FAIL.
 // ---------------------------------------------------------------------------
 module tb_dsrom_pslot_reuse #(
     parameter integer PSL = 3,
+    parameter integer RELAY = 0,                 // 1: the selection rides in the hop (HIDDEN payload words 1..32)
     parameter integer NJOBS = 2,
     parameter integer CORE_LAT = 400,
     parameter integer MAX_CYCLES = 200000
@@ -53,8 +56,8 @@ module tb_dsrom_pslot_reuse #(
     reg  [FLIT-1:0]   vm_rq = {FLIT{1'b0}};
     wire [23:0]       kv_base;
     ot_rom_pkg_ctrl_wf_ps #(.PKG_ID(5), .FLIT(FLIT), .NW(NW), .AW(24), .VWA(VWA), .MAXU(MAXU), .USER_W(USER_W),
-        .KVW(1024), .XWORDS(1), .RXWORDS(1), .RXB(0), .TXB(1), .SOURCE(0), .SEND_HIDDEN(1), .HID_DEST(6),
-        .SIDE_IN(1), .SIDE_USH(SIDE_USH), .SIDE_PSL(PSL), .SIDE_PSH(PSH), .WAVE(1), .WIN(6)) ctrl (
+        .KVW(1024), .XWORDS(1), .RXWORDS(RELAY ? 1 + SW : 1), .RXB(0), .TXB(100), .SOURCE(0), .SEND_HIDDEN(1),
+        .HID_DEST(6), .SIDE_IN(RELAY ? 0 : 1), .SIDE_USH(SIDE_USH), .SIDE_PSL(RELAY ? 0 : PSL), .SIDE_PSH(PSH), .WAVE(1), .WIN(6)) ctrl (
         .clk(clk), .rst_n(rst_n), .cfg_users(8'd1), .cfg_prompt_len({NW{1'b0}}), .cfg_gen_len({NW{1'b0}}),
         .in_valid(in_valid), .in_ready(in_ready), .in_data(in_data), .in_last(in_last),
         .out_valid(out_valid), .out_ready(1'b1), .out_data(out_data), .out_last(out_last),
@@ -112,7 +115,7 @@ module tb_dsrom_pslot_reuse #(
         integer e, base;
         begin
             e = 0;
-            base = SIDE_RXB + (juser << SIDE_USH) + joff;
+            base = RELAY ? 1 : SIDE_RXB + (juser << SIDE_USH) + joff;
             for (w = 0; w < SW; w = w + 1)
                 if (vm[base + w] !== expw[(job * 3 + rd) * SW + w]) e = e + 1;
             reads = reads + 1;

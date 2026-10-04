@@ -12,7 +12,7 @@
 // QPIPE copies (qp / qz with QK > 0) also check the delayed output-table shadow (so_row / so_idx / so_n).
 // The pre-fix decode (2NSEG+1+s -> s_row[NSEG + s[SW-1:0] - 1]) fails on s = NSEG-1 (second macro's segment 7
 // never written, first macro's segment 7 clobbered) and on every a > 3NSEG.
-//   verilator --binary -DELEM=ot_v41_rom_elem_w10 [-DW10] [-DQSH=<QK>] [+define+ELEM_PARAMS=...] ...
+//   built by tools/dsrom_elem_cfg_rw.py: +define+ELEM=<module> [+define+QSH] [+define+ELEM_PARAMS=,...]
 // ---------------------------------------------------------------------------
 `ifndef ELEM
 `define ELEM ot_v41_rom_elem_w10
@@ -32,8 +32,13 @@ module tb_v41_rom_elem_cfg_rw;
     reg [4:0] cfg_a = 5'd0;
     reg [47:0] cfg_d = 48'd0;
     `ELEM #(.NSEG(NSEG), .NB(NB), `ELEM_BASE `ELEM_PARAMS) dut (
+`ifdef PIN    // the QPIPE copies name their boundary inputs *_pin
+        .clk(clk), .rst_n_pin(rst_n), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d),
+        .go_pin(1'b0), .go_bf_pin(1'b0), .xs_v_pin(1'b0), .xb_v_pin(1'b0));
+`else
         .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d),
         .go(1'b0), .go_bf(1'b0), .xs_v(1'b0), .xb_v(1'b0));
+`endif
 
     // model of the decoded state
     reg [47:0] m_seg [0:NSEG-1];
