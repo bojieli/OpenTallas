@@ -16,18 +16,23 @@ def main():
                         help='completed minimum model archive; exported from host')
     parser.add_argument('--source', type=Path, action='append', default=[],
                         help='actual source factory/provider translation unit')
+    parser.add_argument('--link-library', action='append', default=[],
+                        help='required native host library, e.g. crypto for pinned target-entry SHA256')
     parser.add_argument('--linked-source', action='store_true',
                         help='link selected source factory/prefix/embedding directly; select caller "-"')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--cxx', default='g++')
+    parser.add_argument('--host-source', type=Path,
+                        help='source-pinned copied host with selected native DPI instrumentation')
     args = parser.parse_args()
     support = Path(__file__).resolve().parent / 'runtime' / 'dsrom'
+    host_source = args.host_source or support / 's81_minimum_element.cpp'
     required = [args.pq / 'Vpq.h', args.pb / 'Vpb.h',
                 args.pq / 'libVpq.a', args.pb / 'libVpb.a',
                 args.pq / 'libverilated.a',
                 args.verilator_include / 'verilated.h',
                 args.rom_client_dir / 'dsrom_s81_rom_client.hpp',
-                *args.model_archive, *args.source]
+                host_source, *args.model_archive, *args.source]
     for path in required:
         if not path.is_file():
             parser.error(f'completed native input missing: {path}')
@@ -49,12 +54,13 @@ def main():
     commands = [
         [args.cxx, '-std=c++17', '-O2', '-pthread',
          *[f'-I{p}' for p in includes], '-c',
-         str(support / 's81_minimum_element.cpp'), '-o', str(obj)],
+         str(host_source), '-o', str(obj)],
         [args.cxx, '-std=c++17', '-O2', '-pthread', '-rdynamic', str(obj),
          *[f'-I{p}' for p in includes], *map(str, sources),
          str(args.pq / 'libVpq.a'), str(args.pb / 'libVpb.a'),
          *models,
          str(args.pq / 'libverilated.a'), '-ldl',
+         *[f'-l{name}' for name in args.link_library],
          '-o', str(args.output / 'minimum_element')],
     ]
     with (args.output / 'link.log').open('x') as log:

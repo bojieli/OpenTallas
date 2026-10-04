@@ -1,0 +1,474 @@
+{
+  "schema": "opentallas.dsrom.s81.minimum-CROM-image.r1",
+  "status": "PASS_RELEASED_LAYER20_CROM_RAW_CONSTANTS_ONLY",
+  "layer": 20,
+  "rank": 3,
+  "scope": "raw released layer20 constants for existing native SU; no activation/golden intermediate/inference",
+  "snapshot": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "constants": {
+    "attn_norm": {
+      "tensor": "layers.20.attn_norm.weight",
+      "descriptor": {
+        "dtype": "BF16",
+        "shape": [
+          5120
+        ],
+        "data_offsets": [
+          9642200,
+          9652440
+        ]
+      },
+      "source_dtype": "BF16",
+      "source_element_range": [
+        0,
+        5120
+      ],
+      "source_byte_sha256": "0134d0e6e3b9d6c6275098fda048bfa4536fe41a550ce6d0d26ae19a3ac45429",
+      "source_bytes": 10240,
+      "base_word": 0,
+      "word_count": 5120,
+      "output_image_sha256": "81160d8abd437677019ab098ebb141b70b53b90c16e904a2a7d1463bb868b568",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1019609088,
+        1019412480
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "ffn_norm": {
+      "tensor": "layers.20.ffn_norm.weight",
+      "descriptor": {
+        "dtype": "BF16",
+        "shape": [
+          5120
+        ],
+        "data_offsets": [
+          13584600,
+          13594840
+        ]
+      },
+      "source_dtype": "BF16",
+      "source_element_range": [
+        0,
+        5120
+      ],
+      "source_byte_sha256": "2cab2d6f0e2b59a9b7cfd9ca7dd69e71cd789ee7f6489765066b1bb9d0e9545d",
+      "source_bytes": 10240,
+      "base_word": 5120,
+      "word_count": 5120,
+      "output_image_sha256": "e570032a2fbca3d9973a6818d58c93478ec7d5dd8f7e067250500735104f7b3d",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1050476544,
+        1050542080
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "q_norm": {
+      "tensor": "layers.20.attn.q_norm.weight",
+      "descriptor": {
+        "dtype": "BF16",
+        "shape": [
+          1280
+        ],
+        "data_offsets": [
+          9639640,
+          9642200
+        ]
+      },
+      "source_dtype": "BF16",
+      "source_element_range": [
+        0,
+        1280
+      ],
+      "source_byte_sha256": "2277f8f9757e923724348642e9d57802262d64be4ef92ab4d96618dd4df8039a",
+      "source_bytes": 2560,
+      "base_word": 10240,
+      "word_count": 1280,
+      "output_image_sha256": "f2ee959fefcbd593e3b91e95fc5528e1ba2a7754cc9567204a4ef11a0649b366",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1065877504,
+        1061814272
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "kv_norm": {
+      "tensor": "layers.20.attn.kv_norm.weight",
+      "descriptor": {
+        "dtype": "BF16",
+        "shape": [
+          512
+        ],
+        "data_offsets": [
+          9638616,
+          9639640
+        ]
+      },
+      "source_dtype": "BF16",
+      "source_element_range": [
+        0,
+        512
+      ],
+      "source_byte_sha256": "a239ca745f2d0d40cd14f76cd127b1a1757a65d8300fee55a8bdd8cf529ec309",
+      "source_bytes": 1024,
+      "base_word": 11520,
+      "word_count": 512,
+      "output_image_sha256": "0187b7f56b8e46ed057f9471f89677b9d4719f0f0bc8a650c9ce1eb49016b42c",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1059127296,
+        1059389440
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "hc_attn_scale": {
+      "tensor": "layers.20.hc_attn_scale",
+      "descriptor": {
+        "dtype": "F32",
+        "shape": [
+          3
+        ],
+        "data_offsets": [
+          1969504,
+          1969516
+        ]
+      },
+      "source_dtype": "F32",
+      "source_element_range": [
+        0,
+        3
+      ],
+      "source_byte_sha256": "2472cda51a14b9614f7909808c4f2c01d1ece7adbe02ce5a1dc280ad2897f4b7",
+      "source_bytes": 12,
+      "base_word": 12032,
+      "word_count": 24,
+      "output_image_sha256": "1dd804a3ebe4ae8be10a4ba6d6f567d5f3e2027eb8fe807131cd623622dcd636",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1040446536,
+        1050088787
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "hc_attn_base": {
+      "tensor": "layers.20.hc_attn_base",
+      "descriptor": {
+        "dtype": "F32",
+        "shape": [
+          24
+        ],
+        "data_offsets": [
+          3328,
+          3424
+        ]
+      },
+      "source_dtype": "F32",
+      "source_element_range": [
+        0,
+        24
+      ],
+      "source_byte_sha256": "beca4acd8e0acf568103ff932e88df06c469a4b264dd7bf17488cc25f86b75ee",
+      "source_bytes": 96,
+      "base_word": 12056,
+      "word_count": 24,
+      "output_image_sha256": "ffdc64046040df0982a175e347a6af8875ea7d04ca651b8c1a8ca1939d2a0704",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1076292449,
+        1075059912
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "hc_ffn_scale": {
+      "tensor": "layers.20.hc_ffn_scale",
+      "descriptor": {
+        "dtype": "F32",
+        "shape": [
+          3
+        ],
+        "data_offsets": [
+          3935692,
+          3935704
+        ]
+      },
+      "source_dtype": "F32",
+      "source_element_range": [
+        0,
+        3
+      ],
+      "source_byte_sha256": "62be29d79b0f3771fb188884c5fcef0ecb942e4f3cb9ed3899fc97d50b6225d9",
+      "source_bytes": 12,
+      "base_word": 12080,
+      "word_count": 24,
+      "output_image_sha256": "ec67768b8eec9e1b6776b34215ddef75c215d08f5c47761a1875b58ccb0bd6f9",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1037865867,
+        1052304440
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "hc_ffn_base": {
+      "tensor": "layers.20.hc_ffn_base",
+      "descriptor": {
+        "dtype": "F32",
+        "shape": [
+          24
+        ],
+        "data_offsets": [
+          1969516,
+          1969612
+        ]
+      },
+      "source_dtype": "F32",
+      "source_element_range": [
+        0,
+        24
+      ],
+      "source_byte_sha256": "9d1996d2199a916761d442cb44816ff2f814cf42e86eecb41d8f56acb4a101a1",
+      "source_bytes": 96,
+      "base_word": 12104,
+      "word_count": 24,
+      "output_image_sha256": "1a9db8a98dcb983f322a8220e6e1e7ed33e24d813c795041057c2caaa9b2edb8",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1074618360,
+        1074675915
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "attn_sink": {
+      "tensor": "layers.20.attn.attn_sink",
+      "descriptor": {
+        "dtype": "F32",
+        "shape": [
+          64
+        ],
+        "data_offsets": [
+          0,
+          256
+        ]
+      },
+      "source_dtype": "F32",
+      "source_element_range": [
+        48,
+        64
+      ],
+      "source_byte_sha256": "f52af05ad4c6f59ba3a86384e4a22dd6753e5b879967d010113da0ab23520ecc",
+      "source_bytes": 64,
+      "base_word": 12128,
+      "word_count": 16,
+      "output_image_sha256": "5e5f55b43a190be902b515a59bddcfb824b97b228d09910b616e1346f15e9fdf",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1050147638,
+        1002616964
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "gate.bias": {
+      "tensor": "layers.20.ffn.gate.bias",
+      "descriptor": {
+        "dtype": "F32",
+        "shape": [
+          384
+        ],
+        "data_offsets": [
+          256,
+          1792
+        ]
+      },
+      "source_dtype": "F32",
+      "source_element_range": [
+        0,
+        384
+      ],
+      "source_byte_sha256": "8645e88248962a8e838ff75b002e2ff5609f0b702eb9ac1a7b3433e25af2bfb3",
+      "source_bytes": 1536,
+      "base_word": 12144,
+      "word_count": 384,
+      "output_image_sha256": "34cadb09901e307b360a603872a640972ec76fb714c14e6d1f425377d755e501",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1096969973,
+        1096986757
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "compressor.norm": {
+      "tensor": "layers.20.attn.compressor.norm.weight",
+      "descriptor": {
+        "dtype": "BF16",
+        "shape": [
+          512
+        ],
+        "data_offsets": [
+          3935704,
+          3936728
+        ]
+      },
+      "source_dtype": "BF16",
+      "source_element_range": [
+        0,
+        512
+      ],
+      "source_byte_sha256": "016790941ac54700f833a766568895cd768dd32a6702de7785f1859fa831f2f9",
+      "source_bytes": 1024,
+      "base_word": 12528,
+      "word_count": 512,
+      "output_image_sha256": "b0d458732916b3869fe4a6862956104193adbc6dd1b34ffcdd2bf72993b61003",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1062928384,
+        1063256064
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "indexer.k_norm": {
+      "tensor": "layers.20.attn.indexer.k_norm.weight",
+      "descriptor": {
+        "dtype": "BF16",
+        "shape": [
+          128
+        ],
+        "data_offsets": [
+          9179608,
+          9179864
+        ]
+      },
+      "source_dtype": "BF16",
+      "source_element_range": [
+        0,
+        128
+      ],
+      "source_byte_sha256": "9a077b7d9215c21e062eb2c3cd928201cd18445a20d56afda18ba42abe7921de",
+      "source_bytes": 256,
+      "base_word": 13040,
+      "word_count": 128,
+      "output_image_sha256": "eba307afc3f4337d5e32c5fbc55bd9e47a98da0e8a46410e82e7f5b7821407e5",
+      "shard": "model-00023-of-00048.safetensors",
+      "shard_header_data_base": 261288,
+      "shard_identity": {
+        "device": 66313,
+        "inode": 28991158,
+        "bytes": 7400713088,
+        "mtime_ns": 1789299978384941111
+      },
+      "endpoint_raw32": [
+        1059389440,
+        1059192832
+      ],
+      "conversion": "BF16 rawbits <<16 or F32 unchanged; HC scale repeats4/4/16; high32 +0"
+    },
+    "pre0": {
+      "base_word": 13168,
+      "word_count": 4,
+      "generated_rule": "hdc_program_v41.Layout: [1.0, 0.0, 0.0, 0.0]"
+    }
+  },
+  "binder": "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_program_bind_rope_hbm.json",
+  "binder_sha256": "269deb20fd02a7114982b522c679decb475da8232181e4a75bb0ce9cd51498dd",
+  "layout": "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_token_selected_rom_layout.json",
+  "layout_sha256": "554e1d32b8a18ad4053bced1d4a8e8d27c369a94376ca078d168081ec5fdad09",
+  "crom_sha256": "0686f3d02f69057b64323c289a200cd96f9a6352f278e2e9ba6b5769bcafb901",
+  "crom_bytes": 298588,
+  "image_entries": 13172,
+  "selected_directory": "/tmp/dsrom-s81-L20-CROM-hubble-r1/r3",
+  "env": "DSROM_S81_MINIMUM_CROM_HEX=/tmp/dsrom-s81-L20-CROM-hubble-r1/r3/crom.hex",
+  "emitter_sha256": "baca2136e9da5138f8a84fd1eaf4372ca2fef22e8bade9f7a5c9cbc45fd5bd84",
+  "source_sha256": {
+    "tools/dsrom_checkpoint.py": "1f0ba70f4102aa8fb60e27d4bf4ce0f587fb6c9b1e456b6b35cd7705ba256844",
+    "tools/v41_fullshape_weight_layout.py": "86e2f1fa103d1cf89ffeaaac755b81bce1d673afed9bf56651a287a0cc359dab",
+    "tools/dsrom_s81_l20_sim_only.py": "bf850480bb599f6aac1b37eee26eda16b2c65d8a6610a63ad1609dd2f77dce93",
+    "tools/runtime/dsrom/s81_minimum_su256.cpp": "56d02887c8924590f6d69cdf805b3a96a54dacf1702f284cd28d9120417218ee",
+    "tools/runtime/dsrom/s81_minimum_su256_constants.hpp": "1a2355310b64ecb8bfad1ea9a2bd8bfd1929820feb5d57b3596b4762cfb349a9"
+  },
+  "resource": {
+    "elapsed_seconds": 0.06502334494143724,
+    "peak_RSS_bytes": 67346432,
+    "source_read_bytes": 27160,
+    "added_image_bytes": 298588,
+    "hardware_model_delta": 0,
+    "no_execution_caps": true
+  }
+}

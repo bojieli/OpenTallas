@@ -7281,6 +7281,103 @@ def dsrom_s81_native_su_prefix():
         combined_single_user_added_us=None, overlap_credit_us=0)
 
 
+def dsrom_s81_native_su_ik128():
+    """Opt-in literal I36 IK128 address selection; existing SUN256 body costs.
+
+    KVT_SH is a compile-time wire shift into the unchanged address adders.
+    This selects the D128 writer layout, not dynamic format selection or a
+    strobe remap. Existing prefix defaults and headline rows stay unchanged.
+    """
+    base = dsrom_s81_native_su_prefix()
+    selected = copy.deepcopy(base)
+    selected['schema'] = 'opentallas.dsrom.S81.native-SU-IK128.v1'
+    selected['parameters']['KVT_SH'] = 11
+    source_paths = (
+        'rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_vec.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv',
+        'tools/runtime/dsrom/s81_minimum_l20_index_writer.cpp',
+    )
+    selected.update(
+        scope='Opt-in minimum native L20.I36 IK128 SUN256 SH11 source binding; not a final S81 headline change',
+        literal_source='L20.I36 unit2 dst3 nin128 nout1 abase94496 asi1 obase0; actual DY4 GLOBAL row = position; backend local record is separate',
+        literal_word_sha256='436e442bdf1b4743ac79abc55ab08892561afe7bfdf29803d631ed531180c072',
+        source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in source_paths},
+        IK_dimensions=128, interleaved_rows=16, scalar_element_bits=32,
+        prior_KVT_SH=9, selected_KVT_SH=11,
+        prior_block_stride_elements=512, selected_block_stride_elements=2048,
+        prior_block_stride_bytes=2048, selected_block_stride_bytes=8192,
+        address_formula='obase + ((row >> 4) << KVT_SH) + (dimension << 4) + (row & 15)',
+        prior_stride_collision={'row0_dimension32': 512, 'row16_dimension0': 512},
+        target_global_position=1048575, target_DY4=1048575,
+        target_dimension0_element_address=134215695,
+        target_dimension127_element_address=134217727,
+        selected_address_extent_bytes=536870912,
+        address_extent_scope='Logical selected scalar-address extent, not physical replicated bank capacity',
+        selected_body_delta=dict(MACs_per_cycle=0, memory_ports=0, boundary_bits=0,
+                                 state_bits=0, replicas=0, mux_demux=0, fanout=0,
+                                 address_adders=0, pipeline_cycles=0,
+                                 new_body_area_mm2=0, single_user_added_latency_cycles=0),
+        constant_wire_stride_delta='Existing row high bits align two positions higher into same AW30 adders; no dynamic shifter, added stage, new engine or strobe rewrite',
+        routing_cost='Same bounded bus/port/replica inventory; selected wire endpoints differ. Exact placed routes and SS/FF remain unqualified, not zero-cost physical qualification.',
+        all_KV_formats_qualified=False, physical_dynamic_selection_qualified=False,
+        minimum_selected_build_model_ready=True,
+        measured_runtime_qualified=False, measured_rate_credit=0,
+    )
+    return selected
+
+
+def dsrom_s81_native_su_kvt_stride_policy():
+    """Priced opt-in captured-ni fixed SH11/SH13 selector, before KVT add.
+
+    Source scope is Arch's 82 selected KVT operations: D128 IK and D512 KT.
+    Other formats are outside this selection. No extra register or engine.
+    """
+    base = dsrom_s81_native_su_prefix()
+    lanes = base['parameters']['N']
+    aw = base['parameters']['AW']
+    cw = 24  # ot_hdc_v41x_vec.sv localparam CW; existing ni_e per lane.
+    # Existing model uses ASSUMED 0.2 um2/2:1 bit mux (HBM mux screen).
+    # Equality network proxy is explicit, not mapped area/timing evidence.
+    mux_um2 = lanes * aw * 0.2
+    compare_um2 = lanes * cw * 0.2
+    return dict(
+        schema='opentallas.dsrom.S81.native-SU-KVT-stride-policy.v1',
+        adopted=False, model_ready_for_selected_RTL=True,
+        source_scope='82 canonical KVT ops; L20.I21/I53 D512, L20.I36 D128',
+        base_parameters=base['parameters'], ports=base['ports'],
+        supported_dimensions=[128,512], shifts={128:11,512:13},
+        block_stride_elements={128:2048,512:8192},
+        selection='Captured ni_e==128 selects fixed (row_e>>4)<<11; otherwise selected D512 uses fixed <<13, before existing u_kv1. Unsupported dimensions are not enrolled.',
+        arithmetic_order='Existing u_kv1 base+block_offset, then u_kv2 dimension<<4|row_low4 unchanged',
+        defaultoff_required=True, captured_control='Existing CW24 ni_e in same emitting lane/stage; no new capture FF',
+        MACs_per_cycle_peak=base['MACs_per_cycle_peak'],
+        operand_bytes_per_edge_peak=base['operand_bytes_per_edge_peak'],
+        native_write_bytes_per_edge_peak=base['native_write_bytes_per_edge_peak'],
+        new_ports=0, new_queues=0, new_engine_replicas=0, new_FF_bits=0,
+        new_address_adders=0, new_pipeline_cycles=0,
+        replicas_per_rank=base['replicas_per_rank'], TP=base['TP'],
+        mux_bits_per_lane=aw, mux_bits_per_rank=lanes*aw,
+        equality_bits_per_lane=cw, equality_bits_per_rank=lanes*cw,
+        local_select_fanout_per_lane=aw,
+        extra_ni_bit_compare_loads_per_lane=1,
+        extra_global_control_broadcast_bits=0,
+        area_basis='ASSUMED analytical proxy 0.2um2/mux-bit and 0.2um2/equality-input-bit; no mapped/routed/SSFF claim',
+        mux_proxy_um2_per_rank=mux_um2,
+        equality_proxy_um2_per_rank=compare_um2,
+        added_cell_proxy_mm2_per_rank=(mux_um2+compare_um2)/1e6,
+        added_cell_proxy_mm2_TP4=4*(mux_um2+compare_um2)/1e6,
+        loaded_path='ni_e -> CW24 equality -> AW30 fixed-offset mux -> existing u_kv1 -> u_kv2 -> same f_o register',
+        loaded_path_SS_FF_closed=False, loaded_path_delay_ps=None,
+        added_latency_cycles=0, added_physical_latency_ps=None,
+        all_KV_formats_qualified=False, physical_dynamic_selection_qualified=False,
+        measured_rate_credit=0,
+        source_sha256=dsrom_s81_native_su_ik128()['source_sha256'],
+        fixed_IK_SH11_minimum_build_independent=True,
+    )
+
+
 def dsrom_s81_native_he_bootstrap():
     """Native prefix leaves, reusing selected HE and SUN256 reducer arithmetic.
 
@@ -7543,3 +7640,24 @@ def dsrom_s81_native_bf_head_producer():
         'token_latency_ns': None, 'headline_or_rate_credit': False,
         'default_enabled': False,
     }
+
+
+def hbm_dspark_ctl_fast_prefix_candidate():
+    """FAST-only W16 carry repair, model before RTL; no clock/rate adoption.
+
+    Existing control accepts the same commands and emits the same values on
+    the same edges. Retain ctl_f1 output SS miss and full spec_f1 setup fail.
+    """
+    return dict(model_record="results/uarch/hbm_accel_fmax_ctl_20261004/prebuild_model.json",
+                adopted=False, target_period_ps=833, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, replicas=1, MACs_per_cycle=0,
+                new_memory_ports=0, new_boundary_bits=0, new_latency_cycles=0,
+                single_user_token_latency_delta_cycles=0, FAST_default=0,
+                retained_fast_fbase_FF_bits=16, repair_additional_FF_bits=0,
+                carry_width=16, carry_levels=5, carry_prefix_nodes=54,
+                local_kept_wire_bits=204, local_prefix_fanout_bound=2,
+                gate_equivalent_upper=210, added_logic_proxy_um2=105,
+                added_50pct_reservation_proxy_um2=210,
+                area_basis="assumed0.5um2/gate; mapped/routed area not measured",
+                required_leaf_area_growth_um2=210, physical_fit=False,
+                SS_FF_closed=False, measured_gain=False)
