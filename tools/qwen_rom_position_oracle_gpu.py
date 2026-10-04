@@ -626,13 +626,13 @@ def cmd_run(a):
     if not all(st.values()):
         raise SystemExit(f"primitive self-test failed: {st}")
     print("primitive self-test:", "all bit-exact", flush=True)
-    prep = json.loads((a.prep / "prep.json").read_text())
+    prep = json.loads((a.prep_dir / "prep.json").read_text())
     tokens = [int(t) for t in a.tokens.read_text().split()]
     rec_pos = sorted(int(p) for p in a.positions.split(","))
     last = rec_pos[-1]
     nl = a.layers
     t0 = time.time()
-    m = GpuTP(T, a.prep, range(nl), head=a.head)
+    m = GpuTP(T, a.prep_dir, range(nl), head=a.head)
     print(f"loaded {nl} layers{' + head' if a.head else ''} onto {torch.cuda.get_device_name(0)} in {time.time() - t0:.0f} s", flush=True)
     hprogs, hshas = head_programs(prep) if a.head else (None, None)
     z = np.load(a.embedding_npz)
@@ -651,7 +651,7 @@ def cmd_run(a):
               "layers": nl, "head": bool(a.head), "tp": TP, "groups": m.GROUPS, "su_width_arith": 1024, "kv_format": "fp8",
               "device": torch.cuda.get_device_name(0), "torch": torch.__version__,
               "tokens_sha256": sha(a.tokens), "tokens_used": tokens[:last + 1], "positions": rec_pos,
-              "embedding_npz_sha256": sha(a.embedding_npz), "prep_sha256": sha(a.prep / "prep.json"),
+              "embedding_npz_sha256": sha(a.embedding_npz), "prep_sha256": sha(a.prep_dir / "prep.json"),
               "head_program_sha256": hshas, "primitive_selftest": st, "per_position": {},
               "oracle_source_sha256": {p: sha(ROOT / p) for p in (
                   "tools/qwen_rom_position_oracle_gpu.py", "tools/qwen_rom_position_oracle_w12.py",
@@ -730,7 +730,7 @@ def main():
     ap.add_argument("--layout-manifest", help="--prep: layer0_rom.json path with {die} (matrix layout, post-TP scale bases)")
     ap.add_argument("--head-manifest", help="--prep: head_rom.json path with {die}")
     ap.add_argument("--procs", type=int, default=16)
-    ap.add_argument("--prep-dir", dest="prep", type=Path, help="--run: the --prep output")
+    ap.add_argument("--prep-dir", type=Path, help="--run: the --prep output")
     ap.add_argument("--layers", type=int, default=LAYERS)
     ap.add_argument("--head", action="store_true", help="--run: also the lm_head at every recorded position")
     ap.add_argument("--tokens", type=Path)
