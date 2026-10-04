@@ -59,7 +59,7 @@ def build(out):
         '-I'+str(ROOT/'tools/runtime/dsrom'),
         str(ROOT/'tools/runtime/dsrom/s81_embedding_bridge.cpp'),
         str(out/'Vembedding_vm__ALL.a'),str(include/'verilated.cpp')]+
-        ([str(include/'verilated_threads.cpp')] if (include/'verilated_threads.cpp').exists() else [])+
+        ([str(include/'verilated_threads.cpp')] if int(re.search(r'Verilator (\d+)\.',text).group(1))>=5 else [])+
         ['-o',str(lib)],check=True)
     return lib
 
