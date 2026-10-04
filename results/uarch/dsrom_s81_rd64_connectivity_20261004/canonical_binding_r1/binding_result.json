@@ -1,0 +1,46 @@
+{
+  "BF_site_IDs": 519,
+  "actual_parent_source_commit": "bc95bf781bd4d16078dd2ef4727dc470df35bca4",
+  "canonical_matrix_map_pinned": true,
+  "canonical_rank_dies": 324,
+  "canonical_verdict": {
+    "decoder_matrix_capacity_PASS": true,
+    "entire_shipped_checkpoint_exactonce_PASS": false,
+    "failures": [],
+    "placed": 46671
+  },
+  "consumed_source_scope": "canonical geometry/BF/rank identity and frozen source hashes; no allocator, runtime or physical replay",
+  "generated_RTL_byte_identical": true,
+  "geometry_matches_previous_emission": true,
+  "historical_emitter_labels": {
+    "W1_RD": 4,
+    "W1_RD_measured": false,
+    "schema": "opentallas.dsrom.S73.PAIR1.metadata-map.v1"
+  },
+  "input_sha256": {
+    "auxiliary_obligations.json": "a41f4b1d6166620e884e3b2ca48cb310a6be046d611509f163e44a8075f8e433",
+    "inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+    "mapping_verdict.json": "bf7aa85559b92c9a383a316ff7401e2e86dd752b36982352247e3a447c36cc35",
+    "matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "providers.json": "91ad040342b25cd38fb69ef0eb7cb4966ff8e7e9c43cd4c3bd53a04ee30f792d",
+    "stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815"
+  },
+  "inventory_bound": true,
+  "physical_SS_FF": null,
+  "q_only_pairs": 1898,
+  "removed_storage_credit_changed": false,
+  "schema": "dsrom.s81.strict_prune.canonical_inventory_join.v1",
+  "selected_return_contract": {
+    "BYPASS": 1,
+    "QD": 128,
+    "RD": 64,
+    "ROOTD": 128,
+    "RST": 1,
+    "retained_nodes": 5090,
+    "retained_unilateral_nodes": 384
+  },
+  "source_directory": "/home/ubuntu/dsrom-c-w2-20261003/results/uarch/dsrom_s81_released_binding_20261004/canonical",
+  "stage_occupancy_note": "74 full stages, three 9-pair provider-only stages, four zero-occupied stages in allocation; provisioned2417 sites/die are not pruned from occupancy alone",
+  "topology_changed": false,
+  "whole_token_qualified": false
+}

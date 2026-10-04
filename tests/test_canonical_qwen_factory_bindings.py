@@ -227,8 +227,11 @@ def banked_header(root):
             count=64,bits=4096,block='source_owner',leaf=name)
 
 
-def test_banked_manifest_uses_same_physical_RF_authority_without_synthetic_grants():
+@pytest.mark.parametrize('module',['ot_gpu_qwen_banked_manifest_range_owner',
+    'ot_gpu_qwen_native_aperture_range_owner'])
+def test_banked_manifest_uses_same_physical_RF_authority_without_synthetic_grants(module):
     root,writer=pins();banked_header(root);RF=object()
+    root.book['manifest_contract']['owner_module']=module
     with patch('tools.gpu_sys.canonical_qwen_manifest_owner_bindings.build_RF_authority',return_value=RF) as factory:
         bound=F.compose(root,physical_provider=provider(),placement=None,w2_ports=ports(),
             native_factory=lambda *args:{k:lambda request:None for k in F.NATIVE_KINDS},enabled=True)
@@ -239,8 +242,11 @@ def test_banked_manifest_uses_same_physical_RF_authority_without_synthetic_grant
 
 @pytest.mark.parametrize('field,value',[('direction','input'),('leaf_bits',7),('bits',64),
     ('count',1),('block','issuer'),('leaf','required_input_bank_mask64')])
-def test_banked_mask_cannot_be_alias_or_undersized(field,value):
+@pytest.mark.parametrize('module',['ot_gpu_qwen_banked_manifest_range_owner',
+    'ot_gpu_qwen_native_aperture_range_owner'])
+def test_banked_mask_cannot_be_alias_or_undersized(field,value,module):
     root,_=pins();banked_header(root)
+    root.book['manifest_contract']['owner_module']=module
     root.book['pins']['source_owner_required_bank_mask64'][field]=value
     with pytest.raises(TransportError,match='actual banked manifest mask64 port'):
         F.validate_installed_book(root)

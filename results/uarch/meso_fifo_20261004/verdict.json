@@ -1,0 +1,196 @@
+{
+ "schema": "opentallas.meso_fifo.verdict.v1",
+ "date": "2026-10-04",
+ "status": "FUNCTION_PASS_DELTA_MEASURED_SS_NOT_YET_CLOSED",
+ "rtl": {
+  "ot_meso_fifo": "rtl/common/ot_meso_fifo.sv (default-off ENABLE=0; DEPTH 4, OFFSET 2, guards 0/4, CREDITS 8+1)",
+  "ot_fwd_link_stage": "rtl/common/ot_fwd_link_stage.sv (Codex codex/rom-clock-primitives-20261003 @ 6de31bae2, unchanged)"
+ },
+ "campaign": {
+  "d4_central": {
+   "words": 220331463,
+   "errors": 0,
+   "false_faults": 0,
+   "window_violations": 0,
+   "stream_words_per_cycle_min": 1.0,
+   "lag_ps": [
+    839.7,
+    2493.5
+   ],
+   "crossing_delta_periods_mean": 2.0135,
+   "crossing_delta_periods_range": [
+    1.5193,
+    2.512
+   ],
+   "round_trip_delta_histogram": {
+    "4": 36,
+    "5": 1
+   },
+   "drift_runs": 78,
+   "drift_all_fail_closed": true
+  },
+  "d8_tt_routed": {
+   "words": 51535701,
+   "errors": 0,
+   "false_faults": 0,
+   "window_violations": 0,
+   "stream_words_per_cycle_min": 1.0,
+   "lag_ps": [
+    518.3,
+    4481.8
+   ],
+   "crossing_delta_periods_mean": 2.9762,
+   "crossing_delta_periods_range": [
+    2.488,
+    3.4494
+   ],
+   "round_trip_delta_histogram": {
+    "6": 21
+   },
+   "drift_runs": 78,
+   "drift_all_fail_closed": true
+  },
+  "d16_bound_ss": {
+   "words": 51005834,
+   "errors": 0,
+   "false_faults": 0,
+   "window_violations": 0,
+   "stream_words_per_cycle_min": 1.0,
+   "lag_ps": [
+    829.3,
+    7503.8
+   ],
+   "crossing_delta_periods_mean": 4.9762,
+   "crossing_delta_periods_range": [
+    4.4881,
+    5.4493
+   ],
+   "round_trip_delta_histogram": {
+    "10": 20,
+    "9": 1
+   },
+   "drift_runs": 78,
+   "drift_all_fail_closed": true
+  }
+ },
+ "mutants": {
+  "OFFSET": true,
+  "NO_GUARD": true,
+  "EARLY_CREDIT": true
+ },
+ "price_per_token": {
+  "central_thick_metal": {
+   "typical": {
+    "per_op": 4,
+    "qwen_cycles": 1012,
+    "qwen_pct_calibrated": -0.235,
+    "qwen_pct_near_hbm": -0.44,
+    "ds_cycles": 1321,
+    "ds_pct": -0.273
+   },
+   "worst_phase": {
+    "per_op": 5,
+    "qwen_cycles": 1265,
+    "qwen_pct_calibrated": -0.294,
+    "qwen_pct_near_hbm": -0.549,
+    "ds_cycles": 1652,
+    "ds_pct": -0.342
+   },
+   "phase_average": {
+    "per_op": 4.027,
+    "qwen_cycles": 1019,
+    "qwen_pct_calibrated": -0.237,
+    "qwen_pct_near_hbm": -0.443,
+    "ds_cycles": 1330,
+    "ds_pct": -0.275
+   },
+   "model_only_per_op": 2
+  },
+  "tt_routed": {
+   "typical": {
+    "per_op": 6,
+    "qwen_cycles": 1518,
+    "qwen_pct_calibrated": -0.352,
+    "qwen_pct_near_hbm": -0.658,
+    "ds_cycles": 1982,
+    "ds_pct": -0.41
+   },
+   "worst_phase": {
+    "per_op": 7,
+    "qwen_cycles": 1771,
+    "qwen_pct_calibrated": -0.411,
+    "qwen_pct_near_hbm": -0.767,
+    "ds_cycles": 2312,
+    "ds_pct": -0.477
+   },
+   "phase_average": {
+    "per_op": 5.9524,
+    "qwen_cycles": 1506,
+    "qwen_pct_calibrated": -0.349,
+    "qwen_pct_near_hbm": -0.653,
+    "ds_cycles": 1966,
+    "ds_pct": -0.406
+   },
+   "model_only_per_op": 6
+  },
+  "bound_ss_routed": {
+   "typical": {
+    "per_op": 10,
+    "qwen_cycles": 2530,
+    "qwen_pct_calibrated": -0.585,
+    "qwen_pct_near_hbm": -1.092,
+    "ds_cycles": 3303,
+    "ds_pct": -0.681
+   },
+   "worst_phase": {
+    "per_op": 11,
+    "qwen_cycles": 2783,
+    "qwen_pct_calibrated": -0.644,
+    "qwen_pct_near_hbm": -1.2,
+    "ds_cycles": 3633,
+    "ds_pct": -0.748
+   },
+   "phase_average": {
+    "per_op": 9.9524,
+    "qwen_cycles": 2518,
+    "qwen_pct_calibrated": -0.583,
+    "qwen_pct_near_hbm": -1.087,
+    "ds_cycles": 3287,
+    "ds_pct": -0.677
+   },
+   "model_only_per_op": 8
+  }
+ },
+ "physical_asap7_1p2GHz_60_25ps": {
+  "meso_d4_v2_fallthrough_output": {
+   "source_commit": "f8baf0651",
+   "setup_ss_ps": -85.13,
+   "hold_ff_ps": 9.61,
+   "verdict": "REJECTED: cross-clock r_v path and local buffer->r_d"
+  },
+  "meso_d4_v3_registered_output": {
+   "source_commit": "88632fc2f",
+   "setup_ss_ps": -29.96,
+   "hold_ff_ps": 10.56,
+   "std_cell_area_um2": 4892.7,
+   "violating_d_pins": 19,
+   "verdict": "NOT CLOSED: s_lap -> lap compare -> cnt, 369.35 ps against the 356.667 ps crossing budget"
+  },
+  "meso_d4_v4_kept_crossing_term": {
+   "source_commit": "a5db2e1dd",
+   "status": "QUEUED behind ADMISSIONS_FROZEN on ot-epyc1tb (runs/meso_d4_v4); campaign above is on this source"
+  },
+  "fwd_span430_midpoint": {
+   "setup_ss_ps": -88.5,
+   "hold_ff_ps": 37.65,
+   "reg_d_setup_ss_ps": 24.45083,
+   "verdict": "NOT QUALIFIED at 430.56 um standalone: flop -> east port data wire (220 ps) vs CTS-tapped forwarded clock (68 ps past the flop clock); registers and hold pass"
+  },
+  "fwd_span430_rx_end_fence": "ABORTED in global-route repair at -471 ps WNS (outputs); no rescue loop"
+ },
+ "verdict": [
+  "Function: the reset-placed ring FIFO passes 323M words with 0 errors, 0 false faults and 0 window violations across 0..360 deg and 2w wander placed at either extreme; drift fails closed before any window violation; 3/3 mutants caught.",
+  "Measured delta at central wander: 2 periods a crossing (1 ring placement + 1 capture register), 4 a region round trip (5 at the half-period resolution edge), 2x the model's central 2. Option C costs Qwen -0.235% (calibrated) / -0.44% (near-HBM), DS -0.273%; worst phase -0.29/-0.55%, -0.34%. B's whole gain over C stays < 1%: C stands.",
+  "Not yet adoptable: W=512 D4 has not closed SS at 1.2 GHz (best measured -29.96 ps, v3); v4 is queued. The forwarded stage is not qualified over a 430.56 um span in a standalone ORFS fixture."
+ ]
+}

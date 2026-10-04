@@ -3,6 +3,7 @@
 #include "Vmem___024root.h"
 #include "verilated.h"
 #include "mem_access.hpp"
+#include "fullshape_context.hpp"
 #include <algorithm>
 #include <cstdio>
 #include <cstdint>
@@ -27,10 +28,12 @@ int main(int argc,char** argv){
  // Only history before P is preloaded. Token P reaches HBM solely by actual
  // kv_we writes and tagged WR_ACK; the host never serves a requested row.
  for(int s=0;s<4;s++)for(int a=0;a<131072;a++)for(int w=0;w<8;w++)mem_word(mem,s,a,w)=0;
- auto addr=[&](int v,int g,int t,int d){return v?65536+g*32768+t*4+d/32:g*32768+(t/16)*64+d/2;};
- auto byte=[&](int v,int t,int d){return v?d%32:(d%2)*16+t%16;};
+ // Use the adopted full-shape context codec; never reduced sys-die aliases.
+ auto location=[&](int v,int g,int t,int d){
+   return qwen_combined::locate({0,0,unsigned(t),0},v?qwen_combined::Kind::V:qwen_combined::Kind::K,unsigned(g),unsigned(d));
+ };
  for(int v=0;v<2;v++)for(int g=0;g<2;g++)for(int t=0;t<P;t++)for(int d=0;d<128;d++){
-   int a=addr(v,g,t,d),b=byte(v,t,d),s=(a>>9)&3;auto &w=mem_word(mem,s,a,b/4);w=(w&~(255u<<(8*(b%4))))|(uint32_t(kv[v][2*t+g][d])<<(8*(b%4)));
+   auto home=location(v,g,t,d);int a=home.sector_address,b=home.byte_in_sector,s=home.stack;auto &w=mem_word(mem,s,a,b/4);w=(w&~(255u<<(8*(b%4))))|(uint32_t(kv[v][2*t+g][d])<<(8*(b%4)));
  }
  uint64_t cf=0,ch=0,tf=833333,th=300000;
  auto step=[&](){int edges=(tf<=th?1:0)|(th<=tf?2:0);near.clk=near.hclk=0;mem.clk=0;near.eval();mem.eval();
@@ -47,7 +50,7 @@ int main(int argc,char** argv){
  for(int v=0;v<2;v++)for(int block=0;block<4;block++){
    mem.kv_we=~uint64_t(0);
    for(int l=0;l<64;l++){int x=block*64+l,g=x/128,d=x%128;
-     int scalar=v?(131072+g*65536+P*8+d/16)*16+d%16:(g*65536+(P/16)*128+d)*16+P%16;
+     int scalar=location(v,g,P,d).scalar_address;
      put(mem.kv_waddr.data(),l*24,24,scalar);put(mem.kv_wdata.data(),l*32,32,expand(kv[v][2*P+g][d]));
    }hf();if(!mem.kv_write_drained)drain_low=true;
  }mem.kv_we=0;last_write_input=cf;
@@ -66,12 +69,10 @@ int main(int argc,char** argv){
  // Read the actual HBM arrays and tile SRAM ports AFTER measurement.
  int wb_bad=0,slice_bad=0;
  for(int v=0;v<2;v++)for(int g=0;g<2;g++)for(int t=0;t<T;t++)for(int d=0;d<128;d++){
-   int a=addr(v,g,t,d),b=byte(v,t,d),s=(a>>9)&3;if(((mem_word(mem,s,a,b/4)>>(8*(b%4)))&255)!=kv[v][2*t+g][d])wb_bad++;
+   auto home=location(v,g,t,d);int a=home.sector_address,b=home.byte_in_sector,s=home.stack;if(((mem_word(mem,s,a,b/4)>>(8*(b%4)))&255)!=kv[v][2*t+g][d])wb_bad++;
  }
  for(int v=0;v<2;v++)for(int g=0;g<2;g++)for(int d=0;d<128;d++){
-   int tile=v?(d/16)*128+(P%512)/4:((P/16)%48)*32+d/4;
-   int loc=v?22+(P/512)*2+g:((P/16)/48)*2+g;
-   int b=v?(P%4)*16+d%16:(d%4)*16+P%16;
+   auto home=location(v,g,P,d);int tile=home.tile,loc=home.slice_word,b=home.byte_in_slice;
    mem.probe_re=1;mem.probe_tile=tile;mem.probe_addr=loc;hf();hf();hf();
    if(bits(mem.probe_data.data(),b*8,8)!=kv[v][2*P+g][d])slice_bad++;
  }mem.probe_re=0;
