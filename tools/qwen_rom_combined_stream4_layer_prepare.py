@@ -15,8 +15,9 @@ def prepare_accept_head(*, release, release_sha256, step, decoder_sources,
                         history, layer, output, oracle_root, oracle_sha256, root=runtime.ROOT):
     """Prepare actual VPOS inputs only; no model/run or numerical computation.
 
-    Pending/drafts come from the retained released-drafter step receipt, never
-    argmax/expected-head fields. The original and near-rewritten decoder words
+    Pending/drafts come from the retained released-drafter step receipt or a
+    pinned pending-only cached input record, never argmax/expected-head fields.
+    The original and near-rewritten decoder words
     plus the owner's HEAD manifest establish the matching physical X layout.
     """
     release,head_manifest,preload,history,output=map(Path,(release,head_manifest,preload,history,output))
@@ -35,6 +36,18 @@ def prepare_accept_head(*, release, release_sha256, step, decoder_sources,
         actual_drafts=runs[0].get('golden_tokens')
         source={'P':record.get('start')}
         tokens=[record.get('anchor'),*(actual_drafts or [])]
+    elif record.get('status')=='actual_input_bytes_ready':
+        # A one-position checkpoint has no drafts. Reuse the existing pinned
+        # cached producer's pending token and entering frame, not a target or
+        # a fabricated speculative step receipt.
+        selected.require(record.get('layer')==layer and
+                         Path(record.get('oracle','')).resolve()==(Path(oracle_root)/'oracle.json').resolve() and
+                         record.get('oracle_sha256')==oracle_sha256 and
+                         Path(record.get('preload','')).resolve()==preload.resolve() and
+                         record.get('preload_sha256')==preload_sha256,
+                         'actual single-position cached producer binding differs')
+        source={'P':record.get('position')}
+        tokens=[record.get('token')];actual_drafts=[]
     else:
         source=record.get(step);draft=record.get(step+'_draft')
         selected.require(isinstance(source,dict) and isinstance(draft,dict),
@@ -136,7 +149,9 @@ def prepare_accept_head(*, release, release_sha256, step, decoder_sources,
                       ' '.join(['head',*head_dirs,'0'])+'\n')
     inputs=dict(status='prepared',position=position,token=tokens[0],npos=len(tokens),
                 stages=str(stages.resolve()),preload=str(preload.resolve()),history=str(history.resolve()),
-                input_sha256=pins,scope='Actual released-draft decoder->HEAD input preparation only; unexecuted')
+                input_sha256=pins,scope='Actual pending-only cached decoder->HEAD input preparation; unexecuted'
+                if record.get('status')=='actual_input_bytes_ready' else
+                'Actual released-draft decoder->HEAD input preparation only; unexecuted')
     (output/'inputs.json').write_text(json.dumps(inputs,indent=2)+'\n')
     return inputs
 
