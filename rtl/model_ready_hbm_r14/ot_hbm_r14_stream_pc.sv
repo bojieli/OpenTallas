@@ -279,7 +279,7 @@ module ot_hbm_r14_stream_pc #(
     reg [7:0] hwait;                                  // AQ_RD: cycles the read head has waited
     wire starve = AQ && hr && hwait >= 8'(AQ_STARVE);
     wire head_prio = !(AQ && hr) || starve;
-    wire wr_bank_rdy = wq_ne && |(hb_oh & open & ~stale & ((AQ && hr) ? rcd_z : rcdw_z) & ~blk);
+    wire wr_bank_rdy = wq_ne && |(hb_oh & open & ~stale & (AQ ? rcd_z : rcdw_z) & ~blk);   // AQ: every access-queue head waits full tRCD (no hr on this path)
     wire rd_ok_base = running && streaming && !rd_block && |(rd_oh & open & ~stale & rcd_z & ~blk) &&
                       |(rd_bgoh & ccdl_z) && cred_nz;
     assign wr_ok = wr_bank_rdy && ccdl_z[hb[1:0]] && ((AQ && hr) ? (wtr_c == 0) : (rtw_c == 0)) && !rd_block &&
