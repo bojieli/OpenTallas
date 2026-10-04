@@ -55,12 +55,16 @@ extern "C" int dsrom_s81_source_main(DsromS81Runtime&, const char* output);
     std::function<void()> wave_prepare,wave_sample,wave_after,wave_quarantine;
     bool wave_sampled=false,wave_armed=false;
     template<class Join> void bind_native_wave(std::shared_ptr<Join> joined,
-        std::function<void()> stage_before,std::function<void()> stage_after) {
-        if(wave_prepare||!joined||!stage_before||!stage_after||d->clk||d->rst_n)
+        std::function<void()> before_edge,std::function<void()> sample_before_edge,
+        std::function<void()> after_edge) {
+        if(wave_prepare||!joined||!before_edge||!sample_before_edge||!after_edge||d->clk||d->rst_n)
             throw std::runtime_error("WAVE needs actual cold typed join and stage callbacks");
-        wave_prepare=[joined,stage_before](){stage_before();joined->drive();};
-        wave_sample=[joined](){joined->sample_before_edge();};
-        wave_after=[joined,stage_after](){stage_after();joined->after_edge();};
+        // These are the existing poller composition callbacks: before owns
+        // Join.drive, and after owns Poller.after_edge then Join.after_edge.
+        // Calling Join again here would duplicate acceptance and retirement.
+        wave_prepare=[joined,before_edge](){before_edge();};
+        wave_sample=[joined,sample_before_edge](){sample_before_edge();};
+        wave_after=[joined,after_edge](){after_edge();};
         wave_quarantine=[joined](){joined->warm_quarantine();};
     }
     void arm_native_wave() {wave_armed=bool(wave_prepare);}
