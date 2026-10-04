@@ -125,6 +125,14 @@ module ot_v41_rom_pg_eao #(
         initial $error("ot_v41_rom_pg_eao: the retention map is written for NSEG = 8");
     end
     wire host_wr = cfg_v && ({27'd0, cfg_a} < NA);
+    // a local copy of the shared isolation enable per element (one flop; the shared enable fanning out to K x 130
+    // clamps was -65 ps at SS in route A4).  One cycle later in both directions is safe: power-down switches the
+    // rings off one cycle after isolating and their acks fall >= 2 cycles after that; release only follows the
+    // domain's reset.
+    reg iso_q;
+    always @(posedge a_clk or negedge rst_n)
+        if (!rst_n) iso_q <= 1'b0;
+        else iso_q <= iso_n;
     // retention shadow: clocked only on a host write
     wire sh_clk;
     ot_hdc_cg u_sh_cg (.clk(a_clk), .en(cfg_v | !rst_n), .gclk(sh_clk));
@@ -161,10 +169,10 @@ module ot_v41_rom_pg_eao #(
             cdc_ra1 <= 1'b0; ra2 <= 1'b0;
         end else begin
             pg_q <= pwr_good;
-            cdc_bs1 <= dbusy & iso_n; bs2 <= cdc_bs1;
-            cdc_rr1 <= dack & iso_n;  rr2 <= cdc_rr1;
-            cdc_ak1 <= ack & iso_n;   ak2 <= cdc_ak1;
-            cdc_ra1 <= rdy & iso_n;   ra2 <= cdc_ra1;
+            cdc_bs1 <= dbusy & iso_q; bs2 <= cdc_bs1;
+            cdc_rr1 <= dack & iso_q;  rr2 <= cdc_rr1;
+            cdc_ak1 <= ack & iso_q;   ak2 <= cdc_ak1;
+            cdc_ra1 <= rdy & iso_q;   ra2 <= cdc_ra1;
             if (pg_q && !pwr_good) begin                      // power lost: replay everything on the next wake
                 ready <= 1'b0; dirty <= valid; rq <= 1'b0; infl <= 1'b0;
                 cdc_bs1 <= 1'b0; bs2 <= 1'b0; cdc_rr1 <= 1'b0; rr2 <= 1'b0; cdc_ak1 <= 1'b0; ak2 <= 1'b0;
@@ -188,15 +196,15 @@ module ot_v41_rom_pg_eao #(
     assign el_busy  = bs2 | (pwr_good & !ra2) | (pwr_good & rhit) | infl;
     assign el_ready = ra2;
     // output isolation (clamp to 0)
-    assign pv    = e_pv    & {NB{iso_n}};
-    assign pval  = e_pval  & {32*NB{iso_n}};
-    assign prow  = e_prow  & {16*NB{iso_n}};
-    assign pseg  = e_pseg  & {5*NB{iso_n}};
-    assign pnseg = e_pnseg & {5*NB{iso_n}};
-    assign perr  = e_perr  & {NB{iso_n}};
-    assign ppos  = e_ppos  & {3*NB{iso_n}};
-    assign busy  = e_busy  & iso_n;
-    assign fault_e = e_fault & iso_n;
+    assign pv    = e_pv    & {NB{iso_q}};
+    assign pval  = e_pval  & {32*NB{iso_q}};
+    assign prow  = e_prow  & {16*NB{iso_q}};
+    assign pseg  = e_pseg  & {5*NB{iso_q}};
+    assign pnseg = e_pnseg & {5*NB{iso_q}};
+    assign perr  = e_perr  & {NB{iso_q}};
+    assign ppos  = e_ppos  & {3*NB{iso_q}};
+    assign busy  = e_busy  & iso_q;
+    assign fault_e = e_fault & iso_q;
 endmodule
 
 // ---- the shared stage controller: scheduler + W18 controller + spine gate (aon_clk; the spine gate on clk) ----
