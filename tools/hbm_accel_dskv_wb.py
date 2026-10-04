@@ -162,7 +162,10 @@ def main(argv=None):
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--jobs', type=int, default=16)
     ap.add_argument('--points', type=int, default=32)
+    ap.add_argument('--compose', type=Path, help='write the successor DS HBM measured composition here and stop')
     a = ap.parse_args(argv)
+    if a.compose:
+        return compose(a.out, a.compose)
     if a.out.exists():
         raise SystemExit('fresh record path required')
     a.work.mkdir(parents=True, exist_ok=True)
@@ -211,8 +214,8 @@ def main(argv=None):
             d = [w['bg_last'] - n['bg_last'] for w, n in pair]
             s['background_stream'] = dict(
                 bytes=32 * 32 * NBG, nowb_ns_mean=round(statistics.mean(n['bg_last'] for _, n in pair) / 1000, 3),
-                nowb_tbps_min=round(32 * 32 * NBG / max(n['bg_last'] for _, n in pair) / 1000, 4),
-                wb_tbps_min=round(32 * 32 * NBG / max(w['bg_last'] for w, _ in pair) / 1000, 4),
+                nowb_e2e_tbps_min=round(32 * 32 * NBG / max(n['bg_last'] for _, n in pair), 4),   # B / ps = TB/s
+                wb_e2e_tbps_min=round(32 * 32 * NBG / max(w['bg_last'] for w, _ in pair), 4),
                 delta_ns_mean=round(statistics.mean(d) / 1000, 3), delta_ns_max=round(max(d) / 1000, 3),
                 delta_ns_min=round(min(d) / 1000, 3))
             for v in ('bg_wb', 'idle_wb'):
@@ -239,6 +242,94 @@ def main(argv=None):
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps(dict(stats=stats, negative=rec['negative_controls']), indent=1))
+
+
+BASE = 'results/rtl/dshbm_baseline_measured_20261004/measured.json'
+AUDIT = 'results/rtl/hbm_path_bandwidth_audit_20261004/summary.json'
+
+
+def compose(rtl_path, out):
+    """Successor of the DS HBM measured composition (main 75b6fe4fd) with the KV write-back term added."""
+    if out.exists():
+        raise SystemExit('fresh composition path required')
+    rtl = json.loads(Path(rtl_path).read_text())
+    base = json.loads((ROOT / BASE).read_text())
+    audit = json.loads((ROOT / AUDIT).read_text())['dshbm_token']
+    st = rtl['stats']
+    win, ck1 = st['L20_owner_stack3_window'], st['L20_owner_stack1_ckv_key']
+    ck2c, ck2k = st['L2_owner_stack0_ckv'], st['L2_owner_stack2_key']
+    assert all(v['passed'] == v['cases'] and v['viol'] == 0 and v['bad'] == 0 for v in st.values())
+    assert all(n['verdict'] == 'FAIL' for n in rtl['negative_controls'])
+    n_win, n_r1, n_r2 = 40, 5, 3                       # window rows a token; ratio-1 / ratio-2 source layers
+    by_die = {'die31_owner_ratio1': n_win * 544 + n_r1 * (288 + 96), 'die63_owner_ratio2': n_win * 544 + n_r2 * (288 + 96),
+              'other_94_dies': n_win * 544}
+    fence_max = max(v[f] ['fence_ns_max'] for v in (win, ck1, ck2c, ck2k) for f in ('fence_bg_wb', 'fence_idle_wb'))
+    # stream interference: every window row of the token lands on PC (pos mod 128) of stack 3 (40 events);
+    # the owner's compressed row + key on stack 1 (die 31, 5 events) / stacks 0 + 2 (die 63, 3 events)
+    per_stack_us = {
+        'stack3_window_40': dict(mean=n_win * win['background_stream']['delta_ns_mean'] / 1000,
+                                 worst=n_win * win['background_stream']['delta_ns_max'] / 1000),
+        'stack1_ckv_key_5_die31': dict(mean=n_r1 * ck1['background_stream']['delta_ns_mean'] / 1000,
+                                       worst=n_r1 * ck1['background_stream']['delta_ns_max'] / 1000),
+        'stack0_ckv_3_die63': dict(mean=n_r2 * ck2c['background_stream']['delta_ns_mean'] / 1000,
+                                   worst=n_r2 * ck2c['background_stream']['delta_ns_max'] / 1000),
+        'stack2_key_3_die63': dict(mean=n_r2 * ck2k['background_stream']['delta_ns_mean'] / 1000,
+                                   worst=n_r2 * ck2k['background_stream']['delta_ns_max'] / 1000)}
+    stream_add_worst = max(v['worst'] for v in per_stack_us.values())
+    stream_add_mean = max(v['mean'] for v in per_stack_us.values())
+    after = audit['after']
+    hbm_active_wb = after['hbm_active_us'] + stream_add_worst
+    head_us = base['representative_layers']['head']['measured_total']
+    token = base['headline']['measured_total_us']
+    exposed_fence_us = max(0.0, fence_max / 1000 - head_us)
+    hidden = hbm_active_wb < after['sm_busy_us']
+    delta_us = (0.0 if hidden else hbm_active_wb - after['sm_busy_us']) + exposed_fence_us
+    upper_us = stream_add_worst + fence_max / 1000
+    rec = dict(
+        schema='opentallas.rtl.dshbm_measured_composition.kv_writeback.v1',
+        successor_of=dict(record=BASE, main='75b6fe4fd', note='not overwritten; this row adds the KV write-back term'),
+        position=POS, rtl_record=str(rtl_path), rtl_source_commit=rtl['source_commit'],
+        write_back=dict(
+            what='per token: window row of every layer on every die (528 B -> 17 sectors at ring slot pos mod 128 = '
+                 'one PC); compressed row (288 B, 9 sectors over 9 PCs) + index key (68 B packed, 2-3 whole sectors '
+                 'merged with the open key block shadow) on the owner die of every closing index-source layer',
+            owners_at_pos=dict(ratio1_layers_20_24_28_32_36='die 31', ratio2_layers_2_8_14='die 63 (group close: pos+1 even)'),
+            bytes_per_token_by_die=by_die,
+            audit_estimate_bytes=23968,
+            exact='768/768 PASS: golden W17 rows written through the RTL unit + PCs, DRAM array and stream read-back '
+                  'equal to golden bytes (untouched sectors equal to background), 0 DRAM timing violations incl. write '
+                  'rules; negatives FAIL: corrupt DRAM sector, fence skipped (stale read), row bit flip, tRCDWR +1 ns',
+            fence_ns_max=round(fence_max, 3),
+            fence_note='posted-write ACK count == issued; worst case is a write held behind a REFpb (tRFCpb 200 ns) '
+                       'on its bank'),
+        token_critical_path=dict(
+            sm_wait_us=0.0, sm_wait_note='rows are posted to the unit (1-cycle handshake); no SM waits on a write',
+            stream_interference_us_per_stack=per_stack_us,
+            stream_interference_worst_us=round(stream_add_worst, 3), stream_interference_mean_us=round(stream_add_mean, 3),
+            hbm_active_us=dict(before=after['hbm_active_us'], after_worst=round(hbm_active_wb, 3),
+                               sm_busy=after['sm_busy_us'], hidden=hidden),
+            fence_slack_us=head_us,
+            fence_slack_note='the latest write (layer 39 window row) must be visible before token t+1 reads layer 39; '
+                             'token t+1 cannot read before token t\'s head (measured 4.379 us) ends, and earlier layers '
+                             'have a full token of slack',
+            exposed_fence_us=round(exposed_fence_us, 3),
+            token_delta_us=round(delta_us, 3),
+            upper_bound_if_all_serial_us=round(upper_us, 3),
+            upper_bound_pct_of_token=round(100 * upper_us / token, 3)),
+        token=dict(before_us=token, after_us=round(token + delta_us, 3),
+                   tokens_s_before=base['headline']['measured_tokens_s'],
+                   tokens_s_after=round(1e6 / (token + delta_us), 1),
+                   routed_expert_term='unchanged from the HBM-path audit (fetch measured 5.446 mean / 6.056 worst us vs '
+                                      'model 5.33; +0.116 / +0.726 us), not folded here'),
+        unvalidated=['write-request / ACK path terms (10 ns each way, R5a bench values)',
+                     'one stack simulated; die = 4 independent stacks (sectors sharded by address)',
+                     'background stream on the r6 + notice stream PC policy (the r14 static stream PC with WR_EN=0 is '
+                     'the same read policy); interference composed per event, not one 47.7-us stream run',
+                     'open-key-block shadow priming at block open (one 544-B HBM read per source slot per 8 groups) '
+                     'not simulated'])
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rec, indent=1) + '\n')
+    print(json.dumps(rec['token_critical_path'], indent=1), json.dumps(rec['token'], indent=1))
 
 
 if __name__ == '__main__':
