@@ -61,4 +61,6 @@ public:
     bool drained()const;
     const std::array<L20NativeCkv,4>& services()const;
 };
+// Existing minimum caller dispatches this actual four-rank component run.
+int run_minimum_l20_kv(DsromS81MinimumRuntime&,const char* output);
 } // namespace dsrom_s81_minimum
