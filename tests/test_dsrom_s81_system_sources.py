@@ -41,7 +41,7 @@ def test_actual_complete_source_chain_and_defaults(tmp_path):
 def test_actual_identity_price_unknown_until_trace(tmp_path):
     r=S.install(binding(),'unused',tmp_path/'selected',drain=True,accepted_pop=True,trace=True,stage=20)
     assert r['added_cycles'] == 0
-    assert r['parameters']==dict(COLL_ACCEPTED_POP=1,IDX_DRAIN_LOOKAHEAD=1,S81_COMMAND_TRACE=1,S81_TRACE_STAGE=20)
+    assert r['parameters']==dict(COLL_ACCEPTED_POP=1,IDX_DRAIN_LOOKAHEAD=1,S81_COMMAND_TRACE=1,S81_TRACE_STAGE=20,X_IDX=2,IDX_RING=1)
     p=next(p for p in r['sources'] if p.name=='ot_v41_rt_die_l20_c8.sv')
     s=p.read_text()
     assert 'if(dut.cmd_go)' in s and 'trace_identity=c8_engine_identity' in s
@@ -76,3 +76,17 @@ def test_trace_refuses_unowned_stage(tmp_path):
 def test_abandoned_head_candidate_refused(tmp_path):
     with pytest.raises(ValueError,match='headreg candidate rejected'):
         S.install(binding(),'unused',tmp_path,head=True)
+
+
+def test_enabled_drain_elaborates_actual_reader_without_changing_defaults(tmp_path):
+    default=S.install(binding(),'unused',tmp_path/'off')
+    enabled=S.install(binding(),'unused',tmp_path/'on',drain=True)
+    assert 'X_IDX' not in default['parameters'] and 'IDX_RING' not in default['parameters']
+    assert '-GX_IDX=2' not in default['verilator_args']
+    assert enabled['parameters']['X_IDX']==2 and enabled['parameters']['IDX_RING']==1
+    assert '-GX_IDX=2' in enabled['verilator_args'] and '-GIDX_RING=1' in enabled['verilator_args']
+    top=next(p for p in enabled['sources'] if p.name=='ot_v41_rt_die_l20_c8.sv')
+    assert 'IDX_DRAIN_LOOKAHEAD && (X_IDX != 2 || IDX_RING != 1)' in top.read_text()
+    core=next(p for p in enabled['sources'] if p.name=='ot_hdc_core_v41x.sv')
+    assert 'ot_hdc_v41x_idx_pool_adapt_drain #(.DRAIN_LOOKAHEAD(IDX_DRAIN_LOOKAHEAD),' in core.read_text()
+    assert enabled['added_cycles']==0 and not enabled['parent_clock_loaded']

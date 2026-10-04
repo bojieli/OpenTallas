@@ -72,7 +72,7 @@ def install(binding, original_export, output, *, drain=False, head=False,
                      'ot_chip_v41x_die_owner_safe_c8 #(.IDX_DRAIN_LOOKAHEAD(IDX_DRAIN_LOOKAHEAD),')
             s = _one(s, '    parameter integer C8_PUBLICATION=0,',
                      '    parameter integer S81_COMMAND_TRACE=0,\n    parameter integer S81_TRACE_STAGE=-1,\n    parameter integer C8_PUBLICATION=0,')
-            s = _one(s, '\nendmodule', OBSERVER + '\nendmodule')
+            s = _one(s, '\nendmodule', DRAIN_SELECTION_GUARD + OBSERVER + '\nendmodule')
         changed[p] = s
     dests = {p: output/'native'/p.name for p in changed}
     for p, dest in dests.items():
@@ -89,14 +89,28 @@ def install(binding, original_export, output, *, drain=False, head=False,
             raise FileNotFoundError(p)
         if p not in sources:
             sources.append(p)
+    # Enabling the control candidate must elaborate the actual pooled ring
+    # reader. Top defaults X_IDX=0/IDX_RING=0 would otherwise omit it entirely.
+    drain_parameters = dict(X_IDX=2, IDX_RING=1) if drain else {}
+    drain_args = ['-GX_IDX=2', '-GIDX_RING=1'] if drain else []
     result.update(sources=sources,
                   source_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
                   parameters=dict(result['parameters'], IDX_DRAIN_LOOKAHEAD=int(drain),
-                                  S81_COMMAND_TRACE=int(trace), S81_TRACE_STAGE=-1 if stage is None else stage),
-                  verilator_args=result['verilator_args'] + ['-GIDX_DRAIN_LOOKAHEAD='+str(int(drain)), '-GS81_COMMAND_TRACE='+str(int(trace)), '-GS81_TRACE_STAGE='+str(-1 if stage is None else stage)],
+                                  S81_COMMAND_TRACE=int(trace), S81_TRACE_STAGE=-1 if stage is None else stage,
+                                  **drain_parameters),
+                  verilator_args=result['verilator_args'] + drain_args + ['-GIDX_DRAIN_LOOKAHEAD='+str(int(drain)), '-GS81_COMMAND_TRACE='+str(int(trace)), '-GS81_TRACE_STAGE='+str(-1 if stage is None else stage)],
                   capture_ready_not_inferred=True, parent_clock_loaded=False,
                   source_rebase='actual FASTPP PC21 L20; originals byte-identical')
     return result
+
+
+DRAIN_SELECTION_GUARD = r'''
+    // Elaboration selection is part of the candidate's hardware contract.
+    // An enabled flag on an absent reader must never count as integration.
+    generate if(IDX_DRAIN_LOOKAHEAD && (X_IDX != 2 || IDX_RING != 1)) begin:g_drain_selection_invalid
+        initial $fatal(1,"S81 drain lookahead requires X_IDX=2 and IDX_RING=1");
+    end endgenerate
+'''
 
 
 OBSERVER = r'''
