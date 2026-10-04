@@ -7507,3 +7507,39 @@ def dsrom_s81_head_result_hook(roots=128):
 
 if __name__ == "__main__":
     main()
+
+
+def dsrom_s81_native_bf_head_producer():
+    """Serialized native archive reuse vehicle, not a new parallel head engine."""
+    rows, k, ranks = 32320, 5120, 4
+    return {
+        'schema': 'dsrom.s81.native_bf_head_producer.v1',
+        'selected_storage': 'existing dedicated BF head2525pairs/10100macros; unchanged',
+        'ranks': ranks, 'rows_per_rank': rows, 'k': k,
+        'macs_per_rank': rows*k, 'macs_per_native_word_per_bank': 16,
+        'native_macro_read_bits': 274, 'native_pair_read_bits': 548,
+        'released_raw_bytes_per_native_word': 256,
+        'released_raw_useful_bytes_per_native_word': 32,
+        'released_provider_port_bytes_per_cycle': None,
+        'native_rom_words_per_rank_per_bank': (rows//2)*320,
+        'activation_snapshot_bytes_per_reused_vehicle': k*4,
+        'ordered_root_staging_bits_per_vehicle': 2*2*32,
+        'native_input_boundary_bits': 1024+32+4+3+3+1,
+        'native_return': 'retained RD64 branch + D128/QD128 root, nseg1; no host arithmetic',
+        'grain_issue_cycles_per_rowpair': [256,64],
+        'grain_issue_lower_bound_cycles_per_rank': (rows//2)*320,
+        'latency_terms': ['source XN acquisition5120 scalar words on actual ready',
+                          'two actual CFG/GO/native BF phases per rowpair',
+                          'PB lane recurrence LAT8, native EARLY tree',
+                          'actual retained return/capture/drain before rebind',
+                          'actual carried B+0+0 and A+B, finite in_ready',
+                          'actual global argmax chain/final broadcast and VM ACK'],
+        'replicas_in_reuse_vehicle': 1,
+        'replicas_if_four_rank_host_participants': 4,
+        'physical_parallel_head_replicas': None,
+        'new_engine_area_mm2': 0,
+        'simulation_snapshot_and_controls_are_not_hardware_free_area': True,
+        'source_provider_routing_tracks': None, 'physical_slot_fit': None,
+        'token_latency_ns': None, 'headline_or_rate_credit': False,
+        'default_enabled': False,
+    }

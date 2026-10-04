@@ -40,7 +40,7 @@ struct DsromS81MinimumEmbedding::State {
           const std::string& socket,uint32_t token,uint32_t position,
           uint64_t identity,uint32_t base_,DsromS81EmbeddingSink sink_)
     :runtime(runtime_),checkpoint(socket,token,position),sink(std::move(sink_)),base(base_) {
-        if(!sink.offer||!sink.visible||!sink.fault||token>=129280||position!=0||
+        if(!sink.offer||!sink.visible||!sink.fault||token>=129280||position>=(1u<<20)||
            identity>=(1ull<<47)||base>32768-20480||runtime.stage!=0)
             throw std::runtime_error("minimum embedding requires real cold source and target ACK adapter");
         // Existing embedding ABI was compiled with its own Verilator runtime.

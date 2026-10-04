@@ -1,0 +1,23 @@
+2026-10-04T05:40:45Z GATE m=2 rc=0
+2026-10-04T05:41:19Z GATE m=3 rc=0
+2026-10-04T05:51:28Z phase2 M=2 src=3dc2234a7171e6d523646372202b9a5c90e6d3c3
+2026-10-04T05:51:28Z PHYS START route_f3
+2026-10-04T05:51:28Z PHYS START route_f2
+2026-10-04T06:20:23Z PRE m=1 rc=2
+2026-10-04T06:21:58Z PRE m=3 rc=2
+2026-10-04T06:24:55Z B2 build rc=0
+2026-10-04T06:24:55Z B START rm_m2_p255
+2026-10-04T06:24:55Z B START rm_m2_p0
+2026-10-04T06:24:59Z PRE m=2 rc=2
+2026-10-04T06:27:46Z TRACE build rc=0
+2026-10-04T06:27:46Z phase1 done
+2026-10-04T06:29:45Z A2 build rc=0
+planned 37 jobs in /srv/opentallas-scratch/claude/qwen-async-frontier/plans/m2
+  epyc1tb: 37 jobs x 1 threads
+planned 37 jobs in /srv/opentallas-scratch/claude/qwen-async-frontier/plans/m2-poison
+  epyc1tb: 37 jobs x 1 threads
+2026-10-04T06:29:47Z A launched m2
+2026-10-04T06:29:51Z A launched m2-poison
+2026-10-04T06:56:44Z PHYS END route_f3 rc=1
+2026-10-04T06:56:44Z PHYS STA f3 rc=1
+2026-10-04T06:56:52Z STOPPED by replacement agent: verdict decided at GRT (f2 SS -17.792 ps rdy, f3 -66.476 ps) -> FINAL REJECT; exactness/gain runs and DRT cancelled to free EPYC
