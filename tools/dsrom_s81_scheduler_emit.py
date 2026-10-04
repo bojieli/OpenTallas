@@ -67,6 +67,14 @@ extern "C" int dsrom_s81_source_main(DsromS81Runtime&, const char* output);
         wave_after=[joined,after_edge](){after_edge();};
         wave_quarantine=[joined](){joined->warm_quarantine();};
     }
+    template<class Binding> void bind_native_wave(const Binding& bound) {
+        if(!bound.warm_quarantine)
+            throw std::runtime_error("WAVE composition must retain poller and ledger quarantine");
+        bind_native_wave(bound.join,bound.before_edge,bound.sample_before_edge,bound.after_edge);
+        // The composition owns BOTH existing poller and external ledger debt.
+        // Quarantining only Join would leave that enclosing owner runnable.
+        wave_quarantine=bound.warm_quarantine;
+    }
     void arm_native_wave() {wave_armed=bool(wave_prepare);}
     void finish_native_wave_edge() {
         if(wave_sampled) {
