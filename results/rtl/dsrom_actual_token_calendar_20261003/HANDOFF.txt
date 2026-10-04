@@ -1,0 +1,13 @@
+DS ROM actual reduced-token comparison/calendar support
+
+Owner split: Archimedes system/selectedsource owner; Sagan raw field/readback numerical qualification; Einstein additive actual token-boundary/latency consumer. Existing sole system3211140/3222690 live onEPYC at run/sys_b5_p3g2_r2. No build/simulator/waiter/CPUoracle/inference/golden regeneration or pinned/livebench edits.
+
+NEW tools/dsrom_actual_token_calendar.py reuses CachedReducedTokenBinding3005. On ownerterminal: python3 -m tools.dsrom_actual_token_calendar --scratch /srv/opentallas-scratch/claude/dsrom-system/run/sys_b5_p3g2_r2 --name sys_b5_p3g2 --log /srv/opentallas-scratch/claude/dsrom-system/run/sys_b5_p3g2_r2/out_sys_b5_p3g2.txt --gate-record /srv/opentallas-scratch/claude/dsrom-system/run/gate_sys_b5_p3g2_r2.json --out NEW_EXCLUSIVE_OUTPUT.json
+
+Actual cached snapshot: pos0 token2815 cycle429460 and pos1 token3537 cycle870174 both agree existing comparisons; actual device-token interval440714cycles. CPLstamp429454/870168 separately retained, not mixed into TOKclock. Whole reducedtoken remains INCOMPLETE until all4positions+hostCPL+DONE+rc0+terminalzero counters. Existing process continues; no first-token latency guessed without actual launch acceptance.
+
+Generated input checks use previous ACTUAL host/device completion, never cached output substitution. Existing bench mismatch counters expose numerical-summary evidence only; Sagan must qualify raw fields independently. Input hashes cover cached programs/prompt/expectedtokens/SVH/preparation/log; gate mode also pins actual executable/source hash record. Missing terminal cannot publish PASS; wrongtag/duplicate/mismatchedtoken/nonmonotoniccycle/fault/failedprocess retain rejection. Three focused controls PASS.
+
+Composed fieldcalendar is deliberately NULL until Arch exports actual source-bound phase issue -> finalVMcommit -> consumer/retire boundaries in the actual clock domains, plus stage/rank/layer/position/identity/field leases and byte counts. HBPC snapshots are observations, not field issue/completion/latency. No S81 clock/gain/calendar claim from this reducedsource. Selected S81 model738 is separate; oldS82 coordinates are not silently remapped.
+
+Cached operand copies kept outside checkout /tmp/dsrom-actual-token-cached-snapshot-20261003-r1; comparison-only, originalowner images unchanged. No HA work resumed.
