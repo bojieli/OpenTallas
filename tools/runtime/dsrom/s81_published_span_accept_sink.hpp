@@ -210,8 +210,14 @@ public:
     bool offer_prefix(const S81EmbeddingOutput& out,unsigned words) {
         return offer_batch(out,words,true);
     }
+    // Explicit current publisher route. Initial embedding/offer_prefix guards
+    // stay unchanged; this uses the SAME native commands, acceptance and ACK.
+    bool offer_mutable_h(const S81EmbeddingOutput& out,unsigned words,const Record& writer) {
+        return offer_batch(out,words,true,&writer);
+    }
 private:
-    bool offer_batch(const S81EmbeddingOutput& out,unsigned words,bool prefix) {
+    bool offer_batch(const S81EmbeddingOutput& out,unsigned words,bool prefix,
+                     const Record* mutable_record=nullptr) {
         try {
             require(!fault()&&out.vm_valid&&!out.fault&&out.vm_identity==identity,
                     "embedding target offered foreign/faulted source");
@@ -222,7 +228,10 @@ private:
             }
             if(read_pending)return false;
             if(prefix) {
-                require(uint64_t(out.vm_address)+words<=base||out.vm_address>=base+20480,
+                if(mutable_record)require(bool(*mutable_record)&&out.vm_address>=base&&
+                    uint64_t(out.vm_address)+words<=uint64_t(base)+20480&&published==20480,
+                    "mutable H requires completed initial image and actual published writer");
+                else require(uint64_t(out.vm_address)+words<=base||out.vm_address>=base+20480,
                         "prefix writer cannot overwrite immutable embedding input");
                 require(prefix_write_allowed(identity,out.vm_address,words),
                         "prefix batch not in actual native writer source span");
@@ -231,7 +240,7 @@ private:
             // Validate every captured scalar before changing state or accepting any port.
             std::array<MacroWrite,16> next{};
             for(unsigned n=0;n<words;n++) {
-                next[n]=record(out,n);const auto& c=next[n];
+                next[n]=(mutable_record?(*mutable_record)(out,n):record(out,n));const auto& c=next[n];
                 const uint32_t address=out.vm_address+n;
                 const unsigned k=address&15;
                 require(c.source.identity==identity&&c.source.element_address==address&&

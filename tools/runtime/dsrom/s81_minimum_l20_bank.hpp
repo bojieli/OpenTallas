@@ -82,7 +82,14 @@ public:
         source_io={
             [this](auto owner,auto address){return read(owner,address);},
             [this](auto owner,auto address,auto count){return target->source_span_lease(owner,address,count);},
-            [this](const auto& out,unsigned count){return target->offer_prefix(out,count);},
+            [this](const auto& out,unsigned count){
+                if(out.vm_address<20480) {
+                    require(initial&&initial->complete(),"native H write before actual seeded entry visibility");
+                    return target->offer_mutable_h(out,count,
+                        [this](const auto& payload,unsigned lane){return pub.record(payload,lane);});
+                }
+                return target->offer_prefix(out,count);
+            },
             [this](const auto& out,unsigned count){return target->visible_prefix(out,count);}};
         h_sink=target->sink();
         initial=std::make_unique<dsrom_s81_minimum::DsromS81MinimumTargetEntry>(
