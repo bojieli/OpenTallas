@@ -111,5 +111,54 @@
    "synth_area_um2": 4900.65876
   }
  },
- "row_engine": "not completed: the hierarchical synthesis stalled in yosys SHARE twice (>1 h) and was superseded by the full P&R launch"
+ "row_engine": "not completed: the hierarchical synthesis stalled in yosys SHARE twice (>1 h) and was superseded by the full P&R launch",
+ "pipelined_sfu": {
+  "decision": "user decision 2026-10-03: pipeline deeper in the 1.2 GHz domain first. exp and reciprocal moved onto ot_hdc_fp32_add_lat #7 + ot_hdc_fp32_mul_lat; LM 6 left the multiplier's last stage 6.5 ps short inside exp (ABC in context), LM 7 closes both with margin. ADOPTED: LA 7, LM 7 (exp depth 49 -> 109, +60; reciprocal 28 -> 64, +36); no 0.9 GHz move needed",
+  "screens": {
+   "exp_p": {
+    "top": "ot_qwen_nearhbm_exp_p",
+    "LA": 7,
+    "LM": 6,
+    "ss_setup_wns_ps": -6.5,
+    "ss_fmax_prelayout_mhz": 1191.2,
+    "closes_1p2GHz_prelayout": false,
+    "worst_start": "g_h[6].u_m.u.u_c3.g_r.r[1]$_DFF_PN0_",
+    "worst_end": "g_h[6].u_m.u.y[6]$_DFF_PN0_",
+    "synth_area_um2": 11033.95446
+   },
+   "recip_p": {
+    "top": "ot_qwen_nearhbm_recip_p",
+    "LA": 7,
+    "LM": 6,
+    "ss_setup_wns_ps": 12.4,
+    "ss_fmax_prelayout_mhz": 1218.7,
+    "closes_1p2GHz_prelayout": true,
+    "worst_start": "g_nr[2].m_y.u.u_c3.g_r.r[1]$_DFF_PN0_",
+    "worst_end": "g_nr[2].m_y.u.y[13]$_DFF_PN0_",
+    "synth_area_um2": 7378.17984
+   },
+   "exp_p7": {
+    "top": "ot_qwen_nearhbm_exp_p",
+    "LA": 7,
+    "LM": 7,
+    "ss_setup_wns_ps": 78.8,
+    "ss_fmax_prelayout_mhz": 1326.0,
+    "closes_1p2GHz_prelayout": true,
+    "worst_start": "m_t.u.y[24]$_DFF_PN0_",
+    "worst_end": "nint[7]$_DFF_P_",
+    "synth_area_um2": 11303.11584
+   },
+   "recip_p7": {
+    "top": "ot_qwen_nearhbm_recip_p",
+    "LA": 7,
+    "LM": 7,
+    "ss_setup_wns_ps": 110.6,
+    "ss_fmax_prelayout_mhz": 1384.3,
+    "closes_1p2GHz_prelayout": true,
+    "worst_start": "g_nr[2].d_y.genblk1.g_line.line[434]$_DFF_P_",
+    "worst_end": "g_nr[2].m_y.u.u_c1.g_r.r[64]$_DFF_PN0_",
+    "synth_area_um2": 7606.12356
+   }
+  }
+ }
 }

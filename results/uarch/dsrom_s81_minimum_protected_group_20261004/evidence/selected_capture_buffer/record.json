@@ -1,0 +1,112 @@
+{
+  "results": {
+    "decode": {
+      "buffered_netlist_sha256": "0f87e47893316fc25fffaf2bb0cba344aa05d19a155a456a41bce5ab25fe0d25",
+      "construction": {
+        "buffer_count": 230,
+        "capture_buffer_count": 66,
+        "clock_nets_unchanged": true,
+        "logic_and_register_connections_equal_after_buffer_contraction": true,
+        "max_signal_fanout": 8,
+        "rewired_input_pins": 409
+      },
+      "retained_map_sha256": "8e5714bbf5473822ab799363761e308c896691ddfb6207f97fb24f0f5cac8d8d",
+      "timing": {
+        "ff": {
+          "electrical_violations": [],
+          "hold_slack_ps": 54.522255,
+          "log_sha256": "8dd6d701e0d68a54aa5b5d025cc90fb0908e64b46c05efc8ffa69f28905858b1",
+          "setup_slack_ps": 312.837921
+        },
+        "ss": {
+          "electrical_violations": [],
+          "hold_slack_ps": 145.272293,
+          "log_sha256": "7e3889a9c1fbaf2354d6c83b3d33bae87d353d154074ba1039740f0f13cb9348",
+          "setup_slack_ps": -486.160675
+        }
+      }
+    },
+    "encode": {
+      "buffered_netlist_sha256": "809c54d8708d04e32307b29e2d1ea5c7b15ceb0178226648742a1bcf239f364c",
+      "construction": {
+        "buffer_count": 122,
+        "capture_buffer_count": 72,
+        "clock_nets_unchanged": true,
+        "logic_and_register_connections_equal_after_buffer_contraction": true,
+        "max_signal_fanout": 8,
+        "rewired_input_pins": 148
+      },
+      "retained_map_sha256": "f8913fd0b7bd09751494bc66af59b6cdea41148f010fafe11df93d0894f84948",
+      "timing": {
+        "ff": {
+          "electrical_violations": [],
+          "hold_slack_ps": 28.419077,
+          "log_sha256": "f384b428d7c1b384ba2dfdb121034b50b6a5adc10904e7ce6d3fdfa336ad5cef",
+          "setup_slack_ps": 667.49115
+        },
+        "ss": {
+          "electrical_violations": [],
+          "hold_slack_ps": 91.100975,
+          "log_sha256": "4466919d970761d6bd32e7226e52fd14f65857e3d5da5b24503a8ba7d5e89f62",
+          "setup_slack_ps": 251.106476
+        }
+      }
+    },
+    "equal83": {
+      "buffered_netlist_sha256": "da92f2c622a9ddc799f36c91ad11c6b1519546a5e773ffb68245e57932fcbf2f",
+      "construction": {
+        "buffer_count": 1,
+        "capture_buffer_count": 1,
+        "clock_nets_unchanged": true,
+        "logic_and_register_connections_equal_after_buffer_contraction": true,
+        "max_signal_fanout": 8,
+        "rewired_input_pins": 1
+      },
+      "retained_map_sha256": "7f05563c08889de327dbb319e626466673a86285b70574aa6379a2ceba3c475f",
+      "timing": {
+        "ff": {
+          "electrical_violations": [],
+          "hold_slack_ps": 71.322876,
+          "log_sha256": "1e84ebc5cdbedd3a996f6b0487c04929ca6a33ff4abfec9c60e515ebed8f1d0f",
+          "setup_slack_ps": 853.256104
+        },
+        "ss": {
+          "electrical_violations": [],
+          "hold_slack_ps": 178.756088,
+          "log_sha256": "2ce64f05adf3af1ba5adb0d927f26b3bfd303d978a08abf3be8a45bb63ba7b43",
+          "setup_slack_ps": 642.898804
+        }
+      }
+    },
+    "merge256": {
+      "buffered_netlist_sha256": "7af1675a01f8d0acfa4aacf66a16a080d91686170a1e811bb619c7bd9bdb4ab4",
+      "construction": {
+        "buffer_count": 392,
+        "capture_buffer_count": 256,
+        "clock_nets_unchanged": true,
+        "logic_and_register_connections_equal_after_buffer_contraction": true,
+        "max_signal_fanout": 8,
+        "rewired_input_pins": 776
+      },
+      "retained_map_sha256": "daac9414f1ceb47c91fc75f8ad2aad8a5b6153f0a41682a66f3a1095fc04a2b5",
+      "timing": {
+        "ff": {
+          "electrical_violations": [],
+          "hold_slack_ps": 33.765827,
+          "log_sha256": "02afc1d9092025c5623a4f6fb832dc471a540e487289fb6e55c16a6ab548c718",
+          "setup_slack_ps": 879.34491
+        },
+        "ss": {
+          "electrical_violations": [],
+          "hold_slack_ps": 102.773567,
+          "log_sha256": "bcc3eb7b915ef58ac2960685ac3ad97270bde04103394bff5137e35c37a28ccf",
+          "setup_slack_ps": 696.783875
+        }
+      }
+    }
+  },
+  "runner_sha256": "4c2616df07a2ad8c37e0c1c1f410c3e25fc13a9dd0ca4eaa89d83810df4c7844",
+  "schema": "dsrom.s81.native_leaf.fanout8.v1",
+  "target_GHz": 0.9,
+  "wire_CTS_included": false
+}

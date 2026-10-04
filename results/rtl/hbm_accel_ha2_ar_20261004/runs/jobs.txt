@@ -1,0 +1,36 @@
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=1 > runs/ds_central_s1.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=2 > runs/ds_central_s2.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=3 > runs/ds_central_s3.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=4 > runs/ds_central_s4.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=5 > runs/ds_central_s5.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=6 > runs/ds_central_s6.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=7 > runs/ds_central_s7.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=8 > runs/ds_central_s8.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=9 > runs/ds_central_s9.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=10 > runs/ds_central_s10.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=1 > runs/dsgather_central_s1.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=2 > runs/dsgather_central_s2.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=3 > runs/dsgather_central_s3.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=4 > runs/dsgather_central_s4.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=5 > runs/dsgather_central_s5.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=6 > runs/dsgather_central_s6.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=7 > runs/dsgather_central_s7.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=8 > runs/dsgather_central_s8.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=9 > runs/dsgather_central_s9.log 2>&1
+b/dsgather/Vtb_ha2_ar +VEC=fx/dsgather +SEED=10 > runs/dsgather_central_s10.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=1 > runs/dsgather512_central_s1.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=2 > runs/dsgather512_central_s2.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=3 > runs/dsgather512_central_s3.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=4 > runs/dsgather512_central_s4.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=5 > runs/dsgather512_central_s5.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=6 > runs/dsgather512_central_s6.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=7 > runs/dsgather512_central_s7.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=8 > runs/dsgather512_central_s8.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=9 > runs/dsgather512_central_s9.log 2>&1
+b/dsgather512/Vtb_ha2_ar +VEC=fx/dsgather512 +SEED=10 > runs/dsgather512_central_s10.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=1 +PHY_L=114 +PHY_G=122 > runs/ds_phy114_s1.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=1 +PHY_L=170 +PHY_G=178 > runs/ds_phy170_s1.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=2 +PHY_L=114 +PHY_G=122 > runs/ds_phy114_s2.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=2 +PHY_L=170 +PHY_G=178 > runs/ds_phy170_s2.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=3 +PHY_L=114 +PHY_G=122 > runs/ds_phy114_s3.log 2>&1
+b/ds/Vtb_ha2_ar +VEC=fx/ds +SEED=3 +PHY_L=170 +PHY_G=178 > runs/ds_phy170_s3.log 2>&1
