@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """DS-V4.1 HBM accelerator: the DSpark DRAFT measured the way the ROM draft was (main dae91947c), and composed.
 
-    HDC_V41_ARITH=chunk8 python3 tools/dshbm_dspark_draft_chain.py chain     --out PART.json [--workdir DIR]
+    HDC_V41_ARITH=chunk8 python3 tools/dshbm_dspark_draft_chain.py golden    --out golden.pkl
+    HDC_V41_ARITH=chunk8 python3 tools/dshbm_dspark_draft_chain.py chain     --golden golden.pkl --out PART.json
     HDC_V41_ARITH=chunk8 python3 tools/dshbm_dspark_draft_chain.py fullshape --out PART.json [--workdir DIR]
     python3 tools/dshbm_dspark_draft_chain.py compose --chain C.json --fullshape F.json --out composition.json
 
@@ -100,8 +101,17 @@ def golden_draft_step():
         chk.append(tok)
     assert chk == gout, (chk, gout)
     ar, _ = V.Model().generate(prompt, B + 2)
-    return dict(V=V, m=m, prompt=prompt, q=q, y=y, B=B, xn=xn, logits=logits, head=head, emb=emb, mhead=mhead,
-                draft=[int(t) for t in gout], ar=[int(t) for t in ar])
+    return dict(prompt=prompt, q=q, y=y, B=B, xn=xn, logits=logits, head=np.asarray(head, dtype=F),
+                emb=np.asarray(emb, dtype=F), mhead=np.asarray(mhead, dtype=F), draft=[int(t) for t in gout],
+                ar=[int(t) for t in ar])
+
+
+def cmd_golden(a):
+    """The golden operands of the chain (needs the tokenizer for the reduced Engram tables: run where it is)."""
+    import pickle
+    g = golden_draft_step()
+    a.out.write_bytes(pickle.dumps(g))
+    print("golden", g["y"], g["draft"], g["ar"], sha(a.out))
 
 
 # ------------------------------------------------------------------------------------------------------ RTL runs
@@ -145,8 +155,11 @@ def argmax_rtl(rows, biases, nv, workdir, label):
 
 
 def cmd_chain(a):
-    g = golden_draft_step()
-    V, B = g["V"], g["B"]
+    import pickle
+    import hdc_golden_v41 as V
+    V.set_arith("chunk8")
+    g = pickle.loads(Path(a.golden).read_bytes())
+    B = g["B"]
     wd = Path(a.workdir)
     wd.mkdir(parents=True, exist_ok=True)
     head = np.asarray(g["head"], dtype=F)
@@ -523,7 +536,8 @@ def cmd_compose(a):
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("part", choices=("chain", "fullshape", "compose"))
+    ap.add_argument("part", choices=("golden", "chain", "fullshape", "compose"))
+    ap.add_argument("--golden", type=Path, help="chain: the golden operands (the golden part's output)")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--workdir", default="/tmp/claude-1000/dshbm-draft/work")
     ap.add_argument("--chain", type=Path)
@@ -533,6 +547,9 @@ def main() -> int:
         or os.environ.get("OT_SOURCE_COMMIT", "")
     stamp = dict(schema=SCHEMA, source_commit=head,
                  generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))
+    if a.part == "golden":
+        cmd_golden(a)
+        return 0
     if a.part == "compose":
         rec = cmd_compose(a)
         rec.update(stamp, inputs={str(p): sha(p) for p in (a.chain, a.fullshape)},
@@ -541,6 +558,8 @@ def main() -> int:
         a.out.write_text(json.dumps(rec, indent=1) + "\n")
         return 0
     rec, passed = cmd_chain(a) if a.part == "chain" else cmd_fullshape(a)
+    if a.part == "chain":
+        rec["golden_operands_sha256"] = sha(a.golden)
     SC, _ = _sm()
     srcs = sorted(set(SC.SMV_SRC + ["rtl/gpu/dshbm/ot_dshbm_argmax.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/test/tb_dshbm_argmax.sv",
                                     "tools/dshbm_dspark_draft_chain.py", "tools/dshbm_dspark_sm_campaign.py",
