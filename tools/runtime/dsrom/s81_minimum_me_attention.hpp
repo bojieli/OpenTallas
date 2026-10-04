@@ -15,6 +15,9 @@
 // callbacks own actual KV ports on this SAME leaf and runtime. Missing hooks
 // are rejected, and no zero/ready/clean substitute is supplied. With an ATT
 // cut, its real attention participant must be enrolled on the shared host too.
+// Final measurement enrollment is DS position 1048575: 128 WINDOW rows plus
+// 512 native selected-history rows. A full extent is necessary, not proof of
+// provenance: real_kv must still own those actual rows and their native order.
 // No build is requested here: native KV callback/source enrollment is pending.
 template<class NativeLeaf> class DsromS81MinimumMeAttention {
     DsromS81MinimumRuntime& runtime;
@@ -112,6 +115,9 @@ public:
                 require(nk>0&&nk<=640&&leaf->i_nout>0&&
                         (leaf->i_ks>1?leaf->i_nout==512:leaf->i_k==512),
                         "ME attention shape is not actual D512 QK or chronological PV");
+                require(leaf->i_ks>=1&&
+                        (leaf->i_ks>1?leaf->i_k:leaf->i_nout)==640,
+                        "DS target-context ME requires WINDOW128 plus selected512; reduced-context debug is excluded");
                 std::set<uint32_t> unique;
                 for(unsigned h=0;h<(8u<<leaf->i_hg);++h)for(unsigned k=0;k<nk;++k) {
                     const uint64_t a=uint64_t(leaf->i_xbase)+(h/8)*uint64_t(leaf->i_xcs)+
@@ -130,14 +136,17 @@ public:
             }
             if(fetched<addresses.size())return false;
             for(auto a:addresses)require(io.span_lease(identity,a,1),"ME source operand version lost before GO");
-            return kv.inputs_ready(op)&&kv.ready()&&kv.idle();
+            // The real WINDOW may already own staged rows and therefore be
+            // non-idle. Its positive ready/inputs_ready authorizes this exact
+            // held consumer; terminal idle is required only for retirement.
+            return kv.inputs_ready(op)&&kv.ready();
         }catch(...){stopped=true;throw;}
     }
     void drive(const DsromS81PrefixOperation& op,bool go) {
         try {
             if(go)require(!fault()&&!accepted&&operation&&operation->index==op.index&&
                           operation->instruction==op.instruction&&fetched==addresses.size()&&
-                          runtime.identity&&*runtime.identity==identity&&kv.ready()&&kv.idle(),
+                          runtime.identity&&*runtime.identity==identity&&kv.ready(),
                           "ME GO lacks actual source and real KV admission");
             if(go) {
                 check_dynamic(op);
@@ -206,3 +215,16 @@ template<class NativeLeaf> DsromS81PrefixNativeEngine dsrom_s81_bind_minimum_me_
         [p](){return p->fault();}},[p](){return p->ready();},[p](){return p->idle();},
         [p](const auto& op){return p->inputs_ready(op);},[p](const auto& op,bool go){p->drive(op,go);}};
 }
+
+// Concrete selected-model entrypoints. The factory borrows the created leaf
+// to join actual packed KV and, if selected, ATT-cut buses before binding it.
+// Both joins remain actual participants on the canonical shared edge.
+class VDsromAttention;
+std::shared_ptr<VDsromAttention> dsrom_s81_create_minimum_me_attention(
+    DsromS81MinimumRuntime& runtime);
+DsromS81PrefixNativeEngine dsrom_s81_bind_minimum_me_attention(
+    DsromS81MinimumRuntime& runtime,uint64_t identity,
+    dsrom_s81_minimum::PrefixPublication& publication,
+    const DsromS81MinimumSourceIo& io,const DsromS81MinimumSourceTags& tags,
+    std::shared_ptr<VDsromAttention> native,DsromS81PrefixNativeEngine real_kv,
+    std::function<uint32_t(unsigned)> source_dynamic);
