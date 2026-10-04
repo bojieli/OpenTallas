@@ -106,31 +106,30 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
       if (!hrst_n) land_fault <= 0; else if (|(rd_v & l_full)) land_fault <= 1;   // credit breach
     // ---------------- look-ahead landing locations (clk) ----------------
     // cur_*: where this PC's next landed sector goes; g_j / g_kb: the sector after it.
-    reg [NPC-1:0] cur_v; reg [MW-1:0] cur_sm [0:NPC-1]; reg [SW-1:0] cur_slot [0:NPC-1];
-    reg [JW-1:0] g_j [0:NPC-1]; reg [SW-1:0] g_kb [0:NPC-1][0:NSM-1];
+    wire [NPC-1:0] cur_v; wire [MW-1:0] cur_sm [0:NPC-1]; wire [SW-1:0] cur_slot [0:NPC-1];
     wire [NPC-1:0] grant;
     for (genvar p = 0; p < NPC; p = p + 1) begin : loc
-      // lut entry of line L = 8*g_j + p/4 (s = 32 g_j + p): a NSECT-way select from registers
+      reg cv; reg [MW-1:0] csm; reg [SW-1:0] cslot; reg [JW-1:0] gj; reg [NSM*SW-1:0] gkb;
+      // lut entry of line L = NI*g_j + p/4 (s = NPC g_j + p): a NSECT-way select from registers
       reg [15:0] ent;
       always @* begin
         ent = 16'd0;
         for (integer jj = 0; jj < NSECT; jj = jj + 1)
-          if (g_j[p] == JW'(jj)) ent = cfg_lut[(jj * NI + p / 4) * 16 +: 16];
+          if (gj == JW'(jj)) ent = cfg_lut[(jj * NI + p / 4) * 16 +: 16];
       end
       wire [MW-1:0] n_sm = ent[8 +: MW];
-      wire [SW-1:0] n_slot = g_kb[p][n_sm] + SW'(ent[7:0]);
-      wire adv = grant[p] || !cur_v[p];
+      wire [SW-1:0] n_slot = gkb[n_sm * SW +: SW] + SW'(ent[7:0]);
+      wire adv = grant[p] || !cv;
+      reg [NSM*SW-1:0] gkb_n;
+      always @* for (integer m = 0; m < NSM; m = m + 1) gkb_n[m*SW +: SW] = gkb[m*SW +: SW] + cfg_lines[m*16 +: SW];
       always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
-          cur_v[p] <= 1'b0; cur_sm[p] <= 0; cur_slot[p] <= 0; g_j[p] <= 0;
-          for (integer m = 0; m < NSM; m = m + 1) g_kb[p][m] <= 0;
-        end else if (adv) begin
-          cur_v[p] <= 1'b1; cur_sm[p] <= n_sm; cur_slot[p] <= n_slot;
-          if (g_j[p] == JW'(NSECT - 1)) begin
-            g_j[p] <= 0;
-            for (integer m = 0; m < NSM; m = m + 1) g_kb[p][m] <= g_kb[p][m] + cfg_lines[m*16 +: SW];
-          end else g_j[p] <= g_j[p] + 1'b1;
+        if (!rst_n) begin cv <= 1'b0; csm <= 0; cslot <= 0; gj <= 0; gkb <= '0; end
+        else if (adv) begin
+          cv <= 1'b1; csm <= n_sm; cslot <= n_slot;
+          if (gj == JW'(NSECT - 1)) begin gj <= 0; gkb <= gkb_n; end
+          else gj <= gj + 1'b1;
         end
+      assign cur_v[p] = cv; assign cur_sm[p] = csm; assign cur_slot[p] = cslot;
     end
     // ---------------- landing grant: <= 1 PC per (sm, quarter class), rotating priority ----------------
     reg [IWD-1:0] rot;                                     // highest-priority index within a class
@@ -155,20 +154,27 @@ module ot_hbm_accel_expert_fetch_stream_sram #(
     end
     assign l_re = grant;
     // ---------------- write stage: one register per bank (sm, class) ----------------
-    reg [NSM*4-1:0] w_v; reg [SW-1:0] w_a [0:NSM*4-1]; reg [255:0] w_d [0:NSM*4-1];
+    wire [NSM*4-1:0] w_v; wire [SW-1:0] w_a [0:NSM*4-1]; wire [255:0] w_d [0:NSM*4-1];
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) begin rot <= 0; beats <= '0; w_v <= '0; end
-      else begin
-        rot <= rot_n; beats <= beats_n;
-        for (integer m = 0; m < NSM; m = m + 1) for (integer c = 0; c < 4; c = c + 1) begin
-          automatic reg v = 1'b0; automatic reg [SW-1:0] a = '0; automatic reg [255:0] d = '0;
+      if (!rst_n) begin rot <= 0; beats <= '0; end
+      else begin rot <= rot_n; beats <= beats_n; end
+    for (genvar m = 0; m < NSM; m = m + 1) begin : wb
+      for (genvar c = 0; c < 4; c = c + 1) begin : q
+        // one-hot (at most one grant per bank): AND-OR select of the winner's slot and sector
+        reg v; reg [SW-1:0] a; reg [255:0] d;
+        always @* begin
+          v = 1'b0; a = '0; d = '0;
           for (integer i = 0; i < NI; i = i + 1)
             if (grant[4*i + c] && cur_sm[4*i + c] == MW'(m)) begin
               v = 1'b1; a = a | cur_slot[4*i + c]; d = d | l_q[(4*i + c)*256 +: 256];
             end
-          w_v[m*4 + c] <= v; w_a[m*4 + c] <= a; w_d[m*4 + c] <= d;
         end
+        reg v_r; reg [SW-1:0] a_r; reg [255:0] d_r;
+        always @(posedge clk or negedge rst_n) if (!rst_n) v_r <= 1'b0; else v_r <= v;
+        always @(posedge clk) begin a_r <= a; d_r <= d; end
+        assign w_v[m*4 + c] = v_r; assign w_a[m*4 + c] = a_r; assign w_d[m*4 + c] = d_r;
       end
+    end
     // ---------------- banks, mask, release (clk) ----------------
     reg [3:0] mask [0:NSM-1][0:DEPTH-1];
     reg [SW-1:0] cons_p [0:NSM-1]; reg [NSM-1:0] v_q;
