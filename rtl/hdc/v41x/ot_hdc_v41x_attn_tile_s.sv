@@ -196,12 +196,11 @@ module ot_hdc_v41x_attn_tile_s #(
 endmodule
 
 // ---------------------------------------------------------------------------
-// Product with the 8 x 8 significand multiply split across the ML = 6 operand register (zero added cycles):
-// the text of ot_hdc_v41x_attn_bmul_l (rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv) with its operand register and
-// stage 1 replaced.  In the head-group context the routed bmul_l stage 1 (operand register -> 8 x 8 multiply ->
-// product register) missed SS by ~200 ps; here the multiply is two 8 x 4 partial products ahead of the register
-// (in the cycle that held only the bank-select mux) and a keep-prefix 16-bit add behind it.  Same value, same
-// cycle as bmul_l at ML = 6.  The zero test uses (exponent, fraction) == 0, equal to ma == 0.
+// Product with the 8 x 8 significand multiply split across the stage-1 register (zero added cycles): the text
+// of ot_hdc_v41x_attn_bmul_l (rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv) at ML = 6 with stage 1 replaced.  In the
+// head-group context the bmul_l stage 1 (operand register -> 8 x 8 multiply -> product register) missed SS by
+// ~200 ps; here stage 1 makes two 8 x 4 partial products and stage 2 adds them (keep-prefix 16-bit add) ahead of
+// its leading-zero count, before the ML >= 5 cut.  Same value, same cycle as bmul_l at ML = 6.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_attn_bmul_s #(
     parameter integer ML = 6           // 6 only (the split needs the operand register)
@@ -213,42 +212,33 @@ module ot_hdc_v41x_attn_bmul_s #(
     output reg  [31:0] y,
     output reg         flt
 );
-    // -- operand register (ML = 6) with the significand product SPLIT across it: before the register the two
-    //    8 x 4 partial products ma * mb[3:0] and ma * mb[7:4] (exact integers), after it their sum -- the same
-    //    16-bit product ma * mb one cycle later, as bmul_l's operand register + 8 x 8 multiply
-    wire [7:0] ea_i = a[14:7];
-    wire [7:0] eb_i = b[14:7];
-    wire [7:0] ma_i = {(ea_i != 8'd0), a[6:0]};
-    wire [7:0] mb_i = {(eb_i != 8'd0), b[6:0]};
-    reg [11:0] o_pl, o_ph;
-    reg [15:0] oa, ob;
-    reg        opad;
-    always @(posedge clk) begin
-        o_pl <= ma_i * mb_i[3:0];
-        o_ph <= ma_i * mb_i[7:4];
-        oa <= a; ob <= b; opad <= pad;
-    end
-    // -- stage 1: product sum (prefix adder), exponent sum, flags
+    // -- operand register (ML = 6), as bmul_l: the bank-select mux and the skewed element only
+    wire [15:0] oa, ob;
+    wire        opad;
+    ot_hdc_v41x_dly #(.W(33), .D(1)) u_cut0 (.clk(clk), .d({a, b, pad}), .q({oa, ob, opad}));
+    // -- stage 1: decode, the two 8 x 4 partial products ma * mb[3:0] and ma * mb[7:4] (exact), exponent sum
     wire [7:0] ea = oa[14:7];
     wire [7:0] eb = ob[14:7];
-    wire ma_z = (ea == 8'd0) && (oa[6:0] == 7'd0);
-    wire mb_z = (eb == 8'd0) && (ob[6:0] == 7'd0);
+    wire [7:0] ma = {(ea != 8'd0), oa[6:0]};
+    wire [7:0] mb = {(eb != 8'd0), ob[6:0]};
     wire [8:0] esum_c = {1'b0, (ea == 8'd0) ? 8'd1 : ea} + {1'b0, (eb == 8'd0) ? 8'd1 : eb};
     wire nonfin_c = !opad && ((ea == 8'hff) || (eb == 8'hff));
-    wire zero_c = opad || ma_z || mb_z;
-    wire [15:0] psum;
-    wire        pco;
-    ot_hdc_ksadd_k #(.W(16)) u_ps (.a({4'd0, o_pl}), .b({o_ph, 4'd0}), .cin(1'b0), .s(psum), .cout(pco));
-    reg [15:0] s1_p;
+    wire zero_c = opad || (ma == 8'd0) || (mb == 8'd0);
+    reg [11:0] s1_pl, s1_ph;
     reg [8:0]  s1_esum;
     reg        s1_sign, s1_zero, s1_nonfin;
     always @(posedge clk) begin
-        s1_p <= psum;
+        s1_pl <= ma * mb[3:0];
+        s1_ph <= ma * mb[7:4];
         s1_esum <= esum_c;
         s1_sign <= oa[15] ^ ob[15];
         s1_zero <= zero_c;
         s1_nonfin <= nonfin_c;
     end
+    // the 16-bit product, summed at the head of stage 2 (keep-prefix adder) ahead of its leading-zero count
+    wire [15:0] s1_p;
+    wire        pco;
+    ot_hdc_ksadd_k #(.W(16)) u_ps (.a({4'd0, s1_pl}), .b({s1_ph, 4'd0}), .cin(1'b0), .s(s1_p), .cout(pco));
 
     // -- stage 2: normalise; normal encoding; subnormal shift amounts
     //: value = P * 2^(esum - 268); msb at 15 - lz; biased exponent
