@@ -25,7 +25,6 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
     // not the numeric generation, authorize the consumer.
     std::function<uint16_t()> generation;
     std::function<void()> drive_native_ports;
-    std::function<bool()> descriptor_drained;
     bool stopped=false;
     bool consumed=false;
     bool staged_debt=false,stream_active=false;
@@ -35,7 +34,6 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
     uint16_t old_generation=0;
     std::optional<DsromS81PrefixOperation> held_consumer;
     bool held_go=false;
-    bool window_drained=false,old_descriptor_drained=false;
     bool mux_bound=false;
     long prepared_cycle=-1;
 
@@ -83,7 +81,6 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
             old_kv_accept=bool(window.kv_v&&window.kv_ready);
             old_staged=window.staged_v;old_stream_go=window.stream_go;
             old_done=window.done;old_generation=generation();
-            old_descriptor_drained=!target_engine||descriptor_drained();
         }catch(...){stopped=true;throw;}
     }
     void rising(bool released) {
@@ -109,19 +106,11 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
                     require(staged_debt&&!stream_active&&(!target_engine||held_go),
                             "packed WINDOW stream lacks staged native response");
                     staged_debt=false;stream_active=true;
-                    window_drained=false;
                 }
                 if(old_done) {
                     require(stream_active,"packed WINDOW completion lacks accepted stream");
-                    window_drained=true;
-                }
-                // WINDOW.done covers only its 128 rows. The actual descriptor
-                // owner retains selected512/CKV/native transport debt until
-                // its positive terminal drain; preserve generation meanwhile.
-                if(stream_active&&window_drained&&old_descriptor_drained) {
                     stream_active=false;staged_generation=0;
                     held_consumer.reset();held_go=false;
-                    window_drained=false;
                 }
             }
             blocks.clk=1;window.clk=1;
@@ -280,7 +269,6 @@ public:
         target_engine=true;
         auto self=this->shared_from_this();
         auto source=std::make_shared<DsromS81PrefixNativeEngine>(std::move(owner));
-        descriptor_drained=source->idle;
         return {{"actual-packed-window-kv",
             [self,source](const auto& r){source->participant.prepare(r);self->prepare();},
             [self,source](bool reset){self->rising(reset);source->participant.rising(reset);},
