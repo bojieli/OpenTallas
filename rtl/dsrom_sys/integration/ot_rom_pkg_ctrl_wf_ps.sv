@@ -446,7 +446,7 @@ module ot_rom_pkg_ctrl_wf_ps #(
     generate if (SIDE_PSL != 0) begin : g_pslot
         ot_rom_side_pslot #(.MAXU(MAXU), .USER_W(USER_W), .NW(NW), .PSL(SIDE_PSL), .SIDE_IN(SIDE_IN)) u_pslot (
             .clk(clk), .rst_n(rst_n),
-            .sel_user(rx_hdr ? in_user : hdr_user), .sel_pos(rx_hdr ? in_pos : hdr_pos), .ok_q(ps_ok),
+            .sel_new(rx_hdr), .sel_user(hdr_user), .sel_pos(hdr_pos), .ok_q(ps_ok),
             .inc_v(rx_side_last), .inc_user(side_user), .inc_pos(side_pos),
             .dec_v(st_rx), .dec_user(hdr_user), .dec_pos(hdr_pos),
             .chk_v(rx_side), .chk_user(in_user), .chk_pos(in_pos), .conflict(ps_conflict));

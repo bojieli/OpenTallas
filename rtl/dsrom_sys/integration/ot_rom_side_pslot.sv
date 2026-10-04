@@ -18,11 +18,13 @@
 // re-issue (overwriting a squashed instance) or by p + 2^PSL after p has left every stage.  A generation bit
 // (position bit PSL) per slot makes any other reuse fail closed (`conflict`).
 //
-// Timing: the lookup for the pending HIDDEN job (sel_*) is REGISTERED: ok_q is the exact count test of the
-// state after this edge (this cycle's increment and decrement applied), for the header registered on this edge
-// (the controller presents the arriving header on its rx_hdr cycle, else the held one).  It is never early: a
-// HIDDEN payload takes >= 1 cycle after its header, and the controller starts a received job no sooner than the
-// cycle after the header.
+// Timing (1.2 GHz): the lookup for the pending HIDDEN job is REGISTERED and reads only registers: sel_* is the
+// controller's HELD header (hdr_user / hdr_pos); on the edge that captures a new header (sel_new = rx_hdr) ok_q is
+// forced low, so it is valid from the following cycle.  Increments (a SIDE message's last flit) and decrements (a
+// job start) are registered here and applied one edge later; ok_q is computed for the state after the edge (the
+// registered increment / decrement applied).  Both delays only make ok_q later, never early: a decrement lags
+// its start by one edge while that job runs (no second start of the user's slot can follow within it), and an
+// increment lags by one edge.  A HIDDEN payload takes >= 1 cycle after its header.
 // ---------------------------------------------------------------------------
 module ot_rom_side_pslot #(
     parameter integer MAXU    = 16,
@@ -35,6 +37,7 @@ module ot_rom_side_pslot #(
     input  wire              clk,
     input  wire              rst_n,
     // lookup for the next cycle's pending HIDDEN job
+    input  wire              sel_new,      // a new header is captured on this edge (the held one changes)
     input  wire [USER_W-1:0] sel_user,
     input  wire [NW-1:0]     sel_pos,
     output reg               ok_q,
@@ -53,39 +56,46 @@ module ot_rom_side_pslot #(
     output reg               conflict
 );
     localparam integer NSL = 1 << PSL;
-    localparam integer N = MAXU * NSL;
-    localparam integer IW = $clog2(N);
+    localparam integer UB = (MAXU > 1) ? $clog2(MAXU) : 1;
+    localparam integer IW = UB + PSL;
+    localparam integer N = 1 << IW;          // entry {user, slot}; users >= MAXU are never written
     reg [CW-1:0] cnt [0:N-1];
     reg          gen [0:N-1];
-    function automatic [IW-1:0] idx(input [USER_W-1:0] u, input [NW-1:0] p);
-        idx = IW'(u) * IW'(NSL) + IW'(p[PSL-1:0]);
-    endfunction
-    wire [IW-1:0] i_inc = idx(inc_user, inc_pos), i_dec = idx(dec_user, dec_pos), i_sel = idx(sel_user, sel_pos),
-                  i_chk = idx(chk_user, chk_pos);
-    wire inc_ok = inc_v && inc_user < MAXU;
-    wire dec_ok = dec_v && dec_user < MAXU;
-    // lookup of the state after this edge
+    // registered update requests
+    reg          inc_r, dec_r, inc_g;
+    reg [IW-1:0] inc_i, dec_i;
+    wire [IW-1:0] i_sel = {sel_user[UB-1:0], sel_pos[PSL-1:0]};
+    reg          chk_r, chk_g;               // the arriving header, registered (checked one edge later)
+    reg [IW-1:0] i_chk;
+    // lookup of the state after this edge (the registered update applied)
     wire [CW-1:0] c_sel = cnt[i_sel];
     wire          g_sel = gen[i_sel];
-    wire [CW-1:0] c_nx = c_sel + ((inc_ok && i_inc == i_sel) ? CW'(1) : CW'(0))
-                               - ((dec_ok && i_dec == i_sel) ? CW'(SIDE_IN) : CW'(0));
-    wire          g_nx = (inc_ok && i_inc == i_sel) ? inc_pos[PSL] : g_sel;
+    wire [CW-1:0] c_nx = c_sel + ((inc_r && inc_i == i_sel) ? CW'(1) : CW'(0))
+                               - ((dec_r && dec_i == i_sel) ? CW'(SIDE_IN) : CW'(0));
+    wire          g_nx = (inc_r && inc_i == i_sel) ? inc_g : g_sel;
     integer k;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             for (k = 0; k < N; k = k + 1) begin cnt[k] <= {CW{1'b0}}; gen[k] <= 1'b0; end
-            ok_q <= 1'b0; conflict <= 1'b0;
+            ok_q <= 1'b0; conflict <= 1'b0; inc_r <= 1'b0; dec_r <= 1'b0; inc_g <= 1'b0; inc_i <= 0; dec_i <= 0;
+            chk_r <= 1'b0; chk_g <= 1'b0; i_chk <= 0;
         end else begin
-            if (inc_ok && dec_ok && i_inc == i_dec) begin
-                cnt[i_inc] <= cnt[i_inc] + CW'(1) - CW'(SIDE_IN);
+            inc_r <= inc_v && inc_user < MAXU;
+            inc_i <= {inc_user[UB-1:0], inc_pos[PSL-1:0]}; inc_g <= inc_pos[PSL];
+            dec_r <= dec_v && dec_user < MAXU;
+            dec_i <= {dec_user[UB-1:0], dec_pos[PSL-1:0]};
+            if (inc_r && dec_r && inc_i == dec_i) begin
+                cnt[inc_i] <= cnt[inc_i] + CW'(1) - CW'(SIDE_IN);
             end else begin
-                if (inc_ok) cnt[i_inc] <= cnt[i_inc] + CW'(1);
-                if (dec_ok) cnt[i_dec] <= cnt[i_dec] - CW'(SIDE_IN);
+                if (inc_r) cnt[inc_i] <= cnt[inc_i] + CW'(1);
+                if (dec_r) cnt[dec_i] <= cnt[dec_i] - CW'(SIDE_IN);
             end
-            if (inc_ok) gen[i_inc] <= inc_pos[PSL];
-            ok_q <= sel_user < MAXU && c_nx >= CW'(SIDE_IN) && g_nx == sel_pos[PSL];
+            if (inc_r) gen[inc_i] <= inc_g;
+            ok_q <= !sel_new && sel_user < MAXU && c_nx >= CW'(SIDE_IN) && g_nx == sel_pos[PSL];
             // a message for another generation of a slot that still holds unconsumed messages
-            conflict <= chk_v && chk_user < MAXU && cnt[i_chk] != {CW{1'b0}} && gen[i_chk] != chk_pos[PSL];
+            chk_r <= chk_v && chk_user < MAXU;
+            i_chk <= {chk_user[UB-1:0], chk_pos[PSL-1:0]}; chk_g <= chk_pos[PSL];
+            conflict <= chk_r && cnt[i_chk] != {CW{1'b0}} && gen[i_chk] != chk_g;
         end
     end
 endmodule

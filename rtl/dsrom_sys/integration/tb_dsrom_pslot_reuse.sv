@@ -99,8 +99,9 @@ module tb_dsrom_pslot_reuse #(
     always @(posedge clk) if (rst_n) begin
         if (in_valid && in_ready) fi <= fi + 1;
     end
+    reg inj_en = 1'b0;                           // the injector starts after the position preset
     always @(*) begin
-        in_valid = rst_n && fi < nflit;
+        in_valid = rst_n && inj_en && fi < nflit;
         in_data = (fi < nflit) ? stim[fi][FLIT-1:0] : {FLIT{1'b0}};
         in_last = (fi < nflit) ? stim[fi][FLIT] : 1'b0;
     end
@@ -157,6 +158,8 @@ module tb_dsrom_pslot_reuse #(
         rst_n = 1'b1;
         @(negedge clk);
         ctrl.upos[0] = NW'(first_pos);           // labelled preset: the user is already at the first position
+        @(negedge clk);
+        inj_en = 1'b1;
     end
     always @(posedge clk) begin
         if (rst_n && proto_fault) begin
