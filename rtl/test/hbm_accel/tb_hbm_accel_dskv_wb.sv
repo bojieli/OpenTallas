@@ -17,6 +17,7 @@
 // injected row data) +mut=4 (checker tRCDWR + 1 ns).
 module tb_hbm_accel_dskv_wb;
   parameter integer STACK = 1;
+  parameter integer WA_LATE = 0;   // stream PC r9d option (default 0 = r0 cycle-exact)
   parameter integer NOC_PS = 5000, PHY_CMD_PS = 5000;
   localparam integer NPC = 32, CYC = 1024, PERIOD = 118, LAW = 6;
   localparam longint BURST=1024, TCCDL=2560, CL=12500, CWL=6250, RCD=19375, RCDWR=9375, RP=16250, RAS=28125,
@@ -47,7 +48,7 @@ module tb_hbm_accel_dskv_wb;
   reg [NPC-1:0] pwq_v = 0; reg [NPC*5-1:0] pwq_bank = 0, pwq_col = 0; reg [NPC*19-1:0] pwq_row = 0;
   reg [NPC*256-1:0] pwq_data = 0;
   for (genvar p = 0; p < NPC; p = p + 1) begin : pc
-    ot_hbm_accel_stream_pc_wb #(.ENABLE(1), .REF_MODE(1), .PC(p), .CRED(1 << LAW), .WB_EN(1),
+    ot_hbm_accel_stream_pc_wb #(.ENABLE(1), .REF_MODE(1), .PC(p), .CRED(1 << LAW), .WB_EN(1), .WA_LATE(WA_LATE),
       .REF_PHASE((p * PERIOD) / 32 % PERIOD)) u (
       .clk(hclk), .rst_n(hrst_n), .desc_v(dv[p]), .desc_r(dr[p]), .desc_row(drow[p*19 +: 19]), .desc_n(dn[p*11 +: 11]),
       .go(go[p]), .next_posted(1'b0), .notice(1'b0),

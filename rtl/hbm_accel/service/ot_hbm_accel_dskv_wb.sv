@@ -57,6 +57,16 @@ module ot_hbm_accel_dskv_wb #(
     localparam [1:0] S_IDLE = 0, S_MAP = 1, S_EMIT = 2;
     reg [1:0] st;
     reg [1:0] kind; reg [5:0] slot; reg r2; reg [4351:0] dat;
+    // r1: the key block's slot as a registered one-hot, duplicated per 256-bit sector of dat (17 copies, kept
+    // apart) so the 8:1 shadow -> dat copy at S_MAP is an AND-OR with a local select, not one high-fanout net
+    (* keep *) reg [7:0] ssel [0:16];
+    reg [4351:0] shsel;
+    always @* begin
+      shsel = 0;
+      for (integer c = 0; c < 17; c = c + 1)
+        for (integer z = 0; z < 8; z = z + 1)
+          shsel[256*c +: 256] = shsel[256*c +: 256] | ({256{ssel[c][z]}} & shadow[z][256*c +: 256]);
+    end
     reg [4351:0] shadow [0:7];
     reg [19:0] n; reg [16:0] b; reg [13:0] k; reg own;
     reg [20:0] s0;            // first die-local sector (window: PC index with j = t)
@@ -88,6 +98,7 @@ module ot_hbm_accel_dskv_wb #(
     wire [13:0] k_in = {q_in, n_in[2:0]};
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin
+        for (integer c = 0; c < 17; c = c + 1) ssel[c] <= 8'b1;
         st <= S_IDLE; kind <= 0; slot <= 0; r2 <= 0; dat <= 0; n <= 0; b <= 0; k <= 0; own <= 0; s0 <= 0;
         ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; sr <= 0; idx <= 0;
       end else begin
@@ -98,6 +109,7 @@ module ot_hbm_accel_dskv_wb #(
             if (sh_v) shadow[sh_slot] <= sh_data;
             else if (row_v) begin
               kind <= row_kind; slot <= row_slot; r2 <= row_r2; dat <= row_data;
+              for (integer c = 0; c < 17; c = c + 1) ssel[c] <= 8'b1 << row_slot[2:0];
               n <= n_in; b <= b_in; k <= k_in; own <= (own_in[6:0] == die);
               if (row_kind == 2'd2)          // merge the new key into the open block's shadow (chunk n_in[2:0])
                 for (integer c = 0; c < 8; c = c + 1)
@@ -108,7 +120,7 @@ module ot_hbm_accel_dskv_wb #(
           S_MAP: begin
             t <= 0;
             kb_s <= 17'(k >> 3) * 17'd17;
-            if (kind == 2'd2) dat <= shadow[slot[2:0]];
+            if (kind == 2'd2) dat <= shsel;              // = shadow[slot[2:0]]
             // idx: t (window, compressed row); for a key the sector within its block, (68 k >> 5) - 17 (k >> 3)
             idx <= (kind == 2'd2) ? 5'(((21'(k) * 21'd68) >> 5) - 21'(17'(k >> 3) * 17'd17)) : 5'd0;
             case (kind)

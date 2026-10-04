@@ -29,7 +29,13 @@ module ot_hbm_accel_stream_pc_wb #(
   parameter integer REF_PHASE = 0,
   parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5,
   parameter integer IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
-  parameter integer WB_EN = 0, WQ = 8, T_RTW = 10, T_WTR = 14, T_WRR = 28, T_RCDW = 10
+  parameter integer WB_EN = 0, WQ = 8, T_RTW = 10, T_WTR = 14, T_WRR = 28, T_RCDW = 10,
+  // r9d WA_LATE = 1 (default 0 = r0 cycle-exact): the write-ACT candidate (oldest openable queued write) is
+  // selected from this cycle's queue/bank state and registered, then re-validated at use (bank still closed, not
+  // chosen for refresh, tRC/tRRD met).  The candidate can be one cycle late (a write that arrived or a bank that
+  // closed in the previous cycle is seen a cycle later); it never violates an ordering rule, because a
+  // candidate's older-write conflicts can only clear while it waits.
+  parameter integer WA_LATE = 0
 )(
   input  wire        clk, rst_n,
   input  wire        desc_v, output wire desc_r,
@@ -269,7 +275,7 @@ module ot_hbm_accel_stream_pc_wb #(
     wire [31:0] pre_cand = open & (done | stale) & ~blk & ras_z & rtp_z & ~(W ? wopen : 32'b0);
     // WB_EN: write ACT (oldest openable queued write) and write PRE (a write-open bank no queued write needs on
     // its row, after write recovery and tRAS)
-    wire wact_ok = W && wa_v && !act_block && noact_c == 0 && rrds_c == 0 && faw_ok && |(wa_oh & aok_z) &&
+    wire wact_ok = W && wa_v && !act_block && noact_c == 0 && rrds_c == 0 && faw_ok && |(wa_oh & aok_z & ~(WA_LATE ? open : 32'b0)) &&
                    !(|(wa_oh & blk)) && |(wa_bgoh & rrdl_z);
     wire [31:0] wpre_cand = W ? (wopen & ~wnro_q & ~blk & ras_z & wrr_z) : 32'b0;
     wire [31:0] pre_oh, act_oh, wpre_oh;
@@ -327,7 +333,11 @@ module ot_hbm_accel_stream_pc_wb #(
     // ACT, if any) and its conflict set (valid older slots on the same bank with a different row)
     wire push = W && wq_v && wq_r;
     wire wact_fire = row_fire && c_w && c_op == ACT;
-    wire push_hit = (wact_fire && c_bank == wq_bank) ? (c_wrow == wq_row) : (wrow[wq_bank] == wq_row);
+    // r9d: every bank's row compared with the pushed row in parallel, then selected by the pushed bank
+    reg [31:0] wrow_eq;
+    always @* for (integer b = 0; b < 32; b = b + 1) wrow_eq[b] = (wrow[b] == wq_row);
+    wire [31:0] wq_boh_in = 32'b1 << wq_bank;
+    wire push_hit = (wact_fire && |(c_oh & wq_boh_in)) ? (c_wrow == wq_row) : |(wrow_eq & wq_boh_in);
     reg [WQ-1:0] push_conf;
     always @* begin
       push_conf = 0;
@@ -365,14 +375,19 @@ module ot_hbm_accel_stream_pc_wb #(
         end
       end
       for (e = 0; e < WQ; e = e + 1)
-        nact[e] = nv[e] && !(|nconf[e*WQ +: WQ]) && !(|(nboh[e*32 +: 32] & open_nx));
-      for (e = 0; e < WQ; e = e + 1) pwin_n[e] = nact[e] && !(|(nold[e*WQ +: WQ] & nact));
+        nact[e] = WA_LATE ? (sl_v[e] && !(|sl_conf[e*WQ +: WQ]) && !(|(sl_boh[e] & open)))
+                          : (nv[e] && !(|nconf[e*WQ +: WQ]) && !(|(nboh[e*32 +: 32] & open_nx)));
+      for (e = 0; e < WQ; e = e + 1)
+        pwin_n[e] = nact[e] && !(|((WA_LATE ? sl_old[e*WQ +: WQ] : nold[e*WQ +: WQ]) & nact));
       wa_v_n = |nact; wa_b_n = 0; wa_r_n = 0; wa_oh_n = 0; wa_bgoh_n = 0; wnro_n = 0;
       hb_oh_n = 0; hbg_oh_n = 0; hb_n = 0; hc_n = 0; hr_n = 0; hd_n = 0; h_hit_n = 1'b0;
       for (e = 0; e < WQ; e = e + 1) begin
-        if (pwin_n[e]) begin
+        if (pwin_n[e] && !WA_LATE) begin
           wa_b_n = wa_b_n | nwqb[e*5 +: 5]; wa_r_n = wa_r_n | nwqr[e*19 +: 19];
           wa_oh_n = wa_oh_n | nboh[e*32 +: 32]; wa_bgoh_n = wa_bgoh_n | nbgoh[e*4 +: 4];
+        end
+        if (pwin_n[e] && WA_LATE) begin
+          wa_b_n = wa_b_n | wqb[e]; wa_r_n = wa_r_n | wqr[e]; wa_oh_n = wa_oh_n | sl_boh[e]; wa_bgoh_n = wa_bgoh_n | sl_bgoh[e];
         end
         if (W && nv[e] && nhit[e]) wnro_n = wnro_n | (nboh[e*32 +: 32] & nwopen);
         if (nrp[e]) begin

@@ -10,6 +10,9 @@
 //     write pointer has passed the two-flop synchroniser) and cannot be overwritten before it is read, so the
 //     sampled word equals the r0 combinational mem[rbin]; while empty, rdata is a don't-care (as in r0, the
 //     word at an unwritten slot).
+//   * the write and read pointers are also held as registered ONE-HOTS (wp_oh, rp_oh, rp1_oh = rbin + 1), so the
+//     array write enables and the read mux are AND-OR selects of flops, with no pointer decode on the path;
+//     rdata's two candidates (no pop / pop) are both selected and the read enable only picks one.
 // The look-ahead flags read the first synchroniser stage (rg_w1 / wg_r1) through one comparator before a flop,
 // as ot_hbm_accel_cdc_fifo_rf does; mem -> rdata is an asynchronous-group path held stable by the protocol.
 // Every port is a flop output or a flop input (through at most the write/read enable gating): the block can be
@@ -25,6 +28,7 @@ module ot_hbm_accel_cdc_fifo_r2 #(parameter integer W = 32, parameter integer AW
   (* async_reg = "true" *) reg [AW:0] rg_w1, rg_w2;   // read pointer in the write domain
   (* async_reg = "true" *) reg [AW:0] wg_r1, wg_r2;   // write pointer in the read domain
   reg full_r, empty_r; reg [2:0] freed_r; reg [W-1:0] rdata_r;
+  reg [D-1:0] wp_oh, rp_oh, rp1_oh;
   function automatic [AW:0] g2b(input [AW:0] g);
     for (integer i = AW; i >= 0; i = i - 1) g2b[i] = (i == AW) ? g[i] : g2b[i+1] ^ g[i];
   endfunction
@@ -39,9 +43,9 @@ module ot_hbm_accel_cdc_fifo_r2 #(parameter integer W = 32, parameter integer AW
   assign full = full_r;
   assign rd_freed = freed_r;
   always @(posedge wclk or negedge wrst_n)
-    if (!wrst_n) begin wbin <= 0; wgray <= 0; rg_w1 <= 0; rg_w2 <= 0; full_r <= 1'b0; freed_r <= 3'd0; end
+    if (!wrst_n) begin wbin <= 0; wgray <= 0; rg_w1 <= 0; rg_w2 <= 0; full_r <= 1'b0; freed_r <= 3'd0; wp_oh <= D'(1); end
     else begin
-      if (push) mem[wbin[AW-1:0]] <= wdata;
+      if (push) wp_oh <= {wp_oh[D-2:0], wp_oh[D-1]};
       wbin <= push ? wbin_1 : wbin; wgray <= push ? wgray_1 : wgray;
       rg_w1 <= rgray; rg_w2 <= rg_w1;
       full_r <= push ? f_push : f_hold;
@@ -62,5 +66,21 @@ module ot_hbm_accel_cdc_fifo_r2 #(parameter integer W = 32, parameter integer AW
       wg_r1 <= wgray; wg_r2 <= wg_r1;
       empty_r <= pop ? e_pop : e_hold;
     end
-  always @(posedge rclk) rdata_r <= mem[rbin_n[AW-1:0]];
+  // array: entry i written when push && wp_oh[i] (wp_oh == 1 << wbin[AW-1:0] at every edge)
+  for (genvar i = 0; i < D; i = i + 1) begin : g_mem
+    always @(posedge wclk) if (push && wp_oh[i]) mem[i] <= wdata;
+  end
+  reg [W-1:0] q0, q1;
+  always @* begin
+    q0 = 0; q1 = 0;
+    for (integer i = 0; i < D; i = i + 1) begin
+      q0 = q0 | ({W{rp_oh[i]}} & mem[i]);
+      q1 = q1 | ({W{rp1_oh[i]}} & mem[i]);
+    end
+  end
+  always @(posedge rclk or negedge rrst_n)
+    if (!rrst_n) begin rp_oh <= D'(1); rp1_oh <= D'(2); end
+    else if (pop) begin rp_oh <= rp1_oh; rp1_oh <= {rp1_oh[D-2:0], rp1_oh[D-1]}; end
+  // rdata = mem[rbin_n]: rbin_n is rbin + 1 on a pop, else rbin
+  always @(posedge rclk) rdata_r <= pop ? q1 : q0;
 endmodule

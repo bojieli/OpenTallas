@@ -134,7 +134,9 @@ def build(work, stack):
     if exe.exists():
         return exe
     cmd = [VERILATOR, '--binary', '--timing', '-Wno-fatal', '-Wno-WIDTH', '-j', '8', '-O2', '--top-module', TOP,
-           '--Mdir', str(d), f'-GSTACK={stack}'] + [str(ROOT / s) for s in SOURCES]
+           '--Mdir', str(d), f'-GSTACK={stack}'] + \
+          ([f"-GWA_LATE={os.environ['DSKV_WA_LATE']}"] if os.environ.get('DSKV_WA_LATE') else []) + \
+          [str(ROOT / s) for s in SOURCES]
     d.mkdir(parents=True, exist_ok=True)
     with open(work / f'build_stack{stack}.log', 'w') as log:
         subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True)
