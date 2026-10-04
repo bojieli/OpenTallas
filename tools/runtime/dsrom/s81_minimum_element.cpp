@@ -108,7 +108,7 @@ int main(int argc,char** argv) {
         PairMem memory{std::stoi(argv[2]),std::stoi(argv[3]),std::stoi(argv[4]),cfg_words(argv[5])};
         owner_bounds(memory.stage,memory.rank,memory.pair);
         if(setenv("DSROM_S81_ROM_SOCKET",argv[8],1))throw std::runtime_error("native ROM socket binding failed");
-        VerilatedContext ctx;ctx.randReset(0);
+        VerilatedContext ctx;ctx.commandArgs(argc,argv);ctx.randReset(0);
         std::unique_ptr<PairBase> native;
         registering=&memory;
         if(bf)native.reset(new NativePair<Vpb>(&ctx));else native.reset(new NativePair<Vpq>(&ctx));
