@@ -10,6 +10,12 @@
 // first class) and w_lu_r, w_h, w_s, w_c, w_cl_r, the sub-block advance (wA <= wB), the restart and the round end are
 // AND-OR selects of those vectors.  QP_CHECK asserts the mirrors and every consequence equal the encoded walker's every
 // cycle.  Zero added cycles; outputs cycle-identical to the qy element.
+// QX = 2 (after route Z3b's post-CTS screen, SS -45.1 ps: every walker path starts at w_j through the per-class compare
+// j + 1 < cur[k] and its OR, the "next unit of the same class" decision, ~300 ps before the select): that decision is
+// held in a register w_ca_r loaded with its value for the walker's next state exactly where w_lu_r is (go, restart,
+// step; the step value is an AND-OR select of per-class compares against the next state's wA / wB), and the x-need
+// walker's nA / nB enables (sub-block advance, MTP restart) are formed from a decoded n_c and per-class vectors
+// instead of the encoded walk2 output (Z3b: n_c -> nB -16.8 ps).  QP_CHECK asserts both.  Zero added cycles.
 //
 // ot_v41_rom_elem_qy_w10: ot_v41_rom_elem_qz_w10 (byte-identical body, renamed) plus the opt-in QY (default 0 = the qz
 // circuit).  QY = 1 (requires QZ = 1; DS-V4.1 ROM q-pair SS closure, 2026-10-04, after route Z1's post-CTS screen):
@@ -525,6 +531,24 @@ module ot_v41_rom_elem_qx_w10 #(
         ot_v41_walk_w10 #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .nu(nu_p), .base(base_live),
                                        .qlast(qlast), .sbs(2'd3), .nx(n_nx));
     end
+    // QX = 2: the x-need walker's round end (no next unit: MTP restart / stop) and sub-block advance from a decoded
+    // n_c and per-class vectors of nA (= !n_nx[UW-1] and n_nx[UW-1] && n_nx q != n_q of walk2)
+    wire [NSEG-1:0] qx_ndec = NSEG'(1) << n_c;
+    reg  [NSEG-1:0] qx_ncmp, qx_ngt;
+    always @* begin
+        for (int k = 0; k < NSEG; k++) qx_ncmp[k] = {1'b0, n_j} + 4'd1 < nA[NSEG + 4*k +: 4];
+        for (int k = 0; k < NSEG; k++) qx_ngt[k] = k > n_c;
+    end
+    wire qx_n_same = |(qx_ndec & qx_ncmp) || |(nA[NSEG-1:0] & qx_ngt);
+    wire qx_n_endq = n_b == 3'd7 && n_q == qlast;
+    wire qx_n_end = (QX >= 2) ? !qx_n_same && qx_n_endq : !n_nx[UW-1];
+    wire qx_n_adv = (QX >= 2) ? !qx_n_same && !qx_n_endq && n_b == 3'd7 : n_nx[UW-1] && n_nx[UW-2 -: 3] != n_q;
+`ifdef QP_CHECK
+    always @(negedge clk) if (QX >= 2 && rst_n && n_run && (qx_n_end !== !n_nx[UW-1]
+            || qx_n_adv !== (n_nx[UW-1] && n_nx[UW-2 -: 3] != n_q))) begin
+        $display("QX_CHECK FAIL: x-need walker end/advance %b%b at %t", qx_n_end, qx_n_adv, $time); $fatal(1);
+    end
+`endif
     wire pair_match;
     if (FRONT_PAR != 0) begin : g_front_par
         wire [NSEG-1:0] class_match;
@@ -816,7 +840,8 @@ module ot_v41_rom_elem_qx_w10 #(
         qx_s1n[k]  = qx_snx == c_s1[k];
     end
     wire qx_b7   = w_b == 3'd7;
-    wire qx_case_a = |(w_coh & qx_cmpA);                          // next unit of the same class
+    reg  w_ca_r;                                                  // QX = 2: qx_case_a held in a register
+    wire qx_case_a = (QX >= 2) ? w_ca_r : |(w_coh & qx_cmpA);     // next unit of the same class
     wire [NSEG-1:0] qx_above = wA[NSEG-1:0] & w_cgt;
     wire qx_nf   = |qx_above;                                     // a later live class in this round
     wire [NSEG-1:0] qx_onc = qx_low(qx_above);
@@ -845,6 +870,22 @@ module ot_v41_rom_elem_qx_w10 #(
                     qx_b7 ? w_q == 3'd7 : w_q == 3'd0;
     wire qx_h_nx = qx_first && |(qx_nxoh & qx_h0);
     wire qx_adv  = !qx_same && !qx_endq && qx_b7;                 // the step advances the sub-block (wA <= wB)
+    // QX = 2: w_ca_r's value for the walker's next state, case by case as w_lu_r (lu_f with < in place of ==)
+    function automatic ca_f(input [6*NSEG-1:0] fa, input [SW-1:0] fc, input [2:0] fj);
+        ca_f = {1'b0, fj} + 4'd1 < fa[NSEG + 4*fc +: 4];
+    endfunction
+    reg  [NSEG-1:0] qx_cmpA1, qx_c0A, qx_c0B;
+    always @* for (int k = 0; k < NSEG; k++) begin
+        qx_cmpA1[k] = {1'b0, qx_j1} + 4'd1 < wA[NSEG + 4*k +: 4];  // ca_f(wA, k, j + 1)
+        qx_c0A[k]   = 4'd1 < wA[NSEG + 4*k +: 4];                    // ca_f(wA, k, 0)
+        qx_c0B[k]   = 4'd1 < wB[NSEG + 4*k +: 4];                    // ca_f(wB, k, 0)
+    end
+    wire qx_ca_nx = qx_case_a ? |(w_coh & qx_cmpA1) : qx_nf ? |(qx_onc & qx_c0A) : qx_endq ? qx_c0A[0] :
+`ifdef QX_MUTANT_CA
+                    |(qx_ofc & qx_c0A);                           // negative control: sub-block advance ignored
+`else
+                    qx_b7 ? |(qx_ofc & qx_c0B) : |(qx_ofc & qx_c0A);
+`endif
     wire [UW-1:0] w_nx = (QX != 0) ? qx_nx : w_nx0;
     wire w_round_end = (QX != 0) ? !qx_same : !w_nx[UW-1] || w_nx[UW-5 -: 3] != w_b;
     wire [SW-1:0] w_nx_c = w_nx[3 +: SW];
@@ -915,6 +956,9 @@ module ot_v41_rom_elem_qx_w10 #(
     wire lu_xa = lu_f(wA, w_nx_c, w_nx[2:0]);                    // next (c, j) of the walk, sub-block unchanged
     wire lu_xb = lu_f(wB, w_nx_c, w_nx[2:0]);                    //   ... or advanced (wA <= wB)
     wire lu_nx = (QX != 0) ? qx_lu_nx : (w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q) ? lu_xb : lu_xa;
+    always @(posedge gclk)
+        if (go_e) w_ca_r <= ca_f(f0_go, c_first, 3'd0);
+        else if (issue && w_seg_last && w_cl) w_ca_r <= w_restart ? ca_f(fF0, c_live, 3'd0) : qx_ca_nx;
     always @(posedge gclk)
         if (go_e) w_lu_r <= lu_go;
 `ifdef QP_MUTANT_LU
@@ -1043,6 +1087,9 @@ module ot_v41_rom_elem_qx_w10 #(
 `ifdef QP_CHECK
     // the mirrors equal the one-hot / mask of w_c, and every QX consequence equals the encoded walker's
     always @(negedge clk) if (QX != 0 && FAST != 0 && rst_n && qy_seen) begin
+        if (QX >= 2 && w_run && w_ca_r !== |(w_coh & qx_cmpA)) begin
+            $display("QX_CHECK FAIL: case-A register %b at %t", w_ca_r, $time); $fatal(1);
+        end
         if (w_coh !== NSEG'(1) << w_c || w_cgt !== qx_gt(NSEG'(1) << w_c)) begin
             $display("QX_CHECK FAIL: class mirror %b/%b for w_c %0d at %t", w_coh, w_cgt, w_c, $time); $fatal(1);
         end
@@ -1063,10 +1110,10 @@ module ot_v41_rom_elem_qx_w10 #(
             wA <= f0_go; wB <= f1_go;
         end else begin
             // QTIMING_FIX: nA and nB take their enables from match copies 1 and 2 (equal to hit)
-            if (hit_k[1 % HC] && !n_nx[UW-1] && n_more) nA <= sbf(4'd0, 2'd3, nu_p, base_live);
-            else if (hit_k[1 % HC] && n_nx[UW-1] && n_nx[UW-2 -: 3] != n_q) nA <= nB;
-            if (hit_k[2 % HC] && !n_nx[UW-1] && n_more) nB <= sbf(4'd1, 2'd3, nu_p, base_live);
-            else if (hit_k[2 % HC] && n_nx[UW-1] && n_nx[UW-2 -: 3] != n_q) nB <= nQ2;
+            if (hit_k[1 % HC] && qx_n_end && n_more) nA <= sbf(4'd0, 2'd3, nu_p, base_live);
+            else if (hit_k[1 % HC] && qx_n_adv) nA <= nB;
+            if (hit_k[2 % HC] && qx_n_end && n_more) nB <= sbf(4'd1, 2'd3, nu_p, base_live);
+            else if (hit_k[2 % HC] && qx_n_adv) nB <= nQ2;
             if (w_restart) begin wA <= fF0; wB <= fF1; end
             else if (w_step && ((QX != 0) ? qx_adv : w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q)) begin
                 wA <= wB; wB <= wQ2;
