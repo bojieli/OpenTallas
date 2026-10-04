@@ -49,7 +49,7 @@ G, S = gate.G, gate.S
 SNAP = Path(os.environ.get("DSROM_1M_SNAP", Path.home() / (
     ".cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277")))
 REF = Path(os.environ.get("DSROM_1M_HEAD_REF", "/home/ubuntu/w17work/ref/ctx1048576_seed20260930/ctx1048576_head.npz"))
-NODES = Path(os.environ.get("DSROM_1M_NODES", "/home/ubuntu/s81_nodes_dump.json"))
+NODES = Path(os.environ.get("DSROM_1M_NODES", "/nonexistent/s81_nodes_dump.json"))   # default: rebuild from the graph
 TB_ARRAY = "rtl/test/dsrom_sys/tb_dsrom_1m_head_array.sv"
 TB_TERM = "rtl/test/dsrom_sys/tb_dsrom_1m_head_terminal.sv"
 TERM = ["rtl/test/s81_native_head_terminal/native_head_terminal.sv", "rtl/hdc/ot_hdc_fastfp.sv"]
@@ -303,8 +303,21 @@ def cmd_argmax(a):
 
 # ------------------------------------------------------------------------------------------------------------
 def node_params():
-    d = json.loads(NODES.read_text())
-    return {k: d[k] for k in ("head.lm_head", "head.argmax", "head.argmax_merge")}
+    """head.* node parameters of the S81 graph (tools/dsrom_1m_measure.s58_graph), in us and 1.2 GHz cycles."""
+    if NODES.exists():
+        d = json.loads(NODES.read_text())
+        return {k: d[k] for k in ("head.lm_head", "head.argmax", "head.argmax_merge")}
+    import dsrom_1m_measure as M
+    g, _, _ = M.s58_graph()
+    out = {}
+    for k in ("head.lm_head", "head.argmax", "head.argmax_merge"):
+        nd = {x: v for x, v in g.nodes[k].items() if x not in ("_hub_edge_die",)}
+        for f in ("issue", "depth", "ctrl"):
+            nd[f + "_us"] = nd[f] * 1e6
+            nd[f + "_cyc_1p2"] = nd[f] * 1.2e9
+            nd.pop(f)
+        out[k] = nd
+    return out
 
 
 def group_times(res):
