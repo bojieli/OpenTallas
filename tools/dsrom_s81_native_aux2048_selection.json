@@ -1,0 +1,100 @@
+{
+  "parameter_authority": "Sagan original-capacity I50 SK2048 + I93 FP32 source-selected wrapper; canonical s81_capture_parent ot_hdc_core_v41x.sv:61,67,1272; remaining Sagan selected geometry retained",
+  "history_binding": {
+    "runtime_owners": [
+      "Epicurus",
+      "Sagan"
+    ],
+    "C": 65568,
+    "UBLK": 1090,
+    "quarter": 65536,
+    "rank": 262144,
+    "remap_required_before_execution": true,
+    "compile_payload_required": false
+  },
+  "selector_internal_IW": 20,
+  "scorer": {
+    "parameters": {
+      "W": 16,
+      "G": 4,
+      "IL": 8,
+      "AW": 30,
+      "NW": 21,
+      "MP": 2,
+      "IH": 32,
+      "NPC": 32,
+      "HAW": 30,
+      "HLENW": 4,
+      "HTAGW": 16,
+      "HBEATW": 4,
+      "SHARDED": 0,
+      "SLICE_SECTORS": 0,
+      "RING": 1,
+      "RING_RSB": 64,
+      "RING_RTAIL": 32,
+      "RING_WB": 32,
+      "RING_GA": 24
+    },
+    "prefix": "VDsromS81IndexScorer",
+    "defines": [],
+    "sources": [
+      "rtl/hdc/ot_hdc_delay.sv",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv"
+    ]
+  },
+  "selector": {
+    "parameters": {
+      "AW": 30,
+      "NW": 21,
+      "K": 512,
+      "IKW": 12,
+      "SK_STEP": 7,
+      "X_SEL": 1,
+      "X_EG": 0,
+      "SQ": 4,
+      "SW": 16,
+      "SK": 2048,
+      "SLAW": 8
+    },
+    "prefix": "VDsromS81Aux2048",
+    "defines": [],
+    "sources": [
+      "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "rtl/hdc/v41/ot_hdc_engram_hash.sv",
+      "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "rtl/hdc/v41/ot_hdc_select.sv",
+      "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+      "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv",
+      "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_egather.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv"
+    ]
+  }
+}
