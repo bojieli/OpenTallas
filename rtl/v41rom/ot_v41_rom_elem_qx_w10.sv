@@ -19,6 +19,9 @@
 // QX = 3 (after routes Z5a / Z5b: post-GRT SS -18.6 / -17.6 ps, n_c -> per-class select -> nA / nB enables): the x-need
 // walker's step in one-hot form exactly as the word walker's (mirrors n_coh / n_cgt, registered case-A decision n_ca_r,
 // next class one-hot), which also feeds the QTIMING_FIX match copies.  QP_CHECK asserts it.  Zero added cycles.
+// QX = 4 (after route Z6: post-GRT SS -36.6 ps on the lane's P2 shift + CSA, behind ~107 ps of CTS skew): the lanes
+// are ot_v41_bterm4_w10 with P2S = 1 (two shifter levels moved into P1b, bit-identical).  ot_v41_bterm4_w10 with
+// P2S = 0 is ot_v41_bterm3_w10, so QX < 4 is unchanged.  Zero added cycles.
 //
 // ot_v41_rom_elem_qy_w10: ot_v41_rom_elem_qz_w10 (byte-identical body, renamed) plus the opt-in QY (default 0 = the qz
 // circuit).  QY = 1 (requires QZ = 1; DS-V4.1 ROM q-pair SS closure, 2026-10-04, after route Z1's post-CTS screen):
@@ -1453,9 +1456,9 @@ module ot_v41_rom_elem_qx_w10 #(
     wire [31:0] l0_y, l1_y;
     wire [TW-1:0] l0_t, l1_t;
     if (FAST != 0 && QPIPE != 0) begin : g_l3
-        ot_v41_bterm3_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
             .xq(l_xq0), .xe(l_xe0), .wq(w0q), .we(we0), .tag(l_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm3_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
             .xq(l_xq1), .xe(l_xe1), .wq(w1q), .we(we1), .tag(l_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0) begin : g_l2
         ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
