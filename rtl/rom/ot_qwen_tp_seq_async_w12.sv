@@ -35,6 +35,12 @@ module ot_qwen_tp_seq_async_w12 #(
     // 1: pipelined scoreboard set (see below): tap register (the ME->sequencer hop), then offset /
     // range / predecode, then AND-OR into lw.  A result write is visible to the send check 2 cycles
     // later than with 0 (never earlier, so never an early send).  0: the original single-cycle set.
+    // 2 / 3: the read loop has no wide lookup (see "registered read" below): the send check reads a
+    // REGISTERED ready bit, precomputed a cycle early from lw[rd_k] (hold) and lw[rd_k + 1] (advance),
+    // so a mark is visible 3 cycles after the write (never earlier).  The set narrows the tap to
+    // {valid & full & addr < 512, addr[8:0]} and range-checks by two short compares against
+    // registered limits; 2 registers the offset as two 16-way one-hots (as 1), 3 registers the
+    // 8-bit offset and decodes it in the AND-OR stage (fewer flops).
     parameter integer SB_PIPE = 0,
     parameter integer NP   = 1,            // ME result-port groups observed (G >> SMIN)
     parameter integer MAW  = 24,           // ME result word-address width
@@ -130,7 +136,8 @@ module ot_qwen_tp_seq_async_w12 #(
     // one bit per word, set by a full-mask result write: a decoder per port and a port-OR per word
     reg  [255:0]  lw;
     wire [7:0]    rd_w = rd_k[7:0];
-    wire          word_ok = !cut || core_fin || lw[rd_w];
+    reg           rdy;                      // SB_PIPE >= 2: registered lw[rd_k] (one cycle old)
+    wire          word_ok = !cut || core_fin || ((SB_PIPE >= 2) ? rdy : lw[rd_w]);
 
     // -- transmit: vector-memory words (all-reduce) or the argmax record ------------------
     localparam integer QD = 4;
@@ -138,6 +145,7 @@ module ot_qwen_tp_seq_async_w12 #(
     reg [1:0]    q_w, q_r;
     reg [2:0]    q_n;
     reg [8:0]    rd_k, tx_k, rx_k;
+    reg [7:0]    rd_kb;                     // rd_k + 1 (mod 256): the advance select of the registered read
     reg          rd_v;
     assign c_valid = coll_on && (q_n != 0);
     assign c_data  = q_d[q_r];
@@ -183,7 +191,7 @@ module ot_qwen_tp_seq_async_w12 #(
             else if (cut && (st == S_RUN || st == S_CWAIT)) lw <= lw | hit;
         end
     end
-    end else begin : g_sb1
+    end else if (SB_PIPE == 1) begin : g_sb1
     // Pipelined scoreboard set (SB_PIPE = 1).  Every stage only DELAYS a mark, so a word is still
     // sent only after the engine wrote it whole in this segment:
     //   t0  tap register: we & full-mask, word address (the register on the ME -> sequencer hop)
@@ -225,7 +233,91 @@ module ot_qwen_tp_seq_async_w12 #(
             else if (run_seg) lw <= lw | hit_or;
         end
     end
+    end else begin : g_sb2
+    // SB_PIPE = 2 / 3.  Every stage only DELAYS a mark (as 1):
+    //   t0  tap register: v = we & full mask & addr < 512 (a region word is < vw + nw <= 511), a9 = addr[8:0]
+    //   t1  per port: in = v & vw <= a9 < vlim (vlim = vw + nw, a register), offset = a9 - vw (8 bits);
+    //       2: registered as two 16-way one-hots; 3: registered as the 8-bit offset
+    //   t2  hit[w] = OR over ports of (offset == w); lw <= lw | hit
+    // t1 captures only in S_CWAIT: vlim is loaded at the S_RUN edge, and nothing of this segment can
+    // reach the tap in S_RUN (the core samples core_start on that edge; the previous segment's writes
+    // all land before its core_done).
+    wire run_seg = cut && (st == S_RUN || st == S_CWAIT);
+    reg  [9:0]        vlim;
+    always @(posedge clk) vlim <= {2'b00, vw} + {1'b0, nw};
+    reg  [NP-1:0]     s0_v;
+    reg  [NP*9-1:0]   s0_a;
+    reg  [NP-1:0]     s1_v;
+    reg  [NP*16-1:0]  s1_lo, s1_hi;
+    reg  [NP*8-1:0]   s1_o;
+    genvar gp;
+    for (gp = 0; gp < NP; gp = gp + 1) begin : g_port
+        wire [MAW-1:0] ma  = me_addr[gp*MAW +: MAW];
+        wire [8:0]     a   = s0_a[gp*9 +: 9];
+        wire [7:0]     off = a[7:0] - vw;
+        wire           in  = s0_v[gp] && a >= {1'b0, vw} && {1'b0, a} < vlim;
+        always @(posedge clk) begin
+            s0_v[gp] <= me_we[gp] && (&me_mask[gp*16 +: LN]) && (ma >> 9) == 0;
+            s0_a[gp*9 +: 9] <= ma[8:0];
+            s1_v[gp] <= in && cut && st == S_CWAIT;
+            if (SB_PIPE == 2) begin
+                s1_lo[gp*16 +: 16] <= 16'd1 << off[3:0];
+                s1_hi[gp*16 +: 16] <= 16'd1 << off[7:4];
+            end else s1_o[gp*8 +: 8] <= off;
+        end
+    end
+    reg [255:0] hit_or;
+    integer pi, wi;
+    always @(*) begin
+        hit_or = 256'd0;
+        for (wi = 0; wi < 256; wi = wi + 1)
+            for (pi = 0; pi < NP; pi = pi + 1)
+                if (SB_PIPE == 2)
+                    hit_or[wi] = hit_or[wi] | (s1_v[pi] & s1_lo[pi*16 + (wi % 16)] & s1_hi[pi*16 + (wi / 16)]);
+                else
+                    hit_or[wi] = hit_or[wi] | (s1_v[pi] && s1_o[pi*8 +: 8] == wi[7:0]);
+    end
+    always @(posedge clk) begin
+        if (ASYNC_COLL != 0) begin
+            if (st == S_DLAT) lw <= 256'd0;
+            else if (run_seg) lw <= lw | hit_or;
+        end
+    end
     end endgenerate
+
+    // -- registered read (SB_PIPE >= 2): the issue/read loop rd_k -> word_ok -> rd_go -> rd_k has no
+    // wide lookup.  rdy is lw[rd_k] of the previous cycle: the 256:1 selects lw[rd_k] and lw[rd_kb]
+    // are register-to-register paths (rd_k, rd_kb -> mux -> rdy), and rd_go only picks one of the two.
+    // lw only grows inside a segment and is cleared in S_DLAT, where rdy is cleared too, so rdy = 1
+    // implies lw[rd_k] = 1 (asserted below): a word is never sent before the engine wrote it whole.
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) rdy <= 1'b0;
+        else if (st == S_DLAT) rdy <= 1'b0;
+        else rdy <= rd_go ? lw[rd_kb] : lw[rd_w];
+    end
+`ifndef SYNTHESIS
+    always @(posedge clk) begin
+        if (rst_n && ASYNC_COLL != 0 && SB_PIPE >= 2 && rd_go && cut && !core_fin && !lw[rd_w]) begin
+            $display("ot_qwen_tp_seq_async_w12: %m: early send of word %0d", rd_k);
+            $fatal(1);
+        end
+    end
+`endif
+`ifdef OT_SB_TRACE
+    // ME-write order trace of cut-through segments (measurement only)
+    integer tr_cyc = 0, tr_p;
+    always @(posedge clk) begin
+        tr_cyc <= tr_cyc + 1;
+        if (cut && (st == S_RUN || st == S_CWAIT)) begin
+            for (tr_p = 0; tr_p < NP; tr_p = tr_p + 1)
+                if (me_we[tr_p] && (&me_mask[tr_p*16 +: LN]) && me_addr[tr_p*MAW +: MAW] >= {{(MAW - VWA){1'b0}}, vw}
+                    && me_addr[tr_p*MAW +: MAW] - {{(MAW - VWA){1'b0}}, vw} < {{(MAW - 9){1'b0}}, nw})
+                    $display("SBT %m c=%0d seg=%0d p=%0d w=%0d", tr_cyc, seg, tr_p, me_addr[tr_p*MAW +: MAW] - vw);
+            if (rd_go) $display("SBR %m c=%0d seg=%0d k=%0d", tr_cyc, seg, rd_k);
+        end
+        if (cut && st == S_CWAIT && core_done) $display("SBD %m c=%0d seg=%0d", tr_cyc, seg);
+    end
+`endif
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -233,7 +325,7 @@ module ot_qwen_tp_seq_async_w12 #(
             tok_r <= 0; pos_r <= 0; seg <= 0; kind <= K_END; vw <= 0; nw <= 0; row0 <= 0;
             prog_base <= 0; desc_re <= 1'b0; desc_addr <= 0;
             vm_we <= 1'b0; vm_waddr <= 0; vm_wdata <= 0;
-            q_w <= 0; q_r <= 0; q_n <= 0; rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_v <= 1'b0;
+            q_w <= 0; q_r <= 0; q_n <= 0; rd_k <= 0; rd_kb <= 8'd1; tx_k <= 0; rx_k <= 0; rd_v <= 1'b0;
             best_i <= 0; best_v <= 0; cut <= 1'b0; core_fin <= 1'b0; rx_fin <= 1'b0;
         end else begin
             desc_re <= 1'b0;
@@ -242,7 +334,7 @@ module ot_qwen_tp_seq_async_w12 #(
             // queue (vector-memory words read one cycle earlier; pop on send) and receive: in S_COLL,
             // and for a cut-through segment from the core's start
             if (coll_on) begin
-                if (rd_go) rd_k <= rd_k + 1'b1;
+                if (rd_go) begin rd_k <= rd_k + 1'b1; rd_kb <= rd_kb + 1'b1; end
                 if (rd_v) begin q_d[q_w] <= vm_rq; q_w <= q_w + 1'b1; end
                 if (c_fire) begin q_r <= q_r + 1'b1; tx_k <= tx_k + 1'b1; end
                 q_n <= q_n + (rd_v ? 1'b1 : 1'b0) - (c_fire ? 1'b1 : 1'b0);
@@ -274,7 +366,7 @@ module ot_qwen_tp_seq_async_w12 #(
                             ({desc_q[19:18], desc_q[63:48]}) : desc_q[48 +: NW];
                     cut <= (ASYNC_COLL != 0) && desc_q[1:0] == K_AR && desc_q[CUT_BIT];
                     core_fin <= 1'b0; rx_fin <= 1'b0;
-                    rd_k <= 0; tx_k <= 0; rx_k <= 0;
+                    rd_k <= 0; rd_kb <= 8'd1; tx_k <= 0; rx_k <= 0;
                     st <= S_RUN;
                 end
                 S_RUN: st <= S_CWAIT;              // the core samples core_start on this edge
@@ -289,7 +381,7 @@ module ot_qwen_tp_seq_async_w12 #(
                                 cut <= 1'b0; seg <= seg + 1'b1; st <= S_DESC;
                             end else st <= S_COLL;
                         end else begin
-                            rd_k <= 0; tx_k <= 0; rx_k <= 0;
+                            rd_k <= 0; rd_kb <= 8'd1; tx_k <= 0; rx_k <= 0;
                             if (kind == K_END) begin
                                 done <= 1'b1; next_token <= core_next_token + row0; next_val <= core_next_val;
                                 st <= S_IDLE;

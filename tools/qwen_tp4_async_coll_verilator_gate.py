@@ -78,7 +78,7 @@ def main():
     ap.add_argument("--lat", type=int, default=339)
     ap.add_argument("--depth", type=int, default=256)
     ap.add_argument("--seeds", type=int, default=2)
-    ap.add_argument("--sb-pipe", type=int, choices=(0, 1), default=0, help="SB_PIPE of the asynchronous sequencer")
+    ap.add_argument("--sb-pipe", type=int, choices=(0, 1, 2, 3), default=0, help="SB_PIPE of the asynchronous sequencer")
     args = ap.parse_args()
     if args.result.exists():
         raise SystemExit("Refusing to overwrite an existing verdict")
