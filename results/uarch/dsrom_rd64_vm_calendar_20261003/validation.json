@@ -1,0 +1,12 @@
+{
+  "cold_model_and_calibration_byte_identical": true,
+  "hardware_or_rate_admission": false,
+  "new_jobs": 0,
+  "protected_source_snapshots": 9,
+  "python_version": "3.10.12",
+  "scope": "source/control-calendar support only; no connected-top execution",
+  "tests": {
+    "command": "python3 -m pytest -q tests/test_dsrom_rd64_vm_calendar.py",
+    "passed": 33
+  }
+}

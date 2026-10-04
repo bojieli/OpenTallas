@@ -1,0 +1,118 @@
+{
+  "acceptance_required": [
+    "current PHW10 source/program/context enrollment",
+    "each RD64 push/pop and root input/result recorded from oldstate",
+    "every source root pulse captured without requiring a new ready port",
+    "matching field owner/address/lane mask accepted by provider",
+    "actual matching raw visibility ACK and separately checked winning publication",
+    "positive captured return before source seat release",
+    "spine rows_left0 or native idle is not VM debt retirement"
+  ],
+  "accepted_current_journal": null,
+  "clock_or_rate_admission": false,
+  "combined_top_finite_capture_result": null,
+  "edge_convention": "N is PRE-edge acceptance. NBA changes visible afterN, available to next synchronous consumer only atN+1.",
+  "maximum_legal_burst_rows": null,
+  "native_provider": {
+    "CDC_D4_equals_four_transaction_credits": false,
+    "bank_map": "(FP32addr>>4)&3; same512bitword merges lanes in source order, not bank=FP32addr&3",
+    "elapsed_accept_to_earliest_retire_worst_edges": 769,
+    "field_boundary_owner_bits": 228,
+    "field_boundary_payload_bits": 8064,
+    "inclusive_no_external_stall_service_bound_edges": 770,
+    "maximum_distinct_word_batches": 128,
+    "maximum_field_packet_lanes": 128,
+    "positive_forward_reverse_domain_delays": "source-related3:4 interface owns2destination edges each way; bind reset/phase and actual selected implementation before addingtime",
+    "protection": "N+3 is raw visible receipt, not ECC-checked/winning publication; no automatic consumer credit",
+    "raw_accept_to_raw_postNBA_visibility_event_edges": 3,
+    "raw_read_reply_edges": 4,
+    "source_rearm": "owned boundary waits actual provider retire, reverse captured receipt and local release; no sameedge reuse",
+    "source_transaction_credits": 1
+  },
+  "no_new_RTL_or_tree_or_leafgate_or_job": true,
+  "node": {
+    "complete_bypass_input_to_next_stage_accept_edges": 3,
+    "decision_to_next_stage_add_edges": 6,
+    "inputs_max_per_edge": 2,
+    "lone_incomplete_input_WAIT2_to_next_stage_accept_edges": 5,
+    "output_max_per_edge": 1,
+    "queue_wait": "additional actual queue residence and ap[3] bypass collision; RD64 is not a latency deadline",
+    "ready_port": false,
+    "sibling_inputs_accept_to_next_stage_accept_edges": 7,
+    "two_input_FIFOs_bits": 8320
+  },
+  "parameters": {
+    "BYPASS": 1,
+    "RD": 64,
+    "RST": 1,
+    "adder_pipeline": 5,
+    "rootD": 128,
+    "rootQD": 128
+  },
+  "path_examples": {
+    "scope": "first node input acceptance origin, aligned siblings; not absolute GO deadline; no leaf/CDC/protectedbackend delay",
+    "seven_levels_all_siblings_no_queue_input_to_legacy_VM_edges": 52,
+    "six_levels_all_siblings_no_queue_input_to_legacy_VM_edges": 45
+  },
+  "root": {
+    "complete_input_accept_to_legacy_VM_postNBA_edges": 3,
+    "complete_input_accept_to_root_rv_postNBA_edges": 1,
+    "complete_input_accept_to_spine_capture_edges": 2,
+    "input_ready": false,
+    "output_max_per_edge": 1,
+    "queue128_bits": 8320,
+    "result_priority": "sv takes precedence over FIFO head; adds have a registered launch before5-stage pipe",
+    "second_sibling_accept_to_legacy_VM_postNBA_edges_no_queue": 9,
+    "sibling_buffer128_bits": 8320
+  },
+  "scope": "Source-owned RD64 return-to-VM acceptance calendar; not an actual combined-top trace",
+  "source_burst_ceiling": {
+    "PAR2_local_R64_rows_per_edge": 64,
+    "continuous_burst_length": "actual complete selected phase journal/row-root mapping required; source has no return-ready",
+    "finite_capture_requirement": "phase-owned seats reserved before GO; if VM stalls through whole burst, seats cover every phase row, not only128 peak",
+    "global_R128_record_bits_per_edge": 8832,
+    "global_R128_rows_per_edge": 128,
+    "local_R64_record_bits_per_edge": 4416
+  },
+  "source_pins": {
+    "base_commit": "3467bcd0831c29d3eeb1463b84f05f779cc0526e",
+    "sources": {
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "snapshot": "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_hdc_delay.sv"
+      },
+      "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv": {
+        "sha256": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984",
+        "snapshot": "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv"
+      },
+      "rtl/model_ready_ds_shared_native_20261003/ot_ds_native_vm_related_parent.sv": {
+        "sha256": "bc837b130fb0d86aff98daa39ee0f01dc9ecedc6a0239fac1d5f6dcf47b694f7",
+        "snapshot": "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_ds_native_vm_related_parent.sv"
+      },
+      "rtl/model_ready_ds_shared_native_20261003/ot_ds_shared_native_vm_provider.sv": {
+        "sha256": "d116caf625d398e680cd98d1d5e903246ff57c9b002730145ac5e0d30158cc90",
+        "snapshot": "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_ds_shared_native_vm_provider.sv"
+      },
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "snapshot": "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_fp32_add_rne_pipe.sv"
+      },
+      "rtl/v41die/ot_v41_field_w17w10.sv": {
+        "sha256": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811",
+        "snapshot": "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_field_w17w10.sv"
+      },
+      "rtl/v41die/ot_v41_retn_w17w10.sv": {
+        "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+        "snapshot": "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_retn_w17w10.sv"
+      },
+      "rtl/v41die/ot_v41_spine_w17w10.sv": {
+        "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+        "snapshot": "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_spine_w17w10.sv"
+      },
+      "rtl/v41rom/ot_v41_ret.sv": {
+        "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+        "snapshot": "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_ret.sv"
+      }
+    }
+  }
+}

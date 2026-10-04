@@ -1,0 +1,68 @@
+{
+  "files": {
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/HANDOFF.md": {
+      "bytes": 4838,
+      "sha256": "dec6cefdb2b4e53a4b70fea2277d856d6cf50d83b265d8666d2c718bf5020260"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/legal_burst_calibration.json": {
+      "bytes": 24326,
+      "sha256": "635276bb13aff13edb718fcb65df792d282ccfaee6874a0f0862a6fa6ea7cbd3"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/model.json": {
+      "bytes": 6223,
+      "sha256": "816a715731e1f7321cdd050b0a70ce8c648bfe2011fdc0bc555588d7a982e684"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_ds_native_vm_related_parent.sv": {
+      "bytes": 15466,
+      "sha256": "bc837b130fb0d86aff98daa39ee0f01dc9ecedc6a0239fac1d5f6dcf47b694f7"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_ds_shared_native_vm_provider.sv": {
+      "bytes": 8464,
+      "sha256": "d116caf625d398e680cd98d1d5e903246ff57c9b002730145ac5e0d30158cc90"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_fp32_add_rne_pipe.sv": {
+      "bytes": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_hdc_delay.sv": {
+      "bytes": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_field_w17w10.sv": {
+      "bytes": 6177,
+      "sha256": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_ret.sv": {
+      "bytes": 9658,
+      "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_retn_w17w10.sv": {
+      "bytes": 2053,
+      "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_spine_w17w10.sv": {
+      "bytes": 16677,
+      "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv": {
+      "bytes": 11711,
+      "sha256": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/source_pins.json": {
+      "bytes": 2305,
+      "sha256": "20e7f2bfd4d1397beecd7088d9a1ebb69f735d0af0c6908a8438309df474de4e"
+    },
+    "results/uarch/dsrom_rd64_vm_calendar_20261003/validation.json": {
+      "bytes": 368,
+      "sha256": "309c1102d23526057aa327816a1c65e0708111aa0e8cefa40bf6adc66f93f573"
+    },
+    "tests/test_dsrom_rd64_vm_calendar.py": {
+      "bytes": 7540,
+      "sha256": "2b886a30891db1a7f66b064d4b2bc1da8c267773e5ecb49aad0776e8583266b2"
+    },
+    "tools/dsrom_rd64_vm_calendar.py": {
+      "bytes": 13891,
+      "sha256": "7542780d1b5038655ae2df94fd05db67b685627971d6b24cdeb88b303709fb7a"
+    }
+  }
+}
