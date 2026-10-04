@@ -29,15 +29,13 @@ module ot_nhb_rst_leaf (input wire clk, input wire arst_n, input wire d, output 
     always @(posedge clk or negedge arst_n) if (!arst_n) q <= 1'b0; else q <= d;
 endmodule
 
-// a register copy that synthesis must not merge with its siblings (instantiated with keep_hierarchy)
-module ot_nhb_dup_reg #(parameter integer W = 1, parameter integer RST = 0) (
-    input wire clk, input wire rst_n, input wire [W-1:0] d, output reg [W-1:0] q
-);
-    generate if (RST != 0) begin : g_r
-        always @(posedge clk or negedge rst_n) if (!rst_n) q <= {W{1'b0}}; else q <= d;
-    end else begin : g_n
-        always @(posedge clk) q <= d;
-    end endgenerate
+// register copies that synthesis must not merge with their siblings (instantiated with keep_hierarchy); fixed
+// widths, no parameters (Yosys 0.68 asserts re-elaborating a parameterised keep_hierarchy module here)
+module ot_nhb_dup_a6 (input wire clk, input wire [5:0] d, output reg [5:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+module ot_nhb_dup_we256 (input wire clk, input wire rst_n, input wire [255:0] d, output reg [255:0] q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 256'd0; else q <= d;
 endmodule
 
 module ot_qwen_nearhbm_attn_hub_p #(
@@ -121,7 +119,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
     reg [2047:0] pid_c;
     reg [31:0]   lm_we;
     reg [511:0]  zs_we;
-    wire [255:0] pb_we [0:3];                     // one copy per 128-bit quarter of a beat
+    wire [1023:0] pb_we;                          // one copy per 128-bit quarter of a beat: [256*q + entry]
     always @(posedge clk or negedge rl[0])
         if (!rl[0]) begin start_c <= 1'b0; siv_c <= 4'd0; piv_c <= 4'd0; lm_we <= 32'd0; zs_we <= 512'd0; end
         else begin start_c <= start_b; siv_c <= siv_b; piv_c <= piv_b; lm_we <= lm_we_n; zs_we <= zs_we_n; end
@@ -130,7 +128,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
     end
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_pbwe
-        (* keep_hierarchy *) ot_nhb_dup_reg #(.W(256), .RST(1)) u_we (.clk(clk), .rst_n(rl[0]), .d(pb_we_n), .q(pb_we[gq]));
+        (* keep_hierarchy *) ot_nhb_dup_we256 u_we (.clk(clk), .rst_n(rl[0]), .d(pb_we_n), .q(pb_we[256*gq +: 256]));
     end endgenerate
 
     // ---- max --------------------------------------------------------------------------------------------------------
@@ -239,7 +237,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
                 for (gf = 0; gf < 2; gf = gf + 1) begin : g_f
                     wire [5:0] a;                  // {g, pair[4:0]}
                     wire [5:0] pzz = {1'b0, zp[5:0]} + gz;
-                    (* keep_hierarchy *) ot_nhb_dup_reg #(.W(6)) u_a (.clk(clk), .rst_n(1'b1), .d({zg, pzz[4:0]}), .q(a));
+                    (* keep_hierarchy *) ot_nhb_dup_a6 u_a (.clk(clk), .d({zg, pzz[4:0]}), .q(a));
                     wire [8:0] ix = {a[5], gh[1:0], a[4:0], gb[0]};
                     wire [15:0] rd = zv[ix] ? zm[ix][16*gf +: 16] : 16'd0;
                     if (gb == 0) begin : g_a
@@ -388,7 +386,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
     always @(posedge clk)
         for (e3_ = 0; e3_ < 256; e3_ = e3_ + 1)
             for (s4_ = 0; s4_ < 4; s4_ = s4_ + 1)
-                if (pb_we[s4_][e3_]) pb[e3_][128*s4_ +: 128] <= pid_c[512*((e3_ / 32) % 4) + 128*s4_ +: 128];
+                if (pb_we[256*s4_ + e3_]) pb[e3_][128*s4_ +: 128] <= pid_c[512*((e3_ / 32) % 4) + 128*s4_ +: 128];
     wire p_ready = rz_ok[pg] && !pdone[pg] && (pc[{pg, 2'd0}] > pp) && (pc[{pg, 2'd1}] > pp) &&
                    (pc[{pg, 2'd2}] > pp) && (pc[{pg, 2'd3}] > pp);
     always @(posedge clk or negedge rl[4]) begin
@@ -407,16 +405,15 @@ module ot_qwen_nearhbm_attn_hub_p #(
     always @(posedge clk or negedge rl[4])
         if (!rl[4]) begin pr0 <= 1'b0; pr1 <= 1'b0; pr2 <= 1'b0; end
         else begin pr0 <= p_ready; pr1 <= pr0; pr2 <= pr1; end
-    reg [511:0] sx [0:3];
-    reg [511:0] sr [0:3];
+    reg [2047:0] sx, sr;                           // {stack s} x 512 bits (packed: Yosys re-elaborates unpacked ports)
     genvar gs, gl;
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
         for (gl = 0; gl < 16; gl = gl + 1) begin : g_rd
             wire [5:0] a;                          // {g, beat}
-            (* keep_hierarchy *) ot_nhb_dup_reg #(.W(6)) u_a (.clk(clk), .rst_n(1'b1), .d({pg, pp[4:0]}), .q(a));
+            (* keep_hierarchy *) ot_nhb_dup_a6 u_a (.clk(clk), .d({pg, pp[4:0]}), .q(a));
             always @(posedge clk) begin
-                sx[gs][32*gl +: 32] <= pb[{a[5], gs[1:0], a[4:0]}][32*gl +: 32];
-                sr[gs][32*gl +: 32] <= sx[gs][32*gl +: 32];
+                sx[512*gs + 32*gl +: 32] <= pb[{a[5], gs[1:0], a[4:0]}][32*gl +: 32];
+                sr[512*gs + 32*gl +: 32] <= sx[512*gs + 32*gl +: 32];
             end
         end
     end endgenerate
@@ -433,9 +430,9 @@ module ot_qwen_nearhbm_attn_hub_p #(
         wire [1:0] e1, e2, e3, e4;
         wire v1, v2, v3, v4;
         ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_01 (.clk(clk), .rst_n(rl[L_PV + 4*gl]), .valid_in(pr2),
-            .a(sr[0][32*gl +: 32]), .b(sr[1][32*gl +: 32]), .y(a01), .err(e1), .valid_out(v1));
+            .a(sr[0 + 32*gl +: 32]), .b(sr[512 + 32*gl +: 32]), .y(a01), .err(e1), .valid_out(v1));
         ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_23 (.clk(clk), .rst_n(rl[L_PV + 4*gl + 1]), .valid_in(pr2),
-            .a(sr[2][32*gl +: 32]), .b(sr[3][32*gl +: 32]), .y(a23), .err(e2), .valid_out(v2));
+            .a(sr[1024 + 32*gl +: 32]), .b(sr[1536 + 32*gl +: 32]), .y(a23), .err(e2), .valid_out(v2));
         ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_9 (.clk(clk), .rst_n(rl[L_PV + 4*gl + 2]), .valid_in(v1), .a(a01),
             .b(a23), .y(a), .err(e3), .valid_out(v3));
         ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_m (.clk(clk), .rst_n(rl[L_PV + 4*gl + 3]), .valid_in(v3), .a(a),
