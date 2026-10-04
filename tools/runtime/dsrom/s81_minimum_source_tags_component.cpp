@@ -29,6 +29,13 @@ struct Provider {
   if(id!=(1ull<<31)||r.stage<0||r.stage>80||r.rank<0||r.rank>3||r.pair<0||r.pair>2416||!r.cycle)
    throw std::runtime_error("component source/runtime/identity range");
   // Bind the actual selected source directory; no hardcoded obsolete stage37.
+  // Nonfield I0 consumes no CFG/PHROM. Its exact L20 literal is enrolled
+  // by the selected factory; scalar reservations retain stage/rank/producer.
+  const char* native_i0=std::getenv("DSROM_S81_NATIVE_L20_I0");
+  if(native_i0&&std::string(native_i0)=="1") {
+   if(r.stage!=37)throw std::runtime_error("native L20 I0 requires canonical stage37");
+   phase=0;entry=0;return;
+  }
   const char* path=std::getenv("DSROM_S81_MINIMUM_SELECTED_DIR");
   if(!path||!*path)throw std::runtime_error("source-selected PHROM/CFG path required");
   std::ifstream in(std::string(path)+"/spine_phase.hex");std::string s;
