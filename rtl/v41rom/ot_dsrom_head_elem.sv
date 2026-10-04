@@ -73,27 +73,50 @@ module ot_dsrom_head_elem #(
     always @(posedge clk) ib <= {ib[2:0], a[0]};
     wire [273:0] rd0, rd1;
     reg  [273:0] cap0, cap1;
+    // physical closure (route r1): the bank chip enables come straight from flops (ce of word a registered in the
+    // cycle before its issue), and the 274-bit capture enables / 256-bit bank select are registered and replicated
+    // (RP copies, kept) instead of decoded from iv/ib in front of their loads.  Cycle-identical to issue && a[0].
+    localparam integer RP = 8;
+    wire last = a == NPHYS - 1;
+    reg ce0_q, ce1_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin ce0_q <= 1'b0; ce1_q <= 1'b0; end
+        else begin
+            ce0_q <= go_r || (run && !last && a[0]);
+            ce1_q <= !go_r && run && !last && !a[0];
+        end
     ot_rom_4096x274_m8
 `ifndef SYNTHESIS
         #(.INSTANCE($sformatf("%s_0", INSTANCE)))
 `endif
-        u_rom0 (.clk(clk), .ce_in(issue && !a[0]), .addr_in(a[12:1]), .rd_out(rd0));
+        u_rom0 (.clk(clk), .ce_in(ce0_q), .addr_in(a[12:1]), .rd_out(rd0));
     ot_rom_4096x274_m8
 `ifndef SYNTHESIS
         #(.INSTANCE($sformatf("%s_1", INSTANCE)))
 `endif
-        u_rom1 (.clk(clk), .ce_in(issue && a[0]), .addr_in(a[12:1]), .rd_out(rd1));
+        u_rom1 (.clk(clk), .ce_in(ce1_q), .addr_in(a[12:1]), .rd_out(rd1));
     // a bank's word is captured two edges after its read (2-cycle path, physical/abi3/v41_w10_elem_pp_multicycle.sdc)
-    always @(posedge clk) begin
-        if (iv[1] && !ib[1]) cap0 <= rd0;
-        if (iv[1] && ib[1]) cap1 <= rd1;
-    end
+    (* keep *) reg [RP-1:0] en0_q, en1_q, sel_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin en0_q <= '0; en1_q <= '0; end
+        else begin en0_q <= {RP{iv[0] && !ib[0]}}; en1_q <= {RP{iv[0] && ib[0]}}; end
+    always @(posedge clk) sel_q <= {RP{ib[1]}};
+    integer bi;
+    always @(posedge clk)
+        for (bi = 0; bi < 274; bi = bi + 1) begin
+            if (en0_q[bi * RP / 274]) cap0[bi] <= rd0[bi];
+            if (en1_q[bi * RP / 274]) cap1[bi] <= rd1[bi];
+        end
     reg [255:0] w_r, x_r;
     reg w_v, w_l;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin w_v <= 1'b0; w_l <= 1'b0; end
         else begin w_v <= iv[2]; w_l <= il[2]; end
-    always @(posedge clk) begin w_r <= ib[2] ? cap1[255:0] : cap0[255:0]; x_r <= x; end
+    integer wi;
+    always @(posedge clk) begin
+        for (wi = 0; wi < 256; wi = wi + 1) w_r[wi] <= sel_q[wi * RP / 256] ? cap1[wi] : cap0[wi];
+        x_r <= x;
+    end
 
     // ---------------- 16 multipliers, two systolic chunk chains --------------------------------------------------
     wire [31:0] p [0:15];
