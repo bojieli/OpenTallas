@@ -34,18 +34,19 @@
   "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
   "rtl/v41rom/ot_v41_bf16_lanes2.sv": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
   "rtl/v41rom/ot_v41_rom_elem_pg_w10.sv": "c946d7f4053f2ac972f9eb611455f3e2bc8945613c0ad90e2e8c78a9c07af717",
-  "rtl/v41rom/ot_v41_rom_pg_ao.sv": "65a9a1c44ab4525643642c0a231a7692f90807a3c67ac629a520be5b2459bc75",
+  "rtl/v41rom/ot_v41_rom_pg_ao.sv": "ed02eadea1ffc0e6ee8c20eb48d21d4b6d7865670c3f41676603294f60880025",
   "rtl/v41rom/ot_v41_stage_pg_sched.sv": "ce2a8d5f73d616c620843daeb646a0f3eb9b03a4e982a1873ccd46380c8ac3a5",
   "rtl/chip/ot_chip_v41_pg_ctrl.sv": "e2efddf0f5f4203ba9b0d079805b3242898e92acf2d9c0172b1f24263cf21018",
-  "rtl/test/tb_v41_rom_elem_pg.sv": "89ec38a9265398011120e3f2a6c2f2d2a79abfd6b930ce61b2c81982769a0c86",
-  "tools/rom_stage_pg_sim.py": "00ee5206a797226aa78f98f0853d3871f7954f8b4adc27500d2f25262d27a225"
+  "rtl/test/tb_v41_rom_elem_pg.sv": "3348e22b1caa58fbb5c16fe18d776fe37c1037b454857be672df1a60eee12c8f",
+  "tools/rom_stage_pg_sim.py": "0c6d6353bf619fbbb661d021f6cf6980ce6225f217a4baa2e43aff2fbb1190ae"
  },
+ "dom_cg": 0,
  "runs": [
   {
    "mutant": null,
    "pass_": true,
    "returncode": 0,
-   "seconds": 202.8,
+   "seconds": 983.5,
    "tail": [
     "TOKEN 0 mode=0 go_cycle=3000 dut_ready=1",
     "TOKEN 1 mode=0 go_cycle=9895 dut_ready=1",
@@ -67,29 +68,29 @@
    "mutant": "no_restore",
    "pass_": false,
    "returncode": 1,
-   "seconds": 9.5,
+   "seconds": 21.6,
    "tail": [
     "TOKEN 0 mode=0 go_cycle=3000 dut_ready=1",
-    "FATAL: /home/ubuntu/wt-pg/rtl/test/tb_v41_rom_elem_pg.sv:83: FATAL public control mismatch cycle=5002 ref=1110 dut=0010"
+    "FATAL: /home/ubuntu/wt-pg/rtl/test/tb_v41_rom_elem_pg.sv:87: FATAL public control mismatch cycle=5002 ref=1110 dut=0010"
    ]
   },
   {
    "mutant": "no_iso",
    "pass_": false,
    "returncode": 1,
-   "seconds": 1.2,
+   "seconds": 3.2,
    "tail": [
-    "FATAL: /home/ubuntu/wt-pg/rtl/test/tb_v41_rom_elem_pg.sv:83: FATAL public control mismatch cycle=1 ref=0000 dut=xxxx"
+    "FATAL: /home/ubuntu/wt-pg/rtl/test/tb_v41_rom_elem_pg.sv:87: FATAL public control mismatch cycle=1 ref=0000 dut=xxxx"
    ]
   },
   {
    "mutant": "short_lead",
    "pass_": false,
    "returncode": 1,
-   "seconds": 4.6,
+   "seconds": 9.9,
    "tail": [
     "TOKEN 0 mode=0 go_cycle=3000 dut_ready=0",
-    "FATAL: /home/ubuntu/wt-pg/rtl/test/tb_v41_rom_elem_pg.sv:83: FATAL public control mismatch cycle=3001 ref=0000 dut=0001"
+    "FATAL: /home/ubuntu/wt-pg/rtl/test/tb_v41_rom_elem_pg.sv:87: FATAL public control mismatch cycle=3001 ref=0000 dut=0001"
    ]
   }
  ],
