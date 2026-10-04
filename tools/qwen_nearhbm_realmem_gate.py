@@ -14,7 +14,7 @@ def main():
  if w.exists():a.error('immutable work path already exists')
  w.mkdir(parents=True);obj=w/'obj_mem';obj.mkdir();pub=w/'public.vlt'
  pub.write_text('`verilator_config\npublic_flat_rw -module "ot_qwen_hbm_model_ack" -var "mem"\n')
- inputs=[*(ROOT/p for p in FILES),ROOT/'rtl/test/qwen_sys/realmem/qwen_nearhbm_realmem.cpp',Path(__file__)]
+ inputs=[*(ROOT/p for p in FILES),ROOT/'rtl/test/qwen_sys/realmem/qwen_nearhbm_realmem.cpp',ROOT/'tools/runtime/qwen_combined/fullshape_context.hpp',Path(__file__)]
  pinned={str(p.relative_to(ROOT)):sha(p) for p in inputs}
  arch=reuse/'Vot_qwen_nearhbm_sys_tb__ALL.a'
  # The archive is from the actual successful early-replay build, kept intact.
@@ -38,7 +38,7 @@ def main():
   (w/'mem_access.hpp').write_text('#include <cstdlib>\n'+access)
   vr=re.search(r'VERILATOR_ROOT\s*=\s*(\S+)',subprocess.check_output([o.verilator,'-V'],text=True)).group(1)
   src=ROOT/'rtl/test/qwen_sys/realmem/qwen_nearhbm_realmem.cpp'
-  exe=w/'connected';incs=[f'-I{x}' for x in [obj,reuse,w,Path(vr)/'include',Path(vr)/'include/vltstd']]
+  exe=w/'connected';incs=[f'-I{x}' for x in [obj,reuse,w,ROOT/'tools/runtime/qwen_combined',Path(vr)/'include',Path(vr)/'include/vltstd']]
   run('link',['g++','-std=c++20','-O1','-pthread',*incs,src,'-Wl,--start-group',obj/'Vmem__ALL.a',arch,
    reuse/'sim_nhb_fp_lat_dpi.o',reuse/'sim_hdc_v41x_fastfp_dpi.o','-Wl,--end-group',Path(vr)/'include/verilated.cpp',Path(vr)/'include/verilated_dpi.cpp',Path(vr)/'include/verilated_threads.cpp','-o',exe])
   run('context',[exe,v]);r=json.loads((w/'context.log').read_text().strip().splitlines()[-1]);rec['measurement']=r;rec['status']=r['status'];rec['binary_sha256']=sha(exe)
