@@ -13,6 +13,7 @@ module ot_hbm_accel_hbm_system #(
     parameter integer ENABLE    = 0,
     parameter integer HA3       = 0,     // 1: HA3 collective port (cut-through, multicast, fused epilogue)
     parameter integer FLAT      = 5,
+    parameter integer EPI       = 1,     // HA3 port: 0 = cut-through only (fused requests fault)
     parameter integer ND        = 2,
     parameter integer NSM       = 2,
     parameter integer NL        = 128,
@@ -270,7 +271,7 @@ end else begin : g_on
             assign cs_rsp_ss = 32'd0; assign cs_rsp_err = 1'b0; assign port_f[d] = 1'b0;
         end else begin : g_port
             wire [31:0] st_coll;
-            ot_hbm_accel_coll_port #(.ENABLE(1), .NSM(NSM), .NL(NL), .R(ND), .RANK(d), .FLAT(FLAT)) u_port (
+            ot_hbm_accel_coll_port #(.ENABLE(1), .NSM(NSM), .NL(NL), .R(ND), .RANK(d), .FLAT(FLAT), .EPI(EPI)) u_port (
                 .clk_sm(clk_sm), .rst_sm_n(rst_sm_n), .s_req_v(cs_req_v), .s_req_rdy(cs_req_rdy), .s_mode(cs_mode),
                 .s_count(cs_count), .s_data(cs_data), .s_x(cs_x), .s_off(cs_off), .s_nown(cs_nown), .s_fuse(cs_fuse),
                 .s_resid(cs_resid), .s_rsp_v(cs_rsp_v), .s_rsp_rdy(cs_rsp_rdy), .s_rsp_data(cs_rsp_data),

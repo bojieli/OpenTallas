@@ -47,6 +47,9 @@
 // COLL is only accepted while no COLLX collective is open.
 //
 // ENABLE = 0 (default): inert, every output 0.
+// EPI = 1 (default): the fused receive-path epilogue above is built.  EPI = 0: the cut-through port alone (R3a; the
+// epilogue R3b is measured below 1% and rejected): no epilogue pipes, s_rsp_ss = 0, and a fused request latches
+// the sticky fault (fail closed) instead of being served.  Every non-fused collective behaves identically.
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_coll_port #(
     parameter integer ENABLE = 0,
@@ -60,6 +63,7 @@ module ot_hbm_accel_coll_port #(
     parameter integer AW_RX  = 4,
     parameter integer SYNC   = 2,
     parameter integer FLAT   = 5,
+    parameter integer EPI    = 1,
     parameter integer FW     = 32 * LANES,
     parameter integer PW     = FW + 2 + TAGW
 ) (
@@ -242,6 +246,7 @@ end else begin : g_on
     reg  [FLAT:0]       eaq_v, ebq_v;
     reg  [7:0]          eaq_w [0:FLAT];
     reg  [7:0]          ebq_w [0:FLAT];
+    if (EPI != 0) begin : g_epi_ab
     for (g = 0; g < LANES; g = g + 1) begin : g_ab
         wire unused_m, unused_mf, unused_a, unused_af;
         ot_gpu_simt_fplane #(.FLAT(FLAT)) u_a (.clk(clk_sm), .rst_n(rst_sm_n), .add_v(ea_v), .mul_v(1'b0),
@@ -251,6 +256,10 @@ end else begin : g_on
             .a(eb_a[g*32 +: 32]), .b(eb_a[g*32 +: 32]), .add_y(), .add_f(),
             .mul_y(eb_y[g*32 +: 32]), .mul_f(eb_f[g]));
     end
+    end else begin : g_no_ab
+        assign ea_y = {LANES*32{1'b0}}; assign ea_f = {LANES{1'b0}};
+        assign eb_y = {LANES*32{1'b0}}; assign eb_f = {LANES{1'b0}};
+    end
     reg  [NL*32-1:0] xo, sq;            // x' and its squares
     reg  [NCH-1:0]   ch_rdy;            // chunk's squares present
     // chunk chains and the tree: NCH adder lanes
@@ -259,10 +268,14 @@ end else begin : g_on
     reg  [NCH-1:0]    ec_v;
     reg  [NCH*32-1:0] ec_a, ec_b;
     reg  [FLAT:0]     ecq_v [0:NCH-1];
+    if (EPI != 0) begin : g_epi_c
     for (g = 0; g < NCH; g = g + 1) begin : g_c
         ot_gpu_simt_fplane #(.FLAT(FLAT)) u_c (.clk(clk_sm), .rst_n(rst_sm_n), .add_v(ec_v[g]), .mul_v(1'b0),
             .a(ec_a[g*32 +: 32]), .b(ec_b[g*32 +: 32]), .add_y(ec_y[g*32 +: 32]), .add_f(ec_f[g]),
             .mul_y(), .mul_f());
+    end
+    end else begin : g_no_c
+        assign ec_y = {NCH*32{1'b0}}; assign ec_f = {NCH{1'b0}};
     end
     reg  [NCH*32-1:0] acc;              // chunk sums, then tree partials (lane c holds node c)
     reg  [3:0]        ck [0:NCH-1];     // chunk c: next element 0..7, 8 = chunk sum done
@@ -363,13 +376,14 @@ end else begin : g_on
                         st <= S_RUN; t_open <= 32'd0;
                     end else if (|acc_x) begin
                         xm <= 1'b1; contrib <= acc_x; dat <= dat_n; resid <= res_n; lane_ok <= ok_n;
-                        mode_q <= s_mode[fx]; cnt_q <= s_count[fx*8 +: 8]; fuse_q <= s_fuse[fx];
+                        mode_q <= s_mode[fx]; cnt_q <= s_count[fx*8 +: 8]; fuse_q <= (EPI != 0) && s_fuse[fx];
                         nrec <= 8'((32'(s_count[fx*8 +: 8]) + LANES - 1) / LANES);
                         nexp <= s_mode[fx] ? 9'((32'(s_count[fx*8 +: 8]) + LANES - 1) / LANES * R)
                                            : 9'((32'(s_count[fx*8 +: 8]) + LANES - 1) / LANES);
                         if (bad_x || s_count[fx*8 +: 8] == 8'd0 || 32'(s_count[fx*8 +: 8]) > NL ||
                             (s_mode[fx] && 32'(s_count[fx*8 +: 8]) * R > NL) ||
-                            (s_fuse[fx] && (s_mode[fx] || 32'(s_count[fx*8 +: 8]) != NL))) flt <= 1'b1;
+                            (s_fuse[fx] && (s_mode[fx] || 32'(s_count[fx*8 +: 8]) != NL)) ||
+                            (s_fuse[fx] && EPI == 0)) flt <= 1'b1;
                         st <= S_RUN; t_open <= 32'd0;
                     end
                 end
@@ -414,7 +428,7 @@ end else begin : g_on
         assign s_rsp_v[g] = (st == S_RSP) && (xm ? !taken[g] : (own == g));
     end
     assign s_rsp_data = fuse_q ? xo : asmb;
-    assign s_rsp_ss   = acc[31:0];
+    assign s_rsp_ss   = (EPI != 0) ? acc[31:0] : 32'd0;
     assign s_rsp_err  = fuse_q && ep_err;
 
     // ------------------------------------------------------------------ clock crossings (the original endpoint's)

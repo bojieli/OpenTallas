@@ -36,14 +36,16 @@ def sources():
     return RS.SYS_SRC + RS.DEP_SRC + HA3_SRC + [TB]
 
 
-def build(work, model, ha3, flat=5):
+def build(work, model, ha3, flat=5, epi=1):
     obj = Path(work) / f"obj_ha3_{model}_h{ha3}" if flat == 5 else Path(work) / f"obj_ha3_{model}_h{ha3}_f{flat}"
+    if epi != 1:
+        obj = obj.with_name(obj.name + f"_e{epi}")
     exe = obj / "Vtb_hbm_accel_ha3_system"
     if exe.exists():
         return exe
     cmd = [str(RS.VERILATOR), "--binary", "--timing", "-O2", "-j", os.environ.get("GPU_SYS_JOBS", "8"), "-Wno-fatal",
            "-Wno-lint", "-Wno-style", "-Wno-WIDTH", "--x-assign", "0", "--x-initial", "0",
-           "--top-module", "tb_hbm_accel_ha3_system", "--Mdir", str(obj), f"-GHA3={ha3}", f"-GFLAT={flat}"] + \
+           "--top-module", "tb_hbm_accel_ha3_system", "--Mdir", str(obj), f"-GHA3={ha3}", f"-GFLAT={flat}", f"-GEPI={epi}"] + \
           [f"-G{k}={v}" for k, v in RS.MODEL_PARAMS[model].items()] + \
           (["--threads", os.environ["GPU_SYS_THREADS"]] if os.environ.get("GPU_SYS_THREADS") else []) + \
           [str(ROOT / s) for s in sources()]
@@ -86,6 +88,7 @@ def main():
     ap.add_argument("--nprompt", type=int, default=None)
     ap.add_argument("--trace", action="store_true")
     ap.add_argument("--flat", type=int, default=5)
+    ap.add_argument("--epi", type=int, default=1, help="HA3 port epilogue (0: cut-through only, fused requests fault)")
     ap.add_argument("--prepared", action="store_true")
     ap.add_argument("--build-only", action="store_true")
     ap.add_argument("--out", default=None)
@@ -100,12 +103,13 @@ def main():
     if (HERE / "hbm_accel_ha3_v41.py").exists():
         srcs.append("tools/hbm_accel_ha3_v41.py")
     hashes = {p: RS.sha(p) for p in srcs}
-    exe = build(work, a.model, a.ha3, a.flat)
+    exe = build(work, a.model, a.ha3, a.flat, a.epi)
     if a.build_only:
         return
     meta = json.loads((case / "expected.json").read_text()) if a.prepared else prepare(a.model, a.mode, case, a.ngen, a.nprompt)
     t0 = time.time()
-    log = case / (f"sim_h{a.ha3}.log" if a.flat == 5 else f"sim_h{a.ha3}_f{a.flat}.log")
+    stem = f"sim_h{a.ha3}" if a.flat == 5 else f"sim_h{a.ha3}_f{a.flat}"
+    log = case / (stem + ("" if a.epi == 1 else f"_e{a.epi}") + ".log")
     with log.open("w") as f:
         r = subprocess.run([str(exe), "+DIR=."] + (["+TRACE=1"] if a.trace else []), cwd=case, stdout=f,
                            stderr=subprocess.STDOUT)
@@ -116,7 +120,7 @@ def main():
              for m in re.finditer(r"STEP (\d+) pos (\d+) in (\d+) next (\d+) (OK|MISMATCH)?(?:\s+\(step (\d+))?", text)]
     final = re.search(r"TB_GPU_HBM_SYSTEM (PASS|FAIL) steps=(\d+) cq_tokens=(\d+) clk_sm_cycles=(\d+) fails=(\d+)", text)
     ok = bool(final and final.group(1) == "PASS" and r.returncode == 0)
-    rec = dict(schema="opentallas.hbm_accel.ha3_system_run.v1", model=a.model, mode=a.mode, ha3=a.ha3, flat=a.flat,
+    rec = dict(schema="opentallas.hbm_accel.ha3_system_run.v1", model=a.model, mode=a.mode, ha3=a.ha3, flat=a.flat, epi=a.epi,
                tool="tools/hbm_accel_ha3_run.py", top="ot_hbm_accel_hbm_system", bench=TB,
                simulator=subprocess.run([str(RS.VERILATOR), "--version"], capture_output=True, text=True).stdout.strip(),
                golden=meta.get("golden"), prompt=meta["prompt"], expected_steps=meta["steps"], steps=steps,

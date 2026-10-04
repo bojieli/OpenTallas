@@ -22,6 +22,7 @@
 // ---------------------------------------------------------------------------
 module tb_hbm_accel_ha3_system;
     parameter integer HA3 = 0;
+    parameter integer EPI = 1;           // HA3 port epilogue built (0: cut-through only)
     parameter integer FLAT = 5;          // FP pipe depth of the SMs and the HA3 port (7: the SS re-pipelined copies)
     parameter integer ND = 2, NSM = 2, NL = 128, IMW = 13, CB = 8, MEM_WORDS = 65536, HAS_DIV = 0, HAS_BD = 0;
     reg clk_host = 0, clk_sm = 0, clk_mem = 0, clk_link = 0;
@@ -56,7 +57,7 @@ module tb_hbm_accel_ha3_system;
 `else
     localparam integer USE_W2 = 0;
 `endif
-    ot_hbm_accel_hbm_system #(.ENABLE(1), .HA3(HA3), .FLAT(FLAT), .ND(ND), .NSM(NSM), .NL(NL), .IMW(IMW), .CB(CB), .USE_W2(USE_W2), .MEM_WORDS(MEM_WORDS), .HAS_DIV(HAS_DIV),
+    ot_hbm_accel_hbm_system #(.ENABLE(1), .HA3(HA3), .FLAT(FLAT), .EPI(EPI), .ND(ND), .NSM(NSM), .NL(NL), .IMW(IMW), .CB(CB), .USE_W2(USE_W2), .MEM_WORDS(MEM_WORDS), .HAS_DIV(HAS_DIV),
                         .HAS_BD(HAS_BD)) dut (
         .por_n(por_n), .clk_host(clk_host), .clk_sm(clk_sm), .clk_mem(clk_mem), .clk_link(clk_link),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr), .s_wvalid(s_wvalid), .s_wready(s_wready),

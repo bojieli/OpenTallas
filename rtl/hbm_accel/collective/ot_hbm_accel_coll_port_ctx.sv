@@ -14,7 +14,8 @@
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_coll_port_ctx #(
     parameter integer HA3  = 1,
-    parameter integer FLAT = 7
+    parameter integer FLAT = 7,
+    parameter integer EPI  = 1         // 0: the cut-through port alone (no fused epilogue)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -55,7 +56,7 @@ module ot_hbm_accel_coll_port_ctx #(
     wire rsp_err, fault, tx_v;
     wire [PW-1:0] tx_rec;
     if (HA3 != 0) begin : g_ha3
-        ot_hbm_accel_coll_port #(.ENABLE(1), .NSM(NSM), .NL(NL), .R(2), .RANK(0), .FLAT(FLAT)) u_port (
+        ot_hbm_accel_coll_port #(.ENABLE(1), .NSM(NSM), .NL(NL), .R(2), .RANK(0), .FLAT(FLAT), .EPI(EPI)) u_port (
             .clk_sm(clk), .rst_sm_n(rst_n), .s_req_v(req_v), .s_req_rdy(req_rdy), .s_mode(mode), .s_count(count),
             .s_data(data), .s_x(x), .s_off(off), .s_nown(nown), .s_fuse(fuse), .s_resid(resid), .s_rsp_v(rsp_v),
             .s_rsp_rdy(rsp_rdy), .s_rsp_data(rsp_data), .s_rsp_ss(rsp_ss), .s_rsp_err(rsp_err), .fault(fault),
