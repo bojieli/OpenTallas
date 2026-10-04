@@ -1,0 +1,55 @@
+HA5 actual CP20 backend/factory join, prerequisite 5507 + bc318 + 9d5.
+
+Actual code:
+ tools/hbm_accel_program_engine.py: native compiler unchanged, RTLColumnEngine
+ invokes parent SMEngine20Guarded.launch/poll. poll owns every command/SM edge.
+ No parallel command sequencer and no caller-only foreign-CPL prevalidation.
+ tools/hbm_accel_program_backend.py/.cpp: concrete interactive Verilator process,
+ four clocks, source_entry20 -> actual CP20/SM20/memory/collective cluster,
+ actual flat CPL109, native IMEM loader and actual memory readback.
+
+Native prepared-source API (no CPU inference):
+ compiled, engine, pins = compile_and_enroll(
+     prepared_program, D.DGen, D.KINDS, H.link,
+     shared_first=True, moe_sha256=49573d415180a9ef6befd8076dfe7a2f5eea1c26363aeaf4e8f4fea573f7ec47,
+     source=captured_source_root, build=backend_build_root,
+     expand=D.expand, source_sha256=prepared_source_payload_sha256,
+     position_extent=ACTUAL_SOURCE_EXTENT, swapin_positions=actual_descriptor_selectors,
+     enable=True, read_logits_address=ACTUAL_COMPLETED_LOGIT_ADDRESS_CALLBACK)
+ engine.run(actual_controller_command_with_job_and_generation)
+
+Prepared program must already own its existing source build_images output.
+compile_and_enroll compiles real K2/OTG-1 words then calls original finish_images
+(source packing only) before factory installs those same memory bytes. No model
+constructor, numeric interpreter, golden regeneration or source position inflation.
+ABI3 program.bin is refused. Instruction images are {(die,sm):list[uint64]} and
+entries must point inside every real IMEM image. Runtime manifest pins image,
+entry, source, memory and actual executable hashes.
+
+Source capture uses git objects, never peer dirty files:
+ python3 -m tools.hbm_accel_program_backend capture --repo REPO --out NEW_SOURCE_ROOT
+ python3 -m tools.hbm_accel_program_backend plan --source NEW_SOURCE_ROOT --work NEW_BUILD_ROOT --verilator VERILATOR --mem-words ACTUAL_REQUIRED_PARTITION_WORDS --jobs ADMITTED_WORKERS
+Execute emitted argv through host admit.sh. No deadlines/resource caps.
+
+Parent original callback sha0f758ce5 remains identical. Guarded successor pinned
+0cde0cae0/ee7d5be5 selects before execution, without another HDL build. Directed
+adapter/backend checks:14PASS; previous callback-only10PASS recorded separately.
+No existing native compiled-fragment fixture/union/PC gate rerun.
+
+PVE1 r2 supervisor2385921 actual build remains progressing. Its immutable sources
+are /tmp/ha5-cp20-native-backend-r1/source, runtime source/build in r2 directory.
+Preserve progressing objects. r1 terminalFAIL arrayed-defparam limitation retained.
+r2 simulation-only #1 image loader populates each ORIGINAL memory array after
+original time-zero zeroing; gpu_sys_mem_prefix is explicitly empty, and separate
+ha5_native_mem_prefix_dD_pP files avoid the original adapter's default DIE_IDX=-1
+alias. No original RTL edits or ASIC change. Driver evaluates all clock events,
+including delayed loader events, with one SM rising edge per tick.
+
+Read-only PC/can_issue/bulk request/line probes are stable simulator snapshots;
+they do not yet constitute an accepted-edge slot6 measurement. Sagan retains sole
+actual union/column/activation/router/source-service lifecycle implementation.
+The existing reduced cluster plus behavioral HBM is not canonical real-memory
+qualification; reduced source extent32 is not released1M evidence. Need archived
+actual layer/head21946 golden and real source binding. No measured overlap,
+selector load/merge/drain cost, SS/FF, routed corridor or >=1% gain claim. Keep
+shared-first default off/unadopted. HA7 may compose only later actual source keys.

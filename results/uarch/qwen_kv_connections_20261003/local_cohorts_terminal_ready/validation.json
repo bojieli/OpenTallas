@@ -1,0 +1,68 @@
+{
+  "command": "python3 -m unittest discover -s tests -p test_canonical_qwen_local_cohorts.py -v",
+  "full_token_qualified": false,
+  "host": "ot-agidock128",
+  "model": {
+    "added_raw_bits": 3823,
+    "admitted_children_blocked": false,
+    "area_and_slot_fit": null,
+    "equality_comparators": {
+      "metadata_count": 1,
+      "metadata_width": 64,
+      "stage_count": 64,
+      "stage_width": 55
+    },
+    "matched_old_storage_inclusion": null,
+    "matched_terminal_ready_bits": 65,
+    "metadata_RPC_root_credits": 1,
+    "metadata_raw_bits": 152,
+    "metadata_root_identity_bits": 64,
+    "new_CDC_bits": 0,
+    "new_SRAM_bytes": 0,
+    "new_roots_blocked": true,
+    "new_service_replicas": 0,
+    "physical_qualified": false,
+    "prospective_streaming_clock_GHz": 1.2,
+    "protected_area_mm2": null,
+    "protected_bits": null,
+    "query_accept_to_response_min_edges": 2,
+    "query_bits_per_cohort": 84,
+    "quiesce_fanout": {
+      "metadata": 1,
+      "stage": 64
+    },
+    "quiet_metadata_reduction_inputs": 6,
+    "quiet_stage_reduction_inputs": 194,
+    "rate_adopted": false,
+    "raw_FF_area_proxy_mm2": 0.0022295736,
+    "reset_policy": "cold POR only; local reset retains roots and held receipt",
+    "response_bits_per_cohort": 85,
+    "root_ports": {
+      "metadata_accept_bits": 65,
+      "metadata_retire_bits": 65,
+      "stage_accept_bits": 3584,
+      "stage_retire_bits": 3584
+    },
+    "routed_tracks": null,
+    "source_root_retirement_bounds": null,
+    "stage_owner_bits": 55,
+    "stage_raw_bits": 3671,
+    "stage_root_credits": 64,
+    "terminal_offers_held_during_reset_pause": true,
+    "whole_token_upper_edges": null
+  },
+  "model_change": "65 matched combinational terminal-ready wires; same 3823 raw FF inventory",
+  "output_path": "/home/ubuntu/dewey-local-cohorts-new-check-20261003/check.log",
+  "predecessor": "288545477840b2e886b951d2d80bb323f028d326",
+  "retirement_source": "actual retained terminal offer until matching root_retire_ready; no pulse/timer",
+  "runtime_sha256": "bf2ad0df4deec47048ea0298fde5b3d4a68733e3b92044e83be0f318a6a68d4c",
+  "scope": "Matched terminal ready port addition; held completion survives pause/reset; no STATE/NC6/controller/full-token gate",
+  "source_sha256": {
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_local_cohorts.sv": "5b5aacc6e141df20e08f0ec61ff3ccdb3957c2197c4bb5bbb01b9d4fba594a09",
+    "tests/test_canonical_qwen_local_cohorts.py": "5bb97df8fdf19c4e7d43322a38d10a6ae9be7bf28026df08788aea0bd803d9a4",
+    "tools/gpu_sys/canonical_qwen_local_cohorts.py": "fb63e99c4c33fdf267518864fd8c1bd5d3899531e4db74591c5613b4e0e01cef",
+    "tools/gpu_sys/canonical_qwen_local_cohorts_model.py": "404c7ad217b94a6a0b9494e0ad4545013fb3863ba8bb58155e53a5a6c21b3e9d"
+  },
+  "tests": 8,
+  "verdict": "PASS"
+}

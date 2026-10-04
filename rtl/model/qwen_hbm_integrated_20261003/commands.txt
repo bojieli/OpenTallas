@@ -1,0 +1,25 @@
+# Repository root; full source dimensions are literal, never a reduced token.
+# This enclosing filelist uses original W4 SRAM RTL (not host backing memory).
+python3 rtl/model/qwen_hbm_integrated_20261003/generate.py
+python3 -m unittest discover -s rtl/model/qwen_hbm_integrated_20261003 -p test_simulator.py -v
+
+# Russell owns the sole connected fixture compile/run. Exclusive new --Mdir.
+# Source-qualified existing-engine compilation, no physical/headline admission.
+# Shell limits CPU/AS/FSIZE unlimited, no elapsed-time or memory caps.
+verilator --cc --exe --build --timing -Wno-fatal --top-module ot_gpu_qwen_hbm_integrated -GENABLE=1 -f rtl/model/qwen_hbm_integrated_20261003/sources.f rtl/model/qwen_hbm_integrated_20261003/pin_driver.cpp --output-split 10000 --output-split-cfuncs 1000 --Mdir /srv/opentallas-scratch/jobs/EXCLUSIVE-QUALIFIED-SOURCE/obj -j 32
+
+# Run owner's two inherited pipes connect compiled pin_driver stdin/stdout.
+# bindings factory MUST supply actual source issuer and all four native handlers,
+# W2PrimaryPort dictionary; payload sector grant is the real enclosing RTL root.
+# No included fake bindings factory. Missing hardware/owner ports fail closed.
+python3 -m tools.gpu_sys.canonical_qwen_simulator --enable-canonical-qwen --socket /srv/opentallas-scratch/jobs/EXCLUSIVE-QUALIFIED-SOURCE/canonical.sock --pin-read-fd ACTUAL_DRIVER_READ_FD --pin-write-fd ACTUAL_DRIVER_WRITE_FD --bindings ACTUAL_SOURCE_MAPPER:build
+
+# Parameter exposure: root.component('kv'|'sector'|'native');
+# root.component('sm', rank*32+SM, aliases=RF_HOST_ALIASES);
+# root.component('w2', physical_PC), W2PrimaryPort.set_client -> actual6 callers.
+# Cold boot can precede hook enrollment ONLY when actual local KV/W2/sector outputs show no accepted debt. This is not a global drain/fence.
+# One root.tick brackets SectorBoundPayload.before_edge/after_edge everywhere,
+# including synchronous RF/W2 transactors. No second component clock or rearm.
+# All external reset/fence/provider/native/drain endpoints remain literal ports.
+# Current native r5 only executes PC40 FMIN; Claude's complete dispatcher and
+# peer source modules must join before canonical native_primitive token credit.

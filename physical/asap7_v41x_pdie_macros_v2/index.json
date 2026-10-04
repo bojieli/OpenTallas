@@ -1,0 +1,237 @@
+{
+ "audit": "results/uarch/macro_pin_access_audit_20261003",
+ "builder": "tools/mem_compiler/build_aligned_v2.py",
+ "builder_sha256": "a880643a4e3f3ee2e417dc6ebb2652d8c4300035b60478ec41372a2d4ec2db2f",
+ "checker": "tools/check_macro_track_alignment.py",
+ "checker_sha256": "21f4957b432b14b142598ee334b9cdb9ef18f09efbbcaa0d2cbd629582ff8a84",
+ "generators": {
+  "pdie": "tools/v41x_die_pnr.py pdie_specs + tools/chip_assembly/macros.py"
+ },
+ "macros": {
+  "ot_hbm3e_phy_v41x_s4": {
+   "area_um2": 625345.013,
+   "delta": {
+    "area_pct": 0.0014,
+    "area_um2": 8.7545,
+    "height_nm": 0,
+    "width_nm": 42
+   },
+   "height_um": 208.44,
+   "kind": "phy",
+   "m5_crossing_at_origin_0": {
+    "MY": {
+     "L": true
+    },
+    "R0": {
+     "L": true
+    }
+   },
+   "pin_layers": [
+    "M4",
+    "M5"
+   ],
+   "row_grid_alternative": {
+    "area_um2_delta": 8.754,
+    "height_um": 208.44,
+    "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ],
+   "v1_dir": "physical/asap7_v41x_pdie_macros/ot_hbm3e_phy_v41x_s4",
+   "views": {
+    "ot_hbm3e_phy_v41x_s4.json": "5c547605be74c1de485ed40c38fc2de33f6ee41e0b10634353f7b001225c4b51",
+    "ot_hbm3e_phy_v41x_s4.lef": "b3724db7293a30c393a49f2ac90f64c535412ecc9a9c5cc9fbf3a408fb449f91",
+    "ot_hbm3e_phy_v41x_s4_bb.v": "68289ec49e678d9e493bac9affeca2818bb51ea789e9bf6482e2e8bf4e801d91",
+    "ot_hbm3e_phy_v41x_s4_tt.lib": "417f797e19bf0f5a2bc96dee28aa64877225a6ea3c48d21611b77bd3defb0b4a"
+   },
+   "width_um": 3000.12
+  },
+  "ot_pdie_coll": {
+   "area_um2": 24915.514,
+   "delta": {
+    "area_pct": 0.0242,
+    "area_um2": 6.0216,
+    "height_nm": 12,
+    "width_nm": 30
+   },
+   "height_um": 110.712,
+   "kind": "collective",
+   "m5_crossing_at_origin_0": {},
+   "pin_layers": [
+    "M4"
+   ],
+   "row_grid_alternative": {
+    "area_um2_delta": 124.847,
+    "height_um": 111.24,
+    "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ],
+   "v1_dir": "physical/asap7_v41x_pdie_macros/ot_pdie_coll",
+   "views": {
+    "ot_pdie_coll.json": "754a57404f6ba0b8bd03d775dd86a59a0c00d15b66bef6cbf5a89f0a44fc1627",
+    "ot_pdie_coll.lef": "f8306202ad53c6864f9c24c7ee28fc0e197fa2e801c8077bb4a1407360ba9d9b",
+    "ot_pdie_coll_bb.v": "05fe54a686546389678ff3f232769f983b121c284c214b851cb6ac29659b79ce",
+    "ot_pdie_coll_tt.lib": "d0cb956bd9a98530cd3ee2f6ded7d7a6802d02aee887d2d846c01d038d6fd8c3"
+   },
+   "width_um": 225.048
+  },
+  "ot_pdie_serdes": {
+   "area_um2": 562680.012,
+   "delta": {
+    "area_pct": 0.016,
+    "area_um2": 90.0085,
+    "height_nm": 36,
+    "width_nm": 36
+   },
+   "height_um": 2250.216,
+   "kind": "link",
+   "m5_crossing_at_origin_0": {
+    "MY": {
+     "L": true,
+     "R": true
+    },
+    "R0": {
+     "L": true,
+     "R": true
+    }
+   },
+   "pin_layers": [
+    "M4"
+   ],
+   "row_grid_alternative": {
+    "area_um2_delta": 486.097,
+    "height_um": 2251.8,
+    "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ],
+   "v1_dir": "physical/asap7_v41x_pdie_macros/ot_pdie_serdes",
+   "views": {
+    "ot_pdie_serdes.json": "dfd988202539d7c3daceba4c04f556ad1db18b3f288cda10edd6f3d8c01d210b",
+    "ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
+    "ot_pdie_serdes_bb.v": "0ddda3e8073f315e1c527800a5e7ace903b58d59daf728ea842da6a33bebee62",
+    "ot_pdie_serdes_tt.lib": "5011a685d72adc6d19807185eddc7a96090fa327c5a16fedb596be76d51edba7"
+   },
+   "width_um": 250.056
+  },
+  "ot_pdie_tile_bk": {
+   "area_um2": 772462.37,
+   "delta": {
+    "area_pct": 0.0032,
+    "area_um2": 24.8172,
+    "height_nm": 24,
+    "width_nm": 6
+   },
+   "height_um": 978.504,
+   "kind": "tile",
+   "m5_crossing_at_origin_0": {},
+   "pin_layers": [
+    "M4"
+   ],
+   "row_grid_alternative": {
+    "area_um2_delta": 858.457,
+    "height_um": 979.56,
+    "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ],
+   "v1_dir": "physical/asap7_v41x_pdie_macros/ot_pdie_tile_bk",
+   "views": {
+    "ot_pdie_tile_bk.json": "8c3afc083b2c1235267a06d5bf29b487de54dcab383911285e7121cbba9a8186",
+    "ot_pdie_tile_bk.lef": "7582555c00b5790cdc182a79c2b5c091d7298d273232f3fdf49683da0739945d",
+    "ot_pdie_tile_bk_bb.v": "608ffe910f216f75a9fab9412824e46814d65206253bfc9e4e3747da5343f196",
+    "ot_pdie_tile_bk_tt.lib": "64765a2cad0409e7e8175de6896c7b9181ed7b59ad21cbd6392596f19a857036"
+   },
+   "width_um": 789.432
+  },
+  "ot_pdie_tile_io": {
+   "area_um2": 772462.37,
+   "delta": {
+    "area_pct": 0.0032,
+    "area_um2": 24.8172,
+    "height_nm": 24,
+    "width_nm": 6
+   },
+   "height_um": 978.504,
+   "kind": "tile",
+   "m5_crossing_at_origin_0": {},
+   "pin_layers": [
+    "M4"
+   ],
+   "row_grid_alternative": {
+    "area_um2_delta": 858.457,
+    "height_um": 979.56,
+    "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ],
+   "v1_dir": "physical/asap7_v41x_pdie_macros/ot_pdie_tile_io",
+   "views": {
+    "ot_pdie_tile_io.json": "8b0c124adf92085c85e98952409b5bfd90c3d7fb2d396456f6bad7b8c5ca0f8c",
+    "ot_pdie_tile_io.lef": "871674a958950f104a74734e52e7ffd56284e9e3a3d3dcd6080e264ebf38124a",
+    "ot_pdie_tile_io_bb.v": "ea42ed8e25f85086607880833592e9f3fe18dd7076def076cc15b30edcde5fe3",
+    "ot_pdie_tile_io_tt.lib": "d35e971751ce0147409e01b9ee63c0e8cf8785b0cc2dbc0c20b84ff7ebf7aaf8"
+   },
+   "width_um": 789.432
+  },
+  "ot_pdie_ucie": {
+   "area_um2": 430965.399,
+   "delta": {
+    "area_pct": 0.0176,
+    "area_um2": 75.6602,
+    "height_nm": 24,
+    "width_nm": 42
+   },
+   "height_um": 1652.424,
+   "kind": "link",
+   "m5_crossing_at_origin_0": {
+    "MY": {
+     "L": true
+    },
+    "R0": {
+     "L": true
+    }
+   },
+   "pin_layers": [
+    "M4"
+   ],
+   "row_grid_alternative": {
+    "area_um2_delta": 351.073,
+    "height_um": 1653.48,
+    "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ],
+   "v1_dir": "physical/asap7_v41x_pdie_macros/ot_pdie_ucie",
+   "views": {
+    "ot_pdie_ucie.json": "28e4fb217d035fa4bd5d2cc00ae2d598f37a1a40be2b1215bddddf19c9a8dcfa",
+    "ot_pdie_ucie.lef": "da1804482bff5072298b1cae5499f629f5f8bc88df2077f1715e282260873eb4",
+    "ot_pdie_ucie_bb.v": "a645c1beecb54889dfcc93f8c0a166e0ac69802313e1bfd1c43ed4f754fa43a2",
+    "ot_pdie_ucie_tt.lib": "57ffe3590edd6566f582dafe52a3613311e2f609d3f648d964c93afae3b7652e"
+   },
+   "width_um": 260.808
+  }
+ },
+ "rule": "every signal pin centre on its preferred-direction track at origin x = y = 0 mod 0.048 um in R0, MX, MY and R180; SYMMETRY X Y (rotations dropped)",
+ "schema": "opentallas.asap7-memory-macros.aligned-v2",
+ "usage": {
+  "hooks": "physical/common/ot_macro_track_snap.tcl",
+  "lef": "<name>/<name>.lef",
+  "orfs": "tools/run_abi3_physical.py --macro-view <name>=<this dir>/<name>"
+ },
+ "v1_index": "physical/asap7_v41x_pdie_macros/index.json",
+ "v1_index_sha256": "ab7d2d00abefd6173214bab11476945d4afc6adb5b3c67315d0a2fcfccc5f845"
+}

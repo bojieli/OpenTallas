@@ -1,0 +1,10 @@
+design/ot_gpu_rf_service.sv
+design/ot_gpu_full_sm_service.sv
+design/ot_gpu_scratch_service.sv
+design/ot_gpu_fadd.sv
+design/ot_hdc_fp32_add_lat.sv
+design/ot_hdc_fp32_mul_lat.sv
+design/ot_hdc_fastfp.sv
+design/ot_hdc_prefix.sv
+design/ot_sram_1r1w_128x256_m1_r2c2.v
+design/ot_sram_1r1w_1024x256_m2_r2c2.v

@@ -1,0 +1,102 @@
+{
+  "NSLOT": 8,
+  "NW": 21,
+  "admission": {
+    "Arch_full_reset_reprice_and_wire_sites_pending": true,
+    "Maxwell_selected_S58_PAR2_stage_rank_shard_map": null,
+    "functional_component_assignment": "parentexplicit, after corrected minimum reset ledger bound",
+    "physical_or_P_and_R": false,
+    "scalar_protected_RTL": false
+  },
+  "base": "7b4509c23a8a67891f250bef78d7459e6050883c",
+  "component_gate": {
+    "AR_MTP_or_HBM_rate": null,
+    "HBM_service_ACK_terms_unchanged": true,
+    "conditional_tau_adopted": false,
+    "full_drafter_or_acceptance": false,
+    "source_greedy_oracle": "unchanged ot_hdc_accept NSLOT8/NW21; active slots plus prefix/n/bonus, unused source stale slots excluded",
+    "source_origin_inputs": "acceptedproducer command and echoed terminal supplied by fixture; actual native origin echo adapter uninstalled"
+  },
+  "costs": {
+    "gross50pct_mm2": 0.024537323519999998,
+    "gross_body_um2": 12268.661759999999,
+    "leaf_rectangle_request_um": [
+      128,
+      191.7
+    ],
+    "matched_old_debit_or_net": null,
+    "slot_assigned": false,
+    "spare_geometric_um2": 0.27648000000044703
+  },
+  "default_enable": false,
+  "ports": {
+    "actual_leaf_caller_bad_internal_wire": 1,
+    "actual_legal_channel_capacity": null,
+    "internal_fault_wire_adds_no_state": "jointguard gate already priced; addone track ifsourceholderfault crosses physical leaf boundary",
+    "leaf_with_caller_fault_cut": 637,
+    "prior_leaf_union": 636,
+    "producer_named_cuts": [
+      52,
+      52
+    ]
+  },
+  "reset_contract": {
+    "cold_rst_n": "external allcopies-fenced power-on only; not a runtime erase interface",
+    "externally_false_cold_fence_detected_by_kernel": false,
+    "runtime_rearm": "fence_rearm only idle+admission stopped+matchinglease+63receipts; owned debt refused preserving encodedrecords",
+    "sourceprovider_reset_drain_qualification": false
+  },
+  "reset_reconciliation": {
+    "FF_RESETN_fF": 0.802909,
+    "Maxwell_source": "94ac6b0ef7d306860e060effa8080b70a3daf7c3",
+    "added_BUFF4_minimum": 41,
+    "additional_body_um2": 4.18446,
+    "clock_levels": [
+      252,
+      32,
+      4,
+      1
+    ],
+    "new7pin_fF": 5.620363,
+    "new_clock_reset_buffers": 619,
+    "old578_charged_once": true,
+    "old8pin_fF": 6.423272,
+    "old_clock_reset_buffers": 578,
+    "pin_only_minimum_not_physical_closure": true,
+    "reset_levels": [
+      288,
+      36,
+      5,
+      1
+    ],
+    "selected_limit_fF": 5.76,
+    "wire_sites_and_actual_clock_tree": null
+  },
+  "scalar_K512_changed": false,
+  "schema": "DS_MTP_PROTECTED_ACCEPT_RTL_PREPARATION_R1",
+  "source_assignments": {
+    "bits_per_word": 72,
+    "caller_codewords": 4,
+    "leaf_codewords": 24,
+    "physical_state_budget_bits": 2016,
+    "raw_leaf_and_caller_bits": 716
+  },
+  "source_hashes": {
+    "rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv": "9881428846246f96cd84ac2c5bbc1f59156fa03a02c96d44e6fc6db4d05e3ca2",
+    "rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_source_holders.sv": "e7c8ee4239b2ef8b349fc3eb89db14d31acd186fdbaa71cb43ca2acc9bfe4b4e",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
+    "rtl/test/ds_mtp_accept_20261003/tb.sv": "3cf41859212852581940d4fe4b1eeb377e8afafa50b45e6278c80ff119fc4da8"
+  },
+  "timing": {
+    "FF_hold_ps": 25,
+    "SS_setup_ps": 60,
+    "accept_to_guarded_done_edges": 3,
+    "extra_codec_stages": 0,
+    "fixture_clock_not_SS_FF_qualification": true,
+    "functional_fixture_period_ns": 10,
+    "loaded_codec_cones_proven": false,
+    "nominal_model_clock_GHz": 0.9,
+    "stage_extension": "price additional codedword/cell/cut/clock edges before RTL change"
+  }
+}

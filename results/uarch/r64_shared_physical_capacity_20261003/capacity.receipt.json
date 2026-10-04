@@ -1,0 +1,269 @@
+{
+  "schema": "R64_SOURCE_BOUND_PHYSICAL_CAPACITY_V1",
+  "time_utc": "2026-10-03T04:43:50.451236+00:00",
+  "source_main_head": "bf99ccc864cb02579ae6637b629bef660a386722",
+  "R64_source_head": "c46c016d6bf19498cf51861c06c89a408349049a",
+  "unchanged_guard": {
+    "RAM_bytes": 129877099956,
+    "fresh_output_disk_bytes": 528693705466
+  },
+  "fresh_physical_parent": {
+    "time_utc": "2026-10-03T04:42:49.614247+00:00",
+    "hostname": "bojpve.bsql.net",
+    "host_MemTotal_bytes": 270114836480,
+    "host_MemAvailable_bytes": 57147187200,
+    "host_SwapTotal_bytes": 0,
+    "host_cpus": 28,
+    "host_load": [
+      12.0830078125,
+      13.9169921875,
+      15.78271484375
+    ],
+    "qemu9101_memory_current_bytes": 204300554240,
+    "root_available_bytes": 90790023168
+  },
+  "physical_RAM_guard_margin_bytes": -72729912756,
+  "host_RAM_not_added_to_guest_available": true,
+  "VM_reservation": {
+    "vm_config_capacity": {
+      "balloon": "0",
+      "cores": "28",
+      "memory": "245760",
+      "name": "ot-pve1"
+    },
+    "existing_cgroup_limits_and_usage": {
+      "memory.current": "204572708864",
+      "memory.max": "max",
+      "memory.high": "max",
+      "memory.swap.current": "0",
+      "memory.swap.max": "max"
+    }
+  },
+  "QEMU_residency_snapshot": {
+    "pid": 3502423,
+    "timestamp": "2026-10-03T04:40:14.472459+00:00",
+    "RSS_bytes": 256875474944,
+    "PSS_bytes": 204103009280,
+    "shared_dirty_bytes": 70459052032,
+    "swap_bytes": 0,
+    "KSM": {
+      "run": "1",
+      "pages_shared": "7696798",
+      "pages_sharing": "13175260",
+      "pages_unshared": "30755607",
+      "pages_volatile": "11069929"
+    },
+    "configured_memory_bytes": 257698037760
+  },
+  "host_service_residency_snapshot": {
+    "timestamp": "2026-10-03T04:40:14.472459+00:00",
+    "processes": [
+      {
+        "pid": 1298,
+        "comm": "corosync",
+        "RSS_bytes": 171278336,
+        "RssAnon": "114104 kB",
+        "RssFile": "11932 kB",
+        "RssShmem": "41228 kB",
+        "threads": "9",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 965924,
+        "comm": "pveproxy",
+        "RSS_bytes": 159911936,
+        "RssAnon": "127492 kB",
+        "RssFile": "28672 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 965759,
+        "comm": "pvedaemon",
+        "RSS_bytes": 158068736,
+        "RssAnon": "125916 kB",
+        "RssFile": "28448 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 2021748,
+        "comm": "pveproxy worker",
+        "RSS_bytes": 146714624,
+        "RssAnon": "132300 kB",
+        "RssFile": "10976 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 2021750,
+        "comm": "pveproxy worker",
+        "RSS_bytes": 146714624,
+        "RssAnon": "132524 kB",
+        "RssFile": "10752 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 2021749,
+        "comm": "pveproxy worker",
+        "RSS_bytes": 146485248,
+        "RssAnon": "132300 kB",
+        "RssFile": "10752 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 3511768,
+        "comm": "pvedaemon worke",
+        "RSS_bytes": 144633856,
+        "RssAnon": "129836 kB",
+        "RssFile": "11184 kB",
+        "RssShmem": "224 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 3976711,
+        "comm": "pvedaemon worke",
+        "RSS_bytes": 144031744,
+        "RssAnon": "129604 kB",
+        "RssFile": "11052 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 3696942,
+        "comm": "pvedaemon worke",
+        "RSS_bytes": 143876096,
+        "RssAnon": "129576 kB",
+        "RssFile": "10928 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 1319,
+        "comm": "pve-firewall",
+        "RSS_bytes": 115040256,
+        "RssAnon": "88600 kB",
+        "RssFile": "22848 kB",
+        "RssShmem": "896 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 1323,
+        "comm": "pvestatd",
+        "RSS_bytes": 110727168,
+        "RssAnon": "83492 kB",
+        "RssFile": "23072 kB",
+        "RssShmem": "1568 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 2263092,
+        "comm": "pvescheduler",
+        "RSS_bytes": 110473216,
+        "RssAnon": "104524 kB",
+        "RssFile": "3360 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 1565,
+        "comm": "pvescheduler",
+        "RSS_bytes": 110243840,
+        "RssAnon": "104524 kB",
+        "RssFile": "3136 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 1357,
+        "comm": "pve-ha-crm",
+        "RSS_bytes": 109404160,
+        "RssAnon": "102136 kB",
+        "RssFile": "3808 kB",
+        "RssShmem": "896 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 2263093,
+        "comm": "pvescheduler",
+        "RSS_bytes": 109326336,
+        "RssAnon": "104524 kB",
+        "RssFile": "2240 kB",
+        "RssShmem": "0 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      },
+      {
+        "pid": 1367,
+        "comm": "pve-ha-lrm",
+        "RSS_bytes": 109068288,
+        "RssAnon": "101584 kB",
+        "RssFile": "3808 kB",
+        "RssShmem": "1120 kB",
+        "threads": "1",
+        "vm_args_capacity_only": {}
+      }
+    ],
+    "RSS_not_summed_as_unique_physical_RAM": true
+  },
+  "guest_snapshot": {
+    "timestamp": "2026-10-03T04:39:28.018089+00:00",
+    "MemAvailable_bytes": 240227868672,
+    "MemFree_bytes": 94997950464,
+    "Cached_bytes": 142899908608,
+    "SReclaimable_bytes": 3672473600,
+    "persistent_free_bytes": 59658960896,
+    "home_tmp_same_filesystem": true
+  },
+  "interpretation": "Guest reclaimable cache and KSM/shared pages are inside the existing VM reservation. Reuse/unsharing requires source-lifetime and physical residency pricing; neither is an independent additive RAM budget. Current parent MemAvailable does not satisfy unchanged129.877GB fresh RAM admission.",
+  "agidock128_physical_membership": "Peer-reported possible shared host; independently verified guest is KVM/QEMU, exact common physical parent not verified. Do not sum roofs.",
+  "existing_storage": {
+    "host_root_free_bytes": 90790023168,
+    "local_directory": "/var/lib/vz on existing root filesystem; root free not sufficient for528.694GB bound",
+    "configured_NFS_path": "/mnt/pve/nfs-storage",
+    "configured_NFS_origin": "bsql-storage.01.me:/export/pve-storage",
+    "NFS_capacity_and_health_verified": false,
+    "Proxmox_full_storage_query": "Pending; no success or capacity inferred",
+    "thinpool": "local-lvm pve/data holds images/rootdir; not an authorized ordinary output directory",
+    "new_mount_provider_delete_transfer_or_output_write": false,
+    "host_and_guest_free_space_not_summed": true
+  },
+  "local_after_formal": {
+    "time_utc": "2026-10-03T04:42:49.301873+00:00",
+    "available_RAM_bytes": 72404922368,
+    "available_disk_bytes": 392206700544,
+    "yosys1998275_absent": true,
+    "numeric_allowed": false
+  },
+  "formal_preservation": {
+    "terminal_path": "/tmp/qrom-issue-lockstep-760a-r2/terminal.json",
+    "terminal_sha256": "573fdddd6dda08de5e3f4c4e01ef104b6b5ec41b948cd5ec2c91500210c67c8f",
+    "original_status_preserved": "FAIL_LITERAL_ISSUE_LOCKSTEP",
+    "base_exit": 0,
+    "induction_exit": -9,
+    "independent_classification": "INCOMPLETE_SIGNAL9_CAUSE_UNVERIFIED",
+    "no_architectural_failure_or_proof_PASS_inferred": true,
+    "logs_and_source_not_modified": true,
+    "restart": false
+  },
+  "decision": "NO_R64_LAUNCH_UNDER_UNCHANGED_PHYSICAL_RAM_AND_DISK_GUARD",
+  "next_gate": "Peirce source-preserving checkpoint lifetime pricing plus actual shared physical reservation/residency proof and usable existing persistent storage capacity; no guard evasion.",
+  "PVE2_PVE3_assignments": false,
+  "new_jobs_signals_deletions_mounts_transfers": 0,
+  "arbitrary_resource_caps_added": false
+}

@@ -1,0 +1,214 @@
+{
+  "accepted": 157,
+  "checks": 611,
+  "numerical_payload": false,
+  "paths": [
+    {
+      "ACK_to_retire_edges": 32,
+      "case": 1,
+      "edge_deltas": [
+        2,
+        7,
+        2,
+        2,
+        2,
+        3,
+        2,
+        12,
+        2
+      ],
+      "handshakes": [
+        {
+          "edge": 9,
+          "identity": 35782241309876223,
+          "kind": "req"
+        },
+        {
+          "edge": 11,
+          "identity": 35782241309876223,
+          "kind": "host_ack"
+        },
+        {
+          "edge": 18,
+          "identity": 35782241309876223,
+          "kind": "visible"
+        },
+        {
+          "edge": 20,
+          "identity": 35782241309876223,
+          "kind": "consumer"
+        },
+        {
+          "edge": 22,
+          "identity": 35782241309876223,
+          "kind": "child_reverse"
+        },
+        {
+          "edge": 24,
+          "identity": 35782241309876223,
+          "kind": "parent_reverse"
+        },
+        {
+          "edge": 27,
+          "identity": 35782241309876223,
+          "kind": "reverse_CDC"
+        },
+        {
+          "edge": 29,
+          "identity": 35782241309876223,
+          "kind": "drain_req"
+        },
+        {
+          "edge": 41,
+          "identity": 35782241309876223,
+          "kind": "drain_rsp"
+        },
+        {
+          "edge": 43,
+          "identity": 35782241309876223,
+          "kind": "retire"
+        }
+      ],
+      "identity": 35782241309876223
+    },
+    {
+      "ACK_to_retire_edges": 17,
+      "case": 2,
+      "edge_deltas": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        2,
+        2,
+        2
+      ],
+      "handshakes": [
+        {
+          "edge": 45,
+          "identity": 35958163170312703,
+          "kind": "req"
+        },
+        {
+          "edge": 47,
+          "identity": 35958163170312703,
+          "kind": "simd_ack_retire"
+        },
+        {
+          "edge": 49,
+          "identity": 35958163170312703,
+          "kind": "visible"
+        },
+        {
+          "edge": 51,
+          "identity": 35958163170312703,
+          "kind": "consumer"
+        },
+        {
+          "edge": 53,
+          "identity": 35958163170312703,
+          "kind": "child_reverse"
+        },
+        {
+          "edge": 55,
+          "identity": 35958163170312703,
+          "kind": "parent_reverse"
+        },
+        {
+          "edge": 58,
+          "identity": 35958163170312703,
+          "kind": "reverse_CDC"
+        },
+        {
+          "edge": 60,
+          "identity": 35958163170312703,
+          "kind": "drain_req"
+        },
+        {
+          "edge": 62,
+          "identity": 35958163170312703,
+          "kind": "drain_rsp"
+        },
+        {
+          "edge": 64,
+          "identity": 35958163170312703,
+          "kind": "retire"
+        }
+      ],
+      "identity": 35958163170312703
+    },
+    {
+      "ACK_to_retire_edges": 25,
+      "case": 3,
+      "edge_deltas": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        6,
+        2,
+        6
+      ],
+      "handshakes": [
+        {
+          "edge": 66,
+          "identity": 35782241309868543,
+          "kind": "req"
+        },
+        {
+          "edge": 68,
+          "identity": 35782241309868543,
+          "kind": "host_ack"
+        },
+        {
+          "edge": 70,
+          "identity": 35782241309868543,
+          "kind": "visible"
+        },
+        {
+          "edge": 72,
+          "identity": 35782241309868543,
+          "kind": "consumer"
+        },
+        {
+          "edge": 74,
+          "identity": 35782241309868543,
+          "kind": "child_reverse"
+        },
+        {
+          "edge": 76,
+          "identity": 35782241309868543,
+          "kind": "parent_reverse"
+        },
+        {
+          "edge": 79,
+          "identity": 35782241309868543,
+          "kind": "reverse_CDC"
+        },
+        {
+          "edge": 85,
+          "identity": 35782241309868543,
+          "kind": "drain_req"
+        },
+        {
+          "edge": 87,
+          "identity": 35782241309868543,
+          "kind": "drain_rsp"
+        },
+        {
+          "edge": 93,
+          "identity": 35782241309868543,
+          "kind": "retire"
+        }
+      ],
+      "identity": 35782241309868543
+    }
+  ],
+  "physical": false,
+  "production_alldrain": false,
+  "verdict": "PASS_LOCAL_C0_KV_FULLWIDTH_CONTROL_ONLY"
+}

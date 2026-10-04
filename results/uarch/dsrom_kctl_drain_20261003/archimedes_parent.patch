@@ -1,0 +1,76 @@
+--- a/rtl/dsrom_sys/c8/ot_v41_rt_die_l20_c8.sv
++++ b/rtl/dsrom_sys/c8/ot_v41_rt_die_l20_c8.sv
+@@ -33,6 +33,7 @@
+     // tools/w11_idx_ring_place.py into ikring_s<s>.hex, loaded below)
+     parameter integer X_IDX = 0,
+     parameter integer X_SEL = 0,
++    parameter integer IDX_DRAIN_LOOKAHEAD = 0, // candidate, off until exact/contextual SSFF
+     parameter integer IDX_RING = 0,
+     parameter integer IDX_RING_RSB = 64,
+     parameter integer IDX_RING_RTAIL = 32,
+@@ -132,7 +133,7 @@
+     output wire [20:0] c8_own_visible_gid
+ );
+     ot_chip_v41x_die_owner_safe_c8 #(.C8_PUBLICATION(C8_PUBLICATION),.WINDOW_REFILL_CREDITS(WINDOW_REFILL_CREDITS), .WINDOW_REFILL_OWNER_SAFE(WINDOW_REFILL_OWNER_SAFE),.FULL_SHAPE(1), .RANK(RANK), .X_ROM(1), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW),
+-                       .ROM_BST(ROM_BST), .X_ATT(1), .X_ME(0), .X_IDX(X_IDX), .X_SEL(X_SEL), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB),
++                       .ROM_BST(ROM_BST), .X_ATT(1), .X_ME(0), .X_IDX(X_IDX), .X_SEL(X_SEL), .IDX_DRAIN_LOOKAHEAD(IDX_DRAIN_LOOKAHEAD), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB),
+                        .IDX_RING_RTAIL(IDX_RING_RTAIL), .X_EG(0), .W_HBM(0),
+                        .WINDOW_HBM_ATTENTION(1), .CKV_SELECTED(CKV_SELECTED != 0), .CKV_BASE(CKV_BASE),
+                        .CKV_NSLOT(CKV_NSLOT), .K_MEM(K_MEM), .SUN(SUN), .SUM(SUM),
+--- a/rtl/chip/ckvsel/ot_chip_v41x_die.sv
++++ b/rtl/chip/ckvsel/ot_chip_v41x_die.sv
+@@ -111,6 +111,7 @@
+     parameter integer NPC_W   = 8,
+     parameter integer W_HBM   = 1,
+     parameter integer IDX_SHARDED = 0, // opt-in; reader and writer must share one layout
++    parameter integer IDX_DRAIN_LOOKAHEAD = 0, // candidate, off until exact/contextual SSFF
+     parameter integer IDX_RING = 0,    // opt-in W11 quarter-per-stack ring key layout (replaces the replicated
+                                        // key images: ot_hdc_v41x_idx_ring_port in the tile, ring readers in
+                                        // the pooled adapter); regions are rings of IDX_RING_RSB super-blocks
+@@ -494,7 +495,7 @@
+     wire [7:0] core_coll_seq;
+     wire die_coll_fault;
+ 
+-    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL), .IDX_MULTIUSER(IDX_RING_MU), .IDX_KEY_SLICE_SECTORS((IDX_RING_MU != 0) ? IKH_SLICE : 0), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
++    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_DRAIN_LOOKAHEAD(IDX_DRAIN_LOOKAHEAD), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL), .IDX_MULTIUSER(IDX_RING_MU), .IDX_KEY_SLICE_SECTORS((IDX_RING_MU != 0) ? IKH_SLICE : 0), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
+                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
+                         .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW),
+                         .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .X_ATT(X_ATT), .RANK(RANK), .CKV_SEL(CKV_SELECTED ? 1 : 0)) u_tile (
+--- a/rtl/chip/ckvsel/ot_chip_v41x_tile.sv
++++ b/rtl/chip/ckvsel/ot_chip_v41x_tile.sv
+@@ -70,6 +70,7 @@
+     parameter integer X_IDX = 2,
+     parameter integer PIKH_HAW = FULL_SHAPE ? 30 : 28, // pooled-index physical HBM sector address
+     parameter integer IDX_SHARDED = 0,      // paired compact index-key layout
++    parameter integer IDX_DRAIN_LOOKAHEAD = 0, // candidate, off until exact/contextual SSFF
+     parameter integer IDX_RING = 0,         // opt-in W11 quarter-per-stack ring key layout
+     parameter integer IDX_RING_RSB = 1,
+     parameter integer IDX_RING_RTAIL = 0,
+@@ -391,7 +392,7 @@
+                        .X_SEL(X_SEL), .X_EG(X_EG), .XSQ(XSQ), .XSW(XSW), .X_SU(X_SU), .SUN(SUN), .SUM(SUM),
+                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW),
+                        .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_MULTIUSER(IDX_MULTIUSER),
+-                       .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS), .IDX_RING(IDX_RING),
++                       .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS), .IDX_DRAIN_LOOKAHEAD(IDX_DRAIN_LOOKAHEAD), .IDX_RING(IDX_RING),
+                        .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL),
+                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
+--- a/rtl/hdc/v41x/ckvsel/ot_hdc_core_v41x.sv
++++ b/rtl/hdc/v41x/ckvsel/ot_hdc_core_v41x.sv
+@@ -83,6 +83,7 @@
+     parameter integer IDX_SHARDED = 0,      // opt-in paired compact key writer and reader
+     parameter integer IDX_MULTIUSER = 0,    // per-user sector base is applied before PC selection
+     parameter integer IDX_KEY_SLICE_SECTORS = 0,
++    parameter integer IDX_DRAIN_LOOKAHEAD = 0, // candidate, off until exact/contextual SSFF
+     parameter integer IDX_RING = 0,         // opt-in W11 quarter-per-stack ring key layout (X_IDX = 2)
+     parameter integer IDX_RING_RSB = 1,
+     parameter integer IDX_RING_RTAIL = 0,
+@@ -1002,7 +1003,7 @@
+             assign kwr_kv_wdata = kv_wdata;
+         end
+         if (X_IDX == 2) begin : g_pool
+-            ot_hdc_v41x_idx_pool_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP),
++            ot_hdc_v41x_idx_pool_adapt_drain #(.DRAIN_LOOKAHEAD(IDX_DRAIN_LOOKAHEAD), .W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP),
+                                            .HAW(PIKH_HAW), .SHARDED(IDX_SHARDED),
+                                            .SLICE_SECTORS(IDX_KEY_SLICE_SECTORS), .RING(IDX_RING),
+                                            .RING_RSB(IDX_RING_RSB), .RING_RTAIL(IDX_RING_RTAIL)) u_idx (

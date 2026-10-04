@@ -1,0 +1,8 @@
+{
+  "status": "TEST_EXPECTATION_ARITHMETIC_CORRECTED_NOT_PHYSICAL_FAILURE",
+  "initial_expected_read_elements": 1580,
+  "actual_source_sum_read_elements": 1520,
+  "initial_expected_write_elements": 693,
+  "actual_source_sum_write_elements": 593,
+  "cause": "Manual sum in test expectation was incorrect; literal ordered source group counts unchanged. No source/clock/port/area relaxation."
+}

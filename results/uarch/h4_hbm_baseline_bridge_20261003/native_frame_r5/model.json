@@ -1,0 +1,114 @@
+{
+  "FF_plus_planning_protection_only_mm2_ASSUMED": 2.5504255123200004,
+  "RF_data_reuse": "one source-valid512B assembler perSM after exact commonACK; identity records held to parent reverse",
+  "additional_RF_data_bits": 0,
+  "build_allowed": false,
+  "child_rows": 4096,
+  "existing_RF_data_bits_raw": 131072,
+  "frame_rows": 256,
+  "hardware_admitted": false,
+  "max_fragments_per_parent": 64,
+  "max_frames_per_parent": 8,
+  "max_sector_children_per_parent": 128,
+  "once_only_ledger": {
+    "meta92_R14_overlap_debit": null,
+    "net_area_mm2": null,
+    "net_bits": null,
+    "parent55_W4_overlap_debit": null,
+    "reason": "retained8frame metadata outlives reusable W4 ACK; same row/index/ports/lifetime not proved for R14 sidecar; no automatic overlap subtraction"
+  },
+  "physical_model_gaps": [
+    "selector/update/fanout/protection pipeline cell price",
+    "source stop/drain CDC predicate implementation",
+    "actual source physical routing/slot/load clocks",
+    "all program emitted contender composition"
+  ],
+  "ports": {
+    "RF_copies": 2,
+    "RF_write_bytes_per_frame": 512,
+    "allocator_banks": 5,
+    "assembler_data_write_bytes_per_edge": 32,
+    "assembler_data_write_bytes_per_fragment": 64,
+    "child_allocate_updates_per_fragment": 2,
+    "child_return_updates_per_fragment": 2,
+    "child_reverse_updates_per_fragment": 2,
+    "counter_bits_each": 36,
+    "metadata_allocate_capture_reverse_serialized": true,
+    "parent_allocations_per_die_edge": 1,
+    "parent_requesters": 32,
+    "proposed_single_metadata_update_port_perSM": true
+  },
+  "programs": {
+    "DeepSeek": {
+      "PCs": 2213,
+      "families": 30,
+      "program_sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313"
+    },
+    "Qwen": {
+      "PCs": 1737,
+      "families": 21,
+      "program_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+    }
+  },
+  "protected_gross_bits": 940464,
+  "raw_gross_bits": 748500,
+  "required_clock_domains_explicit": true,
+  "required_cost_keys": [
+    "allocator",
+    "W2_select",
+    "allocate_metadata",
+    "request_CDC",
+    "backend_read",
+    "backend_write_visible",
+    "R14_arb",
+    "R14_lookup",
+    "W2_read_hold",
+    "W2_write_hold",
+    "return_CDC",
+    "capture_data",
+    "capture_metadata",
+    "continuation",
+    "RF_common_ACK",
+    "writeback_RF_capture",
+    "native_compute",
+    "consumer",
+    "reverse_route",
+    "reverse_CDC",
+    "reverse_metadata",
+    "allcopy"
+  ],
+  "schema": "NATIVE_FRAME_CONTINUATION_EMITTER_MODEL_R5",
+  "selected_new_ABI": {
+    "C0_owner_release": false,
+    "dispatch_seat": 1,
+    "guard": "both sector identities+payload durably captured in reserved frame/child storage",
+    "name": "continued_fragment_capture_accept",
+    "physical_reverse": false,
+    "source_original_unchanged": true,
+    "source_successor_not_installed": true
+  },
+  "source_fragment_credit": 1,
+  "source_sha256": {
+    "Qwen_tiled.json.gz": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+    "V1_source.py": "a41262dec4fa827a4ecccd32cfee55ccfc14c612e6f8a528e99585d2cf59c884",
+    "allocator.json": "3081fba04e9afbec8d1b6093136fbb921c2546e7a05e9efaac43f24d64c09b8a",
+    "atomic_owner_contract.json": "2614837337c407eb801a0844440fd07d34a244e28dd4d660384a0de4c0a4146d",
+    "bridge_model.json": "fff00ad9ba9e342912143e404beb3f58762ec719c94503d70ae0506231fa4672",
+    "bridge_source.py": "3c09c3e6e974e1b8ffbea9b7cda465b86ae0293b7c1b589f68508fba243e247f",
+    "movement.py": "4ab7c01298d9e6948c3d53a04c833bf0e2f55cf0e664215b88fcb097f4899164",
+    "owner.py": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528",
+    "parent_join.py": "b0e4e3eb7b36cf716be04bbec06c860f0d4d435ae9e1990d806abad0d4b0801a",
+    "program_final.json.gz": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313"
+  },
+  "unsupported": [
+    "partial RF word without source-valid preserved join",
+    "packed FP8 direct RF deposition",
+    "unbound native home byte address",
+    "missing actual client/rank/SM/die binding",
+    "provider command accepted as WRvisibility",
+    "runtime physical reset without allcopy rearm",
+    "production SSA/tile/bittypes/home operand view not joined (protocol-control emitter only)"
+  ],
+  "whole_program_counts": "PC inventory only; actual dynamic emitter inputs/home/client map required",
+  "whole_token_ns": null
+}

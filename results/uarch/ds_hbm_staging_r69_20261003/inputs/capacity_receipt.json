@@ -1,0 +1,831 @@
+{
+  "schema": "SOURCE_BOUND_R68_FLEET_CAPACITY_AND_STAGING_V1",
+  "time_utc": "2026-10-03T06:10:59.379824+00:00",
+  "source_main_head": "4430b906680cd052bd5626231c88542d5f2d5617",
+  "R68_source_head": "915558caaa3742e32ab46343fef9c437807a1f28",
+  "R68_worktree_clean": true,
+  "R68_model_sha256": "ae5e031ebbf51413095a5ae6aeee02958ea653ecedcd26ffe38860f12dafcfda",
+  "R68_verified_source_pins": 2403,
+  "Peirce_floor_review_sha256": "e086626a8a1357cbc27a45254b947082308ba2e7bd614c02c9a1b59c91a5b7b4",
+  "floors_only_not_complete_physical_bounds": {
+    "constructor_RAM_bytes": 40910816974,
+    "runtime_RAM_bytes": 71264523536,
+    "output_disk_bytes": 27751073586,
+    "allocator_page_rounding_filecache_kernel_peer_growth_additional": true,
+    "enrollment_requires_both_phase_proofs": true,
+    "old_R64_R67_guards_unchanged": true
+  },
+  "local": {
+    "snapshot": {
+      "time_utc": "2026-10-03T06:04:19.285966+00:00",
+      "host": "ubuntu",
+      "MemTotal_bytes": 202405810176,
+      "MemAvailable_bytes": 149443280896,
+      "disk_available_bytes": 344232624128,
+      "cpus": 32,
+      "load": [
+        74.0439453125,
+        76.3701171875,
+        73.63525390625
+      ]
+    },
+    "runtime_floor_RAM_margin_before_peer_bytes": 78178757360,
+    "nominal_disk_margin_before_staging_bytes": 307703548952,
+    "CPU_load_exceeds32": true,
+    "no_numeric_admission_from_this_inventory": true,
+    "owned_growth_reservations_not_fully_reconciled": true
+  },
+  "PVE1": {
+    "paired_capture": {
+      "capture_started_utc": "2026-10-03T06:04:43.644724+00:00",
+      "host": {
+        "time_utc": "2026-10-03T06:05:02.511498+00:00",
+        "hostname": "bojpve.bsql.net",
+        "MemTotal_bytes": 270114836480,
+        "MemAvailable_bytes": 56991809536,
+        "meminfo_bytes": {
+          "MemFree": 57244917760,
+          "Cached": 1242271744,
+          "Active(file)": 854470656,
+          "Inactive(file)": 849981440,
+          "Shmem": 80158720,
+          "Dirty": 16384,
+          "Writeback": 0,
+          "SwapTotal": 0
+        },
+        "qemu_pid": 3502423,
+        "actual_argv_sha256": "891458a075c6f770e1a5ab290a199ff1bf10c685de349a9237ccc8c0be7ddebf",
+        "argv_scanned_entirely_for_balloon_reporting": true,
+        "balloon_or_freepage_args": [],
+        "qemu_smaps_rollup": {
+          "Rss_bytes": 256876683264,
+          "Pss_bytes": 203287192576,
+          "Pss_Dirty_bytes": 203278582784,
+          "Pss_Anon_bytes": 203278361600,
+          "Pss_File_bytes": 8826880,
+          "Pss_Shmem_bytes": 4096,
+          "Shared_Clean_bytes": 3375104,
+          "Shared_Dirty_bytes": 67558703104,
+          "Private_Clean_bytes": 8302592,
+          "Private_Dirty_bytes": 189306302464,
+          "Referenced_bytes": 256869638144,
+          "Anonymous_bytes": 256864784384,
+          "LazyFree_bytes": 0,
+          "AnonHugePages_bytes": 6360662016,
+          "ShmemPmdMapped_bytes": 0,
+          "FilePmdMapped_bytes": 0,
+          "Shared_Hugetlb_bytes": 0,
+          "Private_Hugetlb_bytes": 0,
+          "Swap_bytes": 0,
+          "SwapPss_bytes": 0,
+          "Locked_bytes": 0
+        },
+        "largest_mapping_extents": [
+          {
+            "extent_bytes": 257698037760,
+            "permissions": "rw-p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 257698037760,
+            "Rss_bytes": 256806748160,
+            "Pss_bytes": 203222630400,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 67556421632,
+            "Private_Clean_bytes": 16384,
+            "Private_Dirty_bytes": 189250310144,
+            "Anonymous_bytes": 256806748160,
+            "AnonHugePages_bytes": 6360662016,
+            "Swap_bytes": 0
+          },
+          {
+            "extent_bytes": 66973696,
+            "permissions": "---p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 66973696,
+            "Rss_bytes": 0,
+            "Pss_bytes": 0,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 0,
+            "Private_Clean_bytes": 0,
+            "Private_Dirty_bytes": 0,
+            "Anonymous_bytes": 0,
+            "AnonHugePages_bytes": 0,
+            "Swap_bytes": 0
+          },
+          {
+            "extent_bytes": 66973696,
+            "permissions": "---p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 66973696,
+            "Rss_bytes": 0,
+            "Pss_bytes": 0,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 0,
+            "Private_Clean_bytes": 0,
+            "Private_Dirty_bytes": 0,
+            "Anonymous_bytes": 0,
+            "AnonHugePages_bytes": 0,
+            "Swap_bytes": 0
+          },
+          {
+            "extent_bytes": 66973696,
+            "permissions": "---p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 66973696,
+            "Rss_bytes": 0,
+            "Pss_bytes": 0,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 0,
+            "Private_Clean_bytes": 0,
+            "Private_Dirty_bytes": 0,
+            "Anonymous_bytes": 0,
+            "AnonHugePages_bytes": 0,
+            "Swap_bytes": 0
+          },
+          {
+            "extent_bytes": 66973696,
+            "permissions": "---p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 66973696,
+            "Rss_bytes": 0,
+            "Pss_bytes": 0,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 0,
+            "Private_Clean_bytes": 0,
+            "Private_Dirty_bytes": 0,
+            "Anonymous_bytes": 0,
+            "AnonHugePages_bytes": 0,
+            "Swap_bytes": 0
+          },
+          {
+            "extent_bytes": 66973696,
+            "permissions": "---p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 66973696,
+            "Rss_bytes": 0,
+            "Pss_bytes": 0,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 0,
+            "Private_Clean_bytes": 0,
+            "Private_Dirty_bytes": 0,
+            "Anonymous_bytes": 0,
+            "AnonHugePages_bytes": 0,
+            "Swap_bytes": 0
+          },
+          {
+            "extent_bytes": 66973696,
+            "permissions": "---p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 66973696,
+            "Rss_bytes": 0,
+            "Pss_bytes": 0,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 0,
+            "Private_Clean_bytes": 0,
+            "Private_Dirty_bytes": 0,
+            "Anonymous_bytes": 0,
+            "AnonHugePages_bytes": 0,
+            "Swap_bytes": 0
+          },
+          {
+            "extent_bytes": 66973696,
+            "permissions": "---p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 66973696,
+            "Rss_bytes": 0,
+            "Pss_bytes": 0,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 0,
+            "Private_Clean_bytes": 0,
+            "Private_Dirty_bytes": 0,
+            "Anonymous_bytes": 0,
+            "AnonHugePages_bytes": 0,
+            "Swap_bytes": 0
+          },
+          {
+            "extent_bytes": 66973696,
+            "permissions": "---p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 66973696,
+            "Rss_bytes": 0,
+            "Pss_bytes": 0,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 0,
+            "Private_Clean_bytes": 0,
+            "Private_Dirty_bytes": 0,
+            "Anonymous_bytes": 0,
+            "AnonHugePages_bytes": 0,
+            "Swap_bytes": 0
+          },
+          {
+            "extent_bytes": 66973696,
+            "permissions": "---p",
+            "device": "00:00",
+            "inode": 0,
+            "path": "[anonymous]",
+            "Size_bytes": 66973696,
+            "Rss_bytes": 0,
+            "Pss_bytes": 0,
+            "Shared_Clean_bytes": 0,
+            "Shared_Dirty_bytes": 0,
+            "Private_Clean_bytes": 0,
+            "Private_Dirty_bytes": 0,
+            "Anonymous_bytes": 0,
+            "AnonHugePages_bytes": 0,
+            "Swap_bytes": 0
+          }
+        ],
+        "qemu_cgroup": {
+          "memory.current": "204431585280",
+          "memory.stat": {
+            "anon": 203277250560,
+            "file": 344064,
+            "kernel": 1153507328,
+            "kernel_stack": 704512,
+            "pagetables": 508141568,
+            "sec_pagetables": 488935424,
+            "percpu": 9360,
+            "sock": 0,
+            "vmalloc": 126484480,
+            "shmem": 8192,
+            "zswap": 0,
+            "zswapped": 0,
+            "file_mapped": 237568,
+            "file_dirty": 0,
+            "file_writeback": 0,
+            "swapcached": 0,
+            "anon_thp": 6360662016,
+            "file_thp": 0,
+            "shmem_thp": 0,
+            "inactive_anon": 255541248,
+            "active_anon": 203021631488,
+            "inactive_file": 262144,
+            "active_file": 73728,
+            "unevictable": 0,
+            "slab_reclaimable": 208864,
+            "slab_unreclaimable": 25472840,
+            "slab": 25681704,
+            "workingset_refault_anon": 0,
+            "workingset_refault_file": 0,
+            "workingset_activate_anon": 0,
+            "workingset_activate_file": 0,
+            "workingset_restore_anon": 0,
+            "workingset_restore_file": 0,
+            "workingset_nodereclaim": 0,
+            "pgscan": 0,
+            "pgsteal": 0,
+            "pgscan_kswapd": 0,
+            "pgscan_direct": 0,
+            "pgscan_khugepaged": 0,
+            "pgsteal_kswapd": 0,
+            "pgsteal_direct": 0,
+            "pgsteal_khugepaged": 0,
+            "pgfault": 310982200,
+            "pgmajfault": 0,
+            "pgrefill": 0,
+            "pgactivate": 136048654,
+            "pgdeactivate": 0,
+            "pglazyfree": 0,
+            "pglazyfreed": 0,
+            "zswpin": 0,
+            "zswpout": 0,
+            "thp_fault_alloc": 122430,
+            "thp_collapse_alloc": 376562
+          },
+          "memory.max": "max",
+          "memory.high": "max"
+        },
+        "VM_config_capacity": {
+          "balloon": "0",
+          "cores": "28",
+          "memory": "245760",
+          "name": "ot-pve1"
+        },
+        "KSM_counters": {
+          "run": "1",
+          "pages_shared": "6488209",
+          "pages_sharing": "14031258",
+          "pages_unshared": "29974944",
+          "pages_volatile": "12203182"
+        },
+        "page_size": 4096,
+        "no_memory_or_device_changes": true
+      },
+      "guest": {
+        "time_utc": "2026-10-03T06:05:04.211393+00:00",
+        "hostname": "ot-pve1",
+        "kernel": "5.15.0-194-generic",
+        "meminfo_bytes": {
+          "MemTotal": 253343473664,
+          "MemAvailable": 234655158272,
+          "MemFree": 66689785856,
+          "Cached": 164705095680,
+          "Active(file)": 56055058432,
+          "Inactive(file)": 109594206208,
+          "Shmem": 1597440,
+          "Dirty": 540672,
+          "Writeback": 0,
+          "SwapTotal": 0
+        },
+        "balloon_driver_path_present": true,
+        "bound_balloon_devices": [],
+        "persistent_free_bytes": 37885440000,
+        "cachestat_syscall_not_in_installed_headers": true,
+        "page_cleanliness_per_candidate_not_verified": true
+      },
+      "capture_finished_utc": "2026-10-03T06:05:04.254019+00:00"
+    },
+    "actual_physical_parent_membership": "ot-pve1 is QEMU VM9101 PID3502423 on root@bsql-host1.01.me, bojpve.bsql.net",
+    "constructor_floor_margin_before_peer_bytes": 16080992562,
+    "runtime_floor_margin_before_peer_bytes": -14272714000,
+    "persistent_free_bytes": 37885440000,
+    "disk_residual_after_known_single_copy_staging_and_output_bytes": 1356364824,
+    "second_shard_copy_staging_residual_bytes": -7357252480,
+    "live_reservations": {
+      "policy": {
+        "project": "pve",
+        "project_name": "pve",
+        "vm": "ot-pve1",
+        "cpu": 28,
+        "physical_ram_gb": 235.94449615478516,
+        "ram_gb": 208,
+        "disabled": false,
+        "reserved_headroom_gib": 24,
+        "max_aggregate_threads": 28,
+        "max_single_request_gib": 206
+      },
+      "live_slot_owners": {
+        "3369578": [
+          "ot-pve1.2",
+          "ot-pve1.1"
+        ]
+      },
+      "reserved_threads": 1,
+      "thread_leases": [
+        {
+          "host": "ot-pve1",
+          "pid": 3369578,
+          "threads": 1,
+          "slot_gib": 16,
+          "cwd": "/tmp/opentallas-c0-pc40-payload-lease-20261003",
+          "time": 1791007403.583097,
+          "source_head": "81f0a7ded1725186f4323cb5553dfd15e4425aa4",
+          "CPU_sharing": true,
+          "authorization": "User-directed one actual released checkpoint PC40 native leaf payload proof; one shared Nice19 CPU, originals/live jobs unchanged; resource reservation not a process memory cap"
+        }
+      ]
+    },
+    "peer16GiB_already_charged_unique_overlap_not_proved": true,
+    "constructor_margin_if_full16GiB_future_growth_reserved_bytes": -1098876622,
+    "no_physical_recovery_credit": true
+  },
+  "agidock128": {
+    "guest_snapshot": {
+      "time_utc": "2026-10-03T06:04:46.595564+00:00",
+      "hostname": "vm-xry57mhfyn",
+      "MemTotal_bytes": 134974394368,
+      "MemAvailable_bytes": 36834353152,
+      "cpus": 64,
+      "load": [
+        66.6875,
+        76.68603515625,
+        78.07373046875
+      ],
+      "paths": [
+        {
+          "path": "/home",
+          "device": 2049,
+          "free_bytes": 872869670912,
+          "total_bytes": 1065316089856
+        },
+        {
+          "path": "/tmp",
+          "device": 36,
+          "free_bytes": 46644854784,
+          "total_bytes": 67487199232
+        }
+      ],
+      "live_compute": [
+        {
+          "pid": 3166097,
+          "comm": "yosys",
+          "state": "R",
+          "RSS_bytes": 6650384384,
+          "threads": 1
+        },
+        {
+          "pid": 3166137,
+          "comm": "yosys",
+          "state": "R",
+          "RSS_bytes": 4048285696,
+          "threads": 1
+        },
+        {
+          "pid": 3188007,
+          "comm": "qwen_rom_rt_lp",
+          "state": "S",
+          "RSS_bytes": 1531437056,
+          "threads": 380
+        },
+        {
+          "pid": 3189970,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1531662336,
+          "threads": 380
+        },
+        {
+          "pid": 3192361,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1531715584,
+          "threads": 380
+        },
+        {
+          "pid": 3194721,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1531625472,
+          "threads": 380
+        },
+        {
+          "pid": 3196159,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1531658240,
+          "threads": 380
+        },
+        {
+          "pid": 3221889,
+          "comm": "openroad",
+          "state": "R",
+          "RSS_bytes": 31186608128,
+          "threads": 128
+        },
+        {
+          "pid": 3305804,
+          "comm": "qwen_rom_rt_lp",
+          "state": "S",
+          "RSS_bytes": 1527533568,
+          "threads": 380
+        },
+        {
+          "pid": 3307002,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1528258560,
+          "threads": 380
+        },
+        {
+          "pid": 3307531,
+          "comm": "Vtb_hdc_core_2c",
+          "state": "R",
+          "RSS_bytes": 38305792,
+          "threads": 64
+        },
+        {
+          "pid": 3307533,
+          "comm": "Vtb_hdc_core_2c",
+          "state": "R",
+          "RSS_bytes": 38060032,
+          "threads": 64
+        },
+        {
+          "pid": 3307535,
+          "comm": "Vtb_hdc_core_2c",
+          "state": "R",
+          "RSS_bytes": 38555648,
+          "threads": 64
+        },
+        {
+          "pid": 3307537,
+          "comm": "Vtb_hdc_core_2c",
+          "state": "R",
+          "RSS_bytes": 38354944,
+          "threads": 64
+        },
+        {
+          "pid": 3307539,
+          "comm": "Vtb_hdc_core_2c",
+          "state": "R",
+          "RSS_bytes": 38154240,
+          "threads": 64
+        },
+        {
+          "pid": 3307541,
+          "comm": "Vtb_hdc_core_2c",
+          "state": "R",
+          "RSS_bytes": 38387712,
+          "threads": 64
+        },
+        {
+          "pid": 3307542,
+          "comm": "Vtb_hdc_core_2c",
+          "state": "R",
+          "RSS_bytes": 37584896,
+          "threads": 64
+        },
+        {
+          "pid": 3307544,
+          "comm": "Vtb_hdc_core_2c",
+          "state": "R",
+          "RSS_bytes": 38604800,
+          "threads": 64
+        },
+        {
+          "pid": 3310017,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1527025664,
+          "threads": 380
+        },
+        {
+          "pid": 3311621,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1527017472,
+          "threads": 380
+        },
+        {
+          "pid": 3313644,
+          "comm": "qwen_rom_rt_lp",
+          "state": "S",
+          "RSS_bytes": 1527406592,
+          "threads": 380
+        },
+        {
+          "pid": 3314947,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1529364480,
+          "threads": 380
+        },
+        {
+          "pid": 3316934,
+          "comm": "qwen_rom_rt_lp",
+          "state": "S",
+          "RSS_bytes": 1530159104,
+          "threads": 380
+        },
+        {
+          "pid": 3319435,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1529966592,
+          "threads": 380
+        },
+        {
+          "pid": 3320979,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1530322944,
+          "threads": 380
+        },
+        {
+          "pid": 3322539,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1530167296,
+          "threads": 380
+        },
+        {
+          "pid": 3323901,
+          "comm": "qwen_rom_rt_lp",
+          "state": "R",
+          "RSS_bytes": 1530310656,
+          "threads": 380
+        },
+        {
+          "pid": 3330394,
+          "comm": "verilator_bin",
+          "state": "R",
+          "RSS_bytes": 3643486208,
+          "threads": 33
+        },
+        {
+          "pid": 3331141,
+          "comm": "verilator_bin",
+          "state": "R",
+          "RSS_bytes": 1332948992,
+          "threads": 9
+        },
+        {
+          "pid": 3331152,
+          "comm": "verilator_bin",
+          "state": "R",
+          "RSS_bytes": 47722496,
+          "threads": 9
+        },
+        {
+          "pid": 3331168,
+          "comm": "verilator_bin",
+          "state": "R",
+          "RSS_bytes": 1331277824,
+          "threads": 9
+        },
+        {
+          "pid": 3331181,
+          "comm": "verilator_bin",
+          "state": "R",
+          "RSS_bytes": 47366144,
+          "threads": 9
+        },
+        {
+          "pid": 3331193,
+          "comm": "verilator_bin",
+          "state": "R",
+          "RSS_bytes": 46600192,
+          "threads": 9
+        },
+        {
+          "pid": 3331204,
+          "comm": "verilator_bin",
+          "state": "R",
+          "RSS_bytes": 1333751808,
+          "threads": 9
+        }
+      ]
+    },
+    "physical_parent_membership_verified": false,
+    "physical_parent_MemAvailable": null,
+    "guest_constructor_floor_margin_before_peer_bytes": -4076463822,
+    "guest_runtime_floor_margin_before_peer_bytes": -34430170384,
+    "live_reservations": {
+      "policy": {
+        "project": "proj_01M3EBR35E0NVT6ZXWFDASKVN5",
+        "project_name": "agidock",
+        "vm": "vm_01M3X8732YBTQESHXRY57MHFYN",
+        "name": "ot-exp128",
+        "ssh_alias": "ot-agidock128",
+        "cpu": 64,
+        "ram_gb": 96,
+        "physical_ram_gb": 125.7041015625,
+        "disk_gb": 1024,
+        "disabled": false,
+        "qualified": true,
+        "qualification_status": "PASS",
+        "qualification_owner": "parent",
+        "qualification_evidence": "/tmp/claude-1000/queue/agidock128-fleet-20261002/parent-tool-smoke.20261002T030021Z.json",
+        "registration_record": "/tmp/claude-1000/queue/agidock128-fleet-20261002/manifest.json",
+        "measured_mem_total_mib": 128721,
+        "allocated_ram_gb": 128,
+        "reserved_headroom_gib": 24,
+        "max_aggregate_threads": 48,
+        "resource_evidence_owner": "parent",
+        "resource_evidence": "/tmp/claude-1000/queue/agidock128-fleet-20261002/ready-resources.txt",
+        "qualification_evidence_sha256": "514a2d7de53eb84dec6f77cda0a6a18a84a95097d47c6ee14e2aa61d1100fe13",
+        "readiness_publication": "/tmp/claude-1000/queue/agidock128-fleet-20261002/readiness.20261002T030021Z.json",
+        "max_single_request_gib": 94
+      },
+      "live_slot_owners": {},
+      "reserved_threads": 0,
+      "thread_leases": []
+    },
+    "missing_ledger_leases_do_not_prove_zero_live_growth": true,
+    "persistent_home_output_required": true,
+    "tmpfs_tmp_staging_counts_against_RAM": true
+  },
+  "source_staging": {
+    "remote_presence": {
+      "pve1": {
+        "source_root_present": false,
+        "immutable_input_count": 111,
+        "immutable_input_paths_present": 0,
+        "checkpoint_dir_present": false,
+        "selected_shards": [
+          {
+            "name": "model-00002-of-00048.safetensors",
+            "present": false,
+            "bytes": null
+          },
+          {
+            "name": "model-00003-of-00048.safetensors",
+            "present": false,
+            "bytes": null
+          }
+        ],
+        "output_root_exists": false
+      },
+      "agidock128": {
+        "source_root_present": false,
+        "immutable_input_count": 111,
+        "immutable_input_paths_present": 0,
+        "checkpoint_dir_present": false,
+        "selected_shards": [
+          {
+            "name": "model-00002-of-00048.safetensors",
+            "present": false,
+            "bytes": null
+          },
+          {
+            "name": "model-00003-of-00048.safetensors",
+            "present": false,
+            "bytes": null
+          }
+        ],
+        "output_root_exists": false
+      }
+    },
+    "source_closure_bytes": 42835900,
+    "indexed_immutable_input_count": 111,
+    "indexed_immutable_input_bytes": 14078092,
+    "checkpoint_index_bytes": 7470294,
+    "selected_shards": [
+      {
+        "bytes": 1323858272,
+        "name": "model-00002-of-00048.safetensors",
+        "path": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/model-00002-of-00048.safetensors",
+        "selected_names": [
+          "embed.weight"
+        ],
+        "sha256_payload": null,
+        "stamp": [
+          66313,
+          28991055,
+          1323858272,
+          1789298534154389218,
+          1789298534843400598
+        ]
+      },
+      {
+        "bytes": 7389759032,
+        "name": "model-00003-of-00048.safetensors",
+        "path": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/model-00003-of-00048.safetensors",
+        "selected_names": [
+          "layers.0.attn_norm.weight",
+          "layers.0.hc_attn_base",
+          "layers.0.hc_attn_fn",
+          "layers.0.hc_attn_scale"
+        ],
+        "sha256_payload": null,
+        "stamp": [
+          66313,
+          28991059,
+          7389759032,
+          1789298934154178885,
+          1789298934565186007
+        ]
+      }
+    ],
+    "selected_shard_bytes": 8713617304,
+    "two_shard_selection_basis": "Peirce1f7 source-reviewed PC01 subset, not all48 checkpoint files or fulltoken payload availability",
+    "known_source_inputs_plus_single_shards_copy_plus_output_upper_bytes": 36529075176,
+    "sum_may_doublecount_source_input_paths_so_not_a_minimum": true,
+    "git_metadata_transfer_archive_atomic_workspace_live_disk_growth_not_yet_priced": true,
+    "source_weight_payload_transfer_hashes_verified": false,
+    "exact_output_root": "/home/ubuntu/ds-hbm-pc01-r68-run-20261003",
+    "R68_source_root_on_VM_tmpfs_must_be_priced": true,
+    "payload_or_source_transfer_performed": false
+  },
+  "retired_reclaim": {
+    "previous_local_net_recovered_bytes": 12186669056,
+    "new_recovered_bytes": 0,
+    "W6_candidate_guest_resident_filecache_bytes": 16674668544,
+    "W6_final_owner_and_cleanliness_not_verified": true,
+    "W6_actual_host_release_mechanism_not_proven_no_balloon_reporting": true,
+    "protected_active_Qwen_W12_excluded": true,
+    "no_new_owner_confirmed_safe_candidate_found_in_receipt_search": true,
+    "existing_authorization_sufficient_after_engineering_facts": true,
+    "source_refs_unique_patches_and_immutable_evidence_retained": true
+  },
+  "existing_configured_NFS": {
+    "transport_probe": {
+      "time_utc": "2026-10-03T06:08:01.508897+00:00",
+      "existing_NFS_server": "bsql-storage.01.me",
+      "port": 2049,
+      "reachable": false,
+      "error": "OSError",
+      "errno": 113
+    },
+    "capacity_permission_not_verified": true,
+    "no_new_mount": true
+  },
+  "capacity_rule": "No host+guest or PVE1+128GBVM roof sums. COW is one complete touched-page union; no independent sharedDirty double charge, RSS/PSS savings or guest pagecache recovery credit.",
+  "decision": "NO_R68_ENROLLMENT_OR_LAUNCH_FROM_CURRENT_CAPACITY",
+  "next_gate": "Kepler/Peirce complete both phase allocator/filecache/kernel touched-page proofs bound to915558/modelae5; live growth leases and physical parent membership; exact source staging/hash/atomic workspace costs. Preserve existing jobs and retired source/evidence.",
+  "PVE2_PVE3": "Disabled/drain only; no query, assignment, mount or workload here.",
+  "actions": {
+    "new_numeric_constructor_simulation_build": false,
+    "restarts_signals": false,
+    "cleanup_deletion_advice": false,
+    "arbitrary_resource_caps": false,
+    "new_mount_transfer": false
+  }
+}

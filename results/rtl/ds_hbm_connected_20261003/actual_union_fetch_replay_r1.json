@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.ds_hbm.actual_union_transport.v1",
+  "source_commit": "ebb73bb83a27a6324dcc03d449095040c7903288",
+  "runtime_rc": 0,
+  "verdict": "PASS_ACTUAL_UNION_FETCH_REPLAY",
+  "observed_stdout": "PASS_ACTUAL_UNION_FETCH_REPLAY reads=2 consumers=6 scope=controlled_transport_only",
+  "source_sha256": {
+    "rtl/gpu_sys/ds_hbm17/ot_ds_hbm_union_fetch.sv": "af4dd221fe0ea7d420fe57d642a0746bdd683cf710a94303a4e3cf89abb28be8",
+    "rtl/gpu_sys/ds_hbm17/ot_ds_hbm_union_replay.sv": "c49015955ae706dd237e180f204bd0c51596adcb1b8fa191ed9d32ce3b1b597a",
+    "rtl/gpu/ot_gpu_expert_fetch.sv": "a36d62a66e7541a5052b0a1cd3c1c7be346e45627c80f4b94fc72d733b98883e",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/test/gpu_sys/tb_ds_hbm_union_fetch.sv": "b08a00af2a486bae956bb5b3acf5e4dda9993bb32c8aa1392b8b208ae59118c3"
+  },
+  "compile_argv": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_ds_hbm_union_fetch",
+    "-o",
+    "/tmp/sagan-union-fetch-parse.vvp",
+    "rtl/gpu_sys/ds_hbm17/ot_ds_hbm_union_fetch.sv",
+    "rtl/gpu_sys/ds_hbm17/ot_ds_hbm_union_replay.sv",
+    "rtl/gpu/ot_gpu_expert_fetch.sv",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv",
+    "rtl/test/gpu_sys/tb_ds_hbm_union_fetch.sv"
+  ],
+  "runtime_argv": [
+    "vvp",
+    "/tmp/sagan-union-fetch-parse.vvp"
+  ],
+  "scope": "controlled source payload through actual expert fetch, HBM model and finite replay; blocked consumer prevents premature retirement",
+  "released_checkpoint_numerical_qualified": false,
+  "full_token_qualified": false
+}

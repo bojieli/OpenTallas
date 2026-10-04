@@ -1,0 +1,20 @@
+{
+  "archive_origin_count": 7,
+  "cold_final_replay_log": "cold-final-replay.log",
+  "cold_scope": "byte-exact generated models and representative protocol artifacts without Git",
+  "earlier_cold_replay_scope": "pre-metadata-allocation/reverse pricing revision (native_frame only); retained as history",
+  "focused_tests": 15,
+  "hardware_admitted": false,
+  "historical_pinned_files_modified": [],
+  "input_manifest_sha256": "1b943fc383b1e03f0657e4ad796a105142582c9564a13ba6449c49f66fb488ca",
+  "new_RTL_or_checkpoint_or_acceptance_jobs": 0,
+  "schema": "HBM_SOURCE_CONTROL_MILESTONE_VERIFICATION_R1",
+  "source_pins": {
+    "tests/test_h4_hbm_mtp_invocation_model.py": "94b61fcb6a80b2b58ca2013a401ba629cc40af860bb7abb9a98f0c39ab277554",
+    "tools/h4_hbm_mtp_invocation_model.py": "d11409877871269ed9d170d95f2f6acd30235a218fd358d037a852049f4d26b0"
+  },
+  "test_log": "tests-r2.log",
+  "test_scope": "metadata/compiler/control protocol only; not production arithmetic or hardware",
+  "whole_program_numerical_completion": false,
+  "whole_token_latency_ns": null
+}

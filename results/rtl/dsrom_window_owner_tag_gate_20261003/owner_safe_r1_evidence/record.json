@@ -1,0 +1,56 @@
+{
+  "source_commit": "9965ff51cc8d899fc1af3bfc99e15801f6681e9a",
+  "arm": "owner-safe",
+  "status": "PASS_BOUNDED_WINDOW_TAG_GATE_ONLY",
+  "host": {
+    "meminfo": "MemTotal:       197661924 kB\nMemFree:         1598508 kB\nMemAvailable:   61988328 kB\nBuffers:         1197136 kB\nCached:         88662560 kB\nSwapCached:        65608 kB\nActive:         124897324 kB\nInactive:       60125688 kB\nActive(anon):   118243960 kB\nInactive(anon):  9665076 kB\nActive(file):    6653364 kB\nInactive(file): 50460612 kB\nUnevictable:       27996 kB\nMlocked:           27996 kB\nSwapTotal:       8388604 kB\nSwapFree:           2340 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              3248 kB\nWriteback:          2520 kB\nAnonPages:      95127252 kB\nMapped:         23819852 kB\nShmem:          32736500 kB\nKReclaimable:    6420944 kB\nSlab:            7840416 kB\nSReclaimable:    6420944 kB\nSUnreclaim:      1419472 kB\nKernelStack:       53488 kB\nPageTables:       433184 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    107219564 kB\nCommitted_AS:   216883256 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      303676 kB\nVmallocChunk:          0 kB\nPercpu:            50304 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:   1599488 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nUnaccepted:            0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:    77665740 kB\nDirectMap2M:    121364480 kB\nDirectMap1G:     2097152 kB\n",
+    "available_disk_bytes": 314562113536
+  },
+  "versions": {
+    "iverilog": "Icarus Verilog version 11.0 (stable) ()\n\nCopyright 1998-2020 Stephen Williams\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\nIcarus Verilog Preprocessor version 11.0 (stable) ()\n\nCopyright (c) 1999-2020 Stephen Williams (steve@icarus.com)\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\nIcarus Verilog Parser/Elaborator version 11.0 (stable) ()\n\nCopyright (c) 1998-2020 Stephen Williams (steve@icarus.com)\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\n FLAGS DLL vvp.tgt\nvvp.tgt: Icarus Verilog VVP Code Generator 11.0 (stable) ()\n\nCopyright (c) 2001-2020 Stephen Williams (steve@icarus.com)\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\n",
+    "vvp": ""
+  },
+  "limits": {
+    "FSIZE": "unlimited",
+    "CPU_time": "unlimited",
+    "wall_limit": null,
+    "extra_large_job": false
+  },
+  "HDL_execution": true,
+  "physical_credit": false,
+  "fulltoken_credit": false,
+  "file_sha256": {
+    "results/rtl/dsrom_window_owner_tag_gate_20261003/inputs/ot_chip_v41x_window_stage4.sv": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+    "results/rtl/dsrom_window_owner_tag_gate_20261003/inputs/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+    "results/rtl/dsrom_window_owner_tag_gate_20261003/inputs/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
+    "results/rtl/dsrom_window_owner_tag_gate_20261003/inputs/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c",
+    "results/rtl/dsrom_window_owner_tag_gate_20261003/owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv": "649110ca45ce9ccc303ddbc3dddcc55815e0d794d1280ea0b665df2931311f5e",
+    "results/rtl/dsrom_window_owner_tag_gate_20261003/tb_window_owner_tag_r2.sv": "a221bd7ee1201d50a1e889c1b14370af571136a28a38510ccde0ced74be53602"
+  },
+  "compile_command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_window_owner_tag_r2",
+    "-DOWNER_SAFE_BUILD",
+    "-Ptb_window_owner_tag_r2.OWNER_SAFE=1",
+    "-o",
+    "/tmp/opentallas-window-owner-tag-safe-20261003-r1/gate.vvp",
+    "/tmp/opentallas-H3-scalar-contract-model-20261002/results/rtl/dsrom_window_owner_tag_gate_20261003/inputs/ot_chip_v41x_window_stage4.sv",
+    "/tmp/opentallas-H3-scalar-contract-model-20261002/results/rtl/dsrom_window_owner_tag_gate_20261003/inputs/ot_chip_v41x_window_row_codec.sv",
+    "/tmp/opentallas-H3-scalar-contract-model-20261002/results/rtl/dsrom_window_owner_tag_gate_20261003/inputs/ot_chip_v41x_kv_reqmux.sv",
+    "/tmp/opentallas-H3-scalar-contract-model-20261002/results/rtl/dsrom_window_owner_tag_gate_20261003/inputs/ot_chip_v41x_kv_rope_reqmux.sv",
+    "/tmp/opentallas-H3-scalar-contract-model-20261002/results/rtl/dsrom_window_owner_tag_gate_20261003/owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv",
+    "/tmp/opentallas-H3-scalar-contract-model-20261002/results/rtl/dsrom_window_owner_tag_gate_20261003/tb_window_owner_tag_r2.sv"
+  ],
+  "build_exit": 0,
+  "sim_exit": 0,
+  "completion": "WINDOW_OWNER_SAFE_PASS rows=1536 reads=26112 replies=26112 checks=1536 wraps=3 peak=8",
+  "binary_sha256": "1fc29be608731538dcdc8d9f5f5413f19f8f0f2fd49bb63aced14e5bfc0c0da6",
+  "artifact_sha256": {
+    "model.json": "82248bf43a07e0fb7e253c8c494b4b737342646bbf627da22b320e091990a5ce",
+    "compile.log": "9b874ad06a7af73bf42b122bd17fc9f8d8183dcd79da56e6b508d5e1bdce3eda",
+    "simulate.log": "ebef1cd848e00373754f73f646d0574ba472b21fa5e9a278f8776d9d8b73a46e",
+    "gate.vvp": "1fc29be608731538dcdc8d9f5f5413f19f8f0f2fd49bb63aced14e5bfc0c0da6"
+  }
+}

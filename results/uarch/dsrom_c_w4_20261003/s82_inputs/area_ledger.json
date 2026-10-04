@@ -1,0 +1,1627 @@
+{
+  "PAR2_corridor_credit_mm2": 4.31826736128,
+  "RNE_WAKE_config_and_reframe_retained": true,
+  "S69_adopted": false,
+  "S73_provisional": true,
+  "candidate_screen": {
+    "BF": 512,
+    "base_fixed_mm2": 465.4771773187259,
+    "base_variable_mm2": 267.8885065493794,
+    "increment_terms": [
+      {
+        "factor": 1.166015625,
+        "mm2": 18.810306719381263,
+        "name": "field macro clearance"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 18.358885923840003,
+        "name": "cfg halo grid"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.21756259840000153,
+        "name": "reservation rounding"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.2140439189174732,
+        "name": "retained main request and mux proxy"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.061771960800000025,
+        "name": "selector state replacement"
+      },
+      {
+        "factor": 1.4143646408839778,
+        "mm2": 6.654696652800039,
+        "name": "BF frame growth"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 13.46370433554372,
+        "name": "field row whitespace"
+      },
+      {
+        "factor": 1,
+        "mm2": 1.3155131592,
+        "name": "selector complete replacement"
+      },
+      {
+        "factor": 1.1126927639383155,
+        "mm2": 6.210016243199999,
+        "name": "q frame growth"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.002208229960781253,
+        "name": "root clock buffer"
+      },
+      {
+        "factor": 1,
+        "mm2": 2.6571105216,
+        "name": "selector escape corridor"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.5956084256399999,
+        "name": "selector_source_correct_station"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.8869325410575001,
+        "name": "shared_broadcast_BUF"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.0022195863,
+        "name": "same_BST_replica_register_floor"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.09456308063999999,
+        "name": "enable_source_repair"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.5400543156553126,
+        "name": "finite_spatial_element_clock_increment"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.00048743856000000007,
+        "name": "enable_clone_clock_leaf"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.00054884439421875,
+        "name": "enable_clone_reset_tree"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.000147700411875,
+        "name": "local_BF_CFG_large_leaf"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.027770817600000004,
+        "name": "terminal delta"
+      },
+      {
+        "factor": 1.166015625,
+        "mm2": 0.0011141452800000028,
+        "name": "enable replacement delta"
+      },
+      {
+        "factor": 0,
+        "mm2": 0.0,
+        "name": "PAR2 two-port corridor REMOVED"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.0761399676,
+        "name": "initial capture proxy"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.06409047240000001,
+        "name": "capture enclosure replaces old proxy"
+      },
+      {
+        "factor": 1,
+        "mm2": 0.01686526564003543,
+        "name": "selected clock island delta"
+      }
+    ],
+    "margin_mm2": 1.464365841792528,
+    "pairs": 2388,
+    "physical_fit": false,
+    "q": 1876,
+    "retained_return_FF50_reservation_mm2": 52.897587425279994,
+    "screen_mm2": 856.5356341582075,
+    "screen_pass": true,
+    "stages": 82
+  },
+  "classification": "Whitespace remains charged as packing-dependent; generic provider/cell floors conservatively scale by sites pending actual counts.",
+  "complement_credit_mm2": 0,
+  "every_die_858_gate": "BLOCKED: area proxy alone is insufficient",
+  "exact_cost_gaps": [
+    "W1 adder/tag/counter/flow logic and contextual CTS/routes excluded from historical FF return proxy",
+    "Actual per-stage PHW macro counts and source repair geometries must replace proportional proxies",
+    "W4 replacement rectangles and W3 PHY/controller/service map not complete"
+  ],
+  "historical_delta_mm2": 64.55495794136004,
+  "inherited_fixed_mm2": 418.26916414007,
+  "sensitivity": {
+    "fixed_per_die_upside": {
+      "S69": {
+        "BF": 609,
+        "base_fixed_mm2": 465.4771773187259,
+        "base_variable_mm2": 318.25782792319484,
+        "increment_terms": [
+          {
+            "factor": 1,
+            "mm2": 16.13212234560001,
+            "name": "field macro clearance"
+          },
+          {
+            "factor": 1,
+            "mm2": 15.74497419264,
+            "name": "cfg halo grid"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.21756259840000153,
+            "name": "reservation rounding"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.18356865407997702,
+            "name": "retained main request and mux proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.061771960800000025,
+            "name": "selector state replacement"
+          },
+          {
+            "factor": 1,
+            "mm2": 4.705078492800028,
+            "name": "BF frame growth"
+          },
+          {
+            "factor": 1,
+            "mm2": 11.546761507199975,
+            "name": "field row whitespace"
+          },
+          {
+            "factor": 1,
+            "mm2": 1.3155131592,
+            "name": "selector complete replacement"
+          },
+          {
+            "factor": 1,
+            "mm2": 5.5810700352,
+            "name": "q frame growth"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0018938253600000025,
+            "name": "root clock buffer"
+          },
+          {
+            "factor": 1,
+            "mm2": 2.6571105216,
+            "name": "selector escape corridor"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.5956084256399999,
+            "name": "selector_source_correct_station"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.7606523635200001,
+            "name": "shared_broadcast_BUF"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0019035648,
+            "name": "same_BST_replica_register_floor"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.08109932544,
+            "name": "enable_source_repair"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.4631621601600001,
+            "name": "finite_spatial_element_clock_increment"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.00041803776000000006,
+            "name": "enable_clone_clock_leaf"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.00047070072000000005,
+            "name": "enable_clone_reset_tree"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.00012667104,
+            "name": "local_BF_CFG_large_leaf"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.027770817600000004,
+            "name": "terminal delta"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0009555148800000024,
+            "name": "enable replacement delta"
+          },
+          {
+            "factor": 0,
+            "mm2": 0.0,
+            "name": "PAR2 two-port corridor REMOVED"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0761399676,
+            "name": "initial capture proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.06409047240000001,
+            "name": "capture enclosure replaces old proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.01686526564003543,
+            "name": "selected clock island delta"
+          }
+        ],
+        "margin_mm2": -38.869283247280805,
+        "pairs": 2837,
+        "physical_fit": false,
+        "q": 2228,
+        "retained_return_FF50_reservation_mm2": 52.897587425279994,
+        "screen_mm2": 896.8692832472808,
+        "screen_pass": false,
+        "stages": 69
+      },
+      "S73": {
+        "BF": 576,
+        "base_fixed_mm2": 465.4771773187259,
+        "base_variable_mm2": 300.8697548431472,
+        "increment_terms": [
+          {
+            "factor": 1,
+            "mm2": 16.13212234560001,
+            "name": "field macro clearance"
+          },
+          {
+            "factor": 1,
+            "mm2": 15.74497419264,
+            "name": "cfg halo grid"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.21756259840000153,
+            "name": "reservation rounding"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.18356865407997702,
+            "name": "retained main request and mux proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.061771960800000025,
+            "name": "selector state replacement"
+          },
+          {
+            "factor": 1,
+            "mm2": 4.705078492800028,
+            "name": "BF frame growth"
+          },
+          {
+            "factor": 1,
+            "mm2": 11.546761507199975,
+            "name": "field row whitespace"
+          },
+          {
+            "factor": 1,
+            "mm2": 1.3155131592,
+            "name": "selector complete replacement"
+          },
+          {
+            "factor": 1,
+            "mm2": 5.5810700352,
+            "name": "q frame growth"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0018938253600000025,
+            "name": "root clock buffer"
+          },
+          {
+            "factor": 1,
+            "mm2": 2.6571105216,
+            "name": "selector escape corridor"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.5956084256399999,
+            "name": "selector_source_correct_station"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.7606523635200001,
+            "name": "shared_broadcast_BUF"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0019035648,
+            "name": "same_BST_replica_register_floor"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.08109932544,
+            "name": "enable_source_repair"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.4631621601600001,
+            "name": "finite_spatial_element_clock_increment"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.00041803776000000006,
+            "name": "enable_clone_clock_leaf"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.00047070072000000005,
+            "name": "enable_clone_reset_tree"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.00012667104,
+            "name": "local_BF_CFG_large_leaf"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.027770817600000004,
+            "name": "terminal delta"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0009555148800000024,
+            "name": "enable replacement delta"
+          },
+          {
+            "factor": 0,
+            "mm2": 0.0,
+            "name": "PAR2 two-port corridor REMOVED"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0761399676,
+            "name": "initial capture proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.06409047240000001,
+            "name": "capture enclosure replaces old proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.01686526564003543,
+            "name": "selected clock island delta"
+          }
+        ],
+        "margin_mm2": -21.481210167233144,
+        "pairs": 2682,
+        "physical_fit": false,
+        "q": 2106,
+        "retained_return_FF50_reservation_mm2": 52.897587425279994,
+        "screen_mm2": 879.4812101672331,
+        "screen_pass": false,
+        "stages": 73
+      },
+      "first_area_screen": {
+        "BF": 532,
+        "base_fixed_mm2": 465.4771773187259,
+        "base_variable_mm2": 277.9848070474716,
+        "increment_terms": [
+          {
+            "factor": 1,
+            "mm2": 16.13212234560001,
+            "name": "field macro clearance"
+          },
+          {
+            "factor": 1,
+            "mm2": 15.74497419264,
+            "name": "cfg halo grid"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.21756259840000153,
+            "name": "reservation rounding"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.18356865407997702,
+            "name": "retained main request and mux proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.061771960800000025,
+            "name": "selector state replacement"
+          },
+          {
+            "factor": 1,
+            "mm2": 4.705078492800028,
+            "name": "BF frame growth"
+          },
+          {
+            "factor": 1,
+            "mm2": 11.546761507199975,
+            "name": "field row whitespace"
+          },
+          {
+            "factor": 1,
+            "mm2": 1.3155131592,
+            "name": "selector complete replacement"
+          },
+          {
+            "factor": 1,
+            "mm2": 5.5810700352,
+            "name": "q frame growth"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0018938253600000025,
+            "name": "root clock buffer"
+          },
+          {
+            "factor": 1,
+            "mm2": 2.6571105216,
+            "name": "selector escape corridor"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.5956084256399999,
+            "name": "selector_source_correct_station"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.7606523635200001,
+            "name": "shared_broadcast_BUF"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0019035648,
+            "name": "same_BST_replica_register_floor"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.08109932544,
+            "name": "enable_source_repair"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.4631621601600001,
+            "name": "finite_spatial_element_clock_increment"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.00041803776000000006,
+            "name": "enable_clone_clock_leaf"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.00047070072000000005,
+            "name": "enable_clone_reset_tree"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.00012667104,
+            "name": "local_BF_CFG_large_leaf"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.027770817600000004,
+            "name": "terminal delta"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0009555148800000024,
+            "name": "enable replacement delta"
+          },
+          {
+            "factor": 0,
+            "mm2": 0.0,
+            "name": "PAR2 two-port corridor REMOVED"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0761399676,
+            "name": "initial capture proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.06409047240000001,
+            "name": "capture enclosure replaces old proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.01686526564003543,
+            "name": "selected clock island delta"
+          }
+        ],
+        "margin_mm2": 1.4037376284425136,
+        "pairs": 2478,
+        "physical_fit": false,
+        "q": 1946,
+        "retained_return_FF50_reservation_mm2": 52.897587425279994,
+        "screen_mm2": 856.5962623715575,
+        "screen_pass": true,
+        "stages": 79
+      }
+    },
+    "historical_all_scale": {
+      "S69": {
+        "BF": 609,
+        "base_fixed_mm2": 465.4771773187259,
+        "base_variable_mm2": 318.25782792319484,
+        "increment_terms": [
+          {
+            "factor": 1.38525390625,
+            "mm2": 22.347085495345326,
+            "name": "field macro clearance"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 21.81078700416,
+            "name": "cfg halo grid"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.3013794392875021,
+            "name": "reservation rounding"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.25428919512934317,
+            "name": "retained main request and mux proxy"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.08556984999492191,
+            "name": "selector state replacement"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 6.517728361364101,
+            "name": "BF frame growth"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 15.995196482385902,
+            "name": "field row whitespace"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 1.822319742505078,
+            "name": "selector complete replacement"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 7.731199067315624,
+            "name": "q frame growth"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.002623428977695316,
+            "name": "root clock buffer"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 3.680772729384375,
+            "name": "selector escape corridor"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.8250688982132226,
+            "name": "selector_source_correct_station"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 1.0536966578643752,
+            "name": "shared_broadcast_BUF"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.002636920575,
+            "name": "same_BST_replica_register_floor"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.11234315735999999,
+            "name": "enable_source_repair"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.6415971915888283,
+            "name": "finite_spatial_element_clock_increment"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.00057908844,
+            "name": "enable_clone_clock_leaf"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.0006520400110546875,
+            "name": "enable_clone_reset_tree"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.00017547155296875,
+            "name": "local_BF_CFG_large_leaf"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.03846963356015626,
+            "name": "terminal delta"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.0013236307200000033,
+            "name": "enable replacement delta"
+          },
+          {
+            "factor": 0,
+            "mm2": 0.0,
+            "name": "PAR2 two-port corridor REMOVED"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.10547318753964843,
+            "name": "initial capture proxy"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.08878157724550784,
+            "name": "capture enclosure replaces old proxy"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.023362675107802988,
+            "name": "selected clock island delta"
+          }
+        ],
+        "margin_mm2": -62.07570359282931,
+        "pairs": 2837,
+        "physical_fit": false,
+        "q": 2228,
+        "retained_return_FF50_reservation_mm2": 52.897587425279994,
+        "screen_mm2": 920.0757035928293,
+        "screen_pass": false,
+        "stages": 69
+      },
+      "S73": {
+        "BF": 576,
+        "base_fixed_mm2": 465.4771773187259,
+        "base_variable_mm2": 300.8697548431472,
+        "increment_terms": [
+          {
+            "factor": 1.3095703125,
+            "mm2": 21.12614850141564,
+            "name": "field macro clearance"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 20.61915077376,
+            "name": "cfg halo grid"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.284913519975002,
+            "name": "reservation rounding"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.2403960596887199,
+            "name": "retained main request and mux proxy"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.08089472600859378,
+            "name": "selector state replacement"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 6.161631112153161,
+            "name": "BF frame growth"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 15.12129607534684,
+            "name": "field row whitespace"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 1.7227569789914063,
+            "name": "selector complete replacement"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 7.30880363008125,
+            "name": "q frame growth"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.0024800974685156283,
+            "name": "root clock buffer"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 3.47967305611875,
+            "name": "selector escape corridor"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.7799911120930078,
+            "name": "selector_source_correct_station"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.9961277533987501,
+            "name": "shared_broadcast_BUF"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.00249285195,
+            "name": "same_BST_replica_register_floor"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.10620526895999999,
+            "name": "enable_source_repair"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.6065434148189064,
+            "name": "finite_spatial_element_clock_increment"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.0005474498400000001,
+            "name": "enable_clone_clock_leaf"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.000616415688984375,
+            "name": "enable_clone_reset_tree"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.0001658846334375,
+            "name": "local_BF_CFG_large_leaf"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.0363678382828125,
+            "name": "terminal delta"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.0012513139200000033,
+            "name": "enable replacement delta"
+          },
+          {
+            "factor": 0,
+            "mm2": 0.0,
+            "name": "PAR2 two-port corridor REMOVED"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.09971064116367187,
+            "name": "initial capture proxy"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.08393097996914065,
+            "name": "capture enclosure replaces old proxy"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.022086251194616713,
+            "name": "selected clock island delta"
+          }
+        ],
+        "margin_mm2": -40.12870129407429,
+        "pairs": 2682,
+        "physical_fit": false,
+        "q": 2106,
+        "retained_return_FF50_reservation_mm2": 52.897587425279994,
+        "screen_mm2": 898.1287012940743,
+        "screen_pass": false,
+        "stages": 73
+      },
+      "first_area_screen": {
+        "BF": 512,
+        "base_fixed_mm2": 465.4771773187259,
+        "base_variable_mm2": 267.8885065493794,
+        "increment_terms": [
+          {
+            "factor": 1.166015625,
+            "mm2": 18.810306719381263,
+            "name": "field macro clearance"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 18.358885923840003,
+            "name": "cfg halo grid"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.25368138915000177,
+            "name": "reservation rounding"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.2140439189174732,
+            "name": "retained main request and mux proxy"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.07202707147968752,
+            "name": "selector state replacement"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 5.486195039456282,
+            "name": "BF frame growth"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 13.46370433554372,
+            "name": "field row whitespace"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 1.5339088985203124,
+            "name": "selector complete replacement"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 6.5076148652625,
+            "name": "q frame growth"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.002208229960781253,
+            "name": "root clock buffer"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 3.0982323855375,
+            "name": "selector escape corridor"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.6944887306778905,
+            "name": "selector_source_correct_station"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.8869325410575001,
+            "name": "shared_broadcast_BUF"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.0022195863,
+            "name": "same_BST_replica_register_floor"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.09456308063999999,
+            "name": "enable_source_repair"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.5400543156553126,
+            "name": "finite_spatial_element_clock_increment"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.00048743856000000007,
+            "name": "enable_clone_clock_leaf"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.00054884439421875,
+            "name": "enable_clone_reset_tree"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.000147700411875,
+            "name": "local_BF_CFG_large_leaf"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.03238120724062501,
+            "name": "terminal delta"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.0011141452800000028,
+            "name": "enable replacement delta"
+          },
+          {
+            "factor": 0,
+            "mm2": 0.0,
+            "name": "PAR2 two-port corridor REMOVED"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.08878039190859374,
+            "name": "initial capture proxy"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.07473049223203126,
+            "name": "capture enclosure replaces old proxy"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.01966516325605694,
+            "name": "selected clock island delta"
+          }
+        ],
+        "margin_mm2": 1.4998062919511312,
+        "pairs": 2388,
+        "physical_fit": false,
+        "q": 1876,
+        "retained_return_FF50_reservation_mm2": 52.897587425279994,
+        "screen_mm2": 856.5001937080489,
+        "screen_pass": true,
+        "stages": 82
+      }
+    },
+    "source_classified": {
+      "S69": {
+        "BF": 609,
+        "base_fixed_mm2": 465.4771773187259,
+        "base_variable_mm2": 318.25782792319484,
+        "increment_terms": [
+          {
+            "factor": 1.38525390625,
+            "mm2": 22.347085495345326,
+            "name": "field macro clearance"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 21.81078700416,
+            "name": "cfg halo grid"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.21756259840000153,
+            "name": "reservation rounding"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.25428919512934317,
+            "name": "retained main request and mux proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.061771960800000025,
+            "name": "selector state replacement"
+          },
+          {
+            "factor": 1.6823204419889504,
+            "mm2": 7.915449729600047,
+            "name": "BF frame growth"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 15.995196482385902,
+            "name": "field row whitespace"
+          },
+          {
+            "factor": 1,
+            "mm2": 1.3155131592,
+            "name": "selector complete replacement"
+          },
+          {
+            "factor": 1.3214709371293,
+            "mm2": 7.3752218496,
+            "name": "q frame growth"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.002623428977695316,
+            "name": "root clock buffer"
+          },
+          {
+            "factor": 1,
+            "mm2": 2.6571105216,
+            "name": "selector escape corridor"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.5956084256399999,
+            "name": "selector_source_correct_station"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 1.0536966578643752,
+            "name": "shared_broadcast_BUF"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.002636920575,
+            "name": "same_BST_replica_register_floor"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.11234315735999999,
+            "name": "enable_source_repair"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.6415971915888283,
+            "name": "finite_spatial_element_clock_increment"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.00057908844,
+            "name": "enable_clone_clock_leaf"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.0006520400110546875,
+            "name": "enable_clone_reset_tree"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.00017547155296875,
+            "name": "local_BF_CFG_large_leaf"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.027770817600000004,
+            "name": "terminal delta"
+          },
+          {
+            "factor": 1.38525390625,
+            "mm2": 0.0013236307200000033,
+            "name": "enable replacement delta"
+          },
+          {
+            "factor": 0,
+            "mm2": 0.0,
+            "name": "PAR2 two-port corridor REMOVED"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0761399676,
+            "name": "initial capture proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.06409047240000001,
+            "name": "capture enclosure replaces old proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.01686526564003543,
+            "name": "selected clock island delta"
+          }
+        ],
+        "margin_mm2": -61.178683199391344,
+        "pairs": 2837,
+        "physical_fit": false,
+        "q": 2228,
+        "retained_return_FF50_reservation_mm2": 52.897587425279994,
+        "screen_mm2": 919.1786831993913,
+        "screen_pass": false,
+        "stages": 69
+      },
+      "S73": {
+        "BF": 576,
+        "base_fixed_mm2": 465.4771773187259,
+        "base_variable_mm2": 300.8697548431472,
+        "increment_terms": [
+          {
+            "factor": 1.3095703125,
+            "mm2": 21.12614850141564,
+            "name": "field macro clearance"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 20.61915077376,
+            "name": "cfg halo grid"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.21756259840000153,
+            "name": "reservation rounding"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.2403960596887199,
+            "name": "retained main request and mux proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.061771960800000025,
+            "name": "selector state replacement"
+          },
+          {
+            "factor": 1.591160220994475,
+            "mm2": 7.4865337344000435,
+            "name": "BF frame growth"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 15.12129607534684,
+            "name": "field row whitespace"
+          },
+          {
+            "factor": 1,
+            "mm2": 1.3155131592,
+            "name": "selector complete replacement"
+          },
+          {
+            "factor": 1.2491103202846976,
+            "mm2": 6.9713721792,
+            "name": "q frame growth"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.0024800974685156283,
+            "name": "root clock buffer"
+          },
+          {
+            "factor": 1,
+            "mm2": 2.6571105216,
+            "name": "selector escape corridor"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.5956084256399999,
+            "name": "selector_source_correct_station"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.9961277533987501,
+            "name": "shared_broadcast_BUF"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.00249285195,
+            "name": "same_BST_replica_register_floor"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.10620526895999999,
+            "name": "enable_source_repair"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.6065434148189064,
+            "name": "finite_spatial_element_clock_increment"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.0005474498400000001,
+            "name": "enable_clone_clock_leaf"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.000616415688984375,
+            "name": "enable_clone_reset_tree"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.0001658846334375,
+            "name": "local_BF_CFG_large_leaf"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.027770817600000004,
+            "name": "terminal delta"
+          },
+          {
+            "factor": 1.3095703125,
+            "mm2": 0.0012513139200000033,
+            "name": "enable replacement delta"
+          },
+          {
+            "factor": 0,
+            "mm2": 0.0,
+            "name": "PAR2 two-port corridor REMOVED"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0761399676,
+            "name": "initial capture proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.06409047240000001,
+            "name": "capture enclosure replaces old proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.01686526564003543,
+            "name": "selected clock island delta"
+          }
+        ],
+        "margin_mm2": -39.55828055052302,
+        "pairs": 2682,
+        "physical_fit": false,
+        "q": 2106,
+        "retained_return_FF50_reservation_mm2": 52.897587425279994,
+        "screen_mm2": 897.558280550523,
+        "screen_pass": false,
+        "stages": 73
+      },
+      "first_area_screen": {
+        "BF": 512,
+        "base_fixed_mm2": 465.4771773187259,
+        "base_variable_mm2": 267.8885065493794,
+        "increment_terms": [
+          {
+            "factor": 1.166015625,
+            "mm2": 18.810306719381263,
+            "name": "field macro clearance"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 18.358885923840003,
+            "name": "cfg halo grid"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.21756259840000153,
+            "name": "reservation rounding"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.2140439189174732,
+            "name": "retained main request and mux proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.061771960800000025,
+            "name": "selector state replacement"
+          },
+          {
+            "factor": 1.4143646408839778,
+            "mm2": 6.654696652800039,
+            "name": "BF frame growth"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 13.46370433554372,
+            "name": "field row whitespace"
+          },
+          {
+            "factor": 1,
+            "mm2": 1.3155131592,
+            "name": "selector complete replacement"
+          },
+          {
+            "factor": 1.1126927639383155,
+            "mm2": 6.210016243199999,
+            "name": "q frame growth"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.002208229960781253,
+            "name": "root clock buffer"
+          },
+          {
+            "factor": 1,
+            "mm2": 2.6571105216,
+            "name": "selector escape corridor"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.5956084256399999,
+            "name": "selector_source_correct_station"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.8869325410575001,
+            "name": "shared_broadcast_BUF"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.0022195863,
+            "name": "same_BST_replica_register_floor"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.09456308063999999,
+            "name": "enable_source_repair"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.5400543156553126,
+            "name": "finite_spatial_element_clock_increment"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.00048743856000000007,
+            "name": "enable_clone_clock_leaf"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.00054884439421875,
+            "name": "enable_clone_reset_tree"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.000147700411875,
+            "name": "local_BF_CFG_large_leaf"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.027770817600000004,
+            "name": "terminal delta"
+          },
+          {
+            "factor": 1.166015625,
+            "mm2": 0.0011141452800000028,
+            "name": "enable replacement delta"
+          },
+          {
+            "factor": 0,
+            "mm2": 0.0,
+            "name": "PAR2 two-port corridor REMOVED"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.0761399676,
+            "name": "initial capture proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.06409047240000001,
+            "name": "capture enclosure replaces old proxy"
+          },
+          {
+            "factor": 1,
+            "mm2": 0.01686526564003543,
+            "name": "selected clock island delta"
+          }
+        ],
+        "margin_mm2": 1.464365841792528,
+        "pairs": 2388,
+        "physical_fit": false,
+        "q": 1876,
+        "retained_return_FF50_reservation_mm2": 52.897587425279994,
+        "screen_mm2": 856.5356341582075,
+        "screen_pass": true,
+        "stages": 82
+      }
+    }
+  },
+  "terms": [
+    {
+      "kind": "halo policy",
+      "mm2": 16.13212234560001,
+      "mode": "sites",
+      "name": "field macro clearance",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "per-element geometry",
+      "source": "shard.area"
+    },
+    {
+      "kind": "halo policy",
+      "mm2": 15.74497419264,
+      "mode": "sites",
+      "name": "cfg halo grid",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "per-element geometry",
+      "source": "shard.area"
+    },
+    {
+      "kind": "rounding policy",
+      "mm2": 0.21756259840000153,
+      "mode": "die",
+      "name": "reservation rounding",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "per-die accounting",
+      "source": "shard.area"
+    },
+    {
+      "kind": "proposal cell reservation",
+      "mm2": 0.18356865407997702,
+      "mode": "sites",
+      "name": "retained main request and mux proxy",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "provider instance counts",
+      "source": "noecc.area"
+    },
+    {
+      "kind": "state floor",
+      "mm2": 0.061771960800000025,
+      "mode": "die",
+      "name": "selector state replacement",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "per-die service",
+      "source": "noecc.full_topk_slot"
+    },
+    {
+      "kind": "frame reservation",
+      "mm2": 4.705078492800028,
+      "mode": "BF",
+      "name": "BF frame growth",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "per BF element",
+      "source": "map.area"
+    },
+    {
+      "kind": "noncontainment policy",
+      "mm2": 11.546761507199975,
+      "mode": "sites",
+      "name": "field row whitespace",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "packing-dependent",
+      "source": "map.area"
+    },
+    {
+      "kind": "slot reservation",
+      "mm2": 1.3155131592,
+      "mode": "die",
+      "name": "selector complete replacement",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "per-die service",
+      "source": "wake.area"
+    },
+    {
+      "kind": "frame reservation",
+      "mm2": 5.5810700352,
+      "mode": "q",
+      "name": "q frame growth",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "per q element",
+      "source": "wake.area"
+    },
+    {
+      "kind": "cell floor",
+      "mm2": 0.0018938253600000025,
+      "mode": "sites",
+      "name": "root clock buffer",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "per element clock",
+      "source": "wake.area"
+    },
+    {
+      "kind": "route reservation",
+      "mm2": 2.6571105216,
+      "mode": "die",
+      "name": "selector escape corridor",
+      "reference_BF": 362,
+      "reference_q": 1686,
+      "reference_sites": 2048,
+      "scaling": "per-die service",
+      "source": "pg.area"
+    },
+    {
+      "mm2": 0.5956084256399999,
+      "mode": "die",
+      "name": "selector_source_correct_station",
+      "scaling": "replace old102-cycle station; station-free predecessor; includes48007 pin-only clock BUF, global spatial clock/PG still unpriced"
+    },
+    {
+      "mm2": 0.7606523635200001,
+      "mode": "sites",
+      "name": "shared_broadcast_BUF",
+      "scaling": "3726496 BUF/shard; no local3-buffer substitution"
+    },
+    {
+      "mm2": 0.0019035648,
+      "mode": "sites",
+      "name": "same_BST_replica_register_floor",
+      "scaling": "3264bits; generic FF floor only; reset/polarity/hold source circuit remains required"
+    },
+    {
+      "mm2": 0.08109932544,
+      "mode": "sites",
+      "name": "enable_source_repair",
+      "scaling": "8 new FF distinct from8 inheritedWAKE; two D hold networks; existing macro/capture area credit0"
+    },
+    {
+      "mm2": 0.4631621601600001,
+      "mode": "sites",
+      "name": "finite_spatial_element_clock_increment",
+      "scaling": "901/2724 BUF minus inherited84/261 once; positive modeled grid not legal site proof"
+    },
+    {
+      "mm2": 0.00041803776000000006,
+      "mode": "sites",
+      "name": "enable_clone_clock_leaf",
+      "scaling": "one separate positive leaf per8FF group; CLK pins4.100648fF <23.04; upstream root/capture waveform unqualified"
+    },
+    {
+      "mm2": 0.00047070072000000005,
+      "mode": "sites",
+      "name": "enable_clone_reset_tree",
+      "scaling": "reset pin3.211636fF <5.76 plus positive wire5.76; complete9-ary tree; actual launch/recovery/removal unqualified"
+    },
+    {
+      "mm2": 0.00012667104,
+      "mode": "sites",
+      "name": "local_BF_CFG_large_leaf",
+      "scaling": "source BF cfg_a0 pin11.549872; BUF8 positive LEF cell floor; held loader semantics not changed"
+    },
+    {
+      "mm2": 0.027770817600000004,
+      "mode": "die",
+      "name": "terminal delta"
+    },
+    {
+      "mm2": 0.0009555148800000024,
+      "mode": "sites",
+      "name": "enable replacement delta"
+    },
+    {
+      "mm2": 4.31826736128,
+      "mode": "removed",
+      "name": "PAR2 two-port corridor REMOVED"
+    },
+    {
+      "mm2": 0.0761399676,
+      "mode": "die",
+      "name": "initial capture proxy"
+    },
+    {
+      "mm2": 0.06409047240000001,
+      "mode": "die",
+      "name": "capture enclosure replaces old proxy"
+    },
+    {
+      "mm2": 0.01686526564003543,
+      "mode": "die",
+      "name": "selected clock island delta"
+    }
+  ],
+  "traced_58_mm2": 58.147427292879996,
+  "unmapped_complement_mm2": 287.02184985143003
+}

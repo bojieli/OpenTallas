@@ -1,0 +1,13 @@
+....F.
+======================================================================
+FAIL: test_one_definition_per_forwarded_module (__main__.Forwarding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/ha3-hbm-epilogue-20261003/tools/hbm_accel_epilogue_ha8_test.py", line 50, in test_one_definition_per_forwarded_module
+    self.assertFalse(references-set(definitions),'missing module definitions '+str(references-set(definitions)))
+AssertionError: {'ot_hdc_vline', 'ot_hdc_fp32_add_lat_CUTS_must_match_LAT', 'ot_hdc_fp32_mul_lat_CUTS_must_match_LAT'} is not false : missing module definitions {'ot_hdc_vline', 'ot_hdc_fp32_add_lat_CUTS_must_match_LAT', 'ot_hdc_fp32_mul_lat_CUTS_must_match_LAT'}
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.072s
+
+FAILED (failures=1)

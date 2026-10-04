@@ -1,0 +1,14 @@
+{
+  "host": "vm-xry57mhfyn",
+  "PID": 437794,
+  "source_commit": "c6eaef69b",
+  "version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "compiler_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "source_sha256": {
+    "rtl/experimental/canonical_qwen_manifest_range_owner_20261003/ot_gpu_qwen_manifest_range_owner.sv": "677056ec3d1f60c27e7afce3e7add1385fafbf696113ddd3fd31d0f94dd19368",
+    "rtl/test/canonical_qwen_manifest_range_owner_20261003/tb.sv": "7b166c4ccc79a12224ea19fec158faf338e79d47314cfaf4508ccadcc5ba9b9b",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  },
+  "limits": "No memory/swap/time/file/CPU process caps; two build workers",
+  "headroom": " 07:48:26 up 1 day, 11:59, 11 users,  load average: 9.22, 9.14, 10.04\n               total        used        free      shared  buff/cache   available\nMem:          128721       73961       55287       23905       24484       54759\nSwap:              0           0           0\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sda1       993G  334G  659G  34% /\n"
+}

@@ -1,0 +1,39 @@
+/tmp/ds-su-kv-visible-epyc-r1/sources/1_ot_ds_su_kv_related_visible.sv:1: warning: timescale for ot_ds_su_kv_related_visible inherited from another file.
+/tmp/ds-su-kv-visible-epyc-r1/sources/0_tb.sv:1: ...: The inherited timescale is here.
+/tmp/ds-su-kv-visible-epyc-r1/sources/3_ot_ds_owned_ratio_boundary.sv:5: warning: timescale for ot_ds_owned_ratio_boundary inherited from another file.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:1: ...: The inherited timescale is here.
+/tmp/ds-su-kv-visible-epyc-r1/sources/4_ratio_fifo.sv:45: warning: timescale for ot_ratio_cdc_fifo inherited from another file.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:1: ...: The inherited timescale is here.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:182: warning: @* is sensitive to all 264 words in array 'l_v'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:185: warning: @* is sensitive to all 264 words in array 'c_v'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:185: warning: @* is sensitive to all 264 words in array 'c_sec'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:185: warning: @* is sensitive to all 264 words in array 'l_word'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:185: warning: @* is sensitive to all 264 words in array 'l_lane'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:187: warning: @* is sensitive to all 264 words in array 'l_data'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:187: warning: @* is sensitive to all 264 words in array 'l_lane'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:187: warning: @* is sensitive to all 264 words in array 'l_lane'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:190: warning: @* is sensitive to all 264 words in array 'c_v'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:191: warning: @* is sensitive to all 264 words in array 'l_word'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:191: warning: @* is sensitive to all 264 words in array 'l_lane'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:192: warning: @* is sensitive to all 264 words in array 'l_data'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:192: warning: @* is sensitive to all 264 words in array 'l_lane'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:192: warning: @* is sensitive to all 264 words in array 'l_lane'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:199: warning: @* is sensitive to all 264 words in array 'l_v'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:199: warning: @* is sensitive to all 2 words in array 'sv'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:199: warning: @* is sensitive to all 2 words in array 'src'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:199: warning: @* is sensitive to all 264 words in array 'l_word'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:199: warning: @* is sensitive to all 2 words in array 'slo'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:199: warning: @* is sensitive to all 264 words in array 'l_word'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:199: warning: @* is sensitive to all 2 words in array 'shi'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:220: warning: @* is sensitive to all 264 words in array 'c_v'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:220: warning: @* is sensitive to all 264 words in array 'c_sec'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:220: warning: @* is sensitive to all 4 words in array 'ingress_sectors'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:220: warning: @* is sensitive to all 264 words in array 'c_sec'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:222: warning: @* is sensitive to all 4 words in array 'ingress_sectors'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:222: warning: @* is sensitive to all 4 words in array 'wq_n'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:249: warning: @* is sensitive to all 4 words in array 'wq_n'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:250: warning: @* is sensitive to all 4 words in array 'wq_haddr'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:251: warning: @* is sensitive to all 4 words in array 'wq_rp'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:251: warning: @* is sensitive to all 512 words in array 'wq_d'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:251: warning: @* is sensitive to all 4 words in array 'wq_rp'.
+/tmp/ds-su-kv-visible-epyc-r1/sources/2_ot_chip_v41x_kv_prefetch_visible.sv:251: warning: @* is sensitive to all 512 words in array 'wq_s'.

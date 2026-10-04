@@ -1,0 +1,10 @@
+{
+  "status": "REFUSED_BEFORE_COMPILE",
+  "reason": "dirty source because explicit staging omitted --sparse for additive files outside sparse checkout",
+  "requested_out": "/tmp/ds-mtp-accept-component-frozen-r1",
+  "source_HEAD": "7b4509c23a8a67891f250bef78d7459e6050883c",
+  "compile_started": false,
+  "runtime_started": false,
+  "output_directory_preserved": true,
+  "dirty_source": "?? results/rtl/ds_mtp_accept_20261003/\n?? rtl/experimental/ds_mtp_accept_20261003/\n?? rtl/test/ds_mtp_accept_20261003/\n?? tests/test_ds_mtp_accept_rtl_preparation.py\n?? tools/ds_mtp_accept_rtl_gate.py\n?? tools/ds_mtp_accept_rtl_preparation.py\n"
+}

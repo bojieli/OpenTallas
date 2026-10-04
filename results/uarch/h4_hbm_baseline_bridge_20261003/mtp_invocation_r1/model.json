@@ -1,0 +1,220 @@
+{
+  "AR_program_is_MTP": false,
+  "actual_draft_native_program": null,
+  "actual_position_native_program": null,
+  "actual_provider_binding_and_calendar": null,
+  "build_allowed": false,
+  "full_iteration_calibrated_ns": null,
+  "missing_costs_are_zero": false,
+  "native_AR_PC_count": 2213,
+  "reference_subtotal_us_ONLY": 765.72,
+  "remaining": [
+    "actual full-shape draft128/top3 primitive expansion and weight homes",
+    "position-specific native SSA/views/homes rather than cloned AR",
+    "paired all96 rank requester SM/provider mapping",
+    "actual accepted/visible/consumer/reverse finite calendars",
+    "source slotrec compressor rebuild and ring8 ownership/Engram restore",
+    "full-design clocks/area/ports/routes and measured latency"
+  ],
+  "required_invocation_fields": [
+    "iteration",
+    "j",
+    "position",
+    "phase",
+    "version",
+    "rank",
+    "SM",
+    "generation",
+    "lease"
+  ],
+  "schema": "MTP_SOURCE_INVOCATION_LEASE_MODEL_R1",
+  "source_contract": {
+    "configuration": {
+      "beta_fast": 32,
+      "beta_slow": 1,
+      "candidate_block_size": 8,
+      "candidate_source_layer": 20,
+      "candidate_topk_blocks": 2048,
+      "compress_ratios": [
+        0,
+        0,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "compress_rope_theta": 160000,
+      "dim": 5120,
+      "dspark_block_size": 5,
+      "dspark_markov_rank": 256,
+      "dspark_n_activated_experts": 3,
+      "dspark_n_routed_experts": 128,
+      "dspark_noise_token_id": 128799,
+      "dspark_target_layer_ids": [
+        37,
+        38,
+        39
+      ],
+      "dtype": "fp8",
+      "engram_compressed_vocab_size": 99092,
+      "engram_head_dim": 256,
+      "engram_layer_ids": [
+        1,
+        14
+      ],
+      "engram_max_ngram_size": 4,
+      "engram_n_heads": 8,
+      "engram_num_embeddings": [
+        384006168,
+        384016682
+      ],
+      "engram_pad_id": 2,
+      "engram_vocab_size": 16000000,
+      "expert_dtype": "fp4",
+      "hc_eps": 1e-06,
+      "hc_mult": 4,
+      "hc_sinkhorn_iters": 20,
+      "head_dim": 512,
+      "image_token_id": 129264,
+      "index_head_dim": 128,
+      "index_n_heads": 32,
+      "index_source_layers": [
+        2,
+        8,
+        14,
+        20,
+        24,
+        28,
+        32,
+        36
+      ],
+      "index_topk": 512,
+      "kv_source_layers": [
+        2,
+        8,
+        14,
+        20
+      ],
+      "moe_inter_dim": 2304,
+      "n_activated_experts": 6,
+      "n_heads": 64,
+      "n_layers": 40,
+      "n_mtp_layers": 3,
+      "n_routed_experts": 384,
+      "n_shared_experts": 1,
+      "norm_eps": 1e-20,
+      "o_groups": 8,
+      "o_lora_rank": 1024,
+      "original_seq_len": 65536,
+      "q_lora_rank": 1280,
+      "rope_factor": 16,
+      "rope_head_dim": 64,
+      "rope_theta": 10000,
+      "route_scale": 1.5,
+      "score_func": "sqrtsoftplus",
+      "swiglu_limit": 10.0,
+      "vision_dim": 1024,
+      "vision_downsample_ratio": 3,
+      "vision_inter_dim": 2816,
+      "vision_max_n_token": 1024,
+      "vision_max_wh_ratio": null,
+      "vision_min_pixels": 295936,
+      "vision_n_heads": 16,
+      "vision_n_layers": 32,
+      "vision_patch_size": 14,
+      "vision_rope_theta": 10000,
+      "vocab_size": 129280,
+      "window_size": 128
+    },
+    "methods": {
+      "draft": {
+        "first_line": 1159,
+        "last_line": 1185,
+        "sha256": "2cb502def217330249b48dd23de156500a4b628a9920e5ff0dffc35130118ee3"
+      },
+      "dspark_attention": {
+        "first_line": 1128,
+        "last_line": 1143,
+        "sha256": "c038657ee8c2f1c73513cdfa019106169208a2bc1e342127cfda3a2230f813d4"
+      },
+      "dspark_seed": {
+        "first_line": 1109,
+        "last_line": 1119,
+        "sha256": "5a38d29db5c2252dad4fbb8e279a9ca09743fd8b1efb270da7fbbb38c934a34d"
+      },
+      "dspark_stage": {
+        "first_line": 1145,
+        "last_line": 1157,
+        "sha256": "17599725134b6219b1c688211b0e78cbe502ec43652aeb6d5154d4d6db85887c"
+      },
+      "forward_positions": {
+        "first_line": 1023,
+        "last_line": 1062,
+        "sha256": "8ae08f4c04366b7c0d4df4beed137365e307a101b59212f41de1637da6fef58e"
+      },
+      "generate_spec": {
+        "first_line": 1187,
+        "last_line": 1228,
+        "sha256": "c6ffa1b16ab50cb6566b433980de2b06e4bddf949fc6c6fe284765dc71e77ec9"
+      },
+      "main_hidden_part": {
+        "first_line": 1097,
+        "last_line": 1100,
+        "sha256": "3c35060fbd7eb5ca8334d11dcd15ac675ee4f4d8e1a0760a61c8484dd576ff97"
+      },
+      "truncate": {
+        "first_line": 748,
+        "last_line": 763,
+        "sha256": "7a3f7f857d20202a3c54455f40ab13ee51a0a81461edee3272aa1d7706cc4924"
+      }
+    },
+    "source_sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  "source_sha256": {
+    "audit_HANDOFF.txt": "20921c8ab4931a3f6e401122caa3e4f0c6b2b0d29cbe97105189edda6a390caa",
+    "audit_findings.json": "5d6ed50aeb631fd1e5063f16c079d2ac3f35f119678d4f94971c3e0641accdc1",
+    "audit_inventory.json": "c617ac47392fe53265115cd52edc53a343974b00c8025bfba1c36c670b5d5011",
+    "hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+    "inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+  },
+  "whole_MTP_admitted": false
+}

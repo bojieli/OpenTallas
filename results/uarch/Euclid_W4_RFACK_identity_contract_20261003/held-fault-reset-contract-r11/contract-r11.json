@@ -1,0 +1,89 @@
+{
+  "RF_edges": {
+    "accept_E": "write_go=wr_valid&&wr_ready; both SRAMcopyWCE on sameE; capture raw55 and set write_pending; ack_valid stays0",
+    "clock_qualification": "edge ordering is source-derived; absoluteperiod/SSFF/CDC not qualified",
+    "earliest_consume_Eplus2": "sameclock ack_valid&&ack_ready&&!decode.bad; this is local sink acceptance, not parent/reverse retirement",
+    "next_write_earliest_Eplus3": "idle requires no ACK/writepending/readpending/response lease; incoming write cannot overwrite heldACK",
+    "publish_Eplus1": "oldwrite_pending1 -> protected_ACK encode(raw55), ack_valid1, write_pending0"
+  },
+  "accepted_payload55": "{wr_owner46,wr_addr9}; generation is already owner[3:0], not separately copied",
+  "cost_note": "r3 inventory prices raw55+ACK72+SIMD72 across32SM; r4 separately prices sticky/comparator. r3 excludes other control/reset/clock costs, including newwrite_pending control FF. Joint fullsource load model must include these; no free control/clock/reset cost.",
+  "default_off": {
+    "RF_ACK_ID": 0,
+    "SM_ACK_ID": 0,
+    "SM_ENABLE": 0,
+    "identity_extensions_when_ACK_ID0": "owner/slot/fault outputs0; original full bodies unchanged"
+  },
+  "evidence": {
+    "actual_RF_leaf": "PASS writes2 ACK1 resetAbort1 bothcopies72single2556double cycles18",
+    "caller_C0_KV_or_CDC_or_SSFF": "unqualified",
+    "default_original": "LIVE same supervisor2970098 child3493633 ivl3493636",
+    "enabled_fullSM": "compile0/run0;128lanes13cycle sourceowned result/mirrors/leases PASS",
+    "valid_coded_mismatch": "queued, not yet terminal qualified"
+  },
+  "fullSM_fault": {
+    "ACK_expected_tuple": "rf_ack_owner==decoded_SIMD_owner AND rf_ack_slot==dst_q; faultclear required for both ACKready and FSMACK->DONE",
+    "ECC_fault_scope": "identity_fault includes leafbad and internalSIMDdecodebad while state!=IDLE; these decodefault terms are not independently sticky",
+    "SIMD_saved_identity": "w4_encode({simd_owner46,simd_dst9}) only at actualsg=simd_valid&&simd_ready; originalsource operand/dst indices latched sameedge",
+    "host_external_match": "W4 hostpath forwards actualprotectedtuple; external expectedowner/slot match/quarantine belongs Popper/W6, not inferred from SIMDmatcher",
+    "valid_coded_wrong_owner_or_slot": "immediateSIMD_ACK_mismatch -> ACKready0; latches identity_mismatch_fault on RFedge; sticky until localreset, noDONE/release",
+    "valid_not_trusted_alone": "host_ack_valid and simd_done can remain asserted with identity_fault. ParentW6 adapter must gate acceptedvalid/ready with sourcefault plus exacttuple matching; no faulted receipt/retirement."
+  },
+  "held_ACK": {
+    "ack_invalid": "owner/slot outputs0; stored oldcodeword is not a validreceipt",
+    "ack_valid_no_ready": "protected_ACK retained; accepted_identity not recaptured; wr_ready/rd_ready blocked",
+    "decode_correction": "onebit corrected combinationally; no correction writeback/scrub",
+    "fault_free_or_correctable_tuple": "ack_owner/slot are acceptedtuple while ack_valid1",
+    "incoming_owner_slot_data_changes": "ignored without newwrite_go"
+  },
+  "leaf_fault": {
+    "bad_conditions": [
+      "uncorrectableSECDED pattern",
+      "decoded ninepadbits nonzero"
+    ],
+    "bad_tuple_consumption": "leaf refuses clear evenif externalack_ready1; heldACK blocks allnewRFacceptance",
+    "bad_tuple_outputs": "ack_valid can stay1, owner/slot masked0, fault1; do not treat validalone as trustedACK",
+    "signal": "ack_identity_fault = ack_valid && decoded_ACK.bad",
+    "sticky": "fault flag is combinational, not separatesticky latch; retained codeword normally keepsfault until reset or external error change",
+    "valid_coded_wrong_tuple": "leaf has no expected-owner comparator; leafcodec can be valid. Caller must check owner/slot against actualacceptedcontext."
+  },
+  "no_RTL_model_defaults_or_livejob_changed": true,
+  "owner46_fields": [
+    [
+      "PC",
+      7
+    ],
+    [
+      "client",
+      3
+    ],
+    [
+      "originaltag",
+      32
+    ],
+    [
+      "generation",
+      4
+    ]
+  ],
+  "owner_boundaries": {
+    "actualcomponent_gate": "Euclid",
+    "consumer_and_loaded_physical_aftermodel": "Goodall",
+    "jointmodel_and_actual_W4_W6_adapter": "Popper"
+  },
+  "reset": {
+    "SRAM_contents": "not cleared or rolled back; write acceptedbefore reset can remain in both physicalcopies while its ACK is aborted",
+    "admission_during_reset": "RFidle includes rst_n, so read/write ready0; no valid ACK accepted",
+    "allcopy_reset_domain_waitcycles": null,
+    "generationwrap_admitted": false,
+    "local_rising_or_async_low": "leaf rst_n asynchronously clears read/writepending,rsp_valid,ack_valid,raw55,protected72 and page/arbitration; SM clears state/savedidentity/mismatchfault/validpipe",
+    "system_debt": "caller must preserve/quarantine old owner and prove actualallcopy/reverseCDC quiescence; localreset is not permission to reuse generation"
+  },
+  "schema": "W4_FROZEN_HELD_ACK_FAULT_RESET_IDENTITY_R11",
+  "selfcontained_packet_commit": "a48bed8c5a1b779cafe504f0b2447edc89b593d9",
+  "source_sha256": {
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv": "1467492957a70900e969ffee3493e6969a6ac4b0244202a8c0cdd06f6ccfdd18",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv": "0c78df13fc5f356a24b99e42fbf0b7477e0fe57ba6475d3c8f5b80eab966b7d9"
+  },
+  "sourcefreeze": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+}

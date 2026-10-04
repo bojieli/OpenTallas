@@ -1,0 +1,496 @@
+{
+ "schema": "opentallas.hdc-v41-mtp-isa-evidence.v1",
+ "status": "pass",
+ "claim_boundary": "GOLDEN and ISA-LEVEL evidence only: DSpark drafting plus one layer-major multi-position verify pass, run by the ISA model of the as-built V4.1 core (tools/hdc_program_v41.py mtp_run) against hdc_golden_v41's non-speculative greedy decode.  The RTL campaign (tools/rtl_hdc_v41_mtp_campaign.py) and the ASAP7 routes of the changed blocks were HALTED by user decision before completion (V4.1 is being re-specified top-down); no RTL or physical figure is claimed here.  Acceptance on the reduced vehicle (seeded random DSpark weights) is a functional check, never a performance figure.  Cycle figures are the uncalibrated timing model's (tools/hdc_timing_v41.py) for the as-built core, recorded only to show where the verify pass is bound.",
+ "golden": {
+  "test": "Model.generate_spec vs Model.generate, oracle workload prompt, 12 tokens, gamma 5",
+  "tokens_equal": true,
+  "logits_bit_equal": true,
+  "state_after_rollback": "truncate() to the committed positions",
+  "dspark_acceptance_reduced_vehicle": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "oracle_drafter_tokens_and_logits_equal": true
+ },
+ "isa_runs": [
+  {
+   "gamma": 3,
+   "lane_multiplier_m": 1,
+   "prompt": "3 prompt tokens (oracle prompt prefix)",
+   "drafter": "dspark",
+   "program_commit": "93bd43b5",
+   "lane_multiplier_covers": "weight ops",
+   "golden_greedy_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292,
+    91,
+    3161,
+    2937
+   ],
+   "isa_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292,
+    91,
+    3161,
+    2937
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "poisoned_dead_rows": false
+  },
+  {
+   "gamma": 3,
+   "lane_multiplier_m": 1,
+   "prompt": "3 prompt tokens (oracle prompt prefix)",
+   "drafter": "forced",
+   "program_commit": "93bd43b5",
+   "lane_multiplier_covers": "weight ops",
+   "golden_greedy_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292,
+    91,
+    3161,
+    2937
+   ],
+   "isa_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292,
+    91,
+    3161,
+    2937
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    2,
+    1,
+    2
+   ],
+   "poisoned_dead_rows": true
+  },
+  {
+   "gamma": 5,
+   "lane_multiplier_m": 2,
+   "prompt": "4 prompt tokens (oracle prompt prefix)",
+   "drafter": "dspark",
+   "program_commit": "93bd43b5",
+   "lane_multiplier_covers": "weight ops",
+   "golden_greedy_tokens": [
+    1968,
+    935,
+    1853,
+    2384,
+    3155,
+    2643,
+    3657,
+    2085,
+    655,
+    42
+   ],
+   "isa_tokens": [
+    1968,
+    935,
+    1853,
+    2384,
+    3155,
+    2643,
+    3657,
+    2085,
+    655,
+    42
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "poisoned_dead_rows": false
+  },
+  {
+   "gamma": 5,
+   "lane_multiplier_m": 2,
+   "prompt": "4 prompt tokens (oracle prompt prefix)",
+   "drafter": "forced",
+   "program_commit": "93bd43b5",
+   "lane_multiplier_covers": "weight ops",
+   "golden_greedy_tokens": [
+    1968,
+    935,
+    1853,
+    2384,
+    3155,
+    2643,
+    3657,
+    2085,
+    655,
+    42
+   ],
+   "isa_tokens": [
+    1968,
+    935,
+    1853,
+    2384,
+    3155,
+    2643,
+    3657,
+    2085,
+    655,
+    42
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    3,
+    1,
+    3
+   ],
+   "poisoned_dead_rows": true
+  },
+  {
+   "gamma": 5,
+   "lane_multiplier_m": 4,
+   "prompt": "8 prompt tokens (oracle workload)",
+   "drafter": "dspark",
+   "program_commit": "93bd43b5",
+   "lane_multiplier_covers": "weight ops",
+   "golden_greedy_tokens": [
+    3118,
+    2400,
+    64,
+    2325,
+    287,
+    2963,
+    3712,
+    2774,
+    91,
+    104
+   ],
+   "isa_tokens": [
+    3118,
+    2400,
+    64,
+    2325,
+    287,
+    2963,
+    3712,
+    2774,
+    91,
+    104
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "poisoned_dead_rows": false
+  },
+  {
+   "gamma": 5,
+   "lane_multiplier_m": 4,
+   "prompt": "8 prompt tokens (oracle workload)",
+   "drafter": "forced",
+   "program_commit": "93bd43b5",
+   "lane_multiplier_covers": "weight ops",
+   "golden_greedy_tokens": [
+    3118,
+    2400,
+    64,
+    2325,
+    287,
+    2963,
+    3712,
+    2774,
+    91,
+    104
+   ],
+   "isa_tokens": [
+    3118,
+    2400,
+    64,
+    2325,
+    287,
+    2963,
+    3712,
+    2774,
+    91,
+    104
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    1,
+    3,
+    1,
+    1
+   ],
+   "poisoned_dead_rows": true
+  },
+  {
+   "gamma": 2,
+   "lane_multiplier_m": 2,
+   "prompt": "3 prompt tokens (oracle prompt prefix)",
+   "drafter": "dspark",
+   "program_commit": "3d5271a4 with CHAIN_MTP=True",
+   "lane_multiplier_covers": "weight ops; whole-run chase scheduling",
+   "golden_greedy_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292
+   ],
+   "isa_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "poisoned_dead_rows": false
+  },
+  {
+   "gamma": 2,
+   "lane_multiplier_m": 2,
+   "prompt": "3 prompt tokens (oracle prompt prefix)",
+   "drafter": "forced",
+   "program_commit": "3d5271a4 with CHAIN_MTP=True",
+   "lane_multiplier_covers": "weight ops; whole-run chase scheduling",
+   "golden_greedy_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292
+   ],
+   "isa_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    2,
+    1
+   ],
+   "poisoned_dead_rows": true
+  },
+  {
+   "gamma": 5,
+   "lane_multiplier_m": 4,
+   "prompt": "3 prompt tokens (oracle prompt prefix)",
+   "drafter": "dspark",
+   "program_commit": "3d5271a4",
+   "lane_multiplier_covers": "weight ops and the stream unit (MP copies)",
+   "golden_greedy_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292,
+    91,
+    3161,
+    2937
+   ],
+   "isa_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292,
+    91,
+    3161,
+    2937
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "poisoned_dead_rows": false
+  },
+  {
+   "gamma": 5,
+   "lane_multiplier_m": 4,
+   "prompt": "3 prompt tokens (oracle prompt prefix)",
+   "drafter": "forced",
+   "program_commit": "3d5271a4",
+   "lane_multiplier_covers": "weight ops and the stream unit (MP copies)",
+   "golden_greedy_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292,
+    91,
+    3161,
+    2937
+   ],
+   "isa_tokens": [
+    2047,
+    3676,
+    1477,
+    2442,
+    2292,
+    91,
+    3161,
+    2937
+   ],
+   "tokens_equal": true,
+   "committed_logits_bit_exact_with_golden_autoregressive": true,
+   "accepted_per_step": [
+    2,
+    4
+   ],
+   "poisoned_dead_rows": true
+  }
+ ],
+ "forced_drafter": "the golden continuation with draft (q mod (gamma+1)) corrupted: exercises accept lengths 0..gamma; these runs also poison (NaN) every row past the committed positions after each step",
+ "timing_model_as_built_core_pos9": [
+  {
+   "gamma": 1,
+   "m": 1,
+   "step": 353667,
+   "iter": 856939,
+   "draft": 131780,
+   "verify": 725159,
+   "batched_ops": 0
+  },
+  {
+   "gamma": 1,
+   "m": 2,
+   "step": 353667,
+   "iter": 703943,
+   "draft": 110628,
+   "verify": 593315,
+   "batched_ops": 791
+  },
+  {
+   "gamma": 1,
+   "m": 4,
+   "step": 353667,
+   "iter": 693543,
+   "draft": 100228,
+   "verify": 593315,
+   "batched_ops": 739
+  },
+  {
+   "gamma": 3,
+   "m": 1,
+   "step": 353667,
+   "iter": 1679599,
+   "draft": 165598,
+   "verify": 1514001,
+   "batched_ops": 0
+  },
+  {
+   "gamma": 3,
+   "m": 2,
+   "step": 353667,
+   "iter": 1373407,
+   "draft": 144446,
+   "verify": 1228961,
+   "batched_ops": 1478
+  },
+  {
+   "gamma": 3,
+   "m": 4,
+   "step": 353667,
+   "iter": 1230434,
+   "draft": 134046,
+   "verify": 1096388,
+   "batched_ops": 739
+  },
+  {
+   "gamma": 5,
+   "m": 1,
+   "step": 353667,
+   "iter": 2523915,
+   "draft": 199416,
+   "verify": 2324499,
+   "batched_ops": 0
+  },
+  {
+   "gamma": 5,
+   "m": 2,
+   "step": 353667,
+   "iter": 2069371,
+   "draft": 178264,
+   "verify": 1891107,
+   "batched_ops": 2165
+  },
+  {
+   "gamma": 5,
+   "m": 4,
+   "step": 353667,
+   "iter": 1916435,
+   "draft": 167864,
+   "verify": 1748571,
+   "batched_ops": 1426
+  }
+ ],
+ "timing_model_note": "one-position step 353,667 cycles; the verify pass is bound by the stream unit (501,162 SU element-cycles for gamma 5 vs 80,092 per one-position token), which a weight-read lane multiplier does not relieve"
+}
