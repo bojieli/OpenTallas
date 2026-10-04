@@ -1,0 +1,141 @@
+{
+  "schema": "dsrom.c8.actual_publication.v1",
+  "source_pin": "f6df84e14c2bc5908bdbf85b2bd95cd56b1f5520",
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_ckv_die_service.sv": "9c6bbc1289f33473c5395511b419bd0bba89b70910f7bc31840bf931b198ac25",
+    "rtl/chip/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
+    "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/chip/window_owner_safe/ot_chip_v41x_die_owner_safe.sv": "e2f5c60e214ed75c13f63b573667ea2c4782158ce7da3bcb3ab5115ad7b58643",
+    "rtl/chip/window_owner_safe/ot_v41_rt_die_l20_owner_safe.sv": "f1f03d0617070d68856e5dbac814630807210daaf79b3aa119a2bd6378299664"
+  },
+  "scope": "Actual backend completion identity, own-row writable path and two queued stage descriptors; no concurrent singleton-core execution claimed.",
+  "MACs_per_cycle": 0,
+  "replicas_per_rank_die": {
+    "physical_port_journal": 128,
+    "journal_seats_per_port": 64,
+    "K_stack_pending_owner": 4,
+    "stage_descriptors": 2,
+    "index_record_identity": 4
+  },
+  "state_bits_upper_reservation": 804051,
+  "cell_area_floor_mm2": 0.23446127160000002,
+  "cell_area_50pct_reservation_mm2": 0.46892254320000004,
+  "ports": {
+    "HBM": {
+      "write_sector_bytes": 32,
+      "native_ports": 128,
+      "journal_accepts_per_cycle": 128,
+      "visible_retirements_per_cycle": 128,
+      "request_identity_bits": 79,
+      "receipt_identity_bits": 79
+    },
+    "K_client": {
+      "stacks": 4,
+      "bytes_per_accepted_sector": 32,
+      "one_unacked_K_write_per_stack": true
+    },
+    "own_row": {
+      "sectors": 9,
+      "bytes": 288,
+      "capture_words_per_beat": 32,
+      "beats": 16
+    },
+    "index_record": {
+      "sectors_per_selected_stack": 3,
+      "max_selected_stacks": 4,
+      "bytes_per_stack": 68
+    }
+  },
+  "boundaries": {
+    "existing_HBM_data_bits": 32768,
+    "new_full_parallel_receipt_metadata_bits": 10112,
+    "receipt_valid_bits": 128,
+    "K_ownership_signal_tracks_lower_bound": 316,
+    "loaded_channel_capacity_bound": false,
+    "routed_slot_fit": false
+  },
+  "latency": {
+    "journal_visible_receipt": 1,
+    "core_concurrency": 1,
+    "stage_launch_rule": "Second descriptor waits for prior engine done plus all actual enrolled backend writes visible; context restore must be real caller handshake, not a tied ready.",
+    "own_row_minimum": "9 accepted writes + their real backend completion service; grant is never receipt",
+    "index_record_minimum": "3 phases, each selected stack ACK, then identity-visible pulse",
+    "wavefront_interval": "Measured by C8; no 11.6us or modeled fence credit."
+  },
+  "reset": "Outstanding per-port identities retained/quarantined on reset; no admission or retirement until explicit backend drain and matching reconciliation.",
+  "return_baseline": {
+    "node_RD": 64,
+    "node_RST": 1,
+    "node_BYPASS": 1,
+    "root_D": 128,
+    "root_QD": 128,
+    "RD4_adopted": false
+  },
+  "applicability": {
+    "DS_ROM": "Assigned actual L20 successor only",
+    "DS_HBM": "No transfer",
+    "Qwen_ROM": "No transfer",
+    "Qwen_HBM": "No transfer"
+  },
+  "admission": {
+    "isolated_actual_backend_functional": true,
+    "combined_two_position": false,
+    "physical": false,
+    "protected_mutable_state": false
+  },
+  "build_requirements": [
+    "Exact real backend per-port acceptance/wr_done/read reply connected; no completion based on memory observation or m_rdy",
+    "Actual stage launch context and restore handshake connected by C8",
+    "SS60/FF25, clock/reset/PG/channel/slot and mutable-state protection before hardware adoption"
+  ],
+  "adopted": false,
+  "selected_partition": {
+    "stages": 82,
+    "pairs_per_rank_die": 2388,
+    "BF_pairs": 512,
+    "q_pairs": 1876,
+    "rank_dies": 328,
+    "total_dies": 372,
+    "source_owner": "Arendt/Maxwell emitter manifest pending",
+    "screen_mm2": 856.54,
+    "physical_fit_qualified": false
+  },
+  "index_layout": "Qualified original round-robin stack topK/merge only; CONTIGUOUS=0; no scorer campaign rerun",
+  "completion_matching": "Native backend supplies the actual completed queue entry address/tag; match exactly one enrolled seat. No FIFO-order assumption across bank scheduler reordering.",
+  "journal_comparison_bits_per_rank_die": 385024,
+  "native_completion_metadata_bits_per_rank_die": 6016,
+  "fixed_metadata_cycle_added": 0,
+  "context_binding": {
+    "parameter": "C8_CONTEXT=0 by default, selected only with C8_PUBLICATION=1",
+    "offer_bits": 82,
+    "descriptor_seats": 2,
+    "actual_compute_engines": 1,
+    "reset_debt": "actual journals and queued/active descriptor state quarantine; reset/empty is not retirement",
+    "core_entry": "c8_entry14 routed through the actual retained host_entry to tile.entry; no program-counter stand-in",
+    "restore": "c8_context_restored must real caller VM/context restore; not tied ready",
+    "native_identity": "selected engine_identity derived from accepted token/pos/user/epoch; native journals/own-writer consume that stable identity",
+    "retirement": "actual retained core done plus native journal quiet and no write fault/quarantine",
+    "added_state_bits_vs_existing_reservation": 0,
+    "added_capture_cycles": 0,
+    "constant_parameter_selection_no_runtime_mux_credit": true,
+    "functional_parent_measured": false
+  },
+  "two_position_native_reuse": {
+    "selected_control_fix": "C8_PUBLICATION selection clear wins over the later collector npresent assignment; legacy default unchanged",
+    "added_state_bits": 0,
+    "added_MACs_per_cycle": 0,
+    "added_memory_ports": 0,
+    "added_tracks": 0,
+    "added_capture_cycles": 0,
+    "area_charge": "existing collector next-state mux reservation; no area credit",
+    "reuse_contract": "Actual own nine backend ACKs and fetch job_ready plus empty native journal before selection/table reuse; retain first row in actual HBM without reset",
+    "functional_gate": "tb_dsrom_c8_two_positions; two identities same user; second reads first native row; not whole L20 arithmetic or wavefront interval",
+    "option_C_source_pin": "f954ad1ea67f77e8f1a5e86cf48856a96ca650bf",
+    "option_C_integration": "off until Beauvoir primitive ports/reset/debt contract and Maxwell selected physical regions are bound; no inferred FIFO clock closure",
+    "parent_retirement": "Actual local CKV fetch readiness, no output/launch pulse, ID read/tail finished, no merger release, own writer/encoder idle required in c8_write_quiet; no inference of remote all-copies retirement",
+    "added_internal_control_tracks": 1,
+    "port_change": "reuse_ready service-to-parent only; no added external data or state"
+  }
+}

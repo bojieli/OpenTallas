@@ -1,0 +1,57 @@
+{
+  "recorded_run": "sys_b2_lrt0",
+  "source_vector_verified": 87,
+  "launch_manifest_source_commit": "d4317fa6c3ce362c9639671f2e38c6bafa13cda4",
+  "scope": "reduced array diagnostic LINK_RT0 only; no full-shape/PAR2/physical qualification or removal of link protection",
+  "tokens": [
+    {
+      "user": 0,
+      "position": 0,
+      "token": 2815,
+      "cycle": 429041
+    },
+    {
+      "user": 0,
+      "position": 1,
+      "token": 3537,
+      "cycle": 865849
+    },
+    {
+      "user": 0,
+      "position": 2,
+      "token": 2047,
+      "cycle": 1304976
+    }
+  ],
+  "total_cycles": 1304979,
+  "baseline_cycles": 1304979,
+  "cycle_delta": 0,
+  "mismatches": {
+    "token_mismatches": 0,
+    "logit_mismatches": 0,
+    "state_mismatches": 0
+  },
+  "adopted": false,
+  "remaining_runs_untouched": [
+    "sys_d5",
+    "sys_d5_u2",
+    "sys_d5_p3g2",
+    "sys_b5_r2",
+    "queued sys_b5_u2_r2",
+    "queued sys_b5_p3g2_r2",
+    "L0 diagnosis",
+    "phase emitter helper"
+  ],
+  "next": "collect original runs when terminal; integrate already-source-exact SUkr successor and existing phase helper into one selected parent gate after source/model join; preserve current PAR2 and all wire-stage charges",
+  "launch_source_verification": {
+    "commit": "d4317fa6c3ce362c9639671f2e38c6bafa13cda4",
+    "matching_inputs": 87,
+    "all_match": true,
+    "testbench_archive": "source_sys_b2_lrt0/tb_dsrom_system.sv"
+  },
+  "corrected_observation": {
+    "prior_summary_commit": "bcd0bdc25",
+    "cause": "Compared launch sources with later scratch snapshot instead of launch manifest. All 87 inputs match launch commit; no mixed-source build.",
+    "later_benchmark_change": "split-head MBAW_P parameter introduced8f645; prior literal17 used by actual two-die control"
+  }
+}
