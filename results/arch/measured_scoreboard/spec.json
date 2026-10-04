@@ -11,6 +11,8 @@
  "headline": [
   "qwen_rom.ar_tok_s_8k_realmem",
   "qwen_rom.dspark_tok_s_8k",
+  "qwen_rom.ar_tok_s_8k_wirebound",
+  "qwen_rom.dspark_tok_s_8k_wirebound",
   "qwen_rom.dspark_speedup_vs_ar_8k",
   "qwen_rom.ar_over_h100_tp8_8k",
   "qwen_rom.dspark_over_h100_tp8_ar_8k",
@@ -55,6 +57,28 @@
    "unit": "tok/s",
    "status": "composed_from_measured",
    "note": "36 x 14,574 + 2,999; one-stack REAL_MEM KV path (12.7% of 4-stack peak); STREAM4 layer is 6,468 but no STREAM4 token composed yet"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "ar_tok_s_8k_wirebound",
+   "label": "AR per-user rate at 8K with the die-floorplan wire-stage bound (measured-bound value)",
+   "path": "results/rtl/qwen_rom_fulldie_20261003/b3r3/wire_bound_8k.json",
+   "pointer": "ar.bound_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "measured REAL_MEM 527,663 cycles + 6,363: worst block word 64 vs RTL tws 38 (+26/ME op), F2 two-beat +1/ME op, hub-stack 53 vs 46 (+7 x 2 a layer); stage counts are floorplan geometry at 430.56 um, no routed-path STA; die GRT not closed"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "dspark_tok_s_8k_wirebound",
+   "label": "DSpark per-user accepted rate at 8K with the die-floorplan wire-stage bound (measured-bound value)",
+   "path": "results/rtl/qwen_rom_fulldie_20261003/b3r3/wire_bound_8k.json",
+   "pointer": "dspark.bound_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "DSpark step 1,057,503 + 13,687 (74 decoder + 5 drafter layer passes, 5 heads at +176 / +27); tau third-party published"
   },
   {
    "target": "qwen_rom",

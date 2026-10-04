@@ -149,9 +149,9 @@ module tb_v41_rom_elem_pg;
    for(integer c=0;c<8;c=c+1) begin
      d=48'(c+1) | (48'd1<<21) | (48'(mode!=1)<<26) | (48'd1<<27) | (48'd1<<28);
      cfg(c,d); cfg(17+c,48'(c+101));
-     // class 7 (segment 7) idle: ot_v41_rom_elem_w10 writes entry 2NSEG+1+7 (the second macro's segment-7 row)
-     // to s_row[NSEG-1] (index NSEG + a[SW-1:0] - 1 wraps), so s_row[2NSEG-1] is never written: undefined in RTL
-     nu=(mode==0) ? ((c==0)?9:((c==3)?3:((c==6)?2:0))) : ((c==7)?0:1);
+     // class 7 (segment 7) active on both macros: entry 2NSEG+1+7 is the second macro's segment-7 row (the decoder
+     // fix of 2026-10-04; before it the row was never written, so earlier runs kept class 7 idle)
+     nu=(mode==0) ? ((c==0)?9:((c==3)?3:((c==7)?2:0))) : 1;
      base=(c==0)?252:(32*c);
      d=48'(nu!=0) | (48'(base)<<1) | (48'(nu)<<9) | (48'(c)<<16) | (48'(c)<<19) | (48'(mode==2)<<22);
      cfg(8+c,d);

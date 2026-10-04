@@ -98,6 +98,13 @@ def element_power():
                                     "measured controller power divided over the stage's elements (one controller per stage)"),
             residual_ctl_shared=Term(s["power_w"].get("residual_spine_gated_controller_shared"), worst(st, "modelled"),
                                      f"{SPINE_PATH} power_w.residual_spine_gated_controller_shared"),
+            pg_idle_ctl_aon_shared=Term(s["power_w"].get("pg_idle_spine_gated_controller_and_aon_shared"),
+                                        worst(st, "modelled"),
+                                        f"{SPINE_PATH} power_w.pg_idle_spine_gated_controller_and_aon_shared",
+                                        "controller AND its always-on clock branch divided over the stage's elements"),
+            residual_ctl_aon_shared=Term(s["power_w"].get("residual_spine_gated_controller_and_aon_shared"),
+                                         worst(st, "modelled"),
+                                         f"{SPINE_PATH} power_w.residual_spine_gated_controller_and_aon_shared"),
             wake_ns=Term(s["wake"]["wake_ns"], st, f"{SPINE_PATH} wake.wake_ns"),
             verdict=s.get("verdict"))
     else:
@@ -190,6 +197,9 @@ def ds(get, reg, el, dram):
         if el["spine"]["pg_idle_ctl_shared"].value is not None:
             variants.append(("pg_spine_ctl_shared", el["spine"]["pg_idle_ctl_shared"], el["spine"]["residual_ctl_shared"],
                              el["spine"]["wake_ns"]))
+        if el["spine"]["pg_idle_ctl_aon_shared"].value is not None:
+            variants.append(("pg_spine_ctl_aon_shared", el["spine"]["pg_idle_ctl_aon_shared"],
+                             el["spine"]["residual_ctl_aon_shared"], el["spine"]["wake_ns"]))
     for name, ppg, res, wk in variants:
         fa = min(1.0, 1.0 / S + wk.value * 1e-3 / t_ar_us)
         unv = unv_common + [f"element residual {res.value:.4f} applied to the hub logic (ASSUMED transfer)",
@@ -379,8 +389,11 @@ def build():
     D = ds(get, reg, el, dram)
     Q = qwen(F, get, reg, dram)
     r, h, g = D["rom"], D["hbm_accel"], D["b200x8"]
-    best = "ar_b1_pg_spine_ctl_shared" if "ar_b1_pg_spine_ctl_shared" in r["power"] else (
-        "ar_b1_pg_spine" if "ar_b1_pg_spine" in r["power"] else "ar_b1_pg_measured")
+    sp_ok = bool(el["spine"]) and str(el["spine"]["verdict"]).startswith("ADOPT")
+    best = "ar_b1_pg_measured"
+    for k in ("ar_b1_pg_spine", "ar_b1_pg_spine_ctl_shared", "ar_b1_pg_spine_ctl_aon_shared"):
+        if k in r["power"]:
+            best = k                                      # the lowest-residual spine variant (adopted or not)
     bestm = best.replace("ar_b1", "mtp_b1")
     ds_cmp = dict(
         per_user_ar_rom_over_hbm=round(r["rates"]["ar"]["value"] / h["rates"]["ar"]["value"], 4),
@@ -392,7 +405,7 @@ def build():
         J_per_token_ar_hbm_no_switch_over_rom=dict(
             (k, round(h["power"]["ar_b1_no_switch"]["J_per_token"] / r["power"][k]["J_per_token"], 4))
             for k in r["power"] if k.startswith("ar_b1")),
-        best_rom_policy=best,
+        best_rom_policy=best, spine_adopted=sp_ok,
         iso_silicon=iso("DS ROM", r["silicon"]["total_mm2"], dict(
             rom_ar=(r["silicon"], r["rates"]["ar"]["value"], "AR"), rom_mtp=(r["silicon"], r["rates"]["mtp"]["value"], "MTP"),
             hbm_ar=(h["silicon"], h["rates"]["ar"]["value"], "AR"), hbm_mtp=(h["silicon"], h["rates"]["mtp"]["value"], "MTP"),
@@ -458,8 +471,9 @@ def readme(d):
           f"{el['wake_ns']['value']:.1f} ns." + (
               f" Gated spine: PG idle {sp['pg_idle']['value'] * 1e3:.3f} mW, residual {sp['residual']['value'] * 100:.2f}% "
               f"({sp['residual']['status']}; verdict {sp['verdict']})" + (
-                  f"; with one controller a stage {sp['residual_ctl_shared']['value'] * 100:.2f}%"
-                  if sp.get('residual_ctl_shared') and sp['residual_ctl_shared']['value'] is not None else "") + "."
+                  f"; with one controller a stage {sp['residual_ctl_shared']['value'] * 100:.2f}%, controller and its "
+                  f"always-on clock branch shared {sp['residual_ctl_aon_shared']['value'] * 100:.2f}%"
+                  if sp.get('residual_ctl_aon_shared') and sp['residual_ctl_aon_shared']['value'] is not None else "") + "."
               if sp else " Gated spine: pending (results/rtl/rom_stage_spine_gate_20261004)."),
           f"Idle window at 1M: token {fmt(r['idle_window_1m']['token_us'], 1)} us, stage window "
           f"{r['idle_window_1m']['stage_window_us']:.2f} us, wake {r['idle_window_1m']['wake_us'] * 1e3:.1f} ns "
@@ -538,7 +552,8 @@ def verdict_lines(d):
     out.append(f"- **DS, energy at batch 1 (AR):** ROM with the measured {r['element']['residual']['value'] * 100:.1f}% residual {pm['J_per_token']:.2f} J/token "
                f"against HBM {h['power']['ar_b1']['J_per_token']:.2f} (switch charged): HBM/ROM = {ratio_m:.2f} ({win(ratio_m)})"
                + ("" if best == "ar_b1_pg_measured" else
-                  f"; with the gated spine ({best}) ROM {rb['J_per_token']:.2f} J/token, HBM/ROM = {ratio_b:.2f} ({win(ratio_b)})")
+                  f"; with the gated spine ({best}, " + ("ADOPTED" if dc["spine_adopted"] else "UNVALIDATED: spine REJECTED physically")
+                  + f") ROM {rb['J_per_token']:.2f} J/token, HBM/ROM = {ratio_b:.2f} ({win(ratio_b)})")
                + f". Without the switch charge HBM/ROM = {dc['J_per_token_ar_hbm_no_switch_over_rom']['ar_b1_pg_measured']:.2f}.")
     out.append(f"- **DS, energy MTP:** HBM/ROM = {dc['J_per_token_mtp_hbm_over_rom']['mtp_b1_pg_measured']:.2f} (measured "
                "residual)" + ("" if best == "ar_b1_pg_measured" else

@@ -510,7 +510,18 @@ public:
         auto source=std::make_shared<DsromS81PrefixNativeEngine>(std::move(owner));
         descriptor_drained=source->idle;
         return {{"actual-packed-window-kv",
-            [self,source](const auto& r){source->participant.prepare(r);self->prepare();},
+            [self,source](const auto& r){
+                // A pending literal requests descriptor capture/staging; it is
+                // not GO authority. Keep the actual owner progressing before
+                // it snapshots start/prime, even while WINDOW is not ready.
+                if(self->held_consumer&&!self->held_go&&!self->stream_active){
+                    require(!self->fault()&&!source->participant.fault(),
+                            "pending packed WINDOW source authority fault");
+                    source->inputs_ready(*self->held_consumer);
+                    source->drive(*self->held_consumer,false);
+                }
+                source->participant.prepare(r);self->prepare();
+            },
             [self,source](bool reset){self->rising(reset);source->participant.rising(reset);},
             [self,source](bool reset){self->falling(reset);source->participant.falling(reset);},
             [self,source](){return self->fault()||source->participant.fault();}},
@@ -534,12 +545,13 @@ public:
                             self->held_consumer->unit==op.unit&&
                             self->held_consumer->instruction==op.instruction,
                             "packed WINDOW held consumer changed before GO");
-                // This is actual descriptor authorization for THIS literal
-                // operation, not a lease derived from a generation number.
-                if(!source->inputs_ready(op)||!source->ready()||!self->staged()||
-                   !self->selected_bound||!self->selected_ready||!self->current_row_visible())return false;
+                // Ask the real descriptor owner to capture THIS literal before
+                // waiting for WINDOW staging. Retaining a pending request grants
+                // no readiness, native generation or operand lease by itself.
+                const bool authorized=source->inputs_ready(op);
                 self->held_consumer=op;
-                return true;
+                return authorized&&source->ready()&&self->staged()&&
+                       self->selected_bound&&self->selected_ready&&self->current_row_visible();
             },
             [self,source](const auto& op,bool go){
                 if(go)require(self->held_consumer&&!self->held_go&&
