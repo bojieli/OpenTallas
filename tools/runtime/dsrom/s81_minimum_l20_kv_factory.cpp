@@ -196,6 +196,15 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
         r.provider->wire_su(*b.su,1048575);
         std::visit([&](auto& c){
             r.provider->wire_quantizer(*b.quantizer,*c);
+            // The actual current QDQ4E producer is rank3 only. Every native
+            // CKV service needs that same row to complete its selection/fetch
+            // lifecycle; WINDOW mode1 remains bound to each rank's own QE.
+            if(i!=3) {
+                auto& current=*ranks[3].b.quantizer;
+                if(current.native&&current.held_mode&&
+                   (current.native().w_we&1u)&&current.held_mode()==3)
+                    r.provider->wire_quantizer(current,*c);
+            }
             c->sel_v=0;
             if(b.su->accepts_on_current_shared_edge()&&selected_su(b.su->native())){
                 const auto& su=b.su->native();
