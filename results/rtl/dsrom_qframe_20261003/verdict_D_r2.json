@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.dsrom_qframe.verdict.v1",
+ "run": "D_r2",
+ "frame_um": [
+  510.84,
+  151.2
+ ],
+ "die_area_um2": 77239,
+ "core_area_um2": 76963.2,
+ "macro_area_um2": 31525.5,
+ "stdcell_area_um2": 24386.8,
+ "instance_utilisation": 0.726481,
+ "launch_manifests": [
+  "results/rtl/dsrom_qframe_20261003/launch_D_r2.json"
+ ],
+ "evidence": [
+  "results/rtl/dsrom_qframe_20261003/D_r2/6_report.json",
+  "results/rtl/dsrom_qframe_20261003/D_r2/5_route_drc.rpt",
+  "results/rtl/dsrom_qframe_20261003/D_r2/5_2_route.log",
+  "results/rtl/dsrom_qframe_20261003/D_r2/signoff_ss_ff.json",
+  "results/rtl/dsrom_qframe_20261003/D_r2/final_artifact_sha256.txt",
+  "results/rtl/dsrom_qframe_20261003/D_r2/receipt.json",
+  "results/rtl/dsrom_qframe_20261003/D_r2/exit_code"
+ ],
+ "remote_preserved": "ot-epyc1tb:/srv/opentallas-scratch/claude/qframe/D_r2/work/orfs (6_final.odb/.v/.sdc/.spef)",
+ "routing": {
+  "antenna_net_violations": 0,
+  "antenna_pin_violations": 0,
+  "detail_route_final_violations": 0,
+  "drt_0255": 0,
+  "drt_0419": 0,
+  "drv": {
+   "max_cap": 1,
+   "max_fanout": 1,
+   "max_slew": 1
+  },
+  "route_drc_rpt_lines": 0,
+  "verdict": "FAIL_DRV (DRC 0, but routed max-slew/max-cap/max-fanout violations, 1 each)"
+ },
+ "timing": {
+  "SS": {
+   "setup_wns_ps": -199.8,
+   "setup_tns_ns": -448.46,
+   "hold_wns_ps": 7.6,
+   "fmax_mhz": 968.24
+  },
+  "FF": {
+   "setup_wns_ps": -74.3,
+   "hold_wns_ps": -210.0,
+   "hold_tns_ns": -23.95
+  },
+  "policy": "setup at SS with 60 ps uncertainty, hold at FF with 25 ps (6_final.sdc + 6_final.spef; tools/signoff_analysis.py analyze --corners SS,FF --derate 0; ROM macro own ss/ff liberty)",
+  "notes": [
+   "SS setup WNS matches A/B (-201/-213 ps) within 15 ps; 6_final.sdc is byte-identical to A_r3_mig (c90e4b2c); critical path not re-attributed here (timing owned by claude/dsrom-qelem-pipeline-20261003)",
+   "FF hold fails because hold is repaired only at the SS corner, as in A and B"
+  ],
+  "verdict": "FAIL"
+ },
+ "verdict": "FAIL",
+ "verdict_basis": "PASS needs DRC 0, no DRV, SS setup >= 0 and FF hold >= 0. Routability: envelope frame routes DRC/antenna clean, DRV FAIL (1 slew, 1 cap, 1 fanout); timing: FAIL."
+}

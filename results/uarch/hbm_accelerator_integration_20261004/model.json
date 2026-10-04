@@ -1625,7 +1625,7 @@
       ]
     },
     "qwen27": {
-      "config": "configs/models/candidates/qwen3.8-27b.json",
+      "config": "results/uarch/hbm_accelerator_integration_20261004/qwen3.8-27b_hbm_inputs.json",
       "source_revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
       "streamed_weight_bytes": 25624600064,
       "kv_and_state_bytes_per_token_8k": 576323584,
@@ -4028,8 +4028,8 @@
   "input_sha256": {
     "results/uarch/hbm_accelerator_study_20261003/ladder_model.py": "5266d81b537fe18edd427f853bdb25c6b6533c3c65e7dafc2ac3bedb0378125f",
     "results/uarch/hbm_accelerator_study_20261003/ladder.json": "0f21684483496bd811b2ac08e4f4a4f8e29cbd91bb8ad5f696162dbd80b62e2c",
-    "tools/uarch_model.py": "b0f4d524a153876911a7c73578357fa91abe7f1e887ed92644f1d599a412f15b",
-    "tools/hbm_accelerator_model.py": "fb901bf3350e565b594e936d1c71ca42d151a07450d88396b91aca38d33df277",
+    "tools/uarch_model.py": "a78e8886b11121ee1ffed8e8e01989d690798047698977bb89404dc2b546df5f",
+    "tools/hbm_accelerator_model.py": "e60db6eb5fda1721cdc9a6d14c2b0498eacb7f2bfeacc68f7bb1e56a300e7119",
     "results/uarch/consolidation.json": "0d99324bb6e983f75fb786901ae2e6db3000072443c351549f661af35bda3976",
     "results/uarch/economics.json": "4f584946473201c60fcf1ac2c0509b0816ae138f134629cf50f5ed8f081166db",
     "results/uarch/dsrom_gpu_index_scan_correction_20261003/model.json": "90faa72f09270e8fa05536f9447c0349bc5f625c7ec100c5abdddbc1494d0113",
@@ -4038,6 +4038,6 @@
     "results/uarch/v41_hbm_service_term_20261003/uarch_model_service_term.patch": "1743c8eeb197a0b7e0a5790257fe7db78b4dfc55fe499e607a645d218bd78ae8",
     "results/uarch/hbm_accelerator_integration_20261003/VALIDATION_ADDENDUM.md": "7c22a425e27d3578c31d49296dddf9107e0eac95ec6196501dca23b0a647acf2",
     "results/uarch/hbm_accelerator_integration_20261003/C1_C5hc_REPLAY.md": "f456fda9f4762beff1f6a812356fb74c5c73cc580a3a2f9ebf8f8140cbddc43d",
-    "configs/models/candidates/qwen3.8-27b.json": "f157b6ae5075b9bf42e8724a7e7f7ddc5eeecaddac7dd7ee54ee2bbb8926e78c"
+    "results/uarch/hbm_accelerator_integration_20261004/qwen3.8-27b_hbm_inputs.json": "f157b6ae5075b9bf42e8724a7e7f7ddc5eeecaddac7dd7ee54ee2bbb8926e78c"
   }
 }

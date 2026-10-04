@@ -18,7 +18,7 @@ STUDY_PINS = {
 }
 GATES = ['exact', 'latency', 'area', 'route', 'timing', 'gain']
 COMPOSITION = 'results/rtl/hbm_accel_composition_20261004/measured_composition.json'
-Q27 = 'configs/models/candidates/qwen3.8-27b.json'
+Q27 = 'results/uarch/hbm_accelerator_integration_20261004/qwen3.8-27b_hbm_inputs.json'  # header facts; agree with configs/models/candidates/qwen3.8-27b.json (cf63b0c0f)
 
 # Sourced DRAM silicon per stack (HA0). Micron's HBM3E product brief gives an 11 mm x 11 mm cube
 # footprint; a stacked core die cannot exceed it, so 121 mm2 bounds each core die and the base die.

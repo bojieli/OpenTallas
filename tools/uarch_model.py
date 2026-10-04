@@ -1832,6 +1832,25 @@ def hbm_speculation_rows():
     return rows
 
 
+V41_HBM_DSPARK_REC = ROOT / "results/speculative/v41_hbm_speculation_methods_20261003/v41_hbm_speculation_methods.json"
+
+
+def v41_hbm_dspark_rows(ctx=1048576):
+    """OPT-IN (--v41-hbm-dspark; never on a default path): the V4.1 HBM comparator's DSpark rows with the drafter
+    priced from its real structure (3 stages x 5 slots + LM head + 5 serial Markov argmaxes) and the verify pass's
+    MEASURED expert union, on W19's composer (tools/v41_hbm_speculation_methods.py).  V4.1's built-in 'MTP' is
+    DSpark: these rows re-price the existing headline's terms; HBM_W19 and V41_DRAFT_FRACTION are unchanged."""
+    rec = json.loads(V41_HBM_DSPARK_REC.read_text())
+    c = rec["contexts"][str(ctx)]
+    rows = [dict(design="v41_hbm_ar_w19", ctx=ctx, tokens_s=c["ar_tokens_s"], T_us=c["ar_us"])]
+    for k, v in c["headline_comparison_tau_3649_gamma5"].items():
+        rows.append(dict(design=f"v41_hbm_dspark_g5_tau3649_{k}", ctx=ctx, tokens_s=v["tokens_s"], step_us=v["step_us"]))
+    for ts, r in c["rates"].items():
+        for x in r["by_gamma"]:
+            rows.append(dict(design=f"v41_hbm_dspark_g{x['gamma']}", tau_set=ts, ctx=ctx, **x))
+    return rows
+
+
 # ---------------------------------------------------------------------------------------------------------
 # Fabric sensitivity and GPU tiers (user request 2026-09-29)
 # ---------------------------------------------------------------------------------------------------------
@@ -6397,6 +6416,8 @@ def main(argv=None):
     ap.add_argument("--hbm-accel", action="store_true",
                     help="default-off UNVALIDATED HBM accelerator ladder and fairness hypotheses")
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
+    ap.add_argument("--v41-hbm-dspark", action="store_true", help="OPT-IN: V4.1 HBM DSpark rows (priced draft, "
+                    "measured expert union) from results/speculative/v41_hbm_speculation_methods_20261003")
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
     ap.add_argument("--vm-waterfall", action="store_true", help="the VM waterfall and levers (root 2026-10-01)")
