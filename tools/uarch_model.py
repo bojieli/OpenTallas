@@ -6660,14 +6660,18 @@ def dsrom_wavefront_mtp_tok_s(rom, rk):
     return ctx[V41_ROM_DRAFT_VARIANTS[V41_ROM_DRAFT]]["wavefront_occupancy"]["mtp_tok_s"]
 
 
-TAU_OWNER6 = 4.159      # equal 6-class blend, gamma 5 (results/speculative/v41_mtp_acceptance_qualified_20261003/
-                        # blend_owner6.json blends."owner 6-class equal".greedy.tau_blend_harmonic)
+TAU_OWNER6 = 4.159      # SUPERSEDED 2026-10-04 (owner rule: tau from published third-party sources only). Our equal
+                        # 6-class blend, gamma 5 (results/speculative/v41_mtp_acceptance_qualified_20261003/
+                        # blend_owner6.json blends."owner 6-class equal".greedy.tau_blend_harmonic); kept for reproduction.
+import third_party_tau as _TPT                                                     # noqa: E402
+TAU_DS = _TPT.tau_ds_v41(5)               # DEFAULT: published third-party DSpark gamma-5 tau (OT_TAU_SOURCE=self_measured -> 4.159)
+TAU_DS_SRC = _TPT.tau_src("deepseek_v41", 5)
 NVLS_SCEN = ("push_optimistic", "nvls_measured", "gpu_fenced")
 TU_SCEN = ("tomahawk_ultra_protocol", "tomahawk_ultra_inc")
 
 
 def hbm_switch_latency_authoritative():
-    """AUTHORITATIVE DS-V4.1 HBM per-user AR / MTP (tau 4.159, gamma 5) at 1M and 200K under every switch scenario, for
+    """AUTHORITATIVE DS-V4.1 HBM per-user AR / MTP (tau TAU_DS = third-party published, gamma 5) at 1M and 200K under every switch scenario, for
     the W19 GPU-organised ablation, the accelerator (frozen HA firm ladder without R2 -- the switch tier is retained --
     and, under a replaced transport, without R3a, whose endpoint cut-through the replacement already contains), the
     measured composition and the GPU-faithful R0 row (every boundary a MEASURED H100 1.097 us grid sync); ROM:HBM
@@ -6766,7 +6770,7 @@ def hbm_switch_latency_authoritative():
                 d1, d6 = delta(sc, P=1, **kw), delta(sc, P=6, **kw)
                 ar = dd["ar"] * k + d1
                 step = (dd["ver"] + dd["draft"]) * k + d6 + d1 * n_draft / n["total"]
-                ar_r, mtp_r = 1e6 / ar, TAU_OWNER6 * 1e6 / step
+                ar_r, mtp_r = 1e6 / ar, TAU_DS * 1e6 / step
                 primary = kw.get("fec", "board") == "board" and kw.get("gathers", "measured_ag") == "measured_ag" \
                     and kw.get("msg", "small") == "small" and kw.get("cable", "twinax_3m") == "twinax_3m"
                 rows.append(dict(ctx=ctx, design=name, scenario=sc, **kw, primary=primary,
@@ -6854,7 +6858,7 @@ def hbm_switch_latency_authoritative():
                 collective_counts=dict(w19_pass=n, draft_assumed=round(n_draft, 2),
                                        draft_basis="W19 per-collective mix at P = 1 bytes x DRAFT_PARTS.collective / "
                                                    "W19 collective"),
-                tau=TAU_OWNER6, gamma=5, tau_src="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json",
+                tau=TAU_DS, gamma=5, tau_src=TAU_DS_SRC, tau_superseded=dict(tau=TAU_OWNER6, src="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (self-measured)"),
                 rom_records=dict(ar=DSROM_WAVEFRONT, mtp=DSROM_DRAFT_MEASURED, l1l2=DSROM_DRAFT_L1L2), rom_fec="light (130 ns board link)",
                 rom=romv, rom_projections_note="L1 fused head = the measured-draft record's fused_head (= L1, 7,186 at "
                                                "1M); L2 batched head and L1+L2 = EXPECTED projections (no lever "
