@@ -17,6 +17,10 @@ const std::array<DsromS81PrefixOperation,7>& dsrom_s81_l0_prefix_operations();
 struct DsromS81PrefixNativeEngine {
     DsromS81MinimumParticipant participant;
     std::function<bool()> ready,idle;
+    // Poll/admit this operation's real native operand prefetch. Returns true
+    // only with the required source leases and fixed-latency endpoint ready.
+    // Progress uses participant edges; this callback never clocks a model.
+    std::function<bool(const DsromS81PrefixOperation&)> inputs_ready;
     // Drives literal decoded ports plus GO. Does not eval/clock a model.
     std::function<void(const DsromS81PrefixOperation&,bool go)> drive;
 };
@@ -51,7 +55,7 @@ class DsromS81MinimumPrefix {
     static bool valid(const DsromS81PrefixNativeEngine& e) {
         return !e.participant.name.empty()&&e.participant.prepare&&
             e.participant.rising&&e.participant.falling&&e.participant.fault&&
-            e.ready&&e.idle&&e.drive;
+            e.ready&&e.idle&&e.inputs_ready&&e.drive;
     }
     DsromS81PrefixNativeEngine& engine() {
         return dsrom_s81_l0_prefix_operations()[next].unit==5?he:su;
@@ -73,7 +77,9 @@ class DsromS81MinimumPrefix {
                 if(next<7) {
                     auto& e=engine();
                     go=!inflight&&embedding.complete()&&
-                        vm.cold_inputs_visible(identity)&&e.ready()&&e.idle();
+                        vm.cold_inputs_visible(identity)&&
+                        e.inputs_ready(dsrom_s81_l0_prefix_operations()[next])&&
+                        e.ready()&&e.idle();
                     e.drive(dsrom_s81_l0_prefix_operations()[next],go);
                 }
             }
