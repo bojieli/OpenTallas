@@ -66,6 +66,7 @@ module ot_qwen_rom_rt_die_w12_rm #(
     parameter integer KV_PREP = 0,
     parameter integer ENABLE_AR256 = 0,
     parameter integer ASYNC_COLL = 0,
+    parameter integer SB_PIPE = 0,         // 1: pipelined cut-through scoreboard set (ot_qwen_tp_seq_async_w12)
     parameter integer D = 4,
     // REAL_MEM
     parameter integer REAL_MEM = 1,
@@ -200,7 +201,7 @@ module ot_qwen_rom_rt_die_w12_rm #(
         .vx_re(vx_re),.vx_addr(vx_addr),.vx_q(vx_q),
         .tgo(tgo),.tb(tb),.xl_d(xl_d),.t_lvl(t_lvl),.fab_fault(fab_fault),
         .w_ok(w_ok_svc),.emb_ok(emb_ok_svc),.me_mem_ok(me_mem_ok_svc),.me_clk_en(me_clk_en));
-    ot_qwen_tp_seq_async_w12 #(.ASYNC_COLL(ASYNC_COLL),.NP(NPORT),.MAW(AW),.N(D),.NW(SNW),.PAW(PAW),.VWA(8),.DAW(DAW),.FW(FW),.TAGW(32),
+    ot_qwen_tp_seq_async_w12 #(.ASYNC_COLL(ASYNC_COLL),.SB_PIPE(SB_PIPE),.NP(NPORT),.MAW(AW),.N(D),.NW(SNW),.PAW(PAW),.VWA(8),.DAW(DAW),.FW(FW),.TAGW(32),
                     .QWEN_FULLSHAPE(QWEN_FULLSHAPE), .ENABLE_AR256(ENABLE_AR256)) seq (
         .clk(clk),.rst_n(rst_n),.start(start | h_start),.token(tp_token),.pos(tp_pos),
         .done(s_done),.next_token(seq_ntok),.next_val(seq_nval),
