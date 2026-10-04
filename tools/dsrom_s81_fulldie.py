@@ -832,7 +832,9 @@ def _slab_pins(M, m):
     for i, ch_ in enumerate(f'T{h}{t}' for h in 'WE' for t in range(TIERS)):
         ga.face(f'r{ch_}', 1, 'E', 'M4', 60.0 + 95.0 * i, 1)
     for i, st in enumerate(('SW', 'SE', 'NW', 'NE')):
-        vm.face(f's{st}', 1, 'E', 'M4', vm.h - 40.0 - 110.0 * i, 1)   # r6: 90 um left no M4 escape (h_b5 i50 GCell)
+        # r7: S-band services exit the lower E face, N-band ones the upper, the HC bus between (r5/r6 packed all
+        # four next to t_hc: M4 escape overflow at the VM E face)
+        vm.face(f's{st}', 1, 'E', 'M4', (120.0, 220.0, vm.h - 220.0, vm.h - 120.0)[i], 1)
     vm.face('sel', 512, 'S', 'M5', 200.0, 1)
     vm.face('col', 512, 'N', 'M5', 200.0, 1)
     vm.face('t_su_s', 1024, 'S', 'M5', 500.0, 1)
@@ -1772,6 +1774,68 @@ exit
     return meta
 
 
+def case_psmt(out, mode):
+    """PSM macro-current control (why case c, not case irm, is the IR sign-off method): one 1,000 x 1,000 um block
+    with M7 PG stripes at 1 W, versus the same power as 2,116 21.6 um cells with the same stripes, on the identical
+    bump-aligned M8/M9 grid and bump array.  PSM puts a macro instance's whole current on few nodes, so a large
+    abstract's worst drop is a solver artefact (measured 54.8 mV vs 2.4 mV)."""
+    out.mkdir(parents=True, exist_ok=True)
+    W = H = 1400.0; B0 = 200.0; S = 1000.0; P = 1.0
+    def m7(name, w, h):
+        L = [f'MACRO {name}', '  CLASS BLOCK ;', f'  FOREIGN {name} 0 0 ;', f'  SIZE {w:.3f} BY {h:.3f} ;', '  SYMMETRY X Y ;']
+        for net, off in (('VDD', 1.0), ('VSS', 6.4)):
+            L += [f'  PIN {net}', '    DIRECTION INOUT ;', f'    USE {"POWER" if net=="VDD" else "GROUND"} ;', '    PORT', '      LAYER M7 ;']
+            x = off
+            while x + 0.288 < w - 0.2:
+                L.append(f'        RECT {x:.3f} 0.300 {x+0.288:.3f} {h-0.3:.3f} ;'); x += 10.8
+            L += ['    END', f'  END {net}']
+        L += ['  OBS'] + [f'    LAYER M{i} ;\n      RECT 0 0 {w:.3f} {h:.3f} ;' for i in range(1, 7)] + ['  END', f'END {name}', '']
+        return '\n'.join(L)
+    if mode == 'macro':
+        lef = m7('blk', S, S); comps = [('b0', 'blk', B0, B0, P)]
+    else:
+        c = 21.6; n = int(S // c); lef = m7('cell', c, c)
+        comps = [(f'c{i}_{j}', 'cell', B0 + i * c, B0 + j * c, P / (n * n)) for i in range(n) for j in range(n)]
+    (out / 'x.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + lef + 'END LIBRARY\n')
+    d = ['VERSION 5.8 ;', 'DESIGN t ;', 'UNITS DISTANCE MICRONS 1000 ;', f'DIEAREA ( 0 0 ) ( {int(W*1000)} {int(H*1000)} ) ;', f'COMPONENTS {len(comps)} ;']
+    d += [f'- {n} {m} + FIXED ( {round(x*1000)} {round(y*1000)} ) N ;' for n, m, x, y, _ in comps] + ['END COMPONENTS', 'END DESIGN', '']
+    (out / 't.def').write_text('\n'.join(d))
+    vp = 63.64
+    for net, off in (('VDD', vp/2), ('VSS', vp)):
+        s = []
+        y = off
+        while y < H - 1:
+            x = off
+            while x < W - 1:
+                s.append(f'{x:.3f}, {y:.3f}, 20.0, {0.7 if net=="VDD" else 0.0}\n'); x += vp
+            y += vp
+        (out / f'vsrc_{net}.loc').write_text(''.join(s))
+    pitch = 3.7435; PL = '/OpenROAD-flow-scripts/flow/platforms/asap7'
+    t = f"""read_lef {PL}/lef/asap7_tech_1x_201209.lef
+read_lef /work/x.lef
+read_def /work/t.def
+add_global_connection -net VDD -inst_pattern .* -pin_pattern ^VDD$ -power
+add_global_connection -net VSS -inst_pattern .* -pin_pattern ^VSS$ -ground
+global_connect
+set_voltage_domain -name CORE -power VDD -ground VSS
+define_pdn_grid -name top -voltage_domains CORE
+add_pdn_stripe -grid top -layer M8 -width 0.48 -pitch {pitch} -spacing {pitch/2-0.48:.4f} -offset {(vp/2)%pitch:.4f}
+add_pdn_stripe -grid top -layer M9 -width 0.48 -pitch {pitch} -spacing {pitch/2-0.48:.4f} -offset {(vp/2)%pitch:.4f}
+add_pdn_connect -grid top -layers {{M8 M9}}
+define_pdn_grid -macro -name m7 -cells {{{comps[0][1]}}} -halo {{0 0 0 0}} -voltage_domains CORE
+add_pdn_connect -grid m7 -layers {{M7 M8}}
+pdngen
+read_liberty {PL}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+source {PL}/setRC.tcl
+set_pdnsim_source_settings -bump_dx 64 -bump_dy 64 -bump_size 20 -bump_interval 1
+""" + ''.join(f'set_pdnsim_inst_power -inst {n} -power {p:.9f}\n' for n, _, _, _, p in comps) + """
+set_pdnsim_net_voltage -net VDD -voltage 0.7
+analyze_power_grid -net VDD -vsrc /work/vsrc_VDD.loc -voltage_file /work/ir_VDD.rpt
+exit
+"""
+    (out / 'run.tcl').write_text(t)
+
+
 # ------------------------------------------------------------------------------------------------ records
 def record_b(work, m):
     from chip_assembly import v41_die as VD
@@ -1865,7 +1929,7 @@ def where(m, x, y):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['plan', 'real', 'grt', 'ir', 'irm', 'record', 'check'])
+    ap.add_argument('mode', choices=['plan', 'real', 'grt', 'ir', 'irm', 'psmt', 'record', 'check'])
     ap.add_argument('--work', type=Path)
     ap.add_argument('--k', type=int, default=16)
     ap.add_argument('--tag', default='base')
@@ -1877,6 +1941,7 @@ def main(argv=None):
     ap.add_argument('--no-align', action='store_true')
     ap.add_argument('--avg', action='store_true')
     ap.add_argument('--out', type=Path)
+    ap.add_argument('--psmt', type=Path, help='record: the PSM macro-current control directory (mode psmt)')
     ap.add_argument('--only', default='', help='record: case-name regex (cases built by the current floorplan)')
     ap.add_argument('--die', default='layer', choices=['layer', 'head'])
     a = ap.parse_args(argv)
@@ -1927,6 +1992,14 @@ def main(argv=None):
                 cases[d.name] = dict(error=repr(e))
         rec = dict(schema='opentallas.dsrom-s81-fulldie.feasibility.v1', tool_sha256=sha('tools/dsrom_s81_fulldie.py'),
                    cases=cases)
+        if a.psmt:
+            ctl = {}
+            for mode in ('macro', 'cells'):
+                log = (a.psmt / mode / 'run.log').read_text()
+                ctl[mode] = dict(worst_mv=round(float(re.search(r'Worstcase IR drop: ([\d.e+-]+)', log).group(1)) * 1e3, 2),
+                                 avg_mv=round(float(re.search(r'Average IR drop  : ([\d.e+-]+)', log).group(1)) * 1e3, 3))
+            rec['psm_macro_current_control'] = dict(ctl, note=case_psmt.__doc__.split('.  PSM')[0].strip() + '.')
+
         out = a.out or ROOT / OUT / 'feasibility.json'
         out.write_text(json.dumps(rec, indent=1, sort_keys=True) + '\n')
         return 0
@@ -1937,6 +2010,9 @@ def main(argv=None):
         print(json.dumps(case_real(m, work)))
     elif a.mode == 'grt':
         print(json.dumps(case_grt(m, work, a.k, a.tag, a.iters, cov, empty=a.empty)))  # variant carries die
+    elif a.mode == 'psmt':
+        case_psmt(work / 'macro', 'macro')
+        case_psmt(work / 'cells', 'cells')
     elif a.mode == 'irm':
         meta = case_irm(m, work, a.window, cov, vdd_pitch=a.vdd_pitch, peak=not a.avg)
         meta['die'] = a.die
