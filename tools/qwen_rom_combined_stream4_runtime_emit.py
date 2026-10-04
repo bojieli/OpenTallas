@@ -13,8 +13,14 @@ ABI='combined-stream4-layer-v1'
 initialized=predecessor.initialized
 
 
-def emit(root=ROOT):
-    src=predecessor.emit(root)
+def emit(root=ROOT, *, dspark=False):
+    if dspark:
+        import qwen_rom_combined_dspark_runtime_emit as block
+        src=block.emit(root)
+        top=block.TOP
+    else:
+        src=predecessor.emit(root)
+        top=TOP
     def replace(old,new):
         nonlocal src
         if src.count(old)!=1:raise ValueError('STREAM4 source anchor missing/ambiguous: '+old[:90])
@@ -38,8 +44,12 @@ def emit(root=ROOT):
                 ch|=hbm[d]->wire();
                 if(!die[d]->clk)ch|=qwen_combined::wire_stream4_kv_free(*die[d],actual_mlp_base[d]);
             }''')
-    replace('for(int d=0;d<D;++d)all_done&=layer_fences[d].can_retire(sample(d));',
-            'for(int d=0;d<D;++d)all_done&=layer_fences[d].can_retire(sample(d))&&qwen_combined::stream4_layer_terminal(*die[d]);')
+    if dspark:
+        replace('all_done&=layer_fences[d].can_retire(sample(d));',
+                'all_done&=layer_fences[d].can_retire(sample(d))&&qwen_combined::stream4_layer_terminal(*die[d]);')
+    else:
+        replace('for(int d=0;d<D;++d)all_done&=layer_fences[d].can_retire(sample(d));',
+                'for(int d=0;d<D;++d)all_done&=layer_fences[d].can_retire(sample(d))&&qwen_combined::stream4_layer_terminal(*die[d]);')
     replace('hbm[d]->clocks(clock_event.service_high);','hbm[d]->clocks(clock_event.core_high);')
     replace('    for(int d=0;d<D;++d)die[d]->eval();\n    coll.eval();', '''    // Expose actual asserted resets/LOW clocks to the native hook before
     // any first eval. The hook forwards pins; it owns no model or edges.
@@ -52,11 +62,13 @@ def emit(root=ROOT):
         // evaluates. Post-edge outputs are propagated by settle below.
         for(int d=0;d<D;++d)hbm[d]->wire();
         for(int d=0;d<D;++d)die[d]->eval();''')
-    replace('QWEN_ROM_NEARBASELINE PASS stages=%zu','QWEN_ROM_STREAM4_COMBINED PASS stages=%zu')
-    return '// STREAM4_RUNTIME_ABI '+ABI+'; actual selected top '+TOP+'\n'+src
+    replace('QWEN_DSPARK_NEAR_COMPONENT_DONE stages=%zu' if dspark else 'QWEN_ROM_NEARBASELINE PASS stages=%zu',
+            'QWEN_DSPARK_STREAM4_COMPONENT_DONE stages=%zu' if dspark else 'QWEN_ROM_STREAM4_COMBINED PASS stages=%zu')
+    return '// STREAM4_RUNTIME_ABI '+ABI+'; actual selected top '+top+'\n'+src
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--dspark',action='store_true')
     a=p.parse_args()
-    with a.out.open('x') as stream:stream.write(emit())
+    with a.out.open('x') as stream:stream.write(emit(dspark=a.dspark))

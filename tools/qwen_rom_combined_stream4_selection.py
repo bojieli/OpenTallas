@@ -16,14 +16,21 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
     root,compiled,model_sources,link_dir,output=map(Path,(source_root,compiled_source_root,model_sources,link_dir,output))
     require(not output.exists(),'immutable selection exists')
     model=json.loads(model_sources.read_text());link_path=link_dir/'link.json';link=json.loads(link_path.read_text())
-    require(model['top']==runtime.TOP and model['hbm_top']=='ot_qwen_hbm_stream4_tagged'
+    dspark=model['top']=='ot_qwen_rom_combined_dspark_die'
+    top_source='rtl/qwen_sys/combined/ot_qwen_rom_combined_dspark_die.sv' if dspark else TOP_SOURCE
+    require(model['top'] in (runtime.TOP,'ot_qwen_rom_combined_dspark_die') and model['hbm_top']=='ot_qwen_hbm_stream4_tagged'
             and model['parameters']['HBM_STREAM4']==1 and model['parameters']['NEAR_HBM']==1,
             'actual STREAM4/near source book required; frozen near-only model refused')
     require(link['returncode']==0 and link['archives_stable'] is True and link['runtime_abi']==runtime.ABI,
             'actual successful STREAM4 link required')
-    require(link['generated_runtime_sha256']==hashlib.sha256(runtime.emit(root).encode()).hexdigest(),
+    require(link['top']==model['top'] and link.get('dspark_enabled',False)==dspark,
+            'actual runtime/model DSpark selection differs')
+    require(link['generated_runtime_sha256']==hashlib.sha256(runtime.emit(root,dspark=dspark).encode()).hexdigest(),
             'actual initialized STREAM4 runtime differs')
     params=link['resolved_parameters']
+    if dspark:
+        require(all(params['die'].get(k)==v for k,v in dict(DSPARK=1,ACCEPT_COMMIT=1,VPMAX=4,VWA=16,
+                    VM_ELEMS=1048576,NPROG=1024,NDESC=64).items()), 'actual ACCEPT_COMMIT1 compiled model required')
     require(params['hbm']['NSTK']==4 and params['hbm']['NPC']==128 and params['hbm']['TAGW']==9
             and params['hbm']['TTAGW']==13
             and params['die']['HBM_STREAM4']==1 and params['die']['NEAR_HBM']==1,
@@ -37,15 +44,14 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
             relative=str(p.relative_to(compiled.resolve()))
             require(sha(root/relative)==h,'selected runtime/model source differs: '+relative);pins[relative]=h
         else:external[str(p)]=h
-    required=[TOP_SOURCE,'rtl/qwen_sys/combined/ot_qwen_combined_stream4_rows.sv',base.SUBSYSTEM,
+    required=[top_source,'rtl/qwen_sys/combined/ot_qwen_combined_stream4_rows.sv',base.SUBSYSTEM,
               'rtl/hdc/kv/ot_qwen_hbm_stream4_tagged.sv']
-    for pinfile in (base.PIN_SOURCE,'rtl/qwen_sys/combined/stream4_source_pin.json'):
+    if dspark:required.append('rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_service.sv')
+    for pinfile in (base.PIN_SOURCE,'rtl/qwen_sys/combined/stream4_tagged_source_pin.json'):
         source=json.loads((root/pinfile).read_text())
         for path,h in source['sources'].items():
-            # The retained source book pins the original descriptor-only
-            # backend. Its history stays intact; the selected native successor
-            # is instead required in the actual model pins above.
-            if path=='rtl/hdc/kv/ot_qwen_hbm_stream4_ack.sv':continue
+            if dspark and path=='rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv':continue
+            if not dspark and path=='rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_service.sv':continue
             require(pins.get(path)==h,'required native stream/near engine source absent/changed: '+path)
         pins[pinfile]=sha(root/pinfile)
     require(all(p in pins for p in required),'actual stream row/subsystem/top pins required')
@@ -56,6 +62,9 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
               'tools/runtime/qwen_combined/stream4_clock_driver.hpp','tools/runtime/qwen_combined/combined_driver.hpp',
               'tools/runtime/qwen_combined/attention_descriptors.py'):
         pins[p]=sha(root/p)
+    if dspark:
+        for p in ('tools/qwen_rom_combined_dspark_runtime_emit.py','tools/runtime/qwen_combined/dspark_slot_binding.hpp'):
+            pins[p]=sha(root/p)
     for domain,port in (('core','clk'),('service','hclk')):
         c=clocks[domain]
         require(c['port']==port and type(c['period_fs']) is int and c['period_fs']>=2
@@ -63,7 +72,8 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
     require(clocks['core']['period_fs']==params['hbm']['CORE_FS'],'STREAM4 actual core period mismatch')
     exe=link_dir/'qwen_rom_combined';require(sha(exe)==link['executable_sha256'],'linked binary changed')
     book=dict(geometry=dict(tp=4,groups=6144,sw=64,nw=18),real_mem=True,near_hbm_enabled=True,
-              stream4_enabled=True,top_source=TOP_SOURCE,runtime_abi=runtime.ABI,maximum_stages=1,maximum_position=8191,
+              stream4_enabled=True,dspark_enabled=dspark,top_source=top_source,runtime_abi=runtime.ABI,
+              maximum_stages=2 if dspark else 1,maximum_position=8191,
               source_sha256=pins,external_generated_source_sha256=external,clocks=clocks,
               stream4_core_fs=params['hbm']['CORE_FS'],stream4_controller_fs=params['hbm']['CTL_FS'],
               executable=str(exe.resolve()),executable_sha256=link['executable_sha256'],
