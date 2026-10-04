@@ -34,6 +34,16 @@ def require(ok, message):
         raise ValueError(message)
 
 
+def embedding_argument(path, expected_sha256, token):
+    """Bind the cached 32-bit token, BF16 scale and 4096 INT8 ROM bytes."""
+    path = Path(path).resolve(strict=True)
+    require(sha(path) == expected_sha256, 'cached embedding row identity')
+    payload = path.read_bytes()
+    require(len(payload) == 4102, 'cached embedding ROM row extent')
+    require(int.from_bytes(payload[:4], 'little') == token, 'embedding row token differs')
+    return ['--embed-bin', str(path)]
+
+
 def layers_from_stages(path):
     stages = []
     for line in Path(path).read_text().splitlines():
@@ -123,6 +133,7 @@ def prepare(book_path, stages, preload, oracle_root, baseline, output, root=ROOT
     output = Path(output)
     output.mkdir(parents=True)
     kv = history.export(output / 'kv_history', layers=selected_layers)
+    (output / 'run').mkdir()
     # Canonical fscanf ABI has four rank paths and one reset integer. Resolve
     # every path before runtime; strip launcher-only comments without changing
     # the original immutable stage list.
@@ -150,12 +161,21 @@ def prepare(book_path, stages, preload, oracle_root, baseline, output, root=ROOT
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    for key in ('selection', 'stages', 'preload', 'oracle-root', 'baseline', 'output'):
+    for key in ('selection', 'stages', 'preload', 'oracle-root', 'baseline', 'output', 'embedding-bin'):
         ap.add_argument('--'+key, type=Path, required=True)
+    ap.add_argument('--embedding-sha256', required=True)
     ap.add_argument('--prepare-only', action='store_true')
     a = ap.parse_args(argv)
     try:
+        baseline_token = json.loads(a.baseline.read_text())['token']
+        embedding = embedding_argument(a.embedding_bin, a.embedding_sha256, baseline_token)
         cmd, rec = prepare(a.selection, a.stages, a.preload, a.oracle_root, a.baseline, a.output)
+        require(rec['token'] == baseline_token, 'prepared token differs from frozen baseline')
+        cmd += embedding
+        rec['command'] = cmd
+        rec['embedding'] = {'path': embedding[1], 'sha256': a.embedding_sha256}
+        rec['input_sha256'][embedding[1]] = a.embedding_sha256
+        (a.output/'launch.json').write_text(json.dumps(rec, indent=2)+'\n')
         if a.prepare_only:
             print(json.dumps({'status': 'prepared', 'command': cmd}));return 0
         # Sole runtime owner launches this. No timeout, memory cap, new compiler,
