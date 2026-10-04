@@ -308,7 +308,8 @@ module ot_meso_ring #(
     // rp is used from the edge after placement; the sample is SYNC periods old: slot (sample + SYNC + 1) is the
     // newest slot at that edge, and it is consumed (OFFSET - 1 + late) periods after its write edge.
 `ifdef OT_MESO_MUTANT_OFFSET
-    localparam int PLACE = SYNC + 1 - (OFFSET - 1) + 1;   // MUTANT: one period early
+    localparam int PLACE = SYNC + 1 - (OFFSET - 1) + 2;   // MUTANT: two periods early (a one-period error
+                                                          // still sits inside the 1 T guard margin)
 `else
     localparam int PLACE = SYNC + 1 - (OFFSET - 1);
 `endif
