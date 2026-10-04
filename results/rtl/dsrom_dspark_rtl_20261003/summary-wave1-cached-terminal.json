@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.dsrom-dspark-rtl-summary.v1",
+ "model": {
+  "uarch_speculation_json": {
+   "source": "results/uarch/speculation.json v41_rom_mtp_m1",
+   "verify_over_ar": 2.298,
+   "draft_over_ar_assumed": 0.075
+  },
+  "mtp_acceptance_pilot_rom_product": {
+   "source": "origin/claude/v41-hbm-speculation-20261003 d2aff19ef results/speculative/v41_hbm_speculation_methods_20261003 rom_note (T_ar 358.8 us, verify g5 768.3 us, draft assumed 26.9 us, HBM-ratio proxy 42.1 us)",
+   "t_ar_us": 358.8,
+   "verify_us": 768.3,
+   "draft_us_assumed": 26.9,
+   "draft_us_proxy": 42.1,
+   "verify_over_ar": 2.141,
+   "draft_over_ar_assumed": 0.075,
+   "draft_over_ar_proxy": 0.1173
+  },
+  "hbm_dspark_composition": {
+   "source": "d2aff19ef: HBM design, draft 51.9 us, verify P=6 700.9 us at 1M",
+   "draft_us": 51.88,
+   "verify_us": 700.85
+  }
+ },
+ "ar_token_cycles_as_built_same_bench": {},
+ "parts": {
+  "rom_m1_g5_gold4": {
+   "pass": false,
+   "core": "ot_hdc_core_v41 (as built)",
+   "units": null,
+   "accept_unit": "ot_hdc_accept",
+   "gamma": null,
+   "fp": null,
+   "runs": [],
+   "mutation_engram_restore_slot_plus_1_detected": null,
+   "isa_checks": null
+  },
+  "rom_m1_g5_o8s6": {
+   "pass": false,
+   "core": "ot_hdc_core_v41 (as built)",
+   "units": null,
+   "accept_unit": "ot_hdc_accept",
+   "gamma": null,
+   "fp": null,
+   "runs": [],
+   "mutation_engram_restore_slot_plus_1_detected": null,
+   "isa_checks": null
+  },
+  "x_all6": {
+   "pass": false,
+   "core": "ot_hdc_core_v41 (as built)",
+   "units": null,
+   "accept_unit": "ot_hdc_accept",
+   "gamma": null,
+   "fp": null,
+   "runs": [],
+   "mutation_engram_restore_slot_plus_1_detected": null,
+   "isa_checks": null
+  },
+  "x_all6dpi": {
+   "pass": false,
+   "core": "ot_hdc_core_v41 (as built)",
+   "units": null,
+   "accept_unit": "ot_hdc_accept",
+   "gamma": null,
+   "fp": null,
+   "runs": [],
+   "mutation_engram_restore_slot_plus_1_detected": null,
+   "isa_checks": null
+  },
+  "x_heme": {
+   "pass": false,
+   "core": "ot_hdc_core_v41 (as built)",
+   "units": null,
+   "accept_unit": "ot_hdc_accept",
+   "gamma": null,
+   "fp": null,
+   "runs": [],
+   "mutation_engram_restore_slot_plus_1_detected": null,
+   "isa_checks": null
+  },
+  "x_heme_guard": {
+   "pass": false,
+   "core": "ot_hdc_core_v41 (as built)",
+   "units": null,
+   "accept_unit": "ot_hdc_accept",
+   "gamma": null,
+   "fp": null,
+   "runs": [],
+   "mutation_engram_restore_slot_plus_1_detected": null,
+   "isa_checks": null
+  }
+ },
+ "missing_parts": [
+  "rom_m1_plain",
+  "x_heme_g1",
+  "x_heme_g3",
+  "x_heme_guard_n24"
+ ],
+ "status": "incomplete"
+}
