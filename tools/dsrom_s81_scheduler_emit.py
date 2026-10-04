@@ -63,9 +63,11 @@ int main(int argc,char** argv) {
     auto source_main=reinterpret_cast<DsromS81SourceMain>(dlsym(caller,"dsrom_s81_source_main"));
     if(!source_main){fprintf(stderr,"actual source caller entry missing: %s\n",dlerror());return 2;}
     try {
+        DsromS81Runtime runtime{};
+        const char* stage=getenv("DSROM_S81_STAGE");
+        if(!stage)throw std::runtime_error("actual native stage required");
+        runtime.stage=std::stoi(stage);
 '''+loop+r'''
-        DsromS81Runtime runtime;
-        runtime.stage=std::stoi(getenv("DSROM_S81_STAGE")); // required/checked by native Field
         for(auto& die:dies)runtime.dies.push_back(die.get());
         runtime.tick=[&](){
             tick();
@@ -84,10 +86,12 @@ int main(int argc,char** argv) {
         // Caller drives native C8/context/prime through the retained DieBase.
         int rc=source_main(runtime,out.c_str());
         printf("SOURCE_CALLER_EXIT rc=%d cycle=%ld\n",rc,cyc);
-        dlclose(caller);return rc;
+        // Runtime observers may retain source-SO closures. Keep that image
+        // loaded through their destruction, rather than unloading their code.
+        return rc;
     }catch(const std::exception& e){
         fprintf(stderr,"S81_SOURCE_RUNTIME_ERROR %s\n",e.what());
-        dlclose(caller);return 1;
+        return 1;
     }
 }
 '''
@@ -102,12 +106,21 @@ int main(int argc,char** argv) {
                      'rtl/test/v41_runtime/s81_selected/dsrom_s81_rom_client.hpp']:
         (out/Path(relative).name).write_bytes((owner/relative).read_bytes())
     (out/'dsrom_s81_source_scheduler.hpp').write_text(SOURCE_SCHEDULER)
+    # The actual executable caller and its VM-carry integration are support
+    # sources; they need not be present in the immutable native-model owner.
+    support = Path(__file__).resolve().parent/'runtime/dsrom'
+    for name in ['s81_source_caller.cpp', 's81_source_caller_plan.hpp', 's81_source_receipts.cpp',
+                 's81_source_caller_hooks.hpp', 's81_wavefront_c8_group_step.hpp',
+                 's81_wavefront_c8_port_join.hpp', 's81_wavefront_stage_poller.hpp',
+                 's81_wavefront_result_ledger.hpp']:
+        (out/name).write_bytes((support/name).read_bytes())
     return out/'s81_c8_scheduler.cpp'
 
 
 SOURCE_SCHEDULER = r'''#pragma once
 #include "dsrom_s81_scheduler_api.hpp"
 #include "dsrom_c8_source_dispatch.hpp"
+#include "s81_wavefront_c8_group_step.hpp"
 #include "dsrom_s81_workspace.hpp"
 
 // The source caller owns the selected program entry and physical die. All
@@ -135,25 +148,14 @@ void dsrom_s81_run_group(DsromS81Runtime& runtime,const std::vector<DsromC8Sourc
                         Restore& restore,Drain& drain) {
     if(offers.size()!=4 || runtime.dies.size()!=4)
         throw std::runtime_error("actual TP4 source offer group required");
-    std::vector<DsromC8SourceDispatch> dispatches;
-    bool ranks[4]={false,false,false,false};
-    for(const auto& offer:offers) {
-        if(offer.die_id<0 || offer.die_id>=324 || offer.die_id/4!=runtime.stage ||
-           ranks[offer.die_id%4] || offer.identity!=offers[0].identity || offer.token!=offers[0].token)
-            throw std::runtime_error("source TP4 owner/context group mismatch");
-        ranks[offer.die_id%4]=true;dispatches.emplace_back(offer);
-    }
-    for(;;) {
-        bool complete=true;
-        for(size_t i=0;i<offers.size();i++)if(!dispatches[i].complete()) {
-            auto& die=*runtime.dies.at(offers[i].die_id%4);
-            if(die.fault())throw std::runtime_error("source group native fault");
-            dispatches[i].before_edge(die,offers[i].die_id,restore,drain);
-            complete &= dispatches[i].complete();
-        }
-        if(complete)return;
+    std::array<DsromC8SourceOffer,4> group{{offers[0],offers[1],offers[2],offers[3]}};
+    DsromS81C8GroupStep step(group);
+    // Same accepted-event semantics as the old blocking loop. A WAVE caller
+    // can use step.before_edge/after_edge directly to service other providers
+    // around the SAME edge without a recursive runtime.tick().
+    while(step.before_edge(runtime,restore,drain)) {
         runtime.tick();
-        for(auto& dispatch:dispatches)dispatch.accepted_edge();
+        step.after_edge();
     }
 }
 

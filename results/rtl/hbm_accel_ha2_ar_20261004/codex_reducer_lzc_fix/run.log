@@ -1,0 +1,18 @@
+HA2_REDUCE case=0 cycles=49 got=ca1f6c33 expected=ca1f6c33 fault=0
+HA2_REDUCE case=1 cycles=49 got=00000000 expected=00000000 fault=0
+HA2_REDUCE case=2 cycles=49 got=00000060 expected=00000060 fault=0
+HA2_REDUCE case=3 cycles=49 got=c9a864ce expected=c9a864ce fault=0
+HA2_REDUCE case=4 cycles=49 got=c9d7f1d0 expected=c9d7f1d0 fault=0
+HA2_REDUCE case=5 cycles=49 got=c8b00d9e expected=c8b00d9e fault=0
+HA2_REDUCE case=6 cycles=49 got=c93d1a60 expected=c93d1a60 fault=0
+HA2_REDUCE case=7 cycles=49 got=470f8c28 expected=470f8c28 fault=0
+HA2_REDUCE case=8 cycles=49 got=c8405aea expected=c8405aea fault=0
+HA2_REDUCE case=9 cycles=49 got=c8d45442 expected=c8d45442 fault=0
+HA2_REDUCE case=10 cycles=49 got=4883fe25 expected=4883fe25 fault=0
+HA2_REDUCE case=11 cycles=49 got=489f9cf1 expected=489f9cf1 fault=0
+HA2_REDUCE_TERMINAL checks=12 mismatches=0
+- rtl/hbm_accel/direct_links/tb_hbm_accel_snapshot_reduce.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 55ns; walltime 0.004 s; speed 15.242 us/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 10 MB
+run=0

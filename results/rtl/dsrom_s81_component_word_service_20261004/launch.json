@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.dsrom.s81.word-service-launch.r1",
+  "timestamp_ns": 1791087776806964162,
+  "source_commit": "2b5e2ea595ae5c77daebac491489e219209d106e",
+  "pid": 2198968,
+  "process_start_ticks": 329254649,
+  "cmdline": [
+    "/usr/bin/python3",
+    "-u",
+    "tools/dsrom_s81_component_word_server.py",
+    "--selection",
+    "/tmp/dsrom-s81-minimum-source-selected-cicero-r1/selection.json",
+    "--checkpoint",
+    "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+    "--socket",
+    "/tmp/dsrom-s81-minimum-field-57e3.sock",
+    "--output",
+    "/tmp/dsrom-s81-field-word-57e3-r1"
+  ],
+  "cwd": "/home/ubuntu/OpenTallas-dsrom-s81-word-service",
+  "scope": "source-bound socket readiness for sole Cicero component, not numerical/phase/token PASS",
+  "records_sha256": {
+    "admission.json": "5dfe10d1e5dcc89f2d0551c5e8dc0f50f55299774c16bda3cd97425c019d5d77",
+    "ready.json": "0ea5bee763f5057e6594ebc56466b049659a6b08a433a490c91f1ae8941a150d",
+    "resource.json": "4dd67f9fa7bc4203438ae8a998fef313d82be08da4f09f2a6a1de162e9a620be",
+    "unit-start.txt": "80c34e7266748308ad8fbaf1f5e2940635ed9c3721937deaaafb2c6d2fb7cc7c"
+  },
+  "socket": "/tmp/dsrom-s81-minimum-field-57e3.sock",
+  "client_connection_consumed_by_collector": false,
+  "terminal": false,
+  "tests_pass": 6
+}

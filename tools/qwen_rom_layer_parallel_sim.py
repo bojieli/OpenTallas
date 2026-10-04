@@ -248,7 +248,7 @@ def cmd_build(a, rest):
     gs = git_state(src)
     if gs.get("tracked_dirty"):
         raise SystemExit(f"source root {src} has tracked changes; build from a pinned clean worktree")
-    driver = src / "tools/qwen_rom_rt_token_w12.py"
+    driver = src / a.driver
     t0 = time.monotonic()
     rec = {"schema": SCHEMA + "-build.v1", "at": now(), "source_root": str(src), "source_git": gs,
            "driver": str(driver.relative_to(src)), "driver_args": rest, "host": os.uname().nodename}
@@ -755,6 +755,9 @@ def main():
         g.add_argument("--" + c.replace("_", "-"), action="store_true", dest=c)
     ap.add_argument("--workdir", type=Path, help="--build: model/binary directory")
     ap.add_argument("--source-root", type=Path, default=ROOT, help="--build: pinned clean worktree to build from")
+    ap.add_argument("--driver", default="tools/qwen_rom_rt_token_w12.py",
+                    help="--build: token driver (relative to --source-root) that builds the models; it must link the "
+                         "pinned host rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp, e.g. tools/qwen_rom_rt_token_async_w12.py")
     ap.add_argument("--skip-models", action="store_true", help="--build: models already built in --workdir; only (re)link")
     ap.add_argument("--verilator", default=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"))
     ap.add_argument("--plan-dir", type=Path)

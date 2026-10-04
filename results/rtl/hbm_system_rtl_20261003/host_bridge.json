@@ -1,0 +1,400 @@
+{
+ "schema": "opentallas.gpu_sys.host_bridge.v1",
+ "verdict": "PASS",
+ "failures": [],
+ "git_head": "30595836d9d680f2040491b1aa4304700216ba70",
+ "note_worktree": "sources are pinned by sha256 below; the worktree may carry uncommitted files",
+ "simulator": {
+  "icarus": {
+   "version": "Icarus Verilog version 11.0 (stable) ()",
+   "flags": "-g2012"
+  },
+  "verilator": {
+   "version": "Verilator 5.050 2026-07-01 rev v5.050",
+   "flags": "--binary --timing -j 8 -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN"
+  }
+ },
+ "sources": {
+  "rtl/test/gpu_sys/tb_gpu_host_bridge.sv": "ea67a8c94af55b2ea7d7ca895eec2548fb6959d851e3c73d02948b40e13714c4",
+  "rtl/host/ot_host_if.sv": "a093c932db0a17352479d87b28bacc5b86e7d1e134c5c233d9087272cc15bc74",
+  "rtl/gpu_sys/ot_gpu_host_bridge.sv": "015ee63361328844b27e407f1fb48497e6788eaf54387b64e49741c7e74a0a96",
+  "rtl/gpu_sys/ot_gpu_cmdproc.sv": "d0b1f0710af11ea1f60acb790ad23c9192e0794fd94383f23728ea663d327c5a",
+  "rtl/gpu_sys/ot_gpu_reset_ctrl.sv": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+  "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/gpu_sys/ot_gpu_hbm_system.sv": "879b41cc4d7d4c8aa1b8b77c63bf1c7e611f31fbf44af12d9753c31332fa7453",
+  "runtime/hdc/driver.py": "5733f3a03f801e6d4e6e1700d425f9bb3730d86dbbc49824cd8626fcb92d16ec",
+  "tools/gpu_sys/run_host_bridge.py": "baf7b022fdacc9e4698259be7a29bfdc98690f47b06ccb5923ed3121f3e9b422"
+ },
+ "configuration": {
+  "ot_host_if": "NSLOT 16, MODE 0, ENG_CTX 16, NW 16, PLB 8, CTX_MAX 64, AW 24, KVW 1024 (as instantiated in ot_gpu_hbm_system.sv)",
+  "ot_gpu_host_bridge": "ENABLE 1, ND 2, NSM 2, CB 8, IMW 13",
+  "ot_gpu_cmdproc": "2 x ENABLE 1, NSM 2, NCMD 256",
+  "ot_gpu_reset_ctrl": "ENABLE 1 (SYNC 2, HOLD 4), one por_n",
+  "clocks_ps": {
+   "clk_host": 4000,
+   "clk_sm": 833,
+   "clk_mem": 1000,
+   "clk_link": 900
+  },
+  "host": "SQ 0x0000 LOG2 6, CQ 0x1000 LOG2 8, prompts 0x10000 + slot*0x400, MSI 0xF000; driver.py init sequence; CQ polled by phase bit, returned through CQ_HEAD",
+  "graph": "per die: LAUNCH mask 01 pc 0x104+0x10d, LAUNCH mask 10 pc 0x204+0x10d, LAUNCH mask 11 pc 0x304+0x10d, END",
+  "sm_stub": "done 10..300 clk_sm cycles after launch; SM 0 posts RESULT (token*7+pos)&0xFFFF 1..4 cycles before its done on the last kernel",
+  "requests": [
+   "slot 0 tag 0x1234 prompt [11,22,333,4444,5555] max_new 3 EOS {0xFFFE,0xFFFD}",
+   "slot 1 tag 0x2345: die 1 SM 1 sm_fault on kernel 1 of the first step",
+   "slot 2 tag 0x3456: die 1 RESULT ^ 1 on the first step"
+  ]
+ },
+ "checks": {
+  "reset_order": {
+   "description": "ot_gpu_reset_ctrl from one por_n: mem and link released before sm, sm before host",
+   "pass": true
+  },
+  "loader_delivery": {
+   "description": "4 commands per die and 100 instruction words per SM arrive on cmd_we/im_we exactly once, with the right die/SM select, address and data, and nothing else is written",
+   "pass": true
+  },
+  "cq_request1": {
+   "description": "GENERATE (plen 5, max_new 3, greedy|stop-at-EOS, EOS not hit): CQ entries pos 4,5,6, tokens f(token,pos) of the last prompt step and the next two, kind 1,1,2, status 0,0,length, tag, slot, generated 1,2,3, phase 1; no fourth entry; 7 steps; SQ_HEAD advanced",
+   "pass": true
+  },
+  "sm_fault": {
+   "description": "die 1 SM 1 raises sm_fault -> cmdproc status 1 -> eng_fault -> one CQ entry kind 2 (last) status 7 engine_fault (token = die 0's), STATUS.engine_fault set",
+   "pass": true
+  },
+  "result_mismatch": {
+   "description": "die 1 posts a different RESULT -> eng_fault -> one CQ entry kind 2 status 7 engine_fault",
+   "pass": true
+  },
+  "doorbell_tokpos": {
+   "description": "every eng_start carries the step's token/pos (prompt teacher-forced, then the fed-back generated token); each die's doorbell and each launch carry exactly that step",
+   "pass": true
+  },
+  "stream_order": {
+   "description": "per die: launches in graph order with the loaded mask/PC; no LAUNCH while an SM of the previous kernel has not signalled done",
+   "pass": true
+  },
+  "step_results": {
+   "description": "every normal eng_done returns f(token,pos) without eng_fault; fault requests raise eng_fault",
+   "pass": true
+  },
+  "cdc_fault_zero": {
+   "description": "the bridge's CDC overflow fault stays 0",
+   "pass": true
+  },
+  "axi_dma": {
+   "description": "the host_if DMA presents AW and W together (the bench memory's assumption)",
+   "pass": true
+  },
+  "enable0_outputs_zero": {
+   "description": "ENABLE=0 ot_gpu_host_bridge and ot_gpu_cmdproc drive every output 0 (=== 0, no X)",
+   "pass": true
+  }
+ },
+ "latency_ps": {
+  "eng_start_to_first_launch": {
+   "runs": 6,
+   "mean_ps": 4616.5,
+   "min_ps": 4235.0,
+   "max_ps": 4997.0
+  },
+  "last_done_to_eng_done": {
+   "runs": 6,
+   "mean_ps": 20534.63333333333,
+   "min_ps": 18634.0,
+   "max_ps": 22383.0
+  },
+  "eng_start_to_eng_done": {
+   "runs": 6,
+   "mean_ps": 531714.2666666667
+  }
+ },
+ "latency_definition": {
+  "eng_start_to_first_launch": "clk_host edge sampling eng_start -> clk_sm edge sampling the first launch_v of the step (either die)",
+  "last_done_to_eng_done": "clk_sm edge sampling the step's last sm_done (either die) -> clk_host edge sampling eng_done",
+  "eng_start_to_eng_done": "whole step including the stubs' random kernel durations (not a hardware figure)"
+ },
+ "runs": [
+  {
+   "simulator": "icarus",
+   "seed": 1,
+   "pass": true,
+   "checks": {
+    "reset_order": true,
+    "loader_delivery": true,
+    "cq_request1": true,
+    "sm_fault": true,
+    "result_mismatch": true,
+    "doorbell_tokpos": true,
+    "stream_order": true,
+    "step_results": true,
+    "cdc_fault_zero": true,
+    "axi_dma": true,
+    "enable0_outputs_zero": true
+   },
+   "latency": {
+    "eng_start_to_first_launch": {
+     "n": 7,
+     "mean_ps": 4588.6,
+     "min_ps": 4265.0,
+     "max_ps": 4906.0
+    },
+    "last_done_to_eng_done": {
+     "n": 7,
+     "mean_ps": 20475.6,
+     "min_ps": 18824.0,
+     "max_ps": 22383.0
+    },
+    "eng_start_to_eng_done": {
+     "n": 7,
+     "mean_ps": 482857.1
+    }
+   },
+   "cq_entries": [
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=4 token=38889 cycles=300 generated=1 phase=1",
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=5 token=10084 cycles=587 generated=2 phase=1",
+    "CQE cq_request1 kind=2 status=2 slot=0 tag=1234 pos=6 token=5058 cycles=504 generated=3 phase=1",
+    "CQE sm_fault kind=2 status=7 slot=1 tag=2345 pos=0 token=707 cycles=586 generated=0 phase=1",
+    "CQE result_mismatch kind=2 status=7 slot=2 tag=3456 pos=0 token=49 cycles=739 generated=0 phase=1"
+   ],
+   "bench_pass": true,
+   "fail_lines": [],
+   "missing_checks": []
+  },
+  {
+   "simulator": "icarus",
+   "seed": 2,
+   "pass": true,
+   "checks": {
+    "reset_order": true,
+    "loader_delivery": true,
+    "cq_request1": true,
+    "sm_fault": true,
+    "result_mismatch": true,
+    "doorbell_tokpos": true,
+    "stream_order": true,
+    "step_results": true,
+    "cdc_fault_zero": true,
+    "axi_dma": true,
+    "enable0_outputs_zero": true
+   },
+   "latency": {
+    "eng_start_to_first_launch": {
+     "n": 7,
+     "mean_ps": 4654.1,
+     "min_ps": 4235.0,
+     "max_ps": 4981.0
+    },
+    "last_done_to_eng_done": {
+     "n": 7,
+     "mean_ps": 21108.9,
+     "min_ps": 19168.0,
+     "max_ps": 22097.0
+    },
+    "eng_start_to_eng_done": {
+     "n": 7,
+     "mean_ps": 564000.0
+    }
+   },
+   "cq_entries": [
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=4 token=38889 cycles=229 generated=1 phase=1",
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=5 token=10084 cycles=567 generated=2 phase=1",
+    "CQE cq_request1 kind=2 status=2 slot=0 tag=1234 pos=6 token=5058 cycles=500 generated=3 phase=1",
+    "CQE sm_fault kind=2 status=7 slot=1 tag=2345 pos=0 token=707 cycles=629 generated=0 phase=1",
+    "CQE result_mismatch kind=2 status=7 slot=2 tag=3456 pos=0 token=49 cycles=631 generated=0 phase=1"
+   ],
+   "bench_pass": true,
+   "fail_lines": [],
+   "missing_checks": []
+  },
+  {
+   "simulator": "icarus",
+   "seed": 3,
+   "pass": true,
+   "checks": {
+    "reset_order": true,
+    "loader_delivery": true,
+    "cq_request1": true,
+    "sm_fault": true,
+    "result_mismatch": true,
+    "doorbell_tokpos": true,
+    "stream_order": true,
+    "step_results": true,
+    "cdc_fault_zero": true,
+    "axi_dma": true,
+    "enable0_outputs_zero": true
+   },
+   "latency": {
+    "eng_start_to_first_launch": {
+     "n": 7,
+     "mean_ps": 4630.3,
+     "min_ps": 4263.0,
+     "max_ps": 4916.0
+    },
+    "last_done_to_eng_done": {
+     "n": 7,
+     "mean_ps": 20380.3,
+     "min_ps": 19598.0,
+     "max_ps": 21980.0
+    },
+    "eng_start_to_eng_done": {
+     "n": 7,
+     "mean_ps": 527428.6
+    }
+   },
+   "cq_entries": [
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=4 token=38889 cycles=305 generated=1 phase=1",
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=5 token=10084 cycles=470 generated=2 phase=1",
+    "CQE cq_request1 kind=2 status=2 slot=0 tag=1234 pos=6 token=5058 cycles=386 generated=3 phase=1",
+    "CQE sm_fault kind=2 status=7 slot=1 tag=2345 pos=0 token=707 cycles=565 generated=0 phase=1",
+    "CQE result_mismatch kind=2 status=7 slot=2 tag=3456 pos=0 token=49 cycles=538 generated=0 phase=1"
+   ],
+   "bench_pass": true,
+   "fail_lines": [],
+   "missing_checks": []
+  },
+  {
+   "simulator": "verilator",
+   "seed": 1,
+   "pass": true,
+   "checks": {
+    "reset_order": true,
+    "loader_delivery": true,
+    "cq_request1": true,
+    "sm_fault": true,
+    "result_mismatch": true,
+    "doorbell_tokpos": true,
+    "stream_order": true,
+    "step_results": true,
+    "cdc_fault_zero": true,
+    "axi_dma": true,
+    "enable0_outputs_zero": true
+   },
+   "latency": {
+    "eng_start_to_first_launch": {
+     "n": 7,
+     "mean_ps": 4699.7,
+     "min_ps": 4357.0,
+     "max_ps": 4997.0
+    },
+    "last_done_to_eng_done": {
+     "n": 7,
+     "mean_ps": 20106.7,
+     "min_ps": 18634.0,
+     "max_ps": 21501.0
+    },
+    "eng_start_to_eng_done": {
+     "n": 7,
+     "mean_ps": 552571.4
+    }
+   },
+   "cq_entries": [
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=4 token=38889 cycles=424 generated=1 phase=1",
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=5 token=10084 cycles=403 generated=2 phase=1",
+    "CQE cq_request1 kind=2 status=2 slot=0 tag=1234 pos=6 token=5058 cycles=579 generated=3 phase=1",
+    "CQE sm_fault kind=2 status=7 slot=1 tag=2345 pos=0 token=707 cycles=578 generated=0 phase=1",
+    "CQE result_mismatch kind=2 status=7 slot=2 tag=3456 pos=0 token=49 cycles=832 generated=0 phase=1"
+   ],
+   "bench_pass": true,
+   "fail_lines": [],
+   "missing_checks": []
+  },
+  {
+   "simulator": "verilator",
+   "seed": 2,
+   "pass": true,
+   "checks": {
+    "reset_order": true,
+    "loader_delivery": true,
+    "cq_request1": true,
+    "sm_fault": true,
+    "result_mismatch": true,
+    "doorbell_tokpos": true,
+    "stream_order": true,
+    "step_results": true,
+    "cdc_fault_zero": true,
+    "axi_dma": true,
+    "enable0_outputs_zero": true
+   },
+   "latency": {
+    "eng_start_to_first_launch": {
+     "n": 7,
+     "mean_ps": 4558.7,
+     "min_ps": 4354.0,
+     "max_ps": 4751.0
+    },
+    "last_done_to_eng_done": {
+     "n": 7,
+     "mean_ps": 20080.4,
+     "min_ps": 18664.0,
+     "max_ps": 21461.0
+    },
+    "eng_start_to_eng_done": {
+     "n": 7,
+     "mean_ps": 550857.1
+    }
+   },
+   "cq_entries": [
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=4 token=38889 cycles=419 generated=1 phase=1",
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=5 token=10084 cycles=425 generated=2 phase=1",
+    "CQE cq_request1 kind=2 status=2 slot=0 tag=1234 pos=6 token=5058 cycles=654 generated=3 phase=1",
+    "CQE sm_fault kind=2 status=7 slot=1 tag=2345 pos=0 token=707 cycles=623 generated=0 phase=1",
+    "CQE result_mismatch kind=2 status=7 slot=2 tag=3456 pos=0 token=49 cycles=452 generated=0 phase=1"
+   ],
+   "bench_pass": true,
+   "fail_lines": [],
+   "missing_checks": []
+  },
+  {
+   "simulator": "verilator",
+   "seed": 3,
+   "pass": true,
+   "checks": {
+    "reset_order": true,
+    "loader_delivery": true,
+    "cq_request1": true,
+    "sm_fault": true,
+    "result_mismatch": true,
+    "doorbell_tokpos": true,
+    "stream_order": true,
+    "step_results": true,
+    "cdc_fault_zero": true,
+    "axi_dma": true,
+    "enable0_outputs_zero": true
+   },
+   "latency": {
+    "eng_start_to_first_launch": {
+     "n": 7,
+     "mean_ps": 4567.6,
+     "min_ps": 4308.0,
+     "max_ps": 4822.0
+    },
+    "last_done_to_eng_done": {
+     "n": 7,
+     "mean_ps": 21055.9,
+     "min_ps": 19327.0,
+     "max_ps": 22340.0
+    },
+    "eng_start_to_eng_done": {
+     "n": 7,
+     "mean_ps": 512571.4
+    }
+   },
+   "cq_entries": [
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=4 token=38889 cycles=474 generated=1 phase=1",
+    "CQE cq_request1 kind=1 status=0 slot=0 tag=1234 pos=5 token=10084 cycles=504 generated=2 phase=1",
+    "CQE cq_request1 kind=2 status=2 slot=0 tag=1234 pos=6 token=5058 cycles=474 generated=3 phase=1",
+    "CQE sm_fault kind=2 status=7 slot=1 tag=2345 pos=0 token=707 cycles=467 generated=0 phase=1",
+    "CQE result_mismatch kind=2 status=7 slot=2 tag=3456 pos=0 token=49 cycles=625 generated=0 phase=1"
+   ],
+   "bench_pass": true,
+   "fail_lines": [],
+   "missing_checks": []
+  }
+ ],
+ "observations": [
+  "An engine fault is posted by ot_host_if as kind 2 (last) with status 7 engine_fault; kind 3 (error) is reserved for descriptor errors. The bench checks that encoding.",
+  "ot_gpu_cmdproc aborts the list on sm_fault but leaves the die's other SMs running; their later sm_done/res_v are ignored only while the processor is idle. The bench clears its SM stubs after the fault (an SM reset is outside these modules)."
+ ]
+}

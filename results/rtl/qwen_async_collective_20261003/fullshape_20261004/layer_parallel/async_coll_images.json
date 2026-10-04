@@ -1,0 +1,2672 @@
+{
+ "schema": "opentallas.qwen-rom-async-coll-stage-images.v1",
+ "tool_sha256": "4915759ee7cc590377ec3154692c3a2f0cb97be42823eea1afefcb0c54c60c83",
+ "fuse": true,
+ "cut": true,
+ "stages": [
+  {
+   "stage": "L0",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L0-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L0",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L0-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L0",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L0-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L0",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L0-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L1",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L1-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L1",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L1-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L1",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L1-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L1",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L1-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L2",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L2-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L2",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L2-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L2",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L2-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L2",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L2-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L3",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L3-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L3",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L3-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L3",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L3-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L3",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L3-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L4",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L4-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L4",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L4-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L4",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L4-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L4",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L4-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L5",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L5-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L5",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L5-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L5",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L5-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L5",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L5-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L6",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L6-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L6",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L6-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L6",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L6-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L6",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L6-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L7",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L7-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L7",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L7-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L7",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L7-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L7",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L7-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L8",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L8-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L8",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L8-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L8",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L8-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L8",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L8-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L9",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L9-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L9",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L9-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L9",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L9-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L9",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L9-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L10",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L10-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L10",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L10-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L10",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L10-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L10",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L10-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L11",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L11-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L11",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L11-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L11",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L11-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L11",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L11-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L12",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L12-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L12",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L12-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L12",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L12-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L12",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L12-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L13",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L13-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L13",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L13-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L13",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L13-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L13",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L13-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L14",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L14-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L14",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L14-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L14",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L14-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L14",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L14-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L15",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L15-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L15",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L15-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L15",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L15-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L15",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L15-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L16",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L16-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L16",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L16-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L16",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L16-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L16",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L16-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L17",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L17-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L17",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L17-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L17",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L17-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L17",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L17-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L18",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L18-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L18",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L18-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L18",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L18-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L18",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L18-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L19",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L19-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L19",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L19-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L19",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L19-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L19",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L19-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L20",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L20-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L20",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L20-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L20",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L20-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L20",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L20-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L21",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L21-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L21",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L21-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L21",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L21-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L21",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L21-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L22",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L22-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L22",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L22-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L22",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L22-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L22",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L22-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L23",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L23-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L23",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L23-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L23",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L23-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L23",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L23-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L24",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L24-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L24",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L24-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L24",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L24-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L24",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L24-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L25",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L25-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L25",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L25-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L25",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L25-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L25",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L25-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L26",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L26-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L26",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L26-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L26",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L26-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L26",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L26-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L27",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L27-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L27",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L27-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L27",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L27-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L27",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L27-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L28",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L28-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L28",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L28-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L28",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L28-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L28",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L28-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L29",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L29-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L29",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L29-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L29",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L29-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L29",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L29-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L30",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L30-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L30",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L30-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L30",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L30-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L30",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L30-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L31",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L31-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L31",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L31-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L31",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L31-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L31",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L31-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L32",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L32-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L32",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L32-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L32",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L32-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L32",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L32-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L33",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L33-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L33",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L33-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L33",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L33-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L33",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L33-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L34",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L34-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L34",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L34-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L34",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L34-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L34",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L34-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L35",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L35-d0",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L35",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L35-d1",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L35",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L35-d2",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "L35",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/L35-d3",
+   "source_program_sha256": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+   "source_segments_sha256": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+   "program_sha256": "6f05f5e0a972bc69e229c03908d646b020d235bf10d6ef72e4f96453d1ac097c",
+   "segments_sha256": "5c1a122c0a78940e6d0aec6be8b1dd39d856965b0a0a0d99cfa7cb043fcbd7a0",
+   "words": [
+    29,
+    27
+   ],
+   "segments": 3,
+   "fused": 2,
+   "cut": 2,
+   "not_cut": [],
+   "isa_equivalence_pairs": 2
+  },
+  {
+   "stage": "head",
+   "die": 0,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/head-d0",
+   "source_program_sha256": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+   "source_segments_sha256": "5199e0ce362202a5f6dd77a246106964fb7d8265b66ef4136b53bd7809c8a18d",
+   "program_sha256": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+   "segments_sha256": "5199e0ce362202a5f6dd77a246106964fb7d8265b66ef4136b53bd7809c8a18d",
+   "words": [
+    8,
+    8
+   ],
+   "segments": 1,
+   "fused": 0,
+   "cut": 0,
+   "not_cut": [],
+   "isa_equivalence_pairs": 0
+  },
+  {
+   "stage": "head",
+   "die": 1,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/head-d1",
+   "source_program_sha256": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+   "source_segments_sha256": "e1f9468b87875d6e27a1e5f360abbf5d375487089796bc716b1f6964113b203b",
+   "program_sha256": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+   "segments_sha256": "e1f9468b87875d6e27a1e5f360abbf5d375487089796bc716b1f6964113b203b",
+   "words": [
+    8,
+    8
+   ],
+   "segments": 1,
+   "fused": 0,
+   "cut": 0,
+   "not_cut": [],
+   "isa_equivalence_pairs": 0
+  },
+  {
+   "stage": "head",
+   "die": 2,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/head-d2",
+   "source_program_sha256": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+   "source_segments_sha256": "febdb9f2a58fcb0682323a02faa1b6e8eff71a755aa2271111e626e196f35e3c",
+   "program_sha256": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+   "segments_sha256": "febdb9f2a58fcb0682323a02faa1b6e8eff71a755aa2271111e626e196f35e3c",
+   "words": [
+    8,
+    8
+   ],
+   "segments": 1,
+   "fused": 0,
+   "cut": 0,
+   "not_cut": [],
+   "isa_equivalence_pairs": 0
+  },
+  {
+   "stage": "head",
+   "die": 3,
+   "source_dir": "/srv/opentallas-scratch/claude/layer-parallel-sim/img256/head-d3",
+   "source_program_sha256": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+   "source_segments_sha256": "14853a94d9b9e69aa8efdb4eb82f900405ecd638ea71a64f457b7ed5c274e4c7",
+   "program_sha256": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+   "segments_sha256": "14853a94d9b9e69aa8efdb4eb82f900405ecd638ea71a64f457b7ed5c274e4c7",
+   "words": [
+    8,
+    8
+   ],
+   "segments": 1,
+   "fused": 0,
+   "cut": 0,
+   "not_cut": [],
+   "isa_equivalence_pairs": 0
+  }
+ ]
+}
