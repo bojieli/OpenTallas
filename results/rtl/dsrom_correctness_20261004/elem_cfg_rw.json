@@ -5,7 +5,7 @@
  "fix": "if (NB > 1 && a <= 3NSEG) s_row[a - (NSEG + 1)] <= d[15:0]  (entries a > 3NSEG write nothing)",
  "test": "rtl/test/tb_v41_rom_elem_cfg_rw.sv",
  "tool_version": "Verilator 5.050 2026-07-01 rev v5.050",
- "git_head": "895e2a893b116d477699e556c00822785bc02495",
+ "git_head": "5958e9fb4234f55baf83a96ee4e308d740da21a9",
  "prefix_rev": "f23c56908",
  "runs": [
   {
@@ -155,7 +155,7 @@
    "out_of_contract_writes": 108
   },
   {
-   "variant": "rowfix_fix0",
+   "variant": "CONTROL_rowfix_fix0",
    "module": "ot_v41_rom_elem_w10",
    "sources": [
     "rtl/v41rom/ot_v41_rom_elem_w10_rowfix_prepare.sv"
@@ -168,11 +168,23 @@
    "source_root": "/home/ubuntu/claude-dsrom-correctness/wt",
    "run_rc": 0,
    "readbacks": 11,
-   "mismatches": [],
-   "result": "PASS",
-   "writes": 480,
-   "checks": 1353,
-   "out_of_contract_writes": 108
+   "mismatches": [
+    "MISMATCH s_row2[0] got 000000000000ebb3 exp 000000000000db41",
+    "MISMATCH s_row2[1] got 000000000000083f exp 0000000000003584",
+    "MISMATCH s_row2[2] got 000000000000325f exp 000000000000b68f",
+    "MISMATCH s_row2[3] got 000000000000ea00 exp 000000000000b57b",
+    "MISMATCH s_row2[4] got 000000000000cbf6 exp 0000000000000c4a",
+    "MISMATCH s_row2[5] got 0000000000008e0f exp 00000000000099e3",
+    "MISMATCH s_row2[6] got 000000000000f4cb exp 000000000000899f",
+    "MISMATCH s_row[7] got 0000000000003bb2 exp 0000000000004224",
+    "MISMATCH s_row2[7] got 0000000000000000 exp 0000000000003bb2",
+    "MISMATCH s_row2[7] got 0000000000000000 exp 000000000000dbcd",
+    "MISMATCH s_row2[7] got 0000000000000000 exp 0000000000008b58",
+    "MISMATCH s_row2[3] got 0000000000000183 exp 0000000000002e41"
+   ],
+   "result": "FAIL",
+   "errors": 60,
+   "log_tail": " 000000000000105f\nMISMATCH s_row2[3] got 0000000000001ed0 exp 00000000000076b0\nMISMATCH s_row2[5] got 00000000000014e4 exp 000000000000de3f\nREADBACK random writes=180 checks=615 errors=22\nREADBACK random writes=230 checks=738 errors=29\nREADBACK random writes=280 checks=861 errors=36\nREADBACK random writes=330 checks=984 errors=41\nREADBACK random writes=380 checks=1107 errors=48\nREADBACK random writes=430 checks=1230 errors=54\nREADBACK random writes=480 checks=1353 errors=60\nFAIL writes=480 checks=1353 errors=60\n- /home/ubuntu/claude-dsrom-correctness/wt/rtl/test/tb_v41_rom_elem_cfg_rw.sv:152: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2us; walltime 0.007 s; speed 307.956 us/s\n- Verilator: cpu 0.007 s on 1 threads; allocated 7 MB\n"
   },
   {
    "variant": "rowfix_fix1",
@@ -195,7 +207,7 @@
    "out_of_contract_writes": 108
   },
   {
-   "variant": "rne_wake_fix0",
+   "variant": "CONTROL_rne_wake_fix0",
    "module": "ot_v41_rom_elem_w10",
    "sources": [
     "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
@@ -210,11 +222,23 @@
    "source_root": "/home/ubuntu/claude-dsrom-correctness/wt",
    "run_rc": 0,
    "readbacks": 11,
-   "mismatches": [],
-   "result": "PASS",
-   "writes": 480,
-   "checks": 1353,
-   "out_of_contract_writes": 108
+   "mismatches": [
+    "MISMATCH s_row2[0] got 000000000000ebb3 exp 000000000000db41",
+    "MISMATCH s_row2[1] got 000000000000083f exp 0000000000003584",
+    "MISMATCH s_row2[2] got 000000000000325f exp 000000000000b68f",
+    "MISMATCH s_row2[3] got 000000000000ea00 exp 000000000000b57b",
+    "MISMATCH s_row2[4] got 000000000000cbf6 exp 0000000000000c4a",
+    "MISMATCH s_row2[5] got 0000000000008e0f exp 00000000000099e3",
+    "MISMATCH s_row2[6] got 000000000000f4cb exp 000000000000899f",
+    "MISMATCH s_row[7] got 0000000000003bb2 exp 0000000000004224",
+    "MISMATCH s_row2[7] got 0000000000000000 exp 0000000000003bb2",
+    "MISMATCH s_row2[7] got 0000000000000000 exp 000000000000dbcd",
+    "MISMATCH s_row2[7] got 0000000000000000 exp 0000000000008b58",
+    "MISMATCH s_row2[3] got 0000000000000183 exp 0000000000002e41"
+   ],
+   "result": "FAIL",
+   "errors": 60,
+   "log_tail": " 000000000000105f\nMISMATCH s_row2[3] got 0000000000001ed0 exp 00000000000076b0\nMISMATCH s_row2[5] got 00000000000014e4 exp 000000000000de3f\nREADBACK random writes=180 checks=615 errors=22\nREADBACK random writes=230 checks=738 errors=29\nREADBACK random writes=280 checks=861 errors=36\nREADBACK random writes=330 checks=984 errors=41\nREADBACK random writes=380 checks=1107 errors=48\nREADBACK random writes=430 checks=1230 errors=54\nREADBACK random writes=480 checks=1353 errors=60\nFAIL writes=480 checks=1353 errors=60\n- /home/ubuntu/claude-dsrom-correctness/wt/rtl/test/tb_v41_rom_elem_cfg_rw.sv:152: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2us; walltime 0.010 s; speed 216.580 us/s\n- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB\n"
   },
   {
    "variant": "rne_wake_fix1",
@@ -313,7 +337,7 @@
    ],
    "result": "FAIL",
    "errors": 60,
-   "log_tail": " 000000000000105f\nMISMATCH s_row2[3] got 0000000000001ed0 exp 00000000000076b0\nMISMATCH s_row2[5] got 00000000000014e4 exp 000000000000de3f\nREADBACK random writes=180 checks=615 errors=22\nREADBACK random writes=230 checks=738 errors=29\nREADBACK random writes=280 checks=861 errors=36\nREADBACK random writes=330 checks=984 errors=41\nREADBACK random writes=380 checks=1107 errors=48\nREADBACK random writes=430 checks=1230 errors=54\nREADBACK random writes=480 checks=1353 errors=60\nFAIL writes=480 checks=1353 errors=60\n- /home/ubuntu/claude-dsrom-correctness/wt/rtl/test/tb_v41_rom_elem_cfg_rw.sv:152: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2us; walltime 0.007 s; speed 309.159 us/s\n- Verilator: cpu 0.007 s on 1 threads; allocated 7 MB\n"
+   "log_tail": " 000000000000105f\nMISMATCH s_row2[3] got 0000000000001ed0 exp 00000000000076b0\nMISMATCH s_row2[5] got 00000000000014e4 exp 000000000000de3f\nREADBACK random writes=180 checks=615 errors=22\nREADBACK random writes=230 checks=738 errors=29\nREADBACK random writes=280 checks=861 errors=36\nREADBACK random writes=330 checks=984 errors=41\nREADBACK random writes=380 checks=1107 errors=48\nREADBACK random writes=430 checks=1230 errors=54\nREADBACK random writes=480 checks=1353 errors=60\nFAIL writes=480 checks=1353 errors=60\n- /home/ubuntu/claude-dsrom-correctness/wt/rtl/test/tb_v41_rom_elem_cfg_rw.sv:152: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2us; walltime 0.007 s; speed 317.837 us/s\n- Verilator: cpu 0.007 s on 1 threads; allocated 7 MB\n"
   }
  ],
  "source_sha256": {
@@ -343,14 +367,14 @@
   "rtl/v41rom/ot_v41_rom_elem_qt_w10.sv": "a66e1ef60b53f60624a4c32d3bb0a52a53f4edf64ce1df061396d97a7d490f4f",
   "rtl/v41rom/ot_v41_rom_elem_qz_w10.sv": "42acd581394d357ca5c9d557f92d6d726232e43575e0f69c0d537a6ecc302063",
   "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
-  "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv": "6b1cf4ea2039b353262d5986698f1366693048458249e0c18efc07f671f2e332",
-  "rtl/v41rom/ot_v41_rom_elem_w10_rowfix_prepare.sv": "b2fa3628a9a0db5665a398c0a5add0c0268214a6f77acd19917fd2f1edfc4863",
+  "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv": "76f54d8dc82e1b6369666be873e68957daffb4e0df6d8da4bf2949c88c5e5d79",
+  "rtl/v41rom/ot_v41_rom_elem_w10_rowfix_prepare.sv": "78a12b5ef83a2a18fb3e4e521c65425dfc215b9eb816e01075d806a8576babe5",
   "rtl/v41rom/ot_v41_rom_elem_wake_w10.sv": "1a59bcea5422723739be29d2cd1204df4e05a0b90897e14f5c33576591a9346e",
   "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
   "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
   "rtl/v41rom/ot_v41_segtree3.sv": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
   "rtl/v41rom/xneed_lookahead/ot_v41_need_lookahead.sv": "584024293b6499c8814c4654449b6bb1c685df2fd050ce7490617713516ccaeb",
   "rtl/v41rom/xneed_lookahead/ot_v41_rom_elem_qp_xneed_w10.sv": "9582dac61b144640ba1588be0df41af7da324b5b6b686ea486be3d81a412a13e",
-  "tools/dsrom_elem_cfg_rw.py": "387374e8236c56b4c5e47c2c524cb6282708374381b2643ffe319a1c39d0e75b"
+  "tools/dsrom_elem_cfg_rw.py": "1f217552b8cb4d759efa1514b12ba345e5833b2b32b868166f535f2a6cd193cc"
  }
 }

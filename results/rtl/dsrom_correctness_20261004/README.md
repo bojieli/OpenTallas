@@ -18,15 +18,15 @@ The image writers emit entry 24 whenever a pair holds 8 segments (`tools/v41_die
 - `_qp_w10` (and its QPIPE shadow `so_row`)
 - `_qz_w10` (and its QPIPE shadow `so_row`)
 - `_wake_w10`
-- `_w10_rowfix_prepare` (legacy branch)
-- `_w10_rne_wake_prepare` (legacy branch)
 - the pre-W10 `ot_v41_rom_elem`
+
+The pinned prepared copies `_w10_rowfix_prepare` and `_w10_rne_wake_prepare` already carry the opt-in fix (`FIX_SECOND_ROW_INDEX=1`, used by `tools/w17_current_fastpp_rowfix_die_rt.py`) and stay byte-identical; their `FIX=0` legacy decode is a control.
 
 The xneed copy already decoded correctly. The pinned watchdog snapshot is left unchanged.
 
 **Test** `rtl/test/tb_v41_rom_elem_cfg_rw.sv` (`tools/dsrom_elem_cfg_rw.py`) writes every entry 0..31 and reads every decoded register back. Write orders: ascending, descending, emitter order, and 400 random writes. Result in `elem_cfg_rw.json`:
-- **PASS** on all 13 element builds (1,342–1,705 checks each, 0 errors).
-- **Control:** the pre-fix w10 FAILS with 60 errors.
+- **PASS** on all 11 fixed element builds (1,342–1,705 checks each, 0 errors), including both prepared copies at FIX=1.
+- **Controls:** the pre-fix w10 and both prepared copies at FIX=0 FAIL with 60 errors each.
 
 **Element exactness re-proved** on the fixed source (`element_gates/`, pinned commit 54cdd72f9). All four are now run with class/segment 7 live on both macros:
 
