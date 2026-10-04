@@ -20,6 +20,8 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
     Window& window;
     // The existing descriptor owner retains the actual native generation.
     // We do not assign/increment it or grant consumer ownership in software.
+    // Zero is a legal captured value. Native descriptor inputs_ready/ready,
+    // not the numeric generation, authorize the consumer.
     std::function<uint16_t()> generation;
     std::function<void()> drive_native_ports;
     bool stopped=false;
@@ -70,8 +72,6 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
                     require(window.prime_row>=1048448&&window.prime_row<=1048575,
                             "S81 primed history is outside selected target WINDOW");
             }
-            if(window.kv_v)
-                require(generation()!=0,"packed KV lacks actual descriptor generation");
             // Freeze actual pre-edge handshakes before Nash evaluates ME or
             // any other shared participant takes its rising edge.
             old_kv_accept=bool(window.kv_v&&window.kv_ready);
@@ -91,7 +91,7 @@ class PackedKvProvider : public std::enable_shared_from_this<PackedKvProvider<Bl
                 require(prepared_cycle==runtime.cycle(),"packed KV missing pre-edge prepare");
                 consumed=old_kv_accept;
                 if(old_staged) {
-                    require(!staged_debt&&!stream_active&&old_generation!=0,
+                    require(!staged_debt&&!stream_active,
                             "packed WINDOW staged over held generation");
                     staged_generation=old_generation;staged_debt=true;
                 }
@@ -179,7 +179,6 @@ public:
         for(unsigned i=0;i<530;i++)attention.packed_kv_w[i]=window.kv_w[i];
         attention.packed_kv_fault=fault();
         window.kv_ready=attention.packed_kv_ready;
-        if(window.kv_v)require(generation()!=0,"missing native packed KV generation");
     }
     // Staging is asserted by the native schedule only after actual sector
     // read responses. Its row-valid bits require code AND scale m_wr_done.
