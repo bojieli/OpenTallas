@@ -62,7 +62,8 @@ def _isa_bits():
     return sum(w for n, w in I.FIELDS), me
 
 
-def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False):
+def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
+             tree_cols=0):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -122,8 +123,12 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2'] = dict(station_frame_um=list(v.STATION), station_extra_h_um=st_extra_h, strip_fifo_frame_um=list(v.FIFO),
                      strip_fifo_extra_h_um=sf_extra_h, bw_fifo_mm2=round(bw_mm2, 4), band=band or b3r3, b3r3=b3r3,
                      groups=groups)
-    _wrap_masters(v, m, area_pins, ns_faces=b3r3, spread=spread)
-    m['b3r2']['spread_pins'] = spread
+    _wrap_masters(v, m, area_pins, ns_faces=b3r3, spread=spread or b3r6, channel=b3r6)
+    m['b3r2']['spread_pins'] = spread or b3r6
+    m['b3r2']['b3r6_channel_pins'] = b3r6
+    if tree_cols:
+        _tree_cols(v, tree_cols)
+    m['b3r2']['b3r7_tree_pin_columns'] = tree_cols
     m['b3r2']['area_pins'] = area_pins
     return v, m
 
@@ -430,7 +435,7 @@ def _spine_buses(v, m, gm):
     m['isa_bits'] = dict(total=total, me=me_bits, su_and_control=total - me_bits)
 
 
-def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False):
+def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=False):
     """Every endpoint port that the b3 masters do not define becomes a pin group on the face toward the far
     endpoint (M4 on W/E), stacked from the top of the face so no two groups overlap."""
     base = v.masters
@@ -459,14 +464,21 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False):
             # block-word area pins: one word per eighth of the slab height, at the edge facing its tile array
             # (b3r3: all eight words of a slab entered one 41 um M8 band, M8 windows 1.125 at the slab faces)
             xs = model['geo']['x_vch']
+            slab_prefix = ('qfd_sp_port_tiles', 'qfd_port_tiles') if channel else ('qfd_sp_port_tiles',)
             for it in model['insts']:
-                if it.kind != 'spine_block' or not it.master.startswith('qfd_sp_port_tiles'):
+                if it.kind != 'spine_block' or not it.master.startswith(slab_prefix):
                     continue
                 b = out[it.master]
                 east = it.x > xs
-                for i in range(16):
+                # b3r6: the b3r3 band slabs' masters are qfd_port_tiles_<b>[_f1] (not qfd_sp_*), so b3r4/b3r5 never
+                # spread them: all eight words sat as M4 face pins in the top 212 um of the slab face (the M8 1.09
+                # windows at every east slab's top-east corner).  Only the slab's own eight words get pins.
+                words = range(8, 16) if (channel and east) else range(8) if channel else range(16)
+                for i in words:
                     j = i % 8
                     # 2-track pin pitch: a word's 32 bundled M8 pins span 82 um, two M8 tracks per wire
+                    if f'bw{i}' not in b.order:
+                        b.order.append(f'bw{i}')        # pins are emitted in Master.order (b3r6 fix)
                     b.ports[f'bw{i}'] = ('area', v.TREE_BITS, (b.w - 40.0) if east else 20.0, b.h * (j + 0.5) / 8, 2)
             # corridor buses: pins at a 2-track pitch over the station / column-head N and S faces (37 um of the
             # 52.7 um frame instead of 19 um), so the vertical corridor run spreads over the corridor's M7/M9
@@ -477,6 +489,13 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False):
                     if pn in mst.ports and mst.ports[pn][0] == 'face' and mst.ports[pn][2] in 'NS':
                         kind, w_, face, layer, centre, _ = mst.ports[pn]
                         mst.ports[pn] = (kind, w_, face, layer, centre, 2)
+        if channel:
+            # b3r6: tree-top block-word area pins at a 2-track pitch (6 words in one row at mid height)
+            tt = out.get('qfd_sp_tree_top')
+            if tt is not None:
+                for pn, spec in list(tt.ports.items()):
+                    if spec[0] == 'area':
+                        tt.ports[pn] = spec[:4] + (2,)
         # spine slabs created by the band repack (fragments) need masters
         for it in model['insts']:
             if it.kind == 'spine_block' and it.master not in out:
@@ -498,8 +517,12 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False):
                 far[(mst, port)] = (by[inst], by[other])
         spine = {i.master for i in model['insts'] if i.kind == 'spine_block'}
         colcur = {}
+        if channel:
+            _channel_pins(v, model, out, bits, far, k)
         for (mst, port), nb in sorted(bits.items(), key=lambda kv: -kv[1]):
             M = out[mst]
+            if channel and port in M.ports:
+                continue
             me, ot = far[(mst, port)]
             if area_pins and mst in spine:
                 # M8 area pins over the slab interior (as the b2 block-word pins), in columns between the
@@ -529,6 +552,148 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False):
             M.face(port, nb, face, layer, centre, 1)
         return out
     v.masters = masters
+
+
+def _face_used(M, face, k):
+    """[lo, hi] intervals (master-local, along the face) already taken by face pins on `face`."""
+    used = []
+    for spec in M.ports.values():
+        if spec[0] != 'face' or spec[2] != face:
+            continue
+        _, w, _, layer, centre, pitch = spec
+        n = max(1, math.ceil(w / k)) if k > 1 else w
+        span = n * F.TRK[layer][1] * k * pitch
+        used.append((centre - span / 2 - 2.0, centre + span / 2 + 2.0))
+    return used
+
+
+def _channel_pins(v, model, out, bits, far, k):
+    """b3r6: a bus between two spine blocks on opposite sides of the channel leaves both blocks on the faces that
+    look at each other (E of the west block, W of the east block, M4), with its pins at the same die y on both
+    faces, inside the two blocks' vertical overlap, skipping pins already on either face, at the widest pitch
+    (4..1 tracks) that fits.  b3r4/b3r5 stacked these from the top of whichever face the centre-to-centre
+    direction chose: the constant-ROM buses (crom_q 4,096 + crom_a 1,600 bits) entered the channel in the top
+    200 um of SU64, the vector-memory instruction word left through the S face into the same corner (M7 1.09,
+    M9 1.06 windows at x 12.2-12.5 mm, y 14.45-14.53 mm)."""
+    xs = model['geo']['x_vch']
+    by = {i.name: i for i in model['insts']}
+    groups = {}
+    for (mst, port), nb in bits.items():
+        me, ot = far[(mst, port)]
+        if me.kind != 'spine_block' or ot.kind != 'spine_block' or (me.cx < xs) == (ot.cx < xs):
+            continue
+        w_, e_ = (me, ot) if me.cx < xs else (ot, me)
+        groups.setdefault((w_.name, e_.name), {})[(me.name, port)] = nb
+    placed = {}
+    for (wn, en), ports in sorted(groups.items()):
+        W, E = by[wn], by[en]
+        lo, hi = max(W.y, E.y) + 4.0, min(W.y + W.h, E.y + E.h) - 4.0
+        # pair the two ends of each bus: one slot per bus, both ends at the same y
+        buses = {}
+        for (inst, port), nb in ports.items():
+            mate = None
+            for bid, cl, nb_, eps in model['buses']:
+                if len(eps) == 2 and (inst, port) in [(a, p.lstrip('*')) for a, p in eps]:
+                    mate = bid
+                    break
+            buses.setdefault(mate, []).append((inst, port, nb))
+        need = sum(max(1, math.ceil(max(nb for *_, nb in ends) / k)) for ends in buses.values())
+        if hi - lo < 20.0:
+            continue
+        used = [(W.y + a, W.y + b) for a, b in _face_used(out[W.master], 'E', k)] + \
+               [(E.y + a, E.y + b) for a, b in _face_used(out[E.master], 'W', k)]
+        free = [(lo, hi)]
+        for a, b in sorted(used):
+            nf = []
+            for x0, x1 in free:
+                if b <= x0 or a >= x1:
+                    nf.append((x0, x1))
+                    continue
+                if a > x0:
+                    nf.append((x0, a))
+                if b < x1:
+                    nf.append((b, x1))
+            free = nf
+        step1 = F.TRK['M4'][1] * k
+        for pitch in (4, 3, 2, 1):
+            spans = sorted(((max(1, math.ceil(max(nb for *_, nb in ends) / k)) * step1 * pitch + 4.0, bid)
+                            for bid, ends in buses.items()), reverse=True)
+            fr = [list(iv) for iv in sorted(free, key=lambda iv: iv[0] - iv[1])]
+            slot = {}
+            for sp, bid in spans:
+                iv = next((iv for iv in fr if iv[1] - iv[0] >= sp), None)
+                if iv is None:
+                    break
+                slot[bid] = iv[1] - sp / 2           # from the top of the free interval
+                iv[1] -= sp
+            else:
+                break
+        else:
+            continue
+        for bid, ends in buses.items():
+            y = slot[bid]
+            for inst, port, nb in ends:
+                it = by[inst]
+                face = 'E' if it.name == wn else 'W'
+                out[it.master].face(port, nb, face, 'M4', y - it.y, pitch)
+                placed[(it.master, port)] = (face, round(y, 1), pitch)
+    model.setdefault('b3r6_channel', {}).update({f'{a}.{b}': v_ for (a, b), v_ in placed.items()})
+
+
+TREE_COL_UM = 9.24          # one GRT gcell (the k16 GRT grid pitch, gcell_over.txt x step)
+
+
+def _tree_cols(v, ncols):
+    """b3r7: the tile's four tree-word area pins (t_out, n_a, n_b, n_y; 32 bundled M8 pins each) laid out as ncols
+    sub-columns one gcell apart instead of one 82 um stack at one x.  b3r5's per-gcell dump: 13.1k of the 19.4k
+    M9 overflow sits over the tile bodies at the tree-pin x (column offsets 246-292 um), 7-8 M9 tracks a gcell
+    carrying a 32-wire word that leaves one x."""
+    base_masters, base_rects = v.masters, v.pin_rects
+
+    def masters(model, k=1, port_bits=None):
+        out = base_masters(model, k, port_bits)
+        t = out['qfd_tile']
+        for i, pn in enumerate(('t_out', 'n_a', 'n_b', 'n_y')):
+            spec = t.ports[pn]
+            if spec[0] == 'area' and len(spec) == 5:
+                # x 10 + 60 i (was 40 + 60 i): the ncols sub-columns stay inside the 260.9 um body
+                x = 10.0 + 60.0 * i
+                if x + (ncols - 1) * TREE_COL_UM + 0.4 * k > min(x + 60.0, t.w - 2.0) - 1e-6:
+                    raise ValueError(f'tree pin columns: {ncols} do not fit')
+                t.ports[pn] = ('area', spec[1], x, spec[3], spec[4], ncols)
+        return out
+
+    def pin_rects(mst, k, wmap):
+        cols = {p: s_ for p, s_ in mst.ports.items() if s_[0] == 'area' and len(s_) == 6}
+        if not cols:
+            return base_rects(mst, k, wmap)
+        saved = dict(mst.ports)
+        for p in cols:
+            mst.ports[p] = cols[p][:5]
+        try:
+            rects = base_rects(mst, k, wmap)
+        finally:
+            mst.ports.clear()
+            mst.ports.update(saved)
+        out = []
+        for nm, layer, r in rects:
+            port = nm.split('[')[0]
+            if port not in cols:
+                out.append((nm, layer, r))
+                continue
+            _, _, x, yc, pitch, nc = cols[port]
+            n = wmap.get(port, cols[port][1])
+            i = int(nm.split('[')[1].rstrip(']'))
+            per = math.ceil(n / nc)
+            ci, ri = i // per, i % per
+            off, pp = F.TRK['M8']
+            step = pp * k * pitch
+            y = off * k + round((yc - per * step / 2 - off * k) / (pp * k)) * pp * k + ri * step
+            hw = 0.020 * k
+            xx = x + ci * TREE_COL_UM
+            out.append((nm, layer, (xx, y - hw, xx + 0.4 * k, y + hw)))
+        return out
+    v.masters, v.pin_rects = masters, pin_rects
 
 
 # ------------------------------------------------------------------------------------------------ clock regions
@@ -872,6 +1037,9 @@ def main(argv=None):
     ap.add_argument('--b3r3', action='store_true', help='b3r3 spine: +0.5 mm, scale in port slab, crom beside SU64')
     ap.add_argument('--widen-um', type=float, default=500.0)
     ap.add_argument('--spread', action='store_true', help='b3r4: hub north link on the E face, block-word pins spread')
+    ap.add_argument('--b3r6', action='store_true', help='b3r6 = b3r5 + band-slab block words actually spread (master '
+                    'name fix), channel buses face-to-face inside the blocks\' overlap, tree-top pins at 2 tracks')
+    ap.add_argument('--tree-cols', type=int, default=0, help='b3r7: tile tree-word pins in this many gcell columns')
     ap.add_argument('--work', type=Path)
     ap.add_argument('--out', type=Path)
     ap.add_argument('--k', type=int, default=16)
@@ -884,7 +1052,8 @@ def main(argv=None):
     if a.mode == 'latency':
         print(json.dumps(latency(), indent=1))
         return 0
-    v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread)
+    v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
+                    b3r6=a.b3r6, tree_cols=a.tree_cols)
     if a.mode == 'plan':
         out = a.out
         out.mkdir(parents=True, exist_ok=True)
