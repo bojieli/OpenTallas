@@ -7,6 +7,9 @@
 #include "Vnative_vm.h"
 #include "Vretn.h"
 #include "Vroot.h"
+#ifdef DSROM_S81_NATIVE_CONTINUATION_HEADER
+#include DSROM_S81_NATIVE_CONTINUATION_HEADER
+#endif
 #include <fstream>
 #include <cstdlib>
 
@@ -14,6 +17,8 @@ namespace {
 using namespace dsrom_s81_minimum;
 constexpr uint64_t ID=uint64_t(1)<<31;
 constexpr uint32_t OUTPUT_BASE=419776,OUTPUT_ROWS=320,CUT_ALIAS=32768;
+// 9 + canonical ordered source-node index of L0.I7 (not its PHROM phase).
+constexpr unsigned FIELD_PRODUCER=16;
 using Target=PublishedSpanAcceptSink<Vnative_vm>;
 using Return=NativeReturnParticipant<Vretn,Vroot>;
 
@@ -46,7 +51,8 @@ struct Source : std::enable_shared_from_this<Source> {
     std::array<uint64_t,2> phrom{};
     std::vector<uint64_t> stream;
     std::string cfg;
-    bool attached=false,armed=false,field_selected=false;
+    bool attached=false,armed=false,field_selected=false,field_returned=false;
+    bool field_publication_begun=false;
     bool read_pending=false;
     uint32_t read_address=0;
     std::array<uint32_t,8> read_owner{};
@@ -79,6 +85,7 @@ struct Source : std::enable_shared_from_this<Source> {
             },
             Target::AcceptObservers{true,tags.scalar_accept,tags.read_accept});
         prefix_bank=target->participant();
+        publication.enroll_literal(FIELD_PRODUCER,{{OUTPUT_BASE,OUTPUT_ROWS}});
     }
     DsromS81MinimumSourceIo io() {
         return {
@@ -89,7 +96,7 @@ struct Source : std::enable_shared_from_this<Source> {
         };
     }
     std::optional<uint32_t> read(uint64_t id,uint32_t address) {
-        require(id==ID&&!field_selected,"prefix/XN read after field-bank handoff or wrong context");
+        require(id==ID&&!field_selected,"native read while field owns shared bank or wrong context");
         // Reserve exactly once for the held request, not once per polling call.
         if(!read_pending) {
             read_owner=tags.read_owner(id,address);read_address=address;read_pending=true;
@@ -149,17 +156,25 @@ struct Source : std::enable_shared_from_this<Source> {
         runtime.participants.push_back(join_return_to_input_cut(input->native_cut(),*returned));
         field=std::make_unique<MacroAckAdapter<Vnative_vm>>(*vm,
             [this](const auto& result){return returned->supply(result);},
-            [this](auto bank,const auto& command){returned->accepted(bank,command);tags.scalar_accept(bank,command);},
+            [this](auto bank,const auto& command){
+                returned->accepted(bank,command);tags.scalar_accept(bank,command);
+                // An actual selected root write has reached VM acceptance.
+                // No source output version or payload is installed at host arm.
+                if(!field_publication_begun) {
+                    publication.begin(ID,FIELD_PRODUCER);field_publication_begun=true;
+                }
+                publication.native_scalar(FIELD_PRODUCER,command,true);
+            },
             [this](auto bank,const auto& command,const auto& receipt){
                 returned->visible(bank,command,receipt);
-                dsrom_s81_retire_source_scalar_tag(runtime,bank,command,receipt);
+                target->external_scalar_visible(command,receipt);
             });
         field_bank=field->participant();
         // Select once in prepare; use that SAME participant for this edge's
         // rising/falling. There is exactly one native bank clock owner.
         runtime.participants.push_back({"selected-single-native-bank",
             [this](const auto& result) {
-                if(armed&&input->inputs_loaded()) {
+                if(armed&&!field_returned&&input->inputs_loaded()) {
                     require(!read_pending&&prefix->complete(),"field handoff before actual XN read drain");
                     field_selected=true;
                 }
@@ -178,6 +193,19 @@ struct Source : std::enable_shared_from_this<Source> {
     }
     void begin() {engines.start_bootstrap();prefix->start();}
     void advance() {
+        if(field_selected&&input->input_finished()&&returned->local_drained()&&
+                field->drained()&&runtime.result().quiet) {
+            require(!read_pending,"field/native handoff has accepted read debt");
+            field_selected=false;field_returned=true;
+#ifdef DSROM_S81_NATIVE_CONTINUATION_HEADER
+            // Generated from literal source operations. Missing engine maps,
+            // dynamic inputs or full output extents still refuse admission.
+            require(publication.complete(FIELD_PRODUCER),
+                    "literal continuation lacks complete source field output; component rows are insufficient");
+            s81_native_operations_enroll(publication);
+            prefix->load_program(s81_native_operations());
+#endif
+        }
         if(!armed&&prefix->complete()) {
             const auto alias=NativeInputParticipant::declare_input_only_alias(ID,0,OUTPUT_BASE,OUTPUT_ROWS,CUT_ALIAS);
             input->arm(ID,0,phrom,stream,OUTPUT_BASE,OUTPUT_ROWS,alias);
@@ -193,7 +221,7 @@ struct Source : std::enable_shared_from_this<Source> {
         }
     }
     bool complete() const {
-        return attached&&armed&&field_selected&&prefix->complete()&&!read_pending&&
+        return attached&&armed&&field_returned&&prefix->complete()&&!read_pending&&
             input->input_finished()&&returned->local_drained()&&field->drained()&&
             !engines.bootstrap.fault()&&!target->fault()&&!publication.fault()&&runtime.result().quiet;
     }
