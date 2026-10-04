@@ -73,7 +73,10 @@ struct Source : std::enable_shared_from_this<Source> {
             },
             [this](auto id,auto a,auto n){return publication.source_span_lease(id,a,n);},
             [this](auto id,auto a,auto n){return publication.write_allowed(id,a,n);},
-            [this](const auto& c,const auto& receipt){publication.on_prefix_scalar_ack(c,receipt);},
+            [this](const auto& c,const auto& receipt){
+                publication.on_prefix_scalar_ack(c,receipt);
+                dsrom_s81_retire_source_scalar_tag(runtime,c.word.address&3,c,receipt);
+            },
             Target::AcceptObservers{true,tags.scalar_accept,tags.read_accept});
         prefix_bank=target->participant();
     }
@@ -93,7 +96,10 @@ struct Source : std::enable_shared_from_this<Source> {
         }
         require(address==read_address,"changed held source native read address");
         auto bits=target->target_word(address,read_owner);
-        if(bits)read_pending=false;
+        if(bits) {
+            dsrom_s81_retire_source_read_tag(runtime,address,read_owner);
+            read_pending=false;
+        }
         return bits;
     }
     void attach(DsromS81MinimumEmbedding& embedding) {
@@ -144,7 +150,10 @@ struct Source : std::enable_shared_from_this<Source> {
         field=std::make_unique<MacroAckAdapter<Vnative_vm>>(*vm,
             [this](const auto& result){return returned->supply(result);},
             [this](auto bank,const auto& command){returned->accepted(bank,command);tags.scalar_accept(bank,command);},
-            [this](auto bank,const auto& command,const auto& receipt){returned->visible(bank,command,receipt);});
+            [this](auto bank,const auto& command,const auto& receipt){
+                returned->visible(bank,command,receipt);
+                dsrom_s81_retire_source_scalar_tag(runtime,bank,command,receipt);
+            });
         field_bank=field->participant();
         // Select once in prepare; use that SAME participant for this edge's
         // rising/falling. There is exactly one native bank clock owner.
