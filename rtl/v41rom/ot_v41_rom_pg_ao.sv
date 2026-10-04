@@ -107,6 +107,15 @@ module ot_v41_rom_pg_ao #(
         for (k = NA - 1; k >= 0; k = k - 1) if (dirty[k]) begin ridx = k[AW-1:0]; rhit = 1'b1; end
     end
     wire rst_wr = pwr_good && !ready && rhit;
+    // the replay write is registered (dirty -> priority select -> 25:1 shadow mux would otherwise reach the element's
+    // configuration port combinationally: -403 ps at 0.833 ns WC in the AO-only route A1)
+    reg            rp_v;
+    reg [AW-1:0]   rp_a;
+    reg [47:0]     rp_d;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) rp_v <= 1'b0;
+        else rp_v <= rst_wr;
+    always @(posedge clk) if (rst_wr) begin rp_a <= ridx; rp_d <= sh_q[ridx]; end
     reg pg_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin valid <= {NA{1'b0}}; dirty <= {NA{1'b0}}; ready <= 1'b0; late <= 1'b0; pg_q <= 1'b0; end
@@ -119,15 +128,15 @@ module ot_v41_rom_pg_ao #(
                     valid[cfg_a] <= 1'b1;
                     if (!ready) dirty[cfg_a] <= 1'b1;                             // replayed after wake
                 end
-                if (pwr_good && !ready && !rhit && !(host_wr)) ready <= 1'b1;
+                if (pwr_good && !ready && !rhit && !rp_v && !(host_wr)) ready <= 1'b1;
             end
             if (go && !ready) late <= 1'b1;
         end
 
     // configuration port of the element: the host while ready, the replay while restoring
-    assign e_cfg_v = ready ? cfg_v : rst_wr;
-    assign e_cfg_a = ready ? cfg_a : ridx;
-    assign e_cfg_d = ready ? cfg_d : sh_q[ridx];
+    assign e_cfg_v = ready ? cfg_v : rp_v;
+    assign e_cfg_a = ready ? cfg_a : rp_a;
+    assign e_cfg_d = ready ? cfg_d : rp_d;
     assign e_go    = go && ready;
     assign e_rst_n = rst_n && dom_rst_n;
     ot_hdc_cg u_dom_cg (.clk(clk), .en(clk_en | !rst_n), .gclk(e_clk));
@@ -143,7 +152,7 @@ module ot_v41_rom_pg_ao #(
     assign busy  = e_busy  & iso_n;
     assign fault = (e_fault & iso_n) | late | ctl_fault;
 
-    wire dom_busy = go || busy || (|pv) || (pwr_good && !ready) || (|dirty && pwr_good);
+    wire dom_busy = go || busy || (|pv) || (pwr_good && !ready) || (|dirty && pwr_good) || rp_v;
     wire req_on;
     ot_v41_stage_pg_sched #(.NSUB(NSUB), .TW(TW)) u_sched (
         .clk(clk), .rst_n(rst_n), .pg_en(pg_en), .sched_v(sched_v), .sched_gap(sched_gap), .cfg_lead(pg_lead),

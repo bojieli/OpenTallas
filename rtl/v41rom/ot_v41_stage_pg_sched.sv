@@ -51,7 +51,10 @@ module ot_v41_stage_pg_sched #(
             if (dom_busy) idle <= 8'd0;
             else if (idle != 8'hff) idle <= idle + 8'd1;
         end
-    wire [TW:0] th   = {1'b0, cfg_lead} + {1'b0, cfg_bet};
+    reg  [TW:0] th;                                           // lead + bet, registered (static configuration)
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) th <= {(TW+1){1'b0}};
+        else th <= {1'b0, cfg_lead} + {1'b0, cfg_bet};
     wire        near = cnt_v && ({1'b0, cnt} <= th);
     wire        idle_long = !dom_busy && idle >= cfg_idle;
     assign req_on = !pg_en || !idle_long || near;
