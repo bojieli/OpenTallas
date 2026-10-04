@@ -60,7 +60,7 @@ def cmd_plan(a):
         jobs.append(name)
     plan = {"schema": "opentallas.hbm-accel-ha8-layer-parallel-plan.v1", "jobs": jobs, "oracle_dir": str(orc),
             "stages": str(a.stages), "pos": a.pos, "token": a.token, "layout": str(a.layout), "build_dir": str(a.build_dir),
-            "driver_args": a.driver_args, "preroll": a.preroll, "at": time.strftime("%FT%TZ", time.gmtime())}
+            "driver_args": a.driver_args, "preroll": a.preroll, "preroll_stage": a.preroll_stage, "at": time.strftime("%FT%TZ", time.gmtime())}
     (pdir / "plan.json").write_text(json.dumps(plan, indent=1) + "\n")
     print(f"planned {len(jobs)} jobs in {pdir}")
 
@@ -69,7 +69,8 @@ def run_job(pdir: Path, plan: dict, name: str, a) -> int:
     j = pdir / name
     if (j / "token_result.json").exists() and not a.force:
         return 0
-    pre = plan["preroll"] if name != "head" else 0
+    over = dict(kv.split("=") for kv in plan.get("preroll_stage", "").split(",") if kv)
+    pre = int(over[name]) if name in over else (plan["preroll"] if name != "head" else 0)
     cmd = [a.admit, str(a.peak_gb), "--", sys.executable, str(ROOT / "tools/qwen_hbmacc_rt_token_w12.py"),
            "--workdir", str(j), "--build-dir", plan["build_dir"], "--stages", str(j / "stages.txt"),
            "--layout", plan["layout"], "--oracle-dir", plan["oracle_dir"], "--preload", str(j / "preload.hex"),
@@ -147,6 +148,7 @@ def main():
     ap.add_argument("--pos", type=int, default=0)
     ap.add_argument("--token", type=int, default=0)
     ap.add_argument("--preroll", type=int, default=0)
+    ap.add_argument("--preroll-stage", default="", help="per-stage preroll overrides, e.g. L0=5000,L1=5000")
     ap.add_argument("--driver-args", default="", help="extra tools/qwen_hbmacc_rt_token_w12.py design-point flags")
     ap.add_argument("--only", help="comma-separated stage names")
     ap.add_argument("--parallel", type=int, default=8)
