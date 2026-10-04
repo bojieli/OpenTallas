@@ -310,7 +310,7 @@ def _ckv_cycles(ckv):
     return ck
 
 
-def _apply(g, reader, sel, ck, variant):
+def _apply(g, reader, sel, ck, variant, gather=None):
     """Replace every context-dependent node of the graph by its measurement.  variant 'as_built': the four
     re-index layers score all 1,048,576 keys (what the native program and the golden do: score, then mask to the
     16,384 candidates); 'candidate_gather': they read only the candidate blocks (an UNBUILT lever: its index read
@@ -324,8 +324,21 @@ def _apply(g, reader, sel, ck, variant):
                    20: worst("csa1_full_L20")}
     if variant in ("as_built", "mask_drop"):
         scan_reader.update({L: worst("csa1_full_L20") for L in REINDEX})
-    seltag = {2: "L2", 8: "L8", 14: "L14", 20: "L20",
-              **{L: ("L24_full" if variant == "as_built" else "L24") for L in REINDEX}}
+    def reindex_tag(L):
+        """as_built: the full masked stream; the levers: their MEASURED select stream when
+        tools/dsrom_reindex_candidates.py records are given (L24 / L28 measured, L32 / L36 take the
+        worse of the two), else the candidate-only stream of the 1M record (projection)."""
+        suffix = {"mask_drop": "_mdrop", "candidate_gather": "_gather"}.get(variant)
+        if variant == "as_built":
+            return "L24_full"
+        own = [f"L{x}{suffix}" for x in (24, 28) if f"L{x}{suffix}" in sel]
+        if not own:
+            return "L24"
+        if f"L{L}{suffix}" in sel:
+            return f"L{L}{suffix}"
+        cost = lambda t: max(sg["last"] - sg["first"] + 1 + sg["tail"] for sg in sel[t]["local"]["runs"][0]["per_segment"])
+        return max(own, key=cost)
+    seltag = {2: "L2", 8: "L8", 14: "L14", 20: "L20", **{L: reindex_tag(L) for L in REINDEX}}
     sel_local, sel_final = {}, {}
     for L, key in seltag.items():
         r = sel[key]
@@ -350,6 +363,11 @@ def _apply(g, reader, sel, ck, variant):
                 r = scan_reader[L]
                 put(pre + "idx.score", r["cycles"] + IDX_ARRAY["query_settle"] + IDX_ARRAY["latency"],
                     f"reader {r['name']} ({r['keys']} keys/rank, {r['sectors']} sectors/rank) + idx array settle/latency")
+            elif gather is not None and L in REINDEX:
+                w = gather["worst_rank"]
+                put(pre + "idx.score", w["cycles"] + IDX_ARRAY["query_settle"] + IDX_ARRAY["latency"],
+                    f"candidate-block gather {w['name']} (real 1M candidate lists, {w['sectors']} sectors/rank, "
+                    f"{w['achieved_TBps']} TB/s) + idx array settle/latency")
             else:
                 modelled.append(dict(node=pre + "idx.score", us=round(sum(g.contrib[pre + "idx.score"].values()) * 1e6, 4),
                                      why="candidate-block gather reader is not built (unbuilt lever)"))
@@ -376,6 +394,16 @@ def cmd_compose(a):
     for f in a.select:
         sel.update(json.loads(Path(f).read_text())["layers"])
     runs = [json.loads(Path(f).read_text()) for f in a.ckv]
+    gather = json.loads(Path(a.gather).read_text()) if a.gather else None
+    measured_levers = bool(a.reindex_select)
+    if a.reindex_select:
+        rs = json.loads(Path(a.reindex_select).read_text())
+        assert rs["status"] == "pass"
+        for tag, r in rs["layers"].items():
+            sel[f"{tag}_mdrop"] = dict(local=dict(runs=r["drop_dense"]["runs"]), final=r["final"])
+            sel[f"{tag}_gather"] = dict(local=dict(runs=r["gather"]["runs"]), final=r["final"])
+    if gather is not None:
+        assert gather["status"] == "pass"
     g0, T0, _ = s58_graph()
     assert abs(1 / T0 - 2535.5) < 0.1, T0
     t_model, lt_model = layer_times(g0)
@@ -388,7 +416,7 @@ def cmd_compose(a):
         lat = run["results"][0]["fields"]["CKVSEL"]["lat"]
         for variant in ("as_built", "mask_drop", "candidate_gather"):
             g = copy.deepcopy(g0)
-            patches, modelled, scan_reader, sl, sf = _apply(g, reader, sel, ck, variant)
+            patches, modelled, scan_reader, sl, sf = _apply(g, reader, sel, ck, variant, gather)
             t, lt = layer_times(g)
             ar = t * 1e6 + S81_EXTRA_HOPS * HOP_US
             idx_us = lambda L: sum(p["measured_us"] for p in patches if p["node"].startswith(f"L{L}.attn.idx"))
@@ -444,16 +472,18 @@ def cmd_compose(a):
               "selections, CKV HBM latency 259 cycles, conservative over the reader's measured 87-88 ns mean)",
         AR_tok_s=v["as_built.lat259"]["AR_tok_s"], MTP_fused_tok_s=v["as_built.lat259"]["MTP_tok_s"]["fused_us"],
         model_AR_tok_s=out["model"]["AR_tok_s"],
-        levers_unbuilt={k: dict(AR_tok_s=v[k + ".lat259"]["AR_tok_s"], MTP_fused_tok_s=v[k + ".lat259"]["MTP_tok_s"]["fused_us"])
-                        for k in ("mask_drop", "candidate_gather")},
+        **{("levers_measured" if measured_levers else "levers_unbuilt"):
+           {k: dict(AR_tok_s=v[k + ".lat259"]["AR_tok_s"], MTP_fused_tok_s=v[k + ".lat259"]["MTP_tok_s"]["fused_us"],
+                    II_us=v[k + ".lat259"]["II_us"], reindex_occupancy_us=v[k + ".lat259"]["stage_occupancy_us"]["reindex"])
+            for k in ("mask_drop", "candidate_gather")}},
         interim="L20 (global-KV scan layer) is this tool's component measurement; Codex's S81 minimum run owns L20 at 1M "
                 "and replaces it when it lands",
         still_modelled=["context-independent nodes of every layer (weights in ROM: projections, MoE, norms, softmax/p.v "
                         "at T = 640, hc/Sinkhorn) from the S81 unified graph", "L20 candidate-block select (cand.*)",
                         "stage hop 0.482 us (RTL endpoint + technology channel delay, no PHY)",
                         "head 13.63 us in the AR path (wavefront II uses the measured reduced-shape head 12.37 us)",
-                        "candidate_gather variant: candidate-block index read (unbuilt)",
-                        "mask_drop variant: lane compaction ahead of the select (unbuilt)",
+                        *([] if gather is not None else ["candidate_gather variant: candidate-block index read (unbuilt)"]),
+                        *([] if measured_levers else ["mask_drop variant: lane compaction ahead of the select (unbuilt)"]),
                         "L1+L2 NV5 draft (56.07 us): SS pre-layout screen fails, not closed"])
     out["reader_runs"] = reader["runs"]
     Path(a.out).write_text(json.dumps(out, indent=1, default=str) + "\n")
@@ -478,6 +508,8 @@ def main():
     m.add_argument("--select", nargs="+", required=True)
     m.add_argument("--ckv", nargs="+", required=True)
     m.add_argument("--out", required=True)
+    m.add_argument("--gather", default="", help="tools/dsrom_reindex_candidates.py gather.json (measured gather read)")
+    m.add_argument("--reindex-select", default="", help="tools/dsrom_reindex_candidates.py select.json")
     a = ap.parse_args()
     dict(reader=cmd_reader, select=cmd_select, ckvvec=cmd_ckvvec, compose=cmd_compose)[a.cmd](a)
 
