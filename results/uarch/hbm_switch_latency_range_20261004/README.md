@@ -1,5 +1,7 @@
 # DS-V4.1 HBM switch collective latency: a sourced range
 
+**SUPERSEDED 2026-10-04** by the AUTHORITATIVE switch scenarios (measured H100 NVLS, Tomahawk Ultra + our protocol): `results/uarch/hbm_switch_latency_authoritative_20261004/` (AUTHORITATIVE) (sources `results/measured/h100_nvls_20261004/`). This record is kept unchanged as the literature range. Its replay command now emits the measured record.
+
 MODEL ONLY. Owner decision (2026-10-04): the DS-V4.1 HBM switch collective latency is now a sourced range instead of the single quoted 250 ns switch core. That core gave alpha = 2 x 209 + 250 = 668 ns, and W15 measured the fixed collective terms at AR 823.6 ns and AG 777.0 ns. The new range covers one 32 KB all-reduce across 48 packages in one NVL72-class tier of 18 switch chips, hardware path only. The sources are in `switch_latency_research.md`, copied verbatim, section 2.
 
 | Scenario | AR per collective (KP4 / light FEC) | Mechanism |
