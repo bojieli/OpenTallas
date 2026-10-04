@@ -54,6 +54,11 @@ DsromS81QePhase dsrom_s81_qe_load_controls(const DsromS81PrefixOperation&op,
  if(ph.size()!=2)throw std::runtime_error("QE exact selected PHROM two-word extent");
  DsromS81QePhase out{};out.operation=op;out.xbase=input_base;out.cut_output_alias=cut_only_output_alias;
  out.phrom={ph[0],ph[1]};out.ops=(ph[0]>>46)&65535;
+ // The existing native input cut is VAW16. Declare an input-only staging alias
+ // for real VM19 operands above its aperture; actual SourceIo still uses the
+ // original source address and owner, never an aliased VM participant request.
+ unsigned k=(ph[0]>>1)&8191;
+ out.cut_input_alias=uint64_t(input_base)+k<=65536?input_base:0;
  out.stream=hex_words(emitted_directory+"/spine_stream.hex",48);
  std::set<unsigned> bf(actual_bf_sites.begin(),actual_bf_sites.end());
  if(bf.size()!=519||bf.size()!=actual_bf_sites.size()||*bf.rbegin()>=2417)
