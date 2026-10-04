@@ -32,7 +32,11 @@ module tb_v41_rom_elem_pg;
   .xs_q1(q1), .xs_e1(10'd126), .xb_v(1'b0), .xb_b(3'd0), .xb_pos(3'd0), .xb_sv(4'd0), .xb_u(32'd0), .xb_d(1024'd0),
   .pv(av), .pval(ad), .prow(ar), .pseg(asg), .pnseg(an), .perr(ae), .ppos(ap), .busy(ab), .fault(af));
  ot_v41_rom_elem_pg_w10 #(.NB(2), .BF16(0), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .FRONT_PAR(0),
-  .INSTANCE("dut"), .PG(1), .NSUB(NSUB)) dut (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d),
+  .INSTANCE("dut"), .PG(1), .NSUB(NSUB)
+`ifdef PG_DOM_CG
+  , .DOM_CG(1)
+`endif
+  ) dut (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d),
   .go(go), .go_bf(go_bf), .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_pos(xs_pos), .xs_sv(2'b11), .xs_q0(q0),
   .xs_e0(10'd127), .xs_q1(q1), .xs_e1(10'd126), .xb_v(1'b0), .xb_b(3'd0), .xb_pos(3'd0), .xb_sv(4'd0),
   .xb_u(32'd0), .xb_d(1024'd0), .pv(bv), .pval(bd), .prow(br), .pseg(bsg), .pnseg(bn), .perr(be), .ppos(bp),

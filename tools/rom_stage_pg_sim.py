@@ -96,9 +96,9 @@ def ref_copy(out: Path) -> None:
     out.write_text(s.replace("module ot_v41_rom_elem_w10 #(", "module ot_v41_rom_elem_w10_ref #("))
 
 
-def run(work: Path, mutant: str | None, flat: Path, ref: Path) -> dict:
+def run(work: Path, mutant: str | None, flat: Path, ref: Path, domcg: bool = False) -> dict:
     exe = work / f"tb_{mutant or 'base'}.vvp"
-    defs = ["-DPG_MUTANT_" + mutant.upper()] if mutant else []
+    defs = (["-DPG_MUTANT_" + mutant.upper()] if mutant else []) + (["-DPG_DOM_CG"] if domcg else [])
     cmd = (["iverilog", "-g2012", "-DSYNTHESIS", "-o", str(exe), "-s", "tb_v41_rom_elem_pg", *defs, str(ROOT / TB), str(flat), str(ref)]
            + [str(ROOT / f) for f in ELEM if f != "rtl/v41rom/ot_v41_rom_elem_w10.sv"] + [str(ROOT / f) for f in PG_RTL])
     subprocess.run(cmd, check=True, cwd=work)
@@ -117,6 +117,7 @@ def main() -> int:
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--out", type=Path)
     ap.add_argument("--mutants", default="no_restore,no_iso,short_lead")
+    ap.add_argument("--domcg", action="store_true", help="the series domain clock gate (DOM_CG = 1)")
     a = ap.parse_args()
     a.work.mkdir(parents=True, exist_ok=True)
     raw = flatten(a.work)
@@ -126,9 +127,9 @@ def main() -> int:
     ref_copy(ref)
     res = dict(schema="opentallas.rtl.rom_stage_pg_exact.v1", element_params=PARAMS, domain_state=inv,
                sources={f: sha(ROOT / f) for f in ELEM + PG_RTL + [TB, "tools/rom_stage_pg_sim.py"]},
-               runs=[run(a.work, None, flat, ref)])
+               dom_cg=int(a.domcg), runs=[run(a.work, None, flat, ref, a.domcg)])
     for m in [x for x in a.mutants.split(",") if x]:
-        res["runs"].append(run(a.work, m, flat, ref))
+        res["runs"].append(run(a.work, m, flat, ref, a.domcg))
     base = res["runs"][0]
     res["verdict"] = dict(exact_with_gating=base["pass_"],
                           mutants_detected={r["mutant"]: not r["pass_"] for r in res["runs"][1:]})

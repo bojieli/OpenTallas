@@ -110,15 +110,21 @@ module ot_v41_rom_pg_ao #(
     wire rst_wr = pwr_good && !ready && rhit;
     // the replay write is registered (dirty -> priority select -> 25:1 shadow mux would otherwise reach the element's
     // configuration port combinationally: -403 ps at 0.833 ns WC in the AO-only route A1)
+    // the element-side state (valid / dirty / ready / late / replay) changes only on a host write, a `go`, a power
+    // transition or while restoring: it runs on its own clock gate, so a sleeping (or idle, ready) domain's AO side
+    // costs leakage and one ICG clock pin (route R1 measured ~0.13 mW of free-running AO state + its clock tree)
+    wire ao_clk;
+    reg  pg_q;
+    wire ao_en = cfg_v | go | (pwr_good ^ pg_q) | (pwr_good & !ready) | rp_v;
+    ot_hdc_cg u_ao_cg (.clk(clk), .en(ao_en | !rst_n), .gclk(ao_clk));
     reg            rp_v;
     reg [AW-1:0]   rp_a;
     reg [47:0]     rp_d;
-    always @(posedge clk or negedge rst_n)
+    always @(posedge ao_clk or negedge rst_n)
         if (!rst_n) rp_v <= 1'b0;
         else rp_v <= rst_wr;
-    always @(posedge clk) if (rst_wr) begin rp_a <= ridx; rp_d <= sh_q[ridx]; end
-    reg pg_q;
-    always @(posedge clk or negedge rst_n)
+    always @(posedge ao_clk) if (rst_wr) begin rp_a <= ridx; rp_d <= sh_q[ridx]; end
+    always @(posedge ao_clk or negedge rst_n)
         if (!rst_n) begin valid <= {NA{1'b0}}; dirty <= {NA{1'b0}}; ready <= 1'b0; late <= 1'b0; pg_q <= 1'b0; end
         else begin
             pg_q <= pwr_good;
