@@ -6,6 +6,9 @@ set block [ord::get_db_block]
 set dbu [$block getDbUnitsPerMicron]
 set XA0 5;   set XA1 45      ;# stage A fence (centroid x 25)
 set XB0 445; set XB1 485     ;# stage B fence (centroid x 465)
+# both fences span the band the ordered port groups occupy (the placer packs the 515 ports of each edge into ~50 um
+# around the die's mid height), so each bit runs straight across: port -> A flop -> span -> B flop -> port
+set Y0 110;  set Y1 210
 proc fence {block dbu name x0 x1 y0 y1} {
   set r [odb::dbRegion_create $block $name]
   odb::dbBox_create $r [expr {int($x0 * $dbu)}] [expr {int($y0 * $dbu)}] [expr {int($x1 * $dbu)}] [expr {int($y1 * $dbu)}]
@@ -26,8 +29,8 @@ proc add_driver_cone {region iterm depth} {
   }
   return $n
 }
-set west [fence $block $dbu tx_west $XA0 $XA1 5 315]
-set east [fence $block $dbu rx_east $XB0 $XB1 5 315]
+set west [fence $block $dbu tx_west $XA0 $XA1 $Y0 $Y1]
+set east [fence $block $dbu rx_east $XB0 $XB1 $Y0 $Y1]
 set nw 0; set ne 0; set cw 0; set ce 0
 foreach inst [$block getInsts] {
   if {![[$inst getMaster] isSequential]} { continue }
