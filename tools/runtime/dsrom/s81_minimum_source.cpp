@@ -1,4 +1,11 @@
 #include "s81_minimum_source_plan.hpp"
+#ifdef DSROM_S81_L20_KV_ENCLOSING
+#include "s81_minimum_l20_kv_factory.hpp"
+// Entry implemented by the existing KV owner; no Runtime/Plan layout change.
+namespace dsrom_s81_minimum {
+int run_minimum_l20_kv(DsromS81MinimumRuntime&,const char* output);
+}
+#endif
 #include "Vnative_vm.h"
 #include <cstdio>
 #include <filesystem>
@@ -373,6 +380,19 @@ extern "C" int dsrom_s81_minimum_source_main(DsromS81MinimumRuntime& runtime,con
        !runtime.context||!runtime.tick||!runtime.cold_start||
        !runtime.bind_context||!runtime.result||!runtime.cycle)
         throw std::runtime_error("actual selected S81 native runtime required");
+    // Dispatch before constructing any old source VM, plan, or participant.
+    // The existing KV owner constructs all four rank homes and owns the one
+    // shared cold reset, real publications and native attention retirement.
+    const char* attention_mode=std::getenv("DSROM_S81_NATIVE_L20_ATT");
+    if(attention_mode&&std::string(attention_mode)!="0"&&std::string(attention_mode)!="1")
+        throw std::runtime_error("NATIVE_L20_ATT selector must be explicit 0 or 1");
+    if(attention_mode&&std::string(attention_mode)=="1") {
+#ifdef DSROM_S81_L20_KV_ENCLOSING
+        return dsrom_s81_minimum::run_minimum_l20_kv(runtime,output);
+#else
+        throw std::runtime_error("NATIVE_L20_ATT requires the selected native KV enclosing source");
+#endif
+    }
     const char* head_mode=std::getenv("DSROM_S81_NATIVE_HEAD_END");
     const bool head_end=head_mode&&std::string(head_mode)=="1";
 #ifndef DSROM_S81_HEAD_WINNER_BINDING_HEADER
