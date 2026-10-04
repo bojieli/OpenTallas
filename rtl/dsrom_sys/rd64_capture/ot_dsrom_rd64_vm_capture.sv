@@ -74,7 +74,8 @@ module ot_dsrom_rd64_vm_capture #(
  end endgenerate
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   active<=0;sticky_fault<=0;drained<=0;identity<=0;phase<=0;
+   // Authoritative coordinated cold fence proves zero accepted capture debt.
+   active<=0;sticky_fault<=0;drained<=1;identity<=0;phase<=0;
    obase<=0;ops<=0;np<=0;fmt<=0;rsplit<=0;fp32_low<=0;fp32_high<=0;
    for(k=0;k<ROOTS;k=k+1)begin expected[k]<=0;received[k]<=0;committed[k]<=0;count[k]<=0;rdptr[k]<=0;wrptr[k]<=0;end
   end else if(ENABLE!=0)begin
