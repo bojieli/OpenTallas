@@ -4,10 +4,16 @@
 #include "s81_native_kv_phase.hpp"
 #include "s81_minimum_attention_cut.hpp"
 #include "s81_minimum_me_attention.hpp"
+#include "s81_minimum_l20_bank.hpp"
+#include "s81_minimum_source_tags_component.hpp"
 #include "VDsromAttention.h"
 #include "VDsromAttEngine.h"
 #include "VDsromWindowBlocks.h"
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+#include "VDsromS81WindowLa.h"
+#else
 #include "VDsromPackedWindow.h"
+#endif
 #include "VDsromKvRopeMux.h"
 #include "VDsromS81NativeKvPhase.h"
 #include "VDsromS81CkvRank0.h"
@@ -15,6 +21,10 @@
 #include "VDsromS81CkvRank2.h"
 #include "VDsromS81CkvRank3.h"
 #include <algorithm>
+#include <cstdlib>
+#include <deque>
+#include <fstream>
+#include <map>
 namespace dsrom_s81_minimum {
 namespace {
 void need(bool ok,const char* why){if(!ok)throw std::runtime_error(why);}
@@ -41,21 +51,98 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
         std::array<uint32_t,16> read_response{};
         bool response_pending=false;
         std::optional<DsromS81PrefixOperation> selected_op;
+        // Explicit SIM_ONLY source-calendar fallback, not native lifecycle RTL.
+        std::optional<DsromS81PrefixOperation> source_op;
+        std::vector<uint32_t> prime_rows;
+        unsigned prime_cursor=0,user=0;
+        uint32_t region_base=0,region_count=0;
+        uint16_t source_tag=0;
+        bool start_accepted=false,source_go=false,window_finished=false;
+        bool old_prime=false,old_start=false,old_window_done=false,old_source_done=false;
+        bool sim_descriptor=false;
+
     };
     std::array<Rank,4> ranks;
     std::array<L20NativeCkv,4> ckv;
     std::function<void(const std::array<L20NativeCkv,4>&)> tp4;
+    struct Row {long due=0;uint32_t rank=0,gid=0;std::array<uint32_t,72> words{};};
+    std::array<std::array<std::deque<Row>,4>,4> rows;
+    std::array<Row,4> tx_rows{};
+    std::array<bool,4> tx_accept{};
+    std::array<std::array<bool,4>,4> rx_accept{};
+    DsromS81MinimumParticipant sim_transport;
     bool joining=false,stopped=false;
+    bool sim_only=false;
+    bool services_quiet(unsigned i)const {
+        const auto& r=ranks[i];
+        return !r.phase->ckv_ph&&!r.phase->ckv_job_pend&&
+            std::visit([](const auto& c){return !c->own_pending&&c->reuse_ready&&
+                !c->vm_busy&&!c->kv_v&&!c->job_v&&!c->fault;},ckv[i]);
+    }
+    void load_prime(Rank& r) {
+        std::ifstream cfg(r.b.prior_hbm_directory+"/cfg.txt");
+        std::map<std::string,uint32_t> values;std::string key,value;
+        while(cfg>>key>>value)values[key]=uint32_t(std::stoul(value,nullptr,0));
+        need(cfg.eof()&&values.at("pos")==1048575&&values.at("window_region_valid")==1,
+             "SIM_ONLY KV needs actual target source configuration");
+        r.user=values.at("window_prime_user");
+        need(r.user==values.at("user")&&r.user<1024,"KV source user mismatch");
+        r.region_base=values.at("window_region_base");r.region_count=values.at("window_region_count");
+        need(r.region_base==0x40000&&r.region_count==2176,"KV history source region mismatch");
+        std::ifstream prime(r.b.prior_hbm_directory+"/prime.txt");uint32_t row;
+        while(prime>>row)r.prime_rows.push_back(row);
+        need(prime.eof()&&r.prime_rows.size()==127,"KV requires 127 actual prior prime rows");
+        for(unsigned j=0;j<127;j++)need(r.prime_rows[j]==1048448+j,"KV prime must exclude current row");
+    }
+    void source_join(unsigned i) {
+        auto& r=ranks[i];auto& w=*r.window;
+        w.region_base_sector=r.region_base;w.region_sector_count=r.region_count;
+        w.prime_user=r.user;w.blk_user=r.user;w.start_user=r.user;
+        const bool admitted=r.b.runtime->identity&&*r.b.runtime->identity==r.b.identity;
+        w.prime_v=admitted&&r.prime_cursor<r.prime_rows.size();
+        if(w.prime_v)w.prime_row=r.prime_rows[r.prime_cursor];
+        w.start_first=1048448;w.start_count=128;
+        w.start_v=admitted&&r.source_op&&r.prime_cursor==127&&!r.start_accepted;
+        // Actual source producer index is only a SIM_ONLY captured tag. No
+        // claim that this is the unexported native desc_gen signal.
+        w.retain_generation=r.source_tag;
+        w.retain_qk=0;w.retain_pv=0;w.retain_complete=0;w.retain_invalidate=0;
+    }
+    void transport_join() {
+        const long cycle=ranks[0].b.runtime->cycle();
+        for(const auto& r:ranks)need(r.b.runtime->cycle()==cycle,"TP4 ranks must share one host edge");
+        for(unsigned s=0;s<4;s++)std::visit([&](auto& c){
+            bool capacity=true;
+            for(unsigned d=0;d<4;d++)if(d!=s)capacity=capacity&&rows[d][s].size()<512;
+            c->ag_tx_ready=capacity;
+        },ckv[s]);
+        for(unsigned d=0;d<4;d++)std::visit([&](auto& c){
+            c->ag_rx_valid=0;c->ag_rx_rank=0;c->ag_rx_gid=0;
+            unsigned slot=0;
+            for(unsigned s=0;s<4;s++)if(s!=d){
+                const auto& q=rows[d][s];
+                if(!q.empty()&&q.front().due<=cycle){const auto& row=q.front();
+                    c->ag_rx_valid|=1u<<slot;c->ag_rx_rank|=row.rank<<(10*slot);
+                    c->ag_rx_gid|=uint64_t(row.gid)<<(21*slot);
+                    std::copy(row.words.begin(),row.words.end(),c->ag_rx_row.data()+72*slot);
+                }
+                ++slot;
+            }
+        },ckv[d]);
+    }
+
     explicit Impl(std::array<L20KvRankBinding,4> b,
         std::function<void(const std::array<L20NativeCkv,4>&)> transport):tp4(std::move(transport)) {
-        need(bool(tp4),"L20 KV requires actual native TP4 transport");
+        const char* opt=std::getenv("DSROM_S81_SIM_ONLY_KV_SOURCE");
+        sim_only=opt&&std::string(opt)=="1";
+        need(bool(tp4)||sim_only,"L20 KV requires actual TP4 transport or explicit SIM_ONLY source fallback");
         for(unsigned i=0;i<4;i++){
             auto& r=ranks[i];r.b=std::move(b[i]);auto& v=r.b;
             need(v.runtime&&v.runtime->context&&v.runtime->cycle&&!v.runtime->identity&&
                  v.runtime->rank==int(i)&&v.runtime->stage==37&&v.identity<(1ull<<47)&&
                  v.publication&&v.io.read_word&&v.io.span_lease&&v.io.offer&&v.io.visible&&
-                 v.su&&v.quantizer&&v.adapter&&v.endpoint&&v.native_generation&&
-                 v.join_window_owner&&v.selected_ids_published&&v.source_dynamic&&
+                 v.su&&v.quantizer&&v.adapter&&v.endpoint&&
+                 ((v.native_generation&&v.join_window_owner)||sim_only)&&v.selected_ids_published&&v.source_dynamic&&
                  !v.prior_hbm_directory.empty()&&!v.prior_ckv_directory.empty(),
                  "L20 KV missing cold actual rank/source/descriptor/history binding");
             need(v.adapter->contextp()==v.runtime->context&&v.endpoint->contextp()==v.runtime->context,
@@ -73,6 +160,14 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
             r.hbm->preload(v.prior_hbm_directory);r.hbm->preload_ckv(v.prior_ckv_directory);
             need(r.hbm->capacity_words()>=0x490000,"CKV source does not fit actual backend capacity");
             r.hbm->bind(*r.mux);
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+            r.hbm->bind_window_la(*r.window);
+#endif
+            if(sim_only&&v.descriptor.participant.name.empty()){
+                need(!v.native_generation&&!v.join_window_owner,
+                     "SIM_ONLY fallback cannot overwrite partial actual descriptor binding");
+                r.sim_descriptor=true;load_prime(r);
+            }
         }
         auto ctx=ranks[0].b.runtime->context;
         ckv[0]=std::make_shared<VDsromS81CkvRank0>(ctx,"l20_ckv_rank0");
@@ -110,9 +205,17 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
             r.provider->wire_backend(*r.mux);
             r.provider->wire_selected_backend(*c,*r.mux);
             r.hbm->wire(*r.mux);
-            r.provider->wire_selected_attention(*b.adapter,*r.phase,*c);
+            // The cut feeds native endpoint credit back into the adapter.
+            // Settle that feedback with the phase before provider.prepare
+            // captures OLD accept; no clock edge or credit is generated here.
+            for(unsigned settle=0;settle<64;settle++){
+                r.provider->wire_selected_attention(*b.adapter,*r.phase,*c);
+                const bool ready=b.adapter->packed_kv_ready;
+                r.cut->join(); // LAST in each low-edge source/cut join.
+                if(bool(b.adapter->packed_kv_ready)==ready)return;
+            }
+            throw std::runtime_error("native packed phase/ATT ready feedback did not settle");
         },ckv[i]);
-        r.cut->join(); // LAST: no WINDOW-only port overwrite after ATT settle.
     }
     void join(){
         need(!stopped&&!joining,"L20 KV recursive/faulted join");joining=true;
@@ -121,7 +224,75 @@ struct L20KvFactory::Impl : std::enable_shared_from_this<Impl> {
     }
     void finish(){
         auto weak=weak_from_this();
+        if(!tp4){
+            tp4=[weak](const auto&){auto self=weak.lock();need(bool(self),"KV transport expired");self->transport_join();};
+            sim_transport={"SIM_ONLY-existing-CKV-TP4-11-142-II2",
+                [weak](const auto&){auto self=weak.lock();need(bool(self),"KV transport expired");
+                    self->transport_join();
+                    for(unsigned s=0;s<4;s++)std::visit([&](auto& c){
+                        self->tx_accept[s]=c->ag_tx_valid&&c->ag_tx_ready;
+                        if(self->tx_accept[s]){
+                            Row row;row.rank=c->ag_tx_rank;row.gid=c->ag_tx_gid;
+                            std::copy_n(c->ag_tx_row.data(),72,row.words.begin());
+                            need(row.rank<512&&row.gid<=1048575,"actual CKV transport row bounds");
+                            self->tx_rows[s]=row;
+                        }
+                    },self->ckv[s]);
+                    for(unsigned d=0;d<4;d++)for(unsigned s=0;s<4;s++)if(d!=s){
+                        const auto& q=self->rows[d][s];self->rx_accept[d][s]=!q.empty()&&q.front().due<=self->ranks[0].b.runtime->cycle();
+                    }
+                },
+                [weak](bool released){auto self=weak.lock();need(bool(self),"KV transport expired");
+                    if(!released){for(const auto& dst:self->rows)for(const auto& q:dst)need(q.empty(),"reset erases CKV transport debt");return;}
+                    const long cycle=self->ranks[0].b.runtime->cycle();
+                    for(unsigned d=0;d<4;d++)for(unsigned s=0;s<4;s++)if(d!=s){auto& q=self->rows[d][s];
+                        if(self->rx_accept[d][s])q.pop_front();
+                        if(self->tx_accept[s]){Row row=self->tx_rows[s];const bool pkg=(d^1)==s;
+                            row.due=cycle+(pkg?11:142);
+                            if(!pkg&&!q.empty())row.due=std::max(row.due,q.back().due+2);
+                            need(q.size()<512,"CKV transport finite capacity exceeded");q.push_back(row);
+                        }
+                    }
+                },[](bool){},[weak](){auto self=weak.lock();return !self||self->stopped;}};
+        }
         for(unsigned i=0;i<4;i++){
+            auto& source=ranks[i];
+            if(source.sim_descriptor){
+                source.b.native_generation=[weak,i](){auto self=weak.lock();need(bool(self),"KV source expired");return self->ranks[i].source_tag;};
+                source.b.join_window_owner=[weak,i](auto&,auto&){auto self=weak.lock();need(bool(self),"KV source expired");self->source_join(i);};
+                source.b.descriptor={{"SIM_ONLY-held-source-descriptor-rank"+std::to_string(i),
+                    [weak,i](const auto&){auto self=weak.lock();need(bool(self),"KV source expired");auto& r=self->ranks[i];
+                        self->source_join(i);r.window->eval();
+                        r.old_prime=r.window->prime_v&&r.window->prime_ready;
+                        r.old_start=r.window->start_v&&r.window->start_ready;
+                        r.old_window_done=r.source_go&&r.window->done;
+                        r.old_source_done=r.source_go&&r.window_finished&&!r.window->busy&&self->services_quiet(i)&&r.b.adapter->idle;
+                    },
+                    [weak,i](bool released){auto self=weak.lock();need(bool(self),"KV source expired");auto& r=self->ranks[i];
+                        if(!released){need(!r.source_op,"reset erases held KV descriptor");return;}
+                        if(r.old_prime)++r.prime_cursor;
+                        if(r.old_start)r.start_accepted=true;
+                        if(r.old_window_done)r.window_finished=true;
+                        if(r.old_source_done){r.source_op.reset();r.source_go=false;r.start_accepted=false;r.window_finished=false;}
+                    },[](bool){},[weak](){auto self=weak.lock();return !self||self->stopped;}},
+                    [weak,i](){auto self=weak.lock();return self&&self->ranks[i].source_op&&self->ranks[i].start_accepted&&!self->stopped;},
+                    [weak,i](){auto self=weak.lock();return self&&!self->ranks[i].source_op&&self->services_quiet(i)&&!self->ranks[i].window->busy;},
+                    [weak,i](const auto& op){auto self=weak.lock();need(bool(self),"KV source expired");auto& r=self->ranks[i];
+                        need(r.b.runtime->identity&&*r.b.runtime->identity==r.b.identity,
+                             "KV source lacks actual admitted context");
+                        need(op.unit==1&&op.template_sha256,"KV source needs actual QK/PV literal");
+                        const std::string sha=op.template_sha256;
+                        need(sha=="00bb7b6a8b1a67526169d39c1f5b0954d2dbc600f330a42af48d1c0d7c46bc65"||
+                             sha=="6124df21d8de509ccbb8e0f114d2ed9776a4316dd810e92c35c0a07acfb9083a","KV source literal is not L20 QK/PV");
+                        if(r.source_op)need(r.source_op->index==op.index&&r.source_op->instruction==op.instruction,"held source descriptor changed");
+                        else{need(op.index<=65535,"SIM_ONLY source tag overflow");r.source_op=op;r.source_tag=uint16_t(op.index);r.window_finished=false;}
+                        return r.start_accepted&&!r.source_go;
+                    },
+                    [weak,i](const auto& op,bool go){auto self=weak.lock();need(bool(self),"KV source expired");auto& r=self->ranks[i];
+                        if(go){need(r.source_op&&r.source_op->index==op.index&&r.source_op->instruction==op.instruction&&r.start_accepted&&!r.source_go,"KV GO lacks actual held source");r.source_go=true;}
+                    }};
+            }
+
             auto& r=ranks[i];
             r.provider=std::make_shared<Provider>(*r.b.runtime,*r.blocks,*r.window,r.b.native_generation,
                 [weak,i](){auto self=weak.lock();need(bool(self),"L20 KV factory lifetime ended");
@@ -201,6 +372,7 @@ DsromS81PrefixNativeEngine L20KvFactory::bind_su(unsigned i,DsromS81PrefixNative
 }
 std::vector<DsromS81MinimumParticipant> L20KvFactory::participants()const{
     std::vector<DsromS81MinimumParticipant> out;
+    if(!impl->sim_transport.name.empty())out.push_back(impl->sim_transport);
     for(auto& r:impl->ranks){out.push_back(r.provider->mux_participant(*r.mux,*r.hbm));
         out.push_back(r.hbm->participant());out.push_back(r.service);
         out.push_back(r.cut->participant());
@@ -210,8 +382,274 @@ std::vector<DsromS81MinimumParticipant> L20KvFactory::participants()const{
 void L20KvFactory::join(){impl->join();}
 bool L20KvFactory::drained()const{
     if(impl->stopped)return false;
+    for(const auto& dst:impl->rows)for(const auto& q:dst)if(!q.empty())return false;
     for(const auto& r:impl->ranks)if(!r.hbm->drained()||!r.kv.idle()||!r.me.idle())return false;
     return true;
 }
 const std::array<L20NativeCkv,4>& L20KvFactory::services()const{return impl->ckv;}
+namespace {
+constexpr uint64_t L20_ID=uint64_t(1)<<31;
+// Literal controls below are emitted verbatim from the existing canonical
+// demand-r5 source, preserving its producer order and template SHA256.
+const std::array<DsromS81PrefixOperation,5> l20_ops={{
+{2491,3,"bf3065af3fa190fadf83e669f83d0f6fa682ba625a61642a1754d5f2a45a1b7b",{0x13u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x20000000u,0xd5c0u,0x4u,0x0u,0x0u,0x0u,0x6be0000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}},
+{2492,2,"579a8e3fe686578968782d697bc50884d91cb0adbd3e70c374c39def5f7fe193",{0x22u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x4u,0x1u,0x35fu,0x400000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0xc000000u,0x0u,0x0u,0xc400000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x80000000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}},
+{2509,3,"c7cb3b2c8ca7cd305f73719bcb514c513d08e0c177c15b47d01d4fd6088be0f4",{0x13u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x60000000u,0x16e20u,0x4u,0x0u,0x0u,0x0u,0x0u,0x2000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}},
+{2524,2,"3c6c724aa878711f9d8d8057b931deb554e8e1fad2d6e406ae4ec785fb6141a1",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x1f001u,0x0u,0x400002u,0x8000000u,0x6d38u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0xc000000u,0x0u,0x0u,0x7000000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x80000000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}},
+{2526,1,"00bb7b6a8b1a67526169d39c1f5b0954d2dbc600f330a42af48d1c0d7c46bc65",{0x11u,0x40000000u,0x400u,0x40000u,0x80u,0x0u,0x6ce00u,0x3e72u,0xbe200001u,0x40u,0x2000u,0x2cu,0x140u,0x10002u,0x1404u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}}
+}};
+// Native attention continuation: unchanged canonical I61/I62/I63 words.
+const std::array<DsromS81PrefixOperation,3> l20_pv_ops={{
+{2532,2,"c32a2c493d38f4812518e59d75768ba2c7df6675ba68af2dcdfc60245042b816",{0xau,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x40u,0x880000u,0x800003e7u,0x400002u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x40000c0u,0xf9cu,0x100000au,0x20000000u,0x80024380u,0x60000000u,0x7a6a09eu,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x1u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}},
+{2533,2,"fd6862b6c54c37a1e98e2c34589eb59367ddca17dd5c94605f80670f97ae7f33",{0x12u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x40u,0x880000u,0x800003e7u,0x400002u,0x0u,0x0u,0x400121cu,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x402c000u,0xf9cu,0x100000au,0x10000000u,0x800243c0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x1u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}},
+{2534,1,"6124df21d8de509ccbb8e0f114d2ed9776a4316dd810e92c35c0a07acfb9083a",{0x100011u,0x10u,0x400u,0x200u,0x1000u,0x0u,0x7ce00u,0x488au,0x1u,0x62u,0x2800u,0x2cu,0x100u,0x14002u,0x1004u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}}
+}};
+uint32_t op_bits(const DsromS81PrefixOperation& op,unsigned off,unsigned n){
+    uint32_t v=0;for(unsigned j=0;j<n;j++)v|=((op.instruction[(off+j)/32]>>((off+j)%32))&1u)<<j;return v;
+}
+uint32_t l20_dynamic(unsigned d){
+    // Captured L20 target calendar: POS=1048575, WINDOW128, selected512.
+    switch(d){case 0:return 0;case 16:return 1048575u<<9;
+        case 28:return 128;case 31:return 512;case 34:return 640;
+        case 47:return 20;case 49:return 127;
+        default:throw std::runtime_error("I55 caller requested unbound source DYN");}
+}
+struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
+    struct Input {unsigned producer;uint32_t base;std::vector<uint32_t> data;};
+    struct Rank {
+        DsromS81MinimumRuntime runtime{};
+        std::unique_ptr<DsromS81MinimumL20Bank> bank;
+        std::shared_ptr<VDsromAttention> adapter;
+        std::shared_ptr<VDsromAttEngine> endpoint;
+        std::shared_ptr<VDsromSu256> command;
+        DsromS81NativeSuPorts su_ports;
+        DsromS81NativeQeQuantizerPorts qe_ports;
+        DsromS81PrefixNativeEngine qe,su,me,softmax;
+        DsromS81NativeSuPorts softmax_ports;
+        std::optional<DsromS81PrefixOperation> su_op;
+        bool su_go=false,su_accepted=false;
+        std::vector<Input> inputs;size_t input=0,offset=0;
+        bool input_held=false,input_offered=false,h_offered=false,h_visible=false;
+        S81EmbeddingOutput out{},h{};unsigned count=0;
+        bool accepted=false,go=false;
+    };
+    DsromS81MinimumRuntime& host;
+    std::array<Rank,4> ranks;
+    std::shared_ptr<L20KvFactory> factory;
+    unsigned phase=0;
+    bool finished=false,pv=false;
+    long first_qk=-1,last=-1,first_pv=-1;
+    static std::vector<uint32_t> load(const std::string& file,size_t count){
+        std::ifstream f(file,std::ios::binary);need(bool(f),"actual produced ATT input missing");
+        std::vector<unsigned char> b(count*4);f.read(reinterpret_cast<char*>(b.data()),b.size());
+        need(size_t(f.gcount())==b.size()&&f.peek()==std::char_traits<char>::eof(),"ATT input extent mismatch");
+        std::vector<uint32_t> v(count);for(size_t i=0;i<count;i++)v[i]=uint32_t(b[4*i])|
+            uint32_t(b[4*i+1])<<8|uint32_t(b[4*i+2])<<16|uint32_t(b[4*i+3])<<24;return v;
+    }
+    explicit L20AttentionRun(DsromS81MinimumRuntime& runtime):host(runtime){
+        need(host.stage==37&&host.rank==0&&host.bf16&&host.context&&!host.identity&&host.cycle()==0,
+             "I55 requires cold actual stage37 rank0 BF caller");
+        const char* dir=std::getenv("DSROM_S81_NATIVE_L20_ATT_INPUT");
+        const char* history=std::getenv("DSROM_S81_NATIVE_L20_ATT_HISTORY");
+        const char* sim=std::getenv("DSROM_S81_SIM_ONLY_KV_SOURCE");
+        need(dir&&*dir&&history&&*history&&sim&&std::string(sim)=="1",
+             "I55 needs actual operand/history directories and explicit SIM_ONLY source boundary");
+        const char* continuation=std::getenv("DSROM_S81_NATIVE_L20_ATT_PV");
+        need(!continuation||std::string(continuation)=="0"||std::string(continuation)=="1",
+             "ATT_PV selector must be explicit 0 or 1");
+        pv=continuation&&std::string(continuation)=="1";
+        std::array<L20KvRankBinding,4> bindings;
+        for(unsigned i=0;i<4;i++){
+            auto& r=ranks[i];r.runtime=host;r.runtime.rank=i;r.runtime.participants.clear();
+            auto vm=std::make_shared<Vnative_vm>(host.context,("I55_vm_rank"+std::to_string(i)).c_str());
+            r.bank=std::make_unique<DsromS81MinimumL20Bank>(r.runtime,L20_ID,vm,
+                dsrom_s81_bind_minimum_source_tags(r.runtime,L20_ID));
+            auto name=std::to_string(i);
+            r.inputs={{2490,54720,load(std::string(dir)+"/I20.KVN_rank"+name+".u32",512)},
+                      {2508,93728,load(std::string(dir)+"/I38.LAT_rank"+name+".u32",512)},
+                      {2518,447360,load(std::string(dir)+"/I47.SELG_rank"+name+".u32",512)},
+                      {2525,55744,load(std::string(dir)+"/I55.Q_rank"+name+".u32",8192)}};
+            for(const auto& in:r.inputs)r.bank->publication().enroll_literal(in.producer,{{in.base,uint32_t(in.data.size())}});
+            r.bank->publication().enroll_literal(l20_ops[0].index,{{55232,512}});
+            r.bank->publication().enroll_literal(l20_ops[1].index,{});
+            r.bank->publication().enroll_literal(l20_ops[2].index,{});
+            r.bank->publication().enroll_literal(l20_ops[3].index,{});
+            r.bank->publication().enroll_literal(l20_ops[4].index,{{63936,10240}});
+            if(pv){
+                r.bank->publication().enroll_literal(l20_pv_ops[0].index,{{63936,10240},{74176,16}});
+                r.bank->publication().enroll_literal(l20_pv_ops[1].index,{{63936,10240},{74208,16}});
+                r.bank->publication().enroll_literal(l20_pv_ops[2].index,{{74272,8192}});
+                r.softmax=dsrom_s81_bind_minimum_su256(r.runtime,L20_ID,r.bank->publication(),
+                    r.bank->io(),r.bank->tags(),r.softmax_ports);
+                r.softmax_ports.actual_dynamic=[](unsigned d)->std::optional<uint32_t>{return l20_dynamic(d);};
+            }
+            // Native vec requests all four ports even for a copy. Initial H16
+            // is the existing released seeded entry, published through real ACK.
+            const auto h=load("/home/ubuntu/w17work/isa/scratch_s20260930/images/ctx1048576_L20_r0/io.h_in.bin",20480);
+            r.h.vm_valid=1;r.h.vm_identity=L20_ID;r.h.vm_address=0;
+            std::copy_n(h.begin(),16,r.h.vm_data);
+            r.command=std::make_shared<VDsromSu256>(host.context,("SIM_ONLY_source_KVT_command_rank"+name).c_str());
+            r.su_ports.native=[&r]()->const VDsromSu256&{return *r.command;};
+            r.su_ports.held_operation=[&r](){need(bool(r.su_op),"KVT command lacks actual literal");return *r.su_op;};
+            r.su_ports.accepts_on_current_shared_edge=[&r](){return r.su_go&&!r.su_accepted;};
+            r.qe=dsrom_s81_bind_minimum_qe_quantizer(r.runtime,L20_ID,r.bank->publication(),r.bank->io(),r.qe_ports);
+            r.qe_ports.actual_dynamic=[](unsigned d)->std::optional<uint32_t>{return l20_dynamic(d);};
+            r.adapter=dsrom_s81_create_minimum_me_attention(r.runtime);
+            r.endpoint=std::make_shared<VDsromAttEngine>(host.context,("I55_endpoint_rank"+name).c_str());
+            auto& b=bindings[i];b.runtime=&r.runtime;b.identity=L20_ID;b.publication=&r.bank->publication();
+            b.io=r.bank->io();b.tags=r.bank->tags();b.su=&r.su_ports;b.quantizer=&r.qe_ports;
+            b.adapter=r.adapter;b.endpoint=r.endpoint;b.source_dynamic=l20_dynamic;
+            b.selected_ids_published=[&r](){return r.bank->publication().complete(L20_ID,2518)&&r.bank->io().span_lease(L20_ID,447360,512);};
+            b.prior_hbm_directory=std::string(history)+"/r"+name;b.prior_ckv_directory=b.prior_hbm_directory;
+        }
+        factory=std::make_shared<L20KvFactory>(std::move(bindings),std::function<void(const std::array<L20NativeCkv,4>&)>{},true);
+    }
+    void finish_bindings(){
+        auto weak=weak_from_this();
+        for(unsigned i=0;i<4;i++){
+            auto& r=ranks[i];
+            // I21/I53 scalar paths are suppressed in the original packed core.
+            // This explicit SIM_ONLY command boundary issues the SAME literal
+            // controls; actual WINDOW/CKV models do every data move/commit.
+            DsromS81PrefixNativeEngine command={{"SIM_ONLY-source-KVT-command-rank"+std::to_string(i),
+                [](const auto&){},[weak,i](bool released){auto s=weak.lock();need(bool(s),"I55 caller expired");
+                    auto& r=s->ranks[i];if(released&&r.su_go){r.su_accepted=true;r.su_go=false;}},
+                [](bool){},[weak](){return weak.expired();}},
+                [&r](){return r.su_op&&!r.su_accepted;},
+                [&r](){return !r.su_op||(r.su_accepted&&r.su_ports.kv_writes_visible());},
+                [&r](const auto& op){
+                    need(op.index==l20_ops[1].index||op.index==l20_ops[3].index,"I55 SIM_ONLY command requires I21/I53");
+                    if(r.su_op&&r.su_op->index!=op.index){need(r.su_accepted&&r.su_ports.kv_writes_visible(),"KVT rebind loses native debt");r.su_accepted=false;}
+                    r.su_op=op;auto& c=*r.command;
+                    c.i_dst=op_bits(op,986,2);c.i_asrc=op_bits(op,536,2);
+                    c.i_abase=op_bits(op,538,30);c.i_obase=op_bits(op,988,30);
+                    c.i_nin=op_bits(op,503,21);c.i_nout=op_bits(op,482,21)+l20_dynamic(op_bits(op,524,6));
+                    c.i_aind=op_bits(op,634,2);c.i_aibase=op_bits(op,636,30);c.i_aso=op_bits(op,568,30);
+                    c.i_orow=l20_dynamic(op_bits(op,1078,6));
+                    return !r.su_accepted;
+                },[&r](const auto& op,bool go){if(go)need(r.su_op&&r.su_op->instruction==op.instruction&&!r.su_accepted,"KVT GO lacks held source");r.su_go=go;}};
+            r.su=factory->bind_su(i,std::move(command));r.me=factory->attention(i);
+            host.participants.push_back(r.bank->bank_participant());
+        }
+        host.participants.push_back({"I55-four-rank-source-control",
+            [weak](const auto&){auto s=weak.lock();need(bool(s),"I55 source expired");s->prepare_controls();},
+            [weak](bool released){auto s=weak.lock();need(bool(s),"I55 source expired");if(released)s->accepted_controls();},
+            [](bool){},[weak](){return weak.expired();}});
+        // All OLD inputs are sampled before any rising; command acceptance is
+        // frozen by provider before SIM_ONLY command participant retires GO.
+        for(auto& r:ranks){host.participants.push_back(r.me.participant);host.participants.push_back(r.qe.participant);host.participants.push_back(r.su.participant);
+            if(pv)host.participants.push_back(r.softmax.participant);}
+        for(auto p:factory->participants())host.participants.push_back(std::move(p));
+        host.publication_ready=[weak](uint64_t id){auto s=weak.lock();if(!s||id!=L20_ID)return false;for(auto& r:s->ranks)if(r.bank->fault())return false;return true;};
+        host.publication_drained=[weak](uint64_t id){auto s=weak.lock();return s&&id==L20_ID&&s->finished&&s->factory->drained();};
+    }
+    DsromS81PrefixNativeEngine& active(unsigned i){
+        if(phase==6||phase==7)return ranks[i].softmax;
+        return phase==1||phase==3?ranks[i].qe:phase==2||phase==4?ranks[i].su:ranks[i].me;
+    }
+    const DsromS81PrefixOperation& operation()const{
+        return phase<=5?l20_ops.at(phase-1):l20_pv_ops.at(phase-6);
+    }
+    bool continuation_visible()const{
+        for(const auto& r:ranks)if(!r.bank->publication().complete(L20_ID,operation().index))return false;
+        return true;
+    }
+    void prepare_controls(){
+        if(phase==0||phase>(pv?8u:5u))return;
+        for(unsigned i=0;i<4;i++){
+            auto& r=ranks[i];r.go=false;if(phase==3&&i!=3)continue;
+            auto& e=active(i);const auto& op=operation();
+            if(!r.accepted)r.go=e.inputs_ready(op)&&e.ready();
+            e.drive(op,r.go);
+        }
+    }
+    void accepted_controls(){
+        if(phase==0||phase>(pv?8u:5u))return;
+        for(auto& r:ranks)if(r.go){r.bank->publication().begin(L20_ID,operation().index);r.accepted=true;}
+        if(phase==5&&first_qk<0)for(auto& r:ranks)if(r.go){first_qk=host.cycle();break;}
+        if(phase==8&&first_pv<0)for(auto& r:ranks)if(r.go){first_pv=host.cycle();break;}
+    }
+    void advance_inputs(){
+        for(auto& r:ranks){
+            if(!r.h_visible){if(!r.h_offered)r.h_offered=r.bank->embedding_sink().offer(r.h);
+                if(r.h_offered&&r.bank->embedding_sink().visible(r.h))r.h_visible=true;
+                continue;}
+            if(r.input==r.inputs.size())continue;
+            const auto& in=r.inputs[r.input];
+            if(!r.input_held){if(!r.offset)r.bank->publication().begin(L20_ID,in.producer);
+                r.count=std::min<size_t>(16,in.data.size()-r.offset);r.out={};r.out.vm_valid=1;r.out.vm_identity=L20_ID;r.out.vm_address=in.base+r.offset;
+                for(unsigned j=0;j<r.count;j++){r.out.vm_data[j]=in.data[r.offset+j];
+                    auto c=dsrom_s81_reserve_native_scalar_tag(r.runtime,L20_ID,in.producer,r.out.vm_address+j,r.out.vm_data[j]);
+                    r.bank->publication().native_scalar(in.producer,c,true);}
+                r.input_held=true;r.input_offered=false;
+            }
+            if(!r.input_offered){r.input_offered=r.bank->io().offer(r.out,r.count);continue;}
+            if(!r.bank->io().visible(r.out,r.count))continue;
+            r.offset+=r.count;r.input_held=false;r.input_offered=false;
+            if(r.offset==in.data.size()){need(r.bank->publication().complete(L20_ID,in.producer),"I55 operand lacks native ACK");r.offset=0;++r.input;}
+        }
+    }
+    void advance(){
+        if(phase==0){advance_inputs();for(auto& r:ranks)if(r.input!=r.inputs.size()||!r.h_visible)return;phase=1;}
+        else {
+            bool complete=true;for(unsigned i=0;i<4;i++)if(!(phase==3&&i!=3))complete=complete&&ranks[i].accepted&&active(i).idle();
+            // QDQ mode3 ownership intentionally spans the subsequent selected
+            // gather; waiting its own_visible before I53 would deadlock.
+            if(phase==3)complete=ranks[3].accepted;
+            if(!complete)return;
+            for(unsigned i=0;i<4;i++)if(!(phase==3&&i!=3))active(i).drive(operation(),false);
+            if(phase==4&&!ranks[3].qe.idle())return;
+            if(phase==5){
+                if(!factory->drained())return;
+                if(!pv){finished=true;last=host.cycle();return;}
+                // Scale/MAX may overwrite S only after every actual QK write
+                // is positively visible and the full provider debt is drained.
+                if(!continuation_visible())return;
+                for(auto& r:ranks)need(r.bank->io().span_lease(L20_ID,63936,10240),
+                    "native softmax lacks actual published QK score lease");
+            }
+            if(phase>=6&&!continuation_visible())return;
+            if(phase==7)for(auto& r:ranks)
+                need(r.bank->io().span_lease(L20_ID,63936,10240)&&
+                     r.bank->io().span_lease(L20_ID,74208,16),
+                     "PV requires native exponent outputs and sum publication");
+            if(phase==8){if(factory->drained()){finished=true;last=host.cycle();}return;}
+            ++phase;
+        }
+        for(auto& r:ranks){r.accepted=false;r.go=false;}
+        fprintf(stderr,"I55_NATIVE_SOURCE_PHASE %u cycle=%ld\n",phase,host.cycle());
+    }
+};
+} // namespace
+int run_minimum_l20_kv(DsromS81MinimumRuntime& runtime,const char* output){
+    auto source=std::make_shared<L20AttentionRun>(runtime);source->finish_bindings();
+    // Retain the native owners through the host's post-return drain check.
+    runtime.publication_drained=[source](uint64_t id){return id==L20_ID&&source->finished&&source->factory->drained();};
+    runtime.cold_start();runtime.bind_context(L20_ID);
+    for(auto& r:source->ranks)r.runtime.identity=L20_ID;
+    while(!source->finished){source->advance();runtime.tick();}
+    const unsigned result_base=source->pv?74272:63936,result_count=source->pv?8192:10240;
+    const char* result_name=source->pv?"native_L20_I63_rank":"native_L20_I55_rank";
+    for(unsigned i=0;i<4;i++){
+        auto& r=source->ranks[i];
+        if(source->pv)need(r.bank->publication().complete(L20_ID,l20_pv_ops[2].index)&&
+             r.bank->io().span_lease(L20_ID,result_base,result_count),"PV export requires actual native publication/lease");
+        std::ofstream f(std::string(output)+"/"+result_name+std::to_string(i)+".u32",std::ios::binary|std::ios::out);
+        need(bool(f),source->pv?"I63 native PV output unavailable":"I55 score output unavailable");
+        for(unsigned j=0;j<result_count;j++){std::optional<uint32_t> v;
+            while(!(v=r.bank->io().read_word(L20_ID,result_base+j)))runtime.tick();
+            const auto x=*v;unsigned char bytes[4]={uint8_t(x),uint8_t(x>>8),uint8_t(x>>16),uint8_t(x>>24)};
+            f.write(reinterpret_cast<const char*>(bytes),4);
+        }
+        need(bool(f),source->pv?"I63 native PV output write failed":"I55 score output write failed");
+    }
+    std::ofstream f(std::string(output)+"/native_L20_ATT.tsv");
+    if(source->pv)
+        f<<"scope\tposition\tranks\tqk_accept\tpv_accept\tterminal\nQK.I61.I62.PV.native.SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"
+         <<source->first_qk<<'\t'<<source->first_pv<<'\t'<<source->last<<'\n';
+    else
+    f<<"scope\tposition\tranks\tqk_accept\tterminal\nI55.native-QK-KV.SIM_ONLY-source-KVT-descriptor-TP4\t1048575\t4\t"<<source->first_qk<<'\t'<<source->last<<'\n';
+    need(bool(f),"I55 terminal output unavailable");return 0;
+}
+
 } // namespace dsrom_s81_minimum

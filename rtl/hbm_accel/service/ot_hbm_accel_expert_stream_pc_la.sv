@@ -38,6 +38,9 @@ module ot_hbm_accel_expert_stream_pc_la #(
   parameter integer REPICK = 1,
   parameter integer RESERVE = 1,
   parameter integer TAILPULL = 12,
+  parameter integer STEER = 0,
+  parameter integer NWIN = 0,             // >0: cycles from `notice` rise to the routed window's first ACT
+  parameter integer RAMP = 48,
   parameter integer IDLE0 = 7, IDLE1 = 3, IDLE2 = 4, IDLE3 = 2,
   parameter integer IDLE4 = 5, IDLE5 = 1, IDLE6 = 6, IDLE7 = 0
 )(
@@ -237,6 +240,7 @@ module ot_hbm_accel_expert_stream_pc_la #(
     // is unprotected issues as soon as it is legal, so the stream that follows the router does not
     // meet a due refresh (tRREFD) in its first ACTs.  The next REFpb is then due PERIOD later.
     wire idle_nt  = notice && !streaming && !nx_v;
+    wire [6:0] rb_key = keys[rb*7 +: 7];
     // TAILPULL: when `notice` rises on an idle sequencer whose refresh round has at most TAILPULL banks
     // left, those banks are refreshed at once (tRREFD apart, early, never late), so they finish
     // (tRFCpb) before the routed window and the window starts a fresh round with every bank eligible.
@@ -249,10 +253,34 @@ module ot_hbm_accel_expert_stream_pc_la #(
     wire pull_now = REF_MODE && (PULL > 0 || tpull) && idle_nt && ref_pend && pull_ok && !ref_due_n && !ref_due && noact_c == 0 &&
                     !open[rb] && aok_z[rb] && !(c_v && c_op == ACT) && act_age >= 4'(T_RREFD) &&
                     !(c_v && c_op == REFPB);
+    // STEER (default 0): in-stream REFpb slot steering.  A REFpb becomes pending LEAD (48) cycles before
+    // it is due; instead of waiting for the due cycle (where its tRREFD ACT block can land on the ACT
+    // group that opens the next expert's banks, or on the stream's first ACTs), it issues EARLY at the
+    // first cycle in which no ACT is wanted (every bank of the current and the lookahead set is open
+    // or finished) and its bank is closed, unprotected (key < 16) and idle.  Early, never late: the
+    // next REFpb is then due PERIOD later (the pulled-in path below).
+    wire [3:0] want_k  = ~open[{ka, 2'b00} +: 4] & ~done[{ka, 2'b00} +: 4];
+    wire [3:0] want_k1 = k1v ? (~open[{k1a, 2'b00} +: 4] & (k1_cur ? ~done[{k1a, 2'b00} +: 4] : 4'hF)) : 4'b0;
+    wire act_wanted = streaming && (|want_k || |want_k1);
+    wire steer_now = REF_MODE && STEER != 0 && ref_pend && !ref_due_n && !ref_due && noact_c == 0 &&
+                     streaming && !act_wanted &&
+                     rb_key < 7'd16 && !open[rb] && aok_z[rb] && act_age >= 4'(T_RREFD) &&
+                     !(c_v && (c_op == ACT || c_op == REFPB));
+    // NWIN (default 0 = off): ramp-aware notice.  The static schedule raises `notice` NWIN cycles before
+    // the routed window's first ACT.  A REFpb that would fall due inside [NWIN - T_RREFD, NWIN + RAMP] --
+    // where its tRREFD would delay the window's first ACTs, i.e. the first access -- is issued as soon as
+    // it is pending (LEAD cycles early) while still idle, so its ACT block ends before the window opens.
+    // At most one REFpb per notice is moved (the schedule drifts earlier by <= LEAD once).
+    reg [9:0] nt_c;
+    wire [10:0] due_at = 11'(nt_c) + 11'(ref_c);
+    wire ramp_pull = REF_MODE && NWIN > 0 && idle_nt && ref_pend && !ref_due_n && !ref_due && noact_c == 0 &&
+                     due_at >= 11'(NWIN - T_RREFD) && due_at <= 11'(NWIN + RAMP) &&
+                     rb_key < 7'd16 && !open[rb] && aok_z[rb] && act_age >= 4'(T_RREFD) &&
+                     !(c_v && (c_op == ACT || c_op == REFPB));
     always @* begin
       r_v = 0; r_prio = 0; r_op = PRE; r_bank = 0; r_oh = 0; r_row = row; r_la = 0;
       if (REF_MODE && ref_due_n && ref_pend) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
-      else if (pull_now) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
+      else if (pull_now || steer_now || ramp_pull) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
       else if (!REF_MODE && ref_due_n) begin r_v = 1; r_prio = 1; r_op = REFAB; end
       else if (preall_ok) begin r_v = 1; r_prio = 1; r_op = PREALL; end
       else if (forced_pre) begin r_v = 1; r_prio = 1; r_op = PRE; r_bank = rb; r_oh = blk; end
@@ -271,7 +299,6 @@ module ot_hbm_accel_expert_stream_pc_la #(
     assign busy = streaming || nx_v; assign ref_fault = fault_r;
     // descriptor flow: the current stream ends at its last RD; the NEXT descriptor (or a new one
     // offered now when there is none) becomes current on that edge.
-    wire [6:0] rb_key = keys[rb*7 +: 7];
     wire REFPB_REPICK_OK = REF_MODE && REPICK != 0 && ref_pend && !ref_due_n && !ref_due &&
                            bkey < 7'd16 && rb_key >= 7'd16 && bsel != rb && !refreshed[bsel] && !open[bsel] && aok_z[bsel] &&
                            !(r_v && (r_op == REFPB || (r_op == ACT && r_bank == bsel))) &&
@@ -288,9 +315,10 @@ module ot_hbm_accel_expert_stream_pc_la #(
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0; credit <= 8'(CRED);
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
         c_v <= 0; c_prio <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_row <= 0; c_la <= 0;
-        nx_v <= 0; nx_row <= 0; nx_set <= 0; nx_n <= 0; nx_bgx <= 0; bgx <= 0; act_age <= 4'hF; pull_ok <= 0; notice_q <= 0; tpull <= 0;
+        nx_v <= 0; nx_row <= 0; nx_set <= 0; nx_n <= 0; nx_bgx <= 0; bgx <= 0; act_age <= 4'hF; pull_ok <= 0; notice_q <= 0; nt_c <= 0; tpull <= 0;
       end else begin
         notice_q <= notice;
+        nt_c <= !notice ? 10'd0 : (nt_c != 10'h3FF) ? nt_c + 1'b1 : nt_c;
         if (tp_start) tpull <= 1'b1; else if (!idle_nt) tpull <= 1'b0;
         if (rrds_c != 0) rrds_c <= rrds_c - 1'b1;
         if (noact_c != 0) noact_c <= noact_c - 1'b1;

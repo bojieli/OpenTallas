@@ -22,7 +22,7 @@ module tb_hbm_accel_expert_fetch_la;
   parameter integer PHASE = 0;
   parameter integer HPHASE_PS = 0;           // hclk phase against clk
   parameter integer NOC_PS = 5000, PHY_CMD_PS = 5000;
-  parameter integer NSETS = 7, LAW = 6, LANDP = 4, ORDER = 0, PICK = 2, REPICK = 1, RESERVE = 1, PULL = 0, TAILPULL = 12;   // ORDER 0: R5a line order; 1: rate-balanced
+  parameter integer NSETS = 7, LAW = 6, LANDP = 4, ORDER = 0, PICK = 2, REPICK = 1, RESERVE = 1, PULL = 0, TAILPULL = 12, PCPROT = 0, STEER = 0, NWIN = 0;   // ORDER 0: R5a line order; 1: rate-balanced
   integer MUT = 0;                           // +mut=1: corrupt one sector (negative control); 2: tRCD check +1 ns
   localparam integer NSM = 8, NPC = 32, NSECT = 49, NLINE = 392, NIDS = 6, ROW_BASE = 0;
   localparam integer CYC = 1024, CLK = 833;
@@ -43,9 +43,34 @@ module tb_hbm_accel_expert_fetch_la;
   reg [NLINE*16-1:0] cfg_lut; reg [NSM*16-1:0] cfg_lines;
   initial begin
     automatic integer L = 0;
-    for (int i = 0; i < 64; i++) for (int m = 0; m < NSM; m++) if (i < W13[m]) begin lut_sm[L] = m; lut_ln[L] = i; L++; end
-    for (int i = 0; i < 64; i++) for (int m = 0; m < NSM; m++) if (i < LINES[m] - W13[m]) begin
-      lut_sm[L] = m; lut_ln[L] = W13[m] + i; L++; end
+    if (ORDER == 0) begin
+      for (int i = 0; i < 64; i++) for (int m = 0; m < NSM; m++) if (i < W13[m]) begin lut_sm[L] = m; lut_ln[L] = i; L++; end
+      for (int i = 0; i < 64; i++) for (int m = 0; m < NSM; m++) if (i < LINES[m] - W13[m]) begin
+        lut_sm[L] = m; lut_ln[L] = W13[m] + i; L++; end
+    end else begin
+      // ORDER 1 (rate-balanced, still w1/w3 first): within each phase (w1/w3 lines, then w2 lines) an
+      // SM's lines are spread evenly over the phase -- line i of an SM with N lines in the phase is
+      // placed at progress (2i+1)/(2N) -- so a row of 32 PCs (8 lines) never sends more than ~1.4 lines
+      // to one SM and the per-SM landing (LAND sectors a cycle) is not oversubscribed.  Each SM's own
+      // line order (hence its release sequence) is unchanged; only the interleaving across SMs moves.
+      automatic int nx [0:NSM-1];
+      for (int ph = 0; ph < 2; ph++) begin
+        for (int m = 0; m < NSM; m++) nx[m] = 0;
+        forever begin
+          automatic int bm = -1; automatic longint bn = 0, bd = 1;
+          for (int m = 0; m < NSM; m++) begin
+            automatic int N = ph == 0 ? W13[m] : LINES[m] - W13[m];
+            if (nx[m] < N) begin
+              // progress (2*nx+1)/(2N): pick the smallest (cross-multiplied), ties to the lower SM
+              if (bm < 0 || longint'(2 * nx[m] + 1) * bd < bn * longint'(2 * N)) begin
+                bm = m; bn = 2 * nx[m] + 1; bd = 2 * N; end
+            end
+          end
+          if (bm < 0) break;
+          lut_sm[L] = bm; lut_ln[L] = (ph == 0 ? 0 : W13[bm]) + nx[bm]; nx[bm]++; L++;
+        end
+      end
+    end
     if (L != NLINE) begin $display("LAYOUT ERROR %0d", L); $finish; end
     for (int l = 0; l < NLINE; l++) cfg_lut[l*16 +: 16] = {8'(lut_sm[l]), 8'(lut_ln[l])};
     for (int m = 0; m < NSM; m++) cfg_lines[m*16 +: 16] = 16'(LINES[m]);
@@ -57,7 +82,7 @@ module tb_hbm_accel_expert_fetch_la;
   wire [NPC-1:0] row_v, col_v; wire [NPC*3-1:0] row_op; wire [NPC*5-1:0] row_bank, col_bank, col_col;
   wire [NPC*19-1:0] row_row; reg [NPC-1:0] rd_v = 0; reg [NPC*256-1:0] rd_data = 0;
   wire [NSM-1:0] s_valid; wire [NSM*1024-1:0] s_data; wire fault;
-  ot_hbm_accel_expert_fetch_stream_la #(.ENABLE(1), .REF_MODE(REF_MODE), .PHASE(PHASE), .NSETS(NSETS), .LAW(LAW), .LAND(LANDP), .PICK(PICK), .REPICK(REPICK), .RESERVE(RESERVE), .PULL(PULL), .TAILPULL(TAILPULL),
+  ot_hbm_accel_expert_fetch_stream_la #(.ENABLE(1), .REF_MODE(REF_MODE), .PHASE(PHASE), .NSETS(NSETS), .LAW(LAW), .LAND(LANDP), .PICK(PICK), .REPICK(REPICK), .RESERVE(RESERVE), .PULL(PULL), .TAILPULL(TAILPULL), .PCPROT(PCPROT), .STEER(STEER), .NWIN(NWIN),
     .NOTICE_PROT(NSETS >= 8 ? 8'hFF : 8'((1 << NSETS) - 1))) dut (
     .clk(clk), .hclk(hclk), .rst_n(rst_n), .hrst_n(hrst_n), .cfg_lines(cfg_lines), .cfg_lut(cfg_lut),
     .e_valid(e_valid), .e_ready(e_ready), .e_id(e_id), .notice(notice),
@@ -139,6 +164,7 @@ module tb_hbm_accel_expert_fetch_la;
             if (now < b_act[p][bk] + RAS + RP) v("tRC (REFpb)", p, bk);
             if (now < b_ref_end[p][bk]) v("REFpb during refresh", p, bk);
             if (now < p_last_act[p] + RREFD) v("tRREFD (REFpb after ACT)", p, bk);
+            if (now < p_last_refpb_any[p] + RREFD) v("tRREFD (REFpb after REFpb)", p, bk);
             if (p_round[p][bk]) v("REFpb bank twice in one round", p, bk);
             p_round[p][bk] = 1; if (&p_round[p]) p_round[p] = 0;
             if (now - p_last_ref[p] > REFI / 32) v("REFpb late", p, bk);

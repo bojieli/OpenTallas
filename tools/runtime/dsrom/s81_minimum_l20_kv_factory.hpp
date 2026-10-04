@@ -8,7 +8,12 @@
 class VDsromAttention;
 class VDsromAttEngine;
 class VDsromWindowBlocks;
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+class VDsromS81WindowLa;
+using VDsromPackedWindow=VDsromS81WindowLa;
+#else
 class VDsromPackedWindow;
+#endif
 class VDsromS81CkvRank0;
 class VDsromS81CkvRank1;
 class VDsromS81CkvRank2;
@@ -44,6 +49,10 @@ class L20KvFactory {
     struct Impl;
     std::shared_ptr<Impl> impl;
 public:
+    // DSROM_S81_SIM_ONLY_KV_SOURCE=1 permits explicitly labeled missing
+    // descriptor/prime and TP4 callbacks in this existing factory. Supplied
+    // callbacks remain authoritative. Fallback captures actual source literal
+    // index as a SIM_ONLY tag, not native desc_gen; payloads remain native.
     // TP4 callback binds existing native transport directly to these actual
     // service ports. It MUST supply real ag_tx_ready/peer inputs, never tied1.
     L20KvFactory(std::array<L20KvRankBinding,4>,
@@ -57,4 +66,6 @@ public:
     bool drained()const;
     const std::array<L20NativeCkv,4>& services()const;
 };
+// Existing minimum caller dispatches this actual four-rank component run.
+int run_minimum_l20_kv(DsromS81MinimumRuntime&,const char* output);
 } // namespace dsrom_s81_minimum

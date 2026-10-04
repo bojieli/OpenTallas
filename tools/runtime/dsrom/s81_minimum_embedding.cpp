@@ -41,8 +41,12 @@ struct DsromS81MinimumEmbedding::State {
           uint64_t identity,uint32_t base_,DsromS81EmbeddingSink sink_)
     :runtime(runtime_),checkpoint(socket,token,position),sink(std::move(sink_)),base(base_) {
         if(!sink.offer||!sink.visible||!sink.fault||token>=129280||position>=(1u<<20)||
-           identity>=(1ull<<47)||base>32768-20480||runtime.stage!=0)
+           identity>=(1ull<<47)||base>32768-20480||runtime.stage<0||runtime.stage>=81||
+           runtime.rank<0||runtime.rank>=4||!runtime.context)
             throw std::runtime_error("minimum embedding requires real cold source and target ACK adapter");
+        // The native reader addresses dedicated global embed.weight storage,
+        // independent of the consumer's stage. Actual source authorization,
+        // shared cold/context admission and matching VM ACKs remain required.
         // Existing embedding ABI was compiled with its own Verilator runtime.
         // Keep that runtime local rather than interposing the pair's symbols.
         library=dlopen(path.c_str(),RTLD_NOW|RTLD_LOCAL|RTLD_DEEPBIND);
