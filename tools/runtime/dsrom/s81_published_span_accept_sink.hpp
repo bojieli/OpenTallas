@@ -63,6 +63,10 @@ private:
         return a.vm_identity==b.vm_identity&&a.vm_address==b.vm_address&&
             std::equal(std::begin(a.vm_data),std::end(a.vm_data),std::begin(b.vm_data));
     }
+    uint32_t next_embedding_address() const {
+        const uint32_t batch=published/16;
+        return base+(batch%4)*5120+(batch/4)*16;
+    }
     unsigned lane(const MacroWrite& c) const {
         require(active&&c.source.identity==identity&&
                 c.source.element_address>=held.vm_address&&
@@ -95,9 +99,12 @@ private:
         if(prefix_batch) {
             on_prefix_scalar_ack(c,receipt);
             prefix_acked.set(c.source.element_address);
+        } else {
+            require(!prefix_acked.test(c.source.element_address),"duplicate immutable embedding publication");
+            prefix_acked.set(c.source.element_address);
         }
         if(acked==required&&!prefix_batch) {
-            require(accepted==required&&held.vm_address==base+published,
+            require(accepted==required&&held.vm_address==next_embedding_address(),
                     "embedding published prefix gap");
             published+=16;
         }
@@ -192,7 +199,10 @@ public:
     // Concrete same-VM positive receipts AND the source producer's version lease.
     bool source_span_lease(uint64_t id,uint32_t address,unsigned words) const {
         if(fault()||id!=identity||!words||uint64_t(address)+words>(1u<<19))return false;
-        if(address>=base&&uint64_t(address)+words<=uint64_t(base)+published)return true;
+        if(address>=base&&uint64_t(address)+words<=uint64_t(base)+20480) {
+            for(unsigned n=0;n<words;n++)if(!prefix_acked.test(address+n))return false;
+            return true;
+        }
         for(unsigned n=0;n<words;n++)if(!prefix_acked.test(address+n))return false;
         return prefix_source_lease(id,address,words);
     }
@@ -216,7 +226,7 @@ private:
                         "prefix writer cannot overwrite immutable embedding input");
                 require(prefix_write_allowed(identity,out.vm_address,words),
                         "prefix batch not in actual native writer source span");
-            }else require(out.vm_address==base+published&&published<20480,
+            }else require(out.vm_address==next_embedding_address()&&published<20480,
                          "embedding target source order/extent mismatch");
             // Validate every captured scalar before changing state or accepting any port.
             std::array<MacroWrite,16> next{};

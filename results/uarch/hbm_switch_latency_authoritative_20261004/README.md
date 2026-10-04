@@ -72,17 +72,18 @@ Rules:
 - The 200K rows apply the W19 context ratio to the passes and add the transport delta unscaled.
 - ROM sources:
   - AR: `results/rtl/dsrom_wavefront_verify_20261004/record.json` (S81).
-  - MTP: `results/rtl/dsrom_dspark_step_slices_20261004/composition.json` (main 9ea29b069 / dae91947c, wavefront occupancy, light FEC). The "fused head" column is that record's fused-draft projection.
-  - No L2 batched-head projection was available: it exists as an interface only, with no rate.
+  - MTP: `results/rtl/dsrom_dspark_step_slices_20261004/composition.json` (main 9ea29b069 / dae91947c, wavefront occupancy, light FEC). The "L1 fused head" column is that record's fused-head variant (main 2a235a9fe calls it L1).
+  - The L1+L2 column is an EXPECTED projection from `results/rtl/dsrom_dspark_l1l2_20261004/expected.json`; no lever has been measured. It uses the ROM-read-bound, 5-vector batched head: 7,858 tok/s at 1M and 8,123 at 200K. L2 alone gives 7,320 / 7,550.
+  - If the batched head is MAC-bound, L2 gains nothing and L1+L2 = L1.
 
-### 1M: authoritative defaults (ROM S81 + wavefront: AR 2,466.2; MTP 6,733.7 as built / 7,186.2 fused head, measured draft)
+### 1M: authoritative defaults (ROM S81 + wavefront: AR 2,466.2; MTP 6,733.7 as built / 7,186.2 L1 fused head, measured draft; L1+L2 batched 7,858.1 EXPECTED)
 
-| HBM design | Switch scenario (default) | AR tok/s | MTP tok/s (tau 4.159) | ROM:HBM AR | ROM:HBM MTP as built | ROM:HBM MTP fused head |
-|---|---|---|---|---|---|---|
-| HBM accelerator (firm ladder, switch kept) | TU protocol | 2,624 | 6,352 | 0.94 | 1.06 | 1.13 |
-| HBM accelerator, measured composition | TU protocol | 2,563 | 6,032 | 0.96 | 1.12 | 1.19 |
-| GPU-organised ablation (W19) | NVLS measured | 1,482 | 4,124 | 1.66 | 1.63 | 1.74 |
-| GPU-faithful R0 (H100 grid.sync 1.097 us) | GPU fenced | 359 | 1,250 | 6.87 | 5.39 | 5.75 |
+| HBM design | Switch scenario (default) | AR tok/s | MTP tok/s (tau 4.159) | ROM:HBM AR | ROM:HBM MTP as built | ROM:HBM MTP L1 fused head | ROM:HBM MTP L1+L2 (expected) |
+|---|---|---|---|---|---|---|---|
+| HBM accelerator (firm ladder, switch kept) | TU protocol | 2,624 | 6,352 | 0.94 | 1.06 | 1.13 | 1.24 |
+| HBM accelerator, measured composition | TU protocol | 2,563 | 6,032 | 0.96 | 1.12 | 1.19 | 1.30 |
+| GPU-organised ablation (W19) | NVLS measured | 1,482 | 4,124 | 1.66 | 1.63 | 1.74 | 1.91 |
+| GPU-faithful R0 (H100 grid.sync 1.097 us) | GPU fenced | 359 | 1,250 | 6.87 | 5.39 | 5.75 | 6.29 |
 
 1M: every scenario, AR / MTP tok/s (ROM:HBM AR / MTP as built)
 
@@ -93,14 +94,14 @@ Rules:
 | GPU-organised ablation (W19) | 2,478 / 5,918 (0.99 / 1.14) | **1,482 / 4,124 (1.66 / 1.63)** | 411 / 1,414 (6.00 / 4.76) | 1,748 / 4,645 (1.41 / 1.45) | 2,592 / 6,087 (0.95 / 1.11) | 2,498 / 5,885 (0.99 / 1.14) |
 | GPU-faithful R0 (H100 grid.sync 1.097 us) | 1,320 / 3,819 (1.87 / 1.76) | 972 / 2,982 (2.54 / 2.26) | **359 / 1,250 (6.87 / 5.39)** | 1,080 / 3,245 (2.28 / 2.08) | 1,352 / 3,889 (1.82 / 1.73) | 1,326 / 3,805 (1.86 / 1.77) |
 
-### 200K: authoritative defaults (ROM S81 + wavefront: AR 2,574.1; MTP 6,927.5 as built / 7,407.3 fused head, measured draft)
+### 200K: authoritative defaults (ROM S81 + wavefront: AR 2,574.1; MTP 6,927.5 as built / 7,407.3 L1 fused head, measured draft; L1+L2 batched 8,123.2 EXPECTED)
 
-| HBM design | Switch scenario (default) | AR tok/s | MTP tok/s (tau 4.159) | ROM:HBM AR | ROM:HBM MTP as built | ROM:HBM MTP fused head |
-|---|---|---|---|---|---|---|
-| HBM accelerator (firm ladder, switch kept) | TU protocol | 2,630 | 6,365 | 0.98 | 1.09 | 1.16 |
-| HBM accelerator, measured composition | TU protocol | 2,568 | 6,045 | 1.00 | 1.15 | 1.23 |
-| GPU-organised ablation (W19) | NVLS measured | 1,484 | 4,130 | 1.74 | 1.68 | 1.79 |
-| GPU-faithful R0 (H100 grid.sync 1.097 us) | GPU fenced | 359 | 1,251 | 7.17 | 5.54 | 5.92 |
+| HBM design | Switch scenario (default) | AR tok/s | MTP tok/s (tau 4.159) | ROM:HBM AR | ROM:HBM MTP as built | ROM:HBM MTP L1 fused head | ROM:HBM MTP L1+L2 (expected) |
+|---|---|---|---|---|---|---|---|
+| HBM accelerator (firm ladder, switch kept) | TU protocol | 2,630 | 6,365 | 0.98 | 1.09 | 1.16 | 1.28 |
+| HBM accelerator, measured composition | TU protocol | 2,568 | 6,045 | 1.00 | 1.15 | 1.23 | 1.34 |
+| GPU-organised ablation (W19) | NVLS measured | 1,484 | 4,130 | 1.74 | 1.68 | 1.79 | 1.97 |
+| GPU-faithful R0 (H100 grid.sync 1.097 us) | GPU fenced | 359 | 1,251 | 7.17 | 5.54 | 5.92 | 6.50 |
 
 200K: every scenario, AR / MTP tok/s (ROM:HBM AR / MTP as built)
 
