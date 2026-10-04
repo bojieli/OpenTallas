@@ -150,7 +150,9 @@ module ot_meso_fifo #(
         assign w_send   = w_v && w_rdy;
         assign w_fault  = w_flt;
         assign w_align  = (ws == S_ALIGN) && (w_set == SW'(SETTLE));
-        wire   c_in     = w_on && c_rv && c_lap_ok;    // a returned credit
+        (* keep *) logic c_hit;                        // credit-ring crossing term (valid in the expected lap)
+        assign c_hit = c_rv;
+        wire   c_in     = w_on && c_hit;               // a returned credit
         always_ff @(posedge wclk) begin
             if (!wrst_n) begin
                 ws <= S_DOWN; w_cnt <= HW'(HOLD); w_ok <= 1'b0; w_set <= '0; w_cred <= '0; w_flt <= 1'b0; w_arm <= '0;
@@ -172,7 +174,7 @@ module ot_meso_fifo #(
                         end else if (ws == S_READY) begin
                             if (rs_w == S_READY || rs_w == S_RUN) begin ws <= S_RUN; w_cred <= BW'(CREDITS + 1); end   // buffer + output register
                         end else begin
-                            w_cred <= w_cred - BW'(w_send) + BW'(c_in);
+                            w_cred <= c_in ? w_cred - BW'(w_send) + 1'b1 : w_cred - BW'(w_send);
                         end
                     end
                 endcase
@@ -191,7 +193,12 @@ module ot_meso_fifo #(
         assign r_live   = (rs == S_RUN);
         assign r_align  = (rs == S_ALIGN) && (r_set == SW'(SETTLE));
         assign r_fault  = r_flt;
-        wire   d_in     = r_on && !r_flt && d_rv && d_lap_ok;   // a word arrives (crosses: d_rv, d_lap_ok)
+        // The only crossing term in the read control is d_hit (slot valid in the expected lap: one 2*DEPTH:1 mux of
+        // write-domain flops with read-domain selects).  It is kept as a net and only selects between next states
+        // computed from read-domain flops, so the crossing arcs end one mux after it (SS budget 356.667 ps).
+        (* keep *) logic d_hit;
+        assign d_hit = d_rv;
+        wire   d_in     = r_on && !r_flt && d_hit;           // a word arrives
         wire   empty    = (cnt == '0);
         // registered output: o_d is the capture register of the crossing (the arriving word is muxed straight into
         // it when the buffer is empty); its enable 'load' and the select are read-domain signals only.
@@ -200,8 +207,6 @@ module ot_meso_fifo #(
         assign r_d      = o_d;
         assign r_take   = r_v && r_rdy;
         wire   load     = !o_v || r_rdy;
-        wire   take_in  = load && empty && d_in;
-        wire   push     = d_in && !take_in;
         always_ff @(posedge rclk) if (load) o_d <= empty ? d_rd : buf_d[hd];
 `ifdef OT_MESO_MUTANT_EARLY_CREDIT
         assign c_pulse  = d_in;              // MUTANT: credit on arrival instead of consumption
@@ -209,6 +214,13 @@ module ot_meso_fifo #(
         assign c_pulse  = r_take;            // one credit per word the consumer takes
 `endif
         wire   pop      = load && !empty;
+        wire   push_1   = !(load && empty);                   // if a word arrives: buffered unless taken straight in
+        wire [BW-1:0] cnt_0 = cnt - BW'(pop);
+        wire [BW-1:0] cnt_1 = cnt + BW'(push_1) - BW'(pop);
+        wire [IW-1:0] tl_1  = push_1 ? ((tl == IW'(CREDITS - 1)) ? '0 : tl + 1'b1) : tl;
+        wire   o_v_0    = load ? !empty : o_v;
+        wire   o_v_1    = load ? 1'b1 : o_v;
+        wire   ovf_1    = push_1 && (cnt == BW'(CREDITS)) && !pop;
         // written every cycle unless full (read-domain condition only; no crossing signal in the enable); tl
         // advances only on push, so a non-push cycle just rewrites the free slot
         always_ff @(posedge rclk) if (cnt != BW'(CREDITS)) buf_d[tl] <= d_rd;
@@ -237,14 +249,14 @@ module ot_meso_fifo #(
                 if (!r_on) begin
                     hd <= '0; tl <= '0; cnt <= '0; o_v <= 1'b0;
                 end else begin
-                    if (load) o_v <= !empty || d_in;
-                    if (push) tl <= (tl == IW'(CREDITS - 1)) ? '0 : tl + 1'b1;
-                    if (pop)  hd <= (hd == IW'(CREDITS - 1)) ? '0 : hd + 1'b1;
-                    cnt <= cnt + BW'(push) - BW'(pop);
+                    o_v <= d_in ? o_v_1 : o_v_0;
+                    tl  <= d_in ? tl_1 : tl;
+                    cnt <= d_in ? cnt_1 : cnt_0;
+                    if (pop) hd <= (hd == IW'(CREDITS - 1)) ? '0 : hd + 1'b1;
                 end
                 if (!r_on) r_arm <= '0; else if (r_arm != 3'd5) r_arm <= r_arm + 1'b1;
                 if (r_on && ((r_arm == 3'd5 && (!d_glo || !d_ghi)) || !d_lap_ok ||
-                             (push && cnt == BW'(CREDITS) && !pop))) r_flt <= 1'b1;
+                             (d_in && ovf_1))) r_flt <= 1'b1;
             end
         end
 `ifdef OT_MESO_DEBUG
@@ -269,7 +281,7 @@ module ot_meso_ring #(
     input  logic         r_align,    // place the read pointer this cycle
     input  logic         r_on,       // pointer placed: advance every cycle
     output logic [W-1:0] r_d,
-    output logic         r_v,
+    output logic         r_v,        // slot valid in the expected lap
     output logic         r_lap_ok,
     output logic         r_glo_ok,   // synchronised low-guard sample (1 = slot rp+GUARD_LO already written)
     output logic         r_ghi_ok    // synchronised high-guard sample (1 = slot rp-1+GUARD_HI not yet written)
@@ -284,11 +296,12 @@ module ot_meso_ring #(
     // ---------------- transmit (tclk) ----------------
     logic [PW-1:0] tc, tg;
     logic [W-1:0]  s_d   [DEPTH];
-    logic [DEPTH-1:0] s_v, s_lap;
+    logic [DEPTH-1:0] s_v1, s_v0, s_lap;          // s_v1/s_v0: valid written in an odd/even lap
     // Free-running, never reset: a local reset of either side must not stop or restart the ring under a placed
     // reader (that would be a slot slip, which the lap check rightly treats as a fault).  Power-up value is arbitrary.
     always_ff @(posedge tclk) begin
-        s_v[tc[AW-1:0]]   <= t_v;
+        s_v1[tc[AW-1:0]]  <= t_v && tc[AW];
+        s_v0[tc[AW-1:0]]  <= t_v && !tc[AW];
         s_lap[tc[AW-1:0]] <= tc[AW];
         tg <= tc ^ (tc >> 1);                    // Gray of the index written at this edge
         tc <= tc + 1'b1;
@@ -326,7 +339,7 @@ module ot_meso_ring #(
     end
     wire [AW-1:0] ri = rp[AW-1:0];
     assign r_d      = s_d[ri];
-    assign r_v      = s_v[ri];
+    assign r_v      = rp[PW-1] ? s_v1[ri] : s_v0[ri];   // valid AND written in the expected lap
     assign r_lap_ok = (s_lap[ri] == rp[PW-1]);
 
     // guards on the falling read edge, then 3 rising flops
