@@ -7364,5 +7364,43 @@ def dsrom_s81_embedding_bootstrap(inventory, rom_capture_cycles=8):
         required_next_native_producer='SSX = golden-order sum of H squared; never host-computed here')
 
 
+def dsrom_s81_native_head_terminal():
+    """Additive ordered-root/argmax leaf; not an enrolled head-ROM producer."""
+    fifo=16; owner=47; rows=32320
+    bits=16*(32+17+1)+9*17+6*32+47+1+1+2+15+5+4+4+5+32+32+17+1+1
+    return dict(schema='opentallas.dsrom.S81.native-head-terminal.v1',
+        status='MODEL_UNVALIDATED_COMPONENT_ONLY', opt_in_default=False,
+        rows_global=129280, rows_per_rank=rows, ranks=4, K=5120,
+        retained_head_pairs=2525, retained_head_macros=10100,
+        retained_storage_increment_mm2=0, ROM_ECC=False,
+        golden_merge='root4096 + ((root1024 + +0) + +0)',
+        source_arithmetic='ot_hdc_fp32_add_fast unchanged; three LAT3 RNE adds; finite FP32 logits; +/-0 equal; lowest global ID on ties',
+        MACs_per_cycle=0, FP32_adds_per_row=3, add_replicas=3,
+        accepted_pair_II_cycles=1, pipeline_add_latency_cycles=9,
+        comparator_update_cycles_after_last_add=1,
+        reserved_logit_seats=fifo, owner_identity_bits=owner,
+        root_input_bytes_per_cycle_peak=8, logit_output_bytes_per_cycle_peak=4,
+        boundaries_bits=dict(root_pair=64, global_row=17, owner=owner,
+                            held_logit=32+17+1, terminal=32+17+owner+1),
+        tracks_required=dict(root_pair=64, root_owner=owner, global_row=17,
+                            logit=50, terminal=97),
+        state_FF_bits_lower_bound=bits,
+        state_scope='External leaf registers only; unchanged three FP32 adder internal storage/logic separately unpriced',
+        state_FF_cell_lower_bound_mm2=bits*DFF_UM2/1e6,
+        compute_intensity_FP32_adds_per_input_byte=3/8,
+        communication_intensity_output_bytes_per_input_byte=0.5,
+        composed_single_user_cycles_lower_bound=rows+10,
+        serial_clock_hz=0.9e9,
+        composed_single_user_us_lower_bound=(rows+10)/900,
+        latency_scope='From first accepted ordered root pair through local argmax; ROM/VM/subtree/link/CDC/held output ACK and four-rank gather additional, not zero',
+        floorplan_slot_fit=None, routing_channel_capacity=None,
+        new_adders_and_comparator_mapped_area_mm2=None,
+        mux_fanout='One root pair per native edge; bounded16-seat logit FIFO; one scalar compare; owner47 held once; no array replication credited',
+        actual_root_producer='Arch/Boole ordered K4096/K1024 native subtrees, still requires source-bound matched row/lease delivery',
+        compiler_and_ROM_address_owner='Popper',
+        core_connection='Current X_ROM1/X_ME0 e_am zeros and legacy EAM selection remain unchanged; explicit defaultoff successor connection required',
+        physical_SS_FF=False, trained_payload_qualified=False, adopted=False)
+
+
 if __name__ == "__main__":
     main()
