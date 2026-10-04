@@ -90,8 +90,12 @@ module ot_hbm_accel_bulk_copy #(
     wire take;                                      // a line leaves the ring (to the output) this cycle
     (* keep *) wire [TW:0] alloc_inc; assign alloc_inc = alloc_p + 1'b1;
     (* keep *) wire [TW:0] cons_inc;  assign cons_inc = cons_p + 1'b1;
-    (* keep *) wire [AW-1:0] addr_inc; assign addr_inc = a_addr + 1'b1;
-    (* keep *) wire [23:0] left_dec; assign left_dec = a_left - 1'b1;
+    // address / remaining-line counters: an 8-bit low part steps on issue; the high part's
+    // +1 / -1 is a register recomputed every cycle (or loaded with the descriptor), used only on
+    // a low-part wrap, which is >= 256 issues after the high part last changed
+    reg [AW-9:0] addr_hi_inc; reg [15:0] left_hi_dec;
+    wire [AW-1:0] addr_inc = {(a_addr[7:0] == 8'hff) ? addr_hi_inc : a_addr[AW-1:8], a_addr[7:0] + 8'd1};
+    wire [23:0] left_dec = {(a_left[7:0] == 8'h00) ? left_hi_dec : a_left[23:8], a_left[7:0] - 8'd1};
     localparam integer OW = $clog2(MAX_OUT+1);
     (* keep *) wire [OW-1:0] out_inc; assign out_inc = outstanding + 1'b1;
     (* keep *) wire [OW-1:0] out_dec; assign out_dec = outstanding - 1'b1;
@@ -103,6 +107,29 @@ module ot_hbm_accel_bulk_copy #(
     (* keep *) wire [TW-1:0] n2_inc; assign n2_inc = next2_slot + 1'b1;
     reg rsp_q; reg [TW-1:0] rsp_tag_q;
     reg [(1<<HI)-1:0] set_hi, clr_hi; reg [(1<<LO)-1:0] set_lo, clr_lo;
+    // Banked look-ahead: slots are consumed in order, so bank b (slot mod NBK) next needs the full
+    // bit of its own in-order slot bank_ptr[b]; bank_full[b] registers full[bank_ptr[b]] every cycle
+    // through a DEPTH/NBK:1 mux. bank_ptr[b] steps once per NBK takes and is next read as next2
+    // >= NBK-2 cycles later. bank_full lags a response by three edges (late set + register), so the
+    // look-ahead also matches the responses of the last two cycles.
+    localparam integer NBK = 8;
+    localparam integer BB = 3;
+    reg [TW-BB-1:0] bank_ptr [0:NBK-1];
+    reg [NBK-1:0] bank_full;
+    reg rsp_qq; reg [TW-1:0] rsp_tag_qq;
+    integer bk;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            for (bk = 0; bk < NBK; bk = bk + 1) bank_ptr[bk] <= 0;
+            bank_full <= 0; rsp_qq <= 0; rsp_tag_qq <= 0;
+        end else begin
+            rsp_qq <= rsp_q; rsp_tag_qq <= rsp_tag_q;
+            for (bk = 0; bk < NBK; bk = bk + 1) begin
+                bank_full[bk] <= full[{bank_ptr[bk], bk[BB-1:0]}];
+                if (take && cslot[BB-1:0] == bk) bank_ptr[bk] <= bank_ptr[bk] + 1'b1;
+            end
+        end
+    end
     integer k;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -136,7 +163,8 @@ module ot_hbm_accel_bulk_copy #(
         if (!rst_n) begin head_full <= 0; next_full <= 0; end
         else if (take) begin
             head_full <= next_full || (rsp_v && rsp_tag == next_slot);
-            next_full <= full[next2_slot] || (rsp_v && rsp_tag == next2_slot) || (rsp_q && rsp_tag_q == next2_slot);
+            next_full <= bank_full[next2_slot[BB-1:0]] || (rsp_v && rsp_tag == next2_slot)
+                      || (rsp_q && rsp_tag_q == next2_slot) || (rsp_qq && rsp_tag_qq == next2_slot);
         end else begin
             if (rsp_v && rsp_tag == cslot) head_full <= 1;
             if (rsp_v && rsp_tag == next_slot) next_full <= 1;
@@ -207,10 +235,13 @@ module ot_hbm_accel_bulk_copy #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             q_cnt <= 0; q_wp <= 0; q_rp <= 0; act <= 1'b0; a_addr <= 0; a_left <= 0;
+            addr_hi_inc <= 1; left_hi_dec <= 16'hffff;
             alloc_p <= 0; cons_p <= 0; outstanding <= 0; full <= {DEPTH{1'b0}};
         end else begin
             q_cnt <= q_cnt + (d_valid && d_ready ? 1 : 0) - (load ? 1 : 0);
             if (d_valid && d_ready) q_wp <= (q_wp == DQ - 1) ? 0 : q_wp + 1'b1;
+            addr_hi_inc <= load ? q_base[q_rp][AW-1:8] + 1'b1 : a_addr[AW-1:8] + 1'b1;
+            left_hi_dec <= load ? q_len[q_rp][23:8] - 1'b1 : a_left[23:8] - 1'b1;
             if (load) begin
                 act <= (q_len[q_rp] != 0);
                 a_addr <= q_base[q_rp];

@@ -128,16 +128,18 @@ module ot_hbm_accel_issue #(
         lg_n_q <= (gi_n == g_end);
         g1_q <= (g_end == 0);
     end
-    wire row_ok = valid_mask[si];
+    reg row_ok_q, ls_q;               // valid_mask[si] ; si == IL-1, both carried with si
+    wire row_ok = row_ok_q;
     wire        my_turn = issuing && turn_q && x_rdy;
     wire        need_line = my_turn && row_ok;
     wire        adv = my_turn && (!row_ok || w_valid);
     assign w_ready = need_line;
-    wire        last_si = (si == IL - 1);
+    wire        last_si = ls_q;
     wire        last_t = lt_q;
     wire        cg_last = (cg == g_end);
     wire        last_g = gs_q ? ((ti == 0) ? cg_last : slot_glast[si]) : lg_q;
     wire        start_go = start && !busy;
+    wire        wave_adv = adv && last_si && last_t && (gs_q || last_g) && !lw_q;
     assign iss_v = adv;
     assign iss_row_ok = row_ok;
     assign iss_slot = row_now[SW-1:0];
@@ -147,6 +149,19 @@ module ot_hbm_accel_issue #(
     assign iss_glast = last_g;
     assign iss_rev_end = adv && last_si;
     assign xa = gs_q ? gs_xb + ti[XW-1:0] : xa_r;
+    // a slot's item record is captured on its issuing edge and written one edge later; it is
+    // read only from the next revolution on (ti != 0), >= IL edges later
+    reg sw_q; reg [SW-1:0] sw_slot; reg [RW:0] sw_row; reg [7:0] sw_g; reg [XW-1:0] sw_xb; reg sw_last;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) sw_q <= 1'b0;
+        else sw_q <= adv && gs_q && (ti == 0);
+    end
+    always @(posedge clk) begin
+        sw_slot <= si; sw_row <= cr; sw_g <= cg; sw_xb <= cxb; sw_last <= cg_last;
+        if (sw_q) begin
+            s_row[sw_slot] <= sw_row; s_g[sw_slot] <= sw_g; s_xb[sw_slot] <= sw_xb;
+        end
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             ph <= 0; busy <= 1'b0; issuing <= 1'b0; rb <= 0; gi <= 0; ti <= 0; si <= 0;
@@ -154,9 +169,17 @@ module ot_hbm_accel_issue #(
             rows_q <= 0; c_q <= 1; g_q <= 1; rem <= 0; arrive <= 1'b0; xa_r <= 0; gs_q <= 1'b0;
             wb <= 0; cr <= 0; cg <= 0; cxb <= 0; pp0 <= 0; pp1 <= 0; pp2 <= 0; pp3 <= 0;
             valid_mask <= 0; init_q <= 0; c_end <= 0; g_end <= 0; slot_glast <= 0;
-            turn_q <= 1'b1; lt_q <= 1'b0; lg_q <= 1'b0;
+            turn_q <= 1'b1; lt_q <= 1'b0; lg_q <= 1'b0; row_ok_q <= 1'b0; ls_q <= (IL == 1);
         end else begin
             ph <= ph_nx;
+            if (sw_q) slot_glast[sw_slot] <= sw_last;
+            // row_ok / last-slot flags follow si (and valid_mask at a wave change) one step ahead
+            if (init_q) begin
+                row_ok_q <= gs_q ? (init_items != 0) : (rows_q != 0); ls_q <= (IL == 1);
+            end else if (adv) begin
+                row_ok_q <= wave_adv ? next_mask[0] : valid_mask[si_nx];
+                ls_q <= (si_nx == IL - 1);
+            end
             // turn flag: ph and si both step on an issue; otherwise only ph steps
             turn_q <= init_q ? (ph_nx == 0) : (adv ? (ph_nx == si_nx) : (ph_nx == si));
             if (start_go) begin
@@ -178,8 +201,6 @@ module ot_hbm_accel_issue #(
             end else begin
                 if (adv && gs_q) begin
                     if (ti == 0) begin                      // assign this slot its item, advance the cursor
-                        s_row[si] <= cr; s_g[si] <= cg; s_xb[si] <= cxb;
-                        slot_glast[si] <= cg_last;
                         if (cg_last) begin
                             cg <= 0; cxb <= 0; cxb_n <= c_q[XW-1:0]; cr <= cr_n; cr_n <= cr_n_inc;
                         end else begin

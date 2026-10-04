@@ -1,19 +1,19 @@
 {
   "schema": "opentallas.hbm_accel.ha3.clock_gate.v1",
   "origin_commit": null,
-  "source_commit": "3467bcd0831c29d3eeb1463b84f05f779cc0526e",
+  "source_commit": "3f14a175f65cbf8901c5bba8388a5ff68bf2b72f",
   "input_sha256": {
     "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
     "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
-    "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv": "c20b63919dd11a079b89d52f3d1db493eb14b9d31ae3c838dc1ad530f109ac0c",
-    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7143fe720c478493fd87540ae3dace06004ce0ecd4309539d1be56800bc3780d",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv": "85b344cc41e54f4359704763a187b5b887106b94e96e04c9e2a73d691ee9cfec",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "27d10e24a7db953c933149087340a709d7b542423b101cbc0d1d0063faa16a92",
     "rtl/hbm_accel/epilogue/tb_hbm_accel_clock_loops.sv": "4cc4692676884310225904600852b3e7db442f517572a5c5cd6bb3ffe260d527",
     "tools/hbm_accel_epilogue_clock_gate.py": "7f012ab4b370d8f1d5d908eb43cfc27b7643ac3bc41964ba04de3885fae057e1",
     "tools/hbm_accel_epilogue_model.py": "5194ba08d1647cf2416dd6389b39e0eca9c639fe53f1ddf853d8e7b152a6047b",
     "tools/hbm_accel_epilogue_compile.py": "5ed223ddab5154da937d61dd9f65306eec05b00908aecca18e14c61fd1e790e2"
   },
   "host": "ubuntu",
-  "run_pid": 1741925,
+  "run_pid": 1894585,
   "status": "PASS_PROTOCOL_FIXTURE",
   "cases": [
     {
@@ -1777,5 +1777,5 @@
     "max_issue_streak": 1152,
     "price_delta": "Setup/phase costs measured per fixture; full-token composition remains unknown"
   },
-  "elapsed_seconds": 205.2055081697181
+  "elapsed_seconds": 193.95445717405528
 }
