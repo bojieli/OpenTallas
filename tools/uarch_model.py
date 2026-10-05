@@ -9677,9 +9677,10 @@ def dshbm_expert_workgroup_model():
     activation/weight ports. Dynamic hardware steering has not been synthesized.
     """
     return dict(dies=96, SM_per_die=32, active_SM_per_die=24, idle_SM_per_die=8,
-        routed_experts=6, matrices_per_expert=2, K=5120, matrix_rows=2304,
+        released_expert_count=384, routed_experts=6, matrices_per_expert=2, K=5120, matrix_rows=2304,
         rows_per_matrix_per_die=24, rows_per_active_SM=12, k32_blocks=160,
-        exact_MACs_per_issued_line=8*32, line_payload_bits=1088,
+        exact_MACs_per_issued_line_active_column=8*32, native_columns=8,
+        hardware_MACs_per_full_issued_line=8*32*8, line_payload_bits=1088,
         line_bytes_per_accepted_edge=136, simultaneous_weight_bits_per_die=24*1088,
         simultaneous_weight_bytes_per_die=24*136, per_SM_lines=12*3*8, per_SM_valid_row_blocks=12*160,
         per_SM_native_issue_groups=3, per_SM_issue_span_cycles=316,
@@ -9694,3 +9695,93 @@ def dshbm_expert_workgroup_model():
         new_hardware=False, hardware_steering_implemented=False,
         physical_slot_fit=None, actual_1M_L20_exact=False, actual_1M_L3_exact=False,
         actual_composed_token_latency_ns=None, adopted=False)
+
+
+def hbm_su_fused_endpoint_model():
+    """Default-off actual fused-SU endpoint pre-build sizing; unqualified."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_fused_price', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.model()
+
+
+def hbm_su_sqrt_prefix_round_model():
+    """Same-cut opt-in repair of the measured side/softplus rounding ripple.
+
+    Pricing precedes RTL. No exponent retiming, reset exception, or II change.
+    Cell budget is a conservative prebuild reservation, not mapped area.
+    """
+    width = 24
+    levels = (width + 1).bit_length() - 1
+    if (1 << levels) < width + 1:
+        levels += 1
+    pairs = sum(width + 1 - (1 << level) for level in range(levels))
+    return dict(schema='hbm_su_sqrt_prefix_round.v1',
+                source='rtl/hdc/v41/ot_hdc_fsqrt.sv',
+                baseline_SS_r2r_ps=dict(side=-167.446838, softplus=-112.847954),
+                repair='24-bit kept prefix increment; carry becomes rounded[24]',
+                AND2_nodes=pairs, XOR2_nodes=width, prefix_levels=levels,
+                new_FF_bits=0, new_clock_reset_sinks=0,
+                conservative_gross_logic_reservation_um2_per_sqrt=250,
+                mapped_net_area_delta_um2=None,
+                side_sqrt_replicas=3, standalone_softplus_sqrt_replicas=1,
+                side_gross_reservation_um2=750, softplus_gross_reservation_um2=250,
+                primitive_MACs_per_cycle=0, primitive_words_per_cycle=1,
+                operand_port_bytes_per_cycle=4, result_port_bytes_per_cycle=4,
+                boundary_bits_per_cycle=32, new_boundary_bits_per_cycle=0,
+                prefix_local_fanout_bound=6,
+                fanout_basis="Includes alias-collapsed pass-through levels plus final XOR; buffers remain physical cost",
+                internal_prefix_node_tracks=pairs, routing_capacity_pass=None,
+                carry_encode_fanout_and_loaded_wire_delay='unchanged downstream; route must measure',
+                latency_edges=31, issue_interval_edges=1, added_chain_edges=0,
+                single_user_latency_delta_ns=0,
+                critical_cone='finish-1 f_trunc -> prefix/RNE -> exponent/select -> finish-2 y',
+                exponent_encode='original signed 12-bit arithmetic unchanged',
+                reset_recovery='original timed rst_n/vline; retained recovery FAIL remains blocking',
+                exactness_required='same original code/fault/valid edge including bubbles and refusals',
+                context_clock_ns=.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                area_slot_fit=None, SSFF_closed=False, adopted=False)
+
+
+
+def hbm_su_kr_capture_split_model(lanes=1024):
+    """Pre-mux BF16 metadata repair; physical KR40 witness is one lane."""
+    return dict(schema='hbm_su_kr_capture_split.v1',
+                source='rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_f12.sv',
+                measured_SS_capture_slack_ps=-46.211811,
+                baseline='select 32-bit source then increment/reduce to X metadata',
+                candidate='increment and guard/sticky each actual source, then select 17 metadata bits',
+                kept_prefix_levels=5, AND2_nodes_gross=108, XOR2_nodes_gross=32,
+                OR4_nodes_gross=10, AND2_guard_nodes=2, metadata_mux_bits=17,
+                gross_logic_reservation_um2_per_lane=200,
+                whole_lanes=lanes, gross_logic_reservation_um2=lanes*200,
+                new_FF_bits=0, new_reset_clock_sinks=0,
+                MACs_per_cycle=0, helper_input_bytes_per_cycle=8,
+                helper_metadata_bits_per_cycle=17, new_external_port_bits=0,
+                source_selector_metadata_fanout=17,
+                selected_word_capture='original x_a source mux retained',
+                internal_prefix_local_fanout_bound=6,
+                fanout_basis="Includes alias-collapsed pass-through levels plus final XOR; buffers remain physical cost",
+                internal_prefix_node_tracks_gross=108, routing_capacity_pass=None,
+                latency_edges_added=0, issue_interval_edges=1,
+                single_user_latency_delta_ns=0,
+                BF16_semantics='same original unsigned upper-half increment and RNE decision for all 32-bit patterns; no new NaN policy',
+                mutable_KR_owner='unchanged ck_r/kr_q association, no new reads or leases',
+                clock_ns=.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                reset_exception_added=False, area_slot_fit=None,
+                actual_area_delta_um2=None, SSFF_closed=False, adopted=False)
+
+
+
+def hbm_su_command_bridge_model():
+    """Pre-hardware actual command/scalar producer boundary sizing."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_command_bridge_price', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.command_bridge_model()
