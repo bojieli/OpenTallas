@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.ds20-su-original-program-reconstruction.v1",
+  "accepted": true,
+  "target_sha256": "0cfed448f54896266ce57d3a94826e4044cf47f8b09a22419fe16eb5e5a180d7",
+  "actual_sha256": "0cfed448f54896266ce57d3a94826e4044cf47f8b09a22419fe16eb5e5a180d7",
+  "source_root": "/srv/opentallas-scratch/claude/hbm-fmax-su/src",
+  "source_sha256": {
+    "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
+    "tools/su_fmax_measure.py": "6a704ee43ed4305e440e70970c1eb071e2522b5e1758c3e4b8bd629defdb394d",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3"
+  },
+  "case_sha256": "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108",
+  "archived_case_name": "L0.hc_post.attn",
+  "case_index": 4,
+  "original_instruction_count": 4,
+  "args": {
+    "N": 1024,
+    "M": 256,
+    "BCAST": 7,
+    "RET": 8,
+    "MLAT": 6,
+    "ALAT": 5,
+    "fp": "dpi_beh",
+    "f12": true,
+    "cases": "su_cases_v2_ildr.pkl",
+    "chain": true
+  },
+  "input_initialization": "source-pinned dshbm_baseline_measure.cmd_su_run",
+  "archived_driver_sha256": "357f8408c32d5da7cd499bbf83a76bf07b4d943a0f24b9c78a2a195c90cc0978",
+  "emitter": "original VC.schedule -> VC.encode -> VC.write_hex; unchanged formulas and arguments",
+  "reference_results_discarded": true,
+  "oracle_output_files_generated": false,
+  "RTL_or_native_execution": false,
+  "model_inference": false
+}

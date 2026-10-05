@@ -55,19 +55,19 @@
         },
         "exact_receipts": [
           {
-            "path": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
-            "sha256": "f3d6b54070ee0a7c86c49819b59a8798c0637125c135fa988e3277b24612681a",
+            "path": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+            "sha256": "2d57e20013e7db7822c7b2388fb3c2c07bfe98e5363d87d3adf9c44559af815c",
             "pass_path": [
-              "candidate_exact"
+              "verdict"
             ],
-            "pass_value": true,
+            "pass_value": "PASS_PQ_PACK_XMAP_L20_P1",
             "source_pins_path": [
               "source_pins"
             ]
           }
         ],
         "physical": null,
-        "scope": "Current production parent exact under PQ+PACK, XMAP0; earlier XMAP1 joint record preserved separately."
+        "scope": "Actual simultaneous PQ+PACK+XMAP P1 L20; 86 original FP32 rows, finite behavioural provider component; no full-token or SS/FF admission."
       },
       "missing": "Joint exact component gate complete; loaded SS/FF and complete production provider remain unbound."
     },
@@ -158,19 +158,19 @@
         },
         "exact_receipts": [
           {
-            "path": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
-            "sha256": "f3d6b54070ee0a7c86c49819b59a8798c0637125c135fa988e3277b24612681a",
+            "path": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+            "sha256": "2d57e20013e7db7822c7b2388fb3c2c07bfe98e5363d87d3adf9c44559af815c",
             "pass_path": [
-              "candidate_exact"
+              "verdict"
             ],
-            "pass_value": true,
+            "pass_value": "PASS_PQ_PACK_XMAP_L20_P1",
             "source_pins_path": [
               "source_pins"
             ]
           }
         ],
         "physical": null,
-        "scope": "Actual PQ+PACK component, XMAP0. Joint XMAP1 interaction unmeasured; no whole token/physical admission.",
+        "scope": "Actual simultaneous PQ+PACK+XMAP P1 L20; 86 original FP32 rows, finite behavioural provider component; no full-token or SS/FF admission.",
         "reuse_only_no_standalone_rerun": true
       },
       "missing": "Exact PQ+PACK and literal negatives consumed; PQ+PACK+XMAP interaction and physical admission remain unmeasured.",
@@ -198,62 +198,95 @@
       "hooks": [
         "Fetch s_valid/s_ready/s_data[1024] -> gearbox in_valid/in_ready/in_data.",
         "Native gearbox out_valid/out_ready/out_data[1088] -> reserved SM response using the original accepted request tag; coupled benchmark has behavioural bookkeeping, not an installed provider.",
-        "cfg_lines is W2-only; cfg_lut maps W2 source lines, supplied by Hubble, never synthesized from A8 GU metadata.",
         "tools/dshbm_expert_interleave_descriptor.py::compile_descriptors_a8(ids, *, layer, die, input_job, interleave8=False)",
-        "Mandatory W2 eight-sector interleave remains a required owner dependency."
+        "w2_stream returns complete W2 bytes, literal cfg_lut and counts TOGETHER: 10,10,0,0,29,29,29,29 for released die2/stack0.",
+        "expert_w2_service_inputs binds existing w2.hex/cfg_lines.hex/cfg_lut.hex by actual measured hashes; no activation synthesis.",
+        "Mandatory 8/8/1 W2 dispatch byte service passed; arithmetic/installed provider remains unqualified."
       ],
       "binding": null,
-      "missing": "Opt4A8 sources resolved for inventory only; Hubble GU/W2 exact gate and mandatory W2 eight-sector schedule pending; OFF.",
+      "missing": "OFF: 81f77 complete W2 byte service passed; exact postweighted BF16 SwiGLU/unbiased router input, actual connected SM/provider and numerical gate missing.",
       "source_candidates": {
         "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "9cc476d9304fde2a44652b0612545c757624112b6d56ef570823d5d16ae0c902"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "2ac198b09044f1dde428e390792795b5c2b6c642deedd09d25bc89bab0542a08"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_wg_dispatch.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "0b0cfbd03b715f1d3b318911f1fc8d9a8aa7036a147377aec61a3fd6071eeaf1"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "647285ec7bdcd6edcc4ce13a9e6807733b1e7a27b660250019513ecf8b13d6dc"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_wg.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "99de9572538328ddb493136eb4d6a668a574f444fd69431be68433d7b2628806"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_wg.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "1ad53dd9d2245fea0cabadcd13d2613d6ec6964e26500b90b61c829da03e89f0"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "4972eb2f66858181c1ad33a6b701e7e555c6aab5e923c9cb9da2c7993071491a"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_wg_gearbox.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "574b617644d4eaf00714ca6b74adb485538c753da2b3dbf08b8d1002a23a941c"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "080350f39cef5c0de39431d1368b06aadcbf1e1d40bb73366bbdf86380ec149b"
         },
         "tools/dshbm_expert_workgroup_interleave.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "e423065ff214f5c2250adbe6f2d6e8e2e9dabc307594ad1abae7a0086478fc66"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "b84356315a935796bb48afe4ebc26e82a0c4ef7aa7fa2238df1b8fbdf8f6402e"
         },
         "tools/dshbm_expert_interleave_descriptor.py": {
-          "commit": "7658dbdc5df3f6922bfd5dee5cc76f194bf1b659",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "d736dfcaba6f4a390e31ae4ac8368fde382779b094559cb141ebf8a986aa3c8e"
         },
         "tools/dshbm_expert_workgroup_descriptor.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "366f7f56e29053e7ddc487451d27b6eb1bb0538ebfd444275f8e952b5046c97c"
         },
         "tools/dshbm_expert_interleave_native.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "6811620851458f941295a971526fbc00bb8699190287c517c2a62e71da64de4c"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "98c03b4ff9b8cb11df2e9fca66acc1de7158d82d2b419a0c1c704eed354323bb"
         }
       },
       "eligible_workloads": [
         "ds_1m"
       ],
-      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json"
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json",
+      "service_binding": {
+        "receipt": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/record.json",
+        "receipt_sha256": "84cf006e27b10436665760f4ee9c1ea050cdfdb027776e09f144db64d5641ab4",
+        "source_commit": "81f77dcbe808db885e24d786bea083babead3485",
+        "counts": [
+          10,
+          10,
+          0,
+          0,
+          29,
+          29,
+          29,
+          29
+        ],
+        "transport_lines_per_expert": 136,
+        "source_callable": "tools/dshbm_expert_workgroup_interleave.py::w2_stream",
+        "integration_callable": "tools/hbm_opt_integrated_20261005.py::expert_w2_service_inputs",
+        "cli": "w2-service --layer {3,20} --service-dir EXISTING_OWNER_SERVICE_DIR",
+        "scope": "PASS_SERVICE_BYTES_ONLY: L20/L3 die2 stack0, 9408 sectors per case; no arithmetic or installed-provider qualification",
+        "arithmetic_qualified": false,
+        "rate_credit": false,
+        "corrupted_sector_controls": {
+          "L20": {
+            "path": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/L20/corrupted_FAIL.log",
+            "sha256": "589024da26ea1c460c31e3a5596178d22cd94f1d1c178e74a050b1b5aa1c5fe8"
+          },
+          "L3": {
+            "path": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/L3/corrupted_FAIL.log",
+            "sha256": "589024da26ea1c460c31e3a5596178d22cd94f1d1c178e74a050b1b5aa1c5fe8"
+          }
+        }
+      }
     },
     "fused_su": {
       "owner": "Einstein",
@@ -296,12 +329,35 @@
       "default_enabled": false,
       "source_paths": [
         "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv",
-        "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv"
+        "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_query.sv",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv",
+        "rtl/hdc/v41/ot_hdc_actquant.sv",
+        "rtl/hdc/ot_hdc_delay.sv",
+        "rtl/hdc/ot_hdc_fastfp.sv",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "rtl/hdc/ot_hdc_prefix.sv",
+        "rtl/hdc/ot_hdc_fpu.sv",
+        "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "rtl/proto/ot_fp32_add_rne_pipe.sv"
       ],
       "hooks": [
-        "native SU VM query reads",
-        "actual scorer/top-k/candidate source",
-        "final ordered gather"
+        "Actual19-source native VM/scorer/selector/candidate closure",
+        "start && start_ready; hold job32/gen4/position20/rank7 through all real consumer drain",
+        "vm_read_v/r, addr32/tag8/words6 +frame identity; vm_rsp_v/r, data1024/tag8 +same frame identity",
+        "k_v/k_r/k_last; 64slots, key544/ID20/lv/ref/keep per slot; TP96 IDs8*(96*localblock+rank)+offset",
+        "candidate_v/r, Q4*W16 score16+ID20; explicitly accepted third consumer, never final selected gather payload",
+        "out_v/out_r/out_last per4quarters, each16 lanes score16/ID20/ninf; actual local selection only",
+        "cand_out_v/r/last per4quarters, each2 lanes BF16 score16/globalblock17; actual selected maxima/IDs",
+        "candidate_drained input; active release additionally requires both accepted last paths and no candidate/topk busy/fault",
+        "4x256x592 topk +4x1024x68 candidate external synchronous1R1W interfaces; protected installed realization unbound"
       ],
       "binding": {
         "source_sha256": {
@@ -323,8 +379,7 @@
           "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
           "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
           "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
-          "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
-          "rtl/test/hbm_accel/tb_hbm_index_connected.sv": "72d2e34f6330cb47e8b7a6ac296e971f3894b7e6063676dbe851c27c8c063122"
+          "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
         },
         "parameters": {
           "ENABLE": 1,
@@ -362,7 +417,13 @@
         "reuse_executable": "ot-epyc2:/srv/opentallas-scratch2/jobs/sagan-hbm-index-connected-29a9e9710-r1/run/obj/Vtb_hbm_index_connected",
         "reuse_only_no_standalone_rerun": true
       },
-      "missing": "Component source exists; actual selected parent/final gather and loaded corner binding pending."
+      "missing": "Exact local index component enrolled; real downstream adapter/global ordered gather/production VM and physical context remain unbound.",
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/index_endpoint_source_join.json",
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "global_ordered_gather_qualified": false,
+      "constant_ready_or_drained_ties_allowed": false
     },
     "endpoint_sm": {
       "owner": "Goodall",

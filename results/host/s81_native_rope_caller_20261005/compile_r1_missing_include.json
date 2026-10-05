@@ -1,0 +1,23 @@
+{
+  "source_commit": "ed2667661",
+  "scope": "Two changed host TUs/archive-only link; no native HDL/library generation/runtime/numerical or physical timing claim",
+  "load": [
+    1.50537109375,
+    1.349609375,
+    1.95458984375
+  ],
+  "source_sha256": {
+    "s81_minimum_su256.cpp": "4cf58aa3f5d3110267e6c24cf7c67db1b0d733498d71209171e9e09e71c774ab",
+    "s81_minimum_su256_constants.hpp": "b80360b6b62442c3a6eebc508ac48d2e477729fee57c6fbe13cd6f64000f2c05",
+    "s81_minimum_l20_qnorm.cpp": "dfef6ab44e5fc0989d6cb394a1f8bdc8647ac8ba970f7f67907173995ba1e034"
+  },
+  "stages": [
+    {
+      "name": "s81_minimum_l20_qnorm",
+      "exit": 1,
+      "seconds": 1.6306469140108675
+    }
+  ],
+  "memory_available_kib": 99217992,
+  "exit": 1
+}

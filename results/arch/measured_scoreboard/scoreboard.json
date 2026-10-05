@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "1bf7e15b6",
+ "generated_from_commit": "fb50a5e5c",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -5428,8 +5428,8 @@
    "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF.",
    "value": 1.493,
    "resolved": true,
-   "blob": "68d1cdd2a30b492323a9c9c134ea030f7d821b0a",
-   "last_commit": "0c4a9fb42 2026-10-05"
+   "blob": "f4c8a12ebaa91169881d0969e8d6641a1fc953dc",
+   "last_commit": "491fba88f 2026-10-05"
   },
   "hbm_ds.joint_pq_xmap_p1_l20_cycles": {
    "target": "hbm_ds",
@@ -5458,8 +5458,8 @@
    "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF.",
    "value": 26.933,
    "resolved": true,
-   "blob": "68d1cdd2a30b492323a9c9c134ea030f7d821b0a",
-   "last_commit": "0c4a9fb42 2026-10-05"
+   "blob": "f4c8a12ebaa91169881d0969e8d6641a1fc953dc",
+   "last_commit": "491fba88f 2026-10-05"
   },
   "hbm_ds.joint_pq_xmap_p6_l20_cycles": {
    "target": "hbm_ds",
@@ -5485,11 +5485,11 @@
    "status": "measured",
    "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
    "pointer": "paired_W2_increment.measured_component_saved_cycles",
-   "note": "86 exact rows, 28 descriptors and same-executable controls; W2 term replaced once over 40 exposed groups at target1.2GHz. No analytic partial-wave addition; combined PACK+XMAP/SSFF/full-token unqualified, MTP unknown.",
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown.",
    "value": 184,
    "resolved": true,
-   "blob": "68d1cdd2a30b492323a9c9c134ea030f7d821b0a",
-   "last_commit": "0c4a9fb42 2026-10-05"
+   "blob": "f4c8a12ebaa91169881d0969e8d6641a1fc953dc",
+   "last_commit": "491fba88f 2026-10-05"
   },
   "hbm_ds.paired_w2_ar_projection_us": {
    "target": "hbm_ds",
@@ -5500,11 +5500,11 @@
    "status": "composed_from_measured",
    "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
    "pointer": "paired_W2_increment.incremental_AR_projection_us",
-   "note": "86 exact rows, 28 descriptors and same-executable controls; W2 term replaced once over 40 exposed groups at target1.2GHz. No analytic partial-wave addition; combined PACK+XMAP/SSFF/full-token unqualified, MTP unknown.",
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown.",
    "value": 6.133333333333334,
    "resolved": true,
-   "blob": "68d1cdd2a30b492323a9c9c134ea030f7d821b0a",
-   "last_commit": "0c4a9fb42 2026-10-05"
+   "blob": "f4c8a12ebaa91169881d0969e8d6641a1fc953dc",
+   "last_commit": "491fba88f 2026-10-05"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",

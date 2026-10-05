@@ -4092,7 +4092,7 @@
    "pointer": "paired_W2_increment.measured_component_saved_cycles",
    "unit": "cycles",
    "status": "measured",
-   "note": "86 exact rows, 28 descriptors and same-executable controls; W2 term replaced once over 40 exposed groups at target1.2GHz. No analytic partial-wave addition; combined PACK+XMAP/SSFF/full-token unqualified, MTP unknown."
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown."
   },
   {
    "target": "hbm_ds",
@@ -4103,7 +4103,7 @@
    "pointer": "paired_W2_increment.incremental_AR_projection_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "86 exact rows, 28 descriptors and same-executable controls; W2 term replaced once over 40 exposed groups at target1.2GHz. No analytic partial-wave addition; combined PACK+XMAP/SSFF/full-token unqualified, MTP unknown."
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown."
   }
  ],
  "derived": [
