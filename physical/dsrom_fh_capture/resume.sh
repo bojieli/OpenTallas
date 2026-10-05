@@ -20,6 +20,7 @@ cfg=R/'work/orfs/config.mk';text=cfg.read_text()
 assert 'export DIE_AREA = 0 0 2000 660' in text
 assert 'export CORE_AREA = 2 2 1998 658' in text
 text='\n'.join(l for l in text.splitlines() if not l.startswith(('export CORE_UTILIZATION =','export CORE_ASPECT_RATIO =','export CORE_MARGIN =')))+'\n'
+text=text.replace('export POST_MACRO_PLACE_TCL =','export MACRO_PLACEMENT_TCL =')
 cfg.write_text(text)
 print('SOURCE_PIN/reused objects verified',p['commit'],flush=True)
 PY

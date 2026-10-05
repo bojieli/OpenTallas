@@ -36,7 +36,7 @@ exec python3 "$S/tools/run_abi3_physical.py" --source-root "$S" --view asap7 --t
  --orfs-corner WC --hold-corners WC,BC --stages pnr \
  --macro-view "$M=physical/asap7_memory_macros/$M" --macro-place-halo 2 2 \
  --orfs-var ADDER_MAP_FILE= --die-area 0 0 2000 660 --core-area 2 2 1998 658 \
- --orfs-var POST_MACRO_PLACE_TCL=/src/physical/dsrom_fh_capture/macro_place.tcl \
+ --orfs-var MACRO_PLACEMENT_TCL=/src/physical/dsrom_fh_capture/macro_place.tcl \
  --core-utilization 35 --max-transition-ns 0.25 --max-fanout 16 --slew-margin-percent 20 --hold-margin-ns 0.02 \
  --sdc-append physical/dsrom_fh_capture/boundary.sdc --io-delay-fraction 0.2 \
  --keep-workdir "$R/work" --nickname-tag "$TAG" --output "$R/physical.json"
