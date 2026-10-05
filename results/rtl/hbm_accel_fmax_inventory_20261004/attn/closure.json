@@ -96,7 +96,7 @@
    "cycles_added": "tile pass +12 (FPL 3->4 x 9 serial adds, FML 3->6); zero from the restructuring",
    "exactness": {
     "bench": "rtl/test/tb_hdc_v41x_attn_tile_s_lockstep.sv (tile_s vs tile_l, every output every cycle, random loads/beats incl. pads/NaN/extreme scales)",
-    "cases": "H16 TD32 NBANK5 PW2 F12 20,000 cyc and H4 TD16 NBANK3 PW1 F12 30,000 cyc (final RTL) + earlier FPL7 variants",
+    "cases": "H16 TD32 NBANK5 PW2 F12 20,000 cyc (lockstep/h16b5_f12_final.run) and H4 TD16 NBANK3 PW1 F12 30,000 cyc (lockstep/h4b3_f12_final.run), final RTL; earlier FPL7 variants (h16b5_v2, h4b3_v2)",
     "mismatches": 0
    }
   },
