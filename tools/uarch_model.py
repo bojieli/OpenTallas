@@ -9953,6 +9953,12 @@ def dsrom_v9_parent_context_model():
     return model(Path(__file__).resolve().parents[1])
 
 
+def dsrom_qx10_parent_context_model():
+    """Existing full QX10 element plus native parent, in the unchanged slot."""
+    from dsrom_qx10_parent_context import model
+    return model(Path(__file__).resolve().parents[1])
+
+
 def dsrom_window_full_block_pipeline_model():
     """Item4 pre-build sizing of actual full 128-row WINDOW, never a reduced pilot.
 
