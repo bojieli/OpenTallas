@@ -4,11 +4,11 @@
  "position": 1048575,
  "baseline": "recovery",
  "base": "candidate_gather.lat259 (results/rtl/dsrom_reindex_candidates_20261004/composition.json, 394.911 us)",
- "AR_us": 620.078,
- "AR_tok_s": 1612.7,
+ "AR_us": 608.656,
+ "AR_tok_s": 1643.0,
  "critical_path_us_by_class": {
   "zero": 0.0,
-  "measured": 557.321,
+  "measured": 545.879,
   "measured+vendor_phy": 45.096,
   "inside_measured": 0.19,
   "extra_S81_hops": 17.422
@@ -26,41 +26,41 @@
    {
     "first": "L19.ffn.hc_pre",
     "hop": "L20.substage_hop0",
-    "busy_us": 24.9027
+    "busy_us": 24.6172
    },
    {
     "first": "L13.ffn.hc_pre",
     "hop": "L14.substage_hop0",
-    "busy_us": 21.9062
+    "busy_us": 21.6207
    },
    {
     "first": "L7.ffn.hc_pre",
     "hop": "L8.substage_hop0",
-    "busy_us": 21.2069
+    "busy_us": 20.9213
    },
    {
     "first": "L1.ffn.hc_pre",
     "hop": "L2.substage_hop0",
-    "busy_us": 19.0861
+    "busy_us": 18.8005
    },
    {
     "first": "L27.ffn.hc_pre",
     "hop": "L28.substage_hop0",
-    "busy_us": 14.7611
+    "busy_us": 14.4756
    },
    {
     "first": "L31.ffn.hc_pre",
     "hop": "L32.substage_hop0",
-    "busy_us": 14.7611
+    "busy_us": 14.4756
    }
   ],
   "worst_stage": {
    "first": "L19.ffn.hc_pre",
    "hop": "L20.substage_hop0",
-   "busy_us": 24.9027
+   "busy_us": 24.6172
   },
-  "II_us": 25.762,
-  "verify_us": 748.887,
+  "II_us": 25.475,
+  "verify_us": 736.032,
   "draft_us": 119.211,
   "draft_terms": {
    "block5_us": 38.3718,
@@ -70,10 +70,10 @@
    "r_markov": 0.00781
   },
   "seed_commit_us": 3.217,
-  "step_us": 871.315,
-  "MTP_tok_s": 4462.1,
+  "step_us": 858.46,
+  "MTP_tok_s": 4528.9,
   "tau": 3.8879,
-  "mtp_over_ar": 2.767
+  "mtp_over_ar": 2.757
  },
  "still_modelled": [
   {
@@ -231,6 +231,12 @@
      "lever": "router",
      "record": "results/rtl/dsrom_recovery_20261004/levers/router.json",
      "sha256": "413e2559a3db27b51846fe48a577bcb76b26b4bf9c7f23d94b416a22d94414d8",
+     "verdict": "ADOPT"
+    },
+    {
+     "lever": "su_routeract",
+     "record": "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json",
+     "sha256": "0648152478fa23ad5dc04d6c05ef3dc4b648742c72ea04c100b215a802a43fd8",
      "verdict": "ADOPT"
     }
    ],
@@ -6398,10 +6404,10 @@
   },
   {
    "node": "L0.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L0.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -6785,10 +6791,10 @@
   },
   {
    "node": "L1.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L0.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -7246,10 +7252,10 @@
   },
   {
    "node": "L2.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -7633,10 +7639,10 @@
   },
   {
    "node": "L3.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -8020,10 +8026,10 @@
   },
   {
    "node": "L4.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -8407,10 +8413,10 @@
   },
   {
    "node": "L5.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -8794,10 +8800,10 @@
   },
   {
    "node": "L6.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -9181,10 +9187,10 @@
   },
   {
    "node": "L7.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -9642,10 +9648,10 @@
   },
   {
    "node": "L8.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -10029,10 +10035,10 @@
   },
   {
    "node": "L9.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -10416,10 +10422,10 @@
   },
   {
    "node": "L10.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -10803,10 +10809,10 @@
   },
   {
    "node": "L11.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -11190,10 +11196,10 @@
   },
   {
    "node": "L12.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -11577,10 +11583,10 @@
   },
   {
    "node": "L13.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -12038,10 +12044,10 @@
   },
   {
    "node": "L14.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -12425,10 +12431,10 @@
   },
   {
    "node": "L15.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -12812,10 +12818,10 @@
   },
   {
    "node": "L16.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -13199,10 +13205,10 @@
   },
   {
    "node": "L17.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -13586,10 +13592,10 @@
   },
   {
    "node": "L18.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -13973,10 +13979,10 @@
   },
   {
    "node": "L19.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -14435,10 +14441,10 @@
   },
   {
    "node": "L20.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L20.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -14822,10 +14828,10 @@
   },
   {
    "node": "L21.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -15209,10 +15215,10 @@
   },
   {
    "node": "L22.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -15596,10 +15602,10 @@
   },
   {
    "node": "L23.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -15992,10 +15998,10 @@
   },
   {
    "node": "L24.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L24.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -16379,10 +16385,10 @@
   },
   {
    "node": "L25.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -16766,10 +16772,10 @@
   },
   {
    "node": "L26.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -17153,10 +17159,10 @@
   },
   {
    "node": "L27.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -17549,10 +17555,10 @@
   },
   {
    "node": "L28.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L24.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -17936,10 +17942,10 @@
   },
   {
    "node": "L29.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -18323,10 +18329,10 @@
   },
   {
    "node": "L30.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -18710,10 +18716,10 @@
   },
   {
    "node": "L31.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -19106,10 +19112,10 @@
   },
   {
    "node": "L32.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L24.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -19493,10 +19499,10 @@
   },
   {
    "node": "L33.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -19880,10 +19886,10 @@
   },
   {
    "node": "L34.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -20267,10 +20273,10 @@
   },
   {
    "node": "L35.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -20663,10 +20669,10 @@
   },
   {
    "node": "L36.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L24.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -21050,10 +21056,10 @@
   },
   {
    "node": "L37.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -21437,10 +21443,10 @@
   },
   {
    "node": "L38.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -21824,10 +21830,10 @@
   },
   {
    "node": "L39.ffn.softplus_sqrt",
-   "model_us": 0.3242,
-   "measured_us": 0.4322,
+   "model_us": 0.4322,
+   "measured_us": 0.1467,
    "cls": "measured",
-   "source": "SU: L3.ffn.softplus_sqrt: wired RTL (BCAST 22 / RET 15 stages) 0.43222 us, golden-exact",
+   "source": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -22886,7 +22892,7 @@
   },
   {
    "node": "L0.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -23111,7 +23117,7 @@
   },
   {
    "node": "L1.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -23356,7 +23362,7 @@
   },
   {
    "node": "L2.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -23566,7 +23572,7 @@
   },
   {
    "node": "L3.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -23781,7 +23787,7 @@
   },
   {
    "node": "L4.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -23991,7 +23997,7 @@
   },
   {
    "node": "L5.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -24206,7 +24212,7 @@
   },
   {
    "node": "L6.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -24416,7 +24422,7 @@
   },
   {
    "node": "L7.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -24661,7 +24667,7 @@
   },
   {
    "node": "L8.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -24871,7 +24877,7 @@
   },
   {
    "node": "L9.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -25081,7 +25087,7 @@
   },
   {
    "node": "L10.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -25296,7 +25302,7 @@
   },
   {
    "node": "L11.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -25506,7 +25512,7 @@
   },
   {
    "node": "L12.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -25721,7 +25727,7 @@
   },
   {
    "node": "L13.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -25976,7 +25982,7 @@
   },
   {
    "node": "L14.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -26191,7 +26197,7 @@
   },
   {
    "node": "L15.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -26401,7 +26407,7 @@
   },
   {
    "node": "L16.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -26616,7 +26622,7 @@
   },
   {
    "node": "L17.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -26826,7 +26832,7 @@
   },
   {
    "node": "L18.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -27041,7 +27047,7 @@
   },
   {
    "node": "L19.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -27281,7 +27287,7 @@
   },
   {
    "node": "L20.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -27491,7 +27497,7 @@
   },
   {
    "node": "L21.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -27706,7 +27712,7 @@
   },
   {
    "node": "L22.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -27916,7 +27922,7 @@
   },
   {
    "node": "L23.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -28161,7 +28167,7 @@
   },
   {
    "node": "L24.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -28371,7 +28377,7 @@
   },
   {
    "node": "L25.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -28586,7 +28592,7 @@
   },
   {
    "node": "L26.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -28796,7 +28802,7 @@
   },
   {
    "node": "L27.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -29041,7 +29047,7 @@
   },
   {
    "node": "L28.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -29251,7 +29257,7 @@
   },
   {
    "node": "L29.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -29461,7 +29467,7 @@
   },
   {
    "node": "L30.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -29676,7 +29682,7 @@
   },
   {
    "node": "L31.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -29916,7 +29922,7 @@
   },
   {
    "node": "L32.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -30131,7 +30137,7 @@
   },
   {
    "node": "L33.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -30341,7 +30347,7 @@
   },
   {
    "node": "L34.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -30556,7 +30562,7 @@
   },
   {
    "node": "L35.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -30796,7 +30802,7 @@
   },
   {
    "node": "L36.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -31011,7 +31017,7 @@
   },
   {
    "node": "L37.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -31221,7 +31227,7 @@
   },
   {
    "node": "L38.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -31431,7 +31437,7 @@
   },
   {
    "node": "L39.ffn.softplus_sqrt",
-   "us": 0.4377,
+   "us": 0.1522,
    "cls": "measured"
   },
   {
@@ -31550,6 +31556,7 @@
   "results/rtl/dsrom_recovery_20261004/levers/head.json": "a64474c0944ad7cbc52120f1961c7da97e94a5b524d88c1a1d6c705a792c1c41",
   "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
   "results/rtl/dsrom_recovery_20261004/levers/router.json": "413e2559a3db27b51846fe48a577bcb76b26b4bf9c7f23d94b416a22d94414d8",
+  "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json": "0648152478fa23ad5dc04d6c05ef3dc4b648742c72ea04c100b215a802a43fd8",
   "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json": "47b6dbf89f1772c5bb83c712a2e4a637f6211d42bc17e0633f2b8baeafe5a18f",
   "results/rtl/dsrom_s81_window_bind_20261004/window_load.json": "afe2d8443098eff0b7fe7cd5418e3b5660dc705e3b4f16b4cb9d4518d7ccd6f2",
   "results/rtl/dsrom_wavefront_verify_20261004/record.json": "885d1c3e734bfc3d2357e52f2b6699238311a72936d1bbfcb5ea2e24face0d09",
