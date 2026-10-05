@@ -69,7 +69,7 @@
     "hazard_policy": "Track read macro accept+1 versus write macro accept+2 across commands; release after ACK+positive next-edge capture. No reliance on same-command collision flag alone.",
     "head_level2_candidate": {
       "admission": "all64 SU source vectors physically published/ACKed, region lease through PCs3..6, actual loaded selector/capture and native tag association; source chase counter alone is insufficient",
-      "conservative_fill_capture_alignment_edges": 69,
+      "conservative_fill_capture_alignment_edges": 576,
       "consumer_pcs": [
         3,
         4,
@@ -119,7 +119,7 @@
       "check_bits": 2097152,
       "check_macros": 32,
       "checked_read_edges": 9,
-      "checked_write_service_II_edges": 22,
+      "checked_write_service_II_edges": 28,
       "codec_body_mm2": 1.1404762351200002,
       "codec_decode_held_edges": 3,
       "codec_encode_held_edges": 2,
@@ -153,6 +153,16 @@
     "schema": "opentallas.qwen-hbm.finite-activation-vm-candidate.v1",
     "selected_for_minimum_source_implementation": true,
     "selection": "ONE existing full16-group masked-visible provider, no read copies; six-group capacity-only geometry is not selected",
+    "serial_frame_calendar": {
+      "admit_edges": 1,
+      "basis": "Arendt14:39 literal controller source accounting, not runtime measurement",
+      "capture_edges": 1,
+      "formula": "1+actual_read_slot_visits+11*window_misses+actual_write_slot_visits+30*masked_commands+1; skip/pack extra; empty/ownedreadonly fast path only under real source conditions",
+      "masked_flush_extra_edges": 30,
+      "read_miss_extra_edges": 11,
+      "read_slot_visits": 2256,
+      "write_slot_visits": 1633
+    },
     "source_distinct_ME_words": [
       128,
       512,
@@ -167,34 +177,34 @@
     },
     "source_workload": [
       {
-        "conservative_extra_read_service_edges": 263512,
-        "conservative_write_visibility_service_edges": 44704,
-        "isolated_serial_service_charge_us_at_target": 256.8466666666667,
+        "conservative_extra_read_service_edges": 322232,
+        "conservative_write_visibility_service_edges": 60960,
+        "isolated_serial_service_charge_us_at_target": 319.32666666666665,
         "logical_ME_read_edges": 728,
         "read_issue_beats": 29360,
-        "scope": "per-rank ME source-workload reservation, not an actual accepted trace or critical-path delta; SU/collective interference and clock crossings additional",
+        "scope": "per-rank ME missed-window/flush subcomponent only, not a complete frame or actual accepted critical-path delta; scalar read/write slot walkers, skip/pack, SU/collective interference and crossings additional",
         "stage": "L5",
         "write_beats": 2032,
         "write_events": 160
       },
       {
-        "conservative_extra_read_service_edges": 263512,
-        "conservative_write_visibility_service_edges": 44704,
-        "isolated_serial_service_charge_us_at_target": 256.8466666666667,
+        "conservative_extra_read_service_edges": 322232,
+        "conservative_write_visibility_service_edges": 60960,
+        "isolated_serial_service_charge_us_at_target": 319.32666666666665,
         "logical_ME_read_edges": 728,
         "read_issue_beats": 29360,
-        "scope": "per-rank ME source-workload reservation, not an actual accepted trace or critical-path delta; SU/collective interference and clock crossings additional",
+        "scope": "per-rank ME missed-window/flush subcomponent only, not a complete frame or actual accepted critical-path delta; scalar read/write slot walkers, skip/pack, SU/collective interference and crossings additional",
         "stage": "L20",
         "write_beats": 2032,
         "write_events": 160
       },
       {
-        "conservative_extra_read_service_edges": 910800,
+        "conservative_extra_read_service_edges": 1113552,
         "conservative_write_visibility_service_edges": 0,
-        "isolated_serial_service_charge_us_at_target": 759.0,
+        "isolated_serial_service_charge_us_at_target": 927.96,
         "logical_ME_read_edges": 1584,
         "read_issue_beats": 101376,
-        "scope": "per-rank ME source-workload reservation, not an actual accepted trace or critical-path delta; SU/collective interference and clock crossings additional",
+        "scope": "per-rank ME missed-window/flush subcomponent only, not a complete frame or actual accepted critical-path delta; scalar read/write slot walkers, skip/pack, SU/collective interference and crossings additional",
         "stage": "head",
         "write_beats": 0,
         "write_events": 0
@@ -203,7 +213,7 @@
     "target_not_qualified": true,
     "target_provider_GHz": 1.2,
     "token_added_latency_us": null,
-    "write_calendar": "CAP1 RMW: oldread4/decode3/merge1/encode2/commitACK3/postread4/decode3/compare1/release1 =22 target edges per bank window; rawACK not checked visibility",
+    "write_calendar": "CAP1 actual registered RMW handoff: postverifiedACK28 after accept; maskedflush30 extra beyond scalar slot walker. Replaces lower22edge sizing; rawACK not checked visibility",
     "write_ports": "one masked512-bit row per physical bank per provider edge"
   },
   "generic_256bit_payload_only_read_beats_lower_bound": 256,

@@ -10,11 +10,9 @@
  ],
  "headline": [
   "qwen_rom.operating_mode_8k",
-  "qwen_rom.ar_tok_s_8k_stream4",
-  "qwen_rom.ar_tok_s_8k_stream4_wirebound",
+  "qwen_rom.actual_fulltoken_cycles_8k_stream4",
   "qwen_rom.dspark_tok_s_8k_stream4",
   "qwen_rom.dspark_speedup_vs_ar_8k_stream4",
-  "qwen_rom.ar_over_h100_tp8_8k",
   "ds_rom.ar_tok_s_1m",
   "ds_rom.mtp_tok_s_1m",
   "ds_rom.measured_share_of_ar",
@@ -3923,23 +3921,23 @@
    "target": "qwen_rom",
    "section": "rate",
    "key": "operating_mode_8k",
-   "label": "Qwen ROM operating mode at 8K (HEADLINE mode: AR on STREAM4; DSpark built, exact, off)",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
-   "pointer": "verdict",
+   "label": "Actual Qwen ROM full-token operating mode at P8191",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "operating_mode",
    "unit": "verdict",
-   "status": "composed_from_measured",
-   "note": "AR_MODE: no DSpark variant beats AR on STREAM4 (baseline 0.704x, MERGE_SU 0.742x, MERGE_SU np3 0.691-0.744x); free-draft bound 0.969x; derivation docs/ANALYTICAL_REPORT.md"
+   "status": "measured",
+   "note": "Native STREAM4 tile, NEAR_HBM0, DSparkOFF; full36+HEAD process0/drained. Clock not SS/FF qualified; no MTP credit."
   },
   {
    "target": "qwen_rom",
    "section": "rate",
    "key": "ar_tok_s_8k_stream4",
-   "label": "HEADLINE. AR per-user rate at 8K on the 4-stack full-bandwidth KV path (STREAM4); the Qwen ROM operating mode",
+   "label": "Historical STREAM4 composed rate at assumed clock; superseded cycle basis",
    "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
    "pointer": "stream4.tok_per_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "7 + E + L0 iso (6,489) + 35 x chained L1/L2 (5,282, early_go prefetch + posted write-back, fill 1,311 cyc exposed 0) + head + 37 = 194,498 cycles; L0..L2 exact at P8191 vs GPU golden; E/head from P255 (position independent); KV fill 3.72 TB/s = 93% of 4-stack peak"
+   "note": "Historical194498-cycle component projection retained, not current full-token measurement or qualified clock/rate. Actual selected run193955cycles; measured headline reports cycles. No MTP credit."
   },
   {
    "target": "qwen_rom",
@@ -4104,6 +4102,50 @@
    "unit": "us",
    "status": "composed_from_measured",
    "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_cycles_8k_stream4",
+   "label": "Actual STREAM4 full36+HEAD token at P8191",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "actual_fulltoken_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_current_KV_checks",
+   "label": "Actual current-KV rank/layer checks after ACK drain",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "current_KV_checks",
+   "unit": "checks",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_next_token",
+   "label": "Actual full-token argmax on all4 ranks",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "next_token",
+   "unit": "token",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_head_cycles",
+   "label": "Actual HEAD accepted stage duration",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "head_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
   }
  ],
  "derived": [
@@ -4775,9 +4817,9 @@
   {
    "target": "qwen_rom",
    "lever": "STREAM4 4-stack KV fill",
-   "verdict": "ADOPT (operating path)",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
-   "numbers": "token 194,498 cycles = 6,169.7 tok/s, 2.99x REAL_MEM; chained layer 5,282 = compute bound 5,283",
+   "verdict": "selected functional path; full-token numerical PASS, physical unqualified",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "numbers": "193955cycles/full36+HEAD, all144 layer outputs/currentKV checks, token18/logit42282b99, drained/process0; no qualified rate/MTP credit",
    "figures": [
     "qwen_rom.stream4_L0_cycles_P8191",
     "qwen_rom.stream4_fill_TBps",
@@ -5088,18 +5130,6 @@
    "target": "qwen_rom",
    "item": "Native STREAM4 multi-position tagged-row hook (qwen_stream4_wire_native_tagged_rows) for the combined die",
    "owner": "Claude",
-   "path": "/tmp/claude-review-20261003/codex_notes.txt"
-  },
-  {
-   "target": "qwen_rom",
-   "item": "Combined P8191 L0 run host SIGSEGV; L0 prefix->near->OAR/MLPAR->head join on produced state",
-   "owner": "Laplace (Codex)",
-   "path": "/tmp/claude-review-20261003/codex_notes.txt"
-  },
-  {
-   "target": "qwen_rom",
-   "item": "Export L3..L35 P8191 prior KV from the live TP4 GPU oracle for full36",
-   "owner": "Laplace (Codex) / Claude retains GPU output",
    "path": "/tmp/claude-review-20261003/codex_notes.txt"
   },
   {
