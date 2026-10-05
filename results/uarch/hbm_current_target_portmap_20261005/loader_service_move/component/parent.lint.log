@@ -1,0 +1,218 @@
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_host_addr.sv:31:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                           : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   31 |  generate if(!ENABLE)begin:g_off
+      |              ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: ot_hbm_loader_service_join.sv:25:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                        : ... note: In instance 'ot_hbm_accel_die_host_join.movement'
+   25 |  generate if(!ENABLE)begin:off
+      |              ^
+%Warning-WIDTHTRUNC: ot_hbm_accel_store_addr.sv:30:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                     : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_store'
+   30 |  generate if(!ENABLE)begin:g_off
+      |              ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_addr_to_service.sv:15:88: Operator GT expects 65 bits on the LHS, but LHS's VARREF 'STACK_BYTES' generates 64 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   15 |  initial if(ADDR_W<32||ADDR_W>64||STACK_W<0||STACK_W>2||SECTOR_W<LOCAL_W-5||STACK_BYTES>(65'h1<<LOCAL_W))$fatal(1,"lossless loader address geometry");
+      |                                                                                        ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_addr_to_service.sv:17:72: Operator GT expects 65 bits on the RHS, but RHS's VARREF 'STACK_BYTES' generates 64 bits.
+                                                                  : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   17 |  wire bad=|local_addr[4:0] || (STACK_BYTES!=0 && 65'(local_addr)+65'd32>STACK_BYTES);
+      |                                                                        ^
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_addr_to_service.sv:18:21: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   18 |  assign out_v=ENABLE&&in_v&&!bad;assign in_rdy=ENABLE&&out_rdy&&!bad;
+      |                     ^~
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_addr_to_service.sv:18:54: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   18 |  assign out_v=ENABLE&&in_v&&!bad;assign in_rdy=ENABLE&&out_rdy&&!bad;
+      |                                                      ^~
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_addr_to_service.sv:19:25: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   19 |  assign out_stack=ENABLE?2'(in_addr>>LOCAL_W):2'b0;
+      |                         ^
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_addr_to_service.sv:20:26: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   20 |  assign out_sector=ENABLE?SECTOR_W'(local_addr>>5):'0;
+      |                          ^
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_addr_to_service.sv:21:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   21 |  assign out_we=ENABLE&&in_we;assign out_data=ENABLE?in_data:'0;
+      |                      ^~
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_addr_to_service.sv:21:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   21 |  assign out_we=ENABLE&&in_we;assign out_data=ENABLE?in_data:'0;
+      |                                                    ^
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_addr_to_service.sv:22:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   22 |  assign out_strb=ENABLE?in_strb:'0;assign out_tag=ENABLE?in_tag:'0;
+      |                        ^
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_addr_to_service.sv:22:57: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   22 |  assign out_strb=ENABLE?in_strb:'0;assign out_tag=ENABLE?in_tag:'0;
+      |                                                         ^
+%Warning-WIDTHTRUNC: ot_hbm_accel_loader_addr_to_service.sv:23:73: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.movement.on.formatter'
+   23 |  always @(posedge clk or negedge rst_n)if(!rst_n)fault<=0;else if(ENABLE&&in_v&&bad)fault<=1;
+      |                                                                         ^~
+%Warning-WIDTHTRUNC: ot_hbm_accel_store_addr.sv:37:32: Logical operator LOGOR expects 1 bit on the RHS, but RHS's AND generates 32 bits.
+                                                     : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_store'
+   37 |  initial if(CDC_AW<2 || VOUT<2 || (VOUT&(VOUT-1)) || VOUT>=(1<<TW) || BURST<1 || BURST>128 || MAXOUT<1 || MAXOUT>255)$fatal(1,"STORE geometry");
+      |                                ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_store_addr.sv:45:86: Operator GT expects 65 bits on the LHS, but LHS's VARREF 'STACK_BYTES' generates 64 bits.
+                                                      : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_store'
+   45 |         initial if(ADDR_W<32||ADDR_W>64||STACK_W<0||STACK_W>2||LOCAL_W<5||STACK_BYTES>(65'h1<<LOCAL_W)) $fatal(1,"loader address geometry");
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_store_addr.sv:50:45: Operator GT expects 65 bits on the LHS, but LHS's VARREF 'd_end' generates 38 bits.
+                                                      : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_store'
+   50 |         wire desc_bad=daddr_invalid || d_end>(65'h1<<ADDR_W) || local_end>(65'h1<<LOCAL_W) || (STACK_BYTES!=0&&local_end>STACK_BYTES) || host_end>65'h10000000000000000;
+      |                                             ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_store_addr.sv:50:74: Operator GT expects 65 bits on the LHS, but LHS's VARREF 'local_end' generates 38 bits.
+                                                      : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_store'
+   50 |         wire desc_bad=daddr_invalid || d_end>(65'h1<<ADDR_W) || local_end>(65'h1<<LOCAL_W) || (STACK_BYTES!=0&&local_end>STACK_BYTES) || host_end>65'h10000000000000000;
+      |                                                                          ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_store_addr.sv:50:121: Operator GT expects 64 bits on the LHS, but LHS's VARREF 'local_end' generates 38 bits.
+                                                       : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_store'
+   50 |         wire desc_bad=daddr_invalid || d_end>(65'h1<<ADDR_W) || local_end>(65'h1<<LOCAL_W) || (STACK_BYTES!=0&&local_end>STACK_BYTES) || host_end>65'h10000000000000000;
+      |                                                                                                                         ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_store_addr.sv:95:59: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 8 bits.
+                                                      : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_store'
+   95 |  if(busy&&!m_awvalid&&w_left==0&&aw_sec!=nsec&&outstanding<MAXOUT)begin m_awvalid<=1;m_awaddr<=aw_next;m_awlen<=len[7:0]-1'b1;end
+      |                                                           ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_addr.sv:109:86: Operator GT expects 65 bits on the LHS, but LHS's VARREF 'STACK_BYTES' generates 64 bits.
+                                                        : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_load'
+  109 |         initial if(ADDR_W<32||ADDR_W>64||STACK_W<0||STACK_W>2||LOCAL_W<5||STACK_BYTES>(65'h1<<LOCAL_W)) $fatal(1,"loader address geometry");
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_addr.sv:114:45: Operator GT expects 65 bits on the LHS, but LHS's VARREF 'd_end' generates 38 bits.
+                                                        : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_load'
+  114 |         wire desc_bad=daddr_invalid || d_end>(65'h1<<ADDR_W) || local_end>(65'h1<<LOCAL_W) || (STACK_BYTES!=0&&local_end>STACK_BYTES) || host_end>65'h10000000000000000;
+      |                                             ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_addr.sv:114:74: Operator GT expects 65 bits on the LHS, but LHS's VARREF 'local_end' generates 38 bits.
+                                                        : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_load'
+  114 |         wire desc_bad=daddr_invalid || d_end>(65'h1<<ADDR_W) || local_end>(65'h1<<LOCAL_W) || (STACK_BYTES!=0&&local_end>STACK_BYTES) || host_end>65'h10000000000000000;
+      |                                                                          ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_addr.sv:114:121: Operator GT expects 64 bits on the LHS, but LHS's VARREF 'local_end' generates 38 bits.
+                                                         : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.g_die[0].u_load'
+  114 |         wire desc_bad=daddr_invalid || d_end>(65'h1<<ADDR_W) || local_end>(65'h1<<LOCAL_W) || (STACK_BYTES!=0&&local_end>STACK_BYTES) || host_end>65'h10000000000000000;
+      |                                                                                                                         ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:33:51: Operator SUB expects 32 or 7 bits on the LHS, but LHS's VARREF 'rpick' generates 1 bits.
+                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   33 |  assign m_araddr=rpick==0?h_araddr:l_araddr[(rpick-1)*64+:64];
+      |                                                   ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:34:46: Operator SUB expects 32 or 4 bits on the LHS, but LHS's VARREF 'rpick' generates 1 bits.
+                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   34 |  assign m_arlen=rpick==0?8'b0:{l_arlen[(rpick-1)*8+:6],2'b11};assign m_arsize=3;
+      |                                              ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:40:51: Operator SUB expects 32 or 7 bits on the LHS, but LHS's VARREF 'wpick' generates 1 bits.
+                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   40 |  assign m_awaddr=wpick==0?h_awaddr:l_awaddr[(wpick-1)*64+:64];
+      |                                                   ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:41:46: Operator SUB expects 32 or 4 bits on the LHS, but LHS's VARREF 'wpick' generates 1 bits.
+                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   41 |  assign m_awlen=wpick==0?8'b0:{l_awlen[(wpick-1)*8+:6],2'b11};assign m_awsize=3;
+      |                                              ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:44:42: Operator SUB expects 32 or 9 bits on the LHS, but LHS's VARREF 'wo' generates 1 bits.
+                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   44 |  assign m_wdata=wo==0?h_wdata:l_wdata[(wo-1)*256+wp*64+:64];
+      |                                          ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:45:42: Operator SUB expects 32 or 6 bits on the LHS, but LHS's VARREF 'wo' generates 1 bits.
+                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   45 |  assign m_wstrb=wo==0?h_wstrb:l_wstrb[(wo-1)*32+wp*8+:8];
+      |                                          ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:63:111: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rpick' generates 1 bits.
+                                                  : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   63 |  if(m_arvalid&&m_arready)begin rlock<=0;rbusy<=1;ro<=rpick;rp<=0;pv<=0;pe<=0;rleft<={1'b0,m_arlen}+1;rr<=rpick==ND?CW'(0):rpick+1'b1;if(rpick!=0&&l_arlen[(rpick-1)*8+:8]>=64)fault<=1;end
+      |                                                                                                               ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:63:161: Operator SUB expects 32 or 4 bits on the LHS, but LHS's VARREF 'rpick' generates 1 bits.
+                                                  : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   63 |  if(m_arvalid&&m_arready)begin rlock<=0;rbusy<=1;ro<=rpick;rp<=0;pv<=0;pe<=0;rleft<={1'b0,m_arlen}+1;rr<=rpick==ND?CW'(0):rpick+1'b1;if(rpick!=0&&l_arlen[(rpick-1)*8+:8]>=64)fault<=1;end
+      |                                                                                                                                                                 ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:64:99: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wpick' generates 1 bits.
+                                                 : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   64 |  if(m_awvalid&&m_awready)begin wlock<=0;wbusy<=1;wo<=wpick;wp<=0;wleft<={1'b0,m_awlen}+1;wr<=wpick==ND?CW'(0):wpick+1'b1;if(wpick!=0&&l_awlen[(wpick-1)*8+:8]>=64)fault<=1;end
+      |                                                                                                   ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_dma64.sv:64:149: Operator SUB expects 32 or 4 bits on the LHS, but LHS's VARREF 'wpick' generates 1 bits.
+                                                  : ... note: In instance 'ot_hbm_accel_die_host_join.loader.g_on.u_dma'
+   64 |  if(m_awvalid&&m_awready)begin wlock<=0;wbusy<=1;wo<=wpick;wp<=0;wleft<={1'b0,m_awlen}+1;wr<=wpick==ND?CW'(0):wpick+1'b1;if(wpick!=0&&l_awlen[(wpick-1)*8+:8]>=64)fault<=1;end
+      |                                                                                                                                                     ^
+%Warning-WIDTHTRUNC: ot_hbm_r14_pkg.sv:25:10: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's AND generates 34 bits.
+                                            : ... note: In instance 'ot_hbm_accel_die_host_join.movement'
+   25 |     pc_of=((s>>2)^(s>>7)^(s>>12))&31;
+      |          ^
+%Warning-WIDTHTRUNC: ot_hbm_r14_pkg.sv:28:31: Operator ASSIGN expects 19 bits on the Assign RHS, but Assign RHS's SHIFTR generates 34 bits.
+                                            : ... note: In instance 'ot_hbm_accel_die_host_join.movement'
+   28 |     logic [18:0] row;begin row=s>>15;
+      |                               ^
+%Warning-WIDTHEXPAND: ot_hbm_r14_pkg.sv:29:30: Operator SHIFTR expects 34 bits on the LHS, but LHS's VARREF 'row' generates 19 bits.
+                                             : ... note: In instance 'ot_hbm_accel_die_host_join.movement'
+   29 |       bank_of=((((s>>12)^(row>>2))&7)<<2)|((s^row)&3);end
+      |                              ^~
+%Warning-WIDTHEXPAND: ot_hbm_r14_pkg.sv:29:46: Operator XOR expects 34 bits on the RHS, but RHS's VARREF 'row' generates 19 bits.
+                                             : ... note: In instance 'ot_hbm_accel_die_host_join.movement'
+   29 |       bank_of=((((s>>12)^(row>>2))&7)<<2)|((s^row)&3);end
+      |                                              ^
+%Warning-WIDTHTRUNC: ot_hbm_r14_pkg.sv:29:14: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's OR generates 34 bits.
+                                            : ... note: In instance 'ot_hbm_accel_die_host_join.movement'
+   29 |       bank_of=((((s>>12)^(row>>2))&7)<<2)|((s^row)&3);end
+      |              ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:45:57: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   45 |  wire[OWN-1:0] ws=!s_awaddr[11]?OWN'(0):((s_awaddr[10:8]<ND&&!s_awaddr[7]&&s_wstrb==4'hf)?OWN'(1+2*s_awaddr[10:8]+s_awaddr[6]):OWN'(2*ND+1));
+      |                                                         ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:46:57: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   46 |  wire[OWN-1:0] rs=!s_araddr[11]?OWN'(0):((s_araddr[10:8]<ND&&!s_araddr[7])?OWN'(1+2*s_araddr[10:8]+s_araddr[6]):OWN'(2*ND+1));
+      |                                                         ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:52:44: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ws' generates 2 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   52 |  assign s_awready=!wp&&(ws==0?h_awready:(ws==2*ND+1?(s_awvalid&&s_wvalid):laready[ws-1]));
+      |                                            ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:53:42: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ws' generates 2 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   53 |  assign s_wready=!wp&&(ws==0?h_wready:(ws==2*ND+1?(s_awvalid&&s_wvalid):lwready[ws-1]));
+      |                                          ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:54:41: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wo' generates 2 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   54 |  assign s_bvalid=wp&&(wo==0?h_bvalid:(wo==2*ND+1?1'b1:lbvalid[wo-1]));
+      |                                         ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:55:44: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rs' generates 2 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   55 |  assign s_arready=!rp&&(rs==0?h_arready:(rs==2*ND+1?s_arvalid:laready_r[rs-1]));
+      |                                            ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:56:41: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ro' generates 2 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   56 |  assign s_rvalid=rp&&(ro==0?h_rvalid:(ro==2*ND+1?1'b1:lrvalid[ro-1]));
+      |                                         ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:57:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ro' generates 2 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   57 |  assign s_rdata=ro==0?h_rdata:(ro==2*ND+1?32'hbad00800:lrdata[(ro-1)*32+:32]);
+      |                                  ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:57:66: Operator SUB expects 32 or 6 bits on the LHS, but LHS's VARREF 'ro' generates 2 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   57 |  assign s_rdata=ro==0?h_rdata:(ro==2*ND+1?32'hbad00800:lrdata[(ro-1)*32+:32]);
+      |                                                                  ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:59:70: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ws' generates 2 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   59 |  if(s_awvalid&&s_awready&&s_wvalid&&s_wready)begin wp<=1;wo<=ws;if(ws==2*ND+1)csr_fault<=1;end
+      |                                                                      ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_loader_host_addr.sv:61:50: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rs' generates 2 bits.
+                                                            : ... note: In instance 'ot_hbm_accel_die_host_join.loader'
+   61 |  if(s_arvalid&&s_arready)begin rp<=1;ro<=rs;if(rs==2*ND+1)csr_fault<=1;end
+      |                                                  ^~
+%Warning-SYMRSVDWORD: ot_hbm_r14_pkg.sv:5:28: Symbol matches C++ common word: 'stack'
+    5 |     logic die; logic [1:0] stack; logic [33:0] sector;
+      |                            ^~~~~
+                      ... For warning description see https://verilator.org/warn/SYMRSVDWORD?v=5.050
+                      ... Use "/* verilator lint_off SYMRSVDWORD */" and lint_on around source to disable this message.
+%Warning-LATCH: ot_hbm_accel_dma64.sv:27:2: Latch inferred for signal 'ot_hbm_accel_die_host_join.loader.g_on.u_dma.x' (not all control paths of combinational always assign a value)
+                                          : ... Suggest use of always_latch for intentional latches
+   27 |  always @*begin
+      |  ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.481 MB sources in 11 modules, into 0.613 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.053 s (elab=0.010, cvt=0.030, bld=0.000); cpu 0.053 s on 1 threads; allocated 41.383 MB

@@ -183,7 +183,7 @@ def emit(owner, out, *, wavefront=False):
           '        runtime.all_copies_drained=runtime.remote_drained;\n'
           '        runtime.bind_receipt=[&](const DsromC8SourceOffer& offer,const std::string& node){program_book.bind(drain_board,offer,node);};\n'
           '        runtime.source_span_lease=[&](int die,uint64_t identity,uint32_t address,size_t words){return drain_board.source_span_lease(die,identity,address,words);};')
-    path.write_text(native+'#include <dlfcn.h>'+s)
+    path.write_text(native+'#include <dlfcn.h>\n'+s)
     return path
 
 

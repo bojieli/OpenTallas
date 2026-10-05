@@ -28,7 +28,8 @@ struct NativeSu {
  std::deque<S81EmbeddingOutput> outputs;
  NativeSu(DsromS81MinimumRuntime&r,uint64_t identity,dsrom_s81_minimum::PrefixPublication&p,
           const DsromS81MinimumSourceIo& source):runtime(r),id(identity),publication(p),io(source),leaf(r.context,"minimum_native_su256"){
-  if(!r.context||!r.cycle||identity!=(1ull<<31)||!io.read_word||!io.span_lease||!io.offer||!io.visible)
+  if(!r.context||!r.cycle||identity>=(1ull<<47)||
+     !io.read_word||!io.span_lease||!io.offer||!io.visible)
    throw std::runtime_error("SU256 requires same runtime/context and actual scalar SourceIo");
   leaf.clk=0;leaf.rst_n=0;leaf.go=0;for(unsigned j=0;j<1024;++j)leaf.rd_q[j]=0;
   for(unsigned j=0;j<256;++j)leaf.vi_q[j]=0;
@@ -125,6 +126,7 @@ struct NativeSu {
  bool inputs(const DsromS81PrefixOperation&o){
   try {
    require(!stopped,"SU quarantined");
+   require(runtime.identity&&*runtime.identity==id,"SU operand staging requires accepted source context");
    if(admitted)return false;
    if(op&&op->index==o.index)require(op->unit==o.unit&&op->instruction==o.instruction,
     "SU held literal changed during operand staging");
@@ -186,9 +188,11 @@ struct NativeSu {
   }catch(...){stopped=true;throw;}
  }
  void drive(const DsromS81PrefixOperation&o,bool go){
-  leaf.go=go;if(!go)return;
+  leaf.go=0;if(!go)return;
+  require(!stopped&&runtime.identity&&*runtime.identity==id,"SU GO requires accepted source context");
   require(op&&op->index==o.index&&op->instruction==o.instruction&&indirect_planned&&
           index_fetched==index_addresses.size()&&fetched==addresses.size()&&!admitted,"SU GO before actual prefetch");
+  leaf.go=1;
   // Effective dynamic native ports stay fixed from the staged operand capture.
  }
  void prepare(const DsromS81PairResult&){

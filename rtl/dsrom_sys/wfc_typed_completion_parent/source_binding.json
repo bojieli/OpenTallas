@@ -1,0 +1,18 @@
+{
+  "selected": "rtl/dsrom_sys/wavefront_native_result_read_parent/native/ot_v41_rt_die_l20_c8.sv",
+  "generated": "rtl/dsrom_sys/wfc_typed_completion_parent/ot_v41_rt_die_l20_c8.sv",
+  "input_sha256": "00a71ce7c9b9205541ffb2aa5193fed4e43ae20f0d973949a3f3a29d39190a40",
+  "output_sha256": "0593eb90c95bf6f1d5248a9c6e62c274a4e65c1a4bba022b4e67cf21c6401322",
+  "join_source": "rtl/rom/wavefront/completion/ot_dsrom_wf_typed_completion_join.sv",
+  "default_WFC_TYPED_COMPLETION_JOIN": 0,
+  "pinned_fbd7531ca_sources_unchanged": true,
+  "controller_token_completion": "TOKEN_RESULT carries strict token_result_valid; STAGE_HANDOFF may complete only SOURCE0/SEND_RESULT0/COMBINE_IN0 intermediate controller, raw53bit carried fields unchanged and never claimed token-valid",
+  "stage_handoff_consumer": "Compatible intermediate controller uses actual wf_stage_accepted; additional actual typed consumer ACK wf_join_handoff_accepted remains required pin if not present, never host-held result",
+  "wholeplan_coverage_bound": false,
+  "visibility_bound": false,
+  "stage_handoff_END_and_final_fence_bound": false,
+  "token_HEAD_terminal_bound": false,
+  "source_clock": "selected clk unchanged",
+  "actual_consumer_loads": null,
+  "physical_context_qualified": false
+}

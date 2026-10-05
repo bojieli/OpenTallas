@@ -46,6 +46,7 @@ extern "C" int dsrom_s81_source_main(DsromS81Runtime&, const char* output);
 '''
     native = source[:start]+'#include "dsrom_s81_scheduler_api.hpp"\n'+source[end:]
     if wavefront:
+        native='#include "s81_wavefront_native_result_read.hpp"\n'+native
         # Bind the existing typed join while DIE is still known. DieBase and
         # the caller DSO ABI remain unchanged; there is no default provider.
         anchor='    Die(RtPool& pool, const std::string& dir, int id_, int argc, const char** argv) : id(id_) {'
@@ -53,7 +54,25 @@ extern "C" int dsrom_s81_source_main(DsromS81Runtime&, const char* output);
             raise ValueError('typed selected Die constructor changed')
         native=native.replace(anchor,r'''
     std::function<void()> wave_prepare,wave_sample,wave_after,wave_quarantine;
-    bool wave_sampled=false,wave_armed=false;
+    std::function<void()> result_sample,result_after,result_quarantine;
+    bool wave_sampled=false,wave_armed=false,result_sampled=false;
+    template<class Reader> void bind_native_result_read(std::shared_ptr<Reader> reader) {
+        if(result_sample||!reader||d->clk||d->rst_n)
+            throw std::runtime_error("HEAD result needs actual cold typed reader");
+        // The existing reader retains the accepted offer, native producer/END
+        // PCs and sequence. It never grants the poller's enclosing fences.
+        result_sample=[reader](){reader->sample_before_edge();};
+        result_after=[reader](){reader->after_edge();};
+        result_quarantine=[reader](){reader->warm_quarantine();};
+    }
+    auto bind_native_head_terminal(DsromS81NativeResultTerminal terminal,uint64_t sequence) {
+        if(terminal.source_node!="Lhead.I6"||terminal.offer.die_id%4!=id||
+           unsigned(terminal.producer_pc)+1!=unsigned(terminal.end_pc))
+            throw std::runtime_error("HEAD requires actual accepted compute home and released I5/I6 PCs");
+        auto reader=dsrom_s81_bind_native_result_read(*this,std::move(terminal),sequence,true);
+        bind_native_result_read(reader);
+        return reader; // SAME reader supplies existing stage poller's ReadResult
+    }
     template<class Join> void bind_native_wave(std::shared_ptr<Join> joined,
         std::function<void()> before_edge,std::function<void()> sample_before_edge,
         std::function<void()> after_edge) {
@@ -75,8 +94,14 @@ extern "C" int dsrom_s81_source_main(DsromS81Runtime&, const char* output);
         // Quarantining only Join would leave that enclosing owner runnable.
         wave_quarantine=bound.warm_quarantine;
     }
-    void arm_native_wave() {wave_armed=bool(wave_prepare);}
+    void arm_native_wave() {wave_armed=bool(wave_prepare)||bool(result_sample);}
     void finish_native_wave_edge() {
+        // Native END and its actual C8 retirement are observed before the
+        // stage poller reads the held result on this same accepted edge.
+        if(result_sampled) {
+            if(!d->clk||!d->rst_n)throw std::runtime_error("HEAD result sampled edge lost");
+            result_after();result_sampled=false;
+        }
         if(wave_sampled) {
             if(!d->clk||!d->rst_n)throw std::runtime_error("WAVE sampled edge lost");
             wave_after();wave_sampled=false;
@@ -88,12 +113,15 @@ extern "C" int dsrom_s81_source_main(DsromS81Runtime&, const char* output);
             raise ValueError('actual shared edge hook changed')
         native=native.replace(edge,edge+r'''
         if(wave_armed&&clk&&rst) {
-            if(d->clk||wave_sampled)throw std::runtime_error("WAVE edge sampled twice");
+            if(d->clk||wave_sampled||result_sampled)throw std::runtime_error("WAVE edge sampled twice");
             if(!d->rst_n){d->rst_n=1;d->eval();}
-            wave_prepare();d->eval(); // LOW settle; no new clock
-            wave_sample();wave_sampled=true;
+            if(wave_prepare)wave_prepare();
+            d->eval(); // LOW settle; no new clock
+            if(wave_sample){wave_sample();wave_sampled=true;}
+            if(result_sample){result_sample();result_sampled=true;}
         } else if(wave_armed&&!rst&&d->rst_n) {
-            wave_quarantine();
+            if(result_quarantine)result_quarantine();
+            if(wave_quarantine)wave_quarantine();
             throw std::runtime_error("WAVE warm reset retains accepted stage debt");
         }
 ''')
@@ -213,7 +241,7 @@ int main(int argc,char** argv) {
     for name in ['s81_source_caller.cpp', 's81_source_caller_plan.hpp', 's81_source_receipts.cpp',
                  's81_source_caller_hooks.hpp', 's81_wavefront_c8_group_step.hpp',
                  's81_wavefront_c8_port_join.hpp', 's81_wavefront_stage_poller.hpp',
-                 's81_wavefront_result_ledger.hpp']:
+                 's81_wavefront_result_ledger.hpp', 's81_wavefront_native_result_read.hpp']:
         (out/name).write_bytes((support/name).read_bytes())
     return out/'s81_c8_scheduler.cpp'
 

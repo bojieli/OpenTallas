@@ -1,0 +1,35 @@
+{
+  "status": "PASS_MINIMUM_CONNECTED_HEAD_READINESS",
+  "source_commit": "973696daea77f546dc8030a08afff379ace950d1",
+  "source_pins": {
+    "rtl/hbm_accel/svc/aq_head_ready_cut/ot_hbm_r14_stream_pc_aq_head_ready_cut.sv": "7be5be3f78d7081430544ab22a6cef71c03091364b14e267ab7ae034e3f68819",
+    "rtl/hbm_accel/svc/aq_head_ready_cut/ot_hbm_r14_stream_stack_aq_head_ready_cut.sv": "a70b662c8c9497cb2f658c718f8745c9b4dd7355a6f275ec5f808143ceafa680",
+    "rtl/test/hbm_fmax_svc/tb_svc_aq_head_ready_lockstep.sv": "31c1e65e8550db078d29901435068f0a6d8048699b7fe5d04378411104c3fb96",
+    "tools/svc_aq_head_ready_lockstep.sh": "615d851668c32f9fb7ef0030b5e8dec8729d4116719ba13a889188aae19b8ce1",
+    "results/uarch/hbm_stream_aq_head_ready_cut_20261005/model.json": "1c0dabb0d018a41bf9395f344675a0ee0acbb99c2ab98eac394de4d6d72e32f1",
+    "tools/uarch_model.py": "69eb394160a7247c4ba0582847ec7a7e13004d200dc9770f94f2f17251dac734"
+  },
+  "cycles": 200000,
+  "mismatches": 0,
+  "fault_cycles": 0,
+  "checks": [
+    "all interface outputs original49fa vs default0 and enabled1",
+    "nexthead readiness invariant after each observed edge",
+    "queue occupancy and accepted row-grant debt equality",
+    "same actual grant stalls credit returns refresh queued reads writes and warm resets"
+  ],
+  "scope": "twoPC minimum connected source gate; no whole-token, PHY, or current service SSFF qualification",
+  "known_separate_timing_path": "retained PC0 last1->c_oh28 SS-16.29ps; extraction raw log included alongside source",
+  "physical_status": "ONE route supervisor903011 running; no adoption",
+  "raw_artifacts": {
+    "compile_pc0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile_pc1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gate.log": "c5249ef87123fa8fb811b8058aaa6dbb7160d369af21076d6db9cbb4cf2d0db3",
+    "launch.json": "69b32cd342adcf54892f0496fc5d4a8a1c0861137c6465310db3db33f5ff0d72",
+    "pc0_seed1.log": "c138e3d05350aada102375e585b2776709d2ee38717f3e072b17aac453557e6e",
+    "pc1_seed2.log": "a6a299cf5a03b5954c23893ea2234cd8fa91e4b4bb7f5a801c3f765ac49d58e6",
+    "result.txt": "c982b799535781a05a0e4b5a2922cb89b845bd6ae3db6ff856a7ce9db5e952d3",
+    "run.sh": "2e79253b60c538ad5c62e7cdc5127ade2c1704b8eb738db3edf359527634d704"
+  }
+}

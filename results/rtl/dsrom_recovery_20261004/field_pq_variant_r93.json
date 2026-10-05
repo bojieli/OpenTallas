@@ -1,0 +1,163 @@
+{
+ "name": "S81+R93",
+ "new_bf_site": 1773,
+ "region": 93,
+ "moved": [
+  {
+   "phase": "L0.wo_a.g0",
+   "alias": "wo_a.group0.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1769
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L0.wo_a.g1",
+   "alias": "wo_a.group1.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1760
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L1.wo_a.g0",
+   "alias": "wo_a.group0.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1765
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L1.wo_a.g1",
+   "alias": "wo_a.group1.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1769
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L2.wo_a.g0",
+   "alias": "wo_a.group0.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1765
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L2.wo_a.g1",
+   "alias": "wo_a.group1.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1760
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L3.wo_a.g0",
+   "alias": "wo_a.group0.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1760
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L3.wo_a.g1",
+   "alias": "wo_a.group1.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1765
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L20.wo_a.g0",
+   "alias": "wo_a.group0.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1760
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L20.wo_a.g1",
+   "alias": "wo_a.group1.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1765
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L21.wo_a.g0",
+   "alias": "wo_a.group0.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1765
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L21.wo_a.g1",
+   "alias": "wo_a.group1.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1760
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L24.wo_a.g0",
+   "alias": "wo_a.group0.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1765
+   ],
+   "to_pair": 1773
+  },
+  {
+   "phase": "L24.wo_a.g1",
+   "alias": "wo_a.group1.rows768",
+   "superrows": [
+    93
+   ],
+   "from_pairs": [
+    1760
+   ],
+   "to_pair": 1773
+  }
+ ],
+ "base_plan_sha256": "16f2373b73cd92f2d99a93ae7fcf60429a1c35236f030009327f07d41793590d",
+ "note": "S81 region 93 is the only region with 3 BF16-capable pairs (119 have 4, 8 have 5):\nwith 4 superrows of a wo_a group in it, one BF pair holds two of them (16 words a round > the BF16 element's 8),\nwhich splits EVERY layer's wo_a group into a rows0 and a rows768 phase die-wide.  The variant makes one FP pair of\nregion 93 (NEW_BF, 1773: ~2,860 of 8,192 words used) BF16-capable (519 -> 520 BF sites on the die) and moves the\nrows768 superrow(s) of each wo_a group in region 93 onto it; each group is then ONE legal phase in every region.\nEverything else is the S81 canonical map unchanged."
+}

@@ -1,0 +1,56 @@
+{
+  "verified_at_utc": "2026-10-05T06:47:19Z",
+  "owner": "Bacon (Codex)",
+  "family_primary": "Euclid",
+  "transfer": "Euclid transferred the already-launched unique util45 handle; no duplicate launch, script edit, source edit, or restart.",
+  "registry_name": "svc-b-cmd-u45-euclid",
+  "status": "admission_wait",
+  "host": "ot-epyc2",
+  "job_dir": "/srv/opentallas-scratch/jobs/euclid-svc-b-cmd-u45-r1",
+  "readonly_source_worktree": "/srv/opentallas/repos/euclid-svc-fanout-20261005",
+  "source_commit": "db420f504485a99a11fb7e1430bdd7b221f31a75",
+  "published_source_merge": "290069275362dfab53e3aab91f5046be83142316",
+  "source_sha256": "dde4c2ba9853e06f10b472dc3775db8268e157e0181697fee047d5b2933d74d5",
+  "runner_sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+  "connected_gate_sha256": "04b293a64c2dc4f58949287aedd3b8a5938dde0b2d0e214bb4597f8f0591be0d",
+  "pids": {
+    "supervisor": 3491600,
+    "admission_shell": 3491601,
+    "admission_guard": 3491603
+  },
+  "observed": {
+    "load_1m": 249.46,
+    "cpu_admission_threshold": 192,
+    "route_log_bytes": 0,
+    "terminal_record_present": false
+  },
+  "constraints": {
+    "core_utilization": 45,
+    "place_density": 0.6,
+    "period_ns": 0.833,
+    "setup_uncertainty_ns": 0.06,
+    "hold_uncertainty_ns": 0.025,
+    "io_delay_fraction": 0,
+    "hold_margin_ns": 0.01,
+    "setup_corner": "WC",
+    "hold_corners": [
+      "WC",
+      "BC"
+    ],
+    "cores": 16,
+    "admission_GiB": 16,
+    "nice": 10
+  },
+  "unlimited": [
+    "synthesis_timeout",
+    "flow_timeout",
+    "cpu_time",
+    "address_space",
+    "file_size",
+    "data_size",
+    "resident_memory"
+  ],
+  "physical_verdict": "PENDING; synthesis has not started. No clock closure or adoption claim.",
+  "next_step": "Existing supervisor runs synthesis/P&R after admission and invokes corner_sta after a final ODB. Preserve source worktree and job objects; collect terminal physical/corner/exit/log outputs in this u45 namespace and assess actual SS/FF and physical violations without constraint relaxation.",
+  "scope": "One geometry variant only. CMD_MATCH_CUT=1 on the already-passed frozen source; no gate rerun, repack, inference, RTL change, or primary-util40 edit."
+}

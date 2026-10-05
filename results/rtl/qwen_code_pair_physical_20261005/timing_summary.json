@@ -1,0 +1,90 @@
+{
+  "SS": {
+    "data_to_capture": {
+      "startpoint": "u_leaf.on.column[0].bank[4].data_store",
+      "endpoint": "_51801_ (rising edge-triggered flip-flop clocked by core)",
+      "slack_ps": -20.693502,
+      "arrival_ps": 765.420166
+    },
+    "check_to_capture": {
+      "startpoint": "u_leaf.on.column[0].bank[1].check_store",
+      "endpoint": "_52664_ (rising edge-triggered flip-flop clocked by core)",
+      "slack_ps": 20.175528,
+      "arrival_ps": 681.978882
+    },
+    "capture_to_boundary": {
+      "startpoint": "_53197_ (rising edge-triggered flip-flop clocked by core)",
+      "endpoint": "rom_rd[141] (output port clocked by core)",
+      "slack_ps": -1556.269287,
+      "arrival_ps": 2209.602783
+    },
+    "all_setup": {
+      "startpoint": "_53276_ (rising edge-triggered flip-flop clocked by core)",
+      "endpoint": "_53291_ (rising edge-triggered flip-flop clocked by core)",
+      "slack_ps": -7716.757812,
+      "arrival_ps": 8464.391602
+    },
+    "all_hold": {
+      "startpoint": "rd_row[2] (input port clocked by core)",
+      "endpoint": "u_leaf.on.column[0].bank[0].data_store",
+      "slack_ps": -41.56958,
+      "arrival_ps": 10.345891
+    },
+    "macro_inputs_setup": {
+      "startpoint": "_53276_ (rising edge-triggered flip-flop clocked by core)",
+      "endpoint": "u_leaf.on.column[1].bank[3].check_store",
+      "slack_ps": -4267.648926,
+      "arrival_ps": 4998.254883
+    },
+    "macro_inputs_hold": {
+      "startpoint": "rd_row[2] (input port clocked by core)",
+      "endpoint": "u_leaf.on.column[0].bank[0].data_store",
+      "slack_ps": -41.56958,
+      "arrival_ps": 10.345891
+    }
+  },
+  "FF": {
+    "data_to_capture": {
+      "startpoint": "u_leaf.on.column[0].bank[4].data_store",
+      "endpoint": "_51801_ (rising edge-triggered flip-flop clocked by core)",
+      "slack_ps": 279.381195,
+      "arrival_ps": 484.498596
+    },
+    "check_to_capture": {
+      "startpoint": "u_leaf.on.column[0].bank[3].check_store",
+      "endpoint": "_52088_ (rising edge-triggered flip-flop clocked by core)",
+      "slack_ps": 360.494171,
+      "arrival_ps": 389.06076
+    },
+    "capture_to_boundary": {
+      "startpoint": "_53197_ (rising edge-triggered flip-flop clocked by core)",
+      "endpoint": "rom_rd[141] (output port clocked by core)",
+      "slack_ps": -379.821014,
+      "arrival_ps": 1033.154297
+    },
+    "all_setup": {
+      "startpoint": "_53264_ (rising edge-triggered flip-flop clocked by core)",
+      "endpoint": "_53291_ (rising edge-triggered flip-flop clocked by core)",
+      "slack_ps": -2923.432129,
+      "arrival_ps": 3687.09375
+    },
+    "all_hold": {
+      "startpoint": "rd_row[2] (input port clocked by core)",
+      "endpoint": "u_leaf.on.column[0].bank[0].data_store",
+      "slack_ps": -38.515537,
+      "arrival_ps": 5.723094
+    },
+    "macro_inputs_setup": {
+      "startpoint": "_53264_ (rising edge-triggered flip-flop clocked by core)",
+      "endpoint": "u_leaf.on.column[1].bank[3].check_store",
+      "slack_ps": -1480.279663,
+      "arrival_ps": 2228.951416
+    },
+    "macro_inputs_hold": {
+      "startpoint": "rd_row[2] (input port clocked by core)",
+      "endpoint": "u_leaf.on.column[0].bank[0].data_store",
+      "slack_ps": -38.515537,
+      "arrival_ps": 5.723094
+    }
+  }
+}
