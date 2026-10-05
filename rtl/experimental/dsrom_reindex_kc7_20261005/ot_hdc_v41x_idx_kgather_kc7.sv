@@ -60,6 +60,7 @@
 module ot_hdc_v41x_idx_kgctl_kc7 #(
     parameter integer OPT_KC6 = 1,
     parameter integer OPT_KC7 = 0,
+    parameter integer OPT_KC8 = 0,   // grouped registered room, replicated slot write enables
     parameter integer NPC  = 32,
     parameter integer WB   = 128,       // reorder slots (blocks), power of two
     parameter integer AW   = 28,        // sector address bits
@@ -171,10 +172,19 @@ module ot_hdc_v41x_idx_kgctl_kc7 #(
     // in flight (conservative: a FIFO filling anywhere pauses dispatch for a cycle)
     reg            room_all, rob_ok;
     reg [QW-1:0]   inuse;
-    wire           disp = run && hd_v && rob_ok && room_all;
+    // OPT_KC8: the 64-FIFO room AND is retimed: each channel group (4 code + 4 scale FIFOs, beside its
+    // channel copy) registers the AND of its own 8 room bits, and the dispatch ANDs the 8 group flags.
+    // room_g(t+1)[g] = &rm_g(t), so &room_g == room_all every cycle: identical dispatch, zero latency.
+    reg  [7:0]     room_g;
+    wire           room_ok = (OPT_KC8 != 0) ? &room_g : room_all;
+    wire           disp = run && hd_v && rob_ok && room_ok;
     wire           hd_take = !hd_v || disp;
     reg            w_v;
     reg [WB-1:0]   w_oh0, w_oh1;            // the write stage's slots, one-hot (zero when nothing is written)
+    // OPT_KC8: three kept copies of each one-hot (metadata / code-pending / scale-pending writes): a slot's
+    // enable drove 95 mux selects (kc7: 512 post-route slew violations on those nets).  Same D as w_oh*.
+    wire [WB-1:0]  w_oh0_d, w_oh1_d;
+    wire [3*WB-1:0] w_oh0_c, w_oh1_c;
     // The write stage's operands, in GS kept copies (ot_hdc_v41x_kg_kreg_kc7) loaded from the head every cycle
     // (used only on w_v / a one-hot slot): slot copy g feeds slots [g SG, (g+1) SG), channel copy g the request
     // FIFOs of channels [g CG, (g+1) CG); the channel copies' masks are gated by the dispatch (zero otherwise).
@@ -254,6 +264,18 @@ module ot_hdc_v41x_idx_kgctl_kc7 #(
     reg            dq_v; reg [1:0] dq_m; reg [SW-1:0] dq_slot;    // drain decided: read metadata next
     reg [WB-1:0]   dq_oh;
 
+    assign w_oh0_d = (rst_n && !(cmd_v && !busy) && run && disp && hd_m[0]) ? onehot(hd_seq[SW-1:0]) : {WB{1'b0}};
+    assign w_oh1_d = (rst_n && !(cmd_v && !busy) && run && disp && hd_m[1]) ? onehot(hd_s1) : {WB{1'b0}};
+    generate for (genvar wc = 0; wc < 3; wc = wc + 1) begin : g_woh
+        if (OPT_KC8 != 0) begin : g_on
+            ot_hdc_v41x_kg_kreg_kc7 #(.W(WB)) u_w0 (.clk(clk), .d(w_oh0_d), .q(w_oh0_c[wc*WB +: WB]));
+            ot_hdc_v41x_kg_kreg_kc7 #(.W(WB)) u_w1 (.clk(clk), .d(w_oh1_d), .q(w_oh1_c[wc*WB +: WB]));
+        end else begin : g_off
+            assign w_oh0_c[wc*WB +: WB] = w_oh0;
+            assign w_oh1_c[wc*WB +: WB] = w_oh1;
+        end
+    end endgenerate
+
     // per channel issue: the scale head first, else the code head
     reg [NPC-1:0]  iss, use_s;
     integer q;
@@ -313,7 +335,7 @@ module ot_hdc_v41x_idx_kgctl_kc7 #(
             c0_v <= 1'b0; e1_v <= 1'b0; e2_v <= 1'b0; e3_v <= 1'b0; e4_v <= 1'b0; e5_v <= 1'b0;
             hd_v <= 1'b0; w_v <= 1'b0; w_oh0 <= 0; w_oh1 <= 0; pf_n <= 0; pf_wp <= 0; pf_rp <= 0; occ <= 0;
             adm <= 0; adm_q <= 0; cmp <= 0; rq <= 0; adv_r <= 0; hoh <= {{(WB-1){1'b0}}, 1'b1};
-            room_all <= 1'b1; rob_ok <= 1'b1; inuse <= 0;
+            room_all <= 1'b1; room_g <= 8'hff; rob_ok <= 1'b1; inuse <= 0;
             for (p = 0; p < NPC; p = p + 1) rr_oh[p] <= 0;
             for (p = 0; p < 2 * NPC; p = p + 1) begin fq_rp[p] <= 0; fq_wp[p] <= 0; fq_n[p] <= 0; end
             for (p = 0; p < NPC * WB; p = p + 1) cntc[p] <= 2'd0;   // 4 beats wrap it back to 0
@@ -410,6 +432,8 @@ module ot_hdc_v41x_idx_kgctl_kc7 #(
                     end else fq_n[p] <= cnt;
                 end
                 room_all <= &rm;
+                for (g = 0; g < GS; g = g + 1)
+                    room_g[g] <= &{rm[NPC + g*CG +: CG], rm[g*CG +: CG]};
                 // drain stage 1: head and next, in order
                 for (k = 0; k < 4; k = k + 1) rq[k] <= |(cmp & rotl(hoh, k));
                 adv_r <= can1 ? 2'd2 : (can0 ? 2'd1 : 2'd0);
@@ -522,8 +546,14 @@ module ot_hdc_v41x_idx_kgctl_kc7 #(
                 end
         for (e2 = 0; e2 < WB; e2 = e2 + 1)
             for (l2 = 0; l2 < 2; l2 = l2 + 1)
-                if (l2 ? w_oh1[e2] : w_oh0[e2])
-                    {m_blk[e2], m_j[e2], m_f0[e2], m_fc[e2], pend_c[e2], pend_s[e2]} <= sl_q[(2*(e2/SG)+l2)*SLW +: SLW];
+                begin
+                    if (l2 ? w_oh1_c[e2] : w_oh0_c[e2])
+                        {m_blk[e2], m_j[e2], m_f0[e2], m_fc[e2]} <= sl_q[(2*(e2/SG)+l2)*SLW + 2*NPC +: SLW - 2*NPC];
+                    if (l2 ? w_oh1_c[WB + e2] : w_oh0_c[WB + e2])
+                        pend_c[e2] <= sl_q[(2*(e2/SG)+l2)*SLW + NPC +: NPC];
+                    if (l2 ? w_oh1_c[2*WB + e2] : w_oh0_c[2*WB + e2])
+                        pend_s[e2] <= sl_q[(2*(e2/SG)+l2)*SLW +: NPC];
+                end
         // request FIFO entries (lane 0 at the write pointer, lane 1 after it)
         for (p2 = 0; p2 < 2 * NPC; p2 = p2 + 1) begin
             g2 = (p2 % NPC) / CG;
@@ -680,6 +710,7 @@ endmodule
 module ot_hdc_v41x_idx_kgather_kc7 #(
     parameter integer OPT_KC6 = 1,
     parameter integer OPT_KC7 = 0,
+    parameter integer OPT_KC8 = 0,   // grouped registered room, replicated slot write enables
     parameter integer NPC  = 32,
     parameter integer WB   = 128,
     parameter integer AW   = 28,
@@ -755,7 +786,7 @@ module ot_hdc_v41x_idx_kgather_kc7 #(
             if (o_valid && o_ready) cnt_keys_streamed <= cnt_keys_streamed + nko;
             cnt_hbm_beats <= cnt_hbm_beats + nbt;
         end
-    ot_hdc_v41x_idx_kgctl_kc7 #(.OPT_KC6(OPT_KC6), .OPT_KC7(OPT_KC7), .NPC(NPC), .WB(WB), .AW(AW), .HW(HW), .TAGW(TAGW), .LENW(LENW), .BEATW(BEATW),
+    ot_hdc_v41x_idx_kgctl_kc7 #(.OPT_KC6(OPT_KC6), .OPT_KC7(OPT_KC7), .OPT_KC8(OPT_KC8), .NPC(NPC), .WB(WB), .AW(AW), .HW(HW), .TAGW(TAGW), .LENW(LENW), .BEATW(BEATW),
                             .LBW(LBW), .LMW(LMW), .DF(DF)) u_c (
         .clk(clk), .rst_n(rst_n), .lr_re(lr_re), .lr_addr(lr_addr), .lr_e(lr_e), .lr_o(lr_o),
         .cmd_v(cmd_v), .cmd_base(cmd_base), .cmd_skip(cmd_skip), .cmd_n(cmd_n), .busy(cbusy), .fault(fault),
