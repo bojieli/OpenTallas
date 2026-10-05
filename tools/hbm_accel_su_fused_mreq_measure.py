@@ -18,7 +18,7 @@ def main():
   'rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv',
   'rtl/hbm_accel/su/ot_hbm_accel_su_fused_mreq.sv',
   'rtl/test/tb_hbm_accel_su_fused_mreq.sv',
-  'rtl/gpu_sys/ot_gpu_cdc_fifo.sv','rtl/gpu_sys/ot_gpu_mreq_cdc.sv',
+  'rtl/link/ot_link_afifo.sv','rtl/gpu_sys/ot_gpu_cdc_fifo.sv','rtl/gpu_sys/ot_gpu_mreq_cdc.sv',
   'rtl/gpu_sys/ot_gpu_xbar.sv','rtl/gpu_sys/ot_gpu_l2_slice.sv',
   'rtl/gpu_sys/ot_gpu_hbm_partition.sv','rtl/gpu_sys/ot_gpu_memsys.sv',
   'rtl/hdc/kv/ot_hdc_hbm_model.sv']
