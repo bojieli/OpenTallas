@@ -89,7 +89,7 @@ module tb_hdc_core_v41_mtp_slice #(
     wire [MP*G-1:0] vw_me_we; wire [MP*G*AW-1:0] vw_me_addr; wire [MP*G*W-1:0] vw_me_mask;
     wire [MP*G*W*32-1:0] vw_me_data;
     wire [MP*G-1:0] vra_re; wire [MP*G*AW-1:0] vra_addr; reg [MP*G*W*32-1:0] vra_raw; wire [MP*G*W*32-1:0] vra_q;
-    ot_hdc_delay #(.W(MP*G*W*32),.D(2)) u_protected_return (.clk(clk),.rst_n(rst_n),.d(vra_raw),.q(vra_q));
+    ot_hdc_delay #(.W(MP*G*W*32),.D(`OT_FH_RETURN_EXTRA)) u_protected_return (.clk(clk),.rst_n(rst_n),.d(vra_raw),.q(vra_q));
     wire [MP*SW-1:0] vw_su_we, vw_rd_we; wire [MP*SW*AW-1:0] vw_su_addr, vw_rd_addr;
     wire [MP*SW*32-1:0] vw_su_data, vw_rd_data;
     wire vw_xe_we, ww_x_we;

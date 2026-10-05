@@ -3,9 +3,10 @@
 // One protected macro per independently masked lane; no warm-lane overwrite.
 // Requests are bank-aligned words relative to LG_BASE_WORD, with row bounds.
 // Macro -> raw-codeword register -> corrected/identity-checked data register.
-// This adds exactly two return cycles. SECDED applies to mutable SRAM only.
+// This adds two return cycles, or three with default-off PROTECT_SPLIT.
+// SECDED applies to mutable SRAM only.
 module ot_hdc_v41_fh_sram_return #(
-    parameter integer W=16,G=4,AW=24,ROWS=505,
+    parameter integer W=16,G=4,AW=24,ROWS=505,PROTECT_SPLIT=0,
     parameter [AW-1:0] LG_BASE_WORD=0
 )(
     input wire clk,rst_n,
@@ -39,7 +40,7 @@ module ot_hdc_v41_fh_sram_return #(
     end
     for(genvar b=0;b<G*W;b=b+1) begin : g_bank
         localparam integer GROUP=b/W;
-        ot_hdc_v41_fh_sram_lane #(.BANK(b)) u_lane (
+        ot_hdc_v41_fh_sram_lane #(.BANK(b),.PROTECT_SPLIT(PROTECT_SPLIT)) u_lane (
             .clk(clk),.rst_n(rst_n),.read_ok(read_ok[GROUP]),.read_row(read_row[9*GROUP+:9]),
             .write_ok(write_ok[GROUP]&&wr_mask[b]),.write_row(write_row[9*GROUP+:9]),.wr_data(wr_data[32*b+:32]),
             .rd_data(rd_data[32*b+:32]),.rd_valid(rd_valid[b]),.corrected(corrected[b]),
@@ -76,7 +77,7 @@ module ot_hdc_v41_fh_sram_enc(input wire [47:0] payload,output wire [54:0] word)
 endmodule
 
 (* keep_hierarchy *)
-module ot_hdc_v41_fh_sram_lane #(parameter [5:0] BANK=0)(
+module ot_hdc_v41_fh_sram_lane #(parameter [5:0] BANK=0,parameter integer PROTECT_SPLIT=0)(
     input wire clk,rst_n,read_ok,write_ok,
     input wire [8:0] read_row,write_row,
     input wire [31:0] wr_data,
@@ -127,16 +128,34 @@ module ot_hdc_v41_fh_sram_lane #(parameter [5:0] BANK=0)(
         wire [47:0] decoded;
         wire ce,ue;
         ot_rom_secded_dec #(.K(48)) u_decode (.cw(raw_word_r),.data(decoded),.corrected(ce),.uncorrectable(ue));
-        wire identity_ok=decoded[47:32]=={1'b0,capture_row_r,BANK};
+        wire [47:0] checked;
+        wire checked_ce,checked_ue,checked_v;
+        wire [8:0] checked_row;
+        generate if(PROTECT_SPLIT) begin : g_decode_capture
+            reg [47:0] decoded_r;
+            reg [8:0] row_r;
+            reg ce_r,ue_r,valid_r;
+            always @(posedge clk) begin
+                decoded_r<=decoded;row_r<=capture_row_r;ce_r<=ce;ue_r<=ue;
+            end
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n) valid_r<=0;else valid_r<=capture_v_r;
+            assign checked=decoded_r;assign checked_row=row_r;
+            assign checked_ce=ce_r;assign checked_ue=ue_r;assign checked_v=valid_r;
+        end else begin : g_decode_direct
+            assign checked=decoded;assign checked_row=capture_row_r;
+            assign checked_ce=ce;assign checked_ue=ue;assign checked_v=capture_v_r;
+        end endgenerate
+        wire identity_ok=checked[47:32]=={1'b0,checked_row,BANK};
         reg [31:0] payload_q;
         reg valid_q,corrected_q,poison_q;
-        always @(posedge clk) if(capture_v_r&&!ue&&identity_ok) payload_q<=decoded[31:0];
+        always @(posedge clk) if(checked_v&&!checked_ue&&identity_ok) payload_q<=checked[31:0];
         always @(posedge clk or negedge rst_n)
             if(!rst_n) begin valid_q<=0;corrected_q<=0;poison_q<=0;end
             else begin
-                valid_q<=capture_v_r&&!ue&&identity_ok;
-                corrected_q<=capture_v_r&&ce&&!ue&&identity_ok;
-                if(capture_v_r&&(ue||!identity_ok)) poison_q<=1;
+                valid_q<=checked_v&&!checked_ue&&identity_ok;
+                corrected_q<=checked_v&&checked_ce&&!checked_ue&&identity_ok;
+                if(checked_v&&(checked_ue||!identity_ok)) poison_q<=1;
             end
         assign rd_data=payload_q;
         assign rd_valid=valid_q&&!poison_q;
