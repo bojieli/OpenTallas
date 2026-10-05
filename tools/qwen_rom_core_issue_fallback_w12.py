@@ -69,7 +69,7 @@ def apply(text: str, level: int, default: int = 0) -> str:
                     f"    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_ISSUE_FB = {default},\n")
     if level == 0:
         return text
-    assert level in (1, 2)
+    assert level in (1, 2, 3)
     # consumers of `issue` -> their copies (DEC_LA_ISSUE_FB = 0 keeps the original nets)
     text = _rep(text, "    assign me_go = issue && (d_unit == 2'd1);\n", FB_CORE +
                 "    assign me_go = (DEC_LA_ISSUE_FB != 0) ? fb_me_go : (issue && (d_unit == 2'd1));\n")
@@ -161,4 +161,39 @@ def apply_amq(text: str) -> str:
     text = text[:i] + new + text[i + len(old):]
     text = _rep(text, "            cycles <= 0; next_token <= 0;\n", "            cycles <= 0; next_token <= 0; fin_d <= 1'b0;\n")
     text = _rep(text, "    wire fin = (st == S_RUN)", "    reg fin_d;\n    wire fin = (st == S_RUN)")
+    return text
+
+
+def apply_start(text: str) -> str:
+    """DEC_LA_ISSUE_FB >= 3 (over FB2 + AMQ text): the core's `start` input leaves the data-register enables.
+    token / position are captured on every idle edge (the start edge included; they are read only after it), the
+    lm_head running max (run_key / run_idx / run_val) and next_val are written from their own trigger without the
+    start / reset priority terms (mutually exclusive by construction).  Below 3 every condition is the original one."""
+    assert "wire am_trig =" in text, "apply_amq first"
+    text = _rep(text, "                    tok_r <= token; pos_r <= pos; pc <= 0;", "                    pc <= 0;")
+    text = _rep(text, "    wire [31:0] la_cycles1;\n", """    // DEC_LA_ISSUE_FB >= 3: token and position are captured on every idle edge (the start edge included)
+    always @(posedge clk) if (st == S_IDLE && (DEC_LA_ISSUE_FB >= 3 || (rst_n && start))) begin
+        tok_r <= token; pos_r <= pos;
+    end
+    wire [31:0] la_cycles1;
+""")
+    old = """            else if (am_wins) begin
+                run_any<=1'b1; run_key<=okey(amv_val);
+                run_idx<=amv_idx+last_row0; run_val<=amv_val;
+            end"""
+    text = _rep(text, old, "            else if (am_wins) run_any<=1'b1;")
+    old = "    // DYN offsets derived once per token.\n"
+    text = _rep(text, old, """    // the running max's data registers: their own enable (DEC_LA_ISSUE_FB >= 3 drops the start / reset terms, which
+    // never coincide with a fold trigger)
+    always @(posedge clk)
+        if (am_trig && am_trig_amc && am_wins && (DEC_LA_ISSUE_FB >= 3 || (rst_n && !(start && st == S_IDLE)))) begin
+            run_key<=okey(amv_val); run_idx<=amv_idx+last_row0; run_val<=amv_val;
+        end
+    always @(posedge clk)
+        if (((DEC_LA_AMQ != 0) ? fin_d : fin) && (DEC_LA_ISSUE_FB >= 3 || rst_n)) next_val <= fin_val;
+""" + old)
+    text = _rep(text, "if (DEC_LA_AMQ == 0) begin done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; end",
+                "if (DEC_LA_AMQ == 0) begin done <= 1'b1; next_token <= fin_idx; end")
+    text = _rep(text, "if (DEC_LA_AMQ != 0 && fin_d) begin done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; end",
+                "if (DEC_LA_AMQ != 0 && fin_d) begin done <= 1'b1; next_token <= fin_idx; end")
     return text

@@ -1,4 +1,6 @@
 #!/bin/bash
+# Attributes are kept in the cut netlist: (* keep *) prefix adders / comparators / issue copies must reach ORFS
+# synthesis (with -noattr ABC re-rippled them: r3 paths through MAJ/OR chains).
 # In-context route of the Qwen ROM decode core (final DEC_LA + optional issue fallbacks), controller cut.
 # usage: run_variant.sh NAME FALLBACK BOUNDARY(plain|ref) UTIL DENSITY [extra run_abi3_physical args...]
 #   FALLBACK: N (DEC_LA_ISSUE_FB), suffix b = DEC_LA_BOUND, suffix a = DEC_LA_AMQ (e.g. 2ba)
@@ -14,7 +16,7 @@ python3 tools/qwen_rom_core_ctx_claude.py --out $R/prep --fallback $FB $BOPT
 $Y -q -s $R/prep/prepare.ys > $R/prep/yosys.log 2>&1
 python3 tools/qwen_rom_core_controller_cut.py --input $R/prep/original.json --output $R/prep/controller.json --report $R/prep/cut_report.json
 mkdir -p $R/context_src/rtl $R/context_src/physical
-$Y -Q -T -p "read_json $R/prep/controller.json; write_verilog -noattr $R/context_src/rtl/control_context.v" > $R/prep/write.log 2>&1
+$Y -Q -T -p "read_json $R/prep/controller.json; write_verilog $R/context_src/rtl/control_context.v" > $R/prep/write.log 2>&1
 cp -r $S/configs $R/context_src/; cp -r $S/physical/qwen_core_ctx $R/context_src/physical/
 ( cd $R/context_src && git init -q && git -c user.name=Claude -c user.email=claude@opentallas.local add -A . && git -c user.name=Claude -c user.email=claude@opentallas.local commit -qm "core ctx $NAME" )
 echo "$(date -Is) prepared: $(python3 -c "import json;d=json.load(open('$R/prep/cut_report.json'));print(d['after_port_bits'])")" >> $R/STATUS.md

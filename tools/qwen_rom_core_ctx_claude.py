@@ -32,6 +32,8 @@ def core_text(fallback: int, vpos: int, bound: bool = False, amq: bool = False) 
     s = FB.apply(s, fallback)
     if amq:
         s = FB.apply_amq(s)
+    if fallback >= 3:
+        s = FB.apply_start(s)
     # Yosys 0.68 workarounds of the retained screen copy (logic identical).
     s = s.replace("    generate if (VPOS != 0) begin : g_vpos_tiles\n        genvar vpt;\n",
                   "    genvar vpt;\n    generate if (VPOS != 0) begin : g_vpos_tiles\n")

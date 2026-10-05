@@ -94,7 +94,7 @@ def main() -> None:
                     help="DEC_LA_BOUND (tools/qwen_rom_core_dec_bound_emit_w12.py); 0 = core unchanged")
     ap.add_argument("--dec-la-amq", type=int, choices=(0, 1), default=0,
                     help="DEC_LA_AMQ argmax boundary register (+1 cycle per core program END); 0 = core unchanged")
-    ap.add_argument("--dec-la-issue-fb", type=int, choices=(0, 1, 2), default=0,
+    ap.add_argument("--dec-la-issue-fb", type=int, choices=(0, 1, 2, 3), default=0,
                     help="DEC_LA issue fallback (tools/qwen_rom_core_issue_fallback_w12.py); 0 = core unchanged")
     ap.add_argument("--seq-la", type=int, choices=(0, 1), default=1,
                     help="sequencer timing look-ahead (ot_qwen_tp_seq_w12_vp LA; results/rtl/qwen_dspark_closure_20261004)")
@@ -138,6 +138,9 @@ def main() -> None:
         import qwen_rom_core_issue_fallback_w12
         core_text = qwen_rom_core_issue_fallback_w12.apply_amq(core_text).replace(
             "parameter integer DEC_LA_AMQ = 0", "parameter integer DEC_LA_AMQ = 1")
+    if args.dec_la_issue_fb >= 3:
+        import qwen_rom_core_issue_fallback_w12
+        core_text = qwen_rom_core_issue_fallback_w12.apply_start(core_text)
     core_sv.write_text(core_text)
     vs_sv = gen / "ot_hdc_vstream_rt.sv"
     vs_sv.write_text(qwen_rom_rt_core_emit_w12.emit_vstream(qwen_rom_rt_core_emit_w12.VSTREAM.read_text()))
