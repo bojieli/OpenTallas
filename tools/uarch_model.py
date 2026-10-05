@@ -8097,7 +8097,8 @@ def hbm_loader_crc_literal_matrix_price(*, state_masks, word_masks, dies=2):
 
 def hbm_loader_crc_matrix_geometry_bound(price, *, xor2_max_area_um2,
         retained_vehicle_cell_area_um2, vehicle_core_area_um2,
-        reserved_slot_area_um2=None, corridor_capacity_tracks=None):
+        reserved_slot_area_um2=None, corridor_capacity_tracks=None,
+        maximum_slot_cell_utilization=0.55):
     """Conservative pre-build cell/cross-cut requirement, never assume a slot.
 
     Add all matrix cells without credit for removing the installed loop.
@@ -8110,7 +8111,8 @@ def hbm_loader_crc_matrix_geometry_bound(price, *, xor2_max_area_um2,
     added=cells*folds*xor2_max_area_um2
     area=retained_vehicle_cell_area_um2+added
     tracks=folds*(2*cells+32)
-    slot_ok=reserved_slot_area_um2 is not None and area<=reserved_slot_area_um2
+    slot_capacity=None if reserved_slot_area_um2 is None else reserved_slot_area_um2*maximum_slot_cell_utilization
+    slot_ok=slot_capacity is not None and area<=slot_capacity
     corridor_ok=corridor_capacity_tracks is not None and tracks<=corridor_capacity_tracks
     return dict(added_matrix_cell_area_no_removal_credit_um2_ESTIMATE=added,
                 retained_plus_matrix_cell_area_um2_ESTIMATE=area,
@@ -8119,6 +8121,10 @@ def hbm_loader_crc_matrix_geometry_bound(price, *, xor2_max_area_um2,
                 cell_utilization_before_additional_repair_ESTIMATE=area/vehicle_core_area_um2,
                 vehicle_is_actual_top_slot=False,
                 reserved_actual_top_slot_area_um2=reserved_slot_area_um2,
+                maximum_slot_cell_utilization=maximum_slot_cell_utilization,
+                required_slot_area_before_additional_repair_um2_ESTIMATE=area/maximum_slot_cell_utilization,
+                available_slot_cell_area_um2=slot_capacity,
+                additional_repair_cell_budget_um2=None if slot_capacity is None else slot_capacity-area,
                 all_cut_edge_upper_bound_tracks=tracks,
                 bound_basis='two input sinks per unshared XOR2 plus32 CRC outputs per fold; all four cones could span cut without region map',
                 actual_corridor_capacity_tracks=corridor_capacity_tracks,
