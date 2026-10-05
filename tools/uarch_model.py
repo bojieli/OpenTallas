@@ -9295,3 +9295,33 @@ def qwen_service_aq_act_parent_clock_model():
         command_calendar="same accepted-edge count; wall latency depends on actual accumulator phase and consumer stalls",
         SSFF_closed=False, adopted=False, full128_clock_credit=False,
         slower854_61_bound_selected=False)
+
+
+def hbm_collective_txmask_physical_fanout():
+    """Owner-directed geometry fanout of ONE exact endpoint, not new RTL variants."""
+    body = hbm_collective_tx_mask_lookahead()
+    mapped = 24753.8  # actual same-source r2 1_synth.json, endpoint+two-SM registered context
+    return dict(schema='opentallas.collective.txmask.physical-fanout.v1',
+        endpoint=body, geometry_changes_only=True, installed_parent=False,
+        contexts=[dict(name='existing-r2', reuse_live=True, core_um2=287908,
+                       measured_floorplan_cell_um2=25132, measured_utilization=.0872915),
+                  *[dict(name='ctx-u'+str(u), reuse_live=False, core_utilization_pct=u,
+                         mapped_cell_um2=mapped, estimated_core_um2=mapped/(u/100),
+                         estimated_core_side_um=(mapped/(u/100))**.5,
+                         placement_density=.55) for u in (12,15)]],
+        standalone=dict(name='die-u12', core_utilization_pct=12, placement_density=.55,
+                        conservative_cell_um2_upper_bound=mapped,
+                        registered_parent_boundary_removed=True, actual_mapped_area=None),
+        boundary=dict(context_ingress_bits=8192, response_bits=4096, link_record_bits=546,
+                      IO_delay_fraction=.2, IO_false_paths=False,
+                      clock_sm_ns=.833, clock_link_tied_for_physical_context=True,
+                      setup_SS_ps=60, hold_FF_ps=25,
+                      estimated_smallest_context_edge_track_capacity=4*(mapped/.15)**.5/.08,
+                      port_bits_approximately=13417,
+                      track_basis='All four edges, 80nm one-layer equivalent; pin/route legality measured by flow, no installed parent pin map credit'),
+        cycles=dict(added_clk_sm_per_collective=2, added_per_record=0,
+                    prospective_token_ns_265_collectives=265*2*(1000/1200),
+                    clock_credit=False, actual_TU_consumer_timing=False),
+        adoption=False, SS_FF_closed=False,
+        actual_home_fit=False,
+        scope='HA3=0 active baseline boundary; unused HA3 epilogue-only inputs excluded, no arithmetic/credit/CDC change. No actual TU clock substitution.')
