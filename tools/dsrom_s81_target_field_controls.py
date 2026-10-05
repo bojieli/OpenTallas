@@ -331,20 +331,31 @@ def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
     return info
 
 
-def emit(execution,node,rank,out,connectivity):
+def emit(execution,node,rank,out,connectivity,*,fragment_index=None,stage_image=None):
     from dsrom_s81_minimum_return_binding import bind_return_phase
     resolved = execution.source.resolve(node,rank)
     dispatched = execution.dispatch(node,rank)
-    source = execution.source.nodes[node]['instruction']
-    if source['unit'] != 3 or source.get('qe_mode',0) != 0 or len(resolved['fragments']) != 1:
-        raise ValueError('one actual full native QAL/KVAL fragment required')
-    matrix = resolved['fragments'][0]['matrix']
-    fragment = dispatched['fragments'][0]
-    if (matrix['format'] != 'fp8' or matrix['K'] != 5120 or
-            matrix['rows'] != source['qe_nout'] or matrix['rows'] not in (320,128)):
+    if fragment_index is None:
+        if len(resolved['fragments']) != 1:
+            raise ValueError('multi-fragment field requires explicit actual fragment selection')
+        fragment_index=0
+    if type(fragment_index) is not int or not 0<=fragment_index<len(resolved['fragments']):
+        raise ValueError('actual field fragment index required')
+    matrix = resolved['fragments'][fragment_index]['matrix']
+    fragment = dispatched['fragments'][fragment_index]
+    source = fragment['instruction']
+    if source['unit'] != 3 or source.get('qe_mode',0) != 0:
+        raise ValueError('actual native mode0 QE fragment required')
+    if (matrix['format'] != 'fp8' or matrix['K'] != source['qe_nb']*32 or
+            matrix['rows'] != source['qe_nout']):
         raise ValueError('full source dimensions changed')
     pairs = sorted({p[1] for p in matrix['plans']})
-    phrom,beats,stream_hash = native_stream(matrix)
+    fp32=bool(source.get('qe_unrounded',0))
+    if stage_image is None:
+        phrom,beats,stream_hash = native_stream(matrix, fp32_output=fp32)
+    else:
+        phrom,beats,stream_hash = linked_native_stream(matrix,fp32_output=fp32,
+            stage=fragment['stage'],phase=fragment['phase'],key=fragment['key'],stage_image=stage_image)
     out = Path(out);out.mkdir(parents=True,exist_ok=False)
     (out/'spine_phase.hex').write_text(''.join(f'{w:016x}\n' for w in phrom))
     (out/'spine_stream.hex').write_text(''.join(f'{w:010x}\n' for w in beats))
@@ -357,7 +368,7 @@ def emit(execution,node,rank,out,connectivity):
         path.write_text(''.join(f'{w:012x}\n' for w in cfg))
         bindings.append(bind_return_phase(execution.stage_join,connectivity,fragment,
             pair=pair,positions=1,phrom0=phrom[0],phrom1=phrom[1],cfg_path=path,
-            identity=0,format=0,output_base=fragment['instruction']['qe_obase'],
+            identity=0,format=1 if source.get('qe_unrounded',0) else 0,output_base=fragment['instruction']['qe_obase'],
             output_position_stride=matrix['rows'],ME=False))
     owned = [r for b in bindings for r in b['component_rows']]
     if sorted(owned) != list(range(matrix['rows'])):
@@ -378,7 +389,7 @@ def emit(execution,node,rank,out,connectivity):
         cpp.append('b.identity=id;b.component_rows={'+','.join(map(str,b['component_rows']))+'};out.push_back(b);}')
     cpp.append('return out;}')
     (out/'native_field_bindings.hpp').write_text('\n'.join(cpp)+'\n')
-    info = dict(node=node,position=1048575,stage=fragment['stage'],rank=rank,
+    info = dict(node=node,fragment_index=fragment_index,instruction=source,position=1048575,stage=fragment['stage'],rank=rank,
         phase=fragment['phase'],key=fragment['key'],rows=matrix['rows'],pairs=pairs,
         root_return_counts=bindings[0]['whole_root_quota'] if len(bindings)==1 else
             [sum(len(b['component_rows']) for b in bindings if b['root']==r) for r in range(128)],
@@ -386,7 +397,7 @@ def emit(execution,node,rank,out,connectivity):
         output_base=fragment['instruction']['qe_obase'],source_matrix_sha256=fragment['source_matrix_sha256'],
         cfg_phase=fragment['phase'],input_cut_local_phase=0,
         cfg_phase_must_not_be_relabelled=True,cpp_binding_symbol=symbol,bindings=bindings,
-        scope='all canonical QAL/KVAL rows; existing native participants still required',
+        scope='all canonical mode0 QE rows; existing native participants still required',
         native_execution_qualified=False)
     (out/'binding.json').write_text(json.dumps(info,indent=2)+'\n')
     return info
