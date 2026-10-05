@@ -2,12 +2,12 @@
 # Source-ready characterization of full NL128 mux/endpoint; all IO timed.
 # The actual enclosing allocation and macroloads remain a distinct mandatory gate.
 set -euo pipefail
-[[ $# = 3 ]] || { echo 'usage: FRESH_OUTPUT UNIQUE_LABEL EXACT_ENDPOINT_RESULT' >&2; exit 2; }
-out=$1; label=$2; exact=$3
+[[ $# = 4 ]] || { echo 'usage: FRESH_OUTPUT UNIQUE_LABEL EXACT_ENDPOINT_RESULT EXACT_MUX_RESULT' >&2; exit 2; }
+out=$1; label=$2; exact=$3; mux_exact=$4
 [[ "$out" = /* && ! -e "$out" && "$label" =~ ^[a-zA-Z0-9_-]+$ ]]
 cd "$(git rev-parse --show-toplevel)"
 [[ -z "$(git status --porcelain)" ]]
-python3 - "$exact" <<'PY'
+python3 - "$exact" "$mux_exact" <<'PY'
 import hashlib,json,sys
 from pathlib import Path
 r=json.loads(Path(sys.argv[1]).read_text())
@@ -15,10 +15,15 @@ assert r['verdict']=='PASS_FULLSHAPE_ENDPOINT_EXACT'
 assert r['added_cycles_per_collective']==0 and r['added_cycles_per_record']==0
 for f in ('rtl/gpu_sys/ot_gpu_coll_endpoint_f12_cuts.sv',):
     assert hashlib.sha256(Path(f).read_bytes()).hexdigest()==r['source_sha256'][f]
+m=json.loads(Path(sys.argv[2]).read_text())
+assert m['verdict']=='PASS_FULLSHAPE_MUX_EXACT' and m['added_mux_cycles']==0
+for f in ('rtl/gpu_sys/ot_gpu_coll_mux_f12.sv','rtl/gpu_sys/ot_gpu_coll_mux_owner64.sv'):
+    assert hashlib.sha256(Path(f).read_bytes()).hexdigest()==m['source_sha256'][f]
 PY
 mkdir -p "$out"
 git rev-parse HEAD > "$out/source.sha"
 cp "$exact" "$out/exact_endpoint.json"
+cp "$mux_exact" "$out/exact_mux.json"
 export OT_ORFS_NUM_CORES=16 OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 ulimit -t unlimited
 ulimit -f unlimited

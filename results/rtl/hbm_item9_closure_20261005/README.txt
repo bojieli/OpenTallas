@@ -8,7 +8,8 @@ Concrete result: full NL128 NSM2/4 mux lockstep PASS, 800000 configuration-cycle
 Completed r7 reused ODB/SPEF diagnostic: 33 reported negative endpoint paths,
 four actual classes; prior pin-count record 34. SS worst -20.47ps FF +5.24ps
 remain FAIL, with false-IO historical wrapper and two slew violations.
-RX onehot/tag successor is under its own fullshape three-seed numerical gate.
+RX onehot/tag successor PASS full NL128, 3 seeds each off/on: 984 cases,
+zero mismatches, measured latency identical (endpoint_r2/result.json).
 
 Prebuild cost at full NL128/NSM2: owner copies +48 FF; RX decode +7680 FF;
 RDUP8->16 payload copies +4096 FF and control/CDC replicas +468 FF; split tag
@@ -16,7 +17,7 @@ checks +5 FF. None adds a serial stage; XREG's historical +2 cycles stays paid.
 Actual cell area, parent rectangle/channel/macroloads/clock insertion and
 current token composition remain unqualified. No inferred parent fit credit.
 
-route.sh driver: tools/hbm_item9_route.sh FRESH_ROOT LABEL EXACT_ENDPOINT_JSON.
+route.sh driver: tools/hbm_item9_route.sh FRESH_ROOT LABEL EXACT_ENDPOINT_JSON EXACT_MUX_JSON.
 All IO timed, clocks833ps SS60 FF25. Uses existing540um characterization
 wrapper footprint, not an assertion about Turing's actual outer allocation.
 No new launch before source exactness and Kant's fresh headroom admission.
