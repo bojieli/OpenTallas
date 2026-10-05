@@ -1,0 +1,124 @@
+{
+  "source": "uarch_model.sm_op_cycles/sm_area plus complete source macro floorplan",
+  "nc": 8,
+  "sub": 4,
+  "il": 8,
+  "rmax": 4096,
+  "xd": 128,
+  "issue_items_per_cycle": 1,
+  "peak_macs_per_cycle": {
+    "bf16": 512,
+    "fp4": 2048,
+    "fp8": 1024
+  },
+  "ports": {
+    "descriptor_bits": 56,
+    "request_bits": 42,
+    "response_bits": 1098,
+    "weight_line_bytes": 136,
+    "x_write_bytes": 256,
+    "x_useful_read_bytes": 3152,
+    "x_physical_macro_read_bytes": 4096,
+    "result_bytes": 32
+  },
+  "storage": {
+    "x_logical_bits": 3227648,
+    "x_physical_bits": 4194304,
+    "ring_logical_bits": 1114112,
+    "ring_physical_bits": 1310720,
+    "outstanding_requests": 512,
+    "wire_tag_bits": 10,
+    "credit_fifo_depth": 7
+  },
+  "replicas": {
+    "leaves": 32,
+    "bf16_macros": 32,
+    "block_dot_macros": 32,
+    "x_macros": 128,
+    "ring_macros": 10,
+    "sub_half_groups": 8,
+    "half_to_leaf_fanout": 4,
+    "x_write_root_fanout": 4
+  },
+  "cuts": {
+    "per_sub_half_bits": 2887,
+    "per_quadrant_bits": 5774,
+    "gather_bits": 1600,
+    "routed_track_capacity": null,
+    "capacity_authority": "actual existing SM route; no synthetic channel count"
+  },
+  "geometry": {
+    "die_um": [
+      0,
+      0,
+      2202.768,
+      2072.79
+    ],
+    "core_um": [
+      15.12,
+      15.12,
+      2187.648,
+      2057.67
+    ],
+    "complete_macro_area_mm2": 2.328967,
+    "complete_element_mm2": 4.5658755,
+    "replicated_32SM_mm2": 146.108016,
+    "complete_HBM_die_fit": false
+  },
+  "latency": {
+    "added_drain_cycles": 12,
+    "stream_target_period_ns": 0.833,
+    "added_drain_ns_at_target": 9.995999999999999,
+    "measured_start_to_done_extra_cycles": [
+      19,
+      27
+    ],
+    "start_to_done_extra_ns_at_target": {
+      "19": 15.827,
+      "27": 22.491
+    },
+    "loaded_SS_FF_qualified": false
+  },
+  "bench_scope": "one complete NC8/RMAX4096 element, seeded BF16 K1004 R3; finite request/ACK/barrier debt",
+  "accelerator_hardware_changed": false,
+  "headline_clock_or_rate_credit": false,
+  "placement_candidate": {
+    "hook": "physical/hbm_accel_sm_views/sm_v_boundary_regions_r3.tcl",
+    "enrolment": "opt-in POST_PDN; exact NC8/PIO2/202-macro instance census",
+    "existing_flops": {
+      "response_capture": 1099,
+      "result_launch": 270,
+      "bulkcopy_count_and_credit": 8
+    },
+    "added_flops": 0,
+    "added_memory_bits": 0,
+    "changed_port_bits": 0,
+    "added_sequential_cycles": 0,
+    "incremental_cell_area_mm2": 0,
+    "fences": "actual macro-free south/east corridors and ring-group gap",
+    "storage_and_ports": "unchanged complete source_cost above; no receiver or RF ACK bypass",
+    "clock_load": "existing 224842 register sinks plus 202 macro sinks; unchanged",
+    "macro_clock_latency": "retained leaf SS/FF liberty arcs; no clock insertion suppression",
+    "setup_external_ps": 473,
+    "output_external_ps": 323,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "observed_cts": {
+      "rv_setup_slack_ps": -4002.18,
+      "rv_launch_clock_arrival_ps": 3674.45,
+      "rv_total_arrival_ps": 4452.18,
+      "rsp_data_1039_hold_slack_ps": -3598.67,
+      "bulkcopy_internal_setup_slack_ps": -2455.22
+    },
+    "predicted_routed_slack_ps": null,
+    "new_clock_supply_admitted": false,
+    "composed_latency_gain": null,
+    "route_admitted": false,
+    "blockers": [
+      "preserve live sm_r2 through terminal",
+      "source-bound clock-tree correction and complete load/routing price",
+      "actual contextual receiver/RF physical placement remains unjoined"
+    ],
+    "expected_effect": "shorter existing boundary/count wires; no assumed clock or rate gain"
+  }
+}
