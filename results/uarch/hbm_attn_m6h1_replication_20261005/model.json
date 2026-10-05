@@ -72,5 +72,21 @@
     "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/corner_sta.json": "159516ce38f6d402d87fd9ebbb9ba6e4fed89a375e1351affed550776924a896",
     "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/die_inventory.py": "1ca96bbd8f9d26947ebcd650761a50c731b33ea31db849639078340735f6397f",
     "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb"
+  },
+  "existing_die_allocation": {
+    "revision": "service-attn-r1",
+    "record": "results/rtl/hbm_child_contract_20261005/model.json",
+    "DS_head_macros": 1024,
+    "Qwen_head_macros": 0,
+    "tile_usable_outline_um": [
+      1349.112,
+      1349.976
+    ],
+    "die_mm2": 607.03,
+    "replica_footprint_fits": true,
+    "route_qualified": false,
+    "input_hold_qualified": false,
+    "contextual_PNR_admitted": false,
+    "note": "Historical0.5mm2 slot_fit=false preserved; actual reservations now exist in same enlarged DS hub."
   }
 }

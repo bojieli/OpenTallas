@@ -9135,3 +9135,130 @@ def dsrom_v9_field_boundary_model():
     """Source-owned enclosing field clock/load terms; no invented arrivals."""
     from dsrom_v9_field_boundary import model
     return model(Path(__file__).resolve().parents[1])
+
+def hbm_existing_die_child_model(cp_ports, w2_ports, platform):
+    """Finite analytical allocations in the existing cmdproc envelope.
+
+    Geometry and constraints are bounded owner decisions. None are measured
+    receiver loads, propagated CTS skew, or a physical qualification.
+    """
+    cp = json.loads((ROOT/'results/uarch/hbm_cp_balanced_veto_20261005/parent_functional_r1.json').read_text())
+    w2 = hbm_w2_publication_model()
+    # Keep the published source-sized record authoritative if newer than the
+    # function's component evidence; these two must agree before export.
+    published = json.loads((ROOT/'results/uarch/hbm_w2_publication_20261005/model.json').read_text())
+    assert published['storage']['planned_source_FF_bits'] == w2['storage']['planned_source_FF_bits'] == 5616
+    def child(ports, core, halo, cells, state, fanout):
+        area = (core[2]-core[0])*(core[3]-core[1])
+        signals = sum(p['bits'] for p in ports if p['name'] not in ('clk','por_n'))
+        # 4-way clock tree: number of tree nodes, not a measured CTS inventory.
+        clock_buffers = math.ceil(state/4) + math.ceil(state/16) + math.ceil(state/64)
+        io_buffers = signals*2  # input and output segmentation allowance
+        buffer_area = (clock_buffers+io_buffers)*platform['cells']['BUFx4_ASAP7_75t_R']['area_um2']
+        repair_area = .05*cells
+        assert cells+buffer_area+repair_area < .5*area
+        return dict(core_relative_um=core, gross_relative_um=halo, usable_outline_um2=area,
+                    cell_body_budget_um2=cells, state_bits_preoptimization=state,
+                    placement_utilisation_ceiling=.5, CTS_buffers_budget=clock_buffers,
+                    IO_buffers_budget=io_buffers, CTS_IO_cell_area_budget_um2=buffer_area,
+                    hold_repair_cell_area_budget_um2=repair_area,
+                    residual_cell_capacity_um2=.5*area-cells-buffer_area-repair_area,
+                    external_signal_bits=signals, MACs_per_cycle=0, added_memory_ports=0,
+                    internal_fanout_budget=fanout, replicas_per_DS_die=1,
+                    buffer_budget_is_analytical=True, measured_fanout=None,
+                    measured_receiver_load_fF=None, added_boundary_register_cycles=0)
+    cp_alloc = child(cp_ports,[600.48,43.2,643.68,86.4],[583.2,25.92,660.96,103.68],
+                     cp['parent_association_join']['combined_body_ceiling_um2'],696,8)
+    cp_alloc['association_join'] = cp['parent_association_join']
+    w2_alloc = child(w2_ports,[250.56,43.2,509.76,302.4],[233.28,25.92,527.04,319.68],
+                     published['area']['planned_cell_body_um2'] if 'planned_cell_body_um2' in published['area']
+                     else published['area']['planned_50pct_placement_um2']/2/1.05,5616,7)
+    return dict(schema='opentallas.hbm-existing-child-allocation.v1',
+                CP=cp_alloc,W2=w2_alloc,
+                retained_cmdproc_logic_relative_um=[700.272,600.48,1600.128,1270.08],
+                retained_cmdproc_logic_outline_um2=899.856*669.6,
+                retained_original_claim_mm2=.6, removal_credit_um2=0,
+                gateway_relative_um=[17.28,345.6,527.04,518.4],
+                gateway_cell_area_budget_um2=20000,
+                gateway_role='existing provider arbitration, shared owner, CP callback and output ingress seats; no second GO/owner ledger',
+                clock=dict(parent_port='clk_sm',domain='streaming',period_ps=1000/1.2,
+                           setup_uncertainty_ps=60,hold_uncertainty_ps=25,
+                           added_CDCs=0,added_register_stages=0,
+                           source_phase_ps=0,insertion_budget_ps=100,local_skew_budget_ps=10,
+                           skew_budget_must_be_verified=True,
+                           input_delay_max_ps=1000/1.2*.2,input_delay_min_ps=0,
+                           output_delay_max_ps=1000/1.2*.2,output_delay_min_ps=0,
+                           IO_false_paths_allowed=False,
+                           output_capacitance_budget_fF=32*.187426+7*.52508,
+                           capacitance_basis='32um M6 segment plus seven SS DFF D pins; budget, not measured actual load',
+                           max_segment_um=32,root_reset='rst_sm_n',warm_reset='cp_reset_n',
+                           warm_reset_must_not_clear_accepted_debt=True,
+                           actual_propagated_insertion_ps=None,actual_skew_ps=None),
+                latency=dict(CP_added_local_cycles=1,CP_added_target_ns=1/1.2,W2_measured_fourrow_added_edges=34,
+                             W2_fourrow_target_delta_ns=34/1.2,
+                             W2_whole_token_publication_count=None,
+                             whole_token_added_latency_ns=None,
+                             note='Component calendar projection at target clock; no whole-token multiplicity claim'),
+                numerical_contract='unchanged exact rounding/identity/W6 protection; all optimisation switches default OFF',
+                clock_qualified=False,adopted=False)
+
+
+def hbm_existing_attention_allocation_model():
+    """Measured-leaf reservation for the existing DS array, distinct from Qwen W12."""
+    leaf = hbm_attn_m6h1_replication_model()
+    u = DEDICATED['attention']
+    H,D,TD = u['H'],u['D'],u['TD']
+    # Selected full-shape composition att_macs, not the engine RTL defaults
+    # (TD64) and not Lagrange's D64 functional gate.
+    NL = int(PRESETS["proposal"]["att_macs"]/(H*D))
+    assert (H,D,TD,NL)==(16,512,32,4)
+    tiles=NL*(D//TD); groups=H
+    side=294.782; halo=5; gap=43.2; pitch=side+2*halo+gap
+    width,height=1349.136-.024,1350-.024
+    assert 4*(side+2*halo)+3*gap <= min(width,height)
+    removed=.05+2*.0878
+    branch_buffers=(4+16)*1618
+    buffer_area=branch_buffers*.0729
+    row_tracks=math.floor(pitch/.08*(1-removed))-64
+    needed=1618+4*34
+    assert needed < row_tracks
+    return dict(schema='opentallas.hbm-existing-attention-revision.v1',
+                selected_parameters=dict(H=H,D=D,TD=TD,NL=NL,HG=1,NBANK=5,PWORDS=2,FPL=6,FML=8,F12=1),
+                DS=dict(tiles=tiles,head_macros_per_tile=groups,head_macros_per_die=tiles*groups,
+                        products_per_cycle=tiles*H*TD,MACs_per_input_byte_per_tile=512/200,
+                        existing_engine_slot_mm2=32,
+                        engine_core_floor_mm2=leaf['floorplan']['engine_core_area_lower_bound_mm2'],
+                        engine_core_floor_deficit_mm2=leaf['floorplan']['engine_core_area_lower_bound_mm2']-32,
+                        halo_floor_mm2=tiles*(side+2*halo)**2*groups/1e6,
+                        chosen_tile_outline_um=[width,height],chosen_engine_outline_mm2=tiles*width*height/1e6,
+                        shared_inputs_bits_per_tile=1618,leaf_input_branches_per_tile=1618*16,
+                        tile_output_bits=529,leaf_outputs_total_bits_per_tile=16*34,
+                        static_gid_ties_per_tile=128,wrapper_mux_bits=0,wrapper_added_FF_bits=0,
+                        fanout_tree='four rows with four leaves each; static gid, concatenate outputs; ov=gov[0]',
+                        shared_input_buffers_per_tile=branch_buffers,
+                        input_buffer_cell_area_per_tile_um2=buffer_area,
+                        input_buffer_placement_per_tile_um2=buffer_area/.5,
+                        output_buffer_cell_area_budget_per_tile_um2=529*2*.10206,
+                        internal_route_layer_pair=['M8','M9'],pitch_um=.08,
+                        PG_removed_fraction=2*.0878,via_removed_fraction=.05,
+                        row_capacity_tracks_after_PG_vias_and_clock_reserve=row_tracks,
+                        row_demand_tracks=needed,clock_tracks_reserved_per_row=64,
+                        four_row_fanout_boundary_tracks=4*1618+16*34+128,
+                        whole_tile_capacity_tracks=math.floor(width/.08*(1-removed))-64,
+                        macro_OBS_layers=['M1','M2','M3','M4','M5','M6','M7'],
+                        dedicated_memory_ports='same NBANK5 per head; 128B/cycle LD and 72B/cycle packed operands per tile',
+                        full_tile_input_B_per_cycle=200,
+                        output_B_per_cycle=529/8,
+                        engine_input_pin_B_per_cycle=tiles*200,
+                        memory_multicast_credit='None: 64 tile interfaces counted; broadcast reuse requires actual source schedule',
+                        tile_core_cycles=62,delta_core_cycles_vs_old_m4=20,
+                        wrapper_added_cycles=0,input_hold_qualified=False),
+                Qwen=dict(dedicated_DS_attention_tiles=0,dedicated_m6h1_head_macros=0,
+                          shared_W12_tiles=6144//4,groups=6144,TG=4,
+                          physical_die_outline_um=[32149.44,25760.16],
+                          source='ot_qwen_hbmacc_rt_die_w12 -> ot_qwen_rom_core -> W12 array NT=GT/TG; attention via i_mmode',
+                          no_DS_macro_replication_assumption=True),
+                measured_leaf_IO_false_paths=True,parent_IO_false_paths_allowed=False,
+                physical_slot_allocated=True,contextual_tile_PNR_admitted=False,
+                remaining_admission='Actual macro pin escape, fanout netlist, loaded parent clocks and min input delays required; no leaf input-hold qualification.',
+                adopted=False,gain_claim=None)
