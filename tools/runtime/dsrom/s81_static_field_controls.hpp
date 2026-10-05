@@ -18,6 +18,8 @@ inline void validate(unsigned stage,unsigned phase,const std::array<uint64_t,2>&
  if(!first || (requested[0]&~base_mask)!=(first&~base_mask) || requested[1]!=second)
   throw std::runtime_error("immutable descriptor changed beyond source-proven SBASE relocation");
  const auto base=(first>>30)&65535,n=(first>>14)&65535;
+ const auto requested_base=(requested[0]>>30)&65535;
+ if(requested_base!=0 && requested_base!=base)throw std::runtime_error("immutable requested SBASE not canonical or original local zero");
  if(body.size()!=n || base+n>size)throw std::runtime_error("immutable stream extent changed");
  for(size_t i=0;i<n;i++)if(body[i]!=stream[base+i])throw std::runtime_error("immutable stream body changed");
 }

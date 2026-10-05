@@ -47,6 +47,19 @@ class StaticProvider(unittest.TestCase):
         self.assertIn('dsrom_s81_static_controls::validate',block)
         self.assertNotIn('rootp',block)
         self.assertIn('returned.stage==DSROM_S81_STATIC_CONTROL_STAGE',block)
+    def test_current_baseline_cut_hook_preserves_control(self):
+        original=(ROOT/'rtl/v41die/ot_v41_spine_w17w10.sv').read_text()
+        new=(ROOT/'rtl/v41die/ot_v41_spine_static_w17w10.sv').read_text()
+        original=original[original.index('    // ------------------------------------------------------------------ control'):]
+        new=new[new.index('    // ------------------------------------------------------------------ control'):]
+        new=new.replace('pw <= control_pq0; rsplit <= control_pq1[15:0];',"pw <= phrom[{i_ph, 1'b0}]; rsplit <= phrom[{i_ph, 1'b1}][15:0];",1)
+        new=new.replace('sw <= control_sq;',"sw <= strom[SAW'(sbase) + SAW'(sm_i)];",1)
+        new=new.replace('sw <= control_sq;',"sw <= strom[SAW'(sbase) + SAW'(s_last ? 16'd0 : sm_i + 16'd1)];",1)
+        self.assertEqual(original,new)
+        top=(ROOT/'rtl/v41die/ot_v41_fieldtop_static_w17w10.sv').read_text()
+        self.assertIn('`ifdef RT_CUT',top)
+        self.assertIn('.STATIC_CONTROLS(STATIC_CONTROLS)',top)
+
     def test_source_image_tamper_refuses(self):
         import shutil
         with tempfile.TemporaryDirectory() as d:
