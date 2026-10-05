@@ -49,7 +49,7 @@ always @(posedge clk) begin
    end
   end
  end
- if(!rst_n) begin targets=0;reserves=0;blocked=0;pending_age=0;end
+ if(!rst_n) begin targets=0;reserves=0;blocked=0;pending_age<=0;end
  else begin
   if(b.am_reserve) begin reserves=reserves+1;held=dec[1];end
   if(b.am_issue_pending) begin
@@ -59,8 +59,8 @@ always @(posedge clk) begin
     if(accept[1]) $fatal(1,"commit while live gate withdrew");
     blocked=blocked+1;
    end
-   pending_age=pending_age+1;
-  end else pending_age=0;
+   pending_age<=pending_age+1;
+  end else pending_age<=0;
   if(b.am_commit) targets=targets+1;
  end
 end
