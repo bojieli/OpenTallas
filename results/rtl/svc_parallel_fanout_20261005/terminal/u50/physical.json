@@ -6,15 +6,15 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.008773870000000001,
+        "hold_wns_ns": 0.00900112,
         "max_cap_violations": 0.0,
         "max_fanout_violations": 0.0,
         "max_slew_violations": 0.0,
         "met": false,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
-        "setup_violations": 30.0,
-        "setup_wns_ns": -0.0187135,
+        "setup_violations": 27.0,
+        "setup_wns_ns": -0.026927700000000002,
         "signal_integrity_clean": true,
         "stage": "place_and_route",
         "timing_met": false
@@ -26,7 +26,7 @@
     "status": "not_met"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-10-05T05:08:21.473758+00:00",
+  "completed_at": "2026-10-05T07:09:13.862868+00:00",
   "corner": {
     "liberty": [
       {
@@ -65,9 +65,9 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 4016.31,
+    "area_um2": 3972.57,
     "block": "ot_hbm_r14_stream_stack_aq_slot_ready_cut",
-    "cells": 32208,
+    "cells": 31786,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 0.833,
     "clock_port": "clk",
@@ -75,7 +75,7 @@
     "clock_uncertainty_ns": 0.06,
     "closed": false,
     "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
-    "core_area_um2": 8586.61,
+    "core_area_um2": 6852.83,
     "description": "ad-hoc block supplied on the command line",
     "drc": 0,
     "false_path_from_ports": [
@@ -83,8 +83,8 @@
     ],
     "false_path_io": false,
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 1174100000.0,
-    "hold_wns_ns": 0.008773870000000001,
+    "fmax_hz": 1162890000.0,
+    "hold_wns_ns": 0.00900112,
     "io_delay_fraction": 0.0,
     "parameters": {
       "AQ_HOLD_LOOKAHEAD": 1,
@@ -97,7 +97,7 @@
       "WQ": 4,
       "WR_EN": 1
     },
-    "setup_wns_ns": -0.0187135,
+    "setup_wns_ns": -0.026927700000000002,
     "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
@@ -117,14 +117,14 @@
       }
     ],
     "top": "ot_hbm_r14_stream_stack_aq_slot_ready_cut",
-    "utilization_fraction": 0.467741
+    "utilization_fraction": 0.579697
   },
-  "elapsed_seconds": 475.996,
+  "elapsed_seconds": 986.019,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-10-05T05:00:25.477740+00:00",
+  "generated_at": "2026-10-05T06:52:47.843651+00:00",
   "git": {
-    "commit": "1e646051941a907b6c991c2451d873630a5483c0",
+    "commit": "db420f504485a99a11fb7e1430bdd7b221f31a75",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
     "untracked_results": [],
     "worktree_dirty": false,
@@ -132,7 +132,7 @@
   },
   "place_and_route": {
     "adder_map": "yosys_kogge_stone",
-    "artifact_dir": "/srv/opentallas-scratch/jobs/euclid-svc-aq-slot-ready-route-r1/physical_artifacts",
+    "artifact_dir": "/srv/opentallas-scratch/jobs/euclid-svc-a-slot-u50-r1/physical_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
@@ -146,38 +146,38 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "707d193c1240bd7de4ef7a9cbe5cc88213570e5c484ead278733dfeedc2b8a7a",
-        "size_bytes": 33352813
+        "sha256": "a04af6df1d2a3d18ed9b4636014012477103524cea07d3bd94853ebb337874a2",
+        "size_bytes": 32188523
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "9fb0f9efa1f4134b7d2d1b61c83235e88f5b8e1c21b9d3ed88b55eff669e7dbf",
-        "size_bytes": 38350360
+        "sha256": "76d293450e5a1732a6859400627c7f5ac1501ebc889d33f75c9263d39be7b693",
+        "size_bytes": 37340650
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "923f4acd77a8cb482702d0b1f88264f4130b7d981f8af7289a450a3308bc3e12",
-        "size_bytes": 55997317
+        "sha256": "4dde93eb73c726cabe115ff3518fc64b39b0ec11e22a11eccb86c49bac99f7b8",
+        "size_bytes": 53319520
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "7d7adfeec7e8959df4fa197ea1483d1c079d092201f9ff5c88c77f682908c248",
-        "size_bytes": 41241405
+        "sha256": "0117f54025c7557c9be7046dd4c6b2bd0ae4f99bbf26265093dcf9a00f78b217",
+        "size_bytes": 41754298
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "cbab75eaee34071d10b436ce4ac6755c602a992764bfeae9824d958a386b4972",
-        "size_bytes": 3496646
+        "sha256": "5e16b13e373929d51dc1485df465669d9789c76cbc1664f652d90063410a41c7",
+        "size_bytes": 3469237
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "f3c0c4bc8b22ba35757ea68094d528d88d2a019b46d3f08b4ee8d7227e9b3d16",
-        "size_bytes": 28872
+        "sha256": "899cb49c31aeb039f204502a4a14918bd003be4af27c2446e33cf06508b5bef2",
+        "size_bytes": 29748
       },
       "config.mk": {
         "retained": true,
-        "sha256": "d962f5e27faf470e688f4015198d209aef09a9cb700ea893ebeb9a871ce3935b",
-        "size_bytes": 1251
+        "sha256": "1e52792553e937f2c3bed344dff172a74db71116702d506397f8c396eccc976c",
+        "size_bytes": 1248
       },
       "constraint.sdc": {
         "retained": true,
@@ -186,20 +186,20 @@
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "897b2133ca42138e3a5fd81fb4b7c81e970298634be173922db812b94feac98d",
-        "size_bytes": 24285
+        "sha256": "c38f228f462b88b038de95e348df2668163c1d1d6ff13931d217c71b88f3a0d3",
+        "size_bytes": 24288
       }
     },
     "clock_period_ns": 0.833,
-    "core_utilization_percent": 40,
-    "design_nickname": "opentallas_ot_hbm_r14_stream_stack_aq_slot_ready_cut_asap7_svc_aq_slot_ready_r1_euclid_0833",
+    "core_utilization_percent": 50,
+    "design_nickname": "opentallas_ot_hbm_r14_stream_stack_aq_slot_ready_cut_asap7_euclid_svc_a_slot_u50_r1_0833",
     "flow_timeout_seconds": null,
     "metrics": {
       "antenna_violating_nets": 0,
       "antenna_violating_pins": 0,
       "clock_count": 1,
-      "core_area_um2": 8586.61,
-      "die_area_um2": 9372.76,
+      "core_area_um2": 6852.83,
+      "die_area_um2": 7571.44,
       "drc_errors": 0,
       "flow_error_counts": {
         "cts__flow__errors__count": 0,
@@ -213,11 +213,11 @@
         "synth__flow__errors__count": 0
       },
       "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
-      "fmax_hz": 1174100000.0,
+      "fmax_hz": 1162890000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.008773870000000001,
-      "instance_count": 76919,
+      "hold_wns_ns": 0.00900112,
+      "instance_count": 68368,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
@@ -225,26 +225,26 @@
       "max_fanout_violations": 0,
       "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "orfs_aggregate_fmax_hz": 1174100000.0,
+      "orfs_aggregate_fmax_hz": 1162890000.0,
       "per_clock_fmax_hz": {},
-      "power_total_w": 0.034366,
+      "power_total_w": 0.0334353,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 8.77387,
-        "setup_tns_ns": -246.585,
-        "setup_wns_ns": -18.7135
+        "hold_wns_ns": 9.00112,
+        "setup_tns_ns": -270.342,
+        "setup_wns_ns": -26.9277
       },
-      "routed_nets": 30864,
-      "routed_wirelength_um": 130937,
+      "routed_nets": 30563,
+      "routed_wirelength_um": 121081,
       "sequential_area_um2": 1551.08,
       "sequential_cell_count": 4184,
-      "setup_tns_ns": -0.24658500000000003,
-      "setup_violations": 30,
-      "setup_wns_ns": -0.0187135,
-      "standard_cell_area_um2": 4016.31,
-      "standard_cell_count": 32208,
-      "utilization_fraction": 0.467741,
-      "vias": 293004
+      "setup_tns_ns": -0.27034199999999997,
+      "setup_violations": 27,
+      "setup_wns_ns": -0.026927700000000002,
+      "standard_cell_area_um2": 3972.57,
+      "standard_cell_count": 31786,
+      "utilization_fraction": 0.579697,
+      "vias": 291943
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "e2744a7aa39d862a9a8047b88d7c6839cbaa7e8e8771291afb9a59fc92821adb",
@@ -479,7 +479,7 @@
       "--stages",
       "synth,pnr",
       "--core-utilization",
-      "40",
+      "50",
       "--place-density",
       "0.6",
       "--hold-margin-ns",
@@ -491,29 +491,29 @@
       "--purpose",
       "signoff_target",
       "--nickname-tag",
-      "svc_aq_slot_ready_r1_euclid_0833",
+      "euclid_svc_a_slot_u50_r1_0833",
       "--keep-workdir",
-      "/srv/opentallas-scratch/jobs/euclid-svc-aq-slot-ready-route-r1/work",
+      "/srv/opentallas-scratch/jobs/euclid-svc-a-slot-u50-r1/work",
       "--output",
-      "/srv/opentallas-scratch/jobs/euclid-svc-aq-slot-ready-route-r1/physical.json",
+      "/srv/opentallas-scratch/jobs/euclid-svc-a-slot-u50-r1/physical.json",
       "--synth-timeout-seconds",
       "unlimited",
       "--flow-timeout-seconds",
       "unlimited"
     ],
     "driver": {
-      "commit": "1e646051941a907b6c991c2451d873630a5483c0",
+      "commit": "db420f504485a99a11fb7e1430bdd7b221f31a75",
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
-      "path": "/srv/opentallas/repos/euclid-svc-aq-slot-ready-1e646-20261005/tools/run_abi3_physical.py",
+      "path": "/srv/opentallas/repos/euclid-svc-fanout-20261005/tools/run_abi3_physical.py",
       "same_tree_as_sources": true,
       "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
-      "tree": "/srv/opentallas/repos/euclid-svc-aq-slot-ready-1e646-20261005"
+      "tree": "/srv/opentallas/repos/euclid-svc-fanout-20261005"
     },
     "orfs_num_cores": 16,
     "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
     "python": "3.14.4",
-    "source_root": "/srv/opentallas/repos/euclid-svc-aq-slot-ready-1e646-20261005"
+    "source_root": "/srv/opentallas/repos/euclid-svc-fanout-20261005"
   },
   "schema_version": 1,
   "stages_completed": [

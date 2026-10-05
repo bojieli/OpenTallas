@@ -6,15 +6,15 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.00485589,
+        "hold_wns_ns": 0.00803999,
         "max_cap_violations": 0.0,
         "max_fanout_violations": 0.0,
         "max_slew_violations": 0.0,
         "met": false,
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
-        "setup_violations": 164.0,
-        "setup_wns_ns": -0.0490523,
+        "setup_violations": 28.0,
+        "setup_wns_ns": -0.039754,
         "signal_integrity_clean": true,
         "stage": "place_and_route",
         "timing_met": false
@@ -26,7 +26,7 @@
     "status": "not_met"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-10-05T07:18:29.040720+00:00",
+  "completed_at": "2026-10-05T07:08:10.089096+00:00",
   "corner": {
     "liberty": [
       {
@@ -65,9 +65,9 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 5467.86,
-    "block": "ot_hbm_accel_stream_pc_wb_command_match",
-    "cells": 44833,
+    "area_um2": 3993.27,
+    "block": "ot_hbm_r14_stream_stack_aq_slot_ready_cut",
+    "cells": 31964,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 0.833,
     "clock_port": "clk",
@@ -75,7 +75,7 @@
     "clock_uncertainty_ns": 0.06,
     "closed": false,
     "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
-    "core_area_um2": 10207.9,
+    "core_area_um2": 7624.42,
     "description": "ad-hoc block supplied on the command line",
     "drc": 0,
     "false_path_from_ports": [
@@ -83,20 +83,21 @@
     ],
     "false_path_io": false,
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 1133720000.0,
-    "hold_wns_ns": 0.00485589,
+    "fmax_hz": 1145800000.0,
+    "hold_wns_ns": 0.00803999,
     "io_delay_fraction": 0.0,
     "parameters": {
-      "CMD_MATCH_CUT": 1,
-      "CRED": 64,
-      "DIGEST_CUT": 1,
+      "AQ_HOLD_LOOKAHEAD": 1,
+      "AQ_RD": 1,
+      "AQ_SLOT_READY_LOOKAHEAD": 1,
       "ENABLE": 1,
-      "PC": 0,
+      "NCH": 1,
+      "PULLIN": 16,
       "REF_MODE": 1,
-      "WA_LATE": 1,
-      "WB_EN": 1
+      "WQ": 4,
+      "WR_EN": 1
     },
-    "setup_wns_ns": -0.0490523,
+    "setup_wns_ns": -0.039754,
     "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
@@ -105,18 +106,23 @@
     },
     "sources": [
       {
-        "path": "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv",
-        "sha256": "dde4c2ba9853e06f10b472dc3775db8268e157e0181697fee047d5b2933d74d5",
-        "size_bytes": 35299
+        "path": "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_pc_aq_slot_ready_cut.sv",
+        "sha256": "4b1fc50a599072467a26cfe4e1e26d89b98f230b79ec643b13c9eb1ceb609bc2",
+        "size_bytes": 37987
+      },
+      {
+        "path": "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_stack_aq_slot_ready_cut.sv",
+        "sha256": "b80638055afdd559d9ce956c740827b7d8fe87d95d06096e67f70d83e70a06d5",
+        "size_bytes": 4328
       }
     ],
-    "top": "ot_hbm_accel_stream_pc_wb_command_match",
-    "utilization_fraction": 0.535652
+    "top": "ot_hbm_r14_stream_stack_aq_slot_ready_cut",
+    "utilization_fraction": 0.523748
   },
-  "elapsed_seconds": 1541.222,
+  "elapsed_seconds": 922.27,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-10-05T06:52:47.819095+00:00",
+  "generated_at": "2026-10-05T06:52:47.818997+00:00",
   "git": {
     "commit": "db420f504485a99a11fb7e1430bdd7b221f31a75",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
@@ -126,12 +132,12 @@
   },
   "place_and_route": {
     "adder_map": "yosys_kogge_stone",
-    "artifact_dir": "/srv/opentallas-scratch/jobs/euclid-svc-b-cmd-u45-r1/physical_artifacts",
+    "artifact_dir": "/srv/opentallas-scratch/jobs/euclid-svc-a-slot-u45-r1/physical_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
-        "sha256": "3cdf124dd23f3dfb579e947a4ea007235a63687ffe024b44f0eb478fe4dff92b",
-        "size_bytes": 4186198
+        "sha256": "e2744a7aa39d862a9a8047b88d7c6839cbaa7e8e8771291afb9a59fc92821adb",
+        "size_bytes": 3345883
       },
       "5_route_drc.rpt": {
         "retained": true,
@@ -140,38 +146,38 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "c5a8a5dff264966d9a32cbf078ba32837c14ada841ca55c02337dc7c9560c5d9",
-        "size_bytes": 44777186
+        "sha256": "b67fa970142067f1949cc0b47e51814d3ab84f22cef0438ed9bd4985d6b3aaff",
+        "size_bytes": 32606209
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "c1dc77841739f58f01d09a78216395e616379088890ab860dabafd18b4af74ad",
-        "size_bytes": 52268544
+        "sha256": "e7823d9f90851a626c164c7b5d5a796f94cd92cef8bf1ec334ccac0810cd658f",
+        "size_bytes": 37666080
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "cd6194b92b2f99eefc06243d26b6e756a9d72024708c8eb66ff84230ac302314",
-        "size_bytes": 75344861
+        "sha256": "4e4fe9c9549a6e819fefc90d9c05e73fb7b9ea0275b4fc2a0b41f2e04c2c276a",
+        "size_bytes": 54368819
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "a4d3820a9cc189238fb662b048037d548d6fc743eaea927ec5c3c59f5fb56b38",
-        "size_bytes": 57503240
+        "sha256": "78a51141ad16f7a1d03ac9edb009102d71d84d8279cf935269e5dcd4b65e3acf",
+        "size_bytes": 41402026
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "553c63bd164a0adda6069328c09aa7104b4e4366992ed05364f72929453eeaf7",
-        "size_bytes": 4552444
+        "sha256": "02fba7af14849f90f00ee31cd7ac8c2811f87232df32cafb9eeb721c28f8c099",
+        "size_bytes": 3480126
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "8f27a1020e4da535830ef3c614b9f94d2f114ffa9dd86c8291a6e82d51a3c19e",
-        "size_bytes": 30450
+        "sha256": "fd12c7c846d1b189d1bd745d270507655ad9cd607d01890c5b3387d49d6b19a1",
+        "size_bytes": 30202
       },
       "config.mk": {
         "retained": true,
-        "sha256": "89b47cad45f5565671768f25bc4a84b9d29e0372a75fa4364435a56630320084",
-        "size_bytes": 1121
+        "sha256": "370ded2b03cddbcaf3eb9db7c1a361640b0a79fe24d5eca9897aa032a75bb351",
+        "size_bytes": 1248
       },
       "constraint.sdc": {
         "retained": true,
@@ -180,20 +186,20 @@
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "74e41cd6be7c0b7b047f075924309f8407f25414ee3bf1890e9a8ee21e17a55c",
-        "size_bytes": 24231
+        "sha256": "fd5bd732cf688612d6444cac4dfbdfedd67cfb733cdefe80d29ad8cf4fded65b",
+        "size_bytes": 24066
       }
     },
     "clock_period_ns": 0.833,
     "core_utilization_percent": 45,
-    "design_nickname": "opentallas_ot_hbm_accel_stream_pc_wb_command_match_asap7_euclid_svc_b_cmd_u45_r1_0833",
+    "design_nickname": "opentallas_ot_hbm_r14_stream_stack_aq_slot_ready_cut_asap7_euclid_svc_a_slot_u45_r1_0833",
     "flow_timeout_seconds": null,
     "metrics": {
       "antenna_violating_nets": 0,
       "antenna_violating_pins": 0,
       "clock_count": 1,
-      "core_area_um2": 10207.9,
-      "die_area_um2": 11064.5,
+      "core_area_um2": 7624.42,
+      "die_area_um2": 8373.17,
       "drc_errors": 0,
       "flow_error_counts": {
         "cts__flow__errors__count": 0,
@@ -207,11 +213,11 @@
         "synth__flow__errors__count": 0
       },
       "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
-      "fmax_hz": 1133720000.0,
+      "fmax_hz": 1145800000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.00485589,
-      "instance_count": 97998,
+      "hold_wns_ns": 0.00803999,
+      "instance_count": 72143,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
@@ -219,31 +225,31 @@
       "max_fanout_violations": 0,
       "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "orfs_aggregate_fmax_hz": 1133720000.0,
+      "orfs_aggregate_fmax_hz": 1145800000.0,
       "per_clock_fmax_hz": {},
-      "power_total_w": 0.0468513,
+      "power_total_w": 0.0340194,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 4.85589,
-        "setup_tns_ns": -2198.19,
-        "setup_wns_ns": -49.0523
+        "hold_wns_ns": 8.03999,
+        "setup_tns_ns": -384.461,
+        "setup_wns_ns": -39.754
       },
-      "routed_nets": 43375,
-      "routed_wirelength_um": 178318,
-      "sequential_area_um2": 1845.13,
-      "sequential_cell_count": 5628,
-      "setup_tns_ns": -2.1981900000000003,
-      "setup_violations": 164,
-      "setup_wns_ns": -0.0490523,
-      "standard_cell_area_um2": 5467.86,
-      "standard_cell_count": 44833,
-      "utilization_fraction": 0.535652,
-      "vias": 410047
+      "routed_nets": 30685,
+      "routed_wirelength_um": 125475,
+      "sequential_area_um2": 1551.08,
+      "sequential_cell_count": 4184,
+      "setup_tns_ns": -0.384461,
+      "setup_violations": 28,
+      "setup_wns_ns": -0.039754,
+      "standard_cell_area_um2": 3993.27,
+      "standard_cell_count": 31964,
+      "utilization_fraction": 0.523748,
+      "vias": 291205
     },
     "netlist_normalization": {
-      "normalized_netlist_sha256": "3cdf124dd23f3dfb579e947a4ea007235a63687ffe024b44f0eb478fe4dff92b",
+      "normalized_netlist_sha256": "e2744a7aa39d862a9a8047b88d7c6839cbaa7e8e8771291afb9a59fc92821adb",
       "note": "declaration-attribute-only edit on the ORFS-synthesised gate netlist; no cell, net, port or connectivity change",
-      "raw_netlist_sha256": "3cdf124dd23f3dfb579e947a4ea007235a63687ffe024b44f0eb478fe4dff92b",
+      "raw_netlist_sha256": "e2744a7aa39d862a9a8047b88d7c6839cbaa7e8e8771291afb9a59fc92821adb",
       "signed_declarations_stripped": 0
     },
     "place_density": 0.6,
@@ -433,25 +439,29 @@
       "--view",
       "asap7",
       "--top",
-      "ot_hbm_accel_stream_pc_wb_command_match",
+      "ot_hbm_r14_stream_stack_aq_slot_ready_cut",
       "--source",
-      "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv",
+      "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_pc_aq_slot_ready_cut.sv",
+      "--source",
+      "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_stack_aq_slot_ready_cut.sv",
       "--param",
       "ENABLE=1",
       "--param",
       "REF_MODE=1",
       "--param",
-      "PC=0",
+      "NCH=1",
       "--param",
-      "CRED=64",
+      "WR_EN=1",
       "--param",
-      "WB_EN=1",
+      "WQ=4",
       "--param",
-      "WA_LATE=1",
+      "PULLIN=16",
       "--param",
-      "DIGEST_CUT=1",
+      "AQ_RD=1",
       "--param",
-      "CMD_MATCH_CUT=1",
+      "AQ_HOLD_LOOKAHEAD=1",
+      "--param",
+      "AQ_SLOT_READY_LOOKAHEAD=1",
       "--clock-period-ns",
       "0.833",
       "--clock-uncertainty-ns",
@@ -481,11 +491,11 @@
       "--purpose",
       "signoff_target",
       "--nickname-tag",
-      "euclid_svc_b_cmd_u45_r1_0833",
+      "euclid_svc_a_slot_u45_r1_0833",
       "--keep-workdir",
-      "/srv/opentallas-scratch/jobs/euclid-svc-b-cmd-u45-r1/work",
+      "/srv/opentallas-scratch/jobs/euclid-svc-a-slot-u45-r1/work",
       "--output",
-      "/srv/opentallas-scratch/jobs/euclid-svc-b-cmd-u45-r1/physical.json",
+      "/srv/opentallas-scratch/jobs/euclid-svc-a-slot-u45-r1/physical.json",
       "--synth-timeout-seconds",
       "unlimited",
       "--flow-timeout-seconds",
@@ -517,21 +527,21 @@
   "status": "not_met",
   "synthesis": {
     "abc_delay_target_ps": 833.0,
-    "cell_area_um2": 4285.531,
-    "cell_count": 30460,
-    "cell_types_used": 39,
-    "chip_area_um2": 4285.52856,
-    "combinational_cell_count": 24832,
+    "cell_area_um2": 3143.252,
+    "cell_count": 20746,
+    "cell_types_used": 38,
+    "chip_area_um2": 3145.94118,
+    "combinational_cell_count": 16593,
     "dont_use_cell_count": 81,
     "liberty_cell_count": 202,
     "macro_count": 0,
     "netlist_normalization": {
-      "normalized_netlist_sha256": "8f51088c67adb039cd43e8e5c7ad957ce9659f4fd54c41c399fd9cd560ab72d9",
-      "raw_netlist_sha256": "8f51088c67adb039cd43e8e5c7ad957ce9659f4fd54c41c399fd9cd560ab72d9",
+      "normalized_netlist_sha256": "55d697a71b928b838c588bafc5c3f28076dbe006a00ff168a7e5806b8429ebed",
+      "raw_netlist_sha256": "55d697a71b928b838c588bafc5c3f28076dbe006a00ff168a7e5806b8429ebed",
       "signed_declarations_stripped": 0
     },
-    "sequential_area_um2": 1845.129,
-    "sequential_cell_count": 5628,
+    "sequential_area_um2": 1536.64,
+    "sequential_cell_count": 4153,
     "unmapped_cell_types": []
   },
   "target_clock_period_ns": 0.833,
