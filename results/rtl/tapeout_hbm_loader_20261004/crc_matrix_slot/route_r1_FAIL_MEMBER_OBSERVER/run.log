@@ -1,0 +1,64 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+2% | -660.956 |  -197925.1 |  -765729.5 |   4996 | g_on.g_die\[0\].u_load.g_on.r_idx\[28\]$_DFFE_PN0P_/D
+    2298* |       0 |     959 |        0 |      0 |   311 |    +0.2% | -660.956 |  -197925.1 |  -765734.6 |   4996 | g_on.g_die\[0\].u_load.g_on.r_idx\[28\]$_DFFE_PN0P_/D
+    2300* |       0 |     960 |        0 |      0 |   311 |    +0.2% | -660.956 |  -197925.1 |  -765739.8 |   4996 | g_on.g_die\[0\].u_load.g_on.r_idx\[28\]$_DFFE_PN0P_/D
+    2300* |       0 |     960 |        0 |      0 |   311 |    +0.2% | -660.956 |  -197925.1 |  -765739.8 |   4996 | g_on.g_die\[0\].u_load.g_on.r_idx\[28\]$_DFFE_PN0P_/D
+    2300* |       0 |     960 |        0 |      0 |   311 |    +0.2% | -660.956 |  -197925.1 |  -765739.8 |   4996 | g_on.g_die\[0\].u_load.g_on.r_idx\[28\]$_DFFE_PN0P_/D
+    final |       0 |     960 |        0 |      0 |   311 |    +0.2% | -660.956 |  -197925.1 |  -765739.8 |   4987 | g_on.g_die\[0\].u_load.g_on.r_idx\[28\]$_DFFE_PN0P_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0051] Resized 960 instances: 960 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 311 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 174.95s
+Took 175 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -setup -skip_last_gasp -sequence unbuffer,sizeup,swap,vt_swap -verbose
+Default units for flow
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+   Layer   | Unit Resistance | Unit Capacitance 
+           |       (kohm/um) |          (fF/um)
+------------------------------------------------
+        M1 |        7.04e-02 |         1.00e-10
+        M2 |        2.97e-02 |         1.75e-01
+        M3 |        3.13e-02 |         1.56e-01
+        M4 |        1.80e-02 |         1.78e-01
+        M5 |        1.90e-02 |         1.64e-01
+        M6 |        1.19e-02 |         1.87e-01
+        M7 |        1.25e-02 |         1.63e-01
+        M8 |        8.45e-03 |         1.04e-01
+        M9 |        8.90e-03 |         9.28e-02
+       Pad |        0.00e+00 |         0.00e+00
+------------------------------------------------
+
+   Layer   | Via Resistance 
+           |         (kohm) 
+----------------------------
+        V1 |       1.72e-02 
+        V2 |       1.72e-02 
+        V3 |       1.72e-02 
+        V4 |       1.18e-02 
+        V5 |       1.18e-02 
+        V6 |       8.20e-03 
+        V7 |       8.20e-03 
+        V8 |       6.30e-03 
+        V9 |       6.30e-03 
+----------------------------
+Report metrics stage 2, floorplan final...
+
+==========================================================================
+floorplan final report_design_area
+--------------------------------------------------------------------------
+Design area 20348 um^2 7% utilization.
+source /work/hooks/post_floorplan_fence_cones.tcl
+Error: floorplan.tcl, 168 CRC slot load_host state census !=32
+
+Elapsed time: 0:04.22[h:]min:sec. CPU time: user 4.05 sys 0.17 (100%). Peak memory: 651000KB.
+Elapsed time: 3:18.73[h:]min:sec. CPU time: user 263.28 sys 595.22 (431%). Peak memory: 1006368KB.
+make[1]: *** [Makefile:450: do-2_1_floorplan] Error 1
+make: *** [Makefile:450: /work/results/asap7/opentallas_ot_hbm_accel_loader_host_addr_crc_asap7_loader_crc_slot_r1/base/2_1_floorplan.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/item8-hbm-loader-20261004/crc_slot_r1/physical.json

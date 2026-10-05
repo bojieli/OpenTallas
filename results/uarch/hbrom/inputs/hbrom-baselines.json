@@ -1,0 +1,394 @@
+{
+  "schema": "opentallas.hbrom.baseline_audit.v1",
+  "context": 1048576,
+  "position": 1048575,
+  "mode": "batch-one exact autoregressive decode, not MTP",
+  "scope": "Existing accelerator component compositions; neither row is a physically qualified achieved system. No current end-to-end numeric precision proof is inferred from cycle composition.",
+  "sources": {
+    "hbm": {
+      "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+      "sha256": "8287b3865cb7626f4015246d5949110aa22f1d02d84812218ebc0513344304d0"
+    },
+    "rom": {
+      "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
+      "sha256": "42d48c45c84668326de6ee154694889000730d412037de91d89ae26fb5ae0062"
+    },
+    "rom_inventory": {
+      "path": "results/uarch/dsrom_c_recheck_20261004/model.json",
+      "sha256": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348"
+    },
+    "hbm_geometry": {
+      "path": "results/uarch/qwen_hbm_interface_geometry_20261002/deepseek_floorplan_r11.json",
+      "sha256": "6ec1792b3abba1ee23ece46b46b0f3b4e4ae96b8118d27d9829bd04df4ed0cca"
+    }
+  },
+  "hbm": {
+    "design": "DS-V4.1 HBM accelerator (TP-96, 32 SMs/die, static schedule, Tomahawk-Ultra tier + our protocol); adopted SU levers il+dr+ov (N1024)",
+    "AR_us": 460.053,
+    "AR_tok_s": 2173.7,
+    "breakdown_us": {
+      "hbm": 10.757,
+      "su": 93.614,
+      "quant": 19.192,
+      "sm": 70.116,
+      "barrier": 22.295,
+      "coll": 167.257,
+      "tail": 39.75,
+      "attn": 19.669,
+      "hcp": 0.0,
+      "du": 8.735,
+      "swiglu": 5.92,
+      "select": 2.792
+    },
+    "classification": {
+      "total_us": 460.053,
+      "tok_s": 2173.7,
+      "us_by_class": {
+        "measured": 253.039,
+        "measured_tu_budget": 167.264,
+        "modelled": 39.75
+      },
+      "tu_budget_us": 115.168,
+      "modelled_us": 39.75,
+      "measured_share_incl_tu_budget": 0.9136,
+      "measured_share_excl_tu_budget": 0.6633,
+      "modelled_by_family": {
+        "tail:x_projections_gather": 6.0,
+        "tail:o-group": 6.0,
+        "tail:attn_out_gather": 6.0,
+        "tail:router_gather": 6.0,
+        "tail:expert_intermediate_gather": 6.0,
+        "tail:ffn_out_gather": 6.0,
+        "tail:indexer.q_gather": 1.2,
+        "tail:96": 1.2,
+        "tail:selected": 1.2,
+        "tail:argmax": 0.15
+      }
+    },
+    "screened_clock_sensitivity": {
+      "clocks": {
+        "sm": {
+          "mhz": 1030.9,
+          "evidence": "SM element: min(ot_gpu_tc_col routed -102.66 ps 1,068.8 MHz, ot_gpu_stack screen 1,042.4, ot_gpu_tc16 routed 1,157.3, ot_hbm_accel_issue output ports -136.7 ps 1,031); bulk copy r12 closes 1,220; the whole SM element was never routed"
+        },
+        "su": {
+          "mhz": 638.6,
+          "evidence": "SU light lane MLAT4/ALAT3 one-lane placed+repaired screen r2r 638.6 MHz (results/rtl/dshbm_local_chains_20261004/record.json timing_screen lane_k0_kr0; SFU lane 520.9)"
+        },
+        "su_sfu": {
+          "mhz": 520.9,
+          "evidence": "SU SFU lane k1 screen 520.9 MHz (same record)"
+        },
+        "attn": {
+          "mhz": 881.0,
+          "evidence": "attention tile as built on ot_hdc_fastfp LAT3: the multiplier routes 881 MHz at SS (add 975); the tile itself never routed)"
+        },
+        "coll": {
+          "mhz": 394.5,
+          "evidence": "collective endpoint clk_sm side: routed ot_gpu_coll_endpoint (HA3=0 baseline, in context, 540 um) SS setup -1.70125 ns on the RX CDC -> asmb path (results/rtl/hbm_accel_ha3_20261004/verdict.json, main 53ebc1219)"
+        },
+        "hbm": {
+          "mhz": 1209.6,
+          "evidence": "HBM stream PC r8b routed SS +6.28 ps"
+        },
+        "router": {
+          "mhz": 621.5,
+          "evidence": "ot_gpu_router_topk screen 621.5 MHz"
+        }
+      },
+      "AR_us": 603.754,
+      "AR_tok_s": 1656.3,
+      "AR": {
+        "total_us": 603.754,
+        "tok_s": 1656.3,
+        "us_by_class": {
+          "measured": 326.974,
+          "measured_tu_budget": 237.03,
+          "modelled": 39.75
+        },
+        "tu_budget_us": 115.168,
+        "modelled_us": 39.75,
+        "measured_share_incl_tu_budget": 0.9342,
+        "measured_share_excl_tu_budget": 0.7434,
+        "modelled_by_family": {
+          "tail:x_projections_gather": 6.0,
+          "tail:o-group": 6.0,
+          "tail:attn_out_gather": 6.0,
+          "tail:router_gather": 6.0,
+          "tail:expert_intermediate_gather": 6.0,
+          "tail:ffn_out_gather": 6.0,
+          "tail:indexer.q_gather": 1.2,
+          "tail:96": 1.2,
+          "tail:selected": 1.2,
+          "tail:argmax": 0.15
+        }
+      },
+      "AR_by_term": {
+        "hbm": 10.757,
+        "su": 131.942,
+        "quant": 27.071,
+        "sm": 81.642,
+        "barrier": 26.068,
+        "coll": 237.054,
+        "tail": 39.75,
+        "attn": 26.768,
+        "hcp": 0.0,
+        "du": 11.844,
+        "swiglu": 8.32,
+        "select": 2.792
+      },
+      "MTP_tok_s": 3436.1,
+      "MTP": {
+        "tau_source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.by_draft_tokens.5 (published: vLLM PR #57432 TP4 (acc:VLLM_57432))",
+        "verify_p6_us": 1082.633,
+        "walk_p6_us": 1006.4428,
+        "union_model_us": {
+          "sm": 47.74,
+          "fetch": 28.45
+        },
+        "draft_us": 45.28,
+        "seed_commit_us": 3.567,
+        "step_us": 1131.48,
+        "tau": 3.8879,
+        "mtp_tok_s": 3436.1,
+        "verify_summary": {
+          "total_us": 1082.633,
+          "tok_s": 923.7,
+          "us_by_class": {
+            "measured": 577.693,
+            "measured_tu_budget": 389.0,
+            "modelled": 39.75
+          },
+          "tu_budget_us": 115.168,
+          "modelled_us": 115.94,
+          "measured_share_incl_tu_budget": 0.8929,
+          "measured_share_excl_tu_budget": 0.7865,
+          "modelled_by_family": {
+            "tail:x_projections_gather": 6.0,
+            "tail:o-group": 6.0,
+            "tail:attn_out_gather": 6.0,
+            "tail:router_gather": 6.0,
+            "tail:expert_intermediate_gather": 6.0,
+            "tail:ffn_out_gather": 6.0,
+            "tail:indexer.q_gather": 1.2,
+            "tail:96": 1.2,
+            "tail:selected": 1.2,
+            "tail:argmax": 0.15
+          }
+        },
+        "verify_by_term": {
+          "hbm": 10.757,
+          "su": 198.916,
+          "quant": 52.283,
+          "sm": 81.642,
+          "barrier": 26.068,
+          "coll": 388.986,
+          "tail": 39.75,
+          "attn": 160.688,
+          "hcp": 0.0,
+          "du": 20.8,
+          "swiglu": 9.88,
+          "select": 16.76
+        }
+      }
+    },
+    "logic_dies": 96,
+    "sm_per_die": 32,
+    "stacks_per_die": 4,
+    "total_stacks": 384,
+    "logic_die_outline_mm2": 815,
+    "total_logic_outline_mm2": 78240,
+    "inventory_scope": "815 mm2 historical explicit floorplan envelope; not a newly routed accelerator die. Dedicated hub and mixed-service geometry not closed.",
+    "area_unknowns": [
+      "HBM DRAM silicon area and base die area not supplied here",
+      "switch silicon area additional",
+      "new TU endpoint area and SS/FF qualification absent"
+    ],
+    "power_w": null,
+    "energy_J_per_token": null,
+    "energy_scope": "No matched activity-based total power record identified for this exact composition; do not combine historical GPU-organised power with new accelerator TPOT.",
+    "still_modelled": [
+      {
+        "term": "Tomahawk-Ultra PHY + switch + cable per crossing",
+        "us": 115.168,
+        "why": "VENDOR BUDGET (Broadcom SUE RM104 App. A); inside the measured_tu_budget collective rows"
+      },
+      {
+        "term": "MTP verify: routed-expert union SM lines / fetch increments",
+        "us": {
+          "sm": 47.74,
+          "fetch": 28.45
+        },
+        "why": "W19 composer's union pricing, not re-measured"
+      },
+      {
+        "term": "MTP verify: LOCAL_REPEAT issue fraction for dedicated-unit steps",
+        "us": null,
+        "why": "W19 model issue fraction applied to the measured unit cycles at P = 6"
+      },
+      {
+        "term": "DSpark draft",
+        "us": 45.28,
+        "why": "results/rtl/dshbm_dspark_draft_20261004 (RTL chain + full-shape; its collectives are the TU model)"
+      },
+      {
+        "term": "seed commit",
+        "us": 3.567,
+        "why": "draft record"
+      },
+      {
+        "term": "acceptance tau",
+        "us": null,
+        "why": "published third-party (DSpark block 5, vLLM PR 57432), not an RTL quantity"
+      },
+      {
+        "term": "hc_mixes, compressor, cand_apply, Engram/candidate-merge collectives",
+        "us": 0.0,
+        "why": "off the critical path in the program's dependency order (model judgement, unchanged)"
+      }
+    ],
+    "physical_caveat": "Clock sensitivity uses mixed component screens and inherited endpoint clocks; no full SM route or new TU endpoint timing. Not SS/FF sign-off."
+  },
+  "rom": {
+    "AR_us": 725.057,
+    "AR_tok_s": 1379.2,
+    "classification": {
+      "zero": 0.0,
+      "measured": 662.304,
+      "measured+vendor_phy": 45.096,
+      "inside_measured": 0.19,
+      "extra_S81_hops": 17.422
+    },
+    "path_breakdown_us": {
+      "token": 0.0,
+      "embed": 0.8119,
+      "attn.hc_pre": 8.361499999999998,
+      "attn.norm.sumsq": 3.3319999999999985,
+      "attn.norm.rsqrt": 6.444000000000002,
+      "attn.norm.scale": 2.5319999999999983,
+      "attn.quant": 9.331999999999995,
+      "attn.a_proj": 23.69449999999999,
+      "attn.a_allgather": 9.331999999999995,
+      "attn.q_norm.sumsq": 6.707999999999999,
+      "attn.q_norm.rsqrt": 6.444000000000002,
+      "attn.q_norm.scale": 2.4000000000000017,
+      "attn.q_quant": 4.000000000000002,
+      "attn.wq_b": 16.16399999999999,
+      "attn.q_rope": 2.9504000000000015,
+      "attn.scores": 0.2859999999999998,
+      "attn.max": 7.094199999999996,
+      "attn.exp": 8.399200000000004,
+      "attn.den": 2.7733999999999996,
+      "attn.sink": 6.400000000000003,
+      "attn.normalize": 6.932000000000007,
+      "attn.wo_a": 69.33200000000001,
+      "attn.z_quant": 5.288000000000003,
+      "attn.wo_b": 13.564000000000005,
+      "attn.out_allreduce": 19.668000000000006,
+      "attn.hc_post": 11.595999999999995,
+      "substage_hop0": 30.300000000000008,
+      "ffn.hc_pre": 8.576000000000004,
+      "ffn.norm.sumsq": 3.3319999999999985,
+      "ffn.norm.rsqrt": 6.444000000000002,
+      "ffn.norm.scale": 2.5319999999999983,
+      "ffn.router": 20.032000000000014,
+      "ffn.softplus_sqrt": 17.50799999999999,
+      "ffn.router_allgather": 9.232000000000006,
+      "ffn.bias": 3.688000000000002,
+      "ffn.top6": 0.19599999999999984,
+      "ffn.top6_order": 13.432000000000011,
+      "ffn.experts_gu": 68.302,
+      "ffn.swiglu": 8.619999999999994,
+      "ffn.route_w": 3.688000000000002,
+      "ffn.quant2": 7.024000000000005,
+      "ffn.down": 54.139100000000006,
+      "ffn.combine_allreduce": 19.668000000000006,
+      "ffn.hc_post": 11.595999999999995,
+      "eng.dot": 0.4376,
+      "eng.gate": 0.8178,
+      "eng.add": 0.1666,
+      "attn.idx.q": 2.3288000000000006,
+      "attn.idx.score": 14.981200000000001,
+      "attn.idx.topk_local": 9.6399,
+      "attn.idx.topk_merge": 2.2264,
+      "attn.idx.topk_final": 1.1864,
+      "attn.gather": 5.3527,
+      "attn.rows_allgather": 3.7463999999999995,
+      "substage_hop1": 12.877500000000003,
+      "head.hop": 0.7575,
+      "head.hc_pre": 0.2144,
+      "head.norm.sumsq": 0.0833,
+      "head.norm.rsqrt": 0.1611,
+      "head.norm.scale": 0.0633,
+      "head.lm_head": 73.5759,
+      "head.argmax": 35.4766,
+      "head.argmax_merge": 0.2249,
+      "token.return": 1.155
+    },
+    "requires_binding": [
+      "WINDOW load: ot_dsrom_window_stream_la measured 93.9% of peak; the as-built S81 prefetch measures 124.5 us a layer -- composition REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)"
+    ],
+    "inventory": {
+      "1048576": {
+        "b1_AR_tok_s_per_kW_icg": 112.7,
+        "b1_AR_tok_s_per_kW_pg": 324.1,
+        "best_batch_tok_s_per_kW_icg": 2592.6
+      },
+      "200000": {
+        "b1_AR_tok_s_per_kW_icg": 117.8,
+        "b1_AR_tok_s_per_kW_pg": 339.6,
+        "best_batch_tok_s_per_kW_icg": 2707.0
+      },
+      "layer_dies": 324,
+      "packages": 184,
+      "stacks_ASSUMED_W3_rule": 452,
+      "stages": 81,
+      "static_kW_b1_pg": 7.32,
+      "static_kW_icg": 21.59,
+      "total_dies": 368
+    },
+    "area": {
+      "die_mm2": 839.239,
+      "fixed": 465.477,
+      "increments": 71.072,
+      "margin_frac": 0.02187,
+      "margin_mm2": 18.761,
+      "pairs": 2417,
+      "return_mm2": 31.548,
+      "stages": 81,
+      "variable": 271.142
+    },
+    "inventory_scope": "S81 screened model. Legacy ECC/no-ECC coordination and newer service substitutions must be reconciled before matched total-silicon claim. 839.239 mm2 is layer-die price, not a verified uniform area for all 368 dies.",
+    "old_analytical_AR_us": 405.486,
+    "old_analytical_rate_scope": "Historical analytical scenario only; not compared against measured HBM as achieved performance.",
+    "power_w": null,
+    "energy_J_per_token": null,
+    "energy_scope": "Historical S81 static values retained inside inventory, but not a matched power measurement at new 725 us service composition."
+  },
+  "matched_counterfactual": {
+    "purpose": "Isolate memory technology from compute reuse; then separately evaluate chosen cluster topology.",
+    "hold_fixed": [
+      "released FP4/FP8/BF16 payload and exact chunk8 rounding/reduction",
+      "same compute engines and counts, frequencies and pipeline latencies",
+      "same arithmetic schedule, rank count, collective implementation and physical budgets",
+      "same consumer ports and finite staging capacities",
+      "same context, cache residency and index scan contract",
+      "same SRAM/HBM/link mutable-state protection"
+    ],
+    "vary": [
+      "weight source storage area and capacity",
+      "weight source read latency and sustained port service",
+      "source-to-consumer routing/fanout/selection hardware",
+      "weight-path energy and background leakage/refresh",
+      "ROM macro capture and banking versus HBM controller/PHY"
+    ],
+    "equation": "T_op = schedule(overlap of finite weight delivery, compute and reduction, then result availability); no aggregate bandwidth division may replace producer/consumer port modelling.",
+    "do_not_claim": [
+      "eliminating HBM removes 10.757 us: that includes KV and embedding, while much weight streaming is hidden",
+      "ROM eliminates collective costs with unchanged TP96 compute mapping",
+      "HBM-style compute can retain its existing die area while ROM macros occupy the floorplan",
+      "HBM power equals interface-only energy or ROM power equals macro-read-only energy"
+    ],
+    "sensitivity_observation": "HBM breakdown is dominated by 167.257 us collective + 39.750 us modeled tails, not 10.757 us exposed HBM service. A source swap alone does not remove these costs."
+  }
+}

@@ -1,0 +1,12 @@
+HIGHADDR bar=800 byte=1c00000100 high=0000001c bytes=64 status=0 crc=a63d206e
+HIGHADDR bar=840 byte=1c00000100 high=0000001c bytes=64 status=0 crc=a63d206e
+HIGHADDR bar=800 byte=1d3d1ac100 high=0000001d bytes=32 status=3 crc=ffffffff
+HIGHADDR bar=840 byte=1d3d1ac0e0 high=0000001d bytes=64 status=3 crc=ffffffff
+HIGHADDR bar=800 byte=1c00000100 high=0000003c bytes=64 status=3 crc=ffffffff
+HIGHADDR bar=840 byte=1c00000100 high=0000001c bytes=64 status=3 crc=ffffffff
+HIGHADDR bar=800 byte=1fffffffe0 high=0000001f bytes=64 status=3 crc=ffffffff
+PASS high_address_component stack3 local_bit34 fullDMA64 two-sectors CRC=a63d206e requests=6 ACK=6 B=2
+- /srv/opentallas-scratch/codex/item8-hbm-loader-20261004/src_high_addr/rtl/test/hbm_accel/tb_hbm_accel_loader_high_addr.sv:105: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 352ns; walltime 0.000 s; speed 850.585 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

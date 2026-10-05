@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/source/prepare.py", line 69, in <module>
+    for n in names: out.write(f' a.i_{n}={640 if n=="k" else f["me_"+n]};\n')
+                                                             ~^^^^^^^^^
+KeyError: 'me_m'

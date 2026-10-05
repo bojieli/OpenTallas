@@ -1,0 +1,90 @@
+{
+  "runtime_exit": -11,
+  "numerical": "FAIL",
+  "ranks": [
+    {
+      "rank": 0,
+      "x.hex": {
+        "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+        "actual_sha256": null,
+        "expected_entries": 4096,
+        "entries": 0
+      },
+      "kvP.hex": {
+        "expected_sha256": "e6751ad771fc6c10016ce1b8c53c1b904478e55182f84df84722d0c65fc45379",
+        "actual_sha256": null,
+        "expected_entries": 512,
+        "entries": 0
+      },
+      "accept": {
+        "records": [],
+        "expected_bonus": 113742,
+        "exact": false
+      }
+    },
+    {
+      "rank": 1,
+      "x.hex": {
+        "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+        "actual_sha256": null,
+        "expected_entries": 4096,
+        "entries": 0
+      },
+      "kvP.hex": {
+        "expected_sha256": "669452fe2b51e4b9af5aa27382bd8cd13cd0a3f1ffa83bc64b34d6b4635d86d6",
+        "actual_sha256": null,
+        "expected_entries": 512,
+        "entries": 0
+      },
+      "accept": {
+        "records": [],
+        "expected_bonus": 113742,
+        "exact": false
+      }
+    },
+    {
+      "rank": 2,
+      "x.hex": {
+        "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+        "actual_sha256": null,
+        "expected_entries": 4096,
+        "entries": 0
+      },
+      "kvP.hex": {
+        "expected_sha256": "22a9d80b262dfcf896e417c3ee50815b4cf71f39a3fbe6f49bf54edbc464ecac",
+        "actual_sha256": null,
+        "expected_entries": 512,
+        "entries": 0
+      },
+      "accept": {
+        "records": [],
+        "expected_bonus": 113742,
+        "exact": false
+      }
+    },
+    {
+      "rank": 3,
+      "x.hex": {
+        "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+        "actual_sha256": null,
+        "expected_entries": 4096,
+        "entries": 0
+      },
+      "kvP.hex": {
+        "expected_sha256": "114b552690c33234f6dc8f9a32480281297ac8d0d0ba196398253b7ae03ca08e",
+        "actual_sha256": null,
+        "expected_entries": 512,
+        "entries": 0
+      },
+      "accept": {
+        "records": [],
+        "expected_bonus": 113742,
+        "exact": false
+      }
+    }
+  ],
+  "scope": "Actual P8191/token24 NP1 L0 X/KV + HEAD winner/ACCEPT(0,1) against retained qualified component outputs. No HEAD logit-bit/Xnorm readback claim; no full36/token-rate claim.",
+  "process": "FAIL",
+  "source": "a60af57e4",
+  "runtime_source": "f6c5e4af1"
+}

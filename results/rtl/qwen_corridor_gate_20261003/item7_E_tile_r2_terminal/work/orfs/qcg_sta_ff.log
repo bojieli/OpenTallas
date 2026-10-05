@@ -1,0 +1,138 @@
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+QCGSTA setup
+worst slack max 378.81
+QCGSTA hold
+worst slack min 172.60
+tns max 0.00
+Startpoint: qs0_342 (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: qs1_342 (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  22.14   22.14 ^ wire1/Y (BUFx12f_ASAP7_75t_R)
+  35.24   57.38 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.48   79.86 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.36  103.22 ^ clkbuf_1_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  24.14  127.35 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.46  150.81 ^ clkbuf_3_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  61.03  211.84 ^ clkbuf_leaf_10_clk/Y (BUFx24_ASAP7_75t_R)
+   3.29  215.13 ^ qs0_342/CLK (DFFHQNx2_ASAP7_75t_R)
+  64.36  279.50 v qs0_342/QN (DFFHQNx2_ASAP7_75t_R)
+  93.05  372.55 v qr01_342/Y (BUFx4_ASAP7_75t_R)
+  84.19  456.74 v qr02_342/Y (BUFx4_ASAP7_75t_R)
+  84.10  540.84 v qr03_342/Y (BUFx4_ASAP7_75t_R)
+  33.01  573.85 v qs1_342/D (DFFHQNx2_ASAP7_75t_R)
+         573.85   data arrival time
+
+ 833.00  833.00   clock core_clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ clk (in)
+  21.26  854.26 ^ wire1/Y (BUFx12f_ASAP7_75t_R)
+  34.03  888.29 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.31  909.60 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  20.99  930.59 ^ clkbuf_1_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  22.31  952.90 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.03  976.93 ^ clkbuf_3_4_0_clk/Y (BUFx24_ASAP7_75t_R)
+  47.54 1024.47 ^ clkbuf_leaf_57_clk/Y (BUFx24_ASAP7_75t_R)
+   1.12 1025.58 ^ qs1_342/CLK (DFFHQNx2_ASAP7_75t_R)
+ -60.00  965.58   clock uncertainty
+   2.09  967.67   clock reconvergence pessimism
+ -15.01  952.66   library setup time
+         952.66   data required time
+---------------------------------------------------------
+         952.66   data required time
+        -573.85   data arrival time
+---------------------------------------------------------
+         378.81   slack (MET)
+
+
+Startpoint: qs0_753 (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: qs1_753 (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  21.26   21.26 ^ wire1/Y (BUFx12f_ASAP7_75t_R)
+  34.03   55.29 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.82   77.11 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.76   99.88 ^ clkbuf_1_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.30  123.18 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.49  148.67 ^ clkbuf_3_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  47.30  195.97 ^ clkbuf_leaf_24_clk/Y (BUFx24_ASAP7_75t_R)
+   1.45  197.42 ^ qs0_753/CLK (DFFHQNx2_ASAP7_75t_R)
+  58.18  255.60 v qs0_753/QN (DFFHQNx2_ASAP7_75t_R)
+  52.49  308.09 v qr01_753/Y (BUFx4_ASAP7_75t_R)
+  42.58  350.67 v qr02_753/Y (BUFx4_ASAP7_75t_R)
+  46.60  397.27 v qr03_753/Y (BUFx4_ASAP7_75t_R)
+  10.54  407.81 v qs1_753/D (DFFHQNx2_ASAP7_75t_R)
+         407.81   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  22.14   22.14 ^ wire1/Y (BUFx12f_ASAP7_75t_R)
+  35.24   57.38 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.98   79.36 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.59  100.95 ^ clkbuf_1_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.27  124.22 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.16  150.38 ^ clkbuf_3_7_0_clk/Y (BUFx24_ASAP7_75t_R)
+  50.39  200.77 ^ clkbuf_leaf_43_clk/Y (BUFx24_ASAP7_75t_R)
+   2.01  202.77 ^ qs1_753/CLK (DFFHQNx2_ASAP7_75t_R)
+  25.00  227.77   clock uncertainty
+  -2.09  225.69   clock reconvergence pessimism
+   9.52  235.20   library hold time
+         235.20   data required time
+---------------------------------------------------------
+         235.20   data required time
+        -407.81   data arrival time
+---------------------------------------------------------
+         172.60   slack (MET)
+
+
+QCGSTA failing_D setup 0 hold 0 of 2112
