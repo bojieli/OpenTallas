@@ -67,6 +67,7 @@ template<class M> constexpr bool linked_abi=requires(M& m) {
     m.warm_rst_n; m.hold_rows; m.bad_ack_tag; m.join_debt;
     m.join_desc_accepted; m.join_go; m.join_row_take; m.join_row_valid; m.join_bad_ack_seen;
     m.join_desc_committed; m.join_go_committed;
+    m.join_write_accepted;
 };
 template<class M> class Session {
     std::unique_ptr<M> top_;
@@ -75,6 +76,7 @@ template<class M> class Session {
     uint64_t bad_ack_seen_=0;
     unsigned bad_debt_before_=0;
     uint64_t h_descriptors_=0,h_go_=0;
+    uint64_t writes_=0;
 public:
     M& m() {return *top_;}
     explicit Session():top_(new M) {
@@ -97,6 +99,7 @@ public:
         if constexpr(linked_abi<M>) {
             descriptors_+=m().join_desc_accepted;go_+=m().join_go;
             for(int word=0;word<4;++word) {rows_+=__builtin_popcount(m().join_row_take[word]);acks_+=__builtin_popcount(m().join_ack_valid[word]);}
+            for(int word=0;word<4;++word) writes_+=__builtin_popcount(m().join_write_accepted[word]);
             if(m().join_bad_ack_seen) {++bad_ack_seen_;bad_debt_before_=m().join_debt;}
         }
         clocks_.edge(tick_*833333+416666,ctl,[&]{m().clk=1;},settle);
@@ -164,8 +167,10 @@ public:
             for(int i=0;i<24;++i)step();
             need(rows_==row_count,"held row retired without actual consumer pop");
             m().hold_rows=0;token(fixture);
-            // Pause admission after all token operands have reached the real
-            // consumer. Existing owned descriptor/row/write/ACK debt continues.
+            // Pause only after every real producer write acceptance. This
+            // cannot revoke a caller's already-issued registered pulse.
+            until([&]{return writes_==136;});
+            need(m().wb_busy&&m().join_debt>0,"warm stimulus needs real accepted outstanding ACK debt");
             m().warm_rst_n=0;
             for(int i=0;i<24;++i)step();
             m().warm_rst_n=1;
@@ -173,7 +178,7 @@ public:
             for(int i=0;i<3;++i)step(); // existing registered slice visibility
             need(descriptors_==1&&go_==1,"actual command/GO count differs");
             need(h_descriptors_==1&&h_go_==1,"protected descriptor/GO did not commit once to real controllers");
-            need(acks_==136,"actual K128/V8 ACK count differs");
+            need(writes_==136&&acks_==136,"actual K128/V8 acceptance/ACK count differs");
             check_token(fixture);check_slices(fixture);
             std::printf("PASS_RELEASED_P8191_LINKED_JOIN core_edges=%llu controller_edges=%llu descriptor=%llu go=%llu h_descriptor=%llu h_go=%llu rows=%llu ACK=%llu debt=%u warm_held=1\n",
                 (unsigned long long)tick_,(unsigned long long)clocks_.controller_rises(),
@@ -186,8 +191,9 @@ public:
             // The first real ACK's write marker is corrupted at the existing
             // receiver boundary. Accepted debt must survive the rejected tag.
             m().bad_ack_tag=1;
-            // Issue the first real V fragment pair, which makes four sectors.
-            for(int half=0;half<2;++half) {
+            // One actual V64 fragment forms two sectors. Do not issue another
+            // dependent op after the deliberately rejected ACK blocks drain.
+            for(int half=0;half<1;++half) {
                 until([&]{return m().kv_write_drained;},true);
                 for(int lane=0;lane<64;++lane) {
                     int d=half*64+lane;uint32_t e=2097152+P*128+d;
