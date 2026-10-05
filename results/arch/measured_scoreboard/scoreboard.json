@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "0b59c9ab3",
+ "generated_from_commit": "99ccba495",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -5579,7 +5579,7 @@
    "value": 517.934,
    "resolved": true,
    "blob": "a7418b6bfb3781079b60d2a53e7a968a1245c381",
-   "last_commit": "962df6ce9 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_ds.matched_gate_ar_us_die_wire_floor": {
    "target": "hbm_ds",
@@ -5594,7 +5594,7 @@
    "value": 500.722,
    "resolved": true,
    "blob": "a7418b6bfb3781079b60d2a53e7a968a1245c381",
-   "last_commit": "962df6ce9 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_ds.matched_gate_mtp_tok_s_die_wire": {
    "target": "hbm_ds",
@@ -5609,7 +5609,7 @@
    "value": 3802.5,
    "resolved": true,
    "blob": "a7418b6bfb3781079b60d2a53e7a968a1245c381",
-   "last_commit": "962df6ce9 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_ds.die_wire_added_us": {
    "target": "hbm_ds",
@@ -5624,7 +5624,7 @@
    "value": 43.126,
    "resolved": true,
    "blob": "a7418b6bfb3781079b60d2a53e7a968a1245c381",
-   "last_commit": "962df6ce9 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_ds.die_mm2": {
    "target": "hbm_ds",
@@ -5639,7 +5639,7 @@
    "value": 481.27,
    "resolved": true,
    "blob": "384f474c6737837a1dab73faf49561abf7bd2376",
-   "last_commit": "962df6ce9 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_qwen.ar_tok_s_p8191_tp4_die_wire": {
    "target": "hbm_qwen",
@@ -5654,7 +5654,7 @@
    "value": 2136.0,
    "resolved": true,
    "blob": "a7418b6bfb3781079b60d2a53e7a968a1245c381",
-   "last_commit": "962df6ce9 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_qwen.ar_tok_s_p8191_tp2_die_wire": {
    "target": "hbm_qwen",
@@ -5669,7 +5669,7 @@
    "value": 1028.6,
    "resolved": true,
    "blob": "a7418b6bfb3781079b60d2a53e7a968a1245c381",
-   "last_commit": "962df6ce9 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
