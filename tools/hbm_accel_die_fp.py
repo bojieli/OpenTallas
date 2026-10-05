@@ -382,14 +382,12 @@ def _dirface(ax, ay, bx, by):
     return 'N' if by > ay else 'S'
 
 
-def buses(m):
-    """[(id, class, bits, [(inst, port)])] + named critical paths {path: [bus ids in order]}.  Long paths are chains of
-    forwarded-link stations placed in the channels (a station every <= 4 x 430.56 um of route); each station is its own
-    abstract with its ports on the faces that look along the route."""
-    B, P = [], defaultdict(list)
+def _router(m, B, P):
+    """(station, chain) closures over the die model m: forwarded-link / multicast / gather stations placed in free
+    channel space, and polyline chains with a station every <= WAYPOINT_UM.  Shared by the DS SM die and the Qwen tile
+    die builders."""
     insts = m['insts']
     g = m['geo']
-    hub = m['hub']
     faces = m['stn_faces']
     n_wp = [0]
     pf = m['variant'].get('port_fix')
@@ -473,6 +471,19 @@ def buses(m):
         if path:
             P[path] += ids
         return bid
+    return station, chain
+
+
+def buses(m):
+    """[(id, class, bits, [(inst, port)])] + named critical paths {path: [bus ids in order]}.  Long paths are chains of
+    forwarded-link stations placed in the channels (a station every <= 4 x 430.56 um of route); each station is its own
+    abstract with its ports on the faces that look along the route."""
+    B, P = [], defaultdict(list)
+    insts = m['insts']
+    g = m['geo']
+    hub = m['hub']
+    faces = m['stn_faces']
+    station, chain = _router(m, B, P)
 
     def sm_face(it, port):
         f = SM_FACE[port]
@@ -830,17 +841,22 @@ def masters(m, k=1):
             peers[key] += others
     notes = {'hfd_sm': 'SM element ot_hbm_accel_sm_v NC8/SUB4 (sm_r2 context 2202.768 x 2072.79, 202 macros; pin regions '
                        'of the context: d/req/rsp bottom, xw left, results right, control top; element route OPEN)'}
+    notes.update(m.get('master_notes', {}))
+    fixed = m.get('fixed_ports', {})       # master -> fn(Master): replicated elements with a fixed pin plan
     for it in m['insts']:
         if it.master in M or it.master in REAL:
             continue
         nt = notes.get(it.master) or (f'{it.kind}: forwarded-link / multicast / gather station' if it.kind == 'waypoint'
                                       else f'{it.kind} placeholder sized from the block ledger')
-        M[it.master] = Q.Master(it.master, it.w, it.h, 3 if it.kind == 'waypoint' else 7, nt)
+        M[it.master] = Q.Master(it.master, it.w, it.h, 3 if it.kind in ('waypoint', 'head') else 7, nt)
     sm_fixed = dict(d='S', q='S', x='W', r='E', c='N', ck='N')
     sm_span = dict(S=(550.7, 1652.1), W=(518.2, 1554.6), E=(518.2, 1554.6), N=(550.7, 1652.1))
     items = defaultdict(lambda: defaultdict(list))
+    for mname, fn in fixed.items():
+        if mname in M:
+            fn(M[mname])
     for (mname, port), others in peers.items():
-        if mname in REAL or mname not in M:
+        if mname in REAL or mname not in M or mname in fixed:
             continue
         if mname.startswith('hfd_svc_') and port == 'phy':
             continue
@@ -1489,6 +1505,523 @@ def variant_arg(v):
     if v == 'adopted':
         return dict(ADOPTED)
     return json.loads(v)
+# ================================================================================================================
+# Qwen3-8B HBM accelerator die (the HA8 W12 vehicle's own organisation: 1,536 tiles, 4 HBM3E stacks, 421.5 MiB SRAM)
+# ================================================================================================================
+# Census per die (results/uarch/hbm_current_target_portmap_20261005/model_portmap.json Qwen): one core + spine, 1,536
+# W12 tiles (TG4, G = 6,144), the four-stack wstream (128 PC stream controllers), the TP collective, the loader.
+# Floorplan -> hardened element -> replicate: the tile element is the W12 tile logic (measured routed core) + its
+# 421.5 MiB share of the code/KV SRAM (real ASAP7 macros) + its corridor and fill forwarding banks, replicated 96 x 16.
+#
+#   field     96 columns x 16 rows of the tile element, W half (48 columns) | spine | E half (48 columns); the column
+#             head row (MIDCH) between rows 7 and 8 feeds each column's corridor (instruction + x + forwarded clock)
+#             north and south through the abutting tile elements
+#   stacks    one stack per 24-column quarter: SW (columns 0-23) and SE (48-71) fill from the S edge, NW (24-47) and
+#             NE (72-95) from the N edge.  Each stack's PHY (real ot_hbm3e_phy_v41x_aw30_e8p5, 8.5 mm) sits on its
+#             quarter's edge with the stream service between it and the field; the service drops one 512 b fill bus
+#             into the end tile of each of its 24 columns, and the fill runs through the column's tile elements
+#             (each HBM word's 64 B tile slices are striped so that a stack holds its own quarter's slices)
+#   tree      W12 split tree: blocks of 4 x 4 tiles (15 in-block nodes hosted by tiles, 512 b words), 96 block words
+#             (512 b) into the spine port slice of the block-row band (4 bands), port slices -> core tree top
+#   spine     between the halves: core (tree top, VM / x root, constants + sequencer, SU64 + SFU, stream control),
+#             four port slices and four scale-store slabs (the W5 spine reservations of the ROM die), loader; SerDes
+#             macros at the spine's S end, host UCIe macro at its N end; collective + SerDes slab in the free S band
+#             W of the spine, host slab in the free N band E of the spine
+Q_OUT = 'results/rtl/hbm_accel_qwen_die_floorplan_20261005'
+Q_FINAL_ROUND = 'q4'
+Q_TILE_ROUTE = dict(TP2='results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp2_t4/physical.json',
+                    TP4='results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp4_t4/physical.json')
+Q_SRAM_RW = 'physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4/ot_sram_1rw_2048x128_m4.json'
+Q_SRAM_WIN = 'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json'
+Q_STORAGE = 'results/uarch/qwen_hbm_storage_binding_20261005/storage_binding.json'
+Q_ME_OPS = 'results/rtl/qwen_rom_fulldie_20261003/b3r3/wire_bound_8k.json'
+Q_CHAINS = 'results/rtl/hbm_accel_qwen_chains_20261004/composition.json'
+QCOLS, QROWS = 96, 16
+QBLK = (4, 4)                   # tiles per tree block (columns, rows)
+QT_W = 313.632                  # tile slot width: the W12 slot of the ROM die (726 x 0.432), 52.704 um corridor strip on E
+QT_CORR = 52.704
+Q_COR_BITS = Q.CORRIDOR_BITS    # 637: clock 64 + reset 64 + instruction 379 + go 1 + x 128 + ready 1
+Q_FILL_BITS = 512 + 16          # 64 B tile slice of an HBM word + tile select / word index / valid
+Q_TREE_BITS = Q.TREE_BITS       # 512
+Q_PORT_BITS = 12 * 512          # one band's 12 port words (of the 48 x 512 b ME result) per half -> core
+Q_STAT_BITS = 64                # w_c_gray32 + a_gray32 (stream status, model_portmap Q_STREAM_STATUS)
+Q_LOAD_BITS = 341 + 273         # loader request + response (qwen_physical_model service_loader)
+Q_COLL_BITS = 512               # c_data512 / r_data512 (Q_COLLECTIVE)
+Q_SERDES = 4                    # TP4: three peers + one spare lane group (ot_rom_oneshot_allreduce N = 4)
+MIDCH = 345.6                   # column-head row between rows 7 and 8
+Q_GAP = 43.2
+QBLOCKS = dict(
+    tile=(None, 'measured-routed + real macros', 'see tile_element'),
+    core=(2.397 + 0.725 + 2.157 + 1.6 + 0.2, 'model + estimate', 'W12 core: tree top 2.397 + VM 0.725 + constants/'
+          'sequencer 2.157 (W5 spine reservations, tools/qwen_rom_fulldie.py SPINE_BLOCKS) + SU64/SFU 1.6 (estimate) + '
+          'stream control 0.2 (window use-count release ot_hbmacc_win_usecount 85 um2 routed + gray-count syncs, '
+          'estimate)'),
+    port=(11.08, 'model', 'W5 spine_port_tiles (96 port groups), as four band slices'),
+    scale=(14.359, 'model', 'W5 spine_scale_rom reservation, kept as the scale-constant store (the 421.5 MiB code '
+           'budget excludes scales: storage_binding includes_VM_program_scale_constants = false)'),
+    coll=(3.6, 'model', 'collective block (Qwen ROM die IO ledger, tools/qwen_rom_fulldie.py IO_BLOCKS)'),
+    serdes=(4.0, 'model', 'board SerDes reservation (Qwen ROM die IO ledger): real ot_pdie_serdes pin macros + slab'),
+    host=(10.0, 'model', 'host UCIe reservation (Qwen ROM die IO ledger): real ot_pdie_ucie pin macro + slab'),
+    loader=(0.3321, 'measured-slot', 'ot_hbm_accel_loader_host slot 576.288^2 um (tapeout_hbm_loader_20261004)'),
+    svc=(BLOCKS['svc'][0], BLOCKS['svc'][1], BLOCKS['svc'][2]),
+)
+
+
+def q_tile():
+    """The replicated tile element: measured routed W12 tile logic core (the larger of the TP2 / TP4 routes, so that
+    one die frame carries either build) + the tile's share of the code/KV SRAM on real ASAP7 macros + the corridor
+    strip.  SRAM: the HA8 budget is 421.5 MiB / die = 4,496 code words of 98,304 B = 4,496 x 512 b per tile (the
+    window carved out of it); the tile reads 2 group-pair columns x 256 b per code word (ot_qwen_rom_tile_w12 code
+    bank geometry).  Resident words: 2 columns x 2 x ot_sram_1rw_2048x128_m4 wide x 2 deep (4,096 words); the stream
+    window (and the resident tail) in 2 x ot_sram_1r1w_1024x256_m2_r2c2 (1,024 words), so the stream writes never
+    contend with the engine reads."""
+    tl = {k: json.loads((ROOT / p).read_text())['design'] for k, p in Q_TILE_ROUTE.items()}
+    logic = max(v['core_area_um2'] for v in tl.values())
+    rw = json.loads((ROOT / Q_SRAM_RW).read_text())['area']
+    wn = json.loads((ROOT / Q_SRAM_WIN).read_text())['area']
+    body_w = QT_W - QT_CORR
+    halo = 4.32
+    rw_w, rw_h, wn_w, wn_h = rw['macro_width_um'], rw['macro_height_um'], wn['macro_width_um'], wn['macro_height_um']
+    assert 2 * rw_w + 3 * halo <= body_w and wn_w + 2 * halo <= body_w
+    band_h = 4 * (rw_h + halo) + 2 * (wn_h + halo) + halo
+    h = up(logic / body_w + band_h, GY)
+    words = 2048 * 2 + 1024
+    sb = json.loads((ROOT / Q_STORAGE).read_text())['weight_sram_budget']
+    macros = [dict(master='ot_sram_1rw_2048x128_m4', n=8, w=rw_w, h=rw_h, um2=rw['macro_area_um2'],
+                   role='resident code words 0..4,095: 2 group-pair columns x 2 wide (256 b) x 2 deep'),
+              dict(master='ot_sram_1r1w_1024x256_m2_r2c2', n=2, w=wn_w, h=wn_h, um2=wn['macro_area_um2'],
+                   role='stream window + resident tail, words 4,096..5,119: 1R1W so the stream fill never blocks a read')]
+    sram_um2 = sum(x['n'] * x['um2'] for x in macros)
+    return dict(w=QT_W, h=h, body_w=body_w, corridor_w=QT_CORR, logic_core_um2=logic,
+                logic_basis={k: dict(core_um2=v['core_area_um2'], cell_um2=v['area_um2'],
+                                     utilisation=v['utilization_fraction'], fmax_tt_hz=v['fmax_hz'], closed=v['closed'],
+                                     source=Q_TILE_ROUTE[k]) for k, v in tl.items()},
+                macro_band_h=round(band_h, 3), logic_h=round(h - band_h, 3), macros=macros,
+                sram_um2=round(sram_um2, 1), words_per_tile=words, word_bits=512,
+                sram_mib_per_die=round(words * 64 * QCOLS * QROWS / 2 ** 20, 1),
+                goal_words_per_tile=sb['word_capacity'], goal_mib_per_die=sb['mib_per_die'],
+                capacity_over_goal_pct=round(100 * (words / sb['word_capacity'] - 1), 1),
+                hop_stages=math.ceil(h / LINK_STAGE_UM),
+                mm2=round(QT_W * h / 1e6, 5))
+
+
+def build_qwen(variant=None):
+    variant = dict(variant or {}, die='qwen')
+    T = q_tile()
+    th = T['h']
+    spw = up(variant.get('spine_w', 2000.16), GX)
+    spc = up(variant.get('spine_ch', 172.8), GX)
+    xfw = up(EDGE, GX)
+    xsp = xfw + 48 * QT_W
+    xfe = xsp + spw
+    W = up(xfe + 48 * QT_W + EDGE, GX)
+    yp_s = up(EDGE, GY)
+    ys_s = up(yp_s + PHY_H + 8.64, GY)
+    yr0 = up(ys_s + SVC_D + SVC_GAP, GY)
+    row_y = [yr0 + r * th for r in range(8)]
+    ym = yr0 + 8 * th
+    row_y += [ym + MIDCH + r * th for r in range(8)]
+    ytop = row_y[-1] + th
+    ys_n = up(ytop + SVC_GAP, GY)
+    yp_n = up(ys_n + SVC_D + 8.64, GY)
+    H = up(yp_n + PHY_H + EDGE, GY)
+    assert W <= 33000 and H <= 26000, ('die exceeds the reticle', W, H)
+    insts, regions, notes = [], [], []
+
+    def col_x(c):
+        return xfw + c * QT_W if c < 48 else xfe + (c - 48) * QT_W
+    geo = dict(W=W, H=H, xfw=xfw, xsp=xsp, xfe=xfe, spine_w=spw, spine_ch=spc, yr0=yr0, ym=ym, ytop=ytop, tile_h=th,
+               row_y=row_y, side_h=yr0, mid=ym + MIDCH / 2)
+    tiles = {}
+    for c in range(QCOLS):
+        for r in range(QROWS):
+            it = Inst(f't_{c}_{r}', 'qhd_tile', col_x(c), row_y[r], QT_W - SHAVE, th - SHAVE, 'R0', kind='tile',
+                      region='field_W' if c < 48 else 'field_E')
+            insts.append(it)
+            tiles[(c, r)] = it
+    hh = 69.12
+    heads = {}
+    for c in range(QCOLS):
+        it = Inst(f'h_{c}', 'qhd_head', col_x(c) + QT_W - QT_CORR, up(ym + (MIDCH - hh) / 2, GY), QT_CORR - SHAVE,
+                  hh - SHAVE, 'R0', kind='head', region='midch')
+        insts.append(it)
+        heads[c] = it
+    regions += [dict(name='field_W', kind='field', rect=[xfw, yr0, xsp, ytop]),
+                dict(name='field_E', kind='field', rect=[xfe, yr0, xfe + 48 * QT_W, ytop]),
+                dict(name='midch', kind='channel', rect=[xfw, ym, xfe + 48 * QT_W, ym + MIDCH]),
+                dict(name='spine', kind='hub', rect=[xsp, yr0, xfe, ytop])]
+    # ---- stacks: PHY + stream service on the edge of each 24-column quarter
+    rp = S.real_lef(PHY_LEF)
+    groups = {}
+    qcols = dict(SW=range(0, 24), NW=range(24, 48), SE=range(48, 72), NE=range(72, 96))
+    for st, cols in qcols.items():
+        side = st[0]
+        x_lo, x_hi = col_x(cols[0]), col_x(cols[-1]) + QT_W
+        if st == 'SW':
+            xp = up(xfw, GX)
+        elif st == 'NW':
+            xp = dn(xsp - PHY_W, GX)
+        elif st == 'SE':
+            xp = up(xfe, GX)
+        else:
+            xp = dn(xfe + 48 * QT_W - PHY_W, GX)
+        yp, ys, po = (yp_s, ys_s, 'R0') if side == 'S' else (yp_n, ys_n, 'MX')
+        phy = Inst(f'phy_{st}', rp['name'], xp, yp, rp['w'], rp['h'], po, kind='phy', region='phy', domain='hbm')
+        svc = Inst(f'svc_{st}', f'hfd_svc_{st}', xp, ys, PHY_W - SHAVE, SVC_D - SHAVE, po, kind='svc', region='svc',
+                   domain='hbm')
+        insts += [phy, svc]
+        regions.append(dict(name=f'svc_{st}', kind='svc', rect=[xp, ys, xp + PHY_W, ys + SVC_D]))
+        groups[st] = dict(phy=phy, svc=svc, side=side, cols=list(cols), x_lo=x_lo, x_hi=x_hi)
+    # ---- IO: SerDes macros at the spine's S end, collective + SerDes slab in the free S band W of the spine; UCIe at
+    #      the spine's N end, host slab in the free N band E of the spine (+ its remainder beside the UCIe macro)
+    rs, ru = S.real_lef(SERDES_LEF), S.real_lef(UCIE_LEF)
+    MG = 103.68
+    links = []
+    row_w = Q_SERDES * rs['w'] + (Q_SERDES - 1) * MG
+    assert row_w <= spw - 2 * Q_GAP
+    sx = up(xsp + (spw - row_w) / 2, GX)
+    for i in range(Q_SERDES):
+        it = Inst(f'lk_S{i}', rs['name'], up(sx + i * (rs['w'] + MG), GX), up(EDGE, GY), rs['w'], rs['h'], 'R0',
+                  kind='link', region='link', domain='link')
+        insts.append(it)
+        links.append(it)
+    io_y0, io_y1 = up(EDGE, GY), dn(ys_s + SVC_D, GY)     # the service channel stays open above the IO band
+    band_d = io_y1 - io_y0
+    free_s = (groups['SW']['phy'].x + PHY_W + Q_GAP, xsp - Q_GAP)
+    cw = up(QBLOCKS['coll'][0] * 1e6 / band_d, GX)
+    coll = Inst('io_coll', 'qhd_coll', dn(free_s[1] - cw, GX), io_y0, cw - SHAVE, band_d - SHAVE, kind='hub', region='io',
+                domain='serial_0p9')
+    sw_ = up(QBLOCKS['serdes'][0] * 1e6 / band_d, GX)
+    sslab = Inst('io_sd_slab', 'qhd_serdes_slab', dn(coll.x - Q_GAP - sw_, GX), io_y0, sw_ - SHAVE, band_d - SHAVE,
+                 kind='serdes_slab', region='io', domain='link')
+    assert sslab.x >= free_s[0] - 1e-6, ('S band does not hold the collective + SerDes slab', sslab.x, free_s)
+    insts += [coll, sslab]
+    regions.append(dict(name='io_S', kind='link', rect=[sslab.x, io_y0, xsp, io_y1]))
+    ux = up(xsp + spw - Q_GAP - ru['w'], GX)
+    uy = dn(H - EDGE - ru['h'], GY)
+    host = Inst('lk_host', ru['name'], ux, uy, ru['w'], ru['h'], 'R0', kind='link', region='link', domain='link')
+    insts.append(host)
+    io_n0, io_n1 = up(ys_n, GY), dn(H - EDGE, GY)
+    free_n = (xfe + Q_GAP, groups['NE']['phy'].x - Q_GAP)
+    hw_a = dn(free_n[1] - free_n[0], GX)
+    ha_mm2 = min(QBLOCKS['host'][0], hw_a * (io_n1 - io_n0) / 1e6)
+    hs_a = Inst('io_host_a', 'qhd_host_slab_a', up(free_n[0], GX), io_n0, hw_a - SHAVE, dn(io_n1 - io_n0, GY) - SHAVE,
+                kind='host_slab', region='io', domain='link')
+    insts.append(hs_a)
+    hb_mm2 = round(QBLOCKS['host'][0] - ha_mm2, 4)
+    regions.append(dict(name='io_N', kind='link', rect=[xfe, io_n0, free_n[1], io_n1]))
+    # ---- spine: core centred on the head row, port + scale slabs per band, loader, host-slab remainder at the N end
+    bw = spw - 2 * spc
+    bx = up(xsp + spc, GX)
+    bw = dn(xfe - spc - bx, GX)
+    y_lo = up(max(EDGE + rs['h'], yr0) + Q_GAP, GY)
+    y_hi = dn(min(uy, ytop) - Q_GAP, GY)
+    hub = {}
+
+    def blk(name, master, mm2, y, kind='spine', dom='stream_1p2', x=None, w=None):
+        w = w or bw
+        h = up(mm2 * 1e6 / w, GY)
+        it = Inst(name, master, x if x is not None else bx, y, w - SHAVE, h - SHAVE, kind=kind, region='hub', domain=dom)
+        insts.append(it)
+        hub[name] = it
+        return it
+    core_h = up(QBLOCKS['core'][0] * 1e6 / bw, GY)
+    core = blk('sp_core', 'qhd_core', QBLOCKS['core'][0], dn(geo['mid'] - core_h / 2, GY))
+    lower = [('sp_scale0', 'scale', 0), ('sp_port0', 'port', 0), ('sp_port1', 'port', 1), ('sp_scale1', 'scale', 1)]
+    upper = [('sp_scale2', 'scale', 2), ('sp_port2', 'port', 2), ('sp_port3', 'port', 3), ('sp_scale3', 'scale', 3),
+             ('sp_loader', 'loader', None)]
+    if hb_mm2 > 0:
+        upper.append(('sp_host_b', 'host_b', None))
+
+    def mm(kind_):
+        return dict(scale=QBLOCKS['scale'][0] / 4, port=QBLOCKS['port'][0] / 4, loader=QBLOCKS['loader'][0],
+                    host_b=hb_mm2)[kind_]
+    for seq, a, b in ((lower, y_lo, core.y - Q_GAP), (upper, core.y + core.h + SHAVE + Q_GAP, y_hi)):
+        hs_ = [up(mm(k_) * 1e6 / bw, GY) for _, k_, _ in seq]
+        gap = (b - a - sum(hs_)) / (len(seq) + 1)
+        assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap, a, b, sum(hs_))
+        y = a + gap
+        for (name, k_, _), h_ in zip(seq, hs_):
+            master = f'qhd_{name[3:]}'
+            blk(name, master, mm(k_), up(y, GY), kind='host_slab' if k_ == 'host_b' else 'spine',
+                dom='link' if k_ == 'host_b' else 'stream_1p2')
+            y += h_ + gap
+    notes.append(f'spine blocks {bw:.1f} um wide in a {spw:.1f} um column ({spc:.1f} um channels); host slab '
+                 f'{ha_mm2:.3f} mm2 in the N band + {hb_mm2:.3f} mm2 at the spine N end')
+    m = dict(die='qwen', geo=geo, insts=insts, regions=regions, groups=groups, hub=hub, tiles=tiles, heads=heads,
+             links=links, host=host, coll=coll, notes=notes, variant=variant, stn_faces={}, tile_element=T,
+             final_round=Q_FINAL_ROUND, out=Q_OUT, col_x=col_x, qcols=qcols)
+    m['buses'], m['paths'] = buses_qwen(m)
+    m['fixed_ports'] = dict(qhd_tile=lambda mst: _q_tile_pins(mst, T), qhd_head=_q_head_pins)
+    by = {it.name: it for it in insts}
+    tree_x = {p_: 40.0 + 60.0 * i for i, p_ in enumerate(('t_out', 'n_a', 'n_b', 'n_y'))}
+
+    def pin_xy(inst, port):
+        it = by[inst]
+        if it.kind != 'tile' or port not in tree_x:
+            return None
+        return (it.x + tree_x[port] + 0.2, it.y + T['macro_band_h'] + T['logic_h'] / 2)
+    m['pin_xy'] = pin_xy
+    m['master_notes'] = dict(
+        qhd_tile=(f'Qwen HBM tile element: W12 tile logic (routed core {T["logic_core_um2"]:.0f} um2) + 8 x '
+                  f'ot_sram_1rw_2048x128_m4 + 2 x ot_sram_1r1w_1024x256_m2_r2c2 + corridor/fill forwarding banks '
+                  f'({T["hop_stages"]} per hop); internal M1-M7, M8/M9 over the top for die nets'),
+        qhd_head='column head: head-chain station + corridor split north / south (637 b)')
+    return m
+
+
+def _q_tile_pins(mst, T):
+    """Fixed tile pin plan (one master for all 1,536 instances): corridor in the corridor strip on the N/S faces, the
+    fill bus over the macro band on the N/S faces, the tree words as M8 area pins over the logic."""
+    xc = T['body_w'] + T['corridor_w'] / 2
+    for p_, f_ in (('cs', 'S'), ('cn', 'N')):
+        mst.face(p_, Q_COR_BITS, f_, 'M5', xc, 1)
+    for p_, f_ in (('fs', 'S'), ('fn', 'N')):
+        mst.face(p_, Q_FILL_BITS, f_, 'M5', T['body_w'] / 2, 2)
+    for i, p_ in enumerate(('t_out', 'n_a', 'n_b', 'n_y')):
+        mst.area(p_, Q_TREE_BITS, 40.0 + 60.0 * i, T['macro_band_h'] + T['logic_h'] / 2, 2)
+
+
+def _q_head_pins(mst):
+    for p_, f_, ly in (('n', 'N', 'M5'), ('s', 'S', 'M5'), ('w', 'W', 'M4'), ('e', 'E', 'M4')):
+        mst.face(p_, Q_COR_BITS, f_, ly, (mst.w if f_ in 'NS' else mst.h) / 2, 1)
+
+
+def buses_qwen(m):
+    B, P = [], defaultdict(list)
+    station, chain = _router(m, B, P)
+    g = m['geo']
+    T = m['tile_element']
+    hub = m['hub']
+    core = hub['sp_core']
+    # (1) corridors: head -> rows 8.. (north) and rows 7.. (south) through the abutting tile elements
+    for c in range(QCOLS):
+        B.append((f'cor_{c}_n', 'corridor', Q_COR_BITS, [(f'h_{c}', 'n'), (f't_{c}_8', 'cs')]))
+        B.append((f'cor_{c}_s', 'corridor', Q_COR_BITS, [(f'h_{c}', 's'), (f't_{c}_7', 'cn')]))
+        for r in range(QROWS - 1):
+            if r == 7:
+                continue
+            B.append((f'cor_{c}_{r}', 'corridor_hop', Q_COR_BITS, [(f't_{c}_{r}', 'cn'), (f't_{c}_{r + 1}', 'cs')]))
+    # (2) x / instruction distribution from the core's x roots along the head row: a registered head per column
+    #     (ROM-die chain: one stage per 313.632 um hop) or, with variant x_trunk, one trunk per half that every head
+    #     taps (registers every <= 430.56 um of trunk, priced from the trunk's routed length)
+    trunk = bool(m['variant'].get('x_trunk'))
+    if trunk:
+        B.append(('xtr_W', 'head_chain', Q_COR_BITS, [(core.name, 'xw')] + [(f'h_{c}', 'e') for c in range(47, -1, -1)]))
+        B.append(('xtr_E', 'head_chain', Q_COR_BITS, [(core.name, 'xe')] + [(f'h_{c}', 'w') for c in range(48, QCOLS)]))
+    else:
+        prev = (core.name, 'xw')
+        for c in range(47, -1, -1):
+            B.append((f'head_{c}', 'head_chain', Q_COR_BITS, [prev, (f'h_{c}', 'e')]))
+            prev = (f'h_{c}', 'w')
+        prev = (core.name, 'xe')
+        for c in range(48, QCOLS):
+            B.append((f'head_{c}', 'head_chain', Q_COR_BITS, [prev, (f'h_{c}', 'w')]))
+            prev = (f'h_{c}', 'e')
+    for c in range(QCOLS):
+        rng = range(c, 48) if c < 48 else range(48, c + 1)
+        ids = ([f'xtr_{"W" if c < 48 else "E"}'] if trunk else
+               [f'head_{k}' for k in (sorted(rng, reverse=True) if c < 48 else rng)])
+        for r_far, entry in ((15, f'cor_{c}_n'), (0, f'cor_{c}_s')):
+            P[f'bd_{c}_{"n" if r_far else "s"}'] = ids + [entry]
+    # (3) fill: stream service -> end tile of each of its columns; tile-to-tile hops through the elements
+    for st, G in m['groups'].items():
+        svc = G['svc']
+        npins = len(real_ports()[G['phy'].master]['dfi'])
+        B.append((f'dfi_{st}', 'phy_dfi', npins, [(G['phy'].name, 'dfi'), (svc.name, 'phy')]))
+        for c in G['cols']:
+            end = (f't_{c}_0', 'fs') if G['side'] == 'S' else (f't_{c}_15', 'fn')
+            B.append((f'fill_{c}', 'fill', Q_FILL_BITS, [(svc.name, f'f{c}'), end]))
+            P[f'fill_{st}_{c}'] = [f'fill_{c}']
+            for r in range(QROWS - 1):
+                B.append((f'fh_{c}_{r}', 'fill_hop', Q_FILL_BITS, [(f't_{c}_{r}', 'fn'), (f't_{c}_{r + 1}', 'fs')]))
+    # (4) ME split tree: 4 x 4 blocks, nodes hosted by tiles (W12 morton host assignment, as the ROM die)
+    bc, br = QBLK
+    nb = 0
+    roots = []
+    for c0 in range(0, QCOLS, bc):
+        for r0 in range(0, QROWS, br):
+            tl = sorted(((c, r) for c in range(c0, c0 + bc) for r in range(r0, r0 + br)),
+                        key=lambda t: Q.morton(t[0] - c0, t[1] - r0))
+            used = set()
+            level = [(f't_{c}_{r}', 't_out') for c, r in tl]
+            lv = 0
+            while len(level) > 1:
+                nxt = []
+                for i in range(0, len(level), 2):
+                    span = 2 ** (lv + 1)
+                    sub = tl[i * (2 ** lv): i * (2 ** lv) + span]
+                    hostt = next(f't_{c}_{r}' for c, r in sub if f't_{c}_{r}' not in used)
+                    used.add(hostt)
+                    B.append((f'tree_{nb}_{lv}_{i}a', 'tree_block', Q_TREE_BITS, [level[i], (hostt, 'n_a')]))
+                    B.append((f'tree_{nb}_{lv}_{i}b', 'tree_block', Q_TREE_BITS, [level[i + 1], (hostt, 'n_b')]))
+                    nxt.append((hostt, 'n_y'))
+                level = nxt
+                lv += 1
+            roots.append((nb, level[0], c0, r0))
+            nb += 1
+    # every leaf -> root path (q_tree_paths) is priced from the routed lengths
+    for b, root, c0, r0 in roots:
+        band = r0 // br
+        port = hub[f'sp_port{band}']
+        B.append((f'bword_{b}', 'tree_spine', Q_TREE_BITS, [root, (port.name, f'b{b}')]))
+        P[f'tws_{b}'] = [f'bword_{b}', f'pword_{band}']
+    for band in range(4):
+        B.append((f'pword_{band}', 'spine_port', Q_PORT_BITS, [(hub[f'sp_port{band}'].name, 'p'), (core.name, f'p{band}')]))
+        B.append((f'scale_{band}', 'spine_port', 512, [(hub[f'sp_scale{band}'].name, 's'), (hub[f'sp_port{band}'].name, 's')]))
+    m['tree_blocks'] = [dict(block=b, c0=c0, r0=r0, root=root[0]) for b, root, c0, r0 in roots]
+    # (5) collective: core <-> collective (spine W channel, down to the S band), collective -> SerDes macros
+    xw_ch = g['xsp'] + g['spine_ch'] / 2
+    co = m['coll']
+    c0_ = _cxy(core, 'W', 0.2)
+    tgt = _cxy(co, 'N', 0.7)
+    yb = g['yr0'] - SVC_GAP / 2 + 20.0
+    pts = [c0_, (xw_ch, c0_[1]), (xw_ch, yb), (tgt[0], yb), tgt]
+    chain('ct', 'collective', Q_COLL_BITS, (core.name, 'ct'), (co.name, 'vt'), pts, path='coll_tx')
+    c1_ = _cxy(core, 'W', 0.1)
+    tgt = _cxy(co, 'N', 0.85)
+    pts = [c1_, (xw_ch + 40.0, c1_[1]), (xw_ch + 40.0, yb + 10.0), (tgt[0], yb + 10.0), tgt]
+    chain('cr', 'collective', Q_COLL_BITS, (co.name, 'vr'), (core.name, 'cr'), pts[::-1], path='coll_rx')
+    for lk in m['links']:
+        B.append((f'lk_{lk.name}', 'link', 1024, [(co.name, f'l{lk.name}'), (lk.name, 'io')]))
+        P[f'link_{lk.name}'] = [f'lk_{lk.name}']
+    # (6) stream status (gray counts) svc <-> core, and the loader <-> each svc (load path, off the token path)
+    xe_ch = g['xfe'] - g['spine_ch'] / 2
+    ld = hub['sp_loader']
+    for st, G in m['groups'].items():
+        svc = G['svc']
+        side = G['side']
+        west = st[1] == 'W'
+        ych_ = g['yr0'] - SVC_GAP / 2 if side == 'S' else g['ytop'] + SVC_GAP / 2
+        xch = (xw_ch - 30.0) if west else (xe_ch + 30.0)
+        sp = _cxy(core, 'W' if west else 'E', 0.65 if side == 'N' else 0.35)
+        tp = _cxy(svc, 'N' if side == 'S' else 'S', 0.95 if west else 0.05)
+        pts = [tp, (tp[0], ych_), (xch, ych_), (xch, sp[1]), sp]
+        chain(f'stat_{st}', 'stream_status', Q_STAT_BITS, (svc.name, 'st'), (core.name, f'st{st}'), pts,
+              path=f'stat_{st}')
+        lp = _cxy(ld, 'W' if west else 'E', 0.5)
+        xl = (xw_ch + 30.0) if west else (xe_ch - 30.0)
+        yl = ych_ + (12.0 if side == 'S' else -12.0)
+        tq = _cxy(svc, 'N' if side == 'S' else 'S', 0.9 if west else 0.1)
+        pts = [lp, (xl, lp[1]), (xl, yl), (tq[0], yl), tq]
+        chain(f'ld_{st}', 'load', Q_LOAD_BITS, (ld.name, f'l{st}'), (svc.name, 'ld'), pts)
+    B.append(('ld_host', 'host', 1024, [(ld.name, 'h'), (m['host'].name, 'io')]))
+    B.append(('ld_core', 'hub', 256, [(ld.name, 'c'), (core.name, 'ld')]))
+    # (7) clock trunks: PLL in the collective block -> every service and spine block root; the field takes the
+    #     corridor-forwarded clock from the heads (the core's x root)
+    for it in m['insts']:
+        if it.kind in ('svc', 'spine'):
+            B.append((f'clk_{it.name}', 'clock_trunk', CLK_BITS, [(co.name, 'pll'), (it.name, 'ck')]))
+    return B, dict(P)
+
+
+def q_tree_paths(m):
+    """Every leaf -> root path of every block: [bus ids] (four levels).  Built from the tree buses: a node input bus
+    'tree_b_lv_ia/b' feeds host.n_a/n_b; the host's n_y feeds the next level."""
+    by_dst, src_of = {}, {}
+    for bid, cls, bits, eps in m['buses']:
+        if cls == 'tree_block':
+            by_dst[bid] = eps
+            src_of[(eps[1][0], eps[1][1])] = bid
+    out_from = defaultdict(list)
+    for bid, eps in by_dst.items():
+        out_from[eps[0]].append(bid)
+    paths = {}
+    for (c, r), it in m['tiles'].items():
+        p, node = [], (it.name, 't_out')
+        while node in out_from:
+            bid = out_from[node][0]
+            p.append(bid)
+            node = (by_dst[bid][1][0], 'n_y')
+        paths[it.name] = p
+    return paths
+
+
+def plan_record_qwen(m):
+    kinds, area = defaultdict(int), defaultdict(float)
+    for it in m['insts']:
+        kinds[it.kind] += 1
+        pad = 0 if it.kind in ('phy', 'link') else SHAVE
+        area[it.kind] += (it.w + pad) * (it.h + pad) / 1e6
+    cls = defaultdict(lambda: dict(buses=0, wires=0))
+    for bid, c, bits, eps in m['buses']:
+        cls[c]['buses'] += 1
+        cls[c]['wires'] += bits
+    g = m['geo']
+    T = m['tile_element']
+    mp = manhattan_paths(m)
+    ledger = {k: dict(mm2=round(v[0], 4) if v[0] is not None else None, grade=v[1], source=v[2]) for k, v in QBLOCKS.items()}
+    ledger['tile'].update(mm2=T['mm2'], per_die_mm2=round(T['mm2'] * QCOLS * QROWS, 2))
+    placed = sum(area.values())
+    return dict(
+        schema='opentallas.hbm-accel-qwen-die-floorplan.v1', tool='tools/hbm_accel_die_fp.py --die qwen',
+        tool_sha256=sha('tools/hbm_accel_die_fp.py'),
+        sources_sha256={p: sha(p) for p in (PHY_LEF, SERDES_LEF, UCIE_LEF, SNAP_LIB, PORTMAP, QWEN, QWEN_ALL, Q_SRAM_RW,
+                                            Q_SRAM_WIN, Q_STORAGE, Q_ME_OPS, Q_CHAINS, *Q_TILE_ROUTE.values(),
+                                            'tools/dsrom_s81_fulldie.py', 'tools/qwen_rom_fulldie.py')},
+        die=dict(w_um=g['W'], h_um=g['H'], mm2=round(g['W'] * g['H'] / 1e6, 2), reticle_mm2=858.0,
+                 reticle_margin_mm2=round(858.0 - g['W'] * g['H'] / 1e6, 1), dies_per_rank=1,
+                 tp2_dies=2, tp4_dies=4),
+        census=dict(tiles=QCOLS * QROWS, columns=QCOLS, rows=QROWS, tree_blocks=len(m['tree_blocks']),
+                    block_words=len(m['tree_blocks']), stacks=4, pcs_per_stack=32, serdes_macros=len(m['links']),
+                    column_heads=QCOLS),
+        tile_element=T, block_ledger=ledger, instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
+        placed_footprint_mm2=round(placed, 2), utilisation_of_die=round(placed / (g['W'] * g['H'] / 1e6), 3),
+        geometry={k: (round(v, 3) if isinstance(v, float) else v) for k, v in g.items() if k != 'row_y'},
+        row_y_um=[round(v, 3) for v in g['row_y']],
+        stack_columns={k: [v[0], v[-1]] for k, v in ((k_, list(v_)) for k_, v_ in m['qcols'].items())},
+        clock_domains=dict(stream_1p2='tiles, heads, corridors (forwarded clock), core, port / scale slabs, loader '
+                                      '(1.2 GHz, 0.833 ns)', serial_0p9='SU64/SFU inside the core, collective',
+                           hbm='PHY + stream services (1.024 ns)', link='SerDes / host (own clocks)'),
+        crossings=dict(fill='async FIFO in each stream service (hbm -> stream), charged 2 cycles per first access',
+                       corridor='the corridor forwards its own clock (64 tracks) with the instruction and x; a '
+                                'mesochronous FIFO at the core x root',
+                       block_words='mesochronous FIFO at each port slice (forwarded tile clock -> spine clock), '
+                                   'charged 2 cycles on the tree return',
+                       status='gray-coded counts through the vehicle\'s two-flop synchronisers (inside its cycles)'),
+        bus_classes=dict(cls), manhattan_paths=mp, power=die_power(m), pdn=pdn_plan(m), notes=m['notes'],
+        variant={k: v for k, v in m['variant'].items()})
+
+
+def q_check(m):
+    pc = pin_clashes(m)
+    pc16 = pin_clashes(m, 16)
+    out = dict(legality=_legality(m), generated_pin_clashes=len(pc), examples=pc[:10], k16_clashes=len(pc16),
+               die_mm2=round(m['geo']['W'] * m['geo']['H'] / 1e6, 2), W=m['geo']['W'], H=m['geo']['H'],
+               tile=dict((k, m['tile_element'][k]) for k in ('h', 'mm2', 'hop_stages', 'sram_mib_per_die',
+                                                              'capacity_over_goal_pct')),
+               power=die_power(m)['peak_in_phase_w'], notes=m['notes'],
+               buses=len(m['buses']), wires=sum(b[2] for b in m['buses']),
+               instances=len(m['insts']))
+    mp = manhattan_paths(m)
+    worst = {}
+    for p, v in mp.items():
+        k = p.split('_')[0]
+        if v['stages_430'] > worst.get(k, (0, ''))[0]:
+            worst[k] = (v['stages_430'], p, v['um'])
+    out['manhattan_worst'] = worst
+    return out
+
+
+DENS.update(tile=1.05, head=0.6)
+
+
+def write_sdc_qwen(path):
+    Path(path).write_text("""# Qwen3-8B HBM accelerator die clock domains (AGENTS.md clock domains), tools/hbm_accel_die_fp.py --die qwen
+create_clock -name clk_stream -period 0.833 [get_pins {sp_core/ck sp_port*/ck sp_scale*/ck sp_loader/ck}]
+create_clock -name clk_serial -period 1.111 [get_pins {io_coll/pll}]
+create_clock -name clk_hbm    -period 1.024 [get_pins {phy_*/clk svc_*/ck}]
+set_clock_uncertainty -setup 0.060 [all_clocks]
+set_clock_uncertainty -hold 0.025 [all_clocks]
+# no die-wide synchronous tree (32 x 26 mm; qwen_rom_fulldie case d): the core x root launches the corridor with its
+# own forwarded clock (64 corridor tracks) through the head chain and every column's abutting tile elements; the tile
+# tree words return to the port slices through a mesochronous FIFO (2 periods, charged on the TWS path)
+#   H*  stream service (clk_hbm) -> fill bus / status: async FIFO inside the service (2 periods, charged per first
+#       access); status counts gray-coded through the vehicle's two-flop synchronisers
+#   X*  SU64/SFU and collective (clk_serial) <-> core: ratio CDC 3:4 inside the core
+#   L*  collective <-> SerDes, loader <-> UCIe: plesiochronous at the link macro
+set_clock_groups -asynchronous -group {clk_stream} -group {clk_serial} -group {clk_hbm}
+""")
 
 
 def main(argv=None):
@@ -1504,12 +2037,40 @@ def main(argv=None):
     ap.add_argument('--out', type=Path)
     ap.add_argument('--only', default='')
     ap.add_argument('--variant', default='', help='preset name (r8, r10) or a JSON dict of build() variant keys')
+    ap.add_argument('--die', choices=['ds', 'qwen'], default='ds', help='ds: the selected DS SM die; qwen: the Qwen3-8B '
+                    'W12 tile die')
+    ap.add_argument('--var', default='', help='qwen floorplan variant knobs k=v,... (spine_w, spine_ch)')
     a = ap.parse_args(argv)
-    m = build(variant_arg(a.variant))
+    if a.die == 'qwen':
+        var = {k_: float(v_) for k_, v_ in (kv.split('=') for kv in filter(None, a.var.split(',')))}
+        m = build_qwen(var)
+    else:
+        m = build(variant_arg(a.variant))
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
         cov[k_] = float(v)
+    if a.die == 'qwen' and a.mode == 'check':
+        print(json.dumps(q_check(m), indent=1))
+        return 0
+    if a.die == 'qwen' and a.mode == 'plan':
+        out = ROOT / Q_OUT
+        out.mkdir(parents=True, exist_ok=True)
+        rec = plan_record_qwen(m)
+        rec['legality_python'] = _legality(m)
+        rec['ir_windows_um'] = ir_windows(m)
+        (out / 'floorplan.json').write_text(json.dumps(rec, indent=1) + '\n')
+        svg(m, out / 'floorplan.svg', scale=0.03)
+        write_def_floorplan(m, out / 'floorplan.def')
+        write_sdc_qwen(out / 'domains.sdc')
+        print(json.dumps({k_: rec[k_] for k_ in ('die', 'instances', 'placed_footprint_mm2', 'legality_python', 'power')},
+                         indent=1))
+        return 0
+    if a.die == 'qwen' and a.mode in ('record', 'price'):
+        import hbm_accel_die_price as PR
+        if a.mode == 'record':
+            return PR.record(m, a.work, a.out or ROOT / Q_OUT / 'feasibility.json', a.only)
+        return PR.price_qwen(m, a.work, a.out)
     if a.mode == 'check':
         print(json.dumps(_legality(m), indent=1))
         pc = pin_clashes(m)
