@@ -69,10 +69,15 @@ module ot_qwen_stream4_cdc_pc #(
     localparam integer LA = $clog2(LD), WA = $clog2(WB), AA = $clog2(AD);
 
     // local reset release, one synchronizer per domain
-    (* async_reg = "true" *) reg [1:0] c_rs, h_rs;
-    always @(posedge clk or negedge c_arst_n)  if (!c_arst_n) c_rs <= 2'b00; else c_rs <= {c_rs[0], 1'b1};
-    always @(posedge hclk or negedge h_arst_n) if (!h_arst_n) h_rs <= 2'b00; else h_rs <= {h_rs[0], 1'b1};
-    wire c_rst_n = c_rs[1], h_rst_n = h_rs[1];
+    // The release stage is three KEPT copies per domain, one per crossing (landing / write queue /
+    // write-done), so each reset tree is local (route r2: one shared release flop missed recovery by 18 ps
+    // through a 4-level placement-buffer chain across the element).
+    (* async_reg = "true" *) reg c_rs0, h_rs0;
+    (* keep *) reg c_rl, c_rw, c_ra, h_rl, h_rw, h_ra;
+    always @(posedge clk or negedge c_arst_n)
+        if (!c_arst_n) {c_rs0, c_rl, c_rw, c_ra} <= 4'b0; else begin c_rs0 <= 1'b1; c_rl <= c_rs0; c_rw <= c_rs0; c_ra <= c_rs0; end
+    always @(posedge hclk or negedge h_arst_n)
+        if (!h_arst_n) {h_rs0, h_rl, h_rw, h_ra} <= 4'b0; else begin h_rs0 <= 1'b1; h_rl <= h_rs0; h_rw <= h_rs0; h_ra <= h_rs0; end
 
     function automatic [LA:0] g2b_l(input [LA:0] g);
         integer i; begin g2b_l[LA] = g[LA]; for (i = LA - 1; i >= 0; i = i - 1) g2b_l[i] = g2b_l[i+1] ^ g[i]; end
@@ -95,8 +100,8 @@ module ot_qwen_stream4_cdc_pc #(
     wire        l_full = (lw_bin - lr_sb) == LD[LA:0];
     wire [LA:0] lw_bin_n = lw_bin + {{LA{1'b0}}, h_lv && !l_full};
     integer s;
-    always @(posedge hclk or negedge h_rst_n) begin
-        if (!h_rst_n) begin
+    always @(posedge hclk or negedge h_rl) begin
+        if (!h_rl) begin
             lw_bin <= 0; lw_gray <= 0; lr_seen <= 0; h_cred <= 0;
             for (s = 0; s < SYNC; s = s + 1) lr_s[s] <= 0;
         end else begin
@@ -109,8 +114,8 @@ module ot_qwen_stream4_cdc_pc #(
     wire        l_empty = lr_gray == lw_s[SYNC-1];
     wire        l_ren   = !l_empty && (!l_v || l_pop);
     wire [LA:0] lr_bin_n = lr_bin + {{LA{1'b0}}, l_ren};
-    always @(posedge clk or negedge c_rst_n) begin
-        if (!c_rst_n) begin
+    always @(posedge clk or negedge c_rl) begin
+        if (!c_rl) begin
             lr_bin <= 0; lr_gray <= 0; l_v <= 1'b0;
             for (s = 0; s < SYNC; s = s + 1) lw_s[s] <= 0;
         end else begin
@@ -131,8 +136,8 @@ module ot_qwen_stream4_cdc_pc #(
         localparam integer LO = gi * GW, HI = (LO + GW > 281) ? 281 : LO + GW;
         (* keep *) reg [LA-1:0] ix;
         (* keep *) reg          vg;
-        always @(posedge clk or negedge c_rst_n)
-            if (!c_rst_n) begin ix <= 0; vg <= 1'b0; end
+        always @(posedge clk or negedge c_rl)
+            if (!c_rl) begin ix <= 0; vg <= 1'b0; end
             else begin ix <= lr_bin_n[LA-1:0]; if (l_ren) vg <= 1'b1; else if (l_pop) vg <= 1'b0; end
         wire [280:0] row = lmem[ix];
         always @(posedge clk) if (!vg || l_pop) l_q[HI-1:LO] <= row[HI-1:LO];
@@ -150,8 +155,8 @@ module ot_qwen_stream4_cdc_pc #(
     wire [WA:0] wc_sb = g2b_w(wc_s[SYNC-1]);
     wire        w_full = (ww_bin - wc_sb) == WB[WA:0];
     wire [WA:0] ww_bin_n = ww_bin + {{WA{1'b0}}, w_v && !w_full};
-    always @(posedge clk or negedge c_rst_n) begin
-        if (!c_rst_n) begin
+    always @(posedge clk or negedge c_rw) begin
+        if (!c_rw) begin
             ww_bin <= 0; ww_gray <= 0; w_room <= 1'b0; c_fault <= 1'b0;
             for (s = 0; s < SYNC; s = s + 1) wc_s[s] <= 0;
         end else begin
@@ -168,8 +173,8 @@ module ot_qwen_stream4_cdc_pc #(
     wire [WA:0] ww_sb = g2b_w(ww_s[SYNC-1]);
     wire [WA:0] wh_bin_n = wh_bin + {{WA{1'b0}}, h_hand};
     wire [WA:0] wc_bin_n = wc_bin + {{WA{1'b0}}, h_wcon};
-    always @(posedge hclk or negedge h_rst_n) begin
-        if (!h_rst_n) begin
+    always @(posedge hclk or negedge h_rw) begin
+        if (!h_rw) begin
             wh_bin <= 0; wc_bin <= 0; wc_gray <= 0; h_wv <= 1'b0; h_cv <= 1'b0;
             for (s = 0; s < SYNC; s = s + 1) ww_s[s] <= 0;
         end else begin
@@ -194,8 +199,8 @@ module ot_qwen_stream4_cdc_pc #(
     (* async_reg = "true" *) reg [AA:0] ar_s [0:SYNC-1];
     wire        a_full = (aw_bin - g2b_a(ar_s[SYNC-1])) == AD[AA:0];
     wire [AA:0] aw_bin_n = aw_bin + {{AA{1'b0}}, h_av && !a_full};
-    always @(posedge hclk or negedge h_rst_n) begin
-        if (!h_rst_n) begin
+    always @(posedge hclk or negedge h_ra) begin
+        if (!h_ra) begin
             aw_bin <= 0; aw_gray <= 0; h_fault <= 1'b0;
             for (s = 0; s < SYNC; s = s + 1) ar_s[s] <= 0;
         end else begin
@@ -207,8 +212,8 @@ module ot_qwen_stream4_cdc_pc #(
     always @(posedge hclk) if (h_av && !a_full) amem[aw_bin[AA-1:0]] <= h_atag;
     wire        a_ren = ar_gray != aw_s[SYNC-1];                  // wd_v is always taken
     wire [AA:0] ar_bin_n = ar_bin + {{AA{1'b0}}, a_ren};
-    always @(posedge clk or negedge c_rst_n) begin
-        if (!c_rst_n) begin
+    always @(posedge clk or negedge c_ra) begin
+        if (!c_ra) begin
             ar_bin <= 0; ar_gray <= 0; wd_v <= 1'b0;
             for (s = 0; s < SYNC; s = s + 1) aw_s[s] <= 0;
         end else begin
