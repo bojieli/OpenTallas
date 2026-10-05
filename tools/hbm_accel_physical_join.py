@@ -6,9 +6,11 @@ while coordinates are unassigned. An owner-pinned allocation adds service slot
 and corridor costs; unknown bounds remain unknown, never zero.
 """
 import argparse
+import hashlib
 import json
 import math
 import re
+import subprocess
 from pathlib import Path
 
 from hbm_accel_fulldie_inputs import ROOT, DEFAULT, record, box, contains, finite, require
@@ -98,7 +100,14 @@ def join(root, manifest, target):
     # Read the actual existing budget constant without invoking its legacy
     # GPU sizing model, which is explicitly not the selected accelerator.
     from hbm_accel_fulldie_inputs import pinned
-    raw = pinned(root, budgets["uarch"]).decode()
+    uref = budgets["uarch"]
+    if "git_commit" in uref:
+        require(re.fullmatch(r"[0-9a-f]{40}", uref["git_commit"]), "invalid frozen budget commit")
+        raw_bytes = subprocess.check_output(["git", "show", uref["git_commit"]+":"+uref["path"]], cwd=root)
+        require(hashlib.sha256(raw_bytes).hexdigest()==uref["sha256"], "frozen budget source drift")
+        raw = raw_bytes.decode()
+    else:
+        raw = pinned(root, uref).decode()
     shore = re.search(r"HBM_SHORE\s*=\s*dict\(\s*phy_edge_mm=([0-9.]+)", raw)
     corners = re.search(r"corner_mm=([0-9.]+), corner_basis", raw)
     require(shore and corners, "missing existing right-size shoreline budget")
