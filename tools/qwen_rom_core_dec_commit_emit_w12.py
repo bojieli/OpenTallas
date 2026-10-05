@@ -48,15 +48,17 @@ def apply(text):
     end endgenerate
 '''
     text=text[:first]+replacement+text[end:]
-    old='    wire am_wins = am_any && (!run_any || okey(am_val) > run_key);'
+    old='    wire am_wins = am_any && (!run_any || ((DEC_LA != 0) ? la_am_gt : (okey(am_val) > run_key)));'
     assert text.count(old)==1
     text=text.replace(old,'''    // END still folds the current final producer result. Only the pending
     // previous-chunk update uses the reservation-edge snapshot.
     wire [NW-1:0] am_fold_idx = am_issue_pending ? am_issue_idx : am_idx;
     wire [31:0] am_fold_val = am_issue_pending ? am_issue_val : am_val;
     wire am_fold_any = am_issue_pending ? am_issue_any : am_any;
-    wire am_wins = am_any && (!run_any || okey(am_val) > run_key);
-    wire am_fold_wins = am_fold_any && (!run_any || okey(am_fold_val) > run_key);''')
+    wire am_wins = am_any && (!run_any || ((DEC_LA != 0) ? la_am_gt : (okey(am_val) > run_key)));
+    wire la_am_fold_gt;
+    ot_qwen_core_key_gt u_la_am_fold_gt (.a(okey(am_fold_val)), .b(run_key), .gt(la_am_fold_gt));
+    wire am_fold_wins = am_fold_any && (!run_any || ((DEC_LA != 0) ? la_am_fold_gt : (okey(am_fold_val) > run_key)));''')
     old='''            else if (am_wins) begin
                 run_any<=1'b1; run_key<=okey(am_val);
                 run_idx<=am_idx+last_row0; run_val<=am_val;'''
