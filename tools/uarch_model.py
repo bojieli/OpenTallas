@@ -10036,7 +10036,7 @@ def hbm_r5a_protected_pipeline_model():
             parent_context=False,adopted=False))
 
 
-def hbm_smh_local_grt_price(boxes):
+def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
     area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
     die_area=319.68*509.76
@@ -10049,7 +10049,7 @@ def hbm_smh_local_grt_price(boxes):
         added_boundary_bits_per_cycle=0,added_physical_tracks=0,added_replicas=0,
         new_logic_area_um2=0,tile_die_um=[319.68,509.76],density=0.55,
         repair_boxes_um=boxes,repair_area_um2=area,repair_area_fraction=area/die_area,
-        baseline_global_capacity_reservation=0.25,local_capacity_reservation=0.5,
+        baseline_global_capacity_reservation=0.25,local_capacity_reservation=reservation,
         layers=['M2','M3','M4','M5','M6'],
         track_impact='Locally withhold capacity from existing allocated tracks; no obstruction or track budget credit.',
         latency_delta='Zero architectural cycles; actual routed wire/repair buffer delta pending and must be priced.',
