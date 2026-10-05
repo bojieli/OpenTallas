@@ -56,7 +56,8 @@ def main():
  p.add_argument('--jobs',type=int,default=16);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
  rec=dict(status='PREPARING',source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
  source_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in SRC+['tools/dshbm_expert_workgroup_interleave.py','tools/dshbm_expert_interleave_native.py','tools/uarch_model.py']},
- original_r2_qualification=False,whole_token=False,ss_ff_closed=False,cases=[],physical_provider_assumptions=dict(NOC_PS=5000,PHY_CMD_PS=5000,RSP_PS=10000,CL_PS=12500,hclk_ps=1024,stream_clk_ps=833),start_delay_credit_us=0)
+ original_r2_qualification=False,whole_token=False,ss_ff_closed=False,cases=[],
+ w2_scope='pattern transport in this GU arithmetic fixture ONLY; use service-only real W2 payload gate separately; no W2 arithmetic qualification',physical_provider_assumptions=dict(NOC_PS=5000,PHY_CMD_PS=5000,RSP_PS=10000,CL_PS=12500,hclk_ps=1024,stream_clk_ps=833),start_delay_credit_us=0)
  def save(): (a.out/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
  save()
  try:
