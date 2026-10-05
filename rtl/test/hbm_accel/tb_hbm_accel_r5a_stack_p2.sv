@@ -34,7 +34,7 @@ module tb_hbm_accel_r5a_stack_p2;
   localparam integer OFF [0:7]   = '{0, 53, 106, 149, 192, 242, 292, 342};
   localparam integer EXP_LINES = 392;
 
-  reg clk = 0, hclk = 0, rst_n = 0, hrst_n = 0;
+  reg clk = 0, hclk = 0, rst_n = 0; wire hrst_n=dut.on.hreset_n;
   always #(CLK/2) clk = ~clk;
   initial begin #(HPHASE_PS); forever #(CYC/2) hclk = ~hclk; end
 
@@ -270,7 +270,7 @@ module tb_hbm_accel_r5a_stack_p2;
       end
     end
     // both resets released together on an hclk edge so the RTL refresh phase matches the checker
-    @(posedge hclk); #1; hrst_n = 1; rst_n = 1;
+    @(posedge hclk); #1; rst_n = 1;
   end
   // notice: static schedule (hclk domain), from t_route - lead until the stream has started
   always @(posedge hclk) if (hrst_n) notice <= (notice_lead > 0) && ($time >= t_route - notice_lead) && ($time < t_route + 2000000);
