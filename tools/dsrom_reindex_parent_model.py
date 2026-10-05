@@ -15,6 +15,11 @@ def model():
                drain_metadata=4*79-4*(16+28)+3+4,decoded_FIFO=0,list_header_and_result_checks=14+14+28+1,list_capture=banks*70+4*70+70+70+12+2*14*6+8*12*2,
                pending_and_metadata_checks=3*128,local_half_copies=2*2*(95+40+7+128+1))
     net_ff=sum(extra.values())-counter_saved-response_saved-256
+    measured_path=ROOT/'results/rtl/dsrom_reindex_parent_20261005/gather_r8_PASS/gather.json'
+    measured=json.loads(measured_path.read_text()) if measured_path.exists() else None
+    source_matched=bool(measured and measured['status']=='pass' and measured.get('backpressure',{}).get('pass_') and
+        all(hashlib.sha256((ROOT/f).read_bytes()).hexdigest()==h for f,h in measured['source_sha256'].items() if f.endswith(('.sv','.v'))))
+    actual_cycles=measured['worst_rank']['cycles'] if source_matched else None
     return dict(status='PREBUILD_DEFAULT_OFF',default_enabled=False,shape=dict(NPC=npc,WB=128,DF=8,LSW=3,lists=slots,entries_per_list=entries,local_block_bits=lbw),
         MACs_per_cycle=0,rounding_and_reduction_changes=0,
         list_memory=dict(macro=name,macros_per_stack=banks,macro_json_sha256=hashlib.sha256((path/(name+'.json')).read_bytes()).hexdigest(),logical_bits=slots*entries*lbw,physical_bits=banks*512*128,
@@ -30,8 +35,14 @@ def model():
             protection='SRAM SECDED; counter check bits; pending/metadata checks; full tag/beat identity; finite occupancy and reservation checks, no invented clears or credits'),
         latency=dict(list_extra_cycles=5,request_extra_cycles=1,dispatch_extra_cycles=1,drain_extra_cycles=1,
             fixed_added_cycles_upper=8,decoded_occupancy_cut="retain8 real pairs, counting all reads in flight; pipe+head+FIFO share that conserved allocation; no drop or credit",decoded_peak_pairs_per_cycle_upper=1,decoded_sustained_pairs_per_cycle_lower_bound=8/13,worst_pairs_per_stack=1024,decoded_stall_cycles_per_stack_upper=640,decoded_stall_token_us_upper=4*640*833.333/1e6,dispatch_FIFO_room_policy='six free slots for three in-flight pairs',
-            throughput_cycles_must_be_measured=True,token_reindex_layers=4,token_fixed_added_ns_upper=4*8*833.333/1000,
-            composed_current_token_us=604.3,composed_fixed_delta_us=4*8*833.333/1e6,measured=False),
+            throughput_cycles_must_be_measured=not source_matched,token_reindex_layers=4,token_fixed_added_ns_upper=4*8*833.333/1000,
+            historical_token_basis_us=604.3,composed_fixed_delta_us=4*8*833.333/1e6,
+            measured=source_matched,measured_gather_cycles=actual_cycles,measured_record_sha256=hashlib.sha256(measured_path.read_bytes()).hexdigest() if source_matched else None,
+            KC8_reference_cycles=738,composer_production_reference_cycles=757,
+            measured_delta_cycles_vs_KC8=actual_cycles-738 if source_matched else None,
+            measured_component_token_delta_us_vs_KC8=4*(actual_cycles-738)/1200 if source_matched else None,
+            conditional_production_composer='tools/dsrom_reindex_parent_compose.py; replace gather read term only, retain scorer/streaming/CDC costs',
+            stage_latency_not_assumed_equal_component_delta=True),
         area=dict(control_cell_cap_um2=37452.2,retained_KC8_cells_um2=37615.4,estimated_FF_delta_um2=net_ff*ffa,
             unmeasured_mapping_logic_CTS_delta_um2=None,control_cap_unchanged=True,
             list_macro_reservation_um2=banks*m['area']['macro_area_um2'],

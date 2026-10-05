@@ -10783,6 +10783,7 @@ def hbm_simt_gu_coded_retention_model(nl=128, imw=13, nv=256):
             new_logic_reservation='213 seven-bit equality compares +216 bit XORs + three syndrome/overall trees; shared with codec flag logic if mapping proves it',
             slot='Same43.2um reserved probe; actual previous area815.08 exceeded757.92672 reservation, new mapping required',
             measured=False,adopted=False),
+        measured_parallel_repair={'source': '5340736d3', 'evidence': 'results/rtl/hbm_simt_gu_coded_20261005/probe_r3/summary.json', 'cell_area_um2': 652.163, 'cell_count': 5749, 'FFs': 216, 'sequential_cell_area_um2': 81.8813, 'clock_buffers': 22, 'clock_inverters': 6, 'clock_cell_area_um2': 6.473520000000001, 'clock_pin_load_fF': 93.740112, 'timing_repair_buffers': 2408, 'slot_cell_reservation_um2': 757.92672, 'SS_setup_slack_ps': -391.60819031991423, 'SS_R2R_slack_ps': -169.807785, 'SS_I2R_slack_ps': -18.115898, 'FF_hold_slack_ps': 34.03927834044751, 'physical_closed': False, 'adopted': False},
         mapped_synthesis=dict(source_pin='5ff88466a',width=192,code_register_bits=216,
             cells=4350,cell_area_um2=546.779160,sequential_cell_area_um2=81.881280,
             sequential_cell='DFFASRHQNx1_ASAP7_75t_R',clock_pin_capacitance_fF=216*.433982,
@@ -10809,3 +10810,197 @@ def hbm_cp_fourcut_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1] /
         'results/uarch/hbm_cp_fourcut_20261005/model.json').read_text())
+
+
+def dsrom_wfc_control_pipeline_price(nw=21, maxu=866, user_w=10):
+    """Mandatory repair of actual S0 r1 paths, before candidate RTL.
+
+    Capture the qualified completion and its exact argmax, retaining current
+    owner until consume. Capture the start token/position alongside launch;
+    delay last-write starts through pend. This is only the control portion
+    of a multi-class structural repair, not a ready-to-route variant.
+    """
+    completion_bits = nw + 32 + 1
+    launch_bits = 2*nw + 1
+    ff = completion_bits + launch_bits
+    payload = ff - 2
+    nand2 = payload*4 + 128
+    buffers = ff*3 + 64
+    gross = payload*0.2916 + 2*0.37908 + nand2*0.08748 + buffers*0.10206
+    return dict(schema='opentallas.dsrom.wfc.control_pipeline_price.v1',
+        mechanism='qualified completion capture plus reserved core launch',
+        MAXU=maxu, NW=nw, USER_W=user_w, MACs_per_cycle=0, replicas=1,
+        added_FF_bits=ff, completion_capture_bits=completion_bits,
+        launch_capture_bits=launch_bits, NAND2_reservation=nand2,
+        buffer_reservation= buffers, gross_cell_area_um2=gross,
+        cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+        new_memory_ports=0, memory_bytes_per_cycle_delta=0,
+        external_boundary_bits_per_cycle_delta=0,
+        internal_capture_bits_per_cycle=ff,
+        routing_track_demand_delta=2*ff+64,
+        existing_track_demand=4972, existing_track_capacity=16041,
+        analytical_tracks_fit=4972+2*ff+64<=16041,
+        baseline_measured_cell_area_um2=23536.2,
+        modeled_local_cell_area_um2=23536.2+2*gross,
+        existing_characterization_core_area_um2=94864,
+        local_characterization_area_fit=(23536.2+2*gross)<=94864*0.4,
+        allocated_parent_slot=None, selected_parent_slot_fit=False,
+        additional_completion_cycles=1,
+        additional_source_launch_cycles=1,
+        additional_received_launch_cycles=2,
+        per_source_job_latency_delta_cycles=2,
+        per_received_job_latency_delta_cycles=3,
+        target_period_ps=833, SS_setup_uncertainty_ps=60,
+        FF_hold_uncertainty_ps=25,
+        per_source_job_latency_delta_ns=2*0.833,
+        per_received_job_latency_delta_ns=3*0.833,
+        token_composition='delta_cycles = 2*N_source_jobs + 3*N_received_jobs on exposed serial controller edges; queue/router/VM successor waits add separately, no free overlap credit',
+        whole_token_exposed_job_counts=None,
+        whole_token_delta_ns=None, exact_gate_passed=False,
+        raw_failure='results/rtl/dsrom_wfc_parent_cut_physical_20261005/s0/terminal.json',
+        input_clock_or_macro_credit=False,
+        pending_structural_classes=['controller/router elastic cut',
+          'router head/allocator and drops carry', 'position increment',
+          'reset-gated header capture', 'external receiver clock/load and VM macro binding',
+          'one real slew violation place28608/A'],
+        P_and_R_ready=False, SS_FF_closed=False,
+        actual_parent_context_qualified=False, adopted=False)
+
+
+def dsrom_wfc_queue_head_price(flit=512, txq=4, np=3, buf=4):
+    """Same-edge finite shift heads remove measured binary-read mux classes.
+
+    Controller TXQ and only the dedicated WFC router projection shift on pop.
+    Original queue capacity, accepted debt, packet allocation and credits stay
+    unchanged; every shift is charged, no ideal free transport or FF removal.
+    """
+    controller_bits=(flit+1)*(txq-1)
+    router_bits=(flit+1+np)*np*(buf-1)
+    shift_bits=controller_bits+router_bits
+    nand2=shift_bits*4
+    buffers=shift_bits+128
+    gross=nand2*0.08748+buffers*0.10206
+    return dict(schema='opentallas.dsrom.wfc.queue_head_price.v1',
+      MACs_per_cycle=0, replicas=1, flit_bits=flit,
+      controller_queue_flits=txq, router_ports=np, router_queue_flits=buf,
+      added_FF_bits=0, retained_payload_FF_bits=(flit+1)*txq+(flit+1+np)*np*buf,
+      internal_shift_bits_per_edge=shift_bits,
+      internal_shift_bytes_per_edge=shift_bits/8,
+      shifted_memory_ports=0, external_bytes_per_cycle_delta=0,
+      external_boundary_bits_per_edge_delta=0,
+      new_pipeline_edges=0, single_user_latency_delta_cycles=0,
+      NAND2_reservation=nand2, buffer_reservation=buffers,
+      cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+      routing_track_demand_delta=shift_bits,
+      existing_track_capacity=16041, existing_track_demand=4972,
+      combined_control_pipeline_tracks=258,
+      combined_tracks_fit=4972+258+shift_bits<=16041,
+      baseline_measured_area_um2=23536.2,
+      combined_local_area_budget_um2=23536.2+218.2626+2*gross,
+      characterization_core_area_um2=94864,
+      combined_local_area_fit=23536.2+218.2626+2*gross<=94864*0.4,
+      selected_parent_slot_fit=False, measured_routed_fit=False,
+      mechanism='constant head slot; shift accepted entries on pop, simultaneous append indexes exact post-pop count; routing metadata remains sampled at input acceptance',
+      P_and_R_ready=False, SS_FF_closed=False, adopted=False)
+
+
+def dsrom_wfc_header_cut_price(nw=21):
+    """Explicit parallel position carry and separately registered RX enable.
+
+    Price every padded reduction gate. The RX enable follows rst_q one edge
+    later, retaining async assert and blocking acceptance until local release.
+    New valid is protocol control, not completion/visibility authority.
+    """
+    and2=sum((1 << (i-1).bit_length())-1 for i in range(1,nw))
+    nand2=2*and2+4*nw+16
+    buffers=2*nw+16
+    gross=0.37908+nand2*0.08748+buffers*0.10206
+    return dict(schema='opentallas.dsrom.wfc.header_cut_price.v1',
+      NW=nw, MACs_per_cycle=0, replicas=1, added_FF_bits=1,
+      padded_AND2_gates=and2, XOR_bits=nw, NAND2_reservation=nand2,
+      buffer_reservation=buffers, cell_growth_budget_um2=2*gross,
+      old_cell_removal_credit_um2=0, new_memory_ports=0,
+      boundary_bits_per_edge_delta=0, internal_parallel_carry_wires=and2+nw,
+      added_routing_tracks=and2+nw+buffers,
+      additional_per_job_cycles=0, additional_cold_warm_release_cycles=1,
+      total_received_job_delta_cycles=3,
+      latency_composition='reset admission +1 per release, source job +2, received job +3 from control pipeline; no per-job position increment edge',
+      target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+      parent_slot_fit=False, SS_FF_closed=False, P_and_R_ready=False, adopted=False)
+
+
+def hbm_attn_registered_parent_model():
+    """Mandatory loaded H16 launch/capture fix, priced before its RTL.
+
+    Canonical NB5 macro ETMs and the selected finite slot remain the source.
+    Absolute insertion is propagated through real parent registers; no zero
+    external-network assumption or new 20% IO budget qualifies these paths.
+    """
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    old = json.loads((root/'results/uarch/hbm_attn_h16_context_20261005/model.json').read_text())
+    w = 1618
+    ff = w*(1+4+16) + 16*34 + 2 + 16
+    source_fixture_ff = w + 16
+    ff_body = ff*.37908
+    buffer_reserve = 2048*.4374
+    return dict(schema='opentallas.h16.registered-parent.v1',
+        default_parameter=dict(REGISTER_PARENT=0), adopted=False,
+        cause='deaaf2865 all-endpoint baseline: ideal external reference versus real SS2.00455ns/FF1.41003ns macro port clock',
+        canonical_macro='ot_attn_hgrp_m6h1 NBANK5, PCOLP0; original LEF and real SS/FF ETMs byte-identical',
+        shape=dict(H=16,D=512,TD=32,NBANK=5,tiles=64,heads=1024),
+        MACs_per_cycle=32768,memory_input_bytes_per_cycle=200,
+        input_payload_bits=w, head_payload_branch_bits=16*w,
+        output_payload_bits=529, output_receiver_register_bits=16*34,
+        added_memory_ports=0, added_CDCs=0,
+        phase_windows=dict(root_to_row_ps=833.333333, row_to_local_launch_ps=416.666667,
+            local_launch_to_macro_ps=416.666667, macro_to_receiver_ps=833.333333,
+            qualification='real propagated insertion/CRPR and SS/FF ETM setup/hold, none yet qualified'),
+        branch_load=dict(ib348_macro_pin_SS_fF=13.243, old_shared_16head_fF=211.888,
+            head_clock_pin_SS_fF=16.3802, head_clock_pins_total_SS_fF=262.0832,
+            receiver='one actual mapped FF D per macro output, keep all16 valid captures'),
+        dataflow='real positive-edge launch bank ->4 positive-edge row banks ->16 falling-edge local macro launch banks ->real positive-edge receivers',
+        input_extra_positive_edges=2,output_extra_positive_edges=1,
+        total_extra_positive_edges=3,initiation_interval_edges=1,
+        half_cycle_last_launch_window_ps=833.333333/2,
+        source_and_capture_clock='all real clk_sm branches from the same source; actual propagated WC/BC insertion and CPPR, no ideal latency substitution',
+        macro_clock_accounting='ETM617ps SS clkQ retains child internal CTS; parent port insertion added exactly once',
+        source_receiver_association='literal per-head gid/LD/IB/control beat, per-head34bit output register; concatenate oy/oflt, ov=head0',
+        root_reset='POR asynchronous assertion, 2-edge synchronous release then local falling-edge release; CP warm reset does not clear accepted beats',
+        extra_startup_positive_edges=2,
+        added_FF_bits=ff, FF_body_upper_um2=ff_body,
+        clock_buffer_reserve=2048,clock_buffer_area_upper_um2=buffer_reserve,
+        added_clock_pin_capacitance_upper_fF=ff*.433982,
+        register_and_clock_area_upper_um2=ff_body+buffer_reserve,
+        placement_area_at_half_utilization_um2=2*(ff_body+buffer_reserve),
+        retained_outline_um=old['replicas']['chosen_tile_outline_um'],
+        macro_replicas=16, new_macro_replicas=0,
+        finite_cell_space=dict(core_um=[1349.082,1349.730], macro_with_halo_um=304.782,
+            free_area_um2=1349.082*1349.730-16*304.782**2,
+            half_utilization_cell_capacity_um2=(1349.082*1349.730-16*304.782**2)*.5,
+            required_cell_area_upper_um2=ff_body+buffer_reserve+source_fixture_ff*.37908,
+            fit_is_analytical_only=True),
+        qualified_PG_hook=dict(commit='d1775001d',sha256='5d659c098dfb4eb53594637df8ca071141ea561d1b225ec012bdcd41fd765786',
+            VDD_connected=True,VSS_connected=True,IR_qualified=False,added_M2_M3_area_um2=.2268,
+            added_M6_M9_tracks=0,added_FF=0,added_cycles=0),
+        row_capacity_tracks=old['routing_capacity']['row_capacity_tracks_after_PG_vias_and_clock_reserve'],
+        row_demand_tracks=old['routing_capacity']['row_demand_tracks'],
+        whole_tile_capacity_tracks=old['routing_capacity']['whole_tile_capacity_tracks'],
+        clock_tracks_per_row=64,
+        body_clock_layers=['M8','M9'], local_LEF_pin_escape_layers=['M1','M2','M3','M4','M5','M6','M7'],
+        local_clock_body_and_phase_inverter_fit_qualified=False,
+        physical_only_source_fixture=dict(register_bits=source_fixture_ff,
+            body_upper_um2=source_fixture_ff*.37908,
+            role='actual registered producer endpoint for minimum parent physical vehicle, not production engine or full die proof'),
+        composed=dict(existing=old['existing_composed_model'],
+            attention_steps_per_matched_token=40,
+            increment_us=40*3/1.2e3,
+            total_increment_over_old_m4_upper_us=old['latency_projection']['total_increment_upper_bound_us']+40*3/1.2e3,
+            no_overlap_or_old_uninstalled_wire_stage_credit=True,
+            startup_not_per_token=True),
+        input_IO_policy='minimum registered parent paths have actual launch FFs; no external ideal-clock arrival credited',
+        output_IO_policy='receiver FF D pins carry real load; no generic 20% output deadline or output-port launch-reference fiction',
+        baseline_failures_preserved=True, finite_PG_owner='Turing',
+        exact_gate=False, SS_FF_qualified=False, parent_die_qualified=False,
+        route_ready=False, gain_credit=None)

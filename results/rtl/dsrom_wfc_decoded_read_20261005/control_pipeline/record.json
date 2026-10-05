@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-05T23:56:14.457582+00:00",
+  "verdict": "PASS_CHANGED_MINIMUM_MECHANISMS_ONLY",
+  "parameters": {
+    "CONTROL_PIPE": 1,
+    "QUEUE_SHIFT": 1,
+    "HEADER_LOCAL": 1,
+    "PREFIX_INC": 1
+  },
+  "all_parameters_default": 0,
+  "source_sha256": {
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "c95d608f2e00d7fcc6af724cfe405c206b2c193bbc827ae36951523c8b8ddf20",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_parent_cut.sv": "99633a9aef71dc2c226cbdb4a9a5279d87067c8ea003e703bdfce169e6f953af",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv": "3a670d52c59915221c2ecead31f6955fbabcc20777c3d35fbafb207d19db4ffb",
+    "rtl/test/dsrom_wavefront/tb_wfc_control_pipe.sv": "8064815eaa9e6ed4a73271ac01421545eb1f4b0afc244b9704812b8aba29d28b",
+    "rtl/test/dsrom_wavefront/tb_wfc_queue_head.sv": "46d6c1e4e99684eea545134b40f156d4c8f456db45d18e1eb3d859c894c92685",
+    "rtl/test/dsrom_wavefront/tb_wfc_position_inc.sv": "9f11d84ec50e5f3e93383a6b969174ac9c95bb1bab48b5f1e4566024973ebfda"
+  },
+  "model_before_RTL": true,
+  "new_FF_bits": 98,
+  "new_cell_growth_budget_um2": 5961.29544,
+  "new_local_body_budget_um2": 29497.49544,
+  "new_track_demand": 11771,
+  "track_capacity": 16041,
+  "allocated_parent_slot": null,
+  "selected_parent_slot_fit": false,
+  "measured_received_launch_delta_cycles": 2,
+  "measured_completion_delta_cycles": 1,
+  "measured_cold_warm_RX_release_delta_cycles": 1,
+  "source_launch_delta_cycles": 1,
+  "source_launch_delta_measured": false,
+  "per_received_job_serial_delta_cycles": 3,
+  "per_source_job_serial_delta_cycles": 2,
+  "source1_running_frozen_old_source_untouched": true,
+  "changed_full_MAXU866_gate_passed": false,
+  "new_routed_SS_FF_passed": false,
+  "actual_parent_context_qualified": false,
+  "adopted": false,
+  "no_ROM_ECC_added": true,
+  "mutable_protection_unchanged": true,
+  "retained_S0_failure_overwritten": false,
+  "pending": [
+    "changed full-shape controller exact SOURCE0/SOURCE1",
+    "actual receiver clock/load and VM/prompt macro binding from Copernicus/Noether",
+    "routed confirmation of every internal/output/slew class at SS60FF25; no inferred structural timing PASS",
+    "selected parent floorplan/track allocation"
+  ],
+  "minimum_gates": {
+    "control": "41 exact writes/one-shot launch/47 exact flits under stalls; captured result immutable after live input change; warm pending reset cancels debt",
+    "router": "NP3/FW512/BUF4 90 packets/48 multicast/5 drops/457 sent/765 delivered/1454 cycles,0 errors and native cycle-by-cycle parity",
+    "position": "widths1/21/31,4128 exact vectors including every carry/wrap boundary"
+  },
+  "initial_bench_failures": "incorrect header field offsets and counting convention preserved as bench-only FAIL logs"
+}
