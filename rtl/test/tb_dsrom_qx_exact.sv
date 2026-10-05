@@ -112,19 +112,29 @@ module tb_dsrom_qx_exact;
  typedef bit [53:0] ev_t;
  ev_t rq [0:511][$];
  ev_t dq [0:511][$];
+ integer rqt [0:511][$];
+ integer dqt [0:511][$];
  integer seq_matched = 0, seq_dropped = 0, rflt = 0, dflt = 0;
+ // measured extra output delay per matched partial: dut cycle - ref cycle - L (cycles)
+ integer dmax = -1000, dmin = 1000; longint dsum = 0; integer dhist [0:15];
+ initial for (int i = 0; i < 16; i++) dhist[i] = 0;
+ function automatic void seq_delay(input integer d);
+   if (d > dmax) dmax = d; if (d < dmin) dmin = d; dsum = dsum + d; dhist[(d < 0) ? 0 : (d > 15 ? 15 : d)]++;
+ endfunction
  bit both_rst_seen = 0;
  task automatic seq_push(input bit is_dut, input integer key, input ev_t e);
    if (is_dut) begin
      if (rq[key].size() > 0) begin
        if (rq[key][0] !== e) $fatal(1, "sequence mismatch key=%0d cycle=%0d dut %h ref %h", key, tcyc, e, rq[key][0]);
-       void'(rq[key].pop_front()); seq_matched = seq_matched + 1;
-     end else dq[key].push_back(e);
+       seq_delay(tcyc - rqt[key][0] - L);
+       void'(rq[key].pop_front()); void'(rqt[key].pop_front()); seq_matched = seq_matched + 1;
+     end else begin dq[key].push_back(e); dqt[key].push_back(tcyc); end
    end else begin
      if (dq[key].size() > 0) begin
        if (dq[key][0] !== e) $fatal(1, "sequence mismatch key=%0d cycle=%0d dut %h ref %h", key, tcyc, dq[key][0], e);
-       void'(dq[key].pop_front()); seq_matched = seq_matched + 1;
-     end else rq[key].push_back(e);
+       seq_delay(dqt[key][0] - tcyc - L);
+       void'(dq[key].pop_front()); void'(dqt[key].pop_front()); seq_matched = seq_matched + 1;
+     end else begin rq[key].push_back(e); rqt[key].push_back(tcyc); end
    end
  endtask
  function automatic integer seq_pending();
@@ -142,7 +152,7 @@ module tb_dsrom_qx_exact;
      if (!both_rst_seen) begin
        if (rflt != dflt) $fatal(1, "fault differs in a reset window (ref %0d dut %0d) cycle=%0d", rflt, dflt, tcyc);
        seq_dropped = seq_dropped + seq_pending();
-       for (int k = 0; k < 512; k++) begin rq[k].delete(); dq[k].delete(); end
+       for (int k = 0; k < 512; k++) begin rq[k].delete(); dq[k].delete(); rqt[k].delete(); dqt[k].delete(); end
        rflt = 0; dflt = 0;
      end
      both_rst_seen = 1;
@@ -277,7 +287,9 @@ module tb_dsrom_qx_exact;
    if (SEQ != 0) begin
      if (seq_pending() != 0) $fatal(1, "sequence: %0d events still pending at the end", seq_pending());
      if (rflt != dflt) $fatal(1, "fault differs at the end (ref %0d dut %0d)", rflt, dflt);
-     $display("SEQ matched=%0d dropped_at_reset=%0d", seq_matched, seq_dropped);
+     $display("SEQ matched=%0d dropped_at_reset=%0d extra_delay_cycles min=%0d max=%0d mean_x1000=%0d", seq_matched, seq_dropped,
+              dmin, dmax, seq_matched ? (dsum * 1000) / seq_matched : 0);
+     $write("SEQ extra_delay_hist"); for (int i = 0; i < 16; i++) $write(" %0d", dhist[i]); $write("\n");
    end
    if(hits<2000 || issues<2000 || rows<200 || nonzero<100 || classes!=255 || wraps==0 || qadv==0 || restarts<4 ||
       rejected<50 || go_closed<20 || go_drain<20 || closed_cycles<1000 || resets<3)

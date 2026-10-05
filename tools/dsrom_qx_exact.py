@@ -144,6 +144,12 @@ def main() -> None:
                 if rc or not m:
                     raise RuntimeError(f"{name} seed {seed} failed: {log[-1500:]}")
                 r["coverage"] = dict(zip(KEYS, map(int, m.groups())))
+                sq = re.search(r"SEQ matched=(\d+) dropped_at_reset=(\d+) extra_delay_cycles min=(-?\d+) max=(-?\d+) mean_x1000=(-?\d+)", log)
+                if sq:
+                    hist = re.search(r"SEQ extra_delay_hist((?: \d+)+)", log)
+                    r["sequence"] = dict(matched=int(sq[1]), dropped_at_reset=int(sq[2]), extra_delay_min=int(sq[3]),
+                                         extra_delay_max=int(sq[4]), extra_delay_mean=int(sq[5]) / 1000,
+                                         extra_delay_hist_0_to_15plus=[int(x) for x in hist[1].split()] if hist else None)
             record["runs"].append(r)
         record["total_compared_cycles"] = sum(r["coverage"]["compared_cycles"] for r in record["runs"] if "coverage" in r)
         record["verdict"] = "PASS"
