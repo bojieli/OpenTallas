@@ -25,6 +25,8 @@ module tb_hdc_v41x_idx_kgather #(
     reg [LMW-1:0] lw_addr=0;
     reg [LBW-1:0] lw_blk [0:3];
     wire [3:0] s_busy,s_valid,s_fault;
+    reg stall_mode=0;initial stall_mode=$test$plusargs("STALL");
+    wire ready= !stall_mode || ((cyc%17)>=9);
     wire [4*16-1:0] s_kv;
     wire [4*16*544-1:0] s_key;
     wire [4*2*LBW-1:0] s_blk;
@@ -81,7 +83,7 @@ module tb_hdc_v41x_idx_kgather #(
             .rsp_tag(h_rsp_tag[s*NPC*TAGW +:NPC*TAGW]),
             .rsp_beat(h_rsp_beat[s*NPC*BEATW +:NPC*BEATW]),
             .rsp_data(h_rsp_data[s*NPC*DW +:NPC*DW]),
-            .o_valid(s_valid[s]),.o_ready(1'b1),
+            .o_valid(s_valid[s]),.o_ready(ready),
             .o_kv(s_kv[s*16 +:16]),.o_key(s_key[s*16*544 +:16*544]),.o_blk(s_blk[s*2*LBW +:2*LBW]),
             .cnt_keys_streamed(s_keys[s*48 +:48]),
             .cnt_hbm_beats(s_beats[s*48 +:48]));
@@ -143,7 +145,7 @@ module tb_hdc_v41x_idx_kgather #(
             else begin cmd_v<=1; t0<=cyc+1; end
         end
         if(t0>=0 && cyc>t0+MAX_CYCLES) $fatal(1,"timeout");
-        for(q=0;q<4;q=q+1) if(s_valid[q]) begin
+        for(q=0;q<4;q=q+1) if(s_valid[q]&&ready) begin
             if(s_fault[q]) $fatal(1,"fault stack %0d",q);
             if(firsto[q]<0) firsto[q]=cyc-t0;
             lasto[q]=cyc-t0;

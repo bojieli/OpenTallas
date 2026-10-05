@@ -30,7 +30,14 @@ def main():
  except Exception as error:
   (a.out/'FAIL.json').write_text(json.dumps(dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),error=repr(error)),indent=2)+'\n')
   raise
- record=json.loads((a.out/'gather.json').read_text());record['source_commit']=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+ # Exercise the actual four-entry queue under repeated multi-cycle stalls.
+ binary=a.out/'obj_kg_p2/Vtb_hdc_v41x_idx_kgather'
+ stalled_prefix=a.out/'real_rank0_p2' # same already checked exact golden inputs
+ stalled=subprocess.run([str(binary),f'+PFX={stalled_prefix}','+STALL'],capture_output=True,text=True)
+ (a.out/'backpressure.log').write_text(stalled.stdout+stalled.stderr)
+ stall_pass=stalled.returncode==0 and gate.KGP.search(stalled.stdout) is not None
+ if not stall_pass:raise RuntimeError('production finite drain backpressure gate failed')
+ record=json.loads((a.out/'gather.json').read_text());record['backpressure']=dict(pass_=stall_pass,pattern='9 held edges /17; same real_rank0_p2 fullshape exact output oracle');record['source_commit']=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
  record['source_sha256']['tools/dsrom_reindex_production_gate.py']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
  record['scope']='protected actual16macro LSW3 list; KC8-derived full128slot32PC production control, sealed request cuts, real drain reservations; golden/original20cases unchanged'
  (a.out/'gather.json').write_text(json.dumps(record,indent=2)+'\n')
