@@ -54,7 +54,7 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
-def dsrom_fh_capture_model():
+def dsrom_fh_capture_model(protect_split=False):
     """Item2 G4W16 capture successor, before RTL; no adopted rate credit.
 
     A TP4 head rank owns 32,320 logits: 505 64-lane rounds. Each
@@ -64,8 +64,10 @@ def dsrom_fh_capture_model():
     g, w, tw, nw, alat = 4, 16, 160, 16, 7
     macro = 'ot_sram_1r1w_512x128_m4_r2c2'
     spec = json.loads((ROOT/'physical/asap7_memory_macros'/macro/(macro+'.json')).read_text())
+    extra_return = 2 + int(protect_split)
     ff = dict(addend_and_result_capture=2*g*w*32, capture_valid_per_lane=g*w,
-        matching_tag_extension=3*tw, matching_valid_extension=3,
+        protected_result_hold_extension=extra_return*g*w*32,
+        matching_tag_extension=(3+int(protect_split))*tw, matching_valid_extension=3+int(protect_split),
         fused_select_copies=g*w, extra_index_select_copies=g*w-16,
         prepared_index_and_onehot=w*(nw+1), prepared_index_write_valid=1,
         SRAM_raw_codewords=64*55, SRAM_decoded_payload=64*32,
@@ -73,7 +75,9 @@ def dsrom_fh_capture_model():
         SRAM_write_codeword_addr_valid=64*(55+9+1),
         SRAM_fault_status=64*3,
         context_existing_result_consumer=2048+64+4*24+4,
-        context_existing_argmax_level1=32*(1+32+nw))
+        context_existing_argmax_level1=32*(1+32+nw),
+        protected_decode_split=(48+2+9+1)*64 if protect_split else 0,
+        protected_valid_extension=int(protect_split))
     macro_area = spec['area']['macro_area_um2']*64
     ff_area = sum(ff.values())*DFF_UM2
     # Combinational protection is conservatively charged separately until synth.
@@ -109,14 +113,17 @@ def dsrom_fh_capture_model():
             free_std_cell_area_um2=2000*660-macro_area,
             fits_area_proxy=cell_proxy/(2000*660-macro_area)<0.35,
             parent_die_slot_fit='No parent placement credit until composition'),
-        latency=dict(protected_return_extra_cycles=2, pre_ALAT7_capture_cycles=1,
+        latency=dict(protected_return_extra_cycles=extra_return, pre_ALAT7_capture_cycles=1,
             context_consumers='Existing result capture and argmax first level; no new production cycles',
-            matching_mask_tag_row_cycles=3, index_prepare_cycles=1,
-            write_pipeline_cycles=2, old_fused_DF=9,new_fused_DF=12, extra_cycles_per_fused_op=4,
-            five_chain_added_cycles=20, predicted_five_chain_cycles=62873,
-            predicted_tail_cycles=48,
-            single_user_five_chain_added_ns=20*0.833333,
-            conditional_l1_chain_ratio=1+32/4096+48/(12.37*1200)),
+            matching_mask_tag_row_cycles=3+int(protect_split), index_prepare_cycles=1,
+            write_pipeline_cycles=2, old_fused_DF=9,new_fused_DF=12+int(protect_split), extra_cycles_per_fused_op=4+int(protect_split),
+            five_chain_added_cycles=20+5*int(protect_split), predicted_five_chain_cycles=62873+5*int(protect_split),
+            predicted_tail_cycles=48+int(protect_split),
+            single_user_five_chain_added_ns=(20+5*int(protect_split))*0.833333,
+            conditional_l1_chain_ratio=1+32/4096+(48+int(protect_split))/(12.37*1200)),
+        protection_decode_split=dict(default=0, selected=bool(protect_split),
+            purpose='Separate full corrected word/CE/UE capture from identity/enable payload capture; C11 preplacement SS ~-106ps at payload capture',
+            area_note='Matched result-hold extension is charged explicitly; earlier proposal snapshots remain immutable'),
         exactness='Same addend-first RNE add and golden reduction/argmax ordering; no arithmetic primitive change',
         adoption=False, physical_closed=False, measured_cycles=None)
 
