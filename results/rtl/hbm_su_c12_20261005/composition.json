@@ -1,0 +1,107 @@
+{
+ "schema": "opentallas.dshbm.su_c12_compose.v1",
+ "context": 1048576,
+ "position": 1048575,
+ "gate_reproduced": {
+  "AR_us": 474.808,
+  "MTP_step_us": 1050.638
+ },
+ "su_records": {
+  "c12_v2": "results/rtl/hbm_su_c12_20261005/su_runs/su_N1024_M256_b7r8m6a6_dpi_beh_su_cases_v2_ildr.json",
+  "c12_v2_sha256": "0b541fade37b366ebf7a3f540030c6bda9c340176f1b17086059ce0a52b0397f",
+  "c12_p6": "results/rtl/hbm_su_c12_20261005/su_runs/su_N1024_M256_b7r8m6a6_dpi_beh_su_cases_p6om_ildr.json",
+  "c12_p6_sha256": "21b12c6534b67f76d096106bb9be5bd9405d4f0010ea01bc7e06acfc5f0b73f4"
+ },
+ "c12_params": {
+  "mlat": 6,
+  "alat": 6,
+  "opr": 1,
+  "ddiv": 21,
+  "sidex": 3,
+  "fsq": 1,
+  "rpad": 1,
+  "rsl": 1,
+  "rtap": 1,
+  "rslice": 64
+ },
+ "rows": {
+  "corrected+wg+su12:m6a5": {
+   "AR_us": 527.865,
+   "AR_tok_s": 1894.4,
+   "MTP_step_us": 1050.638,
+   "MTP_tok_s": 3958.5
+  },
+  "matched:m6a5": {
+   "AR_us": 476.178,
+   "AR_tok_s": 2100.1,
+   "MTP_step_us": 1050.638,
+   "MTP_tok_s": 3958.5
+  },
+  "corrected+wg+su12:c12": {
+   "AR_us": 538.114,
+   "AR_tok_s": 1858.3,
+   "MTP_step_us": 1059.955,
+   "MTP_tok_s": 3923.8
+  },
+  "matched:c12": {
+   "AR_us": 480.221,
+   "AR_tok_s": 2082.4,
+   "MTP_step_us": 1059.955,
+   "MTP_tok_s": 3923.8
+  }
+ },
+ "effect_c12_vs_m6a5": {
+  "corrected+wg+su12": {
+   "AR_us_delta": 10.249,
+   "AR_rate_pct": -1.905,
+   "MTP_step_us_delta": 9.317,
+   "MTP_rate_pct": -0.877
+  },
+  "matched": {
+   "AR_us_delta": 4.043,
+   "AR_rate_pct": -0.842,
+   "MTP_step_us_delta": 9.317,
+   "MTP_rate_pct": -0.877
+  }
+ },
+ "c12_chain_spans_P1": {
+  "L0.hc_pre_norm.attn": 471,
+  "L0.q_norm_kv_row": 409,
+  "L0.q_rope": 60,
+  "L0.attend": 535,
+  "L0.hc_post.attn": 218,
+  "L0.hc_pre_norm.ffn": 471,
+  "L0.router_act": 333,
+  "L0.route": 242,
+  "L0.swiglu.s0": 176,
+  "L0.swiglu.s1": 176,
+  "L0.swiglu.s2": 176,
+  "L0.swiglu.s3": 176,
+  "L0.swiglu.s4": 176,
+  "L0.swiglu.s5": 176,
+  "L0.swiglu.s6": 176,
+  "L0.moe_sum": 108,
+  "L0.hc_post.ffn": 218,
+  "L2.hc_pre_norm.attn": 471,
+  "L2.q_norm_kv_row": 409,
+  "L2.q_rope": 60,
+  "L2.attend": 573,
+  "L2.hc_post.attn": 218,
+  "L2.hc_pre_norm.ffn": 471,
+  "L2.router_act": 333,
+  "L2.route": 242,
+  "L2.swiglu.s0": 176,
+  "L2.swiglu.s1": 176,
+  "L2.swiglu.s2": 176,
+  "L2.swiglu.s3": 176,
+  "L2.swiglu.s4": 176,
+  "L2.swiglu.s5": 176,
+  "L2.swiglu.s6": 176,
+  "L2.moe_sum": 108,
+  "L2.hc_post.ffn": 218,
+  "head.final_norm": 471,
+  "head.argmax_local": 157,
+  "L0.attend_tail": 119,
+  "L2.attend_tail": 119
+ }
+}
