@@ -32,7 +32,9 @@ module ot_hdc_v41x_vec_lane #(
     parameter integer ALAT = 3,         // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
     parameter integer OPR = 0,          // c12: operand registers at M1 / AD / E1, vi_q register, coll register
     parameter integer DDIV = 19,        // divider depth: 19 ot_hdc_v41x_fdiv, 21 ot_dsrom_fdiv_f12 (1.2 GHz kit)
-    parameter integer SIDEX = 0         // side pipe port registers: 0, or 3 (one here, two in the side pipe)
+    parameter integer SIDEX = 0,        // side pipe port registers: 0, 3 (side_v / side_x here, two in the side pipe),
+                                        // or 4 (also side_y registered here)
+    parameter integer CAPR = 0          // c12: the memory words rd_q registered at the port before the capture logic
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -121,7 +123,8 @@ module ot_hdc_v41x_vec_lane #(
     // (ot_hdc_kadd / _kge / _kinc over rtl/hdc/ot_hdc_prefix.sv) and its FP adds ot_hdc_fp32_add_lat3, so ABC
     // cannot re-ripple them inside the lane; MLAT = 3 keeps the behavioural operators (the unit as it was)
     localparam integer K = (MLAT != 3 || ALAT != 3) ? 1 : 0;
-    generate if ((OPR != 0 && OPR != 1) || (DDIV != 19 && DDIV != 21) || (SIDEX != 0 && SIDEX != 3)) begin : g_bad_c12
+    generate if ((OPR != 0 && OPR != 1) || (DDIV != 19 && DDIV != 21) || (SIDEX != 0 && SIDEX != 3 && SIDEX != 4) || (CAPR != 0 && CAPR != 1))
+        begin : g_bad_c12
         ot_hdc_v41x_vec_lane_c12_OPR_0_1_DDIV_19_21_SIDEX_0_3 u_trap ();
     end endgenerate
     generate if (ALAT > MLAT || ALAT < 3 || ALAT > 7) begin : g_bad_alat
@@ -470,22 +473,39 @@ module ot_hdc_v41x_vec_lane #(
     assign rd_addr = rd_addr_r;
     assign rd_re = rd_re_r;
     assign rd_src = rd_src_r;
-    // tags of the read, to the capture two cycles later
+    // tags of the read, to the capture two cycles later (CAPR: three)
     reg          m_v, x_v;
     reg [AW-1:0] m_o, x_o;
     reg          m_par, x_par;
+    wire         c_v, c_par;
+    wire [AW-1:0] c_o;
+    wire [127:0] rq;                    // the memory words as the capture logic sees them
+    generate if (CAPR != 0) begin : g_capr
+        // c12: the words are registered at the port (a memory-macro boundary); the capture logic below starts
+        // from this register, one cycle later for every element (the controller's fetch is CAPR deeper)
+        reg          cr_v, cr_par;
+        reg [AW-1:0] cr_o;
+        reg [127:0]  cr_q;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) cr_v <= 1'b0; else cr_v <= m_v;
+        end
+        always @(posedge clk) begin cr_o <= m_o; cr_par <= m_par; cr_q <= rd_q; end
+        assign {c_v, c_o, c_par, rq} = {cr_v, cr_o, cr_par, cr_q};
+    end else begin : g_capw
+        assign {c_v, c_o, c_par, rq} = {m_v, m_o, m_par, rd_q};
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin m_v <= 1'b0; x_v <= 1'b0; end
-        else begin m_v <= mr_v; x_v <= m_v; end
+        else begin m_v <= mr_v; x_v <= c_v; end
     end
     always @(posedge clk) begin
         m_o <= g2_v ? g2_o : f_o; m_par <= g2_v ? g2_par : f_par;
-        x_o <= m_o; x_par <= m_par;
+        x_o <= c_o; x_par <= c_par;
     end
     // ---- X: capture (the memories answered during the cycle before) --------------------------------------
     reg [31:0] x_a, x_b, x_c, x_d;
     always @(posedge clk) begin
-        x_a <= rd_q[31:0]; x_b <= rd_q[63:32]; x_c <= rd_q[95:64]; x_d <= rd_q[127:96];
+        x_a <= rq[31:0]; x_b <= rq[63:32]; x_c <= rq[95:64]; x_d <= rq[127:96];
     end
     // ---- PRE ------------------------------------------------------------------------------------------
     // A' = min(relu(rnd?(A)), imm3), evaluated for the three values rnd?(A) can take (A itself, A truncated to
@@ -494,7 +514,7 @@ module ot_hdc_v41x_vec_lane #(
     wire [31:0] a_t  = {x_a[31:16], 16'd0};
     // hbm-fmax-su: A's BF16 round-up candidate and decision are formed at the capture from the word being captured
     // and registered beside x_a (same values one stage earlier; the PRE stage was 45 ps over 0.833 ns with them in it)
-    wire [31:0] xa_in = rd_q[31:0];
+    wire [31:0] xa_in = rq[31:0];
     wire [15:0] xa_hi1;
     ot_hdc_kinc #(.W(16), .K(K)) u_au (.a(xa_in[31:16]), .inc(1'b1), .y(xa_hi1));
     reg  [15:0] a_hi1;
@@ -642,6 +662,15 @@ module ot_hdc_v41x_vec_lane #(
     wire v3 = v3l[ALAT + OPR];
     wire [31:0] R = (r_ad == AD_BYP) ? add_byp : add_y;
     // ---- S --------------------------------------------------------------------------------------------------
+    // c12 SIDEX = 4: lane 0 also registers the side pipe's result at its port (counted in the side depths)
+    wire [31:0] side_yi;
+    generate if (SIDEX == 4 && FULL != 0) begin : g_syr
+        reg [31:0] sy_r;
+        always @(posedge clk) sy_r <= side_y;
+        assign side_yi = sy_r;
+    end else begin : g_syw
+        assign side_yi = side_y;
+    end endgenerate
     localparam integer T4W = 32 * 3 + AW;                 // R, B, C', O
     wire [T4W-1:0] t4;
     wire           v4, c4;
@@ -685,7 +714,7 @@ module ot_hdc_v41x_vec_lane #(
                     .coll(c4), .busy());
             end
             assign S = (cs_sfu == SFU_EXP) ? y_exp : (cs_sfu == SFU_SIGM || cs_sfu == SFU_SILU) ? y_div :
-                       (cs_sfu == SFU_NONE) ? t4[T4W-1 -: 32] : side_y;
+                       (cs_sfu == SFU_NONE) ? t4[T4W-1 -: 32] : side_yi;
             assign f_sfu = f_e | f_den | f_div;
         end else begin : g_nosfu
             assign t4 = {R, r_b, r_c, r_o}; assign v4 = v3; assign c4 = 1'b0;

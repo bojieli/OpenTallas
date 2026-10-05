@@ -32,7 +32,7 @@ module ot_hdc_v41x_vec_side #(
     parameter integer MLAT = 3,     // multiplier latency of the units (ot_hdc_qmul_lat): 3, 4, or 5 (W11 serial domain)
     parameter integer ALAT = 3,     // add latency (ot_hdc_qadd_lat): 3, or 4
     parameter integer DDIV = 19,    // the gate's divider: 19 ot_hdc_v41x_fdiv, 21 ot_dsrom_fdiv_f12
-    parameter integer SIDEX = 0,    // 0, or 3: input and output registers here (+ lane 0's output register)
+    parameter integer SIDEX = 0,    // 0, 3 or 4: input and output registers here (+ lane 0's port registers)
     parameter integer FSQ = 0       // 1: ot_hdc_fsqrt_c12
 ) (
     input  wire        clk,
@@ -45,7 +45,7 @@ module ot_hdc_v41x_vec_side #(
     output wire        fault
 );
     localparam [2:0] SFU_RSQRT = 2, SFU_SQRT = 3, SFU_SPSQRT = 6, SFU_EGATE = 7;
-    generate if ((SIDEX != 0 && SIDEX != 3) || (DDIV != 19 && DDIV != 21) || (FSQ != 0 && FSQ != 1)) begin : g_bad
+    generate if ((SIDEX != 0 && SIDEX != 3 && SIDEX != 4) || (DDIV != 19 && DDIV != 21) || (FSQ != 0 && FSQ != 1)) begin : g_bad
         ot_hdc_v41x_vec_side_c12_SIDEX_0_3_DDIV_19_21_FSQ_0_1 u_trap ();
     end endgenerate
     // c12 SIDEX = 3: v and x arrive from lane 0's register one cycle after fn (the controller's S-in code):

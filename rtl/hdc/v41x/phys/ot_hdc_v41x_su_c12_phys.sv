@@ -3,13 +3,15 @@
 // HBM SU 1.2 GHz closure (claude hbm-su-attn, 2026-10-05): PHYSICAL VEHICLES of the c12 stream unit's hardened
 // elements (fixed-parameter tops, so a route needs no -chparam), built from rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv,
 // ot_hdc_v41x_vec_side_c12.sv, ot_hdc_v41x_sfu_c12.sv and rtl/hdc/ot_hdc_fastfp_lat_c12.sv at MLAT 6 / ALAT 6,
-// OPR 1, DDIV 21, SIDEX 3, FSQ 1.  As rtl/hdc/v41x/ot_hdc_v41x_w11_phys.sv's ot_hdc_v41x_vec_lane1024r, a lane is
+// OPR 1, DDIV 21, SIDEX 4, CAPR 1, FSQ 1.  As rtl/hdc/v41x/ot_hdc_v41x_w11_phys.sv's ot_hdc_v41x_vec_lane1024r, a lane is
 // driven from one register (b_q) that stands for the broadcast tree's stage BCAST_STAGES - 1; the lane's own leaf
 // register is the tree's last stage.
 //   ot_su12_light  KIND 0 (lanes M .. N-1)      ot_su12_sfu  KIND 1 (lanes 1 .. M-1)
 //   ot_su12_full   KIND 2 (lane 0, with the side pipe's ports)    ot_su12_side  the scalar side pipe
 // Every output of the lane vehicles and of the side pipe leaves a register (rd_* / side_* / coll registered in the
-// c12 lane, y / fault in the c12 side), so the routes false-path the outputs only; inputs stay timed.
+// c12 lane, y / fault in the c12 side) and every input enters a register (b_q, the memory-word register (CAPR),
+// the gather-word register (OPR), lane 0's side_y register (SIDEX 4), the side pipe's input registers), so the
+// routes false-path the block's IO (--false-path-io), checked on the routed netlist (outcheck / incheck).
 // ---------------------------------------------------------------------------
 module ot_su12_lane #(
     parameter integer KIND = 0,
@@ -18,7 +20,8 @@ module ot_su12_lane #(
     parameter integer ALAT = 6,         // FP add latency (W11 serial domain: 4)
     parameter integer OPR = 1,
     parameter integer DDIV = 21,
-    parameter integer SIDEX = 3
+    parameter integer SIDEX = 4,
+    parameter integer CAPR = 1
 ) (
     input  wire clk, input wire rst_n,
     input  wire ld, input wire ld_bank, input wire [1199:0] ld_c,
@@ -57,7 +60,7 @@ module ot_su12_lane #(
     // the lane with LEAF = 1: its own register is the broadcast tree's last stage (claude/w11-su d734e304);
     // b_q above stands for the tree's stage BCAST_STAGES - 1
     ot_hdc_v41x_vec_lane #(.AW(24), .LN(10), .KIND(KIND), .LEAF(1), .MLAT(MLAT), .ALAT(ALAT), .OPR(OPR),
-                           .DDIV(DDIV), .SIDEX(SIDEX)) u (
+                           .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR)) u (
         .clk(clk), .rst_n(rst_n), .lane_id(LANE[10:0]), .ld(r_ld), .ld_bank(r_ld_bank), .ld_c(r_ld_c), .emit(r_emit),
         .bank(r_bank), .o_v(r_o_v), .i_v(r_i_v), .no(r_no), .ni(r_ni), .ls(r_ls), .lvw(r_lvw), .vb(r_vb),
         .krow(r_krow), .obase(r_obase), .aibase(r_aibase), .aind(r_aind), .gsh(r_gsh), .cpair(r_cpair), .dst(r_dst),
@@ -89,7 +92,7 @@ module ot_su12_light (
     output wire fault, output wire coll,
     output wire side_v, output wire [31:0] side_x, input wire [31:0] side_y
 );
-    ot_su12_lane #(.KIND(0), .LANE(37), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(3)) u (.clk(clk), .rst_n(rst_n),
+    ot_su12_lane #(.KIND(0), .LANE(37), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(4), .CAPR(1)) u (.clk(clk), .rst_n(rst_n),
         .ld(ld), .ld_bank(ld_bank), .ld_c(ld_c), .emit(emit), .bank(bank), .o_v(o_v), .i_v(i_v), .no(no), .ni(ni),
         .ls(ls), .lvw(lvw), .vb(vb), .krow(krow), .obase(obase), .aibase(aibase), .aind(aind), .gsh(gsh), .cpair(cpair),
         .dst(dst), .srcs(srcs), .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re),
@@ -119,7 +122,7 @@ module ot_su12_sfu (
     output wire fault, output wire coll,
     output wire side_v, output wire [31:0] side_x, input wire [31:0] side_y
 );
-    ot_su12_lane #(.KIND(1), .LANE(5), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(3)) u (.clk(clk), .rst_n(rst_n),
+    ot_su12_lane #(.KIND(1), .LANE(5), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(4), .CAPR(1)) u (.clk(clk), .rst_n(rst_n),
         .ld(ld), .ld_bank(ld_bank), .ld_c(ld_c), .emit(emit), .bank(bank), .o_v(o_v), .i_v(i_v), .no(no), .ni(ni),
         .ls(ls), .lvw(lvw), .vb(vb), .krow(krow), .obase(obase), .aibase(aibase), .aind(aind), .gsh(gsh), .cpair(cpair),
         .dst(dst), .srcs(srcs), .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re),
@@ -149,7 +152,7 @@ module ot_su12_full (
     output wire fault, output wire coll,
     output wire side_v, output wire [31:0] side_x, input wire [31:0] side_y
 );
-    ot_su12_lane #(.KIND(2), .LANE(0), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(3)) u (.clk(clk), .rst_n(rst_n),
+    ot_su12_lane #(.KIND(2), .LANE(0), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(4), .CAPR(1)) u (.clk(clk), .rst_n(rst_n),
         .ld(ld), .ld_bank(ld_bank), .ld_c(ld_c), .emit(emit), .bank(bank), .o_v(o_v), .i_v(i_v), .no(no), .ni(ni),
         .ls(ls), .lvw(lvw), .vb(vb), .krow(krow), .obase(obase), .aibase(aibase), .aind(aind), .gsh(gsh), .cpair(cpair),
         .dst(dst), .srcs(srcs), .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re),
@@ -164,5 +167,5 @@ endmodule
 // the scalar side pipe: v / fn / x from lane 0's registers (fn: the controller's S-in code), y to lane 0's S output
 module ot_su12_side (input wire clk, rst_n, v, input wire [2:0] fn, input wire [31:0] x, input wire [2:0] fn_out,
                      output wire [31:0] y, output wire fault);
-    ot_hdc_v41x_vec_side #(.MLAT(6), .ALAT(6), .DDIV(21), .SIDEX(3), .FSQ(1)) u (.*);
+    ot_hdc_v41x_vec_side #(.MLAT(6), .ALAT(6), .DDIV(21), .SIDEX(4), .FSQ(1)) u (.*);
 endmodule

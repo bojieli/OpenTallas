@@ -4,7 +4,9 @@
 //   OPR    operand registers in every lane at M1, AD and E1 and the gather word register
 //          (rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv): M1 / AD / E1 one deeper, a gather fetch one deeper
 //   DDIV   the divider depth (21: the DS ROM kit's ot_dsrom_fdiv_f12): M1 divide, sigmoid, softplus, gate
-//   SIDEX  the side pipe's port registers (3): rsqrt, sqrt, sqrt(softplus), gate SIDEX deeper
+//   SIDEX  the side pipe's port registers (3, or 4 with lane 0's side_y register): rsqrt, sqrt, sqrt(softplus),
+//          gate SIDEX deeper
+//   CAPR   the lanes' memory-word port register before the capture logic: every fetch one deeper
 //   FSQ    the side / softplus square roots are ot_hdc_fsqrt_c12 (same depth)
 //   RPAD, RSL, RTAP  the reducer's added registers (rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv: padding, slice
 //          boundary, tap): every result RPAD + RSL + RTAP deeper; RSLICE its slice width (physical only)
@@ -173,6 +175,7 @@ module ot_hdc_v41x_vec #(
     parameter integer SIDEX = 0,        // c12: side pipe port registers (0 or 3)
     parameter integer FSQ = 0,          // c12: ot_hdc_fsqrt_c12 in the side pipe
     parameter integer RPAD = 0,         // c12 reducer: padding register
+    parameter integer CAPR = 0,         // c12: lane memory-word port register (every fetch CAPR deeper)
     parameter integer RSL = 0,          // c12 reducer: slice-boundary register
     parameter integer RTAP = 0,         // c12 reducer: tap register
     parameter integer RSLICE = 64       // c12 reducer: lanes a slice
@@ -298,7 +301,7 @@ module ot_hdc_v41x_vec #(
                        D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV + SIDEX, D_EG = 33 + D_SIG + SIDEX;
     localparam [15:0] H_A = ALAT;
     localparam [15:0] H_R = ALAT;                        // a reducer TREE / TIME level
-    localparam [15:0] H_F5 = 5 + OPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
+    localparam [15:0] H_F5 = 5 + OPR + CAPR, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
                       H_EG = D_EG;
     function automatic [9:0] sfu_d(input [2:0] s);
@@ -392,7 +395,7 @@ module ot_hdc_v41x_vec #(
     wire c_gather = (q_aind != IND_NONE);
     wire [AW-1:0] c_gstr = (q_aind == IND_I) ? q_asi : q_aso;
     wire c_div = (q_m1 == M1_DIVB || q_m1 == M1_DIVIMM);
-    wire [9:0] c_dF = c_gather ? 10'd6 + OPR : 10'd4;       // broadcast register + fetch
+    wire [9:0] c_dF = c_gather ? 10'd6 + OPR + CAPR : 10'd4 + CAPR;       // broadcast register + fetch
     wire [9:0] c_dM = c_dF + 10'd1 + OPR + (c_div ? DDIV : H_M[9:0]);
     wire [9:0] c_dS = c_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
     wire [9:0] c_lt = red_on ? {6'd0, c_ls} - 10'd3 : 10'd0;
@@ -696,7 +699,7 @@ module ot_hdc_v41x_vec #(
     // F-line: depth 3 or 5
     wire [WC-1:0] cwx;
     wire          vx, col_f, bz_f, bz_m, bz_s;
-    ot_hdc_v41x_ins #(.W(WC), .K(2), .DEPTHS({H_F5, 16'd3}), .DMAX(5 + OPR)) u_cf (.clk(clk), .rst_n(rst_n),
+    ot_hdc_v41x_ins #(.W(WC), .K(2), .DEPTHS({H_F5, H_F3}), .DMAX(5 + OPR + CAPR)) u_cf (.clk(clk), .rst_n(rst_n),
         .v(t_emit), .sel({t_gather, !t_gather}), .d(t_cw), .vo(vx), .q(cwx), .coll(col_f), .busy(bz_f));
     `define CW_SRCS(w)  w[WC-1 -: 8]
     `define CW_ARND(w)  w[WC-9]
@@ -784,7 +787,7 @@ module ot_hdc_v41x_vec #(
     generate for (l = 0; l < N; l = l + 1) begin : g_lane
         ot_hdc_v41x_vec_lane #(.AW(AW), .CW(CW), .LN(LN), .KIND((l == 0) ? 2 : (l < M) ? 1 : 0),
                                .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0), .MLAT(MLAT), .ALAT(ALAT),
-                               .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX)) u_lane (
+                               .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR)) u_lane (
             .clk(clk), .rst_n(rst_n), .lane_id(l[10:0]),
             .ld(tr_ld), .ld_bank(tr_ldbank), .ld_c(tr_ldc),
             .emit(tr_emit), .bank(tr_bank), .o_v(tr_ov), .i_v(tr_iv), .no(tr_no), .ni(tr_ni), .ls(tr_ls), .lvw(tr_lvw),

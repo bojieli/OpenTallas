@@ -49,6 +49,7 @@ module tb_hdc_v41x_vec #(
     parameter integer SIDEX = 0,
     parameter integer FSQ = 0,
     parameter integer RPAD = 0,
+    parameter integer CAPR = 0,
     parameter integer RSL = 0,
     parameter integer RTAP = 0,
     parameter integer RSLICE = 64
@@ -132,7 +133,7 @@ module tb_hdc_v41x_vec #(
     wire dbg_emit, dbg_ret, dbg_res;
     wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
     ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES), .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT),
-                      .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .FSQ(FSQ), .RPAD(RPAD), .RSL(RSL), .RTAP(RTAP),
+                      .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .FSQ(FSQ), .CAPR(CAPR), .RPAD(RPAD), .RSL(RSL), .RTAP(RTAP),
                       .RSLICE(RSLICE)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(w[F_NOUT +: 16]), .i_nin(w[F_NIN +: 16]),
