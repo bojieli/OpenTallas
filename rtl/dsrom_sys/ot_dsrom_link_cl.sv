@@ -39,6 +39,11 @@
 //      hold-buffer chains against the block's propagated clock latency under
 //      the in-context I/O constraints (input min 30 ps).  The controls
 //      (in_valid, out_ready) stay rising-edge.                           0 cyc
+//  (i) Registered port outputs: in_ready is a register loaded with the
+//      readiness of the NEXT state (identical behaviour), and out_valid /
+//      out_data / out_last leave from an output register fed from the skid
+//      or, bypassing it, straight from the read register (no added cycle),
+//      so no port output carries logic behind the propagated clock.     0 cyc
 //  (g) The receive-overflow and credit-return checks stay as faults but no
 //      longer gate the state update (a correct link never raises them; the
 //      fault latches either way).
@@ -170,12 +175,9 @@ module ot_dsrom_link_cl #(
     wire            rewind   = (ack_ok && ra_nak) || timeout;
 `endif
     wire            replaying = (snd != nxt);
-`ifdef OT_DSROM_LINK_MUT_FREECREDIT
-    assign in_ready = !occ[IW] && !replaying && pace_ok;
-`else
-    assign in_ready = (credits != 0) && !occ[IW] && !replaying && pace_ok;
-`endif
-    wire            accept = in_valid && in_ready;
+    reg             rdy_r;                   // = (credits != 0) && !occ[IW] && !replaying && pace_ok, registered
+    assign in_ready = rdy_r;
+    wire            accept = in_valid && rdy_r;
     reg  [W-1:0]    in_data_n;
     reg             in_last_n;
     always @(negedge clk) begin in_data_n <= in_data; in_last_n <= in_last; end
@@ -195,6 +197,22 @@ module ot_dsrom_link_cl #(
     wire [SEQW-1:0] snd_off = snd - una;
     wire            ack_skip = ack_ok && (d_ack > snd_off);
     wire [IW:0]     occ_a  = occ - (ack_ok ? d_ack[IW:0] : {(IW+1){1'b0}});
+    // next-state values (the always block assigns these) and the readiness they imply
+    wire [IW:0]     occ_n  = accept ? occ_a + 1'b1 : occ_a;
+    wire [SEQW-1:0] nxt_n  = accept ? nxt + 1'b1 : nxt;
+    wire [SEQW-1:0] snd_n  = rewind ? una_n : ack_skip ? ra_ack : launch ? snd + 1'b1 : snd;
+`ifdef OT_DSROM_LINK_MUT_FREECREDIT
+    wire [CW-1:0]   credits_n = credits;
+`else
+    wire [CW-1:0]   credits_n = credits - {{(CW-1){1'b0}}, accept} + (ra_ok ? d_fr : {CW{1'b0}});
+`endif
+    wire [PAW-1:0]  pace_n = (PHY_NUM == 0) ? pace : launch ? pace - PCOST_W + PNUM_W : !pace_ok ? pace + PNUM_W : pace;
+    wire            pace_ok_n = (PHY_NUM == 0) || (pace_n >= PCOST_W);
+`ifdef OT_DSROM_LINK_MUT_FREECREDIT
+    wire            rdy_n  = !occ_n[IW] && (snd_n == nxt_n) && pace_ok_n;
+`else
+    wire            rdy_n  = (credits_n != 0) && !occ_n[IW] && (snd_n == nxt_n) && pace_ok_n;
+`endif
     wire [SEQW-1:0] una_n  = ack_ok ? ra_ack : una;
     wire            retry_exh = rewind && !progress && (retry >= MR_W);
 
@@ -277,10 +295,14 @@ module ot_dsrom_link_cl #(
     wire [W:0]      fq;
     wire [3:0]      sk_room = {1'b0, sk_cnt} + {3'b0, r_v1} + {3'b0, r_v2};
     wire            r_issue = (cm != 0) && (sk_room < SK);
-    wire            sk_pop  = (sk_cnt != 0) && out_ready;
-    assign out_valid = (sk_cnt != 0);
-    assign out_data  = sk_d[sk_hd][W-1:0];
-    assign out_last  = sk_d[sk_hd][W];
+    reg             ov;
+    reg  [W:0]      od;
+    wire            o_take  = !ov || out_ready;
+    wire            sk_pop  = o_take && (sk_cnt != 0);
+    wire            fq_byp  = o_take && (sk_cnt == 0) && r_v2;   // the fresh read goes straight to the output
+    assign out_valid = ov;
+    assign out_data  = od[W-1:0];
+    assign out_last  = od[W];
     ot_dsrom_link_mem #(.W(W + 1), .D(CREDITS), .MEM(MEM)) u_fifo (
         .clk(clk), .r_ce(r_issue), .r_addr(head), .q_en(r_v1), .q(fq),
         .w_ce(wq_v), .w_addr(wq_a), .w_d(wq_d));
@@ -308,7 +330,7 @@ module ot_dsrom_link_cl #(
     reg [5:0] fc_r;                           // registered fault causes, priority on the next cycle
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            pace <= PCOST_W;
+            pace <= PCOST_W; rdy_r <= 1'b1;
             una <= 0; snd <= 0; nxt <= 0; occ <= 0;
             credits <= CRED_C; fr_seen <= 0; timer <= 0; retry <= 0;
             rr_v <= 1'b0; rr_f <= 0;
@@ -319,33 +341,25 @@ module ot_dsrom_link_cl #(
             x0_v <= 1'b0; x1_v <= 1'b0; x2_v <= 1'b0; x2_ok <= 1'b0;
             exp_seq <= 0; nak_sent <= 1'b0; nak_req <= 1'b0; dup_req <= 1'b0;
             freed <= 0; fill <= 0; cm <= 0; head <= 0; tail <= 0;
-            wq_v <= 1'b0; r_v1 <= 1'b0; r_v2 <= 1'b0; sk_cnt <= 0; sk_hd <= 0; sk_tl <= 0;
+            wq_v <= 1'b0; r_v1 <= 1'b0; r_v2 <= 1'b0; sk_cnt <= 0; sk_hd <= 0; sk_tl <= 0; ov <= 1'b0;
             tx_ack <= 0; tx_fr <= 0; ka <= KEEPALIVE[KW-1:0] - 1'b1;
             rg_v <= 1'b0; rg_f <= 0;
             fc_r <= 0; fault <= 1'b0; fault_code <= 4'd0; st_max_replay_occ <= 0;
         end else begin
             // ---------------- sender ----------------
-            if (PHY_NUM != 0) begin
-                if (launch)        pace <= pace - PCOST_W + PNUM_W;
-                else if (!pace_ok) pace <= pace + PNUM_W;
-            end
+            pace <= pace_n;
+            rdy_r <= rdy_n;
             rr_v <= rch_v; rr_f <= rch_f;
             ra_ok  <= rr_v && (rr_crc_calc == rr_f[31:0]);
             ra_bad <= rr_v && (rr_crc_calc != rr_f[31:0]);
             ra_nak <= rr_f[RFW-1];
             ra_ack <= rr_f[RFW-2 -: SEQW];
             ra_fr  <= rr_f[32 +: CW];
-            if (accept) nxt <= nxt + 1'b1;
+            nxt <= nxt_n;
             una <= una_n;
-            occ <= accept ? occ_a + 1'b1 : occ_a;
-            if (rewind)        snd <= una_n;
-            else if (ack_skip) snd <= ra_ack;                       // an ACK overtook a rewound pointer
-            else if (launch)   snd <= snd + 1'b1;
-`ifdef OT_DSROM_LINK_MUT_FREECREDIT
-            credits <= credits;
-`else
-            credits <= credits - {{(CW-1){1'b0}}, accept} + (ra_ok ? d_fr : {CW{1'b0}});
-`endif
+            occ <= occ_n;
+            snd <= snd_n;                     // rewind > ACK overtaking a rewound pointer > launch
+            credits <= credits_n;
             if (ra_ok) fr_seen <= ra_fr;
             if (occ == 0 || progress || rewind) timer <= 0;
             else if (timer != ATO_W) timer <= timer + 1'b1;
@@ -377,9 +391,12 @@ module ot_dsrom_link_cl #(
             cm   <= cm + {{(CW-1){1'b0}}, wq_v} - {{(CW-1){1'b0}}, r_issue};
             if (r_issue) begin head <= head + 1'b1; freed <= freed + 1'b1; end
             r_v1 <= r_issue; r_v2 <= r_v1;
-            if (r_v2) begin sk_d[sk_tl] <= fq; sk_tl <= sk_tl + 1'b1; end
+            if (r_v2 && !fq_byp) begin sk_d[sk_tl] <= fq; sk_tl <= sk_tl + 1'b1; end
             if (sk_pop) sk_hd <= sk_hd + 1'b1;
-            sk_cnt <= sk_cnt + {2'b0, r_v2} - {2'b0, sk_pop};
+            sk_cnt <= sk_cnt + {2'b0, r_v2 && !fq_byp} - {2'b0, sk_pop};
+            if (sk_pop)      begin od <= sk_d[sk_hd]; ov <= 1'b1; end
+            else if (fq_byp) begin od <= fq;          ov <= 1'b1; end
+            else if (o_take) ov <= 1'b0;
 
             // ---------------- reverse frame ----------------
             rg_v <= rg_need;
