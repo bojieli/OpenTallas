@@ -8357,3 +8357,36 @@ def dsrom_s81_native_port_hc_pair():
             exact_component_measured=False, SS_FF_closed=False,
             headline_unchanged=True,
             next_owner_action='Maxwell map native-port calendar onto real critical-chain exposure; Einstein review same-lane bank/packet binding; no RTL/build authorized by this model.'))
+
+
+def hbm_stream_aq_head_ready_cut(*, pcs=128, queue_depth=4):
+    """Exact next-head readiness cut for mandatory AQ service closure.
+
+    Register next_nonempty AND readiness(next_head, next_bank_state), using
+    both existing next-head alternatives. This adds no command or ACK edge.
+    Conservative logic inventory precedes synthesis sharing; loaded timing
+    and clock/reset/buffer/route cost require the connected route.
+    """
+    if pcs < 1 or queue_depth < 2 or queue_depth & (queue_depth-1):
+        raise ValueError('positive PC count and retained power-of-two queue required')
+    return dict(default_enabled=False, MACs_per_cycle=0, pcs=pcs,
+                queue_depth=queue_depth, added_state_bits_per_pc=1,
+                total_added_state_bits=pcs, FF_cell_area_floor_um2=pcs*DFF_UM2,
+                inherited_hold_cut_bits_per_pc=32,
+                mask_AND_equivalents_per_pc=64, OR2_equivalents_per_pc=62,
+                late_mux_bits_per_pc=1, nonempty_gate_bits_per_pc=1,
+                next_readiness_extra_sinks_per_bank_max=2,
+                next_head_onehot_extra_sinks_per_bit_max=1,
+                head_ready_source_consumers=2,
+                existing_wr_ok_fanout_retained=True,
+                output_bytes_per_cycle_max_per_pc=32,
+                extra_memory_ports=0, added_boundary_bits=0,
+                added_external_tracks=0, added_row_command_cycles=0,
+                added_column_command_cycles=0, added_ACK_cycles=0,
+                composed_single_user_token_delta_cycles=0,
+                added_memory_bytes_per_cycle=0,
+                price_excludes_measured_credit='logic sharing, clock/reset buffers, local wires and loaded delay unknown until route',
+                area_fit='one added FF/PC in existing service slot; mapped fit unqualified',
+                invariant='q == wq_ne && OR(hb_oh & rdyr_q) after every edge for AQ',
+                period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                SSFF_closed=False, adopted=False)
