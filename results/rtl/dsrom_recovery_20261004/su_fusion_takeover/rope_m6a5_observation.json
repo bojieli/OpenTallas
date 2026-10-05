@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.su-fusion.observation.v1",
+ "observed_utc": "2026-10-05T23:16:54.147534+00:00",
+ "route": "rope_m6a5",
+ "physical_record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/collected/swiglu-rope_m6a5-physical.json",
+ "source_pin_matches": {
+  "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": true,
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv": true,
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv": true,
+  "rtl/hdc/ot_hdc_delay.sv": true,
+  "rtl/hdc/ot_hdc_fpu.sv": true,
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": true,
+  "rtl/hdc/ot_hdc_sfu.sv": true,
+  "rtl/hdc/ot_hdc_fastfp.sv": true,
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": true,
+  "rtl/hdc/ot_hdc_fp32_f12.sv": true,
+  "rtl/hdc/ot_hdc_prefix.sv": true
+ },
+ "driver_verdict": "error: observation timeout after 21600s",
+ "engineering_verdict": "INCOMPLETE_ROUTE_STILL_RUNNING",
+ "underlying_route": {
+  "host": "ot-epyc1tb",
+  "openroad_pid": 2604449,
+  "run_command_pid": 2604448,
+  "stage": "5_1_grt: setup/hold repair",
+  "latest_log_write_epoch": 1791242097.7912633,
+  "final_odb_exists": false
+ },
+ "action": "Preserve progressing source/container/objects. Continue observing final ODB and source-bound SS60/FF25; no restart, new route, timing rejection or adoption.",
+ "remaining": "Setup warning and 2531 initial hold endpoints appear in live GRT repair, not final all-violator classes. Classify final SS/FF only after actual route terminal."
+}
