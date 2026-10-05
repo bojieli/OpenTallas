@@ -103,5 +103,23 @@
     "sequential_area_um2": 25374.04056,
     "peak_MiB": 2178.015625,
     "elapsed_s": 721.51
+  },
+  "decode_split": {
+    "source": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "default": 0,
+    "exact_pass": true,
+    "gold4_cycles": 62878,
+    "forced_s1_cycles": 62878,
+    "busy_me": 61845,
+    "added_five_chain_cycles": 25,
+    "accepted_reads": 32512,
+    "released_reads": 32512,
+    "masked_writes": 32352,
+    "corrected_errors": 1,
+    "UE_and_identity_rejected": true,
+    "warm_mask_reset_debt_preserved": true,
+    "model": "results/uarch/dsrom_fh_capture_20261005/decode_split_before_rtl.json",
+    "physical_closed": false,
+    "adopted": false
   }
 }
