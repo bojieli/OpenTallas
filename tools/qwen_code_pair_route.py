@@ -44,7 +44,10 @@ def main():
             expr = expr.strip()
             connections[pin] = ([signal(x) for x in expr[1:-1].split(',')][::-1]
                                 if expr.startswith('{') else [signal(expr)])
-        outputs = {'rd_out'} if kind.startswith('ot_sram_') else {'QN'} if kind.startswith('DFF') else {'Y'}
+        outputs = ({'rd_out'} if kind.startswith('ot_sram_') else
+                   {'QN'} if kind.startswith('DFF') else
+                   {'H'} if kind.startswith('TIEHI') else
+                   {'L'} if kind.startswith('TIELO') else {'Y'})
         cells[name.lstrip('\\')] = dict(type=kind, connections=connections,
             port_directions={p: 'output' if p in outputs else 'input' for p in connections})
     for i, (dest, origin) in enumerate(re.findall(r'^\s*assign\s+(\S+)\s*=\s*(.*?);', v, re.M)):

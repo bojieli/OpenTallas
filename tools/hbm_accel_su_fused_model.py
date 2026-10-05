@@ -78,9 +78,10 @@ def model():
 def command_bridge_model():
     """Price the missing scalar producer/held command, before adding hardware.
 
-    Existing VM has four N1024 read planes. The proposal reserves one plane's
-    first 20 word lanes for config, and reuses it after capture. No extra port
-    or payload CDC is assumed; actual parent arbiter is not yet identified.
+    The native bench ABI requires four N1024 read planes. That is not an
+    instantiated HBM memory provider. Scalar capture proposes reusing the
+    first 20 lanes only if a provider can actually guarantee those ports.
+    The mux estimate below does not price or qualify that missing provider.
     """
     records=[]
     for kind, words in (("hc_norm",4),("q_norm",0),("kv_norm",0),
@@ -89,6 +90,7 @@ def command_bridge_model():
         records.append(dict(kind=kind,producer_VM_words=words,
             producer_VM_bytes=words*4,producer_read_bits_per_edge=words*32,
             producer_max_read_planes=1 if words else 0,new_memory_ports=0,
+            new_memory_ports_scope='scalar capture reuse proposal only; provider unresolved',
             read_request_edges=1 if words else 0,read_response_capture_edges=1 if words else 0,
             command_handoff_edges_ESTIMATE=1,
             added_edges_after_operand_availability_ESTIMATE=(2 if words else 0)+1,
@@ -111,8 +113,47 @@ def command_bridge_model():
         actual_parent_issuer_arbiter_source=None,
         existing_execution_hook='dshbm_baseline_measure.cmd_su_run -> rtl_hdc_v41x_vec_campaign.run_program',
         existing_hook_scope='whole-program native bench plus CPU reference; not hardware issuer',
-        concrete_blocker='shared VM issuer/arbiter lease transfer between VEC and fused path not identified',
+        concrete_blocker='no selected finite HBM VM provider guarantees native/fused ports and actual write publication',
+        enclosing_provider=provider_requirements(),
         no_new_hardware_written=True,rows=records,estimates_not_results=True)
+
+
+def provider_requirements():
+    """Actual N1024 native ABI maxima, not simultaneous traffic or SRAM cost.
+
+    A 256-bit service's payload-only beat counts are lower bounds. They do
+    not include addresses, bank conflicts, wire/CDC, credits or arbitration,
+    and cannot satisfy the unstallable next-edge ABI without priced storage.
+    """
+    ports=[]
+    for name, words, source_bits in (
+            ('native_indirection_read',1024,0),
+            ('native_operand_read',4096,2),
+            ('native_VM_write',1024,0),
+            ('native_KV_write',1024,0),
+            ('native_reduction_VM_write',128,0)):
+        ports.append(dict(name=name,max_words_per_edge=words,
+            payload_bits_per_edge=words*32,payload_bytes_per_edge=words*4,
+            address_bits_per_edge=words*24,enable_bits_per_edge=words,
+            source_select_bits_per_edge=words*source_bits,
+            payload_only_256bit_service_beats_lower_bound=(words*32+255)//256,
+            maxima_not_assumed_simultaneous=True))
+    storage=dict(VM=4*(1<<18),KV=4*(1<<19),CR=8*(1<<15),WR=2*(1<<16))
+    return dict(native_source='rtl/hdc/v41x/ot_hdc_v41x_vec.sv',
+        bench_source='rtl/test/tb_hdc_v41x_vec.sv',
+        enclosing_owner='Euclid',selected_provider_source=None,
+        provider_selection_owner='Claude',ports=ports,
+        bench_logical_storage_bytes=storage,
+        bench_logical_storage_total_bytes=sum(storage.values()),
+        storage_scope='logical bench capacities; not an approved macro topology or new area',
+        read_contract='fixed next-edge synchronous reply; no response-valid or request-ready',
+        write_contract='unstallable writes; native cr_dseq/cr_rseq are pipeline events, not physical memory ACK',
+        additional_parent_producer_ports='external X producer/capture must be bound and priced by enclosing owner',
+        actual_provider_bank_topology=None,bank_conflict_or_buffer_cost=None,
+        provider_area_mm2=None,provider_clock_cost=None,corridor_capacity=None,
+        provider_min_max_timing=None,provider_CDC_credit_latency_us=None,
+        actual_provider_publication_hook=None,composed_latency_delta_us=None,
+        RTL_build_admitted=False,physical_qualified=False,adopted=False)
 
 
 if __name__ == "__main__":
