@@ -1836,7 +1836,7 @@ def plan_record_qwen(m):
                        block_words='mesochronous FIFO at each port slice (forwarded tile clock -> spine clock), '
                                    'charged 2 cycles on the tree return',
                        status='gray-coded counts through the vehicle\'s two-flop synchronisers (inside its cycles)'),
-        bus_classes=dict(cls), manhattan_paths=mp, power=die_power(m), pdn=pdn_plan(m), notes=m['notes'],
+        bus_classes=dict(cls), manhattan_paths=mp, power=die_power(m), pdn=pdn_plan(m, Q_COV), notes=m['notes'],
         variant={k: v for k, v in m['variant'].items()})
 
 
@@ -1861,6 +1861,9 @@ def q_check(m):
 
 
 DENS.update(tile=1.05, head=0.6)
+# Qwen die PG: the DS r2 classes, stream-service straps raised to 0.25 (ir1 at 0.1639: the 10 N-edge windows over the
+# PHY signal-bump rows + service failed, worst 37.6 mV; the 0.25 screen passed them at 23.54 mV)
+Q_COV = dict(COV, svc=0.25)
 
 
 def write_sdc_qwen(path):
@@ -1902,7 +1905,7 @@ def main(argv=None):
         m = build_qwen(var)
     else:
         m = build()
-    cov = dict(COV)
+    cov = dict(Q_COV if a.die == 'qwen' else COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
         cov[k_] = float(v)
