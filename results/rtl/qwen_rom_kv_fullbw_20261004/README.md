@@ -112,7 +112,7 @@ registered, IO paths false-pathed so the screen is the element's register-to-reg
 ## DSpark verdict at 8K on STREAM4: AR_MODE (dspark_verdict.json)
 
 Verify levers, measured exact at P8187: MERGE_SU (one stream op for the positions where there is no DYN term) cuts
-the np4 verify layer 17,197 -> 15,971 (-7.1%); np3 13,104. Shared K/V passes give no gain (the KV op's time is
+the np4 verify layer 17,197 -> 15,971 (-7.1%); np3 13,104; np2 9,942. Shared K/V passes give no gain (the KV op's time is
 query slots x K steps; each position already fills the 8 slots; the attention time is the 1,023-cycle-per-position
 softmax on the 64-lane stream unit). With the measured ingest/Markov (75,000) and third-party tau (1.84/2.54/3.14/3.66
 for 1-4 drafts), the best DSpark configuration reaches 0.742x AR (np4, MERGE_SU); break-even verify layer 10,069
