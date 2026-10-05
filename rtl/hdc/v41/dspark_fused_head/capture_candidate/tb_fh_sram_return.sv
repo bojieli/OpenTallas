@@ -53,9 +53,9 @@ module tb_fh_sram_return;
             for(integer q=0;q<4;q=q+1) rd_addr[24*q+:24]=4*9+q;
             rd_en=4'hf;@(negedge clk);rd_en=0;
             @(negedge clk);#1;
-            if(kind==1) dut.g_bank[0].raw_word_r=dut.g_bank[0].raw_word_r^55'b1;
-            if(kind==2) dut.g_bank[0].raw_word_r=dut.g_bank[0].raw_word_r^55'b11;
-            if(kind==3) dut.g_bank[0].raw_word_r=dut.g_bank[1].raw_word_r;
+            if(kind==1) dut.g_bank[0].u_lane.raw_word_r=dut.g_bank[0].u_lane.raw_word_r^55'b1;
+            if(kind==2) dut.g_bank[0].u_lane.raw_word_r=dut.g_bank[0].u_lane.raw_word_r^55'b11;
+            if(kind==3) dut.g_bank[0].u_lane.raw_word_r=dut.g_bank[1].u_lane.raw_word_r;
             @(negedge clk);#1;
             if(kind==1) begin
                 if(fault||!corrected[0]||!rd_valid[0]||rd_data[31:0]!==value(9,0)) $fatal(1,"single-bit correction");
