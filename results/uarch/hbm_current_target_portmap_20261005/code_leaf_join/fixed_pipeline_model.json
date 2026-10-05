@@ -1,0 +1,58 @@
+{
+  "selection": "FIXED_LATENCY_IN_ORDER_READ_PIPELINE",
+  "default_enabled": false,
+  "fulltile_adopted": false,
+  "read_issue_interval_core_edges": 1,
+  "leaf_read_response_core_edges": 2,
+  "leaf_old_read": true,
+  "original_read_core_edges": 1,
+  "added_edges_per_operation": 1,
+  "MEM_EXTRA": [
+    0,
+    1
+  ],
+  "total_memory_tag_delay": "original MEM_EXTRA + 1; preserve original arithmetic stages/reduction order",
+  "paired_read_bytes_per_core_edge": 64,
+  "read_boundary_bits_per_core_edge": 512,
+  "read_reserved_columns": 2,
+  "read_capacity": "leaf has 2 protected 288-bit column captures; fixed pipeline valid/bank tags exactly2 stages; no outstanding queue or unknown capacity",
+  "fault_policy": "GO requires actual installed span published retained. Any issued read not actually accepted or scheduled response missing faults/holds retirement; no fake ready, no dropped read. Caller cannot pause response consumption while requests in flight. Drain fixed readpipe before mode/operation turnover.",
+  "span_dependency": "actual virtual24 originalsegtable+held installed descriptor, no resident-sidx0 physical inference or virtualbank truncation",
+  "bank_tag_pipeline": {
+    "bank_payload_bits": 12,
+    "valid_payload_bits": 4,
+    "sticky_bits": 1,
+    "protected_control_bits": 72,
+    "control_encode_decode64_instances": 2
+  },
+  "extra_tile_state": {
+    "X_delay_bits": 128,
+    "KV_LOCAL0_delay_bits": 2048,
+    "KV_LOCAL1_delay_bits": 512,
+    "code_selection_bits": 5,
+    "code_valid_bits": 1,
+    "matvec_tag_delta": "actual u_mt TW+G+3, u_mtt NW, u_mv1 extra stage from original matvec source; counted from elaborated tag width before wholefit",
+    "FF_body_per_bit_um2": 0.2916
+  },
+  "read_mux": {
+    "output_bits": 2660,
+    "payload_steering_bits": 512,
+    "virtual_bank_compare_bits": 6,
+    "positive_logic_gate_um2_proxy": 4,
+    "steering_area_screen_um2": 2048,
+    "control_comparison_screen_um2": 24,
+    "codec_route_loaded_SSFF": false
+  },
+  "MEM_EXTRA_policy": "PIPE adapter always0; successor tile owns original optional extra capture exactly once. CODEselector delayed2, MEM_EXTRA capture E+2; X D(MEM_EXTRA+1); KV actual C+1 input D(MEM_EXTRA+1); matvec MEM_EXTRA+1 all tags/round/gm/first/wsrc/valid.",
+  "clock": "same actual core clock for leaf+tile pipeline, no private clocks or active clockskip. GO admission fullselectedspan residency/publication; any external wholeengine stall requires complete pipeline drain or holding ALL memory/tag participants, not assumed.",
+  "single_user_price": {
+    "resident_selected_stage_added_tail_edges": 1,
+    "II_changed": false,
+    "II_baseline": 1,
+    "II_selected": 1,
+    "extra_tail_ns_at_1p2GHz": 0.8333333333333334,
+    "full_token_delta_unknown": true,
+    "whole_window_staging": "original HBM transfer bytes already charged; requiring publication before GO can expose additional wait, measured before whole adoption"
+  },
+  "rejected_alternative": "One outstanding elastic adapter II3/4 unsuitable for streaming ME; retained component source only, not adopted fulltile"
+}
