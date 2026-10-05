@@ -1,0 +1,4 @@
+  File "/home/ubuntu/peirce-s81-head-actual-xn-capture-0613be50f-r1/build.py", line 14
+    (r/'terminal.json').write_text(json.dumps(v,indent=2)+'
+                                                          ^
+SyntaxError: unterminated string literal (detected at line 14)

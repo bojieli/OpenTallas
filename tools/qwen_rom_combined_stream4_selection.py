@@ -25,7 +25,7 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
             'actual successful STREAM4 link required')
     require(link['top']==model['top'] and link.get('dspark_enabled',False)==dspark,
             'actual runtime/model DSpark selection differs')
-    require(link['generated_runtime_sha256']==hashlib.sha256(runtime.emit(root,dspark=dspark).encode()).hexdigest(),
+    require(link['generated_runtime_sha256']==hashlib.sha256(runtime.emit(root,dspark=dspark,full_decoder=link.get("full_decoder",False)).encode()).hexdigest(),
             'actual initialized STREAM4 runtime differs')
     params=link['resolved_parameters']
     if dspark:
@@ -73,7 +73,7 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
     exe=link_dir/'qwen_rom_combined';require(sha(exe)==link['executable_sha256'],'linked binary changed')
     book=dict(geometry=dict(tp=4,groups=6144,sw=64,nw=18),real_mem=True,near_hbm_enabled=True,
               stream4_enabled=True,dspark_enabled=dspark,top_source=top_source,runtime_abi=runtime.ABI,
-              maximum_stages=2 if dspark else 1,maximum_position=8191,
+              full_decoder=link.get("full_decoder",False),maximum_stages=37 if link.get("full_decoder",False) else (2 if dspark else 1),maximum_position=8191,
               source_sha256=pins,external_generated_source_sha256=external,clocks=clocks,
               stream4_core_fs=params['hbm']['CORE_FS'],stream4_controller_fs=params['hbm']['CTL_FS'],
               executable=str(exe.resolve()),executable_sha256=link['executable_sha256'],

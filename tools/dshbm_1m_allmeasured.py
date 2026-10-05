@@ -220,9 +220,15 @@ class Local:
 
 class Hbm:
     """hbm_streams.json (tools/dshbm_1m_hbm.py: ot_hbm_accel_expert_stream_pc on one HBM3E stack, 32 PCs, corrected
-    REFpb, 64 refresh phases, data-checked) -> on-path load times (worst phase), as BUILT (no notice); the notice /
-    prefetch variants are reported as sensitivities."""
-    MODE = "as_built"
+    REFpb, 64 refresh phases, data-checked) -> on-path load times (worst phase).
+
+    DEFAULT (owner >= 90 % bandwidth rule, 2026-10-04): the index-key scans and the window rows are issued with the
+    stream PC's static-schedule NOTICE (the program is static, so the next scan / window descriptor and its notice
+    are posted ahead of the query; measured 1.0 of peak steady at the worst of 64 refresh phases, 0 violations on
+    the per-PC DRAM checker).  Token-dependent loads (CKV gather, embedding row) stay as built.  MODE = "as_built"
+    gives the earlier everything-as-built walk (a sensitivity); MODE = "notice" puts notice on every load."""
+    MODE = "default"
+    NOTICE_KINDS = ("window_rows", "index_keys")
 
     def __init__(self, rec):
         self.rec = rec
@@ -238,6 +244,8 @@ class Hbm:
         if self.rec is None:
             return None
         m = self.MODE
+        if m == "default":
+            m = "notice" if name.startswith(self.NOTICE_KINDS) else "as_built"
         if name == "window_rows":
             return self._s(f"window_{m}")
         if name.startswith("index_keys"):
@@ -569,8 +577,14 @@ def main():
     Hbm.MODE = "notice"
     ts, _ = walk(prog, sm, su1, coll, local, hbm, use=use)
     sens["hbm_loads_with_notice"] = dict(AR_us=round(ts, 3), AR_tok_s=round(1e6 / ts, 1),
-                                         note="stream PC notice mode on the index-key / window / CKV / embedding loads")
+                                         note="stream PC notice mode on every load (index keys, window, CKV gather, "
+                                              "embedding); the headline already has it on the index keys and window")
     Hbm.MODE = "as_built"
+    ts, _ = walk(prog, sm, su1, coll, local, hbm, use=use)
+    sens["hbm_loads_as_built_no_notice"] = dict(AR_us=round(ts, 3), AR_tok_s=round(1e6 / ts, 1),
+                                                note="index keys and window WITHOUT notice (scans 0.617 / 0.506, window "
+                                                     "0.198 of peak at the worst refresh phase): the superseded default")
+    Hbm.MODE = "default"
     Coll.HUB = "matched"
     ts, _ = walk(prog, sm, su1, coll, local, hbm, use=use)
     sens["collective_hub_port_matched"] = dict(AR_us=round(ts, 3), AR_tok_s=round(1e6 / ts, 1),
