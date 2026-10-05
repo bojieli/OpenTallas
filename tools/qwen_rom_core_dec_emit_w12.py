@@ -173,10 +173,10 @@ def emit_dec(text: str) -> str:
     // stage 4 (E4): rounds (0 for an invalid split)
     reg [NW-1:0]    la_rt [0:LA_NO*16-1];
     wire [15:0]  la_inv;
-    wire [NW-1:0] la_po_n [0:LA_NO-1];
+    wire [LA_NO*NW-1:0] la_po_n;   // packed: Yosys 0.68 asserts on an unpacked array bound to output ports
     genvar lap;
     generate for (lap = 0; lap < LA_NO; lap = lap + 1) begin : g_la_po
-        ot_hdc_ksadd_k #(.W(NW)) u_po (.a(pos_r), .b(lap), .cin(1'b0), .s(la_po_n[lap]), .cout());
+        ot_hdc_ksadd_k #(.W(NW)) u_po (.a(pos_r), .b(lap), .cin(1'b0), .s(la_po_n[lap*NW +: NW]), .cout());
     end endgenerate
     genvar las;
     generate for (las = 0; las < 16; las = las + 1) begin : g_la_inv
@@ -186,7 +186,7 @@ def emit_dec(text: str) -> str:
     always @(posedge clk) if (DEC_LA != 0) begin
         la_tokh <= tok_r * HID;
         for (lo = 0; lo < LA_NO; lo = lo + 1) begin
-            la_po[lo] <= la_po_n[lo];
+            la_po[lo] <= la_po_n[lo*NW +: NW];
             for (ls = 0; ls < 16; ls = ls + 1)
                 la_sh[lo*16+ls] <= la_inv[ls] ? {{LA_SW{{1'b0}}}}
                                               : {{2'b00, (la_po[lo] >> (LA_WT + LA_GT - ls))}} + LA_ODD;
