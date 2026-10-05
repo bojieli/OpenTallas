@@ -198,6 +198,7 @@ module tb_qwen_o4_g4_rommac;
         repeat (40) @(negedge clk);
         if (mism == 0 && results > 0 && ops == 4) $display("PASS rommac equivalence: %0d ops, %0d result cycles, %0d cycles", ops, results, cyc);
         else $display("FAIL rommac equivalence: %0d mismatching cycles, %0d results", mism, results);
+        if (!(mism == 0 && results > 0 && ops == 4)) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

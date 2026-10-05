@@ -1,0 +1,92 @@
+{
+  "schema": "dsrom-i63-same-accepted-bytes-r1",
+  "scope": "Connected controlled-source rank0 QK -> native SU I61/I62 -> PV; SIM_ONLY endpoint/native adapter/VM ACK; no full token or hardware timing",
+  "source_commit": "738cb3095",
+  "capture_root": "/srv/opentallas-scratch/jobs/arch-qk-su-pv-minimum-20261005",
+  "python": "3.14.4",
+  "numpy": "2.3.5",
+  "tool_sha256": "d6d072af319a1c62c75cc0868efc34470caf0992e0ee8a337f8a7dd33fab199e",
+  "capture_pins": {
+    "terminal.json": "e8d672d0a87de50e85704ac2f51e44c7ab5ba083fdd2f4e22fad71f508590887",
+    "frozen_inputs.json": "3e2bd51084f058155d99680effa260026ad91496371b839367d5c2efaf820d06",
+    "captured/events.tsv": "150a8d9dfd1b561e51bc401467ddc563fc4ceb061d7fd9c70cc3c26ff6cf8cda",
+    "captured/PV_accepted_p.u32": "e54de59cb6671deed0eebbb304c54a08f24aa3b773b2b7ca9cfa039a7f7a66b4",
+    "captured/PV_accepted_kv.u32": "2061b434f96db7ebab3bbf3bf9ffca388bd6ab6de8dda1fe3d226896d5b596b6",
+    "captured/PV_old_pv.u32": "6527439c824e2f9370fc67f94ad8dbf3131f240b14dd068032cef83cb6269e94",
+    "captured/PV.u32": "8d828db3f7e6bc8bff395e1561b0236dcf7d1f47fc29eee6d902233d0ba08690",
+    "source/capture.cpp": "ad167166a393eb237782bf987d443bda2738ca05e64be089303a0f845ae29d88",
+    "headers/tools/runtime/dsrom/s81_sim_only_attention_endpoint.hpp": "4741300afb2199eaf261add2badae02c397ef28f5f76017ad196662e2fcb8f1f",
+    "headers/tools/runtime/dsrom/s81_minimum_attention_cut.hpp": "0d84be8dd8e2a31ab90b6f444b9a94cb87caceb06030f8561746eab3fc1b4185",
+    "source/adapter_config.hpp": "2cfa45b433facfa3612d636a583b9d4b1c7887d97e67af2c4ff3980f9a71a4e2"
+  },
+  "geometry": {
+    "heads": 16,
+    "dimensions": 512,
+    "rows": 640,
+    "row_bits": 4240,
+    "products": 5242880,
+    "chunk_size": 8,
+    "chunks": 80,
+    "padded_chunks": 128
+  },
+  "fp4_rows_by_group": [
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512
+  ],
+  "checks": {
+    "integer_vs_golden": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "integer_vs_old_pv": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "golden_vs_old_pv": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "old_pv_vs_adapter": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "golden_vs_adapter": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "dequant_integer_vs_format_tables": {
+      "compared": 327680,
+      "mismatches": 0,
+      "first": null
+    }
+  },
+  "stage_checks": {
+    "product_mismatches": 0,
+    "chunk8_mismatches": 0,
+    "tree_mismatches": 0,
+    "integer_faults": 0
+  },
+  "original_full_run_qualification": false,
+  "hardware_timing_qualification": false,
+  "elapsed_seconds": 1.4670569940026326,
+  "verdict": "PASS"
+}

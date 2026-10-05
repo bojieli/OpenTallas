@@ -1,0 +1,63 @@
+Content-based terminal audit after Kepler06769a47c, 2026-10-05.
+
+Kepler34 current lockstep/equivalence fixes are reused, not edited/replayed.
+12 additional current benches now fail nonzero on their existing unexpected
+mismatch conditions. Engine RTL, stimulus, rounding and expected fault/refusal
+conditions are unchanged. Printed PASS/FAIL summaries are retained.
+
+The content scan examined 92 rtl/test SV/C++ files containing equivalence or
+lockstep language, rather than relying only on filenames. Pure performance or
+geometry reporters without an equivalence verdict are outside this change.
+C++-owned nearhbm and ME-spine miters already return their mismatch status;
+clock-only HDC harnesses consume the SV fatal terminal. Historical seed8_trace
+is diagnostic evidence of an intentional failed source and is untouched.
+
+Additional bench                                      actual failure predicate
+W11 short softplus/sqrt/exp/Horner                      nerr; herr/hunj; xerr/x0err/aerr
+V41X vector SFU                                        de/ee/re/se (rsq_fault_timing excluded)
+Qwen slab port group                                  errors
+Qwen O4 ROM/MAC                                       mism or absent results/four-op coverage
+BF16 add pipe                                         bad
+A3 dependence-table depth                             errors
+A3 resolver case0                                     mismatches/golden_mismatches
+Dispatcher throughput functional subcheck             mism/tmism
+ROM/HBM kernel                                        mism; existing setup/timeout FAIL
+Qwen land merge                                       bad
+Qwen MP commit                                        bad (intentional bad_lanes excluded)
+HBM HA3 merge                                         bad (matching faults remain expected)
+
+Return-code-only PASS review:
+* tools/w11_softplus_short.py: pass_ requires complete coverage/zero err,
+  and Horner errors/unjustified refusals, mul4/mul_x2/addpos2 errors=0.
+  Recorded results/rtl/w11_softplus_short.json remains immutable.
+* tools/rtl_hdc_v41x_vec_campaign.py::sfu_equivalence: pass_ tests all four
+  error counts. Expected rsqrt fault timing is reported separately.
+* tools/rtl_qwen_o4_g4_rommac.py: last rommac summary must start PASS.
+* tools/qwen_slab_capture_gate.sh: rejects FAIL text and requires RESET EPOCH
+  PASS, in addition to rc. Ampere live source copies are untouched.
+* tools/run_a3_dependence_table_depth_campaign.py: parses errors and PASS.
+* tools/rtl_dispatch_tree_campaign.py: functional_pass requires PASS summary;
+  actual work conservation is also checked independently.
+* tools/rtl_refill_stall_campaign.py and rtl_gemm_operand_reuse_campaign.py:
+  parse PASS/FAIL status, not just process success.
+* results/rtl/hbm_accel_ha3_20261004/eqv/merge_eqv.txt explicitly records
+  3000 iterations/mismatches0; no exit-code-only equivalence claim there.
+* results/rtl/qwen_rom_kv_fullbw_20261004/standalone/land_merge_lockstep.log
+  has four mismatches0 positives and one intentional mismatches257907 mutant;
+  none is regraded. MP physical closure is not an equivalence PASS record.
+* BF16 pipe_5stage.json is a physical timing record, not an exit-code-only
+  simulation PASS. No retained resolver-case0 rc-only PASS was located.
+
+Identified affected exit-code-only PASS records: NONE in the reviewed evidence.
+Numerical/historical benchmark reruns launched: NONE. This is not a blanket
+certification of unreviewed records, nor a new numerical/timing qualification.
+
+Validation: one EPYC1 source-derived terminal fixture, source db5b22b3f.
+Exact 12 new terminal predicates: success rc0 + 12 mismatches rc1, all correct.
+Small predicate fixture only, no native engine or arithmetic campaign. It does
+not claim full-bench elaboration or validate every possible error-counter value.
+Job arendt-bench-terminal-policy-r1, ot-epyc1tb supervisor547219, terminal0.
+Remote immutable source/logs retained:
+/srv/opentallas-scratch/jobs/arendt-bench-terminal-policy-r1/{src,work}
+Actual source_guards.json names each tested predicate and source SHA256.
+No clock constraints, architecture, DS FIELD SPINE/PQ or S81 plumbing changed.
