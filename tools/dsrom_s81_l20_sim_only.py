@@ -149,6 +149,9 @@ def capture_h_chain_inputs(ranks, nodes, execution, output, result, *, pause=Tru
 
 
 def main():
+    if M.V.ARITH != 'chunk8' or M.V.FUSE:
+        raise ValueError('S81 caller requires resolved ARITH=chunk8 and FUSE empty; '
+                         f'got ARITH={M.V.ARITH!r}, FUSE={sorted(M.V.FUSE)!r}')
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--head-chain',action='store_true',help='carry produced L20 H/PF directly into released head')
@@ -224,6 +227,7 @@ def main():
             p.error(str(exc))
     a.output.mkdir(exist_ok=False)
     result = dict(scope='S81.L20.position1048575', functional='SIM_ONLY',
+                  arithmetic_mode=dict(arith=M.V.ARITH, fuse=sorted(M.V.FUSE)),
                   headline_timing=False, completed=False, exact=None,
                   source_stage=37, simulation_ticks=0, native_cycles=None)
     if native_pv is not None:

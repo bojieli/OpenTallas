@@ -1074,11 +1074,14 @@
     "results/rtl/dsrom_recovery_20261004/composition.json": "6cef075ee8d265690f609ad727bcb13349f82572005abe1a0ab612ab29623306",
     "results/rtl/dsrom_recovery_20261004/su_chains/takeover/transport_result.json": "eeb70af58820e0e399b0c15170798ce1f1b4ea5d2abc85d3f924c2261fc01c6d",
     "results/rtl/dsrom_recovery_20261004/su_chains/takeover/transport_cached_manifest.json": "be3d158443fdb9c75a94f9e56588b1d0594e09a7ffeea80f672ddf238a96adb7",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/hcpost_terminal/run_ng256_w33_23_m5a4_h.json": "d8a06ce5b52dea96a01acf1236f27e3ee7a5236d3ea9afc59c5374767f26d8f3",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/hcpost_terminal/cases.json": "458287baff9c66fb3ef24d96c41918b742c69941a6c27ae0b9256377f06730fc",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/hcpost_recovery.json": "1ed459c49407f3c4f920a37c78b69685b063f895396153fee30ea2a943b12951",
     "results/rtl/dsrom_recovery_20261004/su_chains/takeover/swiglu/run_rtl_W64_NB32_L0.swiglu+L0.shared_swiglu+L3.swiglu+L3.shared_swiglu+L20.swiglu+L20.shared_swiglu+L24.swiglu+L24.shared_swiglu+random.swiglu.json": "658469bd61e6e4d4935aaabc1a7869fb9d2bb6d8413db3c97265aefb459e3a8d",
     "results/rtl/dsrom_recovery_20261004/su_chains/takeover/swiglu/run_dpi_beh_W1024_NB32_L0.swiglu+L0.shared_swiglu+L3.swiglu+L3.shared_swiglu+L20.swiglu+L20.shared_swiglu+L24.swiglu+L24.shared_swiglu+random.swiglu.json": "e8145f17eb169cb306062c16a37b0bf2ca738860be9eda9c8f984101fb286b4c",
     "results/rtl/dsrom_recovery_20261004/su_chains/takeover/swiglu/cases.json": "988f921371c9301d2e3d31e4ef446d106a901e8a9cd6096ba5b246dd73ec868d"
   },
-  "tool_sha256": "e83f58a9410e79484bdbb94a01a19e51498314d3608f8183e64ca07c0de6e9f0",
+  "tool_sha256": "a6d02ecb00a5c9a990e90748f97fc3d14fd37c9bf297763b9cc5bb3dc3a6b968",
   "actual_registered_transport": {
     "chain": "L20.attn.hc_pre_norm",
     "nodes": [
@@ -1141,6 +1144,201 @@
     },
     "cdc": "not in component: use graph crossings once; no zero-CDC adoption",
     "gate": "component functional/transport PASS; credits/VM lease/area/corridor/SSFF HOLD"
+  },
+  "hcpost": {
+    "full_shape_exact": true,
+    "rows": [
+      {
+        "chain": "L20.attn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L20.ffn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L0.attn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L0.ffn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L3.attn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L3.ffn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L24.attn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L24.ffn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      }
+    ],
+    "cases": 40,
+    "verdict": "UNVALIDATED_COMPONENT_COMPARISON",
+    "cost": {
+      "NG": 256,
+      "output_lanes": 1024,
+      "input_bits_per_cycle": 40960,
+      "output_bits_per_cycle": 32768,
+      "coefficients_bits": 640,
+      "lane_multipliers": 5120,
+      "lane_adders": 4096,
+      "register_bypass_edges": 3,
+      "necessary_output_VM_waits": true,
+      "fused_sumsq_included": false,
+      "area_um2": null,
+      "routing_fit": null,
+      "timing": null,
+      "adoption": false,
+      "counts_status": "ESTIMATE sourcecounts, not physicalcost/adoption",
+      "selected_physical_verdict": "REJECT_SS",
+      "selected_SS_ps": -52.47,
+      "selected_FF_ps": 5.7,
+      "measured_lane_standard_cell_area_um2": 5435.51,
+      "replicated_lane_area_mm2_ESTIMATE": 5.56596224,
+      "hub_data_and_coefficient_register_bits_ESTIMATE": 2168064,
+      "hub_valid_register_bits_ESTIMATE": 90,
+      "full_unit_area_um2": null,
+      "hub_area_um2": null,
+      "full_unit_routed_corridor": false
+    },
+    "gate": "REJECT_SS; functional component only; no area/corridor/SSFF/composed-rate adoption"
   },
   "swiglu": {
     "rows": [

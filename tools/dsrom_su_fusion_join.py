@@ -140,7 +140,12 @@ def hcpost_join(run, metadata, baseline, pins, source_root):
                 r["last_out"] - r["first_out"] == 19, "HC-post stream/endpoints")
         c = chains[r["name"]]
         b = completion(c)
+        final_op = c["per_op"][c["nodes"][-1]["op"]]
+        result_event = final_op["last_result"]
         rows.append(dict(chain=r["name"], baseline_wired_cycles=b, baseline_component_us=b / 900,
+                         baseline_final_result_cycle=result_event,
+                         baseline_result_tail_after_write_cycles=(result_event - b) if result_event is not None else 0,
+                         result_tail_note="publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
                          candidate_registered_landing_cycles=r["cycles"], candidate_component_us=r["cycles"] / 1200,
                          conditional_component_delta_us=b / 900 - r["cycles"] / 1200,
                          golden_exact_words=r["words"], sumsq_result_included=False,

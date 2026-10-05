@@ -67,3 +67,25 @@ ESTIMATE excluding outside-lane hub storage2,168,064bits plus90validbits, routin
 and slot fit. Existing M6A5 lane closes SS+0.56/FF+4.47ps, but is a separately
 labelled source/latency configuration without selected full-shape exact evidence.
 It is not a rescue or substitute for M5A4. No new parameter/P&R run is launched.
+
+NG256 SAME-SOURCE EPYC2 recovery is terminal: all40cases (8representative+32stress),
+819200actual checkedwords, zero mismatches/faults, every case99cycles (first79/last98).
+Source64b85a818 was clean and byte-identical to the failed AGI snapshot; PID1799575
+and frontend1805547 are gone. Binarybe13059d, compiled30m06.168s; retained objects
+and original cases reused, no reduced reruns/new parameters/P&R. The unwrapped
+nohup launcher retained no exit-code file; the complete numeric JSON and all40PASS
+rows are the terminal evidence, not a fabricated shell RC. SelectedM5A4 remains
+REJECT_SS. Last-write baseline256slowcycles (0.284444us) versus99fastcycles
+(0.082500us at proposed1.2GHz) is a publication-component comparison only. The
+original final reducer result is339slowcycles,83afterpublication: required result/
+busy/lease waits must remain priced, alongside nextHCmix sumsq branch. No actual
+operational1.2GHz/full-token/composed gain claim follows from this functional run.
+
+Physical-owner handoff after terminal: NO component is admitted until Maxwell
+verifies>=1%composed gain with priced area, actual slot and finite corridor/supply.
+The smallest existing SwiGLU complete quant block is ot_dsrom_su_swiglu W32,
+LM5/LA4/ROUTED1/NIN33/NOUT23 in rtl/hdc/v41x/ot_dsrom_su_swiglu.sv,32replicas for
+W1024. Slot isUNASSIGNED. NORM has inline lane generates, no independently bindable
+physical leaf; factoring the retained-x/gain lane group/reducer/scalar boundary
+needs model pricing before any new RTL. Current S81 serial su_s/su_n do not grant
+fast-domain slots or 96/128times-wider operand faces. No new hardening is launched.
