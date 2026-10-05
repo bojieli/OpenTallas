@@ -20,6 +20,7 @@ module tb_qwen_finite_vm_adapter;
     reg [63:0] native_edges=0,raw_acks=0;
     reg [31:0] initial_x[0:4095];
     reg [1023:0] fixture_path;
+    integer negative=0;
     ot_hdc_cg u_gate(.clk(clk),.en(!rst_n||tick),.gclk(native_clk));
     always @(posedge native_clk)if(rst_n)native_edges<=native_edges+1;
     ot_qwen_finite_vm_adapter #(.ENABLE(1),.HEAD_CACHE(0),
@@ -65,6 +66,7 @@ module tb_qwen_finite_vm_adapter;
     endtask
     initial begin
         if(!$value$plusargs("FIXTURE=%s",fixture_path))$fatal(1,"mandatory actual initial fixture missing");
+        if($value$plusargs("NEGATIVE=%d",negative))begin end
         $readmemh(fixture_path,initial_x);
         if(^initial_x[0]===1'bx || ^initial_x[4095]===1'bx)$fatal(1,"incomplete initial fixture");
         repeat(3)@(negedge clk);rst_n=1;
@@ -82,14 +84,28 @@ module tb_qwen_finite_vm_adapter;
         $display("POSITIVE physical_writes=%0d checked_ACKs=%0d raw_ACKs=%0d reads=%0d held=%0d native=%0d",writes,acks,raw_acks,reads,held,native_edges);
         // A foreign echo is a deliberate negative at the response boundary,
         // never an input/ACK shortcut to get the positive path through.
-        re=1;ra[0+:24]=4160;
-        @(posedge clk);#1;
-        wait(dut.rd_valid);
-        force dut.rd_owner=227'h1;
-        @(posedge clk);#1;
-        release dut.rd_owner;
-        if(!fault || tick || lease)$fatal(1,"foreign response did not fail closed");
-        $display("PASS initial_source_install oldread_write readback hold foreign_response HEAD_CACHE_OFF");
+        if(negative==0)begin
+            re=1;ra[0+:24]=4160;
+            @(posedge clk);#1;
+            wait(dut.rd_valid);
+            force dut.rd_owner=227'h1;
+            @(posedge clk);#1;
+            release dut.rd_owner;
+            if(!fault || tick || lease)$fatal(1,"foreign response did not fail closed");
+            $display("PASS initial_source_install oldread_write readback hold foreign_response HEAD_CACHE_OFF");
+        end else if(negative==1)begin:foreign_ack
+            reg [63:0] before_native;
+            before_native=native_edges;
+            // Negative response on empty-frame fast admission must hold the
+            // SAME native edge, not merely capture fault for the next edge.
+            force dut.wr_ACK=4'b0001;
+            #1;if(tick || lease)$fatal(1,"unsolicited ACK admitted native edge before fault capture");
+            @(posedge clk);#1;
+            release dut.wr_ACK;
+            if(!fault || tick || lease || native_edges!=before_native)
+                $fatal(1,"unsolicited ACK did not hold source/fail closed");
+            $display("PASS unsolicited_ACK_same_edge_hold HEAD_CACHE_OFF");
+        end else $fatal(1,"unknown negative case");
         $finish;
     end
 endmodule
