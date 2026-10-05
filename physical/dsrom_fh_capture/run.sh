@@ -3,6 +3,7 @@
 set -euo pipefail
 if [ "$#" -ne 1 ]; then echo 'Usage: run.sh RUN_ROOT' >&2; exit 2; fi
 R=$(realpath -m "$1")
+mkdir -p "$R"
 cd "$(dirname "$0")/../.."
 python3 -c 'from pathlib import Path; assert float(Path("/proc/loadavg").read_text().split()[0]) < 128'
 uptime
