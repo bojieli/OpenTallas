@@ -26,8 +26,8 @@
       "/home/ubuntu/wt-claude-hbmsm/results/floorplan/hbm_gpu/v41_hbm_die.json"
     ],
     "parent_instance_path": "ot_ds_hbm_cluster20_integrated.g_on.g_die[d].u_w2_sink",
-    "planned_50pct_placement_um2": 48589.918818000006,
-    "planned_cell_body_um2": 23138.05658,
+    "planned_50pct_placement_um2": 51850.85829000001,
+    "planned_cell_body_um2": 24690.884900000005,
     "slot_fit": null
   },
   "compute": {
@@ -37,7 +37,7 @@
     "incoming_FP32_words": 32
   },
   "default_enabled": false,
-  "engine_RTL_admitted": false,
+  "engine_RTL_admitted": true,
   "gate": {
     "assertions": "accepted protected debt/tag survives; no new request, owner release or successful CPL; root POR stays high",
     "existing_fourrow_inputs_unchanged": true,
@@ -96,6 +96,7 @@
     ],
     "native_returns": 64,
     "new_replay": false,
+    "owned_transactions": 1,
     "provider_sink_accept_trace": [
       [
         11397,
@@ -164,7 +165,7 @@
         3
       ]
     ],
-    "recipe_Npublication": 1,
+    "recipe_Npublication": 4,
     "registered_flag_OFF_original_body_unchanged": true,
     "releases": 1,
     "result_writes": 4,
@@ -196,12 +197,12 @@
   "protection": {
     "CE_bound_scope": "one transient correctable error per selected stripe; repeated faults/refusal have no finite completion bound",
     "CE_critical_path": false,
-    "CE_extra_edges_per_corrected_stripe": 4,
+    "CE_extra_edges_per_corrected_stripe": 5,
     "CE_holds_accepted_debt": true,
     "CE_max_selected_payload_stripes": 4,
     "CE_path": "hold code+identity+owner/debt; serial correction select, corrected-code capture, fresh syndrome/DUE recheck, scrub/positive capture; resume only after successful recheck",
     "CE_requires_preissued_noready_results_still_captured_in_reserved_seats": true,
-    "CE_selected_payload_extra_edges_bound": 16,
+    "CE_selected_payload_extra_edges_bound": 20,
     "DUE_always_vetoes_handshakes": true,
     "code": "unchanged W6 SECDED64/72, including every stage identity/phase/completion word",
     "completion": "all source cuts valid + matching protected identity + four matched write ACKs + four full payload readbacks + positive verified/completion fences; shared matched release then CP callback/CPL",
@@ -211,15 +212,16 @@
     "no_parity_waiver": true,
     "normal_path": "select unchanged code+identity; capture syndrome/overall; reject DUE; capture checked original code+identity with positive completion (no correction mux or re-encode of payload)",
     "physical_triplicate_independence_credited": false,
-    "planned_codec_pairs": 73,
+    "planned_codec_pairs": 78,
     "raw_code_retained_through_check": true,
     "representation_basis": "72-bit SECDED code FF per64bit stripe, not textual triplicate views; successor mapping not measured",
     "syndrome_bits_per_word": 8,
     "syndrome_status_stored_as_W6": true
   },
   "publication_count": {
-    "Npublication": 1,
+    "Npublication": 4,
     "canonical_program_census_source": "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/selected_program_cp_census.json#selected_case",
+    "owned_transactions": 1,
     "rows_per_operation": 2,
     "schedule_source": "tools/hubble_w2_connected_runtime.py prepare: native seq[:16], both op IDs x rows(0,1); tb_hbm_integrated_gu_w2_hubble.sv one reserve edge",
     "selected_descriptor_records": 1,
@@ -234,7 +236,7 @@
     "actual_parent_channel_capacity_tracks": null,
     "buffer_tree_load_assumption": 7,
     "channel_fit": null,
-    "estimated_buffer_count": 751,
+    "estimated_buffer_count": 803,
     "identity_code_bits": 216,
     "logical_slot_select_fanout": 288,
     "mapped_fanout": null,
@@ -252,6 +254,7 @@
     "immutable_caller": "f835c8641",
     "released_selected_schedule": "a86d3cfd3"
   },
+  "source_permission": "Owner explicitly authorizes bounded component pipeline/gate while actual parent slot remains unbound; no physical fit or route admission",
   "source_sha256": {
     "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
     "results/physical/hbm_w2_sink_registered_terminal_20261005/r1/endpoint_groups.json": "3ab6043317f55791134fda188d64515611084309fb1c52edaa966485b043c0c8",
@@ -283,8 +286,11 @@
     "new_SRAM_ports": 0,
     "no_result_ready": true,
     "payload_bytes": 128,
-    "planned_source_FF_bits": 5256,
+    "planned_source_FF_bits": 5616,
     "protected_words_by_stage": {
+      "CE_code_snapshot": 2,
+      "CE_controller": 1,
+      "CE_mask_snapshot": 2,
       "checked_payload_and_identity": 7,
       "control_and_completion": 2,
       "held_request": 6,
@@ -301,7 +307,7 @@
     "whole_die_sink_replica_count": null
   },
   "timing": {
-    "CE_selected_payload_added_edges_bound": 64,
+    "CE_selected_payload_added_edges_bound": 80,
     "CE_selected_payload_bound_scope": "at most4 transient CE stripes in each of4rows, serial correction; excludes control/identity faults and repeated injection",
     "FF_hold_uncertainty_ps": 25,
     "SS_setup_uncertainty_ps": 60,

@@ -7903,9 +7903,9 @@ def qwen_w12_lvl7_clock_cut_model(*, gt=6144, lanes=16, aw=24, nw=18,
 def hbm_w2_publication_model():
     """One bounded protected-transaction candidate, before any sink RTL.
 
-    Count the released connected reservation, not weight descriptors/expert
+    Count four numeric row publications inside one connected reservation, not weight descriptors/expert
     slots. The selected component schedule is not a whole-token schedule.
-    Unknown parent geometry is a hard implementation gate, never free area.
+    Unknown parent geometry blocks physical admission; bounded component source/gate work is explicitly authorized.
     """
     import ast
     import re
@@ -7952,8 +7952,9 @@ def hbm_w2_publication_model():
             raise ValueError('released Program.put extent changed')
         extents[name] = int(value[1])
     census = json.loads((recipe / 'selected_program_cp_census.json').read_text())
-    n_publication = census['selected_case']['paired_descriptor_count']
-    if n_publication != 1 or census['selected_case']['operation_ids'] != seq[14:16]:
+    n_transactions = census['selected_case']['paired_descriptor_count']
+    n_publication = census['observed_transport']['numeric_publications']
+    if n_transactions != 1 or n_publication != 4 or census['selected_case']['operation_ids'] != seq[14:16]:
         raise ValueError('selected canonical caller/program publication census changed')
     rows = 2 * 2
     snapshot = root / 'results/physical/hbm_w2_sink_registered_terminal_20261005/r1'
@@ -8006,7 +8007,7 @@ def hbm_w2_publication_model():
                  held_request=math.ceil(337 / 64),
                  held_response=math.ceil(273 / 64),
                  reservation_frame=math.ceil(73 / 64),
-                 control_and_completion=2)
+                 control_and_completion=2, CE_controller=1, CE_code_snapshot=2, CE_mask_snapshot=2)
     ff = sum(words.values()) * 72
     # A conservative fully spatial encode/decode allowance for every64b stripe,
     # charged once, from the unified model's existing source W6 codec estimate.
@@ -8037,7 +8038,7 @@ def hbm_w2_publication_model():
         scope='released connected L20/sm4/pair0 component; no whole-token multiplicity or rate claim',
         measured_connected_component=dict(source_commit='a86d3cfd3', inherited_original_f835_sink_bytes_match=True,
             registered_flag_OFF_original_body_unchanged=True,
-            recipe_Npublication=1, rows=4, sectors=212, native_requests=64, native_returns=64,
+            recipe_Npublication=4, owned_transactions=1, rows=4, sectors=212, native_requests=64, native_returns=64,
             result_writes=4, full_checked_readbacks=4, releases=1,
             provider_sink_accept_trace=provider, readback_verified_trace=verified,
             native_result_trace=native_results,
@@ -8050,7 +8051,7 @@ def hbm_w2_publication_model():
             functional_fixture_clock_ns=1.0, fixture_clock_is_not_SS_signoff=True,
             retained_upstream='GU/SwiGLU output boundary reused; live native W2 and real installed NS2 provider',
             new_replay=False, whole_token=False, changed_pipeline_measured=False),
-        publication_count=dict(Npublication=n_publication, selected_descriptor_records=1,
+        publication_count=dict(Npublication=n_publication, owned_transactions=n_transactions, selected_descriptor_records=n_transactions,
             selected_operation_ids=seq[14:16], rows_per_operation=2,
             canonical_program_census_source='results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/selected_program_cp_census.json#selected_case',
             schedule_source='tools/hubble_w2_connected_runtime.py prepare: native seq[:16], both op IDs x rows(0,1); tb_hbm_integrated_gu_w2_hubble.sv one reserve edge',
@@ -8076,9 +8077,9 @@ def hbm_w2_publication_model():
             no_parity_waiver=True, no_ROM_waiver_for_mutable_state=True,
             normal_path='select unchanged code+identity; capture syndrome/overall; reject DUE; capture checked original code+identity with positive completion (no correction mux or re-encode of payload)',
             CE_path='hold code+identity+owner/debt; serial correction select, corrected-code capture, fresh syndrome/DUE recheck, scrub/positive capture; resume only after successful recheck',
-            CE_extra_edges_per_corrected_stripe=4,
+            CE_extra_edges_per_corrected_stripe=5,
             CE_max_selected_payload_stripes=4,
-            CE_selected_payload_extra_edges_bound=16,
+            CE_selected_payload_extra_edges_bound=20,
             CE_bound_scope='one transient correctable error per selected stripe; repeated faults/refusal have no finite completion bound',
             CE_critical_path=False, CE_holds_accepted_debt=True,
             CE_requires_preissued_noready_results_still_captured_in_reserved_seats=True,
@@ -8117,8 +8118,8 @@ def hbm_w2_publication_model():
             old_SS_slack_ps=-733.090149, old_FF_hold_slack_ps=15.645707,
             inherited_same_fourrow_gate_release_edges=dict(original=162, registered=181, measured_delta=19),
             planned_added_local_edges_by_cut=cuts, planned_added_local_edges_per_publication=extra,
-            selected_recipe_serial_local_delta_ns=n_publication*extra/1.2,
-            CE_selected_payload_added_edges_bound=16*rows,
+            selected_recipe_serial_local_delta_ns=n_transactions*extra/1.2,
+            CE_selected_payload_added_edges_bound=20*rows,
             CE_selected_payload_bound_scope='at most4 transient CE stripes in each of4rows, serial correction; excludes control/identity faults and repeated injection',
             total_fault_stall_bound=None,
             measured_successor_release_edges=None, measured_successor_delta_edges=None,
@@ -8134,4 +8135,6 @@ def hbm_w2_publication_model():
                                'all_routes_drained', 'cp_reset_wait'],
             parent_condition='real CP reset/quarantine hook must hold root POR high and retain sink/borrower/CDC accepted debt until matched consumption; gate does not certify warm reset'),
         model_bounded=True, parent_binding_complete=False,
-        engine_RTL_admitted=False, physical_launch_admitted=False, adopted=False)
+        engine_RTL_admitted=True,
+        source_permission='Owner explicitly authorizes bounded component pipeline/gate while actual parent slot remains unbound; no physical fit or route admission',
+        physical_launch_admitted=False, adopted=False)
