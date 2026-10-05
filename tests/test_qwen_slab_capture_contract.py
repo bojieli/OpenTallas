@@ -46,6 +46,33 @@ class CaptureContract(unittest.TestCase):
             p["ss"]["capture_clock"] = [1000, value]
             with self.assertRaises(ValueError): subject.path_slacks(p)
 
+    def contract(self):
+        c = {name: self.path() for name in subject.INPUT_GROUPS + subject.OUTPUT_GROUPS}
+        for name in subject.OUTPUT_GROUPS:
+            c[name].update(output_load_sta_units=1.0, load_library_sha256="c"*64)
+        return c
+
+    def test_complete_source_io_translation(self):
+        s = subject.parent_io_sdc(self.contract())
+        self.assertIn("set_input_delay -max 1250 -clock clk [get_ports {res_in*}]", s)
+        self.assertIn("set_input_delay -min 1085 -clock clk [get_ports {res_in*}]", s)
+        self.assertIn("set_output_delay -max -790 -clock clk [get_ports {tw_v}]", s)
+        self.assertIn("set_output_delay -min -1000 -clock clk [get_ports {tw_v}]", s)
+        self.assertIn("set_clock_uncertainty -setup 60", s)
+        self.assertIn("set_clock_uncertainty -hold 25", s)
+        self.assertIn("set_min_delay -ignore_clock_latency 0", s)
+        self.assertNotIn("166.667", s)
+
+    def test_partial_io_cannot_hide_other_failures(self):
+        c = self.contract()
+        del c["p_*"]
+        with self.assertRaises(ValueError): subject.parent_io_sdc(c)
+
+    def test_ideal_receiver_load_refused(self):
+        c = self.contract()
+        c["tw_v"]["output_load_sta_units"] = 0
+        with self.assertRaises(ValueError): subject.parent_io_sdc(c)
+
     def test_scope_and_once_only_capture(self):
         r = subject.model()
         self.assertEqual(r["capture"]["new_ff_bits"], 0)

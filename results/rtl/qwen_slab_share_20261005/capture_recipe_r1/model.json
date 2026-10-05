@@ -112,6 +112,7 @@
     },
     "tree_input": "slab.g_bw.u_bw.o_v/o_d -> tw_v/tw_d -> parent.t_in -> lvl[LV0]"
   },
+  "parent_io_generator": "Complete 23-group finite source-owned SS/FF IO bounds plus evidenced receiver loads; refuses missing groups. No 0.2T fallback; physical path remains unqualified until actual context closes.",
   "period_ns": 0.833333,
   "physical_args": [
     "--die-area",
@@ -194,7 +195,7 @@
     "rtl/test/qwen_runtime/ot_qwen_rt_tree.sv": "de118f21249f823a7786742a59bbdafe83a81a1f7eaf1c11c75332c6c6d3994e",
     "rtl/test/tb_qwen_slab_port_group.sv": "7a9fd0c303d53e7f15873f050416f976b53d11aba0965d2203205bb2ce019c1a",
     "rtl/test/tb_qwen_slab_port_group_capture.sv": "aceeebd25148a666df77691d57485f2ae2bdd7cf5ed02a3ca4d012be6eea7ebf",
-    "tools/qwen_slab_capture_contract.py": "043377343268880a520575dcc92415cfd2934454082715d3edf9081ee6f78dbb",
+    "tools/qwen_slab_capture_contract.py": "fe695484a360cf4a0b9165ece157044f71c45cb1cec0af594d3d79e525b280ce",
     "tools/qwen_slab_capture_gate.sh": "7d00e7ac76f104b1ec74a1e0189998c3432632876462d7583dccf48d73f069a9"
   },
   "ss_setup_uncertainty_ps": 60,

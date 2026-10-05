@@ -65,6 +65,51 @@ def path_slacks(p):
                 hold_repair_margin_ps=10)
 
 
+INPUT_GROUPS = ("bw_rst_n", "bw_v", "bw_d*", "rst_n", "tw_rdy", "p_*", "res_in*")
+OUTPUT_GROUPS = ("bw_rdy", "bw_w_fault", "bw_w_live", "tw_v", "tw_d*", "o_we",
+                 "o_addr*", "o_mask*", "o_data*", "ov", "am_tv", "am_top*",
+                 "am_rmax", "fault", "bw_r_fault", "bw_r_live")
+
+
+def parent_io_sdc(contract):
+    """Replace the fractional IO assumption only with complete finite evidence.
+
+    Delays are root-relative ps, from actual parent leaf/cell/wire bounds.
+    Negative output delay represents a finite propagated receiver clock, not
+    a timing waiver. All uncertainty, cross-clock guards and fanout survive.
+    Numeric loads must be in the evidenced STA library's load units.
+    """
+    if set(contract) != set(INPUT_GROUPS + OUTPUT_GROUPS):
+        raise ValueError("complete 23-group parent IO contract required")
+    baseline = (ROOT / "physical/qwen_slab_m5/port_group.sdc").read_text()
+    head = baseline.split("# Boundary:", 1)[0]
+    lines = [head.rstrip(), "# Source-owned parent IO bounds; no fractional-delay fallback."]
+    for name in INPUT_GROUPS + OUTPUT_GROUPS:
+        p = contract[name]
+        path_slacks(p)  # Validate finite bounds, identities and corner evidence.
+        clock = "bw_clk" if name.startswith("bw_") and name not in ("bw_r_fault", "bw_r_live") else "clk"
+        ss, ff = p["ss"], p["ff"]
+        if name in INPUT_GROUPS:
+            hi = ss["launch_clock"][1] + ss["clk_q"][1] + ss["wire"][1]
+            lo = ff["launch_clock"][0] + ff["clk_q"][0] + ff["wire"][0]
+            cmd = "set_input_delay"
+        else:
+            hi = ss["wire"][1] + ss["setup"] - ss["capture_clock"][0]
+            lo = ff["wire"][0] - ff["hold"] - ff["capture_clock"][1]
+            cmd = "set_output_delay"
+            load = p.get("output_load_sta_units")
+            if not isinstance(load, (int, float)) or not math.isfinite(load) or load <= 0:
+                raise ValueError("finite positive source-derived load required for " + name)
+            units_sha = p.get("load_library_sha256", "")
+            if len(units_sha) != 64 or any(c not in "0123456789abcdef" for c in units_sha):
+                raise ValueError("load library evidence required for " + name)
+            lines.append(f"set_load {load:.9g} [get_ports {{{name}}}]")
+        lines.append(f"{cmd} -max {hi:.9g} -clock {clock} [get_ports {{{name}}}]")
+        lines.append(f"{cmd} -min {lo:.9g} -clock {clock} [get_ports {{{name}}}]")
+    lines.append("set_max_fanout 32 [current_design]")
+    return "\n".join(lines) + "\n"
+
+
 def physical_args():
     args = previous.predecessor.args(570.24)
     i = args.index("^res_in=top")
@@ -143,6 +188,7 @@ def model():
                        "Propagated SS/FF parent and slab leaf/cell/wire bounds for all boundary paths",
                        "Column capture pin landing/group census and legal placement",
                        "CTS, routing, slew/cap and SS60/FF25 closure without IO exemptions"],
+        parent_io_generator="Complete 23-group finite source-owned SS/FF IO bounds plus evidenced receiver loads; refuses missing groups. No 0.2T fallback; physical path remains unqualified until actual context closes.",
         sourcepins={s: hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in SOURCES})
     return r
 
@@ -151,7 +197,13 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--out", type=Path)
     p.add_argument("--parent-path", type=Path)
+    p.add_argument("--parent-io", type=Path)
+    p.add_argument("--sdc-out", type=Path)
     a = p.parse_args()
+    if bool(a.parent_io) != bool(a.sdc_out):
+        p.error("--parent-io and --sdc-out are required together")
+    if a.parent_io:
+        a.sdc_out.write_text(parent_io_sdc(json.loads(a.parent_io.read_text())))
     r = model()
     if a.parent_path:
         r["provided_parent_path"] = path_slacks(json.loads(a.parent_path.read_text()))
