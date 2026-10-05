@@ -9312,6 +9312,17 @@ def qwen_service_aq_act_parent_clock_model():
         slower854_61_bound_selected=False)
 
 
+def ha2_tu_owner_adapter_model():
+    """Additive runtime owner replacement, selected shared8 TU shape, unadopted."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('ha2_tu_owner_model.py')
+    spec = importlib.util.spec_from_file_location('ha2_tu_owner_model', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.model()
+
+
 def qwen_service_actual_edge_eligibility_model(exposed_column_transactions=None):
     """Observed clock-calendar failure and unadmitted conservative column-wait cost."""
     import importlib.util
