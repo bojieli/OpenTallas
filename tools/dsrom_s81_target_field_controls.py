@@ -73,6 +73,25 @@ def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14):
         if not bound or len({v for n,v in bound})!=1:
             raise ValueError((stage,row['phase'],'missing/conflicting source rounding'))
         fp32=bound[0][1]
+        descriptor_templates=[]
+        group=execution.stage_join.groups[(m['layer'],row['original_alias'])]
+        for node,mode in bound:
+            f=execution.source.nodes[node]['instruction']
+            dynamic_shape={k:f.get(k,0) for k in ('me_d_nout','me_d_k','me_d_tiles') if f.get(k,0)}
+            if dynamic_shape:
+                raise ValueError((stage,row['key'],node,'mutable phase descriptor',dynamic_shape))
+            K=f['me_k']*(1<<f.get('me_split',0)) if f['unit']==1 else f['qe_nb']*32
+            count=f['me_nout'] if f['unit']==1 else f['qe_nout']
+            if K!=m['K'] or count!=sum(x['rows'] for x in group):
+                raise ValueError((stage,row['key'],node,'source shape conflicts with canonical descriptor'))
+            if mode!=fp32:
+                raise ValueError((stage,row['key'],node,'repeated key changes rounding descriptor'))
+            descriptor_templates.append(dict(node=node,
+                template_word_sha256=execution.source.nodes[node]['template_word_sha256'],
+                input_base=f.get('me_xbase',f.get('qe_xbase')),
+                output_base=f.get('me_obase',f.get('qe_obase')),
+                dynamic_input_output={k:f[k] for k in ('me_d_xbase','me_d_obase','qe_d_obase') if f.get(k,0)},
+                expert_selector_slot=execution.source.bindings[node]['selector_slot']))
         original,beats,pin=native_stream(m,fp32_output=fp32)
         if not beats or any(v<0 or v>=1<<40 for v in beats):
             raise ValueError('existing codec no longer zero extends into48bit carrier')
@@ -100,6 +119,14 @@ def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14):
         phase=row['phase']; ME=m['format']=='bf16'
         if execution.stage_join.lookup(stage,row['key'],ME=ME)!=phase:
             raise ValueError('canonical key/phase changed')
+        # Decode every linked descriptor through the actual packed bit fields.
+        decoded=(bool(linked[0]&1),(linked[0]>>1)&8191,(linked[0]>>14)&65535,
+                 (linked[0]>>30)&65535,(linked[0]>>46)&65535,
+                 bool((linked[0]>>62)&1),bool((linked[0]>>63)&1),linked[1])
+        if decoded!=(fields['bf'],m['K'],len(beats),base,m['rows'],fp32,fp32,0):
+            raise ValueError('actual PHROM decode differs from source descriptor')
+        if base+len(beats)>1<<saw:
+            raise ValueError('relocated phase body exceeds stream depth')
         phrom[2*phase:2*phase+2]=linked
         phases.append(dict(phase=phase,key=row['key'],key_word=row['key_word'],layer=m['layer'],
             alias=m['alias'],expert=m['expert'],source_nodes=[n for n,v in bound],
@@ -108,7 +135,8 @@ def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14):
             cfg_word_range=[25*phase,25*(phase+1)],phrom_address=[2*phase,2*phase+1],
             PHROM_words=linked,original_local_PHROM_words=original,
             body=body_id,stream_base=base,stream_words=len(beats),stream_sha256=hashlib.sha256(body).hexdigest(),
-            fp32_output=fp32,stream_source_sha256=pin))
+            fp32_output=fp32,stream_source_sha256=pin,
+            descriptor_templates=descriptor_templates,descriptor_stable_for_all_bound_commands=True))
         original_words+=len(beats)
     out=Path(out);out.mkdir(parents=True,exist_ok=False)
     (out/'spine_phase.hex').write_text(''.join(f'{w:016x}\n' for w in phrom))
@@ -128,7 +156,11 @@ def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14):
         high8_stream_bits_zero=True,only_PHROM_SBASE_changed=True,CFG_remapped=False,
         all_resident_experts_bound=True,inactive_key_and_PHROM_slots_explicit_zero=True,
         unused_stream_tail_explicit_zero=True,hardware_provider_adopted=False,
-        runtime_array_patching_removed=False,programming_service_priced=False)
+        runtime_array_patching_removed=False,programming_service_priced=False,
+        actual_phase_decode_checks=len(phases),descriptor_conflicts=[],
+        descriptor_mutability_rule='Dynamic ME shape refused; all bound templates agree on K/rows/rounding. Input/output VM bases and their dynamic selectors are GO ports, not PHROM. i_np/batch position is a GO port, not a phase_words field. Expert IDs select existing canonical phase/key; all384 alternatives included.',
+        source_pins={str(Path('tools')/n):hashlib.sha256((execution.owner/'tools'/n).read_bytes()).hexdigest()
+            for n in ('dsrom_s81_target_field_controls.py','v41_die_images_w17w10.py','dsrom_s81_execution_binding.py','dsrom_stage_program_join.py')})
     (out/'binding.json').write_text(json.dumps(record,indent=2)+'\n')
     return record
 
@@ -277,8 +309,17 @@ def main():
     p.add_argument('--layer',type=int,required=True)
     p.add_argument('--rank',type=int,required=True)
     p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--stage-tables',default='',help='opt-in canonical stage37/38 byte-identical stream interning; no payload')
     a=p.parse_args()
     execution=CanonicalS81Execution(a.owner)
+    if a.stage_tables:
+        stages=[int(x) for x in a.stage_tables.split(',')]
+        if stages!=sorted(set(stages)) or not set(stages)<=set((37,38)):
+            raise ValueError('selected distinct stages37/38 required')
+        for stage in stages:
+            r=emit_native_stage_tables(execution,stage,a.out/f'stage{stage}')
+            print(stage,r['phase_count'],r['unique_stream_words'],flush=True)
+        return
     connectivity=json.loads((a.owner/'results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/connectivity.json').read_text())
     for pc in (7,8):
         result=emit(execution,f'L{a.layer}.I{pc}',a.rank,a.out/f'I{pc}',connectivity)
