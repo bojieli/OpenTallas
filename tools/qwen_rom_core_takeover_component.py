@@ -33,13 +33,16 @@ def model():
       clock=dict(period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,qualified=False),
       adoption=False,default_DEC_LA=0,baseline_P0_edited=False)
 
-def component(bounded=False,chaseq=False):
+def component(bounded=False,chaseq=False,counter_la=False):
     text=E.emit(E.V.E.CORE.read_text())
-    if bounded or chaseq:
+    if bounded or chaseq or counter_la:
         from qwen_rom_core_dec_bound_emit_w12 import apply
         text=apply(text)
-    if chaseq:
+    if chaseq or counter_la:
         from qwen_rom_core_dec_chaseq_emit_w12 import apply
+        text=apply(text)
+    if counter_la:
+        from qwen_rom_core_dec_counter_emit_w12 import apply
         text=apply(text)
     seq=text[text.index('    localparam integer LW'):text.index('    always @(posedge clk or negedge rst_n) begin\n        if (!rst_n) begin kvd_v')]
     seq=seq.replace('    wire       me_ready, me_idle, su_ready, su_idle;','')
@@ -53,7 +56,7 @@ def component(bounded=False,chaseq=False):
     body=baseline[baseline.index(E.DEC_START)+len(E.DEC_START):baseline.index(E.DEC_END)]
     fields=[name for name,_ in E._statements(body)]
     helpers=text[text.index('// a > b on 32-bit unsigned keys'):]
-    header='''module decode_component #(parameter DEC_LA=0, VPOS=0, DEC_LA_BOUND=0, DEC_LA_CHASE_Q=0)(
+    header='''module decode_component #(parameter DEC_LA=0, VPOS=0, DEC_LA_BOUND=0, DEC_LA_CHASE_Q=0, DEC_LA_COUNT_LA=0)(
 input clk,rst_n,start, input [17:0] token,pos,
 input me_ready,me_idle,su_ready,su_idle,
 input [15:0] me_progress,su_progress,su_rows,
@@ -74,6 +77,6 @@ assign accepted=issue; assign invalid_at_load=dyn_tiles_bad_instruction;
     return (header+seq+argmax+dyn+'\nassign decoded={'+','.join(fields)+'};\nendmodule\n'+helpers).replace('`include "ot_hdc_isa.svh"',(E.V.E.CORE.parent/'ot_hdc_isa.svh').read_text())
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--model',action='store_true');p.add_argument('--out',type=Path);p.add_argument('--bounded',action='store_true');p.add_argument('--chaseq',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--model',action='store_true');p.add_argument('--out',type=Path);p.add_argument('--bounded',action='store_true');p.add_argument('--chaseq',action='store_true');p.add_argument('--counter-la',action='store_true');a=p.parse_args()
     if a.model:print(json.dumps(model(),indent=2,sort_keys=True))
-    else:a.out.write_text(component(a.bounded,a.chaseq))
+    else:a.out.write_text(component(a.bounded,a.chaseq,a.counter_la))

@@ -47,7 +47,17 @@
     "setup_uncertainty_ps": 60,
     "hold_uncertainty_ps": 25,
     "SSFF_closed": false,
-    "adopted": false
+    "adopted": false,
+    "objective": "mandatory 833ps SS/FF baseline clock repair, not speed optimization",
+    "token_speedup_credit": 0,
+    "reset_FF_library_master": "DFFASRHQNx1_ASAP7_75t_R",
+    "reset_FF_body_per_pc_um2": 0.37908,
+    "reset_FF_body_total_um2": 0.75816,
+    "reset_FF_clock_pin_cap_ff": 0.433982,
+    "reset_FF_reset_pin_cap_ff": 0.704025,
+    "reset_FF_tied_set_pin_cap_ff": 1.02641,
+    "clock_reset_distribution_area_um2": null,
+    "reset_FF_plus_logic_body_proxy_um2": 7.1581600000000005
   },
   "full128pc": {
     "default_enabled": false,
@@ -96,7 +106,17 @@
     "setup_uncertainty_ps": 60,
     "hold_uncertainty_ps": 25,
     "SSFF_closed": false,
-    "adopted": false
+    "adopted": false,
+    "objective": "mandatory 833ps SS/FF baseline clock repair, not speed optimization",
+    "token_speedup_credit": 0,
+    "reset_FF_library_master": "DFFASRHQNx1_ASAP7_75t_R",
+    "reset_FF_body_per_pc_um2": 0.37908,
+    "reset_FF_body_total_um2": 48.52224,
+    "reset_FF_clock_pin_cap_ff": 0.433982,
+    "reset_FF_reset_pin_cap_ff": 0.704025,
+    "reset_FF_tied_set_pin_cap_ff": 1.02641,
+    "clock_reset_distribution_area_um2": null,
+    "reset_FF_plus_logic_body_proxy_um2": 458.12224000000003
   },
   "source_basis": [
     {
@@ -176,7 +196,10 @@
     "full128_slot_fit_proven": false,
     "zero_edge_token_delta_cycles": 0,
     "zero_edge_condition": "Only exact mirror transition/invariant and unchanged eligibility qualify this price.",
-    "extra_edge_alternative": "Not selected. Readiness delayed by >=1 edge requires current-state revalidation; composed command calendar and token delta UNKNOWN. It cannot claim zero cycles or reuse source lockstep as PASS."
+    "extra_edge_alternative": "Not selected. Readiness delayed by >=1 edge requires current-state revalidation; composed command calendar and token delta UNKNOWN. It cannot claim zero cycles or reuse source lockstep as PASS.",
+    "reset_master_ff_full128_um2": 48.52224,
+    "reset_master_plus_logic_full128_um2": 458.12224,
+    "two_pc_reset_master_gross_body_screen_um2": 4023.46816
   },
   "remaining_loaded_path_bound": {
     "actual_ss_path_comb_delay_ps": 670.08,
@@ -189,5 +212,31 @@
     "credit_ps": 0,
     "predicted_wns_ps": null,
     "warning": "Moving reduction to a mirror can move the worst path to mirror D or another endpoint. Existing path delays do not bound remapped load/skew or guarantee 18.71ps recovery."
+  },
+  "loaded_cell_basis": {
+    "library_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+    "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "scope": "Read actual master area/pin load from existing ORFS image; no synthesis/STA/route launched. Master appears in retained final SS path. Selected mapping not yet known.",
+    "area_um2": 0.37908,
+    "clock_cap_ff": 0.433982,
+    "resetn_cap_ff": 0.704025,
+    "setn_cap_ff": 1.02641,
+    "plain_FF_floor_um2": 0.2916,
+    "reset_master_body128_um2": 48.52224,
+    "reset_master_plus_logic_proxy128_um2": 458.12224,
+    "extra128_clock_pin_load_ff": 55.549696,
+    "extra128_reset_pin_load_ff": 90.1152,
+    "extra128_tied_set_pin_load_ff": 131.38048,
+    "reset_set_distribution_area_and_delay": null,
+    "selected_mapping_or_SSFF_credit": false
+  },
+  "classification": {
+    "mandatory_baseline_repair": true,
+    "speed_optimization": false,
+    "claimed_token_speedup": 0,
+    "reason": "Recover required 833ps SS setup without altering command/grant/ACK calendar. Existing source behavior remains reference; no rate gain from model-only predicate.",
+    "no_fourth_variant_until_technical_decision": true,
+    "payload_joins_independent": true
   }
 }
