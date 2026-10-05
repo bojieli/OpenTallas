@@ -244,7 +244,9 @@ def apply_levers(P, info, lever_dir):
     """Recovery baseline: every ADOPTED lever record in `lever_dir`/levers/*.json replaces the measured terms it
     re-measured on its successor RTL.  Record schema (opentallas.dsrom-recovery.lever.v1):
       lever, verdict ("ADOPT" | "REJECT" | ...), exact (bool), ss_ff (signoff summary),
-      nodes  {"<node name>" | "*.<suffix>": {"us": float, "source": str, "cls": "measured"}}
+      nodes  {"<node name>" | "*.<suffix>": {"us": float, "source": str, "cls": "measured",
+              "kind": optional graph kind, e.g. "fused_fast" for a node moved to the 1.2 GHz domain (not in
+              uarch_model.SLOW_KINDS), so the measured CDC is charged on the edges the move creates or removes}}
       info   {"hop_us": all stage hops + extra S81 hops, "head_stage_occupancy_us", "head_argmax_drain_us",
               "draft_blocks_total_us" + "draft_blocks_source": the three DSpark blocks re-measured with the recovery
               levers (ONE lever record owns it, normally levers/draft.json; the 5 draft head sweeps follow
@@ -262,6 +264,8 @@ def apply_levers(P, info, lever_dir):
             assert names and all(n in P.g.nodes for n in names), (f, key)
             for n in names:
                 P.put(n, v["us"] * 1e-6, f"{r['lever']}: {v['source']}", cls=v.get("cls", "measured"))
+                if "kind" in v:
+                    P.g.nodes[n]["kind"] = v["kind"]
         li = r.get("info", {})
         if "hop_us" in li:
             for n, nd in P.g.nodes.items():
