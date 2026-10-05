@@ -22,7 +22,7 @@ module tb_qwen_p0_linked #(
     input wire bad_ack_tag,
     output wire join_desc_accepted, join_go,
     output wire join_desc_committed, join_go_committed,
-    output wire [127:0] join_row_valid, join_row_take, join_ack_valid,
+    output wire [127:0] join_row_valid, join_row_take, join_ack_valid, join_write_accepted,
     output wire [6:0] join_debt,
     output wire join_bad_ack_seen,
     input  wire              clk,
@@ -73,6 +73,7 @@ module tb_qwen_p0_linked #(
     assign join_row_valid=producer_lv;
     assign join_row_take=producer_pop&producer_lv;
     assign join_ack_valid=hwd_v;
+    assign join_write_accepted=hw_v & hw_room;
     assign join_debt=7'($countones(u_svc.w_valid));
     assign join_bad_ack_seen=bad_ack_tag && (|hwd_v);
     wire svc_fault, hbm_fault; wire [15:0] svc_code, hbm_code;
