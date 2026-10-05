@@ -1,0 +1,170 @@
+{
+ "case": "b3r16B80_k16_banded_i50",
+ "exit": "0",
+ "grt_s": 9242,
+ "peak_rss_gb": 12.3,
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 16203,
+   "demand": 3741,
+   "usage_pct": 23.09,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 82181,
+   "demand": 5510,
+   "usage_pct": 6.7,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 17098803,
+   "demand": 329212,
+   "usage_pct": 1.93,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 16612957,
+   "demand": 5340370,
+   "usage_pct": 32.15,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M8": {
+   "resource": 47261377,
+   "demand": 4187880,
+   "usage_pct": 8.86,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M9": {
+   "resource": 47127606,
+   "demand": 5119617,
+   "usage_pct": 10.86,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "Total": {
+   "resource": 128199127,
+   "demand": 14986330,
+   "usage_pct": 11.69,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  }
+ },
+ "windows": {
+  "M2": {
+   "windows": 594960,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M3": {
+   "windows": 594960,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M4": {
+   "windows": 594960,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M5": {
+   "windows": 594960,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M6": {
+   "windows": 594960,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    13305.6,
+    0.0
+   ]
+  },
+  "M7": {
+   "windows": 594960,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    1441.44,
+    36.96
+   ]
+  },
+  "M8": {
+   "windows": 594960,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    1700.16,
+    628.32
+   ]
+  },
+  "M9": {
+   "windows": 594960,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    11457.6,
+    3326.4
+   ]
+  }
+ }
+}

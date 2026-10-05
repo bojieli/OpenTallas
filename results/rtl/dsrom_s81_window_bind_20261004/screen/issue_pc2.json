@@ -1,0 +1,39 @@
+{
+ "top": "ot_dsrom_window_stream_la_s81",
+ "params": {
+  "ISSUE_PC": "1",
+  "AW": "30",
+  "TAGW": "13"
+ },
+ "period_ps": 833.0,
+ "ss_setup_wns_ps": -487.8,
+ "ff_hold_wns_ps": 5.8,
+ "cell_area_um2": 11419.26012,
+ "ss_fmax_prelayout_hz": 757145080,
+ "worst_start": "v2[3]$_DFF_PN0_",
+ "worst_end": "landed[15]$_DFFE_PN0P_",
+ "worst_slack_by_stage_ps": {
+  "landed": -487.75,
+  "run": -459.77,
+  "G": -278.93,
+  "k16_2": -239.74,
+  "pcbad2": -130.28,
+  "rtag": 64.43,
+  "rv": 89.49,
+  "fault": 109.48,
+  "Grel": 173.71,
+  "pdone": 218.79,
+  "g1": 222.79,
+  "j1": 222.79,
+  "j0": 224.12,
+  "b": 224.16,
+  "g0": 224.25,
+  "raddr": 229.19,
+  "rng2": 430.08,
+  "s1": 437.84,
+  "d2": 611.13,
+  "d1": 623.1,
+  "v2": 643.77
+ },
+ "basis": "pre-layout: ORFS yosys/abc at CORNER=WC, OpenSTA SS RVT libs (setup, 60 ps) and FF RVT libs (hold, 25 ps), ideal clock"
+}

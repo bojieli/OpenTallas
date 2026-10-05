@@ -22,7 +22,7 @@ def _one(text, old, new):
 
 def install(binding, original_export, output, *, drain=False, head=False,
             actual_collectives=None, trace=False, stage=None, accepted_pop=False,
-            workspace=False, capture=False, kvt_source_stride=False):
+            workspace=False, capture=False, kvt_source_stride=False, capture_stream=False):
     """Return actual elaborator sources/parameters, with every flag default off.
 
     trace is simulation-only and records commands admitted at dut.cmd_go,
@@ -30,6 +30,8 @@ def install(binding, original_export, output, *, drain=False, head=False,
     per-launch ordinal. Tag wrap is never used as a transaction identity.
     No synthetic execution calendar or physical load closure is manufactured.
     """
+    if capture_stream and not capture:
+        raise ValueError('indexed stream requires capture selection')
     if head:
         raise ValueError("headreg candidate rejected; selected baseline requires head=False")
     if trace and (type(stage) is not int or not 0 <= stage < 81):
@@ -86,7 +88,7 @@ def install(binding, original_export, output, *, drain=False, head=False,
                 s = _one(s, module+' #(', module+' #(.SU_KVT_SOURCE_STRIDE(SU_KVT_SOURCE_STRIDE),')
         if capture:
             from dsrom_s81_capture_parent import hook
-            s=hook(role,s)
+            s=hook(role,s,stream=capture_stream)
         changed[p] = s
     dests = {p: output/'native'/p.name for p in changed}
     for p, dest in dests.items():
@@ -101,7 +103,7 @@ def install(binding, original_export, output, *, drain=False, head=False,
         sources = _select_kvt_stride_sources(sources)
     if capture:
         from dsrom_s81_capture_parent import dependencies
-        sources=dependencies(sources,output/'capture')
+        sources=dependencies(sources,output/'capture',stream=capture_stream)
     for rel in DRAIN:
         p = ROOT/rel
         if not p.is_file():
@@ -124,6 +126,12 @@ def install(binding, original_export, output, *, drain=False, head=False,
         result['parameters']['S81_CAPTURE']=1
         result['verilator_args'].extend(['-GS81_CAPTURE=1','-I'+str(ROOT/'rtl/hdc/v41')])
         result['capture_added_idle_edges_per_executed_phase']=2
+        result['physical_admission']=False
+    if capture_stream:
+        result['parameters']['S81_CAPTURE_STREAM']=1
+        result['verilator_args'].append('-GS81_CAPTURE_STREAM=1')
+        result['capture_stream_model']='results/uarch/dsrom_s81_adjacent_stream_price_20261005/model.json'
+        result['capture_stream_remote_terminal_required']=True
         result['physical_admission']=False
     if kvt_source_stride:
         result['parameters']['SU_KVT_SOURCE_STRIDE']=1

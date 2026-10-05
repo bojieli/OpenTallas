@@ -47,6 +47,34 @@
   "step1_P8187_np4": 17197,
   "step2_P8188_np4_after_rollback": 17188
  },
+ "verify_op_breakdown": {
+  "all_reduces": {
+   "ar": [
+    1094,
+    949
+   ],
+   "excess": 1295,
+   "note": "4x payload on the same link: inherent to the collective bandwidth",
+   "verify": [
+    1621,
+    1717
+   ]
+  },
+  "attention_kv_passes": {
+   "ar": 1155,
+   "excess": 3490,
+   "lever": "share each K/V pass between block positions: the scores/PV ME op already serves a GQA group of 4 query heads per K word (me_jsh); 2 positions per pass = 8 queries (jsh 3 = IL) halves the passes (-2,322 a layer), program + golden change; causality: the extra key of the earlier position must be masked to an exact zero weight",
+   "verify": "4 x ~1,161 (QK/PV over 8K keys, one pass a position)"
+  },
+  "levers_ranked": [
+   "SU ops without a DYN term merged across positions (region-major VM layout so p copies are one op with nout x p): latency paid once",
+   "K/V pass sharing (above)",
+   "single weight pass for the block (needs p accumulators a lane, i.e. 4x MACs, or no gain: the ROM read rate equals the MAC rate)"
+  ],
+  "remaining_composition": "per-position stream-unit ops issued back to back (latency-bound: e.g. 8x64 ops take 30-42 cycles for 8 cycles of work) and the weight matvecs re-streamed once a position (qkv 4x152, gu 278+3x152, down 4x118, o 4x~40)",
+  "remaining_excess": 5933,
+  "source": "RT_OPTRACE instruction-fetch trace, die 0, P8187, STREAM4 (dspark_verify_P8187/optrace): verify np4 17,197 vs AR np1 6,479 (both exact)"
+ },
  "verify_segment_breakdown": {
   "ar": {
    "attention_block_pc0": {

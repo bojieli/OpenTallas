@@ -1,0 +1,59 @@
+{
+ "case": "c",
+ "window": "field_bf",
+ "window_um": [
+  8471.52,
+  3421.44,
+  11606.896,
+  6321.68
+ ],
+ "size_um": [
+  3135.376,
+  2900.24
+ ],
+ "cell_um": 20.0,
+ "loads": 22620,
+ "power_w": 18.8354,
+ "power_w_by_kind": {
+  "bf": 5.3016,
+  "cfg": 1.74,
+  "q": 10.1163,
+  "node": 1.6557,
+  "fifo_blk": 0.0118,
+  "waypoint": 0.01
+ },
+ "power_w_per_mm2": 2.0713,
+ "cells_without_both_rails": 0,
+ "peak": true,
+ "scale": 1.0,
+ "align": true,
+ "signal_bumps_phy": true,
+ "coverage": {
+  "field": 0.128,
+  "hub": 0.044,
+  "svc": 0.1639,
+  "channel": 0.0439
+ },
+ "bump_sites": 2254,
+ "stripes": {
+  "M9": 1871,
+  "M8": 1731,
+  "vias": 1619351,
+  "width_um": 0.48,
+  "pitch_by_kind": {
+   "field": 3.3495,
+   "hub": 9.0914,
+   "svc": 2.7669,
+   "channel": 9.0914
+  }
+ },
+ "bumps": {
+  "array_pitch_um": 45.0,
+  "vdd_pitch_um": 63.64,
+  "size_um": 20.0,
+  "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only"
+ },
+ "vdd_v": 0.7,
+ "budget_mv": 35.0,
+ "die": "layer"
+}

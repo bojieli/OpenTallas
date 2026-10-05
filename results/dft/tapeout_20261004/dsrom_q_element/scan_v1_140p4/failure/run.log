@@ -1,0 +1,70 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+  210 |        166 |        31 |       135
+      220 |         69 |        16 |        53
+      230 |         39 |         9 |        30
+      240 |         24 |         6 |        18
+      250 |         13 |         3 |        10
+      256 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 256.
+[INFO DPL-0500] Runtime: 58.86s
+Placement Analysis
+---------------------------------
+total displacement       9896.2 u
+average displacement        0.1 u
+max displacement           45.4 u
+original HPWL         1156571.8 u
+legalized HPWL        1162034.1 u
+delta HPWL                    0 %
+
+Took 59 seconds: detailed_placement
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_v41_rom_elem_q_qp_w10_asap7_item8_q_scan_v1_scan/base/congestion_post_repair_design.rpt
+[WARNING GRT-0273] Disabled NDR (to reduce congestion) for net: clk
+[INFO DPL-0006] Core area: 71446.08 um^2
+[INFO DPL-0007] Movable instances area: 26984.61 um^2
+[INFO DPL-0008] Fixed instances area within core: 31619.00 um^2
+[INFO DPL-0009] Utilization: 82.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 188898 cells
+[INFO DPL-0393]   height 233 row(s): 4 cells
+[INFO DPL-0500] Runtime: 1.48s
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             1087988        617418           56.75%             1 /  1 /  5
+M3             1333990        539996           40.48%             0 /  1 / 19
+M4             1056293        442942           41.93%             2 /  0 /  2
+M5             1273761        163451           12.83%             0 /  1 /  3
+M6             1170660        362315           30.95%             0 /  0 /  0
+M7             1239700        121095            9.77%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          7162392       2247217           31.38%             3 /  3 / 29
+
+[WARNING GRT-0704] Try reduce the layer adjustment from 25% to 18%
+[ERROR GRT-0232] Routing congestion too high. Check the congestion heatmap in the GUI.
+write_db /work/results/asap7/opentallas_ot_v41_rom_elem_q_qp_w10_asap7_item8_q_scan_v1_scan/base/5_1_grt-failed.odb
+Error: global_route.tcl, 175 GRT-0232
+
+Elapsed time: 0:03.33[h:]min:sec. CPU time: user 3.19 sys 0.14 (100%). Peak memory: 630280KB.
+Elapsed time: 2:12.52[h:]min:sec. CPU time: user 159.01 sys 57.44 (163%). Peak memory: 934188KB.
+Elapsed time: 1:04.67[h:]min:sec. CPU time: user 107.47 sys 48.38 (240%). Peak memory: 991552KB.
+Elapsed time: 0:01.34[h:]min:sec. CPU time: user 1.22 sys 0.12 (100%). Peak memory: 480500KB.
+Elapsed time: 0:02.84[h:]min:sec. CPU time: user 2.72 sys 0.12 (100%). Peak memory: 587088KB.
+Elapsed time: 0:17.47[h:]min:sec. CPU time: user 128.00 sys 0.20 (733%). Peak memory: 750896KB.
+Elapsed time: 0:01.22[h:]min:sec. CPU time: user 1.12 sys 0.10 (100%). Peak memory: 501864KB.
+Elapsed time: 4:02.38[h:]min:sec. CPU time: user 922.41 sys 134.62 (436%). Peak memory: 2355808KB.
+Elapsed time: 1:05.45[h:]min:sec. CPU time: user 91.05 sys 54.97 (223%). Peak memory: 1076128KB.
+Elapsed time: 2:21.26[h:]min:sec. CPU time: user 165.21 sys 48.35 (151%). Peak memory: 2970512KB.
+Elapsed time: 3:58.59[h:]min:sec. CPU time: user 321.27 sys 94.67 (174%). Peak memory: 1919672KB.
+Elapsed time: 45:35.19[h:]min:sec. CPU time: user 4965.34 sys 128.58 (186%). Peak memory: 3779452KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/results/asap7/opentallas_ot_v41_rom_elem_q_qp_w10_asap7_item8_q_scan_v1_scan/base/5_1_grt.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/tapeout-item8-20261004/q-scan-v1/physical.json

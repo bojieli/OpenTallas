@@ -1,0 +1,233 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T02:55:24.680230+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_qwen_slab_port_group",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "MUL_LAT": 6
+    },
+    "sources": [
+      {
+        "path": "rtl/physical/ot_qwen_slab_port_group.sv",
+        "sha256": "0d36bc56256b6642e957d00316c9292f58fb6063ea6ea8afe0e9f3a6229aa08f",
+        "size_bytes": 19284
+      },
+      {
+        "path": "rtl/common/ot_meso_fifo.sv",
+        "sha256": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
+        "size_bytes": 25454
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+        "size_bytes": 11377
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+        "size_bytes": 12112
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_prefix.sv",
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "size_bytes": 2803
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+        "sha256": "c23844e60690a83f36e7fb4fc508e91cb4f3354352299a0b13f7eb90e1b41788",
+        "size_bytes": 409
+      }
+    ],
+    "top": "ot_qwen_slab_port_group"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n   0 |    +1.5% | -167.464 | -44571.055 | res_q[204]$_DFF_P_/D\n     8950 |       0 |   30130 |            0 |    +1.5% | -165.713 | -42970.895 | res_q[207]$_DFF_P_/D\n     8960 |       0 |   30285 |            0 |    +1.5% | -164.178 | -41380.824 | res_q[283]$_DFF_P_/D\n     8970 |       0 |   30438 |            0 |    +1.6% | -163.318 | -39783.688 | t_lb[8]$_DFF_P_/D\n     8980 |       0 |   30589 |            0 |    +1.6% | -162.126 | -38202.203 | res_q[257]$_DFF_P_/D\n     8990 |       0 |   30741 |            0 |    +1.6% | -160.851 | -36637.777 | res_q[368]$_DFF_P_/D\n     9000 |       0 |   30894 |            0 |    +1.6% | -159.945 | -35064.117 | res_q[390]$_DFF_P_/D\n     9010 |       0 |   31046 |            0 |    +1.6% | -158.473 | -33511.289 | res_q[156]$_DFF_P_/D\n     9020 |       0 |   31196 |            0 |    +1.6% | -156.983 | -31968.234 | res_q[279]$_DFF_P_/D\n     9030 |       0 |   31346 |            0 |    +1.6% | -155.564 | -30436.656 | res_q[175]$_DFF_P_/D\n     9040 |       0 |   31496 |            0 |    +1.6% | -154.338 | -28903.246 | res_q[137]$_DFF_P_/D\n     9050 |       0 |   31646 |            0 |    +1.6% | -153.545 | -27376.535 | res_q[434]$_DFF_P_/D\n     9060 |       0 |   31796 |            0 |    +1.6% | -152.798 | -25847.172 | res_q[104]$_DFF_P_/D\n     9070 |       0 |   31946 |            0 |    +1.6% | -151.772 | -24336.197 | res_q[181]$_DFF_P_/D\n     9080 |       0 |   32096 |            0 |    +1.6% | -150.429 | -22829.021 | res_q[127]$_DFF_P_/D\n     9090 |       0 |   32245 |            0 |    +1.6% | -149.131 | -21340.309 | res_q[142]$_DFF_P_/D\n     9100 |       0 |   32395 |            0 |    +1.7% | -147.861 | -19858.520 | res_q[141]$_DFF_P_/D\n     9110 |       0 |   32537 |            0 |    +1.7% | -145.218 | -18397.986 | t_nb[0]$_DFF_P_/D\n     9120 |       0 |   32677 |            0 |    +1.7% | -143.520 | -16952.232 | res_q[364]$_DFF_P_/D\n     9130 |       0 |   32817 |            0 |    +1.7% | -140.535 | -15532.663 | res_q[246]$_DFF_P_/D\n     9140 |       0 |   32957 |            0 |    +1.7% | -137.371 | -14134.312 | res_q[362]$_DFF_P_/D\n     9150 |       0 |   33091 |            0 |    +1.7% | -127.994 | -12799.427 | res_q[438]$_DFF_P_/D\n     9160 |       0 |   33221 |            0 |    +1.7% | -125.326 | -11533.908 | t_nb[13]$_DFF_P_/D\n     9170 |       0 |   33342 |            0 |    +1.7% | -123.916 | -10287.513 | res_q[128]$_DFF_P_/D\n     9180 |       0 |   33462 |            0 |    +1.7% | -119.249 | -9065.255 | t_sbase[2]$_DFF_P_/D\n     9190 |       0 |   33581 |            0 |    +1.7% | -112.033 | -7888.262 | res_q[130]$_DFF_P_/D\n    final |       0 |   33614 |            0 |    +1.7% | -110.221 | -7552.478 | res_q[149]$_DFF_P_/D\n--------------------------------------------------------------------------------------\n[WARNING RSZ-0064] Unable to repair all hold checks within margin.\n[INFO RSZ-0032] Inserted 33614 hold buffers.\n[ERROR RSZ-0060] Max buffer count reached.\nError: cts.tcl, 83 RSZ-0060\n\nElapsed time: 0:03.24[h:]min:sec. CPU time: user 3.11 sys 0.13 (100%). Peak memory: 627832KB.\nElapsed time: 0:24.37[h:]min:sec. CPU time: user 31.61 sys 9.26 (167%). Peak memory: 874300KB.\nElapsed time: 0:04.09[h:]min:sec. CPU time: user 6.46 sys 0.26 (164%). Peak memory: 1187048KB.\nElapsed time: 0:01.91[h:]min:sec. CPU time: user 1.82 sys 0.08 (100%). Peak memory: 438456KB.\nElapsed time: 0:06.16[h:]min:sec. CPU time: user 6.01 sys 0.15 (100%). Peak memory: 681044KB.\nElapsed time: 0:26.21[h:]min:sec. CPU time: user 156.76 sys 0.37 (599%). Peak memory: 1184824KB.\nElapsed time: 0:02.09[h:]min:sec. CPU time: user 1.99 sys 0.11 (100%). Peak memory: 581728KB.\nElapsed time: 2:24.37[h:]min:sec. CPU time: user 374.94 sys 78.04 (313%). Peak memory: 3640700KB.\nElapsed time: 0:57.46[h:]min:sec. CPU time: user 79.99 sys 16.53 (167%). Peak memory: 1170676KB.\nElapsed time: 1:18.86[h:]min:sec. CPU time: user 97.51 sys 28.25 (159%). Peak memory: 2787208KB.\nElapsed time: 2:18.94[h:]min:sec. CPU time: user 175.96 sys 16.29 (138%). Peak memory: 3182088KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_qwen_slab_port_group_asap7_codex_item7_s570_l6_splitface_m7/base/4_1_cts.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T02:45:21.273892+00:00",
+  "git": {
+    "commit": "bc22a84ef71374b32dfc2ed1c09729a5029c4755",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_qwen_slab_port_group",
+      "--source",
+      "rtl/physical/ot_qwen_slab_port_group.sv",
+      "--source",
+      "rtl/common/ot_meso_fifo.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+      "--param",
+      "MUL_LAT=6",
+      "--macro-view",
+      "ot_rom_4096x266_m8=physical/asap7_memory_macros/ot_rom_4096x266_m8",
+      "--macro-place-halo",
+      "2.16",
+      "2.16",
+      "--die-area",
+      "0",
+      "0",
+      "777.576",
+      "570.24",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "775.416",
+      "568.080",
+      "--pin-region",
+      "^bw_=left:248.4-319.68",
+      "--pin-region",
+      "^res_in=top",
+      "--pin-region",
+      "^tw_=right:2.16-246.24",
+      "--pin-region",
+      "^(o_|ov$|am_|fault$)=bottom",
+      "--pin-region",
+      "^(p_|rst_n$|clk$)=right:248.4-319.68",
+      "--routing-layers",
+      "M2",
+      "M7",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      "0.833333",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "pnr",
+      "--hold-margin-ns",
+      "0.01",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--orfs-var",
+      "NUM_CORES=16",
+      "--orfs-var",
+      "SDC_FILE=/src/physical/qwen_slab_m5/port_group.sdc",
+      "--orfs-var",
+      "PDN_TCL=/src/physical/qwen_slab_m5/pdn_m5.tcl",
+      "--orfs-var",
+      "MACRO_PLACEMENT_TCL=/src/physical/qwen_slab_share/macro_place_h570.24.tcl",
+      "--nickname-tag",
+      "codex_item7_s570_l6_splitface_m7",
+      "--purpose",
+      "signoff_target",
+      "--output",
+      "/srv/opentallas-scratch/codex/ampere-qwen-rom-die-item7-20261004/runs/s570_l6_splitface_m7/physical.json",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/ampere-qwen-rom-die-item7-20261004/runs/s570_l6_splitface_m7/work"
+    ],
+    "driver": {
+      "commit": "bc22a84ef71374b32dfc2ed1c09729a5029c4755",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/ampere-qwen-rom-die-item7-20261004/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "7d826655f41cd1c7888040f131c8240871b119e63e461cd3e7dd8f93f10fd2f4",
+      "tree": "/srv/opentallas-scratch/codex/ampere-qwen-rom-die-item7-20261004/src"
+    },
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.10.22",
+    "source_root": "/srv/opentallas-scratch/codex/ampere-qwen-rom-die-item7-20261004/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
