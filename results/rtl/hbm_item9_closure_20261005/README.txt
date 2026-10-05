@@ -23,8 +23,12 @@ wrapper footprint, not an assertion about Turing's actual outer allocation.
 No new launch before source exactness and Kant's fresh headroom admission.
 Existing Goodall/Einstein/Claude jobs are preserved, never killed or restarted.
 No editing of original RTL, peer child modules, pinned failure records, docs,
-or central measured scoreboard. Unresolved far(-329ps) vehicle identity has
-been requested; its path classes are not inferred from this r7 diagnosis.
+or central measured scoreboard. Far(-329ps) vehicle RECOVERED: EPYC
+collctx_f12x_r2, SS -328.81ps FF -8.85ps; actual ODB/SPEF/SDC and mapped
+synthesis snapshots retained. r2_diagnosis contains 13374 reported setup paths
+in 21 classes and all six hold paths in two classes; D-pin property count13442
+is a different count from the actual timing report13374. Historical false-IO
+NSM2 context does not qualify current32SM loaded parent.
 
 Live continuation: ONE source-changed full128 route on E2, source090bd3652,
 PID1246044, /srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1.
@@ -36,3 +40,18 @@ The original single-lane28word evidence is retained and not overstated.
 
 Selected32-SM mux fullNL128 minimum gate PASS:2048cycles/209grants/0mismatches,
 zero extra cycles (mux32_r2/result.json); no wholearray simulation.
+
+Actual32SM minimum caller/mux/endpoint source: ot_gpu_coll_item9_context32,
+defaultOFF, original O_COLL request/response source slice, actual32 destination
+vector loads, unchanged reset controller, real two-stage link receivers.
+Model recorded before RTL; zero new context cycles, caller state262496FF
+(76543.8336um2 FF floor). Full131072bit caller ingress cannot be charged to
+a9972track shared upperlayer; source-local placement/channel binding remains
+mandatory. This is the original SIMT baseline, NOT selected sm_v/TU equivalence.
+Full32 enabled elaboration/lint PASS; no physical/adoption claim.
+
+Recovered colldie_f12_r8 driver terminated on historical21600s timeout,
+corner collector failed because6_final.sdc absent. This is a driver terminal,
+NOT automatically a route terminal: live container/dependency audit required.
+Existing progressing container must be retained. Immutable partial evidence
+at terminal_collection/colldie_f12_r8; no new closure claim or rerun.
