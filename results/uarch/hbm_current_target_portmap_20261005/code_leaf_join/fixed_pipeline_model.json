@@ -40,7 +40,9 @@
     "code_valid_extra_bits": 1,
     "per_tile_added_bits_KV_LOCAL0": 2375,
     "per_tile_added_bits_KV_LOCAL1": 839,
-    "all1536_KV_LOCAL0_added_FF_floor_um2": 1063756.8
+    "all1536_KV_LOCAL0_added_FF_floor_um2": 1063756.8,
+    "issued_response_fault_guard_bits": 3,
+    "issued_response_fault_guard_FF_body_floor_um2": 0.8748
   },
   "read_mux": {
     "output_bits": 2660,
@@ -86,6 +88,18 @@
     "extra_route_wires": "actual owned465+legacy/protectedROM2660+tag/control pins already component debit; new2-way legacy/protected mux2560steeringbits at4um2 screen10424incl46compare/muxcontrol allowance; buffers/loadedroute unknownpositive",
     "new_protocol": false,
     "publication": "real externalinstalled/published/retained sourcepins, no privatevisible->globalready tie",
-    "read_pipe_empty": "only two-edge request/response tail, not destination lease or fabric debt drain"
+    "read_pipe_empty": "only two-edge request/response tail, not destination lease or fabric debt drain",
+    "writer_pending_and_mapper_fault_bits": 2,
+    "writer_pending_and_mapper_fault_FF_body_floor_um2": 0.5832
+  },
+  "service_controller_status": {
+    "Euclid_revised_service_SS_ps": -21.277,
+    "FF_ps": 7.988,
+    "DRV": 0,
+    "closes_1p2GHz": false,
+    "component_clock_bound_GHz": 1.17,
+    "whole_128_PC_rate_qualified": false,
+    "controller_selected_as_833ps": false,
+    "tile_gate_scope": "Manual actual returned-port stimulus through existing ownership crossing, no physical controller/signoff qualification"
   }
 }
