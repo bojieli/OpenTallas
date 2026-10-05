@@ -48,6 +48,44 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
+def dsrom_source_fragment_calendar(events, measured_service_cycles=None):
+    """Price a compiler's finite source order; missing service costs stay unknown.
+
+    This is a sequential candidate calendar, not a FIELD phase census or a
+    claim that operand movement is free. TP4 service is maximum, never sum.
+    Cost rows, when supplied by an actual owner, include prefetch, arithmetic,
+    publication/ACK, context restore, collective and fragment drain cycles.
+    """
+    costs = {} if measured_service_cycles is None else measured_service_cycles
+    rows = []
+    finish = 0.0
+    for ordinal, e in enumerate(events):
+        if e['ordinal'] != ordinal or e['depends_on'] != ([] if ordinal==0 else [ordinal-1]):
+            raise ValueError('literal sequential source calendar/order required')
+        cost = costs.get(e['node'])
+        seconds = None
+        if cost is not None:
+            if len(cost) != 4:
+                raise ValueError('actual TP4 per-rank service costs required')
+            values=[]
+            for r in cost:
+                if r['cycles'] < 0 or r['clock_hz'] <= 0:
+                    raise ValueError('service cycle/clock price bounds')
+                values.append(r['cycles']/r['clock_hz'])
+            seconds=max(values)
+        start=finish
+        finish=None if start is None or seconds is None else start+seconds
+        rows.append(dict(node=e['node'],depends_on=e['depends_on'],start_s=start,
+                         service_s=seconds,finish_s=finish,
+                         missing=e['missing']+([] if cost is not None else ['actual composed per-rank service cycles/clock'])))
+    return dict(order='literal source order, sequential dependencies; no overlap credit',
+                rank_composition='TP4 maximum',rows=rows,composed_seconds=finish,
+                composition_complete=all(not r['missing'] for r in rows),
+                unknown_costs_are_zero=False,added_hardware_area_um2=0,
+                hardware_change='compiler-only candidate; existing physical capacity/homes unresolved',
+                adoption=False)
+
+
 def dsrom_recovery_decision_gate():
     """Source-pinned, conditional S81 recovery DAG prices; no hardware adoption.
 
@@ -8117,6 +8155,52 @@ def dsrom_wfc_local_control_price(maxu=866, nw=21, flit=512, txq=4):
 
 
 
+
+def dsrom_wfc_stage_completion_join_price(idw=47, paw=14, nw=21):
+    """One finite retained stage result, qualified by real source-owned pins.
+
+    Complete plan coverage and five visibility predicates are REQUIRED inputs;
+    this join never counts a fragment END as whole-plan coverage. The selected
+    native END/result and C8/capture/collective health bind inside the overlay.
+    Functional implementation needs that contract, not prior STA arrival data.
+    """
+    metadata_bits = idw + 3*paw
+    result_bits = nw + 32
+    flags = 5  # active, fresh producer, END pending, result held, quarantine
+    ff = metadata_bits + result_bits + flags
+    compare_bits = 3*idw + 3*paw
+    comparison_nand2 = 7*compare_bits + 8*paw
+    control_nand2 = 128
+    mux_nand2 = 4*ff
+    buffers = 3*ff
+    nand2 = comparison_nand2 + control_nand2 + mux_nand2
+    gross = ff*0.37908 + buffers*0.10206 + nand2*0.08748
+    return dict(default_enabled=False, adopted=False, replicas=1,
+                retained_slots=1, new_FF_bits=ff, saved_metadata_bits=metadata_bits,
+                retained_result_bits=result_bits, control_flags=flags,
+                equality_compare_bits=compare_bits,
+                comparison_NAND2_reservation=comparison_nand2,
+                control_NAND2_reservation=control_nand2, mux_NAND2_reservation=mux_nand2,
+                buffer_reservation_cells=buffers, NAND2_equivalent_reservation=nand2,
+                gross_cell_reservation_um2=gross,
+                additional_implementation_reservation_um2=gross,
+                total_cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+                MACs_per_cycle=0, new_memory_ports=0, new_memory_bytes_per_cycle=0,
+                required_source_authority_input_bits=(2+metadata_bits)+(2+idw)+(2+idw+5),
+                producer_data_bits_per_edge=result_bits, native_result_capture_words=1,
+                added_response_edges_when_all_authorities_visible=0,
+                response_basis='END is sampled on its native edge; following-cycle native done/data may bypass retention on the original response edge. Held data waits for real coverage/visibility/quiet, never a fixed timer.',
+                coverage_counters_added=0, coverage_authority='Required identity-matched wholeplan coverage pin; actual owner hook remains unbound',
+                warm_reset='Preserve retained metadata/data/debt and quarantine any active request; no reset retirement',
+                clock='same selected native clk', new_clock_pin_cap_fF_SS=ff*0.433982,
+                mapped_area_proven=False, routing_capacity_proven=False,
+                source_contract_for_component_ready=True, physical_context_ready=False,
+                actual_SS_FF_arrivals=None, SS_FF_closed=False,
+                target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                physical_obligation='Charge this retained result and all comparators/enable/clock/reset buffers in actual parent slot and route required authority ports; no fulltop fit or signoff credit.')
+
+
 def dsrom_wfc_completion_ready_price(nw=21, txq=4):
     """Conditional same-edge completion-ready lookahead, not an adopted repair.
 
@@ -9031,3 +9115,53 @@ def hbm_stream_aq_block_nonempty_selected(*, pcs=128):
                   qualified_route_count_allowed=1,
                   failure_policy='stop and report actual limiting cone; no rescue')
     return record
+
+
+def qwen_rom_registered_issue_commit_price():
+    """Source-counted mandatory core repair; no clock/adoption credit.
+
+    Four head ME_AMAX instructions per TP rank in original P8191 AR manifest;
+    four ranks execute in parallel. One positive833ps reservation cycle each.
+    Descriptor stays in existing NEXT; measured stalls/context remain gates.
+    """
+    return json.loads((ROOT / "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/prebuild.json").read_text())
+
+
+def hbm_stream_aq_period_bound_candidate(*, exposed_service_cycles=None):
+    """Unadopted slower-service bound from the failed two-PC extracted path.
+
+    No SDC change, new hardware or route admission. N must be actual exposed
+    critical-path service edges, not total issued traffic; absent journal
+    keeps whole-token composition unknown. Existing overlap cannot be freed.
+    """
+    if exposed_service_cycles is not None and exposed_service_cycles < 0:
+        raise ValueError('nonnegative actual exposed service cycles required')
+    nominal_ps = 833.333
+    measured_violation_ps = 21.277424
+    bound_ps = nominal_ps + measured_violation_ps
+    return dict(status='UNADOPTED_PERIOD_BOUND_ONLY', source_measured_pcs=2,
+                nominal_target_period_ps=nominal_ps,
+                actual_routed_period_ps=833.0,
+                measured_SS_setup_ps=-measured_violation_ps,
+                measured_FF_hold_ps=7.988277,
+                setup_uncertainty_ps=60,hold_uncertainty_ps=25,
+                nominal_period_bound_ps=bound_ps,
+                same_existing_SDC_linear_bound_ps=833.0+measured_violation_ps,
+                candidate_service_frequency_MHz=1e6/bound_ps,
+                service_time_multiplier=bound_ps/nominal_ps,
+                service_only_time_increase_fraction=measured_violation_ps/nominal_ps,
+                service_only_rate_loss_fraction=1-nominal_ps/bound_ps,
+                actual_exposed_service_cycles=exposed_service_cycles,
+                added_exposed_service_time_us=(None if exposed_service_cycles is None
+                    else exposed_service_cycles*measured_violation_ps/1e6),
+                composed_single_user_token_delta_us=None,
+                composed_rate_prediction=None,full128_clock_qualified=False,
+                additional_CDC_phase_wait_us=None, additional_overlap_credit_us=0,
+                whole_token_composition='deltaT=N_exposed*21.277424ps + changed CDC/phase waits + changed competing-service waits; derive N and waits from accepted source calendar',
+                selected_installed_service_period_changed=False,
+                actual_selected_caller_clock_must_be_reconciled=True,
+                added_state_bits=0, added_ports=0, added_area_um2=0,
+                constraints_relaxed=False, adopted=False, route_admitted=False,
+                timing_requalification='linear fixed-netlist bound only; changed clock/CTS/IO/CDC context not measured',
+                limiting_cone='PC1 refwin -> wq_act / oldest pwin -> wab_oh[27]',
+                physical_record='results/rtl/svc_aq_block_nonempty_cut_20261005/route_r1/terminal.json')
