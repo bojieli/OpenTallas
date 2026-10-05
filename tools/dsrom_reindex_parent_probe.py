@@ -2,8 +2,9 @@
 """Read-only SS/FF inspection of the actual routed production control/list.
 
 Reports the real ready cones, macro loads/capture/check ports and mutable-state
-register inventory. The raw timing reports must be assessed against 166.666ps;
-successful execution alone is not a ready-budget or parent qualification PASS.
+register inventory. Each ready cone must leave at least 166.666ps setup slack
+for its neighbour under SS60; this is a slack reserve, not a 166.666ps maximum
+data delay. Successful execution alone is not parent qualification PASS.
 """
 import argparse
 import hashlib
@@ -143,6 +144,7 @@ def main():
                route_commit=route_source['commit'], tools_sha256={f: sha(ROOT / f) for f in pins},
                scope='Actual production control/list/request/drain-header component; key-data store outside scope',
                ready_budget_ps=166.666, standard_cell_cap_um2=37452.2,
+               ready_budget_basis='SS setup slack reserve >=166.666ps on actual ready-source register -> core capture; keep SS60/FF25',
                qualification=False, corners={})
     for corner in ('ss', 'ff'):
         (out / f'{corner}.tcl').write_text(TCL.replace('TAG', corner.upper()).replace('MACRO/', MACRO + '/').replace('MACRO_CORNER', MACRO + '_' + corner))
@@ -153,7 +155,20 @@ def main():
         run = subprocess.run(cmd, capture_output=True, text=True)
         log = out / f'{corner}.log'
         log.write_text(run.stdout + run.stderr)
-        rec['corners'][corner] = dict(exit=run.returncode, log_sha256=sha(log),
+        text = log.read_text()
+        groups = {}
+        for name in ('*c_req_rdy*', '*drain_ready*'):
+            group = {}
+            for delay in ('max', 'min'):
+                marker = f'PARENT_READY_PATH {name} {delay}\n'
+                if marker in text:
+                    section = re.split(r'\nPARENT_[A-Z_]+', text.split(marker, 1)[1], maxsplit=1)[0]
+                    values = re.findall(r'([-+0-9.eE]+)\s+slack\s+\((?:MET|VIOLATED)\)', section)
+                    if values:
+                        group[delay + '_slack_ps'] = min(map(float, values))
+            group['SS_neighbour_reserve_met'] = corner == 'ss' and group.get('max_slack_ps', float('-inf')) >= 166.666
+            groups[name] = group
+        rec['corners'][corner] = dict(exit=run.returncode, log_sha256=sha(log), ready_groups=groups,
             macro_lib_sha256=sha(ROOT / 'physical/asap7_memory_macros' / MACRO / f'{MACRO}_{corner}.lib'),
             complete=run.returncode == 0 and 'PARENT_PROBE_DONE' in log.read_text() and '[ERROR' not in log.read_text())
         (out / 'record.json').write_text(json.dumps(rec, indent=2) + '\n')
