@@ -58,6 +58,11 @@ module tb_hbm_accel_sm_w2_pair_seq;
     integer t_lastline [0:MAXOPS-1]; integer t_firstline [0:MAXOPS-1]; integer consumed [0:MAXOPS-1];
     integer t_dpost [0:MAXOPS-1]; integer t_ready [0:MAXOPS-1];
     integer cur, cons_total, line_op;
+    integer accepted_ops=0;
+    always @(posedge clk) if(rst_n && start && start_ready) begin
+        if(accepted_ops!=op) $fatal(1,"duplicate/missing public start: accepted=%0d driven=%0d",accepted_ops,op);
+        accepted_ops=accepted_ops+1;
+    end
     reg [1023:0] dir;
     initial for (ii = 0; ii < 512; ii = ii + 1) p_use[ii] = 0;
     always @(posedge clk) begin
@@ -184,6 +189,11 @@ module tb_hbm_accel_sm_w2_pair_seq;
             op_gs = seq[op * NW + 5]; op_xb = seq[op * NW + 9];
             op_pair=seq[op*NW+10];op_delta=(seq[op*NW+12]-seq[op*NW+9]+XDEPTH)%XDEPTH;
             id_a=seq[op*NW+14];id_b=seq[op*NW+15];
+            // New caller ready includes descriptor validity. Settle that
+            // combinational decode BEFORE asserting valid: otherwise the
+            // first op can accept during the while-loop's extra negedge and
+            // then be posted twice. Payload/loads/provider remain unchanged.
+            #0.001;
             start = 1;
             while (!start_ready) @(negedge clk);     // sampled at the negedge: the credit decode is stable
             @(posedge clk);                           // the channel takes the op on this edge
