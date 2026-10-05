@@ -1,0 +1,49 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+1.5% | -236.042 | -96564.031 | res_q[267]$_DFF_P_/D
+     9480 |       0 |   29654 |            0 |    +1.5% | -236.042 | -94795.336 | res_q[267]$_DFF_P_/D
+     9490 |       0 |   29814 |            0 |    +1.5% | -236.042 | -93108.016 | res_q[267]$_DFF_P_/D
+     9500 |       0 |   29959 |            0 |    +1.5% | -236.042 | -91622.703 | res_q[267]$_DFF_P_/D
+     9510 |       0 |   30090 |            0 |    +1.5% | -236.042 | -90264.008 | res_q[267]$_DFF_P_/D
+     9520 |       0 |   30210 |            0 |    +1.5% | -236.042 | -89002.562 | res_q[267]$_DFF_P_/D
+     9530 |       0 |   30330 |            0 |    +1.6% | -236.042 | -87775.195 | res_q[267]$_DFF_P_/D
+     9540 |       0 |   30448 |            0 |    +1.6% | -236.042 | -86582.688 | res_q[267]$_DFF_P_/D
+     9550 |       0 |   30558 |            0 |    +1.6% | -236.042 | -85428.234 | res_q[267]$_DFF_P_/D
+     9560 |       0 |   30665 |            0 |    +1.6% | -236.042 | -84354.328 | res_q[267]$_DFF_P_/D
+     9570 |       0 |   30765 |            0 |    +1.6% | -236.042 | -83317.805 | res_q[267]$_DFF_P_/D
+     9580 |       0 |   30867 |            0 |    +1.6% | -236.042 | -82318.125 | res_q[267]$_DFF_P_/D
+     9590 |       0 |   30965 |            0 |    +1.6% | -236.042 | -81347.375 | res_q[267]$_DFF_P_/D
+     9600 |       0 |   31056 |            0 |    +1.6% | -236.042 | -80408.711 | res_q[267]$_DFF_P_/D
+     9610 |       0 |   31140 |            0 |    +1.6% | -236.042 | -79546.797 | res_q[267]$_DFF_P_/D
+     9620 |       0 |   31217 |            0 |    +1.6% | -236.042 | -78768.680 | res_q[267]$_DFF_P_/D
+     9630 |       0 |   31280 |            0 |    +1.6% | -236.042 | -78457.344 | res_q[267]$_DFF_P_/D
+     9640 |       0 |   31313 |            0 |    +1.6% | -236.042 | -78258.414 | res_q[267]$_DFF_P_/D
+     9650 |       0 |   31337 |            0 |    +1.6% | -236.042 | -78168.984 | res_q[267]$_DFF_P_/D
+     9660 |       0 |   31362 |            0 |    +1.6% | -236.042 | -78150.000 | res_q[267]$_DFF_P_/D
+     9670 |       0 |   31376 |            0 |    +1.6% | -236.042 | -78150.000 | res_q[267]$_DFF_P_/D
+     9680 |       0 |   31502 |            0 |    +1.6% | -233.474 | -76866.219 | res_q[384]$_DFF_P_/D
+     9690 |       0 |   31702 |            0 |    +1.6% | -230.774 | -74746.656 | res_q[373]$_DFF_P_/D
+     9700 |       0 |   31902 |            0 |    +1.6% | -227.155 | -72629.586 | res_q[265]$_DFF_P_/D
+     9710 |       0 |   32102 |            0 |    +1.6% | -225.436 | -70522.273 | res_q[368]$_DFF_P_/D
+     9720 |       0 |   32302 |            0 |    +1.7% | -219.856 | -68422.414 | res_q[363]$_DFF_P_/D
+    final |       0 |   32362 |            0 |    +1.7% | -219.155 | -67795.984 | res_q[256]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 32362 hold buffers.
+[ERROR RSZ-0060] Max buffer count reached.
+Error: cts.tcl, 83 RSZ-0060
+
+Elapsed time: 0:06.92[h:]min:sec. CPU time: user 6.63 sys 0.27 (99%). Peak memory: 633188KB.
+Elapsed time: 0:40.58[h:]min:sec. CPU time: user 43.18 sys 0.72 (108%). Peak memory: 888532KB.
+Elapsed time: 0:07.45[h:]min:sec. CPU time: user 9.44 sys 0.50 (133%). Peak memory: 1125372KB.
+Elapsed time: 0:03.89[h:]min:sec. CPU time: user 3.68 sys 0.21 (99%). Peak memory: 437440KB.
+Elapsed time: 0:10.72[h:]min:sec. CPU time: user 10.22 sys 0.42 (99%). Peak memory: 656456KB.
+Elapsed time: 3:36.58[h:]min:sec. CPU time: user 621.76 sys 0.91 (287%). Peak memory: 1081272KB.
+Elapsed time: 0:04.49[h:]min:sec. CPU time: user 4.20 sys 0.26 (99%). Peak memory: 564640KB.
+Elapsed time: 9:25.75[h:]min:sec. CPU time: user 1276.88 sys 9.62 (227%). Peak memory: 3332520KB.
+Elapsed time: 1:50.38[h:]min:sec. CPU time: user 127.99 sys 3.24 (118%). Peak memory: 1240032KB.
+Elapsed time: 2:03.08[h:]min:sec. CPU time: user 148.32 sys 22.56 (138%). Peak memory: 2381808KB.
+Elapsed time: 2:51.33[h:]min:sec. CPU time: user 223.25 sys 18.42 (141%). Peak memory: 2814452KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_qwen_slab_port_group_asap7_qss_fanout_twoface_456_l7/base/4_1_cts.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_twoface_456_l7/physical.json

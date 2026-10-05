@@ -11,6 +11,10 @@ New files only (default-off: nothing existing is swapped or edited; a source lis
   one or the other): qmul LAT 5 -> mul_f12_l5, LAT 6 -> mul_f12_l6; keep-prefix qadd LAT 4 -> add_f12_l4, LAT 5 -> add_f12_l5x.
 - `rtl/test/tb_su_fp32_f12.{sv,cpp}` (equivalence bench), `rtl/test/sim_hdc_fp32_f12_dpi_tops.sv` (DPI latency stand-ins).
 
+**2026-10-05 alert resolved (l6_alert/finding.txt): mul_f12_l6 is exact (stress classes incl. signed zeros, exact
+cancellation, wide exponents, subnormal results: 0 mismatches); the DS ROM su_hcpost ML=6 failure is that lane's
+fixed-L5 y*post multiplier aligned as latency ML (lockstep: 195,546 mismatches -> 0 when it follows ML).**
+
 Exactness (`fp32_f12_eq_v6_5M_x2.log`): 2 x 5,000,000 biased random pairs (specials, subnormals, cancellation,
 rounding carries), every variant {valid, err, y} equal to the fast units delayed to its LAT: 0 mismatches.
 

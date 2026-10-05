@@ -328,7 +328,12 @@ def main():
     ap.add_argument("--w", type=int, default=64)
     ap.add_argument("--nb", type=int, default=32)
     ap.add_argument("--only", default=None)
+    ap.add_argument("--nin", type=int, default=None, help="hub stages in (default 33: the ROM's 22 slow stages)")
+    ap.add_argument("--nout", type=int, default=None, help="hub stages out (default 23: the ROM's 15 slow stages)")
     a = ap.parse_args()
+    global NIN, NOUT
+    NIN = a.nin if a.nin is not None else NIN
+    NOUT = a.nout if a.nout is not None else NOUT
     return dict(prep=cmd_prep, run=cmd_run)[a.step](a)
 
 
