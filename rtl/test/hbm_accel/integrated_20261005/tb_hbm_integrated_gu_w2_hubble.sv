@@ -369,7 +369,9 @@ module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0,PROTECTE
   @(negedge clk);lease_requested=1;wait(grants[2]);@(negedge clk);
   if(source_permit)$fatal(1,"source permission before reserve");
   reserve_v=1;wait(reserve_r);@(negedge clk);reserve_v=0;lease_requested=0;
-  if(!source_permit)$fatal(1,"missing real four-seat reservation");
+  // Protected metadata is checked before admitting the native no-ready producer.
+  wait(source_permit);
+  if(!retained||!grants[2])$fatal(1,"missing real four-seat reservation");
   if(LIVE_SWIGLU)begin
    producer_start=1;@(negedge clk);producer_start=0;
    wait(producer_done);@(negedge clk);
