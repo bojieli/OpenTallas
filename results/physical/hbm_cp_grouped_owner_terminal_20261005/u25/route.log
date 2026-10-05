@@ -1,0 +1,6 @@
+view=asap7 corner=TT block=ot_hbm_integrated_su_cp_bind top=ot_hbm_integrated_su_cp_bind purpose=characterization
+  pnr:   wirelength=15112 um vias=32234 DRC=0 antenna_nets=0 Fmax=945.21 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; set_max_transition 320 [current_design]
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch2/jobs/maxwell-cp-grouped-owner-routes-r1/u25/physical.json
