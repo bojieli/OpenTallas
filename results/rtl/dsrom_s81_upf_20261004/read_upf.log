@@ -1,0 +1,8 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+UPF_IMPORT_LIMITATION: supply commands unavailable; VDD/VSS/VDD_ELEM references only, no physical switched-grid claim
+IMPORT instance_count=339330 (UPF supply limitation reported above; existing AO shadow retention checked by PA-sim)
+DOMAINS 2 POWER_SWITCHES 4
+READ_UPF_PASS

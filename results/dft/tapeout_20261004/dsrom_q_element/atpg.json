@@ -1,0 +1,161 @@
+{
+ "aborted_by_pin": {
+  "A": 701,
+  "A1": 59,
+  "A2": 206,
+  "A3": 3,
+  "B": 260,
+  "B1": 1,
+  "B2": 1,
+  "C": 11,
+  "D": 4,
+  "Y": 1602
+ },
+ "block": "ot_v41_rom_elem_q_qp_w10",
+ "classes": {
+  "AU": 2848,
+  "DS": 155960,
+  "DT": 1068531,
+  "ND": 0,
+  "UT": 53719
+ },
+ "engine": {
+  "binary_source_sha256": "3b639ac42a3eb520dab25b0f73eda39624d3d878399fe3eab4deba9461dd220d",
+  "capture": {
+   "abort_retry_backtrack_limit": 4096,
+   "aborted": 2848,
+   "aborted_retried": 7430,
+   "backtrack_limit": 256,
+   "detected": 1068531,
+   "detected_after_random": 996659,
+   "faults_targeted": 1217846,
+   "log": [
+    "otatpg: PODEM 167728 calls, 146467 untestable, 2863 aborted, 10856 deterministic patterns, 0 unconfirmed (28.1804 s)",
+    "otatpg: compaction 11983 -> 9042 patterns (34.2377 s)",
+    "otatpg: 1068531 detected, 146467 untestable, 2848 aborted, 0 other; 9042 patterns (42.2707 s)"
+   ],
+   "max_level": 76,
+   "nodes": 1250323,
+   "observed": 31765,
+   "patterns": 9042,
+   "patterns_before_compaction": 11983,
+   "podem_backtracks": 20762722,
+   "podem_calls": 167728,
+   "podem_unconfirmed": 0,
+   "primary_inputs": 639,
+   "random_blocks": 20,
+   "random_patterns_kept": 1127,
+   "seconds": 42.2706,
+   "seed": 1,
+   "sources": 32245,
+   "threads": 24,
+   "undetected_other": 0,
+   "untestable": 146467,
+   "untestable_but_detected": 0,
+   "wall_seconds": 42.5
+  },
+  "shift": {
+   "cycles": 2066,
+   "detected": 155960,
+   "faults_simulated": 212527,
+   "first_divergence_faults": 160761,
+   "full_simulation_faults": 51704,
+   "log": [
+    "otatpg: flush 2066 cycles, 155960/212527 faults detected (155.987 s)"
+   ],
+   "longest_chain": 1032,
+   "mode": "flush",
+   "scan_out_faults": 62,
+   "seconds": 155.987,
+   "wall_seconds": 157.4
+  }
+ },
+ "fault_coverage": 0.955844,
+ "fault_model": "single stuck-at, every pin of every cell (uncollapsed), clock pins included",
+ "faults_total": 1281058,
+ "gate_level": {
+  "build": "default",
+  "capture_faults_confirmed": 48,
+  "capture_faults_injected": 48,
+  "chain_faults_confirmed": 16,
+  "chain_faults_injected": 16,
+  "good_machine_mismatches": 0,
+  "good_machine_patterns": 48,
+  "sampling": {
+   "capture_faults_sampled_from": 1068531,
+   "chain_faults_sampled_from": 155960,
+   "method": "patterns 0..N-1 plus each sampled fault's detecting pattern; faults drawn uniformly without replacement with random.Random(seed)",
+   "patterns_replayed": 48,
+   "patterns_total": 9042,
+   "seed": 1
+  },
+  "seconds": 235.6,
+  "simulator": "Verilator 5 (--timing), cell models generated from Liberty",
+  "unconfirmed": []
+ },
+ "model": {
+  "clock_pin_faults": 63212,
+  "clock_ports": [
+   "clk"
+  ],
+  "instances": 179344,
+  "lockup_latches": 0,
+  "node_types": {
+   "AND": 208557,
+   "BUF": 640529,
+   "CONST0": 1,
+   "CONST1": 1,
+   "INPUT": 32245,
+   "NOT": 249549,
+   "OR": 119441
+  },
+  "nodes": 1250323,
+  "pin_faults_modelled": 1217846,
+  "primary_inputs": 639,
+  "primary_outputs": 159,
+  "scan_cells": 31606,
+  "top": "ot_v41_rom_elem_q_qp_w10",
+  "undriven_net_count": 0,
+  "undriven_nets": []
+ },
+ "netlist": {
+  "path": "/home/ubuntu/tapeout-workstreams/dft/q/atpg_netlist.v",
+  "sha256": "d1a524772ad87ae9c978dbab3739b55e9dce45f73115e9263e73d036d84d8475"
+ },
+ "patterns": {
+  "before_compaction": 11983,
+  "capture": 9042,
+  "chain_test": 1,
+  "note": "tester cycles = one load/unload of the longest chain per pattern, overlapped, plus the capture cycle",
+  "random_kept": 1127,
+  "tester_cycles": 9342451
+ },
+ "scan": {
+  "capture_constraints": {
+   "rst_n": 1,
+   "scan_en": 0,
+   "test_mode": 1
+  },
+  "chains": 31,
+  "max_chain_length": 1032,
+  "scan_cells": 31606
+ },
+ "schema": "opentallas.dft.atpg.v1",
+ "seconds": 548.6,
+ "test_coverage": 0.99768,
+ "top": "ot_v41_rom_elem_q_qp_w10",
+ "untestable_by_pin": {
+  "A": 16609,
+  "A1": 2347,
+  "A2": 3529,
+  "B": 7451,
+  "B1": 67,
+  "C": 1201,
+  "D": 68,
+  "L": 2193,
+  "RESETN": 929,
+  "SE": 2829,
+  "SETN": 929,
+  "Y": 15519
+ }
+}

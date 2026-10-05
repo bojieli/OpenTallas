@@ -1,0 +1,32 @@
+{
+  "verdict": "PASS_FULL_SIZE_ISSUER_DIFFERENTIAL",
+  "source_commit": "b4f1034f0e694addd8d4d5b9dc1a7d4f4c54bd3d",
+  "remote_root": "/srv/opentallas-scratch/codex/epicurus-field-address-20261005-r2",
+  "counts": {
+    "cycles": 7512,
+    "launches": 20,
+    "ends": 20,
+    "stalls": 4234,
+    "wraps": 82,
+    "active": 6562,
+    "writes": 10496,
+    "qbeats": 1177,
+    "bbeats": 840
+  },
+  "comparison": "Pinned original vs additive parameter0 vs parameter1. Active address/family/nbeat/base/cursor/streamword/stall predicate; all public control, qualified Q/BF data,128 root write channels/address/value, row retirement, injected upstream fault and reset.",
+  "expected_root_writes": 10496,
+  "qualification_limits": [
+    "Synthetic immutable ROMword stimulus; no golden input injection.",
+    "Full ONE issuer shape, not a full field arithmetic/golden or installed parent token gate.",
+    "No actual placement/clock/PG/memory macro boundary or SS/FF qualification.",
+    "time maximumRSS metrics are per-command process measurements, not aggregate worker peak. Shared measured admission, not hard pilot cgroup caps."
+  ],
+  "artifact_sha256": {
+    "terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "build.metrics": "8cafa14d20f3ca017ca17751c34bdc7421aa4af0ad0269091a896c506706e89d",
+    "build.log": "123671496830b42100bf6298e1f8e51d2025da3c33c238af683731c4ba4bdab3",
+    "sim.log": "0207de0b670242da09d8b85b0a4049c0f00b2754d55e3d435889eba91d3fd0c7",
+    "sim.metrics": "75b5dd7d6d25f940670d5ee928acd208eed580042b1cad1f6f90c4a7728be306",
+    "admission.json": "4458ce7099ed16bda932dc04da8be3047e4411c475aa2d17799d00a8307b7e11"
+  }
+}
