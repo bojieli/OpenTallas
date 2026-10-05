@@ -10806,6 +10806,7 @@ def hbm_simt_gu_coded_retention_model(nl=128, imw=13, nv=256):
             new_logic_reservation='213 seven-bit equality compares +216 bit XORs + three syndrome/overall trees; shared with codec flag logic if mapping proves it',
             slot='Same43.2um reserved probe; actual previous area815.08 exceeded757.92672 reservation, new mapping required',
             measured=False,adopted=False),
+        measured_parallel_repair={'source': '5340736d3', 'evidence': 'results/rtl/hbm_simt_gu_coded_20261005/probe_r3/summary.json', 'cell_area_um2': 652.163, 'cell_count': 5749, 'FFs': 216, 'sequential_cell_area_um2': 81.8813, 'clock_buffers': 22, 'clock_inverters': 6, 'clock_cell_area_um2': 6.473520000000001, 'clock_pin_load_fF': 93.740112, 'timing_repair_buffers': 2408, 'slot_cell_reservation_um2': 757.92672, 'SS_setup_slack_ps': -391.60819031991423, 'SS_R2R_slack_ps': -169.807785, 'SS_I2R_slack_ps': -18.115898, 'FF_hold_slack_ps': 34.03927834044751, 'physical_closed': False, 'adopted': False},
         mapped_synthesis=dict(source_pin='5ff88466a',width=192,code_register_bits=216,
             cells=4350,cell_area_um2=546.779160,sequential_cell_area_um2=81.881280,
             sequential_cell='DFFASRHQNx1_ASAP7_75t_R',clock_pin_capacitance_fF=216*.433982,
