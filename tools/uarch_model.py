@@ -396,6 +396,49 @@ def rom_spine_publication_price(*, roots=128, elements=2417, phases=1):
                 SSFF_closed=False, physical_admission=False)
 
 
+def rom_stage_context_price():
+    """One full NB2/PP1 W5 element, protected AO and actual boundary cuts.
+
+    Two separately kept AO copies, full state comparison, cold-only quarantine
+    rails and freeze ICG. Original state and handshakes stay intact; no ROM ECC.
+    Four real ping-pong weight macros. Loaded timing/power validate these costs.
+    """
+    shadow = 8*43 + 8*23 + 20 + 8*16
+    ao = shadow + 123 + 91
+    boundary_ff = 3*549 + 86 + 3 + 126 + 65 + 1
+    return_ff = 2*64*65 + 4*6 + 2*7 + 2*5 + 5 + 5 + 2 + 64 + 5*66
+    source_control = 86+126+3
+    comparison_gates = 4*(ao+source_control)
+    logic_floor = (33962 + 2*ao + source_control + 4 + boundary_ff + return_ff)*.37908
+    return dict(schema='opentallas.uarch.W5.context.v1', fullshape='NB2 PP1 NSEG8 K1',
+                compute_macs_per_cycle=128, FP8_macs_per_cycle=64, weight_macro_count=4,
+                weight_macro_bytes_per_cycle=68.5, XS_boundary_bits_per_cycle=549,
+                cfg_boundary_bits_per_cycle=54, result_boundary_bits_per_cycle=126,
+                retained_shadow_payload_bits=shadow, protected_primary_AO_bits=ao,
+                duplicate_AO_bits=ao+source_control, quarantine_FF=4, source_capture_FF=boundary_ff, first_return_depth=64,
+                protection_ICG_count=3,
+                first_return_node_FF_bound=return_ff,
+                conservative_comparison_gates=comparison_gates,
+                added_context_cell_body_um2=(ao+source_control+4+boundary_ff+return_ff)*.37908+comparison_gates*.08748,
+                full_component_logic_floor_um2=logic_floor,
+                logic_placement_reservation_um2=2*(logic_floor+comparison_gates*.08748),
+                macro_body_um2=4*7881.3648, outline_um=[1040.256,239.76],
+                outline_area_um2=1040.256*239.76,
+                floorplan_model_source='results/uarch/dsrom_v9_field_boundary_20261005/model.json',
+                replica_count_stage=2417, hardened_element_count=1,
+                bank_mux_captures=548, capture_mux_fanout=1,
+                boundary_channel_wires=549+54+126,
+                nominal_signal_tracks_per100um_perlayer=100/.048,
+                source_BST_D=3, configuration_loader_edges_inherited=True,
+                return_node_edges_inherited=6, added_operational_edges=0,
+                protection_fault_policy='immediate exclusion; retained debt; cold reset only',
+                streaming_period_ps=833.3333333333334, SS_uncertainty_ps=60, FF_uncertainty_ps=25,
+                macro_SS_clkQ_ps=743.9627002267231, macro_FF_clkQ_ps=492.24471244471647,
+                macro_SS_CLK_load_fF=4*8.68376, macro_FF_CLK_load_fF=4*10.3732,
+                ROM_ECC=False, default_off=True, residual_power_w=None,
+                physical_track_slot_fit=False, context_SSFF_closed=False, energy_credit=False)
+
+
 def rom_stage_retention_edge_price(elements=2417):
     """Mandatory write preservation on the PG falling edge, NB2 full25 map.
 
