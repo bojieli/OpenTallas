@@ -389,7 +389,7 @@ Each record is reproduced by its command, from the sources it pins. `current` pi
 | `results/arch/sync_cost_table.json` | yes | `python3 tools/sync_cost_table.py` | current 5, stale 2 | — |
 | `results/gpu/blackwell_gather_designs.json` | yes | `./gather_designs 500 21 64 16  (steps, trials, GEMVs per trial, weight matrices)` | none | — |
 | `results/physical_abi3/asap7/signoff/energy_common_kv.json` | yes | `not recorded` | none | — |
-| `results/rtl/hdc_decode_campaign.json` | yes | `not recorded` | current 24, stale 4 | — |
+| `results/rtl/hdc_decode_campaign.json` | yes | `not recorded` | current 22, stale 6 | — |
 | `results/rtl/hdc_v41_decode_campaign.json` | yes | `python3 tools/rtl_hdc_v41_decode_campaign.py  (inferred; the record names no command)` | current 20, stale 16 | — |
 | `results/rtl/hdc_v41x_egather_campaign.json` | yes | `python3 tools/rtl_hdc_v41x_egather_campaign.py  (inferred; the record names no command)` | current 6, stale 2 | — |
 | `results/rtl/hdc_v41x_sel_campaign.json` | yes | `python3 tools/rtl_hdc_v41x_sel_campaign.py  (inferred; the record names no command)` | current 2, stale 1 | — |
@@ -433,12 +433,12 @@ Everything below is known to the check. A new entry of any kind fails it; a valu
 - `results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json`: provenance.source_snapshot_commit 6afcfba39b4d6e2b92252030b24986d26e36e4ce is not in HEAD's history
 - `results/rtl/hdc_v41x_whbm_pooled_multi.json`: provenance.execution_source_commit 351aecd4a1827eaccb2c4476282db4db1629d5a6 is not in HEAD's history
 
-### stale-pin (159)
+### stale-pin (161)
 
 - `results/arch/sync_cost_table.json`: inputs[results/arch/arch_budget_v41.json] -> results/arch/arch_budget_v41.json is stale
 - `results/arch/sync_cost_table.json`: inputs[results/arch/v41_rack.json] -> results/arch/v41_rack.json is stale
 - `results/quality/qwen3_8b_deployment_arithmetic.json`: golden_pin[tools/hdc_golden.py] -> tools/hdc_golden.py is stale
-- `results/rtl/hdc_decode_campaign.json`: 4 pins, e.g. input_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; input_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale; input_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale
+- `results/rtl/hdc_decode_campaign.json`: 6 pins, e.g. input_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; input_sha256[rtl/test/tb_hdc_fastfp_equiv.sv] -> rtl/test/tb_hdc_fastfp_equiv.sv is stale; input_sha256[rtl/test/tb_hdc_mul_equiv.sv] -> rtl/test/tb_hdc_mul_equiv.sv is stale
 - `results/rtl/hdc_qwen_context_1024.json`: 4 pins, e.g. source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale; source_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale
 - `results/rtl/hdc_qwen_context_2048.json`: 4 pins, e.g. source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale; source_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale
 - `results/rtl/hdc_qwen_context_512.json`: 6 pins, e.g. source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu_q.sv] -> rtl/hdc/ot_hdc_sfu_q.sv is stale
