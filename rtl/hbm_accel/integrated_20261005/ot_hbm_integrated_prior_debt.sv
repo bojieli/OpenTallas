@@ -30,21 +30,36 @@ module ot_hbm_integrated_prior_debt #(parameter integer ENABLE=0,NC=4)(
  for(genvar k=0;k<NC*9;k=k+1)begin:rows
   wire [65:0] d=decode64(code[k]);assign raw[k*64+:64]=d[63:0];assign bad[k]=|d[65:64];
  end
- reg [NC*576-1:0] next_ledger;reg held_debt,invalid;reg [NC-1:0] authorized;
+ reg [NC*576-1:0] next_ledger;reg invalid;
+ wire [NC*32-1:0] live_slots;
+ wire held_debt=|live_slots;
+ // Authorization reads only the pre-edge protected ledger/frame and offered
+ // response tuple. It must never depend on the downstream consumption edge.
+ // Keeping it out of the retirement block removes the native response-ready
+ // feedback path without registering or manufacturing authorization.
+ wire [NC-1:0] authorized;
+ for(genvar ac=0;ac<NC;ac=ac+1)begin:authorization
+  wire [31:0] matches;
+  for(genvar aslot=0;aslot<32;aslot=aslot+1)begin:slots
+   assign live_slots[ac*32+aslot]=raw[ac*576+aslot*18+17];
+   assign matches[aslot]=raw[ac*576+aslot*18+17]&&
+    raw[ac*576+aslot*18+:16]==observe_rsp_tag[ac*16+:16]&&
+    raw[ac*576+aslot*18+16]==observe_rsp_we[ac];
+  end
+  assign authorized[ac]=(|matches)&&frame_match;
+ end
  integer c,s,found,free_slot,duplicates;
  always @*begin
-  next_ledger=raw;held_debt=0;invalid=0;authorized=0;
+  next_ledger=raw;invalid=0;
   for(c=0;c<NC;c=c+1)begin
    found=-1;free_slot=-1;duplicates=0;
    for(s=0;s<32;s=s+1)begin
     if(raw[c*576+s*18+17])begin
-     held_debt=1;
      if(raw[c*576+s*18+:16]==observe_rsp_tag[c*16+:16]&&
         raw[c*576+s*18+16]==observe_rsp_we[c])found=s;
      if(raw[c*576+s*18+:16]==observe_req_tag[c*16+:16])duplicates=duplicates+1;
     end else if(free_slot<0)free_slot=s;
    end
-   authorized[c]=found>=0&&frame_match;
    if(return_offer[c]&&!authorized[c])invalid=1;
    if(observe_rsp[c])begin
     if(found<0||!frame_match)invalid=1;

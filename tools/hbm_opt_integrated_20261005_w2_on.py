@@ -9,6 +9,7 @@ import argparse
 import ast
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -79,8 +80,10 @@ def run(work, tool):
         rc = subprocess.run(command, cwd=work, stdout=log, stderr=subprocess.STDOUT).returncode
     (work / 'frontend.exit').write_text(str(rc) + '\n')
     # A permissive frontend exit must not qualify an out-of-range hierarchy.
-    if not rc and '%Warning-SELRANGE:' in (work / 'elaboration.log').read_text():
-        print('REJECT_ENABLED_PARENT_OUT_OF_RANGE_SELECTION')
+    dangerous = re.findall(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR):',
+                           (work / 'elaboration.log').read_text())
+    if not rc and dangerous:
+        print('REJECT_ENABLED_PARENT_DIAGNOSTICS ' + ','.join(sorted(set(dangerous))))
         rc = 1
     (work / 'elaboration.exit').write_text(str(rc) + '\n')
     if not rc:
