@@ -28,6 +28,7 @@ endmodule
 module ot_hdc_v41x_idx_kgctl_kc7_ctx #(
     parameter integer OPT_KC6 = 1,
     parameter integer OPT_KC7 = 0,
+    parameter integer OPT_KC8 = 0,
     parameter integer NPC = 32, WB = 128, AW = 28, HW = 20, TAGW = 16, LENW = 4, BEATW = 4,
     parameter integer LBW = 14, LMW = 11, DF = 8
 ) (
@@ -62,7 +63,7 @@ module ot_hdc_v41x_idx_kgctl_kc7_ctx #(
     wire [9:0] dr_fc, dr_f0;
     wire [2*LBW-1:0] dr_blk;
     assign {lr_e, lr_o, cmd_v, cmd_base, cmd_skip, cmd_n, req_rdy, rsp_v, rsp_tag, rsp_beat, dr_ready} = i;
-    ot_hdc_v41x_idx_kgctl_kc7 #(.OPT_KC6(OPT_KC6), .OPT_KC7(OPT_KC7), .NPC(NPC), .WB(WB), .AW(AW), .HW(HW), .TAGW(TAGW), .LENW(LENW), .BEATW(BEATW),
+    ot_hdc_v41x_idx_kgctl_kc7 #(.OPT_KC6(OPT_KC6), .OPT_KC7(OPT_KC7), .OPT_KC8(OPT_KC8), .NPC(NPC), .WB(WB), .AW(AW), .HW(HW), .TAGW(TAGW), .LENW(LENW), .BEATW(BEATW),
                             .LBW(LBW), .LMW(LMW), .DF(DF)) u_dut (
         .clk(clk), .rst_n(rst_q), .lr_re(lr_re), .lr_addr(lr_addr), .lr_e(lr_e), .lr_o(lr_o),
         .cmd_v(cmd_v), .cmd_base(cmd_base), .cmd_skip(cmd_skip), .cmd_n(cmd_n), .busy(busy), .fault(fault),
