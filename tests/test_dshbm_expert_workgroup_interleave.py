@@ -45,3 +45,21 @@ def test_actual_row_pair_assignment_all_dies_no_alias():
    p,s=paired_rows(read,383,die,q)
    assert p[::2,0].tolist()==[v%256 for v in range(die*24+q*6,die*24+q*6+6)]
    assert np.array_equal(p[::2],p[1::2]) and np.all(s[::2]==1) and np.all(s[1::2]==3)
+
+
+def test_a8_descriptors_preserve_default_and_actual_row_views():
+ from dshbm_expert_interleave_descriptor import compile_descriptors_a8
+ from dshbm_expert_workgroup_descriptor import compile_descriptors
+ ids=(41,65,158,164,259,266);kw=dict(layer=20,die=95,input_job='actual-retained-L20')
+ assert compile_descriptors_a8(ids,**kw)==compile_descriptors(ids,**kw)
+ a=compile_descriptors_a8(ids,**kw,interleave8=True)
+ assert [d['sm'] for d in a['descriptors']]==list(range(24))
+ for k,e in enumerate(ids):
+  for parity,w in enumerate(('w1','w3')):
+   covered=[]
+   for q in range(4):
+    d=a['descriptors'][4*k+q];v=d['source_views'][parity]
+    assert v['tensor']==f'layers.20.ffn.experts.{e}.{w}.weight'
+    assert v['native_rows']==list(range(parity,12,2))
+    covered.extend(range(v['row_start'],v['row_stop']))
+   assert covered==list(range(2280,2304))
