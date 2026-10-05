@@ -21,12 +21,12 @@
       "physical_holds": [
         "Selected loaded SS60/FF25 context unbound"
       ],
-      "implementation_holds": [
-        "Combined PQ+PACK+XMAP interaction unmeasured"
-      ],
+      "implementation_holds": [],
       "source_replacements": {},
       "slot_macro_channel_binding": null,
-      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json"
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
+      "joint_measurement": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+      "combined_PQ_PACK_XMAP_measured": true
     },
     {
       "lever": "format_masked_activation",
@@ -36,21 +36,21 @@
         "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv"
       ],
       "default_enabled": false,
-      "candidate_exact_selected": false,
+      "candidate_exact_selected": true,
       "parameters": null,
       "physical_holds": [
-        "physical binding absent"
+        "Selected loaded SS60/FF25 context unbound"
       ],
-      "implementation_holds": [
-        "Owner leaf available; production XMAP forwarding/selected combined exact executable pending"
-      ],
+      "implementation_holds": [],
       "source_replacements": {},
       "slot_macro_channel_binding": null,
       "eligible_workloads": [
         "ds_1m"
       ],
       "qwen_opt3_enabled": false,
-      "qwen_source_bound_record": "results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json"
+      "qwen_source_bound_record": "results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json",
+      "joint_measurement": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+      "combined_PQ_PACK_XMAP_measured": true
     },
     {
       "lever": "partial_wave_packing",
@@ -71,12 +71,12 @@
       "physical_holds": [
         "Selected loaded SS60/FF25 context unbound"
       ],
-      "implementation_holds": [
-        "Combined PQ+PACK+XMAP interaction unmeasured"
-      ],
+      "implementation_holds": [],
       "source_replacements": {},
       "slot_macro_channel_binding": null,
-      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json"
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
+      "joint_measurement": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+      "combined_PQ_PACK_XMAP_measured": true
     },
     {
       "lever": "expert_workgroup",
@@ -105,7 +105,8 @@
         "Actual W2 cfg_lines, 136-entry cfg_lut, released payload ordering and W2 exact result remain unbound.",
         "Mandatory eight-sector W2 interleave is not established: current dispatcher uses a 17-sector W2 tail (j0=32,n=17) per expert after the eight-sector GU schedule.",
         "Combined PQ/XMAP response-tag credit and destination publication join has no measured interaction result.",
-        "Loaded SS60/FF25 clock, provider, macro, slot and channel bindings remain open."
+        "Loaded SS60/FF25 clock, provider, macro, slot and channel bindings remain open.",
+        "Await actual Hubble corrected 8/8/1 dispatcher source/hash plus literal cfg_lut and actual W2 golden gate; no deadline waiver."
       ],
       "source_replacements": {},
       "slot_macro_channel_binding": null,

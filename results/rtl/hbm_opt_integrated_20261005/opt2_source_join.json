@@ -120,13 +120,13 @@
   "full_token_measured": false,
   "adopted": false,
   "composition_owner": "Maxwell",
-  "combined_XMAP_interaction_measured": false,
-  "next_measurement": "Only changed PQ+PACK_W2+XMAP joint interaction, preserving the literal 31-op fixture/28-descriptor ordering and response identity; no standalone paired gate or prior eight-case replay.",
-  "next_dependencies": [
-    "Owned combined caller must explicitly pass XMAP=1 and pack the original activation payload by actual paired-column address map.",
-    "Existing result-restore and request-tag/credit joins must remain unchanged; metadata/payload binding must be literal."
-  ],
+  "combined_XMAP_interaction_measured": true,
+  "next_measurement": null,
+  "next_dependencies": [],
   "model_threshold_owner_receipt": "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/incremental_verdict.json",
   "model_threshold_met": true,
-  "headline_clock_qualified": false
+  "headline_clock_qualified": false,
+  "combined_receipt": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+  "actual_joined_cycles": 3864,
+  "actual_joined_saving_cycles": 184
 }

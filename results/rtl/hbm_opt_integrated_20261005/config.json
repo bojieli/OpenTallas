@@ -55,19 +55,19 @@
         },
         "exact_receipts": [
           {
-            "path": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
-            "sha256": "f3d6b54070ee0a7c86c49819b59a8798c0637125c135fa988e3277b24612681a",
+            "path": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+            "sha256": "2d57e20013e7db7822c7b2388fb3c2c07bfe98e5363d87d3adf9c44559af815c",
             "pass_path": [
-              "candidate_exact"
+              "verdict"
             ],
-            "pass_value": true,
+            "pass_value": "PASS_PQ_PACK_XMAP_L20_P1",
             "source_pins_path": [
               "source_pins"
             ]
           }
         ],
         "physical": null,
-        "scope": "Current production parent exact under PQ+PACK, XMAP0; earlier XMAP1 joint record preserved separately."
+        "scope": "Actual simultaneous PQ+PACK+XMAP P1 L20; 86 original FP32 rows, finite behavioural provider component; no full-token or SS/FF admission."
       },
       "missing": "Joint exact component gate complete; loaded SS/FF and complete production provider remain unbound."
     },
@@ -158,19 +158,19 @@
         },
         "exact_receipts": [
           {
-            "path": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
-            "sha256": "f3d6b54070ee0a7c86c49819b59a8798c0637125c135fa988e3277b24612681a",
+            "path": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+            "sha256": "2d57e20013e7db7822c7b2388fb3c2c07bfe98e5363d87d3adf9c44559af815c",
             "pass_path": [
-              "candidate_exact"
+              "verdict"
             ],
-            "pass_value": true,
+            "pass_value": "PASS_PQ_PACK_XMAP_L20_P1",
             "source_pins_path": [
               "source_pins"
             ]
           }
         ],
         "physical": null,
-        "scope": "Actual PQ+PACK component, XMAP0. Joint XMAP1 interaction unmeasured; no whole token/physical admission.",
+        "scope": "Actual simultaneous PQ+PACK+XMAP P1 L20; 86 original FP32 rows, finite behavioural provider component; no full-token or SS/FF admission.",
         "reuse_only_no_standalone_rerun": true
       },
       "missing": "Exact PQ+PACK and literal negatives consumed; PQ+PACK+XMAP interaction and physical admission remain unmeasured.",
@@ -203,7 +203,7 @@
         "Mandatory W2 eight-sector interleave remains a required owner dependency."
       ],
       "binding": null,
-      "missing": "Opt4A8 sources resolved for inventory only; Hubble GU/W2 exact gate and mandatory W2 eight-sector schedule pending; OFF.",
+      "missing": "OFF: owner coupled slot0 timeout; old e96 source historical, corrected8/8/1 source pins and literal W2 cfg_lut/golden gate pending.",
       "source_candidates": {
         "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": {
           "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
