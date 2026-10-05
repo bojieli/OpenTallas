@@ -9759,3 +9759,9 @@ def dsrom_window_full_block_pipeline_model():
             parent_phase_insertion_and_terminal_loads_qualified=False),
         gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
             adoption=False))
+
+
+def hbm_existing_cp_local_pg_model():
+    """Priced native bridge for the existing CP child; PDN connectivity only."""
+    from hbm_cp_local_pg import cp_local_pg_model
+    return cp_local_pg_model()
