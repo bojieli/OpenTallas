@@ -9663,3 +9663,40 @@ def ha2_tu_owner_adapter_model():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.model()
+
+
+def hbm_su_sqrt_prefix_round_model():
+    """Same-cut opt-in repair of the measured side/softplus rounding ripple.
+
+    Pricing precedes RTL. No exponent retiming, reset exception, or II change.
+    Cell budget is a conservative prebuild reservation, not mapped area.
+    """
+    width = 24
+    levels = (width + 1).bit_length() - 1
+    if (1 << levels) < width + 1:
+        levels += 1
+    pairs = sum(width + 1 - (1 << level) for level in range(levels))
+    return dict(schema='hbm_su_sqrt_prefix_round.v1',
+                source='rtl/hdc/v41/ot_hdc_fsqrt.sv',
+                baseline_SS_r2r_ps=dict(side=-167.446838, softplus=-112.847954),
+                repair='24-bit kept prefix increment; carry becomes rounded[24]',
+                AND2_nodes=pairs, XOR2_nodes=width, prefix_levels=levels,
+                new_FF_bits=0, new_clock_reset_sinks=0,
+                conservative_gross_logic_reservation_um2_per_sqrt=250,
+                mapped_net_area_delta_um2=None,
+                side_sqrt_replicas=3, standalone_softplus_sqrt_replicas=1,
+                side_gross_reservation_um2=750, softplus_gross_reservation_um2=250,
+                primitive_MACs_per_cycle=0, primitive_words_per_cycle=1,
+                operand_port_bytes_per_cycle=4, result_port_bytes_per_cycle=4,
+                boundary_bits_per_cycle=32, new_boundary_bits_per_cycle=0,
+                prefix_local_fanout_bound=3,
+                internal_prefix_node_tracks=pairs, routing_capacity_pass=None,
+                carry_encode_fanout_and_loaded_wire_delay='unchanged downstream; route must measure',
+                latency_edges=31, issue_interval_edges=1, added_chain_edges=0,
+                single_user_latency_delta_ns=0,
+                critical_cone='finish-1 f_trunc -> prefix/RNE -> exponent/select -> finish-2 y',
+                exponent_encode='original signed 12-bit arithmetic unchanged',
+                reset_recovery='original timed rst_n/vline; retained recovery FAIL remains blocking',
+                exactness_required='same original code/fault/valid edge including bubbles and refusals',
+                context_clock_ns=.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                area_slot_fit=None, SSFF_closed=False, adopted=False)
