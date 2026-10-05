@@ -10435,3 +10435,9 @@ def hbm_index_ds20_gather_bridge_model():
         static_source_implementation_permitted=True,functional_integration_permitted_after_layout_and_real_lease=True,
         physical_build_admitted=False,adopted=False,token_gain_us=None,
         next='Rawls implements priced opt-in loadedbook/lease+bridges; Sagan plane-major actual formatter. Missing installer must fail closed; no free arena/base or port. Compose actual accepted service after implementation, not model rate adoption.')
+
+
+def qwen_w12_common_advance_composition():
+    """Literal selected-program clock cut and finite publication pre-RTL budget."""
+    from qwen_w12_clock_composition import model
+    return model(Path(__file__).resolve().parents[1])
