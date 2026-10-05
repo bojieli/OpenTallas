@@ -22,6 +22,6 @@ bench_dir=rtl/test/ctl_spec_seed8_20261005
   rtl/hdc/ot_hdc_prefix.sv rtl/gpu/dshbm/ot_dshbm_spec_state.sv "$fixed_source" \
   "$bench_dir/tb_spec_seed8_fixed.sv" > "$run_dir/seed8_build.log" 2>&1
 /srv/opentallas-scratch/admit.sh 2 -- vvp -n "$run_dir/seed8.out" > "$run_dir/seed8.log" 2>&1
-# Existing bench exits0 even on mismatch: require its actual terminal count.
+# Keep the exact terminal-count parser in addition to simulator failure status.
 grep -Eq '^LOCKSTEP spec_state .*mismatches=0$' "$run_dir/seed8.log"
 printf '0\n' > "$run_dir/exit.txt"

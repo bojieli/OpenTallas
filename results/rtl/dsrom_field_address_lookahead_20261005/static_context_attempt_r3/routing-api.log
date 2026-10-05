@@ -1,0 +1,15 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+set_global_routing_layer_adjustment layer adj  
+set_global_routing_random [-seed seed]
+   [-capacities_perturbation_percentage percent] [-perturbation_amount value] 
+                                                 
+set_global_routing_region_adjustment region [-layer layer]
+   [-adjustment adjustment]   
+set_routing_alpha alpha [-net net_name] [-min_fanout fanout] [-min_hpwl hpwl]
+   [-clock_nets] 
+
+set_routing_auto_taper  (-net name | -all_clocks) (-enable | -disable) 
+set_routing_layers [-signal min-max] [-clock min-max]   
