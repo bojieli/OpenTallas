@@ -150,6 +150,10 @@ set_false_path -from [get_ports por_n]
               'export TNS_END_PERCENT = 100', 'export LEC_CHECK = 0',
               'export NUM_CORES = 16', 'export SKIP_REPORT_METRICS = 0']
     (work / 'config.mk').write_text('\n'.join(config) + '\n')
+    # ORFS scripts write SDC alongside ODB, but this pinned Makefile omits
+    # some side-effect dependencies. Order the producer and require its real
+    # SDC output; never manufacture a constraint/checkpoint file.
+    (work / 'side_effects.mk').write_text('$(RESULTS_DIR)/%.sdc: $(RESULTS_DIR)/%.odb\n\t@test -f $@\n')
     manifest = dict(frozen_wrapper_main='3379692178c522e452d7d7e484ef95361b013978',
                     scope='Owner-authorized diagnostic route despite retained predicted timing miss',
                     mapped_netlist_sha256=hashlib.sha256(v.encode()).hexdigest(),
@@ -159,7 +163,7 @@ set_false_path -from [get_ports por_n]
                                   for p in src.rglob('*') if p.is_file() and '.git' not in p.parts},
                     abc_repeated=False, rtl_changes=False)
     (work / 'route_manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
-    make = 'make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 '
+    make = 'make -f Makefile -f /work/side_effects.mk DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 '
     result = f'/work/results/asap7/{a.nickname}/base/'
     cmd = ['docker', 'run', '--rm', '-v', f'{src}:/src:ro', '-v', f'{work}:/work',
            '-w', '/OpenROAD-flow-scripts/flow', a.image, 'bash', '-lc',
