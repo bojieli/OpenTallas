@@ -288,14 +288,15 @@ def ds(get, reg, el, dram):
 # ---------------------------------------------------------------------------------------------------------------------
 def qwen(F, get, reg, dram):
     econ = load(ECON_PATH)["qwen_rom"]["energy"]
-    q_ar, q_ds = get("qwen_rom.ar_tok_s_8k_realmem"), get("qwen_rom.dspark_tok_s_8k")
+    q_ar, q_ds = get("qwen_rom.ar_tok_s_8k_stream4"), get("qwen_rom.dspark_tok_s_8k_stream4")
     q_static = Term(econ["static_w_total"], "modelled", f"{ECON_PATH} qwen_rom.energy.static_w_total (4 dies; ungated clock)")
     q_dyn = Term(round(econ["dynamic_mJ_per_token"] * 1e-3, 5), "modelled", f"{ECON_PATH} qwen_rom.energy.dynamic_mJ_per_token")
     integ = load(INTEG_PATH)["fairness"]
     qc = integ["qwen_ROM_option_C_area"]["central"]
     unv_q = ["Qwen ROM static 200 W and dynamic 76.6 mJ/token are the uarch model (no gate-level power of the Qwen ROM "
              "tile; the DS element measurement does not transfer: KV SRAM slice + split-tree node)",
-             "AR rate is the REAL_MEM one-stack KV path (STREAM4 not composed into a token)"]
+             "AR rate is the measured STREAM4 component composition; full36+head token remains separately required",
+             "Operating mode is plain AR; DSpark rows are off-mode sensitivity, not the selected operating mode"]
     rom = dict(design="Qwen3-8B ROM, TP4: 4 reticle dies, 4 HBM stacks a die (KV)",
                rates=dict(ar=q_ar.d(), dspark=q_ds.d()),
                silicon=silicon(4, get("qwen_rom.die_area_mm2"), qc["stacks"], dram),
@@ -413,8 +414,8 @@ def build():
     sp_ok = bool(el["spine"]) and str(el["spine"]["verdict"]).startswith("ADOPT")
     best = "ar_b1_pg_measured"
     for k in ("ar_b1_pg_spine", "ar_b1_pg_spine_ctl_shared", "ar_b1_pg_spine_ctl_aon_shared"):
-        if k in r["power"]:
-            best = k                                      # the lowest-residual spine variant (adopted or not)
+        if sp_ok and k in r["power"]:
+            best = k                                      # only an adopted spine may determine the energy verdict
     bestm = best.replace("ar_b1", "mtp_b1")
     ds_cmp = dict(
         per_user_ar_rom_over_hbm=round(r["rates"]["ar"]["value"] / h["rates"]["ar"]["value"], 4),
@@ -449,7 +450,15 @@ def build():
             h100_tp1_ar=(qg["h100_tp1"]["silicon"], qg["h100_tp1"]["rates"]["ar"]["value"], "AR"),
             h100_tp8_ar=(qg["h100_tp8"]["silicon"], qg["h100_tp8"]["rates"]["ar"]["value"], "AR"),
             b200_dflash=(qg["b200_dflash"]["silicon"], qg["b200_dflash"]["rates"]["spec"]["value"], "DFlash (published)"))))
+    failure_path = "results/rtl/rom_stage_spine_cdc_20261004/failure_E1/terminal.json"
+    current_spine = dict(status="pending", residual=None, energy_win_claim=False)
+    if (ROOT / failure_path).exists() and not (ROOT / CDC_PATH).exists():
+        current_spine.update(status="unknown: E1 global route failed; no final ODB or measured power",
+                             source=failure_path)
+    elif (ROOT / CDC_PATH).exists():
+        current_spine.update(status="adopted" if sp_ok else "unvalidated", source=CDC_PATH)
     return dict(schema="opentallas.arch.energy_silicon_measured.v1",
+                current_spine_measurement=current_spine,
                 supersedes="results/uarch/ds_energy_silicon_authoritative_20261004 (INVALID: old 2,466-2,532 tok/s DS ROM "
                            "rate, ASSUMED 10% power-gating residual)",
                 inputs=dict(scoreboard=SB_PATH, scoreboard_commit=load(SB_PATH).get("generated_from_commit"),
@@ -476,6 +485,8 @@ def readme(d):
          f"spine record `{d['inputs']['spine']}` and `{d['inputs']['registry']}`. Re-run it whenever the scoreboard "
          "or those records change; `--check` fails if this record is stale.", "",
          f"**Supersedes** {d['supersedes']}. Its \"ROM wins energy 1.6-2.3x\" verdict is withdrawn.", "",
+         "**Current spine PG:** " + d["current_spine_measurement"]["status"] +
+         ". No measured residual or energy-win credit is assigned to failed E1. Earlier PG/spine rows retain their historical provenance.", "",
          "Status of every row = its weakest term (measured < composed_from_measured < published < partial < modelled < "
          "assumed). The `unvalidated` list in the JSON names the terms that are not measured.", "",
          "## DeepSeek-V4.1 at 1M (batch 1)", "",
