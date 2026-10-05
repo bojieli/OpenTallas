@@ -28,11 +28,12 @@ module ot_hbm_accel_w2_result_join #(
         assign pair_complete=1'b0;assign fault=1'b0;
     end else begin:g_restore
         localparam integer PW=$clog2(NCTX);
+        localparam integer CW=$clog2(NCTX+1);
         reg [31:0] qa[0:NCTX-1],qb[0:NCTX-1];
         reg [RW:0] qrows[0:NCTX-1];
         reg [NCTX-1:0] qpair,qbound;
         reg [PW-1:0] wp,rp;
-        reg [PW:0] cnt;
+        reg [CW-1:0] cnt;
         reg [RW:0] next_row;
         reg [3:0] seen;
         reg failed;
