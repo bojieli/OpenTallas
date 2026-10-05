@@ -27,7 +27,26 @@ PY
 uptime
 free -g
 df -h "$S" "$R"
-B=/work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C10_capture/base
+B=$(python3 - "$R" <<'PY'
+import re,sys
+from pathlib import Path
+root=Path(sys.argv[1])/'work/orfs'
+name=re.search(r'^export DESIGN_NICKNAME = (\S+)$',(root/'config.mk').read_text(),re.M).group(1)
+assert re.fullmatch(r'[A-Za-z0-9_]+',name)
+print('/work/results/asap7/'+name+'/base')
+PY
+)
+# Completed floorplan outputs are reusable only when explicitly hashed in
+# reuse.json, just like the mapped synthesis outputs. Never replay synthesis.
+REUSE_ARGS=$(python3 - "$R" <<'PY'
+import json,sys
+from pathlib import Path
+m=json.loads((Path(sys.argv[1])/'reuse.json').read_text())
+for f in m['reused_sha256']:
+    if f.endswith(('/1_synth.odb','/1_synth.sdc','/2_1_floorplan.odb','/2_1_floorplan.sdc')):
+        print('-o /work/'+f,end=' ')
+PY
+)
 exec docker run --rm -e OMP_NUM_THREADS=16 -v "$S:/src:ro" -v "$R/work/orfs:/work" \
  -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc \
- "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 -o $B/1_synth.odb -o $B/1_synth.sdc finish metadata-generate"
+ "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 $REUSE_ARGS finish metadata-generate"
