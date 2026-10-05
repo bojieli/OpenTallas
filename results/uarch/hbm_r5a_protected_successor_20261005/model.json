@@ -1,0 +1,148 @@
+{
+  "item": 6,
+  "status": "PREBUILD_DEFAULT_OFF",
+  "enabled_default": false,
+  "evidence": {
+    "path": "results/rtl/hbm_accel_ha4_r5a_gates_20261004/physical_failures/e11b_terminal/verdict.json",
+    "sha256": "0319edf09706051bc91bccc4af486942bd9c04c4c5a403e1f41049f65a4b5924"
+  },
+  "shape": {
+    "NPC": 32,
+    "NSM": 8,
+    "banks": 32,
+    "depth": 512,
+    "landing_credit": 32,
+    "element_replicas_per_die": 4,
+    "macro_count": 96
+  },
+  "compute": {
+    "MACs_per_cycle": 0,
+    "compute_intensity": 0,
+    "communication_intensity": "payload copy; no arithmetic/rounding/reduction changes"
+  },
+  "ports_bytes_per_cycle": {
+    "HBM_payload": 1024,
+    "HBM_coded": 1440,
+    "bank_payload_write": 1024,
+    "bank_sidecar_write": 512,
+    "bank_payload_read": 1024,
+    "bank_sidecar_read": 512,
+    "SM_output": 1024
+  },
+  "boundaries_bits_per_cycle": {
+    "expert_descriptor": 72,
+    "HBM_return": 11520,
+    "bank_local_landing": 11520,
+    "SM_output": 8192
+  },
+  "protection": {
+    "ingress": "SECDED64 id word plus complemented occupancy/valid",
+    "landing": "4 SECDED64 payload words + SECDED64 PC/sector sequence identity, depth32 unchanged",
+    "SRAM": "64 raw128 macros +32 parity/tag128 macros; correct single bit, poison double bit before delivery",
+    "mutable": "complement mirrors on FIFO local pointers, dispatch, location, masks and PC refresh state; mismatched synchronised Gray rails conservatively refuse",
+    "config": "duplicated local LUT/base with bounds/validity; never waive HBM/link/SRAM protection"
+  },
+  "cuts": {
+    "ingress_registered": 1,
+    "descriptor_prefetch": 2,
+    "bank_local_decode": 1,
+    "bank_reduction": 2,
+    "SRAM_read_then_correct_capture": 2,
+    "per_pc_broadcast_local": true,
+    "read_capture": "real corner macro clkQ -> correction registers -> finite skid/consumer",
+    "min_paths": "real capture clocks and loads; repair hold on SRAM address/data/enable and local control, no false IO"
+  },
+  "replicas_mux_demux_fanout": {
+    "bank_winner_inputs": 8,
+    "bank_mux": "two-level registered 4:1 then2:1 one-hot reduction",
+    "global_grant_to_payload": false,
+    "descriptor_tables": 32,
+    "configuration_tables": 32,
+    "masks_per_SM": 512,
+    "fanout": "PC-local and bank-local registered request; no shared ptr ->32 row fanout"
+  },
+  "area": {
+    "measured_predecessor_footprint_mm2": 1.59207,
+    "minimum_footprint_mm2": 1.59207,
+    "added_FF_ceiling_by_class": {
+      "landing_codes": 106496,
+      "pc_descriptor_tables": 18432,
+      "pc_mutable_mirrors": 40960,
+      "local_lut_and_bases": 66560,
+      "mask_mirrors": 16384,
+      "bank_selection_cuts": 46080,
+      "read_correction_and_skid": 30720,
+      "core_control_mirrors": 32768,
+      "ingress_and_outputs": 25856
+    },
+    "added_FF_ceiling_bits": 384256,
+    "standard_cell_upper_um2": 477463.0496,
+    "macro_area_um2": 497052.0,
+    "util_ceiling": 0.35,
+    "CTS_route_headroom_fraction": 0.15,
+    "physical_reservation_mm2": 4.0006400256,
+    "requested_outline_um": [
+      2000.16,
+      2000.16
+    ],
+    "existing_service_estimate_mm2": 1.4,
+    "parent_slot_fit": false,
+    "allocation_owner": "Turing"
+  },
+  "routing": {
+    "demand_tracks": 21088,
+    "requested_channel_width_um": 600,
+    "layers": 4,
+    "pitch_um": 0.08,
+    "PG_via_reserved_fraction": 0.2256,
+    "clock_tracks": 64,
+    "capacity_tracks": 23168,
+    "local_reservation_fits": true,
+    "actual_parent_residual_tracks": null,
+    "parent_channel_fit": false
+  },
+  "latency": {
+    "added_clk_edges_upper": 6,
+    "added_hclk_edges_upper": 2,
+    "first_access_added_ns_upper": 7.048,
+    "DS_routed_fetches": 40,
+    "DS_token_added_us_upper": 0.28192,
+    "old_measured_gain_us": 13.343,
+    "remaining_gain_us_lower": 13.06108,
+    "golden_sector_sequence_unchanged": true,
+    "steady_PC_sectors_per_hclk": 1,
+    "bounds_analytical_until_changed_source_bench": true
+  },
+  "targets": {
+    "qwen_rom": {
+      "applicable": false,
+      "token_added_ns_per_fetch": 0
+    },
+    "v41_rom": {
+      "applicable": false,
+      "token_added_ns_per_fetch": 0
+    },
+    "qwen_hbm": {
+      "applicable": true,
+      "token_added_ns_per_fetch": 7.048
+    },
+    "v41_hbm": {
+      "applicable": true,
+      "token_added_ns_per_fetch": 7.048
+    }
+  },
+  "clock": {
+    "clk_period_ps": 833.333333333,
+    "hclk_period_ps": 1024,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "macro_clkQ_from_own_SS_FF": true
+  },
+  "gates": {
+    "fullshape_exact": false,
+    "physical_admitted": false,
+    "routed_SS_FF": false,
+    "parent_context": false,
+    "adopted": false
+  }
+}
