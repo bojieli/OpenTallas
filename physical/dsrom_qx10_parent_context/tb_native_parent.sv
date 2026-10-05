@@ -16,7 +16,7 @@ module tb_native_parent;
     always_comb begin
         cfg_rom_q=0;
         if (cfg_rom_a<8)
-            cfg_rom_q=48'(cfg_rom_a+1) | (48'd1<<16) | (48'd1<<21) | (48'd1<<27) | (48'd1<<28);
+            cfg_rom_q=48'(cfg_rom_a+1) | (48'd1<<21) | (48'd1<<27) | (48'd1<<28);
         else if (cfg_rom_a<16)
             cfg_rom_q=48'd1 | (48'(32*(cfg_rom_a-8))<<1) | (48'd1<<9)
                 | (48'(cfg_rom_a-8)<<16) | (48'(cfg_rom_a-8)<<19);
@@ -38,7 +38,7 @@ module tb_native_parent;
         if (dut.u_ld.fault!==1'b0) $fatal(1,"PQ0 descriptor fault semantics differ after reset");
         if (node_v) begin
             row=int'(node_t[28:13]);
-            if (node_d!==32'd0 || node_e!==1'b0 || node_t[31:29]!=0 || node_t[4:0]!=1)
+            if (node_d!==32'd0 || node_e!==1'b0 || node_t[31:29]!=0 || node_t[12:8]!=0 || node_t[4:0]!=1)
                 $fatal(1,"zero-ROM return payload/identity mismatch row=%0d tag=%h data=%h err=%b",row,node_t,node_d,node_e);
             if (row>=1 && row<=8) begin
                 mask=1<<(row-1);if (seen0&mask) $fatal(1,"duplicate bank0 row");seen0=seen0|mask;
