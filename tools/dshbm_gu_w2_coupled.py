@@ -82,6 +82,35 @@ def coupled_inputs(gu,weights,limit,ids):
                     np.clip(gu[e,'w3'],-limit,limit).astype(np.float32)))) for e in ids}
 
 
+def native_swiglu(out,exe,gu,weights,limit,ids,expected):
+    """Actual native RTL SiLU/route/BF16/FP8 outputs become W2 operands."""
+    from dsrom_su_swiglu import aq_lines
+    xs={};quant={}
+    for e in ids:
+        d=out/f'expert{e}';d.mkdir(parents=True)
+        for name,data in [('g.mem',gu[e,'w1']),('u.mem',gu[e,'w3']),
+                          ('w.mem',np.full(2304,weights[e],np.float32)),('a.mem',expected[e])]:
+            (d/name).write_text(''.join(f'{int(v):08x}\n' for v in G.bits(data)))
+        (d/'exp.mem').write_text('\n'.join(aq_lines(expected[e],0))+'\n')
+        cmd=[str(exe),'+N=2304','+NA=2304','+NBLK=72',f'+LIM={int(G.bits(limit)):08x}']
+        with (d/'runtime.log').open('w') as log:
+            subprocess.run(cmd,cwd=d,stdout=log,stderr=subprocess.STDOUT,check=True)
+        actual=np.fromfile(d/'native_a.u32',dtype='<u4')
+        if not np.array_equal(actual,G.bits(expected[e])):raise ValueError('native SwiGLU activation mismatch')
+        if 'NATIVE_SWIGLU_CAPTURE_PASS' not in (d/'runtime.log').read_text():raise ValueError('native SwiGLU incomplete')
+        xs[e]=G.from_bits(actual)
+        packet=(d/'native_q.bin').read_bytes()
+        if len(packet)!=72*34:raise ValueError('native FP8 packet count')
+        quant[e]=[(int.from_bytes(packet[b*34+2:b*34+34],'little') |
+                   (int.from_bytes(packet[b*34:b*34+2],'little')<<256)) for b in range(72)]
+    return xs,quant
+
+
+def native_xwords(blocks):
+    return [sum(blocks[(g*8+j)*8+t]<<(266*j) for j in range(8) if (g*8+j)*8+t<72)
+            for g in range(2) for t in range(8)]
+
+
 def accepted_weights(service,views,ids):
     """Unpack ONLY actual preedge accepted W2 bytes; verify all released bytes."""
     result={}
@@ -110,12 +139,18 @@ def accepted_weights(service,views,ids):
     return result
 
 
-def fixture(out,m,rows,ids,weights,xs):
+def fixture(out,m,rows,ids,weights,xs,quant):
     """Use unchanged two-row pair ABI; a third literal row is ordinary FP4."""
     out.mkdir();lines=[];xwords=[];seq=[];gold={};labels={};opid=0
     def op(e,start,n,base):
         p,s=weights[m,e];p=p[start:start+n];s=s[start:start+n]
         g=M.gen_op('v41_fp4',n,2304,8,None,X=[xs[e]]+[np.zeros(2304,np.float32) for _ in range(7)],released_fp4=(p,s))
+        actual_x=native_xwords(quant[e])
+        mask=(1<<M.XC)-1
+        if actual_x!=[w&mask for w in g['xw']]:raise ValueError('native FP8 handoff differs from unchanged W2 operand encoding')
+        # Active column zero is the real native packet; other seven columns
+        # keep the original benchmark's explicitly inactive encoded zeros.
+        g['xw']=[(w&~mask)|native for w,native in zip(g['xw'],actual_x)]
         for r,v in enumerate(g['gold'][0]):gold[opid,r]=int(G.bits(v));labels[opid,r]=(e,rows[start+r])
         return g
     for start in range(0,len(rows),2):
@@ -143,7 +178,9 @@ def run(a):
         d=a.out/f'L{layer}';d.mkdir();inputs=a.inputs
         ids=tuple(map(int,np.fromfile(inputs/f'L{layer}/expert_ids.u32',dtype='<u4')))
         gu=native_gu(a.gu/f'L{layer}',ids)
-        weights,limit=source_route(inputs,a.router,layer,ids);xs=coupled_inputs(gu,weights,limit,ids)
+        weights,limit=source_route(inputs,a.router,layer,ids)
+        expected=coupled_inputs(gu,weights,limit,ids)
+        xs,quant=native_swiglu(d/'native_swiglu',a.swiglu_exe,gu,weights,limit,ids,expected)
         # No cached weighted activation or inversion of rounded biased scores.
         service=d/'service';service.mkdir()
         for name in ('gu.hex','sm_expected.hex','w2.hex','cfg_lut.hex','cfg_lines.hex'):
@@ -160,7 +197,7 @@ def run(a):
         results={};calls=[]
         for m,v in enumerate(views):
             if not v['rows']:continue
-            case=d/f'sm{m}';seq,gold,labels=fixture(case,m,v['rows'],ids,decoded,xs)
+            case=d/f'sm{m}';seq,gold,labels=fixture(case,m,v['rows'],ids,decoded,xs,quant)
             with (case/'runtime.log').open('w') as log:
                 rc=subprocess.run([str(a.w2_exe),f'+DIR={case.resolve()}',f'+NOPS={len(seq)}'],stdout=log,stderr=subprocess.STDOUT).returncode
             got,meta,cycles=parse_output(case/'out.txt')
@@ -176,7 +213,7 @@ def run(a):
         expected={(e,r) for e in ids for v in views for r in v['rows']}
         if set(results)!=expected:raise ValueError('final weighted expert output ownership mismatch')
         (d/'weighted_expert_outputs.txt').write_text(''.join(f'{e} {r} {results[e,r]:08x}\n' for e,r in sorted(results)))
-        records.append(dict(layer=layer,status='PASS_COUPLED_GU_SWIGLU_A8_SERVICE_PAIRED_W2',ids=ids,
+        records.append(dict(layer=layer,status='PASS_NATIVE_GU_NATIVE_SWIGLU_A8_SERVICE_PAIRED_W2',ids=ids,
                             outputs=len(results),calls=calls,die=2,stack=0,full_token=False,physical_closed=False))
         print(json.dumps(records[-1]),flush=True)
         (a.out/'result.json').write_text(json.dumps(records,indent=2)+'\n')
@@ -187,7 +224,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='step',required=True)
     e=sub.add_parser('export-router');e.add_argument('--checkpoint',type=Path,required=True);e.add_argument('--out',type=Path,required=True)
     r=sub.add_parser('run')
-    for name in ('out','inputs','router','gu','service','w2','service-exe','w2-exe'):r.add_argument('--'+name,type=Path,required=True)
+    for name in ('out','inputs','router','gu','service','w2','service-exe','w2-exe','swiglu-exe'):r.add_argument('--'+name,type=Path,required=True)
     a=p.parse_args()
     if a.step=='export-router':export_router(a.checkpoint,a.out);return 0
     return run(a)
