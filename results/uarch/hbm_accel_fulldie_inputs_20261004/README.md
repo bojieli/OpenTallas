@@ -68,7 +68,9 @@ The selected-instance record requires:
 - `instances`: exact `name`, `role`, `module`, `rtl_source`, explicit
   `parameters`, `master`, `lef`, `abstract_provenance`, `ports`, `tied_ports`;
 - each port's `kind` (`memory`, `signal`, `clock_power`), `physical_bits` and
-  `bits_per_cycle`; memory ports also have `bytes_per_cycle`;
+  `bits_per_cycle`; memory ports also have `bytes_per_cycle`. A bundled port
+  supplies `lef_pins` mapping its logical name to every actual LEF bit pin;
+  physical width must equal this pin count. A scalar defaults to its own name;
 - optional `contained_in` for storage physically contained by a hardened block;
   no extra placement/area charge is emitted for such a child;
 - `absent_roles` source references if RF or L2 is absent in that target.

@@ -25,13 +25,15 @@ def fixture(root):
     rtl = save("fixture.sv", "module parser_fixture; endmodule\n")
     uarch = save("fixture_uarch.py", "# Parser fixture, NOT unified accelerator model\n")
     tech = save("fixture_tech.json", {})
-    lef = save("fixture.lef", "MACRO parser_fixture\n SIZE 2 BY 2 ;\n PIN p\n END p\nEND parser_fixture\n")
+    pin_names = ["p["+str(i)+"]" for i in range(8)]
+    lef = save("fixture.lef", "MACRO parser_fixture\n SIZE 2 BY 2 ;\n"+
+               "".join(" PIN "+p+"\n END "+p+"\n" for p in pin_names)+"END parser_fixture\n")
     lib = save("fixture.lib", "library(parser_fixture) { cell(parser_fixture) {} }\n")
     view = save("view.json", dict(actual_macro_abstract=True, master="parser_fixture", rtl_source=rtl,
                 parameters={}, lef=lef, size_um=[2,2], liberty=dict(ss=lib, ff=lib)))
     instances, slots = [], {}
     roles = ["sm", "rf", "l2", "service", "controller", "phy", "collective"]
-    port = dict(p=dict(kind="signal", physical_bits=8, bits_per_cycle=8))
+    port = dict(p=dict(kind="signal", physical_bits=8, bits_per_cycle=8, lef_pins=pin_names))
     for n, role in enumerate(roles):
         name = "fixture"+str(n)
         instances.append(dict(name=name, role=role, master="parser_fixture", module="parser_fixture",

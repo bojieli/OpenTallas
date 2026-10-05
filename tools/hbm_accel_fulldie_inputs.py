@@ -185,14 +185,20 @@ def compile_inputs(root, manifest):
         pins = set(re.findall(r"\bPIN\s+(\S+)", match[1]))
         require(isinstance(instance["ports"], dict) and instance["ports"], "unknown ports: " + name)
         require(slot["ports"] == instance["ports"], "model port mismatch: " + name)
+        accounted_pins = set()
         for port, info in instance["ports"].items():
-            require(port in pins, "missing abstract pin: " + name + "/" + port)
+            mapped = info.get("lef_pins", [port])
+            require(isinstance(mapped, list) and mapped and len(mapped) == len(set(mapped)) and
+                    set(mapped) <= pins, "missing abstract pin mapping: " + name + "/" + port)
+            require(accounted_pins.isdisjoint(mapped), "multiply-owned abstract pins: " + name)
+            accounted_pins.update(mapped)
             require(info["kind"] in ("memory", "signal", "clock_power"), "unknown port kind")
             finite(info["bits_per_cycle"], "boundary bits/cycle")
             finite(info["physical_bits"], "physical port width", True)
+            require(info["physical_bits"] == len(mapped), "port width differs from physical pin map: " + name)
             if info["kind"] == "memory": finite(info["bytes_per_cycle"], "memory bytes/cycle")
         tied = set(instance["tied_ports"])
-        require(set(instance["ports"]).isdisjoint(tied) and set(instance["ports"]) | tied == pins,
+        require(accounted_pins.isdisjoint(tied) and accounted_pins | tied == pins,
                 "unaccounted or multiply-owned abstract pins: " + name)
         for key in ("macs_per_cycle", "communication_intensity", "mux_demux_fanout_area_um2", "latency_cycles"):
             finite(slot[key], name + " " + key)
