@@ -16,6 +16,7 @@ module ot_hbm_integrated_gather_bridge #(
  input wire [16:0] token, input wire [19:0] pos,
  output wire borrow_v, input wire borrow_granted,borrow_fault,
  output wire retained,arena_visible,sink_visible,fault,
+ output wire [31:0] bound_arena_base,bound_arena_limit,
  // All addresses here are BYTE addresses. kind: 0 source read, 1 score
  // store, 2 ID store, 3 formatter read, 4 final ID sink store.
  input wire req_v, output wire req_r, input wire [2:0] req_kind,
@@ -45,6 +46,7 @@ module ot_hbm_integrated_gather_bridge #(
  generate if(ENABLE==0)begin:off
  assign desc_r=0;assign start_r=0;assign borrow_v=0;assign retained=0;
  assign arena_visible=0;assign sink_visible=0;assign fault=0;
+ assign bound_arena_base=0;assign bound_arena_limit=0;
  assign req_r=0;assign rsp_v=0;assign rsp_data=0;assign rsp_addr=0;
  assign rsp_tag=0;assign rsp_kind=0;assign rsp_checked=0;
  assign held_job=0;assign held_gen=0;assign held_token=0;assign held_pos=0;
@@ -53,20 +55,22 @@ module ot_hbm_integrated_gather_bridge #(
  assign m_rsp_rdy=0;assign release_r=0;assign borrow_release=0;
  end else begin:on
  initial if(VM_AW<13||VM_AW>26)$fatal(1,"Installer-derived W15 aperture required");
- // 39 protected rows = 2808 FF, below 4104 estimate; no extra raw payload FF.
+ // 35 protected rows = 2520 FF, below 4104 estimate; no extra raw payload FF.
  // Rows: descriptor8, valid1, frame2, control1, request1, counts1, sequence1,
- // two 96-rank seen sets4, request5128, return5128, captured sector2564.
- reg [71:0] code[0:38]; wire [65:0] dec[0:38];
- wire [63:0] d[0:38]; reg bad;
- for(genvar k=0;k<39;k=k+1)begin:rows
+ // two 96-rank seen sets4, request5128, return5128. Common transport holds the sector before capture.
+ reg [71:0] code[0:34]; wire [65:0] dec[0:34];
+ wire [63:0] d[0:34]; reg bad;
+ for(genvar k=0;k<35;k=k+1)begin:rows
   assign dec[k]=decode64(code[k]);assign d[k]=dec[k][63:0];
  end
- always @*begin bad=0;for(integer k=0;k<39;k=k+1)bad=bad||dec[k][65];end
+ always @*begin bad=0;for(integer k=0;k<35;k=k+1)bad=bad||dec[k][65];end
  localparam [3:0] IDLE=0,ADMIT=1,READY=2,ENC=3,SEND=4,WAIT_RSP=5,
    DEC=6,NEXT=7,RETURN=8,RELEASE1=9,RELEASE2=10,FAIL=15;
  wire [3:0] state=d[11][3:0];wire [3:0] ticks=d[11][7:4];
  wire sector=d[11][8],verify=d[11][9];
+ wire [3:0] next_tick=ticks+4'd1;
  wire [31:0] base=d[2][31:0],limit=d[2][63:32];
+ assign bound_arena_base=base;assign bound_arena_limit=limit;
  wire [31:0] sink_base=d[3][31:0],sink_limit=d[3][63:32];
  wire [32:0] capacity=d[4][32:0];
  wire [31:0] score_src=d[1][31:0],id_src=d[1][63:32];
@@ -147,12 +151,16 @@ module ot_hbm_integrated_gather_bridge #(
  assign release_r=state==READY&&sink_visible&&release_match&&result_published&&source_reverse_done&&!fault;
  assign borrow_release=state==RELEASE2&&!fault;
  function automatic [71:0] ctrl(input [3:0] s,input [3:0] t,input sec,v);
-  ctrl=encode64({54'b0,v,sec,t,s});
+  reg [63:0] raw;
+  begin
+   raw=64'b0;raw[3:0]=s;raw[7:4]=t;raw[8]=sec;raw[9]=v;
+   ctrl=encode64(raw);
+  end
  endfunction
  integer k;reg [95:0] seen;reg [127:0] new_frame;
- wire [255:0] captured={d[38],d[37],d[36],d[35]};
+ wire [255:0] captured=sector?read_data[511:256]:read_data[255:0];
  always @(posedge clk or negedge por_n)begin
-  if(!por_n)begin for(k=0;k<39;k=k+1)code[k]<=encode64(0);end
+  if(!por_n)begin for(k=0;k<35;k=k+1)code[k]<=encode64(0);end
   else if(fault||(retained&&!borrow_granted&&state!=RELEASE2))code[11]<=ctrl(FAIL,0,0,0);
   else case(state)
    IDLE:begin
@@ -166,7 +174,7 @@ module ot_hbm_integrated_gather_bridge #(
      end
     end
    end
-   ADMIT:if(ticks==15)code[11]<=ctrl(READY,0,0,0);else code[11]<=ctrl(ADMIT,ticks+1,0,0);
+   ADMIT:if(ticks==15)code[11]<=ctrl(READY,0,0,0);else code[11]<=ctrl(ADMIT,next_tick,0,0);
    READY:begin
     if(release_v)begin
      if(!release_match)code[11]<=ctrl(FAIL,0,0,0);
@@ -180,22 +188,22 @@ module ot_hbm_integrated_gather_bridge #(
      end
     end
    end
-   ENC:if(ticks==1)code[11]<=ctrl(SEND,0,sector,verify);else code[11]<=ctrl(ENC,ticks+1,sector,verify);
+   ENC:if(ticks==1)code[11]<=ctrl(SEND,0,sector,verify);else code[11]<=ctrl(ENC,next_tick,sector,verify);
    SEND:if(m_req_v&&m_req_rdy)code[11]<=ctrl(WAIT_RSP,0,sector,verify);
    WAIT_RSP:if(m_rsp_v)begin
     if(!rsp_match)code[11]<=ctrl(FAIL,0,sector,verify);
     else if(m_rsp_rdy)begin
-     for(k=0;k<4;k=k+1)code[35+k]<=encode64(m_rsp_data[64*k+:64]);
+     if(!is_write||verify)
+      for(k=0;k<4;k=k+1)code[27+4*integer'(sector)+k]<=encode64(m_rsp_data[64*k+:64]);
      code[11]<=ctrl(DEC,0,sector,verify);
     end
    end
    DEC:if(ticks==2)begin
     if(is_write&&verify&&captured!=(sector?write_data[511:256]:write_data[255:0]))code[11]<=ctrl(FAIL,0,sector,verify);
     else begin
-     if(!is_write||verify)for(k=0;k<4;k=k+1)code[27+4*integer'(sector)+k]<=encode64(captured[64*k+:64]);
      code[14]<=encode64(d[14]+1);code[11]<=ctrl(NEXT,0,sector,verify);
     end
-   end else code[11]<=ctrl(DEC,ticks+1,sector,verify);
+   end else code[11]<=ctrl(DEC,next_tick,sector,verify);
    NEXT:begin
     // Both write ACKs precede both readbacks; visibility advances only after
     // all four matched sector responses and full original-payload comparison.
