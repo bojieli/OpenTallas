@@ -33,3 +33,6 @@ SS/FF route and actual enclosing allocation remain unqualified. See route_launch
 FullLANES16 PF384 HA2 changed-boundary gate uses tb_item9_ha2_fullshape.sv,
 against original owner reducer (PF64 and384), same golden tree and clocks.
 The original single-lane28word evidence is retained and not overstated.
+
+Selected32-SM mux fullNL128 minimum gate PASS:2048cycles/209grants/0mismatches,
+zero extra cycles (mux32_r2/result.json); no wholearray simulation.

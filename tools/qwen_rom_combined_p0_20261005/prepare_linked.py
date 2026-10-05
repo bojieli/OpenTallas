@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 
 
@@ -30,7 +31,13 @@ def prepare(job, objects, source, output):
     # dependency. Never force internal state or claim a constant pin is warm.
     seam_exports = {k:('&'+k+',') in raw_header for k in
                     ('warm_rst_n','hold_rows','bad_ack_tag','join_debt')}
-    include = Path('/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include')
+    model_make = objects/'Vtb_qwen_rt_kv_stream4.mk'
+    match = re.search(r'^VERILATOR_ROOT\s*=\s*(\S+)\s*$',model_make.read_text(),re.M)
+    if not match:
+        raise ValueError('actual generated model runtime root absent')
+    include = Path(match.group(1))/'include'
+    if not (include/'verilated.h').is_file():
+        raise ValueError('actual model runtime headers absent')
     driver = source/'tools/qwen_rom_combined_p0_20261005/linked_driver.cpp'
     compiler = ['g++', '-std=c++20', '-O2', '-pthread', '-DP0_REUSE_HEADER=1',
                 '-I'+str(objects), '-I'+str(include), '-I'+str(include/'vltstd'),
@@ -43,6 +50,7 @@ def prepare(job, objects, source, output):
                   token_fixture=dict(path=str(token),sha256=sha(token),scope='actual released-checkpoint token K/V, linked protocol operands only'),
                   original_runtime_command_sha256=sha(job/'runtime.command.json'),
                   existing_model=dict(objects=str(objects),archive_sha256=sha(archive),header_sha256=sha(header),seam_exports=seam_exports),
+                  actual_runtime_root=str(include.parent),actual_model_make_sha256=sha(model_make),
                   new_frontend_launched=False,force_internal_state=False,producer32case_replay=False,
                   command=compiler,link=link,source_sha256=sha(driver),
                   required_runtime_ABI='actual public warm admission + held row valid/pop + consumer ACK tag seam; old constant warm pin is not equivalent',

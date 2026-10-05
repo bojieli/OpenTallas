@@ -94,7 +94,13 @@ wire cp,gp,bp,fp,cr,gr,br,fr,lc,bad;
 wire [4:0] ap,ar;wire [47:0] dp,dr;wire [10:0] mp,mr;
 wire [85:0] sp,sr;
 (* keep,dont_touch *) reg sticky,sticky_inverse;
-wire stop=bad|sticky|~sticky_inverse;
+wire qualified_bad;
+generate if(ENABLE!=0)begin:g_qualify
+ ot_w5_fault_low u_low(.clk(clk),.rst_n(por_n),.alarm(bad),.settled(qualified_bad));
+end else begin:g_no_qualify
+ assign qualified_bad=0;
+end endgenerate
+wire stop=qualified_bad|sticky|~sticky_inverse;
 always @(posedge clk or negedge por_n)
  if(!por_n)begin sticky<=0;sticky_inverse<=1;end
  else if(ENABLE!=0 && stop)begin sticky<=1;sticky_inverse<=0;end
