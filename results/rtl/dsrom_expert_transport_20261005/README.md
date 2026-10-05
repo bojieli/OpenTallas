@@ -1,16 +1,20 @@
-Exact-size expert transport endpoint measurements
+Expert transport endpoint casebook: native raw32 and conditional packed shapes
 
-Both cases passed on EPYC2 using existing dsrom_1m_links.run_hop_case / tb_dsrom_1m_hop and the unchanged four RECOVERY_HOPS RTL/bench source hashes. Source 5bdbbee2f; terminal exit 0. Only these two payloads ran, sequentially on the existing Icarus endpoint. Model-before-measurement, command, headroom and raw summaries are retained.
+Arendt source contract main7095e772 supplies raw32 native GU4608B, W2input9216B and fieldinput20480B per rank. Packed BF16 sizes2304/4608/10240B are conditional only: no actual source pack/unpack, rounding/visibility or consumer bridge is bound.
 
-| Payload | Flits | Measured endpoint cycles excluding vendor | Vendor board / UCIe cycles | PHY extra cycles | Wire cycles | Total cycles | Total µs at 1.2 GHz |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| GU return 2304 B | 36 | 47 | 156 / 11 | 0 | 90 | 304 | 0.253333333 |
-| W2 input 4608 B | 72 | 83 | 156 / 11 | 0 | 90 | 340 | 0.283333333 |
+| Payload bytes | Current source role | Endpoint cycles excluding vendor | Vendor board / UCIe cycles | PHY extra | Wire | Total cycles | Total µs at 1.2 GHz |
+|---:|---|---:|---:|---:|---:|---:|---:|
+| 2304 | Conditional packed GU | 47 | 156 / 11 | 0 | 90 | 304 | 0.253333333 |
+| 4608 | Native raw32 GU; conditional packed W2 | 83 | 156 / 11 | 0 | 90 | 340 | 0.283333333 |
+| 9216 | Native raw32 W2 input | 155 | 156 / 11 | 0 | 90 | 412 | 0.343333333 |
+| 20480 | Native raw32 field input | 331 | 156 / 11 | 0 | 90 | 588 | 0.490000000 |
 
-RTL last-flit latency already includes vendor delay lines: 214 and 250 cycles respectively. Total is that measured latency plus only the PHY serialization beyond the endpoint and 2×45 wire stages. The existing 130 ns board light-FEC and 8.5 ns UCIe vendor budgets quantize to 156 and 11 streaming cycles. Do not add vendor or wire again. Endpoint rate is 64 B per cycle; existing PHY rate exceeds it, so extra PHY serialization is zero for both measured payloads. No linear interpolation was used.
+Original2304/4608 PASS records from source5bdbbee2f are preserved and reused, never rerun. Their historical gu_return/w2_input labels preceded the raw32 correction; casebook.json supplies authoritative current roles by byte count and the pinned Arendt contract. Only missing9216/20480 ran on source6580e0088, recorded under native_raw32/. Existing draft x_row10240B/428cycles remains an unchanged reused conditional packed-field reference, not a native field bridge. No linear interpolation was used.
 
-Board credits512/SEQW10 and UCIe credits64/SEQW8 exactly preserve the existing recovery-hop recipe. Both messages delivered the exact flit count, hash-pattern payload order/data/last, with zero mismatches, extra flits, endpoint faults, credit stalls, CRC errors or retries. Hash-pattern payload is transport-fixture data, not an actual GU provider output.
+All four distinct payloads passed the existing dsrom_1m_links.run_hop_case / tb_dsrom_1m_hop with identical retained endpoint/bench source hashes. Board FB64/CRED512/SEQW10, CH156 and UCIe CH11/CRED64/SEQW8 preserve the RECOVERY_HOPS recipe. Exact sent/received counts, hash-pattern payload order/data/last checks; no mismatches, extra flits, endpoint faults, stalls, CRC errors or retries. Fixture data is not actual GU provider output. Model-before-measurement, source/input hashes, command, headroom, raw summaries and terminal0 are retained for both runs.
 
-This is endpoint payload timing plus explicitly modeled vendor/PHY/wire terms on one idle link with an always-ready destination. It does not qualify six concurrent TP4 groups, provider/consumer format or visibility, mutable-context retirement, loaded fanout, SS60/FF25, a full token or adoption. Arendt and Maxwell own subsequent service/calendar binding. Historical field failures and the Claude spine/PQ redesign hold remain unchanged. CFG is parked and was not launched.
+RTL first-to-last latency already includes vendor delay lines (214/250/322/498 cycles). Add only PHY serialization beyond the endpoint and 2×45 wire cycles, once. The existing 130ns board light-FEC and8.5ns UCIe vendor budgets quantize to156/11 streaming cycles; these are vendor budgets, not analog measurements. Endpoint64B/cycle is slower than the existing PHY budget, so extra PHY serialization is0. Wire90 is the existing routed-geometry model term, not new loaded-route qualification.
 
-The measurement used one low-priority CPU worker after sampling at least one idle logical CPU and sufficient memory; existing admit.sh was unchanged. No CPU/wall/address-space/file/RAM caps were applied. Completed remote source and binaries remain at /srv/opentallas/repos/noether-expert-transport-5bdbbee2f and /srv/opentallas-scratch/codex/noether-expert-transport-5bdbbee2f-r1.
+Scope: one idle endpoint message, always-ready destination. Not six concurrent TP4 groups, actual provider/consumer format/order/VM binding, mutable-context visibility/ACK/leases, reverse credit or loaded fanout calendar, SS60/FF25, whole-token arithmetic or adoption. Whole-chain latency remains NULL. Maxwell owns source-bound composition; Arendt owns placement/consumer scope. Historical field failures and Claude spine/PQ redesign hold are unchanged; CFG remains parked/unlaunched.
+
+Both jobs used one low-priority CPU worker after measured singleCPU/memory headroom guard and unchanged admit.sh1GiB scheduling estimate, with no CPU/wall/address-space/file/RAM caps. Completed remote sources/binaries remain at /srv/opentallas/repos/noether-expert-transport-{5bdbbee2f,6580e0088} and /srv/opentallas-scratch/codex/noether-expert-transport-{5bdbbee2f,6580e0088}-r1. No full array, collective or proof replay was launched.
