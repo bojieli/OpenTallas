@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "4592e3082",
+ "generated_from_commit": "b64dab000",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -1251,9 +1251,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "AR_tok_s",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 1402.3,
+   "value": 1384.8,
    "resolved": true,
-   "blob": "d608fc3bd4c52c05a520b335d9bf01f44a8b1030",
+   "blob": "e9e25f6510d0b1451e10a71496e63c05e56bda4b",
    "last_commit": "1b34fc737 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
@@ -1263,13 +1263,13 @@
    "label": "Per-user AR tok/s at 1M (adopted: candidate-block gather re-index, CKV lat 259) [superseded by all-measured]",
    "unit": "tok/s",
    "status": "partial",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "headline.levers_measured.candidate_gather.AR_tok_s",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "headline.s81_window.la.AR_tok_s",
    "note": "Newest record (9db526f58). Context-dependent terms are full-shape RTL at pos 1,048,575; context-independent nodes come from the S81 graph model. Gather adopted (idxkey verdict keeps it as baseline).",
-   "value": 2532.2,
+   "value": 2467.0,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_allmeasured_asbuilt": {
    "target": "ds_rom",
@@ -1281,9 +1281,9 @@
    "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
    "pointer": "AR_tok_s",
    "note": "as-built S81 microarchitecture, before the recovery levers",
-   "value": 1379.2,
+   "value": 1362.2,
    "resolved": true,
-   "blob": "c146ebd5dddbcc3a8b6c07886426aebc64fcf036",
+   "blob": "9a4e6cd89e6b833449cd719c7353adda7a7059e7",
    "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m": {
@@ -1296,9 +1296,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 2511.6,
+   "value": 2497.0,
    "resolved": true,
-   "blob": "d608fc3bd4c52c05a520b335d9bf01f44a8b1030",
+   "blob": "e9e25f6510d0b1451e10a71496e63c05e56bda4b",
    "last_commit": "1b34fc737 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
@@ -1308,13 +1308,13 @@
    "label": "Per-user speculative (DSpark MTP, L1 fused draft head, third-party tau) tok/s at 1M [superseded by all-measured]",
    "unit": "tok/s",
    "status": "partial",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "headline.levers_measured.candidate_gather.MTP_fused_tok_s",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "headline.s81_window.la.MTP_fused_tok_s",
    "note": "Draft 105.55 us measured on the reduced vehicle, scaled to full shape by l1_chain_ratio 1.0106.",
-   "value": 6842.8,
+   "value": 7187.8,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_allmeasured_asbuilt": {
    "target": "ds_rom",
@@ -1326,9 +1326,9 @@
    "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
    "note": "as-built S81 microarchitecture, before the recovery levers",
-   "value": 2443.6,
+   "value": 2429.8,
    "resolved": true,
-   "blob": "c146ebd5dddbcc3a8b6c07886426aebc64fcf036",
+   "blob": "9a4e6cd89e6b833449cd719c7353adda7a7059e7",
    "last_commit": "243809bdb 2026-10-04"
   },
   "ds_rom.mtp_as_built_tok_s_1m": {
@@ -1338,13 +1338,13 @@
    "label": "MTP tok/s at 1M, as-built draft",
    "unit": "tok/s",
    "status": "partial",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].MTP_tok_s.as_built_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].MTP_tok_s.as_built_us",
    "note": "Key is named *_us but holds tok/s.",
-   "value": 6404.3,
+   "value": 6735.1,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.mtp_l1l2_nv5_tok_s_1m": {
    "target": "ds_rom",
@@ -1353,13 +1353,13 @@
    "label": "MTP at 1M with L1+L2 NV5 batched draft (not closed)",
    "unit": "tok/s",
    "status": "unvalidated",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].MTP_tok_s.l1l2_nv5_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].MTP_tok_s.l1l2_nv5_us",
    "note": "L2 SS pre-layout screen fails; needs +4 head dies. Do not headline.",
-   "value": 7495.4,
+   "value": 7859.9,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.ar_us_1m": {
    "target": "ds_rom",
@@ -1371,9 +1371,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "AR_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 713.09,
+   "value": 722.121,
    "resolved": true,
-   "blob": "d608fc3bd4c52c05a520b335d9bf01f44a8b1030",
+   "blob": "e9e25f6510d0b1451e10a71496e63c05e56bda4b",
    "last_commit": "1b34fc737 2026-10-04"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
@@ -1383,13 +1383,13 @@
    "label": "AR token latency at 1M [superseded by all-measured]",
    "unit": "us",
    "status": "partial",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].AR_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].AR_us",
    "note": "110 patched nodes add up to 51.27 us measured (72.61 us modelled); the rest is the S81 graph model.",
-   "value": 394.911,
+   "value": 405.35,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.verify_us_1m": {
    "target": "ds_rom",
@@ -1401,9 +1401,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.verify_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 1090.037,
+   "value": 1099.068,
    "resolved": true,
-   "blob": "d608fc3bd4c52c05a520b335d9bf01f44a8b1030",
+   "blob": "e9e25f6510d0b1451e10a71496e63c05e56bda4b",
    "last_commit": "1b34fc737 2026-10-04"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
@@ -1413,12 +1413,12 @@
    "label": "MTP verify step at 1M [superseded by all-measured]",
    "unit": "us",
    "status": "partial",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].verify_us",
-   "value": 459.413,
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].verify_us",
+   "value": 469.852,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.wavefront_ii_us": {
    "target": "ds_rom",
@@ -1432,7 +1432,7 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 75.389,
    "resolved": true,
-   "blob": "d608fc3bd4c52c05a520b335d9bf01f44a8b1030",
+   "blob": "e9e25f6510d0b1451e10a71496e63c05e56bda4b",
    "last_commit": "1b34fc737 2026-10-04"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
@@ -1442,13 +1442,13 @@
    "label": "Wavefront initiation interval [superseded by all-measured]",
    "unit": "us",
    "status": "partial",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "headline.levers_measured.candidate_gather.II_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "headline.s81_window.la.II_us",
    "note": "19.165 before the re-index fix",
    "value": 12.9,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_as_built": {
    "target": "ds_rom",
@@ -1457,13 +1457,13 @@
    "label": "AR at 1M before re-index fix",
    "unit": "tok/s",
    "status": "partial",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "headline.AR_tok_s",
    "note": "Superseded",
-   "value": 2211.3,
+   "value": 2211.7,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_as_built": {
    "target": "ds_rom",
@@ -1472,13 +1472,13 @@
    "label": "MTP fused at 1M before re-index fix",
    "unit": "tok/s",
    "status": "partial",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "headline.MTP_fused_tok_s",
    "note": "Superseded",
-   "value": 5919.3,
+   "value": 6333.6,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_model": {
    "target": "ds_rom",
@@ -1487,13 +1487,13 @@
    "label": "S81 analytical model AR at 1M",
    "unit": "tok/s",
    "status": "modelled",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "model.AR_tok_s",
    "note": "Same value the energy record uses (2,466.2)",
    "value": 2466.1,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_maskdrop": {
    "target": "ds_rom",
@@ -1502,13 +1502,13 @@
    "label": "AR at 1M, mask-drop lever only",
    "unit": "tok/s",
    "status": "partial",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "headline.levers_measured.mask_drop.AR_tok_s",
    "note": "Gather supersedes it",
-   "value": 2427.6,
+   "value": 2428.1,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.reindex_layer_us": {
    "target": "ds_rom",
@@ -1517,13 +1517,13 @@
    "label": "Re-index layer (L24/28/32/36)",
    "unit": "us",
    "status": "composed_from_measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa1_reindex.measured_composed_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa1_reindex.measured_composed_us",
    "note": "24.8 as built",
-   "value": 10.586,
+   "value": 10.491,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.reindex_layer_model_us": {
    "target": "ds_rom",
@@ -1532,12 +1532,12 @@
    "label": "Re-index layer model",
    "unit": "us",
    "status": "modelled",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa1_reindex.model_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa1_reindex.model_us",
    "value": 10.842,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.csa1_full_l20_us": {
    "target": "ds_rom",
@@ -1546,13 +1546,13 @@
    "label": "L20 global scan layer",
    "unit": "us",
    "status": "composed_from_measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa1_full.measured_composed_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa1_full.measured_composed_us",
    "note": "Interim: Codex S81 run owns L20 at 1M (SIM_ONLY so far, no timing)",
-   "value": 17.694,
+   "value": 17.678,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.csa2_full_us": {
    "target": "ds_rom",
@@ -1561,12 +1561,12 @@
    "label": "csa2_full layer (L2/L8/L14)",
    "unit": "us",
    "status": "composed_from_measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa2_full.measured_composed_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa2_full.measured_composed_us",
    "value": 13.986,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.csa_reuse_us": {
    "target": "ds_rom",
@@ -1575,12 +1575,12 @@
    "label": "Re-use layer (csa2/csa1, 30 layers)",
    "unit": "us",
    "status": "composed_from_measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa2_reuse.measured_composed_us",
-   "value": 8.144,
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa2_reuse.measured_composed_us",
+   "value": 8.476,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.head_us": {
    "target": "ds_rom",
@@ -1589,13 +1589,13 @@
    "label": "Head in AR path",
    "unit": "us",
    "status": "modelled",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.head.measured_composed_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.head.measured_composed_us",
    "note": "Listed in headline.still_modelled; wavefront uses the measured reduced-shape 12.37 us",
    "value": 13.634,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.reindex_occupancy_us": {
    "target": "ds_rom",
@@ -1604,12 +1604,12 @@
    "label": "Re-index stage occupancy",
    "unit": "us",
    "status": "composed_from_measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "headline.levers_measured.candidate_gather.reindex_occupancy_us",
-   "value": 4.259,
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].stage_occupancy_us.reindex",
+   "value": 4.164,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.stage_hop_us": {
    "target": "ds_rom",
@@ -1618,13 +1618,13 @@
    "label": "Stage-to-stage hop",
    "unit": "us",
    "status": "modelled",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "constants.hop_us",
    "note": "RTL endpoint plus technology channel delay, no PHY",
    "value": 0.4820175438596491,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.draft_fused_us": {
    "target": "ds_rom",
@@ -1633,12 +1633,12 @@
    "label": "DSpark draft, L1 fused head",
    "unit": "us",
    "status": "composed_from_measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "constants.draft.fused_us",
    "value": 105.55,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.tau": {
    "target": "ds_rom",
@@ -1647,13 +1647,13 @@
    "label": "DSpark tau (third-party published, gamma 5)",
    "unit": "tokens/step",
    "status": "published",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "constants.draft.tau",
    "note": "vLLM PR #57432 V4.1-Flash (results/speculative/third_party_acceptance_20261004/acceptance.json); superseded self-measured 4.159",
-   "value": 3.8879,
+   "value": 4.159,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.idx_scan_l20_frac_peak": {
    "target": "ds_rom",
@@ -1662,12 +1662,12 @@
    "label": "L20 index scan, fraction of HBM peak",
    "unit": "fraction",
    "status": "measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "hbm_per_token.index_scan.ratio1_L20.fraction_of_peak",
-   "value": 0.9191,
+   "value": 0.9222,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.idx_scan_l2_frac_peak": {
    "target": "ds_rom",
@@ -1676,12 +1676,12 @@
    "label": "Ratio-2 index scan, fraction of peak",
    "unit": "fraction",
    "status": "measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "hbm_per_token.index_scan.ratio2_L2_L8_L14.fraction_of_peak",
    "value": 0.9435,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.window_rows_frac_peak": {
    "target": "ds_rom",
@@ -1690,13 +1690,13 @@
    "label": "128-row WINDOW load (component reader used in composition)",
    "unit": "fraction",
    "status": "measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "hbm_per_token.window_rows.per_stack.fraction_of_peak",
    "note": "Not the as-built S81 prefetch path",
    "value": 0.4568,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.reindex_gather_worst_cycles": {
    "target": "ds_rom",
@@ -1736,7 +1736,7 @@
    "status": "measured",
    "path": "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json",
    "pointer": "summary.asbuilt_c1.us_median",
-   "note": "0.06% of peak. NOT in the composition. stream_la refactor binding pending (Codex/Noether)",
+   "note": "Bare prefetch, credits 1. In the S81 chain (credits 8, S81 selection) see window_s81_asbuilt_c8_us; bound successor see window_s81_lf_*",
    "value": 124.5352,
    "resolved": true,
    "blob": "1ec8ec944047ee32b2dc064278bc0412b6ed2e67",
@@ -2219,12 +2219,12 @@
    "label": "L2 NV5 batched draft MTP at 1M (SS fails)",
    "unit": "tok/s",
    "status": "unvalidated",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].MTP_tok_s.l1l2_nv5_us",
-   "value": 7495.4,
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].MTP_tok_s.l1l2_nv5_us",
+   "value": 7859.9,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "hbm_ds.ar_tok_s_baseline_partial": {
    "target": "hbm_ds",
@@ -4478,13 +4478,13 @@
    "label": "Sum of full-shape RTL-measured node patches in the AR token (lat259 gather variant)",
    "unit": "us",
    "status": "measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "sum:variants[\"candidate_gather.lat259\"].patches|measured_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "sum:variants[\"candidate_gather.lat259.s81_window_la\"].patches|measured_us",
    "note": "the remainder of ar_us_1m is the S81 graph model",
-   "value": 51.2688,
+   "value": 88.832,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.measured_patch_model_us": {
    "target": "ds_rom",
@@ -4493,12 +4493,12 @@
    "label": "Model time those patched nodes replaced",
    "unit": "us",
    "status": "modelled",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "sum:variants[\"candidate_gather.lat259\"].patches|model_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "sum:variants[\"candidate_gather.lat259.s81_window_la\"].patches|model_us",
    "value": 72.6134,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.measured_patch_count": {
    "target": "ds_rom",
@@ -4507,12 +4507,12 @@
    "label": "Number of measured node patches",
    "unit": "nodes",
    "status": "measured",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "len:variants[\"candidate_gather.lat259\"].patches",
-   "value": 110,
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "len:variants[\"candidate_gather.lat259.s81_window_la\"].patches",
+   "value": 190,
    "resolved": true,
-   "blob": "b4ae31e30253b232bbe90bf455f1c60561768f89",
-   "last_commit": "98226b1f6 2026-10-04"
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "ds_rom.measured_share_allmeasured": {
    "target": "ds_rom",
@@ -4524,10 +4524,142 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "measured_share",
    "note": "rest listed in still_modelled",
-   "value": 1.0,
+   "value": 0.9999,
    "resolved": true,
-   "blob": "d608fc3bd4c52c05a520b335d9bf01f44a8b1030",
+   "blob": "e9e25f6510d0b1451e10a71496e63c05e56bda4b",
    "last_commit": "1b34fc737 2026-10-04"
+  },
+  "ds_rom.window_s81_asbuilt_c8_us": {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_asbuilt_c8_us",
+   "label": "WINDOW load per layer, S81 chain as built (credits 8, S81 selection)",
+   "unit": "us",
+   "status": "measured",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.asbuilt_c8\"].load_us_mean",
+   "note": "start -> rows staged, 4 refresh phases",
+   "value": 20.1251,
+   "resolved": true,
+   "blob": "cc4b831d17c617fbef2be983ff9dd8bf905057f3",
+   "last_commit": "42c10b947 2026-10-04"
+  },
+  "ds_rom.window_s81_lf_us_mean": {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_lf_us_mean",
+   "label": "WINDOW load per layer, S81-bound (stream_la issue per PC + REFpb pull-in)",
+   "unit": "us",
+   "status": "measured",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.lf\"].load_us_mean",
+   "note": "own row written first (S81 order); mean over 64 refresh phases",
+   "value": 0.1366,
+   "resolved": true,
+   "blob": "cc4b831d17c617fbef2be983ff9dd8bf905057f3",
+   "last_commit": "42c10b947 2026-10-04"
+  },
+  "ds_rom.window_s81_lf_us_max": {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_lf_us_max",
+   "label": "WINDOW load per layer, S81-bound, worst refresh phase",
+   "unit": "us",
+   "status": "measured",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.lf\"].load_us_max",
+   "value": 0.3032,
+   "resolved": true,
+   "blob": "cc4b831d17c617fbef2be983ff9dd8bf905057f3",
+   "last_commit": "42c10b947 2026-10-04"
+  },
+  "ds_rom.window_s81_lf_sustained_median": {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_lf_sustained_median",
+   "label": "WINDOW load sustained after first access (audit metric, cold rows), median",
+   "unit": "fraction",
+   "status": "measured",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.lf_cold\"].sustained_after_first_access.median",
+   "note": ">=90% rule; corrected REFpb model, 0 DRAM violations",
+   "value": 0.9834,
+   "resolved": true,
+   "blob": "cc4b831d17c617fbef2be983ff9dd8bf905057f3",
+   "last_commit": "42c10b947 2026-10-04"
+  },
+  "ds_rom.window_s81_lf_sustained_mean": {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_lf_sustained_mean",
+   "label": "WINDOW load sustained after first access (cold rows), mean over refresh phases",
+   "unit": "fraction",
+   "status": "measured",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.lf_cold\"].sustained_after_first_access.mean",
+   "value": 0.939,
+   "resolved": true,
+   "blob": "cc4b831d17c617fbef2be983ff9dd8bf905057f3",
+   "last_commit": "42c10b947 2026-10-04"
+  },
+  "ds_rom.window_s81_own_row_write_scan_cycles": {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_own_row_write_scan_cycles",
+   "label": "Own-row write (16 blocks, as-built writer) under the L20 scan",
+   "unit": "cycles@833ps",
+   "status": "measured",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L20.lf_scan\"].write_cycles.mean",
+   "note": "on the critical path in window-only and re-use layers",
+   "value": 3220.6,
+   "resolved": true,
+   "blob": "cc4b831d17c617fbef2be983ff9dd8bf905057f3",
+   "last_commit": "42c10b947 2026-10-04"
+  },
+  "ds_rom.kgather_s81_cycles": {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "kgather_s81_cycles",
+   "label": "Candidate gather worst rank through the S81 wmux (corrected REFpb)",
+   "unit": "cycles@833ps",
+   "status": "measured",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "kgather_s81.worst_rank.cycles",
+   "value": 643,
+   "resolved": true,
+   "blob": "cc4b831d17c617fbef2be983ff9dd8bf905057f3",
+   "last_commit": "42c10b947 2026-10-04"
+  },
+  "ds_rom.ar_tok_s_1m_s81_window_asbuilt": {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "ar_tok_s_1m_s81_window_asbuilt",
+   "label": "AR tok/s at 1M with the S81 as-built WINDOW refill (credits 8)",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "headline.s81_window.asbuilt_c8.AR_tok_s",
+   "note": "what the S81 element as built would give",
+   "value": 829.4,
+   "resolved": true,
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
+  },
+  "ds_rom.ar_tok_s_1m_pre_window": {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "ar_tok_s_1m_pre_window",
+   "label": "AR tok/s at 1M before the window terms (component reader)",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259\"].AR_tok_s",
+   "note": "previous headline basis, superseded",
+   "value": 2532.8,
+   "resolved": true,
+   "blob": "bcb8fd63b033ea67deb61844157b7d05ce54ac0b",
+   "last_commit": "42c10b947 2026-10-04"
   },
   "qwen_rom.j_per_token_ar_8k": {
    "target": "qwen_rom",
@@ -4968,7 +5100,7 @@
    "expr": "x0",
    "derived": true,
    "note": "still-modelled terms listed in the composition record",
-   "value": 1.0,
+   "value": 0.9999,
    "resolved": true,
    "status": "measured"
   },
@@ -5088,7 +5220,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
-   "value": 0.6451,
+   "value": 0.6371,
    "resolved": true,
    "status": "partial"
   },
@@ -5105,7 +5237,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
-   "value": 0.5737,
+   "value": 0.5704,
    "resolved": true,
    "status": "partial"
   },
@@ -5122,7 +5254,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side tier-2 MODEL: no DS-V4.1 decode measured on any GPU",
-   "value": 5.254,
+   "value": 5.1885,
    "resolved": true,
    "status": "modelled"
   },
@@ -5139,7 +5271,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side modelled (1.94x MTP sensitivity)",
-   "value": 4.8486,
+   "value": 4.8205,
    "resolved": true,
    "status": "modelled"
   },
@@ -5155,7 +5287,7 @@
    ],
    "expr": "x0/x1",
    "derived": true,
-   "value": 0.5686,
+   "value": 0.5615,
    "resolved": true,
    "status": "modelled"
   },
@@ -5246,25 +5378,19 @@
   {
    "target": "ds_rom",
    "item": "Context-independent nodes of every layer (ROM projections, MoE, norms, softmax/p.v, hc/Sinkhorn) from the S81 unified-graph model: ~344 of 394.9 us AR",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "path_exists": true
   },
   {
    "target": "ds_rom",
    "item": "L20 candidate-block select, stage hop 0.482 us (no PHY), head 13.63 us in AR path, L1+L2 NV5 draft",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "path_exists": true
   },
   {
    "target": "ds_rom",
    "item": "No native S81 timing: native L20 1M run exact but SIM_ONLY (headline_timing=false)",
    "path": "results/rtl/dsrom_s81_l20_sim_only_20261004/r3_terminal.json",
-   "path_exists": true
-  },
-  {
-   "target": "ds_rom",
-   "item": "As-built S81 WINDOW load measures 124.5 us/layer (0.06% of peak) and is NOT in the composition (component reader used)",
-   "path": "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json",
    "path_exists": true
   },
   {
@@ -5867,10 +5993,10 @@
    ],
    "path_exists": true,
    "figure_values": {
-    "ds_rom.ar_tok_s_1m": 1402.3,
-    "ds_rom.ar_tok_s_1m_as_built": 2211.3,
-    "ds_rom.mtp_tok_s_1m": 2511.6,
-    "ds_rom.mtp_tok_s_1m_as_built": 5919.3
+    "ds_rom.ar_tok_s_1m": 1384.8,
+    "ds_rom.ar_tok_s_1m_as_built": 2211.7,
+    "ds_rom.mtp_tok_s_1m": 2497.0,
+    "ds_rom.mtp_tok_s_1m_as_built": 6333.6
    }
   },
   {
@@ -5884,7 +6010,7 @@
    ],
    "path_exists": true,
    "figure_values": {
-    "ds_rom.ar_tok_s_1m_maskdrop": 2427.6
+    "ds_rom.ar_tok_s_1m_maskdrop": 2428.1
    }
   },
   {
@@ -5972,7 +6098,7 @@
    ],
    "path_exists": true,
    "figure_values": {
-    "ds_rom.lever_l2_nv5_mtp": 7495.4
+    "ds_rom.lever_l2_nv5_mtp": 7859.9
    }
   },
   {
@@ -6146,6 +6272,24 @@
    "figure_values": {
     "hbm_qwen.ha2_tp2_ar_ns": 115.092
    }
+  },
+  {
+   "target": "ds_rom",
+   "lever": "S81 WINDOW full-bandwidth load (stream_la bound, per-PC issue, REFpb pull-in)",
+   "verdict": "ADOPT",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "numbers": "see ar_tok_s_1m vs ar_tok_s_1m_s81_window_asbuilt",
+   "figures": [
+    "ds_rom.ar_tok_s_1m",
+    "ds_rom.ar_tok_s_1m_s81_window_asbuilt",
+    "ds_rom.window_s81_lf_us_mean"
+   ],
+   "path_exists": true,
+   "figure_values": {
+    "ds_rom.ar_tok_s_1m": 1384.8,
+    "ds_rom.ar_tok_s_1m_s81_window_asbuilt": 829.4,
+    "ds_rom.window_s81_lf_us_mean": 0.1366
+   }
   }
  ],
  "open_items": [
@@ -6214,9 +6358,9 @@
   },
   {
    "target": "ds_rom",
-   "item": "Bind ot_dsrom_window_stream_la into S81 (as built 0.06% of peak)",
-   "owner": "Noether (Codex)",
-   "path": "results/rtl/hbm_path_bandwidth_audit_20261004/summary.json",
+   "item": "Adopt the S81-bound window successor in the S81 runtime (WINDOW_STREAM_LA=1, LA_ISSUE_PC=1, stack controller PULLIN=16 PULLIN_BATCH=16; install_die())",
+   "owner": "Codex S81 runtime owners",
+   "path": "/tmp/claude-review-20261003/codex_notes.txt",
    "path_exists": true
   },
   {
@@ -6228,7 +6372,7 @@
   },
   {
    "target": "ds_rom",
-   "item": "Carry kgather+mdrop into the S81 element for L24/28/32/36",
+   "item": "kgather HBM read bound (wmux client 1, IDX_KGATHER_PORT); still open: gathered-key scoring/select dataflow in the core and mdrop in front of the select",
    "owner": "Codex S81 owners",
    "path": "/tmp/claude-review-20261003/codex_notes.txt",
    "path_exists": true
@@ -6287,6 +6431,13 @@
    "item": "REFpb controller repair: repeated REFpb same bank before tRFCpb, missing tRREFD; memory timing UNQUALIFIED until remeasured",
    "owner": "Claude (wt-hbm-refpb)",
    "path": "/tmp/claude-review-20261003/codex_notes.txt",
+   "path_exists": true
+  },
+  {
+   "target": "ds_rom",
+   "item": "Own-row bypass lever: stage the token's own row from the block stream instead of an HBM round trip before the window job (measured own-row write ~0.6 us on the critical path of window-only/re-use layers)",
+   "owner": "unowned (Claude proposal)",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
    "path_exists": true
   }
  ],

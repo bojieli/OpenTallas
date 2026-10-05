@@ -181,6 +181,43 @@ def apply_head(P, head):
                 stage_occupancy_us=head["wavefront"]["head_stage_occupancy_us_per_position"])
 
 
+S81_WINDOW = ROOT / "results/rtl/dsrom_s81_window_bind_20261004/window_load.json"
+
+
+def apply_window_s81(P, win):
+    """S81-BOUND WINDOW terms (tools/dsrom_s81_window_la.py, claude/dsrom-s81-window-bind-20261004): the S81 die's
+    window HBM service measured with the bound full-bandwidth load (per-PC issue, stack REFpb pull-in) on the 1M
+    token's golden rows, in the S81 die's order: the token's own packed row is written through the as-built writer
+    after kv_rope_qdq (own_row_write), the 128-row job starts at the attention issue (after the own row, q_rope and,
+    in an indexed layer, the final select) and its rows are staged before the scores (window_load); means over the
+    refresh phases, per layer type (window-only, scan, re-index, re-use)."""
+    import dsrom_1m_measure as M
+    terms = win["composition_terms"]["la"]
+    g = P.g
+    out = {}
+    for name, nd in list(g.nodes.items()):
+        if name.endswith(".attn.scores"):
+            L = int(name.split(".")[0][1:])
+            pre = f"L{L}.attn."
+            t = terms[M._window_type(L)]
+            wr = dict(name=pre + "own_row_write", deps=[pre + "kv_rope_qdq"], layer=nd["layer"],
+                      issue=t["own_row_write_cycles"] / CLK, issue_cat="kv_load", depth=0.0, depth_cat="kv_load",
+                      ctrl=0.0, stream=False, kind="load", sweep=None, desc="S81 own-row write (measured)")
+            deps = [pre + "own_row_write", pre + "q_rope"] + ([pre + "idx.topk_final"] if pre + "idx.topk_final" in g.nodes else [])
+            ld = dict(name=pre + "window_load", deps=deps, layer=nd["layer"], issue=t["window_cycles"] / CLK,
+                      issue_cat="kv_load", depth=0.0, depth_cat="kv_load", ctrl=0.0, stream=False, kind="load",
+                      sweep=None, desc="S81-bound WINDOW job (measured)")
+            out[wr["name"]], out[ld["name"]] = wr, ld
+            nd = dict(nd, deps=nd["deps"] + [pre + "window_load"])
+            for n in (wr, ld):
+                P.rows[n["name"]] = dict(node=n["name"], model_us=0.0, measured_us=round(n["issue"] * 1e6, 4),
+                                         cls="measured", source=f"{t['source']} ({rel(S81_WINDOW)})")
+        out[name] = nd
+    g.nodes.clear()
+    g.nodes.update(out)
+    return dict(mode="s81", terms_cycles=terms, record=rel(S81_WINDOW))
+
+
 def apply_window(P, win, mode="stream_la"):
     s = win["summary"]["stream_la"]
     t = s["cycles"]["max"] / CLK if mode == "stream_la" else win["summary"]["asbuilt_c1"]["us_max"] * 1e-6
@@ -358,7 +395,8 @@ def main():
     ap.add_argument("--baseline", default="recovery", choices=("asbuilt", "recovery"),
                     help="recovery (default): apply the adopted lever records of --recovery on top of as-built")
     ap.add_argument("--recovery", type=Path, default=RECOVERY)
-    ap.add_argument("--window", default="stream_la", choices=("stream_la", "asbuilt_c1"))
+    ap.add_argument("--window", default="s81", choices=("s81", "stream_la", "asbuilt_c1"),
+                    help="s81 (default): the S81-bound window record; stream_la / asbuilt_c1: the audit's component")
     ap.add_argument("--hop-tier", default="light_fec", choices=("light_fec", "kp4_209ns"))
     a = ap.parse_args()
     if a.out is None:
@@ -375,8 +413,11 @@ def main():
         info["cand"] = apply_cand(P, recs["cand_select"], recs.get("links"))
     if "head" in recs:
         info["head"] = apply_head(P, recs["head"])
-    info["window"] = apply_window(P, json.loads(WINDOW.read_text()), a.window)
-    info["window"]["mode"] = a.window
+    if a.window == "s81":
+        info["window"] = apply_window_s81(P, json.loads(S81_WINDOW.read_text()))
+    else:
+        info["window"] = apply_window(P, json.loads(WINDOW.read_text()), a.window)
+        info["window"]["mode"] = a.window
     info["hop_tier"] = a.hop_tier
     if "field" in recs:
         import dsrom_1m_allmeasured_adapters as AD
@@ -501,10 +542,11 @@ def main():
                  tau=M.DRAFT["tau"], mtp_over_ar=round(mtp * ar / 1e6, 3)),
         still_modelled=still,
         measured_formerly_modelled=done,
-        requires_binding=["WINDOW load: ot_dsrom_window_stream_la measured 93.9% of peak; the as-built S81 prefetch "
-                          "measures 124.5 us a layer -- composition REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)"],
+        requires_binding=([] if a.window == "s81" else
+                          ["WINDOW load: ot_dsrom_window_stream_la measured 93.9% of peak; the as-built S81 prefetch "
+                           "measures 124.5 us a layer -- composition REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)"]),
         info=info, patches=list(P.rows.values()), base_patches=base_patches, critical_path=path,
-        inputs={rel(p): sha(p) for p in list(ins.values()) + sorted((a.recovery / "levers").glob("*.json")) + [WINDOW, WAVE, DRAFT_REC, BASE / "reader.json",
+        inputs={rel(p): sha(p) for p in list(ins.values()) + sorted((a.recovery / "levers").glob("*.json")) + [WINDOW, S81_WINDOW, WAVE, DRAFT_REC, BASE / "reader.json",
                                                              BASE / "ckv_lat259.json", RC / "gather.json",
                                                              RC / "select.json"] if Path(p).exists()},
         tool_sha256={rel(ROOT / "tools/dsrom_1m_allmeasured.py"): sha(ROOT / "tools/dsrom_1m_allmeasured.py"),

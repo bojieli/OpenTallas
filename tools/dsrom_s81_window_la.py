@@ -320,7 +320,8 @@ def _one(text, old, new):
     return text.replace(old, new, 1)
 
 
-DIE_PARAMS = """    parameter integer WINDOW_STREAM_LA = 0, // opt-in (claude/dsrom-s81-window-bind-20261004): the WINDOW refill
+DIE_PARAMS = """    parameter integer WINDOW_LA_ISSUE_PC = 1, // with WINDOW_STREAM_LA: per-pseudo-channel issue (the adopted, timing-closed)
+    parameter integer WINDOW_STREAM_LA = 0, // opt-in (claude/dsrom-s81-window-bind-20261004): the WINDOW refill
                                             // reads the job's ring at full stack bandwidth (ot_dsrom_window_attn_source_la)
     parameter integer IDX_KGATHER_PORT = 0, // opt-in: per-stack wide read client 1 for ot_hdc_v41x_idx_kgather
                                             // (the re-index candidate read); exposed as kgw_* die ports
@@ -353,7 +354,7 @@ def install_die(text: str) -> str:
              KGW_PORTS + "    input  wire              clk,\n    input  wire              rst_n,")
     # the window source -> the successor (same parameters and ports, plus the wide port)
     t = _one(t, "        ot_chip_v41x_window_attn_source_owner_safe #(.REFILL_OWNER_SAFE(WINDOW_REFILL_OWNER_SAFE),",
-             "        ot_dsrom_window_attn_source_la #(.STREAM_LA(WINDOW_STREAM_LA != 0), "
+             "        ot_dsrom_window_attn_source_la #(.STREAM_LA(WINDOW_STREAM_LA != 0), .LA_ISSUE_PC(WINDOW_LA_ISSUE_PC), "
              ".REFILL_OWNER_SAFE(WINDOW_REFILL_OWNER_SAFE),")
     t = _one(t, "            .s_beat(w_s_beat), .s_data(w_s_data));\n        assign win_fault = win_service_fault;",
              "            .s_beat(w_s_beat), .s_data(w_s_data),\n"
