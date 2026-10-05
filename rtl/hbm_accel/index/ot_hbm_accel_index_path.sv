@@ -4,13 +4,22 @@
 // TP96 global IDs, never ROM stack-major reassociation. Selection SRAM ports
 // and candidate consumer are real external ports, not ready/idle assumptions.
 module ot_hbm_accel_index_path #(
- parameter integer ENABLE=0,NS=16,NK=4,Q=4,W=16,IW=20,K=512,AW=8,FPL=7,FML=5,QL=5
+ parameter integer ENABLE=0,SOURCE_VM_ENABLE=0,NS=16,NK=4,Q=4,W=16,IW=20,K=512,AW=8,FPL=7,FML=5,QL=5
 )(
  input wire clk,por_n,start,output wire start_ready,
  input wire [31:0] source_job,input wire[3:0] source_gen,input wire[19:0] source_pos,input wire[6:0] source_rank,
  output wire[31:0] held_job,output wire[3:0] held_gen,output wire[19:0] held_pos,output wire[6:0] held_rank,
  input wire q_block_v,output wire q_block_r,input wire[4:0] q_head,input wire[1:0] q_block,
  input wire[1023:0] q_data,input wire[15:0] q_weight,
+ input wire[31:0] original_q_base,rotated_q_base,scaled_weight_base,
+ input wire[7:0] source_tail_words,
+ output wire vm_read_v,input wire vm_read_r,output wire[31:0] vm_read_addr,
+ output wire[7:0] vm_read_tag,output wire[5:0] vm_read_words,
+ output wire[31:0] vm_read_job,output wire[3:0] vm_read_gen,
+ output wire[19:0] vm_read_pos,output wire[6:0] vm_read_rank,
+ input wire vm_rsp_v,output wire vm_rsp_r,input wire[1023:0] vm_rsp_data,
+ input wire[7:0] vm_rsp_tag,input wire[31:0] vm_rsp_job,input wire[3:0] vm_rsp_gen,
+ input wire[19:0] vm_rsp_pos,input wire[6:0] vm_rsp_rank,
  input wire k_v,output wire k_r,input wire k_last,
  input wire[NS*NK-1:0] k_lv,k_ref,k_keep,
  input wire[NS*NK*IW-1:0] k_idx,input wire[NS*NK*544-1:0] k_data,
@@ -46,6 +55,8 @@ generate if(!ENABLE)begin:off
  assign cand_out_score=0;assign cand_out_block=0;assign cand_mem_we=0;assign cand_mem_re=0;
  assign cand_mem_waddr=0;assign cand_mem_raddr=0;assign cand_mem_wdata=0;
  assign cand_replay_required=0;assign cand_overflow=0;assign cand_stats=0;
+ assign vm_read_v=0;assign vm_read_addr=0;assign vm_read_tag=0;assign vm_read_words=0;
+ assign vm_read_job=0;assign vm_read_gen=0;assign vm_read_pos=0;assign vm_read_rank=0;assign vm_rsp_r=0;
  assign replay_required=0;assign overflow=0;assign retained=0;assign selector_stats=0;
  assign held_job=0;assign held_gen=0;assign held_pos=0;assign held_rank=0;
  always @*begin fault=0;done=0;end
@@ -59,14 +70,35 @@ end else begin:on
  assign held_job=job;assign held_gen=generation;assign held_pos=position;assign held_rank=rank;
  assign retained=active;
  wire qs_ready,qs_done,qs_fault,ql_v,ql_r,query_block_ready;
- assign q_block_r=query_block_ready&&active&&!fault;
+ wire source_ready,source_fault,source_done,source_block_v;
+ wire[4:0] source_head;wire[1:0] source_block;
+ wire[1023:0] source_data;wire[15:0] source_weight;
+ assign q_block_r=!SOURCE_VM_ENABLE&&query_block_ready&&active&&!fault;
  wire[7:0] ql_head;wire[511:0] ql_codes;wire[31:0] ql_sc;wire[15:0] ql_w;
- assign start_ready=!active&&qs_ready&&!fault;
+ assign start_ready=!active&&qs_ready&&source_ready&&!fault;
  wire begin_frame=start&&start_ready;
+ if(SOURCE_VM_ENABLE)begin:native_vm
+ ot_hbm_accel_index_query_source #(.ENABLE(1)) u_source(
+ .clk(clk),.por_n(por_n),.start(begin_frame),.start_ready(source_ready),
+ .source_job(source_job),.source_gen(source_gen),.source_pos(source_pos),.source_rank(source_rank),
+ .original_q_base(original_q_base),.rotated_q_base(rotated_q_base),.scaled_weight_base(scaled_weight_base),.source_tail_words(source_tail_words),
+ .read_v(vm_read_v),.read_r(vm_read_r),.read_addr(vm_read_addr),.read_tag(vm_read_tag),.read_words(vm_read_words),
+ .read_job(vm_read_job),.read_gen(vm_read_gen),.read_pos(vm_read_pos),.read_rank(vm_read_rank),
+ .rsp_v(vm_rsp_v),.rsp_r(vm_rsp_r),.rsp_data(vm_rsp_data),.rsp_tag(vm_rsp_tag),
+ .rsp_job(vm_rsp_job),.rsp_gen(vm_rsp_gen),.rsp_pos(vm_rsp_pos),.rsp_rank(vm_rsp_rank),
+ .block_v(source_block_v),.block_r(query_block_ready&&active&&!fault),.block_head(source_head),.block_number(source_block),
+ .block_data(source_data),.head_weight(source_weight),.fault(source_fault),.done(source_done));
+ end else begin:external_native_stream
+ assign source_ready=1;assign source_fault=0;assign source_done=0;
+ assign source_block_v=q_block_v;assign source_head=q_head;assign source_block=q_block;
+ assign source_data=q_data;assign source_weight=q_weight;
+ assign vm_read_v=0;assign vm_read_addr=0;assign vm_read_tag=0;assign vm_read_words=0;
+ assign vm_read_job=0;assign vm_read_gen=0;assign vm_read_pos=0;assign vm_read_rank=0;assign vm_rsp_r=0;
+ end
  ot_hbm_accel_index_query #(.ENABLE(1)) u_index_q(
  .clk(clk),.por_n(por_n),.start(begin_frame),.start_ready(qs_ready),
- .block_v(q_block_v&&active&&!fault),.block_r(query_block_ready),.block_head(q_head),.block_number(q_block),
- .block_data(q_data),.head_weight(q_weight),.ql_v(ql_v),.ql_r(ql_r),.ql_head(ql_head),
+ .block_v(source_block_v&&active&&!fault),.block_r(query_block_ready),.block_head(source_head),.block_number(source_block),
+ .block_data(source_data),.head_weight(source_weight),.ql_v(ql_v),.ql_r(ql_r),.ql_head(ql_head),
  .ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.done(qs_done),.fault(qs_fault));
  wire sv,sr,sp;wire[NS-1:0] slast;wire[NS*NK-1:0] slv,sfault;
  wire[NS*NK*16-1:0] sval;wire[NS*NK*IW-1:0] sidx;
@@ -130,7 +162,7 @@ end else begin:on
    if(k_v&&k_r)for(j=0;j<NS*NK;j=j+1)if(k_lv[j])begin
     previous_id[j/W]<=k_idx[j*IW+:IW];seen_input[j/W]<=1;
    end
-   if(qs_fault||sp||(sv&&sr&&|(sfault&slv))||(k_v&&k_r&&invalid_ids)||replay_required||overflow||cand_replay_required||cand_overflow)fault<=1;
+   if(qs_fault||source_fault||sp||(sv&&sr&&|(sfault&slv))||(k_v&&k_r&&invalid_ids)||replay_required||overflow||cand_replay_required||cand_overflow)fault<=1;
    if(!begin_frame)begin
     emitted_last<=emitted_last|(out_v&out_r&out_last);
     emitted_cand_last<=emitted_cand_last|(cand_out_v&cand_out_r&cand_out_last);
