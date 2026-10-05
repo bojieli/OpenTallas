@@ -10321,6 +10321,20 @@ def dsrom_window_parent_boundary_model():
     Routed WINDOW leaf dimensions, clock load and SS/FF arcs are required
     inputs after its terminal; aggregate attention area is not a subslot.
     """
+    import re
+    macro_name = 'ot_sram_1r1w_256x256_m2_r2c2'
+    macro_dir = Path('physical/asap7_memory_macros') / macro_name
+    macro = json.loads((ROOT/macro_dir/f'{macro_name}.json').read_text())
+    corner_views = {}
+    for corner in ('ss', 'ff'):
+        lib = (ROOT/macro_dir/f'{macro_name}_{corner}.lib').read_text()
+        assert 'time_unit : "1ps"' in lib and 'capacitive_load_unit (1, ff)' in lib
+        values = re.search(r'cell_rise\s*\(mc_delay\)\s*\{.*?values\s*\((.*?)\);', lib, re.S)
+        clkq = [float(x) for x in re.findall(r'[0-9]+\.[0-9]+', values.group(1))]
+        cap = float(re.search(r'pin \(clk\).*?capacitance\s*:\s*([0-9.]+)', lib, re.S).group(1))
+        corner_views[corner] = dict(clk_cap_fF=cap, clkQ_table_min_ps=min(clkq),
+            clkQ_table_max_ps=max(clkq), min_period_ps=macro['timing'][corner]['min_period_ps'],
+            basis='own predictive compiled corner Liberty; full slew/load table, not routed capture qualification')
     d, td, nl, trows, bw, pwords = 512, 32, 4, 640, 2, 1
     tiles = nl * (d // td)
     rowbits = (d // 32) * 265
@@ -10349,6 +10363,8 @@ def dsrom_window_parent_boundary_model():
         'rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv',
         'rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv',
     ]
+    sources += [str(macro_dir/f'{macro_name}{suffix}') for suffix in
+                ('.json', '.lef', '_bb.v', '_ss.lib', '_ff.lib')]
     return dict(item=4, status='SOURCE_PRICED_WAIT_WINDOW_TERMINAL_AND_ALLOCATION',
         scope='actual packed-block producer/native lifecycle and first attention captures; no whole S81',
         source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources},
@@ -10360,13 +10376,18 @@ def dsrom_window_parent_boundary_model():
             all_projected_R0_FF_bits=r0_all, all_projected_E1_FF_bits=e_all,
             capture_control_upper_FF_bits=capture_control_upper, FF_upper_bits=ff_upper,
             FF_cell_floor_um2=ff_upper*DFF_UM2),
-        memory=dict(name='ot_sram_1r1w_256x256_m2_r2c2', macros=nl*slices,
+        memory=dict(name=macro_name, macros=nl*slices,
             implementation='existing actual SRAM_MACRO branch; bind its own aligned LEF and SS/FF views',
             logical_payload_bits=trows*rowbits, physical_capacity_bits=nl*slices*256*256,
             write_ports=nl*slices, read_ports=nl*slices, bytes_per_physical_port_per_cycle=32,
             physical_read_bytes_per_cycle=nl*slices*32, physical_write_bytes_per_cycle=nl*slices*32,
             logical_read_bytes_per_cycle=nl*rowbits/8, logical_write_bytes_per_cycle=nl*rowbits/8,
-            actual_macro_area_um2=None, SS_clkQ_qualified=False, mutable_memory_protection_retained_required=True),
+            actual_macro_area_um2=nl*slices*macro['area']['macro_area_um2'],
+            macro_dimensions_um=[macro['area']['macro_width_um'],macro['area']['macro_height_um']],
+            corner_views=corner_views,
+            total_macro_clk_cap_fF={c:nl*slices*x['clk_cap_fF'] for c,x in corner_views.items()},
+            pin_alignment_required='existing ot_macro_track_snap placement and assertion per actual orientation',
+            SS_clkQ_qualified=False, mutable_memory_protection_retained_required=True),
         communication=dict(WINDOW_to_staging_bits_per_cycle=nl*rowbits,
             staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,
             producer_payload_bits_per_cycle=264, producer_identity_bits_per_cycle=10+21+4,
