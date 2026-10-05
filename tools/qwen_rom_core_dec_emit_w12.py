@@ -14,7 +14,7 @@ both and the pinned rtl/hdc/ot_hdc_core_vector_weight.sv untouched).  Adds
     the decode arithmetic are no longer one path.
   * REGISTERED TABLES, NO ADDED CYCLE.  The DYN tables (and VPOS's per-position tables) and every DYN_TTILES
     round count (one per position offset and split: (pos+o) >> (WT+GT-s) / ODD + 1, the ot_hdc_dyn_ttiles
-    function) are computed by a three-stage pipeline that runs from pos_r / tok_r.  start loads pos_r at edge E0;
+    function) are computed by a four-stage pipeline that runs from pos_r / tok_r.  start loads pos_r at edge E0;
     the first program word can be pushed no earlier than E4 (S_DYN at E1, first fetch at E2, ROM data at E3), so
     the tables registered at E1..E3 are settled before their first use: the divider leaves the decode path and
     no cycle is added.
@@ -91,7 +91,7 @@ def emit_dec(text: str) -> str:
             raise SystemExit(f"no declaration for decoded field {name}")
 
     def pre(expr: str) -> str:
-        e = expr.replace("`F(", "`FP(").replace("`DYNS(", "`DYNP(").replace("ir[", "prog_q[")
+        e = expr.replace("`F(", "`FP(").replace("`DYNS(", "`DYNP(").replace("ir[", "pq_r[")
         return e.replace("dyn_tiles_split", "pq_split_rounds")
 
     ctrl = CTRL
@@ -116,7 +116,7 @@ def emit_dec(text: str) -> str:
                 return expr[:k], expr[k + 3:]
         return None
 
-    decl, push, load, adders, assigns = [], [], [], [], []
+    decl, push, cpush, load, adders, assigns = [], [], [], [], [], []
     for name, expr in stmts:
         w = widths[name]
         decl.append(f"    reg {w + ' ' if w else ''}fqd_{name} [0:7];")
@@ -125,9 +125,11 @@ def emit_dec(text: str) -> str:
             adders.append(f"    wire {w + ' ' if w else ''}pa_{name};\n"
                           f"    ot_hdc_ksadd_k #(.W({wexpr(w)})) u_pa_{name} (.a({pre(sp[0])}), .b({pre(sp[1])}), .cin(1'b0), "
                           f".s(pa_{name}), .cout());")
-            push.append(f"            fqd_{name}[la_wr] <= pa_{name};")
+            push.append(f"            fqd_{name}[la_wr_r] <= pa_{name};")
+        elif name in ctrl:
+            cpush.append(f"            fqd_{name}[la_wr] <= {expr.replace('`F(', '`FQ(')};")
         else:
-            push.append(f"            fqd_{name}[la_wr] <= {pre(expr)};")
+            push.append(f"            fqd_{name}[la_wr_r] <= {pre(expr)};")
         if name in ctrl:
             load.append(f"            {name} <= fqd_{name}[la_rd];")
         else:
@@ -146,15 +148,15 @@ def emit_dec(text: str) -> str:
     localparam integer LA_NO = (VPOS != 0) ? 8 : 1;         // position offsets
     localparam integer LA_SW = NW + 2;                       // rounds operand: shifted position + ODD
     localparam integer LA_H = LA_SW / 2 - 3;                 // divider split (low part: remainder + LA_H bits)
-    // stage 1 (E1): pos_r + o; (pos_r + o) >> (WT + GT - split) + ODD for every (o, split) (rounds = that / ODD)
+    // stage 1 (E1): pos_r + o; stage 2 (E2): (pos_r + o) >> (WT + GT - split) + ODD for every (o, split) (rounds = that / ODD)
     reg [NW-1:0]    la_po [0:LA_NO-1];
     reg [LA_SW-1:0] la_sh [0:LA_NO*16-1];
     reg [AW-1:0]    la_tokh;
-    // stage 2 (E2): high-half quotient and remainder; the other DYN entries
+    // stage 3 (E3): high-half quotient and remainder; stage 2 (E2): the other DYN entries
     reg [LA_SW-1:0] la_qh [0:LA_NO*16-1];
     reg [LA_SW-1:0] la_lo [0:LA_NO*16-1];
     reg [AW-1:0]    la_tab [0:LA_NO*8-1];
-    // stage 3 (E3): rounds (0 for an invalid split)
+    // stage 4 (E4): rounds (0 for an invalid split)
     reg [NW-1:0]    la_rt [0:LA_NO*16-1];
     wire [15:0]  la_inv;
     genvar las;
@@ -168,7 +170,7 @@ def emit_dec(text: str) -> str:
             la_po[lo] <= pos_r + lo[NW-1:0];
             for (ls = 0; ls < 16; ls = ls + 1)
                 la_sh[lo*16+ls] <= la_inv[ls] ? {{LA_SW{{1'b0}}}}
-                                              : {{2'b00, ((pos_r + lo[NW-1:0]) >> (LA_WT + LA_GT - ls))}} + LA_ODD;
+                                              : {{2'b00, (la_po[lo] >> (LA_WT + LA_GT - ls))}} + LA_ODD;
         end
         for (lo = 0; lo < LA_NO; lo = lo + 1) begin
             for (ls = 0; ls < 16; ls = ls + 1) begin
@@ -188,11 +190,21 @@ def emit_dec(text: str) -> str:
             la_rt[lo] <= la_inv[lo % 16] ? {{NW{{1'b0}}}} : (la_qh[lo] | (la_lo[lo] / LA_ODD));
     end
     // the program word entering the FIFO: its position offset, split rounds and DYN values
-    wire [2:0]    pq_vp_off = (VPOS != 0) ? prog_q[{V.POS_OFF_LO} +: {V.POS_OFF_W}] : 3'd0;
-    wire [3:0]    pq_split = prog_q[O_ME_SPLIT +: 4];
+    // the program word is staged one cycle (pq_r): the data fields of an entry are written one edge after its
+    // push, which is no later than its LOAD edge, and they are read only after LOAD (from la_nx)
+    reg [INSTR_BITS-1:0] pq_r;
+    reg [2:0]     la_wr_r;
+    reg           pq_v;
+    always @(posedge clk) if (DEC_LA != 0) begin
+        pq_v <= pend1; la_wr_r <= la_wr;
+        if (pend1) pq_r <= prog_q;
+    end
+    wire [2:0]    pq_vp_off = (VPOS != 0) ? pq_r[{V.POS_OFF_LO} +: {V.POS_OFF_W}] : 3'd0;
+    wire [3:0]    pq_split = pq_r[O_ME_SPLIT +: 4];
     wire [NW-1:0] pq_split_rounds = la_rt[((VPOS != 0) ? {{pq_vp_off, 4'd0}} : 7'd0) + pq_split];
-    wire          pq_split_bad = prog_q[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6 && la_inv[pq_split];
-    `define FP(name) prog_q[O_``name +: W_``name]
+    wire          pq_split_bad = prog_q[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6 && la_inv[prog_q[O_ME_SPLIT +: 4]];
+    `define FP(name) pq_r[O_``name +: W_``name]
+    `define FQ(name) prog_q[O_``name +: W_``name]
     `define DYNP(sel) (((sel) == 3'd6) ? {{{{(AW-NW){{1'b0}}}}, la_rt[((VPOS != 0) ? {{pq_vp_off, 4'd0}} : 7'd0)]}} \\
                       : la_tab[((VPOS != 0) ? {{pq_vp_off, 3'd0}} : 6'd0) + (sel)])
     // decoded-field FIFO: 8 entries, so the entry in NEXT (la_nx) is never overwritten while it is NEXT or
@@ -210,14 +222,19 @@ def emit_dec(text: str) -> str:
     reg           fqd_kvd [0:7];
     reg           fqd_wd  [0:7];
 {chr(10).join(adders)}
-    // written on pend1 alone: outside S_RUN the slot la_wr is free (never NEXT, never held), so the write is dead
-    always @(posedge clk) if (DEC_LA != 0 && pend1) begin
+    // data fields from the staged word; control fields (below) from prog_q at pend1.  Written on pend1 (pq_v) alone:
+    // outside S_RUN the slot la_wr is free (never NEXT, never held), so such a write is dead
+    always @(posedge clk) if (DEC_LA != 0 && pq_v) begin
 {chr(10).join(push)}
+    end
+    always @(posedge clk) if (DEC_LA != 0 && pend1) begin
+{chr(10).join(cpush)}
             fqd_bad[la_wr] <= pq_split_bad;
             fqd_kvd[la_wr] <= prog_q[O_UNIT +: W_UNIT] == 2'd1 && prog_q[O_ME_WSRC];
             fqd_wd[la_wr]  <= (W_HBM != 0) && prog_q[O_UNIT +: W_UNIT] == 2'd1 && !prog_q[O_ME_WSRC];
     end
     `undef FP
+    `undef FQ
     `undef DYNP
     // NEXT: control fields are registers (issue reads them); data fields are the NEXT entry of the FIFO
 {chr(10).join(assigns)}
