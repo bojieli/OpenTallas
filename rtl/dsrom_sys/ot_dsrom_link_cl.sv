@@ -196,7 +196,8 @@ module ot_dsrom_link_cl #(
     // late `launch` only selects the final mux.
     wire [SEQW-1:0] snd_off = snd - una;
     wire            ack_skip = ack_ok && (d_ack > snd_off);
-    wire [IW:0]     occ_a  = occ - (ack_ok ? d_ack[IW:0] : {(IW+1){1'b0}});
+    wire [IW:0]     dk     = ack_ok ? d_ack[IW:0] : {(IW+1){1'b0}};
+    wire [IW:0]     occ_a  = occ - dk;
     // next-state values (the always block assigns these) and the readiness they imply
     wire [IW:0]     occ_n  = accept ? occ_a + 1'b1 : occ_a;
     wire [SEQW-1:0] nxt_n  = accept ? nxt + 1'b1 : nxt;
@@ -208,10 +209,15 @@ module ot_dsrom_link_cl #(
 `endif
     wire [PAW-1:0]  pace_n = (PHY_NUM == 0) ? pace : launch ? pace - PCOST_W + PNUM_W : !pace_ok ? pace + PNUM_W : pace;
     wire            pace_ok_n = (PHY_NUM == 0) || (pace_n >= PCOST_W);
+    // replaying next cycle (snd_n != nxt_n) without comparing the muxed pointers: after a rewind or an ACK
+    // overtake snd_n = una_n, so it replays iff occ_n != 0 (occ_n = occ - dk + accept); otherwise only an ongoing
+    // replay continues, and it ends when the last outstanding flit relaunches
+    wire            last_rp = (snd + 1'b1 == nxt);
+    wire            rpl_n  = (rewind || ack_skip) ? (accept || (occ != dk)) : (replaying && !(rp_go && last_rp));
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
-    wire            rdy_n  = !occ_n[IW] && (snd_n == nxt_n) && pace_ok_n;
+    wire            rdy_n  = !occ_n[IW] && !rpl_n && pace_ok_n;
 `else
-    wire            rdy_n  = (credits_n != 0) && !occ_n[IW] && (snd_n == nxt_n) && pace_ok_n;
+    wire            rdy_n  = (credits_n != 0) && !occ_n[IW] && !rpl_n && pace_ok_n;
 `endif
     wire [SEQW-1:0] una_n  = ack_ok ? ra_ack : una;
     wire            retry_exh = rewind && !progress && (retry >= MR_W);
@@ -420,6 +426,17 @@ module ot_dsrom_link_cl #(
             if ({{(31-IW){1'b0}}, occ} > st_max_replay_occ) st_max_replay_occ <= {{(31-IW){1'b0}}, occ};
         end
     end
+
+`ifndef SYNTHESIS
+    // the registered readiness must equal the direct one every cycle (checked in every bench run)
+`ifdef OT_DSROM_LINK_MUT_FREECREDIT
+    wire rdy_direct = !occ[IW] && !replaying && pace_ok;
+`else
+    wire rdy_direct = (credits != 0) && !occ[IW] && !replaying && pace_ok;
+`endif
+    always @(posedge clk) if (rst_n && (rdy_r !== rdy_direct))
+        $fatal(1, "ot_dsrom_link_cl: registered in_ready %b != direct %b at %0t", rdy_r, rdy_direct, $time);
+`endif
 
     // status counters (registered increments, split carry)
     ot_dsrom_link_ctr u_c_cs  (.clk(clk), .rst_n(rst_n), .inc({1'b0, in_valid && !in_ready}), .count(credit_stalls));
