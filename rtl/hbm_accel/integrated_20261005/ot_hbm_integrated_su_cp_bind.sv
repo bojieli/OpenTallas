@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Existing CP LAUNCH -> actual shared SU lease. No second borrower/GO authority.
 // Original W6 header/control rows; opt-in boundary control uses protected phase rails.
-module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0)(
+module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0,GROUPED_OWNER_BOUNDARY=0)(
  input wire clk,por_n,input wire [1:0] launch_v,input wire [31:0] launch_pc,
  input wire [31:0] cp_job,input wire [3:0] cp_gen,
  input wire [16:0] launch_token,input wire [19:0] launch_pos,
@@ -69,6 +69,8 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  reg decoder_start_q;
  initial if(REGISTERED_BOUNDARY&&!REGISTERED_STATUS)
   $fatal(1,"registered boundary requires registered status");
+ initial if(GROUPED_OWNER_BOUNDARY&&!REGISTERED_BOUNDARY)
+  $fatal(1,"grouped owner boundary requires registered boundary");
  initial if(REGISTERED_STATUS&&!REGISTERED_OUTPUTS)
   $fatal(1,"registered status requires checked registered header");
  // A dedicated one-bit request cut removes protected control decode/fault
@@ -127,7 +129,6 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  wire instant_fault=exec_fault||shared_fault||ecc_fault_q||control_bad||rails_bad||live_veto;
  assign qualified_fault=qualified_sticky||instant_fault;
  assign recurrence_fault=qualified_sticky||exec_fault||shared_fault||ecc_fault_q;
- assign fault=qualified_fault;
  assign native_launch=entry?2'b0:launch_v;
  assign selected=checked_status[6]||(entry&&|launch_v);
  // Distributed positive boundary qualification avoids the state-qualified
@@ -137,12 +138,45 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  wire current_owner_ok=checked_valid_q&&checked_frame_match&&checked_shape;
  wire permit_ok=REGISTERED_BOUNDARY?(boundary_ok&&current_owner_ok):!fault;
  wire idle_ok=REGISTERED_BOUNDARY?(boundary_ok&&(!checked_valid_q||is_idle||current_owner_ok)):!fault;
- assign pending=checked_status[0]&&!lease_granted&&permit_ok;
- assign lease_v=checked_status[1]&&checked_valid_q&&!lease_granted&&permit_ok;
- assign owned=checked_status[2]&&lease_granted&&permit_ok;
- assign quiet=checked_status[3]&&!lease_granted&&idle_ok;
- assign release_v=checked_status[4]&&lease_granted&&exec_done&&retired_original_ops==4&&permit_ok;
- assign done=checked_status[5]&&!lease_granted&&!exec_done&&permit_ok;
+ if(GROUPED_OWNER_BOUNDARY)begin:grouped_owner_boundary
+  // Complete PC64/frame128 comparison includes every zero padding bit.
+  // Byte groups are independent combinational frontiers, not registered
+  // owner permission. A changed live tuple denies on the original edge.
+  wire [191:0] live_header={55'd0,launch_pos,launch_token,cp_gen,cp_job,32'd0,launch_pc};
+  wire [23:0] owner_mismatch;
+  for(genvar byte_index=0;byte_index<24;byte_index=byte_index+1)begin:bytes
+   (* keep_hierarchy = "yes" *) ot_hbm_integrated_cp_owner_byte compare_byte(
+    .held(decoded_header[byte_index*8+:8]),.live(live_header[byte_index*8+:8]),
+    .mismatch(owner_mismatch[byte_index]));
+  end
+  // Carry the independent veto terms into each final reduction. Do not
+  // serialize full-owner equality -> current_owner_ok -> permit_ok -> output.
+  wire [5:0] error_veto={qualified_sticky,exec_fault,shared_fault,ecc_fault_q,
+                       control_bad,rails_bad};
+  assign pending=~(|{owner_mismatch,error_veto,!checked_valid_q,
+                     !checked_status[0],lease_granted});
+  assign lease_v=~(|{owner_mismatch,error_veto,!checked_valid_q,
+                     !checked_status[1],lease_granted});
+  assign owned=~(|{owner_mismatch,error_veto,!checked_valid_q,
+                   !checked_status[2],!lease_granted});
+  assign release_v=~(|{owner_mismatch,error_veto,!checked_valid_q,
+                       !checked_status[4],!lease_granted,!exec_done,
+                       retired_original_ops!=4});
+  assign done=~(|{owner_mismatch,error_veto,!checked_valid_q,
+                  !checked_status[5],lease_granted,exec_done});
+  wire [23:0] live_fault_mismatch=owner_mismatch &
+                                 {24{!is_idle&&checked_valid_q}};
+  assign quiet=~(|{live_fault_mismatch,error_veto,!checked_status[3],lease_granted});
+  assign fault=|{live_fault_mismatch,error_veto};
+ end else begin:serial_owner_boundary
+  assign fault=qualified_fault;
+  assign pending=checked_status[0]&&!lease_granted&&permit_ok;
+  assign lease_v=checked_status[1]&&checked_valid_q&&!lease_granted&&permit_ok;
+  assign owned=checked_status[2]&&lease_granted&&permit_ok;
+  assign quiet=checked_status[3]&&!lease_granted&&idle_ok;
+  assign release_v=checked_status[4]&&lease_granted&&exec_done&&retired_original_ops==4&&permit_ok;
+  assign done=checked_status[5]&&!lease_granted&&!exec_done&&permit_ok;
+ end
  reg [6:0] next_status;
  always @*begin
   next_status=0;
@@ -273,4 +307,13 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   endcase
  end
  end endgenerate
+endmodule
+
+// A retained small synthesis boundary keeps the current-owner byte compares
+// parallel. No state, clock, inferred permission, or delayed error veto.
+(* keep_hierarchy = "yes" *)
+module ot_hbm_integrated_cp_owner_byte(
+ input wire [7:0] held,live,output wire mismatch
+);
+ assign mismatch=|(held^live);
 endmodule
