@@ -25,7 +25,7 @@ SRCS="$FP rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv" FP=1 UTIL=45 EXTRA="$L1" jobs/r
 SRCS="$FP rtl/v41rom/ot_v41_bterm.sv rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv" PARAMS=M1=10 FP=1 UTIL=40 EXTRA="$L1" jobs/route.sh bdk10_l1 ot_hbm_accel_bd_col
 SRCS="$FP rtl/gpu/ot_gpu_stack.sv" PARAMS="LEV=4 IL=8 TAGW=12 ALAT=7" FP=1 UTIL=30 jobs/route.sh stack_orig ot_gpu_stack
 jobs/abstract.sh tck2_u45 ot_hbm_accel_tc16; jobs/abstract.sh bdk10_l1 ot_hbm_accel_bd_col   # -> physical/hbm_accel_sm_views
-FPARGS='--gap 14 --tile-gap-x 48 --tile-gap-y 30' HALO=4 jobs/route_sm.sh sm_r2              # element + corner_sta
+FPARGS="--gap 14 --tile-gap-x 48 --tile-gap-y 30" HALO=4 jobs/route_sm.sh sm_r2  # element + corner_sta (OPEN: HANDOFF_CODEX.md)
 python3 tools/hbm_accel_sm_v_gate.py {synth|shapes|edges} --out R.json --workdir W --jobs 12
 iverilog -g2012 -s tb_hbm_accel_bmul_equiv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv \
   rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv rtl/test/tb_hbm_accel_bmul_equiv.sv

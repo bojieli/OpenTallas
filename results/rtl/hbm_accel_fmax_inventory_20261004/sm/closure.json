@@ -28,7 +28,19 @@
     "evidence": "results/rtl/risk_clock_loops_20261003/screens/hbm/bulkcopy_ds_833.json (as built 0.59 GHz: ot_gpu_bulk_copy consume loop); ot_gpu_sm_v never routed at 0.833",
     "period_ns": 1.695
    },
-   "after": null,
+   "after": {
+    "status": "OPEN: hierarchical route sm_r2 running (passed synth/place/CTS; CTS repair WNS ~-4.0 ns at the die-budget IO: output rv, rsp input stage); r1 failed DPL-0033",
+    "route": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-fmax-sm/routes/sm_r2",
+    "r1_record": "results/rtl/hbm_accel_fmax_inventory_20261004/sm/records/sm_r1_fail/physical.json",
+    "period_ns": 0.833,
+    "closes_signoff": null,
+    "handoff": "results/rtl/hbm_accel_fmax_inventory_20261004/sm/HANDOFF_CODEX.md",
+    "macros": 202,
+    "die_um": [
+     2202.768,
+     2072.79
+    ]
+   },
    "false_path_io": "no: IO constrained by the W13 die budget (inputs 300 ps internal, outputs 450 ps incl. insertion; rtl/hbm_accel/sm/ot_hbm_accel_sm_v_die_budget.sdc)",
    "fix": "successor element: closed issue/bulk copy; issue outputs registered (s1); leaf per (column, sub) with its own x-store macros (fragment re-laid out, per-bit write masks); keep_hierarchy replicated distribution (DS per-sub stages + per-half copy), gather (DG stages), registered boundary (PIO, credit channels for descriptor/request); combine-tree select by the op's registered format",
    "cycles_added": {
@@ -102,7 +114,8 @@
     "note": "output ports -137 ps against a 20% output delay"
    },
    "after": {
-    "note": "proven in the SM context: outputs registered at s1 inside the element; see the element row"
+    "note": "proven in the SM context: outputs registered at s1 inside the element; see the element row",
+    "in_context": "pending element route sm_r2 (see element row)"
    },
    "fix": "adv/xa/control registered in the SM (s1); x read issued from s1",
    "cycles_added": {
@@ -121,7 +134,8 @@
     "closes_signoff": true
    },
    "after": {
-    "note": "reused unchanged; its ports are registered inside the element (s1, credit channels, rsp pipe)"
+    "note": "reused unchanged; its ports are registered inside the element (s1, credit channels, rsp pipe)",
+    "in_context": "pending element route sm_r2 (see element row)"
    },
    "cycles_added": {
     "per_op": 0
@@ -458,5 +472,6 @@
  },
  "unvalidated": [
   "real-operand rerun of sm_real_ops (w19_sm_real_ops on the TP-96 executor's dump): the dump of the baseline was not preserved and the TP-96 golden executor is a CPU numpy model execution barred on every host (owner rules 2026-10-04); exactness is proven on seeded operands at every measured shape + FP edges, and SM cycles are shape-determined"
- ]
+ ],
+ "verdict": "LEAVES CLOSED (tc16 +24.88/+2.33, bd_col +19.01/+5.05, stack +12.58/+3.31), RTL exact; ELEMENT ROUTE OPEN (handed to Codex)"
 }
