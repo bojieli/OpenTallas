@@ -18,9 +18,10 @@
   ],
   "physical_adopted": false,
   "full_S81_ready": false,
-  "new_terminals_collected": 0,
+  "new_terminals_collected": 1,
   "ledger_rows_removed": [
-    "dsrom-wf-close/R12_fanout_34223b7b0/R12_src_u50_launcher_retry1"
+    "dsrom-wf-close/R12_fanout_34223b7b0/R12_src_u50_launcher_retry1",
+    "dsrom-field-spine-route/a721/c0r128_h20s40"
   ],
   "WF_u50_purpose_assessment": {
     "recorded_purpose": "Same pre-registered variant R12_src_u50 retry CLI int type only; frozenRTL60146157; PID937637; SS833/60 FF25",
@@ -88,8 +89,14 @@
     "retirement/WF_src_u50/work/orfs/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/1_synth.json": "31cc6bcc4fbdc4eaee47747ad07e0018c87eee166e2937ad118fc5bdb7f74b54",
     "retirement/WF_src_u50/work/orfs/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_5_place_dp.log": "a4f503fdd3b54bbed1737b96d409f058141105533738591b7358037153e7c62d",
     "retirement/WF_src_u50/work/orfs/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_3_floorplan_tapcell.json": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
-    "retirement/WF_src_u50/work/orfs/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_1_grt.log": "2a09b3a3ce10aaae495b188d8b974bec69fde41e169cfde58a4953cf6f4c3084"
+    "retirement/WF_src_u50/work/orfs/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_1_grt.log": "2a09b3a3ce10aaae495b188d8b974bec69fde41e169cfde58a4953cf6f4c3084",
+    "retirement/c0r128_h20s40/consumer_release.txt": "e04a253ecac1e34fe37437f8d49dd8c94aa63aec67b71a5420c68d390e0e9352",
+    "retirement/c0r128_h20s40/cancellation.json": "75578eea02bf3ac78a8afab23beceff6aa912bbf7c9cec911d7e62be71ce2123",
+    "retirement/c0r128_h20s40/ledger_retirement.json": "888b12d8bf8a3cb43993d849a7adcf5f3eb7cafbaa11ae0709a7d4b9052ee023"
   },
-  "current_state": "WF SOURCE1 u50 CANCELLED_SUPERSEDED after explicit owner authorization; five transferred spine jobs remain live in GRT; no new final SS/FF result",
-  "observed_after_retirement_utc": "2026-10-05T19:18:32Z"
+  "current_state": "WF src_u50 and E1 c0r128_h20s40 CANCELLED_SUPERSEDED after explicit consumer releases; c0r16_h30s40 terminal FAIL_PHYSICAL_SCREEN SS-2.91267/FF+15.00119 retained main8c85576cf; three E2 legacy R128 routes remain supervised",
+  "observed_after_retirement_utc": "2026-10-05T19:18:32Z",
+  "screen_terminal_commit": "8c85576cf",
+  "E1_R128_retirement_record": "retirement/c0r128_h20s40/cancellation.json",
+  "E1_R128_consumer_release": "retirement/c0r128_h20s40/consumer_release.txt"
 }
