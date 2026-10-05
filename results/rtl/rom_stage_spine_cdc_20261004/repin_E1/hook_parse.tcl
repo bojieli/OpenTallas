@@ -1,4 +1,0 @@
-set_thread_count 1
-read_db /work/results/asap7/opentallas_ot_v41_rom_stage_q_pg_cdc_w10_asap7_spine_cdc_E1_20261004/base/4_cts.odb
-source /query/repin_hook.tcl
-puts "HOOK_PARSE_PASS_NO_PIN_PLACEMENT_OR_ROUTE"

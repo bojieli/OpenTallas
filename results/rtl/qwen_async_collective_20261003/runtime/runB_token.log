@@ -1,8 +1,0 @@
-images loaded in 8.6 s
-models constructed in 10.1 s (tiles/die=1536 nodes/die=1488)
-progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 wall=2s passes=3
-STAGE L0 done cycles=3801 start_cyc=7 end_cyc=3808 me_busy=2033/2033 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=1536 su_writes=22044 wall=1741s
-stage L1 loaded: code_words=1056 scale_words=50112 crom_words=541953
-progress tick=4096 cyc=4097 pc_base=0/0 me_busy=2285/2285 wall=1916s passes=11442
-STAGE L1 done cycles=3800 start_cyc=3809 end_cyc=7609 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=3072 su_writes=44088 wall=3165s
-QWEN_ROM_TOKEN_TP2 PASS stages=2 token=0 val=00000000 die1_token=0 cycles=7609 edges=7609 settle_max=2 wall_s=3164.8 RSS_KiB=1688496 threads=24

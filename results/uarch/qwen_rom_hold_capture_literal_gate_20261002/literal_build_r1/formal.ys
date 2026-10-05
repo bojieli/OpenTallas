@@ -1,5 +1,0 @@
-read_verilog -formal -sv /tmp/qwen-hold-literal-gate-r1/formal_original.sv /tmp/qwen-hold-literal-gate-r1/formal_candidate.sv /tmp/qwen-hold-literal-gate-r1/formal_miter.sv
-prep -top qwen_hold_capture_formal -flatten
-async2sync
-dffunmap
-write_smt2 -wires /tmp/qwen-hold-literal-gate-r1/formal.smt2

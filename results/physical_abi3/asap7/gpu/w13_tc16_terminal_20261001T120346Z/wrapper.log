@@ -1,5 +1,0 @@
-[remote_gate] worker ot-pve1 (floor 31 GB), job 604b77d865: bash -c export LD_LIBRARY_PATH=/home/ubuntu/.local/w13lib; mkdir -p /home/ubuntu/w13work; docker run --rm -v /home/ubuntu/w13work:/w alpine:latest rm -rf /w/tc16_12; mkdir -p /home/ubuntu/w13work/tc16
-{"block": "ot_gpu_tc16", "ports": 11}
-{"block": "ot_gpu_tc16", "closed": false, "setup_wns_ps": -31.057}
-{"block": "ot_gpu_tc16", "ss_fmax_hz": 1157327037.0, "closed_signoff": false, "SS": {"rc": 0, "macros_at_tt": [], "setup_wns_ps": -31.06, "setup_tns_ps": -244.33, "hold_wns_ps": 73.78, "hold_tns_ps": 0.0, "hold_buffers": 12792, "hold_buffer_um2": 932.5, "timing_model": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16_ss.lib"}, "FF": {"rc": 0, "macros_at_tt": [], "setup_wns_ps": 233.36, "setup_tns_ps": 0.0, "hold_wns_ps": 5.22, "hold_tns_ps": 0.0, "hold_buffers": 12792, "hold_buffer_um2": 932.5, "timing_model": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16_ff.lib"}}
-[remote_gate] worker ot-pve1 job 604b77d865 finished rc=0; 8 worktree files returned
