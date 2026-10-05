@@ -218,23 +218,29 @@
     {
      "lever": "draft",
      "record": "results/rtl/dsrom_recovery_20261004/levers/draft.json",
-     "sha256": "a2e50ea6af09a8c91c0370859a7056ae0b778aa5cb6af72d135bbc48d0179a76",
+     "sha256": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
      "verdict": "ADOPT"
     },
     {
      "lever": "head",
      "record": "results/rtl/dsrom_recovery_20261004/levers/head.json",
-     "sha256": "a64474c0944ad7cbc52120f1961c7da97e94a5b524d88c1a1d6c705a792c1c41",
+     "sha256": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
      "verdict": "ADOPT"
     },
     {
      "lever": "router",
      "record": "results/rtl/dsrom_recovery_20261004/levers/router.json",
-     "sha256": "413e2559a3db27b51846fe48a577bcb76b26b4bf9c7f23d94b416a22d94414d8",
+     "sha256": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
      "verdict": "ADOPT"
     }
    ],
    "not_applied": [
+    {
+     "lever": "field",
+     "record": "results/rtl/dsrom_recovery_20261004/levers/field.json",
+     "sha256": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
+     "verdict": "REJECT"
+    },
     {
      "lever": "hop",
      "record": "results/rtl/dsrom_recovery_20261004/levers/hop.json",
@@ -31546,10 +31552,11 @@
   "results/rtl/dsrom_1m_allmeasured_20261004/su_cdc.json": "641395e891d004439cdd0ede1d9ceca8a6011391ebb79d63d3e7fe31b3a2d6df",
   "results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json": "aaa6b190af2192499fe13f13f93803080dacc7746739470371adef905e850129",
   "results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json": "3d4837a6cbdffce831ab48dc8a7677ff7e8eae2ef03cf7e84f985129e5d01775",
-  "results/rtl/dsrom_recovery_20261004/levers/draft.json": "a2e50ea6af09a8c91c0370859a7056ae0b778aa5cb6af72d135bbc48d0179a76",
-  "results/rtl/dsrom_recovery_20261004/levers/head.json": "a64474c0944ad7cbc52120f1961c7da97e94a5b524d88c1a1d6c705a792c1c41",
+  "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
+  "results/rtl/dsrom_recovery_20261004/levers/field.json": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
+  "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
   "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
-  "results/rtl/dsrom_recovery_20261004/levers/router.json": "413e2559a3db27b51846fe48a577bcb76b26b4bf9c7f23d94b416a22d94414d8",
+  "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
   "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json": "47b6dbf89f1772c5bb83c712a2e4a637f6211d42bc17e0633f2b8baeafe5a18f",
   "results/rtl/dsrom_s81_window_bind_20261004/window_load.json": "afe2d8443098eff0b7fe7cd5418e3b5660dc705e3b4f16b4cb9d4518d7ccd6f2",
   "results/rtl/dsrom_wavefront_verify_20261004/record.json": "885d1c3e734bfc3d2357e52f2b6699238311a72936d1bbfcb5ea2e24face0d09",
@@ -31560,7 +31567,7 @@
   "results/rtl/dsrom_reindex_candidates_20261004/select.json": "1b6fc6822b9f211af799335153f1b4a952ce35fc62ff0342a3929e791fcdf315"
  },
  "tool_sha256": {
-  "tools/dsrom_1m_allmeasured.py": "b99e1972d7c8efb13fc52706ebfd3719774d73377bfe66e5a66c952d4ca61126",
+  "tools/dsrom_1m_allmeasured.py": "fe00f7b183697337c02e069deec5f6873ce24369e991b4f664c6586763ab5ff5",
   "tools/dsrom_1m_measure.py": "76ad2faed9f8a4683d350b7aa91548e0b78468261c88b416e377c94937757bff"
  }
 }

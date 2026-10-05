@@ -1,0 +1,146 @@
+{
+  "scope": "terminal predicates and small actual spec RTL; no historical PASS regrade",
+  "source_pins": {
+    "rtl/test/ctl_spec_seed8_20261005/tb_spec_seed8_fixed.sv": "938dcb299696dc75540db987f899b2f053dccf210dc1c3d142ad514a0f653413",
+    "rtl/test/hbm_fmax_ctl/tb_ctl_lockstep.sv": "fab46d3f2d61362f97bf93ca0c412780c5cee97b1610e4d4aeb00952fc1e8719",
+    "rtl/test/hbm_fmax_ctl/tb_spec_state_lockstep.sv": "e8bc999739c6c877d068ceaf3a2d0f97cde6ee51f19e4c645e1f456d52ba77d2",
+    "rtl/test/hbm_fmax_svc/tb_svc_aq_act_cut_lockstep.sv": "e61e266308c9439c6a8bb5ae89911610464a8de5e4d5bef96386a4f3d0275faf",
+    "rtl/test/qwen_combined_seq_la/tb_combined_seq_la_equiv.sv": "c74a8ca7d8ef171b511a33b1fabd742235ab5b5a569af04aa59f631c6e70ec45",
+    "rtl/test/qwen_dspark_closure/tb_seq_vp_la_equiv.sv": "e187d68b87b77b632a1f7d12e9971446668cfa3ca4bc3a0def39c977577784a4",
+    "rtl/test/tb_a3_dma_index_mover_pipe_equiv.sv": "fbb1b7a4c836c3ab91499a60e3904b91c9e78d0ff9fdb6bfa5de10c9048a4588",
+    "rtl/test/tb_a3_fp32_div_pipe_equiv.sv": "db0ffa5a7bcac7f00a18e3d35e280c899ea4f8958e03be1a88dbf739d318c39f",
+    "rtl/test/tb_a3_hc_sinkhorn20_pipe_equiv.sv": "ab168120be36657e2d8ef99e3dd09792929ebbe0271c5fa4e3d14e9e647c81cd",
+    "rtl/test/tb_a3_kv_index_equiv.sv": "20abc4e5fbedae69cbae7c69628579e1feedaa76838504e2a680771f91d269a4",
+    "rtl/test/tb_a3_mac_lane_scale_index_equiv.sv": "bf78f10503f27d0cc99392cf12723c17bbbc308b0327b9eccfd4f4505159ffa1",
+    "rtl/test/tb_a3_mhc_pre_tile_equiv.sv": "b881de234e1e6539b5ff8902d46b76bcd2a3b6f2108d8958dfcdb17a7ae2e2d0",
+    "rtl/test/tb_a3_resolver_bank_equiv.sv": "0a993975501339a9a5a26f78acf03ff4f9642537e23b048e4ef7afd911ee71ae",
+    "rtl/test/tb_a3_shared_divider_equiv.sv": "30debd32f7e183f1ec4d67bd96b25a3b7087a0c7ae44ef0100a36fd25cd04be0",
+    "rtl/test/tb_a3_tile_work_product_equiv.sv": "8f5f742bd52d8f78671ae5a99e18692667cf3c7388b5496c8a51512b19be6814",
+    "rtl/test/tb_crc32c_tree_equiv.sv": "a6e91e668e67bc6fe5bd9a42d65a48688b9ffd525ffc187968f323e30d67abf4",
+    "rtl/test/tb_fp32_add_deep_equiv.sv": "a6f5fbfe2a4362d85a2f21a9bf2aa1116bbb5518affffb3bed44dd67735373b8",
+    "rtl/test/tb_fp32_rsqrt_split_equiv.sv": "f60f7130dce269048b7255498929b2e21afbc02800c6a5a71cfc1a0ad5c1ed1d",
+    "rtl/test/tb_hbm_accel_bmul_equiv.sv": "6cc4a648505c9ece009945445362944fa2805af39162e2e45d2ae2c1912a6149",
+    "rtl/test/tb_hdc_fastfp_equiv.sv": "a38d62d051cf08e2a9824914e80428bb7fb687777a05a448751b4a51237294bd",
+    "rtl/test/tb_hdc_fsqrt_equiv.sv": "9f0268d24e5ff9293f168e572570858ded1f8b9e1ef2abf19752c275d6515c4b",
+    "rtl/test/tb_hdc_mul_equiv.sv": "ca321afb9420f8b992513a2d25a9a1e82a7c0a1b1da133e8e541fc664c7b5ac9",
+    "rtl/test/tb_hdc_sfu_equiv.sv": "e9dfeca9237d960bc1030b5493ec42442356155e61a483dcca1e591520c1c320",
+    "rtl/test/tb_mac_lane_pipe_equiv.sv": "0e2a1b37e2cc67c88ae1b4e71195aad5b637b63a14f6aa69e071b4f0e0bb8753",
+    "rtl/test/tb_reduction_endpoint_equiv.sv": "65b8ca89048d51945799d8123a6d7d6cbbe6852c5bbcff4287d769c6c37db8fe",
+    "rtl/test/tb_v41_attn_neighborhood_equiv.sv": "961f4a1d91924509983de5539c2ae624eb44e2fc595783fe6999be31545a8128",
+    "rtl/test/tb_vector_scale_pipe_equivalence.sv": "9d849bad87af89a270442ec164b0c730656706a0c2ab1f9042775c32c03380a4",
+    "rtl/test/tb_w11s_cut_equiv.sv": "afbf5e7eb51606760cfd0ba31b514a1abf1e10301800ce6de39ef900244837ed",
+    "rtl/test/tb_wide_div_seq_equiv.sv": "a8a7ec5a8e37919662749aef989cc1b1c481d74fa0505f86f5d3163321db0dec",
+    "rtl/test/tb_wide_div_small_seq_equiv.sv": "eb6dd0f7f0983654a66101a21fc66574523ee5174e56ba68cb3a8fa0fe1165b3",
+    "rtl/test/tb_wide_mul_seq_equiv.sv": "7727b4838803f30856f68055263fc96043ce8ca3029445340eb148345f7318a6",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/gpu/dshbm/ot_dshbm_spec_state.sv": "b39964d19f984a10446175cc7dd34f451ab3a16306d473a374c89f483e75e411",
+    "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv": "7ba75538d2ef10775a8a26fb7af15d3a140ee4ffbbcfd43173c3c970437633e8"
+  },
+  "guard_count": 31,
+  "checks": [
+    {
+      "name": "guard_build_0",
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "terminal_fixture",
+        "-o",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/guards_0.out",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/guards_0.sv"
+      ],
+      "returncode": 0,
+      "expected_zero": true
+    },
+    {
+      "name": "guard_run_0",
+      "argv": [
+        "vvp",
+        "-n",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/guards_0.out"
+      ],
+      "returncode": 0,
+      "expected_zero": true
+    },
+    {
+      "name": "guard_build_1",
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "terminal_fixture",
+        "-o",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/guards_1.out",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/guards_1.sv"
+      ],
+      "returncode": 0,
+      "expected_zero": true
+    },
+    {
+      "name": "guard_run_1",
+      "argv": [
+        "vvp",
+        "-n",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/guards_1.out"
+      ],
+      "returncode": 0,
+      "expected_zero": true
+    },
+    {
+      "name": "spec_build_0",
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "spec_fixture",
+        "-o",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/spec_0.out",
+        "rtl/hdc/ot_hdc_prefix.sv",
+        "rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+        "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv",
+        "rtl/test/ctl_spec_seed8_20261005/tb_spec_seed8_fixed.sv",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/spec_0.sv"
+      ],
+      "returncode": 0,
+      "expected_zero": true
+    },
+    {
+      "name": "spec_run_0",
+      "argv": [
+        "vvp",
+        "-n",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/spec_0.out"
+      ],
+      "returncode": 0,
+      "expected_zero": true
+    },
+    {
+      "name": "spec_build_1",
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "spec_fixture",
+        "-o",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/spec_1.out",
+        "rtl/hdc/ot_hdc_prefix.sv",
+        "rtl/gpu/dshbm/ot_dshbm_spec_state.sv",
+        "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv",
+        "rtl/test/ctl_spec_seed8_20261005/tb_spec_seed8_fixed.sv",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/spec_1.sv"
+      ],
+      "returncode": 0,
+      "expected_zero": true
+    },
+    {
+      "name": "spec_run_1",
+      "argv": [
+        "vvp",
+        "-n",
+        "/srv/opentallas-scratch/codex/kepler-bench-terminal-81cd/check_r2/spec_1.out"
+      ],
+      "returncode": 1,
+      "expected_zero": false
+    }
+  ]
+}

@@ -172,6 +172,12 @@ class CanonicalS81Execution:
         return self.stage_join.emit_programs(dispatches, out,
                                              program_address_bits=program_address_bits)
 
+    def emit_current_stage_candidate(self, out, *, stage=37, layer=20,
+                                     expert_ids_by_node=None, context=None, calendar_pricer=None):
+        from dsrom_s81_source_plan_emit import emit_current_stage_candidate
+        return emit_current_stage_candidate(self, out, stage=stage, layer=layer,
+            expert_ids_by_node=expert_ids_by_node, context=context, calendar_pricer=calendar_pricer)
+
     def emit_candidate_dispatch(self, candidate, context, out, *, layers=None,
                                 expert_ids_by_node=None, include_fields=True, endpoint_map=None, fragment_endpoints=None):
         """Compile inactive owner-assignment mechanics using these source objects.
