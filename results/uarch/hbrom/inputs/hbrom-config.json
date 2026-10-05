@@ -1,0 +1,95 @@
+{
+  "schema": "hbrom.configuration.v1",
+  "status": "analytical_program_capacity_not_compiled_or_RTL_validated",
+  "scope": "AR matrix/address descriptors including mandatory conditional compressor work; vector/SFU/service microcode remains separate and must be added. MTP and vision excluded.",
+  "sources": {
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "rtl/v41rom/ot_v41_rom_elem_qt_w10.sv": "a66e1ef60b53f60624a4c32d3bb0a52a53f4edf64ce1df061396d97a7d490f4f",
+    "rtl/test/dsrom_sys/tb_dsrom_1m_head_array.sv": "2968652d9cbbb997007be241f45195764e748ecd2a31f922994e72876783a361",
+    "results/rtl/dsrom_1m_allmeasured_20261004/head.json": "404264a42c6e1faa0635d38e3f29b2e1cb34e028b0562c6d720dd91c8be15cce"
+  },
+  "legacy": {
+    "configuration_write_payload_bits": 48,
+    "configuration_write_address_bits": 5,
+    "configuration_element_address_bits": 8,
+    "bus_transaction_bits": 61,
+    "packed_head_phases": 119,
+    "packed_head_configuration_writes": 14059,
+    "packed_head_min_byte_padded_config_B": 112472,
+    "packed_head_cfg_cycles": 14059,
+    "native_head_phases": 408,
+    "native_head_configuration_writes": 39576,
+    "native_head_min_byte_padded_config_B": 316608,
+    "native_head_cfg_cycles": 39576,
+    "config_to_go_guard_cycles": 4,
+    "note": "Measured group=8 element pairs, no implemented shadow bank. Headline hides writes by assumption. Static program does not eliminate fetch/dispatch or guard. Config registers written live."
+  },
+  "matrix_inventory": {
+    "per_layer_looped_templates": {
+      "hc_attn_fn": 1,
+      "hc_ffn_fn": 1,
+      "wq_a": 1,
+      "wq_b": 1,
+      "wkv": 1,
+      "wo_a_group_loop_8": 1,
+      "wo_b": 1,
+      "router": 1,
+      "shared_w1_w3_w2": 3,
+      "routed_w1_w3_w2_selected_expert_loop_6": 3
+    },
+    "layer_count": 40,
+    "outside_repeated_layer_templates": {
+      "index_wqb_and_weights_proj_8_sources": 16,
+      "compressor_wkv_wgate_3_ratio2_and_wkv_1_ratio1": 7,
+      "index_wk_4_kv_sources": 4,
+      "engram_wkv_2_layers": 2,
+      "embedding_lookup": 1,
+      "lm_head": 1
+    },
+    "looped_template_count": 591,
+    "looped_64B_storage_bytes": 37824,
+    "per_token_expanded_selected_expert_dispatch_count": 1191,
+    "per_token_expanded_group_and_expert_dispatch_count": 1471,
+    "full_static_all_384_expert_matrix_descriptor_count": 46551,
+    "full_static_all_expert_64B_bytes": 2979264,
+    "shared_compute_subset_excludes_80_FP32_hc_and_1_embedding_lookup": {
+      "looped_template_count": 510,
+      "looped_template_bytes": 32640,
+      "selected_expert_dispatches": 1110
+    },
+    "conditional_note": "At compression boundary all four wk execute; other parity only L20 wk. Compressor wkv/wgate projections themselves execute each token. Counts are full-boundary upper work, not all arithmetic instructions."
+  },
+  "selected_scheduler_compatibility": {
+    "descriptor_bytes": 64,
+    "port_B_per_cycle": 16,
+    "cycles_per_descriptor": 4,
+    "cold_control_cycles_per_dispatch": 9,
+    "basis": "/tmp/hbrom-scheduler.json",
+    "global_looped_program_preload_cycles": 2364,
+    "global_expanded_selected_descriptor_fetch_B_per_token": 76224,
+    "global_expanded_selected_descriptor_fetch_cycles": 4764,
+    "global_expanded_group_and_expert_descriptor_fetch_B_per_token": 94144,
+    "global_expanded_group_and_expert_descriptor_fetch_cycles": 5884,
+    "note": "Global sums are not critical-path latency. Sum dispatch service on actual shared ports; independent clusters may fetch concurrently. 16KiB store holds256 entries, not full591 global program. Per-cluster capacity depends layers/matrices assigned. Loop expansion removes refetch only if generator/state is implemented and priced."
+  },
+  "proposed_minimum": {
+    "mechanism": "Immutable static 64B matrix templates plus runtime epoch/operation/expert/slot identities, bounded FIFO, row/K/group/expert affine counters and bank-map lookup. Read immutable template locally; no host config per weight word.",
+    "template_full_model_simple_fit": "64KiB globally holds591 templates with room for explicitly counted additions; does not prove full vector/service program fits. Per-cluster replicated stores charge physical macro geometry.",
+    "affine_expert_mapping": "If each of384 experts has same bank geometry per layer, use matrix template + expert_id*expert_stride; otherwise charge explicit per-expert base table. Do not assume arbitrary packed layout is affine.",
+    "non_affine_expert_base_table_bytes_if_64bit_per_w1_w3_w2": 368640,
+    "runtime_selected_ID_bytes_per_token_16bit": 480,
+    "runtime_ID_fetch_cycles_16B_port": 30,
+    "mutable_state_protection": "SRAM/control protection, transaction ID, descriptor validity, bank/address bounds, no generation wrap while live remain mandatory. Immutable descriptor ROM requires no ECC per owner policy.",
+    "address_costs": "Counter additions per accepted beat; compare/final flags; bank-boundary carry; source mapping lookup; output row ID generation; golden-tail masks; separately valid w1,w3,w2 strides. Model mux width and map port count when multiple weight lanes issue.",
+    "no_hidden_overlap": "Default charge four descriptor read cycles plus nine total cold control cycles. Only subtract proven prefetch when future operands/IDs ready, shadow context distinct, shared port available, old phase drained."
+  },
+  "required_before_complete_model": [
+    "Compile concrete bank allocation and emit executable descriptors for every AR matrix family, including Engram, compressor parity, embedding, head and dedicated FP32 hc.",
+    "Add vector/SFU/index/attention/link service command ROM inventory; this artifact is not a complete all-instruction program.",
+    "Sum per-cluster template count/replica bytes after placement; reject overflow or charge refill.",
+    "Use actual ROM/SRAM macro read width and latency for descriptor fetch; 16B/cycle is proposed scheduling service, not physical characterization.",
+    "Count row-tile dispatch repetitions ceil(M/tile_rows) and K/group loops according to actual reusable SM launch protocol.1191/1471 are matrix-level dispatches, not necessarily hardware phases.",
+    "Measure cold config and continuous loop issue including route ID readiness, draining and backpressure; source-pin program payload and descriptor bounds proof."
+  ]
+}

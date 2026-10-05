@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Execute handoff scan recipe 1 without changing element RTL or the driver.
 
-Only the explicit frame/pin variant is selected. Source hashes and slot pricing
+Only the explicit frame/pin recipes 1 and 3 are selected. Source hashes and slot pricing
 are written before execution; historic pre-row-fix ATPG is never its verdict.
 The admitted owner controls resources; synthesis and routing have no deadline.
 """
@@ -21,7 +21,7 @@ ROWFIX = {'rtl/v41rom/ot_v41_rom_elem_qp_w10.sv',
           'rtl/v41rom/ot_v41_rom_elem_w10.sv'}
 
 
-def prepare(output):
+def prepare(output, recipe=1):
     output = Path(output).resolve()
     output.mkdir(parents=True, exist_ok=False)
     baseline = json.loads((ROOT / BASE).read_text())
@@ -54,13 +54,16 @@ def prepare(output):
         argv[i + 1:i + 1 + len(values)] = values
     replace('--die-area', ['0', '0', '510.84', str(height)])
     replace('--core-area', ['0', '0.27', '510.84', str(height - 0.27)])
-    replace('--nickname-tag', ['item8_q_scan_v1'])
+    replace('--nickname-tag', [f'item8_q_scan_recipe{recipe}'])
+    if recipe == 3:
+        replace('--place-density', ['0.55'])
     replace('--keep-workdir', [str(output / 'work')])
     replace('--output', [str(output / 'physical.json')])
     argv += ['--dft', 'scan', '--scan-max-length', '1024', '--dft-bound-macros',
              '--pin-region', '^(scan_|test_mode).*=bottom:136.08-374.76']
     record = dict(
-        variant='scan_recipe_1_pinned_ports_height140p4', adopted=False,
+        variant=f'scan_recipe_{recipe}_pinned_ports_height140p4', adopted=False,
+        place_density=0.55 if recipe == 3 else 0.6,
         baseline_record=BASE,
         baseline_record_sha256=hashlib.sha256((ROOT / BASE).read_bytes()).hexdigest(),
         source_pins=pins, changed_since_historical_baseline=changed,
@@ -92,20 +95,17 @@ def prepare(output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--recipe', type=int, choices=(1, 3), default=1)
     parser.add_argument('--prepare-only', action='store_true')
     args = parser.parse_args()
-    argv = prepare(args.output)
+    argv = prepare(args.output, args.recipe)
     if args.prepare_only:
         return 0
     os.environ['OT_ORFS_NUM_CORES'] = '16'
     os.environ['MAKEFLAGS'] = '-j16'
-    # These driver callbacks go directly to subprocess.run(timeout=...).
-    # None disables only the costly synthesis/route deadlines; other tooling
-    # probes retain the original driver behaviour. No admission script changes.
-    driver.flow_timeout_seconds = lambda: None
-    driver.synth_timeout_seconds = lambda: None
-    sys.argv = [str(ROOT / 'tools/run_abi3_physical.py'), *argv]
-    return driver.main()
+    # New jobs use Bacon's shared explicit API. Never omit these arguments:
+    # omission intentionally selects the driver's legacy numeric defaults.
+    return driver.main(argv, synth_timeout=None, flow_timeout=None)
 
 
 if __name__ == '__main__':

@@ -102,7 +102,11 @@
 // and `core_pos` are combinational (the start costs no extra cycle); the
 // memory and link ports are driven from state and the link-side inputs.
 // ---------------------------------------------------------------------------
+`ifndef OT_WFC_LOCAL_CONTROL
+`define OT_WFC_LOCAL_CONTROL 0
+`endif
 module ot_rom_pkg_ctrl_wfc #(
+    parameter integer LOCAL_CONTROL = `OT_WFC_LOCAL_CONTROL, // opt-in same-edge control locality
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
     parameter integer NW           = 16,     // token / position bits
@@ -276,6 +280,7 @@ module ot_rom_pkg_ctrl_wfc #(
     reg [FLIT-1:0] txq_d [0:TXQ-1];
     reg            txq_l [0:TXQ-1];
     reg [QB-1:0]   txq_w, txq_r;
+    (* keep *) reg [TXQ-1:0] txq_bank; // same-edge one-hot mirror of txq_w
     reg [QB:0]     txq_n;
     reg            rd_inflight, rd_last;
     reg [VWA-1:0]  tx_k;
@@ -390,8 +395,8 @@ module ot_rom_pkg_ctrl_wfc #(
     genvar ugi;
     generate for (ugi = 0; ugi < UNG; ugi = ugi + 1) begin : g_upos
         (* keep_hierarchy *)
-        ot_rom_pkg_ctrl_wfc_upos #(.NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
-            .clk(clk), .rst_n(rst_q), .lo(hdr_user[4:0]), .rd(uchk2),
+        ot_rom_pkg_ctrl_wfc_upos #(.LOCAL_CONTROL(LOCAL_CONTROL), .NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
+            .clk(clk), .rst_n(rst_q), .lo(hdr_user[4:0]), .rd(uchk2), .rd_early(uchk),
             .wr(uchk4 && gw_oh[ugi]), .wdata(hdr_pos1), .part(ug_part[ugi]));
     end endgenerate
     reg [NW-1:0] upos_sel;
@@ -460,12 +465,13 @@ module ot_rom_pkg_ctrl_wfc #(
     wire q_hdr_r = !job_done && tx_st == T_RHDR && tx_space && !rd_inflight;   // RESULT after a HIDDEN
     wire q_hdr_s = !job_done && tx_st == T_SHDR && tx_space && !rd_inflight;   // SIDE after a HIDDEN
     wire q_push  = (job_done && (SEND_HIDDEN || SEND_RESULT)) || q_hdr_r || q_hdr_s || rd_inflight;
-    integer u;
+    integer u, qbank;
     always @(posedge clk or negedge rst_q) begin
         if (!rst_q) begin
             running <= 1'b0; cur_user <= 0; cur_pos <= 0; cur_pa_idx <= 0; cur_pa_val <= 0; kv_base <= 0;
             cur_tok <= 0; hdr_tok <= 0; side_user <= 0; side_addr <= 0;
             pend <= 1'b0; hdr_user <= 0; hdr_pos <= 0; hdr_pa_idx <= 0; hdr_pa_val <= 0;
+            txq_bank <= {{(TXQ-1){1'b0}}, 1'b1};
             tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0;
             tx_k <= 0; tx_user <= 0; tx_pos <= 0; tx_idx <= 0; tx_val <= 0; tx_tok <= 0;
             rx_st <= R_IDLE; rx_j <= 0;
@@ -580,28 +586,62 @@ module ot_rom_pkg_ctrl_wfc #(
             rd_inflight <= vm_re;
             rd_last <= vm_re && (job_done ? (XWORDS == 1) :
                                  (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1));
-            if (job_done) begin
-                if (SEND_HIDDEN) begin
-                    txq_d[txq_w] <= header(HID_D, MT_HIDDEN, XLEN, cur_user, cur_pos, rep_idx, rep_val,
-                                           FWD_TOKEN ? cur_tok : {NW{1'b0}}, 16'd0);
-                    txq_l[txq_w] <= 1'b0;
-                end else begin
-                    txq_d[txq_w] <= header(RES_D, MT_RESULT, 8'd0, cur_user, cur_pos, rep_idx, rep_val,
+            // Same queue, same priority, same write edge. The opt-in bank
+            // mirror removes binary write-address decoding from the late
+            // core_done enqueue control. Payload registers remain unreset.
+            if (LOCAL_CONTROL) begin
+                for (qbank = 0; qbank < TXQ; qbank = qbank + 1) begin
+                    if (txq_bank[qbank]) begin
+                        if (job_done) begin
+                            if (SEND_HIDDEN) begin
+                                txq_d[qbank] <= header(HID_D, MT_HIDDEN, XLEN, cur_user, cur_pos, rep_idx, rep_val,
+                                                       FWD_TOKEN ? cur_tok : {NW{1'b0}}, 16'd0);
+                                txq_l[qbank] <= 1'b0;
+                            end else begin
+                                txq_d[qbank] <= header(RES_D, MT_RESULT, 8'd0, cur_user, cur_pos, rep_idx, rep_val,
+                                                       {NW{1'b0}}, 16'd0);
+                                txq_l[qbank] <= 1'b1;
+                            end
+                        end else if (q_hdr_r) begin
+                            txq_d[qbank] <= header(RES_D, MT_RESULT, 8'd0, tx_user, tx_pos, tx_idx, tx_val,
+                                                   {NW{1'b0}}, 16'd0);
+                            txq_l[qbank] <= 1'b1;
+                        end else if (q_hdr_s) begin
+                            txq_d[qbank] <= header(SIDE_D, MT_SIDE, SLEN, tx_user, tx_pos, {NW{1'b0}}, 32'd0,
+                                                   {NW{1'b0}}, SIDE_A);
+                            txq_l[qbank] <= 1'b0;
+                        end else if (rd_inflight) begin
+                            txq_d[qbank] <= vm_rq;
+                            txq_l[qbank] <= rd_last;
+                        end
+                    end
+                end
+            end else begin
+                if (job_done) begin
+                    if (SEND_HIDDEN) begin
+                        txq_d[txq_w] <= header(HID_D, MT_HIDDEN, XLEN, cur_user, cur_pos, rep_idx, rep_val,
+                                               FWD_TOKEN ? cur_tok : {NW{1'b0}}, 16'd0);
+                        txq_l[txq_w] <= 1'b0;
+                    end else begin
+                        txq_d[txq_w] <= header(RES_D, MT_RESULT, 8'd0, cur_user, cur_pos, rep_idx, rep_val,
+                                               {NW{1'b0}}, 16'd0);
+                        txq_l[txq_w] <= 1'b1;
+                    end
+                end else if (q_hdr_r) begin
+                    txq_d[txq_w] <= header(RES_D, MT_RESULT, 8'd0, tx_user, tx_pos, tx_idx, tx_val,
                                            {NW{1'b0}}, 16'd0);
                     txq_l[txq_w] <= 1'b1;
+                end else if (q_hdr_s) begin
+                    txq_d[txq_w] <= header(SIDE_D, MT_SIDE, SLEN, tx_user, tx_pos, {NW{1'b0}}, 32'd0,
+                                           {NW{1'b0}}, SIDE_A);
+                    txq_l[txq_w] <= 1'b0;
+                end else if (rd_inflight) begin
+                    txq_d[txq_w] <= vm_rq;
+                    txq_l[txq_w] <= rd_last;
                 end
-            end else if (q_hdr_r) begin
-                txq_d[txq_w] <= header(RES_D, MT_RESULT, 8'd0, tx_user, tx_pos, tx_idx, tx_val,
-                                       {NW{1'b0}}, 16'd0);
-                txq_l[txq_w] <= 1'b1;
-            end else if (q_hdr_s) begin
-                txq_d[txq_w] <= header(SIDE_D, MT_SIDE, SLEN, tx_user, tx_pos, {NW{1'b0}}, 32'd0,
-                                       {NW{1'b0}}, SIDE_A);
-                txq_l[txq_w] <= 1'b0;
-            end else if (rd_inflight) begin
-                txq_d[txq_w] <= vm_rq;
-                txq_l[txq_w] <= rd_last;
             end
+            if (LOCAL_CONTROL && q_push)
+                txq_bank <= (txq_bank << 1) | (txq_bank >> (TXQ - 1));
             if (q_push) txq_w <= (txq_w == TXQ - 1) ? {QB{1'b0}} : txq_w + 1'b1;
             if (tx_pop) txq_r <= (txq_r == TXQ - 1) ? {QB{1'b0}} : txq_r + 1'b1;
             txq_n <= txq_n + (q_push ? 1'b1 : 1'b0) - (tx_pop ? 1'b1 : 1'b0);
@@ -632,13 +672,22 @@ endmodule
 // locally; a registered read of that entry (0 until written) and a write of it;
 // its own reset copy (synchronous clear).
 // ---------------------------------------------------------------------------
-module ot_rom_pkg_ctrl_wfc_upos #(parameter integer NW = 16, parameter integer N = 32) (
+module ot_rom_pkg_ctrl_wfc_upos #(parameter integer LOCAL_CONTROL = 0, parameter integer NW = 16, parameter integer N = 32) (
     input  wire          clk, rst_n,
     input  wire [4:0]    lo,
-    input  wire          rd, wr,
+    input  wire          rd, rd_early, wr,
     input  wire [NW-1:0] wdata,
     output reg  [NW-1:0] part
 );
+    // This local copy equals top-level uchk2 on every edge, including reset.
+    // It is fed from uchk, not uchk2, so it adds no read/check/write edge.
+    (* keep *) reg rd_local;
+    generate if (LOCAL_CONTROL) begin : g_local_read_control
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) rd_local <= 1'b0; else rd_local <= rd_early;
+    end else begin : g_original_read_control
+        always @(*) rd_local = rd;
+    end endgenerate
     reg          rq;
     always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
     reg [4:0]    lo_r;                  // local copy of the user's low bits (one cycle later)
@@ -648,7 +697,7 @@ module ot_rom_pkg_ctrl_wfc_upos #(parameter integer NW = 16, parameter integer N
         lo_r <= lo;
         if (!rq) uval <= 0; else if (wr && lo_r < N) uval[lo_r] <= 1'b1;   // synchronous clear
         if (wr && lo_r < N) upos[lo_r] <= wdata;
-        if (rd) part <= (lo_r < N && uval[lo_r]) ? upos[lo_r] : {NW{1'b0}};
+        if (rd_local) part <= (lo_r < N && uval[lo_r]) ? upos[lo_r] : {NW{1'b0}};
     end
 endmodule
 
