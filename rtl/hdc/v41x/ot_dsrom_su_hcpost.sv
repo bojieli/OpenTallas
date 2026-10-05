@@ -133,6 +133,47 @@ module ot_dsrom_su_hcpost_wire #(parameter integer W = 32, parameter integer D =
     end endgenerate
 endmodule
 
+// one element group: r0..r3 and y of one i through WIN hub stages, the operand register (the op words land in
+// the broadcast registers the cycle before), 4 lanes (k = 0..3), WOUT hub stages back
+module ot_dsrom_su_hcpost_group #(
+    parameter integer WIN = 33,
+    parameter integer WOUT = 23,
+    parameter integer ML = 5,
+    parameter integer AL = 4
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          in_v,
+    input  wire [127:0]  r,
+    input  wire [31:0]   y,
+    input  wire [511:0]  c,
+    input  wire [127:0]  p,
+    output wire          out_v,
+    output wire [127:0]  o,
+    output wire          fault
+);
+    /*verilator hier_block*/
+    wire         b_v;
+    wire [159:0] b_d;
+    ot_dsrom_su_hcpost_wire #(.W(160), .D(WIN)) u_win (.clk(clk), .rst_n(rst_n), .v(in_v), .d({y, r}), .vq(b_v), .q(b_d));
+    reg          x_v;
+    reg  [159:0] x_d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= b_v;
+    always @(posedge clk) x_d <= b_d;
+    wire [127:0] l_o;
+    wire [3:0]   l_v, l_f;
+    genvar k;
+    generate for (k = 0; k < 4; k = k + 1) begin : g_k
+        ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u (
+            .clk(clk), .rst_n(rst_n), .v(x_v),
+            .r0(x_d[0 +: 32]), .r1(x_d[32 +: 32]), .r2(x_d[64 +: 32]), .r3(x_d[96 +: 32]), .y(x_d[128 +: 32]),
+            .c0(c[32*(0+k) +: 32]), .c1(c[32*(4+k) +: 32]), .c2(c[32*(8+k) +: 32]), .c3(c[32*(12+k) +: 32]),
+            .p(p[32*k +: 32]), .vo(l_v[k]), .o(l_o[32*k +: 32]), .fault(l_f[k]));
+    end endgenerate
+    ot_dsrom_su_hcpost_wire #(.W(128), .D(WOUT)) u_wout (.clk(clk), .rst_n(rst_n), .v(l_v[0]), .d(l_o), .vq(out_v), .q(o));
+    assign fault = |l_f;
+endmodule
+
 module ot_dsrom_su_hcpost #(
     parameter integer NG   = 256,   // element groups: NG x 4 outputs a beat (256: 1,024 a cycle)
     parameter integer WIN  = 33,    // hub stages, vector memory -> lanes (1.2 GHz reach)
@@ -155,39 +196,22 @@ module ot_dsrom_su_hcpost #(
     output wire [NG*4*32-1:0]   out_d,
     output wire                 fault
 );
-    // ---- the hub traverse in: the beat, and the op words travelling with go
-    wire              b_v, w_v;
-    wire [NG*5*32-1:0] b_d;
-    wire [20*32-1:0]  w_d;
-    ot_dsrom_su_hcpost_wire #(.W(NG*5*32), .D(WIN)) u_win (.clk(clk), .rst_n(rst_n), .v(in_v), .d({in_y, in_r}),
-                                                          .vq(b_v), .q(b_d));
+    // ---- the op words travel the hub traverse in with go and land in the (lane-tile) broadcast registers
+    wire             w_v;
+    wire [20*32-1:0] w_d;
     ot_dsrom_su_hcpost_wire #(.W(20*32), .D(WIN)) u_wop (.clk(clk), .rst_n(rst_n), .v(go), .d({post, comb}),
                                                         .vq(w_v), .q(w_d));
     reg [16*32-1:0] c_r;
     reg [4*32-1:0]  p_r;
     always @(posedge clk) if (w_v) begin c_r <= w_d[16*32-1:0]; p_r <= w_d[20*32-1:16*32]; end
-    // op words land one cycle before the first beat may use them: the beat waits one register
-    reg              x_v;
-    reg [NG*5*32-1:0] x_d;
-    always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= b_v;
-    always @(posedge clk) x_d <= b_d;
-    // ---- lanes
-    wire [NG*4*32-1:0] l_o;
-    wire [NG*4-1:0]    l_v, l_f;
-    genvar g, k;
+    // ---- element groups: each carries its own slice of the beat through the hub stages (identical timing)
+    wire [NG-1:0] g_v, g_f;
+    genvar g;
     generate for (g = 0; g < NG; g = g + 1) begin : g_g
-        for (k = 0; k < 4; k = k + 1) begin : g_k
-            ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u (
-                .clk(clk), .rst_n(rst_n), .v(x_v),
-                .r0(x_d[32*(4*g+0) +: 32]), .r1(x_d[32*(4*g+1) +: 32]), .r2(x_d[32*(4*g+2) +: 32]),
-                .r3(x_d[32*(4*g+3) +: 32]), .y(x_d[NG*4*32 + 32*g +: 32]),
-                .c0(c_r[32*(0+k) +: 32]), .c1(c_r[32*(4+k) +: 32]), .c2(c_r[32*(8+k) +: 32]),
-                .c3(c_r[32*(12+k) +: 32]), .p(p_r[32*k +: 32]),
-                .vo(l_v[4*g+k]), .o(l_o[32*(4*g+k) +: 32]), .fault(l_f[4*g+k]));
-        end
+        ot_dsrom_su_hcpost_group #(.WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL)) u (
+            .clk(clk), .rst_n(rst_n), .in_v(in_v), .r(in_r[32*4*g +: 128]), .y(in_y[32*g +: 32]), .c(c_r), .p(p_r),
+            .out_v(g_v[g]), .o(out_d[32*4*g +: 128]), .fault(g_f[g]));
     end endgenerate
-    // ---- the hub traverse out
-    ot_dsrom_su_hcpost_wire #(.W(NG*4*32), .D(WOUT)) u_wout (.clk(clk), .rst_n(rst_n), .v(l_v[0]), .d(l_o),
-                                                            .vq(out_v), .q(out_d));
-    assign fault = |l_f;
+    assign out_v = g_v[0];
+    assign fault = |g_f;
 endmodule

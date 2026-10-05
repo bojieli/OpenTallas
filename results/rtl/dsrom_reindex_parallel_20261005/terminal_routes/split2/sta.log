@@ -1,0 +1,46 @@
+{
+ "ss": {
+  "exit": 0,
+  "setup_wns_ns": -0.00897,
+  "hold_wns_ns": 0.03879,
+  "setup_tns_ns": -0.06306,
+  "failing_setup_endpoints": 13,
+  "failing_hold_endpoints": 0,
+  "endpoints": 53950,
+  "tap_source_cells": 0,
+  "lw_cells": 0,
+  "worst_setup_slack_ns": -0.00897,
+  "worst_setup_path": {
+   "start": "u_dut.d_left[1]$_DFFE_PP_",
+   "end": "u_dut.hoh[78]$_SDFFE_PP0P_"
+  },
+  "worst_hold_slack_ns": 0.03879,
+  "worst_hold_path": {
+   "start": "u_dut.e3_blk[0][10]$_DFF_P_",
+   "end": "u_dut.e4_blk[0][10]$_DFF_P_"
+  }
+ },
+ "ff": {
+  "exit": 0,
+  "setup_wns_ns": 0.32281,
+  "hold_wns_ns": 0.001,
+  "setup_tns_ns": 0.0,
+  "failing_setup_endpoints": 0,
+  "failing_hold_endpoints": 0,
+  "endpoints": 53950,
+  "tap_source_cells": 0,
+  "lw_cells": 0,
+  "worst_setup_slack_ns": 0.32281,
+  "worst_setup_path": {
+   "start": "rst_q$_DFF_P_",
+   "end": "u_dut.fq_wp[23][1]$_SDFFE_PN0P_"
+  },
+  "worst_hold_slack_ns": 0.001,
+  "worst_hold_path": {
+   "start": "u_dut.pend_c[52][6]$_DFFE_PP_",
+   "end": "u_dut.cpart[52][0]$_DFF_P_"
+  }
+ },
+ "ss_setup_met": false,
+ "ff_hold_met": true
+}
