@@ -21,6 +21,7 @@
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_sm_pq #(
     parameter integer ENABLE = 0, PQ_ENABLE = 0,
+    parameter integer XMAP = 0,         // Pauli static layout; original leaf remains selected by default
     parameter integer SUB  = 4,
     parameter integer LBS  = 2,
     parameter integer LSB  = 16,
@@ -246,11 +247,19 @@ module ot_hbm_accel_sm_pq #(
                                                       .q(b2[1 +: WBW - 1]));
             for (c = h * HC; c < NC && c < (h + 1) * HC; c = c + 1) begin : g_c
                 wire gv1, gf1; wire [31:0] gy1; wire [TAGW-1:0] gt1;
+                if (XMAP != 0) begin : g_xmap
+                ot_hbm_accel_smpq_xmap_leaf #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW), .XD(XD),
+                                        .NBEAT(NBEAT), .COL(c), .SP(sp), .TCK(TCK), .XMAP(XMAP), .G1ASB(G1ASB)) u_leaf (
+                    .clk(clk), .rst_n(rst_n), .c_in(c2), .w_in(w2), .x_ce(x2[0]), .x_addr(x2[1 +: XW]),
+                    .b_en(b2[0]), .b_addr(b2[1 +: XW]), .b_oh(b2[1 + XW +: NBEAT]), .b_data(b2[1 + XW + NBEAT +: 2048]),
+                    .gv(gv1), .gy(gy1), .gt(gt1), .gf(gf1));
+                end else begin : g_original_layout
                 ot_hbm_accel_smpq_leaf #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW), .XD(XD),
                                         .NBEAT(NBEAT), .COL(c), .SP(sp), .TCK(TCK), .G1ASB(G1ASB)) u_leaf (
                     .clk(clk), .rst_n(rst_n), .c_in(c2), .w_in(w2), .x_ce(x2[0]), .x_addr(x2[1 +: XW]),
                     .b_en(b2[0]), .b_addr(b2[1 +: XW]), .b_oh(b2[1 + XW +: NBEAT]), .b_data(b2[1 + XW + NBEAT +: 2048]),
                     .gv(gv1), .gy(gy1), .gt(gt1), .gf(gf1));
+                end
                 // gather toward the hub
                 ot_hbm_accel_smv_chain #(.W(2), .D(DG), .RST(1)) u_gv (.clk(clk), .rst_n(rst_n), .d({gv1, gf1}),
                     .q({g_v[c*SUB + sp], g_f[c*SUB + sp]}));
