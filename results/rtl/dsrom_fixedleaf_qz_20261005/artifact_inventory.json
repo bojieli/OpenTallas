@@ -1,0 +1,57 @@
+{
+  "source_inputs": "source_inputs/ retains all27 exact original input files before own source WT cleanup",
+  "binaries": {
+    "pos": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/pos/Vtb_dsrom_qz_exact",
+      "bytes": 1545600,
+      "sha256": "b109150c6104a369d25ee3080e19b5437e396608100efca5d4b74fc4fab8b493"
+    },
+    "xs0": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/xs0/Vtb_dsrom_qz_exact",
+      "bytes": 1545592,
+      "sha256": "c5e908b2fe37b985e7fe6f7b6227353b16707feddfd3bb8aab0fcf30f0dd5871"
+    },
+    "qz0": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/qz0/Vtb_dsrom_qz_exact",
+      "bytes": 1520584,
+      "sha256": "0268e9a1feb34d4df03871d1f7f3f141a874446794dc39cce98f321c402157b9"
+    },
+    "neg_bk": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/neg_bk/Vtb_dsrom_qz_exact",
+      "bytes": 1492128,
+      "sha256": "58d20af252304609675c3a55a0e743afd850bd6590cf686f0a8ba46d1628117e"
+    },
+    "neg_z": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/neg_z/Vtb_dsrom_qz_exact",
+      "bytes": 1492128,
+      "sha256": "444d471ea85546effd2a26301acb4a9835dc66d7f5fa313c7a3d6ef164b43771"
+    },
+    "neg_dp": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/neg_dp/Vtb_dsrom_qz_exact",
+      "bytes": 1492128,
+      "sha256": "32297ee431cef3471f0e77bff5f7e9c8a17159a81d256931e5c78b310f1f283b"
+    },
+    "neg_tree": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/neg_tree/Vtb_dsrom_qz_exact",
+      "bytes": 1492128,
+      "sha256": "955b27f5e3cb6648e06346a6ed352e9cf2451c1c2f0ea9259ddfabc3f95c4e5a"
+    },
+    "neg_half": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/neg_half/Vtb_dsrom_qz_exact",
+      "bytes": 1492128,
+      "sha256": "171692a0bc6482c809a5fba1cd7f2f626c441d90bb1e341d59d706ed3f0afe94"
+    },
+    "neg_shadow": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/neg_shadow/Vtb_dsrom_qz_exact",
+      "bytes": 1492128,
+      "sha256": "0f6483aa9f37b3a567b724b521984b23c98d384951d0093a43bb41ebe4e75cb1"
+    },
+    "neg_lu": {
+      "path": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build/neg_lu/Vtb_dsrom_qz_exact",
+      "bytes": 1492128,
+      "sha256": "40036dd7cfaf0bd6fc16c842d25a0db106a91b66f4aa820c360c786e9ae2c8b8"
+    }
+  },
+  "compiled_objects_retained": "/srv/opentallas-scratch/codex/rawls-fixedleaf-qz-7957cd35b-r1/build",
+  "record_runs": 15
+}
