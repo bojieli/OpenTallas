@@ -9706,3 +9706,14 @@ def dshbm_expert_workgroup_model():
         new_hardware=False, hardware_steering_implemented=False,
         physical_slot_fit=None, actual_1M_L20_exact=False, actual_1M_L3_exact=False,
         actual_composed_token_latency_ns=None, adopted=False)
+
+
+def hbm_su_command_bridge_model():
+    """Pre-hardware actual command/scalar producer boundary sizing."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_command_bridge_price', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.command_bridge_model()
