@@ -61,6 +61,14 @@ def prepare(measured, native, output, source=ROOT):
     build.mkdir()
     for leaf in LEAVES:
         shutil.copytree(measured/'die'/leaf, build/leaf)
+    # Direct top-only Verilation includes this hierarchy file but does not emit
+    # it. Declare the exact completed libraries without regeneration rules.
+    # A missing archive remains a make error instead of rebuilding a leaf.
+    libraries = [str(p.relative_to(build)) for leaf in LEAVES
+                 for p in sorted((build/leaf).glob('lib*.a'))]
+    (build/'Vdie_hier.mk').write_text(
+        '# Retained measured compute libraries; top-only compilation.\n'
+        'VM_HIER_LIBS := '+' '.join(libraries)+'\n')
     text = (measured/'die/Vdie__hierMkArgs.f').read_text()
     lines = text.splitlines()
     original_top = next(p for p in lines if p.endswith('/ot_qwen_rom_rt_die_w12_stream4.sv'))
