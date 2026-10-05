@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.hbm.su.c12.clock_candidate_terminal.v1",
+  "route": "t6_u30p1",
+  "host": "ot-epyc2",
+  "original_job_root": "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/r6/routes/t6_u30p1",
+  "source_verified": true,
+  "source_root": "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/r6/src",
+  "original_physical_status": "not_met",
+  "signoff_ss_ff": false,
+  "SS_setup_ps": -0.258127,
+  "FF_hold_ps": 2.805784,
+  "SS_violating_d_pins": 1,
+  "FF_violating_d_pins": 0,
+  "clock_ps": 833.0,
+  "setup_uncertainty_ps": 60.0,
+  "hold_uncertainty_ps": 25.0,
+  "original_io_false_paths": true,
+  "full_SU_context_qualified": false,
+  "actual_qualified_rate_comparison": null,
+  "adopted": false,
+  "note": "Existing completed route only; native verdict and separate extracted SS/FF check preserved. No uncertainty or clock relaxation, tuning, rebuild or adoption. Other existing required candidates remain live."
+}

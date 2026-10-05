@@ -1,0 +1,37 @@
+{
+  "mdrop_already_integrated": true,
+  "mdrop_source_sha256": "5e74932ad866aa491eea0ce0c1a7038bd29e648ec4c004d7e06fdcfb5faa5e2e",
+  "mdrop_current_parent": "rtl/dsrom_sys/integration/ot_dsrom_reindex_chain.sv:u_sel (.MDROP(MDROP)), default MDROP=1",
+  "mdrop_historical_context": "results/rtl/dsrom_mdrop_closed_20261005/record.json",
+  "mdrop_historical_context_only": true,
+  "selected_gather_control": "ot_hdc_v41x_idx_kgctl in ot_hdc_v41x_idx_kgather_ps; not experimental ot_hdc_v41x_idx_kgctl_kc7 OPT_KC8=1",
+  "global_ID_expression": "j_qb[s] + {g_blk[s*2*LBW+(l/8)*LBW +: LBW],3'd0} + IW'(l%8)",
+  "causal_keep": "sc_lv && (sc_idx <= j_pos)",
+  "physical_parent_blockers": [
+    "Selected production kgctl differs from failed experimental KC8; no source-matched parent timing credit",
+    "Position-slotted list memory has two 8192x14 behavioral 1W1R banks at LSW3; no instantiated technology macro in that source, no real macro clock-to-Q/corner load/capture record",
+    "Synthetic harness reset launch and req/drain/list launch registers are not the enclosing producer/receiver"
+  ],
+  "window": {
+    "current_verdict": "FAIL_FULL_BLOCK_SS_SCREEN",
+    "ss_ps": -1175.2,
+    "ff_ps": 3.2,
+    "main_screen_sha256": "9447dfc4f442a5c6371d96a3005e349703ad3d39cf08d59f4270eeaa5ca53528",
+    "remote_screen_sha256": "9447dfc4f442a5c6371d96a3005e349703ad3d39cf08d59f4270eeaa5ca53528",
+    "current_jobs": false,
+    "new_jobs": 0,
+    "source_unchanged": true
+  },
+  "legacy_kc3": {
+    "host": "ot-epyc1tb",
+    "yosys_pid": 3957831,
+    "container": "8440cdd050361684a791070fcdcb2707a2fa442ed5da69c06033daa930158a7e",
+    "source_worktree": "/srv/opentallas-scratch/claude/dsrom-reindex-close/wt-c09f9e91b",
+    "running_observed": true,
+    "registered": "dsrom-reindex-legacy-kc3-recovered-20261005",
+    "relevance": "historical driver reported timeout, original child still active; no restart/stop/delete performed"
+  },
+  "rates_unchanged": true,
+  "RTL_unchanged": true,
+  "new_route": false
+}
