@@ -2,7 +2,10 @@
 # Caller supplies literal pins from the selected linked parent. No pattern
 # defaults: the screen cannot satisfy u_f, VM, or QX bindings.
 # Times are ps. Load the corner's real ROM and standard-cell libraries first.
-namespace eval ot_v9_field {}
+namespace eval ot_v9_field {
+    variable data_roles {activation configuration go result vm_read vm_write macro_read
+                         busy fault free_to_gated gated_to_free_control}
+}
 
 proc ot_v9_field::one {kind name} {
     if {$kind eq "port"} {set objects [get_ports -quiet $name]} else {
@@ -24,9 +27,10 @@ proc ot_v9_field::pins {names suffix} {
 }
 
 proc ot_v9_field::constrain {binding corner} {
+    variable data_roles
     if {$corner ni {SS FF}} {error "v9 field requires SS setup / FF hold libraries"}
     foreach key {root_port root_clock clock_anchors gate_input gate_output gate_enable
-                 gated_clock boundaries macro_cells source_commit gate_enable_launch} {
+                 gated_clock boundaries macro_cells source_commit gate_enable_launch reset_boundary} {
         if {![dict exists $binding $key]} {error "v9 field: missing $key"}
     }
     # This binds the actual streaming input of the selected enclosing parent.
@@ -68,12 +72,16 @@ proc ot_v9_field::constrain {binding corner} {
     set_clock_uncertainty -hold 25 $clocks
     set_clock_gating_check -setup 60 -hold 25 $cell
     ot_v9_field::pins [dict get $binding gate_enable_launch] {/(Q|QN)$}
-    foreach role {activation configuration go result vm_read vm_write macro_read} {
+    foreach role $data_roles {
         if {![dict exists $binding boundaries $role]} {error "v9 field: missing $role path"}
         set path [dict get $binding boundaries $role]
         ot_v9_field::pins [dict get $path launch] {/(Q|QN|rd_out\[[0-9]+\])$}
         ot_v9_field::pins [dict get $path capture] {/D$}
     }
+    set reset [dict get $binding reset_boundary]
+    ot_v9_field::pins [dict get $reset launch] {/(Q|QN)$}
+    if {![llength [dict get $reset capture]]} {error "v9 field: empty recovery/removal boundary"}
+    foreach n [dict get $reset capture] {ot_v9_field::one pin $n}
     if {[llength [dict get $binding macro_cells]] != 4} {error "v9 field: full NB=2 PP=1 pair requires four real weight ROMs"}
     foreach n [dict get $binding macro_cells] {
         set c [get_cells -quiet $n]
@@ -87,6 +95,7 @@ proc ot_v9_field::constrain {binding corner} {
 }
 
 proc ot_v9_field::report {binding prefix} {
+    variable data_roles
     # Invoke only AFTER CTS and the actual parasitics are loaded. This is a
     # query of the enclosing parent's paths, not a closure flag.
     set clocks [get_clocks [list [dict get $binding root_clock] [dict get $binding gated_clock]]]
@@ -99,14 +108,14 @@ proc ot_v9_field::report {binding prefix} {
             error "v9 field: $role anchor has no actual parent clock"
         }
     }
-    foreach role {activation configuration go result vm_read vm_write macro_read} {
+    foreach role $data_roles {
         set path [dict get $binding boundaries $role]
         set q [ot_v9_field::pins [dict get $path launch] {/(Q|QN|rd_out\[[0-9]+\])$}]
         set d [ot_v9_field::pins [dict get $path capture] {/D$}]
         set launch_clock [dict get $binding root_clock]
         set capture_clock $launch_clock
-        if {$role in {activation macro_read}} {set capture_clock [dict get $binding gated_clock]}
-        if {$role in {result macro_read}} {set launch_clock [dict get $binding gated_clock]}
+        if {$role in {activation macro_read free_to_gated}} {set capture_clock [dict get $binding gated_clock]}
+        if {$role in {result macro_read gated_to_free_control}} {set launch_clock [dict get $binding gated_clock]}
         foreach dp $d {
             if {[lsearch -exact [all_registers -clock $capture_clock -data_pins] $dp] < 0} {
                 error "v9 field: $role capture lacks expected $capture_clock: [get_full_name $dp]"
@@ -126,6 +135,28 @@ proc ot_v9_field::report {binding prefix} {
             report_checks -from $q -to $d -path_delay $delay -group_count 10 \
                 -format full_clock_expanded -fields {slew capacitance input_pin net} > ${prefix}.${role}.${delay}.rpt
         }
+    }
+    set reset [dict get $binding reset_boundary]
+    set rq [ot_v9_field::pins [dict get $reset launch] {/(Q|QN)$}]
+    set rd {}
+    foreach q $rq {
+        if {[lsearch -exact [all_registers -clock [dict get $binding root_clock] -output_pins] $q] < 0} {
+            error "v9 field: reset synchronizer is not on Qfree: [get_full_name $q]"
+        }
+    }
+    foreach n [dict get $reset capture] {
+        set p [ot_v9_field::one pin $n]
+        if {[lsearch -exact [all_registers -clock [dict get $binding gated_clock] -async_pins] $p] < 0} {
+            error "v9 field: reset target is not an actual gated async pin: $n"
+        }
+        lappend rd $p
+    }
+    foreach delay {min max} {
+        if {![llength [find_timing_paths -from $rq -to $rd -path_delay $delay -group_count 1]]} {
+            error "v9 field: reset $delay recovery/removal path absent"
+        }
+        report_checks -from $rq -to $rd -path_delay $delay -group_count 10 \
+            -format full_clock_expanded -fields {slew capacitance input_pin net} > ${prefix}.reset.${delay}.rpt
     }
     # All anchors must really carry the bound clock. OpenSTA's clock arrival
     # reports retain insertion/slew; no zero or ideal latency is substituted.
