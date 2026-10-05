@@ -805,7 +805,25 @@
         }
       ]
     },
-    "measured_current_capture_revision": false
+    "measured_current_capture_revision": true,
+    "measured_current_capture_minimum": {
+      "source_commit": "cde8433038b0f8bbf7ad894fb5d37c0e343cb463",
+      "record": "results/rtl/hbm_accel_r5a_p2_20261005/r3_CAPTURE_EXACT/exact.json",
+      "exact": {
+        "verdict": "PASS",
+        "cases": 4,
+        "backpressure_cases": 3,
+        "sectors_checked_per_case": 9408
+      },
+      "protection_pass": true,
+      "first_access_ns": 150.423,
+      "performance": {
+        "verdict": "FAIL",
+        "first_access_gate_ns": 140.0,
+        "criterion": "all SMs first-expert w1/w3 access, independent of composed token gain"
+      },
+      "full88_replayed": false
+    }
   },
   "targets": {
     "qwen_rom": {
