@@ -17,7 +17,7 @@
     "tools/dshbm_1m_coll.py": "aa96b2bfeb69653d1b67362a30dce1348530c0fc821f3b7692e4181c82e4beb0",
     "tools/hbm_accel_shared_join_model.py": "5111625febdd26a2c20d90f84d5af9f692af4a57a7a4706ea824bcc02fdb10c8"
   },
-  "ff_cell_area_floor_um2": 1262.0448,
+  "ff_cell_area_floor_um2": 1241.9244,
   "floorplan_slot_fit": null,
   "fp32_adds_per_issue": 112,
   "golden_tree": "three levels adjacent rank pairs, FP32 rounding at every node, final BF16 RNE",
@@ -41,11 +41,13 @@
     "peer_payload_write_max": 512,
     "result_payload": 64
   },
-  "new_cdc": 0,
+  "new_cdc": 1,
+  "new_control_cdc": "one PHY-quiet bit through two core-domain synchronizer FF; drain latency phase-dependent, unmeasured",
   "new_control_ports": "operation64/phase32 heldtuple inputs and quiet_core/quiet_phy/rearm_ready outputs; metadata retained by122FF, no payload widening",
   "new_external_ports": 5,
   "new_lease_publication_api": false,
   "new_memory_ports": 0,
+  "new_payload_cdc": 0,
   "new_presence_bits": 384,
   "new_storage_bits": 196608,
   "old_presence_bits": 384,
@@ -64,12 +66,13 @@
     "peer": 4360,
     "peer_internal_stripped": 4296
   },
+  "prebuild_quiet_ff_reservation": 93,
   "publication_reset": "cold POR unchanged; GO only rearms transaction counters after actual localquiet; shared8 matchedfabricrelease/publication permits nextGO; no FIFO/credit/debt reset",
   "qualification": "UNVALIDATED; component exactness and parent physical/context gates pending",
   "qualified_physical_scope": "NONE for PFMAX384; PF64 standalone r4 still pending",
-  "quiet_monitor_counter_ff": 93,
+  "quiet_monitor_counter_ff": 24,
   "quiet_observation": "Explicit delay-valid OR and AFIFO write-empty outputs; no private hierarchy taps, added payload registers, or change to pointer advancement.",
-  "quiet_price_detail": "core reducer pending6 + core expected/actual-delivery counters16x2 +2 PHYquiet synchronizers + fault/handshake counters; conservative93 reserve; synth area UNKNOWN",
+  "quiet_price_detail": "6 pending FF +16 delivered-word FF +2 PHY-quiet sync FF; expected count combinational; conservative prebuild reserve93 retained separately",
   "rank_contract": "shared8 rank<96; AR rank64..95 receive only, never inject/reduce",
   "reducer_cycles": 23,
   "replicated_adder_nodes": 112,
@@ -132,5 +135,5 @@
   },
   "steady_issue_interval_cycles": 1,
   "strip_and_ordinal_slice_cost": "wiring only; actual ordinal remains unchanged in original TX dispatch",
-  "total_added_ff": 4328
+  "total_added_ff": 4259
 }
