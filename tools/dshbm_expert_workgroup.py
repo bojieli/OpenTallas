@@ -195,7 +195,6 @@ def run_actual(args):
     import hdc_golden as G
     import hdc_golden_v41 as V
     import dshbm_matched_sm_seq as M
-    from deepseek_v41_deployment_quality import Checkpoint
     V.set_arith('chunk8')
     x = G.from_bits(np.fromfile(args.activation_u32,dtype='<u4'))
     ids = np.fromfile(args.router_ids_u32,dtype='<u4')
@@ -207,6 +206,7 @@ def run_actual(args):
     if args.weight_rows:
         reader = exported_weight_reader(args.weight_rows,args.layer,tuple(int(e) for e in ids))
     else:
+        from deepseek_v41_deployment_quality import Checkpoint
         checkpoint = Checkpoint(args.checkpoint)
         reader = checkpoint_reader(checkpoint,args.layer)
     params = dict(ENABLE=1,SUB=4,LBS=2,LSB=16,NC=8,XDEPTH=128,RMAX=256,LEV=4,XB=2)
