@@ -8933,3 +8933,13 @@ def hbm_stream_aq_block_nonempty_selected(*, pcs=128):
                   qualified_route_count_allowed=1,
                   failure_policy='stop and report actual limiting cone; no rescue')
     return record
+
+
+def qwen_rom_registered_issue_commit_price():
+    """Source-counted mandatory core repair; no clock/adoption credit.
+
+    Four head ME_AMAX instructions per TP rank in original P8191 AR manifest;
+    four ranks execute in parallel. One positive833ps reservation cycle each.
+    Descriptor stays in existing NEXT; measured stalls/context remain gates.
+    """
+    return json.loads((ROOT / "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/prebuild.json").read_text())
