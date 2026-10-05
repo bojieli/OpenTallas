@@ -35,7 +35,7 @@ module tb_hbm_accel_sm_pq_xmap_seq;
     reg xw_en = 0; reg [XW-1:0] xw_addr; reg [6:0] xw_grp; reg [8*256-1:0] xw_data;
     wire rv; wire [RW-1:0] rrow; wire [NC*32-1:0] rdata; wire fault; wire arrive; wire released;
     reg release_in = 0;
-    ot_hbm_accel_sm_pq_xmap #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
+    ot_hbm_accel_sm_pq #(.ENABLE(1), .PQ_ENABLE(1), .SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
                          .MAX_OUT(512), .HAZ(HAZ), .G1ASB(G1ASB), .XMAP(XMAP)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
         .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(busy), .d_valid(d_valid),
@@ -79,7 +79,7 @@ module tb_hbm_accel_sm_pq_xmap_seq;
         end
     end
     always @(posedge clk) cyc <= cyc + 1;
-    wire take = dut.w_valid && dut.w_ready;
+    wire take = dut.g_pq.w_valid && dut.g_pq.w_ready;
     always @(posedge clk) if (take) begin
         while (line_op < nops - 1 && cons_total >= base_of[line_op + 1]) line_op = line_op + 1;
         if (consumed[line_op] == 0) t_firstline[line_op] = cyc;
@@ -210,20 +210,20 @@ module tb_hbm_accel_sm_pq_xmap_seq;
         if (!$value$plusargs("TRACE_TO=%d", tr_to)) tr_to = 0;
     end
     always @(posedge clk) if (trace && rst_n) begin
-        if (dut.u_issue.launch)
+        if (dut.g_pq.u_issue.launch)
             $display("T %0d LAUNCH rows %0d g %0d bf %0d xb %0d need_q %0d since %0d d_cur %0d d_head %0d on %0d",
-                     cyc, dut.u_issue.op_rows, dut.u_issue.op_g, dut.u_issue.op_bf, dut.h_xb, dut.u_issue.need_q,
-                     dut.u_issue.since, dut.u_issue.d_cur, dut.u_issue.d_head, dut.u_issue.on);
-        if (dut.u_issue.op_end) $display("T %0d OPEND", cyc);
-        if (dut.u_issue.rdone) $display("T %0d RDONE row %0d oh %0d ocnt %0d", cyc, dut.crow[RW-1:0], dut.u_issue.oh,
-                                        dut.u_issue.ocnt[dut.u_issue.oh]);
-        if (dut.u_issue.head_done) $display("T %0d HEADDONE oh %0d", cyc, dut.u_issue.oh);
-        if (dut.u_issue.adv && cyc >= tr_from && cyc <= tr_to)
+                     cyc, dut.g_pq.u_issue.op_rows, dut.g_pq.u_issue.op_g, dut.g_pq.u_issue.op_bf, dut.g_pq.h_xb, dut.g_pq.u_issue.need_q,
+                     dut.g_pq.u_issue.since, dut.g_pq.u_issue.d_cur, dut.g_pq.u_issue.d_head, dut.g_pq.u_issue.on);
+        if (dut.g_pq.u_issue.op_end) $display("T %0d OPEND", cyc);
+        if (dut.g_pq.u_issue.rdone) $display("T %0d RDONE row %0d oh %0d ocnt %0d", cyc, dut.g_pq.crow[RW-1:0], dut.g_pq.u_issue.oh,
+                                        dut.g_pq.u_issue.ocnt[dut.g_pq.u_issue.oh]);
+        if (dut.g_pq.u_issue.head_done) $display("T %0d HEADDONE oh %0d", cyc, dut.g_pq.u_issue.oh);
+        if (dut.g_pq.u_issue.adv && cyc >= tr_from && cyc <= tr_to)
             $display("T %0d ADV si %0d ti %0d row_ok %0d row %0d cr %0d first %0d last %0d glast %0d xa %0d wave_adv %0d lw %0d vm %b items %0d wb_n %0d",
-                     cyc, dut.u_issue.si, dut.u_issue.ti, dut.u_issue.row_ok, dut.u_issue.row_now, dut.u_issue.cr,
-                     dut.u_issue.iss_first, dut.u_issue.iss_last, dut.u_issue.iss_glast, dut.u_issue.xa,
-                     dut.u_issue.wave_adv, dut.u_issue.lw_q, dut.u_issue.valid_mask, dut.u_issue.items_q,
-                     dut.u_issue.wb_n);
+                     cyc, dut.g_pq.u_issue.si, dut.g_pq.u_issue.ti, dut.g_pq.u_issue.row_ok, dut.g_pq.u_issue.row_now, dut.g_pq.u_issue.cr,
+                     dut.g_pq.u_issue.iss_first, dut.g_pq.u_issue.iss_last, dut.g_pq.u_issue.iss_glast, dut.g_pq.u_issue.xa,
+                     dut.g_pq.u_issue.wave_adv, dut.g_pq.u_issue.lw_q, dut.g_pq.u_issue.valid_mask, dut.g_pq.u_issue.items_q,
+                     dut.g_pq.u_issue.wb_n);
         fault_q <= fault;
         if (fault && !fault_q) $display("T %0d FAULT", cyc);
     end
@@ -233,9 +233,9 @@ module tb_hbm_accel_sm_pq_xmap_seq;
     always @(posedge clk) if (rv || take || (arrive != arrive_q) || start) last_prog = cyc;
     always @(posedge clk) if (rst_n && cyc - last_prog > STALL) begin
         $fwrite(fo, "# TIMEOUT stall at cyc %0d: op %0d ndone %0d cur %0d nres %0d start %0d start_ready %0d busy %0d | issue on %0d issuing %0d init %0d start_v %0d hv %0d since %0d need %0d launch %0d w_valid %0d\n",
-                cyc, op, ndone, cur, nres[cur], start, start_ready, busy, dut.u_issue.on, dut.u_issue.issuing,
-                dut.u_issue.init_q, dut.u_issue.start_v, dut.u_issue.hv_q, dut.u_issue.since, dut.u_issue.need_q,
-                dut.u_issue.launch, dut.w_valid);
+                cyc, op, ndone, cur, nres[cur], start, start_ready, busy, dut.g_pq.u_issue.on, dut.g_pq.u_issue.issuing,
+                dut.g_pq.u_issue.init_q, dut.g_pq.u_issue.start_v, dut.g_pq.u_issue.hv_q, dut.g_pq.u_issue.since, dut.g_pq.u_issue.need_q,
+                dut.g_pq.u_issue.launch, dut.g_pq.w_valid);
         $fclose(fo); $finish;
     end
     initial begin #50000000; $fwrite(fo, "# TIMEOUT\n"); $fclose(fo); $finish; end

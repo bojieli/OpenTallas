@@ -15,20 +15,23 @@ import dshbm_sm_pq_seq as P
 
 ROOT=Path(__file__).resolve().parents[1]
 TB='tb_hbm_accel_sm_pq_xmap_seq'
-SRC=[s for s in P.SRC if s not in ('rtl/hbm_accel/sm/ot_hbm_accel_sm_pq.sv','rtl/test/tb_hbm_accel_sm_pq_seq.sv')]+[
- 'rtl/hbm_accel/sm/ot_hbm_accel_sm_pq_xmap.sv','rtl/test/tb_hbm_accel_sm_pq_xmap_seq.sv']
+SRC=[s for s in P.SRC if s not in ('rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv','rtl/hbm_accel/sm/ot_hbm_accel_sm_pq.sv','rtl/test/tb_hbm_accel_sm_pq_seq.sv')]+[
+ 'rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv','rtl/test/tb_hbm_accel_sm_pq_xmap_seq.sv']
 
 
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
-def build(work,jobs=16,xmap=1):
+def build(work,jobs=16,xmap=1,production_dir=None):
     out=Path(work)/f'build_xmap{xmap}'
     out.mkdir(parents=True,exist_ok=True)
     exe=out/('V'+TB)
+    production_dir=Path(production_dir or ROOT/'rtl/hbm_accel/sm/pq_production_20261005').resolve()
+    paths=[ROOT/s for s in SRC]+[production_dir/'ot_hbm_accel_issue_pq.sv',production_dir/'ot_hbm_accel_sm_pq.sv']
+    assert all(p.is_file() for p in paths), 'Require frozen Euclid production source and leaf XMAP hook'
     command=['verilator','--binary','--timing','-O2','-Wno-fatal','--top-module',TB,'--Mdir',str(out),'-j',str(jobs),
-             '-GNC=8','-GXDEPTH=128','-GRMAX=256','-GLEV=4',f'-GXMAP={xmap}',*[str(ROOT/s) for s in SRC]]
-    source_pin={s:sha(ROOT/s) for s in SRC}
+             '-GNC=8','-GXDEPTH=128','-GRMAX=256','-GLEV=4',f'-GXMAP={xmap}',*[str(p) for p in paths]]
+    source_pin={str(p):sha(p) for p in paths}
     pin=out/'sources.json'
     if exe.exists():
         assert json.loads(pin.read_text())==source_pin, 'Refuse stale executable from another source'
@@ -128,13 +131,14 @@ def main():
     ap.add_argument('step',choices=['build','run'])
     ap.add_argument('--work',type=Path,required=True)
     ap.add_argument('--fixture',type=Path)
+    ap.add_argument('--production-dir',type=Path,help='Frozen Euclid production top/issue directory; no legacy integration')
     ap.add_argument('--active',type=int,choices=range(1,9),default=6)
     ap.add_argument('--jobs',type=int,default=16)
     ap.add_argument('--xmap',type=int,choices=[0,1],default=1)
     ap.add_argument('--serial',action='store_true')
     ap.add_argument('--negative-fp4',action='store_true')
     args=ap.parse_args()
-    exe=build(args.work.resolve(),args.jobs,args.xmap)
+    exe=build(args.work.resolve(),args.jobs,args.xmap,args.production_dir)
     if args.step=='build':return
     assert args.fixture is not None
     work=args.work.resolve()/('negative' if args.negative_fp4 else 'serial' if args.serial else 'pq')/f'a{args.active}'/args.fixture.name
