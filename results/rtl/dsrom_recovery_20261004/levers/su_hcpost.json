@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "su_hcpost",
+ "verdict": "ADOPT",
+ "exact": true,
+ "ss_ff": {
+  "period_ps": 833.0,
+  "ss_setup_wns_ps": 0.23,
+  "ff_hold_wns_ps": 1.69,
+  "closes": true,
+  "basis": "ROUTED minimum component (one lane, ot_dsrom_su_hcpost_lane): ORFS asap7 at 0.833 ns, tools/w18/corner_sta.py SS setup 60 ps / FF hold 25 ps",
+  "record": "results/rtl/dsrom_recovery_20261004/su_hcpost/route/lane_m5a5.corner.json",
+  "prelayout_screen": "results/rtl/dsrom_recovery_20261004/su_hcpost/screen/ (pessimistic for the f12 units: standalone add_f12_l5x screens -45.6 ps but routes +13.0)"
+ },
+ "nodes": {
+  "*.attn.hc_post": {
+   "us": 0.08583,
+   "source": "ot_dsrom_su_hcpost (NG 256 groups x 4 lanes = 1,024 outputs/cycle, mul_f12 L5 / add_f12 L5): go -> last of 20 output beats landed 103 cycles at 1.2 GHz incl. hub in 33 / out 23 register stages; bit-exact on the 8 golden 1M hc_post chains (L0/L3/L20/L24 attn+ffn) + 32 stress cases",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.hc_post": {
+   "us": 0.08583,
+   "source": "ot_dsrom_su_hcpost (NG 256 groups x 4 lanes = 1,024 outputs/cycle, mul_f12 L5 / add_f12 L5): go -> last of 20 output beats landed 103 cycles at 1.2 GHz incl. hub in 33 / out 23 register stages; bit-exact on the 8 golden 1M hc_post chains (L0/L3/L20/L24 attn+ffn) + 32 stress cases",
+   "cls": "measured",
+   "kind": "fused_fast"
+  }
+ },
+ "measurement": {
+  "old": {
+   "unit": "ot_hdc_v41x_vec N1024 wired, 4 dependent ops (0.9 GHz) + CDC",
+   "us": 0.2899,
+   "record": "results/rtl/dsrom_1m_allmeasured_20261004/su.json"
+  },
+  "new": {
+   "unit": "ot_dsrom_su_hcpost",
+   "cycles": 103,
+   "us": 0.08583,
+   "clock_hz": 1200000000.0,
+   "record": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+  },
+  "floor": {
+   "cycles": 97,
+   "us": 0.08083,
+   "source": "anatomy.json floors.hc_post",
+   "residual": "6 cycles over the anatomy floor: the operand capture register (1), the closing adder latency (add_f12 L5 instead of L4: +1 on each of the 4 serial adds) and the landing register (1); L4 adders fail the routed lane by -52.5 ps (route/lane_m5a4_FAIL.corner.json)"
+  },
+  "saving_us_per_layer": 0.40814
+ },
+ "variants_note": "mul_f12_l6 lanes (m6a4, m6a5) mismatch the golden in this lane (runs/*m6*: FAIL), so the L6 multiplier is not used; m5a4 is exact (99 cycles) but does not close routed; m5a5 is exact and closes",
+ "default": "opt-in: applied only in the recovery baseline; the SU lowering of hc_post is unchanged",
+ "note": "composed (recovery baseline, this lever alone on main 96ed22b21): AR 620.078 -> 604.348 us, 1,612.7 -> 1,654.7 tok/s (+2.60%); MTP 4,462.1 -> 4,554.6 tok/s (+2.07%). Supersedes su_chains/takeover/hcpost_recovery.json (REJECT_SS on the m5a4 lane: the m5a5 lane closes)."
+}
