@@ -206,6 +206,51 @@ def wire_cycles(um: float, clock_hz: float, ps_per_um: float = WIRE_PS_PER_UM) -
     return regs + 1 if regs > 0 else (1 if um > 0 else 0)
 
 
+def rom_spine_publication_price(*, roots=128, elements=2417, phases=1):
+    """One paired publication edge; alternatives, never two free pipe stages.
+
+    Selected enclosing bus: each root {valid,row16,pos3,fp32,bf16,error}.
+    E1 component bus: each bank {valid,value32,row16,seg5,nseg5,error,pos3}
+    plus per-element busy/fault. Actual parent capture owns phase identity and
+    remains live until real VM acceptance/drain; no new identity ledger here.
+    Liberty SS DFFASRHQNx1: area .37908 um2, CLK .433982 fF.
+    All bits conservatively cold-reset; clock buffers/wire and fault steering
+    are additional unknown positive costs, not free energy or closure.
+    """
+    if min(roots, elements, phases) < 1:
+        raise ValueError("positive actual source geometry required")
+    root_bits = 69 * roots + 1
+    element_bits = 63 * 2 + 2
+    def cost(bits):
+        return dict(ff_bits=bits, ff_cell_body_um2=bits * .37908,
+                    placement_floor_um2_at50pct=bits * .37908 * 2,
+                    clock_pin_capacitance_ff=bits * .433982,
+                    clock_buffers_wire_energy_w=None,
+                    fault_fanout_buffers_mux_area_um2=None)
+    return dict(selected_root_boundary=cost(root_bits),
+                E1_component_alternative=cost(element_bits),
+                E1_replicated_alternative=cost(element_bits * elements),
+                boundary_payload_bits_per_cycle=69 * roots,
+                boundary_payload_bytes_per_cycle=69 * roots / 8,
+                compute_macs_per_cycle=0,
+                VM_commit_payload_bytes_per_cycle=4 * roots,
+                added_external_boundary_bits_per_cycle=0,
+                added_buffered_net_bits=root_bits,
+                root_publication_replica_count=roots,
+                E1_publication_replica_count=elements,
+                result_added_edges_per_phase=1,
+                fault_added_edges=1, issue_interval_edges=1,
+                phase_chain_added_edges=phases,
+                phase_chain_added_ns=phases * (1 / 1.2),
+                parent_busy="Existing phase/capture ownership through positive VM commit and capture_drained; never a delayed idle credit",
+                fault_policy="Aligned fault drives existing warm-quarantine request, inhibits writes, retains accepted debt; prior writes not rolled back",
+                root_fault_quarantine_fanout=roots,
+                E1_fault_bank_fanout=2,
+                tracks_slot_fit=None, gate_power_w=None,
+                source_exactness_pass=False, connected_consumer_gate_pass=False,
+                SSFF_closed=False, physical_admission=False)
+
+
 def rom_spine_repin_price(displacements_um, setup_slack_ps, hold_slack_ps):
     """Same-frame pin-only recipe: bound both shorter and longer Manhattan wires.
 
@@ -8970,3 +9015,19 @@ def hbm_stream_aq_block_nonempty_choice(*, pcs=128):
                 loaded_delay_ps=None, full_slot_fit_qualified=False,
                 period_ns=.833, setup_uncertainty_ps=60,
                 hold_uncertainty_ps=25, SSFF_closed=False, adopted=False)
+
+
+def hbm_stream_aq_block_nonempty_selected(*, pcs=128):
+    """Owner-selected mandatory baseline repair; zero speed/adoption credit.
+
+    Supersedes only model-only admission status. Original three failures and
+    review choice remain immutable. Exactly one changed-source route allowed.
+    """
+    record = hbm_stream_aq_block_nonempty_choice(pcs=pcs)
+    record.update(candidate_selected=True,
+                  selection_owner='Explicit owner technical decision after three failed variants',
+                  implementation_started=False, route_admitted=False,
+                  source_gate_required=True,
+                  qualified_route_count_allowed=1,
+                  failure_policy='stop and report actual limiting cone; no rescue')
+    return record

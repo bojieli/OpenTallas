@@ -348,6 +348,9 @@ endmodule
 
 // ---- a stage of K power-gated S81 FP8/FP4 pair elements (BF16 0, NB 2) sharing the x broadcast and `go` ----
 module ot_v41_rom_stage_q_pg_cdc_w10 #(
+    // Component alternative to the enclosing root publication edge. Never
+    // enable both without charging two edges and testing the actual consumer.
+    parameter integer PUBLICATION_CAPTURE = 0,
     parameter integer K = 1,
     parameter integer NB = 2,
     parameter integer MTP = 1,
@@ -399,6 +402,28 @@ module ot_v41_rom_stage_q_pg_cdc_w10 #(
     output wire         pg_fault
 );
     wire s_clk, arst_n;
+    localparam integer PUBW = K * (63 * NB + 2);
+    wire [K*NB-1:0] raw_pv, raw_perr;
+    wire [K*32*NB-1:0] raw_pval;
+    wire [K*16*NB-1:0] raw_prow;
+    wire [K*5*NB-1:0] raw_pseg, raw_pnseg;
+    wire [K*3*NB-1:0] raw_ppos;
+    wire [K-1:0] raw_busy, raw_fault;
+    wire [PUBW-1:0] raw_publication = {raw_pv,raw_pval,raw_prow,
+      raw_pseg,raw_pnseg,raw_perr,raw_ppos,raw_busy,raw_fault};
+    wire [PUBW-1:0] publication;
+    generate if (PUBLICATION_CAPTURE != 0) begin : g_publication
+        // Root clk stays alive when the element spine sleeps. Only coordinated
+        // cold reset clears this copy; no warm fault/idle/ACK fabrications.
+        reg [PUBW-1:0] held;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) held <= '0;
+            else held <= raw_publication;
+        assign publication = held;
+    end else begin : g_original_publication
+        assign publication = raw_publication;
+    end endgenerate
+    assign {pv,pval,prow,pseg,pnseg,perr,ppos,busy,fault} = publication;
     wire [K*NB-1:0] e_pv, e_perr; wire [K*32*NB-1:0] e_pval; wire [K*16*NB-1:0] e_prow;
     wire [K*5*NB-1:0] e_pseg, e_pnseg; wire [K*3*NB-1:0] e_ppos;
     wire [K-1:0] e_busy, e_fault, dbusy, dack, ack, rdy, rq, ready_a;
@@ -410,8 +435,8 @@ module ot_v41_rom_stage_q_pg_cdc_w10 #(
         .s_clk(s_clk), .arst_n(arst_n), .e_pv(e_pv), .e_pval(e_pval), .e_prow(e_prow), .e_pseg(e_pseg),
         .e_pnseg(e_pnseg), .e_perr(e_perr), .e_ppos(e_ppos), .e_busy(e_busy), .e_fault(e_fault), .dbusy(dbusy),
         .dack(dack), .ack(ack), .rdy(rdy), .rq(rq), .rp_a(rp_a), .rp_d(rp_d), .ready_a(ready_a),
-        .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr), .ppos(ppos), .busy(busy),
-        .fault(fault), .pg_ready(pg_ready), .pg_late(pg_late), .pg_fault(pg_fault));
+        .pv(raw_pv), .pval(raw_pval), .prow(raw_prow), .pseg(raw_pseg), .pnseg(raw_pnseg), .perr(raw_perr), .ppos(raw_ppos), .busy(raw_busy),
+        .fault(raw_fault), .pg_ready(pg_ready), .pg_late(pg_late), .pg_fault(pg_fault));
     genvar g;
     for (g = 0; g < K; g = g + 1) begin : g_el
         wire e_rst_n, e_cfg_v, e_go; wire [4:0] e_cfg_a; wire [47:0] e_cfg_d;

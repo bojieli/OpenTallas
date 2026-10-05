@@ -1,0 +1,41 @@
+{
+  "status": "PASS_FOCUSED_SOURCE_SEMANTICS",
+  "source_commit": "2b05908b2d9fd50447513e4a8ee11d428cbd5940",
+  "source_pins": {
+    "rtl/hbm_accel/svc/aq_block_nonempty_cut/ot_hbm_r14_stream_pc_aq_block_nonempty_cut.sv": "08a3185fd50316145ce1145e7719eca3bf46f7e30b116acbb71710884b5966a2",
+    "rtl/hbm_accel/svc/aq_block_nonempty_cut/ot_hbm_r14_stream_stack_aq_block_nonempty_cut.sv": "b0ae1b6eef73f107b98e8d5ae09f84586665b0ed3e95b9a28ab88ecc6f0962f1",
+    "rtl/test/hbm_fmax_svc/tb_svc_aq_block_nonempty_lockstep.sv": "4ded200bbda23774f97028a53d9b61805cb46ba1322aa84168c87b011427767c",
+    "tools/svc_aq_block_nonempty_lockstep.sh": "41de5e6e88cfe9886be1b7c07bc2bb2255d8f79ce53754a30c60184f981ec2bc",
+    "results/uarch/hbm_stream_aq_block_nonempty_cut_20261005/model.json": "c895273d4a804a65ab64abb1b181efbdc6ec5ca750076da960155db0de6289b5"
+  },
+  "actual_cycles": 200000,
+  "mismatches": 0,
+  "faults": 0,
+  "original_off_on": true,
+  "checks": [
+    "50outputs everycycle",
+    "actual ep_start and queue/row_grant debt",
+    "q==ORblk every service edge and asynchronous reset",
+    "q_next==ORblk_n before edge",
+    "slot/head readiness invariant",
+    "exact original next_blk state"
+  ],
+  "source_identity": "source_transition_check.json",
+  "runtime_coverage_limit": "final_clear_overrides0; reset_debt counter samples after async reset and reports0; no positive coverage claim from these counters. Branch priority identity separately checked directly from actual source.",
+  "price_before_RTL_commit": "76f9ebb42",
+  "model": "results/uarch/hbm_stream_aq_block_nonempty_cut_20261005/model.json",
+  "physical_status": "ONE_ROUTE_LIVE_NOT_ADOPTED",
+  "speedup_credit": 0,
+  "raw_file_sha256": {
+    "compile_pc0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pc0_seed1.log": "84f524f789bc3969adace062bb870485e813315f19b54c13cddeb7929e05dd41",
+    "compile_pc1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launch.json": "2a227ebe63a9615b114c64e12c5343d447bd710e4e9f0471cfdd1d2695db2192",
+    "source_transition_check.json": "0fedf004ef051c5edf915009934139fce14965da5f5ee08cccd2a81b801a8de5",
+    "result.txt": "b4a6b7511ec73f37cde7d9873586fa7decb9a6cc94a6ce9bd7bbb887c1d536de",
+    "gate.log": "56d59659783fd39a631194d18bfa3cd0adad7202d55bc7b37e6d8b2e0c707ed3",
+    "exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "pc1_seed2.log": "71314828a8af6116784f95553d320535492002334e83145d95e55f0f9fdf8b91",
+    "run.sh": "5b0b7b2891c723fbbe689d50f9f160f2708a29653d1b99fbf946d73ee7f26d2a"
+  }
+}
