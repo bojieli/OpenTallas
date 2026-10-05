@@ -1,0 +1,30 @@
+{
+  "scope": "actual native Die.d binder/ReadResult edge-boundary unit only, literal ports are fixtures",
+  "command": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Itools/runtime/dsrom",
+    "-Irtl/test/v41_runtime",
+    "tests/runtime/dsrom/wavefront_native_result_read.cpp",
+    "-o",
+    "/tmp/dsrom-wavefront-native-result-read-boundary-20261004"
+  ],
+  "compile_rc": 0,
+  "run_rc": 0,
+  "PASS": true,
+  "checks": [
+    "fresh expected producer PC",
+    "END+done without retirement pending",
+    "matching retirement exposes captured native bits",
+    "legitimate token0 and rawNaN payload preserved",
+    "later native output changes do not alter held result",
+    "foreign offer refusal",
+    "quarantine refusal/heldstate",
+    "FIELD+END stale/reset producer absent refusal",
+    "wrong producer PC refusal",
+    "defaultoff"
+  ]
+}

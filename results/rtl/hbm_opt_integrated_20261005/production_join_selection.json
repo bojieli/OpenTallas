@@ -1,0 +1,67 @@
+{
+  "owner_selection": "Parent12:12: Euclid productionSMtop/issuer solewriter; Pauli layoutleaf/packer only; Rawls config/runners/results only.",
+  "production_top": "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv",
+  "production_issuer": "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+  "candidate_measurement_flags": {
+    "ENABLE": 1,
+    "PQ_ENABLE": 1,
+    "XMAP": 1,
+    "G1ASB": 0,
+    "HAZ": 1
+  },
+  "hardware_defaults": {
+    "ENABLE": 0,
+    "PQ_ENABLE": 0,
+    "XMAP": 0
+  },
+  "absolute_address": "Production issuer op_xb(h_xb); SM s1_xa<=xa exactly once, no extra xb_q add.",
+  "pauli_actual_callables": [
+    "tools/hbm_accel_activation_layout.py::pack_fragment(original,fmt,active,nc=8)",
+    "tools/hbm_accel_activation_layout.py::beat_groups(fmt,active,nc=8)"
+  ],
+  "pauli_actual_packer": "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv; FORMAT0 BF16/1 FP8/2 FP4, XMAP0 bypass/XMAP1 staticpacking",
+  "pauli_leaf_module": "ot_hbm_accel_smpq_xmap_leaf",
+  "pauli_leaf_only_file": "rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv",
+  "excluded": [
+    "Pauli prototype SM top",
+    "legacy/prototype PQ issuer when selecting production issuer",
+    "duplicate original/successor module definitions"
+  ],
+  "actual_wip_source_hashes": {
+    "/tmp/euclid-hbm-opt1-production-20261005/rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "126e66792431e9906b60a756bf5e502c5220cd917c0bcc49d792136c0c7bdadf",
+    "/home/ubuntu/pauli-hbm-opt3-layout/tools/hbm_accel_activation_layout.py": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff",
+    "/home/ubuntu/pauli-hbm-opt3-layout/rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv": "6284aa2f24fe1cb5f6a1488304a38de33a9a2bfe06caaf4fe7ddd18c2f8da2c4",
+    "/home/ubuntu/pauli-hbm-opt3-layout/rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv": "7f271a0f817c4b057dfc27d85b75821813da9851a73ae27a5ed70ad4d8bfaabb"
+  },
+  "source_ready": false,
+  "remaining_actual_source_hooks": [
+    "Euclid production default-off XMAP parameter and forwarding to that leaf",
+    "Frozen combined source closure/driver/canonical minimum-component fixture cache and existing-executable compatibility binding"
+  ],
+  "required_existing_cases": [
+    "stress nonzero x-ring base and wrap",
+    "ar_l20 and p6_l20 same source selection",
+    "retained G1 entering-format negative control"
+  ],
+  "launch_policy": {
+    "make_jobs": 16,
+    "NUM_CORES": 16,
+    "TMPDIR": "<unique job directory>/tmp",
+    "arbitrary_timeout": null,
+    "new_heavy_hosts": {
+      "ot-epyc1tb": {
+        "job_root": "/srv/opentallas/jobs-overflow",
+        "admit": "/srv/opentallas-scratch/admit.sh"
+      },
+      "ot-epyc2": {
+        "job_root": "/srv/opentallas-scratch2/jobs",
+        "admit": "/srv/opentallas-scratch/admit.sh"
+      }
+    },
+    "selection": "Kepler/Rawls refresh both CPU busy/load, available RAM and selected NVMe disk immediately before the one ready launch; balanced selection, no memory-only dispatch."
+  },
+  "new_heavy_jobs": 0,
+  "combined_exact_measurement": null,
+  "headline_clock_admitted": false,
+  "pauli_leaf_file_available": true
+}

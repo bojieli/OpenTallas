@@ -1,0 +1,137 @@
+{
+ "base": {
+  "n_layer_kernels_x_dies": 144,
+  "ar_o_mean": 1193.1666666666667,
+  "ar_o_median": 1300.0,
+  "ar_o_min": 984,
+  "ar_o_max": 1504,
+  "ar_d_mean": 600.1388888888889,
+  "ar_d_median": 516.0,
+  "ar_d_min": 478,
+  "ar_d_max": 1031,
+  "step_cycles": [
+   89718,
+   87497,
+   88706,
+   89255,
+   88834,
+   88885,
+   88528,
+   89707,
+   89292,
+   88533,
+   87521,
+   88785,
+   88909,
+   88941,
+   90273,
+   89248,
+   86633,
+   91713
+  ],
+  "total_step_cycles": 1600978,
+  "breakdown_mean": {
+   "ar_o_barrier_wait": 191.9,
+   "ar_o_collective_wait": 35.2,
+   "ar_d_barrier_wait": 172.6,
+   "ar_d_collective_wait": 35.0
+  },
+  "breakdown_note": "max over the die's SMs, inside the section: cycles waiting at BAR (arrive->release) and in a collective (issue->response)",
+  "saved_vs_base": {
+   "ar_o": 0.0,
+   "ar_d": 0.0,
+   "per_layer": 0.0,
+   "total_step_cycles": 0
+  }
+ },
+ "cut": {
+  "n_layer_kernels_x_dies": 144,
+  "ar_o_mean": 834.9166666666666,
+  "ar_o_median": 762.0,
+  "ar_o_min": 735,
+  "ar_o_max": 1242,
+  "ar_d_mean": 86.68055555555556,
+  "ar_d_median": 87.0,
+  "ar_d_min": 86,
+  "ar_d_max": 88,
+  "step_cycles": [
+   84834,
+   85248,
+   83383,
+   84230,
+   84434,
+   84140,
+   84305,
+   84470,
+   83767,
+   84278,
+   83975,
+   84592,
+   86030,
+   86737,
+   84252,
+   85996,
+   87005,
+   84711
+  ],
+  "total_step_cycles": 1526387,
+  "breakdown_mean": {
+   "ar_o_barrier_wait": 0,
+   "ar_o_collective_wait": 35.2,
+   "ar_d_barrier_wait": 0,
+   "ar_d_collective_wait": 35.1
+  },
+  "breakdown_note": "max over the die's SMs, inside the section: cycles waiting at BAR (arrive->release) and in a collective (issue->response)",
+  "saved_vs_base": {
+   "ar_o": 358.3,
+   "ar_d": 513.5,
+   "per_layer": 871.7,
+   "total_step_cycles": 74591
+  }
+ },
+ "fuseo": {
+  "n_layer_kernels_x_dies": 144,
+  "ar_o_mean": 825.9444444444445,
+  "ar_o_median": 733.5,
+  "ar_o_min": 674,
+  "ar_o_max": 1175,
+  "ar_d_mean": 86.66666666666667,
+  "ar_d_median": 87.0,
+  "ar_d_min": 86,
+  "ar_d_max": 88,
+  "step_cycles": [
+   86686,
+   85385,
+   85413,
+   84048,
+   84434,
+   84140,
+   84305,
+   84470,
+   83767,
+   84278,
+   83975,
+   84592,
+   83749,
+   85653,
+   87615,
+   84999,
+   87998,
+   85645
+  ],
+  "total_step_cycles": 1531152,
+  "breakdown_mean": {
+   "ar_o_barrier_wait": 0,
+   "ar_o_collective_wait": 164.2,
+   "ar_d_barrier_wait": 0,
+   "ar_d_collective_wait": 35.1
+  },
+  "breakdown_note": "max over the die's SMs, inside the section: cycles waiting at BAR (arrive->release) and in a collective (issue->response)",
+  "saved_vs_base": {
+   "ar_o": 367.2,
+   "ar_d": 513.5,
+   "per_layer": 880.7,
+   "total_step_cycles": 69826
+  }
+ }
+}

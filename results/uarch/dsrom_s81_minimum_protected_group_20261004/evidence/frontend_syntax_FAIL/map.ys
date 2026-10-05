@@ -1,0 +1,13 @@
+read_verilog -sv /tmp/dsrom-s81-minimum-w6-leaves-20261004-r1/encode/leaf.sv
+hierarchy -top leaf
+proc
+flatten
+opt
+techmap
+opt
+dfflibmap -liberty /tmp/dsrom-s81-minimum-w6-leaves-20261004-r1/allowed_ss.lib
+abc -liberty /tmp/dsrom-s81-minimum-w6-leaves-20261004-r1/allowed_ss.lib
+clean
+check -assert
+write_verilog -noattr /tmp/dsrom-s81-minimum-w6-leaves-20261004-r1/encode/mapped.v
+write_json /tmp/dsrom-s81-minimum-w6-leaves-20261004-r1/encode/mapped.json

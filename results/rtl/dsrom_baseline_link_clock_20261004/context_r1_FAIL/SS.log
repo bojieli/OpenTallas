@@ -1,0 +1,64 @@
+ARGV ["docker", "run", "--rm", "-v", "/home/ubuntu/maxwell-dsrom-baseline-link-clock-1664/context-r1:/work", "openroad/orfs:latest", "bash", "-lc", "source /OpenROAD-flow-scripts/env.sh; sta /work/SS.tcl"]
+OPENROAD: /OpenROAD-flow-scripts/tools/OpenROAD
+OpenSTA 3.1.0  Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+Warning 1212: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+Startpoint: una[1]$_DFF_PN0_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: st_replays[31]$_DFFE_PN0P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+ 353.985  353.985   clock network delay (propagated)
+   0.000  353.985 ^ una[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  97.153  451.138 v una[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  42.459  493.597 v place24361/Y (BUFx3_ASAP7_75t_R)
+  43.438  537.035 v place24360/Y (BUFx3_ASAP7_75t_R)
+  43.797  580.832 v _091799_/Y (OA21x2_ASAP7_75t_R)
+  55.232  636.064 v _091800_/Y (OA33x2_ASAP7_75t_R)
+  58.705  694.769 v _091801_/Y (OA211x2_ASAP7_75t_R)
+  42.891  737.660 v _091814_/Y (OA31x2_ASAP7_75t_R)
+  42.011  779.672 v _091823_/Y (OA31x2_ASAP7_75t_R)
+  43.509  823.181 v _091825_/Y (OA31x2_ASAP7_75t_R)
+  43.217  866.398 v place19847/Y (BUFx6f_ASAP7_75t_R)
+  47.106  913.504 v _091848_/Y (AO21x1_ASAP7_75t_R)
+  34.882  948.386 v _091992_/Y (AND2x4_ASAP7_75t_R)
+  94.184 1042.570 v _116370_/Y (OR5x1_ASAP7_75t_R)
+  40.539 1083.110 v place16430/Y (BUFx6f_ASAP7_75t_R)
+  72.742 1155.852 v _116372_/Y (OR4x1_ASAP7_75t_R)
+  65.479 1221.331 v _157581_/Y (OR4x1_ASAP7_75t_R)
+  45.665 1266.995 ^ _157582_/Y (XNOR2x2_ASAP7_75t_R)
+   0.061 1267.056 ^ st_replays[31]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R)
+         1267.056   data arrival time
+
+ 833.333  833.333   clock clk (rise edge)
+ 339.976 1173.309   clock network delay (propagated)
+ -60.000 1113.309   clock uncertainty
+   3.578 1116.887   clock reconvergence pessimism
+         1116.887 ^ st_replays[31]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -26.400 1090.487   library setup time
+         1090.487   data required time
+-----------------------------------------------------------
+         1090.487   data required time
+         -1267.056   data arrival time
+-----------------------------------------------------------
+         -176.569   slack (VIOLATED)
+
+
+WNS -1.7656887063566273e-10

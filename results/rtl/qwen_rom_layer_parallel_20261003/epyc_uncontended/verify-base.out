@@ -1,0 +1,14 @@
+{
+ "composed_full_token_exact": false,
+ "all_single_stage_jobs_pass": true,
+ "chain_covers_every_stage_from_preload_to_head": true,
+ "entry_state_composition_ok": false,
+ "pair_jobs": {
+  "L18+pair": true,
+  "head+pair": true
+ },
+ "composed_total_cycles": 171090,
+ "reference_total_cycles": 171090,
+ "wall_seconds_max_single_job": 1879.3,
+ "wall_seconds_first_start_to_last_end_singles": 2907.5
+}

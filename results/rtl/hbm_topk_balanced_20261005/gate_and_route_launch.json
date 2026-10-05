@@ -1,0 +1,38 @@
+{
+  "source_commit": "5ee4cde5b11b31b7f45964f24165a46b9eb3f90d",
+  "variant": 2,
+  "gate": "PASS_FULL_N384_FOCUSED",
+  "vectors": 256,
+  "internal_checks": 124464,
+  "injected_cases": 288,
+  "raw_compare_checks": 512,
+  "mismatches": 0,
+  "latency_original_cycles": 23,
+  "latency_candidate_cycles": 23,
+  "async_reset_inflight": "PASS",
+  "defaults_cycle_equivalence": "PASS",
+  "negative_control": {
+    "mutation": "suppress highest generate bit of unsigned comparison",
+    "compile_rc": 0,
+    "runtime_rc": 1,
+    "required_marker": "RAW_UNSIGNED_COMPARE_FAIL"
+  },
+  "route": {
+    "status": "RUNNING_NO_VERDICT",
+    "host": "ot-epyc2",
+    "supervisor_pid": 3271408,
+    "output": "/srv/opentallas-scratch/jobs/peirce-topk-balanced-route-r1",
+    "source_commit": "5ee4cde5b11b31b7f45964f24165a46b9eb3f90d",
+    "clock_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "io_delay_fraction": 0.2,
+    "hold_repair_margin_ps": 20,
+    "fixed_component_slot": true,
+    "parent_named_slot_bound": false
+  },
+  "adopted": false,
+  "whole_target_qualified": false,
+  "predecessor_FAIL_preserved": true,
+  "common_helper_sha256": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027"
+}

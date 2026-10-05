@@ -1,0 +1,75 @@
+{
+  "scope": "ONE controlled-source I63 PV; SIM_ONLY endpoint, native adapter; no original-run attribution",
+  "source_commit": "0321e8097fea31bd790a69e4f0c187762211f23b",
+  "estimated_host_peak_bytes": 2147483648,
+  "compiler_workers": 1,
+  "stages": [
+    {
+      "name": "prepare",
+      "command": [
+        "python3",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/source/prepare.py",
+        "/srv/opentallas/repos/arch-i63-minimum-capture-20261005",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005"
+      ],
+      "exit": 0,
+      "seconds": 3.1004291160006687
+    },
+    {
+      "name": "compile",
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-pthread",
+        "-I/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/source",
+        "-I/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/adapter",
+        "-isystem",
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+        "-isystem",
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/source/capture.cpp",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/adapter/VDsromAttention__ALL.a",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/adapter/libverilated.a",
+        "-ldl",
+        "-o",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/capture"
+      ],
+      "exit": 0,
+      "seconds": 0.9859738089999155
+    },
+    {
+      "name": "capture",
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/capture",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/inputs",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/captured"
+      ],
+      "exit": 0,
+      "seconds": 1.3085121810017881
+    }
+  ],
+  "exit": 0,
+  "source_sha256": {
+    "source/adapter_config.hpp": "fea85aa19b3c06e838292db3c914183d62668ed7d330e22456765b8dcc0401f1",
+    "source/run.py": "812c06ee7b3f6406306cc17cf67dc0f256c444ea484d5d60c527e98cc940d91c",
+    "source/capture.cpp": "de8a28e9195598cf6a7734613b31964fa801a962b438c076ebb1e7e499a23992",
+    "source/s81_sim_only_attention_endpoint.hpp": "4741300afb2199eaf261add2badae02c397ef28f5f76017ad196662e2fcb8f1f",
+    "source/prepare.py": "ea3d056bc83eb91716d9456395698ebdf1d9e8f0617b0496980811bedde70617",
+    "source/s81_minimum_attention_cut.hpp": "0d84be8dd8e2a31ab90b6f444b9a94cb87caceb06030f8561746eab3fc1b4185",
+    "source/s81_minimum_runtime.hpp": "0f3bad0a3efd4dc3cda64d1d67ff23e053ff6a50df3393e72b287e78d08cba2c",
+    "adapter/VDsromAttention__ALL.a": "18c57df9182d5b0fa2343c6cea749b26dbe529b4507220c1785f66aab2f74be2",
+    "adapter/libverilated.a": "6b20f7786e34a9ad71a8024d195e6590a96ed8ad35b1b774e6421e865aace9f0",
+    "adapter/VDsromAttention.h": "e6bfa2e5704f59d97ec20350c97157390a9b99f13dd06e6d1c69513479b8df62"
+  },
+  "captured_sha256": {
+    "events.tsv": "189bf2e9176a4569937b619d55e82a1fe690771e8e7900168a2c4f6f812d5808",
+    "accepted_kv.u32": "2061b434f96db7ebab3bbf3bf9ffca388bd6ab6de8dda1fe3d226896d5b596b6",
+    "accepted_p.u32": "e54de59cb6671deed0eebbb304c54a08f24aa3b773b2b7ca9cfa039a7f7a66b4",
+    "accepted_q.u32": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+    "adapter_PV.u32": "8d828db3f7e6bc8bff395e1561b0236dcf7d1f47fc29eee6d902233d0ba08690",
+    "old_pv_bus.u32": "6527439c824e2f9370fc67f94ad8dbf3131f240b14dd068032cef83cb6269e94"
+  }
+}

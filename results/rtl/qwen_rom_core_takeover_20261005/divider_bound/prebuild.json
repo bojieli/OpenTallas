@@ -1,0 +1,90 @@
+{
+  "schema": "qwen.rom.controller_divider_bound.v1",
+  "phase": "diagnosis/model before successor RTL; do not launch until final relevant path",
+  "source_sha256": "8c634b5bcf5169d9c7588d3d332bd12e6e20b2b8edb58ad1ab5c34c96afe429c",
+  "report_sha256": "9618a240de27368257c0ab41bd5d065bdea19dbbcd7ab563f06b77e38caaa391",
+  "source": "tools/qwen_rom_core_dec_emit_w12.py: LA_SW/LA_H, E2 la_lo assignment, E3 la_rt assignment",
+  "measured_path": {
+    "start": "la_lo[7][16]",
+    "end": "la_rt[7][0]",
+    "corner": "WC/SS",
+    "slack_ps": -365.96,
+    "launch_clock_ps": 338.73,
+    "capture_clock_ps": 1153.89,
+    "clk_to_q_ps": 94.76,
+    "data_arrival_ps": 1452.55,
+    "required_ps": 1086.59,
+    "combinational_and_wire_ps": 1019.0699999999999,
+    "observation": "E3 constant division has a long logic path from an unreachable high remainder-state bit; not fixed by a fanout-only edit or timing exception"
+  },
+  "actual_parameters": {
+    "NW": 18,
+    "AW": 24,
+    "W": 16,
+    "G": 6144,
+    "VPOS": 0,
+    "LA_SW": 20,
+    "LA_H": 7,
+    "LA_ODD": 3,
+    "valid_splits": 12
+  },
+  "exact_bound": {
+    "expression": "lo = (((sh >> H) % ODD) << H) | (sh & ((1 << H)-1))",
+    "for_unsigned_sh": "0 <= remainder < ODD; disjoint low H bits; lo <= ODD*2**H-1",
+    "default_max_lo": 383,
+    "default_required_bits": 9,
+    "general_width": "min(LA_SW, LA_H + ceil(log2(LA_ODD))); original LA_SW truncation retained",
+    "reason_bit16_unreachable": "la_lo bits19:9 are zero after E2 for known inputs; no consumer may sample uninitialised tables; retained earliest E4 consumer follows E3 result",
+    "successor": "narrow only la_lo state to proven bound under a new default-off opt-in; leave clock/enable/selector/table staging and all external ports unchanged"
+  },
+  "cycle_accounting": {
+    "additional_startup_cycles": 0,
+    "additional_instruction_cycles": 0,
+    "additional_token_ns": 0,
+    "stage_sequence": "E1 sh, E2 lo/high quotient, E3 rt, earliest E4 table read; unchanged"
+  },
+  "pricing": {
+    "MACs_added": 0,
+    "program_bytes_per_cycle": 128,
+    "decoded_bits_per_cycle": 878,
+    "external_bits_or_tracks_added": 0,
+    "new_mux_or_demux": 0,
+    "new_enable_fanout": 0,
+    "replicas": 4,
+    "AR_declared_state_delta_bits": -176,
+    "AR_valid_split_inventory_delta_bits": -132,
+    "VPOS_valid_split_inventory_delta_bits": -1056,
+    "register_area_basis_um2": 0.2916,
+    "AR_valid_register_inventory_area_delta_um2": -38.491200000000006,
+    "VPOS_valid_register_inventory_area_delta_um2": -307.92960000000005,
+    "internal_E2_to_E3_operand_bits_per_valid_table": {
+      "before": 20,
+      "after": 9
+    },
+    "current_measured_core_um2": 20671.2,
+    "current_measured_core_side_um": 143.77482394355417,
+    "slot": "reuse actual context5 controller boundary/core; no new slot/die. Positive state/mux/track inventory zero; actual mapped area and route still required",
+    "area_power_skew_claim": null,
+    "internal_track_floor_delta_bits_AR": -132,
+    "channel_capacity": "no new channel; receiver loading/parent slot fit remain unqualified"
+  },
+  "alternative_extra_pipeline": {
+    "decision": "not selected while exact bound removes offending state without added cycle",
+    "concrete_lower_inventory": "split narrowed9-bit low division at bit4: stage3 high quotient shifted4 plus6-bit remainder/low; E4 combines",
+    "additional_state_bits_AR_minimum": 180,
+    "additional_state_bits_VPOS_minimum": 1440,
+    "register_only_area_AR_minimum_um2": 52.48800000000001,
+    "additional_startup_cycles_minimum": 1,
+    "additional_token_ns_minimum": 0.833,
+    "new_startup_valid_or_fetch_interlock_unpriced": true,
+    "ready_to_build": false
+  },
+  "final_path_required_before_launch": true,
+  "adoption": false,
+  "clock": {
+    "period_ps": 833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25
+  },
+  "default_off": true
+}

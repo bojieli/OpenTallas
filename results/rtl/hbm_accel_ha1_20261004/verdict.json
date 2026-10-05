@@ -1,0 +1,106 @@
+{
+ "schema": "opentallas.hbm_accel.ha1_verdict.v1",
+ "rung": "HA1 / R1b tx-count arrival counters (mbarrier-style)",
+ "price": {
+  "boundary_cycles": 78,
+  "target_cycles": 47,
+  "saved_cycles": 31,
+  "modelled_saved_us": 8.9,
+  "source": "claude/hbm-accelerator-study-20261003 ladder_model.py (W19_BARRIER_RELEASE_CYC 31)"
+ },
+ "boundaries_per_token": 342.9,
+ "G_exact": {
+  "qwen": {
+   "exact": {
+    "base": "pass",
+    "txcount": "pass",
+    "steps": 18,
+    "mismatches": 0
+   },
+   "clk_sm_cycles": {
+    "base": 1759405,
+    "txcount": 1756528,
+    "delta": -2877
+   },
+   "barriers": {
+    "tb_gpu_hbm_system.dut.g_on.g_die[1].u_bar": {
+     "count": 594,
+     "boundary_sum_base": 1188,
+     "boundary_sum_txcount": 594,
+     "wait_sum_base": 87543,
+     "wait_sum_txcount": 86189
+    },
+    "tb_gpu_hbm_system.dut.g_on.g_die[0].u_bar": {
+     "count": 594,
+     "boundary_sum_base": 1188,
+     "boundary_sum_txcount": 594,
+     "wait_sum_base": 87543,
+     "wait_sum_txcount": 86189
+    }
+   }
+  },
+  "ds": {
+   "status": "NOT_RUN",
+   "have": [],
+   "note": "whole-system DS runs stopped under the owner minimum-component rule (2026-10-04); exactness rests on the Qwen e2e + unit bench, latency on the die bench"
+  }
+ },
+ "G_latency": {
+  "die_boundary_cycles": {
+   "ablation_with_x": 79,
+   "txcount_x": 77,
+   "tree_sync": 62,
+   "txcount_a2a_sync": 58
+  },
+  "measured_boundary_with_x": 77,
+  "target": 47,
+  "pass_": false,
+  "saved_cycles_with_x": 2,
+  "saved_cycles_sync_only_max": 4,
+  "saved_cycles_sync_only_mean": 9.79
+ },
+ "G_gain": {
+  "measured_with_x": {
+   "saved_us_per_token": 0.572,
+   "per_user_gain_pct": {
+    "ablation_2261.7": 0.129,
+    "ablation_R0c_2188": 0.125,
+    "model_full_ladder_3015": 0.173
+   }
+  },
+  "upper_bound_sync_only_mean": {
+   "saved_us_per_token": 2.798,
+   "per_user_gain_pct": {
+    "ablation_2261.7": 0.637,
+    "ablation_R0c_2188": 0.616,
+    "model_full_ladder_3015": 0.851
+   }
+  },
+  "priced": {
+   "saved_us_per_token": 8.859,
+   "per_user_gain_pct": {
+    "ablation_2261.7": 2.045,
+    "ablation_R0c_2188": 1.977,
+    "model_full_ladder_3015": 2.744
+   }
+  },
+  "pass_": false
+ },
+ "G_area": {
+  "counter_um2_per_sm_asap7_ss_synth": 62.4,
+  "counters_um2_per_die": 1996.8,
+  "a2a_link_stage_flops_per_die": 25696,
+  "tree_stage_flops_per_die": 624,
+  "links_per_die": 992,
+  "status": "yosys ASAP7 SS cell area of ot_hbm_txcount_arrival K=32 (499 cells, 45 flops); link stages counted, not placed"
+ },
+ "G_route": "NOT_RUN (gate order: latency/gain failed first; addendum forbids P&R before the measurement gate passes)",
+ "G_timing": "NOT_RUN (same); the W6 SECDED fence 429 MHz cone is not on this rung's path in the base system (W6 is not integrated there) and remains with HA6",
+ "why": "The release broadcast is not removable latency on this die: every boundary must deliver the next op's x block from the hub to every SM, over the same root->SM distance the release travels (pipelined with it). tx-count turns the release into a byte count of that data, which saves only the two AND-node registers on the up path (79 -> 77). Even a sync-only boundary cannot reach 47: the farthest SM pair is 28.56 mm Manhattan = 57 stages at 504 um, vs 62 for the tree; the 31-cycle price assumed the down leg vanishes.",
+ "verdict": "REJECT",
+ "source_sha256": {
+  "die_boundary.json": "b1e6c7aef316751ef5eccc048ab0143ccc5cbf0f013809fbb82818016144c847",
+  "qwen_base.json": "fba2a90a39bb14342a9b813c62484e89aa0ba0b8f7a56ac9202dfcfe9ab23417",
+  "qwen_tx.json": "41d39299262fbd4a4652f790ea7575fd781171a775e3cd29e32823f994101e75"
+ }
+}

@@ -1,0 +1,8 @@
+/tmp/pytest-of-ubuntu/pytest-7381/test_planned_reservation_is_di0/test.cpp: In function ‘int main()’:
+/tmp/pytest-of-ubuntu/pytest-7381/test_planned_reservation_is_di0/test.cpp:25:2: error: this ‘for’ clause does not guard... [-Werror=misleading-indentation]
+   25 |  for(auto& t:tags)p.qualified_retire(t);p.qualified_retire(read[0]);assert(p.batch_retired());
+      |  ^~~
+/tmp/pytest-of-ubuntu/pytest-7381/test_planned_reservation_is_di0/test.cpp:25:41: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘for’
+   25 |  for(auto& t:tags)p.qualified_retire(t);p.qualified_retire(read[0]);assert(p.batch_retired());
+      |                                         ^
+cc1plus: all warnings being treated as errors

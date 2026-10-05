@@ -1,0 +1,80 @@
+{
+  "E_cycles": 98,
+  "ar256_isolated_layer": {
+    "hbm_stream_composed": 4230,
+    "real_mem": 4338
+  },
+  "ar256_layers": {
+    "L0": {
+      "hbm_stream_composed": 4229,
+      "real_mem": 4337
+    },
+    "L1": {
+      "hbm_stream_composed": 4307,
+      "real_mem": 4776
+    },
+    "L2": {
+      "hbm_stream_composed": 4041,
+      "real_mem": 4653
+    }
+  },
+  "clock_ghz": 1.2,
+  "head_cycles": 3006,
+  "headline_method": "Headline: AR256 isolated layer minus the matched L0 removal (4230), plus the largest measured chain increment of the stream (8 cycles: stream L0/L1/L2 = 4967/4967/4975, i.e. write-back meets refresh costs <=8 cycles under stream-aware REFpb), for L1..L35. The per-layer subtraction (upper bound) lands below the isolated composition because the AR256 chain penalties differ from the W12 ones; it is not used.",
+  "method": "Matched A/B on the W12 REAL_MEM runtime (frozen_v2 real2 vs HBM_STREAM WBW=4, same core, same position oracle, both bit-exact): cycles removed per layer = real2 - stream. Applied to the AR256 REAL_MEM full-token record (main 973abe581: E 98, L0 chained 4,337 / isolated 4,338, L1 4,776, L2 4,653, head 3,006; token 172,484 chained-adjusted = head + E + L0 + 35 x mean(L1,L2)). Assumes the memory stall removed is the same in the AR256 core (same KV service boundary, same fill/drain MEMSTAT counters); the AR256 core's real-minus-ideal penalty is larger (+383 at L0 vs +247), so the removal is not over-credited.",
+  "physical": {
+    "controller_slice": "ot_hbm_r14_stream_stack NCH=1 REF_MODE=1, merged r8+WR_EN PC (0475545ad); WC setup / BC hold, 60/25 ps uncertainty, ADDER_MAP_FILE off",
+    "exactness": "merged PC cycle-identical to 5f0d5c50d at WR_EN=1 (merge_r8/tb_wr_lockstep.sv) and to r6 at WR_EN=0 (hbm_clock_loops_20261004/stream/tb_stream_pc_lockstep.sv): REF_MODE 0/1 x PC 0/1 x seeds 1-4 x 400k cycles, 0 mismatches",
+    "not_routed": "the die-side KV stream service (ot_qwen_rt_kv_stream_service) is, like its REAL_MEM predecessor ot_qwen_rt_kv_fill_service, not separately routed",
+    "wr_en0_0p833ns": {
+      "area_um2": 2697.33,
+      "hold_wns_ps": 3.7,
+      "record": "merge_r8/physical-ss-wr0-0833-PASS.json",
+      "setup_wns_ps": 8.3
+    },
+    "wr_en1_1p024ns_976p6MHz": {
+      "area_um2": 3422.95,
+      "hold_wns_ps": 4.3,
+      "record": "merge_r8/physical-ss-wr1-1024-PASS.json",
+      "setup_wns_ps": 25.6
+    }
+  },
+  "position": 255,
+  "schema": "opentallas.qwen-rom-hbm-stream-ar256-composition.v1",
+  "tok_per_s_1p2ghz": {
+    "hbm_stream": 7708.9,
+    "hbm_stream_upper_bound": 7821.5,
+    "real_mem": 6957.2
+  },
+  "token_cycles": {
+    "hbm_stream_headline": 155664,
+    "hbm_stream_isolated": 155384,
+    "hbm_stream_upper_bound_per_layer_subtraction": 153423,
+    "ideal_memory_P0": 144522,
+    "real_mem_chained_adjusted": 172484,
+    "real_mem_isolated": 159272
+  },
+  "token_rate_gain_pct": 10.81,
+  "token_rate_gain_pct_upper_bound": 12.42,
+  "verdict": "ADOPT (>=1%): +10.81% per user at P255 (default-off HBM_STREAM, WBW=4)",
+  "w12_matched_layers": {
+    "L0": {
+      "cycles_removed": 108,
+      "hbm_stream": 4967,
+      "ideal": 4828,
+      "real_mem": 5075
+    },
+    "L1": {
+      "cycles_removed": 469,
+      "hbm_stream": 4967,
+      "ideal": 4828,
+      "real_mem": 5436
+    },
+    "L2": {
+      "cycles_removed": 612,
+      "hbm_stream": 4975,
+      "ideal": 4828,
+      "real_mem": 5587
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+ "schema": "opentallas.hbm-accel-ha8-measured-composition.v1",
+ "scope": "Qwen3-8B HBM accelerator per-user AR token at position 1023 (prompt token 1796 -> 12147), composed from exact single-stage RTL jobs (owner rule: one representative layer per layer type + head; all layers identical in shape)",
+ "vehicle": "W12 exact datapath (static schedule, lane-local fusion, no kernel launch) + weight/KV prefetch stream timed by the r14 streaming controller (52ce3e9c1, REFpb, CK/2 1.024 ns domain, 4 stacks/die); window 160 words (15 MiB/die); SRAM: lm_head first, then leading layers",
+ "exactness": {
+  "a_tp2": "L0..L9, L19..L35 X bit-exact on both dies (27 layers, 54 die-checks) + head token 12147 logit 41f41df1 = GPU oracle; L10..L18 not simulated (identical shape)",
+  "b_tp4": "L0, L5, L6, L20 X bit-exact on 4 dies + head token 12147 logit 41f4268a = GPU oracle",
+  "golden": "tools/qwen_hbmacc_position_oracle_gpu.py on local GPU, validated bit-exact at P0 vs retained CPU oracles (TP2 72/72, TP4 144/144, tokens 50994)"
+ },
+ "a_same_silicon_TP2": {
+  "stages": [
+   [
+    "L0 (SRAM-resident)",
+    4344,
+    1
+   ],
+   [
+    "L1 (170 of 992 words SRAM)",
+    23379,
+    1
+   ],
+   [
+    "L2..L35 (HBM, measured identical on 27 layers)",
+    30748,
+    34
+   ],
+   [
+    "head (lm_head SRAM)",
+    4634,
+    1
+   ]
+  ],
+  "composed_cycles": 1077832,
+  "us": 898.19,
+  "ar_tok_s": 1113.3,
+  "typical_layer_breakdown_cycles": {
+   "hbm_wait": 26404,
+   "kv_wait": 4,
+   "matmul": 1967,
+   "attention": 143,
+   "collective": 816,
+   "stream_unit": 1346,
+   "other": 69
+  },
+  "typical_layer_cycles": 30748,
+  "typical_layer_stream": {
+   "words": 1003,
+   "bytes": 98598912,
+   "ctl_cycles_streaming": 25027,
+   "TBps_per_stack": 0.962
+  },
+  "chain_check": "L1->L2 chained from golden L0 exit: L1 23,379 (= isolated), L2 30,699 vs isolated 30,748 (isolated+preroll conservative by 49 cycles, 0.16%)",
+  "rom_same_datapath_P0_cycles": 151557,
+  "model_before_rtl_tok_s": 1109.1
+ },
+ "b_iso_silicon_TP4": {
+  "stages": [
+   [
+    "L0..L4 (SRAM-resident, L0 measured)",
+    4805,
+    5
+   ],
+   [
+    "L5 (186 of 512 words SRAM)",
+    10260,
+    1
+   ],
+   [
+    "L6 (first full-HBM layer after resident run)",
+    13503,
+    1
+   ],
+   [
+    "L7..L35 (HBM, L20 measured)",
+    16102,
+    29
+   ],
+   [
+    "head (lm_head SRAM)",
+    2999,
+    1
+   ]
+  ],
+  "composed_cycles": 517788,
+  "us": 431.49,
+  "ar_tok_s": 2317.6,
+  "typical_layer_breakdown_cycles": {
+   "hbm_wait": 11297,
+   "kv_wait": 2,
+   "matmul": 1669,
+   "attention_or_in_collective": 0,
+   "collective": 1944,
+   "stream_unit": 1122,
+   "other": 69
+  },
+  "note": "preroll 1000 ctl cycles vs measured TP4 tail 1,393 cycles (=1,133 ctl): composed value conservative by ~0.8%",
+  "model_before_rtl_tok_s": 2429.9
+ },
+ "rungs_measured_on_one_layer_a": {
+  "R5a_refresh_aware_REFpb_vs_REFab": {
+   "layer_cycles_REFpb": 30748,
+   "layer_cycles_REFab": 33925,
+   "delta_cycles": -3177,
+   "token_cycles_without": 1188489,
+   "tok_s_without": 1009.7,
+   "gain_pct": 10.27,
+   "stream_bench_TBps_per_stack": {
+    "REFpb": 0.9635,
+    "REFab": 0.8718
+   },
+   "verdict": "gain >=1% (exact; physical: controller closes SS at CK/2 976.6 MHz per 52ce3e9c1)"
+  },
+  "HA1_barrier_HA2_links_HA3_cut_through_epilogue_HA6_clock": {
+   "exposed_non_stream_cycles_typical_layer": "~0 (layer = stream time; window never full: room_block 0)",
+   "upper_bound_pct_of_token": 0.63,
+   "verdict": "0 measured on the representative layer; only L0/L1 SRAM part and head expose compute; REJECT for Qwen AR (<1%)"
+  },
+  "R5b_shared_expert_first": "N/A (dense model)"
+ },
+ "not_modelled": [
+  "embedding row fetch from HBM at token start (~60 cycles est.)",
+  "KV write-back of the token (posted, off path)",
+  "HBM data carried through the window (arrival timed; data from the stage images)",
+  "area/route/SS-FF of the vehicle"
+ ]
+}

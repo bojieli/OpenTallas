@@ -8,9 +8,10 @@ ROM design point of tools/arch_lanes_v41.py (results/arch/v41_lanes.json).
 Fabric (spec agent's request, 2026-09-27; closes the asymmetry that the comparator's collectives were on the board
 mesh with overlapped bytes while the ROM array's are on its real 112G lanes):
 
-* every comparator die is an endpoint of one switch tier; a traversal is SerDes -> switch -> SerDes:
-  alpha = 2 x 209 ns (technology.json links.rom_rack_cable_serdes: full KP4 over rack cable, validated 2026-09-27;
-  the same hop the ROM array's stage links use) + 250 ns (one cut-through tier) = 668 ns;
+* every comparator die is an endpoint of one switch tier; a traversal is SerDes -> switch -> SerDes.
+  The named light-FEC switch comparison uses 2 x 130 ns + 250 ns = 510 ns, matching ROM board FEC.
+  This is MODEL ONLY: light FEC is not qualified for rack-cable reach. Historical KP4 configurations
+  remain at 2 x 209 ns + 250 ns = 668 ns; compare those only with ROM board links also at 209 ns.
 * each die's link to the switch carries 1.8 TB/s per direction (the spec agent's figure, "B200 NVLink"; note B200's
   published 1.8 TB/s is the bidirectional total, 0.9 TB/s per direction -- priced as a sensitivity);
 * a collective's bytes cross the die's ONE switch link: one-shot all-reduce (p - 1) n, two-step (reduce-scatter +
@@ -40,12 +41,13 @@ import arch_hbm_best_v41 as HB  # noqa: E402
 import arch_lanes_v41 as LN  # noqa: E402
 
 LX, U, A, D = HB.LX, HB.U, HB.A, HB.D
-SCHEMA = "opentallas.v41-hbm-switched.v1"
-OUT = ROOT / "results/arch/v41_hbm_switched.json"
+SCHEMA = "opentallas.v41-hbm-switched.same-fec.v2"
+OUT = ROOT / "results/arch/v41_hbm_switched_same_fec_model_20261004.json"
 CONTEXTS = LX.CONTEXTS
 GROUPS = (4, 8, 16, 24, 32, 48, 64, 96)
 SW_S = D.SWITCH_LATENCY_S["value"]
 LANE_NET = LN.LANE_NET_BPS
+from fec_class_fairness import matched_fec_row, policy as fec_policy
 
 
 class SwitchFabric:
@@ -57,11 +59,16 @@ class SwitchFabric:
     DIES_PER_PKG = 2
     DOMAIN_PKGS = 72                                   # NVL72: 72 GPUs (packages) on one switch tier
 
-    def __init__(self, G, dies, B_pkg=0.9e12, nvls=True):
+    def __init__(self, G, dies, B_pkg=0.9e12, nvls=True, fec_class=None):
         self.G, self.dies, self.B, self.nvls = G, dies, B_pkg, nvls
         lk = A.links_for(A.BASELINE)
         # a switched traversal is over rack cable: 2 x the rack-cable SerDes hop (209 ns, full KP4) + the switch
         self.hop_s = (lk["rom_rack_cable_serdes"] if "rom_rack_cable_serdes" in lk else lk["rom_board_serdes"])["hop"]
+        # None preserves historical KP4 calculations. Named comparisons select
+        # the SAME FEC as ROM board links; light switch reach is model-only.
+        self.fec_row = matched_fec_row(fec_class, switch_s=SW_S) if fec_class else None
+        if self.fec_row:
+            self.hop_s = self.fec_row["hbm_switch_leg_s"]
         self.ucie = lk["rom_package_ucie"]["hop"]
         self.ucie_bw = lk["rom_package_ucie"]["bw"]
         self.alpha = 2 * self.hop_s + SW_S
@@ -70,7 +77,8 @@ class SwitchFabric:
 
     def label(self):
         return (f"switched NVLink domain ({self.B / 1e12:.1f} TB/s per package per direction"
-                f"{', NVLS' if self.nvls else ''}; alpha {self.alpha * 1e9:.0f} ns)")
+                f"{', NVLS' if self.nvls else ''}; alpha {self.alpha * 1e9:.0f} ns"
+                f"{'; ' + self.fec_row['name'] + ' MODEL_ONLY' if self.fec_row else '; historical KP4'} )")
 
     def collective(self, op, n, span, algorithm=None):
         p = span
@@ -201,16 +209,20 @@ def build():
     ST = U.static_terms(hb)
     die_static_noserdes = ST["hbm_die_no_serdes"]      # leakage 0.10 W/mm2 x logic + stacks + UCIe idle
     rec = dict(schema=SCHEMA, tool="tools/arch_hbm_switched_v41.py", basis=__doc__.split("Fabric (")[1].strip(),
-               alpha_s=SwitchFabric(4, hb["dies"]).alpha, dies=hb["dies"])
+               alpha_s=SwitchFabric(4, hb["dies"], fec_class="light").alpha,
+               historical_KP4_alpha_s=SwitchFabric(4, hb["dies"]).alpha, dies=hb["dies"])
     cfgs = dict(nvl_0p9_nvls=dict(B_pkg=0.9e12, nvls=True), nvl_0p9=dict(B_pkg=0.9e12, nvls=False),
                 nvl_1p8_nvls=dict(B_pkg=1.8e12, nvls=True), nvl_1p8=dict(B_pkg=1.8e12, nvls=False))
+    cfgs["light_fec_switch_0p9_nvls"] = dict(B_pkg=0.9e12, nvls=True, fec_class="light")
+    rec["fec_fairness"] = fec_policy(ROOT)
+    rec["legacy_unequal_FEC_config_names"] = list(k for k in cfgs if not k.startswith("light_fec"))
     rec["configs"] = {k: run(v, sp, muts, hz, hb, hbm, None) for k, v in cfgs.items()}
-    rec["headline_config"] = "nvl_0p9_nvls"
+    rec["headline_config"] = "light_fec_switch_0p9_nvls"
     # the board-mesh comparator of v41_hbm_best, for comparison
     rec["board_mesh_was"] = {str(ctx): hbrec["rungs"]["top"]["hbm"][str(ctx)] for ctx in CONTEXTS}
     # energy at the baseline switched config: every operating point, the best G per (AR, MTP)
-    main = rec["configs"]["nvl_0p9_nvls"]
-    HB.FABRIC = lambda G, dies: SwitchFabric(G, dies, B_pkg=0.9e12, nvls=True)
+    main = rec["configs"][rec["headline_config"]]
+    HB.FABRIC = lambda G, dies: SwitchFabric(G, dies, B_pkg=0.9e12, nvls=True, fec_class="light")
     s_die = die_static_noserdes + serdes_w_per_die(0.9e12)
     rec["hbm_static_w_per_die"] = dict(total=s_die, serdes=serdes_w_per_die(0.9e12),
                                        leakage_hbm_ucie=die_static_noserdes, serdes_at_1p8=serdes_w_per_die(1.8e12))
@@ -323,7 +335,7 @@ def build():
                            hbm=v[str(ctx)]["best_ar" if k == "ar" else "best_mtp"]["rate"],
                            ratio=lanes["design_point"][str(ctx)]["ar" if k == "ar" else "mtp"]
                            / v[str(ctx)]["best_ar" if k == "ar" else "best_mtp"]["rate"])
-                   for k in ("ar", "mtp") for v in [rec["configs"]["nvl_0p9_nvls"]]}
+                   for k in ("ar", "mtp") for v in [rec["configs"][rec["headline_config"]]]}
         for ctx in CONTEXTS}
     for r in rec["ratios_batch1"].values():   # what MTP buys each machine at batch 1 (with / without, same machine)
         r["mtp_speedup"] = {m: r["mtp"][m] / r["ar"][m] for m in ("rom", "hbm")}

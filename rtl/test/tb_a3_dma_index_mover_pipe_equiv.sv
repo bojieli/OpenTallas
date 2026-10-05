@@ -194,6 +194,7 @@ module tb_a3_dma_index_mover_pipe_equiv;
             $display("PASS tb_a3_dma_index_mover_pipe_equiv: %0d cases", CASES);
         else
             $display("FAIL tb_a3_dma_index_mover_pipe_equiv: %0d failures", failures);
+        if (failures != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

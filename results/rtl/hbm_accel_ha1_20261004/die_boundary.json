@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.hbm_accel.ha1_die_boundary.v1",
+ "tool": "tools/hbm_accel/run_ha1_die.py",
+ "floorplan": "results/floorplan/hbm_gpu/v41_hbm_die.json",
+ "clock_hz": 1200000000.0,
+ "stage_reach_um": 504.0,
+ "tree": {
+  "max_leaf_um": 3248.2,
+  "max_trunk_um": 11033.7,
+  "d_leaf": 7,
+  "d_trunk": 22
+ },
+ "x_data": {
+  "d_up": 29,
+  "d_dn": 31,
+  "beats": 16,
+  "basis": "H_X_TAIL_B 4096 B / X_BCAST_BPC 256 B (tools/uarch_model.py)"
+ },
+ "pair": {
+  "max_um": 28561.7,
+  "max_stages": 57,
+  "links": 992,
+  "link_stage_flops": 25696,
+  "tree_stage_flops": 624
+ },
+ "runs": [
+  {
+   "variant": 0,
+   "desc": "tree + x broadcast (ablation boundary)",
+   "min": 79,
+   "max": 79,
+   "mean": 79.0,
+   "early_start_errors": 0,
+   "barriers": 200
+  },
+  {
+   "variant": 1,
+   "desc": "tx-count point-to-point arrival counters, sync only (R1b as priced)",
+   "min": 45,
+   "max": 58,
+   "mean": 52.21,
+   "early_start_errors": 0,
+   "barriers": 200
+  },
+  {
+   "variant": 2,
+   "desc": "tree, sync only (the measured 62-cycle barrier)",
+   "min": 62,
+   "max": 62,
+   "mean": 62.0,
+   "early_start_errors": 0,
+   "barriers": 200
+  },
+  {
+   "variant": 3,
+   "desc": "tx-count on the x data (hub forwards on landing, per-SM beat counters)",
+   "min": 77,
+   "max": 77,
+   "mean": 77.0,
+   "early_start_errors": 0,
+   "barriers": 200
+  }
+ ],
+ "boundary_cycles": {
+  "ablation_with_x": 79,
+  "txcount_x": 77,
+  "tree_sync": 62,
+  "txcount_a2a_sync": 58
+ },
+ "saved_cycles_per_boundary": {
+  "with_x_data": 2,
+  "sync_only": 4
+ },
+ "priced": {
+  "boundary_cycles": 78,
+  "target_cycles": 47,
+  "saved_cycles": 31
+ },
+ "source_sha256": {
+  "rtl/gpu/ot_gpu_barrier_node.sv": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hbm_accel/txcount/ot_hbm_txcount_arrival.sv": "fd4d42c108ba625711f8e1b54c698a956088f6989907ab6840a5bc68ffcebf6f",
+  "rtl/hbm_accel/txcount/tb_txcount_die.sv": "256f2bb91f9f484c13d4d75d2bbcdc27cdd1ee42db378f928423ffb8411d7010",
+  "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+  "tools/hbm_accel/run_ha1_die.py": "52657a1dd564450e4b671a76764c9753b0630e74e1933f2df9556cf3c0df5050"
+ }
+}

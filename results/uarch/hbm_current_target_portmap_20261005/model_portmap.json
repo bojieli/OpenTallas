@@ -1,0 +1,347 @@
+{
+  "schema": "opentallas.hbm.current_target_portmap.draft.v1",
+  "default_enabled": false,
+  "RTL_admitted": false,
+  "physical_admitted": false,
+  "source_pins": {
+    "tools/uarch_model.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "d97982d88554cf74763c90ffaffd683d04e4a9a15e21f1ef90f7efdec094302b"
+    },
+    "tools/dshbm_1m_allmeasured.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "aceca984195bc11c2480da2b49a263bfe15910f1b0735b7c2fa5882e9410346b"
+    },
+    "tools/dshbm_baseline_measure.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "357f8408c32d5da7cd499bbf83a76bf07b4d943a0f24b9c78a2a195c90cc0978"
+    },
+    "tools/dshbm_1m_hbm.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "dfb301425d84cbf145b7e6b4f568b3018882f81f6d1ce419878dbb89e81ee961"
+    },
+    "tools/dshbm_1m_coll.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "aa96b2bfeb69653d1b67362a30dce1348530c0fc821f3b7692e4181c82e4beb0"
+    },
+    "tools/qwen_hbmacc_rt_token_w12.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "73492ce27f8fccfa434730791bcbafe908916bbb41fea42d7f390dc27be60b86"
+    },
+    "rtl/test/qwen_rom_runtime/qwen_hbmacc_rt_w12.cpp": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "1f35dbe10ae759e39e5ad0c58e8330e7827e0c6e869aaf4403f9373ae0285cd4"
+    },
+    "rtl/test/qwen_rom_runtime/ot_qwen_hbmacc_rt_die_w12.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "761799736039b1345140b7d2da2634829baf3adfe4be49477c04af3e815f4618"
+    },
+    "rtl/hdc/ot_qwen_me_array_w12.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+    },
+    "rtl/hbm_accel/qwen/ot_hbmacc_qwen_wstream.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "24f3f13649f31078863b9d82d48c2f2984a1bd3a7eabdbd47c9947a311501cf6"
+    },
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "88e6fd591d576f7082541a41915058e37185cb9d6086c1f0a63af6b51764c024"
+    },
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "b96be44ecfe9bb2148aa88131169894229f9b1a60432b4bb0477fb28dbddd877"
+    },
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "8598529049b99eaa4db2c5dfcbe3c1419047d245a8a7a2b707657e1c7a82be24"
+    },
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_service.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "e86d428e357e5c1c294bf5c16634871a67124c0672ea98a5cb15f61efe403d86"
+    },
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98"
+    },
+    "tools/hbm_accel_service_context_model.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "20a3ea33ced1a18aff0ade2c89ae33f25b5cfca966e25cc15989fc3bcb30c4cd"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_hbm_system_loader.sv": {
+      "commit": "67916251b",
+      "sha256": "e91c44c99dc9d0dea62216a903ca44a44339f4dafc955dd3110111ce77a5b79b"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv": {
+      "commit": "67916251b",
+      "sha256": "ddb758e8aada4579d3210f537957ba61f5bede0569b53f43a76059bd6a45bf0f"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader.sv": {
+      "commit": "67916251b",
+      "sha256": "377dbf6c0230249ec89111e92f9887c84099dbca23f3fdc081410fe01eaa4a91"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_store.sv": {
+      "commit": "67916251b",
+      "sha256": "f34ff2dd74a043e0fb2e2e9ce492ff58dd5bb4099e256d888eab07731387a682"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_dma64.sv": {
+      "commit": "67916251b",
+      "sha256": "656a8c7d71aca1910843a1e8b4c1cad8ff205bf2d70aa6c352b98ac2f5e6f90b"
+    }
+  },
+  "DS": {
+    "target": "DS_CURRENT_MEASURED_TP96",
+    "ranks": 96,
+    "rank_bits": 7,
+    "position_bits": 20,
+    "SM_per_die": 32,
+    "SM_local_bits": 5,
+    "stacks_per_die": 4,
+    "stack_bits": 2,
+    "SM_per_stack": 8,
+    "stack_local_SM_bits": 3,
+    "PCs_per_stack": 32,
+    "PC_local_bits": 5,
+    "PCs_per_die": 128,
+    "selected_SM": "ot_hbm_accel_sm_v",
+    "SM_parameters": {
+      "ENABLE": 1,
+      "SUB": 4,
+      "LBS": 2,
+      "LSB": 16,
+      "NC": 8,
+      "RMAX": 4096,
+      "XD": 128,
+      "MAX_OUT": 512
+    },
+    "final_pipeline_selection": "Use Popper actual frozen sm_r2 source/DS,DW,DG,PIO,STK parameters; source defaults are not routed selection authority.",
+    "parent_hooks": {
+      "DS_ISSUE": "existing static fullprogram op -> selected SM start/op_rows13/op_c16/op_g8/op_gs1/op_fmt2; do not use SIMT cmdproc instruction reinterpretation",
+      "DS_X": "actual acquired operand -> xw_en/xw_addr7/xw_grp7/xw_data2048; shared publication/broadcast admission must precede start",
+      "DS_FETCH": "four stack groups, ot_hbm_accel_expert_fetch NSM8/NPC32 -> eight1024bit streams each; descriptor->SM bulkcopy LINE1088/tag10 binding requires existing owner/format adapter, not zero padding or tag truncation",
+      "DS_RESULTS": "32 SM rv/rrow12/rdata256 -> actual shared/DU owner publication before arrive/release_in/released; no done=publication shortcut",
+      "DS_DU": "existing N1024 SU il+dr+ov, index/attention/mHC/quantise/select service hooks consume actual published operands in static order; exact per-die replica census beyond measured components not fixed by a fullparent",
+      "DS_HBM": "four32PC stack groups with actual read/write arbitration, owned identity/beat returns and positive ACK; expert_service is read-only, causal provider owns write lifecycle, do not instantiate duplicate unarbitrated controllers",
+      "DS_TU": "hub actual ordered fragments -> inj_rd/inj_idx16/inj_data512; del_valid/del_flit545 -> checked published consumer slots; preserve rank8/flit-index16 and return credits",
+      "DS_HOST": "globalrank7, localSM5 and position20 source context; enclosing existing host hierarchy must retain these through launch/completion, not inherited4/4/16",
+      "DS_LOAD": "per-die existing load/store port -> selected actual stack-service client; full byte aperture and client allocation must precede corridor sizing"
+    },
+    "port_prices": {
+      "SM_ingest_payload_bits_per_edge": 34816,
+      "SM_results_payload_bits_per_edge": 8192,
+      "SM_ingest_byte_upper_bound_per_fast_edge": 4096,
+      "per_stack_SM_ingest_byte_upper_bound": 1024,
+      "stack_column_payload_B_per_service_edge": 1024,
+      "die_column_payload_B_per_service_edge": 4096,
+      "clock_target_fast_Hz": 1200000000.0,
+      "measured_service_period_ps": 1024,
+      "die_column_peak_Bps": 4000000000000.0,
+      "joint_ingest_vs_service": "32SM peak4915.2GB/s > fourstack4000GB/s; actual measured schedule must stall/prices HBM stretch, no free compute/HBM overlap"
+    },
+    "TU": {
+      "NPT": 8,
+      "LANES": 16,
+      "FW": 512,
+      "PWT": 545,
+      "PFMAX": 384,
+      "INJ": 2,
+      "DEL": 4,
+      "HUBW": 35,
+      "WSTG": 14,
+      "all_reduce": {
+        "NC": 8,
+        "NOG": 8,
+        "BF16": 1,
+        "contributors": 64
+      },
+      "all_gather": {
+        "NC": 1,
+        "NOG": 96,
+        "BF16": 0,
+        "contributors": 96
+      },
+      "external_TX_wires": 4368,
+      "external_RX_wires": 4368,
+      "credit_wires_each_direction": 8,
+      "payload_peak_Bps": 720000000000.0,
+      "fixed_external_budget_ns_per_crossing": 377.6,
+      "conservative_tail_us_per_collective": 0.15,
+      "topology": "existing switched TU tier, no proposed direct-link/NVLS/in-switch reduction",
+      "owner_decision": "Measured AR/gather are two separately elaborated NC/NOG/BF16 configurations. Select existing dual-configuration parent with priced shared eight-port arbitration, or provide existing compatible mode-capable source. Cannot silently share one parameter-fixed endpoint or allocate16 free ports.",
+      "hardware_endpoint_instance_count": null,
+      "PHY_switch_realization": "vendor budget; physical PHY/FEC/switch binding absent"
+    }
+  },
+  "Qwen": {
+    "target": "QWEN_CURRENT_HA8_TP4",
+    "ranks": 4,
+    "rank_bits": 2,
+    "position_extent": 8192,
+    "source_position_bits": 18,
+    "minimum_required_position_bits": 13,
+    "SM32_not_selected": true,
+    "die_top": "ot_qwen_hbmacc_rt_die_w12",
+    "die_parameters": {
+      "G": 6144,
+      "NW": 18,
+      "SNW": 18,
+      "D": 4,
+      "SW": 64,
+      "LV": 7,
+      "SMIN": 7,
+      "SMAX": 11,
+      "TCUT": 6,
+      "BD": 31,
+      "XVM": 1,
+      "NWS": 4,
+      "TWS": 30,
+      "ORD": 4
+    },
+    "tile_parameters": {
+      "GT": 6144,
+      "SMIN": 7,
+      "CODE_BANKS": 5,
+      "KV_LOCAL": 0
+    },
+    "die_parameter_note": "CODE_BANKS belongs to tile model; final fmax arithmetic/core/spine successor selection must match owner terminal records, not historical defaults",
+    "component_census_per_die": {
+      "die_core_and_spine": 1,
+      "tiles": 1536,
+      "stream": 1,
+      "PC_stream_controllers": 128
+    },
+    "system_collective": {
+      "module": "ot_rom_oneshot_allreduce",
+      "N": 4,
+      "LANES": 16,
+      "TAGW": 32,
+      "DEPTH": 16,
+      "LAT": 11,
+      "BPC_NUM": 3600
+    },
+    "parent_array_source": "rtl/hdc/ot_qwen_me_array_w12.sv preserves TG4 tile mapping/tree/order; runtime C++ replicates identical fabric, not a different algorithm",
+    "stream_parameters": {
+      "ENABLE": 1,
+      "NSTK": 4,
+      "REF_MODE": 1,
+      "CRED": 32,
+      "WINW": 160,
+      "SPW": 24,
+      "CW": 32,
+      "RL": 23,
+      "MINLAT": 2
+    },
+    "storage": {
+      "stream_word_bytes": 98304,
+      "window_words": 160,
+      "window_payload_bytes": 15728640,
+      "model_resident_bytes": 441974784,
+      "resident_and_window_overlap_binding": null,
+      "note": "Do not sum window+resident until actual shared-bank/capacity mapping states containment; no memory abstract implied."
+    },
+    "parent_hooks": {
+      "Q_ARRAY": "spine tgo/tb379/xl_d65536 ->1536tiles, tile-to-tile staged split tree ->t_lvl49152; preserve BD31,NWS4,TWS30 and existing array source",
+      "Q_VM": "actual SW64 source VM: three64x32bit read payloads and64x32bit SU writes; ME48 ports x512bit result plus addresses/masks, existing source conflict/publication rules",
+      "Q_COLLECTIVE": "four die c_valid/c_ready/c_data512/c_last/c_mode/c_tag32 into selected collective; r_valid/r_data512/r_last/r_rank2/r_err returns; preserve actual shared-edge tags/order",
+      "Q_STREAM_STATUS": "w_c_gray32 -> existing two-flop ctl synchroniser; a_gray32 -> existing two-flop core synchroniser; no extra clock or free latency",
+      "Q_STREAM_PAYLOAD": "MANDATORY hook: real controller sector returns -> checked code/KV window storage + positive published complete-word count. Existing wstream carries NO DATA and host preloads code/KV. Its timing count alone is not physical payload delivery.",
+      "Q_LOAD": "existing ND4 loader can addressfourdie BARs; load/store1+1 per die -> real resident/window/code/KV writers through owned sector path. W12 has no MREQ/loader client port: bridge aperture+port/calendar binding remains required, not host memcpy",
+      "Q_PROGRAM": "prog_addr12/prog_q1024; desc_addr6/desc_q64; staged seg_base24/seg_len24/seg_sidx32/seg_kind2 xNSEG8; actual loader/programmem writers not implicit host values"
+    },
+    "port_prices": {
+      "core_period_ps": 833.333,
+      "service_period_ps": 1024,
+      "PC_sector_B": 32,
+      "peak_service_Bps": 4000000000000.0,
+      "VM_three_read_payload_bits_per_edge": 6144,
+      "VM_SU_write_payload_bits_per_edge": 2048,
+      "ME_result_payload_bits_per_edge": 24576,
+      "tile_instruction_fanout": 1536,
+      "tree_to_spine_payload_bits": 49152,
+      "collective_payload_B_per_fast_edge": 64
+    }
+  },
+  "loader": {
+    "source": "ot_hbm_accel_loader_host",
+    "enabled": true,
+    "per_die": {
+      "ot_hbm_accel_loader": 1,
+      "ot_hbm_accel_store": 1,
+      "shared_service_clients": 1
+    },
+    "existing_host_group_limit": 8,
+    "DS96_host_group_selection": null,
+    "Qwen4_single_existing_host_group_legal": true,
+    "ports": {
+      "request_payload_bits": 256,
+      "address_bits": 32,
+      "strobe_bits": 32,
+      "tag_bits": 16,
+      "physical_host_DMA_bits": 64
+    },
+    "load_parameters": {
+      "BURST": 16,
+      "MAXOUT": 8,
+      "OUTW": 96,
+      "VOUT": 16,
+      "TW": 16,
+      "CDC_AW": 5
+    },
+    "store_parameters": {
+      "BURST": 16,
+      "MAXOUT": 32,
+      "VOUT": 16,
+      "TW": 16,
+      "CDC_AW": 5
+    },
+    "address_check": {
+      "existing_DADDR_is_byte_address": true,
+      "existing_byte_aperture": 4294967296,
+      "pkg_sectors_per_stack": 703125000,
+      "bytes_per_stack": 22500000000,
+      "minimum_full_stack_byte_bits": 35,
+      "minimum_four_stack_flat_byte_bits": 37,
+      "source_sector_field_bits": 34,
+      "source_stack_bits": 2,
+      "owner_hook": "Bind existing checked fullsector+stack translator to loader page/aperture or supply selected widened loader source.32bitDADDR is not wholefourstack address. No unchecked narrowing."
+    },
+    "service_client_check": "identity_t.client6 cannot encode64SMclients+loader+DU globally. Existing8SM/stack partition has16 SM clients/stack; actual DU+loader enrollment must fit<=64, source census required.",
+    "identity_check": "identity_t.die1 is local namespace. Across die boundaries preserve immutable rank7 DS/rank2 Qwen context; no casts of rank96 to1bit. Decide contained per-die namespace vs width-selected successor explicitly.",
+    "corridor": {
+      "host64_payload": true,
+      "service256_payload": true,
+      "positive_completion": "RLAST/B + actual writeACK/readback order",
+      "clock_crossings": "existing load/store forward/reverse CDC retained",
+      "slot_rectangle": null,
+      "track_capacity": null,
+      "CTS_PG_allowance": null,
+      "protected_control_source_qualification": false
+    }
+  },
+  "minimum_price": {
+    "unified_constant_DFF_um2": 0.2916,
+    "DS_fullrank_vs_local_die_extra_bits_per_identity": 6,
+    "conditional_extra_raw_context_bits_if_fullrank_expansion": 1536,
+    "conditional_extra_raw_context_FF_floor_um2": 447.8976,
+    "context_protection_note": "current301raw->307 fits320raw/360coded context envelope; owned465->471 fits512raw/576coded; wire/codec/decode/clock not free. This is a bound for width-selected variant, not an authored or admitted change.",
+    "composition": "Preserve current measured DS/HA8 calendars; any added copy, CDC or port arbitration contributes its actual exposed cycles. No saving, added0 or headline claim while mandatory hooks unresolved.",
+    "unpriced_terms": [
+      "parent issue/DU/publication mux",
+      "TU AR/gather mode arbitration and installed endpoint count",
+      "actual loader page translator and request merge",
+      "Qwen real sector/window/code/KV publication",
+      "native staged capture and VM write arbitration",
+      "loaded physical route/CDC/mux/codec/CTS/PG in exact slots"
+    ],
+    "full_composed_latency": null,
+    "full_area": null,
+    "slot_fit": null
+  },
+  "decisions": [
+    "DS: existing per-die static-SM+DU owner parent binding; not SIMT substitution",
+    "DS: existing eight-port TU AR/gather configuration-sharing source selection",
+    "DS: actual per-die host or supported host-group selection for96rank system",
+    "Both: loader fulladdress translation, exact client census and physical corridor",
+    "Qwen: real payload-to-window/program/VM hardware writer enrollment plus final fmax successor source selection"
+  ]
+}

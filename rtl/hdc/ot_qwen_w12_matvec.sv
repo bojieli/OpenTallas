@@ -570,33 +570,43 @@ end endgenerate
         end
     end else if (LANES) begin : g_kv_addr_prep
         //: the per-group offset q*ts + c*wcs is constant through the op: a free-running three-stage pipeline
-        //: from the go's latched fields: (1) q, c; (2) the shifted rows of both products reduced carry-save to two;
-        //: (3) their kept prefix sum -- ready after KV_PREP = 3
-        localparam integer QW = $clog2(GT) + 1;       // q < GT
-        localparam integer CW = 16;                   // c < 2^split
+        //: from the go's latched fields: (1) q, c; (2) the shifted rows of both products, four carry-save
+        //: quarters (q low / high bits, c low / high bits) each reduced to two; (3) the eight rows reduced to two
+        //: and their kept prefix sum -- ready after KV_PREP = 3.  q = g >> S and c = g mod 2^S are both at most
+        //: the group index g < GT, so each has clog2(GT) bits (the rows above are always zero).  [W12 HBM fmax:
+        //: one 30-row tree in stage (2) was -190 ps at 0.833 ns SS in the routed tile]
+        localparam integer QW = $clog2(GT);           // q <= g < GT
+        localparam integer CW = $clog2(GT);           // c <= g < GT
+        localparam integer QL = (QW + 1) / 2, CL = (CW + 1) / 2;
         reg [QW-1:0] q_p [0:G-1];
         reg [CW-1:0] c_p [0:G-1];
         reg [AW-1:0] off [0:G-1];
         genvar gq, rb;
         for (gq = 0; gq < G; gq = gq + 1) begin : g_off
             wire [AW-1:0] a_s, osum;
-            wire [(QW+CW)*AW-1:0] rows;
+            wire [QW*AW-1:0] qrows;
+            wire [CW*AW-1:0] crows;
             for (rb = 0; rb < QW; rb = rb + 1) begin : g_rq
-                assign rows[rb*AW +: AW] = q_p[gq][rb] ? (ts_r << rb) : {AW{1'b0}};
+                assign qrows[rb*AW +: AW] = q_p[gq][rb] ? (ts_r << rb) : {AW{1'b0}};
             end
             for (rb = 0; rb < CW; rb = rb + 1) begin : g_rc
-                assign rows[(QW+rb)*AW +: AW] = c_p[gq][rb] ? (wcs_r << rb) : {AW{1'b0}};
+                assign crows[rb*AW +: AW] = c_p[gq][rb] ? (wcs_r << rb) : {AW{1'b0}};
             end
-            reg [AW-1:0] r_s, r_c;
             wire [31:0] qv = (gb + gq) >> split_r;
             wire [31:0] cv = (gb + gq) & ((1 << split_r) - 1);
+            wire [8*AW-1:0] part;
+            ot_qwen_w12_csa_tree #(.W(AW), .N(QL)) u_q0 (.rows(qrows[QL*AW-1:0]), .s(part[0*AW +: AW]), .c(part[1*AW +: AW]));
+            ot_qwen_w12_csa_tree #(.W(AW), .N(QW-QL)) u_q1 (.rows(qrows[QW*AW-1:QL*AW]), .s(part[2*AW +: AW]), .c(part[3*AW +: AW]));
+            ot_qwen_w12_csa_tree #(.W(AW), .N(CL)) u_c0 (.rows(crows[CL*AW-1:0]), .s(part[4*AW +: AW]), .c(part[5*AW +: AW]));
+            ot_qwen_w12_csa_tree #(.W(AW), .N(CW-CL)) u_c1 (.rows(crows[CW*AW-1:CL*AW]), .s(part[6*AW +: AW]), .c(part[7*AW +: AW]));
+            reg  [8*AW-1:0] r_part;
             wire [AW-1:0] cs_s, cs_c;
-            ot_qwen_w12_csa_tree #(.W(AW), .N(QW+CW)) u_cs (.rows(rows), .s(cs_s), .c(cs_c));
-            ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(r_s), .b(r_c), .s(osum));
+            ot_qwen_w12_csa_tree #(.W(AW), .N(8)) u_cs (.rows(r_part), .s(cs_s), .c(cs_c));
+            ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s), .b(cs_c), .s(osum));
             always @(posedge clk) begin
                 q_p[gq] <= qv[QW-1:0];
                 c_p[gq] <= cv[CW-1:0];
-                r_s <= cs_s; r_c <= cs_c;
+                r_part <= part;
                 off[gq] <= osum;
             end
             ot_qwen_w12_kadd #(.W(AW)) u_ka (.a(cur), .b(off[gq]), .s(a_s));
@@ -796,7 +806,9 @@ end endgenerate
             assign lvl[0] = sum;
         end
     endgenerate
-    assign tfault[LV0] = 1'b0;
+    // PART2 has no local levels below LV0; their real faults arrive through
+    // t_fault_in. Define every absent local bit before the full-vector OR.
+    assign tfault[LV0:0] = {(LV0 + 1){1'b0}};
     wire [LG*4+3:0] split_at;                       // split at each level's input
     assign split_at[4*LV0+3 -: 4] = t_split;
     generate

@@ -1,0 +1,1104 @@
+{
+ "schema": "opentallas.dsrom-1m.select.v1",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "source_sha256": {
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+  "rtl/test/tb_hdc_v41x_sel.sv": "4956bd6294cfab4c2b9e93d2f388ede28dc19016ea0de70af4c12f6527281cef",
+  "rtl/test/hdc_v41x_sel_harness.cpp": "32e0872cc0b1beee5b41dfc9b7f05e174fa0a3b02f7baf07447dafc287452f69",
+  "tools/rtl_hdc_v41x_sel_campaign.py": "be281d187bbe5ca761a40b45709f35597fb166c1a631a184a402e6852ceb81fb",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/dsrom_1m_measure.py": "0c80b0fb075db8caf3492a29ba2784e98319a3605a1750305d0b829ccd16294c"
+ },
+ "golden_shards": {
+  "L2": {
+   "npz": "c7a427509f8caf071a1e39aee3c176c93b04b8d0b44a49f07178bf5708823135",
+   "json": "94e7155751fe65e63c37533bc18578e3424fc2ca6922ecda540985aa643a3860"
+  },
+  "L8": {
+   "npz": "904c3d323b4c64179c93072c1995ff57d07f57627da18b636f162497130b8dc9",
+   "json": "63ba588948ee2a5a8cb631bf3a03fdf6376481fc1582ac3d76b59613394840ca"
+  },
+  "L14": {
+   "npz": "2f0d79a326a122c996aebf8b2adc5daceeed95e13df27ff35f16441e98c5a901",
+   "json": "9958ee914bca9853fa5289eedd03d3e17dc88d4ae7939b6288f3a2aa6193e68f"
+  },
+  "L20": {
+   "npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45",
+   "json": "0824b4c7f1086bb19c284b1c4be4151e988b2da4ff563dbab9c61dd51d852dd2"
+  },
+  "L24": {
+   "npz": "c7c2809d84a259425632856d9a942858c0da49a944788e69d49be098a88b9592",
+   "json": "2e3a53643e78616ab11f5d4114792c826f8784ae5b9ca5b54ebccd7e2f59a20d"
+  }
+ },
+ "layers": {
+  "L20": {
+   "layer": 20,
+   "full_stream": false,
+   "scores": 1048576,
+   "streamed_per_rank": [
+    262144,
+    262144,
+    262144,
+    262144
+   ],
+   "local": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 4,
+      "beats": 65536,
+      "elements": 1048576,
+      "outputs": 2048,
+      "out_beats": 135,
+      "errors": 0,
+      "tail_min": 100,
+      "tail_max": 102,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 16912,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 100,
+        "first": 27,
+        "last": 4122,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         99,
+         96,
+         97,
+         95
+        ],
+        "n2": [
+         10,
+         8,
+         10,
+         9
+        ],
+        "n3": [
+         9,
+         8,
+         9,
+         9
+        ],
+        "family": "L20_rank0",
+        "n": 262144
+       },
+       {
+        "seg": 1,
+        "tail": 102,
+        "first": 4248,
+        "last": 8343,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         97,
+         100,
+         99,
+         96
+        ],
+        "n2": [
+         10,
+         11,
+         10,
+         9
+        ],
+        "n3": [
+         9,
+         10,
+         9,
+         8
+        ],
+        "family": "L20_rank1",
+        "n": 262144
+       },
+       {
+        "seg": 2,
+        "tail": 100,
+        "first": 8471,
+        "last": 12566,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         96,
+         96,
+         97,
+         95
+        ],
+        "n2": [
+         10,
+         10,
+         9,
+         8
+        ],
+        "n3": [
+         9,
+         9,
+         9,
+         8
+        ],
+        "family": "L20_rank2",
+        "n": 262144
+       },
+       {
+        "seg": 3,
+        "tail": 100,
+        "first": 12692,
+        "last": 16787,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         96,
+         98,
+         96,
+         98
+        ],
+        "n2": [
+         10,
+         9,
+         9,
+         9
+        ],
+        "n3": [
+         9,
+         9,
+         9,
+         8
+        ],
+        "family": "L20_rank3",
+        "n": 262144
+       }
+      ],
+      "pass": true
+     }
+    ],
+    "elements": 1048576,
+    "beats": 65536
+   },
+   "final": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 1,
+      "beats": 128,
+      "elements": 2048,
+      "outputs": 512,
+      "out_beats": 34,
+      "errors": 0,
+      "tail_min": 146,
+      "tail_max": 146,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 229,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 146,
+        "first": 27,
+        "last": 58,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n2": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n3": [
+         31,
+         32,
+         32,
+         32
+        ],
+        "family": "L20_final",
+        "n": 2048
+       }
+      ],
+      "pass": true
+     }
+    ]
+   },
+   "global_selection_equals_golden_layer": true,
+   "golden_selection_sha256": "342793eb611c6eb205b6691bebebdbf0113f69b8941273fb73852deeb0f770ba"
+  },
+  "L2": {
+   "layer": 2,
+   "full_stream": false,
+   "scores": 524288,
+   "streamed_per_rank": [
+    131072,
+    131072,
+    131072,
+    131072
+   ],
+   "local": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 4,
+      "beats": 32768,
+      "elements": 524288,
+      "outputs": 2048,
+      "out_beats": 133,
+      "errors": 0,
+      "tail_min": 100,
+      "tail_max": 102,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 8721,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 100,
+        "first": 27,
+        "last": 2074,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         86,
+         84,
+         87,
+         82
+        ],
+        "n2": [
+         9,
+         9,
+         10,
+         10
+        ],
+        "n3": [
+         9,
+         8,
+         9,
+         9
+        ],
+        "family": "L2_rank0",
+        "n": 131072
+       },
+       {
+        "seg": 1,
+        "tail": 101,
+        "first": 2200,
+        "last": 4247,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         86,
+         86,
+         87,
+         85
+        ],
+        "n2": [
+         9,
+         9,
+         10,
+         10
+        ],
+        "n3": [
+         8,
+         9,
+         10,
+         8
+        ],
+        "family": "L2_rank1",
+        "n": 131072
+       },
+       {
+        "seg": 2,
+        "tail": 102,
+        "first": 4374,
+        "last": 6421,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         87,
+         85,
+         87,
+         84
+        ],
+        "n2": [
+         11,
+         10,
+         8,
+         9
+        ],
+        "n3": [
+         10,
+         9,
+         8,
+         9
+        ],
+        "family": "L2_rank2",
+        "n": 131072
+       },
+       {
+        "seg": 3,
+        "tail": 100,
+        "first": 6549,
+        "last": 8596,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         87,
+         87,
+         84,
+         83
+        ],
+        "n2": [
+         10,
+         9,
+         9,
+         9
+        ],
+        "n3": [
+         9,
+         9,
+         9,
+         9
+        ],
+        "family": "L2_rank3",
+        "n": 131072
+       }
+      ],
+      "pass": true
+     }
+    ],
+    "elements": 524288,
+    "beats": 32768
+   },
+   "final": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 1,
+      "beats": 128,
+      "elements": 2048,
+      "outputs": 512,
+      "out_beats": 35,
+      "errors": 0,
+      "tail_min": 146,
+      "tail_max": 146,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 229,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 146,
+        "first": 27,
+        "last": 58,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n2": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n3": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "family": "L2_final",
+        "n": 2048
+       }
+      ],
+      "pass": true
+     }
+    ]
+   },
+   "global_selection_equals_golden_layer": true,
+   "golden_selection_sha256": "36352314e94637e8d0b8b5d354c48a1a00870bfc06fe55e06cda60bda0a0074e"
+  },
+  "L8": {
+   "layer": 8,
+   "full_stream": false,
+   "scores": 524288,
+   "streamed_per_rank": [
+    131072,
+    131072,
+    131072,
+    131072
+   ],
+   "local": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 4,
+      "beats": 32768,
+      "elements": 524288,
+      "outputs": 2048,
+      "out_beats": 134,
+      "errors": 0,
+      "tail_min": 113,
+      "tail_max": 115,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 8774,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 114,
+        "first": 27,
+        "last": 2074,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         90,
+         95,
+         96,
+         95
+        ],
+        "n2": [
+         16,
+         15,
+         15,
+         16
+        ],
+        "n3": [
+         16,
+         15,
+         15,
+         16
+        ],
+        "family": "L8_rank0",
+        "n": 131072
+       },
+       {
+        "seg": 1,
+        "tail": 115,
+        "first": 2214,
+        "last": 4261,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         96,
+         96,
+         93,
+         95
+        ],
+        "n2": [
+         15,
+         16,
+         16,
+         16
+        ],
+        "n3": [
+         14,
+         15,
+         15,
+         15
+        ],
+        "family": "L8_rank1",
+        "n": 131072
+       },
+       {
+        "seg": 2,
+        "tail": 114,
+        "first": 4402,
+        "last": 6449,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         94,
+         95,
+         97,
+         93
+        ],
+        "n2": [
+         16,
+         16,
+         17,
+         14
+        ],
+        "n3": [
+         16,
+         15,
+         16,
+         13
+        ],
+        "family": "L8_rank2",
+        "n": 131072
+       },
+       {
+        "seg": 3,
+        "tail": 113,
+        "first": 6589,
+        "last": 8636,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         94,
+         97,
+         96,
+         95
+        ],
+        "n2": [
+         16,
+         17,
+         13,
+         14
+        ],
+        "n3": [
+         15,
+         16,
+         13,
+         14
+        ],
+        "family": "L8_rank3",
+        "n": 131072
+       }
+      ],
+      "pass": true
+     }
+    ],
+    "elements": 524288,
+    "beats": 32768
+   },
+   "final": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 1,
+      "beats": 128,
+      "elements": 2048,
+      "outputs": 512,
+      "out_beats": 34,
+      "errors": 0,
+      "tail_min": 146,
+      "tail_max": 146,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 229,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 146,
+        "first": 27,
+        "last": 58,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n2": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n3": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "family": "L8_final",
+        "n": 2048
+       }
+      ],
+      "pass": true
+     }
+    ]
+   },
+   "global_selection_equals_golden_layer": true,
+   "golden_selection_sha256": "56919a1a2725534030deda66c6c68dcfcfe7a50c5502e8f6c6cd09dc4f94b1af"
+  },
+  "L14": {
+   "layer": 14,
+   "full_stream": false,
+   "scores": 524288,
+   "streamed_per_rank": [
+    131072,
+    131072,
+    131072,
+    131072
+   ],
+   "local": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 4,
+      "beats": 32768,
+      "elements": 524288,
+      "outputs": 2048,
+      "out_beats": 136,
+      "errors": 0,
+      "tail_min": 100,
+      "tail_max": 101,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 8720,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 101,
+        "first": 27,
+        "last": 2074,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         88,
+         88,
+         85,
+         85
+        ],
+        "n2": [
+         9,
+         11,
+         10,
+         9
+        ],
+        "n3": [
+         8,
+         9,
+         9,
+         8
+        ],
+        "family": "L14_rank0",
+        "n": 131072
+       },
+       {
+        "seg": 1,
+        "tail": 100,
+        "first": 2201,
+        "last": 4248,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         86,
+         87,
+         86,
+         87
+        ],
+        "n2": [
+         9,
+         10,
+         9,
+         9
+        ],
+        "n3": [
+         9,
+         9,
+         8,
+         9
+        ],
+        "family": "L14_rank1",
+        "n": 131072
+       },
+       {
+        "seg": 2,
+        "tail": 100,
+        "first": 4374,
+        "last": 6421,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         88,
+         85,
+         82,
+         88
+        ],
+        "n2": [
+         10,
+         9,
+         8,
+         10
+        ],
+        "n3": [
+         9,
+         9,
+         8,
+         9
+        ],
+        "family": "L14_rank2",
+        "n": 131072
+       },
+       {
+        "seg": 3,
+        "tail": 101,
+        "first": 6547,
+        "last": 8594,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         86,
+         85,
+         86,
+         86
+        ],
+        "n2": [
+         9,
+         11,
+         9,
+         9
+        ],
+        "n3": [
+         9,
+         10,
+         9,
+         9
+        ],
+        "family": "L14_rank3",
+        "n": 131072
+       }
+      ],
+      "pass": true
+     }
+    ],
+    "elements": 524288,
+    "beats": 32768
+   },
+   "final": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 1,
+      "beats": 128,
+      "elements": 2048,
+      "outputs": 512,
+      "out_beats": 34,
+      "errors": 0,
+      "tail_min": 146,
+      "tail_max": 146,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 229,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 146,
+        "first": 27,
+        "last": 58,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n2": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n3": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "family": "L14_final",
+        "n": 2048
+       }
+      ],
+      "pass": true
+     }
+    ]
+   },
+   "global_selection_equals_golden_layer": true,
+   "golden_selection_sha256": "52d869b3cdd4ff69ebb67cc833054ceb10ae819cfe800dab09fccbf3a5e6cb42"
+  },
+  "L24": {
+   "layer": 24,
+   "full_stream": false,
+   "scores": 1048576,
+   "streamed_per_rank": [
+    3880,
+    4328,
+    4136,
+    4040
+   ],
+   "local": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 4,
+      "beats": 1027,
+      "elements": 16384,
+      "outputs": 2048,
+      "out_beats": 134,
+      "errors": 0,
+      "tail_min": 128,
+      "tail_max": 132,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 925,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 132,
+        "first": 27,
+        "last": 94,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         47,
+         43,
+         46,
+         43
+        ],
+        "n2": [
+         35,
+         31,
+         33,
+         31
+        ],
+        "n3": [
+         16,
+         10,
+         14,
+         11
+        ],
+        "family": "L24_rank0",
+        "n": 3880
+       },
+       {
+        "seg": 1,
+        "tail": 130,
+        "first": 252,
+        "last": 324,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         44,
+         47,
+         46,
+         45
+        ],
+        "n2": [
+         29,
+         33,
+         32,
+         31
+        ],
+        "n3": [
+         13,
+         15,
+         16,
+         14
+        ],
+        "family": "L24_rank1",
+        "n": 4328
+       },
+       {
+        "seg": 2,
+        "tail": 128,
+        "first": 480,
+        "last": 548,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         46,
+         45,
+         45,
+         44
+        ],
+        "n2": [
+         33,
+         33,
+         33,
+         31
+        ],
+        "n3": [
+         14,
+         14,
+         14,
+         11
+        ],
+        "family": "L24_rank2",
+        "n": 4136
+       },
+       {
+        "seg": 3,
+        "tail": 132,
+        "first": 702,
+        "last": 768,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         46,
+         45,
+         45,
+         44
+        ],
+        "n2": [
+         35,
+         34,
+         34,
+         32
+        ],
+        "n3": [
+         16,
+         13,
+         14,
+         12
+        ],
+        "family": "L24_rank3",
+        "n": 4040
+       }
+      ],
+      "pass": true
+     }
+    ],
+    "elements": 16384,
+    "beats": 1027
+   },
+   "final": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 1,
+      "beats": 128,
+      "elements": 2048,
+      "outputs": 512,
+      "out_beats": 34,
+      "errors": 0,
+      "tail_min": 146,
+      "tail_max": 146,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 229,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 146,
+        "first": 27,
+        "last": 58,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n2": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n3": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "family": "L24_final",
+        "n": 2048
+       }
+      ],
+      "pass": true
+     }
+    ]
+   },
+   "global_selection_equals_golden_layer": true,
+   "golden_selection_sha256": "4345216b6fe44788ef09f06c2df678a3728548f0db919275b263888d5393cdac"
+  }
+ },
+ "status": "pass"
+}

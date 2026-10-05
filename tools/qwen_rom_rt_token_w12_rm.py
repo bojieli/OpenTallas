@@ -119,6 +119,10 @@ def main() -> None:
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--no-embed-rom", action="store_true", help="preload X instead of the embedding stage E")
+    ap.add_argument("--enable-ar256", action="store_true",
+                    help="opt in to the one-stream 256-word all-reduce (sequencer ENABLE_AR256; use one-stream stage images)")
+    ap.add_argument("--x-preload", type=Path, help="X entry (@1000 format) instead of the oracle's x_preload.hex: a stage "
+                    "list entered after layer n-1 takes the golden exit of layer n-1 (layer-parallel jobs)")
     ap.add_argument("--build-only", action="store_true")
     ap.add_argument("--result", type=Path)
     args = ap.parse_args()
@@ -160,7 +164,7 @@ def main() -> None:
         ("die", "ot_qwen_rom_rt_die_w12_rm", [str(pub), str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
           f"-GSW={args.su_width}", f"-GLV={args.lv}", "-GSCALE_LOCAL=0", f"-GMEM_EXTRA={args.mem_extra}", *spine,
-          "-GREAL_MEM=1", f"-GSCALE_BANKS={args.scale_banks}", f"-GCROM_WORDS={args.crom_words}",
+          "-GREAL_MEM=1", f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GSCALE_BANKS={args.scale_banks}", f"-GCROM_WORDS={args.crom_words}",
           f"-GHBM_LAYERS={args.hbm_layers}", f"-GEMBED_ROM={int(not args.no_embed_rom)}", f"-GFILL_LAT={args.fill_lat}", f"-GNRD={args.nrd}", f"-GLKA={args.lka}", *arithmetic]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
@@ -214,7 +218,7 @@ def main() -> None:
     kvdir.mkdir(exist_ok=True)
     kv_pins = {}
     for st in stages:
-        if st[0] == "E":
+        if st[0] in ("E", "head"):
             continue
         n = int(st[0][1:])
         for d in range(args.tp):
@@ -229,8 +233,9 @@ def main() -> None:
                           + bytes.fromhex(emb["codes_hex"]))
     env = dict(os.environ, RT_THREADS=str(args.threads))
     t0 = time.monotonic()
+    x_entry = args.x_preload or (args.oracle / "x_preload.hex")
     with open(out / "token.log", "w") as log:
-        p = subprocess.run([str(binary), "--stages", str(args.stages), str(out), str(args.oracle / "x_preload.hex"),
+        p = subprocess.run([str(binary), "--stages", str(args.stages), str(out), str(x_entry),
                             "--pos", str(args.pos), "--token", str(args.token), "--kv-dir", str(kvdir), "--embed-bin", str(embed_bin), "--kv-ideal", str(kv_ideal)], cwd=out,
                            stdout=log, stderr=subprocess.STDOUT, env=env)
     wall = time.monotonic() - t0
@@ -242,8 +247,17 @@ def main() -> None:
     for mm in re.finditer(r"MEMSTAT (\S+) (die\d) (.*)", text):
         per_stage.setdefault(mm.group(1), {}).setdefault("memory", {})[mm.group(2)] = {
             k: int(v) for k, v in (item.split("=", 1) for item in mm.group(3).split())}
-    checks, kv_checks = {}, {}
+    checks, kv_checks, head_check = {}, {}, None
     for name, *_ in stages:
+        if name == "head":
+            want = json.loads((args.oracle / "head.json").read_text())
+            mm = re.search(r"STAGE head done .*?next_token=(\d+)/(\d+) next_val=([0-9a-f]+)/([0-9a-f]+)", text)
+            head_check = {"oracle_next_token": want["next_token"], "oracle_next_logit_bits": want["next_logit_bits"],
+                          "rtl_next_token": [int(mm.group(1)), int(mm.group(2))] if mm else None,
+                          "rtl_next_val": [mm.group(3), mm.group(4)] if mm else None}
+            head_check["exact"] = bool(mm) and int(mm.group(1)) == int(mm.group(2)) == want["next_token"] \
+                and mm.group(3) == mm.group(4) == want["next_logit_bits"]
+            continue
         if name == "E":
             want_x = [ln for ln in (args.oracle / "x_preload.hex").read_text().split() if not ln.startswith("@")]
             for d in range(args.tp):
@@ -279,7 +293,8 @@ def main() -> None:
     stable = end_pins == start_pins
     m = re.search(r"QWEN_ROM_REALMEM PASS stages=(\d+) cycles=(\d+).*RSS_KiB=(\d+)", text)
     good = (p.returncode == 0 and bool(m) and stable and all(c["mismatches"] == 0 for c in checks.values())
-            and all(c["k_mismatches"] == 0 and c["v_mismatches"] == 0 for c in kv_checks.values()))
+            and all(c["k_mismatches"] == 0 and c["v_mismatches"] == 0 for c in kv_checks.values())
+            and (head_check is None or head_check["exact"]))
     result = {
         "schema": "opentallas.qwen-rom-rt-real-memory.v1", "status": "pass" if good else "fail",
         "configuration": "KV_IDEAL A/B reference (HBM bypassed, slices preloaded)" if args.kv_ideal else "REAL_MEM",
@@ -294,6 +309,8 @@ def main() -> None:
                             "scale_rom": f"{G >> args.smin} ports x {args.scale_banks} ot_rom_4096x266_m8",
                             "code_rom": f"per tile 2 x {args.code_banks} ot_rom_4096x266_m8 (hardened ot_qwen_rom_tile_w12)",
                             "kv_slices": "per tile 2 x ot_sram_1r1w_128x256_m1_r2c2 (KV_LOCAL=1)"},
+        "ar256_enabled": bool(args.enable_ar256), "hbm_layers": args.hbm_layers,
+        "x_entry": str(x_entry), "x_entry_sha256": sha(x_entry), "head_check": head_check,
         "stages_run": [s[0] for s in stages], "total_cycles": int(m.group(2)) if m else None,
         "stages": per_stage, "layer_x_checks": checks, "token_kv_writeback_checks": kv_checks,
         "simulate_wall_seconds": round(wall, 1), "max_rss_kib": int(m.group(3)) if m else None,

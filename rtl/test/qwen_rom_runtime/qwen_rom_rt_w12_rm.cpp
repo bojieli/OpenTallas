@@ -19,7 +19,8 @@
 // an idle engine extra edges -- exactly what ME_IDLE_GATE = 0 does, which changes no result.
 //
 //   qwen_rom_rt_rm --stages FILE OUTDIR PRELOAD_X --pos P --token T [--kv-dir DIR] [--embed-bin F] [--kv-ideal 0|1]
-//     FILE lines: <name> <die0 dir> .. <die(D-1) dir> <kv_reset (ignored)>, names L<n> (layer n)
+//     FILE lines: <name> <die0 dir> .. <die(D-1) dir> <kv_reset (ignored)>, names L<n> (layer n), E (embedding)
+//     or head (the lm_head stage: no KV; its token/logit are printed on the STAGE line as next_token/next_val)
 //     DIR: L<n>_die<d>.bin, the layer's KV window before P (u32 FP32 bits, 2*kv_v0 elements)
 // Compile-time: as qwen_rom_rt_w12.cpp.  Run-time --kv-ideal 1: the A/B reference (the KV service's HBM bypassed,
 // the slices preloaded with exactly what the fill writes).
@@ -348,7 +349,8 @@ int main(int argc, char** argv) {
             if (fscanf(fp, "%d", &k) != 1) fatal("stage kv_reset");
             if (st.name == "E") st.layer = -1;                    // embedding stage: no KV
             else if (st.name.size() >= 2 && st.name[0] == 'L') st.layer = atoi(st.name.c_str() + 1);
-            else fatal("REAL_MEM runs the embedding stage E and decoder-layer stages L<n> only");
+            else if (st.name == "head") st.layer = -1;            // lm_head stage: no KV, X carried/preloaded
+            else fatal("REAL_MEM runs the embedding stage E, decoder-layer stages L<n> and the lm_head stage head only");
             if (st.layer >= RM_HBM_LAYERS) fatal("layer beyond the HBM model's regions", st.layer);
             stages.push_back(st);
         }
@@ -373,6 +375,12 @@ int main(int argc, char** argv) {
     }
     cctx.randReset(0);
     Vcoll coll(&cctx, "coll");
+    // ---- first evaluation BEFORE any preload: it runs every model's initial blocks, and the ROM/SRAM macro
+    // models (ot_rom_4096x266_m8, ot_sram_1r1w_128x256_m1_r2c2) clear their arrays there.  Preloading first lost
+    // the stage-0 code/scale ROM (and ideal KV slices): harmless only while stage 0 was E, which reads neither.
+    // Clocks are low and the die holds its reset (cyc < 5), so no state advances.
+    for (int d = 0; d < D; d++) { die[d]->clk = 0; die[d]->eval(); fab[d]->set_clk(0); fab[d]->eval(); }
+    coll.clk = 0; coll.eval();
     // ---- preloads: vector memory X row, ROMs of stage 0, HBM KV history of every layer --------
     std::vector<std::vector<uint8_t>> kv_codes(RM_HBM_LAYERS);
     for (auto& st : stages) {
@@ -380,7 +388,7 @@ int main(int argc, char** argv) {
     }
     for (int d = 0; d < D; d++) {
         auto* r = die[d]->rootp;
-        const bool embed_stage = stages[0].layer < 0;
+        const bool embed_stage = stages[0].name == "E";
         for (size_t i = 0; i < VM_ELEMS; i++) rm_vm(r)[i] = (!embed_stage && i < x0.size()) ? x0[i] : 0;
 #if RM_EMBED_ROM
         if (embed_stage) {

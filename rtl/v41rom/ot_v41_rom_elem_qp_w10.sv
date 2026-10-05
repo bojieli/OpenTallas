@@ -349,7 +349,8 @@ module ot_v41_rom_elem_qp_w10 #(
             plast <= (MTP != 0) ? cfg_d_e[5:3] : 3'd0;
             pbase <= cfg_d_e[19:6];
         end else begin                          // 2NSEG+1+s: the row of segment s on the pair's second macro
-            s_row[NSEG + cfg_a_e[SW-1:0] - 1] <= cfg_d_e[15:0];
+            // 2NSEG+1+s -> NSEG+s for every s, including s = NSEG-1 (the low-bit decode wrapped it to NSEG-1)
+            if (NB > 1 && {27'd0, cfg_a_e} <= 3 * NSEG) s_row[{27'd0, cfg_a_e} - (NSEG + 1)] <= cfg_d_e[15:0];
         end
     end
 
@@ -372,7 +373,8 @@ module ot_v41_rom_elem_qp_w10 #(
             if ({27'd0, qa_} < NSEG) begin
                 so_row[qa_[SW-1:0]] <= qd_[15:0]; so_idx[qa_[SW-1:0]] <= qd_[20:16]; so_n[qa_[SW-1:0]] <= qd_[25:21];
             end else if ({27'd0, qa_} > 2 * NSEG)
-                so_row[NSEG + qa_[SW-1:0] - 1] <= qd_[15:0];
+                // 2NSEG+1+s -> NSEG+s for every s, including s = NSEG-1 (the low-bit decode wrapped it to NSEG-1)
+                if (NB > 1 && {27'd0, qa_} <= 3 * NSEG) so_row[{27'd0, qa_} - (NSEG + 1)] <= qd_[15:0];
         end
     end
     // per class: unit count and whether it belongs to the running family, packed for the walkers

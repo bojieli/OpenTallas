@@ -1,0 +1,13 @@
+
+-- Running command `read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib; read_verilog /srv/opentallas-scratch/codex/qwen-rom-core-context2-20261005/context_src/rtl/control_context.v; write_json /srv/opentallas-scratch/codex/qwen-rom-controller-cut-context4-20261005/original.json' --
+
+1. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/qwen-rom-core-context2-20261005/context_src/rtl/control_context.v
+Parsing Verilog input from `/srv/opentallas-scratch/codex/qwen-rom-core-context2-20261005/context_src/rtl/control_context.v' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_rom_core'.
+Successfully finished Verilog frontend.
+
+3. Executing JSON backend.
+ERROR: Module ot_qwen_rom_core contains processes, which are not supported by JSON backend (run `proc` first).

@@ -150,12 +150,31 @@ module ot_meso_fifo #(
         assign w_send   = w_v && w_rdy;
         assign w_fault  = w_flt;
         assign w_align  = (ws == S_ALIGN) && (w_set == SW'(SETTLE));
-        (* keep *) logic c_hit;                        // credit-ring crossing term (valid in the expected lap)
+        logic c_hit;                                   // credit-ring crossing term (valid in the expected lap)
         assign c_hit = c_rv;
-        wire   c_in     = w_on && c_hit;               // a returned credit
+        // w_cred next state for c_hit = 1 / 0, from write-domain flops only; the crossing term c_hit only selects
+        // between them, in a separately kept 2:1 select (ABC cannot fold c_hit back into the arithmetic)
+        logic [BW-1:0] wcr_n1, wcr_n0, wcr_d;
+        always_comb begin
+            wcr_n0 = w_cred; wcr_n1 = w_cred;
+            if (!wrst_n) begin
+                wcr_n0 = '0; wcr_n1 = '0;
+            end else if (ws == S_READY || ws == S_RUN) begin
+                if (rs_w == S_DOWN) begin
+                    wcr_n0 = '0; wcr_n1 = '0;
+                end else if (ws == S_READY) begin
+                    if (rs_w == S_READY || rs_w == S_RUN) begin wcr_n0 = BW'(CREDITS + 1); wcr_n1 = BW'(CREDITS + 1); end   // buffer + output register
+                end else begin
+                    wcr_n0 = w_cred - BW'(w_send);
+                    wcr_n1 = w_cred - BW'(w_send) + 1'b1;   // w_on holds in RUN
+                end
+            end
+        end
+        ot_meso_sel #(.N(BW)) u_wsel (.s(c_hit), .a(wcr_n1), .b(wcr_n0), .y(wcr_d));
+        always_ff @(posedge wclk) w_cred <= wcr_d;
         always_ff @(posedge wclk) begin
             if (!wrst_n) begin
-                ws <= S_DOWN; w_cnt <= HW'(HOLD); w_ok <= 1'b0; w_set <= '0; w_cred <= '0; w_flt <= 1'b0; w_arm <= '0;
+                ws <= S_DOWN; w_cnt <= HW'(HOLD); w_ok <= 1'b0; w_set <= '0; w_flt <= 1'b0; w_arm <= '0;
             end else begin
                 case (ws)
                     S_DOWN: begin
@@ -170,11 +189,9 @@ module ot_meso_fifo #(
                     end
                     default: begin                                       // READY / RUN
                         if (rs_w == S_DOWN) begin
-                            ws <= S_DOWN; w_cnt <= HW'(HOLD); w_ok <= 1'b1; w_cred <= '0;
+                            ws <= S_DOWN; w_cnt <= HW'(HOLD); w_ok <= 1'b1;
                         end else if (ws == S_READY) begin
-                            if (rs_w == S_READY || rs_w == S_RUN) begin ws <= S_RUN; w_cred <= BW'(CREDITS + 1); end   // buffer + output register
-                        end else begin
-                            w_cred <= c_in ? w_cred - BW'(w_send) + 1'b1 : w_cred - BW'(w_send);
+                            if (rs_w == S_READY || rs_w == S_RUN) ws <= S_RUN;
                         end
                     end
                 endcase
@@ -193,10 +210,10 @@ module ot_meso_fifo #(
         assign r_live   = (rs == S_RUN);
         assign r_align  = (rs == S_ALIGN) && (r_set == SW'(SETTLE));
         assign r_fault  = r_flt;
-        // The only crossing term in the read control is d_hit (slot valid in the expected lap: one 2*DEPTH:1 mux of
-        // write-domain flops with read-domain selects).  It is kept as a net and only selects between next states
-        // computed from read-domain flops, so the crossing arcs end one mux after it (SS budget 356.667 ps).
-        (* keep *) logic d_hit;
+        // The only crossing term in the read control is d_hit (slot valid in the expected lap: a two-level AND-OR of
+        // write-domain flops with registered one-hot read-domain selects).  It only selects between next states computed
+        // from read-domain flops (u_rsel), so the crossing arcs end one 2:1 select after it (SS budget 356.667 ps).
+        logic d_hit;
         assign d_hit = d_rv;
         wire   d_in     = r_on && !r_flt && d_hit;           // a word arrives
         wire   empty    = (cnt == '0);
@@ -224,10 +241,23 @@ module ot_meso_fifo #(
         // written every cycle unless full (read-domain condition only; no crossing signal in the enable); tl
         // advances only on push, so a non-push cycle just rewrites the free slot
         always_ff @(posedge rclk) if (cnt != BW'(CREDITS)) buf_d[tl] <= d_rd;
+        // {cnt, tl, o_v} next state for d_hit = 1 / 0 from read-domain flops only, selected by d_hit in a kept 2:1
+        localparam int RN = BW + IW + 1;
+        logic [RN-1:0] rn1, rn0, rnd;
+        always_comb begin
+            if (!rrst_n || !r_on) begin
+                rn0 = '0; rn1 = '0;
+            end else begin
+                rn0 = {cnt_0, tl, o_v_0};
+                rn1 = r_flt ? rn0 : {cnt_1, tl_1, o_v_1};
+            end
+        end
+        ot_meso_sel #(.N(RN)) u_rsel (.s(d_hit), .a(rn1), .b(rn0), .y(rnd));
+        always_ff @(posedge rclk) {cnt, tl, o_v} <= rnd;
         always_ff @(posedge rclk) begin
             if (!rrst_n) begin
                 rs <= S_DOWN; r_cnt <= HW'(HOLD); r_ok <= 1'b0; r_set <= '0; r_flt <= 1'b0; r_arm <= '0;
-                hd <= '0; tl <= '0; cnt <= '0; o_v <= 1'b0;
+                hd <= '0;
             end else begin
                 case (rs)
                     S_DOWN: begin
@@ -246,14 +276,8 @@ module ot_meso_fifo #(
                         end else if (rs == S_READY && (ws_r == S_READY || ws_r == S_RUN)) rs <= S_RUN;
                     end
                 endcase
-                if (!r_on) begin
-                    hd <= '0; tl <= '0; cnt <= '0; o_v <= 1'b0;
-                end else begin
-                    o_v <= d_in ? o_v_1 : o_v_0;
-                    tl  <= d_in ? tl_1 : tl;
-                    cnt <= d_in ? cnt_1 : cnt_0;
-                    if (pop) hd <= (hd == IW'(CREDITS - 1)) ? '0 : hd + 1'b1;
-                end
+                if (!r_on) hd <= '0;
+                else if (pop) hd <= (hd == IW'(CREDITS - 1)) ? '0 : hd + 1'b1;
                 if (!r_on) r_arm <= '0; else if (r_arm != 3'd5) r_arm <= r_arm + 1'b1;
                 if (r_on && ((r_arm == 3'd5 && (!d_glo || !d_ghi)) || !d_lap_ok ||
                              (d_in && ovf_1))) r_flt <= 1'b1;
@@ -333,24 +357,52 @@ module ot_meso_ring #(
 `else
     localparam int PLACE = SYNC + 1 - (OFFSET - 1);
 `endif
+    // Every read of the write-domain ring goes through a REGISTERED one-hot select (no pointer decode and no lap
+    // compare on a crossing arc): oh is the one-hot copy of the 2*DEPTH-position pointer rp (index = {lap, slot}),
+    // di the one-hot slot index; both are placed and advanced with rp, so they add no latency.  A crossing arc is
+    // then slot flop -> AND -> OR tree -> the reader's next-state select.
+    localparam int NS = 2 * DEPTH;
+    wire [PW-1:0] rp_place = gb + PW'(PLACE) - PW'(late);
+    logic [NS-1:0] oh;
     always_ff @(posedge rclk) begin
-        if (r_align) rp <= gb + PW'(PLACE) - PW'(late);
-        else if (r_on) rp <= rp + 1'b1;
+        if (r_align) begin
+            rp <= rp_place;
+            oh <= NS'(1) << rp_place;
+        end else if (r_on) begin
+            rp <= rp + 1'b1;
+            oh <= {oh[NS-2:0], oh[NS-1]};
+        end
     end
-    wire [AW-1:0] ri = rp[AW-1:0];
-    assign r_d      = s_d[ri];
-    assign r_v      = rp[PW-1] ? s_v1[ri] : s_v0[ri];   // valid AND written in the expected lap
-    assign r_lap_ok = (s_lap[ri] == rp[PW-1]);
+    // position j = {lap, slot}: valid in the expected lap, and lap bit as expected
+    wire [NS-1:0] pos_v   = {s_v1, s_v0};
+    wire [NS-1:0] pos_lap = {s_lap, ~s_lap};
+    // one-hot rotations: rot(oh, k)[j] = oh[j - k]  (the position k ahead of rp)
+    function automatic logic [NS-1:0] rot(input logic [NS-1:0] x, input int k);
+        for (int j = 0; j < NS; j++) rot[j] = x[(j - k + 2 * NS) % NS];
+    endfunction
+    // data word: NCH chunks, each with its own one-hot slot-index register (fanout 64, not W)
+    localparam int NCH = (W % 64 == 0) ? W / 64 : 1;
+    localparam int WCH = W / NCH;
+    for (genvar c = 0; c < NCH; c++) begin : dch
+        logic [DEPTH*WCH-1:0] sd_c;
+        for (genvar i = 0; i < DEPTH; i++) begin : sl
+            assign sd_c[i*WCH +: WCH] = s_d[i][c*WCH +: WCH];
+        end
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH)) u_dsel (.clk(rclk), .align(r_align), .on(r_on),
+                                                      .place(rp_place[AW-1:0]), .sd(sd_c), .y(r_d[c*WCH +: WCH]));
+    end
+    ot_meso_ohor #(.N(NS)) u_v   (.sel(oh), .x(pos_v),   .y(r_v));
+    ot_meso_ohor #(.N(NS)) u_lap (.sel(oh), .x(pos_lap), .y(r_lap_ok));
 
     // guards on the falling read edge, then 3 rising flops
-    wire [PW-1:0] q_lo = rp + PW'(GUARD_LO);            // consumed at the next rising edge + GUARD_LO
-    wire [PW-1:0] q_hi = rp - 1'b1 + PW'(GUARD_HI);      // rp-1 was consumed at the last rising edge
+    wire [NS-1:0] oh_lo = rot(oh, GUARD_LO);            // rp + GUARD_LO: consumed at the next rising edge + GUARD_LO
+    wire [NS-1:0] oh_hi = rot(oh, GUARD_HI - 1);        // rp - 1 + GUARD_HI (rp-1 was consumed at the last rising edge)
     (* async_reg = "true" *) logic glo0, ghi0;
     (* async_reg = "true" *) logic glo1, glo2, ghi1, ghi2;
     logic glo3, ghi3;
     always_ff @(negedge rclk) begin
-        glo0 <= (s_lap[q_lo[AW-1:0]] == q_lo[PW-1]);   // written in this lap
-        ghi0 <= (s_lap[q_hi[AW-1:0]] != q_hi[PW-1]);   // not yet written in this lap
+        glo0 <= |(oh_lo & pos_lap);                    // written in this lap
+        ghi0 <= ~|(oh_hi & pos_lap);                   // not yet written in this lap
     end
     always_ff @(posedge rclk) begin
         glo1 <= glo0; glo2 <= glo1; glo3 <= glo2;
@@ -366,4 +418,47 @@ module ot_meso_ring #(
 `ifdef OT_MESO_DEBUG
     assign dbg_tc = tc; assign dbg_rp = rp;
 `endif
+endmodule
+
+// Kept-hierarchy leaves of the crossing arcs: ABC optimises each alone, so the crossing term arrives at one 2:1 select
+// (ot_meso_sel) after a two-level AND-OR (ot_meso_ohor) and cannot be folded back into next-state arithmetic.
+(* keep_hierarchy *)
+module ot_meso_sel #(parameter int N = 1) (
+    input  logic         s,
+    input  logic [N-1:0] a,
+    input  logic [N-1:0] b,
+    output logic [N-1:0] y
+);
+    assign y = s ? a : b;
+endmodule
+
+(* keep_hierarchy *)
+module ot_meso_ohor #(parameter int N = 2) (
+    input  logic [N-1:0] sel,
+    input  logic [N-1:0] x,
+    output logic         y
+);
+    assign y = |(sel & x);
+endmodule
+
+// One chunk of the data-ring read: its own one-hot copy of the slot index (placed and advanced with rp), then a
+// one-hot AND-OR of the DEPTH slots.  Kept hierarchy keeps the replicated index registers from being merged.
+(* keep_hierarchy *)
+module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4) (
+    input  logic                    clk,
+    input  logic                    align,
+    input  logic                    on,
+    input  logic [$clog2(DEPTH)-1:0] place,
+    input  logic [DEPTH*W-1:0]      sd,
+    output logic [W-1:0]            y
+);
+    logic [DEPTH-1:0] di;
+    always_ff @(posedge clk) begin
+        if (align) di <= DEPTH'(1) << place;
+        else if (on) di <= {di[DEPTH-2:0], di[DEPTH-1]};
+    end
+    always_comb begin
+        y = '0;
+        for (int i = 0; i < DEPTH; i++) y = y | (sd[i*W +: W] & {W{di[i]}});
+    end
 endmodule

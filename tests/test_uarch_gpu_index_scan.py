@@ -67,7 +67,10 @@ def test_invalid_context_refused(ctx):
         u.v41_gpu_index_scan(ctx)
 
 
-def test_all_three_GPU_pricers_use_one_source_inventory():
+def test_all_three_GPU_pricers_use_one_source_inventory(monkeypatch):
+    # the index-scan correction is compared at the superseded 8 us all-reduce it was recorded under (the default is
+    # now the measured H100 fenced one-shot, results/uarch/hbm_switch_latency_authoritative_20261004)
+    monkeypatch.setattr(u, 'NCCL_ALLREDUCE_S', u.NCCL_ALLREDUCE_ASSUMED_SUPERSEDED_S)
     scan = u.v41_gpu_index_scan(1048576)
     tier = u.gpu_tier2()[1]
     econ = u.gpu_economics()['v41']

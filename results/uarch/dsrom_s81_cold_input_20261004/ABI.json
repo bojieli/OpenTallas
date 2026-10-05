@@ -1,0 +1,27 @@
+{
+  "adopted": false,
+  "caller_env": "DSROM_S81_EMBED_SOCKET=/tmp/dsrom-s81-embedding.sock",
+  "caller_pin": "e1ed45582",
+  "checkpoint_service": "python3 tools/dsrom_s81_embedding_server.py --socket /tmp/dsrom-s81-embedding.sock",
+  "entry": "dsrom_s81_bind_inputs(DsromS81Runtime&,DsromS81SourceRank&,const char* source_node)",
+  "implementation": "tools/runtime/dsrom/s81_embedding_inputs.cpp",
+  "lookup_geometry": "Canonical dedicated embed.weight 2525 global pairs x4 leaves x4096 rows x256 payload bits. Global logical word = pair*16384 + bank*8192 + row*2 + parity. No S82 geometry or per-head-die reassignment.",
+  "mandatory_DIR_policy": "Full parent requires source-bound prog/crom/hbank/hrom/erom/vm_init/hbm0..3. This native input provider does not replace missing files, grant visibility/retirement, or use expected activations.",
+  "native_reader": "rtl/dsrom_sys/s81_bootstrap/ot_dsrom_s81_embedding.sv",
+  "open_parent_costs": [
+    "TP4 16lane VM arbitration/fanout",
+    "Global dedicated embedding macro to actual head-die delivery ownership",
+    "Native SSX reduction latency",
+    "Loaded ROM read/capture and SS/FF/channel/floorplan"
+  ],
+  "opt_in_only": true,
+  "prompt_source": "/home/ubuntu/OpenTallas/build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P10.json",
+  "required_link": [
+    "libdsrom_s81_embedding.so",
+    "tools/runtime/dsrom/s81_embedding_inputs.cpp",
+    "Cicero actual caller/factory and native scheduler ABI",
+    "Popper actual remote/allcopy receipts"
+  ],
+  "shared_ROM_port": "One DUT/one outstanding request per TP4 group; VM beat acknowledgement requires all four real native C8 workspace writes. Reader advances once per enclosing runtime cycle.",
+  "source_node_admission": "embedding, native stage0/position0 only. Reject L0.I7 or any other node needing normalized/native-computed inputs. Native SSX before L0.I0 remains a separate producer."
+}

@@ -116,6 +116,9 @@ def build_models(
     allow_mixed_edge: bool = False,
 ) -> dict[str, Any]:
     """Write capture.model, shift.model, faults and a names map into out_dir."""
+    if scan.get("edt"):
+        raise ValueError("EDT requires encoded-input sequential fault responses; "
+                         "independent-PPI ATPG cannot qualify compressed scan")
     mod = nl.read_module(netlist, top or scan.get("top"))
     design = Design(mod, cells)
     out_dir.mkdir(parents=True, exist_ok=True)

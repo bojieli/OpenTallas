@@ -490,6 +490,18 @@ def measured_price(campaign_path: Path, physical_path, qwc, dsc, e) -> dict:
         out["physical_note"] = dict(source=str(physical_path),
                                     note="standard-cell area of one W=512 D4 crossing (data + credit rings, 8-entry "
                                          "receive buffer); see the route record for closure")
+        m = ph.get("place_and_route", {}).get("metrics", {})
+        if m:
+            out["physical_note"].update(status=ph.get("status"), std_cell_area_um2=m.get("standard_cell_area_um2"),
+                                        drc_errors=m.get("drc_errors"), max_slew_violations=m.get("max_slew_violations"))
+        cs = Path(physical_path).with_name("corner_sta.json")
+        if cs.is_file():
+            c = json.loads(cs.read_text())
+            out["physical_note"].update(corner_sta=str(cs), setup_ss_ps=c["setup_ss"]["worst_slack_ps"],
+                                        hold_ff_ps=c["hold_ff"]["worst_slack_ps"],
+                                        closes_signoff=c.get("closes_signoff"),
+                                        latency_note="closure adds no cycles: the crossing delta above is measured "
+                                                     "on the same RTL as the route")
     return out
 
 

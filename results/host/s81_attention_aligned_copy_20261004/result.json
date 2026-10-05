@@ -1,0 +1,28 @@
+{
+  "scope": "HOST copy helper only; no DUT or simulator performance qualification",
+  "host": "ot-agidock128",
+  "remote_directory": "/home/ubuntu/sagan-att-host-copy-component-20261004-r1",
+  "exit_rc": 0,
+  "compiler_argv": [
+    "g++",
+    "-std=c++17",
+    "-O2",
+    "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+    "check.cpp",
+    "-o",
+    "check"
+  ],
+  "source_path": "tools/runtime/dsrom/s81_minimum_attention_cut.hpp",
+  "original_header_sha256": "0d84be8dd8e2a31ab90b6f444b9a94cb87caceb06030f8561746eab3fc1b4185",
+  "successor_header_sha256": "2fc7ea06e9ed47ba27b6d577cb07d13c4fb982bfa2eb1fa018a4b10f3ed1eff3",
+  "fixture_sha256": "5a649120f87aa1c0960095fb93bbb08653863eb3895435a3324e5dabbc1c8548",
+  "result_sha256": "90a817cd61b958279f96e20833f39d369d223a7287ba937f6714be0af5423658",
+  "exactness_cases": 18,
+  "iterations": 4000,
+  "aligned_bits_per_iteration": 33792,
+  "original_seconds": 0.344939587,
+  "successor_seconds": 0.002677083,
+  "host_copy_speedup": 128.84904465,
+  "preserved": "unaligned/scalar/tail fallback, propagation order, changed-OR, settle/eval calls, all clocks and callbacks",
+  "deployment": "future compiled factory replacement only by enclosing owner at safe serial transition; current ATT sources and runtimes untouched"
+}

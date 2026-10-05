@@ -1,0 +1,224 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/phy_ew.lef, created 1 library cells
+[INFO ODB-0221] 1000000 lines parsed!
+[INFO ODB-0227] LEF file: /work/elements.lef, created 32 library cells
+[WARNING ORD-2011] LEF master qfd_ctrl has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_chead has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_hub has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_collective has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_embedding_rom has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_serdes has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_ucie has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_c has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_c_split has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lfifo has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_h has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_v has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_v_split has no liberty cell.
+[WARNING ORD-2011] LEF master ot_hbm3e_phy has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_reng has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_cst has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_constants_sequencer has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_0 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_0_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_1_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_2 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_2_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_3 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_3_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_4 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_4_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_5 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_5_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_su64_sfu has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_tree_top has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_vector_memory has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_tile has no liberty cell.
+OTMEM linked 2356 MB 1791148078
+[INFO IFP-0001] Added 121488 rows of 458288 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 24747.552 32801.760 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 24747.552 32801.760 ) um
+[INFO IFP-0102] Core area:                    811763261.292 um^2
+[INFO IFP-0103] Total instances area:         655664026.300 um^2
+[INFO IFP-0104] Effective utilization:                0.808
+[INFO IFP-0105] Number of instances:                   3225
+OTMEM floorplan 2422 MB 1791148080
+OT_TIME place_s=311
+OTMEM placed 2578 MB 1791148391
+OT_LEGAL instances=3225 overlaps=0 outside=0
+OTMEM def 2613 MB 1791148413
+OT_MACRO_TRACK_ASSERT PASS label=fulldie macros=3225 pins_checked=5792788 offtrack=0 max_offset_nm=0.0 no_track_grid=0
+OT_ASSERT PASS
+OTMEM assert 7646 MB 1791148558
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     245
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qfd_die
+Die area:                 ( 0 0 ) ( 24747552 32801760 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     3225
+Number of terminals:      0
+Number of snets:          0
+Number of nets:           2792166
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 151.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 3225.
+[INFO DRT-0033] V1 shape region query size = 0.
+[INFO DRT-0033] M2 shape region query size = 3225.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 3225.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 1300346.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 1337660.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 1585.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 8027.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 3204394.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0076]   Complete 3000 pins.
+[INFO DRT-0076]   Complete 4000 pins.
+[INFO DRT-0076]   Complete 5000 pins.
+[INFO DRT-0076]   Complete 6000 pins.
+[INFO DRT-0076]   Complete 7000 pins.
+[INFO DRT-0076]   Complete 8000 pins.
+[INFO DRT-0076]   Complete 9000 pins.
+[INFO DRT-0076]   Complete 10000 pins.
+[INFO DRT-0076]   Complete 20000 pins.
+[INFO DRT-0076]   Complete 30000 pins.
+[INFO DRT-0076]   Complete 40000 pins.
+[INFO DRT-0076]   Complete 50000 pins.
+[INFO DRT-0076]   Complete 60000 pins.
+[INFO DRT-0076]   Complete 70000 pins.
+[INFO DRT-0076]   Complete 80000 pins.
+[INFO DRT-0076]   Complete 90000 pins.
+[INFO DRT-0076]   Complete 100000 pins.
+[INFO DRT-0076]   Complete 110000 pins.
+[INFO DRT-0076]   Complete 120000 pins.
+[INFO DRT-0076]   Complete 130000 pins.
+[INFO DRT-0076]   Complete 140000 pins.
+[INFO DRT-0076]   Complete 150000 pins.
+[INFO DRT-0076]   Complete 160000 pins.
+[INFO DRT-0076]   Complete 170000 pins.
+[INFO DRT-0076]   Complete 180000 pins.
+[INFO DRT-0076]   Complete 190000 pins.
+[INFO DRT-0076]   Complete 200000 pins.
+[INFO DRT-0076]   Complete 210000 pins.
+[INFO DRT-0076]   Complete 220000 pins.
+[INFO DRT-0076]   Complete 230000 pins.
+[INFO DRT-0076]   Complete 240000 pins.
+[INFO DRT-0076]   Complete 250000 pins.
+[INFO DRT-0076]   Complete 260000 pins.
+[INFO DRT-0076]   Complete 270000 pins.
+[INFO DRT-0076]   Complete 280000 pins.
+[INFO DRT-0076]   Complete 290000 pins.
+[INFO DRT-0076]   Complete 300000 pins.
+[INFO DRT-0078]   Complete 307474 pins.
+[INFO DRT-0081]   Complete 0 unique inst patterns.
+[INFO DRT-0084]   Complete 0 groups.
+#scanned instances     = 3225
+#unique  instances     = 91
+#stdCellGenAp          = 0
+#stdCellValidPlanarAp  = 0
+#stdCellValidViaAp     = 0
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 0
+#instTermValidViaApCnt = 0
+#macroGenAp            = 1347337
+#macroValidPlanarAp    = 1347337
+#macroValidViaAp       = 880410
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:13:23, elapsed time = 00:01:36, memory = 10661.71 (MB), peak = 10598.82 (MB)
+OT_PA DONE
+OT_TIME pa_s=123
+OTMEM pa 11060 MB 1791148681
+	Command being timed: "openroad -threads 16 -no_init -exit /work/run.tcl"
+	User time (seconds): 1321.43
+	System time (seconds): 6.45
+	Percent of CPU this job got: 213%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 10:22.82
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 11263856
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2916422
+	Voluntary context switches: 688
+	Involuntary context switches: 160533
+	Swaps: 0
+	File system inputs: 44992
+	File system outputs: 1808936
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

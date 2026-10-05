@@ -890,21 +890,22 @@
   "results/uarch/qwen_rom_calibrated_calendar_20261003/summary-r1.json": "1120d1e11699461a7f1e7eb620488c0262df75f1588e01a0e91c826fa8dab522",
   "results/uarch/dsrom_return_storage_hbm_20261003/model.json": "620e7b8be078e4b90e5986340cb7c719351beba39029d4e66b7b193a9ea2b5d2",
   "results/uarch/dsrom_MTP_selected_parent_containment_20261003/inputs/setRC.tcl": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14",
-  "tools/uarch_model.py": "fed8813b1e77ba30e8483782d0a02a6cbd76307631016e5a7339d72346263d61",
-  "tools/rom_die_clocking_model.py": "24774d0519928bf7835d7afe8d083dccca87d83869c5c1b2eb2f7765aa72f21c",
-  "results/uarch/meso_fifo_20261004/campaign.json": "15ac96f241ab98445aecda32ba4878cf3527e3111bd6fcba968bae2a156f36f0"
+  "tools/uarch_model.py": "ef07352d259ed5a58f60780145ee6c37c7406ac481aad0a5e18b08fec7a1b5ec",
+  "tools/rom_die_clocking_model.py": "94d87ca3cf1a6b4b13d594aedfe8ebdaf7225568a5260ce58c8a4ec9ce46e19f",
+  "results/uarch/meso_fifo_20261004/campaign.json": "57134ec83f700cb8b413dd0fbee5df1ec43f136a858ff18506d44c542503c77b",
+  "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json": "635ae98aea31f228f7ba2d848c455ea06587e22759b62951cdb4725b3f1e569a"
  },
  "measured_price": {
   "source": "results/uarch/meso_fifo_20261004/campaign.json",
   "scope": "DIGITAL_ONLY dual-clock RTL simulation with a physical lag-window checker; edges closer than 20 ps processed in random order; not an MTBF proof",
   "rtl_sources": {
-   "rtl/common/ot_meso_fifo.sv": "35a81619b80fe8090ff7412a94125ae67d3e7602a13e9879e44acf0039c7c0fa",
+   "rtl/common/ot_meso_fifo.sv": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
    "rtl/test/meso/tb_meso_fifo.cpp": "feb9bde72c1f45ab440fb84089d020e72b5f7fefcdf8b68e79531a212dced9bf",
    "rtl/test/meso/build_tb.sh": "f632607d6f563885d2cd6fc3f706037065787ac9a88f57ce1f784efc3096102e",
    "tools/meso_fifo_campaign.py": "136e6277816397d1a01a7a815ed79fdbd259b2e7bee93da8da43b1e5a911960c"
   },
   "git": {
-   "head": "a5db2e1dd63189c0d7859ff8c4fa563ca5b0718c",
+   "head": "aec121692cc6c16931d4972501cdceda65459dc7",
    "sources_dirty": false
   },
   "basis": "per op = measured round-trip delta (two crossings); model-only price was 2 x DELTA",
@@ -1175,6 +1176,19 @@
      }
     }
    }
+  },
+  "physical_note": {
+   "source": "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json",
+   "note": "standard-cell area of one W=512 D4 crossing (data + credit rings, 8-entry receive buffer); see the route record for closure",
+   "status": "pass",
+   "std_cell_area_um2": 4842.31,
+   "drc_errors": 0,
+   "max_slew_violations": 0,
+   "corner_sta": "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/corner_sta.json",
+   "setup_ss_ps": 10.13,
+   "hold_ff_ps": 9.44,
+   "closes_signoff": true,
+   "latency_note": "closure adds no cycles: the crossing delta above is measured on the same RTL as the route"
   }
  }
 }

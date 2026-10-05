@@ -8,6 +8,20 @@ from pathlib import Path
 PREFIXES = ('Vdie0','Vdie1','Vdie2','Vdie3','Vpq','Vpb','Vrd64','Vattn')
 
 
+def caller_command(source, owner_sources, includes, output, compiler='c++'):
+    source = Path(source)
+    owner_sources = list(map(Path, owner_sources))
+    if not source.is_file():raise FileNotFoundError(source)
+    if not owner_sources:
+        raise ValueError('actual dsrom_s81_bind_source producer implementation required')
+    for path in owner_sources:
+        if not path.is_file():raise FileNotFoundError(path)
+    return [compiler, '-std=c++17', '-O1', '-shared', '-fPIC',
+            '-Wl,-z,defs', '-DDSROM_C8_S81=1', '-DDSROM_S81_CAPTURE=1', '-DV41_L20',
+            *[f'-I{d}' for d in [source.parent, *map(Path, includes)]],
+            str(source), *map(str, owner_sources), '-o', str(output)]
+
+
 def command(source, owner, verilator_root, includes, archives, output, compiler='c++'):
     source, owner, verilator_root = Path(source), Path(owner), Path(verilator_root)
     includes, archives = list(map(Path,includes)), list(map(Path,archives))
@@ -42,17 +56,19 @@ def main():
                    help='actual enclosing source scheduler defining dsrom_s81_source_main')
     p.add_argument('--caller-output',type=Path,
                    help='shared caller executable hook; no model objects are rebuilt')
+    p.add_argument('--caller-owner-source',action='append',default=[],
+                   help='actual source producer defining dsrom_s81_bind_source; required with caller')
+    p.add_argument('--caller-include',action='append',default=[],
+                   help='actual source producer and generated dispatch include directories')
     a=p.parse_args()
     if a.output.exists():raise FileExistsError('preserve existing executable: '+str(a.output))
     cmd=command(a.source,a.owner,a.verilator_root,a.include,a.archive,a.output,a.compiler)
     if bool(a.caller_source) != bool(a.caller_output):
         p.error('--caller-source and --caller-output must be supplied together')
     if a.caller_source:
-        if not a.caller_source.is_file():raise FileNotFoundError(a.caller_source)
         if a.caller_output.exists():raise FileExistsError(a.caller_output)
-        rc=subprocess.call([a.compiler,'-std=c++17','-O1','-shared','-fPIC',
-                            '-DDSROM_C8_S81=1','-DDSROM_S81_CAPTURE=1','-DV41_L20',
-                            f'-I{a.source.parent}',str(a.caller_source),'-o',str(a.caller_output)])
+        rc=subprocess.call(caller_command(a.caller_source,a.caller_owner_source,
+                           [a.source.parent,*a.caller_include],a.caller_output,a.compiler))
         if rc:raise SystemExit(rc)
     raise SystemExit(subprocess.call(cmd))
 

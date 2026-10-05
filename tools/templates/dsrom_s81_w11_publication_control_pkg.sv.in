@@ -1,0 +1,31 @@
+// Interface/type scaffold only: no clock, stage latency, grants or clean ties.
+// Source b41 owner83; engine emission requires priced joint stage enrollment.
+package ot_dsrom_w11_publication_control_pkg;
+  typedef struct packed {
+    logic [7:0] mask;
+    logic [7:0] row;
+    logic [1:0] slot;
+    logic bank;
+    logic [6:0] group_id;
+    logic [56:0] identity;
+  } owner83_t;
+  typedef struct packed {
+    logic valid;
+    logic init_operation; // separate typed event namespace, owner83 unchanged
+    logic [5:0] root_counts; // two three-bit counts, each at most4/group/bank
+    logic [13:0] root_ids;
+    owner83_t owner;
+  } count_receipt105_t;
+  typedef logic [143:0] coded_owner_record_t; // raw W6 2x64/72 +padding check
+  typedef logic [287:0] coded_row_t;          // raw W6 4x64/72 stripes
+  typedef enum logic [3:0] {
+    BANK_EMPTY, BANK_INITIALIZE, BANK_COLLECT, BANK_READ_REQUEST, BANK_READ_RETURN,
+    BANK_CHECK_OLD, BANK_ENCODE_MERGE, BANK_WRITE_REQUEST,
+    BANK_ALL_COPY_COMMIT, BANK_VERIFY_REQUEST, BANK_ALL_COPY_VERIFY,
+    BANK_COUNT_HELD, BANK_COUNT_RETURN, BANK_RETIRED, BANK_QUARANTINE
+  } bank_state_t;
+  typedef enum logic [2:0] {
+    ROW_EMPTY, ROW_RESERVED, ROW_INITIALIZED, ROW_COLLECT, ROW_RMW,
+    ROW_COUNT_HELD, ROW_RETURNED, ROW_QUARANTINE
+  } row_state_t;
+endpackage

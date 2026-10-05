@@ -23,7 +23,12 @@ module ot_hbm_accel_bulk_copy #(
     parameter integer MAX_OUT   = 512,      // outstanding reads (tracker entries)
     parameter integer AW        = 32,       // line address
     parameter integer DQ        = 4,        // descriptor queue
-    parameter integer SRAM_RING = 0         // 1: the ring is LINE_BITS/256 hard SRAM macros (1024 deep)
+    parameter integer SRAM_RING = 0,        // 1: the ring is LINE_BITS/256 hard SRAM macros (1024 deep)
+    parameter integer RING_MACRO = 0        // ENABLE=1, SRAM_RING=1: 0 = one group of 1024x256 macros read every
+                                            // cycle (SS clk->q 692 ps: one-cycle capture cannot meet 1.2 GHz SS);
+                                            // 1 = even/odd slot groups of 512x256 macros, each read at most every
+                                            // other cycle, captured two cycles after the read (DEPTH = 1024; the
+                                            // 1.2 GHz SS configuration, multicycle constraint ot_hbm_accel_bulk_copy_mc2.sdc)
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -52,8 +57,31 @@ module ot_hbm_accel_bulk_copy #(
         ot_gpu_bulk_copy #(.LINE_BITS(LINE_BITS), .DEPTH(DEPTH), .MAX_OUT(MAX_OUT),
             .AW(AW), .DQ(DQ), .SRAM_RING(SRAM_RING)) u_original (.*);
     end else begin : g_lookahead
+    // Look-ahead successor (HA3; retimed 2026-10-04 for 1.2 GHz SS). Same request/tag/order/data
+    // contract and cycle behaviour as the original; the clock-limited loops are cut by:
+    //  * head/next full flags carried in registers (no DEPTH:1 full-bit mux behind take); the
+    //    look-ahead mux is addressed by registered next_slot/next2_slot;
+    //  * full-bit set and clear both applied one edge late from registered, pre-decoded
+    //    (32 x 32 one-hot) slot selects, so neither take nor the response tag fans out to DEPTH
+    //    flops; the late set is covered by matching the registered response in the look-ahead;
+    //  * request eligibility (active, ring space, outstanding credit) and the take condition (head
+    //    full, output-queue room) as registered flags with next-state look-ahead, each held in
+    //    several keep_hierarchy copies (ot_hbm_accel_bc_kreg) so every consumer group -- address,
+    //    length, ring pointers, counters, each SRAM macro -- has its own local issue / take;
+    //    the copies are bit-identical, so the cycle behaviour is unchanged;
+    //  * the SRAM output queue is a three-entry queue written through per-64-bit registered write
+    //    enables, read through a registered pointer.
     localparam integer TW = $clog2(DEPTH);
     localparam integer QW = (DQ <= 1) ? 1 : $clog2(DQ);
+    localparam integer LO = TW / 2;                 // pre-decode split of a slot index
+    localparam integer HI = TW - LO;
+    localparam integer NBM = (LINE_BITS + 255) / 256;   // SRAM macros (when SRAM_RING)
+    // issue groups: 0 req_v/act/last/descriptor queue, 1 a_addr low, 2 a_addr high, 3 a_left,
+    // 4 alloc_p/ring-space flag, 5 outstanding/credit flag
+    localparam integer NG = 6;
+    // take groups: 0 cons_p/next slots/clear selects, 1 bank pointers, 2 head/next flags,
+    // ring-space flag, output queue; 3.. one per SRAM macro read enable
+    localparam integer NT = 3 + NBM;
     // ---- descriptor queue ----
     reg [AW-1:0] q_base [0:DQ-1];
     reg [23:0]   q_len  [0:DQ-1];
@@ -61,116 +89,294 @@ module ot_hbm_accel_bulk_copy #(
     reg [QW-1:0] q_wp, q_rp;
     assign d_ready = (q_cnt < DQ);
     // ---- active descriptor ----
-    reg          act;
     reg [AW-1:0] a_addr;
     reg [23:0]   a_left;
+    reg          last_q;                            // a_left == 1
     // ---- staging ring ----
     reg [DEPTH-1:0]     full;
     reg [TW:0]          alloc_p, cons_p;            // one extra bit: ring occupancy = alloc - cons
-    wire [TW:0]         used = alloc_p - cons_p;
-    wire                slot_free = used < DEPTH;
-    assign req_v = act && slot_free && (outstanding < MAX_OUT);
+    reg  [TW:0]         used;                       // ring occupancy alloc_p - cons_p, kept as its own counter
+    wire [NG-1:0] act_c, free_c, cred_c;            // copies: act ; used < DEPTH ; outstanding < MAX_OUT
+    wire [NG-1:0] issue_c = act_c & free_c & cred_c & {NG{req_ready}};
+    wire act = act_c[0];
+    assign req_v = act_c[0] && free_c[0] && cred_c[0];
     assign req_addr = a_addr;
     assign req_tag = alloc_p[TW-1:0];
-    wire issue = req_v && req_ready;
     wire [TW-1:0] cslot = cons_p[TW-1:0];
-    // Current and successor flags bypass the DEPTH:1 full-bit mux on take.
-    // Match arriving data at both heads so out-of-order returns cannot be lost.
-    reg head_full, next_full;
-    wire [TW-1:0] next_slot = cslot + 1'b1;
-    wire [TW-1:0] next2_slot = cslot + 2'd2;
+    wire [NT-1:0] hf_c;                             // copies of head_full
+    wire [NT-1:0] rok_c;                            // copies of "output queue has room" (SRAM ring)
+    wire pop_o;                                     // the output stream pops this cycle
+    wire [NT-1:0] take_c = hf_c & (rok_c | {NT{pop_o}});   // a line leaves the ring this cycle
+    wire take = take_c[0];
+    wire head_full = hf_c[2];
+    (* keep *) wire [TW:0] alloc_inc; assign alloc_inc = alloc_p + 1'b1;
+    (* keep *) wire [TW:0] cons_inc;  assign cons_inc = cons_p + 1'b1;
+    (* keep *) wire [TW:0] used_inc;  assign used_inc = used + 1'b1;
+    (* keep *) wire [TW:0] used_dec;  assign used_dec = used - 1'b1;
+    // address / remaining-line counters: an 8-bit low part steps on issue; the high part's
+    // +1 / -1 is a register recomputed every cycle (or loaded with the descriptor), used only on
+    // a low-part wrap, which is >= 256 issues after the high part last changed
+    reg [AW-9:0] addr_hi_inc; reg [15:0] left_hi_dec;
+    reg [AW-9:0] q_base_hinc [0:DQ-1]; reg [15:0] q_len_hdec [0:DQ-1];   // high-part +1/-1 made at enqueue
+    reg [DQ-1:0] q_nz, q_one;                         // length != 0, length == 1, made at enqueue
+    wire qne = (q_cnt != 0);
+    wire [NG-1:0] load_c = ~act_c & {NG{qne}};
+    wire load = load_c[0];
+    localparam integer OW = $clog2(MAX_OUT+1);
+    (* keep *) wire [OW-1:0] out_inc; assign out_inc = outstanding + 1'b1;
+    (* keep *) wire [OW-1:0] out_dec; assign out_dec = outstanding - 1'b1;
+    // look-ahead candidates for the eligibility flags, from registers only
+    wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+    wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+    reg next_full;
+    reg [TW-1:0] next_slot, next2_slot;
+    (* keep *) wire [TW-1:0] n2_inc; assign n2_inc = next2_slot + 1'b1;
+    reg rsp_q; reg [TW-1:0] rsp_tag_q;
+    reg [(1<<HI)-1:0] set_hi, clr_hi; reg [(1<<LO)-1:0] set_lo, clr_lo;
+    // next states of the duplicated flags
+    reg act_nx, free_nx, cred_nx, hf_nx;
+    always @* begin
+        act_nx = load ? q_nz[q_rp] : (issue_c[0] && last_q) ? 1'b0 : act_c[0];
+        case ({issue_c[4], take_c[2]})
+            2'b10: free_nx = free_up;
+            2'b01: free_nx = free_dn;
+            default: free_nx = free_eq;
+        endcase
+        case ({issue_c[5], rsp_q})
+            2'b10: cred_nx = cred_up;
+            2'b01: cred_nx = cred_dn;
+            default: cred_nx = cred_eq;
+        endcase
+        if (take_c[2]) hf_nx = next_full || (rsp_v && rsp_tag == next_slot);
+        else hf_nx = head_full || (rsp_v && rsp_tag == cslot);
+    end
+    ot_hbm_accel_bc_kreg #(.W(NG), .RV({NG{1'b0}})) u_act_c (.clk(clk), .rst_n(rst_n), .d({NG{act_nx}}), .q(act_c));
+    ot_hbm_accel_bc_kreg #(.W(NG), .RV({NG{1'b1}})) u_free_c (.clk(clk), .rst_n(rst_n), .d({NG{free_nx}}), .q(free_c));
+    ot_hbm_accel_bc_kreg #(.W(NG), .RV({NG{MAX_OUT > 0}})) u_cred_c (.clk(clk), .rst_n(rst_n), .d({NG{cred_nx}}), .q(cred_c));
+    ot_hbm_accel_bc_kreg #(.W(NT), .RV({NT{1'b0}})) u_hf_c (.clk(clk), .rst_n(rst_n), .d({NT{hf_nx}}), .q(hf_c));
+    // Banked look-ahead: slots are consumed in order, so bank b (slot mod NBK) next needs the full
+    // bit of its own in-order slot bank_ptr[b]; bank_full[b] registers full[bank_ptr[b]] every cycle
+    // through a DEPTH/NBK:1 mux. bank_ptr[b] steps once per NBK takes and is next read as next2
+    // >= NBK-2 cycles later. bank_full lags a response by three edges (late set + register), so the
+    // look-ahead also matches the responses of the last two cycles.
+    localparam integer NBK = 8;
+    localparam integer BB = 3;
+    reg [TW-BB-1:0] bank_ptr [0:NBK-1];
+    reg [NBK-1:0] bank_full;
+    reg rsp_qq; reg [TW-1:0] rsp_tag_qq;
+    integer bk;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin head_full <= 0; next_full <= 0; end
-        else if (take) begin
-            head_full <= next_full || (rsp_v && rsp_tag == next_slot);
-            next_full <= full[next2_slot] || (rsp_v && rsp_tag == next2_slot);
+        if (!rst_n) begin
+            for (bk = 0; bk < NBK; bk = bk + 1) bank_ptr[bk] <= 0;
+            bank_full <= 0; rsp_qq <= 0; rsp_tag_qq <= 0;
         end else begin
-            if (rsp_v && rsp_tag == cslot) head_full <= 1;
-            if (rsp_v && rsp_tag == next_slot) next_full <= 1;
+            rsp_qq <= rsp_q; rsp_tag_qq <= rsp_tag_q;
+            for (bk = 0; bk < NBK; bk = bk + 1) begin
+                bank_full[bk] <= full[{bank_ptr[bk], bk[BB-1:0]}];
+                if (take_c[1] && cslot[BB-1:0] == bk) bank_ptr[bk] <= bank_ptr[bk] + 1'b1;
+            end
         end
     end
-    wire load = !act && (q_cnt != 0);
-    wire take;                                      // a line leaves the ring (to the output) this cycle
+    integer k, kf;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            next_slot <= 1; next2_slot <= 2; rsp_q <= 0; rsp_tag_q <= 0;
+            set_hi <= 0; set_lo <= 0; clr_hi <= 0; clr_lo <= 0;
+        end else begin
+            if (take_c[0]) begin next_slot <= next2_slot; next2_slot <= n2_inc; end
+            rsp_q <= rsp_v; rsp_tag_q <= rsp_tag;
+            for (k = 0; k < (1<<HI); k = k + 1) begin
+                set_hi[k] <= rsp_v && (rsp_tag[TW-1:LO] == k);
+                clr_hi[k] <= take_c[0] && (cslot[TW-1:LO] == k);
+            end
+            for (k = 0; k < (1<<LO); k = k + 1) begin
+                set_lo[k] <= (rsp_tag[LO-1:0] == k);
+                clr_lo[k] <= (cslot[LO-1:0] == k);
+            end
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) next_full <= 0;
+        else if (take_c[2])
+            next_full <= bank_full[next2_slot[BB-1:0]] || (rsp_v && rsp_tag == next2_slot)
+                      || (rsp_q && rsp_tag_q == next2_slot) || (rsp_qq && rsp_tag_qq == next2_slot);
+        else if (rsp_v && rsp_tag == next_slot) next_full <= 1;
+    end
     if (SRAM_RING == 0) begin : g_regs
         reg [LINE_BITS-1:0] ring [0:DEPTH-1];
         assign s_valid = head_full;
         assign s_data = ring[cslot];
-        assign take = s_valid && s_ready;
+        assign pop_o = s_valid && s_ready;
+        assign rok_c = {NT{1'b0}};                  // take = head_full && s_ready
         always @(posedge clk) if (rsp_v) ring[rsp_tag] <= rsp_data;
-        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && (used == 0);
+        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && !rsp_q && (used == 0);
     end else begin : g_sram
-        // hard macros: a one-cycle read into a two-entry output queue keeps one line a cycle
-        localparam integer NB = (LINE_BITS + 255) / 256;
-        wire [NB*256-1:0] rd;
+        // hard macros: the read lands two edges after the take (read latency 2) in a three-entry
+        // queue, which keeps one line a cycle. +1 cycle from take to the stream output against the
+        // original. RING_MACRO = 0: an unconditional capture register one edge after the read,
+        // then the queue. RING_MACRO = 1: slot s lives in group s[0] (512 deep, address s >> 1);
+        // consecutive takes alternate groups, so a group is read at most every other edge and its
+        // output holds for two cycles: the queue entry captures it directly (a two-cycle path).
+        localparam integer NB = NBM;
+        localparam integer NW = NB * 4;            // 64-bit write-enable domains of the output queue
+        localparam integer NG2 = (RING_MACRO == 0) ? 1 : 2;
+        wire [NB*256-1:0] rd [0:NG2-1];
         wire [NB*256-1:0] wpad = {{(NB*256-LINE_BITS){1'b0}}, rsp_data};
-        reg [LINE_BITS-1:0] oq0, oq1;
-        reg [1:0] oq_n;
-        reg rd_v;
-        wire pop_o = s_valid && s_ready;
-        wire [1:0] after_pop = oq_n - (pop_o ? 1 : 0);
-        reg space_q;
-        wire [2:0] reserved = {1'b0,oq_n} + rd_v;
-        assign take = head_full && (space_q || pop_o);
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) space_q <= 1;
-            else case ({take,pop_o})
-                2'b10: space_q <= (reserved == 0);
-                2'b01: space_q <= 1;
-                default: space_q <= space_q;
-            endcase
+        wire [NB*256-1:0] qin;                    // the line the queue entry captures
+        reg [NB*256-1:0] oq0, oq1, oq2;
+        reg [1:0] oq_n, res, oq_wp, oq_rp;            // res = oq_n + rd_v + rd_v2 (entries reserved)
+        reg rd_v, rd_v2;
+        assign pop_o = s_valid && s_ready;
+        wire [1:0] res_nx = res + (take_c[2] ? 2'd1 : 2'd0) - (pop_o ? 2'd1 : 2'd0);
+        ot_hbm_accel_bc_kreg #(.W(NT), .RV({NT{1'b1}})) u_rok_c (.clk(clk), .rst_n(rst_n),
+            .d({NT{res_nx != 2'd3}}), .q(rok_c));
+        genvar mb, gg;
+        if (RING_MACRO == 0) begin : g_m1
+            for (mb = 0; mb < NB; mb = mb + 1) begin : g_mb
+                ot_sram_1r1w_1024x256_m2_r2c2 u_ring (
+                    .clk(clk), .r_ce_in(take_c[3+mb]), .r_addr_in(cslot), .rd_out(rd[0][256*mb +: 256]),
+                    .w_ce_in(rsp_v), .w_addr_in(rsp_tag), .wd_in(wpad[256*mb +: 256]), .w_mask_in({256{1'b1}}),
+                    .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            end
+            reg [NB*256-1:0] rdq;
+            always @(posedge clk) rdq <= rd[0];
+            assign qin = rdq;
+        end else begin : g_m2
+            // read group = the slot's parity, carried with the take for two edges (per-64-bit copies)
+            wire [NW-1:0] par2;
+            reg par1;
+            always @(posedge clk or negedge rst_n) if (!rst_n) par1 <= 1'b0; else par1 <= cslot[0];
+            ot_hbm_accel_bc_kreg #(.W(NW), .RV({NW{1'b0}})) u_par2 (.clk(clk), .rst_n(rst_n), .d({NW{par1}}), .q(par2));
+            for (gg = 0; gg < 2; gg = gg + 1) begin : g_grp
+                for (mb = 0; mb < NB; mb = mb + 1) begin : g_mb
+                    ot_sram_1r1w_512x256_m1_r2c2 u_ring (
+                        .clk(clk), .r_ce_in(take_c[3+mb] && cslot[0] == gg), .r_addr_in(cslot[TW-1:1]),
+                        .rd_out(rd[gg][256*mb +: 256]),
+                        .w_ce_in(rsp_v && rsp_tag[0] == gg), .w_addr_in(rsp_tag[TW-1:1]),
+                        .wd_in(wpad[256*mb +: 256]), .w_mask_in({256{1'b1}}),
+                        .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+                end
+            end
+            for (mb = 0; mb < NW; mb = mb + 1) begin : g_sel
+                assign qin[64*mb +: 64] = par2[mb] ? rd[1][64*mb +: 64] : rd[0][64*mb +: 64];
+            end
         end
-        genvar mb;
-        for (mb = 0; mb < NB; mb = mb + 1) begin : g_mb
-            ot_sram_1r1w_1024x256_m2_r2c2 u_ring (
-                .clk(clk), .r_ce_in(take), .r_addr_in(cslot), .rd_out(rd[256*mb +: 256]),
-                .w_ce_in(rsp_v), .w_addr_in(rsp_tag), .wd_in(wpad[256*mb +: 256]), .w_mask_in({256{1'b1}}),
-                .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        end
+        // registered write-enable copies, one per 64-bit domain: we<k> = rd_v2 next cycle AND write pointer == k
+        wire [NW-1:0] we0, we1, we2;
+        wire [1:0] wp_inc = (oq_wp == 2'd2) ? 2'd0 : oq_wp + 1'b1;
+        wire [1:0] wp_nx = rd_v2 ? wp_inc : oq_wp;
+        ot_hbm_accel_bc_kreg #(.W(NW), .RV({NW{1'b0}})) u_we0 (.clk(clk), .rst_n(rst_n), .d({NW{rd_v && wp_nx == 2'd0}}), .q(we0));
+        ot_hbm_accel_bc_kreg #(.W(NW), .RV({NW{1'b0}})) u_we1 (.clk(clk), .rst_n(rst_n), .d({NW{rd_v && wp_nx == 2'd1}}), .q(we1));
+        ot_hbm_accel_bc_kreg #(.W(NW), .RV({NW{1'b0}})) u_we2 (.clk(clk), .rst_n(rst_n), .d({NW{rd_v && wp_nx == 2'd2}}), .q(we2));
         assign s_valid = oq_n != 0;
-        assign s_data = oq0;
+        assign s_data = (oq_rp == 2'd0) ? oq0[LINE_BITS-1:0] : (oq_rp == 2'd1) ? oq1[LINE_BITS-1:0] : oq2[LINE_BITS-1:0];
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin oq_n <= 0; rd_v <= 1'b0; end
-            else begin
-                rd_v <= take;
-                oq_n <= after_pop + (rd_v ? 1 : 0);
+            if (!rst_n) begin
+                oq_n <= 0; res <= 0; rd_v <= 1'b0; rd_v2 <= 1'b0; oq_wp <= 0; oq_rp <= 0;
+            end else begin
+                rd_v <= take_c[2]; rd_v2 <= rd_v;
+                oq_n <= oq_n - (pop_o ? 2'd1 : 2'd0) + (rd_v2 ? 2'd1 : 2'd0);
+                res <= res_nx;
+                oq_wp <= wp_nx;
+                if (pop_o) oq_rp <= (oq_rp == 2'd2) ? 2'd0 : oq_rp + 1'b1;
             end
         end
-        always @(posedge clk) begin
-            // shift on pop, then append the landing line
-            if (pop_o) oq0 <= oq1;
-            if (rd_v) begin
-                if (after_pop == 0) oq0 <= rd[LINE_BITS-1:0];
-                else oq1 <= rd[LINE_BITS-1:0];
+        for (mb = 0; mb < NW; mb = mb + 1) begin : g_oq
+            always @(posedge clk) begin
+                if (we0[mb]) oq0[64*mb +: 64] <= qin[64*mb +: 64];
+                if (we1[mb]) oq1[64*mb +: 64] <= qin[64*mb +: 64];
+                if (we2[mb]) oq2[64*mb +: 64] <= qin[64*mb +: 64];
             end
         end
-        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && (used == 0) && (oq_n == 0) && !rd_v;
+        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && !rsp_q && (used == 0) && (oq_n == 0) && !rd_v && !rd_v2;
     end
+    // descriptor queue and active-descriptor registers, each group driven by its own issue / load copy
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            q_cnt <= 0; q_wp <= 0; q_rp <= 0; act <= 1'b0; a_addr <= 0; a_left <= 0;
-            alloc_p <= 0; cons_p <= 0; outstanding <= 0; full <= {DEPTH{1'b0}};
+            q_cnt <= 0; q_wp <= 0; q_rp <= 0; last_q <= 1'b0;
         end else begin
             q_cnt <= q_cnt + (d_valid && d_ready ? 1 : 0) - (load ? 1 : 0);
             if (d_valid && d_ready) q_wp <= (q_wp == DQ - 1) ? 0 : q_wp + 1'b1;
             if (load) begin
-                act <= (q_len[q_rp] != 0);
-                a_addr <= q_base[q_rp];
-                a_left <= q_len[q_rp];
+                last_q <= q_one[q_rp];
                 q_rp <= (q_rp == DQ - 1) ? 0 : q_rp + 1'b1;
-            end else if (issue) begin
-                a_addr <= a_addr + 1'b1;
-                a_left <= a_left - 1'b1;
-                if (a_left == 1) act <= 1'b0;
-            end
-            if (issue) alloc_p <= alloc_p + 1'b1;
-            if (take) cons_p <= cons_p + 1'b1;
-            outstanding <= outstanding + (issue ? 1 : 0) - (rsp_v ? 1 : 0);
-            if (rsp_v) full[rsp_tag] <= 1'b1;
-            if (take) full[cslot] <= 1'b0;
+            end else if (issue_c[0]) last_q <= (a_left == 24'd2);
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) a_addr[7:0] <= 0;
+        else if (load_c[1]) a_addr[7:0] <= q_base[q_rp][7:0];
+        else if (issue_c[1]) a_addr[7:0] <= a_addr[7:0] + 8'd1;
+    end
+    // high-part +1 in two registered halves; held for the edge after a load (the stage registers
+    // then still hold the previous descriptor), whose value came pre-incremented from the queue
+    localparam integer HW = AW - 8, HL = HW / 2;
+    reg [HL:0] hi_lo1; reg [HW-HL-1:0] hi_hi1; reg load_d1;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin hi_lo1 <= 0; hi_hi1 <= 0; load_d1 <= 1'b0; end
+        else begin
+            hi_lo1 <= {1'b0, a_addr[8 +: HL]} + 1'b1; hi_hi1 <= a_addr[AW-1:8+HL]; load_d1 <= load_c[2];
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin a_addr[AW-1:8] <= 0; addr_hi_inc <= 1; end
+        else begin
+            if (load_c[2]) addr_hi_inc <= q_base_hinc[q_rp];
+            else if (!load_d1) addr_hi_inc <= {hi_lo1[HL] ? hi_hi1 + 1'b1 : hi_hi1, hi_lo1[HL-1:0]};
+            if (load_c[2]) a_addr[AW-1:8] <= q_base[q_rp][AW-1:8];
+            else if (issue_c[2] && a_addr[7:0] == 8'hff) a_addr[AW-1:8] <= addr_hi_inc;
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin a_left <= 0; left_hi_dec <= 16'hffff; end
+        else begin
+            left_hi_dec <= load_c[3] ? q_len_hdec[q_rp] : a_left[23:8] - 1'b1;
+            if (load_c[3]) a_left <= q_len[q_rp];
+            else if (issue_c[3]) a_left <= {(a_left[7:0] == 8'h00) ? left_hi_dec : a_left[23:8], a_left[7:0] - 8'd1};
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            alloc_p <= 0; cons_p <= 0; used <= 0; outstanding <= 0; full <= {DEPTH{1'b0}};
+        end else begin
+            if (issue_c[4]) alloc_p <= alloc_inc;
+            case ({issue_c[4], take_c[2]})
+                2'b10: used <= used_inc;
+                2'b01: used <= used_dec;
+                default: ;
+            endcase
+            if (take_c[0]) cons_p <= cons_inc;
+            case ({issue_c[5], rsp_q})
+                2'b10: outstanding <= out_inc;
+                2'b01: outstanding <= out_dec;
+                default: ;
+            endcase
+            // one-edge-late clear and set from the registered pre-decoded selects; a set wins
+            for (kf = 0; kf < DEPTH; kf = kf + 1)
+                if (set_hi[kf >> LO] && set_lo[kf % (1<<LO)]) full[kf] <= 1'b1;
+                else if (clr_hi[kf >> LO] && clr_lo[kf % (1<<LO)]) full[kf] <= 1'b0;
         end
     end
     always @(posedge clk) begin
-        if (d_valid && d_ready) begin q_base[q_wp] <= d_base; q_len[q_wp] <= d_lines; end
+        if (d_valid && d_ready) begin q_base[q_wp] <= d_base; q_len[q_wp] <= d_lines;
+            q_base_hinc[q_wp] <= d_base[AW-1:8] + 1'b1; q_len_hdec[q_wp] <= d_lines[23:8] - 1'b1;
+            q_nz[q_wp] <= (d_lines != 0); q_one[q_wp] <= (d_lines == 24'd1); end
     end
     end endgenerate
+endmodule
+
+// A W-bit register synthesis keeps as its own instance (Yosys opt_merge merges flip-flops with identical
+// inputs even under (* keep *); a keep_hierarchy instance is never merged), so the bulk copy's duplicated
+// control flags stay separate cells that placement can put next to their consumers. q <= d; RV at reset.
+(* keep_hierarchy *)
+module ot_hbm_accel_bc_kreg #(
+    parameter integer W = 1,
+    parameter [W-1:0] RV = '0
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [W-1:0] d,
+    output reg  [W-1:0] q
+);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= RV; else q <= d;
 endmodule

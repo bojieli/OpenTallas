@@ -1,0 +1,74 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/results/asap7/kant_code_banklocal_reverse_ac019_r1/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/kant_code_banklocal_reverse_ac019_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/slot/macros.tcl
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[0\].data_store placed. Bounding box (8.640um, 395.280um), (183.384um, 465.750um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[0\].check_store placed. Bounding box (287.064um, 395.280um), (381.888um, 436.320um). Orientation R0
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[1\].data_store placed. Bounding box (8.640um, 298.656um), (183.384um, 369.126um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[1\].check_store placed. Bounding box (287.064um, 298.656um), (381.888um, 339.696um). Orientation R0
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[2\].data_store placed. Bounding box (8.640um, 201.984um), (183.384um, 272.454um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[2\].check_store placed. Bounding box (287.064um, 201.984um), (381.888um, 243.024um). Orientation R0
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[3\].data_store placed. Bounding box (8.640um, 105.312um), (183.384um, 175.782um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[3\].check_store placed. Bounding box (287.064um, 105.312um), (381.888um, 146.352um). Orientation R0
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[4\].data_store placed. Bounding box (8.640um, 8.640um), (183.384um, 79.110um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[0\].bank\[4\].check_store placed. Bounding box (287.064um, 8.640um), (381.888um, 49.680um). Orientation R0
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[0\].data_store placed. Bounding box (482.112um, 395.280um), (656.856um, 465.750um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[0\].check_store placed. Bounding box (760.536um, 395.280um), (855.360um, 436.320um). Orientation R0
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[1\].data_store placed. Bounding box (482.112um, 298.656um), (656.856um, 369.126um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[1\].check_store placed. Bounding box (760.536um, 298.656um), (855.360um, 339.696um). Orientation R0
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[2\].data_store placed. Bounding box (482.112um, 201.984um), (656.856um, 272.454um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[2\].check_store placed. Bounding box (760.536um, 201.984um), (855.360um, 243.024um). Orientation R0
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[3\].data_store placed. Bounding box (482.112um, 105.312um), (656.856um, 175.782um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[3\].check_store placed. Bounding box (760.536um, 105.312um), (855.360um, 146.352um). Orientation R0
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[4\].data_store placed. Bounding box (482.112um, 8.640um), (656.856um, 79.110um). Orientation MY
+[INFO MPL-0035] Macro u_leaf.on.column\[1\].bank\[4\].check_store placed. Bounding box (760.536um, 8.640um), (855.360um, 49.680um). Orientation R0
+rtl_macro_placer -max_num_level 2 -halo_width 2.16 -halo_height 2.16 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/kant_code_banklocal_reverse_ac019_r1/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.55
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[0\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[0\].data_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[1\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[1\].data_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[2\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[2\].data_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[3\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[3\].data_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[4\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[0\].bank\[4\].data_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[0\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[0\].data_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[1\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[1\].data_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[2\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[2\].data_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[3\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[3\].data_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[4\].check_store.
+[INFO MPL-0062] Found fixed macro u_leaf.on.column\[1\].bank\[4\].data_store.
+[INFO MPL-0017] No unfixed macros.
+[INFO MPL-0013] Skipping macro placement.
+[INFO MPL-0500] Runtime: 0.01s
+Design area 165591 um^2 30% utilization.
+write_db /work/results/asap7/kant_code_banklocal_reverse_ac019_r1/base/2_2_floorplan_macro.odb
+Elapsed time: 0:05.58[h:]min:sec. CPU time: user 5.41 sys 0.15 (99%). Peak memory: 352592KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb            5            344 2ea36f9649e6e56c00d2

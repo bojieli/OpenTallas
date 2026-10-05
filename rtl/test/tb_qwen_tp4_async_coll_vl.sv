@@ -17,6 +17,7 @@ module tb_qwen_tp4_async_coll_vl #(
     parameter integer DEPTH  = 256,
     parameter integer LAT    = 339,
     parameter integer LEGACY = 0,
+    parameter integer SB_PIPE = 0,
     parameter integer NP     = 12,
     parameter integer TMAX   = 1024
 );
@@ -89,7 +90,7 @@ module tb_qwen_tp4_async_coll_vl #(
                 .r_last(ol[g] ^ (inject_last != 0 && ov[g])),
                 .r_rank(ranks[g*2 +: 2]), .r_err(oe[g]));
         end else begin : s
-            ot_qwen_tp_seq_async_w12 #(.ENABLE_AR256(1), .ASYNC_COLL(1), .NP(NP), .MAW(24),
+            ot_qwen_tp_seq_async_w12 #(.ENABLE_AR256(1), .ASYNC_COLL(1), .SB_PIPE(SB_PIPE), .NP(NP), .MAW(24),
                 .N(N), .NW(18), .TAGW(TAGW), .QWEN_FULLSHAPE(1)) seq (
                 .clk(clk), .rst_n(rst_n), .start(start), .token(18'd151935), .pos(18'd0),
                 .done(done[g]), .next_token(), .next_val(), .fault(sfault[g]), .coll_busy(),

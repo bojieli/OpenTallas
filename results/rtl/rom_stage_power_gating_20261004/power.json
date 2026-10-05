@@ -1,0 +1,228 @@
+{
+ "schema": "opentallas.rtl.rom_stage_pg_power.v1",
+ "activity": {
+  "netlist": "/srv/opentallas-scratch/claude/rom-stage-pg/jobs/R3/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_pg_w10_asap7_rom_stage_pg_R3_20261004/base/6_final.v",
+  "netlist_sha256": "35ddffda5862c09b8ff115697a0ebbf3feb65807fc36ff59b849a1c8c92e6ad1",
+  "bench_removed": [],
+  "cell_models": {
+   "models": 89,
+   "skipped": [],
+   "missing": [
+    "ot_rom_4096x274_m8",
+    "parameter"
+   ]
+  },
+  "build_s": 14.6,
+  "sim_returncode": 0,
+  "sim_s": 176.2,
+  "marks": [
+   "MARK go_A 3000 ready=1",
+   "MARK end_A 3855",
+   "MARK pg_idle_from 4255",
+   "MARK go_B 19000 ready=1",
+   "MARK end_B 19855",
+   "MARK cg_idle_from 20256",
+   "MARK go_C 35000 ready=1",
+   "MARK end_C 35855",
+   "PASS cycles=36054 rows=42 nonzero=36"
+  ],
+  "pass": true,
+  "windows_cycles": {
+   "active": [
+    3000,
+    3855
+   ],
+   "pg_idle": [
+    4255,
+    16255
+   ],
+   "cg_idle": [
+    20256,
+    32256
+   ]
+  }
+ },
+ "states": {
+  "active": {
+   "power_w": {
+    "total": {
+     "internal": 0.09747176617383957,
+     "switching": 0.01826012134552002,
+     "leakage": 0.00023647971102036536,
+     "total": 0.11596836894750595
+    },
+    "sequential": {
+     "internal": 0.040346793830394745,
+     "switching": 0.0005288994289003313,
+     "leakage": 6.658721758867614e-06,
+     "total": 0.04088234901428223
+    },
+    "combinational": {
+     "internal": 0.002442043973132968,
+     "switching": 0.0030250069685280323,
+     "leakage": 1.736173544486519e-05,
+     "total": 0.005484412424266338
+    },
+    "clock": {
+     "internal": 0.018106669187545776,
+     "switching": 0.014706401154398918,
+     "leakage": 1.189965473713528e-06,
+     "total": 0.03281426057219505
+    },
+    "macro": {
+     "internal": 0.03657592087984085,
+     "switching": 0.0,
+     "leakage": 0.00021122056932654232,
+     "total": 0.03678714111447334
+    }
+   },
+   "annotation": {
+    "saif": 582768,
+    "unannotated": 2168
+   },
+   "routed": {
+    "results_dir": "/srv/opentallas-scratch/claude/rom-stage-pg/jobs/R3/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_pg_w10_asap7_rom_stage_pg_R3_20261004/base",
+    "stage": "final",
+    "parasitics": "routed SPEF (OpenRCX)",
+    "odb_sha256": "4c6db88de3f519b0671992904b411438ffe167547000580aa38f0844b5cc6784",
+    "spef_sha256": "ded9ce979d1050be2152c894d0b95df8838fd0bf335ff86a91aeb827138095d5",
+    "netlist_sha256": "35ddffda5862c09b8ff115697a0ebbf3feb65807fc36ff59b849a1c8c92e6ad1"
+   }
+  },
+  "pg_idle": {
+   "power_w": {
+    "total": {
+     "internal": 0.000871756172273308,
+     "switching": 0.00018583198834676296,
+     "leakage": 0.00024254462914541364,
+     "total": 0.0013001328334212303
+    },
+    "sequential": {
+     "internal": 0.00014416349586099386,
+     "switching": 1.4972976032368024e-06,
+     "leakage": 6.9439142862393055e-06,
+     "total": 0.000152604712639004
+    },
+    "combinational": {
+     "internal": 9.281137863581534e-06,
+     "switching": 6.016637144057313e-06,
+     "leakage": 2.2127385818748735e-05,
+     "total": 3.742516128113493e-05
+    },
+    "clock": {
+     "internal": 0.0007183114648796618,
+     "switching": 0.0001783180341590196,
+     "leakage": 2.223890305685927e-06,
+     "total": 0.0008988534100353718
+    },
+    "macro": {
+     "internal": 0.0,
+     "switching": 0.0,
+     "leakage": 0.00021122056932654232,
+     "total": 0.00021122056932654232
+    }
+   },
+   "annotation": {
+    "saif": 582768,
+    "unannotated": 2168
+   },
+   "routed": {
+    "results_dir": "/srv/opentallas-scratch/claude/rom-stage-pg/jobs/R3/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_pg_w10_asap7_rom_stage_pg_R3_20261004/base",
+    "stage": "final",
+    "parasitics": "routed SPEF (OpenRCX)",
+    "odb_sha256": "4c6db88de3f519b0671992904b411438ffe167547000580aa38f0844b5cc6784",
+    "spef_sha256": "ded9ce979d1050be2152c894d0b95df8838fd0bf335ff86a91aeb827138095d5",
+    "netlist_sha256": "35ddffda5862c09b8ff115697a0ebbf3feb65807fc36ff59b849a1c8c92e6ad1"
+   }
+  },
+  "cg_idle": {
+   "power_w": {
+    "total": {
+     "internal": 0.002237780252471566,
+     "switching": 0.0005248923553153872,
+     "leakage": 0.0002425469137961045,
+     "total": 0.003005219390615821
+    },
+    "sequential": {
+     "internal": 0.0009634454036131501,
+     "switching": 0.0,
+     "leakage": 6.94730761097162e-06,
+     "total": 0.0009703927207738161
+    },
+    "combinational": {
+     "internal": 0.0,
+     "switching": 0.0,
+     "leakage": 2.2152455130708404e-05,
+     "total": 2.2152455130708404e-05
+    },
+    "clock": {
+     "internal": 0.0012743371771648526,
+     "switching": 0.0005248923553153872,
+     "leakage": 2.191424073316739e-06,
+     "total": 0.00180142093449831
+    },
+    "macro": {
+     "internal": 0.0,
+     "switching": 0.0,
+     "leakage": 0.00021122056932654232,
+     "total": 0.00021122056932654232
+    }
+   },
+   "annotation": {
+    "saif": 582768,
+    "unannotated": 2168
+   },
+   "routed": {
+    "results_dir": "/srv/opentallas-scratch/claude/rom-stage-pg/jobs/R3/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_pg_w10_asap7_rom_stage_pg_R3_20261004/base",
+    "stage": "final",
+    "parasitics": "routed SPEF (OpenRCX)",
+    "odb_sha256": "4c6db88de3f519b0671992904b411438ffe167547000580aa38f0844b5cc6784",
+    "spef_sha256": "ded9ce979d1050be2152c894d0b95df8838fd0bf335ff86a91aeb827138095d5",
+    "netlist_sha256": "35ddffda5862c09b8ff115697a0ebbf3feb65807fc36ff59b849a1c8c92e6ad1"
+   }
+  }
+ },
+ "ao_route": {
+  "power_w": {
+   "total": {
+    "internal": 0.0026605722960084677,
+    "switching": 0.0009314094204455614,
+    "leakage": 7.184029868767539e-07,
+    "total": 0.003592700231820345
+   },
+   "sequential": {
+    "internal": 0.0014195081312209368,
+    "switching": 0.00019532919395714998,
+    "leakage": 1.946479954995084e-07,
+    "total": 0.0016150319715961814
+   },
+   "combinational": {
+    "internal": 0.0003789347829297185,
+    "switching": 0.00025273242499679327,
+    "leakage": 4.568486531297822e-07,
+    "total": 0.0006321240798570216
+   },
+   "clock": {
+    "internal": 0.0008621326996944845,
+    "switching": 0.0004833473649341613,
+    "leakage": 6.690928699981669e-08,
+    "total": 0.0013455470325425267
+   },
+   "macro": {
+    "internal": 0.0,
+    "switching": 0.0,
+    "leakage": 0.0,
+    "total": 0.0
+   }
+  },
+  "routed": {
+   "results_dir": "/srv/opentallas-scratch/claude/rom-stage-pg/jobs/A2/work/orfs/results/asap7/opentallas_ot_v41_rom_pg_ao_asap7_rom_stage_pg_A2_20261004/base",
+   "stage": "final",
+   "parasitics": "routed SPEF (OpenRCX)",
+   "odb_sha256": "600a3933030308d22e1012717c373819a9de8e8e4432390250db321651a054b0",
+   "spef_sha256": "aed8c3a5195aa64e1ae1569c7c7f96d2e7009abed2cbdf53ba585954b446ad49",
+   "netlist_sha256": "fd80638be90e4785c675d2ec33a63898e20a930531568b72073984f4c5623e59"
+  },
+  "note": "vectorless (leakage is activity-independent; dynamic not used)"
+ }
+}

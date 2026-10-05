@@ -247,7 +247,8 @@ module ot_v41_rom_elem_wake_w10 #(
             plast <= (MTP != 0) ? cfg_d_e[5:3] : 3'd0;
             pbase <= cfg_d_e[19:6];
         end else begin                          // 2NSEG+1+s: the row of segment s on the pair's second macro
-            s_row[NSEG + cfg_a_e[SW-1:0] - 1] <= cfg_d_e[15:0];
+            // 2NSEG+1+s -> NSEG+s for every s, including s = NSEG-1 (the low-bit decode wrapped it to NSEG-1)
+            if (NB > 1 && {27'd0, cfg_a_e} <= 3 * NSEG) s_row[{27'd0, cfg_a_e} - (NSEG + 1)] <= cfg_d_e[15:0];
         end
     end
 

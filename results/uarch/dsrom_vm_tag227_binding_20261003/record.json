@@ -1,0 +1,106 @@
+{
+  "abi": "COMPONENT_TAG227_V1",
+  "actual_callback_fields_fabricated": false,
+  "actual_provider_trace": null,
+  "base_commit": "dae694a56f3dce0caa18ef446f10b605d7aa72d4",
+  "compile_flags": [
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "compiler": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+  "counter_rules": {
+    "batch": "advance only own accepted ledger empty, 65536 rejects",
+    "era": "strictly newer32bit era only with own ledger empty AND source quiescent; wrap rejects",
+    "request_id": "increments once per actual accept, 1024 exhaustion rejects; no modulo reuse"
+  },
+  "fields_lsb_first": [
+    {
+      "lsb": 0,
+      "name": "identity47",
+      "width": 47
+    },
+    {
+      "lsb": 47,
+      "name": "token17",
+      "width": 17
+    },
+    {
+      "lsb": 64,
+      "name": "stage7",
+      "width": 7
+    },
+    {
+      "lsb": 71,
+      "name": "rank2",
+      "width": 2
+    },
+    {
+      "lsb": 73,
+      "name": "pair12",
+      "width": 12
+    },
+    {
+      "lsb": 85,
+      "name": "phase10",
+      "width": 10
+    },
+    {
+      "lsb": 95,
+      "name": "entry14",
+      "width": 14
+    },
+    {
+      "lsb": 109,
+      "name": "reserved",
+      "width": 60
+    },
+    {
+      "lsb": 169,
+      "name": "reset_era",
+      "width": 32
+    },
+    {
+      "lsb": 201,
+      "name": "batch",
+      "width": 16
+    },
+    {
+      "lsb": 217,
+      "name": "request_id",
+      "width": 10
+    }
+  ],
+  "initial_compile_failure_preserved": "initial_compile_FAIL.log",
+  "native_header_tests": 18,
+  "production_169_encoder_found": false,
+  "production_context_claim": false,
+  "provider_build_or_whole_array_or_proof_campaign": false,
+  "range": {
+    "pair_max": 2416,
+    "rank_max": 3,
+    "stage_max": 80
+  },
+  "raw_visibility_not_retirement": true,
+  "read_bus_words": 8,
+  "reserved_zero_bits": 60,
+  "root_experiment": {
+    "identity47": 2147483648,
+    "identity_meaning": "epoch1/user0/position0; token0 separately",
+    "reset_era": 1,
+    "stage_rank_pair_phase_entry": "REQUIRED actual compiled/source accepted selection; NO inferredstage37/expert9",
+    "token17": 0
+  },
+  "scope": "root-authorized minimal component experiment only; NOT recovered full169 production or wholeC8 enrollment",
+  "source_sha256": {
+    "rtl/dsrom_sys/c8/ot_dsrom_c8_stage_context.sv": "cda9b462f1f4b4858aa0ad530b634cc23067570b56557e6c631b006ee53b249c",
+    "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984",
+    "tools/dsrom_I66_capture_owner.py": "3fa8dbba41672201aa2be181bea695fe02737feb345c669b925fddbac02519fa",
+    "tools/dsrom_capture_publication_credit.py": "cfe526e957847c595cf3c7cb0522b231423d7c614eddbde27e8b09dfce1ea628",
+    "tools/dsrom_native_masked_backend_prepare.py": "da797b91572a561d755c23084f5741633930b38089aa2ee55976f195809dba32"
+  },
+  "storage_padding_zero_bits": 29,
+  "write_bank_tag_bit_offset": "227*bank",
+  "write_bus_words": 29
+}

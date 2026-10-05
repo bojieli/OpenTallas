@@ -1,0 +1,78 @@
+{
+  "verdict": "PASS_DS20_COMPOSED_CP_SERVICE",
+  "source_commit": "4cdf3cbaf",
+  "shared_join_source": "95f784cfdcfb6acc4e070e7dc2a5749ddc2f1f16",
+  "job": "/srv/opentallas-scratch/jobs/euclid-ds20-cp-composition-r3",
+  "supervisor": 3593549,
+  "terminal_exit": 0,
+  "functional_scope": "Actual CP NSM1/NCMD2 + shared join + DS20 frame + actual DS writer + CMD1 PC0/CA + finite PHY-backed visibility echo; 17 accepted DS sectors, next CP frame guarded through real CDC bound window. Kernel sm_done is directed input, not numerical engine claim.",
+  "clocks_ps": {
+    "core": 833.333,
+    "service": 1024
+  },
+  "constraints": "Functional input clocks only; not setup/hold qualification, not relaxation of 833.333 SS60/FF25 target.",
+  "checks": [
+    "full native job32/gen4/pos20/rank7/stack2 PHY receipts",
+    "actual writer ACK only matching post-PHY visibility",
+    "CPdone alone cannot bypass WR debt",
+    "initial debt-empty release is not CPdone",
+    "no old-frame row accept during next CP CDC handoff",
+    "gen15->0 next CP accepted only after prior debt drained"
+  ],
+  "source_hashes": {
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/hbm_accel/integration/ot_ds_hbm_pcwb_owner_join.sv": "7e67a155d721bf5f852d4af3940bac090279d16131910c41ad1a36909bd35709",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20_pcwb.sv": "226541998b189854ee627d72aa9f233dd986c6fa1309b991d5dcb876a7a05d75",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv": "baeca01c84a454ab5c819d2c5612877a3bf257cb38c398a54059243059733009",
+    "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv": "dde4c2ba9853e06f10b472dc3775db8268e157e0181697fee047d5b2933d74d5",
+    "rtl/hbm_accel/integration/ot_hbm_pcwb_ca_slots.sv": "fba1bf191a8c5c056f1384f2252ca9ff630a7ceaad91fe756d264d3af357f4ad",
+    "rtl/hbm_accel/integration/frame_ds20_20261005/ot_hbm_pcwb_owner_frame_ds20.sv": "271c0275eb777b379afcebf55c2b1406d796ee8bee6c8f6b4a438aab29393842",
+    "rtl/hbm_accel/integration/frame_ds20_20261005/ot_hbm_accel_pcwb_service_stack_frame_ds20.sv": "3a05c9b3414ae7c77cbae56f93f4f097d82213322500e798b76f43f534992c0f",
+    "rtl/hbm_accel/integration/frame_ds20_20261005/ot_hbm_pcwb_prepaid_column_frame_ds20.sv": "50973f56008ac5d14f112b116bcaca8b3f47afe82e8071fce5e64145468ee5e5",
+    "rtl/hbm_accel/integration/frame_ds20_20261005/ot_hbm_accel_pcwb_service_stack_ds20_window.sv": "c16eb5fa1b4e6bf2a2d6c337c4ec4fb41373e81782ba0faad9abec7f82062353",
+    "results/rtl/hbm_pcwb_frame_ds20_20261005/tb_ds20_cp_service.sv": "89d060c29bad3eb329833fbd83a3bac0d0c126ef05751900a803e9c3d9a4c69a"
+  },
+  "integration_mapping": {
+    "source_window_owned": "shared cluster pin[d*STACKS+s] -> ds20_window.source_window_owned",
+    "owner_fenced": "ds20_window.owner_released -> shared join owner_fenced",
+    "owner_tuple": "shared owner_v/r plus o_job/gen/pos/rank/stack -> native parent exact fields",
+    "row_acc": "actual row_v && row_r -> join association check",
+    "receipt": "PHY echo of captured136bit native receipt; no producer64/IRS relabel"
+  },
+  "no_credit": [
+    "full128PC runtime",
+    "full DS cluster arithmetic",
+    "whole-token numerical or performance",
+    "loaded CDC signoff or SS/FF closure",
+    "pipelined issue optimization"
+  ],
+  "prelaunch_failures": {
+    "r1": "exit1 clean guard: 25 index-tracked root files unhydrated in new sparse WT; no HDL tool launch",
+    "r2": "exit2 source-helper missing sparse model.json; no HDL tool launch"
+  },
+  "body_model": "composition_model.json prewritten: existing Sagan68FF/stack once, native parent900566FF/stack, receiver0FF/0edges; 100 AND loads + bound export estimate, loaded costs unknown",
+  "artifact_sha256": {
+    "composition_r3_PASS/runtime.log": "e2a1b75a0fb746a84fde37ff2419d9401e208e425a4ca88aba9ac4953424eab1",
+    "composition_r3_PASS/supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "composition_r3_PASS/build.log": "d2138601cd4c2bc0e8bac92449f358b294f0721975238e8a00378ea55bd3ba20",
+    "composition_r3_PASS/sources.f": "2ae4d3f3bda577a3f04eac91813c7de06901ab08b496bd610a0ae74b38928215",
+    "composition_r3_PASS/receiver-lint.log": "6948af352ab4173c55e343f2d6cea28b36a0bb4a792d95ac67602b1f3f2d78c0",
+    "composition_r3_PASS/source.dirty": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "composition_r3_PASS/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "composition_r3_PASS/supervisor.pid": "efcabb7fc10874bd1ab72d2ac5cb5ef42596acc9157e5b1f143abea9b46e2aeb",
+    "composition_r3_PASS/source.commit": "a32590c5fec780e8b101893597ccfc1d737444d70ea7cef0b2d61615a50a13b7",
+    "composition_r3_PASS/run.sh": "fdf3ccb559ed9febcefe544f0d8a0ecddebe7c449db17be30852fbf8b55539a1",
+    "prelaunch_r1_FAIL/supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prelaunch_r1_FAIL/source.dirty": "9135db12bda0b4266ee53136b9124327bead870dae24ae09e000036f4d57dcfd",
+    "prelaunch_r1_FAIL/exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "prelaunch_r1_FAIL/supervisor.pid": "0b0aa739de66c2f1e6fd74bf5aebb91d0f292cc589d4b22e76d6c61bdce1c02f",
+    "prelaunch_r1_FAIL/source.commit": "a32590c5fec780e8b101893597ccfc1d737444d70ea7cef0b2d61615a50a13b7",
+    "prelaunch_r1_FAIL/run.sh": "be642c5d9850a3b78607d32a4bf1f60979e8dd619ddf84685a48596276660855",
+    "prelaunch_r2_FAIL/supervisor.log": "3f72298752bb0a8bc39a55da904263fc5314d483039ed7eea8902932c82053d3",
+    "prelaunch_r2_FAIL/source.dirty": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prelaunch_r2_FAIL/exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "prelaunch_r2_FAIL/supervisor.pid": "d159c6445b13d6c600461177c7096ab4b099e072920b9c40667f3b9bcb90361f",
+    "prelaunch_r2_FAIL/source.commit": "a32590c5fec780e8b101893597ccfc1d737444d70ea7cef0b2d61615a50a13b7",
+    "prelaunch_r2_FAIL/run.sh": "72d480dcac81fb2fb143eaf8b59de08c2c68e024d8808f5cda9aeb5932706d82"
+  }
+}

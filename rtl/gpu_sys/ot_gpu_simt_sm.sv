@@ -312,7 +312,8 @@ end else begin : g_on
     reg  bd_start, bd_fp4, bd_xw;
     reg  [$clog2(BD_XDEPTH)-1:0] bd_xa;
     reg  [8*266-1:0] bd_xmirror [0:BD_XDEPTH-1];
-    reg  [8*266-1:0] bd_xd;
+    reg  [8*266-1:0] bd_xd;            // registered X-tile write data: sampled by u_bdtc on the edge after issue
+    reg  [8*266-1:0] bd_xn;            // clocked-block temporary (never read outside it)
     if (HAS_BD != 0) begin : g_bd
         wire bdl_wv, bdl_wr, bd_arr, bd_rel;
         wire [8*266-1:0] bdl_wd;
@@ -423,6 +424,10 @@ end else begin : g_on
 
     wire drained = (pend == {NV{1'b0}}) && (fq_left == 0) && !alu_wv && !tc_active && !tc_start && !bd_start && !bc_dv;
     integer i, q;
+    // the clocked block's own loop temporaries: the combinational LSU block above has jj/lj/bi, and sharing a
+    // module variable between two processes is an ordering race (it diverged under Verilator --threads)
+    integer sj, sbi;
+    reg [LB+1:0] slj;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             running <= 1'b0; faulted <= 1'b0; bar_q <= 1'b0; pc <= 0; pend <= {NV{1'b0}}; bst <= B_IDLE;
@@ -495,14 +500,14 @@ end else begin : g_on
                     end
                     if (lrsp_v) begin
                         if (!l_we) begin
-                            for (jj = 0; jj < 32; jj = jj + 1) begin
-                                lj = l_first[lrsp_tag[LB-1:0]] + jj;
-                                if (lj <= l_last[lrsp_tag[LB-1:0]] && lj < NL) begin
-                                    bi = lane_addr(l_base, l_stride, lj) & 31;
+                            for (sj = 0; sj < 32; sj = sj + 1) begin
+                                slj = l_first[lrsp_tag[LB-1:0]] + sj;
+                                if (slj <= l_last[lrsp_tag[LB-1:0]] && slj < NL) begin
+                                    sbi = lane_addr(l_base, l_stride, slj) & 31;
                                     case (l_esz)
-                                        2'd0: l_buf[lj*32 +: 32] <= lrsp_data[bi*8 +: 32];
-                                        2'd1: l_buf[lj*32 +: 32] <= {lrsp_data[bi*8 +: 16], 16'd0};
-                                        default: l_buf[lj*32 +: 32] <= f_e4m3_dec(lrsp_data[bi*8 +: 8]);
+                                        2'd0: l_buf[slj*32 +: 32] <= lrsp_data[sbi*8 +: 32];
+                                        2'd1: l_buf[slj*32 +: 32] <= {lrsp_data[sbi*8 +: 16], 16'd0};
+                                        default: l_buf[slj*32 +: 32] <= f_e4m3_dec(lrsp_data[sbi*8 +: 8]);
                                     endcase
                                 end
                             end
@@ -583,13 +588,14 @@ end else begin : g_on
                     end
                     O_TCXB, O_TCXE: if (HAS_BD != 0) begin
                         bd_xw <= 1'b1; bd_xa <= imm[$clog2(BD_XDEPTH)-1:0];
-                        bd_xd = bd_xmirror[imm[$clog2(BD_XDEPTH)-1:0]];
+                        bd_xn = bd_xmirror[imm[$clog2(BD_XDEPTH)-1:0]];
                         for (li = 0; li < 8; li = li + 1) begin
-                            if (op == O_TCXB) for (jj = 0; jj < 32; jj = jj + 1)
-                                bd_xd[li*266 + jj*8 +: 8] = (li < 4) ? va[(li*32 + jj)*32 +: 8] : vb[((li-4)*32 + jj)*32 +: 8];
-                            else bd_xd[li*266 + 256 +: 10] = va[li*32 +: 10];
+                            if (op == O_TCXB) for (sj = 0; sj < 32; sj = sj + 1)
+                                bd_xn[li*266 + sj*8 +: 8] = (li < 4) ? va[(li*32 + sj)*32 +: 8] : vb[((li-4)*32 + sj)*32 +: 8];
+                            else bd_xn[li*266 + 256 +: 10] = va[li*32 +: 10];
                         end
-                        bd_xmirror[imm[$clog2(BD_XDEPTH)-1:0]] <= bd_xd;
+                        bd_xmirror[imm[$clog2(BD_XDEPTH)-1:0]] <= bd_xn;
+                        bd_xd <= bd_xn;
                     end
                     O_TCBMMA: if (HAS_BD != 0) begin
                         tc_rows <= {1'b0, imm[9:0]}; tc_c <= {8'd0, imm[23:16]}; tc_g <= fb; bd_fp4 <= imm[12];

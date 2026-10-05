@@ -1,0 +1,3 @@
+INTERNAL checks=936912 injected_cases=288 default_cycle_checks=enabled
+LOCKSTEP N=384 P=16 K=6 vectors=2000 sel0=2000 sel1=2000 mismatches=0 lat0=23 lat1=23
+src/tb_topk_predicate.sv:103: $finish called at 58559500 (1ps)

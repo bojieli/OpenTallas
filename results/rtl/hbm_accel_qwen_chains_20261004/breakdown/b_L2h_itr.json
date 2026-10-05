@@ -1,0 +1,156 @@
+{
+ "schema": "opentallas.hbm-accel-qwen-chain-breakdown.v1",
+ "stage": "L2",
+ "tp": 4,
+ "cycles": 17237,
+ "chains_critical_path_cycles": {
+  "norm1_sumsq": 1,
+  "qkv_matvec": 151,
+  "norm1_rsqrt_scale": 817,
+  "qk_norm_vwrite": 215,
+  "rope_kvwrite": 918,
+  "attn_QK": 279,
+  "softmax": 1380,
+  "attn_PV": 67,
+  "o_matvec": 1230,
+  "residual1_norm2_sumsq": 150,
+  "gu_matvec": 67,
+  "norm2_rsqrt_scale": 6424,
+  "silu_mul": 149,
+  "down_matvec": 5160,
+  "residual2_next_norm_sumsq": 218,
+  "start_to_first_issue": 11
+ },
+ "sum_check": 17237,
+ "hbmstat_die0": {
+  "hbm_wait": 10479,
+  "kv_wait": 897,
+  "matmul": 1853,
+  "attention": 0,
+  "collective": 1944,
+  "stream_unit": 1996,
+  "other": 69,
+  "ctl_cycles": 15032,
+  "rd": 1704960,
+  "room_block": 0,
+  "desc_gap": 1792,
+  "words_done": 555,
+  "last_wread_cyc": 15844,
+  "hbm_fault": 0,
+  "wst_fault": 0
+ },
+ "stream_words": 555,
+ "floor_cycles_at_peak": 16368,
+ "measured_over_peak_floor": 1.0531,
+ "issue": {
+  "0": [
+   "norm1_sumsq",
+   11
+  ],
+  "1": [
+   "qkv_matvec",
+   12
+  ],
+  "2": [
+   "norm1_rsqrt_scale",
+   163
+  ],
+  "3": [
+   "qk_norm_vwrite",
+   980
+  ],
+  "4": [
+   "qk_norm_vwrite",
+   985
+  ],
+  "5": [
+   "qk_norm_vwrite",
+   1093
+  ],
+  "6": [
+   "qk_norm_vwrite",
+   1153
+  ],
+  "7": [
+   "rope_kvwrite",
+   1195
+  ],
+  "8": [
+   "rope_kvwrite",
+   1204
+  ],
+  "9": [
+   "rope_kvwrite",
+   1207
+  ],
+  "10": [
+   "rope_kvwrite",
+   1216
+  ],
+  "11": [
+   "attn_QK",
+   2113
+  ],
+  "12": [
+   "softmax",
+   2392
+  ],
+  "13": [
+   "attn_PV",
+   3486
+  ],
+  "14": [
+   "softmax",
+   3553
+  ],
+  "15": [
+   "softmax",
+   3802
+  ],
+  "16": [
+   "o_matvec",
+   3839
+  ],
+  "19": [
+   "residual1_norm2_sumsq",
+   5069
+  ],
+  "20": [
+   "residual1_norm2_sumsq",
+   5134
+  ],
+  "21": [
+   "gu_matvec",
+   5219
+  ],
+  "22": [
+   "norm2_rsqrt_scale",
+   5286
+  ],
+  "23": [
+   "norm2_rsqrt_scale",
+   11592
+  ],
+  "24": [
+   "silu_mul",
+   11710
+  ],
+  "25": [
+   "down_matvec",
+   11859
+  ],
+  "28": [
+   "residual2_next_norm_sumsq",
+   17019
+  ],
+  "29": [
+   "residual2_next_norm_sumsq",
+   17084
+  ]
+ },
+ "inputs": {
+  "log": "results/rtl/hbm_accel_qwen_chains_20261004/runs/b_L2h_itr/token.log",
+  "program": "results/rtl/hbm_accel_qwen_chains_20261004/breakdown/programs/tp4_L2_program.hex",
+  "segments": "results/rtl/hbm_accel_qwen_chains_20261004/breakdown/programs/tp4_L2_segments.hex"
+ }
+}

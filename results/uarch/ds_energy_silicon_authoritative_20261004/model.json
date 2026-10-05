@@ -1,0 +1,1385 @@
+{
+ "schema": "opentallas.uarch.ds_energy_silicon_authoritative.v1",
+ "date": "2026-10-04",
+ "status": "MODEL on authoritative/measured inputs; every non-record constant in ASSUMED",
+ "source_commit": "4eee27714275b8a9cf60b19c3f4a1ac4849b84fd",
+ "tau": 4.159,
+ "sources": {
+  "rates": "tools/uarch_model.py hbm_switch_latency_authoritative() (record results/uarch/hbm_switch_latency_authoritative_20261004)",
+  "rom_ar": "results/rtl/dsrom_wavefront_verify_20261004/record.json",
+  "rom_draft": "results/rtl/dsrom_dspark_step_slices_20261004/composition.json (MEASURED draft, main dae91947c)",
+  "rom_l1l2": "results/rtl/dsrom_dspark_l1l2_20261004/expected.json (EXPECTED projection, 2a235a9fe)",
+  "rom_s81": "results/uarch/dsrom_c_recheck_20261004/model.json priced.S81_ragged_RD64_replicated",
+  "rom_power": "tools/dsrom_c_recheck.py + tools/dsrom_return_storage_hbm.py C1/scenario_c (isopower history 8bb540cd1)",
+  "hbm_power": "results/uarch/consolidation.json hbm.v41_sweep TP-96 4-stack row (gated); results/uarch/hbm_accelerator_study_20261003/ladder_model.py DS_HBM_STATIC_GATED_W / DS_HBM_DYN_J",
+  "hbm_power_crosscheck": "results/uarch/economics.json v41_hbm (legacy DAG, ungated static 6,498.5 W)",
+  "hbm_silicon": "results/uarch/hbm_accelerator_integration_20261004/model.json fairness (96 x 340.5 mm2, 384 stacks)",
+  "dram_mm2": "results/uarch/hbm_accelerator_integration_20261004/model.json fairness.DRAM_mm2_per_stack_sourced (Micron HBM3E 11 x 11 mm cube: 8-Hi 1,089 / 12-Hi 1,573 mm2 core+base bound)",
+  "dram_power": "configs/hardware/power_scenarios.json memory (idle 2.8 W/stack ASSUMED band 1.2-6.4; path 104.88 pJ/B MEASURED A100 SC'25)",
+  "gpu": "tools/uarch_model.py gpu_tier2() / gpu_economics() (8x B200 tier-2 model; 689 W measured decode draw per GPU)",
+  "h100": "results/measured/h100_nvls_20261004/README.md (NVLS collectives, grid.sync 1.097 us; no DS-V4.1 run on H100)"
+ },
+ "assumed": {
+  "switch_chip_mm2": {
+   "value": 800.0,
+   "range": [
+    500.0,
+    850.0
+   ],
+   "basis": "ASSUMED: Tomahawk Ultra / NVSwitch die area unpublished; 51.2T 5 nm monolithic (Tomahawk 5 class) taken as reticle-class 800 mm2"
+  },
+  "switch_chip_w": {
+   "value": 500.0,
+   "range": [
+    300.0,
+    500.0
+   ],
+   "basis": "ASSUMED by analogy: Broadcom Tomahawk 5 (51.2T, N5) 'consumes less than 500 W' (gazettabyte.com/?p=145716); Tomahawk Ultra / NVSwitch power unpublished; full-load figure charged as always-on (upper end)"
+  },
+  "hbm_tier_switch_chips": {
+   "value": 8,
+   "basis": "authoritative record: 'about 8 Tomahawk Ultra chips in one tier' (also charged to the NVLS-class ablation, ASSUMED same count)"
+  },
+  "b200_nvswitch_chips": {
+   "value": 2,
+   "basis": "ASSUMED: HGX B200 baseboard carries 2 NVLink switch chips"
+  },
+  "b200_die_mm2": {
+   "value": 800.0,
+   "basis": "repo record ds_5 (16 dies x 800 mm2, integration fairness) -- ASSUMED die area"
+  },
+  "rom_mtp_step_energy": {
+   "basis": "ASSUMED: ROM MTP dynamic energy per STEP = C1 170.4 / 164.5 mJ per token x tau 3.649 (work per step is schedule-invariant; the wavefront changes overlap, not work); divided by tau 4.159"
+  },
+  "rom_mtp_pg_active": {
+   "basis": "ASSUMED: wavefront MTP keeps 6 positions + 1 pre-woken stage active: f = 7/S"
+  },
+  "rom_pg_residual": {
+   "value": 0.1,
+   "basis": "ASSUMED (scenario C): gated logic and gated SerDes keep 10%"
+  },
+  "rom_mtp_saturation": {
+   "basis": "ASSUMED: saturated MTP step occupancy = C1 non-draft occupancy (tau 3.649 / C1 mtp_sat - 0.1173 x C1 AR) + the MEASURED draft, i.e. the draft serialises on the head"
+  },
+  "hbm_200k_dyn": {
+   "basis": "ASSUMED: HBM 200K dynamic J/token = 1M value - (ROM 1M - ROM 200K dynamic) = -16.3 mJ (same model, same KV/index HBM bytes at the same pJ/B on both designs)"
+  },
+  "hbm_saturation": {
+   "basis": "consolidation TP-96 sweep saturated rows (GPU-organised resource model); the accelerator's batch/union/credit calendar is NOT composed (integration record saturation_gap), so the same saturated aggregate is used for accelerator, ablation and R0 -- HISTORICAL MODEL"
+  },
+  "hbm_200k_mtp_sat": {
+   "basis": "ASSUMED: no 200K MTP saturated row exists; the 1M value is carried (lower bound)"
+  },
+  "gpu_200k_sat": {
+   "basis": "ASSUMED: B200 200K saturated not modelled; 1M value carried (lower bound)"
+  },
+  "hbm_endpoint_serdes": {
+   "basis": "endpoint SerDes area inside the 340.5 mm2 die and power inside the ledger's 'links' static (33.1 W/die); not separately re-priced"
+  }
+ },
+ "rates": {
+  "1M": {
+   "rom": {
+    "ar": 2466.2,
+    "mtp_as_built": 6294.8,
+    "mtp_l1_fused": 6717.8,
+    "mtp_l1l2_expected": 7345.8,
+    "draft_us": {
+     "as_built": 144.44,
+     "l1_fused": 105.55
+    }
+   },
+   "hbm_accel": {
+    "ar": 2624.4,
+    "mtp_pending_draft": 6351.9,
+    "hbm_draft_us_estimate": 47.23,
+    "mtp_sens_rom_ratio_as_built": 5595.5,
+    "mtp_sens_rom_ratio_l1_fused": 5884.9,
+    "sensitivity": {
+     "as_built": {
+      "rom_draft_over_ar": 0.3562,
+      "hbm_draft_us": 135.73,
+      "step_us": 743.27,
+      "mtp_tok_s": 5595.5
+     },
+     "l1_fused": {
+      "rom_draft_over_ar": 0.2603,
+      "hbm_draft_us": 99.19,
+      "step_us": 706.73,
+      "mtp_tok_s": 5884.9
+     }
+    }
+   },
+   "hbm_accel_measured_comp": {
+    "ar": 2562.7,
+    "mtp_pending_draft": 6032.4
+   },
+   "ablation_nvls": {
+    "ar": 1481.9,
+    "mtp": 4123.9
+   },
+   "gpu_faithful_r0": {
+    "ar": 358.9,
+    "mtp": 1249.9
+   },
+   "b200x8": {
+    "ar": 266.9,
+    "mtp": 518.0,
+    "mtp_basis": "existing 1.94x B200 MTP sensitivity (not DSpark tau 4.159)"
+   }
+  },
+  "200K": {
+   "rom": {
+    "ar": 2574.1,
+    "mtp_as_built": 6475.9,
+    "mtp_l1_fused": 6924.5,
+    "mtp_l1l2_expected": 7593.7,
+    "draft_us": {
+     "as_built": 144.44,
+     "l1_fused": 105.55
+    }
+   },
+   "hbm_accel": {
+    "ar": 2629.9,
+    "mtp_pending_draft": 6364.9,
+    "hbm_draft_us_estimate": 47.13,
+    "mtp_sens_rom_ratio_as_built": 5562.6,
+    "mtp_sens_rom_ratio_l1_fused": 5861.0,
+    "sensitivity": {
+     "as_built": {
+      "rom_draft_over_ar": 0.3718,
+      "hbm_draft_us": 141.37,
+      "step_us": 747.67,
+      "mtp_tok_s": 5562.6
+     },
+     "l1_fused": {
+      "rom_draft_over_ar": 0.2717,
+      "hbm_draft_us": 103.31,
+      "step_us": 709.61,
+      "mtp_tok_s": 5861.0
+     }
+    }
+   },
+   "hbm_accel_measured_comp": {
+    "ar": 2568.1,
+    "mtp_pending_draft": 6044.8
+   },
+   "ablation_nvls": {
+    "ar": 1483.7,
+    "mtp": 4129.8
+   },
+   "gpu_faithful_r0": {
+    "ar": 359.0,
+    "mtp": 1250.7
+   },
+   "b200x8": {
+    "ar": 267.2,
+    "mtp": 518.5,
+    "mtp_basis": "existing 1.94x B200 MTP sensitivity (not DSpark tau 4.159)"
+   }
+  }
+ },
+ "silicon": {
+  "rom": {
+   "logic_mm2": 308840.3,
+   "stacks": 452,
+   "dram_mm2": 492228.0,
+   "switch_chips": 0,
+   "switch_mm2": 0.0,
+   "total_mm2": 801068.3
+  },
+  "rom_alt_head_table_786": {
+   "logic_mm2": 306507.9,
+   "stacks": 452,
+   "dram_mm2": 492228.0,
+   "switch_chips": 0,
+   "switch_mm2": 0.0,
+   "total_mm2": 798735.9
+  },
+  "hbm_accel": {
+   "logic_mm2": 32688.0,
+   "stacks": 384,
+   "dram_mm2": 418176.0,
+   "switch_chips": 8,
+   "switch_mm2": 6400.0,
+   "total_mm2": 457264.0
+  },
+  "ablation_nvls": {
+   "logic_mm2": 32688.0,
+   "stacks": 384,
+   "dram_mm2": 418176.0,
+   "switch_chips": 8,
+   "switch_mm2": 6400.0,
+   "total_mm2": 457264.0
+  },
+  "gpu_faithful_r0": {
+   "logic_mm2": 32688.0,
+   "stacks": 384,
+   "dram_mm2": 418176.0,
+   "switch_chips": 8,
+   "switch_mm2": 6400.0,
+   "total_mm2": 457264.0
+  },
+  "b200x8": {
+   "logic_mm2": 12800.0,
+   "stacks": 64,
+   "dram_mm2": 69696.0,
+   "switch_chips": 2,
+   "switch_mm2": 1600.0,
+   "total_mm2": 84096.0
+  }
+ },
+ "silicon_sensitivity": {
+  "rom_420_stacks": {
+   "logic_mm2": 308840.3,
+   "stacks": 420,
+   "dram_mm2": 457380.0,
+   "switch_chips": 0,
+   "switch_mm2": 0.0,
+   "total_mm2": 766220.3
+  },
+  "dram_12hi_1573": {
+   "rom": {
+    "logic_mm2": 308840.3,
+    "stacks": 452,
+    "dram_mm2": 710996.0,
+    "switch_chips": 0,
+    "switch_mm2": 0.0,
+    "total_mm2": 1019836.3
+   },
+   "hbm_accel": {
+    "logic_mm2": 32688.0,
+    "stacks": 384,
+    "dram_mm2": 604032.0,
+    "switch_chips": 8,
+    "switch_mm2": 6400.0,
+    "total_mm2": 643120.0
+   },
+   "b200x8": {
+    "logic_mm2": 12800.0,
+    "stacks": 64,
+    "dram_mm2": 100672.0,
+    "switch_chips": 2,
+    "switch_mm2": 1600.0,
+    "total_mm2": 115072.0
+   }
+  },
+  "dram_assumed_low_900": {
+   "rom": {
+    "logic_mm2": 308840.3,
+    "stacks": 452,
+    "dram_mm2": 406800.0,
+    "switch_chips": 0,
+    "switch_mm2": 0.0,
+    "total_mm2": 715640.3
+   },
+   "hbm_accel": {
+    "logic_mm2": 32688.0,
+    "stacks": 384,
+    "dram_mm2": 345600.0,
+    "switch_chips": 8,
+    "switch_mm2": 6400.0,
+    "total_mm2": 384688.0
+   },
+   "b200x8": {
+    "logic_mm2": 12800.0,
+    "stacks": 64,
+    "dram_mm2": 57600.0,
+    "switch_chips": 2,
+    "switch_mm2": 1600.0,
+    "total_mm2": 72000.0
+   }
+  }
+ },
+ "power": {
+  "1M": {
+   "rom": {
+    "ar_b1_icg": {
+     "tok_s": 2466.2,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 292.5,
+     "system_w": 21884.5,
+     "J_per_token": 8.8738,
+     "J_per_token_check": 8.8738,
+     "tok_s_per_kW": 112.7,
+     "note": "ICG only"
+    },
+    "ar_b1_pg": {
+     "tok_s": 2466.2,
+     "static_w": 7316.3,
+     "switch_w": 0.0,
+     "dynamic_w": 292.5,
+     "system_w": 7608.8,
+     "J_per_token": 3.0852,
+     "J_per_token_check": 3.0852,
+     "tok_s_per_kW": 324.1,
+     "note": "stage power gating, f = 2/S (ASSUMED 10% residual)"
+    },
+    "mtp_as_built_b1_icg": {
+     "tok_s": 6294.8,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 941.1,
+     "system_w": 22533.1,
+     "J_per_token": 3.5796,
+     "J_per_token_check": 3.5796,
+     "tok_s_per_kW": 279.4,
+     "note": ""
+    },
+    "mtp_as_built_b1_pg": {
+     "tok_s": 6294.8,
+     "static_w": 8219.8,
+     "switch_w": 0.0,
+     "dynamic_w": 941.1,
+     "system_w": 9160.9,
+     "J_per_token": 1.4553,
+     "J_per_token_check": 1.4553,
+     "tok_s_per_kW": 687.1,
+     "note": "f = 7/S"
+    },
+    "mtp_l1_fused_b1_pg": {
+     "tok_s": 6717.8,
+     "static_w": 8219.8,
+     "switch_w": 0.0,
+     "dynamic_w": 1004.3,
+     "system_w": 9224.1,
+     "J_per_token": 1.3731,
+     "J_per_token_check": 1.3731,
+     "tok_s_per_kW": 728.3,
+     "note": "f = 7/S"
+    },
+    "ar_sat_icg": {
+     "tok_s": 80833.5,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 9586.9,
+     "system_w": 31178.9,
+     "J_per_token": 0.3857,
+     "J_per_token_check": 0.3857,
+     "tok_s_per_kW": 2592.6,
+     "note": "head-bound 80,833.5 tok/s, ~33 users"
+    },
+    "ar_sat_pg": {
+     "tok_s": 80833.5,
+     "static_w": 13058.5,
+     "switch_w": 0.0,
+     "dynamic_w": 9586.9,
+     "system_w": 22645.3,
+     "J_per_token": 0.2801,
+     "J_per_token_check": 0.2801,
+     "tok_s_per_kW": 3569.5,
+     "note": "f = 0.417"
+    },
+    "mtp_as_built_sat_icg": {
+     "tok_s": 21010.2,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 3141.1,
+     "system_w": 24733.1,
+     "J_per_token": 1.1772,
+     "J_per_token_check": 1.1772,
+     "tok_s_per_kW": 849.5,
+     "note": "draft serialised on head (ASSUMED)"
+    },
+    "mtp_l1_fused_sat_icg": {
+     "tok_s": 26147.1,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 3909.1,
+     "system_w": 25501.1,
+     "J_per_token": 0.9753,
+     "J_per_token_check": 0.9753,
+     "tok_s_per_kW": 1025.3,
+     "note": "draft serialised on head (ASSUMED)"
+    }
+   },
+   "hbm_accel": {
+    "ar_b1": {
+     "tok_s": 2624.4,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 3835.3,
+     "system_w": 13203.0,
+     "J_per_token": 5.0309,
+     "J_per_token_check": 5.0309,
+     "tok_s_per_kW": 198.8,
+     "note": "gated static + 8 switch chips (ASSUMED)"
+    },
+    "ar_b1_no_switch": {
+     "tok_s": 2624.4,
+     "static_w": 5367.7,
+     "switch_w": 0.0,
+     "dynamic_w": 3835.3,
+     "system_w": 9203.0,
+     "J_per_token": 3.5067,
+     "J_per_token_check": 3.5067,
+     "tok_s_per_kW": 285.2,
+     "note": "switch not charged (as earlier records)"
+    },
+    "mtp_b1": {
+     "tok_s": 6351.9,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 5653.6,
+     "system_w": 15021.3,
+     "J_per_token": 2.3648,
+     "J_per_token_check": 2.3648,
+     "tok_s_per_kW": 422.9,
+     "note": "pending measured draft"
+    },
+    "ar_sat": {
+     "tok_s": 25292.7,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 13397.3,
+     "system_w": 22765.0,
+     "J_per_token": 0.9001,
+     "J_per_token_check": 0.9001,
+     "tok_s_per_kW": 1111.0,
+     "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
+    },
+    "mtp_sat": {
+     "tok_s": 15931.1,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 14831.3,
+     "system_w": 24199.0,
+     "J_per_token": 1.519,
+     "J_per_token_check": 1.519,
+     "tok_s_per_kW": 658.3,
+     "note": ""
+    },
+    "mtp_b1_sens_rom_ratio_as_built": {
+     "tok_s": 5595.5,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 4980.3,
+     "system_w": 14348.0,
+     "J_per_token": 2.5642,
+     "J_per_token_check": 2.5642,
+     "tok_s_per_kW": 390.0,
+     "note": "HBM draft = ROM measured draft/AR"
+    }
+   },
+   "ablation_nvls": {
+    "ar_b1": {
+     "tok_s": 1481.9,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 2165.6,
+     "system_w": 11533.3,
+     "J_per_token": 7.7828,
+     "J_per_token_check": 7.7828,
+     "tok_s_per_kW": 128.5,
+     "note": "gated static + 8 switch chips (ASSUMED)"
+    },
+    "ar_b1_no_switch": {
+     "tok_s": 1481.9,
+     "static_w": 5367.7,
+     "switch_w": 0.0,
+     "dynamic_w": 2165.6,
+     "system_w": 7533.3,
+     "J_per_token": 5.0836,
+     "J_per_token_check": 5.0836,
+     "tok_s_per_kW": 196.7,
+     "note": "switch not charged (as earlier records)"
+    },
+    "mtp_b1": {
+     "tok_s": 4123.9,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 3670.5,
+     "system_w": 13038.2,
+     "J_per_token": 3.1616,
+     "J_per_token_check": 3.1616,
+     "tok_s_per_kW": 316.3,
+     "note": ""
+    },
+    "ar_sat": {
+     "tok_s": 25292.7,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 13397.3,
+     "system_w": 22765.0,
+     "J_per_token": 0.9001,
+     "J_per_token_check": 0.9001,
+     "tok_s_per_kW": 1111.0,
+     "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
+    },
+    "mtp_sat": {
+     "tok_s": 15931.1,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 14831.3,
+     "system_w": 24199.0,
+     "J_per_token": 1.519,
+     "J_per_token_check": 1.519,
+     "tok_s_per_kW": 658.3,
+     "note": ""
+    }
+   },
+   "gpu_faithful_r0": {
+    "ar_b1": {
+     "tok_s": 358.9,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 524.5,
+     "system_w": 9892.2,
+     "J_per_token": 27.5626,
+     "J_per_token_check": 27.5626,
+     "tok_s_per_kW": 36.3,
+     "note": "gated static + 8 switch chips (ASSUMED)"
+    },
+    "ar_b1_no_switch": {
+     "tok_s": 358.9,
+     "static_w": 5367.7,
+     "switch_w": 0.0,
+     "dynamic_w": 524.5,
+     "system_w": 5892.2,
+     "J_per_token": 16.4174,
+     "J_per_token_check": 16.4174,
+     "tok_s_per_kW": 60.9,
+     "note": "switch not charged (as earlier records)"
+    },
+    "mtp_b1": {
+     "tok_s": 1249.9,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 1112.5,
+     "system_w": 10480.2,
+     "J_per_token": 8.3848,
+     "J_per_token_check": 8.3848,
+     "tok_s_per_kW": 119.3,
+     "note": ""
+    },
+    "ar_sat": {
+     "tok_s": 25292.7,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 13397.3,
+     "system_w": 22765.0,
+     "J_per_token": 0.9001,
+     "J_per_token_check": 0.9001,
+     "tok_s_per_kW": 1111.0,
+     "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
+    },
+    "mtp_sat": {
+     "tok_s": 15931.1,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 14831.3,
+     "system_w": 24199.0,
+     "J_per_token": 1.519,
+     "J_per_token_check": 1.519,
+     "tok_s_per_kW": 658.3,
+     "note": ""
+    }
+   },
+   "b200x8": {
+    "ar_b1": {
+     "tok_s": 266.9,
+     "static_w": 6512.0,
+     "switch_w": 0.0,
+     "dynamic_w": 0.0,
+     "system_w": 6512.0,
+     "J_per_token": 24.3987,
+     "J_per_token_check": 24.3987,
+     "tok_s_per_kW": 41.0,
+     "note": "8 x 689 W measured decode draw + 2 NVSwitch (ASSUMED)"
+    },
+    "mtp_b1": {
+     "tok_s": 518.0,
+     "static_w": 6512.0,
+     "switch_w": 0.0,
+     "dynamic_w": 0.0,
+     "system_w": 6512.0,
+     "J_per_token": 12.5714,
+     "J_per_token_check": 12.5714,
+     "tok_s_per_kW": 79.5,
+     "note": ""
+    },
+    "ar_sat": {
+     "tok_s": 59239.6,
+     "static_w": 6512.0,
+     "switch_w": 0.0,
+     "dynamic_w": 0.0,
+     "system_w": 6512.0,
+     "J_per_token": 0.1099,
+     "J_per_token_check": 0.1099,
+     "tok_s_per_kW": 9097.0,
+     "note": "batch 839"
+    },
+    "ar_b1_tdp": {
+     "tok_s": 266.9,
+     "static_w": 10600.0,
+     "switch_w": 0.0,
+     "dynamic_w": 0.0,
+     "system_w": 10600.0,
+     "J_per_token": 39.7152,
+     "J_per_token_check": 39.7152,
+     "tok_s_per_kW": 25.2,
+     "note": "1,200 W TDP sensitivity"
+    }
+   }
+  },
+  "200K": {
+   "rom": {
+    "ar_b1_icg": {
+     "tok_s": 2574.1,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 263.3,
+     "system_w": 21855.3,
+     "J_per_token": 8.4905,
+     "J_per_token_check": 8.4905,
+     "tok_s_per_kW": 117.8,
+     "note": "ICG only"
+    },
+    "ar_b1_pg": {
+     "tok_s": 2574.1,
+     "static_w": 7316.3,
+     "switch_w": 0.0,
+     "dynamic_w": 263.3,
+     "system_w": 7579.6,
+     "J_per_token": 2.9446,
+     "J_per_token_check": 2.9446,
+     "tok_s_per_kW": 339.6,
+     "note": "stage power gating, f = 2/S (ASSUMED 10% residual)"
+    },
+    "mtp_as_built_b1_icg": {
+     "tok_s": 6475.9,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 934.7,
+     "system_w": 22526.7,
+     "J_per_token": 3.4785,
+     "J_per_token_check": 3.4785,
+     "tok_s_per_kW": 287.5,
+     "note": ""
+    },
+    "mtp_as_built_b1_pg": {
+     "tok_s": 6475.9,
+     "static_w": 8219.8,
+     "switch_w": 0.0,
+     "dynamic_w": 934.7,
+     "system_w": 9154.4,
+     "J_per_token": 1.4136,
+     "J_per_token_check": 1.4136,
+     "tok_s_per_kW": 707.4,
+     "note": "f = 7/S"
+    },
+    "mtp_l1_fused_b1_pg": {
+     "tok_s": 6924.5,
+     "static_w": 8219.8,
+     "switch_w": 0.0,
+     "dynamic_w": 999.4,
+     "system_w": 9219.2,
+     "J_per_token": 1.3314,
+     "J_per_token_check": 1.3314,
+     "tok_s_per_kW": 751.1,
+     "note": "f = 7/S"
+    },
+    "ar_sat_icg": {
+     "tok_s": 80833.5,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 8269.3,
+     "system_w": 29861.3,
+     "J_per_token": 0.3694,
+     "J_per_token_check": 0.3694,
+     "tok_s_per_kW": 2707.0,
+     "note": "head-bound 80,833.5 tok/s, ~33 users"
+    },
+    "ar_sat_pg": {
+     "tok_s": 80833.5,
+     "static_w": 12810.2,
+     "switch_w": 0.0,
+     "dynamic_w": 8269.3,
+     "system_w": 21079.5,
+     "J_per_token": 0.2608,
+     "J_per_token_check": 0.2608,
+     "tok_s_per_kW": 3834.7,
+     "note": "f = 0.400"
+    },
+    "mtp_as_built_sat_icg": {
+     "tok_s": 20934.2,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 3021.4,
+     "system_w": 24613.4,
+     "J_per_token": 1.1758,
+     "J_per_token_check": 1.1758,
+     "tok_s_per_kW": 850.5,
+     "note": "draft serialised on head (ASSUMED)"
+    },
+    "mtp_l1_fused_sat_icg": {
+     "tok_s": 26029.5,
+     "static_w": 21592.0,
+     "switch_w": 0.0,
+     "dynamic_w": 3756.8,
+     "system_w": 25348.8,
+     "J_per_token": 0.9739,
+     "J_per_token_check": 0.9739,
+     "tok_s_per_kW": 1026.9,
+     "note": "draft serialised on head (ASSUMED)"
+    }
+   },
+   "hbm_accel": {
+    "ar_b1": {
+     "tok_s": 2629.9,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 3800.4,
+     "system_w": 13168.1,
+     "J_per_token": 5.0071,
+     "J_per_token_check": 5.0071,
+     "tok_s_per_kW": 199.7,
+     "note": "gated static + 8 switch chips (ASSUMED)"
+    },
+    "ar_b1_no_switch": {
+     "tok_s": 2629.9,
+     "static_w": 5367.7,
+     "switch_w": 0.0,
+     "dynamic_w": 3800.4,
+     "system_w": 9168.1,
+     "J_per_token": 3.4861,
+     "J_per_token_check": 3.4861,
+     "tok_s_per_kW": 286.9,
+     "note": "switch not charged (as earlier records)"
+    },
+    "mtp_b1": {
+     "tok_s": 6364.9,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 5561.4,
+     "system_w": 14929.1,
+     "J_per_token": 2.3455,
+     "J_per_token_check": 2.3455,
+     "tok_s_per_kW": 426.3,
+     "note": "pending measured draft"
+    },
+    "ar_sat": {
+     "tok_s": 41663.8,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 21389.8,
+     "system_w": 30757.5,
+     "J_per_token": 0.7382,
+     "J_per_token_check": 0.7382,
+     "tok_s_per_kW": 1354.6,
+     "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
+    },
+    "mtp_sat": {
+     "tok_s": 15931.1,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 14571.6,
+     "system_w": 23939.3,
+     "J_per_token": 1.5027,
+     "J_per_token_check": 1.5027,
+     "tok_s_per_kW": 665.5,
+     "note": "1M row carried at 200K"
+    },
+    "mtp_b1_sens_rom_ratio_as_built": {
+     "tok_s": 5562.6,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 4860.4,
+     "system_w": 14228.1,
+     "J_per_token": 2.5578,
+     "J_per_token_check": 2.5578,
+     "tok_s_per_kW": 391.0,
+     "note": "HBM draft = ROM measured draft/AR"
+    }
+   },
+   "ablation_nvls": {
+    "ar_b1": {
+     "tok_s": 1483.7,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 2144.1,
+     "system_w": 11511.8,
+     "J_per_token": 7.7588,
+     "J_per_token_check": 7.7588,
+     "tok_s_per_kW": 128.9,
+     "note": "gated static + 8 switch chips (ASSUMED)"
+    },
+    "ar_b1_no_switch": {
+     "tok_s": 1483.7,
+     "static_w": 5367.7,
+     "switch_w": 0.0,
+     "dynamic_w": 2144.1,
+     "system_w": 7511.8,
+     "J_per_token": 5.0629,
+     "J_per_token_check": 5.0629,
+     "tok_s_per_kW": 197.5,
+     "note": "switch not charged (as earlier records)"
+    },
+    "mtp_b1": {
+     "tok_s": 4129.8,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 3608.4,
+     "system_w": 12976.2,
+     "J_per_token": 3.1421,
+     "J_per_token_check": 3.1421,
+     "tok_s_per_kW": 318.3,
+     "note": ""
+    },
+    "ar_sat": {
+     "tok_s": 41663.8,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 21389.8,
+     "system_w": 30757.5,
+     "J_per_token": 0.7382,
+     "J_per_token_check": 0.7382,
+     "tok_s_per_kW": 1354.6,
+     "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
+    },
+    "mtp_sat": {
+     "tok_s": 15931.1,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 14571.6,
+     "system_w": 23939.3,
+     "J_per_token": 1.5027,
+     "J_per_token_check": 1.5027,
+     "tok_s_per_kW": 665.5,
+     "note": "1M row carried at 200K"
+    }
+   },
+   "gpu_faithful_r0": {
+    "ar_b1": {
+     "tok_s": 359.0,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 518.8,
+     "system_w": 9886.5,
+     "J_per_token": 27.539,
+     "J_per_token_check": 27.539,
+     "tok_s_per_kW": 36.3,
+     "note": "gated static + 8 switch chips (ASSUMED)"
+    },
+    "ar_b1_no_switch": {
+     "tok_s": 359.0,
+     "static_w": 5367.7,
+     "switch_w": 0.0,
+     "dynamic_w": 518.8,
+     "system_w": 5886.5,
+     "J_per_token": 16.3969,
+     "J_per_token_check": 16.3969,
+     "tok_s_per_kW": 61.0,
+     "note": "switch not charged (as earlier records)"
+    },
+    "mtp_b1": {
+     "tok_s": 1250.7,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 1092.8,
+     "system_w": 10460.5,
+     "J_per_token": 8.3637,
+     "J_per_token_check": 8.3637,
+     "tok_s_per_kW": 119.6,
+     "note": ""
+    },
+    "ar_sat": {
+     "tok_s": 41663.8,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 21389.8,
+     "system_w": 30757.5,
+     "J_per_token": 0.7382,
+     "J_per_token_check": 0.7382,
+     "tok_s_per_kW": 1354.6,
+     "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
+    },
+    "mtp_sat": {
+     "tok_s": 15931.1,
+     "static_w": 9367.7,
+     "switch_w": 4000.0,
+     "dynamic_w": 14571.6,
+     "system_w": 23939.3,
+     "J_per_token": 1.5027,
+     "J_per_token_check": 1.5027,
+     "tok_s_per_kW": 665.5,
+     "note": "1M row carried at 200K"
+    }
+   },
+   "b200x8": {
+    "ar_b1": {
+     "tok_s": 267.2,
+     "static_w": 6512.0,
+     "switch_w": 0.0,
+     "dynamic_w": 0.0,
+     "system_w": 6512.0,
+     "J_per_token": 24.3713,
+     "J_per_token_check": 24.3713,
+     "tok_s_per_kW": 41.0,
+     "note": "8 x 689 W measured decode draw + 2 NVSwitch (ASSUMED)"
+    },
+    "mtp_b1": {
+     "tok_s": 518.5,
+     "static_w": 6512.0,
+     "switch_w": 0.0,
+     "dynamic_w": 0.0,
+     "system_w": 6512.0,
+     "J_per_token": 12.5593,
+     "J_per_token_check": 12.5593,
+     "tok_s_per_kW": 79.6,
+     "note": ""
+    },
+    "ar_sat": {
+     "tok_s": 59239.6,
+     "static_w": 6512.0,
+     "switch_w": 0.0,
+     "dynamic_w": 0.0,
+     "system_w": 6512.0,
+     "J_per_token": 0.1099,
+     "J_per_token_check": 0.1099,
+     "tok_s_per_kW": 9097.0,
+     "note": "batch 839 (1M row carried at 200K)"
+    },
+    "ar_b1_tdp": {
+     "tok_s": 267.2,
+     "static_w": 10600.0,
+     "switch_w": 0.0,
+     "dynamic_w": 0.0,
+     "system_w": 10600.0,
+     "J_per_token": 39.6707,
+     "J_per_token_check": 39.6707,
+     "tok_s_per_kW": 25.2,
+     "note": "1,200 W TDP sensitivity"
+    }
+   }
+  }
+ },
+ "per_area_and_iso": {
+  "1M": {
+   "per_area": {
+    "rom": {
+     "total_mm2": 801068.3,
+     "per_user_ar_per_1000mm2": 3.0786,
+     "per_user_mtp_per_1000mm2": 7.858,
+     "sat_ar_per_1000mm2": 100.91,
+     "iso_rom_silicon": {
+      "replicas_fractional": 1.0,
+      "replicas_integer": 1,
+      "per_user_ar": 2466.2,
+      "per_user_mtp": 6294.8,
+      "concurrent_b1_users_fractional": 1.0,
+      "aggregate_b1_ar_tok_s": 2466.2,
+      "aggregate_sat_ar_tok_s_integer": 80833.5,
+      "aggregate_sat_ar_tok_s_fractional": 80833.5
+     }
+    },
+    "hbm_accel": {
+     "total_mm2": 457264.0,
+     "per_user_ar_per_1000mm2": 5.7394,
+     "per_user_mtp_per_1000mm2": 13.8911,
+     "sat_ar_per_1000mm2": 55.31,
+     "iso_rom_silicon": {
+      "replicas_fractional": 1.752,
+      "replicas_integer": 1,
+      "per_user_ar": 2624.4,
+      "per_user_mtp": 6351.9,
+      "concurrent_b1_users_fractional": 1.75,
+      "aggregate_b1_ar_tok_s": 2624.4,
+      "aggregate_sat_ar_tok_s_integer": 25292.7,
+      "aggregate_sat_ar_tok_s_fractional": 44309.6
+     }
+    },
+    "ablation_nvls": {
+     "total_mm2": 457264.0,
+     "per_user_ar_per_1000mm2": 3.2408,
+     "per_user_mtp_per_1000mm2": 9.0186,
+     "sat_ar_per_1000mm2": 55.31,
+     "iso_rom_silicon": {
+      "replicas_fractional": 1.752,
+      "replicas_integer": 1,
+      "per_user_ar": 1481.9,
+      "per_user_mtp": 4123.9,
+      "concurrent_b1_users_fractional": 1.75,
+      "aggregate_b1_ar_tok_s": 1481.9,
+      "aggregate_sat_ar_tok_s_integer": 25292.7,
+      "aggregate_sat_ar_tok_s_fractional": 44309.6
+     }
+    },
+    "gpu_faithful_r0": {
+     "total_mm2": 457264.0,
+     "per_user_ar_per_1000mm2": 0.7849,
+     "per_user_mtp_per_1000mm2": 2.7334,
+     "sat_ar_per_1000mm2": 55.31,
+     "iso_rom_silicon": {
+      "replicas_fractional": 1.752,
+      "replicas_integer": 1,
+      "per_user_ar": 358.9,
+      "per_user_mtp": 1249.9,
+      "concurrent_b1_users_fractional": 1.75,
+      "aggregate_b1_ar_tok_s": 358.9,
+      "aggregate_sat_ar_tok_s_integer": 25292.7,
+      "aggregate_sat_ar_tok_s_fractional": 44309.6
+     }
+    },
+    "b200x8": {
+     "total_mm2": 84096.0,
+     "per_user_ar_per_1000mm2": 3.1738,
+     "per_user_mtp_per_1000mm2": 6.1596,
+     "sat_ar_per_1000mm2": 704.43,
+     "iso_rom_silicon": {
+      "replicas_fractional": 9.526,
+      "replicas_integer": 9,
+      "per_user_ar": 266.9,
+      "per_user_mtp": 518.0,
+      "concurrent_b1_users_fractional": 9.53,
+      "aggregate_b1_ar_tok_s": 2402.1,
+      "aggregate_sat_ar_tok_s_integer": 533156.4,
+      "aggregate_sat_ar_tok_s_fractional": 564295.2
+     }
+    }
+   },
+   "iso_power_at_rom_sat_icg": {
+    "hbm_accel": {
+     "budget_w": 31178.9,
+     "replica_sat_w": 22765.0,
+     "replicas_fractional": 1.37,
+     "aggregate_sat_ar_tok_s": 34640.8
+    },
+    "ablation_nvls": {
+     "budget_w": 31178.9,
+     "replica_sat_w": 22765.0,
+     "replicas_fractional": 1.37,
+     "aggregate_sat_ar_tok_s": 34640.8
+    },
+    "b200x8": {
+     "budget_w": 31178.9,
+     "replica_sat_w": 6512.0,
+     "replicas_fractional": 4.788,
+     "aggregate_sat_ar_tok_s": 283634.1
+    },
+    "rom": {
+     "budget_w": 31178.9,
+     "aggregate_sat_ar_tok_s": 80833.5
+    }
+   }
+  },
+  "200K": {
+   "per_area": {
+    "rom": {
+     "total_mm2": 801068.3,
+     "per_user_ar_per_1000mm2": 3.2133,
+     "per_user_mtp_per_1000mm2": 8.0841,
+     "sat_ar_per_1000mm2": 100.91,
+     "iso_rom_silicon": {
+      "replicas_fractional": 1.0,
+      "replicas_integer": 1,
+      "per_user_ar": 2574.1,
+      "per_user_mtp": 6475.9,
+      "concurrent_b1_users_fractional": 1.0,
+      "aggregate_b1_ar_tok_s": 2574.1,
+      "aggregate_sat_ar_tok_s_integer": 80833.5,
+      "aggregate_sat_ar_tok_s_fractional": 80833.5
+     }
+    },
+    "hbm_accel": {
+     "total_mm2": 457264.0,
+     "per_user_ar_per_1000mm2": 5.7514,
+     "per_user_mtp_per_1000mm2": 13.9195,
+     "sat_ar_per_1000mm2": 91.12,
+     "iso_rom_silicon": {
+      "replicas_fractional": 1.752,
+      "replicas_integer": 1,
+      "per_user_ar": 2629.9,
+      "per_user_mtp": 6364.9,
+      "concurrent_b1_users_fractional": 1.75,
+      "aggregate_b1_ar_tok_s": 2629.9,
+      "aggregate_sat_ar_tok_s_integer": 41663.8,
+      "aggregate_sat_ar_tok_s_fractional": 72989.7
+     }
+    },
+    "ablation_nvls": {
+     "total_mm2": 457264.0,
+     "per_user_ar_per_1000mm2": 3.2447,
+     "per_user_mtp_per_1000mm2": 9.0315,
+     "sat_ar_per_1000mm2": 91.12,
+     "iso_rom_silicon": {
+      "replicas_fractional": 1.752,
+      "replicas_integer": 1,
+      "per_user_ar": 1483.7,
+      "per_user_mtp": 4129.8,
+      "concurrent_b1_users_fractional": 1.75,
+      "aggregate_b1_ar_tok_s": 1483.7,
+      "aggregate_sat_ar_tok_s_integer": 41663.8,
+      "aggregate_sat_ar_tok_s_fractional": 72989.7
+     }
+    },
+    "gpu_faithful_r0": {
+     "total_mm2": 457264.0,
+     "per_user_ar_per_1000mm2": 0.7851,
+     "per_user_mtp_per_1000mm2": 2.7352,
+     "sat_ar_per_1000mm2": 91.12,
+     "iso_rom_silicon": {
+      "replicas_fractional": 1.752,
+      "replicas_integer": 1,
+      "per_user_ar": 359.0,
+      "per_user_mtp": 1250.7,
+      "concurrent_b1_users_fractional": 1.75,
+      "aggregate_b1_ar_tok_s": 359.0,
+      "aggregate_sat_ar_tok_s_integer": 41663.8,
+      "aggregate_sat_ar_tok_s_fractional": 72989.7
+     }
+    },
+    "b200x8": {
+     "total_mm2": 84096.0,
+     "per_user_ar_per_1000mm2": 3.1773,
+     "per_user_mtp_per_1000mm2": 6.1656,
+     "sat_ar_per_1000mm2": 704.43,
+     "iso_rom_silicon": {
+      "replicas_fractional": 9.526,
+      "replicas_integer": 9,
+      "per_user_ar": 267.2,
+      "per_user_mtp": 518.5,
+      "concurrent_b1_users_fractional": 9.53,
+      "aggregate_b1_ar_tok_s": 2404.8,
+      "aggregate_sat_ar_tok_s_integer": 533156.4,
+      "aggregate_sat_ar_tok_s_fractional": 564295.2
+     }
+    }
+   },
+   "iso_power_at_rom_sat_icg": {
+    "hbm_accel": {
+     "budget_w": 29861.3,
+     "replica_sat_w": 30757.5,
+     "replicas_fractional": 0.971,
+     "aggregate_sat_ar_tok_s": 40449.8
+    },
+    "ablation_nvls": {
+     "budget_w": 29861.3,
+     "replica_sat_w": 30757.5,
+     "replicas_fractional": 0.971,
+     "aggregate_sat_ar_tok_s": 40449.8
+    },
+    "b200x8": {
+     "budget_w": 29861.3,
+     "replica_sat_w": 6512.0,
+     "replicas_fractional": 4.586,
+     "aggregate_sat_ar_tok_s": 271648.0
+    },
+    "rom": {
+     "budget_w": 29861.3,
+     "aggregate_sat_ar_tok_s": 80833.5
+    }
+   }
+  }
+ },
+ "saturation_points": {
+  "1M": {
+   "rom_ar": {
+    "tok_s": 80833.5,
+    "users": 32.8,
+    "per_user": 2466.2,
+    "rule": "pipeline fill: every user keeps the batch-1 rate until the head binds"
+   },
+   "rom_mtp_as_built": {
+    "tok_s": 21010.2,
+    "users": 3.34,
+    "per_user": 6294.8
+   },
+   "hbm_ar": {
+    "tok_s": 25292.7,
+    "users": 32,
+    "per_user": 790.4,
+    "rule": "column passes: per-user rate falls with batch (HISTORICAL resource model)"
+   },
+   "hbm_mtp": {
+    "tok_s": 15931.1,
+    "users": 4,
+    "per_user": 3982.8
+   },
+   "b200x8_ar": {
+    "tok_s": 59239.6,
+    "users": 839,
+    "per_user": 70.6
+   }
+  },
+  "200K": {
+   "rom_ar": {
+    "tok_s": 80833.5,
+    "users": 31.4,
+    "per_user": 2574.1,
+    "rule": "pipeline fill: every user keeps the batch-1 rate until the head binds"
+   },
+   "rom_mtp_as_built": {
+    "tok_s": 20934.2,
+    "users": 3.23,
+    "per_user": 6475.9
+   },
+   "hbm_ar": {
+    "tok_s": 41663.8,
+    "users": 32,
+    "per_user": 1302.0,
+    "rule": "column passes: per-user rate falls with batch (HISTORICAL resource model)"
+   },
+   "hbm_mtp": {
+    "tok_s": 15931.1,
+    "users": 4,
+    "per_user": 3982.8
+   },
+   "b200x8_ar": {
+    "tok_s": 59239.6,
+    "users": 839,
+    "per_user": 70.6
+   }
+  }
+ },
+ "hbm_sweep": {
+  "ar_sat_1M": 25292.7,
+  "ar_sat_200K": 41663.8,
+  "dyn_ar_sat_J": 0.5296897072847699,
+  "mtp_step_b1_J": 3.7017455720416947,
+  "mtp_steps_s_sat": 3830.5015072622637,
+  "mtp_step_sat_J": 3.871890620933789,
+  "capacity_users_1m": 7763,
+  "ar_sat_batch": 32,
+  "ar_sat_per_user": 790.4,
+  "mtp_sat_batch": 4,
+  "mtp_sat_per_user_tau3649": 3494.4,
+  "crosscheck": {
+   "mtp_step_b1_J": [
+    3.7017,
+    4.1556,
+    "consolidation gated vs economics legacy"
+   ],
+   "dyn_ar_sat_J": [
+    0.5297,
+    0.6143,
+    "consolidation gated vs economics legacy"
+   ],
+   "static_gated_W": [
+    5367.7,
+    5367.7,
+    "ladder constant vs consolidation gated_mJ x rate - dyn"
+   ]
+  }
+ },
+ "cross_checks": {
+  "rates": {
+   "1M": {
+    "acc_ar_us": [
+     381.04,
+     381.04
+    ],
+    "acc_mtp_step_us": [
+     654.77,
+     654.77
+    ]
+   },
+   "200K": {
+    "acc_ar_us": [
+     380.24,
+     380.24
+    ],
+    "acc_mtp_step_us": [
+     653.43,
+     653.43
+    ]
+   }
+  },
+  "power": {
+   "1M": {
+    "rom_static_icg_kW": [
+     21.59,
+     21.59,
+     "components vs S81 record"
+    ],
+    "rom_static_pg_b1_kW": [
+     7.32,
+     7.32,
+     "components vs S81 record"
+    ],
+    "rom_b1_pg_tok_s_per_kW": [
+     324.1,
+     324.1
+    ],
+    "rom_sat_icg_tok_s_per_kW": [
+     2592.6,
+     2592.6
+    ],
+    "rom_mtp_sat": {
+     "base_occupancy_us": 53.51,
+     "as_built": 21010.2,
+     "l1_fused": 26147.1
+    },
+    "rom_mtp_dyn_J": {
+     "step_J": 0.6218,
+     "per_token": 0.1495
+    },
+    "hbm_dyn": {
+     "ar_b1": 1.4614,
+     "mtp_b1": 0.8901,
+     "ar_sat": 0.5297,
+     "mtp_sat": 0.931
+    }
+   },
+   "200K": {
+    "rom_static_icg_kW": [
+     21.59,
+     21.59,
+     "components vs S81 record"
+    ],
+    "rom_static_pg_b1_kW": [
+     7.32,
+     7.32,
+     "components vs S81 record"
+    ],
+    "rom_b1_pg_tok_s_per_kW": [
+     339.6,
+     339.6
+    ],
+    "rom_sat_icg_tok_s_per_kW": [
+     2707.0,
+     2707.0
+    ],
+    "rom_mtp_sat": {
+     "base_occupancy_us": 54.23,
+     "as_built": 20934.2,
+     "l1_fused": 26029.5
+    },
+    "rom_mtp_dyn_J": {
+     "step_J": 0.6003,
+     "per_token": 0.1443
+    },
+    "hbm_dyn": {
+     "ar_b1": 1.4451,
+     "mtp_b1": 0.8738,
+     "ar_sat": 0.5134,
+     "mtp_sat": 0.9147
+    }
+   }
+  },
+  "hbm": {
+   "mtp_step_b1_J": [
+    3.7017,
+    4.1556,
+    "consolidation gated vs economics legacy"
+   ],
+   "dyn_ar_sat_J": [
+    0.5297,
+    0.6143,
+    "consolidation gated vs economics legacy"
+   ],
+   "static_gated_W": [
+    5367.7,
+    5367.7,
+    "ladder constant vs consolidation gated_mJ x rate - dyn"
+   ]
+  }
+ },
+ "h100_measured_anchor": {
+  "nvls_ar_us": 2.244,
+  "grid_sync_us": 1.097,
+  "sys_fenced_ar_us": "8.904-9.144",
+  "note": "H100 numbers enter as the ablation's NVLS transport and R0's grid.sync; no DeepSeek-V4.1 decode was measured on H100"
+ }
+}

@@ -1,0 +1,4 @@
+STATS CHAIN_P8191_early_short_mlp hbm_act=8864 rd=262144 wr=272 refpb=5563 violations=0 max_landing=12 rsp_tile_stall=26804 fill_sectors=262144 wr_sectors=272 wr_lat_max=57
+PASS CHAIN_P8191_early_short_mlp "P":8191,"early_go":1,"posted_wb":1,"attn_cycles":1200,"mlp_cycles":400,"A_fill_cycles":1357,"A_kv_ok_after_start":1367,"B_fill_cycles":1398,"B_fill_exposed_after_start":998,"B_kv_ok_after_start":1008,"su_drain_wait":0,"violations":0 : A and B slices, both token write-backs exact
+KV_SERVICE4_STANDALONE PASS
+{"cases":[{"name":"CHAIN_P8191_early_short_mlp","pass":true,"P":8191,"early_go":1,"posted_wb":1,"attn_cycles":1200,"mlp_cycles":400,"A_fill_cycles":1357,"A_kv_ok_after_start":1367,"B_fill_cycles":1398,"B_fill_exposed_after_start":998,"B_kv_ok_after_start":1008,"su_drain_wait":0,"violations":0,"detail":"A and B slices, both token write-backs exact"}],"status":"pass"}

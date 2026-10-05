@@ -1,0 +1,23 @@
+{
+ "shape": "qwen",
+ "seed": 20261004,
+ "params": {
+  "GS": 2,
+  "NG": 1,
+  "NC": 2,
+  "NOG": 1,
+  "E": 4096,
+  "LANES": 256,
+  "ONESHOT": 1,
+  "BF16": 0
+ },
+ "partial_flits": 16,
+ "result_flits": 16,
+ "golden": "hdc_golden.add pairwise tree in contributor rank order",
+ "sha256": {
+  "part.hex": "cd0f9413cf7952adf63cc4f87e37d0d9532d1f4d201c9b90268a2e88e018669e",
+  "expected.hex": "54d4c4680f5cf994eda155dd41a17f4c89d1c3bd048876ee4e42edbda6a20496"
+ },
+ "zero_results": 65,
+ "subnormal_results": 6
+}

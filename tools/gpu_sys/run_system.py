@@ -48,7 +48,8 @@ def sha(p):
 
 
 def build(work, model="qwen"):
-    obj = Path(work) / (("obj_sys_w2" if os.environ.get("GPU_SYS_USE_W2") == "1" else "obj_sys") + "_" + model)
+    obj = Path(work) / (("obj_sys_w2" if os.environ.get("GPU_SYS_USE_W2") == "1" else "obj_sys") + "_" + model +
+                        ("_trace" if os.environ.get("GPU_SYS_TRACE") == "1" else ""))
     exe = obj / "Vtb_gpu_hbm_system"
     if exe.exists():
         return exe
@@ -57,9 +58,11 @@ def build(work, model="qwen"):
            "--top-module", "tb_gpu_hbm_system", "--Mdir", str(obj)] + \
           [f"-G{k}={v}" for k, v in MODEL_PARAMS[model].items()] + \
           (["--threads", os.environ["GPU_SYS_THREADS"]] if os.environ.get("GPU_SYS_THREADS") else []) + \
-          (["-DGPU_SYS_USE_W2"] if os.environ.get("GPU_SYS_USE_W2") == "1" else []) + [str(ROOT / s) for s in SYS_SRC + DEP_SRC + [TB]]
+          (["-DGPU_SYS_USE_W2"] if os.environ.get("GPU_SYS_USE_W2") == "1" else []) + \
+          (["-DGPU_SYS_TRACE"] if os.environ.get("GPU_SYS_TRACE") == "1" else []) + [str(ROOT / s) for s in SYS_SRC + DEP_SRC + [TB]]
     t0 = time.time()
-    subprocess.run(cmd, check=True, cwd=ROOT, stdout=subprocess.DEVNULL)
+    with open(obj.parent / (obj.name + "_build.log"), "w") as blog:   # keep Verilator's warnings (UNOPTFLAT, ...)
+        subprocess.run(cmd, check=True, cwd=ROOT, stdout=blog, stderr=subprocess.STDOUT)
     print(f"build {time.time() - t0:.0f} s", flush=True)
     return exe
 

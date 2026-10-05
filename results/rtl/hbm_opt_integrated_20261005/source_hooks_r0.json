@@ -1,0 +1,151 @@
+{
+  "schema": "opentallas.hbm-opt-integrated-plan.v1",
+  "profile": "candidate_on",
+  "enabled": {},
+  "levers": {
+    "pipelined_issue": {
+      "owner": "Euclid",
+      "requested": true,
+      "selected": false,
+      "source_sha256": {
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": null,
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": null
+      },
+      "exact_holds": [
+        "Production cursor-fold and selected combined bench source/fixture binding pending."
+      ],
+      "physical_holds": [
+        "physical binding absent"
+      ]
+    },
+    "format_masked_activation": {
+      "owner": "Pauli",
+      "requested": true,
+      "selected": false,
+      "source_sha256": {
+        "rtl/hbm_accel/sm/ot_hbm_accel_sm_pq_xmap.sv": null,
+        "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv": null
+      },
+      "exact_holds": [
+        "Measure ON TOP of selected production PQ using the same cached operands/results; separate effects are not additive."
+      ],
+      "physical_holds": [
+        "physical binding absent"
+      ]
+    },
+    "partial_wave_packing": {
+      "owner": "Erdos",
+      "requested": true,
+      "selected": false,
+      "source_sha256": {},
+      "exact_holds": [
+        "Optional: >=1% measured incremental gain over PQ; source/ABI not landed."
+      ],
+      "physical_holds": [
+        "physical binding absent"
+      ]
+    },
+    "expert_workgroup": {
+      "owner": "Hubble",
+      "requested": true,
+      "selected": false,
+      "source_sha256": {
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv": "2ac198b09044f1dde428e390792795b5c2b6c642deedd09d25bc89bab0542a08",
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv": "9cc476d9304fde2a44652b0612545c757624112b6d56ef570823d5d16ae0c902"
+      },
+      "exact_holds": [
+        "Baseline files exist; WG implementation and selected native fetch-to-SM gearbox binding pending."
+      ],
+      "physical_holds": [
+        "physical binding absent"
+      ]
+    },
+    "fused_su": {
+      "owner": "Einstein",
+      "requested": true,
+      "selected": false,
+      "source_sha256": {
+        "rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv": "1a79190bb283e76672c7c644fdd0f8cb4d9ca264cd356ea1b2a7c9e22d1dc539",
+        "rtl/hbm_accel/su/ot_hbm_accel_su_fused_mreq.sv": null
+      },
+      "exact_holds": [
+        "Component exactness exists; selected whole-command finite VM issuer/readback join is required before integrated enable."
+      ],
+      "physical_holds": [
+        "physical binding absent"
+      ]
+    },
+    "su_physical": {
+      "owner": "Nash",
+      "requested": true,
+      "selected": false,
+      "source_sha256": {},
+      "exact_holds": [
+        "No primitive-only timing substitution; clocks unknown until selected loaded context closes."
+      ],
+      "physical_holds": [
+        "physical binding absent"
+      ]
+    },
+    "index_path": {
+      "owner": "Sagan",
+      "requested": true,
+      "selected": false,
+      "source_sha256": {
+        "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv": "1ca1dff79e7ee4375e8a422d8c5b916b86644a3a3231810653636556db29b279",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv": "ea09f3560651e7f0946f07ff4edb5d2a6b78c4c30c151c2fe104d553670b0946"
+      },
+      "exact_holds": [
+        "Component source exists; actual selected parent/final gather and loaded corner binding pending."
+      ],
+      "physical_holds": [
+        "physical binding absent"
+      ]
+    },
+    "endpoint_sm": {
+      "owner": "Goodall",
+      "requested": true,
+      "selected": false,
+      "source_sha256": {
+        "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23"
+      },
+      "exact_holds": [
+        "Selected endpoint/SM closure and receiving parent binding required."
+      ],
+      "physical_holds": [
+        "physical binding absent"
+      ]
+    },
+    "attention": {
+      "owner": "Noether",
+      "requested": true,
+      "selected": false,
+      "source_sha256": {},
+      "exact_holds": [
+        "Await selected export and minimum-component executable mapping; no ideal provider."
+      ],
+      "physical_holds": [
+        "physical binding absent"
+      ]
+    }
+  },
+  "workloads": {
+    "ds_1m": {
+      "holds": [
+        "selected combined minimum-component executable/recipe unbound"
+      ],
+      "binding": null
+    },
+    "qwen_8k": {
+      "holds": [
+        "selected combined minimum-component executable/recipe unbound"
+      ],
+      "binding": null
+    }
+  },
+  "first_two_exact": false,
+  "headline_clock_eligible": false,
+  "full_token_measured": false,
+  "composition_owner": "Maxwell",
+  "die_floorplan_owner": "Claude"
+}

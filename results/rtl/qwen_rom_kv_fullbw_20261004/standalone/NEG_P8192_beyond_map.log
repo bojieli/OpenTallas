@@ -1,0 +1,4 @@
+STATS NEG_P8192_beyond_map hbm_act=4116 rd=131072 wr=0 refpb=176488 violations=0 max_landing=4 rsp_tile_stall=1984 fill_sectors=131072 wr_sectors=0 wr_lat_max=0
+PASS NEG_P8192_beyond_map "P":8192,"fill_cycles":0,"fill_sectors":131072,"sectors_per_cycle":0.00,"tb_s_at_1p2ghz":0.000,"kv_ok_after_start":200049,"su_drain_wait":0,"violations":0 : faulted as required (code 2)
+KV_SERVICE4_STANDALONE PASS
+{"cases":[{"name":"NEG_P8192_beyond_map","pass":true,"P":8192,"fill_cycles":0,"fill_sectors":131072,"sectors_per_cycle":0.00,"tb_s_at_1p2ghz":0.000,"kv_ok_after_start":200049,"su_drain_wait":0,"violations":0,"detail":"faulted as required (code 2)"}],"status":"pass"}

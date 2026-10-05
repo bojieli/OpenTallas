@@ -1,0 +1,11 @@
+PASS normal rows3 groups3 fmt2 gs1 base0 lines72
+PASS normal rows9 groups2 fmt1 gs0 base8192 lines144
+PASS normal rows3 groups10 fmt0 gs1 base57344 lines240
+PASS normal rows3 groups5 fmt1 gs1 base131072 lines120
+PASS normal rows3 groups2 fmt2 gs0 base253952 lines48
+PASS normal rows3 groups3 fmt2 gs1 base0 lines72
+PASS HBROM feed protocol/transport macros2784 captures2784 cycles1124
+- rtl/test/hbrom/tb_hbrom_rom_feed.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 936ns; walltime 0.119 s; speed 7.850 us/s
+- Verilator: cpu 0.119 s on 1 threads; allocated 30 MB

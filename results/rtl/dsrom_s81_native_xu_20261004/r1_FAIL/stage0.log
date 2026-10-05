@@ -1,0 +1,91 @@
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv:37:25: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cnt' generates 3 bits.
+                                                                                                                           : ... note: In instance 'ot_hdc_v41_xu.u_sk'
+   37 |             cnt <= (cnt == STEP_CYC - 1) ? {CW{1'b0}} : cnt + 1'b1;
+      |                         ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv:39:26: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cnt' generates 3 bits.
+                                                                                                                           : ... note: In instance 'ot_hdc_v41_xu.u_sk'
+   39 |             sclk <= (cnt == STEP_CYC - 1);
+      |                          ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_engram_hash.sv:169:22: Operator FUNCREF 'csub' expects 18 bits on the Function Argument, but Function Argument's REPLICATE generates 17 bits.
+                                                                                                                            : ... note: In instance 'ot_hdc_v41_xu.u_hash'
+  169 |                 t8 = csub(s4, {Q, 3'b000});
+      |                      ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_engram_hash.sv:170:23: Operator FUNCREF 'csub' expects 18 bits on the Function Argument, but Function Argument's REPLICATE generates 17 bits.
+                                                                                                                            : ... note: In instance 'ot_hdc_v41_xu.u_hash'
+  170 |                 m1 <= csub(t8, {1'b0, Q, 2'b00});
+      |                       ^~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_engram_hash.sv:170:20: Operator ASSIGNDLY expects 17 bits on the Assign RHS, but Assign RHS's FUNCREF 'csub' generates 18 bits.
+                                                                                                                           : ... note: In instance 'ot_hdc_v41_xu.u_hash'
+  170 |                 m1 <= csub(t8, {1'b0, Q, 2'b00});
+      |                    ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_engram_hash.sv:171:22: Operator FUNCREF 'csub' expects 18 bits on the Function Argument, but Function Argument's REPLICATE generates 17 bits.
+                                                                                                                            : ... note: In instance 'ot_hdc_v41_xu.u_hash'
+  171 |                 t2 = csub({1'b0, m1}, {2'b0, Q, 1'b0});
+      |                      ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_engram_hash.sv:172:23: Operator FUNCREF 'csub' expects 18 bits on the Function Argument, but Function Argument's REPLICATE generates 17 bits.
+                                                                                                                            : ... note: In instance 'ot_hdc_v41_xu.u_hash'
+  172 |                 m2 <= csub(t2, {3'b0, Q});
+      |                       ^~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_engram_hash.sv:172:20: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's FUNCREF 'csub' generates 18 bits.
+                                                                                                                           : ... note: In instance 'ot_hdc_v41_xu.u_hash'
+  172 |                 m2 <= csub(t2, {3'b0, Q});
+      |                    ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:104:27: Operator GT expects 21 bits on the LHS, but LHS's VARREF 'k' generates 12 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  104 |     wire [KW-1:0] kk = (k > n) ? KW'(n) : KW'(k);
+      |                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:148:23: Operator ADD expects 11 bits on the RHS, but RHS's VARREF 'sc' generates 8 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  148 |                 e = e + sc + 11'sd127;
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:181:51: Operator ADD expects 30 bits on the RHS, but RHS's VARREF 'ni' generates 21 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  181 |                     vr_re <= 1'b1; vr_addr <= src + ni; ni <= ni + 1'b1;
+      |                                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:185:39: Operator GT expects 21 bits on the LHS, but LHS's VARREF 'k' generates 12 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  185 |                 S_SELW: if (nw == ((k > n) ? n : k) && !sel_busy) st <= S_IDLE;
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:185:44: Operator COND expects 21 bits on the Conditional False, but Conditional False's VARREF 'k' generates 12 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  185 |                 S_SELW: if (nw == ((k > n) ? n : k) && !sel_busy) st <= S_IDLE;
+      |                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:193:60: Operator ADD expects 30 bits on the RHS, but RHS's VARREF 'tok_l' generates 21 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  193 |                 S_EH0: begin cr_re <= 1'b1; cr_addr <= src + tok_l; st <= S_EH1; end
+      |                                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:197:84: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'eg_c' generates 5 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  197 |                     er_re <= 1'b1; er_addr <= src + rows[ENG_ROW_W*(layer*ENG_COLS + eg_c) +: ENG_ROW_W];
+      |                                                                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:197:51: Operator ADD expects 30 bits on the RHS, but RHS's SEL generates 18 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  197 |                     er_re <= 1'b1; er_addr <= src + rows[ENG_ROW_W*(layer*ENG_COLS + eg_c) +: ENG_ROW_W];
+      |                                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:198:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'eg_c' generates 5 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  198 |                     if (eg_c + 1 == ENG_COLS) st <= S_EGW;
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:204:47: Operator ADD expects 30 bits on the RHS, but RHS's VARREF 'nw' generates 21 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  204 |                 vw_we <= 1'b1; vw_addr <= dst + nw; vw_data <= {16'd0, so_idx}; nw <= nw + 1'b1;
+      |                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:210:45: Operator ADD expects 30 bits on the RHS, but RHS's REPLICATE generates 10 bits.
+                                                                                                                       : ... note: In instance 'ot_hdc_v41_xu'
+  210 |                 w_we <= 1'b1; w_addr <= dst + {eg_i1, 5'd0}; w_mask <= 32'hFFFFFFFF;
+      |                                             ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:212:40: Operator ASSIGNDLY expects 32 bits on the Assign RHS, but Assign RHS's FUNCREF 'deq' generates 33 bits.
+                                                                                                                      : ... note: In instance 'ot_hdc_v41_xu'
+  212 |                     w_data[32*q +: 32] <= deq(er_q[8*q +: 8], er_q[263:256]);
+      |                                        ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/source/rtl/hdc/v41/ot_hdc_v41_xu.sv:213:21: Logical operator IF expects 1 bit on the If, but If's SHIFTR generates 33 bits.
+                                                                                                                      : ... note: In instance 'ot_hdc_v41_xu'
+  213 |                     if (deq(er_q[8*q +: 8], er_q[263:256]) >> 32) flt <= 1'b1;
+      |                     ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.998 MB sources in 17 modules, into 74.348 MB in 81 C++ files needing 0.236 MB
+- Verilator: Walltime 16.292 s (elab=2.543, cvt=12.632, bld=0.000); cpu 16.292 s on 1 threads; allocated 634.777 MB

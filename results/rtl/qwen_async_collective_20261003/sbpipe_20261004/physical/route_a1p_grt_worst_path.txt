@@ -1,0 +1,31 @@
+Startpoint: seq.rd_k[0]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: seq.rd_k[4]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock core_clk (rise edge)
+                          267.212  267.212   clock network delay (propagated)
+                  23.746    0.000  267.212 ^ seq.rd_k[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     2    2.209   53.319   97.481  364.693 ^ seq.rd_k[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     4   26.746   54.199   53.063  417.755 ^ place13040/Y (BUFx10_ASAP7_75t_R)
+    12   12.213   37.319   49.188  466.943 ^ place13021/Y (BUFx6f_ASAP7_75t_R)
+    31   32.199   52.275   45.952  512.895 ^ place13019/Y (BUFx12f_ASAP7_75t_R)
+     1    0.557   19.874   24.847  537.742 v _50714_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.875   21.582   55.104  592.847 v _50716_/Y (OA211x2_ASAP7_75t_R)
+     1    1.403   25.923   51.814  644.661 v _50717_/Y (OR3x1_ASAP7_75t_R)
+     1    6.677   42.396   47.527  692.188 v _50718_/Y (AND3x2_ASAP7_75t_R)
+     1    5.351   45.437   77.989  770.176 v _50734_/Y (OR3x2_ASAP7_75t_R)
+     1    0.766   16.786   37.177  807.354 v _50766_/Y (AND3x1_ASAP7_75t_R)
+     1    7.261   60.629   86.286  893.640 v _50912_/Y (OA33x2_ASAP7_75t_R)
+     3    8.420   58.438   75.353  968.993 v _51170_/Y (AO21x2_ASAP7_75t_R)
+     6    5.022   21.967   50.780 1019.772 v _51182_/Y (AND2x4_ASAP7_75t_R)
+     1    0.774   16.553   35.468 1055.240 v _51199_/Y (AO21x1_ASAP7_75t_R)
+     1    0.974   21.641   54.517 1109.758 v _51200_/Y (OA211x2_ASAP7_75t_R)
+                  21.643    0.111 1109.868 v seq.rd_k[4]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+                                  1109.868   data arrival time
+

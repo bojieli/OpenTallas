@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.meso_fifo.verdict.v1",
  "date": "2026-10-04",
- "status": "FUNCTION_PASS_DELTA_MEASURED_SS_NOT_YET_CLOSED",
+ "status": "MESO_FIFO_CLOSED; FORWARDED_HOP_CLOSED_REG_TO_REG; HOP_FIXTURE_PORT_BOUNDARY_NOT_CLOSED",
  "rtl": {
-  "ot_meso_fifo": "rtl/common/ot_meso_fifo.sv (default-off ENABLE=0; DEPTH 4, OFFSET 2, guards 0/4, CREDITS 8+1)",
-  "ot_fwd_link_stage": "rtl/common/ot_fwd_link_stage.sv (Codex codex/rom-clock-primitives-20261003 @ 6de31bae2, unchanged)"
+  "ot_meso_fifo": "rtl/common/ot_meso_fifo.sv (default-off ENABLE=0; DEPTH 4, OFFSET 2, guards 0/4, CREDITS 8+1; closed source aec121692: registered one-hot ring selects, kept 2:1 next-state selects, per-64-bit index copies)",
+  "ot_fwd_link_stage": "rtl/common/ot_fwd_link_stage.sv (Codex 6de31bae2 + two changes: forwarding inverter is a kept cell ot_fwd_clk_inv, else synthesis folds it into the next stage's flops; data flops need no reset hold, removing a 512-load rst_n enable)"
  },
  "campaign": {
   "d4_central": {
@@ -178,19 +178,102 @@
   },
   "meso_d4_v4_kept_crossing_term": {
    "source_commit": "a5db2e1dd",
-   "status": "QUEUED behind ADMISSIONS_FROZEN on ot-epyc1tb (runs/meso_d4_v4); campaign above is on this source"
+   "setup_ss_ps": -14.13,
+   "setup_tns_ps": -38.7,
+   "hold_ff_ps": 8.93,
+   "std_cell_area_um2": 4999.82,
+   "violating_d_pins": 6,
+   "verdict": "NOT CLOSED: w_cred[0..3] <- credit-ring s_v1 4:1 pointer-decoded mux (AND2/AO211/OA211/OR4) + lap XNOR; cnt[1]/tl[0] <- data-ring valid mux (physical/meso_d4_v4/violating_paths_ss.txt)"
   },
   "fwd_span430_midpoint": {
    "setup_ss_ps": -88.5,
    "hold_ff_ps": 37.65,
    "reg_d_setup_ss_ps": 24.45083,
-   "verdict": "NOT QUALIFIED at 430.56 um standalone: flop -> east port data wire (220 ps) vs CTS-tapped forwarded clock (68 ps past the flop clock); registers and hold pass"
+   "verdict": "NOT QUALIFIED at 430.56 um standalone: flop -> east port data wire (220 ps) vs CTS-tapped forwarded clock (68 ps past the flop clock); registers and hold pass",
+   "superseded_by": "fwd_hop2 runs: the -88.5 ps was the CTS-tapped clock vs the 220 ps data wire; with the clock forwarded beside the bus the hop has +374 ps"
   },
-  "fwd_span430_rx_end_fence": "ABORTED in global-route repair at -471 ps WNS (outputs); no rescue loop"
+  "fwd_span430_rx_end_fence": "ABORTED in global-route repair at -471 ps WNS (outputs); no rescue loop",
+  "meso_d4_v5_onehot_select": {
+   "source_commit": "9dd52e6c6",
+   "setup_ss_ps": -21.38,
+   "setup_tns_ps": -111.6,
+   "hold_ff_ps": 10.29,
+   "violating_d_pins": 9,
+   "verdict": "NOT CLOSED: registered one-hot selects shortened the mux to OAI22+OR4 (206 ps), but ABC folded the hit back into the counter arithmetic (XNOR/AO32 after it)"
+  },
+  "meso_d4_v6_kept_selects": {
+   "source_commit": "8baea9a28",
+   "setup_ss_ps": 12.26,
+   "hold_ff_ps": 8.65,
+   "max_slew_violations": 4,
+   "verdict": "TIMING CLOSED, not physically clean: 4 max-slew violations on the 512-load one-hot data-index net"
+  },
+  "meso_d4_v7_closed": {
+   "source_commit": "aec121692",
+   "setup_ss_ps": 10.13,
+   "setup_tns_ps": 0.0,
+   "hold_ff_ps": 9.44,
+   "violating_d_pins": 0,
+   "std_cell_area_um2": 4842.31,
+   "drc_errors": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "status": "pass",
+   "closes_signoff": true,
+   "added_latency_cycles": 0,
+   "verdict": "CLOSED at SS 60 ps / FF 25 ps, physically clean. Zero added latency: every crossing term (slot valid / lap) is a two-level AND-OR of write-domain flops with REGISTERED one-hot read-domain selects (placed and advanced with the pointer), and it only drives a kept 2:1 select between next states precomputed from local flops; the 512-bit data select has one one-hot index register per 64-bit chunk. Campaign on this source is cycle-identical to v4."
+  },
+  "fwd_hop2_fixture": "physical/rom_clock/ot_fwd_link_hop2.sv: stage A (west fence) -> 440 um -> stage B (east fence), B clocked ONLY by A's forwarded clock (fwd_hop2.sdc: generated clock fwd_a at the last of six kept span repeaters; fwd_forwarded_subtree.tcl keeps the forwarded subtree: ORFS repair_clock_inverters skipped)",
+  "fwd_hop2_synchronous_counterfactual": {
+   "setup_ss_reg_to_reg_ps": -330.27,
+   "hold_ff_ps": 213.44,
+   "verdict": "inverter folded into B's flops, so CTS built ONE balanced tree over 440 um: -330 ps. A synchronous span does not close; forwarding is required"
+  },
+  "fwd_hop2_v7": {
+   "source_commit": "4e13f3442",
+   "hop_setup_ss_ps": 165.28,
+   "hop_hold_ff_ps": 297.54,
+   "boundary_input_ps": -656.51,
+   "verdict": "HOP CLOSED; boundary failed (rst_n 512-load enable). Path detail: physical/fwd_hop2_v7/hop_path_{ss,ff}.txt"
+  },
+  "fwd_hop2_v11": {
+   "source_commit": "ab338894c",
+   "hop_setup_ss_ps": 373.97,
+   "hop_hold_ff_ps": 246.18,
+   "input_to_reg_ss_ps": 129.12,
+   "output_port_ss_ps": -426.15,
+   "max_slew_violations": 14,
+   "closes_signoff": false,
+   "verdict": "HOP CLOSED with ~374 ps setup / ~246 ps hold margin at a 440 um span: no added stages over the 430.56 um pitch. Fixture output boundary (B flop -> east port, Codex output-delay rule 166.67 ps) fails: a buffer inserted by timing-driven global placement was stranded at x 250 um on the B -> port net"
+  },
+  "fwd_hop2_v12": {
+   "source_commit": "ab338894c",
+   "gpl_timing_driven": 0,
+   "hop_setup_ss_ps": 329.08,
+   "hop_hold_ff_ps": 263.04,
+   "worst_ss_ps": -213.89,
+   "input_to_reg_ss_ps": -131.75,
+   "max_slew_violations": 138,
+   "verdict": "non-timing-driven placement moves the failure to the input boundary; v13/v14 (re-buffer before resize) crashed TritonCTS"
+  }
  },
  "verdict": [
-  "Function: the reset-placed ring FIFO passes 323M words with 0 errors, 0 false faults and 0 window violations across 0..360 deg and 2w wander placed at either extreme; drift fails closed before any window violation; 3/3 mutants caught.",
-  "Measured delta at central wander: 2 periods a crossing (1 ring placement + 1 capture register), 4 a region round trip (5 at the half-period resolution edge), 2x the model's central 2. Option C costs Qwen -0.235% (calibrated) / -0.44% (near-HBM), DS -0.273%; worst phase -0.29/-0.55%, -0.34%. B's whole gain over C stays < 1%: C stands.",
-  "Not yet adoptable: W=512 D4 has not closed SS at 1.2 GHz (best measured -29.96 ps, v3); v4 is queued. The forwarded stage is not qualified over a 430.56 um span in a standalone ORFS fixture."
- ]
+  "Meso FIFO W512 D4 CLOSED at 1.2 GHz: SS +10.13 ps, FF +9.44 ps, 0 DRC/slew/cap, 4842.31 um2 (aec121692), with no added latency; the campaign on that RTL is cycle-identical to v4 (0 errors, drift fails closed, mutants 3/3).",
+  "Measured option-C price unchanged: 2 periods a crossing, 4 a round trip (5 at the resolution edge): Qwen -0.235% / -0.44%, DS -0.273% (clocking_model_measured.json now carries the closure).",
+  "Forwarded link: the A->B hop over 440 um with the clock forwarded beside its bus closes with +374 ps setup / +246 ps hold (v11), so the 430.56 um pitch needs no added stages; a synchronous (one balanced tree) span measures -330 ps. The standalone hop fixture's port boundaries are still unclosed (placement artifacts), recorded as open."
+ ],
+ "campaign_source": {
+  "commit": "aec121692",
+  "note": "tools/meso_fifo_campaign.py on the closed RTL (campaign.json): word, latency and round-trip numbers identical to the v4 campaign (220,331,463 / 51,535,701 / 51,005,834 words, 0 errors, 0 false faults, 0 window violations; drift 78/78 fail closed per config; mutants 3/3)"
+ },
+ "forwarded_link_stage": {
+  "hop_span_um": 440.0,
+  "stage_pitch_um": 430.56,
+  "added_stages": 0,
+  "hop_setup_ss_ps": 373.97,
+  "hop_hold_ff_ps": 246.18,
+  "source": "physical/fwd_hop2_v11",
+  "implementation": "forwarded clock = kept inverter at the launching stage + repeated clock-net span beside the bus + the receiving stage's own CTS subtree; not shielded (no NDR in this flow; coupling is not in the STA)",
+  "open_item": "standalone fixture's port boundaries (placeholders for the neighbouring hops, which are this same hop) have not closed in ORFS: outputs -426.15 ps (v11), inputs -131.75 ps (v12)"
+ }
 }

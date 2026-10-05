@@ -14,6 +14,16 @@ import hbm_accelerator_model as h
 BEFORE = json.loads((ROOT / 'results/uarch/hbm_accelerator_integration_20261003/defaults_before.json').read_text())
 
 
+@pytest.fixture
+def legacy_switch(monkeypatch):
+    # the pre-integration pins were taken under the superseded defaults: the 0.668 us switch lump ("w15"), the 8 us
+    # ASSUMED NCCL all-reduce and the V100 1.43 us grid sync.  The AUTHORITATIVE defaults are the measured ones
+    # (results/uarch/hbm_switch_latency_authoritative_20261004).
+    monkeypatch.setattr(u, '_HBM_SWITCH', 'w15')
+    monkeypatch.setattr(u, 'NCCL_ALLREDUCE_S', u.NCCL_ALLREDUCE_ASSUMED_SUPERSEDED_S)
+    monkeypatch.setitem(u.GPU, 'barrier_ns_grid', u.GPU['barrier_ns_grid_v100_superseded'])
+
+
 @pytest.fixture(scope='module')
 def model():
     return u.hbm_accel_rows()
@@ -21,14 +31,14 @@ def model():
 
 @pytest.mark.parametrize('group_slot', [False, True])
 @pytest.mark.parametrize('positions', [1, 6])
-def test_no_service_default_is_exact_preintegration(group_slot, positions):
+def test_no_service_default_is_exact_preintegration(group_slot, positions, legacy_switch):
     # JSON turns the tuple into a list; every numeric part and boundary is exact.
     assert list(u.v41_hbm_chain(group_slot, positions)) == BEFORE['v41_hbm_chain'][f'{group_slot}/{positions}']
     assert list(u.v41_hbm_chain(group_slot, positions, service='off')) == BEFORE['v41_hbm_chain'][f'{group_slot}/{positions}']
 
 
 @pytest.mark.parametrize('fn', ['qwen_hbm_rows', 'v41_hbm_rows', 'gpu_tier2'])
-def test_default_rows_are_unchanged(fn):
+def test_default_rows_are_unchanged(fn, legacy_switch):
     assert getattr(u, fn)() == BEFORE[fn]
 
 
@@ -69,8 +79,9 @@ def test_eight_scans_and_literal_fullscore_remain_explicit(model):
     gpu = model['labeled_baselines']['corrected_B200']
     assert len(gpu['index_scan']['scanning_layers']) == 8
     assert gpu['index_scan']['candidate_gather'] is True
-    assert gpu['tokens_s'] == 282.4 and gpu['spec_tokens_s'] == 547.8
-    assert model['labeled_baselines']['full_score_AR_tok_s'] == pytest.approx(281.84379348323137)
+    # measured H100 fenced one-shot all-reduce (9.024 us) is the GPU-baseline default; 282.4 / 547.8 at the superseded 8 us
+    assert gpu['tokens_s'] == 266.9 and gpu['spec_tokens_s'] == 517.9
+    assert model['labeled_baselines']['full_score_AR_tok_s'] == pytest.approx(266.46311383853737)   # 281.84 at 8 us
     assert model['fairness']['comparable_workload_precision_context_and_acceptance_qualified'] is False
 
 
@@ -184,3 +195,28 @@ def test_qwen27_profile_replaces_assumed_dense_config(model):
     assert c['full_attention_layers'] == 16 and c['linear_attention_layers'] == 48
     assert q['streamed_weight_bytes'] == c['streamed_weight_bytes_8bit'] < 27.0e9
     assert q['hbm_accel_16_stacks']['ar_tok_s'] > 0 and 'study_assumed' in q
+
+
+def test_authoritative_switch_defaults():
+    assert u.HBM_SWITCH_DEFAULTS == dict(ablation='nvls_measured', accelerator='tomahawk_ultra_protocol',
+                                         gpu_faithful='gpu_fenced')
+    assert u._HBM_SWITCH == 'nvls_measured' and u._HBM_FEC == 'board'
+    T_new = u.v41_hbm_chain(True, 1)[0]
+    T_old = u.v41_hbm_chain(True, 1, switch='w15')[0]
+    mix = u.hbm_switch_mix_us('nvls_measured')
+    assert abs((T_new - T_old) - (u.V41_HBM_FABRIC_US['collective_latency'] / 0.668 * mix - 125.9)) < 1e-9
+    # measured anchors: one-shot NVLS AR 2,244 ns + 0.15 us tail; AG 1,382 ns + tail; sys-scope AR 8,904 ns + tail
+    assert abs(u.hbm_switch_collective_us('central', 'ar') - 2.394) < 1e-9
+    assert abs(u.hbm_switch_collective_us('nvls_measured', 'ag') - 1.532) < 1e-9
+    assert abs(u.hbm_switch_collective_us('gpu_fenced', 'ar') - 9.054) < 1e-9
+    # Tomahawk Ultra + our protocol: 2 x 477.6 + 22 cycles at 1.2 GHz + 2 x 32 KB at 720 GB/s + 150 ns
+    assert abs(u.tu_transport_us('all_reduce', 32768) - (2 * 477.6 + 22 / 1.2 + 2 * 32768 / 720 + 150) * 1e-3) < 1e-12
+    assert 1.0 <= u.tu_transport_us('all_reduce', 32768) <= 1.3
+    assert 0.5 <= u.tu_transport_us('all_gather', 10240) <= 0.65
+    assert 0.6 <= u.tu_transport_us('all_reduce', 32768, 'tomahawk_ultra_inc') <= 0.8
+    # the W19 transport + the wide select reproduce the study's collective parts (two ways)
+    for P in (1, 6):
+        study = h._load_study(ROOT)[0].VERIFY_PARTS[P]['collective']
+        assert abs(u.w19_transport_us(P, 'w15', 'kp4') + 8 * 419 * P / 1.2e3 - study) < 0.01
+    assert u.NCCL_ALLREDUCE_S == (8.904e-6 + 9.144e-6) / 2 and u.GPU['barrier_ns_grid'] == 1097.0
+    assert u.qwen_hbm_rows()[1] == BEFORE['qwen_hbm_rows'][1]      # the Qwen HBM headline does not move

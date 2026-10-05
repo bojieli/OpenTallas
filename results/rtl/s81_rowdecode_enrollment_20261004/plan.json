@@ -1,0 +1,154 @@
+{
+  "schema": "s81-native-minimum-rowdecode-enrollment-v1",
+  "baseline_source": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1",
+  "fix_commit": "be155754b5edbf51b780c0db1afcee0f949d6580",
+  "sources": [
+    {
+      "path": "rtl/v41die/ot_v41_pair_w17w10.sv",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv",
+      "sha256": "226c65a86629682eae7932ab122b317f5dd6f3025ee919ca6c1c1af298bc7c1f",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv",
+      "sha256": "49850d3745c25fb695cb586b9e9767c88bdf7398758b991cf3ab5bfc643e6c92",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_ret.sv",
+      "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "sha256": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+      "origin": "be155754b5edbf51b780c0db1afcee0f949d6580"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm.sv",
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain.sv",
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree.sv",
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd.sv",
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bmul2.sv",
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain2.sv",
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree2.sv",
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/common/ot_prefix.sv",
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_cg.sv",
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "origin": "57e3f45e3473e9e36b052f558a3b65ab71b1d6d1"
+    }
+  ],
+  "affected_archives": [
+    "Vpq/libVpq.a",
+    "Vpb/libVpb.a"
+  ],
+  "only_RTL_change": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+  "parameters": {
+    "NSEG": 8,
+    "NB": 2,
+    "PHW": 10,
+    "FAST": 1,
+    "PP": 1,
+    "BP": 0,
+    "q_XF": 4,
+    "BF_XF": 8
+  },
+  "body_ports_registers_pipeline_latency_changes": 0,
+  "cfg_loader": "CW25 everyphase; raw weight callback does not bypassCFG",
+  "forbidden_local_hostname": "ubuntu",
+  "worker_threads": 2,
+  "reservation_request_GiB": 8,
+  "per_file_AS_CPU_wall_limits": "none",
+  "measured_baseline_maxRSS_KiB": {
+    "pq": 307928,
+    "pb": 640604
+  },
+  "compiler": "GCC11.4.0",
+  "Verilator": "5.050",
+  "new_programs_or_inputs": false,
+  "unaffected_models": [
+    "Vcut",
+    "Vretn",
+    "Vroot",
+    "Vnative_vm",
+    "SUN256",
+    "HE",
+    "nativeindex/selector",
+    "CKV",
+    "HEAD",
+    "factory/providers"
+  ],
+  "runtime_restart": false,
+  "next_consumer": "Cicero/Arch solehost uses successor --pq/--pb dirs on next seriallink after prior runtime terminal; no oldbinary replacement"
+}

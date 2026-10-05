@@ -1,0 +1,10 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+Error: odb-api.tcl, 3 Wrong number or type of arguments for overloaded function 'dbChip_create'.
+  Possible C/C++ prototypes are:
+    odb::dbChip::create(odb::dbDatabase *,odb::dbTech *,std::string const &,odb::dbChip::ChipType)
+    odb::dbChip::create(odb::dbDatabase *,odb::dbTech *,std::string const &)
+    odb::dbChip::create(odb::dbDatabase *,odb::dbTech *)
+

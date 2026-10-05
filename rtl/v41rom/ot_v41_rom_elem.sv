@@ -147,7 +147,8 @@ module ot_v41_rom_elem #(
             qlast <= cfg_d[2:0];
             plast <= (MTP != 0) ? cfg_d[5:3] : 3'd0;
         end else begin                          // 2NSEG+1+s: the row of segment s on the pair's second macro
-            s_row[NSEG + cfg_a[SW-1:0] - 1] <= cfg_d[15:0];
+            // 2NSEG+1+s -> NSEG+s for every s, including s = NSEG-1 (the low-bit decode wrapped it to NSEG-1)
+            if (NB > 1 && {27'd0, cfg_a} <= 3 * NSEG) s_row[{27'd0, cfg_a} - (NSEG + 1)] <= cfg_d[15:0];
         end
     end
 

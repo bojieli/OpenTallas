@@ -170,7 +170,7 @@ module ot_qwen_nearhbm_attn_hub #(
     reg [2:0]  rh;
     wire [31:0] ry;
     wire        rvo, rfault;
-    ot_qwen_nearhbm_recip_p #(.LA(7), .LM(6)) u_recip (.clk(clk), .rst_n(rst_n), .v(rv), .x(rx), .y(ry), .vo(rvo),
+    ot_qwen_nearhbm_recip_p #(.LA(7), .LM(7)) u_recip (.clk(clk), .rst_n(rst_n), .v(rv), .x(rx), .y(ry), .vo(rvo),
                                                      .fault(rfault));
     reg [2:0]  rcnt;
     reg [31:0] rz [0:7];                           // {g, h}

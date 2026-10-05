@@ -1,0 +1,16 @@
+{
+  "run": "row_engine_r6",
+  "top": "ot_qwen_nearhbm_row_engine (HD 128, R 6, DQ 32)",
+  "rtl_commit": "84c4edbd1",
+  "host": "ot-epyc1tb",
+  "orfs_num_cores": 20,
+  "target_period_ns": 0.833,
+  "verdict": "FAIL",
+  "stopped": "2026-10-04 after 16 h: placement resizing completed (6 h); the stage-3 metrics report then ran for 2.7 h without finishing. Stopped by killing only its container 5e908065bf0e and its runner PID.",
+  "placement_setup_wns_ps": -2700.47,
+  "placement_setup_tns_ns": -277235.0,
+  "placement_hold_wns_ps": 2.50,
+  "violating_endpoints_placement": {"core_clk": 104868, "asynchronous": 235880},
+  "cause": "broadcasts from the central issue logic to 512 lanes on a 328 x 1,998 um die, not lane arithmetic. Worst paths: c_g -> product input -2,700 ps; T (port) -2,347; e-FIFO read pointer -2,063; row-FIFO read pointer -1,577; u_ctl / kl delay lines -> lane adders -1,526 / -1,491; rst_n recovery to 236 k async flops -1,453; rsp_valid -> FIFO write enable -708. See census.json.",
+  "successor": "ot_qwen_nearhbm_row_engine_p (rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv), P&R run row_engine_p_r7"
+}

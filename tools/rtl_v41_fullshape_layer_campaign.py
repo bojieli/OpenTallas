@@ -222,7 +222,8 @@ def build_model(ck: Checkpoint, config: Path = CONFIG, engram=True):
                                 c["beta_fast"], c["beta_slow"])
     m.w = LazyWeights(ck)
     m.emb_codes = {L: (EngramCodes(ck, f"layers.{L}.engram.embed.weight"),
-                       EngramScales(ck, f"layers.{L}.engram.embed.scale")) for L in c["engram_layer_ids"]}
+                       EngramScales(ck, f"layers.{L}.engram.embed.scale"))
+                   for L in c["engram_layer_ids"] if engram}
     if engram:
         tok = V.TOKENIZER
         V.TOKENIZER = HF / "tokenizer.json"

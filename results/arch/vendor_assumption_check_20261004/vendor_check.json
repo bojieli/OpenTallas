@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.vendor_assumption_check.v1",
+ "date": "2026-10-04",
+ "assumptions": [
+  {
+   "id": "cooling_474p6",
+   "assumption": "liquid cooling at 474.6 W per die in 2-die packages",
+   "used_in": [
+    "results/arch/power_assumptions.json (Cooling, liquid, 2-die package)",
+    "results/arch/qwen3_budget.json die_limit_w"
+   ],
+   "derivation_in_repo": "GB200 package 1,200 W less its HBM stacks at peak bandwidth x 3.92 pJ/b (r-gb200-guide)",
+   "our_average_flux_w_cm2": 58.2,
+   "die_area_mm2_assumed": 815.0,
+   "published": [
+    {
+     "source_id": "sct:r-gb200-guide",
+     "value": "GB200 TDP configurable up to 1,200 W (2 dies + HBM)"
+    },
+    {
+     "source_id": "sct:r-amd-instinct",
+     "value": "MI355X 1,400 W TBP liquid"
+    },
+    {
+     "source_id": "sct:r-dgxb200",
+     "value": "HGX B200 1,000 W, two reticle-limited dies"
+    },
+    {
+     "source_id": "new:coolit_4000w_coldplate",
+     "value": "single-phase cold plate >300 W/cm2, >4,000 W TTV"
+    }
+   ],
+   "verdict": "PASS",
+   "reason": "949 W of die power per package plus stacks stays inside the shipping 1,200 W GB200 rating it was derived from; the die-average flux is ~58.2 W/cm2 (474.6 W over ~815 mm2), about 1/5 of the >300 W/cm2 a production single-phase cold plate demonstrates.",
+   "residual": "Hot-spot flux (local W/mm2 of the MAC fabric) is not covered by a published cold-plate figure; keep the repo's hot-spot check (power_assumptions 'sustainable hot-spot W/mm2')."
+  },
+  {
+   "id": "light_fec_130ns",
+   "assumption": "light-FEC 130 ns package-to-package (on-module) link",
+   "used_in": [
+    "results/arch/sync_cost_table.json values_checked",
+    "results/arch/arch_budget_v41.json",
+    "results/arch/v41_latency_ladder.json",
+    "tools/uarch_model.py",
+    "docs/ARCH_V41_RACK.md T1"
+   ],
+   "published": [
+    {
+     "source_id": "sct:r-sue",
+     "value": "Broadcom SUE: Ethernet link+PHY Tx+Rx <100 ns"
+    },
+    {
+     "source_id": "sct:r-sun3cd",
+     "value": "RS(272,257) ~99 ns vs RS(544,514) ~198 ns"
+    },
+    {
+     "source_id": "sct:r-gustlin3ck",
+     "value": "Clause 91 RS544 101-151 ns total"
+    },
+    {
+     "source_id": "sct:r-dassharma-ofa",
+     "value": "networking PHY 20+ ns (+ >100 FEC); PCIe/CXL <10 ns; UCIe <2 ns"
+    },
+    {
+     "source_id": "sct:r-llfec",
+     "value": "RS(272) needs raw BER far below CR-copper limits"
+    },
+    {
+     "source_id": "sct:r-ualink",
+     "value": "UALink in-rack: RS(544,514) codeword, reduced interleave"
+    }
+   ],
+   "verdict": "PASS (on-module MR channel only) / CONCERN on cables",
+   "reason": "130 ns sits inside the published 100-185 ns band for a light (RS(272)-class) code plus PHY on an OIF MR-class channel, and the H100 NVLS measurement gives ~85 ns per board leg. On rack cables the light code is NOT qualified (802.3ck mandates RS(544,514) for CR); the repo already prices cable hops at 209 ns (results/arch/v41_rack.json, ARCH_V41_RACK C2). Any record still applying 130 ns to a cable hop is wrong.",
+   "suggested": "keep 130 ns (100-185) on-module; 209 ns (160-300) for any copper-cable hop"
+  },
+  {
+   "id": "tomahawk_ultra",
+   "assumption": "Tomahawk Ultra switch tier: 250 ns switch, SUE crossing budget, in-network collectives",
+   "used_in": [
+    "tools/uarch_model.py HBM_SWITCH_LATENCY (tomahawk_ultra_protocol / tomahawk_ultra_inc)",
+    "results/uarch/hbm_switch_latency_authoritative_20261004/",
+    "results/arch/v41_rack.json"
+   ],
+   "published": [
+    {
+     "source_id": "new:broadcom_tomahawk_ultra_pr",
+     "value": "250 ns at 51.2 Tb/s; sub-400 ns XPU-to-XPU; INC in switch"
+    },
+    {
+     "source_id": "sct:r-sue",
+     "value": "one-way budget 477.6 ns (3 m twinax): 100 + 100 + 2 x 13.8 + 250"
+    }
+   ],
+   "verdict": "PASS (baseline) / CONCERN (in-network collective as baseline)",
+   "reason": "The repo prices a crossing with Broadcom's own SUE budget (477.6 ns one-way), which is more conservative than the PR's sub-400 ns claim, and uses the 250 ns switch figure verbatim. Broadcom publishes NO in-network collective latency or reduction order, so INC must stay a sensitivity (as tomahawk_ultra_inc already is), never the baseline; bit-exactness of an in-switch reduction is also unpublished.",
+   "suggested": "keep; do not promote tomahawk_ultra_inc without a published latency and a fixed reduction order"
+  }
+ ]
+}

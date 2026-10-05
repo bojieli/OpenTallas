@@ -1,0 +1,46 @@
+2026-10-04T00:40:50Z chain start src=a756c6a7bbfe4304fb5b20746b700e2a3f0417e2
+2026-10-04T00:41:16Z imgFC derived
+2026-10-04T00:41:16Z A build start
+2026-10-04T00:41:16Z B build start
+2026-10-04T00:47:21Z A build rc=0
+planned 37 jobs in /srv/opentallas-scratch/claude/qwen-async-full/plans/fc
+  epyc1tb: 37 jobs x 1 threads
+planned 37 jobs in /srv/opentallas-scratch/claude/qwen-async-full/plans/legacy
+  epyc1tb: 37 jobs x 1 threads
+planned 37 jobs in /srv/opentallas-scratch/claude/qwen-async-full/plans/fc-poison
+  epyc1tb: 37 jobs x 1 threads
+2026-10-04T00:47:21Z A launch fc, legacy, fc-poison
+2026-10-04T00:47:22Z A launched fc
+2026-10-04T00:47:22Z A launched legacy
+2026-10-04T00:47:23Z A launched fc-poison
+2026-10-04T00:48:24Z A verified fc rc=1
+2026-10-04T00:54:52Z B build rc=0
+2026-10-04T00:54:52Z B START rm_img256_p255
+2026-10-04T00:54:52Z B START rm_img256_p0
+2026-10-04T00:54:52Z B START rm_imgFC_p0
+2026-10-04T00:54:52Z B START rm_imgFC_p255
+2026-10-04T00:54:52Z B START rm_imgFC_p1023
+2026-10-04T00:54:52Z B START rm_img256_p1023
+2026-10-04T00:54:57Z B END rm_imgFC_p255 rc=1
+2026-10-04T00:54:57Z B END rm_imgFC_p1023 rc=1
+2026-10-04T00:54:57Z B END rm_imgFC_p0 rc=1
+2026-10-04T00:55:31Z r2 start (fixed stage paths)
+2026-10-04T00:55:31Z B START rm_imgFC_p255_r2
+2026-10-04T00:55:31Z B START rm_imgFC_p0_r2
+2026-10-04T00:55:31Z B START rm_imgFC_p1023_r2
+planned 37 jobs in /srv/opentallas-scratch/claude/qwen-async-full/plans/fc-r2
+  epyc1tb: 37 jobs x 1 threads
+planned 37 jobs in /srv/opentallas-scratch/claude/qwen-async-full/plans/fc-poison-r2
+  epyc1tb: 37 jobs x 1 threads
+2026-10-04T01:24:28Z A verified legacy rc=1
+2026-10-04T01:24:30Z A verified fc-poison rc=1
+2026-10-04T01:24:30Z A fc final verdict with poison rc=1
+2026-10-04T01:29:07Z A launched fc-r2
+2026-10-04T01:29:12Z A launched fc-poison-r2
+2026-10-04T02:35:04Z B END rm_img256_p0 rc=0
+2026-10-04T02:36:27Z B END rm_img256_p255 rc=0
+2026-10-04T03:02:06Z A verified fc-r2 rc=1
+2026-10-04T03:02:08Z A verified fc-poison-r2 rc=1
+2026-10-04T03:02:08Z A fc-r2 final verdict with poison rc=0
+2026-10-04T03:06:53Z B END rm_imgFC_p0_r2 rc=0
+2026-10-04T03:10:33Z B END rm_imgFC_p255_r2 rc=0

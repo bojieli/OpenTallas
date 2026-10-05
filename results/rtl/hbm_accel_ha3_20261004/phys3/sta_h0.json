@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.qwen-async-seq.corner-sta.v1",
+ "workdir": "/srv/opentallas-scratch/claude/ha3/phys3/out/work_route_h0",
+ "nickname": "opentallas_ot_hbm_accel_coll_port_ctx_asap7_ha3p3_route_h0",
+ "basis": "OpenSTA on 6_final.odb + RCX 6_final.spef, one ASAP7 RVT liberty corner per run, propagated clocks; uncertainties from the routed SDC (60 ps setup / 25 ps hold)",
+ "artifacts_sha256": {
+  "6_final.odb": "9b18b8591f168166e020ce2fa9ee5d387bc096b41d8a299af5096ddd9e37281b",
+  "6_final.sdc": "251eea375277bbfbcfe643a01adaecff51f695c48de64581ba695b4ff1b393b4",
+  "6_final.spef": "3564f3f32b825aa894bdd8a6afebe73d53bbe87508ab2392cafe69ef5ca05dba"
+ },
+ "sdc_text": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_hbm_accel_coll_port_ctx\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.3330 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[0]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[10]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[11]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[12]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[13]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[14]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[15]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[1]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[2]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[3]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[4]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[5]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[6]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[7]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[8]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_count[9]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[0]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1000]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1001]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1002]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1003]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1004]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1005]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1006]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1007]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1008]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1009]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[100]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1010]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1011]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1012]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1013]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1014]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1015]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1016]}]\nset_input_delay 166.6666 -clock [get_clocks {core_clk}] -add_delay [get_ports {i_data[1017]}]\nset_input_delay 166.6666 -clock [get_cloc",
+ "corners": {
+  "ss": {
+   "exit": 0,
+   "setup_wns_ns": -1.70125,
+   "hold_wns_ns": 0.04741,
+   "setup_tns_ns": -12220.312,
+   "failing_setup_endpoints": 18344,
+   "failing_hold_endpoints": 0,
+   "endpoints": 43201,
+   "tap_source_cells": 0,
+   "lw_cells": 0,
+   "worst_setup_slack_ns": -1.70125,
+   "worst_setup_path": {
+    "start": "g_base.u_ep.g_on.u_rx_cdc.g_on.u_fifo.rbin[0]$_DFFE_PN0P_",
+    "end": "g_base.u_ep.g_on.asmb[1955]$_DFFE_PN0P_"
+   },
+   "worst_hold_slack_ns": 0.04741,
+   "worst_hold_path": {
+    "start": "g_base.u_ep.g_on.asmb[3724]$_DFFE_PN0P_",
+    "end": "o_rsp_data[3724]$_DFF_P_"
+   }
+  },
+  "ff": {
+   "exit": 0,
+   "setup_wns_ns": -0.52207,
+   "hold_wns_ns": -0.00977,
+   "setup_tns_ns": -2352.266,
+   "failing_setup_endpoints": 8231,
+   "failing_hold_endpoints": 7,
+   "endpoints": 43201,
+   "tap_source_cells": 0,
+   "lw_cells": 0,
+   "worst_setup_slack_ns": -0.52207,
+   "worst_setup_path": {
+    "start": "g_base.u_ep.g_on.u_rx_cdc.g_on.u_fifo.rbin[1]$_DFFE_PN0P_",
+    "end": "g_base.u_ep.g_on.asmb[1293]$_DFFE_PN0P_"
+   },
+   "worst_hold_slack_ns": -0.00977,
+   "worst_hold_path": {
+    "start": "g_base.u_ep.g_on.flt_sync[0]$_DFF_PN0_",
+    "end": "g_base.u_ep.g_on.flt_sync[1]$_DFF_PN0_"
+   }
+  }
+ },
+ "signoff": {
+  "ss_setup_met": false,
+  "ff_hold_met": false
+ }
+}

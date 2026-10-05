@@ -1,0 +1,11 @@
+%Warning-WIDTH: /tmp/peirce-l20-native-me-matrix-provider-20261004-build/decoder.sv:31:50: Logical Operator LOGAND expects 1 bit on the RHS, but RHS's AND generates 32 bits.
+                                                                                         : ... In instance ot_chip_v41x_woa_fp8_decode
+   31 |            if(remainder>half || (remainder==half && (q&1)))q=q+1;
+      |                                                  ^~
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+make: Entering directory '/tmp/peirce-l20-native-me-matrix-provider-20261004-build/obj'
+/usr/bin/perl /usr/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include VDsromL20WoaDecode.cpp VDsromL20WoaDecode__Slow.cpp VDsromL20WoaDecode__Syms.cpp > VDsromL20WoaDecode__ALL.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow      -Os -c -o VDsromL20WoaDecode__ALL.o VDsromL20WoaDecode__ALL.cpp
+ar -cr VDsromL20WoaDecode__ALL.a VDsromL20WoaDecode__ALL.o
+ranlib VDsromL20WoaDecode__ALL.a
+make: Leaving directory '/tmp/peirce-l20-native-me-matrix-provider-20261004-build/obj'

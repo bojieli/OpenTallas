@@ -1,0 +1,17 @@
+In file included from tools/native/dsrom_vm_tag227_source_hook.hpp:2,
+                 from /tmp/pytest-of-ubuntu/pytest-7379/tag2270/test.cpp:2:
+tools/native/dsrom_vm_tag227.hpp: In function ‘dsrom::component_tag227::Tag227 dsrom::component_tag227::read_bank_from(const Wide&, unsigned int)’:
+tools/native/dsrom_vm_tag227.hpp:87:5: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+   87 |     if(bank>=4)throw std::out_of_range("TAG227 bank");Tag227 tag{};
+      |     ^~
+tools/native/dsrom_vm_tag227.hpp:87:55: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   87 |     if(bank>=4)throw std::out_of_range("TAG227 bank");Tag227 tag{};
+      |                                                       ^~~~~~
+/tmp/pytest-of-ubuntu/pytest-7379/tag2270/test.cpp: In function ‘int main(int, char**)’:
+/tmp/pytest-of-ubuntu/pytest-7379/tag2270/test.cpp:15:4: error: this ‘for’ clause does not guard... [-Werror=misleading-indentation]
+   15 |    for(auto word:t)std::cout<<word<<" ";std::cout<<"\n";
+      |    ^~~
+/tmp/pytest-of-ubuntu/pytest-7379/tag2270/test.cpp:15:41: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘for’
+   15 |    for(auto word:t)std::cout<<word<<" ";std::cout<<"\n";
+      |                                         ^~~
+cc1plus: all warnings being treated as errors

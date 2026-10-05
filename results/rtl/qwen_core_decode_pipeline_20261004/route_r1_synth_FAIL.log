@@ -1,0 +1,61 @@
+FAILED: FlowError: yosys synthesis failed with exit 1:
+ee /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:298
+
+4.1. Analyzing design hierarchy..
+Top module:  \decode_component
+Used module:     \ot_hdc_dyn_ttiles
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Generating RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Found cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Found cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Found cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Found cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Found cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Found cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Found cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Found cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Parameter \W = 16
+Parameter \G = 6144
+Parameter \NW = 18
+Found cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles'.
+Reprocessing module decode_component because instantiated module $paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\ot_hdc_dyn_ttiles has become available.
+Generating RTLIL representation for module `$paramod$beae2756a33f97e84efbd3f2dbc8d5962647f4c1\decode_component'.
+Warning: Replacing memory \dp_dyn with list of registers. See /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:365
+Warning: Replacing memory \dynp with list of registers. See /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:329
+Warning: Replacing memory \dyn with list of registers. See /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:316
+Warning: Replacing memory \fq with list of registers. See /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:298
+
+ERROR: Assert `modules_.count(module->name) == 0' failed in /home/ubuntu/.cache/opentallas-build/yosys-0.68/kernel/rtlil.cc:1231.
+
+partial record written to /home/ubuntu/hubble-qwen-decode-route-20261004-r1/physical.json

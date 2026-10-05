@@ -1,0 +1,50 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/2_2_floorplan_macro.odb
+read_sdc /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+Tap and End Cap cell insertion
+  TAP Cell          : TAPCELL_ASAP7_75t_R
+  ENDCAP Cell       : TAPCELL_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO TAP-0004] Inserted 782 endcaps.
+[INFO TAP-0005] Inserted 1572 tapcells.
+Design area 379 um^2 2% utilization.
+write_db /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/2_3_floorplan_tapcell.odb
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            1            294 f69c255ff404ef573814
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+Running pdn.tcl, stage 2_4_floorplan_pdn
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/2_3_floorplan_tapcell.odb
+read_sdc /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO PDN-0001] Inserting grid: context
+[INFO PDN-0500] Runtime: 0.47s
+source /work/hooks/post_pdn_regions.tcl
+Error: pdn.tcl, 9 provider kept boundary nets absent
+
+Elapsed time: 0:00.02[h:]min:sec. CPU time: user 0.02 sys 0.01 (99%). Peak memory: 26828KB.
+Elapsed time: 0:00.02[h:]min:sec. CPU time: user 0.02 sys 0.01 (99%). Peak memory: 25784KB.
+Elapsed time: 0:01.66[h:]min:sec. CPU time: user 1.58 sys 0.08 (100%). Peak memory: 305892KB.
+Elapsed time: 0:06.49[h:]min:sec. CPU time: user 7.38 sys 1.38 (135%). Peak memory: 328396KB.
+Elapsed time: 0:01.84[h:]min:sec. CPU time: user 1.76 sys 0.08 (100%). Peak memory: 301488KB.
+Elapsed time: 0:01.83[h:]min:sec. CPU time: user 1.75 sys 0.08 (100%). Peak memory: 301372KB.
+Elapsed time: 0:02.37[h:]min:sec. CPU time: user 2.29 sys 0.08 (100%). Peak memory: 318968KB.
+make[1]: *** [Makefile:464: do-2_4_floorplan_pdn] Error 1
+make: *** [Makefile:464: /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/2_4_floorplan_pdn.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/epicurus-static-provider-context-20261005-r4/physical.json

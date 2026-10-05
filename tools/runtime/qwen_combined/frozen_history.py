@@ -15,6 +15,8 @@ KV_BYTES = KV_WORDS * 4
 SCHEMAS = {
     'opentallas.qwen-rom-tp4-position-oracle.v1',
     'opentallas.qwen-rom-tp4-position-oracle-gpu.v1',
+    # Shared GPU generator; the explicit TP4/shape checks below still apply.
+    'opentallas.qwen-tp-position-oracle-gpu.v1',
 }
 
 

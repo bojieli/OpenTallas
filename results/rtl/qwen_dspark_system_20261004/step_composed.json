@@ -1,0 +1,500 @@
+{
+ "schema": "opentallas.qwen-dspark-step-composed.v1",
+ "exact": {
+  "c_L0": true,
+  "c_AR0": true,
+  "c_H0": true,
+  "c_H1": true,
+  "c_H2": true,
+  "c_D0": false
+ },
+ "outputs_bit_exact": {
+  "c_L0": true,
+  "c_AR0": true,
+  "c_H0": true,
+  "c_H1": true,
+  "c_H2": true,
+  "c_D0": true
+ },
+ "faults": {
+  "c_L0": [
+   [
+    "S1L0",
+    "0",
+    "0",
+    "0"
+   ],
+   [
+    "S2L0",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_AR0": [
+   [
+    "ARL0",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_H0": [
+   [
+    "H0",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_H1": [
+   [
+    "H1",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_H2": [
+   [
+    "H2",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_D0": [
+   [
+    "D0",
+    "15",
+    "0",
+    "0"
+   ]
+  ]
+ },
+ "fault_trace": {
+  "c_L0": [],
+  "c_AR0": [],
+  "c_H0": [],
+  "c_H1": [],
+  "c_H2": [],
+  "c_D0": [
+   "FAULTTRACE core_fault die=0 cyc=4657 pc_base=0 stage=D0",
+   "FAULTTRACE core_fault die=1 cyc=4657 pc_base=0 stage=D0",
+   "FAULTTRACE core_fault die=2 cyc=4657 pc_base=0 stage=D0",
+   "FAULTTRACE core_fault die=3 cyc=4657 pc_base=0 stage=D0",
+   "FAULTTRACE seq_fault die=0 cyc=6163 pc_base=0 core_fault=1 coll_err=0 coll_fault=0 stage=D0",
+   "FAULTTRACE seq_fault die=1 cyc=6163 pc_base=0 core_fault=1 coll_err=0 coll_fault=0 stage=D0",
+   "FAULTTRACE seq_fault die=2 cyc=6163 pc_base=0 core_fault=1 coll_err=0 coll_fault=0 stage=D0",
+   "FAULTTRACE seq_fault die=3 cyc=6163 pc_base=0 core_fault=1 coll_err=0 coll_fault=0 stage=D0"
+  ]
+ },
+ "components_cycles": {
+  "verify_layer_L0_step1_P": 12520,
+  "verify_layer_L0_step2_Pprime": 13872,
+  "ar_layer_L0_P": 4338,
+  "head_p1": 2999,
+  "verify_head_p4_step1": 11993,
+  "verify_head_p4_step2": 11993,
+  "drafter_layer_D0_S3": 20112,
+  "accept_after_head": {
+   "c_H1": 64,
+   "c_H2": 64
+  }
+ },
+ "memory_stalls": {
+  "c_L0": {
+   "S1L0": {
+    "cycles": 12520,
+    "layer": 0,
+    "me_clock_edges": "3619/3619",
+    "memory": {
+     "die0": {
+      "drain_low": 1248,
+      "fill_cycles": 373,
+      "fill_sectors": 4088,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 3153,
+      "stall_drain": 1166,
+      "stall_kv": 21,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 3859,
+      "wr_lat_max": 71,
+      "wr_sectors": 544
+     },
+     "die1": {
+      "drain_low": 1248,
+      "fill_cycles": 373,
+      "fill_sectors": 4088,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 3153,
+      "stall_drain": 1166,
+      "stall_kv": 21,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 3859,
+      "wr_lat_max": 71,
+      "wr_sectors": 544
+     },
+     "die2": {
+      "drain_low": 1248,
+      "fill_cycles": 373,
+      "fill_sectors": 4088,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 3153,
+      "stall_drain": 1166,
+      "stall_kv": 21,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 3859,
+      "wr_lat_max": 71,
+      "wr_sectors": 544
+     },
+     "die3": {
+      "drain_low": 1248,
+      "fill_cycles": 373,
+      "fill_sectors": 4088,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 3153,
+      "stall_drain": 1166,
+      "stall_kv": 21,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 3859,
+      "wr_lat_max": 71,
+      "wr_sectors": 544
+     }
+    },
+    "np": 4,
+    "pos": 255
+   },
+   "S2L0": {
+    "cycles": 13872,
+    "layer": 0,
+    "me_clock_edges": "3613/3613",
+    "memory": {
+     "die0": {
+      "drain_low": 2593,
+      "fill_cycles": 1289,
+      "fill_sectors": 4224,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 3153,
+      "stall_drain": 2511,
+      "stall_kv": 21,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 7892,
+      "wr_lat_max": 552,
+      "wr_sectors": 544
+     },
+     "die1": {
+      "drain_low": 2593,
+      "fill_cycles": 1289,
+      "fill_sectors": 4224,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 3153,
+      "stall_drain": 2511,
+      "stall_kv": 21,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 7892,
+      "wr_lat_max": 552,
+      "wr_sectors": 544
+     },
+     "die2": {
+      "drain_low": 2593,
+      "fill_cycles": 1289,
+      "fill_sectors": 4224,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 3153,
+      "stall_drain": 2511,
+      "stall_kv": 21,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 7892,
+      "wr_lat_max": 552,
+      "wr_sectors": 544
+     },
+     "die3": {
+      "drain_low": 2593,
+      "fill_cycles": 1289,
+      "fill_sectors": 4224,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 3153,
+      "stall_drain": 2511,
+      "stall_kv": 21,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 7892,
+      "wr_lat_max": 552,
+      "wr_sectors": 544
+     }
+    },
+    "np": 4,
+    "pos": 256
+   }
+  },
+  "c_AR0": {
+   "ARL0": {
+    "cycles": 4338,
+    "layer": 0,
+    "me_clock_edges": "2067/2067",
+    "memory": {
+     "die0": {
+      "drain_low": 391,
+      "fill_cycles": 373,
+      "fill_sectors": 4088,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 1,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 2159,
+      "wr_lat_max": 114,
+      "wr_sectors": 136
+     },
+     "die1": {
+      "drain_low": 391,
+      "fill_cycles": 373,
+      "fill_sectors": 4088,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 1,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 2159,
+      "wr_lat_max": 114,
+      "wr_sectors": 136
+     },
+     "die2": {
+      "drain_low": 391,
+      "fill_cycles": 373,
+      "fill_sectors": 4088,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 1,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 2159,
+      "wr_lat_max": 114,
+      "wr_sectors": 136
+     },
+     "die3": {
+      "drain_low": 391,
+      "fill_cycles": 373,
+      "fill_sectors": 4088,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 1,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 2159,
+      "wr_lat_max": 114,
+      "wr_sectors": 136
+     }
+    },
+    "np": 1,
+    "pos": 255
+   }
+  },
+  "c_D0": {
+   "D0": {
+    "cycles": 20112,
+    "layer": 0,
+    "me_clock_edges": "5557/5557",
+    "memory": {
+     "die0": {
+      "drain_low": 900,
+      "fill_cycles": 247,
+      "fill_sectors": 904,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 9406,
+      "stall_drain": 770,
+      "stall_kv": 19,
+      "stall_mem": 0,
+      "stall_retire": 867,
+      "tile_edges": 5671,
+      "wr_lat_max": 71,
+      "wr_sectors": 408
+     },
+     "die1": {
+      "drain_low": 900,
+      "fill_cycles": 247,
+      "fill_sectors": 904,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 9406,
+      "stall_drain": 770,
+      "stall_kv": 19,
+      "stall_mem": 0,
+      "stall_retire": 867,
+      "tile_edges": 5671,
+      "wr_lat_max": 71,
+      "wr_sectors": 408
+     },
+     "die2": {
+      "drain_low": 900,
+      "fill_cycles": 247,
+      "fill_sectors": 904,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 9406,
+      "stall_drain": 770,
+      "stall_kv": 19,
+      "stall_mem": 0,
+      "stall_retire": 867,
+      "tile_edges": 5671,
+      "wr_lat_max": 71,
+      "wr_sectors": 408
+     },
+     "die3": {
+      "drain_low": 900,
+      "fill_cycles": 247,
+      "fill_sectors": 904,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 9406,
+      "stall_drain": 770,
+      "stall_kv": 19,
+      "stall_mem": 0,
+      "stall_retire": 867,
+      "tile_edges": 5671,
+      "wr_lat_max": 71,
+      "wr_sectors": 408
+     }
+    },
+    "np": 3,
+    "pos": 49
+   }
+  }
+ },
+ "accept_rtl": {
+  "c_H1": [
+   {
+    "a": "0",
+    "bonus": "98951",
+    "die": "0",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "1"
+   },
+   {
+    "a": "0",
+    "bonus": "98951",
+    "die": "1",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "1"
+   },
+   {
+    "a": "0",
+    "bonus": "98951",
+    "die": "2",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "1"
+   },
+   {
+    "a": "0",
+    "bonus": "98951",
+    "die": "3",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "1"
+   }
+  ],
+  "c_H2": [
+   {
+    "a": "3",
+    "bonus": "1958",
+    "die": "0",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "4"
+   },
+   {
+    "a": "3",
+    "bonus": "1958",
+    "die": "1",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "4"
+   },
+   {
+    "a": "3",
+    "bonus": "1958",
+    "die": "2",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "4"
+   },
+   {
+    "a": "3",
+    "bonus": "1958",
+    "die": "3",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "4"
+   }
+  ]
+ },
+ "commits": [
+  "COMMIT 1 of block 255..258: committed_len=256 (rollback 256..258)"
+ ],
+ "composed": {
+  "verify_cycles": 462713,
+  "ar_token_cycles": 159167,
+  "draft_cycles": 117430.0,
+  "draft_terms": {
+   "drafter_layers_rtl": 100560,
+   "drafter_lm_head_S_slots_from_measured_heads": 8995.0,
+   "priced_not_rtl": {
+    "ingest": 3024,
+    "markov": 4851,
+    "source": "results/rtl/qwen_rom_dspark_20261003/drafter/drafter_rom_schedule.json draft_step_cycles.existing_rtl S=3 (MODEL_ONLY)"
+   }
+  },
+  "commit_cycles": 65,
+  "step_cycles": 580208.0
+ },
+ "bounds": {
+  "verify_layer_increment_per_extra_position": 2727.3333333333335,
+  "speedup_if_draft_were_free": 1.0447120703663528,
+  "verify_layer_cycles_break_even": 9832.826736111112,
+  "verify_layer_cycles_for_1pct_gain": 9699.859254675468,
+  "drafter_su_serial_stall_cycles_per_layer": 9406
+ },
+ "tau": 3.0375,
+ "tau_source": "results/rtl/qwen_rom_dspark_20261003/drafter/tau_summary.json per_class tau_w8_S3_B4 (W8 target, S=3 drafter slots, verify block 4), equal weight over the owner 6 classes chat 2.708 / reasoning 3.687 / coding 3.364 / long_agentic 3.025 / assistant_structured 3.406 / creative 2.035 (long_doc_rag, multilingual retired); 3 prompts x 128 greedy tokens a class, not benchmark-grade",
+ "clock_hz": 1200000000.0,
+ "per_user_accepted_tok_s": 6282.229821029699,
+ "ar_tok_s": 7539.251226699002,
+ "speedup_vs_ar": 0.8332697282698619,
+ "claim_boundary": "Layer, head and drafter-layer cycles measured on the VPRM REAL_MEM RTL at P=255 (in-tile KV slices, not near-HBM attention); 36- and 5-layer totals composed from layer 0; drafter context ingest and Markov epilogue priced (model), not RTL; no SS/FF closure of the new logic."
+}

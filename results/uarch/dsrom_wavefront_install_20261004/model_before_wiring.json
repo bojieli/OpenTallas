@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.uarch.dsrom.wavefront_wiring.v1",
+  "source_parent": "025d24e3b399c8c7eba683a94389c146fd1626d1",
+  "controller": "rtl/rom/wavefront/ot_rom_pkg_ctrl_wf.sv",
+  "controller_sha256": "12843b3de997ca12acc76a36b7b11a29f174575b8d9bc6edc780effa4f108cbe",
+  "selected_s81": {
+    "stages": 81,
+    "TP": 4,
+    "RD": 64,
+    "head": false,
+    "accepted_pop": true,
+    "capture": true,
+    "workspace": true
+  },
+  "scope": "Additive installer/controller ports and actual job_done export only; Arch owns C8 request acceptance/context restore and actual system.",
+  "defaults": {
+    "PKG_WAVE": 0,
+    "PKG_WAVE_WIN": 6
+  },
+  "new_state_bits": 0,
+  "new_memory_ports": 0,
+  "new_MACs": 0,
+  "added_wire_latency_cycles": 0,
+  "identity_retention": "Existing source C8 identities/journals/capture unchanged; no shadow/debt or fabricated fence.",
+  "external_ports": {
+    "draft_block": 4,
+    "known_token": 1,
+    "issue_reject_squash": 3,
+    "controller_request": 53,
+    "actual_retirement_pulse": "whole-stage completion valid held until source job_done acceptance; never busy transition or fragment retirement",
+    "actual_core_result": 53,
+    "prompt_and_configuration": "Existing cfg/pr ports exposed; SOURCE caller only",
+    "stage_flit_paths": "Existing UCIe and board flit ports exposed, no link replication",
+    "controller_busy": 1,
+    "completion_acceptance": 1
+  },
+  "source_controller_state_upper_unmapped": {
+    "MAXU": 866,
+    "NW": 21,
+    "WQ": 16,
+    "declared_wave_bits": 640024,
+    "area_um2": null,
+    "scope": "Claude existing waveform source, not new installer storage; SOURCE arrays mapping/pruning/load/ports remain unqualified"
+  },
+  "replicas": "existing one package controller per actual selected die; no extra instance",
+  "mux_cost": "Default-off wrapper input muxes reuse existing cfg/pr/router ports; completion AND of actual C8 quiet/no quarantine/no fault/no collective busy; result token/val mux 21+32 bits. Added gate delay/loaded fanout unmapped ESTIMATE; no physical admission.",
+  "track_capacity": null,
+  "loaded_area": null,
+  "latency_context": null,
+  "model_composition": {
+    "tau": 4.159,
+    "MTP_tokens_per_second": 8036,
+    "status": "MODEL_ONLY_NOT_MEASURED_SYSTEM"
+  },
+  "no_whole_array_run": true,
+  "SS_WNS": null,
+  "FF_WNS": null,
+  "adopt": false
+}

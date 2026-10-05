@@ -1,0 +1,23 @@
+{
+ "shape": "ds",
+ "seed": 20261004,
+ "params": {
+  "GS": 16,
+  "NG": 6,
+  "NC": 8,
+  "NOG": 8,
+  "E": 1024,
+  "LANES": 16,
+  "ONESHOT": 0,
+  "BF16": 1
+ },
+ "partial_flits": 64,
+ "result_flits": 256,
+ "golden": "hdc_golden.add pairwise tree in contributor rank order + hdc_golden.to_bf16",
+ "sha256": {
+  "part.hex": "494c5ef69dc7d1c2bc146c08cf5e832c039663d3ccd458102eb637b12cc55a0f",
+  "expected.hex": "fb25aaf116f43891e1b26273280da43264468128d8a6c99d80f31621b762bfd5"
+ },
+ "zero_results": 159,
+ "subnormal_results": 225
+}

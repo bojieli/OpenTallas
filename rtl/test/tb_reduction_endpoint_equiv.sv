@@ -86,6 +86,7 @@ module tb_reduction_endpoint_equiv;
                      cycles, emitted);
         else
             $display("FAIL reduction_endpoint: %0d disagreeing cycles of %0d", bad, cycles);
+        if (bad != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

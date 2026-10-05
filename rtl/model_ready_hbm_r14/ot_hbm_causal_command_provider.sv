@@ -17,7 +17,7 @@ module ot_hbm_causal_command_provider #(parameter integer ENABLE=0,STACK=0,DIE=0
  output wire [15:0] live_tags);
  import ot_hbm_r14_pkg::*;
  generate if(!ENABLE)begin:off
-   assign req_r=0;assign cmd_v=0;assign cmd='0;assign rsp_r=0;assign commit_ready=0;
+   assign req_r=0;assign cmd_v=0;assign cmd='0;assign rsp_r=0;assign commit_r=0;
    assign owned_v=0;assign owned_we=0;assign owned_credit=0;assign owned='0;assign credit_r=0;
    assign fault=0;assign cycle=0;assign WRresidents=0;assign live_tags=0;
  end else begin:on

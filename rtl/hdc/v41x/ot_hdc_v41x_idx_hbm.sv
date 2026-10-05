@@ -15,6 +15,20 @@
 // and one addition: REFPB = 3, the refresh-aware choice with a most-recently-
 // activated tie-break (see the refresh code).  Everything else -- timing,
 // scheduler, REFPB 0/1/2, address map -- is the original's; its header follows.
+// 2026-10-04 REFpb correctness fix (default; REF_LEGACY = 1 reproduces the old
+// model only for before/after comparison).  The old model placed each REFpb at
+// its due time regardless of the commands it had already committed, so it (a)
+// could refresh the SAME bank twice < tRFCpb apart at a 32-REFpb set boundary
+// (REFPB >= 2: the bank refreshed last in a set was eligible first in the next),
+// and (b) had no REFpb <-> ACT / REFpb <-> REFpb spacing.  Now a REFpb issues no
+// earlier than its due time and: tRRD after every ACT, tRREFD before every
+// later ACT and after the last REFpb (all other banks); tRC / tRP of its bank
+// (as before); tRFCpb after the bank's own previous REFpb.  The
+// refresh-aware choice (REFPB >= 2) skips a bank still in its tRFCpb unless no
+// other unrefreshed bank remains.  tRREFD = 8 ns (JESD238); ACT -> REFpb is
+// tRRD (tRRD_L for every bank group, as Ramulator 2 HBM3 encodes JESD235C/238:
+// ACT -> REFsb tRRD_S / tRRD_L + 1 tCK); REFpb is not counted in tFAW (an
+// ACT-only window there).  Refresh rate is unchanged (due times tREFIpb apart).
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // Behavioural, timing-faithful HBM model (simulation only) for the KV cache.
@@ -33,7 +47,7 @@
 //     the others (JESD238 Table 93: tRFCpb 200 ns for 16 Gb dies, tREFIpb =
 //     tREFI / banks per pseudo-channel -- 32 for 16 Gb 8-high, 2 SIDs x 16
 //     banks -- as encoded by Ramulator 2 72427a1).  tRFCpb > tREFIpb, so ~1.6
-//     banks are refreshing at any time; there is no postpone/pull-in;
+//     banks are refreshing at any time; no postpone; pull-in only with PULLIN > 0;
 //   * a controller/PHY latency on the request path and on the response path;
 //   * a reordering scheduler per pseudo-channel over the RW oldest queued
 //     bursts: the burst whose column command can issue earliest goes next
@@ -108,6 +122,11 @@ module ot_hdc_v41x_idx_hbm #(
     parameter integer RSP_PS   = 10000,       // PHY + controller, response path (assumed)
     parameter integer REFPB    = 0,           // 1: per-bank refresh (REFpb), one bank every REFI / NB
     parameter integer RFCPB_PS = 200000,      // tRFCpb, JESD238 Table 93 (16 Gb/die), via Ramulator 2 72427a1
+    parameter integer RREFD_PS = 8000,        // tRREFD: REFpb <-> ACT / REFpb (other bank), JESD238
+    parameter integer REF_LEGACY = 0,         // 1: the pre-2026-10-04 REFpb placement (comparison only)
+    parameter integer PULLIN = 0,             // >0: idle REFpb pull-in, at most PULLIN tREFIpb ahead (opt-in)
+    parameter integer PULLIN_LRU = 0,         // 1: a pulled-in REFpb takes the least recently activated bank
+    parameter integer PULLIN_BATCH = 0,       // >0: pull REFpb in clusters of this many (<= PULLIN)
     // Opt-in experimental shared K/W sector reservation. Tag MSB is W.
     // Clients must occupy disjoint regions; legacy scheduling unchanged at zero.
     parameter integer SHARE_W_NUM = 0,
@@ -182,6 +201,8 @@ module ot_hdc_v41x_idx_hbm #(
     integer          ref_bank [0:NPC-1];          // REFPB = 1: the bank the next REFpb refreshes
     reg [NB-1:0]     ref_done [0:NPC-1];          // REFPB = 2: banks refreshed in the current set
     integer          ref_cnt [0:NB-1];
+    longint          b_refend [0:NPC-1][0:NB-1];  // end of the bank's last REFpb (tRFCpb)
+    longint          ref_hist [0:NPC-1][0:3];      // the pseudo-channel's last four REFpb times, oldest first (tRREFD)
     // head scheduling
     reg              h_sched [0:NPC-1];
     integer          h_skip [0:NPC-1];
@@ -189,6 +210,8 @@ module ot_hdc_v41x_idx_hbm #(
     // statistics (public)
     longint st_rd [0:NPC-1], st_wr [0:NPC-1], st_act [0:NPC-1], st_hit [0:NPC-1], st_conf [0:NPC-1];
     longint st_ref [0:NPC-1], st_bp_cycles, st_rd_lat_sum, st_rd_lat_max;
+    longint st_pullin [0:NPC-1];
+    reg     pi_batch [0:NPC-1];
     longint cyc;
 
     function automatic integer pc_of(input [AW-1:0] s);
@@ -227,6 +250,70 @@ module ot_hdc_v41x_idx_hbm #(
     endfunction
     initial if (MEM_MODE == 0 && MEMFILE != "") $readmemh(MEMFILE, mem);
 
+    // REFpb <-> ACT spacing (other banks): ACT -> REFpb >= tRRD (tRRD_L taken for every bank group: Ramulator 2
+    // HBM3 has tRRD_S / tRRD_L + 1 tCK), REFpb -> ACT >= tRREFD, REFpb -> REFpb >= tRREFD.  A REFpb may lie ahead of
+    // the last committed ACT, so an ACT may still issue before it; REFpb times are increasing.
+    // act_dodge: the earliest ACT time >= t outside (REFpb - tRRD_L, REFpb + tRREFD) of the last four REFpb.
+    function automatic longint act_dodge(input integer p, input longint t);
+        integer h;
+        begin
+            for (h = 0; h < 4; h = h + 1)
+                if (t > ref_hist[p][h] - RRDL_PS && t < ref_hist[p][h] + RREFD_PS) t = ref_hist[p][h] + RREFD_PS;
+            act_dodge = t;
+        end
+    endfunction
+    // ref_slot: the earliest REFpb time >= t (its due time) with no committed ACT in (t - tRREFD, t + tRRD_L) and
+    // tRREFD after the last REFpb.  faw[] holds the last four ACTs (oldest first, increasing); an older ACT is
+    // only possible inside the window when faw[0] is, and then the REFpb goes after the last ACT.
+    function automatic longint ref_slot(input integer p, input longint t);
+        integer h;
+        begin
+            t = max2(t, ref_hist[p][3] + RREFD_PS);
+            if (faw[p][0] > t - RRDL_PS) t = max2(t, last_act[p] + RRDL_PS);
+            else
+                for (h = 0; h < 4; h = h + 1)
+                    if (faw[p][h] > t - RRDL_PS && faw[p][h] < t + RREFD_PS) t = faw[p][h] + RRDL_PS;
+            ref_slot = t;
+        end
+    endfunction
+
+    // REFpb pull-in (PULLIN > 0, opt-in, REFPB >= 2, REF_LEGACY = 0; claude/dsrom-s81-window-bind-20261004): an
+    // idle pseudo-channel (no queued beat) issues its next REFpb now, up to PULLIN tREFIpb intervals ahead of its
+    // due time (JEDEC refresh pull-in; the due schedule itself is unchanged), so a short burst that follows finds
+    // no REFpb due.  Same bank choice and the same placement rules as a due REFpb (bank tRP / tRC / tRFCpb, a
+    // slot clear of committed ACTs, tRREFD after the last REFpb).
+    function automatic longint pull_ref(input integer p, input longint t);
+        longint tr;
+        integer b2, bi;
+        begin
+            for (bi = 0; bi < NB; bi = bi + 1) ref_cnt[bi] = 0;
+            for (bi = 0; bi < NB; bi = bi + 1)
+                if (b_refend[p][bi] > t) ref_cnt[bi] += 4 * (QD + 1);
+            b2 = -1;
+            for (bi = 0; bi < NB; bi = bi + 1)
+                if (!ref_done[p][bi] && (b2 < 0 || ref_cnt[bi] < ref_cnt[b2] ||
+                                         (REFPB == 2 && ref_cnt[bi] == ref_cnt[b2] && b_open[p][b2] && !b_open[p][bi]) ||
+                                         (REFPB == 3 && PULLIN_LRU == 0 && ref_cnt[bi] == ref_cnt[b2] && b_act[p][bi] > b_act[p][b2]) ||
+                                         (PULLIN_LRU != 0 && ref_cnt[bi] == ref_cnt[b2] && b_act[p][bi] < b_act[p][b2])))
+                    b2 = bi;
+            ref_done[p][b2] = 1'b1;
+            if (&ref_done[p]) ref_done[p] = '0;
+            tr = t;
+            if (b_open[p][b2]) tr = max2(tr, b_preok[p][b2] + RP_PS);
+            tr = ref_slot(p, max2(tr, b_actok[p][b2]));
+            b_open[p][b2] = 1'b0;
+            b_actok[p][b2] = max2(b_actok[p][b2], tr + RFCPB_PS);
+            b_refend[p][b2] = tr + RFCPB_PS;
+            ref_hist[p][0] = ref_hist[p][1]; ref_hist[p][1] = ref_hist[p][2];
+            ref_hist[p][2] = ref_hist[p][3]; ref_hist[p][3] = tr;
+            ref_bank[p] = (b2 + 1) % NB;
+            next_ref[p] = next_ref[p] + REFI_PS / NB;
+            st_ref[p] = st_ref[p] + 1;
+            st_pullin[p] = st_pullin[p] + 1;
+            pull_ref = tr;
+        end
+    endfunction
+
     // Earliest column-command time of a queued burst, without committing it.
     function automatic longint estimate(input integer p, input reg we, input [AW-1:0] s, input longint arr,
                                         input longint tnow);
@@ -242,6 +329,7 @@ module ot_hdc_v41x_idx_hbm #(
                 tact = max2(tact, last_act[p] + RRDS_PS);
                 tact = max2(tact, last_act_bg[p][bg] + RRDL_PS);
                 tact = max2(tact, faw[p][0] + FAW_PS);
+                if (REF_LEGACY == 0) tact = act_dodge(p, tact);
             end
             tcol = max2(tmin, tact + (we ? RCDWR_PS : RCDRD_PS));
             tcol = max2(tcol, last_col[p] + BURST_PS);
@@ -277,6 +365,10 @@ module ot_hdc_v41x_idx_hbm #(
                     for (bi = 0; bi < q_n[p]; bi = bi + 1)
                         ref_cnt[bank_of(q_addr[p][(q_rp[p] + bi) % QD])] += 1;
                     ref_cnt[bk] += QD + 1;
+                    // a bank still in its previous REFpb's tRFCpb is the last resort
+                    if (REF_LEGACY == 0)
+                        for (bi = 0; bi < NB; bi = bi + 1)
+                            if (b_refend[p][bi] > next_ref[p]) ref_cnt[bi] += 4 * (QD + 1);
                     b2 = -1;
                     for (bi = 0; bi < NB; bi = bi + 1)
                         if (!ref_done[p][bi] && (b2 < 0 || ref_cnt[bi] < ref_cnt[b2] ||
@@ -287,9 +379,19 @@ module ot_hdc_v41x_idx_hbm #(
                     if (&ref_done[p]) ref_done[p] = '0;
                 end
                 tr = next_ref[p];
-                if (b_open[p][b2]) tr = max2(tr, b_preok[p][b2]) + RP_PS;
+                if (REF_LEGACY == 0) begin
+                    // the bank's own bounds first (tRAS/tRTP/tWR + tRP if open, tRC, tRFCpb of its last
+                    // REFpb), then a slot clear of every committed ACT; an open bank's PRE goes tRP before
+                    if (b_open[p][b2]) tr = max2(tr, b_preok[p][b2] + RP_PS);
+                    tr = ref_slot(p, max2(tr, b_actok[p][b2]));
+                end else begin
+                    if (b_open[p][b2]) tr = max2(tr, b_preok[p][b2]) + RP_PS;
+                end
                 b_open[p][b2] = 1'b0;
                 b_actok[p][b2] = max2(b_actok[p][b2], tr + RFCPB_PS);
+                b_refend[p][b2] = tr + RFCPB_PS;
+                ref_hist[p][0] = ref_hist[p][1]; ref_hist[p][1] = ref_hist[p][2];
+                ref_hist[p][2] = ref_hist[p][3]; ref_hist[p][3] = tr;
                 ref_bank[p] = (b2 + 1) % NB;
                 next_ref[p] = next_ref[p] + REFI_PS / NB;
                 st_ref[p] = st_ref[p] + 1;
@@ -321,6 +423,7 @@ module ot_hdc_v41x_idx_hbm #(
                 tact = max2(tact, last_act[p] + RRDS_PS);
                 tact = max2(tact, last_act_bg[p][bg] + RRDL_PS);
                 tact = max2(tact, faw[p][0] + FAW_PS);
+                if (REF_LEGACY == 0) tact = act_dodge(p, tact);   // ACT <-> REFpb, tRREFD
                 faw[p][0] = faw[p][1]; faw[p][1] = faw[p][2]; faw[p][2] = faw[p][3]; faw[p][3] = tact;
                 last_act[p] = tact; last_act_bg[p][bg] = tact;
                 b_open[p][bk] = 1'b1; b_row[p][bk] = row; b_act[p][bk] = tact;
@@ -363,6 +466,7 @@ module ot_hdc_v41x_idx_hbm #(
                 q_rp[p] = 0; q_n[p] = 0; r_rp[p] = 0; r_n[p] = 0; h_sched[p] = 1'b0; h_skip[p] = 0;
                 last_act[p] = -1000000; last_col[p] = -1000000; last_rd[p] = -1; last_wr[p] = -1;
                 last_wr_bg_valid[p] = 1'b0;
+                for (k = 0; k < 4; k = k + 1) ref_hist[p][k] = -1000000;
                 next_ref[p] = (REFPB != 0) ? REFI_PS / NB + (longint'(REFI_PS) * p) / (NPC * NB)
                                            : REFI_PS + (longint'(REFI_PS) * p) / NPC;
                 ref_bank[p] = 0; ref_done[p] = '0;
@@ -371,14 +475,32 @@ module ot_hdc_v41x_idx_hbm #(
                 end
                 for (k = 0; k < NB; k = k + 1) begin
                     b_open[p][k] = 1'b0; b_actok[p][k] = 0; b_preok[p][k] = 0; b_act[p][k] = 0; b_row[p][k] = 0;
+                    b_refend[p][k] = -1000000;
                 end
-                st_rd[p] = 0; st_wr[p] = 0; st_act[p] = 0; st_hit[p] = 0; st_conf[p] = 0; st_ref[p] = 0;
+                st_rd[p] = 0; st_wr[p] = 0; st_act[p] = 0; st_hit[p] = 0; st_conf[p] = 0; st_ref[p] = 0; st_pullin[p] = 0; pi_batch[p] = 1'b0;
             end
             st_bp_cycles = 0; st_rd_lat_sum = 0; st_rd_lat_max = 0;
         end else begin
             cyc <= cyc + 1;
             wr_done <= 0;
             now = cyc * CLK_PS;
+            // REFpb pull-in on idle pseudo-channels (PULLIN > 0)
+            // PULLIN_BATCH > 0: an idle channel waits until PULLIN_BATCH REFpb can be pulled in, then issues them
+            // back to back (tRREFD apart), so its refreshes cluster and a short burst between clusters meets none
+            if (PULLIN != 0 && REFPB >= 2 && REF_LEGACY == 0)
+                for (p = 0; p < NPC; p = p + 1)
+                    if (q_n[p] == 0 && ref_hist[p][3] + RREFD_PS <= now) begin   // one pulled REFpb in the future at most
+                        if (PULLIN_BATCH == 0) begin
+                            if (next_ref[p] <= now + longint'(PULLIN) * (REFI_PS / NB)) void'(pull_ref(p, now));
+                        end else begin
+                            if (!pi_batch[p] && next_ref[p] <= now + longint'(PULLIN - PULLIN_BATCH) * (REFI_PS / NB))
+                                pi_batch[p] = 1'b1;
+                            if (pi_batch[p]) begin
+                                if (next_ref[p] <= now + longint'(PULLIN) * (REFI_PS / NB)) void'(pull_ref(p, now));
+                                else pi_batch[p] = 1'b0;
+                            end
+                        end
+                    end
             // responses taken this cycle (rsp_v is the registered offer)
             for (p = 0; p < NPC; p = p + 1)
                 if (rsp_v[p] && rsp_rdy[p]) begin

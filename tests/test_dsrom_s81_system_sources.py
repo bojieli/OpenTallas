@@ -88,3 +88,43 @@ def test_workspace_abi_is_setup_only_and_failclosed(tmp_path):
     assert 'c8_write_quarantine' in w and 'rom_we' in w
     assert 'context_restored=' not in w and 'retire_v=' not in w
     assert 'v41rt_c8_workspace_write=1' in w
+
+
+def stride_binding():
+    b=binding();old=b.native_sources(None)
+    b.native_sources=lambda export:[*old,*(ROOT/'rtl/hdc/v41x'/n for n in
+        ('ot_hdc_v41x_su_adapt.sv','ot_hdc_v41x_vec.sv','ot_hdc_v41x_vec_lane.sv'))]
+    return b
+
+
+def test_source_selected_kvt_stride_complete_chain(tmp_path):
+    b=stride_binding();before={p:p.read_bytes() for p in b.native_sources(None)}
+    r=S.install(b,'unused',tmp_path/'selected',kvt_source_stride=True)
+    assert r['parameters']['SU_KVT_SOURCE_STRIDE']==1
+    assert '-GSU_KVT_SOURCE_STRIDE=1' in r['verilator_args']
+    assert r['kvt_source_stride']=={'128':11,'512':13}
+    assert r['physical_admission'] is False and r['parent_clock_loaded'] is False
+    roles={p.name:p for p in r['sources']}
+    assert '.KVT_SOURCE_STRIDE(SU_KVT_SOURCE_STRIDE)' in roles['ot_hdc_core_v41x.sv'].read_text()
+    for name in ('ot_chip_v41x_tile.sv','ot_chip_v41x_die_owner_safe_c8.sv','ot_v41_rt_die_l20_c8.sv'):
+        assert '.SU_KVT_SOURCE_STRIDE(SU_KVT_SOURCE_STRIDE)' in roles[name].read_text()
+    for name in ('ot_hdc_v41x_su_adapt.sv','ot_hdc_v41x_vec.sv','ot_hdc_v41x_vec_lane.sv'):
+        assert roles[name]==ROOT/'rtl/hdc/v41x/s81_kvt_stride'/name
+        assert ROOT/'rtl/hdc/v41x'/name not in r['sources']
+    assert all(p.read_bytes()==data for p,data in before.items())
+    assert all(hashlib.sha256(p.read_bytes()).hexdigest()==r['source_sha256'][str(p)] for p in r['sources'])
+
+
+@pytest.mark.parametrize('case',['missing','duplicate','mismatch'])
+def test_kvt_source_binding_refuses_unmatched_source(tmp_path,case):
+    b=stride_binding();paths=b.native_sources(None)
+    leaf=next(p for p in paths if p.name=='ot_hdc_v41x_vec_lane.sv')
+    if case=='missing':paths.remove(leaf)
+    elif case=='duplicate':
+        duplicate=tmp_path/leaf.name;duplicate.write_bytes(leaf.read_bytes());paths.append(duplicate)
+    else:
+        wrong=tmp_path/leaf.name;wrong.write_text(leaf.read_text()+'\n// unmatched source\n')
+        paths=[wrong if p==leaf else p for p in paths]
+    b.native_sources=lambda export:paths
+    with pytest.raises(ValueError,match='actual KVT source|original source mismatch'):
+        S.install(b,'unused',tmp_path/'selected',kvt_source_stride=True)

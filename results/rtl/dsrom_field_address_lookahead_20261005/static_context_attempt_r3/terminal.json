@@ -1,0 +1,25 @@
+{
+  "verdict": "FAIL_TOOL_LAYER_RANGE_BEFORE_PLACEMENT",
+  "source_commit": "d08f5b0b68bdb3393f4af3397a66d60196888d72",
+  "supervisor_pid": 1286142,
+  "terminal_exit": 1,
+  "diagnosis": "Installed global-router requires a non-singleton clock layer range: M8-M8 rejected ODB-0137. Read-only existing mapped-ODB binding check proved M7-M8 clock with M2-M7 data accepted.",
+  "correction": "M8 clock trunk with necessary M7 vertical leaf access, existing M7 PG/via exclusions retained. No RTL, FF, stages, clocks, uncertainty, load or slot change.",
+  "qualification": "No placement/timing obtained; source parser and mapping successful.",
+  "sha256": {
+    "routing-binding-two-layer.log": "abe1f46dbcca74880ef965287ca3fc9142c862597d9a22ee688b5ba347feb98d",
+    "routing-binding-installed.log": "8a4bcd8a43ec0c8781a04082eba7a84886a10849ee53f5b1676af5f593c74b0d",
+    "physical.json": "ccd1a97a85968485c1c110fc3f685408022bf78b4c57b1b0011bf23db18b8e42",
+    "route.log": "54f2a90c327c6eb73763d771dbda847df24a1d23ed1f6b5f6fb1ebf2af3de21a",
+    "launch.json": "ec3b16e2adacb2f5ad7fc629e33e9f5f845dea7729096de22f2113af1e5a7107",
+    "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "terminal.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "routing-binding-floorplan.log": "011228ba86aeeabb6f05652a1b5d0c044b58e2e67ef3e93943bf9bc35984ed81",
+    "routing-binding.tcl": "3e5174602d39158244ccaf0fa0ccfe273275cf3a24a717cd74d0efa517af3d91",
+    "routing-api.log": "488ec0e56cc7d63c5c66827f4ac81b8b808b23784245906fee9d1e012995e84f",
+    "routing-api.tcl": "3b2169c30a182f293b0ddc385144b63d971574add2b4edec8c2786e5db1af880",
+    "supervisor.pid": "04209562df4d6b5558993e8d246ef869e7fdc1fd8342841ff2dcbda0a39ca247",
+    "routing-binding.log": "fb0b5a14107824155d63203d975e265c548eced21699d6a77c84c671c3312aaf",
+    "admission.json": "fa42c298afa0d2b2d6b38e2ee7601e0e3ec42e0438336a55171752aead274038"
+  }
+}
