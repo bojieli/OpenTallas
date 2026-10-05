@@ -268,9 +268,9 @@
    "evidence": [
     "results/rtl/qwen_rom_fulldie_20261003/STATUS.md",
     "results/rtl/qwen_rom_fulldie_20261003/README.md",
-    "results/rtl/qwen_rom_fulldie_20261003/feasibility.json"
+    "results/rtl/qwen_rom_fulldie_20261003/b3r3/grt/b3r16B40_k16_banded_i50/summary.json"
    ],
-   "gap": "792.36 mm2 floorplan (reticle 858 mm2), legality + track PASS, pin access PASS. GRT k16 NOT closed (b2 36.4k overflow; b3r2 variants worse). No die-level detailed route, timing budgets or STA. Die top for synthesis does not exist at full shape (tile fabric is host-composed).",
+   "gap": "792.36 mm2 floorplan (reticle 858 mm2), legality + track PASS, pin access PASS. Die global route CLOSED at b3r16B40 (50-iteration GRT, 0 overflow; scoreboard f1df64409). No die-level detailed route, timing budgets or STA. Die top for synthesis does not exist at full shape (tile fabric is host-composed).",
    "effort": "XL",
    "risk": "high",
    "note": ""
@@ -283,7 +283,7 @@
     "results/rtl/dsrom_s81_fulldie_20261004/STATUS.md",
     "results/rtl/dsrom_integration_20261004/elaborate.json"
    ],
-   "gap": "Layer + head die floorplans, legality/on-track PASS, GRT k16 i50 overflow 0 PASS. Open: q element pin xs_q1[151] access; die top lint OOM at 81 GB (elaborate.json killed_oom, not a verdict); no detailed route or die STA; q element pair route p8 not met (setup -88 ps, 3,531 paths).",
+   "gap": "Layer + head die floorplans, legality/on-track PASS, GRT k16 i50 overflow 0 PASS. The all-flags S81 die top (die_c2_allon) lints with 0 errors at 33.5 GB peak (elaborate.json; the c0/c1 configs were OOM-killed at 81-84 GB, not verdicts). Open: q element pin xs_q1[151] access; no detailed route or die STA; q element pair route p8 not met (setup -88 ps, 3,531 paths).",
    "effort": "L",
    "risk": "high",
    "note": ""
@@ -444,7 +444,7 @@
     "results/rtl/dsrom_system_rtl_20261003/STATUS.md",
     "rtl/dsrom_sys/ot_dsrom_stage_guard.sv"
    ],
-   "gap": "Stage guards, stall export, wavefront package controller RTL; power/reset sequencing NOT built (Qwen's ot_qwen_sys_rst_seq is reusable); S81 die top cannot be linted on 81 GB.",
+   "gap": "Stage guards, stall export, wavefront package controller RTL; power/reset sequencing NOT built (Qwen's ot_qwen_sys_rst_seq is reusable); the all-flags S81 die top lints (33.5 GB) but has never been simulated.",
    "effort": "M",
    "risk": "med",
    "note": ""
@@ -526,7 +526,7 @@
     "results/rtl/dsrom_dspark_step_slices_20261004/composition.json",
     "results/rtl/ds_mtp_accept_20261003"
    ],
-   "gap": "DSpark drafter + accept RTL exact on the reduced vehicle and as measured step slices at 1M; fused draft head adopted. Not run inside the S81 system top (die top too large to elaborate).",
+   "gap": "DSpark drafter + accept RTL exact on the reduced vehicle and as measured step slices at 1M; fused draft head adopted. Not run inside the S81 system top (the die top lints at 33.5 GB but has no system simulation).",
    "effort": "M",
    "risk": "med",
    "note": ""
@@ -579,7 +579,7 @@
   {
    "rank": 7,
    "item": "qwen_rom / hbm_accel fullchip",
-   "why": "Qwen GRT not closed; no accelerator die floorplan"
+   "why": "Qwen die GRT closed (b3r16B40) but no detailed route/STA; no accelerator die floorplan"
   }
  ],
  "started_items": {
