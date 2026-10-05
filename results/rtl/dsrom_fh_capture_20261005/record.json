@@ -2,7 +2,7 @@
   "scope": "item2 DS-ROM G4W16 single component capture successor; defaultOFF",
   "adopted": false,
   "physical_closed": false,
-  "status": "DECODE_SPLIT_EXACT_PASS_C12_PHYSICAL_RUNNING",
+  "status": "DECODE_SPLIT_EXACT_PASS_C13_PHYSICAL_RUNNING",
   "exact_source": "50dcfa9c388028da6296f9db2935073419dc2c9f",
   "memory_source": "55f26355c",
   "route_source": "78cd22c97e9310e6d12dd1036a77c932a934762b",
@@ -121,7 +121,8 @@
     "model": "results/uarch/dsrom_fh_capture_20261005/decode_split_before_rtl.json",
     "physical_closed": false,
     "adopted": false,
-    "route": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C12_decode_split"
+    "route": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C12_decode_split",
+    "route_successor": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C13_decode_split"
   },
   "C11_actual_result": {
     "stage": "floorplan, estimated parasitics, before propagated CTS/extracted route",
@@ -132,5 +133,17 @@
     "terminal_reason": "Automatic macro placer locks macros before POST_MACRO_PLACE_TCL attempts planned reposition; ODB-0359",
     "source": "a3046f074",
     "RTL_and_arithmetic_unchanged": true
+  },
+  "C12_actual_result": {
+    "stage": "floorplan estimated parasitics before propagated CTS/extracted route",
+    "setup_ws_ps": 81.0209,
+    "hold_ws_ps": -6.98575,
+    "qualified": false,
+    "real_macros": 64,
+    "terminal_exit": 1,
+    "terminal_reason": "POST macro placement attempts orientation of automatically LOCKED macro; ODB-0360",
+    "source": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "successor": "C13_decode_split",
+    "reuse": "completed mapped synthesis and floorplan SHA checked; corrected pre-auto MACRO_PLACEMENT_TCL only; no RTL change or resynthesis"
   }
 }
