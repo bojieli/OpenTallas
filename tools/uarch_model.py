@@ -825,6 +825,68 @@ def network_ledger(d: dict, clock: float):
 # of the L20 (busiest scanning layer) ops at the design's context, which is what evaluate() prices.
 # Shared by the V4.1 ROM and V4.1 HBM dies (the hub region of the W1 floorplan).
 # ---------------------------------------------------------------------------------------------------------
+def dsrom_reindex_kc6_model():
+    """Default-off, zero-edge repair of the source-pinned kc5 baseline control.
+
+    Footprint allowance is conservative NAND2-equivalent construction, not
+    mapped timing/area. The slot is the retained kc5 context core, not a die
+    reservation. Unknown buffers/route occupancy must satisfy explicit bounds.
+    """
+    # Charge all three local head muxes, even though the old body already
+    # contains rotation/hold muxes: no speculative baseline subtraction.
+    nand2 = 768 * 9 + 768 * 4 + 3 * 128 * 4 + 8 * 12
+    gross = round(nand2 * 0.08748, 8)
+    core, cells = 93630.5, 34438.8
+    cell_cap = 0.40 * core
+    return dict(
+        schema="opentallas.dsrom-reindex.kc6-model.v1",
+        selected=False, default_enabled=False, mandatory_baseline_repair=True,
+        parent_source="2d3057fb8", parent_source_sha256=
+        "88864591d588add3b2f23578e778557ece9f53f9bfe7abd698aa15b60938d89d",
+        mechanism=["free-running derived cpart; reset-cleared adm_q/cmp retained",
+                   "FIFO count alternatives with actual late pop selection",
+                   "ready-last head rotation with eight local 16-bit slices"],
+        dimensions=dict(NPC=32, WB=128, DF=8, AW=28, TAGW=16, GS=8),
+        compute=dict(new_macs_per_cycle=0, new_arithmetic_rounding_points=0),
+        ports=dict(list_read_bits=28, list_address_bits=10, list_read_enable_bits=1,
+                   request_bits_per_pc=1+28+4+16, request_ready_bits_per_pc=1,
+                   response_control_bits_per_pc=1+16+4, response_ready_bits_per_pc=1,
+                   unchanged_payload_bytes_per_response_pc=32,
+                   control_only_payload_ports=True,
+                   drain_bits=2+7+14+10+10+28, drain_ready_bits=1,
+                   new_boundary_bits_per_cycle=0, new_memory_bytes_per_cycle=0),
+        replicas=dict(control_per_stack=1, stacks_per_rank=4, ranks=4,
+                      local_head_slices=8, bits_per_slice=16,
+                      new_clock_sinks=0, gross_mux_selectors=768+3*128),
+        state=dict(new_ff_bits=0, retained_cpart_bits=1024,
+                   reset_enable_loads_removed=1024, reset_switching_increases=True,
+                   accepted_debt_reset_policy="unchanged source policy; no new drain proof"),
+        area=dict(gross_nand2_equivalents=nand2, nand2_um2=0.08748,
+                  nand2_basis="TT cell footprint ONLY, not timing",
+                  library_sha256="fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+                  gross_logic_allowance_um2=gross, net_mapped_delta_um2=None,
+                  removed_enable_credit_um2=0, mapped_buffers_um2=None),
+        slot=dict(scope="kc5 register-to-register context core, not parent die",
+                  baseline_core_um2=core, baseline_standard_cells_um2=cells,
+                  max_standard_cell_fraction=0.40,
+                  max_standard_cells_um2=cell_cap,
+                  gross_plus_baseline_um2=round(cells+gross, 8),
+                  remaining_buffer_and_mapping_budget_um2=round(cell_cap-cells-gross, 8),
+                  fit_verified=False,
+                  admission="mapped cells including repair/CTS <= cap; explicit unchanged-core route required"),
+        routing=dict(new_count_alternative_nets_max=768, candidate_head_nets=128,
+                     extra_track_capacity=None, channel_occupancy_measured=False,
+                     acceptance="same slot; zero DRC/antenna/slew/cap/fanout violations"),
+        timing=dict(period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                    external_side_budget_ps=166.6, new_registered_edges=0,
+                    new_cdc=0, predicted_token_latency_delta_cycles=0,
+                    same_program_cycles_measured=False, ss_ff_closed=False),
+        adoption=False,
+        blockers=["actual mapped area/buffers must satisfy slot cap",
+                  "unchanged-core routing capacity and SS60/FF25/boundary closure",
+                  "original component exactness and measured cycle reconciliation"])
+
+
 HBM_PC_SECTORS_PER_CYCLE = (1e12 / 1.0339e9) / 1024.0
                                                 # one 32-B burst per 1,024 ps per pseudo-channel (HBM3E 1 TB/s over
                                                 # 32 PCs; rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv) at 967.2 ps/cycle
@@ -849,6 +911,7 @@ DEDICATED = dict(
         hardened_scale=16,                      # 16 chunks per NK=4 slice (+ 4 tails, 1% of a chunk)
     ),
     idx_reader=dict(
+        reindex_control_closure_successor=dsrom_reindex_kc6_model(),
         element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
                 "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
         replicas_fixed=HBM_PCS_DIE,
@@ -8013,3 +8076,86 @@ def hbm_stream_aq_current_hold_cut(*, queue_depth=4, pcs=128):
                 interface_and_tags='unchanged accepted push/pop; no payload/visibility or grant changes',
                 SSFF_closed=False, adopted=False,
                 source_basis='svc/closure_handoff_20261004/source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv')
+
+
+def hbm_loader_crc_literal_matrix_price(*, state_masks, word_masks, dies=2):
+    """Source-bound recipe only; keep the installed loop until final route selects.
+
+    Four existing folds/die: LOAD host/readback and STORE host/readback.
+    Literal masks implement the same LSB-first CRC32 over one 256-bit sector.
+    XOR inventory is an unshared structural ESTIMATE, not mapped area/timing.
+    """
+    import math
+    if len(state_masks)!=32 or len(word_masks)!=32 or dies<1:
+        raise ValueError('32 exact CRC masks and positive die count required')
+    sp=[m.bit_count() for m in state_masks]
+    wp=[m.bit_count() for m in word_masks]
+    depth=max(max(math.ceil(math.log2(max(1,a))),
+                  math.ceil(math.log2(max(1,b))))+1 for a,b in zip(sp,wp))
+    xors=sum(max(0,a-1)+max(0,b-1)+1 for a,b in zip(sp,wp))
+    sf=max(sum((m>>j)&1 for m in state_masks) for j in range(32))
+    wf=max(sum((m>>j)&1 for m in word_masks) for j in range(256))
+    return dict(recipe_selected=False, adopted=False, default_enabled=False,
+                MACs_per_cycle=0, dies=dies, folds_per_die=4,
+                host_folds_per_die=2, memory_folds_per_die=2,
+                existing_CRC_state_bits_per_die=128, added_state_bits=0,
+                sector_bytes_per_fold=32, initiation_interval_edges=1,
+                added_fold_edges=0, added_memory_ports=0,
+                added_bytes_per_memory_edge=0, new_boundary_bits=0,
+                local_word_bits=256, local_state_bits=32,
+                literal_constant_bits_per_fold=32*(256+32),
+                literal_constants_are_storage=False,
+                unshared_XOR2_equivalents_per_fold_ESTIMATE=xors,
+                unshared_XOR2_equivalents_all_folds_ESTIMATE=xors*4*dies,
+                maximum_balanced_parity_tree_levels_ESTIMATE=depth,
+                maximum_state_bit_output_fanout=sf,
+                maximum_word_bit_output_fanout=wf,
+                mux_demux_delta='no new port mux; CRC function substitution only',
+                acceptance_edge_and_CRC_order='unchanged real LOAD beat/readback retirement and STORE W/data retirement',
+                composed_latency_delta_cycles=0,
+                host_target_period_ns=1.0, memory_target_period_ns=0.833,
+                setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                area_um2=None, area_status='UNKNOWN until synthesis; unshared XOR count is not area',
+                routing_tracks=None, routing_status='UNKNOWN local CRC fanout/wire cost; no new external boundary',
+                floorplan_fit=None, routed_SS_FF=None,
+                composed_gain_percent=None,
+                select_only_if='current installed route final critical path implicates CRC; never infer selection from preliminary floorplan repair')
+
+
+def hbm_loader_crc_matrix_geometry_bound(price, *, xor2_max_area_um2,
+        retained_vehicle_cell_area_um2, vehicle_core_area_um2,
+        reserved_slot_area_um2=None, corridor_capacity_tracks=None,
+        maximum_slot_cell_utilization=0.55):
+    """Conservative pre-build cell/cross-cut requirement, never assume a slot.
+
+    Add all matrix cells without credit for removing the installed loop.
+    Clock/repair area is unknown. Twice each XOR plus CRC output sinks bounds
+    the edges across ANY cut; conservative, not an expected wire demand.
+    Actual consumer region assignment/available tracks are required to select.
+    """
+    folds=price['folds_per_die']
+    cells=price['unshared_XOR2_equivalents_per_fold_ESTIMATE']
+    added=cells*folds*xor2_max_area_um2
+    area=retained_vehicle_cell_area_um2+added
+    tracks=folds*(2*cells+32)
+    slot_capacity=None if reserved_slot_area_um2 is None else reserved_slot_area_um2*maximum_slot_cell_utilization
+    slot_ok=slot_capacity is not None and area<=slot_capacity
+    corridor_ok=corridor_capacity_tracks is not None and tracks<=corridor_capacity_tracks
+    return dict(added_matrix_cell_area_no_removal_credit_um2_ESTIMATE=added,
+                retained_plus_matrix_cell_area_um2_ESTIMATE=area,
+                repair_clock_buffer_area_um2=None,
+                vehicle_core_area_um2=vehicle_core_area_um2,
+                cell_utilization_before_additional_repair_ESTIMATE=area/vehicle_core_area_um2,
+                vehicle_is_actual_top_slot=False,
+                reserved_actual_top_slot_area_um2=reserved_slot_area_um2,
+                maximum_slot_cell_utilization=maximum_slot_cell_utilization,
+                required_slot_area_before_additional_repair_um2_ESTIMATE=area/maximum_slot_cell_utilization,
+                available_slot_cell_area_um2=slot_capacity,
+                additional_repair_cell_budget_um2=None if slot_capacity is None else slot_capacity-area,
+                all_cut_edge_upper_bound_tracks=tracks,
+                bound_basis='two input sinks per unshared XOR2 plus32 CRC outputs per fold; all four cones could span cut without region map',
+                actual_corridor_capacity_tracks=corridor_capacity_tracks,
+                slot_cell_bound_pass=slot_ok, corridor_bound_pass=corridor_ok,
+                build_gate_pass=slot_ok and corridor_ok,
+                routed_area_fit=False, adopted=False,
+                unresolved='actual top reserved slot and CRC locality/corridor map; additional clock/buffer repair cannot be priced as zero')
